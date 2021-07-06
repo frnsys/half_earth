@@ -1,4 +1,5 @@
 let path = require('path');
+const { VueLoaderPlugin } = require('vue-loader')
 const dev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
@@ -25,8 +26,27 @@ module.exports = {
       use: {
         loader: 'webpack-glsl-loader'
       }
+    }, {
+      test: /\.vue$/,
+      loader: 'vue-loader'
+    }, {
+      test: /\.css$/,
+      use: [
+        'vue-style-loader',
+        'css-loader'
+      ]
+    }, {
+      test: /\.s[ac]ss$/i,
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+      ]
     }]
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   resolve: {
     extensions: ['.js']
   },
