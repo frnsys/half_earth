@@ -2,7 +2,7 @@
     <div id="hand">
         <swiper
             :slides-per-view="3"
-            :space-between="50"
+            :space-between="10"
             :centered-slides=true
             :touchStartPreventDefault=false
             @swiper="onSwiper"
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import util from '../util';
 import Card from './Card.vue'
 import SwiperCore, { A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -61,7 +62,7 @@ export default {
             if (el) this.cardRefs.push(el);
         },
         onDrag(card) {
-            const targetScale = 1.2;
+            const targetScale = 1.8;
             const box = card.$el.getBoundingClientRect();
             const yCenter = window.innerHeight/2;
             const yCenterOffset = yCenter - box.height/2;
@@ -69,7 +70,7 @@ export default {
             const pDistToCenter = distToCenter/yCenter;
             const p = (1 + pDistToCenter);
             const scale = Math.min(1 + (targetScale - 1) * p, targetScale);
-            card.$el.style.transform = `scale(${scale})`;
+            util.updateTransform(card.$el, {scale});
 
             const opacity = Math.min(1 * p, 1);
             this.$refs.overlay.style.opacity = opacity;
@@ -103,8 +104,11 @@ export default {
 
             // Preview card
             if (Math.abs(pDistToCenter) < 0.1 && !played) {
+                /* $card.style.left = `${-box.width/4}px`; */
                 $card.style.left = 0;
                 $card.style.top = `${parseInt($card.style.top) + distToCenter}px`;
+                util.updateTransform($card, {rotate: '0deg'});
+                $card.classList.add('card-preview');
 
             // Reset card to hand
             } else {
@@ -112,6 +116,7 @@ export default {
                 $overlay.style.transition = 'all 0.2s';
                 $overlay.style.opacity = 0;
                 $implement.style.opacity = 0.0;
+                $card.classList.remove('card-preview');
                 this.overlayTimeout = setTimeout(() => {
                     $overlay.style.transition = '';
                 }, 200);
@@ -187,14 +192,20 @@ export default {
 #hand {
     position: fixed;
     left: 0;
-    bottom: -180px;
+    bottom: -120px; /* Hand is partially off-screen */
     right: 0;
     z-index: 2;
 }
 .swiper-container {
     overflow: visible;
+
+    /* Let the container spill out over
+    the sides so we only show peeks of next/prev cards */
+    width: 150%;
+    margin-left: -25%; /* Re-center the container */
 }
 .swiper-slide {
+    /* Scale down next/prev cards */
     transform: scale(80%);
 }
 .swiper-slide-active {
@@ -229,5 +240,11 @@ export default {
     left: 0;
     right: 0;
     z-index: 3;
+}
+
+.card {
+    max-width: 100%;
+    width: 200px;
+    height: 250px;
 }
 </style>

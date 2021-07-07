@@ -51,6 +51,8 @@ module.exports = {
     extensions: ['.js']
   },
   devServer: {
-    writeToDisk: true
+    compress: true,
+    writeToDisk: true,
+    disableHostCheck: true
   }
 };

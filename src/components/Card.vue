@@ -1,23 +1,29 @@
 <template>
     <div class="card"
         @mousedown="onDragStart"
+        @touchstart="onDragStart"
         @mousemove="onDrag"
+        @touchmove="onDrag"
         @mouseup="onDragStop"
+        @touchend="onDragStop"
         @mouseleave="onLeave"
         >card {{card.id}}</div>
 </template>
 
 <script>
+import util from '../util';
+
 export default {
     props: {
         card: Object,
-        draggable: Boolean,
+        draggable: Boolean
     },
     data() {
         return {
             isDraggable: this.draggable,
             dragging: false,
-            snapTimeout: null
+            snapTimeout: null,
+            prevTouch: Object
         }
     },
     methods: {
@@ -30,6 +36,7 @@ export default {
             if (!this.isDraggable) return;
             this.dragging = true;
             /* this.$el.style.transform = 'rotate(-2deg)'; */
+            util.updateTransform(this.$el, {rotate: '-2deg'});
             this.$el.style.cursor = 'grab';
             if (this.snapTimeout) clearTimeout(this.snapTimeout);
             this.$emit('onDragStart', this);
@@ -38,10 +45,11 @@ export default {
             if (!this.isDraggable) return;
             if (this.dragging) {
                 const $card = this.$el;
+                let delta = this.getMovementDelta(ev);
                 let top = $card.style.top || 0;
-                let newTop = `${parseInt(top) + ev.movementY}px`;
+                let newTop = `${parseInt(top) + delta.y}px`;
                 let left = $card.style.left || 0;
-                let newLeft = `${parseInt(left) + ev.movementX}px`;
+                let newLeft = `${parseInt(left) + delta.x}px`;
                 $card.style.top = newTop;
                 $card.style.left = newLeft;
                 this.$emit('onDrag', this);
@@ -50,6 +58,7 @@ export default {
         onDragStop() {
             if (!this.isDraggable) return;
             this.dragging = false;
+            this.prevTouch = null;
             this.$emit('onDragStop', this);
         },
         resetDrag() {
@@ -68,6 +77,27 @@ export default {
         },
         onLeave() {
             this.onDragStop();
+        },
+        getMovementDelta(ev) {
+            // Mobile/touch
+            if (ev.touches) {
+                let touch = ev.touches[0];
+                let delta = this.prevTouch ? {
+                    x: touch.pageX - this.prevTouch.pageX,
+                    y: touch.pageY - this.prevTouch.pageY
+                } : {
+                    x: 0, y: 0
+                };
+                this.prevTouch = touch;
+                return delta;
+
+            // Mouse
+            } else {
+                return {
+                    x: ev.movementX,
+                    y: ev.movementY
+                };
+            }
         }
     }
 }
@@ -76,9 +106,9 @@ export default {
 <style scoped>
 .card {
     position: relative;
-    border-radius: 1em;
-    width: 320px;
-    height: 400px;
+    border-radius: 0.5em;
+    width: 200px;
+    height: 250px;
     background: #202020;
     color: #fff;
     text-align: center;
