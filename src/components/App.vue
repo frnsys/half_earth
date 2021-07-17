@@ -29,6 +29,8 @@ export default {
 html, body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    overscroll-behavior-y: contain;
     font-family: "Uchen", serif;
 }
 </style>
