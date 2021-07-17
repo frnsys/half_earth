@@ -114,6 +114,7 @@ export default {
     width: 200px;
     height: 250px;
     background: #202020;
+    background: #F17F5A;
     color: #fff;
     text-align: center;
     display: flex;

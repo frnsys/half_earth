@@ -21,7 +21,7 @@ class Scene {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
     // this.renderer.setClearColor(0xeeeeee, 1);
-    this.renderer.setClearColor(0x000000, 1);
+    this.renderer.setClearColor(0xffffe8, 1);
 
     let hemiLight = new THREE.HemisphereLight(0xeeeeee, 0x000000, opts.brightness);
     this.scene.add(hemiLight);
@@ -44,7 +44,7 @@ class Scene {
     // TODO adjust camera
     let aspect = width/height;
     this.camera = new THREE.OrthographicCamera(-D*aspect, D*aspect, D, -D, NEAR, FAR);
-    this.camera.zoom = 0.2;
+    this.camera.zoom = 0.15;
     this.camera.position.z = 200;
     this.camera.position.y = 0;
     this.camera.position.x = 0;
