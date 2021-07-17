@@ -1,26 +1,18 @@
 <template>
-    <Hand :cards="cards" />
+    <!-- <Setting
+        background="assets/settings/bgs/redwood_forest.png"
+        audio="assets/settings/audio/463903__burghrecords__birds-in-spring-scotland.mp3" /> -->
+    <Implementation />
 </template>
 
 <script>
-import Hand from './Hand.vue'
+import Setting from './Setting.vue'
+import Implementation from './Implementation.vue'
 export default {
     components: {
-        Hand,
+        Setting,
+        Implementation
     },
-    data() {
-        return {
-            cards: [{
-                id: 0
-            }, {
-                id: 1
-            }, {
-                id: 2
-            }, {
-                id: 3
-            }]
-        }
-    }
 }
 </script>
 
@@ -29,6 +21,8 @@ export default {
 html, body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    overscroll-behavior-y: contain;
     font-family: "Uchen", serif;
 }
 </style>

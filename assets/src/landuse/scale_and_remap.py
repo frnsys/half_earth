@@ -33,7 +33,8 @@ from rasterio.plot import show, reshape_as_image
 from PIL import Image
 
 mosaic_tif = 'mosaic.tif'
-target_width = 3840
+# target_width = 1920
+target_width = 480
 target_height = target_width/2
 
 sparse_remap = {

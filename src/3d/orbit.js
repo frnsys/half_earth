@@ -73,6 +73,8 @@ class OrbitControls extends THREE.EventDispatcher {
     this.autoRotateSpeed = 2.0; // 30 seconds per orbit when fps is 60
     // The four arrow keys
 
+    this.onUpdate = [];
+
     this.keys = {
       LEFT: 'ArrowLeft',
       UP: 'ArrowUp',
@@ -140,7 +142,6 @@ class OrbitControls extends THREE.EventDispatcher {
 
 
     this.update = function () {
-
       const offset = new THREE.Vector3(); // so camera.up is the orbit axis
 
       const quat = new THREE.Quaternion().setFromUnitVectors( object.up, new THREE.Vector3( 0, 1, 0 ) );
@@ -149,6 +150,7 @@ class OrbitControls extends THREE.EventDispatcher {
       const lastQuaternion = new THREE.Quaternion();
       const twoPI = 2 * Math.PI;
       return function update() {
+        this.onUpdate.forEach((fn) => fn());
 
         const position = scope.object.position;
         offset.copy( position ).sub( scope.target ); // rotate offset to "y-axis-is-up" space
@@ -288,6 +290,8 @@ class OrbitControls extends THREE.EventDispatcher {
 
     const spherical = new THREE.Spherical();
     const sphericalDelta = new THREE.Spherical();
+    this.sphericalDelta = sphericalDelta;
+    this.spherical = spherical;
     let scale = 1;
     const panOffset = new THREE.Vector3();
     let zoomChanged = false;

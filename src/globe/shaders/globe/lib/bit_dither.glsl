@@ -1,5 +1,5 @@
 const float PIXEL_FACTOR = 840.; // Lower num - bigger pixels (this will be the screen width)
-const float COLOR_FACTOR = 8.;   // Higher num - higher colors quality
+const float COLOR_FACTOR = 4.;   // Higher num - higher colors quality
 
 const mat4 ditherTable = mat4(
     -4.0, 0.0, -3.0, 1.0,

@@ -2,8 +2,9 @@
     <div id="hand">
         <swiper
             :slides-per-view="3"
-            :space-between="10"
+            :space-between="5"
             :centered-slides=true
+            :breakpoints="{480: {slidesPerView: 5}, 720: {slidesPerView: 7}}"
             :touchStartPreventDefault=false
             @swiper="onSwiper"
             @slideChange="onSlideChange"
@@ -34,6 +35,7 @@ SwiperCore.use([A11y]);
 
 const params = {
   stretch: 0,
+  rotate: 50,
   depth: 100,
   scale: 0.8,
   modifier: 1
@@ -46,6 +48,11 @@ export default {
     data() {
         return {
             swiper: null,
+            breakpoints: {
+                480: {
+                    slidersPerView: 3
+                },
+            },
             cardRefs: []
         }
     },
@@ -61,6 +68,14 @@ export default {
         setCardRef(el) {
             if (el) this.cardRefs.push(el);
         },
+        setAdjacentCardOpacity(opacity) {
+            if (this.swiper.activeIndex > 0) {
+                this.cardRefs[this.swiper.activeIndex-1].$el.style.opacity = opacity;
+            }
+            if (this.swiper.activeIndex < this.cardRefs.length - 1) {
+                this.cardRefs[this.swiper.activeIndex+1].$el.style.opacity = opacity;
+            }
+        },
         onDrag(card) {
             const targetScale = 1.8;
             const box = card.$el.getBoundingClientRect();
@@ -74,13 +89,13 @@ export default {
 
             const opacity = Math.min(1 * p, 1);
             this.$refs.overlay.style.opacity = opacity;
+            this.$refs.overlay.style.display = 'block';
             this.$refs.implement.style.opacity = opacity * 0.2;
+            this.setAdjacentCardOpacity(1 - opacity);
 
             const $implement = this.$refs.implement;
-            if (box.top < $implement.offsetHeight) {
-                $implement.style.opacity = 1.0;
-            } else {
-                $implement.style.opacity = 0.2;
+            if (box.top < 0) {
+                $implement.style.opacity = box.top/(-box.height/3);
             }
         },
         onDragStart() {
@@ -90,8 +105,10 @@ export default {
             const $card = card.$el;
             const box = $card.getBoundingClientRect();
             const $implement = this.$refs.implement;
+
+            // Card must be pushed a third off screen to implement
             let played = false;
-            if (box.top < $implement.offsetHeight) {
+            if (box.top < -box.height/3) {
                 // TODO card is played
                 alert("played card");
                 played = true;
@@ -103,8 +120,8 @@ export default {
             const pDistToCenter = distToCenter/yCenter;
 
             // Preview card
-            if (Math.abs(pDistToCenter) < 0.1 && !played) {
-                /* $card.style.left = `${-box.width/4}px`; */
+            // if dragged past (yCenter - 0.1) and not played
+            if (pDistToCenter + 0.1 > 0 && !played) {
                 $card.style.left = 0;
                 $card.style.top = `${parseInt($card.style.top) + distToCenter}px`;
                 util.updateTransform($card, {rotate: '0deg'});
@@ -115,6 +132,7 @@ export default {
                 const $overlay = this.$refs.overlay;
                 $overlay.style.transition = 'all 0.2s';
                 $overlay.style.opacity = 0;
+                $overlay.style.display = 'none';
                 $implement.style.opacity = 0.0;
                 $card.classList.remove('card-preview');
                 this.overlayTimeout = setTimeout(() => {
@@ -122,6 +140,7 @@ export default {
                 }, 200);
 
                 card.resetDrag();
+                this.setAdjacentCardOpacity(1);
                 this.swiper.enable();
             }
         },
@@ -136,6 +155,8 @@ export default {
             this.cardRefs[swiper.activeIndex].isDraggable = true;
         },
 
+        // Adapted from:
+        // https://raw.githubusercontent.com/nolimits4web/swiper/master/src/components/effect-coverflow/effect-coverflow.js
         setTranslate(swiper) {
             swiper.updateSlidesOffset();
             const { width: swiperWidth, height: swiperHeight, slides, slidesSizesGrid } = swiper;
@@ -143,6 +164,7 @@ export default {
             const isHorizontal = true;
             const transform = swiper.translate;
             const center = isHorizontal ? -transform + swiperWidth / 2 : -transform + swiperHeight / 2;
+            const rotate = isHorizontal ? params.rotate : -params.rotate;
             const translate = params.depth;
             // Each slide offset from center
             for (let i = 0, length = slides.length; i < length; i += 1) {
@@ -151,6 +173,10 @@ export default {
               const slideOffset = $slideEl[0].swiperSlideOffset;
               const offsetMultiplier =
                 ((center - slideOffset - slideSize / 2) / slideSize) * params.modifier;
+
+              let rotateY = isHorizontal ? rotate * offsetMultiplier : 0;
+              let rotateX = isHorizontal ? 0 : rotate * offsetMultiplier;
+              // var rotateZ = 0
 
               let translateZ = -translate * Math.abs(offsetMultiplier);
 
@@ -164,13 +190,20 @@ export default {
 
               let scale = 1 - (1 - params.scale) * Math.abs(offsetMultiplier);
 
+              // Limit rotation and scale
+              rotateY = Math.max(Math.min(rotateY, 45), -45);
+              scale = Math.max(scale, 0.75);
+
               // Fix for ultra small values
               if (Math.abs(translateX) < 0.001) translateX = 0;
               if (Math.abs(translateY) < 0.001) translateY = 0;
               if (Math.abs(translateZ) < 0.001) translateZ = 0;
               if (Math.abs(scale) < 0.001) scale = 0;
+              if (Math.abs(rotateY) < 0.001) rotateY = 0;
+              if (Math.abs(rotateX) < 0.001) rotateX = 0;
 
-              const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px) scale(${scale})`;
+              /* const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px) scale(${scale})`; */
+              const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
 
               $slideEl.transform(slideTransform);
               $slideEl[0].style.zIndex = -Math.abs(Math.round(offsetMultiplier)) + 1;
@@ -202,7 +235,7 @@ export default {
     /* Let the container spill out over
     the sides so we only show peeks of next/prev cards */
     width: 150%;
-    margin-left: -25%; /* Re-center the container */
+    margin-left: -24%; /* Re-center the container */
 }
 .swiper-slide {
     /* Scale down next/prev cards */
@@ -221,6 +254,7 @@ export default {
     bottom: 0;
     z-index: 1;
     opacity: 0;
+    display: none;
 }
 #stage {
     display: flex;
@@ -232,14 +266,13 @@ export default {
     text-align: center;
     font-size: 1.5em;
     padding: 0.5em;
-    margin-bottom: 1.5em;
-    background: rgba(0,0,0,0.5);
     opacity: 0.0;
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
     z-index: 3;
+    pointer-events: none;
 }
 
 .card {
