@@ -32,7 +32,11 @@ export default {
         // use-case here and seems like it might be complicated
         // to adapt it for this case
         // This is buggy but fine for now (e.g. if you drag outside the window)
-        onDragStart() {
+        // TODO the better way to do this is:
+        // on click, get cursor/touch offset from card container
+        // set card position to cursor/touch position on move, preserving original offset
+        onDragStart(ev) {
+            console.log(ev);
             if (!this.isDraggable) return;
             this.dragging = true;
             /* this.$el.style.transform = 'rotate(-2deg)'; */
