@@ -50,6 +50,9 @@ module.exports = {
   resolve: {
     extensions: ['.js']
   },
+  experiments: {
+    asyncWebAssembly: true
+  },
   devServer: {
     compress: true,
     writeToDisk: true,

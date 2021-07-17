@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import HexSphere from './hexsphere';
-import setupPaletteGUI from './design';
 import loadLabelsTexture from './labels';
 import vertexShader from './shaders/globe/vertex.glsl';
 import fragmentShader from './shaders/globe/fragment.glsl';
@@ -15,10 +14,13 @@ export default (scene) => {
           value: texLoader.load('./assets/heightmap.png')
         },
         satTexture: {
-          value: texLoader.load('./assets/satellite.bw.png')
+          value: texLoader.load('./assets/satellite.bw.jpg')
+        },
+        edges: {
+          value: texLoader.load('./assets/edges.png')
         },
         labelsTexture: {
-          value: labels.generateTexture(labels.colors)
+          value: labels.generateTexture()
         },
         screenRes: {
           value: new THREE.Vector3()
@@ -26,10 +28,6 @@ export default (scene) => {
       },
       vertexShader: vertexShader,
       fragmentShader: fragmentShader
-    });
-
-    setupPaletteGUI(labels.colors, (colors) => {
-      material.uniforms.labelsTexture.value = labels.generateTexture(colors);
     });
 
     const sphere = new THREE.Mesh(

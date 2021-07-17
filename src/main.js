@@ -1,10 +1,15 @@
 import Scene from './3d/scene';
 import globe from './globe/main';
-import makeCards from './cards/main';
 import hexgrid from './hexgrid/main';
 import Stats from 'stats.js';
 import * as Vue from 'vue';
 import App from './components/App.vue'
+
+import * as wasm from "half-earth-engine";
+
+console.log(wasm);
+
+// wasm.greet();
 
 // var stats = new Stats();
 // stats.showPanel(0); // fps
@@ -24,8 +29,6 @@ import App from './components/App.vue'
 //   requestAnimationFrame(render);
 // }
 // render();
-
-// makeCards();
 
 const app = Vue.createApp(App);
 app.mount('#main');

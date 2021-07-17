@@ -1,7 +1,7 @@
 import UPNG from 'upng-js';
-import labelColors from './colors';
 import * as THREE from 'three';
-
+import * as wasm from "half-earth-engine";
+import { memory } from "half-earth-engine/half_earth_engine_bg.wasm";
 
 function loadPNG(url) {
   return fetch(url, {
@@ -33,32 +33,18 @@ function loadPNG(url) {
   });
 }
 
-// Process colors into uint8 RGB values
-function processColors(colors) {
-  return colors.map((c) => {
-    let color = new THREE.Color(c);
-    let r = Math.floor(color.r * 255);
-    let g = Math.floor(color.g * 255);
-    let b = Math.floor(color.b * 255);
-    return {r, g, b};
-  });
-}
+function generateLabelsTexture(dims, labels) {
+  let [n_cols, n_rows] = dims;
 
-function generateLabelsTexture(dims, labels, colors) {
-  const [n_cols, n_rows] = dims;
-  const size = n_cols * n_rows;
-  const textureMatrix = new Uint8Array(3*size);
-  for (let i=0; i<size; i++) {
-    // const label = labels[i];
-    // let {r, g, b} = label == 255 ? colors[0] : colors[label+1];
-    const label = labels[i];
-    let {r, g, b} = label == 255 ? colors[0] : colors[label];
-    const stride = i * 3;
-    textureMatrix[stride] = r;
-    textureMatrix[stride+1] = g;
-    textureMatrix[stride+2] = b;
-  }
-  let tex = new THREE.DataTexture(textureMatrix, n_cols, n_rows, THREE.RGBFormat);
+  var t0 = performance.now()
+  const earthSurface = wasm.EarthSurface.new(labels, n_cols, n_rows);
+  const pixelsPtr = earthSurface.surface();
+  const effectTextureArr = new Uint8Array(memory.buffer, pixelsPtr, earthSurface.width() * earthSurface.height() * 3);
+  // let effectTextureArr = wasm.oil_paint_effect(scaledTextureArr, n_cols, n_rows);
+  var t1 = performance.now()
+  console.log("wasm: " + (t1 - t0) + "milliseconds.")
+
+  let tex = new THREE.DataTexture(effectTextureArr, earthSurface.width(), earthSurface.height(), THREE.RGBFormat);
   tex.flipY = true;
   return tex;
 }
@@ -69,12 +55,10 @@ function generateLabelsTexture(dims, labels, colors) {
 // indicates the label of that pixel
 function loadLabelsTexture(src) {
   return loadPNG(src).then(({labels, dims}) => {
-    let colors = processColors(labelColors)
     return {
       labels,
-      colors,
-      generateTexture: (colors) => {
-        return generateLabelsTexture(dims, labels, colors);
+      generateTexture: () => {
+        return generateLabelsTexture(dims, labels);
       }
     }
   });
