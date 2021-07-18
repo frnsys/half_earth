@@ -1,15 +1,15 @@
 import Scene from './3d/scene';
-import globe from './globe/main';
-import hexgrid from './hexgrid/main';
 import Stats from 'stats.js';
-import * as Vue from 'vue';
 import App from './components/App.vue'
+// import * as Vue from 'vue';
 
-import * as wasm from "half-earth-engine";
+import Globe from './earth/globe';
+const globe = new Globe(document.getElementById('main'));
+globe.render();
+globe.init();
 
-console.log(wasm);
-
-// wasm.greet();
+// import hexgrid from './hexgrid/main';
+// hexgrid(scene);
 
 // var stats = new Stats();
 // stats.showPanel(0); // fps
@@ -19,9 +19,6 @@ console.log(wasm);
 // const main = document.getElementById('main');
 // main.appendChild(scene.renderer.domElement);
 
-// // hexgrid(scene);
-// globe(scene);
-
 // function render() {
 //   stats.begin();
 //   scene.render();
@@ -30,5 +27,5 @@ console.log(wasm);
 // }
 // render();
 
-const app = Vue.createApp(App);
-app.mount('#main');
+// const app = Vue.createApp(App);
+// app.mount('#main');

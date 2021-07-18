@@ -38,25 +38,30 @@ const COLORS: [Color; 17] = [
 pub struct EarthSurface {
     width: usize,
     height: usize,
+    scale: usize,
     biomes: Vec<usize>,
     pixels: Vec<u8>,
     intensities: Vec<(BigColor, usize)>
 }
 
 #[wasm_bindgen]
-impl EarthSurface {
-    pub fn new(biomes: Vec<usize>, width: usize, height: usize) -> EarthSurface {
-        let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
-        pixels = nearest_neighbor_scale(&pixels, width, height, SCALE);
-        let intensities = compute_intensities(&pixels);
-        pixels = vec![0; pixels.len()];
+pub fn add(a: usize, b: usize) -> usize {
+    return a + b;
+}
 
-        let w = width * SCALE;
-        let h = height * SCALE;
-        oil_paint_effect(&mut pixels, &intensities, w, h);
+#[wasm_bindgen]
+impl EarthSurface {
+    pub fn new(biomes: Vec<usize>, width: usize, height: usize, scale: usize) -> EarthSurface {
+        let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
+        pixels = nearest_neighbor_scale(&pixels, width, height, scale);
+        let intensities = compute_intensities(&pixels);
+
+        let w = width * scale;
+        let h = height * scale;
         EarthSurface {
             biomes,
             pixels,
+            scale,
             intensities,
             width: w,
             height: h
@@ -71,10 +76,16 @@ impl EarthSurface {
         self.height
     }
 
+    pub fn test_update(&mut self) {
+        for i in 0..self.pixels.len() {
+            self.pixels[i] = 128;
+        }
+    }
+
     // TODO assuming the biome/land use simulation will implemented in Rust
     // as well, so probably will be handled by this struct directly
     pub fn update_biome(&mut self, x: usize, y: usize, label: usize) {
-        let idx = y * self.width/SCALE + x;
+        let idx = y * self.width/self.scale + x;
         self.biomes[idx] = label;
 
         // Get color for biome
@@ -84,15 +95,15 @@ impl EarthSurface {
         let b = color.2 as usize;
 
         // Scaled coordinates
-        let x_ = x * SCALE;
-        let y_ = y * SCALE;
+        let x_ = x * self.scale;
+        let y_ = y * self.scale;
         let idx_ = y_ * self.width + x_;
 
         // Update intensities
         // Then you can run `update_surface()` to update the surface pixels
-        for i in 0..SCALE {
+        for i in 0..self.scale {
             let ii = idx_ * i;
-            self.intensities[ii..ii+SCALE].fill(((r,g,b), compute_intensity(r,g,b)));
+            self.intensities[ii..ii+self.scale].fill(((r,g,b), compute_intensity(r,g,b)));
         }
     }
 
