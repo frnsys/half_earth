@@ -1,19 +1,11 @@
 use wasm_bindgen::prelude::*;
 
-// Technically should be u8
-// but we need larger numbers,
-// which we later divide down to fit u8
-type BigColor = (usize, usize, usize);
-type Color = (u8, u8, u8);
-
-fn add_colors(a: BigColor, b: BigColor) -> BigColor {
-    (a.0 + b.0, a.1 + b.1, a.2 + b.2)
-}
-
 const SCALE: usize = 4;
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 4;
 const INTENSITY: f64 = 25.;
+
+// Biome colors
 const COLORS: [Color; 17] = [
   (21,120,194),  // Water Bodies
   (27,100,6),    // Evergreen Needleleaf Forests
@@ -34,6 +26,12 @@ const COLORS: [Color; 17] = [
   (234,171,68),  // Barren
 ];
 
+// Technically should be u8
+// but we need larger numbers,
+// which we later divide down to fit u8
+type BigColor = (usize, usize, usize);
+type Color = (u8, u8, u8);
+
 #[wasm_bindgen]
 pub struct EarthSurface {
     width: usize,
@@ -42,11 +40,6 @@ pub struct EarthSurface {
     biomes: Vec<usize>,
     pixels: Vec<u8>,
     intensities: Vec<(BigColor, usize)>
-}
-
-#[wasm_bindgen]
-pub fn add(a: usize, b: usize) -> usize {
-    return a + b;
 }
 
 #[wasm_bindgen]
@@ -74,12 +67,6 @@ impl EarthSurface {
 
     pub fn height(&self) -> usize {
         self.height
-    }
-
-    pub fn test_update(&mut self) {
-        for i in 0..self.pixels.len() {
-            self.pixels[i] = 128;
-        }
     }
 
     // TODO assuming the biome/land use simulation will implemented in Rust
@@ -138,7 +125,11 @@ pub fn biomes_to_pixels(biomes: &[usize]) -> Vec<u8> {
     pixels
 }
 
-pub fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize) -> Vec<u8> {
+fn add_colors(a: BigColor, b: BigColor) -> BigColor {
+    (a.0 + b.0, a.1 + b.1, a.2 + b.2)
+}
+
+fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize) -> Vec<u8> {
     let new_width = width * scale;
     let new_height = height * scale;
     let mut result: Vec<u8> = Vec::with_capacity(new_width * new_height * STRIDE);
@@ -156,7 +147,6 @@ pub fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: us
     result
 }
 
-
 // Compute pixel intensities, for applying the oil paint effect
 fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
     img.chunks_exact(3).map(|rgb| {
@@ -173,7 +163,7 @@ fn compute_intensity(r: usize, g: usize, b: usize) -> usize {
 }
 
 // Ported from <https://codepen.io/loktar00/pen/Fhzot>
-pub fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: usize, height: usize) {
+fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: usize, height: usize) {
     // For each pixel, get the most common intensity value of the neighbors in radius
     let mut top;                                                            // Max intensity value
     let mut pixel_intensity_count: Vec<Option<(usize, BigColor)>> = vec![None; INTENSITY as usize + 1];

@@ -8,7 +8,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "dat.gui": "^0.7.7",
-    "half-earth-engine": "file:wasm/pkg",
+    "half-earth-engine": "file:engine/pkg",
     "hexasphere.js": "^0.2.2",
     "howler": "^2.2.3",
     "swiper": "^6.7.5",
@@ -37,9 +37,13 @@
     "webpack-glsl-loader": "git+https://github.com/grieve/webpack-glsl-loader.git"
   },
   "babel": {
-    "presets": ["@babel/preset-env"],
+    "presets": [
+      "@babel/preset-env"
+    ],
     "plugins": [
-        ["@babel/transform-runtime"]
+      [
+        "@babel/transform-runtime"
+      ]
     ]
   }
 }
