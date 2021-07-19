@@ -115,9 +115,8 @@ function waitReady(worker) {
 // Initialize the worker RPC
 // interface on the main thread.
 function initialize(worker) {
-  return {
-    construct: function() {
-      let args = [...arguments];
+  return new Proxy(() => {}, {
+    construct(_target, args) {
       return waitReady(worker).then(() => {
         return requestResponse(worker, {
           type: TYPE.NEW,
@@ -127,7 +126,7 @@ function initialize(worker) {
         return createProxy(worker, id, methods);
       });
     }
-  };
+  });
 }
 
 

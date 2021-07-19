@@ -25,7 +25,7 @@ class Globe {
 
   async init() {
     let {labels, size} = await util.loadPNG(biomeLabelsSrc);
-    this.surface = await Surface.construct(labels, size);
+    this.surface = await new Surface(labels, size);
 
     let pixelsBuf = await this.surface.pixelsBuf;
     let width = await this.surface.width;
