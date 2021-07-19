@@ -1,4 +1,5 @@
 let path = require('path');
+const { VueLoaderPlugin } = require('vue-loader')
 const dev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
@@ -25,12 +26,41 @@ module.exports = {
       use: {
         loader: 'webpack-glsl-loader'
       }
+    }, {
+      test: /\.vue$/,
+      loader: 'vue-loader'
+    }, {
+      test: /\.css$/,
+      use: [
+        'vue-style-loader',
+        'css-loader'
+      ]
+    }, {
+      test: /\.s[ac]ss$/i,
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+      ]
     }]
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   resolve: {
     extensions: ['.js']
   },
+  experiments: {
+    asyncWebAssembly: true
+  },
   devServer: {
-    writeToDisk: true
+    compress: true,
+    writeToDisk: true,
+    disableHostCheck: true,
+    headers: {
+      // Required for SharedArrayBuffer
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp'
+    }
   }
 };
