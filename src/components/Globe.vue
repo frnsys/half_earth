@@ -3,11 +3,12 @@
 </template>
 
 <script>
-import Globe from '../globe/globe';
+import Globe from '../earth/globe';
 export default {
     mounted() {
         const globe = new Globe(this.$el);
         globe.render();
+        globe.init();
     }
 }
 </script>

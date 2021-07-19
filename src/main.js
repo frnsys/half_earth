@@ -1,15 +1,7 @@
-import Scene from './3d/scene';
+import * as Vue from 'vue';
 import Stats from 'stats.js';
+import Scene from './3d/scene';
 import App from './components/App.vue'
-// import * as Vue from 'vue';
-
-import Globe from './earth/globe';
-const globe = new Globe(document.getElementById('main'));
-globe.render();
-globe.init();
-
-// import hexgrid from './hexgrid/main';
-// hexgrid(scene);
 
 // var stats = new Stats();
 // stats.showPanel(0); // fps
@@ -27,5 +19,5 @@ globe.init();
 // }
 // render();
 
-// const app = Vue.createApp(App);
-// app.mount('#main');
+const app = Vue.createApp(App);
+app.mount('#main');

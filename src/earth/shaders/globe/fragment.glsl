@@ -5,7 +5,7 @@ varying vec3 vertexPosition;
 uniform sampler2D heightmap;
 uniform sampler2D shadows;
 uniform sampler2D satTexture;
-uniform sampler2D labelsTexture;
+uniform sampler2D biomesTexture;
 uniform vec3 screenRes;
 
 #include "./lib/bit_dither.glsl"
@@ -24,9 +24,9 @@ void main() {
     /* vec3 heightEdges = detect_edges(heightColor); */
     vec3 heightEdges = detect_edges(texture2D(heightmap, vertexUV).rgb);
 
-    // Color based on labels
-    vec3 color = texture2D(labelsTexture, vertexUV).rgb;
-    /* vec3 color = scale2x(labelsTexture, vertexUV).rgb; */
+    // Color based on biomes
+    vec3 color = texture2D(biomesTexture, vertexUV).rgb;
+    /* vec3 color = scale2x(biomesTexture, vertexUV).rgb; */
 
     // Add satellite texture
     /* color *= texture2D(satTexture, vertexUV).r * 1.5; */
