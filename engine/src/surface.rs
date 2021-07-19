@@ -1,8 +1,7 @@
 use wasm_bindgen::prelude::*;
 
-const SCALE: usize = 4;
 const STRIDE: usize = 3; // For r,g,b
-const RADIUS: usize = 4;
+const RADIUS: usize = 3;
 const INTENSITY: f64 = 25.;
 
 // Biome colors

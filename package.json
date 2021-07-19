@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "start": "webpack serve --progress --compress --mode=development",
-    "build": "NODE_ENV=production webpack --mode production --env production --progress"
+    "build": "NODE_ENV=production webpack --mode production --env production --progress",
+    "build-wasm": "cd engine; wasm-pack build --release",
+    "test": "cd engine; wasm-pack test --headless --firefox"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

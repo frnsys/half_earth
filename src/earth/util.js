@@ -1,5 +1,6 @@
 import UPNG from 'upng-js';
 
+// Load a grayscale PNG
 function loadPNG(url) {
   return fetch(url, {
     headers: {

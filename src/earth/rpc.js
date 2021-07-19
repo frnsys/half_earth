@@ -1,3 +1,11 @@
+/*
+ * A simple RPC class wrapper for web workers.
+ *
+ * Usage:
+ *  - In your worker file, call RPC.prepare(YourClass);
+ *  - In your main file, call RPC.initialize(yourWorker);
+ */
+
 const TYPE = Object.freeze({
   READY: 1,
   NEW:   2,
@@ -7,7 +15,7 @@ const TYPE = Object.freeze({
 });
 
 
-// Make a request the worker and
+// Make a request to the worker and
 // wait for the matching response.
 let nextReqId = 0;
 function requestResponse(worker, data) {
@@ -35,8 +43,9 @@ function requestResponse(worker, data) {
 }
 
 
+// Create a proxy for the class instance
+// that the main thread can use.
 function createProxy(worker, id, methods) {
-  methods.add('foobar');
   return new Proxy({}, {
     get(_target, key, _receiver) {
       // The way promises work is that after
@@ -44,6 +53,9 @@ function createProxy(worker, id, methods) {
       // whatever they resolve to (e.g. this proxy),
       // so just ignore that.
       if (key == 'then') return;
+
+      // If this key matches a known method,
+      // return a function to call.
       if (methods.has(key)) {
         return function() {
           return requestResponse(worker, {
@@ -51,6 +63,8 @@ function createProxy(worker, id, methods) {
             type: TYPE.CALL
           });
         };
+
+      // Otherwise get the value.
       } else {
         return requestResponse(worker, {
           id, key,
@@ -70,8 +84,10 @@ function createProxy(worker, id, methods) {
   });
 }
 
-// The worker sometimes isn't loaded synchronously?
-// So wait for it to be ready.
+
+// Waits for the worker to be ready.
+// This assumes that once it's ready
+// its ready state doesn't change.
 function waitReady(worker) {
   return new Promise((resolve, reject) => {
     if (worker.ready) {
@@ -94,6 +110,7 @@ function waitReady(worker) {
     }
   });
 }
+
 
 // Initialize the worker RPC
 // interface on the main thread.
@@ -162,5 +179,6 @@ function prepare(cls) {
     }
   });
 }
+
 
 export default {initialize, prepare};
