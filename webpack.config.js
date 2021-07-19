@@ -56,6 +56,11 @@ module.exports = {
   devServer: {
     compress: true,
     writeToDisk: true,
-    disableHostCheck: true
+    disableHostCheck: true,
+    headers: {
+      // Required for SharedArrayBuffer
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp'
+    }
   }
 };
