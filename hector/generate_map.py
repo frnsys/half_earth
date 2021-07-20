@@ -10,6 +10,10 @@ patterns = {
 
 def pscl_apply(pscl, tgav):
     """
+    Applies tgav from Hector over a scaling pattern,
+    to spatialize temperatures to a grid.
+    This approach is what `hectorui` uses.
+
     - pscl: scaling pattern
     - tgav: N x 1 matrix of global mean temperatures
 
@@ -27,11 +31,10 @@ def pscl_apply(pscl, tgav):
 
 
 if __name__ == '__main__':
-    output = pyhector.run(pyhector.rcp45, {'core': {'endDate': 2100}})
+    output = pyhector.run(pyhector.rcp45, {'core': {'endDate': 2100}}, outputs='all')
 
-    # TODO The hectorui code adds 15 here which gives
-    # the expected temperatures...but idk why
-    tgav = output['temperature.Tgav'].values + 15
+    base_temp = 15
+    tgav = output['temperature.Tgav'].values + base_temp
     result = pscl_apply(patterns['temp'], tgav)
 
     import ipdb; ipdb.set_trace()
