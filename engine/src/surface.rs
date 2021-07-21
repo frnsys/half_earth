@@ -201,3 +201,48 @@ fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: 
         pixels[i+2] = !!(top.1.2 / top.0) as u8; // b
     }
 }
+
+
+/*
+Applies tgav from Hector over a scaling pattern,
+to spatialize temperatures to a grid.
+This approach is what `hectorui` uses.
+
+Jason Evanoff, Chris Vernon, Stephanie Pennington, & Robert Link. (2021, May 13). JGCRI/hectorui: v1.2.0 PNNL web feature (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.4758524
+
+Ported from:
+- <https://rdrr.io/github/JGCRI/fldgen/man/pscl_apply.html>
+- <https://rdrr.io/github/JGCRI/fldgen/src/R/meanfield.R>
+
+The original `pscl_apply` takes a vector for `tgav`, where each
+value is the temperature anomaly for one year. We only need to
+calculate one year at a time, so for simplicity this takes a single
+value for `tgav`.
+
+Important note: If using `temperature.Tgav` from Hector,
+add 15 to it (the base temperature) before passing it here.
+This is what they do in `hectorui`.
+*/
+fn pscl_apply(pscl_w: &[f64], pscl_b: &[f64], tgav: f64) -> Vec<f64> {
+    pscl_w.iter().zip(pscl_b).map(|(w_i, b_i)| w_i * tgav + b_i).collect()
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use float_cmp::approx_eq;
+
+    #[test]
+    fn test_pscl_apply() {
+        let pscl_w: [f64; 6] = [ 0., 1., 0., 0.5, 1.0, 0.];
+        let pscl_b: [f64; 6] = [-1., 1., 0., 0., 0.5, 0.5];
+        let tgav = 8.;
+        let expected = vec![-1., 9., 0., 4., 8.5, 0.5];
+        let map = pscl_apply(&pscl_w, &pscl_b, tgav);
+
+        assert!(map.len() == expected.len());
+        assert!(map.iter().zip(expected)
+                .all(|(x1,x2)| approx_eq!(f64, *x1, x2, epsilon=1e-8)))
+    }
+}

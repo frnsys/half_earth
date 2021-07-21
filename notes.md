@@ -62,6 +62,19 @@ Would be really nice if it's possible to run Hector in the browser rather than s
 
 One possibility is writing Rust bindings for hector, then compiling all the Rust code into a single WASM binary. I looked into [cxx](https://github.com/dtolnay/cxx) to help creating the bindings and referenced the [pyhector](https://github.com/openclimatedata/pyhector) code for the C++ wrapping into the Hector library (specifically the [`include/`](https://github.com/openclimatedata/pyhector/tree/master/include) and [`src/`](https://github.com/openclimatedata/pyhector/tree/master/src) directories and [setup.py](https://github.com/openclimatedata/pyhector/blob/master/setup.py)). I've only skimmed the Hector code but it looks like it uses the file I/O quite a bit and I worry that it will not properly work with WebAssembly ([based on the info here](https://rustwasm.github.io/docs/book/reference/which-crates-work-with-wasm.html)). I'm also not sure about the compatibility of Boost with WASM. And in general I'm not certain of if Rust with a FFI compiles to WASM. Based on the comments [here](https://www.reddit.com/r/rust/comments/i8snc5/compiling_rust_library_with_c_dependencies_to_wasm/) and [here](https://www.reddit.com/r/rust/comments/8bnco7/including_external_c_library_in_web_assembly_rust/), it might work if the C code is also compiled directly to WASM. I think `cxx` might do this as part of [building with Cargo](https://cxx.rs/build/cargo.html) to the WASM target?
 
+Update 7/20: It does not look like Rust + C combined will compile to WASM in most cases, see <https://github.com/rustwasm/team/issues/291>. I tried a minimal example with `cxx` and couldn't compile the Rust/C to WASM with `wasm-pack`, it looks like some headers couldn't be found:
+
+```
+running: "clang" "-O3" "-ffunction-sections" "-fdata-sections" "-fPIC" "--target=wasm32-unknown-unknown" "-Wall" "-Wextra" "-o" "/home/ftseng/work/half_earth/hector-rs/target/wasm32-unknown-unknown/release/build/cxx-542f93539571d0d9/out/src/cxx.o" "-c" "src/cxx.cc"
+cargo:warning=In file included from src/cxx.cc:1:
+cargo:warning=src/../include/cxx.h:2:10: fatal error: 'algorithm' file not found
+cargo:warning=#include <algorithm>
+cargo:warning=         ^~~~~~~~~~~
+cargo:warning=1 error generated.
+exit status: 1
+```
+
+
 Alternatively, perhaps Hector can be directly compiled to WASM (e.g. via [Emscripten](https://developer.mozilla.org/en-US/docs/WebAssembly/C_to_wasm), see [this question about compiling Boost with Emscripten](https://stackoverflow.com/questions/15724357/using-boost-with-emscripten)). In this case Javascript would be a glue between the rest of the Rust-WASM code and Hector. Ideally Hector would just be part of the Rust-WASM code, especially if other parts of the Rust code will be communicating with Hector frequently. And again, here with Emscripten I don't know if file system access complicates things (I'm assuming it does).
 
 For the sake of time and feasibility it makes the most sense to use `pyhector` and set up a web service that game clients query for model output. It makes the infrastructure more complicated than just serving static assets. At a later point we can revisit integrating Hector directly into the frontend--especially because we're not totally sure it's even the model we want to use!
@@ -78,3 +91,5 @@ Different scaling patterns have different resolutions ("tas" is temperature, "pr
 - `MIROC-ESM` (tas & pr): 128x64
 
 It seems like for higher resolution we should stick with the `MRI-ESM1` scaling patterns, though maybe there are other factors to consider. For comparison, the biome/land use labels are 480x240, though we can also scale them to 320x160 to simplify things.
+
+_7/21 update_: Managed to get Hector compiling to WASM with Emscripten (see <https://github.com/frnsys/hector-wasm>), and it's just as fast as `pyhector`. I should look more closely at memory usage and file sizes though.
