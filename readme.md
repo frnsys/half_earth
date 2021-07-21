@@ -26,6 +26,8 @@ If you modify the Rust code, run `npm run build-wasm`
 
 ## Tests
 
+Run Cargo and WASM tests with:
+
 ```
 npm run test
 ```
