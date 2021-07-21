@@ -1,6 +1,6 @@
 #!/bin/bash
-mkdir -p maps/src
-cd maps/src
+mkdir -p data/src
+cd data/src
 wget https://github.com/JGCRI/hectorui/raw/main/inst/shinyApp/www/maps/tas_Amon_CanESM2_esmrcp85_r1i1p1_200601-210012_pattern.rds
 wget https://github.com/JGCRI/hectorui/raw/main/inst/shinyApp/www/maps/tas_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds
 wget https://github.com/JGCRI/hectorui/raw/main/inst/shinyApp/www/maps/tas_Amon_GFDL-ESM2G_rcp85_r1i1p1_200601-210012_pattern.rds

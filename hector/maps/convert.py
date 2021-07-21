@@ -15,7 +15,7 @@ def convert(r_df):
     return d
 
 
-for src in glob('maps/src/*.rds'):
+for src in glob('data/src/*.rds'):
     print(src)
     df = readRDS(src)
     result = convert(df)
@@ -36,12 +36,12 @@ for src in glob('maps/src/*.rds'):
 
 # Highest resolution scaling pattern (320x160)
 patterns = {
-    'temp': np.load('maps/npz/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.npz'),
-    'precip': np.load('maps/npz/pr_Amon_MRI-ESM1_rcp85_r1i1p1_200601-210012_pattern.npz')
+    'temp': np.load('data/npz/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.npz'),
+    'precip': np.load('data/npz/pr_Amon_MRI-ESM1_rcp85_r1i1p1_200601-210012_pattern.npz')
 }
 
 # Create an include file for Rust
-with open('maps/temp_pattern.in', 'w') as f:
+with open('data/temp_pattern.in', 'w') as f:
     rs_w = 'static TEMP_PATTERN_W: [f64; {size}] = [{vals}];'.format(
             size=patterns['temp']['w'].shape[0],
             vals='{}'.format(list(patterns['temp']['w'].flatten()))[1:-1])
