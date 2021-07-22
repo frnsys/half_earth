@@ -111,11 +111,13 @@ function waitReady(worker) {
   });
 }
 
+// Dummy class so we can use `Proxy.construct`
+class P {};
 
 // Initialize the worker RPC
 // interface on the main thread.
 function initialize(worker) {
-  return new Proxy(() => {}, {
+  return new Proxy(P, {
     construct(_target, args) {
       return waitReady(worker).then(() => {
         return requestResponse(worker, {

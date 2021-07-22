@@ -4,7 +4,7 @@ const dev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: {
-    'main': ['@babel/polyfill', './src/main'],
+    'main': ['./src/main'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -13,15 +13,6 @@ module.exports = {
   devtool: dev ? 'inline-source-map' : 'source-map',
   module: {
     rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env']
-        }
-      }
-    }, {
       test: /\.glsl/,
       use: {
         loader: 'webpack-glsl-loader'
