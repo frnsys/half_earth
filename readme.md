@@ -11,7 +11,7 @@
 npm install -d
 
 # Compile Rust code
-cd engine; bash build.sh
+npm run build-wasm
 ```
 
 ## Usage
