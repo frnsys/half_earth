@@ -9,7 +9,7 @@ uniform sampler2D biomesTexture;
 uniform vec3 screenRes;
 
 #include "./lib/bit_dither.glsl"
-#include "./lib/detect_edges.glsl"
+/* #include "./lib/detect_edges.glsl" */
 
 
 void main() {
@@ -22,7 +22,7 @@ void main() {
     /*     heightColor = vec3(1.0, 1.0, 1.0); */
     /* } */
     /* vec3 heightEdges = detect_edges(heightColor); */
-    vec3 heightEdges = detect_edges(texture2D(heightmap, vertexUV).rgb);
+    /* vec3 heightEdges = detect_edges(texture2D(heightmap, vertexUV).rgb); */
 
     // Color based on biomes
     vec3 color = texture2D(biomesTexture, vertexUV).rgb;
@@ -33,7 +33,7 @@ void main() {
 
     // Add light edge highlighting
     vec3 shadows = texture2D(shadows, vertexUV).rgb;
-    vec3 edges = max(min(heightEdges, detect_edges(color)), 0.75);
+    /* vec3 edges = max(min(heightEdges, detect_edges(color)), 0.75); */
 
     // Atmospheric glow
     /* float intensity = 1.05 - dot(vertexNormal, vec3(0.0, 0.0, 1.0)); */
