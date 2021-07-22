@@ -33,6 +33,9 @@ module.exports = {
         'css-loader',
         'sass-loader',
       ]
+    }, {
+      test: /hector\.wasm/,
+      type: 'asset'
     }]
   },
   plugins: [
