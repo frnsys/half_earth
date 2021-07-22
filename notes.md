@@ -93,3 +93,27 @@ Different scaling patterns have different resolutions ("tas" is temperature, "pr
 It seems like for higher resolution we should stick with the `MRI-ESM1` scaling patterns, though maybe there are other factors to consider. For comparison, the biome/land use labels are 480x240, though we can also scale them to 320x160 to simplify things.
 
 _7/21 update_: Managed to get Hector compiling to WASM with Emscripten (see <https://github.com/frnsys/hector-wasm>), and it's just as fast as `pyhector`. I should look more closely at memory usage and file sizes though.
+
+## 7/22: Trying to lower file sizes/load times
+
+This is a little early in the process but I want to get a feel for where things are at and what I need to keep in mind moving forward.
+
+For now only looking at the `dist/main.js` resulting from the production build command (`npm run build`). The `.map` files are large but only loaded when using dev tools.
+
+Right now `dist/main.js` comes out at about 1.8MB. Commenting out imports to or that rely on `three.js` reduces this by ~500KB (from what I looked at I thought the version of `three.js` I'm using should allow for tree-shaking which should reduce this, but doesn't look like it is. Might be missing something...). Commenting out imports to or that rely on Vue reduces this by another ~300KB. The remaining 1MB is almost entirely from `hector-wasm` (~200KB of that is from the scenario import; that can probably be reduced). I think `three.js` and `hector-wasm` will be the only large dependencies; hopefully most of the other game logic can be implemented in Rust and so have a relatively small footprint.
+
+For `three.js`, one workaround might be this: <https://gist.github.com/drcmda/974f84240a329fa8a9ce04bbdaffc04d>, i.e. creating a proxy `three.js` file to manually export only the parts that are needed.
+
+The inclusion of `src/globe/worker.js` creates a couple additional `.js` files (72KB total), and since it's what interacts with the Rust code also brings in that corresponding `.wasm` file (24KB).
+
+In practice, `hector-wasm` will only be used by the worker, which spreads out the size a bit (920KB for `dist/main.js` and the worker scripts go up to 800KB total).
+
+Adding async code to `src/globe/worker.js` caused some problems with Babel (`regeneratorRuntime is not defined`, probably because Babel wasn't processing that file) and I realized that we might not need Babel at all since [ES6 is supported by ~95% of browsers](https://caniuse.com/?search=es6). Removing Babel brought `dist/main.js` down to ~830KB, so almost another 100KB saved.
+
+Using the `three.js` exports approach brought it down to ~715KB, so another ~115KB saved. Not as much as I'd hoped but still not bad.
+
+For the `hector-wasm` integration I changed it so that the config and scenario data are loaded separately as async requests.
+
+Total size for `dist/main.js` and the worker files (including the `.wasm`) is 1.532MB, original size for all these was 1.896MB, so overall savings of about 364KB.
+
+After reconfiguring `hector-wasm` to have its `.wasm` file separate from the Javascript, the total file size of the workers went down to 112KB (so down 688KB). The total file size across `dist/main.js` and the workers is 828KB. A big chunk of those savings are from moving the `.wasm` file out of the JS--the total size of the `.wasm` files are now 464KB. So the total file size is still 1.292MB, but that was another 240KB savings.
