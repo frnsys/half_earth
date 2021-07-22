@@ -13,7 +13,7 @@ module.exports = {
   devtool: dev ? 'inline-source-map' : 'source-map',
   module: {
     rules: [{
-      test: /\.glsl/,
+      test: /\.glsl$/,
       use: {
         loader: 'webpack-glsl-loader'
       }
@@ -39,7 +39,11 @@ module.exports = {
     new VueLoaderPlugin()
   ],
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js'],
+    alias: {
+      // Proxy three.js exports to reduce bundle size
+      'three$': path.resolve('./src/3d/three.js')
+    }
   },
   experiments: {
     asyncWebAssembly: true
