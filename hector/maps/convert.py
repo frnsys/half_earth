@@ -45,7 +45,7 @@ with open('data/temp_pattern.in', 'w') as f:
     rs_w = 'static TEMP_PATTERN_W: [f64; {size}] = [{vals}];'.format(
             size=patterns['temp']['w'].shape[0],
             vals='{}'.format(list(patterns['temp']['w'].flatten()))[1:-1])
-    rs_b = 'static TEMP_PATTERN_B: [f64; {size}] = [];'.format(
+    rs_b = 'static TEMP_PATTERN_B: [f64; {size}] = [{vals}];'.format(
             size=patterns['temp']['b'].shape[0],
             vals='{}'.format(list(patterns['temp']['b'].flatten()))[1:-1])
     f.write('\n'.join([rs_w, rs_b]))

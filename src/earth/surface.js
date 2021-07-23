@@ -24,28 +24,34 @@ class Surface {
     this.pixels = new Uint8Array(this.pixelsBuf);
     this.pixels.set(this._pixels);
 
-    const outputVars = {
-      "temperature.Tgav": {
-        "component": "temperature",
-        "description": "global atmospheric temperature anomaly",
-        "unit": "degC",
-        "variable": "Tgav"
-      }
-    };
-    Promise.all([
-      loadHector(),
-      fetch('/assets/hector/config.json')
-        .then((resp) => resp.json()),
-      fetch('/assets/hector/rcp45.json')
-        .then((resp) => resp.json())
-    ]).then(([{Hector, run}, config, scenario]) => {
-      console.log(`Hector version ${Hector.version()}`);
-      console.log('Running...');
-      var t0 = performance.now()
-      let results = run(config, scenario, outputVars);
-      var t1 = performance.now()
-      console.log(`Done running in ${t1 - t0}ms`);
-    });
+    // const outputVars = {
+    //   "temperature.Tgav": {
+    //     "component": "temperature",
+    //     "description": "global atmospheric temperature anomaly",
+    //     "unit": "degC",
+    //     "variable": "Tgav"
+    //   }
+    // };
+    // Promise.all([
+    //   loadHector(),
+    //   fetch('/assets/hector/config.json')
+    //     .then((resp) => resp.json()),
+    //   fetch('/assets/hector/rcp45.json')
+    //     .then((resp) => resp.json())
+    // ]).then(([{Hector, run}, config, scenario]) => {
+    //   console.log(`Hector version ${Hector.version()}`);
+    //   console.log('Running...');
+    //   var t0 = performance.now()
+    //   let results = run(config, scenario, outputVars);
+    //   var t1 = performance.now()
+    //   console.log(`Done running in ${t1 - t0}ms`);
+    // });
+  }
+
+  updateBiomes() {
+    // TODO testing
+    this._surface.update_biomes(10000.0);
+    this.updateTexture();
   }
 
   updateTexture() {

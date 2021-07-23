@@ -73,6 +73,12 @@ class Globe {
 
     await this.surface.updateTexture();
     surfaceTexture.needsUpdate = true;
+
+    // TODO testing
+    setTimeout(async () => {
+      await this.surface.updateBiomes();
+      surfaceTexture.needsUpdate = true;
+    }, 10000);
   }
 
   render() {
