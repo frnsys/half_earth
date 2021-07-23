@@ -3,6 +3,8 @@ use wasm_bindgen::prelude::*;
 
 include!("../../hector/maps/data/temp_pattern.in");
 
+type BiomeLabel = usize;
+
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
 const INTENSITY: f64 = 25.;
@@ -39,14 +41,14 @@ pub struct EarthSurface {
     width: usize,
     height: usize,
     scale: usize,
-    biomes: Vec<usize>,
+    biomes: Vec<BiomeLabel>,
     pixels: Vec<u8>,
     intensities: Vec<(BigColor, usize)>
 }
 
 #[wasm_bindgen]
 impl EarthSurface {
-    pub fn new(biomes: Vec<usize>, width: usize, height: usize, scale: usize) -> EarthSurface {
+    pub fn new(biomes: Vec<BiomeLabel>, width: usize, height: usize, scale: usize) -> EarthSurface {
         utils::set_panic_hook();
 
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
@@ -92,15 +94,9 @@ impl EarthSurface {
         // Above we assert that TEMP_PATTERN_W, TEMP_PATTER_B, and tgav are all the same size,
         // so no scaling necessary.
         for (idx, (temp, biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, tgav).zip(self.biomes.iter_mut()).enumerate() {
-            let label = 9; // Savannas
-            let mut changed = false;
-            if temp > 30. && *biome < 255 { // Not water
+            if let Some(label) = biome_for_temp(biome, temp) {
                 *biome = label;
-                changed = true;
-            }
-
-            if changed {
-                let color = color_for_biome(*biome);
+                let color = color_for_biome(label);
                 let r = color.0 as usize;
                 let g = color.1 as usize;
                 let b = color.2 as usize;
@@ -113,11 +109,21 @@ impl EarthSurface {
                     let ii = scaled_idx + (i * self.width * self.scale);
                     self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
                 }
-            }
+            };
         }
     }
 }
 
+// TODO this is where we implement the biome changing logic
+// If the biome hasn't changed, return None
+fn biome_for_temp(biome: &mut BiomeLabel, temp: f64) -> Option<usize> {
+    let label = 9; // Savannas
+    if temp > 0. && *biome < 255 { // Not water
+        Some(label)
+    } else {
+        None
+    }
+}
 
 fn scale_idx(idx: usize, width: usize, scale: usize) -> usize {
     let scaled_width = width * scale;
@@ -325,6 +331,6 @@ mod test {
         let mut surface = EarthSurface::new(biomes, width, height, scale);
 
         surface.update_biomes(1000.);
-        // TODO
+        // TODO implement an actual test
     }
 }
