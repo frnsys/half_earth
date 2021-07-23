@@ -1,6 +1,7 @@
 ## Notes
 
 - Heavy-lifting code implemented in Rust (in `engine/`), provided to the frontend via WebAssembly (wasm), which is managed via a web worker.
+- The [Hector Simple Climate Model](https://github.com/JGCRI/hector) is integrated via WebAssembly, managed by the same web worker managing the Rust components
 - Main libraries used for the UI are three.js and Vue.
 - Some of the assets are generated programmatically; look in `assets/src/` for the scripts.
 
