@@ -11,7 +11,7 @@
 npm install -d
 
 # Compile Rust code
-cd engine; bash build.sh
+npm run build-wasm
 ```
 
 ## Usage
@@ -25,6 +25,8 @@ npm start
 If you modify the Rust code, run `npm run build-wasm`
 
 ## Tests
+
+Run Cargo and WASM tests with:
 
 ```
 npm run test

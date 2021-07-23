@@ -16,6 +16,7 @@ const Surface = RPC.initialize(
   new Worker(new URL('./worker.js', import.meta.url))
 );
 
+const startYear = 2020;
 
 class Globe {
   constructor(el) {
@@ -25,7 +26,7 @@ class Globe {
 
   async init() {
     let {labels, size} = await util.loadPNG(biomeLabelsSrc);
-    this.surface = await new Surface(labels, size);
+    this.surface = await new Surface(startYear, labels, size);
 
     let pixelsBuf = await this.surface.pixelsBuf;
     let width = await this.surface.width;
@@ -75,10 +76,17 @@ class Globe {
     surfaceTexture.needsUpdate = true;
   }
 
+  // Calculate world update.
+  // See comments for Surface.addEmissions
+  // for what `emissions` should look like.
+  async addEmissionsThenUpdate(emissions) {
+    await this.surface.addEmissions(emissions);
+    await this.surface.updateBiomes();
+    surfaceTexture.needsUpdate = true;
+  }
+
   render() {
-    // stats.begin();
     this.scene.render();
-    // stats.end();
     requestAnimationFrame(this.render.bind(this));
   }
 }

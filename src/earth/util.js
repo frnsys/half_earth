@@ -1,4 +1,4 @@
-import UPNG from 'upng-js';
+import {decode, toRGBA8} from 'upng-js';
 
 // Load a grayscale PNG
 function loadPNG(url) {
@@ -10,11 +10,11 @@ function loadPNG(url) {
   }).then((res) => {
     return res.arrayBuffer();
   }).then((buf) => {
-    let png = UPNG.decode(buf);
+    let png = decode(buf);
 
     // There are a variety of PNG color types;
     // this converts them into a consistent RGBA type
-    var rgba = UPNG.toRGBA8(png);
+    var rgba = toRGBA8(png);
 
     // Data is flat RGBA values
     // since the images we're working with is grayscale,

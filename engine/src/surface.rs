@@ -1,4 +1,9 @@
+use super::utils;
 use wasm_bindgen::prelude::*;
+
+include!("../../hector/maps/data/temp_pattern.in");
+
+type BiomeLabel = usize;
 
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
@@ -36,17 +41,24 @@ pub struct EarthSurface {
     width: usize,
     height: usize,
     scale: usize,
-    biomes: Vec<usize>,
+    biomes: Vec<BiomeLabel>,
     pixels: Vec<u8>,
     intensities: Vec<(BigColor, usize)>
 }
 
 #[wasm_bindgen]
 impl EarthSurface {
-    pub fn new(biomes: Vec<usize>, width: usize, height: usize, scale: usize) -> EarthSurface {
+    pub fn new(biomes: Vec<BiomeLabel>, width: usize, height: usize, scale: usize) -> EarthSurface {
+        utils::set_panic_hook();
+
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
         pixels = nearest_neighbor_scale(&pixels, width, height, scale);
         let intensities = compute_intensities(&pixels);
+
+        // Assert they have the same number of values
+        // (assumes they are the same aspect ratio)
+        assert!(biomes.len() == TEMP_PATTERN_W.len());
+        assert!(biomes.len() == TEMP_PATTERN_B.len());
 
         let w = width * scale;
         let h = height * scale;
@@ -68,31 +80,6 @@ impl EarthSurface {
         self.height
     }
 
-    // TODO assuming the biome/land use simulation will implemented in Rust
-    // as well, so probably will be handled by this struct directly
-    pub fn update_biome(&mut self, x: usize, y: usize, label: usize) {
-        let idx = y * self.width/self.scale + x;
-        self.biomes[idx] = label;
-
-        // Get color for biome
-        let color = color_for_biome(label);
-        let r = color.0 as usize;
-        let g = color.1 as usize;
-        let b = color.2 as usize;
-
-        // Scaled coordinates
-        let x_ = x * self.scale;
-        let y_ = y * self.scale;
-        let idx_ = y_ * self.width + x_;
-
-        // Update intensities
-        // Then you can run `update_surface()` to update the surface pixels
-        for i in 0..self.scale {
-            let ii = idx_ * i;
-            self.intensities[ii..ii+self.scale].fill(((r,g,b), compute_intensity(r,g,b)));
-        }
-    }
-
     pub fn update_surface(&mut self) {
         oil_paint_effect(&mut self.pixels, &self.intensities, self.width, self.height);
     }
@@ -102,9 +89,52 @@ impl EarthSurface {
     pub fn surface(&self) -> *const u8 {
         self.pixels.as_ptr()
     }
+
+    pub fn update_biomes(&mut self, tgav: f64) {
+        // Above we assert that TEMP_PATTERN_W, TEMP_PATTER_B, and tgav are all the same size,
+        // so no scaling necessary.
+        for (idx, (temp, biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, tgav).zip(self.biomes.iter_mut()).enumerate() {
+            if let Some(label) = biome_for_temp(biome, temp) {
+                *biome = label;
+                let color = color_for_biome(label);
+                let r = color.0 as usize;
+                let g = color.1 as usize;
+                let b = color.2 as usize;
+
+                // Update intensities
+                // Then you can run `update_surface()` to update the surface pixels
+                let intensity = compute_intensity(r,g,b);
+                let scaled_idx = scale_idx(idx, self.width, self.scale);
+                for i in 0..self.scale {
+                    let ii = scaled_idx + (i * self.width * self.scale);
+                    self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
+                }
+            };
+        }
+    }
 }
 
-pub fn color_for_biome(label: usize) -> Color {
+// TODO this is where we implement the biome changing logic
+// If the biome hasn't changed, return None
+fn biome_for_temp(biome: &mut BiomeLabel, temp: f64) -> Option<usize> {
+    let label = 9; // Savannas
+    if temp > 0. && *biome < 255 { // Not water
+        Some(label)
+    } else {
+        None
+    }
+}
+
+fn scale_idx(idx: usize, width: usize, scale: usize) -> usize {
+    let scaled_width = width * scale;
+    let x = idx % width;
+    let y = idx / width;
+    let y_scaled = y * scale;
+    let x_scaled = x * scale;
+    (y_scaled * scaled_width) + x_scaled
+}
+
+fn color_for_biome(label: usize) -> Color {
     if label == 255 {
         COLORS[0]
     } else {
@@ -113,7 +143,7 @@ pub fn color_for_biome(label: usize) -> Color {
 }
 
 // Convert biome labels to RGB
-pub fn biomes_to_pixels(biomes: &[usize]) -> Vec<u8> {
+fn biomes_to_pixels(biomes: &[usize]) -> Vec<u8> {
     let mut pixels: Vec<u8> = Vec::with_capacity(biomes.len() * STRIDE);
     for label in biomes {
         let (r, g, b) = color_for_biome(*label);
@@ -199,5 +229,108 @@ fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: 
         pixels[i]   = !!(top.1.0 / top.0) as u8; // r
         pixels[i+1] = !!(top.1.1 / top.0) as u8; // g
         pixels[i+2] = !!(top.1.2 / top.0) as u8; // b
+    }
+}
+
+
+/*
+Applies tgav from Hector over a scaling pattern,
+to spatialize temperatures to a grid.
+This approach is what `hectorui` uses.
+
+Jason Evanoff, Chris Vernon, Stephanie Pennington, & Robert Link. (2021, May 13). JGCRI/hectorui: v1.2.0 PNNL web feature (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.4758524
+
+Ported from:
+- <https://rdrr.io/github/JGCRI/fldgen/man/pscl_apply.html>
+- <https://rdrr.io/github/JGCRI/fldgen/src/R/meanfield.R>
+
+The original `pscl_apply` takes a vector for `tgav`, where each
+value is the temperature anomaly for one year. We only need to
+calculate one year at a time, so for simplicity this takes a single
+value for `tgav`.
+
+Important note: If using `temperature.Tgav` from Hector,
+add 15 to it (the base temperature) before passing it here.
+This is what they do in `hectorui`.
+*/
+fn pscl_apply<'a>(pscl_w: &'a [f64], pscl_b: &'a [f64], tgav: f64) -> impl Iterator<Item=f64> + 'a {
+    pscl_w.iter().zip(pscl_b).map(move |(w_i, b_i)| w_i * tgav + b_i)
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use float_cmp::approx_eq;
+
+    #[test]
+    fn test_pscl_apply() {
+        let pscl_w: [f64; 6] = [ 0., 1., 0., 0.5, 1.0, 0.];
+        let pscl_b: [f64; 6] = [-1., 1., 0., 0., 0.5, 0.5];
+        let tgav = 8.;
+        let expected = vec![-1., 9., 0., 4., 8.5, 0.5];
+        let map: Vec<f64> = pscl_apply(&pscl_w, &pscl_b, tgav).collect();
+
+        assert!(map.len() == expected.len());
+        assert!(map.iter().zip(expected)
+                .all(|(x1,x2)| approx_eq!(f64, *x1, x2, epsilon=1e-8)))
+    }
+
+    #[test]
+    fn test_nearest_neighbor_scale() {
+        let img: [u8; 18] = [
+            0, 0, 0,
+            1, 1, 1,
+            2, 2, 2,
+            3, 3, 3,
+            4, 4, 4,
+            5, 5, 5,
+        ];
+        let width = 3;
+        let height = 2;
+        let scale = 2;
+        let expected: [u8; 72] = [
+            0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2,
+            0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5,
+            3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5,
+        ];
+        let scaled = nearest_neighbor_scale(&img, width, height, scale);
+        println!("{:?}", scaled);
+
+        assert!(scaled.len() == expected.len());
+        assert!(scaled.iter().zip(expected)
+                .all(|(x1,x2)| *x1 == x2));
+    }
+
+    #[test]
+    fn test_scale_idx() {
+        let mut scale = 2;
+        let mut width = 3;
+        assert!(scale_idx(0, width, scale) == 0);
+        assert!(scale_idx(1, width, scale) == 2);
+        assert!(scale_idx(5, width, scale) == 16);
+        assert!(scale_idx(7, width, scale) == 26);
+
+        scale = 4;
+        width = 3;
+        assert!(scale_idx(0, width, scale) == 0);
+        assert!(scale_idx(1, width, scale) == 4);
+        assert!(scale_idx(2, width, scale) == 8);
+        assert!(scale_idx(3, width, scale) == 48);
+        assert!(scale_idx(4, width, scale) == 52);
+        assert!(scale_idx(5, width, scale) == 56);
+    }
+
+    #[test]
+    fn test_earth_surface_update_biomes() {
+        let biomes: Vec<usize> = (0..TEMP_PATTERN_W.len()).map(|_| 0).collect();
+        let width = 320;
+        let height = 160;
+        let scale = 2;
+        let mut surface = EarthSurface::new(biomes, width, height, scale);
+
+        surface.update_biomes(1000.);
+        // TODO implement an actual test
     }
 }
