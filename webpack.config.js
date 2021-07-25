@@ -34,6 +34,8 @@ module.exports = {
         'sass-loader',
       ]
     }, {
+      // This needs to be loaded as a regular file (asset)
+      // to work correctly
       test: /hector\.wasm/,
       type: 'asset'
     }]
