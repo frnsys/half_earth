@@ -33,13 +33,13 @@ class Globe {
     const material = new THREE.ShaderMaterial({
       uniforms: {
         heightmap: {
-          value: texLoader.load('./assets/heightmap.png')
+          value: texLoader.load('./assets/surface/heightmap.png')
         },
         shadows: {
-          value: texLoader.load('./assets/shadows.processed.png')
+          value: texLoader.load('./assets/surface/shadows.processed.png')
         },
         satTexture: {
-          value: texLoader.load('./assets/satellite.bw.jpg')
+          value: texLoader.load('./assets/surface/satellite.bw.jpg')
         },
         biomesTexture: {
           value: surfaceTexture
