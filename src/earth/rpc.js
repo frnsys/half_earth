@@ -172,10 +172,13 @@ function prepare(cls) {
       } break;
 
       // Call a method on the wrapped class instance.
+      // This can handle async methods as well
       case TYPE.CALL: {
         const {id, key, args} = data;
         let ret = instances[id][key](...args);
-        postMessage({reqId, resp: ret});
+        Promise.resolve(ret).then((ret) => {
+          postMessage({reqId, resp: ret});
+        });
       } break;
     }
   });

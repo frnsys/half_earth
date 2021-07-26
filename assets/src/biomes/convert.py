@@ -120,6 +120,13 @@ im = Image.fromarray(labels.astype('uint8'), 'L')
 im.save('/tmp/biomes.png')
 subprocess.run(['pngquant', '/tmp/biomes.png', '--speed', '1', '--force', '-o', 'out/biomes.png'])
 
-print('Save the following values to the Rust code:')
-print('x range: [{}, {}]'.format(x_min, x_max))
-print('y range: [{}, {}]'.format(y_min, y_max))
+with open('out/biome_lookup.in', 'w') as f:
+    size_rs = 'static BIOME_SIZE: usize = {};'.format(n_squares_per_side)
+    x_min_rs = 'static BIOME_TEMP_MIN: f64 = {};'.format(x_min)
+    x_max_rs = 'static BIOME_TEMP_MAX: f64 = {};'.format(x_max)
+    x_step_rs = 'static BIOME_TEMP_STEP: f64 = {};'.format(x_step)
+    y_min_rs = 'static BIOME_PRECIP_MIN: f64 = {};'.format(y_min)
+    y_max_rs = 'static BIOME_PRECIP_MAX: f64 = {};'.format(y_max)
+    y_step_rs = 'static BIOME_PRECIP_STEP: f64 = {};'.format(y_step)
+    f.write('\n'.join([
+        size_rs, x_min_rs, x_max_rs, x_step_rs, y_min_rs, y_max_rs, y_step_rs]))

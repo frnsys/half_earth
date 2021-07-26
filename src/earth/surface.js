@@ -3,6 +3,18 @@ import {EarthSurface} from 'half-earth-engine';
 import { memory } from 'half-earth-engine/half_earth_engine_bg.wasm';
 import loadHector from 'hector-wasm';
 
+// A grayscale image where each value
+// indicates the label of that pixel
+const biomeLabelsSrc = '/assets/surface/landuse.png';
+
+// A grayscale image that maps
+// temp (x-axis) and precip (y-axis)
+// to a biome label.
+const biomeLookupSrc = '/assets/surface/biomes.png';
+
+// Base emissions scenario for Hector
+const baseEmissionsScenario = '/assets/hector/rcp45.to_2050.json';
+
 const scale = 4;
 const hectorOutputVars = {
   'temperature.Tgav': {
@@ -15,27 +27,38 @@ const hectorOutputVars = {
 
 
 class Surface {
-  constructor(startYear, labels, size) {
-    this._surface = EarthSurface.new(labels, size.width, size.height, scale);
-    this.width = this._surface.width();
-    this.height = this._surface.height();
+  constructor(startYear) {
+    this.startYear = startYear;
+  }
 
-    // Support for shared wasm memory across workers is in relatively
-    // early stages and complicated.
-    // See <https://github.com/richwandell/rust_wasm_webcam/blob/8a86f5fe2c1d8bcba34f747f529f4c14826a1d9c/README.md>
-    // For compatibility reasons and to avoid a lot of extra configuration,
-    // just copy the pixel data from wasm memory
-    // info a SharedArrayBuffer that the main thread has access to,
-    // and re-copy whenever it updates.
-    let pixelsPtr = this._surface.surface();
-    this._pixels = new Uint8Array(memory.buffer, pixelsPtr, this.width * this.height * 3);
-    this.pixelsBuf = new SharedArrayBuffer(memory.buffer.byteLength);
-    this.pixels = new Uint8Array(this.pixelsBuf);
-    this.pixels.set(this._pixels);
+  async init() {
+    let loadLabels = Promise.all([
+      util.loadPNG(biomeLabelsSrc),
+      util.loadPNG(biomeLookupSrc)
+    ]).then(([labels, lookup]) => {
+      this._surface = EarthSurface.new(
+        labels.data, labels.size.width, labels.size.height, scale,
+        lookup.data);
+      this.width = this._surface.width();
+      this.height = this._surface.height();
+
+      // Support for shared wasm memory across workers is in relatively
+      // early stages and complicated.
+      // See <https://github.com/richwandell/rust_wasm_webcam/blob/8a86f5fe2c1d8bcba34f747f529f4c14826a1d9c/README.md>
+      // For compatibility reasons and to avoid a lot of extra configuration,
+      // just copy the pixel data from wasm memory
+      // info a SharedArrayBuffer that the main thread has access to,
+      // and re-copy whenever it updates.
+      let pixelsPtr = this._surface.surface();
+      this._pixels = new Uint8Array(memory.buffer, pixelsPtr, this.width * this.height * 3);
+      this.pixelsBuf = new SharedArrayBuffer(memory.buffer.byteLength);
+      this.pixels = new Uint8Array(this.pixelsBuf);
+      this.pixels.set(this._pixels);
+    });
 
     // Load the base emissions scenario history,
     // for computing temperature changes
-    fetch('/assets/hector/rcp45.to_2050.json')
+    let loadScenario = fetch(baseEmissionsScenario)
       .then((resp) => resp.json()).then((baseScenario) => {
         this.emissions = {
           startYear: baseScenario['startYear'],
@@ -43,11 +66,13 @@ class Surface {
         };
 
         // Only get the base scenario data up to the game starting year
-        let baseYears = startYear - baseScenario['startYear'];
+        let baseYears = this.startYear - baseScenario['startYear'];
         Object.keys(baseScenario['data']).forEach((k) => {
           this.emissions['data'][k] = baseScenario['data'][k].slice(0, baseYears);
         });
       });
+
+    return Promise.all([loadLabels, loadScenario]);
   }
 
   /*

@@ -41,7 +41,7 @@ patterns = {
 }
 
 # Create an include file for Rust
-with open('data/temp_pattern.in', 'w') as f:
+with open('data/scale_patterns.in', 'w') as f:
     rs_w = 'static TEMP_PATTERN_W: [f64; {size}] = [{vals}];'.format(
             size=patterns['temp']['w'].shape[0],
             vals='{}'.format(list(patterns['temp']['w'].flatten()))[1:-1])

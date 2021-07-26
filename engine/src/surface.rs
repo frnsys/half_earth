@@ -1,13 +1,16 @@
 use super::utils;
 use wasm_bindgen::prelude::*;
 
-include!("../../hector/maps/data/temp_pattern.in");
+include!("../../hector/maps/data/scale_patterns.in");
+include!("../../assets/src/biomes/out/biome_lookup.in");
 
-type BiomeLabel = usize;
+type BiomeLabel = u8;
 
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
 const INTENSITY: f64 = 25.;
+
+
 
 // Biome colors
 const COLORS: [Color; 17] = [
@@ -42,13 +45,15 @@ pub struct EarthSurface {
     height: usize,
     scale: usize,
     biomes: Vec<BiomeLabel>,
+    biome_lookup: Vec<BiomeLabel>,
     pixels: Vec<u8>,
     intensities: Vec<(BigColor, usize)>
 }
 
 #[wasm_bindgen]
 impl EarthSurface {
-    pub fn new(biomes: Vec<BiomeLabel>, width: usize, height: usize, scale: usize) -> EarthSurface {
+    pub fn new(biomes: Vec<BiomeLabel>, width: usize, height: usize, scale: usize,
+               lookup: Vec<BiomeLabel>) -> EarthSurface {
         utils::set_panic_hook();
 
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
@@ -68,7 +73,8 @@ impl EarthSurface {
             scale,
             intensities,
             width: w,
-            height: h
+            height: h,
+            biome_lookup: lookup
         }
     }
 
@@ -91,12 +97,15 @@ impl EarthSurface {
     }
 
     pub fn update_biomes(&mut self, tgav: f64) {
-        // Above we assert that TEMP_PATTERN_W, TEMP_PATTER_B, and tgav are all the same size,
+        // TODO actually calculate precip
+        let precip = 100.0;
+
+        // Above we assert that TEMP_PATTERN_W, TEMP_PATTERN_B, and tgav are all the same size,
         // so no scaling necessary.
         for (idx, (temp, biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, tgav).zip(self.biomes.iter_mut()).enumerate() {
-            if let Some(label) = biome_for_temp(biome, temp) {
+            if let Some(label) = biome_for_temp(biome, temp, precip, &self.biome_lookup) {
                 *biome = label;
-                let color = color_for_biome(label);
+                let color = color_for_biome(label as usize);
                 let r = color.0 as usize;
                 let g = color.1 as usize;
                 let b = color.2 as usize;
@@ -114,14 +123,21 @@ impl EarthSurface {
     }
 }
 
-// TODO this is where we implement the biome changing logic
+// The biome changing logic
 // If the biome hasn't changed, return None
-fn biome_for_temp(biome: &mut BiomeLabel, temp: f64) -> Option<usize> {
-    let label = 9; // Savannas
-    if temp > 0. && *biome < 255 { // Not water
-        Some(label)
-    } else {
+fn biome_for_temp(biome: &mut BiomeLabel, temp: f64, precip: f64, lookup: &[BiomeLabel]) -> Option<BiomeLabel> {
+    if *biome == 255 { // Water
         None
+    } else {
+        // Clamp to known range
+        let temp_ = temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);
+        let precip_ = precip.clamp(BIOME_PRECIP_MIN, BIOME_PRECIP_MAX);
+
+        let x = ((temp_ - BIOME_TEMP_MIN) / BIOME_TEMP_STEP).floor() as usize;
+        let y = ((precip_ - BIOME_PRECIP_MIN) / BIOME_PRECIP_STEP).floor() as usize;
+        let idx = y * BIOME_SIZE + x;
+        let label = lookup[idx];
+        Some(label)
     }
 }
 
@@ -143,10 +159,10 @@ fn color_for_biome(label: usize) -> Color {
 }
 
 // Convert biome labels to RGB
-fn biomes_to_pixels(biomes: &[usize]) -> Vec<u8> {
+fn biomes_to_pixels(biomes: &[u8]) -> Vec<u8> {
     let mut pixels: Vec<u8> = Vec::with_capacity(biomes.len() * STRIDE);
     for label in biomes {
-        let (r, g, b) = color_for_biome(*label);
+        let (r, g, b) = color_for_biome(*label as usize);
         pixels.push(r);
         pixels.push(g);
         pixels.push(b);
@@ -324,13 +340,13 @@ mod test {
 
     #[test]
     fn test_earth_surface_update_biomes() {
-        let biomes: Vec<usize> = (0..TEMP_PATTERN_W.len()).map(|_| 0).collect();
-        let width = 320;
-        let height = 160;
-        let scale = 2;
-        let mut surface = EarthSurface::new(biomes, width, height, scale);
+        // let biomes: Vec<usize> = (0..TEMP_PATTERN_W.len()).map(|_| 0).collect();
+        // let width = 320;
+        // let height = 160;
+        // let scale = 2;
+        // let mut surface = EarthSurface::new(biomes, width, height, scale);
 
-        surface.update_biomes(1000.);
+        // surface.update_biomes(1000.);
         // TODO implement an actual test
     }
 }

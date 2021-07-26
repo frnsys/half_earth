@@ -1,14 +1,9 @@
 import RPC from './rpc';
-import util from './util';
 import HexSphere from './hex';
 import Scene from '../3d/scene';
 import vertexShader from './shaders/globe/vertex.glsl';
 import fragmentShader from './shaders/globe/fragment.glsl';
 import * as THREE from 'three';
-
-// A grayscale image where each value
-// indicates the label of that pixel
-const biomeLabelsSrc = '/assets/grid_landuse.png';
 
 const texLoader = new THREE.TextureLoader();
 
@@ -25,8 +20,8 @@ class Globe {
   }
 
   async init() {
-    let {labels, size} = await util.loadPNG(biomeLabelsSrc);
-    this.surface = await new Surface(startYear, labels, size);
+    this.surface = await new Surface(startYear);
+    await this.surface.init();
 
     let pixelsBuf = await this.surface.pixelsBuf;
     let width = await this.surface.width;

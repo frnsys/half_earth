@@ -19,13 +19,13 @@ function loadPNG(url) {
     // Data is flat RGBA values
     // since the images we're working with is grayscale,
     // we only need the first of every four values
-    let labels = [];
+    let data = [];
     let vals = new Uint8Array(rgba[0]);
     for (let i=0; i<vals.length; i=i+4) {
-      labels.push(vals[i]);
+      data.push(vals[i]);
     }
     return {
-      labels,
+      data,
       size: {width: png.width, height: png.height}
     };
   });
