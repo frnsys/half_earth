@@ -2,7 +2,7 @@ use super::utils;
 use wasm_bindgen::prelude::*;
 
 include!("../../assets/src/scaling_patterns/out/scale_patterns.in");
-include!("../../assets/src/biomes/out/biome_lookup.in");
+include!("../../assets/src/biome_lookup/out/biome_lookup.in");
 
 type BiomeLabel = u8;
 
