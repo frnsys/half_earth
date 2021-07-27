@@ -42,10 +42,10 @@ patterns = {
 
 # Create an include file for Rust
 with open('out/scale_patterns.in', 'w') as f:
-    rs_w = 'static TEMP_PATTERN_W: [f64; {size}] = [{vals}];'.format(
+    rs_w = 'const TEMP_PATTERN_W: [f64; {size}] = [{vals}];'.format(
             size=patterns['temp']['w'].shape[0],
             vals='{}'.format(list(patterns['temp']['w'].flatten()))[1:-1])
-    rs_b = 'static TEMP_PATTERN_B: [f64; {size}] = [{vals}];'.format(
+    rs_b = 'const TEMP_PATTERN_B: [f64; {size}] = [{vals}];'.format(
             size=patterns['temp']['b'].shape[0],
             vals='{}'.format(list(patterns['temp']['b'].flatten()))[1:-1])
     f.write('\n'.join([rs_w, rs_b]))
