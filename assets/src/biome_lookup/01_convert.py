@@ -16,7 +16,11 @@ from PIL import Image
 x_var = 'temp_c'
 y_var = 'precp_cm'
 
-result = pyreadr.read_r('plotbiomes/data/Whittaker_biomes.rda')
+# Resolution of the approximation,
+# higher is more fine-grained
+n_squares_per_side = 40
+
+result = pyreadr.read_r('src/plotbiomes/data/Whittaker_biomes.rda')
 biomes = result['Whittaker_biomes']
 
 # Color-coding
@@ -46,6 +50,7 @@ biome_to_labels = {
 
 # Build the biome temp/precip range polygons
 polys = []
+patches = []
 for label, group in biomes.groupby('biome'):
     pts = group[[x_var, y_var]].values
     poly = Polygon(pts)
@@ -59,13 +64,15 @@ for label, group in biomes.groupby('biome'):
     polys.append(poly)
 
     # Plot so we can see how good/bad our pixelation is
-    plt.fill(*poly.exterior.xy, biome_to_colors[label])
+    patch,  = plt.fill(*poly.exterior.xy, biome_to_colors[label])
+    patches.append((patch, label))
+
+plt.legend(*zip(*patches))
 
 # For quick querying of matching biome
 tree = STRtree(polys)
 
 # How to grid the space
-n_squares_per_side = 40
 x_min = biomes[x_var].min()
 x_max = biomes[x_var].max()
 y_min = biomes[y_var].min()
@@ -94,6 +101,8 @@ for y_ in range(n_squares_per_side):
             plt.fill(*rect.exterior.xy, biome_to_colors[mapping[-1]],
                     alpha=0.5,
                     linewidth=0.25, edgecolor='#000000')
+plt.xlabel(x_var)
+plt.ylabel(y_var)
 plt.show()
 
 def lookup_biome(temp, precip):

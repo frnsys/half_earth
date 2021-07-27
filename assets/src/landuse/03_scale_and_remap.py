@@ -32,31 +32,31 @@ from rasterio.enums import Resampling
 from rasterio.plot import show, reshape_as_image
 from PIL import Image
 
-mosaic_tif = 'mosaic.tif'
+mosaic_tif = 'src/mosaic.tif'
 # target_width = 1920
 target_width = 480
 target_height = target_width/2
 
-sparse_remap = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-    10: 0,
-    11: 0,
-    12: 0,
-    13: 1,
-    14: 0,
-    15: 0,
-    16: 0,
-    17: 0,
-    0: 0
-}
+# sparse_remap = {
+#     1: 0,
+#     2: 0,
+#     3: 0,
+#     4: 0,
+#     5: 0,
+#     6: 0,
+#     7: 0,
+#     8: 0,
+#     9: 0,
+#     10: 0,
+#     11: 0,
+#     12: 0,
+#     13: 1,
+#     14: 0,
+#     15: 0,
+#     16: 0,
+#     17: 0,
+#     0: 0
+# }
 
 def to_image(data, outpath, colormap=None, normalize=True):
     data = reshape_as_image(data)

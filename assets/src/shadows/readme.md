@@ -1,1 +1,1 @@
-Used this model to bake ambient occlusion texture to add shadows to the globe. Ultimately this didn't really do much (the AO effect is not really noticeable on the globe).
+Used the heightmap model in Blender to bake ambient occlusion texture to add shadows to the globe. Ultimately the AO effect wasn't really noticeable on the globe, but the shadows do add some depth.

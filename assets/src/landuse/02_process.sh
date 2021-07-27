@@ -5,6 +5,9 @@
 #   gdalinfo MCD12Q1.A2019001.h22v13.006.2020212132220.hdf
 # Here the IGBP land use classification should be subdataset 1
 # <https://lpdaac.usgs.gov/documents/101/MCD12_User_Guide_V6.pdf>
+# `modis_mosaic.py` is from `pymodis`. The filename produced
+# is actually `A2019001_mosaic.tif`
+cd src/hdf
 ls | grep .hdf$ > hdf_files.txt
 modis_mosaic.py -o mosaic.tif -s "1" hdf_files.txt
 

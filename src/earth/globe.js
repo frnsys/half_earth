@@ -36,7 +36,7 @@ class Globe {
           value: texLoader.load('./assets/surface/heightmap.png')
         },
         shadows: {
-          value: texLoader.load('./assets/surface/shadows.processed.png')
+          value: texLoader.load('./assets/surface/shadows.png')
         },
         satTexture: {
           value: texLoader.load('./assets/surface/satellite.bw.jpg')
