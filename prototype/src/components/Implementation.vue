@@ -17,7 +17,26 @@
   <ul>
     <li v-for="p in state.player.projects">
       <Card>
-        {{p.name}}
+        <b>{{p.project.name}}</b>
+        <div>
+          <div v-if="p.yearsLeft > 0">construction years left:{{p.yearsLeft}}</div>
+          <div v-else-if="p.yearsLeft == 0">completed</div>
+        </div>
+
+        <div>
+          <b>Destruction:</b>
+          ⏳:{{p.project.destruction.years}}
+          <span v-for="(v, k) in p.project.destruction.resources">
+            <b>{{k}}</b>:{{v}}
+          </span>
+        </div>
+        <div>
+          <b>Operation:</b>
+          <span v-for="(v, k) in p.project.operation.resources">
+            <b>{{k}}</b>:{{v}}/⏳
+          </span>
+        </div>
+
         <button @click="() => revokeCard(p)">Revoke</button>
       </Card>
     </li>
@@ -27,7 +46,7 @@
   <ul>
     <li v-for="p in state.player.hand">
       <Card>
-        {{p.name}}
+        <b>{{p.name}}</b>
         <div>
           <b>Construction:</b>
           ⏳:{{p.construction.years}}
@@ -78,10 +97,15 @@ export default {
 
       // Update resources and indicators
       Object.keys(state.world).forEach((k) => {
-        world[k].value += world[k].change;
+        state.world[k].value += state.world[k].change;
       });
       Object.keys(state.player.resources).forEach((k) => {
         state.player.resources[k].value += state.player.resources[k].change;
+      });
+
+      // Update project progress
+      state.player.projects.forEach((p) => {
+        p.yearsLeft = Math.max(0, p.yearsLeft - 1);
       });
 
       if (state.player.year % 5 == 0) {
@@ -89,7 +113,19 @@ export default {
       }
     },
     playCard(proj) {
-      // TODO
+      // Deduct construction resources
+      Object.keys(proj.construction.resources).forEach((k) => {
+        state.player.resources[k].value -= proj.construction.resources[k];
+      });
+
+      // Remove from hand
+      state.player.hand = state.player.hand.filter((p) => p != proj);
+
+      // Add to active
+      state.player.projects.push({
+        yearsLeft: proj.construction.years,
+        project: proj
+      });
     },
     revokeCard(proj) {
       // TODO
