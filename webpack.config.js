@@ -6,6 +6,7 @@ module.exports = {
   entry: {
     'main': ['./src/main'],
     'prototype': ['./prototype/src/main'],
+    'editor': ['./prototype/editor/main'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
