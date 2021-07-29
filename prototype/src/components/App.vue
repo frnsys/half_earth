@@ -1,19 +1,22 @@
 <template>
   <Planning v-if="phase == 'PLANNING'" />
   <Implementation v-else-if="phase == 'IMPLEMENTATION'" />
+  <Report v-else-if="phase == 'REPORT'" />
 </template>
 
 <script>
 import state from '../state';
 import Planning from './Planning.vue'
 import Implementation from './Implementation.vue'
+import Report from './Report.vue'
 export default {
   data() {
     return state;
   },
   components: {
     Planning,
-    Implementation
+    Implementation,
+    Report
   },
 }
 </script>
@@ -67,6 +70,12 @@ main {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #000;
+}
+
+.icon {
+  font-size: 0.6em;
+  line-height: 1.8;
+  vertical-align: top;
 }
 
 p.help {

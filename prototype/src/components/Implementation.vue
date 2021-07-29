@@ -8,8 +8,10 @@
 
   <ul class="bar">
     <li v-for="(d, vari) in state.world">
-      <b>{{vari}}</b>:{{d.value}}<span v-if="vari in state.plan.targets">/{{state.plan.targets[vari].value}}</span>
-      <span style="color:#888;">⏳{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
+      <b>{{vari}}</b>:
+      <span v-if="vari in state.plan.targets" :class="{achieved: d.value * state.plan.targets[vari].valence >= state.plan.targets[vari].value * state.plan.targets[vari].valence}">{{d.value}}/{{state.plan.targets[vari].value}}</span>
+      <span v-else>{{d.value}}</span>
+      <span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
     </li>
   </ul>
 
@@ -40,7 +42,7 @@
 
   <b>Resources:</b>
     <span class="resource" v-for="(d, vari) in state.player.resources">
-      <b>{{vari}}</b>:{{d.value}}<span style="color:#888;">⏳{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
+      <b>{{vari}}</b>:{{d.value}}<span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
     </span>
 
   <div class="actions">
@@ -48,7 +50,7 @@
   </div>
 
   <div id="help">
-    <div>⏳+X : <em>estimate for variable change in next turn</em></div>
+    <div><span class="estimate"><span class="icon">⏳</span>+X</span> : <em>estimate for variable change in next turn</em></div>
   </div>
 </template>
 
@@ -85,8 +87,13 @@ export default {
         p.yearsLeft = Math.max(0, p.yearsLeft - 1);
       });
 
+      // Lose state
+      if (state.player.political_capital <= 0) {
+        alert('You\'ve lost your planning mandate! You lose');
+      }
+
       if (state.player.year % 5 == 0) {
-        state.phase = 'PLANNING'; // TODO should be report
+        state.phase = 'REPORT';
       }
     },
     playCard(proj) {
@@ -141,5 +148,18 @@ export default {
   opacity: 0.5;
   border: 1px dashed #000;
   pointer-events: none;
+}
+
+.estimate {
+	color: #888;
+	background: #f0f0f0;
+	border: 1px solid #aaa;
+	padding: 0 0.1em;
+	margin-left: 0.2em;
+}
+
+.achieved {
+  color: #1bbf5a;
+  border-bottom: 2px solid #1bbf5a;
 }
 </style>

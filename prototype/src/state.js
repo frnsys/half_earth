@@ -32,7 +32,8 @@ const init = {
         wager: 0,
         valence: -1
       }
-    }
+    },
+    contentedness: 5
   },
   world: {
     biodiversity: {
