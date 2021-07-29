@@ -9,7 +9,7 @@
   </div>
   <div v-else-if="phase === 2">
     <h2>PLANNING.HAND</h2>
-    <p class="help">Choose what projects to have prepared for the next five years.</p>
+    <p class="help">Choose what projects to have prepared for the next five years. Unpopular projects have a PC cost to put into your hand.</p>
   </div>
 
   <div class="stats">
@@ -53,7 +53,13 @@
     <div v-else-if="phase === 2">
       <ul>
         <li v-for="p in state.projects.filter((p) => p.unlocked)">
-          <Project @click="() => toggleProject(p)" :class="{selected: state.player.hand.includes(p)}" :project="p" />
+          <Project @click="() => toggleProject(p)" :class="{selected: state.player.hand.includes(p)}" :project="p">
+            <template v-slot:costs>
+              <div class="meta">
+                <div v-if="p.popularity < 0">😡5PC</div>
+              </div>
+            </template>
+          </Project>
         </li>
       </ul>
     </div>
@@ -118,10 +124,19 @@ export default {
       }
     },
     toggleProject(project) {
+      // TODO hard-coded unpopular cost of 5pc
       if (state.player.hand.includes(project)) {
         state.player.hand = state.player.hand.filter((p) => p != project);
+        if (project.popularity < 0) {
+          state.player.political_capital += 5;
+        }
       } else {
-        state.player.hand.push(project);
+        if (project.popularity < 0 && state.player.political_capital >= 5) {
+          state.player.hand.push(project);
+          state.player.political_capital -= 5;
+        } else {
+          state.player.hand.push(project);
+        }
       }
     }
   }
@@ -135,5 +150,18 @@ ul {
 }
 .hand-slots {
   text-align: center;
+}
+.meta {
+  top: -0.7em;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+.meta > div {
+	background: #fff;
+	margin: 0 auto;
+	display: inline-block;
+	border: 1px dashed black;
+	padding: 0.05em 0.1em;
 }
 </style>

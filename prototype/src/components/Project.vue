@@ -1,5 +1,7 @@
 <template>
 <Card>
+  <slot name="costs"></slot>
+
   <div class="flip" @click="flip">⮌</div>
   {{project.name}}
 

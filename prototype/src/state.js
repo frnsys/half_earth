@@ -57,6 +57,7 @@ const init = {
   projects: [{
     name: 'Foo',
     unlocked: true,
+    popularity: -1,
     construction: {
       years: 2,
       resources: {
