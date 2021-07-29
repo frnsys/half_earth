@@ -60,6 +60,7 @@
   </div>
 
   <div class="actions">
+    <button @click="prevPhase" v-if="phase > 0">Back</button>
     <button @click="nextPhase">Done</button>
   </div>
 </template>
@@ -82,6 +83,11 @@ export default {
   methods: {
     handSize() {
       return state.player.hand.length + state.player.research.length;
+    },
+    prevPhase() {
+      if (this.phase > 0) {
+        this.phase--;
+      }
     },
     nextPhase() {
       if (this.phase < 2) {

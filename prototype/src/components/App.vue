@@ -39,9 +39,11 @@ button:hover {
   background: #000;
   color: #fff;
 }
+.actions {
+  text-align: center;
+}
 .actions button {
-  margin: 1em auto 0 auto;
-  display: block;
+  margin: 0 1em;
 }
 
 ul, li {
