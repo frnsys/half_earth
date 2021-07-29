@@ -36,4 +36,18 @@
   margin-top: 1em;
   text-align: center;
 }
+
+.flip {
+  position: absolute;
+  right: 0.5em;
+  top: 0;
+  opacity: 0;
+  z-index: 1;
+}
+.card:hover .flip {
+  opacity: 0.5;
+}
+.card:hover .flip:hover {
+  opacity: 1;
+}
 </style>
