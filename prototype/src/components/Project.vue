@@ -17,7 +17,7 @@
       <b>Operation</b>
       <div>
         <span v-for="(v, k) in project.operation.resources">
-          <b>{{k}}</b>:{{v}}/year
+          <b>{{k}}</b>:{{v > 0 ? '-' : '+'}}{{Math.abs(v)}}/year
         </span>
       </div>
     </div>

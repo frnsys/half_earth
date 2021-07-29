@@ -15,7 +15,8 @@ const init = {
     resources: {
       energy: {
         value: 10,
-        change: 2
+        change: 0,
+        baseChange: 2
       }
       // TODO
     }
@@ -38,15 +39,18 @@ const init = {
   world: {
     biodiversity: {
       value: 5,
-      change: -1
+      change: 0,
+      baseChange: -1
     },
     emissions: {
       value: 5,
-      change: 1
+      change: 0,
+      baseChange: 1
     },
     contentedness: {
       value: 5,
-      change: 0
+      change: 0,
+      baseChange: 0
     }
   },
 

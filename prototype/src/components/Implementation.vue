@@ -64,6 +64,7 @@ import ActiveProject from './ActiveProject.vue';
 
 export default {
   data() {
+    this.updateEstimates();
     return {
       state,
     };
@@ -79,44 +80,46 @@ export default {
 
       // Update resources and indicators
       Object.keys(state.world).forEach((k) => {
-        state.world[k].value += state.world[k].change;
+        state.world[k].value += state.world[k].baseChange;
       });
       Object.keys(state.player.resources).forEach((k) => {
-        state.player.resources[k].value += state.player.resources[k].change;
+        state.player.resources[k].value += state.player.resources[k].baseChange;
       });
 
       // Update project progress
       state.player.projects.forEach((p) => {
-        if (p.yearsLeft > 0) {
-          let requiredResources = {};
-          if (p.status == PROJECT_STATE.CONSTRUCTING) {
-            requiredResources = p.base.construction.resources;
-          } else if (p.status == PROJECT_STATE.DESTRUCTING) {
-            requiredResources = p.base.destruction.resources;
-          }
-          let enoughResources = Object.keys(requiredResources).every((k) => {
-            return state.player.resources[k].value >= requiredResources[k];
+        let requiredResources = {};
+        if (p.status == PROJECT_STATE.CONSTRUCTING) {
+          requiredResources = p.base.construction.resources;
+        } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+          requiredResources = p.base.destruction.resources;
+        } else if (p.status == PROJECT_STATE.OPERATIONAL) {
+          requiredResources = p.base.operation.resources;
+        }
+        let enoughResources = Object.keys(requiredResources).every((k) => {
+          return state.player.resources[k].value >= requiredResources[k];
+        });
+
+        if (enoughResources) {
+          if (p.yearsLeft > 0) p.yearsLeft -= 1;
+
+          // Deduct resources
+          Object.keys(requiredResources).forEach((k) => {
+            state.player.resources[k].value -= requiredResources[k];
           });
 
-          if (enoughResources) {
-            p.yearsLeft -= 1;
-
-            // Deduct resources
-            Object.keys(requiredResources).forEach((k) => {
-              state.player.resources[k].value -= requiredResources[k];
-            });
-
-            if (p.yearsLeft === 0) {
-              if (p.status == PROJECT_STATE.CONSTRUCTING) {
-                p.status = PROJECT_STATE.OPERATIONAL;
-              } else if (p.status == PROJECT_STATE.DESTRUCTING) {
-                // Remove card
-                state.player.projects = state.player.projects.filter((p_) => p_ !== p);
-              }
+          if (p.yearsLeft === 0) {
+            if (p.status == PROJECT_STATE.CONSTRUCTING) {
+              p.status = PROJECT_STATE.OPERATIONAL;
+            } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+              // Remove card
+              state.player.projects = state.player.projects.filter((p_) => p_ !== p);
             }
           }
         }
       });
+
+      this.updateEstimates();
 
       // Lose state
       if (state.player.political_capital <= 0) {
@@ -137,10 +140,41 @@ export default {
         yearsLeft: proj.construction.years,
         base: proj
       });
+
+      this.updateEstimates();
     },
     revokeCard(proj) {
       proj.status = PROJECT_STATE.DESTRUCTING;
       proj.yearsLeft = proj.base.destruction.years;
+      this.updateEstimates();
+    },
+    updateEstimates() {
+      Object.keys(state.world).forEach((k) => {
+        state.world[k].change = state.world[k].baseChange;
+      });
+      Object.keys(state.player.resources).forEach((k) => {
+        state.player.resources[k].change = state.player.resources[k].baseChange;
+      });
+
+      state.player.projects.forEach((p) => {
+        let resources = {};
+        if (p.status == PROJECT_STATE.CONSTRUCTING) {
+          resources = p.base.construction.resources;
+        } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+          resources = p.base.destruction.resources;
+        } else if (p.status == PROJECT_STATE.OPERATIONAL) {
+          resources = p.base.operation.resources;
+        };
+
+        Object.keys(resources).forEach((k) => {
+          if (k in state.world) {
+            state.world[k].change += resources[k];
+          } else {
+            // Resources depicted as costs
+            state.player.resources[k].change -= resources[k];
+          }
+        });
+      });
     }
   }
 }
