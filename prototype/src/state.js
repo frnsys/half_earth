@@ -25,10 +25,12 @@ const init = {
       biodiversity: {
         value: 5,
         wager: 0,
+        valence: 1,
       },
       emissions: {
         value: 5,
         wager: 0,
+        valence: -1
       }
     }
   },
@@ -41,7 +43,7 @@ const init = {
       value: 5,
       change: 1
     },
-    content: {
+    contentedness: {
       value: 5,
       change: 0
     }

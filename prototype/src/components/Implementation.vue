@@ -1,8 +1,10 @@
 <template>
   <h2>IMPLEMENTATION</h2>
 
-  <div>Year: {{state.player.year}}</div>
-  <div>Political Capital: {{state.player.political_capital}}</div>
+  <div class="stats">
+    <div>Year: {{state.player.year}}</div>
+    <div>Political Capital: {{state.player.political_capital}}</div>
+  </div>
 
   <ul class="bar">
     <li v-for="(d, vari) in state.world">
@@ -14,65 +16,36 @@
   <!-- TODO EVENTS -->
 
   <h3>Active Projects</h3>
-  <ul>
-    <li v-for="p in state.player.projects">
-      <Card>
-        <b>{{p.project.name}}</b>
-        <div>
-          <div v-if="p.yearsLeft > 0">construction years left:{{p.yearsLeft}}</div>
-          <div v-else-if="p.yearsLeft == 0">completed</div>
-        </div>
-
-        <div>
-          <b>Destruction:</b>
-          ⏳:{{p.project.destruction.years}}
-          <span v-for="(v, k) in p.project.destruction.resources">
-            <b>{{k}}</b>:{{v}}
-          </span>
-        </div>
-        <div>
-          <b>Operation:</b>
-          <span v-for="(v, k) in p.project.operation.resources">
-            <b>{{k}}</b>:{{v}}/⏳
-          </span>
-        </div>
-
+  <div v-if="state.player.projects.length === 0">No active projects</div>
+  <div v-else class="active-projects cards">
+    <ActiveProject :project="p" v-for="p in state.player.projects">
+      <template v-slot:actions>
         <button @click="() => revokeCard(p)">Revoke</button>
-      </Card>
-    </li>
-  </ul>
+      </template>
+    </ActiveProject>
+  </div>
 
   <h3>Hand</h3>
-  <ul>
-    <li v-for="p in state.player.hand">
-      <Card>
-        <b>{{p.name}}</b>
-        <div>
-          <b>Construction:</b>
-          ⏳:{{p.construction.years}}
-          <span v-for="(v, k) in p.construction.resources">
-            <b>{{k}}</b>:{{v}}
-          </span>
-        </div>
-        <div>
-          <b>Operation:</b>
-          <span v-for="(v, k) in p.operation.resources">
-            <b>{{k}}</b>:{{v}}/⏳
-          </span>
-        </div>
+  <div class="hand cards">
+    <Project :project="p" v-for="p in state.player.hand">
+      <template v-slot:actions>
         <button @click="() => playCard(p)">Play</button>
-      </Card>
-    </li>
-  </ul>
+      </template>
+    </Project>
+    <Card class="card--research" v-for="r in state.player.research">
+      <div>Research</div>
+      {{r.name}}
+    </Card>
+  </div>
 
-  <h3>Resources</h3>
-  <ul class="bar">
-    <li v-for="(d, vari) in state.player.resources">
+  <b>Resources:</b>
+    <span class="resource" v-for="(d, vari) in state.player.resources">
       <b>{{vari}}</b>:{{d.value}}<span style="color:#888;">⏳{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
-    </li>
-  </ul>
+    </span>
 
-  <button @click="nextTurn">Next Turn</button>
+  <div class="actions">
+    <button @click="nextTurn">Next Year</button>
+  </div>
 
   <div id="help">
     <div>⏳+X : <em>estimate for variable change in next turn</em></div>
@@ -82,6 +55,8 @@
 <script>
 import state from '../state';
 import Card from './Card.vue';
+import Project from './Project.vue';
+import ActiveProject from './ActiveProject.vue';
 export default {
   data() {
     return {
@@ -89,7 +64,9 @@ export default {
     };
   },
   components: {
-    Card
+    Card,
+    Project,
+    ActiveProject
   },
   methods: {
     nextTurn() {
@@ -124,7 +101,7 @@ export default {
       // Add to active
       state.player.projects.push({
         yearsLeft: proj.construction.years,
-        project: proj
+        base: proj
       });
     },
     revokeCard(proj) {
@@ -141,8 +118,28 @@ export default {
 }
 .bar {
   display: flex;
+  padding: 0.5em 0;
+  justify-content: space-around;
 }
 .bar li {
-  margin-right: 1em;
+  margin: 0 1em 0 0;
+}
+
+.hand .card,
+.active-projects .card {
+  border: 1px solid #000;
+}
+.active-projects .in-progress {
+  opacity: 0.5;
+  border: 1px dashed #000;
+}
+.resource {
+  margin-left: 1em;
+}
+
+.hand .card--research {
+  opacity: 0.5;
+  border: 1px dashed #000;
+  pointer-events: none;
 }
 </style>

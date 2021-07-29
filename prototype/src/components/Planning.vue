@@ -1,34 +1,49 @@
 <template>
-  <h2 v-if="phase === 0">PLANNING.TARGETS</h2>
-  <h2 v-else-if="phase === 1">PLANNING.RESEARCH</h2>
-  <h2 v-else-if="phase === 2">PLANNING.HAND</h2>
+  <div v-if="phase === 0">
+    <h2>PLANNING.TARGETS</h2>
+    <p class="help">Set targets for the next five years. Harder targets can earn you more PC, but also risk losing more. Backtracking on a target has a PC cost.</p>
+  </div>
+  <div v-else-if="phase === 1">
+    <h2>PLANNING.RESEARCH</h2>
+    <p class="help">Set ongoing research initiatives. These use hand slots.</p>
+  </div>
+  <div v-else-if="phase === 2">
+    <h2>PLANNING.HAND</h2>
+    <p class="help">Choose what projects to have prepared for the next five years.</p>
+  </div>
 
-  <div>Year: {{state.player.year}}</div>
-  <div>Political Capital: {{state.player.political_capital}}</div>
+  <div class="stats">
+    <div>Year: {{state.player.year}}</div>
+    <div>Political Capital: {{state.player.political_capital}}</div>
+  </div>
 
   <div v-if="phase === 0">
     <ul>
       <li v-for="(d, vari) in state.plan.targets">
         <b>{{vari}}</b>
-        <div>Current value: {{state.world[vari].value}}</div>
+        <div>Current world value: {{state.world[vari].value}}</div>
         <div>
           <input type="number" step="1"
             @change="() => calculatePCWager(vari)"
             v-model="state.plan.targets[vari].value">
-          PC wager: <span class="pc-wager">{{state.plan.targets[vari].wager}}</span>
+          <span> or {{ state.plan.targets[vari].valence > 0 ? 'higher' : 'lower' }}</span>
+        </div>
+        <div>
+          <span v-if="state.plan.targets[vari].wager < 0">PC penalty: </span>
+          <span v-else>PC wager: </span>
+          <span class="pc-wager">{{state.plan.targets[vari].wager}}</span>
         </div>
       </li>
     </ul>
   </div>
 
   <div v-else-if="phase > 0">
-    <div>Hand slots: {{state.player.hand.length + state.player.research.length}}/{{state.consts.MAX_HAND_SIZE}}</div>
+    <div class="hand-slots">Hand: <span v-for="(_, i) in state.consts.MAX_HAND_SIZE">{{i < handSize() ? '▮' : '▯'}}</span></div>
 
     <div v-if="phase === 1">
       <ul>
         <li v-for="r in state.research">
-          <Card @click="() => toggleResearch(r)">
-            <div v-if="state.player.research.includes(r)">selected</div>
+          <Card @click="() => toggleResearch(r)" :class="{selected: state.player.research.includes(r)}">
             {{r.name}}
           </Card>
         </li>
@@ -38,34 +53,21 @@
     <div v-else-if="phase === 2">
       <ul>
         <li v-for="p in state.projects.filter((p) => p.unlocked)">
-          <Card @click="() => toggleProject(p)">
-            <div v-if="state.player.hand.includes(p)">selected</div>
-            {{p.name}}
-            <div>
-              <b>Construction:</b>
-              ⏳:{{p.construction.years}}
-              <span v-for="(v, k) in p.construction.resources">
-                <b>{{k}}</b>:{{v}}
-              </span>
-            </div>
-            <div>
-              <b>Operation:</b>
-              <span v-for="(v, k) in p.operation.resources">
-                <b>{{k}}</b>:{{v}}/⏳
-              </span>
-            </div>
-          </Card>
+          <Project @click="() => toggleProject(p)" :class="{selected: state.player.hand.includes(p)}" :project="p" />
         </li>
       </ul>
     </div>
   </div>
 
-  <button @click="nextPhase">Done</button>
+  <div class="actions">
+    <button @click="nextPhase">Done</button>
+  </div>
 </template>
 
 <script>
 import state from '../state';
 import Card from './Card.vue';
+import Project from './Project.vue';
 export default {
   data() {
     return {
@@ -74,19 +76,33 @@ export default {
     };
   },
   components: {
-    Card
+    Card,
+    Project
   },
   methods: {
+    handSize() {
+      return state.player.hand.length + state.player.research.length;
+    },
     nextPhase() {
-      this.phase++;
-      if (this.phase >= 3) {
-        state.phase = 'IMPLEMENTATION';
+      if (this.phase < 2) {
+        this.phase++;
+      } else {
+        let availableCards = state.projects.filter((p) => p.unlocked).length + state.research.length;
+        let maxCards = Math.min(state.consts.MAX_HAND_SIZE, availableCards);
+        if (this.handSize() == maxCards || confirm('Your hand is undersized, continue?')) {
+          state.phase = 'IMPLEMENTATION';
+        }
       }
     },
     calculatePCWager(vari) {
       let val = state.plan.targets[vari].value;
+      let valence = state.plan.targets[vari].valence;
+      let mult = 1;
+      if (val * valence < state.world[vari].value * valence) { // Penalty
+        mult = -1;
+      }
       let wager = (val - state.world[vari].value)**2;
-      state.plan.targets[vari].wager = wager;
+      state.plan.targets[vari].wager = wager * mult;
     },
     toggleResearch(research) {
       if (state.player.research.includes(research)) {
@@ -106,5 +122,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+ul {
+  display: flex;
+  justify-content: space-around;
+}
+.hand-slots {
+  text-align: center;
+}
 </style>

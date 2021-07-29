@@ -9,10 +9,31 @@
   padding: 1em;
   border: 1px dashed #000;
   text-align: center;
-  max-width: 280px;
+  width: 160px;
+  height: 200px;
   cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .card:hover {
   background: #f0f0f0;
+}
+.card.selected {
+  border: 1px solid #000;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+}
+.card.selected::before {
+  content: '✔️';
+  position: absolute;
+  top: -0.5em;
+  left: -0.5em;
+  background: #fff;
+}
+
+.details {
+  margin-top: 1em;
+  text-align: center;
 }
 </style>

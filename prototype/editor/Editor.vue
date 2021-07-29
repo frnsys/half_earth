@@ -21,7 +21,9 @@
 <script>
 import state from '../src/state';
 
-const dbHost = 'http://localhost:8000'
+// Hacky meh
+const dbHost = window.location.host.startsWith('localhost') ?
+  'http://localhost:8000' : 'http://half_earth_editor.frnsys.com';
 
 export default {
   data() {
