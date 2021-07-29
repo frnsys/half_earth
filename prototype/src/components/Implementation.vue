@@ -56,9 +56,12 @@
 
 <script>
 import state from '../state';
+import {PROJECT_STATE} from '../consts';
 import Card from './Card.vue';
 import Project from './Project.vue';
 import ActiveProject from './ActiveProject.vue';
+
+
 export default {
   data() {
     return {
@@ -84,7 +87,35 @@ export default {
 
       // Update project progress
       state.player.projects.forEach((p) => {
-        p.yearsLeft = Math.max(0, p.yearsLeft - 1);
+        if (p.yearsLeft > 0) {
+          let requiredResources = {};
+          if (p.status == PROJECT_STATE.CONSTRUCTING) {
+            requiredResources = p.base.construction.resources;
+          } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+            requiredResources = p.base.destruction.resources;
+          }
+          let enoughResources = Object.keys(requiredResources).every((k) => {
+            return state.player.resources[k].value >= requiredResources[k];
+          });
+
+          if (enoughResources) {
+            p.yearsLeft -= 1;
+
+            // Deduct resources
+            Object.keys(requiredResources).forEach((k) => {
+              state.player.resources[k].value -= requiredResources[k];
+            });
+
+            if (p.yearsLeft === 0) {
+              if (p.status == PROJECT_STATE.CONSTRUCTING) {
+                p.status = PROJECT_STATE.OPERATIONAL;
+              } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+                // Remove card
+                state.player.projects = state.player.projects.filter((p_) => p_ !== p);
+              }
+            }
+          }
+        }
       });
 
       // Lose state
@@ -97,22 +128,19 @@ export default {
       }
     },
     playCard(proj) {
-      // Deduct construction resources
-      Object.keys(proj.construction.resources).forEach((k) => {
-        state.player.resources[k].value -= proj.construction.resources[k];
-      });
-
       // Remove from hand
       state.player.hand = state.player.hand.filter((p) => p != proj);
 
       // Add to active
       state.player.projects.push({
+        status: PROJECT_STATE.CONSTRUCTING,
         yearsLeft: proj.construction.years,
         base: proj
       });
     },
     revokeCard(proj) {
-      // TODO
+      proj.status = PROJECT_STATE.DESTRUCTING;
+      proj.yearsLeft = proj.base.destruction.years;
     }
   }
 }

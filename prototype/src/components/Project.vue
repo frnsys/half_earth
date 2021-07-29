@@ -9,7 +9,7 @@
       <div>{{project.construction.years}} years</div>
       <div>
         <span v-for="(v, k) in project.construction.resources">
-          <b>{{k}}</b>:{{v}}
+          <b>{{k}}</b>:{{v}}/year
         </span>
       </div>
     </div>

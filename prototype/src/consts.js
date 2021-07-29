@@ -1,0 +1,5 @@
+export const PROJECT_STATE = {
+  CONSTRUCTING: 1,
+  OPERATIONAL: 2,
+  DESTRUCTING: 3,
+};
