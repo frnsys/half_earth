@@ -8,7 +8,7 @@
 
   <ul class="bar">
     <li v-for="(d, vari) in state.world">
-      <b>{{VARI_ICONS[vari]}}{{vari}}</b>:
+      <b>{{VARI_ICONS[vari]}}{{VARI_ABBREV[vari]}}</b>:
       <span v-if="vari in state.plan.targets" :class="{achieved: d.value * state.plan.targets[vari].valence >= state.plan.targets[vari].value * state.plan.targets[vari].valence}">{{d.value}}/{{state.plan.targets[vari].value}}</span>
       <span v-else>{{d.value}}</span>
       <span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
@@ -67,6 +67,8 @@
     <ul>
       <li>- Adjacency effects</li>
       <li>- Convert tile types (e.g. convert water to land by landfilling)</li>
+      <li>- Things like BECCS should have outputs based on the plot fertility</li>
+      <li>- Global mandates should have worldwide effects, like energy quotas lowers the energy/output of everything</li>
     </ul>
   </div>
 </template>
@@ -278,6 +280,7 @@ export default {
 .hand .card,
 .active-projects .card {
   border: 1px solid #000;
+  margin: 0 0.5em 1em 0.5em;
 }
 .active-projects .in-progress {
   opacity: 0.5;

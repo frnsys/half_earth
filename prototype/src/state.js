@@ -71,7 +71,12 @@ const init = {
       value: 5,
       change: 0,
       baseChange: 0
-    }
+    },
+    temperature: {
+      value: 5,
+      change: 0,
+      baseChange: 1
+    },
   },
 
   projects: [{
@@ -101,7 +106,65 @@ const init = {
       impacts: {}
     }
   }, {
-    name: 'A Spatial Project',
+    name: 'Energy Quotas',
+    unlocked: true,
+    popularity: -1,
+    global: true,
+    construction: {
+      years: 1,
+      resources: {},
+      impacts: {
+        contentedness: -3
+      }
+    },
+    operation: {
+      resources: {},
+      impacts: {
+        emissions: -2
+      }
+    },
+    destruction: {
+      years: 1,
+      resources: {
+        contentedness: 2,
+        emissions: 3
+      },
+      impacts: {}
+    }
+  }, {
+    name: 'Solar Radiation Management (Sulphur)',
+    unlocked: true,
+    popularity: -1,
+    global: true,
+    construction: {
+      years: 1,
+      resources: {
+        energy: 2
+      },
+      impacts: {
+        contentedness: -1
+      }
+    },
+    operation: {
+      resources: {
+        energy: 2
+      },
+      impacts: {
+        temperature: -1
+      }
+    },
+    destruction: {
+      years: 1,
+      resources: {
+        contentedness: 2,
+      },
+      impacts: {
+        temperature: 1
+      }
+    }
+
+  }, {
+    name: 'Nuclear Power Plant',
     unlocked: true,
     popularity: 1,
     global: false,
@@ -109,13 +172,13 @@ const init = {
     construction: {
       years: 2,
       resources: {
-        energy: 7
+        energy: 2
       },
       impacts: {}
     },
     operation: {
       resources: {
-        energy: -1
+        energy: 3
       },
       impacts: {}
     },
@@ -125,6 +188,65 @@ const init = {
         energy: 2
       },
       impacts: {}
+    }
+  }, {
+    name: 'Rewilding',
+    unlocked: true,
+    popularity: 1,
+    global: false,
+    toxic: true,
+    construction: {
+      years: 2,
+      resources: {
+        energy: 1
+      },
+      impacts: {}
+    },
+    operation: {
+      resources: {
+        energy: 0
+      },
+      impacts: {
+        biodiversity: 2
+      }
+    },
+    destruction: {
+      years: 1,
+      resources: {
+        energy: 2
+      },
+      impacts: {
+        biodiversity: -2
+      }
+    }
+  }, {
+    name: 'BECCS',
+    unlocked: true,
+    popularity: 1,
+    global: false,
+    toxic: true,
+    construction: {
+      years: 2,
+      resources: {
+        energy: 1
+      },
+      impacts: {
+        biodiversity: -1
+      }
+    },
+    operation: {
+      resources: {
+        energy: 2
+      }
+    },
+    destruction: {
+      years: 1,
+      resources: {
+        energy: 1
+      },
+      impacts: {
+        biodiversity: 1
+      }
     }
   }],
 

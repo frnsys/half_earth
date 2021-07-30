@@ -22,7 +22,15 @@ const PLOT_ICONS = {
 const VARI_ICONS = {
   biodiversity: '🐬',
   emissions: '☁️',
-  contentedness: '😶'
+  contentedness: '😶',
+  temperature: '🌡️',
+};
+
+const VARI_ABBREV = {
+  temperature: 'Temp.',
+  biodiversity: 'Biod.',
+  contentedness: 'Cont.',
+  emissions: 'Emis.',
 };
 
 const PLOT_ABBREV = {
@@ -37,5 +45,6 @@ export default {
   PLOT_TYPE,
   PLOT_ICONS,
   PLOT_ABBREV,
-  VARI_ICONS
+  VARI_ICONS,
+  VARI_ABBREV
 };
