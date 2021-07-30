@@ -50,4 +50,23 @@
 .card:hover .flip:hover {
   opacity: 1;
 }
+
+.meta {
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+.meta-top {
+  top: -0.7em;
+}
+.meta-bot {
+  bottom: -0.7em;
+}
+.meta > div {
+	background: #fff;
+	margin: 0 auto;
+	display: inline-block;
+	border: 1px dashed black;
+	padding: 0.05em 0.1em;
+}
 </style>

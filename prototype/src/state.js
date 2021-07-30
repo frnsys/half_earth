@@ -21,6 +21,13 @@ const init = {
       // TODO
     }
   },
+  region: [...Array(16).keys()].map(() => ({
+    project: null,
+    props: {
+      fertility: 3,
+      biodiversity: 4,
+    },
+  })),
   plan: {
     targets: {
       biodiversity: {
@@ -55,9 +62,32 @@ const init = {
   },
 
   projects: [{
-    name: 'Foo',
+    name: 'A Global Policy',
     unlocked: true,
     popularity: -1,
+    global: true,
+    construction: {
+      years: 2,
+      resources: {
+        energy: 7
+      }
+    },
+    operation: {
+      resources: {
+        energy: -1
+      }
+    },
+    destruction: {
+      years: 1,
+      resources: {
+        energy: 2
+      }
+    }
+  }, {
+    name: 'A Spatial Project',
+    unlocked: true,
+    popularity: 1,
+    global: false,
     construction: {
       years: 2,
       resources: {

@@ -16,9 +16,17 @@
   </ul>
 
   <!-- TODO EVENTS -->
+  <h3>Region</h3>
+  <div class="region">
+    <Plot v-for="plot in state.region" @click="() => togglePlot(plot)" :class="{'selected-plot': selectedPlot === plot}" :plot="plot">
+      <template v-slot:actions>
+        <button v-if="plot.project" @click="() => revokeCard(plot.project)">Revoke</button>
+      </template>
+    </Plot>
+  </div>
 
-  <h3>Active Projects</h3>
-  <div v-if="state.player.projects.length === 0">No active projects</div>
+  <h3>Active Policies</h3>
+  <div v-if="state.player.projects.length === 0">No active policies</div>
   <div v-else class="active-projects cards">
     <ActiveProject :project="p" v-for="p in state.player.projects">
       <template v-slot:actions>
@@ -31,7 +39,7 @@
   <div class="hand cards">
     <Project :project="p" v-for="p in state.player.hand">
       <template v-slot:actions>
-        <button @click="() => playCard(p)">Play</button>
+        <button @click="() => playCard(p)" :disabled="!(p.global || (selectedPlot !== null && selectedPlot.project === null))">Play</button>
       </template>
     </Project>
     <Card class="card--research" v-for="r in state.player.research">
@@ -40,10 +48,12 @@
     </Card>
   </div>
 
-  <b>Resources:</b>
-    <span class="resource" v-for="(d, vari) in state.player.resources">
-      <b>{{vari}}</b>:{{d.value}}<span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
-    </span>
+  <div class="resources">
+    <b>Resources:</b>
+      <span class="resource" v-for="(d, vari) in state.player.resources">
+        <b>{{vari}}</b>:{{d.value}}<span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
+      </span>
+    </div>
 
   <div class="actions">
     <button @click="nextTurn">Next Year</button>
@@ -58,6 +68,7 @@
 import state from '../state';
 import {PROJECT_STATE} from '../consts';
 import Card from './Card.vue';
+import Plot from './Plot.vue';
 import Project from './Project.vue';
 import ActiveProject from './ActiveProject.vue';
 
@@ -66,15 +77,20 @@ export default {
   data() {
     this.updateEstimates();
     return {
+      selectedPlot: null,
       state,
     };
   },
   components: {
     Card,
+    Plot,
     Project,
     ActiveProject
   },
   methods: {
+    togglePlot(i) {
+      this.selectedPlot = this.selectedPlot === i ? null : i;
+    },
     nextTurn() {
       state.player.year++;
 
@@ -87,7 +103,7 @@ export default {
       });
 
       // Update project progress
-      state.player.projects.forEach((p) => {
+      state.player.projects.concat(state.region.filter((plot) => plot.project).map((plot) => plot.project)).forEach((p) => {
         let requiredResources = {};
         if (p.status == PROJECT_STATE.CONSTRUCTING) {
           requiredResources = p.base.construction.resources;
@@ -134,18 +150,32 @@ export default {
       // Remove from hand
       state.player.hand = state.player.hand.filter((p) => p != proj);
 
-      // Add to active
-      state.player.projects.push({
-        status: PROJECT_STATE.CONSTRUCTING,
-        yearsLeft: proj.construction.years,
-        base: proj
-      });
+      if (proj.global) {
+        // Add to active policies
+        state.player.projects.push({
+          status: PROJECT_STATE.CONSTRUCTING,
+          yearsLeft: proj.construction.years,
+          base: proj
+        });
+      } else if (this.selectedPlot) {
+        // Add to selected plot
+        this.selectedPlot.project = {
+          status: PROJECT_STATE.CONSTRUCTING,
+          yearsLeft: proj.construction.years,
+          plot: this.selectedPlot,
+          base: proj
+        };
+        this.selectedPlot = null;
+      }
 
       this.updateEstimates();
     },
     revokeCard(proj) {
       proj.status = PROJECT_STATE.DESTRUCTING;
       proj.yearsLeft = proj.base.destruction.years;
+      if (proj.plot) {
+        proj.plot.project = null;
+      }
       this.updateEstimates();
     },
     updateEstimates() {
@@ -202,6 +232,10 @@ export default {
   opacity: 0.5;
   border: 1px dashed #000;
 }
+
+.resources {
+  margin: 2em 0 0 0;
+}
 .resource {
   margin-left: 1em;
 }
@@ -223,5 +257,20 @@ export default {
 .achieved {
   color: #1bbf5a;
   border-bottom: 2px solid #1bbf5a;
+}
+
+.region {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.region .card {
+  width: 24%;
+  margin-bottom: 0.5em;
+}
+.region .selected-plot {
+  background: #f0f0f0;
+  border: 1px solid #000;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
 }
 </style>

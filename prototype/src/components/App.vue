@@ -28,6 +28,11 @@ body {
   font-size: 14px;
   font-family: 'Inconsolata', monospace;
 }
+
+* {
+  box-sizing: border-box;
+}
+
 button {
   font-family: 'Inconsolata', monospace;
   padding: 0.5em 1em;
@@ -39,8 +44,14 @@ button:hover {
   background: #000;
   color: #fff;
 }
+button:disabled {
+  opacity: 0.5;
+  border: 1px solid #aaa;
+  pointer-events: none;
+}
 .actions {
   text-align: center;
+  margin: 1em 0;
 }
 .actions button {
   margin: 0 1em;

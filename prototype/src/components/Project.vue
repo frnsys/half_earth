@@ -26,6 +26,9 @@
     <div class="actions">
       <slot name="actions"></slot>
     </div>
+    <div class="meta meta-bot">
+      <div class="scope">{{project.global ? '🌐Global' : '🏞Plot'}}</div>
+    </div>
   </div>
   <div v-else>card back</div>
 </Card>

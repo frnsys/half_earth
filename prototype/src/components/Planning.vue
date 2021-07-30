@@ -55,7 +55,7 @@
         <li v-for="p in state.projects.filter((p) => p.unlocked)">
           <Project @click="() => toggleProject(p)" :class="{selected: state.player.hand.includes(p)}" :project="p">
             <template v-slot:costs>
-              <div class="meta">
+              <div class="meta meta-top">
                 <div v-if="p.popularity < 0">😡5PC</div>
               </div>
             </template>
@@ -150,18 +150,5 @@ ul {
 }
 .hand-slots {
   text-align: center;
-}
-.meta {
-  top: -0.7em;
-  left: 0;
-  right: 0;
-  position: absolute;
-}
-.meta > div {
-	background: #fff;
-	margin: 0 auto;
-	display: inline-block;
-	border: 1px dashed black;
-	padding: 0.05em 0.1em;
 }
 </style>
