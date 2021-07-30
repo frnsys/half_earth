@@ -13,6 +13,11 @@
         <b>{{k}}</b>:{{v > 0 ? '-' : '+'}}{{Math.abs(v)}}/year
       </span>
     </div>
+    <div>
+      <span v-for="(v, k) in project.base.operation.impacts">
+        <b>{{VARI_ICONS[k]}}</b>:{{v}}/year
+      </span>
+    </div>
   </div>
   <div class="details">
     <b>Destruction</b>
@@ -20,6 +25,11 @@
     <span v-for="(v, k) in project.base.destruction.resources">
       <b>{{k}}</b>:{{v}}/year
     </span>
+    <div>
+      <span v-for="(v, k) in project.base.destruction.impacts">
+        <b>{{VARI_ICONS[k]}}</b>:{{v}}/year
+      </span>
+    </div>
   </div>
 
   <div class="actions">
@@ -30,13 +40,11 @@
 
 <script>
 import Card from './Card.vue';
-import {PROJECT_STATE} from '../consts';
 
 export default {
   props: ['project'],
   data() {
     return {
-      PROJECT_STATE
     };
   },
   components: {

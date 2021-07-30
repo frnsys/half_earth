@@ -8,7 +8,7 @@
 
   <ul class="bar">
     <li v-for="(d, vari) in state.world">
-      <b>{{vari}}</b>:
+      <b>{{VARI_ICONS[vari]}}{{vari}}</b>:
       <span v-if="vari in state.plan.targets" :class="{achieved: d.value * state.plan.targets[vari].valence >= state.plan.targets[vari].value * state.plan.targets[vari].valence}">{{d.value}}/{{state.plan.targets[vari].value}}</span>
       <span v-else>{{d.value}}</span>
       <span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
@@ -63,23 +63,25 @@
 
   <div id="help">
     <div><span class="estimate"><span class="icon">⏳</span>+X</span> : <em>estimate for variable change in next turn</em></div>
+    <p><em>Misc Notes</em></p>
+    <ul>
+      <li>- Adjacency effects</li>
+      <li>- Convert tile types (e.g. convert water to land by landfilling)</li>
+    </ul>
   </div>
 </template>
 
 <script>
 import state from '../state';
-import {PROJECT_STATE} from '../consts';
 import Card from './Card.vue';
 import Plot from './Plot.vue';
 import Project from './Project.vue';
 import ActiveProject from './ActiveProject.vue';
 
-
 export default {
   data() {
     this.updateEstimates();
     return {
-      PROJECT_STATE,
       selectedPlot: null,
       state,
     };
@@ -107,17 +109,21 @@ export default {
 
       // Update project progress
       state.player.projects.concat(state.region.filter((plot) => plot.project).map((plot) => plot.project)).forEach((p) => {
-        if (p.status == PROJECT_STATE.PLANNED) {
-          p.status = PROJECT_STATE.CONSTRUCTING;
+        if (p.status == this.PROJECT_STATE.PLANNED) {
+          p.status = this.PROJECT_STATE.CONSTRUCTING;
         }
 
         let requiredResources = {};
-        if (p.status == PROJECT_STATE.CONSTRUCTING) {
+        let impacts = {};
+        if (p.status == this.PROJECT_STATE.CONSTRUCTING) {
           requiredResources = p.base.construction.resources;
-        } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+          impacts = p.base.construction.impacts;
+        } else if (p.status == this.PROJECT_STATE.DESTRUCTING) {
           requiredResources = p.base.destruction.resources;
-        } else if (p.status == PROJECT_STATE.OPERATIONAL) {
+          impacts = p.base.destruction.impacts;
+        } else if (p.status == this.PROJECT_STATE.OPERATIONAL) {
           requiredResources = p.base.operation.resources;
+          impacts = p.base.operation.impacts;
         }
         let enoughResources = Object.keys(requiredResources).every((k) => {
           return state.player.resources[k].value >= requiredResources[k];
@@ -131,14 +137,26 @@ export default {
             state.player.resources[k].value -= requiredResources[k];
           });
 
+          // Apply impacts
+          Object.keys(impacts).forEach((k) => {
+            state.world[k].value += impacts[k];
+          });
+
           if (p.yearsLeft === 0) {
-            if (p.status == PROJECT_STATE.CONSTRUCTING) {
-              p.status = PROJECT_STATE.OPERATIONAL;
-            } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+            if (p.status == this.PROJECT_STATE.CONSTRUCTING) {
+              p.status = this.PROJECT_STATE.OPERATIONAL;
+            } else if (p.status == this.PROJECT_STATE.DESTRUCTING) {
               // Remove card
               state.player.projects = state.player.projects.filter((p_) => p_ !== p);
             }
           }
+        }
+      });
+
+      // Plot updates
+      state.region.forEach((plot) => {
+        if (plot.toxic && plot.fertility > 0 && Math.random() < 0.25) {
+          plot.fertility--;
         }
       });
 
@@ -160,14 +178,14 @@ export default {
       if (proj.global) {
         // Add to active policies
         state.player.projects.push({
-          status: PROJECT_STATE.PLANNED,
+          status: this.PROJECT_STATE.PLANNED,
           yearsLeft: proj.construction.years,
           base: proj
         });
       } else if (this.selectedPlot) {
         // Add to selected plot
         this.selectedPlot.project = {
-          status: PROJECT_STATE.PLANNED,
+          status: this.PROJECT_STATE.PLANNED,
           yearsLeft: proj.construction.years,
           plot: this.selectedPlot,
           base: proj
@@ -178,7 +196,7 @@ export default {
       this.updateEstimates();
     },
     revokeCard(proj) {
-      proj.status = PROJECT_STATE.DESTRUCTING;
+      proj.status = this.PROJECT_STATE.DESTRUCTING;
       proj.yearsLeft = proj.base.destruction.years;
       if (proj.plot) {
         proj.plot.project = null;
@@ -186,7 +204,7 @@ export default {
       this.updateEstimates();
     },
     cancelCard(proj) {
-      if (proj.status == PROJECT_STATE.PLANNED) {
+      if (proj.status == this.PROJECT_STATE.PLANNED) {
         // Put back into hand
         state.player.hand.push(proj.base);
 
@@ -194,7 +212,7 @@ export default {
         if (proj.plot) {
           proj.plot.project = null;
         }
-      } else if (proj.status == PROJECT_STATE.CONSTRUCTING) {
+      } else if (proj.status == this.PROJECT_STATE.CONSTRUCTING) {
         // Remove card
         if (proj.plot) {
           proj.plot.project = null;
@@ -214,22 +232,26 @@ export default {
 
       state.player.projects.forEach((p) => {
         let resources = {};
-        if (p.status == PROJECT_STATE.CONSTRUCTING) {
+        let impacts = {};
+        if (p.status == this.PROJECT_STATE.CONSTRUCTING) {
           resources = p.base.construction.resources;
-        } else if (p.status == PROJECT_STATE.DESTRUCTING) {
+          impacts = p.base.construction.impacts;
+        } else if (p.status == this.PROJECT_STATE.DESTRUCTING) {
           resources = p.base.destruction.resources;
-        } else if (p.status == PROJECT_STATE.OPERATIONAL) {
+          impacts = p.base.destruction.impacts;
+        } else if (p.status == this.PROJECT_STATE.OPERATIONAL) {
           resources = p.base.operation.resources;
+          impacts = p.base.operation.impacts;
         };
 
         Object.keys(resources).forEach((k) => {
-          if (k in state.world) {
-            state.world[k].change += resources[k];
-          } else {
-            // Resources depicted as costs
-            state.player.resources[k].change -= resources[k];
-          }
+          // Resources depicted as costs
+          state.player.resources[k].change -= resources[k];
         });
+        Object.keys(impacts).forEach((k) => {
+          state.world[k].change += impacts[k];
+        });
+        console.log(impacts);
       });
     }
   }
@@ -240,6 +262,9 @@ export default {
 #help {
   color: #888;
   margin-top: 2em;
+}
+#help li {
+  margin: 0;
 }
 .bar {
   display: flex;

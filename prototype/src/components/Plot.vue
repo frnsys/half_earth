@@ -2,40 +2,51 @@
 <Card :class="{'in-progress': plot.project && plot.project.yearsLeft > 0}">
   <div v-if="plot.project">
     <div class="flip" @click="flip">⮌</div>
-    <div v-if="!flipped">
-      <b>{{plot.project.base.name}}</b>
-      <div class="details">
-        <div v-if="plot.project.status == PROJECT_STATE.CONSTRUCTING">construction years left:{{plot.project.yearsLeft}}</div>
-        <div v-else-if="plot.project.status == PROJECT_STATE.DESTRUCTING">destructing years left:{{plot.project.yearsLeft}}</div>
-      </div>
+  </div>
+  <div v-if="plot.project && !flipped">
+    <b>{{plot.project.base.name}}</b>
+    <div class="details">
+      <div v-if="plot.project.status == PROJECT_STATE.CONSTRUCTING">construction years left:{{plot.project.yearsLeft}}</div>
+      <div v-else-if="plot.project.status == PROJECT_STATE.DESTRUCTING">destructing years left:{{plot.project.yearsLeft}}</div>
+    </div>
 
-      <div class="details">
-        <b>Operation</b>
-        <div>
-          <span v-for="(v, k) in plot.project.base.operation.resources">
-            <b>{{k}}</b>:{{v > 0 ? '-' : '+'}}{{Math.abs(v)}}/year
-          </span>
-        </div>
-      </div>
-      <div class="details">
-        <b>Destruction</b>
-        <div>{{plot.project.base.destruction.years}} years</div>
-        <span v-for="(v, k) in plot.project.base.destruction.resources">
-          <b>{{k}}</b>:{{v}}/year
+    <div class="details">
+      <b>Operation</b>
+      <div>
+        <span v-for="(v, k) in plot.project.base.operation.resources">
+          <b>{{k}}</b>:{{v > 0 ? '-' : '+'}}{{Math.abs(v)}}/year
         </span>
       </div>
-
-      <div class="actions">
-        <slot name="actions"></slot>
+      <div>
+        <span v-for="(v, k) in project.base.operation.impacts">
+          <b>{{VARI_ICONS[k]}}</b>:{{v}}/year
+        </span>
       </div>
     </div>
-    <div v-else>
-      <div v-for="(d, vari) in plot.props">{{vari}}:{{d}}</div>
+    <div class="details">
+      <b>Destruction</b>
+      <div>{{plot.project.base.destruction.years}} years</div>
+      <span v-for="(v, k) in plot.project.base.destruction.resources">
+        <b>{{k}}</b>:{{v}}/year
+      </span>
+      <div>
+        <span v-for="(v, k) in project.base.destruction.impacts">
+          <b>{{VARI_ICONS[k]}}</b>:{{v}}/year
+        </span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <slot name="actions"></slot>
     </div>
   </div>
 
   <div v-else>
-    <div v-for="(d, vari) in plot.props">{{vari}}:{{d}}</div>
+    <div class="plot-type">{{plot.type}}</div>
+    <div class="plot-prop" v-for="(d, vari) in plot.props">
+      <div>{{PLOT_ICONS[vari]}}{{d}}</div>
+      <div class="plot-prop--name">{{PLOT_ABBREV[vari]}}</div>
+    </div>
   </div>
 
   <div class="meta meta-bot">
@@ -46,12 +57,10 @@
 
 <script>
 import Card from './Card.vue';
-import {PROJECT_STATE} from '../consts';
 export default {
   props: ['plot'],
   data() {
     return {
-      PROJECT_STATE,
       flipped: false
     };
   },
@@ -66,3 +75,24 @@ export default {
   },
 }
 </script>
+
+<style>
+.plot-prop {
+	text-align: center;
+	padding: 0.5em;
+	display: inline-block;
+	width: 40%;
+	margin: 0.1em;
+}
+
+.plot-type {
+	text-align: center;
+	border: 1px dotted #ccc;
+	padding: 0 0.5em;
+	background: #f0f0f0;
+}
+
+.plot-prop--name {
+  color: #888;
+}
+</style>

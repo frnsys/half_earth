@@ -45,8 +45,9 @@ export default {
       return acc;
     }, {});
 
-    let contentChange = (state.world['contentedness'].value - state.plan.contentedness)**2;
-    pcChanges['contentedness'] = contentChange;
+    let contentChange = state.world['contentedness'].value - state.plan.contentedness;
+    let contentPC = contentChange**2 * (contentChange < 0 ? -1 : 1);
+    pcChanges['contentedness'] = contentPC;
 
     let change = Object.values(pcChanges).reduce((acc, v) => acc + v, 0);
     state.player.political_capital += change;

@@ -20,7 +20,7 @@
   <div v-if="phase === 0">
     <ul>
       <li v-for="(d, vari) in state.plan.targets">
-        <b>{{vari}}</b>
+        <b>{{VARI_ICONS[vari]}}{{vari}}</b>
         <div>Current world value: {{state.world[vari].value}}</div>
         <div>
           <input type="number" step="1"
@@ -45,6 +45,7 @@
         <li v-for="r in state.research">
           <Card @click="() => toggleResearch(r)" :class="{selected: state.player.research.includes(r)}">
             {{r.name}}
+            <div>Estimate: {{r.estimate ? `${r.estimate} years` : '🎲'}}</div>
           </Card>
         </li>
       </ul>
@@ -147,6 +148,9 @@ export default {
 ul {
   display: flex;
   justify-content: space-around;
+}
+ul .card {
+  margin: 0.5em;
 }
 .hand-slots {
   text-align: center;

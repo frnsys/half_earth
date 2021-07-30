@@ -1,4 +1,13 @@
 import {reactive} from 'vue';
+import consts from './consts';
+
+function randChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randEnum(en) {
+  return randChoice(Object.values(en));
+}
 
 // TODO initial game state
 const init = {
@@ -22,10 +31,14 @@ const init = {
     }
   },
   region: [...Array(16).keys()].map(() => ({
+    type: randEnum(consts.PLOT_TYPE),
+    connected: true,
     project: null,
     props: {
       fertility: 3,
       biodiversity: 4,
+      temperature: 25,
+      population: 10,
     },
   })),
   plan: {
@@ -62,26 +75,30 @@ const init = {
   },
 
   projects: [{
-    name: 'A Global Policy',
+    name: 'Mandated Veganism',
     unlocked: true,
     popularity: -1,
     global: true,
     construction: {
-      years: 2,
-      resources: {
-        energy: 7
+      years: 1,
+      resources: {},
+      impacts: {
+        contentedness: -3
       }
     },
     operation: {
-      resources: {
-        energy: -1
+      resources: {},
+      impacts: {
+        emissions: -2
       }
     },
     destruction: {
       years: 1,
       resources: {
-        energy: 2
-      }
+        contentedness: 2,
+        emissions: 3
+      },
+      impacts: {}
     }
   }, {
     name: 'A Spatial Project',
@@ -93,24 +110,39 @@ const init = {
       years: 2,
       resources: {
         energy: 7
-      }
+      },
+      impacts: {}
     },
     operation: {
       resources: {
         energy: -1
-      }
+      },
+      impacts: {}
     },
     destruction: {
       years: 1,
       resources: {
         energy: 2
-      }
+      },
+      impacts: {}
     }
   }],
 
   research: [{
     name: 'Nuclear Fusion',
-    desc: 'TK',
+    estimate: null
+  }, {
+    name: 'New SRM Method',
+    estimate: 5,
+  }, {
+    name: 'New Battery Technology',
+    estimate: 5,
+  }, {
+    name: 'Low-Carbon Concrete Production',
+    estimate: 5
+  }, {
+    name: 'Perennial Cereals',
+    estimate: 10
   }]
 }
 
