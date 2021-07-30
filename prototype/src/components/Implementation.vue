@@ -19,8 +19,10 @@
   <h3>Region</h3>
   <div class="region">
     <Plot v-for="plot in state.region" @click="() => togglePlot(plot)" :class="{'selected-plot': selectedPlot === plot}" :plot="plot">
-      <template v-slot:actions>
-        <button v-if="plot.project" @click="() => revokeCard(plot.project)">Revoke</button>
+      <template v-slot:actions v-if="plot.project">
+        <button v-if="plot.project.status == PROJECT_STATE.OPERATIONAL" @click="() => revokeCard(plot.project)">Revoke</button>
+        <button v-else-if="plot.project.status == PROJECT_STATE.PLANNED" @click="() => cancelCard(plot.project)">Undo</button>
+        <button v-else-if="plot.project.status == PROJECT_STATE.CONSTRUCTING" @click="() => cancelCard(plot.project)">Cancel</button>
       </template>
     </Plot>
   </div>
@@ -77,6 +79,7 @@ export default {
   data() {
     this.updateEstimates();
     return {
+      PROJECT_STATE,
       selectedPlot: null,
       state,
     };
@@ -104,6 +107,10 @@ export default {
 
       // Update project progress
       state.player.projects.concat(state.region.filter((plot) => plot.project).map((plot) => plot.project)).forEach((p) => {
+        if (p.status == PROJECT_STATE.PLANNED) {
+          p.status = PROJECT_STATE.CONSTRUCTING;
+        }
+
         let requiredResources = {};
         if (p.status == PROJECT_STATE.CONSTRUCTING) {
           requiredResources = p.base.construction.resources;
@@ -153,14 +160,14 @@ export default {
       if (proj.global) {
         // Add to active policies
         state.player.projects.push({
-          status: PROJECT_STATE.CONSTRUCTING,
+          status: PROJECT_STATE.PLANNED,
           yearsLeft: proj.construction.years,
           base: proj
         });
       } else if (this.selectedPlot) {
         // Add to selected plot
         this.selectedPlot.project = {
-          status: PROJECT_STATE.CONSTRUCTING,
+          status: PROJECT_STATE.PLANNED,
           yearsLeft: proj.construction.years,
           plot: this.selectedPlot,
           base: proj
@@ -177,6 +184,25 @@ export default {
         proj.plot.project = null;
       }
       this.updateEstimates();
+    },
+    cancelCard(proj) {
+      if (proj.status == PROJECT_STATE.PLANNED) {
+        // Put back into hand
+        state.player.hand.push(proj.base);
+
+        // Remove card
+        if (proj.plot) {
+          proj.plot.project = null;
+        }
+      } else if (proj.status == PROJECT_STATE.CONSTRUCTING) {
+        // Remove card
+        if (proj.plot) {
+          proj.plot.project = null;
+          if (proj.base.toxic) {
+            proj.plot.toxic = true;
+          }
+        }
+      }
     },
     updateEstimates() {
       Object.keys(state.world).forEach((k) => {

@@ -37,6 +37,10 @@
   <div v-else>
     <div v-for="(d, vari) in plot.props">{{vari}}:{{d}}</div>
   </div>
+
+  <div class="meta meta-bot">
+    <div class="toxic" v-if="plot.toxic">☠Toxic</div>
+  </div>
 </Card>
 </template>
 

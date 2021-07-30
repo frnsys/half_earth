@@ -88,6 +88,7 @@ const init = {
     unlocked: true,
     popularity: 1,
     global: false,
+    toxic: true,
     construction: {
       years: 2,
       resources: {
