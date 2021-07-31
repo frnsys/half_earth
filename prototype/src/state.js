@@ -125,11 +125,11 @@ const init = {
     },
     destruction: {
       years: 1,
-      resources: {
+      resources: {},
+      impacts: {
         contentedness: 2,
         emissions: 3
-      },
-      impacts: {}
+      }
     }
   }, {
     name: 'Solar Radiation Management (Sulphur)',
@@ -139,7 +139,7 @@ const init = {
     construction: {
       years: 1,
       resources: {
-        energy: 2
+        energy: -2
       },
       impacts: {
         contentedness: -1
@@ -147,7 +147,7 @@ const init = {
     },
     operation: {
       resources: {
-        energy: 2
+        energy: -2
       },
       impacts: {
         temperature: -1
@@ -172,7 +172,7 @@ const init = {
     construction: {
       years: 2,
       resources: {
-        energy: 2
+        energy: -2
       },
       impacts: {}
     },
@@ -185,7 +185,7 @@ const init = {
     destruction: {
       years: 1,
       resources: {
-        energy: 2
+        energy: -2
       },
       impacts: {}
     }
@@ -198,14 +198,12 @@ const init = {
     construction: {
       years: 2,
       resources: {
-        energy: 1
+        energy: -1
       },
       impacts: {}
     },
     operation: {
-      resources: {
-        energy: 0
-      },
+      resources: {},
       impacts: {
         biodiversity: 2
       }
@@ -213,7 +211,7 @@ const init = {
     destruction: {
       years: 1,
       resources: {
-        energy: 2
+        energy: -2
       },
       impacts: {
         biodiversity: -2
@@ -228,7 +226,7 @@ const init = {
     construction: {
       years: 2,
       resources: {
-        energy: 1
+        energy: -1
       },
       impacts: {
         biodiversity: -1
@@ -242,7 +240,7 @@ const init = {
     destruction: {
       years: 1,
       resources: {
-        energy: 1
+        energy: -1
       },
       impacts: {
         biodiversity: 1

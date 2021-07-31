@@ -136,7 +136,7 @@ export default {
 
           // Deduct resources
           Object.keys(requiredResources).forEach((k) => {
-            state.player.resources[k].value -= requiredResources[k];
+            state.player.resources[k].value += requiredResources[k];
           });
 
           // Apply impacts
@@ -247,8 +247,7 @@ export default {
         };
 
         Object.keys(resources).forEach((k) => {
-          // Resources depicted as costs
-          state.player.resources[k].change -= resources[k];
+          state.player.resources[k].change += resources[k];
         });
         Object.keys(impacts).forEach((k) => {
           state.world[k].change += impacts[k];

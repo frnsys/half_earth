@@ -10,12 +10,12 @@
     <b>Operation</b>
     <div>
       <span v-for="(v, k) in project.base.operation.resources">
-        <b>{{k}}</b>:{{v > 0 ? '-' : '+'}}{{Math.abs(v)}}/year
+        <b>{{k}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
       </span>
     </div>
     <div>
       <span v-for="(v, k) in project.base.operation.impacts">
-        <b>{{VARI_ICONS[k]}}</b>:{{v}}/year
+        <b>{{VARI_ICONS[k]}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
       </span>
     </div>
   </div>
@@ -23,11 +23,11 @@
     <b>Destruction</b>
     <div>{{project.base.destruction.years}} years</div>
     <span v-for="(v, k) in project.base.destruction.resources">
-      <b>{{k}}</b>:{{v}}/year
+      <b>{{k}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
     </span>
     <div>
       <span v-for="(v, k) in project.base.destruction.impacts">
-        <b>{{VARI_ICONS[k]}}</b>:{{v}}/year
+        <b>{{VARI_ICONS[k]}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
       </span>
     </div>
   </div>
