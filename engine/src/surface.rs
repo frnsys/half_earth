@@ -170,10 +170,6 @@ fn biomes_to_pixels(biomes: &[u8]) -> Vec<u8> {
     pixels
 }
 
-fn add_colors(a: BigColor, b: BigColor) -> BigColor {
-    (a.0 + b.0, a.1 + b.1, a.2 + b.2)
-}
-
 fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize) -> Vec<u8> {
     let new_width = width * scale;
     let new_height = height * scale;
@@ -193,7 +189,7 @@ fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize)
 }
 
 // Compute pixel intensities, for applying the oil paint effect
-fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
+pub fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
     img.chunks_exact(3).map(|rgb| {
         let r = rgb[0] as usize;
         let g = rgb[1] as usize;
@@ -208,13 +204,13 @@ fn compute_intensity(r: usize, g: usize, b: usize) -> usize {
 }
 
 // Ported from <https://codepen.io/loktar00/pen/Fhzot>
-fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: usize, height: usize) {
+pub fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: usize, height: usize) {
     // For each pixel, get the most common intensity value of the neighbors in radius
     let mut top;                                                            // Max intensity value
-    let mut pixel_intensity_count: Vec<Option<(usize, BigColor)>> = vec![None; INTENSITY as usize + 1];
+    let mut pixel_intensity_count: Vec<(usize, BigColor)> = vec![(0, (0, 0, 0)); INTENSITY as usize + 1];
     for idx in 0..intensities.len() {
         top = (0, (0, 0, 0));
-        for item in &mut pixel_intensity_count { *item = None; }
+        for item in &mut pixel_intensity_count { *item = (0, (0, 0, 0)); }
 
         // Find intensities of nearest pixels within radius.
         let x = idx % width;
@@ -229,15 +225,16 @@ fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: 
         for i in 0..y_span {
             let midpoint = start_idx + i * width;
             for (rgb, intensity_val) in &intensities[midpoint-left_span..midpoint+right_span] {
-                let count = match pixel_intensity_count[*intensity_val] {
-                    Some((val, color)) => (val + 1, add_colors(color, *rgb)),
-                    None => (1, *rgb)
-                };
+                let mut count = &mut pixel_intensity_count[*intensity_val];
+
+                count.0 += 1;
+                count.1.0 += rgb.0;
+                count.1.1 += rgb.1;
+                count.1.2 += rgb.2;
 
                 if count.0 > top.0 {
-                    top = count;
+                    top = *count;
                 }
-                pixel_intensity_count[*intensity_val] = Some(count);
             }
         }
 
