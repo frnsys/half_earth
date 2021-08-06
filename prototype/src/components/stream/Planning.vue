@@ -4,12 +4,8 @@
     <p class="help">Set targets for the next five years. Harder targets can earn you more PC, but also risk losing more. Backtracking on a target has a PC cost.</p>
   </div>
   <div v-else-if="phase === 1">
-    <h2>PLANNING.RESEARCH</h2>
-    <p class="help">Set ongoing research initiatives. These use hand slots.</p>
-  </div>
-  <div v-else-if="phase === 2">
-    <h2>PLANNING.HAND</h2>
-    <p class="help">Choose what projects to have prepared for the next five years. Unpopular projects have a PC cost to put into your hand.</p>
+    <h2>PLANNING.PROJECTS</h2>
+    <p class="help">Set ongoing research initiatives and projects.</p>
   </div>
 
   <div class="stats">
@@ -37,32 +33,33 @@
     </ul>
   </div>
 
-  <div v-else-if="phase > 0">
-    <div class="hand-slots">Hand: <span v-for="(_, i) in state.consts.MAX_HAND_SIZE">{{i < handSize() ? '▮' : '▯'}}</span></div>
+  <div v-else-if="phase === 1">
+    <ul>
+      <li v-for="r in state.research">
+        <Card @click="() => toggleResearch(r)" :class="{selected: state.player.research.includes(r)}">
+          {{r.name}}
+          <div>Estimate: {{r.estimate ? `${r.estimate} years` : '🎲'}}</div>
+        </Card>
+      </li>
+    </ul>
 
-    <div v-if="phase === 1">
-      <ul>
-        <li v-for="r in state.research">
-          <Card @click="() => toggleResearch(r)" :class="{selected: state.player.research.includes(r)}">
-            {{r.name}}
-            <div>Estimate: {{r.estimate ? `${r.estimate} years` : '🎲'}}</div>
-          </Card>
-        </li>
-      </ul>
-    </div>
+    <ul>
+      <li v-for="p in state.projects.filter((p) => p.unlocked)">
+        <Project @click="() => toggleProject(p)" :class="{selected: state.player.hand.includes(p)}" :project="p">
+          <template v-slot:costs>
+            <div class="meta meta-top">
+              <div v-if="p.popularity < 0">😡5PC</div>
+            </div>
+          </template>
+        </Project>
+      </li>
+    </ul>
 
-    <div v-else-if="phase === 2">
-      <ul>
-        <li v-for="p in state.projects.filter((p) => p.unlocked)">
-          <Project @click="() => toggleProject(p)" :class="{selected: state.player.hand.includes(p)}" :project="p">
-            <template v-slot:costs>
-              <div class="meta meta-top">
-                <div v-if="p.popularity < 0">😡5PC</div>
-              </div>
-            </template>
-          </Project>
-        </li>
-      </ul>
+    <div class="resources">
+      <b>Resources:</b>
+      <span class="resource" v-for="(d, vari) in state.player.resources">
+        <b>{{vari}}</b>:{{d.value}}<span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
+      </span>
     </div>
   </div>
 
@@ -73,9 +70,9 @@
 </template>
 
 <script>
-import state from '../state';
-import Card from './Card.vue';
-import Project from './Project.vue';
+import state from '../../state';
+import Card from '../Card.vue';
+import Project from '../Project.vue';
 export default {
   data() {
     return {
@@ -88,23 +85,16 @@ export default {
     Project
   },
   methods: {
-    handSize() {
-      return state.player.hand.length + state.player.research.length;
-    },
     prevPhase() {
       if (this.phase > 0) {
         this.phase--;
       }
     },
     nextPhase() {
-      if (this.phase < 2) {
+      if (this.phase < 1) {
         this.phase++;
       } else {
-        let availableCards = state.projects.filter((p) => p.unlocked).length + state.research.length;
-        let maxCards = Math.min(state.consts.MAX_HAND_SIZE, availableCards);
-        if (this.handSize() == maxCards || confirm('Your hand is undersized, continue?')) {
-          state.phase = 'IMPLEMENTATION';
-        }
+        state.phase = 'IMPLEMENTATION';
       }
     },
     calculatePCWager(vari) {

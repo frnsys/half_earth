@@ -26,6 +26,11 @@ const init = {
         value: 10,
         change: 0,
         baseChange: 2
+      },
+      labor: {
+        value: 10,
+        change: 0,
+        baseChange: 1
       }
       // TODO
     }
@@ -263,6 +268,62 @@ const init = {
   }, {
     name: 'Perennial Cereals',
     estimate: 10
+  }],
+
+  events: [{
+    type: 'Natural Disaster',
+    body: 'This is an event. Two sentences!',
+    selectedResponse: null,
+    impacts: {
+      contentedness: -1,
+    },
+    responses: [{
+      name: 'Response A',
+      costs: {
+        energy: 1
+      },
+      impacts: {
+        contentedness: -1,
+      }
+    }, {
+      name: 'Response B',
+      costs: {
+        energy: 3
+      },
+      impacts: {
+        contentedness: 1,
+      }
+    }, {
+      name: 'Response C',
+      costs: {
+        energy: 12
+      },
+      impacts: {
+        contentedness: 5,
+      }
+    }]
+  }, {
+    type: 'Cultural Shift',
+    body: 'This is another event. Another two sentences!',
+    selectedResponse: null,
+    impacts: {
+      emissions: -1,
+    },
+    responses: [{
+      name: 'Response A',
+      costs: {
+        energy: 10
+      },
+      impacts: {}
+    }, {
+      name: 'Response B',
+      costs: {},
+      impacts: {}
+    }, {
+      name: 'Response C',
+      costs: {},
+      impacts: {}
+    }]
   }]
 }
 

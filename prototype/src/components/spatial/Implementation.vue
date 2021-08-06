@@ -6,14 +6,6 @@
     <div>Political Capital: {{state.player.political_capital}}</div>
   </div>
 
-  <ul class="bar">
-    <li v-for="(d, vari) in state.world">
-      <b>{{VARI_ICONS[vari]}}{{VARI_ABBREV[vari]}}</b>:
-      <span v-if="vari in state.plan.targets" :class="{achieved: d.value * state.plan.targets[vari].valence >= state.plan.targets[vari].value * state.plan.targets[vari].valence}">{{d.value}}/{{state.plan.targets[vari].value}}</span>
-      <span v-else>{{d.value}}</span>
-      <span class="estimate"><span class="icon">⏳</span>{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
-    </li>
-  </ul>
 
   <!-- TODO EVENTS -->
   <h3>Region</h3>
@@ -74,10 +66,10 @@
 </template>
 
 <script>
-import state from '../state';
-import Card from './Card.vue';
+import state from '../../state';
+import Card from '../Card.vue';
 import Plot from './Plot.vue';
-import Project from './Project.vue';
+import Project from '../Project.vue';
 import ActiveProject from './ActiveProject.vue';
 
 export default {
@@ -266,14 +258,6 @@ export default {
 }
 #help li {
   margin: 0;
-}
-.bar {
-  display: flex;
-  padding: 0.5em 0;
-  justify-content: space-around;
-}
-.bar li {
-  margin: 0 1em 0 0;
 }
 
 .hand .card,
