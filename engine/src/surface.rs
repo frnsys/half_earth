@@ -9,7 +9,7 @@ type BiomeLabel = u8;
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
 const INTENSITY: f64 = 25.;
-
+const BASE_TEMP: f64 = 15.;
 
 
 // Biome colors
@@ -97,29 +97,33 @@ impl EarthSurface {
     }
 
     pub fn update_biomes(&mut self, tgav: f64) {
-        // TODO actually calculate precip
-        let precip = 100.0;
-
         // Above we assert that TEMP_PATTERN_W, TEMP_PATTERN_B, and tgav are all the same size,
         // so no scaling necessary.
-        for (idx, (temp, biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, tgav).zip(self.biomes.iter_mut()).enumerate() {
-            let label = biome_for_temp(biome, temp, precip, &self.biome_lookup);
-            if *biome != label {
-                *biome = label;
-                let color = color_for_biome(label as usize);
-                let r = color.0 as usize;
-                let g = color.1 as usize;
-                let b = color.2 as usize;
+        // Add 15 to tgav to get actual temperature (this is what `hectorui` does).
+        for (idx, ((temp, precip), biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, BASE_TEMP + tgav)
+            .zip(pscl_apply(&PRECIP_PATTERN_W, &PRECIP_PATTERN_B, BASE_TEMP + tgav))
+            .zip(self.biomes.iter_mut()).enumerate() {
+                // In kg/m2/s, convert to cm/year
+                // 1 kg/m2/s = 1 mm/s
+                // 31536000 seconds per year, which yields mm/year
+                let precip_cm_year = precip * 31536000. / 10.;
+                let label = biome_for_temp(biome, temp, precip_cm_year, &self.biome_lookup);
+                if *biome != label {
+                    *biome = label;
+                    let color = color_for_biome(label as usize);
+                    let r = color.0 as usize;
+                    let g = color.1 as usize;
+                    let b = color.2 as usize;
 
-                // Update intensities
-                // Then you can run `update_surface()` to update the surface pixels
-                let intensity = compute_intensity(r,g,b);
-                let scaled_idx = scale_idx(idx, self.width, self.scale);
-                for i in 0..self.scale {
-                    let ii = scaled_idx + (i * self.width * self.scale);
-                    self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
+                    // Update intensities
+                    // Then you can run `update_surface()` to update the surface pixels
+                    let intensity = compute_intensity(r,g,b);
+                    let scaled_idx = scale_idx(idx, self.width, self.scale);
+                    for i in 0..self.scale {
+                        let ii = scaled_idx + (i * self.width * self.scale);
+                        self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
+                    }
                 }
-            }
         }
     }
 }
