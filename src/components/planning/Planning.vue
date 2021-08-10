@@ -23,6 +23,15 @@
             <span v-else>PC wager: </span>
             <span class="pc-wager">{{state.plan.targets[vari].wager}}</span>
           </div>
+          <figure>
+            <Projection
+              :startYear="state.time.start"
+              :endYear="state.time.end"
+              :pastValues="state.world[vari].history.concat(state.world[vari].value)"
+              :currentTargetValue="state.plan.targets[vari].value"
+              :finalTargetValue="state.world[vari].preindustrial" />
+            <figcaption>At this rate you will reach preindustrial levels in X years...</figcaption>
+          </figure>
         </li>
       </ul>
     </div>
@@ -52,12 +61,13 @@
 </template>
 
 <script>
-import state from '../state';
-import Hud from './Hud.vue';
-import Resources from './Resources.vue';
-import Window from './Window.vue';
+import state from '../../state';
+import Hud from '../Hud.vue';
+import Window from '../Window.vue';
 import Project from './Project.vue';
-import Setting from './Setting.vue';
+import Projection from './Projection.vue';
+import Setting from '../Setting.vue';
+import Resources from '../Resources.vue';
 export default {
   data() {
     return {
@@ -70,7 +80,8 @@ export default {
     Project,
     Setting,
     Window,
-    Resources
+    Resources,
+    Projection
   },
   methods: {
     prevPhase() {
@@ -124,5 +135,8 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+.planning--targets li {
+  width: 49%;
 }
 </style>

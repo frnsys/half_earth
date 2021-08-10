@@ -6,8 +6,8 @@
 
 <script>
 import state from '../state';
-import Stream from './Stream.vue';
-import Planning from './Planning.vue';
+import Stream from './stream/Stream.vue';
+import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
 export default {
   data() {
@@ -59,5 +59,13 @@ ul, li {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+figure {
+  padding: 0;
+  margin: 0;
+}
+figcaption {
+  font-size: 0.8em;
+  font-style: italic;
 }
 </style>

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import util from '../util';
+import util from '../../util';
 import Card from './Card.vue'
 import SwiperCore, { A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';

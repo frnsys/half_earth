@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import state from '../state';
-import Hud from './Hud.vue';
-import Globe from './Globe.vue'
+import state from '../../state';
+import Hud from '../Hud.vue';
+import Globe from '../Globe.vue'
 import Event from './Event.vue';
 export default {
   data() {

@@ -13,6 +13,10 @@ function randEnum(en) {
 
 const init = {
   phase: 'PLANNING',
+  time: {
+    start: 2025,
+    end: 2100
+  },
   player: {
     year: 2025,
     projects: [],
@@ -32,12 +36,12 @@ const init = {
   plan: {
     targets: {
       biodiversity: {
-        value: 5,
+        value: 10,
         wager: 0,
         valence: 1,
       },
-      emissions: {
-        value: 5,
+      carbon: {
+        value: 420,
         wager: 0,
         valence: -1
       }
@@ -45,20 +49,27 @@ const init = {
   },
   world: {
     biodiversity: {
-      value: 5,
-      baseChange: -1
+      value: 10,
+      baseChange: -1,
+      history: [],
+      preindustrial: 20
     },
-    emissions: {
-      value: 5,
-      baseChange: 1
+    carbon: {
+      value: 420,
+      baseChange: 1,
+      history: [],
+      preindustrial: 260
     },
     contentedness: {
       value: 5,
-      baseChange: 0
+      baseChange: 0,
+      history: []
     },
     temperature: {
-      value: 5,
-      baseChange: 1
+      value: 1,
+      baseChange: 0.025,
+      history: [],
+      preindustrial: 0
     },
   },
 

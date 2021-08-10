@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import state from '../state';
+import state from '../../state';
 import Hand from './Hand.vue'
 export default {
   props: ['event'],

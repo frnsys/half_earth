@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import util from '../util';
+import util from '../../util';
 
 export default {
   props: {

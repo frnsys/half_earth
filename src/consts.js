@@ -13,7 +13,7 @@ const PROJECT_TYPE = {
 
 const VARI_ICONS = {
   biodiversity: '🐬',
-  emissions: '☁️',
+  carbon: '☁️',
   contentedness: '😶',
   temperature: '🌡️',
 };
@@ -22,7 +22,7 @@ const VARI_ABBREV = {
   temperature: 'Temp.',
   biodiversity: 'Biod.',
   contentedness: 'Cont.',
-  emissions: 'Emis.',
+  carbon: 'CO2',
 };
 
 export default {

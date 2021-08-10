@@ -37,7 +37,7 @@ export default [{
   location: 351,
   selectedResponse: null,
   impacts: {
-    emissions: -1,
+    carbon: -1,
   },
   responses: [{
     name: 'Response A',
