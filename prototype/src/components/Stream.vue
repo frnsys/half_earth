@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import state from '../../state';
-import Card from '../Card.vue';
+import state from '../state';
+import Card from './Card.vue';
 import Response from './Response.vue';
 export default {
   data() {

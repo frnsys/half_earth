@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Card from '../Card.vue';
+import Card from './Card.vue';
 export default {
   props: ['response'],
   data() {

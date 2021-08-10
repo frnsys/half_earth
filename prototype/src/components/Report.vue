@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import state from '../../state';
+import state from '../state';
 export default {
   data() {
     let pcChanges = Object.keys(state.plan.targets).reduce((acc, vari) => {

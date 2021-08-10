@@ -1,39 +1,24 @@
 <template>
-  <div id="select-prototype" v-if="proto == null">
-    Select a prototype:
-      <div>
-        <span @click="() => setPrototype('spatial')">Spatial</span>
-        <p class="help">Implementation phase has you playing projects onto a grid representing a region. This one is probably more meticulous/detailed (much more to keep track of, many more decisions to make) and harder to do on mobile.</p>
-      </div>
-      <div>
-        <span @click="() => setPrototype('stream')">Stream</span>
-        <p class="help">Implementation phase has you reacting to events. Projects are decided during the planning phase. This one is probably quicker, more Reigns-like, better for mobile. Space is not as strongly represented but we can still include it with events in different locations.</p>
-      </div>
-  </div>
-  <div v-else>
-    <StreamApp v-if="proto == 'stream'" />
-    <SpatialApp v-else-if="proto == 'spatial'" />
-  </div>
+  <Planning v-if="state.phase == 'PLANNING'" />
+  <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
+  <Report v-else-if="state.phase == 'REPORT'" />
 </template>
 
 <script>
 import state from '../state';
-import StreamApp from './stream/App.vue'
-import SpatialApp from './spatial/App.vue'
+import Planning from './Planning.vue'
+import Stream from './Stream.vue'
+import Report from './Report.vue'
 export default {
   data() {
     return {
-      proto: null,
+      state
     };
   },
   components: {
-    StreamApp,
-    SpatialApp,
-  },
-  methods: {
-    setPrototype(t) {
-      this.proto = t;
-    }
+    Planning,
+    Stream,
+    Report
   }
 }
 </script>
@@ -120,17 +105,5 @@ p.help {
 }
 .bar li {
   margin: 0 1em 0 0;
-}
-
-#select-prototype span {
-  margin-top: 1em;
-  cursor: pointer;
-  display: block;
-}
-#select-prototype span:hover {
-  text-decoration: underline;
-}
-#select-prototype p {
-  margin-top: 0;
 }
 </style>

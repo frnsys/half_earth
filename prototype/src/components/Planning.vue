@@ -70,9 +70,9 @@
 </template>
 
 <script>
-import state from '../../state';
-import Card from '../Card.vue';
-import Project from '../Project.vue';
+import state from '../state';
+import Card from './Card.vue';
+import Project from './Project.vue';
 export default {
   data() {
     return {
