@@ -17,6 +17,11 @@ class Globe {
   constructor(el) {
     this.scene = new Scene({});
     el.appendChild(this.scene.renderer.domElement);
+    this._onReady = [];
+  }
+
+  onReady(fn) {
+    this._onReady.push(fn);
   }
 
   async init() {
@@ -58,17 +63,19 @@ class Globe {
     );
     this.scene.add(sphere);
 
-    const hexsphere = new HexSphere(this.scene, 5.2, 12, 0.98);
+    this.hexsphere = new HexSphere(this.scene, 5.2, 12, 0.98);
 
     // TODO add test icons to sphere
-    [52, 128, 191].forEach((idx) => hexsphere.showIcon('alert', idx));
-    [238, 351].forEach((idx) => hexsphere.showIcon('advisor', idx));
+    [52, 128, 191].forEach((idx) => this.hexsphere.showIcon('alert', idx));
+    [238, 351].forEach((idx) => this.hexsphere.showIcon('advisor', idx));
 
     const canvas = this.scene.renderer.domElement;
     material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
 
     await this.surface.updateTexture();
     surfaceTexture.needsUpdate = true;
+
+    this._onReady.forEach((fn) => fn(this));
   }
 
   // Calculate world update.

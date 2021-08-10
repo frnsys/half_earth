@@ -4,7 +4,7 @@ import Hexasphere from 'hexasphere.js';
 const tooltip = document.createElement('div');
 tooltip.id = 'tooltip';
 document.body.appendChild(tooltip);
-tooltip.innerText = 'hello world\ntesting';
+tooltip.innerText = 'hello world\ntesting'; // TODO testing
 tooltip.style.padding = '0.25em 0.5em';
 tooltip.style.background = '#fff';
 tooltip.style.borderRadius = '0.5em';
@@ -48,11 +48,10 @@ function calculateSurfaceNormal(p1, p2, p3) {
 
 class HexSphere {
   constructor(scene, radius, subdivisions, tileWidth) {
-
     this.selectables = [];
     this.scene = scene;
     this.hexasphere = new Hexasphere(radius, subdivisions, tileWidth);
-    this.hexasphere.tiles.forEach((tile) => {
+    this.hexasphere.tiles.forEach((tile, idx) => {
       let geometry = new THREE.BufferGeometry();
       let vertices = new Float32Array(tile.boundary.map((bp) => [bp.x, bp.y, bp.z]).flat());
       geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
@@ -85,6 +84,8 @@ class HexSphere {
 
       let center = tile.centerPoint;
       tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
+
+      tile.mesh.idx = idx;
     });
 
     // Interaction
@@ -95,10 +96,15 @@ class HexSphere {
     this.scene.controls.onUpdate.push(() => {
       tooltip.style.display = 'none';
     });
+    this._onClick = [];
   }
 
   get tiles() {
     return this.hexasphere.tiles;
+  }
+
+  onClick(fn) {
+    this._onClick.push(fn);
   }
 
   // TODO col/row addressing
@@ -129,14 +135,10 @@ class HexSphere {
       // Rotate orbital controls camera to center on this point
       const mesh = intersects[0].object;
       const pos = mesh.position;
-      const targetSpherical = new THREE.Spherical();
-      targetSpherical.setFromCartesianCoords(pos.x, pos.y, pos.z);
-
-      const orbit = this.scene.controls;
-      orbit.sphericalDelta.phi = targetSpherical.phi - orbit.spherical.phi;
-      orbit.sphericalDelta.theta = targetSpherical.theta - orbit.spherical.theta;
-      orbit.update();
-      intersects[0].object.parent.material = hexMaterialFocus;
+      this.centerOnPosition(pos);
+      let tile = mesh.parent;
+      tile.material = hexMaterialFocus;
+      this._onClick.forEach((fn) => fn(tile));
 
       // TODO this gets the correct position but is hacky
       // WE can just flag an active tooltip and update its position
@@ -154,12 +156,27 @@ class HexSphere {
         screenPos.x = (screenPos.x * widthHalf) + widthHalf;
         screenPos.y = - (screenPos.y * heightHalf) + heightHalf;
         screenPos.z = 0;
-        tooltip.style.display = 'block';
+        // tooltip.style.display = 'block'; // TODO not using tooltip at the moment
         let box = tooltip.getBoundingClientRect();
         tooltip.style.top = `${screenPos.y - box.height}px`;
         tooltip.style.left = `${screenPos.x - box.width/2}px`;
       }, 100);
     }
+  }
+
+  centerOnIndex(idx) {
+    let tile = this.hexasphere.tiles[idx];
+    this.centerOnPosition(tile.centerPointVec);
+  }
+
+  centerOnPosition(pos) {
+    const targetSpherical = new THREE.Spherical();
+    targetSpherical.setFromCartesianCoords(pos.x, pos.y, pos.z);
+
+    const orbit = this.scene.controls;
+    orbit.sphericalDelta.phi = targetSpherical.phi - orbit.spherical.phi;
+    orbit.sphericalDelta.theta = targetSpherical.theta - orbit.spherical.theta;
+    orbit.update();
   }
 
   onTouchStart(ev) {

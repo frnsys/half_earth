@@ -9,7 +9,7 @@ type BiomeLabel = u8;
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
 const INTENSITY: f64 = 25.;
-
+const BASE_TEMP: f64 = 15.;
 
 
 // Biome colors
@@ -54,7 +54,7 @@ pub struct EarthSurface {
 impl EarthSurface {
     pub fn new(biomes: Vec<BiomeLabel>, width: usize, height: usize, scale: usize,
                lookup: Vec<BiomeLabel>) -> EarthSurface {
-        utils::set_panic_hook();
+        // utils::set_panic_hook();
 
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
         pixels = nearest_neighbor_scale(&pixels, width, height, scale);
@@ -97,37 +97,42 @@ impl EarthSurface {
     }
 
     pub fn update_biomes(&mut self, tgav: f64) {
-        // TODO actually calculate precip
-        let precip = 100.0;
-
         // Above we assert that TEMP_PATTERN_W, TEMP_PATTERN_B, and tgav are all the same size,
         // so no scaling necessary.
-        for (idx, (temp, biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, tgav).zip(self.biomes.iter_mut()).enumerate() {
-            if let Some(label) = biome_for_temp(biome, temp, precip, &self.biome_lookup) {
-                *biome = label;
-                let color = color_for_biome(label as usize);
-                let r = color.0 as usize;
-                let g = color.1 as usize;
-                let b = color.2 as usize;
+        // Add 15 to tgav to get actual temperature (this is what `hectorui` does).
+        for (idx, ((temp, precip), biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, BASE_TEMP + tgav)
+            .zip(pscl_apply(&PRECIP_PATTERN_W, &PRECIP_PATTERN_B, BASE_TEMP + tgav))
+            .zip(self.biomes.iter_mut()).enumerate() {
+                // In kg/m2/s, convert to cm/year
+                // 1 kg/m2/s = 1 mm/s
+                // 31536000 seconds per year, which yields mm/year
+                let precip_cm_year = precip * 31536000. / 10.;
+                let label = biome_for_temp(biome, temp, precip_cm_year, &self.biome_lookup);
+                if *biome != label {
+                    *biome = label;
+                    let color = color_for_biome(label as usize);
+                    let r = color.0 as usize;
+                    let g = color.1 as usize;
+                    let b = color.2 as usize;
 
-                // Update intensities
-                // Then you can run `update_surface()` to update the surface pixels
-                let intensity = compute_intensity(r,g,b);
-                let scaled_idx = scale_idx(idx, self.width, self.scale);
-                for i in 0..self.scale {
-                    let ii = scaled_idx + (i * self.width * self.scale);
-                    self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
+                    // Update intensities
+                    // Then you can run `update_surface()` to update the surface pixels
+                    let intensity = compute_intensity(r,g,b);
+                    let scaled_idx = scale_idx(idx, self.width, self.scale);
+                    for i in 0..self.scale {
+                        let ii = scaled_idx + (i * self.width * self.scale);
+                        self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
+                    }
                 }
-            };
         }
     }
 }
 
 // The biome changing logic
 // If the biome hasn't changed, return None
-fn biome_for_temp(biome: &mut BiomeLabel, temp: f64, precip: f64, lookup: &[BiomeLabel]) -> Option<BiomeLabel> {
+fn biome_for_temp(biome: &mut BiomeLabel, temp: f64, precip: f64, lookup: &[BiomeLabel]) -> BiomeLabel {
     if *biome == 255 { // Water
-        None
+        255
     } else {
         // Clamp to known range
         let temp_ = temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);
@@ -136,18 +141,15 @@ fn biome_for_temp(biome: &mut BiomeLabel, temp: f64, precip: f64, lookup: &[Biom
         let x = ((temp_ - BIOME_TEMP_MIN) / BIOME_TEMP_STEP).floor() as usize;
         let y = ((precip_ - BIOME_PRECIP_MIN) / BIOME_PRECIP_STEP).floor() as usize;
         let idx = y * BIOME_SIZE + x;
-        let label = lookup[idx];
-        Some(label)
+        lookup[idx]
     }
 }
 
 fn scale_idx(idx: usize, width: usize, scale: usize) -> usize {
     let scaled_width = width * scale;
-    let x = idx % width;
-    let y = idx / width;
-    let y_scaled = y * scale;
-    let x_scaled = x * scale;
-    (y_scaled * scaled_width) + x_scaled
+    let x = (idx % width) * scale;
+    let y = (idx / width) * scale;
+    (y * scaled_width) + x
 }
 
 fn color_for_biome(label: usize) -> Color {
@@ -170,10 +172,6 @@ fn biomes_to_pixels(biomes: &[u8]) -> Vec<u8> {
     pixels
 }
 
-fn add_colors(a: BigColor, b: BigColor) -> BigColor {
-    (a.0 + b.0, a.1 + b.1, a.2 + b.2)
-}
-
 fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize) -> Vec<u8> {
     let new_width = width * scale;
     let new_height = height * scale;
@@ -193,7 +191,7 @@ fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize)
 }
 
 // Compute pixel intensities, for applying the oil paint effect
-fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
+pub fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
     img.chunks_exact(3).map(|rgb| {
         let r = rgb[0] as usize;
         let g = rgb[1] as usize;
@@ -208,13 +206,11 @@ fn compute_intensity(r: usize, g: usize, b: usize) -> usize {
 }
 
 // Ported from <https://codepen.io/loktar00/pen/Fhzot>
-fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: usize, height: usize) {
+pub fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: usize, height: usize) {
     // For each pixel, get the most common intensity value of the neighbors in radius
-    let mut top;                                                            // Max intensity value
-    let mut pixel_intensity_count: Vec<Option<(usize, BigColor)>> = vec![None; INTENSITY as usize + 1];
+    let mut pixel_intensity_count: Vec<(usize, BigColor)> = vec![(0, (0, 0, 0)); INTENSITY as usize + 1];
     for idx in 0..intensities.len() {
-        top = (0, (0, 0, 0));
-        for item in &mut pixel_intensity_count { *item = None; }
+        pixel_intensity_count.fill((0, (0, 0, 0)));
 
         // Find intensities of nearest pixels within radius.
         let x = idx % width;
@@ -229,17 +225,19 @@ fn oil_paint_effect(pixels: &mut[u8], intensities: &[(BigColor, usize)], width: 
         for i in 0..y_span {
             let midpoint = start_idx + i * width;
             for (rgb, intensity_val) in &intensities[midpoint-left_span..midpoint+right_span] {
-                let count = match pixel_intensity_count[*intensity_val] {
-                    Some((val, color)) => (val + 1, add_colors(color, *rgb)),
-                    None => (1, *rgb)
-                };
+                let mut count = &mut pixel_intensity_count[*intensity_val];
 
-                if count.0 > top.0 {
-                    top = count;
-                }
-                pixel_intensity_count[*intensity_val] = Some(count);
+                count.0 += 1;
+                count.1.0 += rgb.0;
+                count.1.1 += rgb.1;
+                count.1.2 += rgb.2;
             }
         }
+
+        // Max intensity value
+        let top = pixel_intensity_count.iter().fold((0, (0,0,0)), |acc, count| {
+            if count.0 > acc.0 { *count } else { acc }
+        });
 
         let i = idx * STRIDE;
         pixels[i]   = !!(top.1.0 / top.0) as u8; // r

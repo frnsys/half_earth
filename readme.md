@@ -32,3 +32,23 @@ Run Cargo and WASM tests with:
 ```
 npm run test
 ```
+
+## Benchmarking
+
+For Rust code benchmarking, run:
+
+```
+cargo bench
+```
+
+See [the `criterion` docs](https://bheisler.github.io/criterion.rs/book/user_guide/command_line_options.html) for more info.
+
+In particular:
+
+```
+# Save a new baseline
+cargo bench -- --save-baseline <name>
+
+# Compare against a baseline
+cargo bench -- --baseline <name>
+```

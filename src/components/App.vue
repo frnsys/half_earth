@@ -1,28 +1,63 @@
 <template>
-    <!-- <Setting
-        background="assets/settings/bgs/redwood_forest.png"
-        audio="assets/settings/audio/463903__burghrecords__birds-in-spring-scotland.mp3" /> -->
-    <Implementation />
+  <Planning v-if="state.phase == 'PLANNING'" />
+  <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
+  <Report v-else-if="state.phase == 'REPORT'" />
 </template>
 
 <script>
-import Setting from './Setting.vue'
-import Implementation from './Implementation.vue'
+import state from '../state';
+import Stream from './Stream.vue';
+import Planning from './Planning.vue';
+import Report from './Report.vue';
 export default {
-    components: {
-        Setting,
-        Implementation
-    },
+  data() {
+    return {
+      state
+    };
+  },
+  components: {
+    Stream,
+    Planning,
+    Report
+  },
 }
 </script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Uchen&display=swap');
 html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    overscroll-behavior-y: contain;
-    font-family: "Uchen", serif;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior-y: contain;
+  font-family: "Uchen", serif;
+}
+
+button {
+  padding: 0.5em 1em;
+  border: 1px solid #000;
+  cursor: pointer;
+  background: #fff;
+}
+button:hover {
+  background: #000;
+  color: #fff;
+}
+button:disabled {
+  opacity: 0.5;
+  border: 1px solid #aaa;
+  pointer-events: none;
+}
+.actions {
+  text-align: center;
+  margin: 1em 0;
+}
+.actions button {
+  margin: 0 1em;
+}
+
+ul, li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 </style>
