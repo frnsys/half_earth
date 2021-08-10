@@ -5,18 +5,10 @@ const PROJECT_STATE = {
   DESTRUCTING: 4,
 };
 
-const PLOT_TYPE = {
-  FOREST: '🌳Forest',
-  CLEARED: '🏞️Cleared Land',
-  DEVELOPED: '🏘️Developed',
-  WATER: '🌊Water'
-};
-
-const PLOT_ICONS = {
-  temperature: '🌡️',
-  fertility: '🌽',
-  biodiversity: '🐬',
-  population: '👥'
+const PROJECT_TYPE = {
+  PROJECT: 1,
+  RESEARCH: 2,
+  POLICY: 3
 };
 
 const VARI_ICONS = {
@@ -33,18 +25,10 @@ const VARI_ABBREV = {
   emissions: 'Emis.',
 };
 
-const PLOT_ABBREV = {
-  temperature: 'Temp.',
-  fertility: 'Fert.',
-  biodiversity: 'Biod.',
-  population: 'Pop.',
-};
-
 export default {
   PROJECT_STATE,
-  PLOT_TYPE,
-  PLOT_ICONS,
-  PLOT_ABBREV,
+  PROJECT_TYPE,
   VARI_ICONS,
   VARI_ABBREV
 };
+

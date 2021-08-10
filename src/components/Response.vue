@@ -1,5 +1,5 @@
 <template>
-<Card>
+<div>
   <div class="flip" @click="flip">⮌</div>
   {{response.name}}
 
@@ -22,11 +22,10 @@
   <div v-else>
     <em class="notes">Reminder text etc</em>
   </div>
-</Card>
+</div>
 </template>
 
 <script>
-import Card from './Card.vue';
 export default {
   props: ['response'],
   data() {
@@ -39,9 +38,6 @@ export default {
       this.flipped = !this.flipped;
       ev.stopPropagation();
     }
-  },
-  components: {
-    Card
   },
 }
 </script>
