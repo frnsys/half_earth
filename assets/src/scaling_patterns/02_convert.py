@@ -45,7 +45,7 @@ for src in glob('data/src/*.rds'):
         except:
             print('Couldn\'t reshape:', src)
             continue
-        result['annual_pattern'][k] = np.concatenate((r_arr[half:], r_arr[:half]))
+        result['annual_pattern'][k] = np.concatenate((r_arr[half:], r_arr[:half])).flatten()
 
     np.savez(outfile, **result['annual_pattern'])
 
