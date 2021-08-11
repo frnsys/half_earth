@@ -32,6 +32,6 @@ export default {
   padding: 0.75em 0.5em 0.5em 0.5em;;
 }
 .window--body {
-  padding: 1em;
+  padding: 0.5em 1em;
 }
 </style>

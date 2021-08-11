@@ -11,6 +11,7 @@
     </div>
     <button @click="nextEvent">&gt;</button>
   </div>
+  <Hand v-if="activeEvent >= 0" :cards="state.events[activeEvent].responses" />
 
   <div class="actions">
     <button v-if="state.events.every((ev) => ev.selectedResponse !== null)" @click="nextTurn">Next Year</button>
@@ -23,6 +24,7 @@ import state from '../../state';
 import Hud from '../Hud.vue';
 import Globe from '../Globe.vue'
 import Event from './Event.vue';
+import Hand from './Hand.vue'
 export default {
   data() {
     return {
@@ -32,6 +34,7 @@ export default {
   },
   components: {
     Hud,
+    Hand,
     Event,
     Globe,
   },
@@ -93,6 +96,7 @@ export default {
       }
     },
     jumpToEvent(event) {
+      // TODO
       console.log(this.$refs.globe.hexphere);
     },
     toggleResponse(response) {
@@ -121,5 +125,11 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+#event-stream .actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>

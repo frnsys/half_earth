@@ -1,23 +1,18 @@
 <template>
-    <div class="event">
-      <div class="event--type">{{event.type}}</div>
-      <p>{{event.body}}</p>
-    </div>
-    <Hand :cards="event.responses" />
+<div class="event">
+  <div class="event--type">{{event.type}}</div>
+  <p>{{event.body}}</p>
+</div>
 </template>
 
 <script>
 import state from '../../state';
-import Hand from './Hand.vue'
 export default {
   props: ['event'],
   data() {
     return {
       state
     };
-  },
-  components: {
-    Hand,
   },
 }
 </script>

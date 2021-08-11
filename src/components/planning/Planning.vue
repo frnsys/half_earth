@@ -5,39 +5,45 @@
 
   <Hud />
 
-  <Window :title="`Planning - ${phase === 0 ? 'Targets' : 'Projects'}`">
-    <div v-if="phase === 0">
+  <Window :title="`${state.player.year}-${state.player.year+5} Planning - ${phase === 0 ? 'Targets' : 'Projects'}`">
+    <div v-if="phase === 0" :set="vari = targetVars[targetVar]" class="planning--target">
+      <h2>{{VARI_ICONS[vari]}}{{vari}}</h2>
+      <Fader
+        :steps="10"
+        :value="state.plan.targets[vari].value"
+        :current="state.world[vari].value"
+        :reverse="state.plan.targets[vari].valence < 0"
+        :minLabel="state.world[vari].labels.min"
+        :maxLabel="state.world[vari].labels.max"
+        @change="(value) => updateTarget(vari, value)"
+        />
+      <div class="planning--ambition">
+        <span v-if="state.plan.targets[vari].wager < 0" class="planning--warning">Retrogression</span>
+        <template v-else>
+          <span v-if="state.plan.targets[vari].wager < 1">Business as Usual</span>
+          <span v-else-if="state.plan.targets[vari].wager < 4">Milquetoast</span>
+          <span v-else-if="state.plan.targets[vari].wager < 9">Modest</span>
+          <span v-else-if="state.plan.targets[vari].wager < 16">Ambitious</span>
+          <span v-else>Impossible</span>
+        </template>
+        <div class="planning--pc-wager">
+          <template v-if="state.plan.targets[vari].wager < 0">{{state.plan.targets[vari].wager}}PC penalty</template>
+          <template v-else>{{state.plan.targets[vari].wager}}PC stake</template>
+        </div>
+      </div>
+      <figure>
+        <Projection
+          :startYear="state.time.start"
+          :endYear="state.time.end"
+          :pastValues="state.world[vari].history.concat(state.world[vari].value)"
+          :currentTargetValue="state.plan.targets[vari].value"
+          :finalTargetValue="state.world[vari].preindustrial" />
+        <figcaption>At this rate you will reach preindustrial levels in X years...</figcaption>
+      </figure>
       <p class="help">Set targets for the next five years. Harder targets can earn you more PC, but also risk losing more. Backtracking on a target has a PC cost.</p>
-      <ul class="planning--targets">
-        <li v-for="(d, vari) in state.plan.targets">
-          <b>{{VARI_ICONS[vari]}}{{vari}}</b>
-          <div>Current world value: {{state.world[vari].value}}</div>
-          <div>
-            <input type="number" step="1"
-              @change="() => calculatePCWager(vari)"
-              v-model="state.plan.targets[vari].value">
-            <span> or {{ state.plan.targets[vari].valence > 0 ? 'higher' : 'lower' }}</span>
-          </div>
-          <div>
-            <span v-if="state.plan.targets[vari].wager < 0">PC penalty: </span>
-            <span v-else>PC wager: </span>
-            <span class="pc-wager">{{state.plan.targets[vari].wager}}</span>
-          </div>
-          <figure>
-            <Projection
-              :startYear="state.time.start"
-              :endYear="state.time.end"
-              :pastValues="state.world[vari].history.concat(state.world[vari].value)"
-              :currentTargetValue="state.plan.targets[vari].value"
-              :finalTargetValue="state.world[vari].preindustrial" />
-            <figcaption>At this rate you will reach preindustrial levels in X years...</figcaption>
-          </figure>
-        </li>
-      </ul>
     </div>
 
     <div v-else-if="phase === 1">
-      <p class="help">Set ongoing research initiatives, projects, and policies.</p>
       <ul class="planning--projects">
         <li v-for="p in state.projects">
           <Project @click="() => toggleProject(p)" :class="{selected: state.player.projects.includes(p)}" :project="p">
@@ -51,11 +57,15 @@
       </ul>
 
       <Resources />
+
+      <p class="help">Set ongoing research initiatives, projects, and policies.</p>
     </div>
 
     <div class="actions">
-      <button @click="prevPhase" v-if="phase > 0">Back</button>
-      <button @click="nextPhase">Done</button>
+      <button @click="prev" v-if="phase > 0">Back</button>
+      <button @click="prev" v-if="phase == 0 && targetVar > 0">Back</button>
+      <button @click="next" v-if="phase < 1">Next</button>
+      <button @click="next" v-if="phase == 1">Done</button>
     </div>
   </Window>
 </template>
@@ -64,15 +74,23 @@
 import state from '../../state';
 import Hud from '../Hud.vue';
 import Window from '../Window.vue';
+import Fader from './Fader.vue';
 import Project from './Project.vue';
 import Projection from './Projection.vue';
 import Setting from '../Setting.vue';
 import Resources from '../Resources.vue';
+
+const targetVars = Object.keys(state.plan.targets);
+
 export default {
+  created() {
+    this.targetVars = targetVars;
+  },
   data() {
     return {
       state,
-      phase: 0
+      phase: 0,
+      targetVar: 0
     };
   },
   components: {
@@ -80,21 +98,32 @@ export default {
     Project,
     Setting,
     Window,
+    Fader,
     Resources,
     Projection
   },
   methods: {
-    prevPhase() {
+    prev() {
       if (this.phase > 0) {
         this.phase--;
+      } else {
+        this.targetVar--;
       }
     },
-    nextPhase() {
+    next() {
       if (this.phase < 1) {
-        this.phase++;
+        if (this.targetVar >= targetVars.length - 1) {
+          this.phase++;
+        } else {
+          this.targetVar++;
+        }
       } else {
         state.phase = 'IMPLEMENTATION';
       }
+    },
+    updateTarget(vari, value) {
+      this.state.plan.targets[vari].value = value;
+      this.calculatePCWager(vari);
     },
     calculatePCWager(vari) {
       let val = state.plan.targets[vari].value;
@@ -131,12 +160,23 @@ export default {
 </script>
 
 <style>
-.planning--targets {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+.planning--target h2 {
+  text-align: center;
+  font-weight: normal;
+  margin: 0;
+  font-size: 1em;
 }
-.planning--targets li {
-  width: 49%;
+.planning--ambition {
+  text-align: center;
+  margin: 0.5em 0 1em 0;
+  font-size: 0.9em;
+}
+.planning--pc-wager {
+  text-align: center;
+  font-size: 0.8em;
+  color: #888;
+}
+.planning--warning {
+  color: red;
 }
 </style>

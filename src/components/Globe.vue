@@ -15,6 +15,6 @@ export default {
 
 <style>
 #globe {
-  height: 50vh;
+  flex: 1;
 }
 </style>

@@ -36,12 +36,12 @@ const init = {
   plan: {
     targets: {
       biodiversity: {
-        value: 10,
+        value: 5,
         wager: 0,
         valence: 1,
       },
       carbon: {
-        value: 425,
+        value: 5,
         wager: 0,
         valence: -1
       }
@@ -49,16 +49,24 @@ const init = {
   },
   world: {
     biodiversity: {
-      value: 10,
+      value: 5,
       baseChange: -1,
       history: [],
-      preindustrial: 20
+      preindustrial: 10,
+      labels: {
+        max: 'Eden Earth',
+        min: 'Dead Planet'
+      }
     },
     carbon: {
-      value: 425,
+      value: 5,
       baseChange: 1,
       history: [],
-      preindustrial: 260
+      preindustrial: 0,
+      labels: {
+        max: 'Stability',
+        min: 'Hot House'
+      }
     },
     contentedness: {
       value: 5,

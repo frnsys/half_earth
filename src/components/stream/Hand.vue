@@ -1,10 +1,11 @@
 <template>
     <div id="hand">
+        <!-- TODO temporary: slidesPerView for 480 should be 5 and 720 should be 7-->
         <swiper
             :slides-per-view="3"
             :space-between="5"
             :centered-slides=true
-            :breakpoints="{480: {slidesPerView: 5}, 720: {slidesPerView: 7}}"
+            :breakpoints="{480: {slidesPerView: 3}, 720: {slidesPerView: 3}}"
             :touchStartPreventDefault=false
             @swiper="onSwiper"
             @slideChange="onSlideChange"
@@ -40,6 +41,10 @@ const params = {
   scale: 0.8,
   modifier: 1
 };
+
+const targetCardScale = 1.8;
+
+const dragTarget = () => window.innerHeight/2;
 
 export default {
     props: {
@@ -77,14 +82,13 @@ export default {
             }
         },
         onDrag(card) {
-            const targetScale = 1.8;
             const box = card.$el.getBoundingClientRect();
-            const yCenter = window.innerHeight/2;
+            const yCenter = dragTarget();
             const yCenterOffset = yCenter - box.height/2;
             const distToCenter = yCenterOffset - box.top;
             const pDistToCenter = distToCenter/yCenter;
             const p = (1 + pDistToCenter);
-            const scale = Math.min(1 + (targetScale - 1) * p, targetScale);
+            const scale = Math.min(1 + (targetCardScale - 1) * p, targetCardScale);
             util.updateTransform(card.$el, {scale});
 
             const opacity = Math.min(1 * p, 1);
@@ -155,6 +159,7 @@ export default {
             this.cardRefs[swiper.activeIndex].isDraggable = true;
         },
 
+        // This determines card positions in the swiper
         // Adapted from:
         // https://raw.githubusercontent.com/nolimits4web/swiper/master/src/components/effect-coverflow/effect-coverflow.js
         setTranslate(swiper) {
@@ -223,11 +228,12 @@ export default {
 
 <style scoped>
 #hand {
-    position: fixed;
-    left: 0;
-    bottom: -120px; /* Hand is partially off-screen */
-    right: 0;
+    position: relative;
     z-index: 2;
+    width: 100%;
+    height: 200px;
+    clip-path: polygon(0 0, 100% 0, 100% 200px, 0% 200px);
+    /* overflow: hidden; */
 }
 .swiper-container {
     overflow: visible;

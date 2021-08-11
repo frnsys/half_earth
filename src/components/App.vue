@@ -87,4 +87,11 @@ figcaption {
   font-size: 0.8em;
   font-style: italic;
 }
+
+/* For prototyping/testing */
+.help {
+  font-size: 0.6em;
+  font-style: italic;
+  color: #888;
+}
 </style>
