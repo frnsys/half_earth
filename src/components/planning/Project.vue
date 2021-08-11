@@ -6,24 +6,15 @@
 
   <div v-if="!flipped">
     <div class="details">
-      <b>Construction</b>:
-      <span>{{project.construction.years ? `${project.construction.years} years` : '🎲'}}</span>
-      <span v-for="(v, k) in project.construction.resources">
-        <b>{{k}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
-      </span>
-      <span v-for="(v, k) in project.construction.impacts">
-        <b>{{VARI_ICONS[k]}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
-      </span>
-    </div>
-
-    <div class="details" v-if="project.type !== PROJECT_TYPE.RESEARCH">
-      <b>Operation</b>:
-      <span v-for="(v, k) in project.operation.resources">
-        <b>{{k}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
-      </span>
-      <span v-for="(v, k) in project.operation.impacts">
-        <b>{{VARI_ICONS[k]}}</b>:{{v > 0 ? '+' : '-'}}{{Math.abs(v)}}/year
-      </span>
+      <span>{{project.construction.years ? `${project.construction.years}` : '🎲'}} year{{project.construction.years !== 1 ? 's' : ''}} to complete</span>
+      <div>
+        <template v-for="(v, k) in project.construction.resources">
+          <Resource :name="k" :value="v" />
+        </template>
+        <template v-for="(v, k) in project.construction.impacts">
+          <Resource :name="k" :value="v" />
+        </template>
+      </div>
     </div>
   </div>
   <div v-else>(more details)</div>
@@ -31,8 +22,12 @@
 </template>
 
 <script>
+import Resource from '../Resource.vue';
 export default {
   props: ['project'],
+  components: {
+    Resource
+  },
   data() {
     return {
       flipped: false
@@ -54,6 +49,13 @@ export default {
   position: relative;
   margin: 0.5em 0;
   padding: 0.25em 0.5em;
+  width: 220px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  white-space: normal;
 }
 .project:hover {
   background: #f0f0f0;

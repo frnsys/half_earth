@@ -16,6 +16,8 @@ const VARI_ICONS = {
   carbon: '☁️',
   contentedness: '😶',
   temperature: '🌡️',
+  energy: '⚡',
+  labor: '🔨',
 };
 
 export default {

@@ -20,7 +20,7 @@ export default {
 .window {
   background: #fff;
   margin: 2em auto;
-  max-width: 640px;
+  max-width: 100%;
   border-radius: 0.25em;
 }
 .window--title {

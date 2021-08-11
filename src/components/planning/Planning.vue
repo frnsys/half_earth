@@ -56,8 +56,6 @@
         </li>
       </ul>
 
-      <Resources />
-
       <p class="help">Set ongoing research initiatives, projects, and policies.</p>
     </div>
 
@@ -78,7 +76,6 @@ import Fader from './Fader.vue';
 import Project from './Project.vue';
 import Projection from './Projection.vue';
 import Setting from '../Setting.vue';
-import Resources from '../Resources.vue';
 
 const targetVars = Object.keys(state.plan.targets);
 
@@ -99,7 +96,6 @@ export default {
     Setting,
     Window,
     Fader,
-    Resources,
     Projection
   },
   methods: {
@@ -178,5 +174,15 @@ export default {
 }
 .planning--warning {
   color: red;
+}
+.planning--projects {
+  white-space: nowrap;
+  overflow-x: scroll;
+  width: 100%;
+}
+.planning--projects li {
+  display: inline-block;
+  margin: 0 0.5em;
+  vertical-align: top;
 }
 </style>
