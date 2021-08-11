@@ -24,12 +24,31 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Uchen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital@0;1&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   overscroll-behavior-y: contain;
-  font-family: "Uchen", serif;
+  font-family: "DM Mono", monospace;
+}
+
+/* TODO temporary mobile constraint */
+body {
+  background: #000;
+}
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 button {

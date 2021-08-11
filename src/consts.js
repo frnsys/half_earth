@@ -18,17 +18,9 @@ const VARI_ICONS = {
   temperature: '🌡️',
 };
 
-const VARI_ABBREV = {
-  temperature: 'Temp.',
-  biodiversity: 'Biod.',
-  contentedness: 'Cont.',
-  carbon: 'CO2',
-};
-
 export default {
   PROJECT_STATE,
   PROJECT_TYPE,
   VARI_ICONS,
-  VARI_ABBREV
 };
 

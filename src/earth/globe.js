@@ -15,7 +15,11 @@ const startYear = 2020;
 
 class Globe {
   constructor(el) {
-    this.scene = new Scene({});
+    let width = el.clientWidth;
+    let height = el.clientHeight;
+    this.scene = new Scene({
+      width, height
+    });
     el.appendChild(this.scene.renderer.domElement);
     this._onReady = [];
   }

@@ -41,7 +41,7 @@ const init = {
         valence: 1,
       },
       carbon: {
-        value: 420,
+        value: 425,
         wager: 0,
         valence: -1
       }
@@ -55,7 +55,7 @@ const init = {
       preindustrial: 20
     },
     carbon: {
-      value: 420,
+      value: 425,
       baseChange: 1,
       history: [],
       preindustrial: 260

@@ -4,7 +4,7 @@
 
     <ul class="hud--indicators">
       <li v-for="(d, vari) in estimates">
-        <b>{{VARI_ICONS[vari]}}{{VARI_ABBREV[vari]}}</b>:
+        <b>{{VARI_ICONS[vari]}}</b>
         <span v-if="vari in state.plan.targets" :class="{achieved: d.value * state.plan.targets[vari].valence >= state.plan.targets[vari].value * state.plan.targets[vari].valence}">{{d.value}}/{{state.plan.targets[vari].value}}</span>
         <span v-else>{{d.value}}</span>
         <span class="estimate">{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>

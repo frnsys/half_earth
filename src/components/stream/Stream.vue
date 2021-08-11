@@ -1,7 +1,7 @@
 <template>
+<Hud />
+<div id="event-stream">
   <Globe ref="globe" />
-  <Hud />
-
   <div id="event-wrapper">
     <button @click="prevEvent">&lt;</button>
     <Event v-if="activeEvent >= 0" :event="state.events[activeEvent]" />
@@ -15,6 +15,7 @@
   <div class="actions">
     <button v-if="state.events.every((ev) => ev.selectedResponse !== null)" @click="nextTurn">Next Year</button>
   </div>
+</div>
 </template>
 
 <script>
@@ -109,13 +110,16 @@ export default {
 </script>
 
 <style>
+#event-stream {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFE8;
+  flex: 1;
+}
 #event-wrapper {
   margin: 1em 0;
-  position: fixed;
-  bottom: 120px;
   width: 100%;
   display: flex;
   justify-content: space-between;
 }
 </style>
-

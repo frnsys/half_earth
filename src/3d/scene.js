@@ -7,8 +7,8 @@ const D = 1;
 
 class Scene {
   constructor(opts) {
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let width = opts.width || window.innerWidth;
+    let height = opts.height || window.innerHeight;
     opts.brightness = opts.brightness || 0.5;
     this.opts = opts;
 
@@ -52,8 +52,9 @@ class Scene {
     this.camera.updateProjectionMatrix();
 
     window.addEventListener('resize', () => {
-      let width = window.innerWidth;
-      let height = window.innerHeight;
+      let parent = this.renderer.domElement.parentElement;
+      let width = parent.clientWidth;
+      let height = parent.clientHeight;
       let aspect = width/height;
       this.camera.left = -D * aspect;
       this.camera.right = D * aspect;
@@ -65,6 +66,7 @@ class Scene {
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableRotate = true;
+    this.controls.enablePan = false;
     this.controls.maxZoom = 0.6;
     this.controls.minZoom = 0.001;
     // this.controls.maxPolarAngle = Math.PI/2;
