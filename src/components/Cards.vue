@@ -1,3 +1,8 @@
+<!--
+  Renders child elements side-by-side with drag-to-scroll.
+  Children should be wrapped in <li> tags.
+-->
+
 <template>
 <ul class="cards"
   :class="{dragging:dragging}"
@@ -7,31 +12,16 @@
 </template>
 
 <script>
+
+// For animating snap-to-center
 // <https://gist.github.com/andjosh/6764939>
+const duration = 150; // ms
 function easeInOutQuad(t, b, c, d) {
   t /= d/2;
 	if (t < 1) return c/2*t*t + b;
 	t--;
 	return -c/2 * (t*(t-2) - 1) + b;
 };
-
-const duration = 150; // ms
-const increment = 20;
-function scrollTo(el, to) {
-  let start = el.scrollLeft,
-    change = to - start,
-    currentTime = 0;
-
-  let animate = setInterval(() => {
-    let val = easeInOutQuad(currentTime, start, change, duration);
-    el.scrollLeft = val;
-    currentTime += increment;
-    if (currentTime >= duration) {
-      clearInterval(animate)
-    }
-  }, increment);
-  return animate;
-}
 
 
 export default {
@@ -71,7 +61,9 @@ export default {
       this.$el.scrollLeft = this.pos.left - dx;
     },
     startDrag(ev) {
-      if (this.animation) clearInterval(this.animation);
+      // Stop snap-to-center animation if there is one
+      if (this.animation) cancelAnimationFrame(this.animation);
+
       this.down = true;
       this.pos = {
         // Current mouse position
@@ -88,10 +80,12 @@ export default {
       if (this.dragging) {
         this.dragging = false;
 
-        // Horizontal snapping
+        // Horizontal snap-to-center
         let rect = this.$el.getBoundingClientRect();
-        let centerOffset = this.$el.scrollLeft + rect.width/2;
+        let scrollLeft = this.$el.scrollLeft;
+        let centerOffset = scrollLeft + rect.width/2;
 
+        // Find the child closest to the center
         let target = [...this.$el.children].reduce((acc, child) => {
           let childRect = child.getBoundingClientRect();
           let childCenterOffset = child.offsetLeft + childRect.width/2;
@@ -102,8 +96,21 @@ export default {
             return acc;
           }
         }, null);
+
         if (target) {
-          this.animation = scrollTo(this.$el, target.child.offsetLeft - rect.width/2 + target.width/2);
+          // Animate snap-to-center
+          let to = target.child.offsetLeft - rect.width/2 + target.width/2;
+          let start = this.$el.scrollLeft,
+            change = to - start,
+            currentTime = performance.now();
+
+          let update = (timestamp) => {
+            this.$el.scrollLeft = easeInOutQuad(timestamp - currentTime, start, change, duration);
+            if (timestamp - currentTime < duration) {
+              this.animation = requestAnimationFrame(update);
+            }
+          };
+          this.animation = requestAnimationFrame(update);
         }
       }
     }
@@ -132,5 +139,16 @@ export default {
   display: inline-block;
   margin: 0 0.5em;
   vertical-align: top;
+  white-space: normal;
+}
+
+/* Margin on either side so
+the first and last cards have room
+to be centered */
+.cards li:first-child {
+  margin-left: 12em;
+}
+.cards li:last-child {
+  margin-right: 12em;
 }
 </style>

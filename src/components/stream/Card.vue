@@ -15,6 +15,8 @@
 <script>
 import util from '../../util';
 
+// TODO basically none of this is being used right now
+
 export default {
   props: {
     draggable: Boolean

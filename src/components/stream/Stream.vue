@@ -4,10 +4,14 @@
   <Globe ref="globe" />
   <div id="event-wrapper">
     <button @click="prevEvent">&lt;</button>
-    <Event :event="state.events[activeEvent]" />
+    <Event :event="event" />
     <button @click="nextEvent">&gt;</button>
   </div>
-  <Hand :cards="state.events[activeEvent].responses" />
+  <Cards>
+      <li v-for="r in event.responses">
+        <Response :response="r" @click="() => toggleResponse(r)" :class="{selected: event.selectedResponse == r}" />
+      </li>
+  </Cards>
 
   <div class="actions">
     <button v-if="state.events.every((ev) => ev.selectedResponse !== null)" @click="nextTurn">Next Year</button>
@@ -20,7 +24,8 @@ import state from '../../state';
 import Hud from '../Hud.vue';
 import Globe from '../Globe.vue'
 import Event from './Event.vue';
-import Hand from './Hand.vue'
+import Cards from '../Cards.vue'
+import Response from './Response.vue'
 export default {
   data() {
     return {
@@ -30,9 +35,10 @@ export default {
   },
   components: {
     Hud,
-    Hand,
     Event,
     Globe,
+    Cards,
+    Response,
   },
   mounted() {
     this.$refs.globe.globe.onReady((globe) => {
@@ -77,7 +83,7 @@ export default {
         this.activeEvent = 0;
       }
       if (this.globe) {
-        let idx = state.events[this.activeEvent].location;
+        let idx = this.event.location;
         this.globe.hexsphere.centerOnIndex(idx);
       }
     },
@@ -87,7 +93,7 @@ export default {
         this.activeEvent = this.state.events.length - 1;
       }
       if (this.globe) {
-        let idx = state.events[this.activeEvent].location;
+        let idx = this.event.location;
         this.globe.hexsphere.centerOnIndex(idx);
       }
     },
@@ -96,15 +102,18 @@ export default {
       console.log(this.$refs.globe.hexphere);
     },
     toggleResponse(response) {
-      // TODO
-      let ev = this.state.events[this.activeEvent];
+      let ev = this.event;
       if (ev.selectedResponse == response) {
         ev.selectedResponse = null;
       } else {
         ev.selectedResponse = response;
       }
-      this.updateEstimates();
     },
+  },
+  computed: {
+    event() {
+      return this.state.events[this.activeEvent];
+    }
   }
 }
 </script>
@@ -129,5 +138,15 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+}
+#event-stream .cards {
+  padding-top: 1em;
+}
+.response {
+  transition: margin 0.1s;
+}
+.response.selected {
+  margin-top: -1em;
+  border: 2px solid #000;
 }
 </style>

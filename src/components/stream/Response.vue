@@ -32,6 +32,15 @@ export default {
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-  height: 100%;
+
+  position: relative;
+  border-radius: 0.5em;
+  width: 200px;
+  height: 250px;
+  background: #F17F5A;
+  color: #fff;
+  z-index: 1;
+  user-select: none;
+  margin: 0 auto;
 }
 </style>

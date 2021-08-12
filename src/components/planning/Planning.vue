@@ -87,7 +87,7 @@ import Project from './Project.vue';
 import Projection from './Projection.vue';
 import Setting from '../Setting.vue';
 import Tip from '../Tip.vue';
-import Cards from './Cards.vue';
+import Cards from '../Cards.vue';
 
 const targetVars = Object.keys(state.plan.targets);
 

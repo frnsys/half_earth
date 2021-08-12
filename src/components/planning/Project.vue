@@ -55,7 +55,6 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   text-align: center;
-  white-space: normal;
 }
 .project:hover {
   background: #f0f0f0;
