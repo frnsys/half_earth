@@ -52,3 +52,28 @@ cargo bench -- --save-baseline <name>
 # Compare against a baseline
 cargo bench -- --baseline <name>
 ```
+
+## Deployment
+
+On older versions of `nginx` you may need to manually add the `wasm` MIME type:
+
+```
+vi /etc/nginx/mime.types
+
+# Add the line:
+application/wasm    wasm
+
+systemctl restart nginx
+```
+
+You also to configure the server to add the proper cross-origin isolation headers so that `SharedArrayBuffer` can be used. In `nginx` you add the following to your `server` block:
+
+```
+server {
+    // ...
+
+    add_header Cross-Origin-Opener-Policy 'same-origin';
+    add_header Cross-Origin-Embedder-Policy 'require-corp';
+
+    // ...
+}
