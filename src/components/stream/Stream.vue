@@ -4,14 +4,10 @@
   <Globe ref="globe" />
   <div id="event-wrapper">
     <button @click="prevEvent">&lt;</button>
-    <Event v-if="activeEvent >= 0" :event="state.events[activeEvent]" />
-    <div v-else>
-      <p>Emergency Measures</p>
-      <em class="note">Make changes to the plan; these cost PC to use</em>
-    </div>
+    <Event :event="state.events[activeEvent]" />
     <button @click="nextEvent">&gt;</button>
   </div>
-  <Hand v-if="activeEvent >= 0" :cards="state.events[activeEvent].responses" />
+  <Hand :cards="state.events[activeEvent].responses" />
 
   <div class="actions">
     <button v-if="state.events.every((ev) => ev.selectedResponse !== null)" @click="nextTurn">Next Year</button>
@@ -78,19 +74,19 @@ export default {
     nextEvent() {
       this.activeEvent++;
       if (this.activeEvent > this.state.events.length - 1) {
-        this.activeEvent = -1;
+        this.activeEvent = 0;
       }
-      if (this.activeEvent >= 0 && this.globe) {
+      if (this.globe) {
         let idx = state.events[this.activeEvent].location;
         this.globe.hexsphere.centerOnIndex(idx);
       }
     },
     prevEvent() {
       this.activeEvent--;
-      if (this.activeEvent < -1) {
+      if (this.activeEvent < 0) {
         this.activeEvent = this.state.events.length - 1;
       }
-      if (this.activeEvent >= 0 && this.globe) {
+      if (this.globe) {
         let idx = state.events[this.activeEvent].location;
         this.globe.hexsphere.centerOnIndex(idx);
       }
@@ -119,6 +115,8 @@ export default {
   flex-direction: column;
   background: #FFFFE8;
   flex: 1;
+  height: 100vh;
+  overflow: hidden;
 }
 #event-wrapper {
   margin: 1em 0;

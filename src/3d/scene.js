@@ -44,7 +44,7 @@ class Scene {
     // TODO adjust camera
     let aspect = width/height;
     this.camera = new THREE.OrthographicCamera(-D*aspect, D*aspect, D, -D, NEAR, FAR);
-    this.camera.zoom = 0.15;
+    this.camera.zoom = 0.18;
     this.camera.position.z = 200;
     this.camera.position.y = 0;
     this.camera.position.x = 0;

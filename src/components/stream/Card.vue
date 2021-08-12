@@ -7,7 +7,9 @@
   @mouseup="onDragStop"
   @touchend="onDragStop"
   @mouseleave="onLeave"
-  >{{card.name}}</div>
+  >
+  <slot />
+</div>
 </template>
 
 <script>
@@ -15,7 +17,6 @@ import util from '../../util';
 
 export default {
   props: {
-    card: Object,
     draggable: Boolean
   },
   data() {
@@ -36,7 +37,6 @@ export default {
     // on click, get cursor/touch offset from card container
     // set card position to cursor/touch position on move, preserving original offset
     onDragStart(ev) {
-      console.log(ev);
       if (!this.isDraggable) return;
       this.dragging = true;
       /* this.$el.style.transform = 'rotate(-2deg)'; */
@@ -116,10 +116,8 @@ export default {
   background: #202020;
   background: #F17F5A;
   color: #fff;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
   z-index: 1;
+  user-select: none;
+  margin: 0 auto;
 }
 </style>

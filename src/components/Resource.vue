@@ -14,10 +14,8 @@ export default {
     value: Number
   },
   computed: {
-    amountIcon: {
-      get: function() {
-        return this.value < 0 ? '-' : '+';
-      }
+    amountIcon() {
+      return this.value < 0 ? '-' : '+';
     }
   }
 }

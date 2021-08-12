@@ -14,16 +14,8 @@ export default {
     finalTargetValue: Number
   },
   mounted() {
-    let values = this.pastValues.concat([
-      this.currentTargetValue,
-      this.finalTargetValue
-    ]);
     this.chart = new Chart(this.$el, {
-      // Pad out the ranges a bit
-      ranges: {
-        x: [this.startYear - 1, this.endYear + 1],
-        y: [0.9 * Math.min(...values), Math.max(...values) * 1.1]
-      }
+      ranges: this.ranges
     });
 
     window.addEventListener('resize', () => {
@@ -34,7 +26,21 @@ export default {
     this.renderChart();
   },
   updated() {
+    this.chart.ranges = this.ranges;
     this.renderChart();
+  },
+  computed: {
+    ranges() {
+      let values = this.pastValues.concat([
+        this.currentTargetValue,
+        this.finalTargetValue
+      ]);
+      // Pad out the ranges a bit
+      return {
+        x: [this.startYear - 2, this.endYear + 2],
+        y: [0.9 * Math.min(...values), Math.max(...values) * 1.1]
+      };
+    }
   },
   methods: {
     renderChart() {

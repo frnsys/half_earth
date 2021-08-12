@@ -76,10 +76,10 @@ class Globe {
     const canvas = this.scene.renderer.domElement;
     material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
 
+    this._onReady.forEach((fn) => fn(this));
+
     await this.surface.updateTexture();
     surfaceTexture.needsUpdate = true;
-
-    this._onReady.forEach((fn) => fn(this));
   }
 
   // Calculate world update.

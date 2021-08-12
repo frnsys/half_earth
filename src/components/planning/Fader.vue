@@ -36,27 +36,25 @@ export default {
     minLabel: String
   },
   computed: {
-    pips: {
-      get: function() {
-        let startColor = this.reverse ? colorB : colorA;
-        let endColor = this.reverse ? colorA : colorB;
-        return [...Array(this.steps)].map((_, i) => {
-          let value = this.steps - i + 1; // Make 1-indexed for values
-          let current = value == this.current;
-          let selected = (value >= this.value && this.reverse) || (value <= this.value && !this.reverse);
-          let color = colorsLerp(startColor, endColor, i/this.steps);
-          let label = null;
-          if (i == 0) {
-            label = `< ${this.reverse ? this.minLabel : this.maxLabel}`;
-          } else if (i == this.steps - 1) {
-            label = `< ${this.reverse ? this.maxLabel : this.minLabel}`;
-          }
-          return {
-            value, current, label,
-            color: selected ? `rgb(${color.join()})` : '#ededed'
-          }
-        });
-      }
+    pips() {
+      let startColor = this.reverse ? colorB : colorA;
+      let endColor = this.reverse ? colorA : colorB;
+      return [...Array(this.steps)].map((_, i) => {
+        let value = this.steps - i + 1; // Make 1-indexed for values
+        let current = value == this.current;
+        let selected = (value >= this.value && this.reverse) || (value <= this.value && !this.reverse);
+        let color = colorsLerp(startColor, endColor, i/this.steps);
+        let label = null;
+        if (i == 0) {
+          label = `< ${this.reverse ? this.minLabel : this.maxLabel}`;
+        } else if (i == this.steps - 1) {
+          label = `< ${this.reverse ? this.maxLabel : this.minLabel}`;
+        }
+        return {
+          value, current, label,
+          color: selected ? `rgb(${color.join()})` : '#ededed'
+        }
+      });
     },
   },
   methods: {

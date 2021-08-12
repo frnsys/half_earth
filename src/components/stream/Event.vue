@@ -20,11 +20,12 @@ export default {
 <style>
 .event {
   text-align: center;
-  border: 1px solid #888;
+  border: 1px solid #000;
   padding: 0.25em 0.5em 1em;
   flex: 1;
   margin: 0 1em;
-  background: #8E905D;
+  background: #fff;
+  height: 120px;
 }
 .event--type {
   font-size: 0.75em;

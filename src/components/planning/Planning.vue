@@ -18,7 +18,7 @@
         @change="(value) => updateTarget(vari, value)"
         />
       <div class="planning--ambition">
-        <span v-if="state.plan.targets[vari].wager < 0" class="planning--warning">Retrogression</span>
+        <span v-if="state.plan.targets[vari].wager < 0" class="planning--warning">Regression</span>
         <template v-else>
           <span v-if="state.plan.targets[vari].wager < 1">Business as Usual</span>
           <span v-else-if="state.plan.targets[vari].wager < 4">Milquetoast</span>
@@ -27,8 +27,14 @@
           <span v-else>Impossible</span>
         </template>
         <div class="planning--pc-wager">
-          <template v-if="state.plan.targets[vari].wager < 0">{{state.plan.targets[vari].wager}}PC penalty</template>
-          <template v-else>{{state.plan.targets[vari].wager}}PC stake</template>
+          <template v-if="state.plan.targets[vari].wager < 0">
+            {{state.plan.targets[vari].wager}}PC penalty
+            <Tip>People will not like this backtracking and you'll lose support.</Tip>
+          </template>
+          <template v-else>
+            {{state.plan.targets[vari].wager}}PC stake
+            <Tip>If you reach this target, you'll earn this much PC. If you fail, you'll lose this much.</Tip>
+          </template>
         </div>
       </div>
       <figure>
@@ -38,9 +44,13 @@
           :pastValues="state.world[vari].history.concat(state.world[vari].value)"
           :currentTargetValue="state.plan.targets[vari].value"
           :finalTargetValue="state.world[vari].preindustrial" />
-        <figcaption>At this rate you will reach preindustrial levels in X years...</figcaption>
       </figure>
-      <p class="help">Set targets for the next five years. Harder targets can earn you more PC, but also risk losing more. Backtracking on a target has a PC cost.</p>
+      <p class="help">
+        Set targets for the next five years. Harder targets can earn you more PC, but also risk losing more. Backtracking on a target has a PC cost.
+      </p>
+      <p class="help">
+        Should backtracking targets be allowed at all? Can you only set targets in the "forward" direction from the current value?
+      </p>
     </div>
 
     <div v-else-if="phase === 1">
@@ -76,6 +86,7 @@ import Fader from './Fader.vue';
 import Project from './Project.vue';
 import Projection from './Projection.vue';
 import Setting from '../Setting.vue';
+import Tip from '../Tip.vue';
 
 const targetVars = Object.keys(state.plan.targets);
 
@@ -92,6 +103,7 @@ export default {
   },
   components: {
     Hud,
+    Tip,
     Project,
     Setting,
     Window,

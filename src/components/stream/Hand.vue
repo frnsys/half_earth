@@ -15,20 +15,22 @@
       @setTransition="setTransition"
     >
       <swiper-slide v-for="(card, idx) in cards" :key="card.id">
-        <Card :card="card" :ref="setCardRef"
+        <Card :ref="setCardRef"
           @onDragStart="onDragStart"
           @onDragStop="onDragStop"
-          @onDrag="onDrag" />
+          @onDrag="onDrag">
+          <Response :response="card" />
+        </Card>
       </swiper-slide>
     </swiper>
   </div>
-  <div id="overlay" ref="overlay"></div>
-  <div id="implement" ref="implement">Implement</div>
+  <div id="playzone" ref="playzone">Play</div>
 </template>
 
 <script>
 import util from '../../util';
 import Card from './Card.vue'
+import Response from './Response.vue'
 import SwiperCore, { A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper.scss';
@@ -42,9 +44,15 @@ const params = {
   modifier: 1
 };
 
-const targetCardScale = 1.8;
+const targetCardScale = 1.1;
+const zoneRadius = 0.5;
 
-const dragTarget = () => window.innerHeight/2;
+// A little hacky, but drop zone is in the center of the globe div
+const dragTarget = () => {
+  let globe = document.querySelector('#globe');
+  let rect = globe.getBoundingClientRect();
+  return rect.top + rect.height/2;
+}
 
 export default {
   props: {
@@ -65,6 +73,7 @@ export default {
     Card,
     Swiper,
     SwiperSlide,
+    Response,
   },
   beforeUpdate() {
     this.cardRefs = [];
@@ -72,14 +81,6 @@ export default {
   methods: {
     setCardRef(el) {
       if (el) this.cardRefs.push(el);
-    },
-    setAdjacentCardOpacity(opacity) {
-      if (this.swiper.activeIndex > 0) {
-        this.cardRefs[this.swiper.activeIndex-1].$el.style.opacity = opacity;
-      }
-      if (this.swiper.activeIndex < this.cardRefs.length - 1) {
-        this.cardRefs[this.swiper.activeIndex+1].$el.style.opacity = opacity;
-      }
     },
     onDrag(card) {
       const box = card.$el.getBoundingClientRect();
@@ -92,15 +93,10 @@ export default {
       util.updateTransform(card.$el, {scale});
 
       const opacity = Math.min(1 * p, 1);
-      this.$refs.overlay.style.opacity = opacity;
-      this.$refs.overlay.style.display = 'block';
-      this.$refs.implement.style.opacity = opacity * 0.2;
-      this.setAdjacentCardOpacity(1 - opacity);
+      this.$refs.playzone.style.opacity = opacity * 0.2;
 
-      const $implement = this.$refs.implement;
-      if (box.top < 0) {
-        $implement.style.opacity = box.top/(-box.height/3);
-      }
+      const $playzone = this.$refs.playzone;
+      $playzone.style.opacity = 1. + pDistToCenter + zoneRadius;
     },
     onDragStart() {
       this.swiper.disable();
@@ -108,43 +104,29 @@ export default {
     onDragStop(card) {
       const $card = card.$el;
       const box = $card.getBoundingClientRect();
-      const $implement = this.$refs.implement;
+      const $playzone = this.$refs.playzone;
 
-      // Card must be pushed a third off screen to implement
-      let played = false;
-      if (box.top < -box.height/3) {
-        // TODO card is played
-        alert("played card");
-        played = true;
-      }
-
-      const yCenter = window.innerHeight/2;
+      const yCenter = dragTarget();
       const yCenterOffset = yCenter - box.height/2;
       const distToCenter = yCenterOffset - box.top;
       const pDistToCenter = distToCenter/yCenter;
 
-      // Preview card
-      // if dragged past (yCenter - 0.1) and not played
-      if (pDistToCenter + 0.1 > 0 && !played) {
+      // Play card if close enough to drop zone
+      $playzone.style.opacity = 0.0;
+      if (pDistToCenter + zoneRadius > 0) {
         $card.style.left = 0;
         $card.style.top = `${parseInt($card.style.top) + distToCenter}px`;
         util.updateTransform($card, {rotate: '0deg'});
         $card.classList.add('card-preview');
 
+        // TODO finish
+        this.$emit('cardPlayed', card);
+
       // Reset card to hand
       } else {
-        const $overlay = this.$refs.overlay;
-        $overlay.style.transition = 'all 0.2s';
-        $overlay.style.opacity = 0;
-        $overlay.style.display = 'none';
-        $implement.style.opacity = 0.0;
         $card.classList.remove('card-preview');
-        this.overlayTimeout = setTimeout(() => {
-          $overlay.style.transition = '';
-        }, 200);
 
         card.resetDrag();
-        this.setAdjacentCardOpacity(1);
         this.swiper.enable();
       }
     },
@@ -250,24 +232,13 @@ export default {
   transform: scale(100%);
 }
 
-#overlay {
-  background: rgba(0,0,0,0.8);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  opacity: 0;
-  display: none;
-}
 #stage {
   display: flex;
   align-items: center;
   justify-content: space-around;
 }
-#implement {
-  color: #fff;
+#playzone {
+  color: red;
   text-align: center;
   font-size: 1.5em;
   padding: 0.5em;

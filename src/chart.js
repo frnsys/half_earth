@@ -141,7 +141,6 @@ class Chart {
 
     if (label) {
       this.ctx.fillStyle = '#000000';
-      let textSize = this.ctx.measureText(label);
       this.ctx.fillText(label, labelPos[0], labelPos[1] - fontSize/2);
     }
   }
@@ -157,10 +156,11 @@ class Chart {
 
   drawXTick(x, size, label) {
     let px_x = this.xToPixel(x);
+    let textSize = this.ctx.measureText(label);
     this.drawTick(
         [px_x, this.height-size/2],
         [px_x, this.height+size/2],
-        [px_x, this.height-size/2],
+        [px_x-textSize.width/2, this.height-size/2],
         label
       );
   }

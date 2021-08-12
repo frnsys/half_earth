@@ -24,28 +24,26 @@ export default {
     };
   },
   computed: {
-    estimates: {
-      get: function() {
-        const estimates = {};
+    estimates() {
+      const estimates = {};
 
-        Object.keys(state.world).forEach((k) => {
-          estimates[k] = {
-            change: state.world[k].baseChange,
-            value: state.world[k].value
-          };
+      Object.keys(state.world).forEach((k) => {
+        estimates[k] = {
+          change: state.world[k].baseChange,
+          value: state.world[k].value
+        };
+      });
+
+      // Event effects
+      state.events.forEach((ev) => {
+        Object.keys(ev.impacts).forEach((k) => {
+          estimates[k].change += ev.impacts[k];
         });
+      });
 
-        // Event effects
-        state.events.forEach((ev) => {
-          Object.keys(ev.impacts).forEach((k) => {
-            estimates[k].change += ev.impacts[k];
-          });
-        });
+      // TODO other factors
 
-        // TODO other factors
-
-        return estimates;
-      }
+      return estimates;
     }
   }
 };

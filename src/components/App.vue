@@ -83,10 +83,6 @@ figure {
   padding: 0;
   margin: 0;
 }
-figcaption {
-  font-size: 0.8em;
-  font-style: italic;
-}
 
 /* For prototyping/testing */
 .help {

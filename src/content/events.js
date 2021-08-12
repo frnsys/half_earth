@@ -1,13 +1,13 @@
 export default [{
   type: 'Natural Disaster',
-  body: 'This is an event. Two sentences!',
+  body: 'A major hurricane will make landfall soon in the Southeastern US.',
   location: 238,
   selectedResponse: null,
   impacts: {
     contentedness: -1,
   },
   responses: [{
-    name: 'Response A',
+    name: 'Evacuate the region',
     costs: {
       energy: 1
     },
@@ -15,7 +15,7 @@ export default [{
       contentedness: -1,
     }
   }, {
-    name: 'Response B',
+    name: 'Accelerate seawall construction',
     costs: {
       energy: 3
     },
@@ -23,18 +23,35 @@ export default [{
       contentedness: 1,
     }
   }, {
-    name: 'Response C',
-    costs: {
-      energy: 12
-    },
+    name: 'Ignore',
+    costs: {},
     impacts: {
-      contentedness: 5,
+      contentedness: -3,
     }
   }]
 }, {
   type: 'Cultural Shift',
-  body: 'This is another event. Another two sentences!',
+  body: 'Everyone is really into hemp clothing now.',
   location: 351,
+  selectedResponse: null,
+  impacts: {
+    carbon: -1,
+  },
+  responses: [{
+    name: 'Great',
+    costs: {
+      energy: 10
+    },
+    impacts: {}
+  }, {
+    name: 'Grow more hemp',
+    costs: {},
+    impacts: {}
+  }]
+}, {
+  type: 'Planetary Crisis',
+  body: 'Emergency measures placeholder',
+  location: 191,
   selectedResponse: null,
   impacts: {
     carbon: -1,
