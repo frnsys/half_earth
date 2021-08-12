@@ -54,7 +54,7 @@
     </div>
 
     <div v-else-if="phase === 1">
-      <ul class="planning--projects">
+      <Cards>
         <li v-for="p in state.projects">
           <Project @click="() => toggleProject(p)" :class="{selected: state.player.projects.includes(p)}" :project="p">
             <template v-slot:costs>
@@ -64,7 +64,7 @@
             </template>
           </Project>
         </li>
-      </ul>
+      </Cards>
 
       <p class="help">Set ongoing research initiatives, projects, and policies.</p>
     </div>
@@ -87,6 +87,7 @@ import Project from './Project.vue';
 import Projection from './Projection.vue';
 import Setting from '../Setting.vue';
 import Tip from '../Tip.vue';
+import Cards from './Cards.vue';
 
 const targetVars = Object.keys(state.plan.targets);
 
@@ -104,6 +105,7 @@ export default {
   components: {
     Hud,
     Tip,
+    Cards,
     Project,
     Setting,
     Window,
@@ -186,15 +188,5 @@ export default {
 }
 .planning--warning {
   color: red;
-}
-.planning--projects {
-  white-space: nowrap;
-  overflow-x: scroll;
-  width: 100%;
-}
-.planning--projects li {
-  display: inline-block;
-  margin: 0 0.5em;
-  vertical-align: top;
 }
 </style>
