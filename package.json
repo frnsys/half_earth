@@ -12,7 +12,6 @@
     "hector-wasm": "file:hector/wasm",
     "hexasphere.js": "^0.2.2",
     "howler": "^2.2.3",
-    "swiper": "^6.7.5",
     "three": "^0.129.0",
     "upng-js": "^2.1.0",
     "vue": "^3.1.4"
