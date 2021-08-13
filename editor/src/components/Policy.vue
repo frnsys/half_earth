@@ -5,7 +5,7 @@
       Name
       <Tip>A name describing the policy.</Tip>
     </label>
-    <input type="text" v-model="localPolicy.name" @blur="save" />
+    <input class="policy--name" type="text" v-model="localPolicy.name" @blur="save" />
   </div>
   <div>
     <label>
@@ -42,12 +42,21 @@
 
 <script>
 import api from '../api';
+import util from '../util';
 import Tip from './Tip.vue';
 
 export default {
   props: ['policy'],
   components: {
     Tip
+  },
+  mounted() {
+    this.$el.querySelectorAll('textarea').forEach((el) => {
+      util.resizeTextArea(el);
+      el.addEventListener('input', () => {
+        util.resizeTextArea(el);
+      });
+    });
   },
   data() {
     return {
@@ -66,3 +75,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.policy--name {
+  font-size: 1.5em;
+  border: none;
+  border-bottom: 1px solid #000;
+  font-weight: bold;
+}
+</style>

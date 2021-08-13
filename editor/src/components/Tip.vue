@@ -76,7 +76,7 @@ export default {
   color: #aaa;
 	border: 1px solid #aaa;
 	border-radius: 20em;
-	padding: 0 0.4em;
+	padding: 0.1em 0.4em;
   cursor: pointer;
   margin: 0 0.25em;
   font-size: 0.8em;

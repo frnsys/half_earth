@@ -23,7 +23,7 @@ import Policy from './Policy.vue';
 export default {
   data() {
     return {
-      type: 'Policy',
+      type: 'Event',
       state
     }
   },
@@ -33,13 +33,15 @@ export default {
   },
   methods: {
     itemsOfType(type) {
-      return Object.values(this.state.items).filter((i) => i._type == type);
+      return Object.values(this.state.items).filter((i) => i._type == type).sort((a, b) => a._created < b._created);
     },
     addNew(type) {
       api.update({
         id: uuid(),
+        _created: Date.now(),
         _type: type,
       });
+      scroll(0,0);
     }
   }
 }
@@ -50,24 +52,51 @@ export default {
   box-sizing: border-box;
 }
 
+html, body {
+  font-family: 'Arial', sans-serif;
+}
+
 main {
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto;
 }
+
 label {
-  font-size: 0.8em;
+  font-size: 0.7em;
   display: flex;
   justify-content: space-between;
   margin-top: 0.3em;
+  font-family: 'Arial', sans-serif;
 }
-
-input, textarea, select, button {
+input, textarea, select {
   width: 100%;
-  max-width: 100%;
+  font-family: 'Arial', sans-serif;
 }
-
 textarea {
-  min-height: 80px;
+  min-width: 100%;
+  max-width: 100%;
+  resize: none;
+}
+button {
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+}
+fieldset {
+  border: none;
+  display: flex;
+  padding: 0;
+}
+fieldset > div {
+  flex: 1;
+  margin-left: 0.5em;
+  display: flex;
+  flex-direction: column;
+}
+fieldset > div textarea {
+  flex-grow: 1;
+}
+fieldset > div:first-child {
+  margin-left: 0;
 }
 
 ul, li {
@@ -77,10 +106,7 @@ ul, li {
 }
 
 li {
-  margin: 2em 0;
-  background: #f0f0f0;
-  border: 1px solid #aaa;
-  padding: 0.5em 1em 1em 1em;
+  margin: 4em 0;
 }
 
 nav {
@@ -95,6 +121,8 @@ nav {
 }
 
 .new-button {
-  margin: 3em 0 0 0;
+  position: fixed;
+  right: 1em;
+  top: 1em;
 }
 </style>
