@@ -46,7 +46,9 @@ export default {
 
       // Jump to tile for current event
       let idx = state.events[this.activeEvent].location;
-      globe.hexsphere.centerOnIndex(idx);
+      if (idx) {
+        globe.hexsphere.centerOnIndex(idx);
+      }
 
       // Jump to event on clicked tile, if any
       globe.hexsphere.onClick((tile) => {
@@ -84,7 +86,9 @@ export default {
       }
       if (this.globe) {
         let idx = this.event.location;
-        this.globe.hexsphere.centerOnIndex(idx);
+        if (idx) {
+          this.globe.hexsphere.centerOnIndex(idx);
+        }
       }
     },
     prevEvent() {
@@ -94,7 +98,9 @@ export default {
       }
       if (this.globe) {
         let idx = this.event.location;
-        this.globe.hexsphere.centerOnIndex(idx);
+        if (idx) {
+          this.globe.hexsphere.centerOnIndex(idx);
+        }
       }
     },
     jumpToEvent(event) {

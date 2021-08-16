@@ -39,8 +39,11 @@ class Globe {
     let surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
     surfaceTexture.flipY = true;
 
-    const material = new THREE.ShaderMaterial({
+    this.material = new THREE.ShaderMaterial({
       uniforms: {
+        time: {
+          value: 0.0
+        },
         heightmap: {
           value: texLoader.load('./assets/surface/heightmap.png')
         },
@@ -63,7 +66,7 @@ class Globe {
 
     const sphere = new THREE.Mesh(
       new THREE.SphereGeometry(5, 256, 256),
-      material
+      this.material
     );
     this.scene.add(sphere);
 
@@ -74,7 +77,7 @@ class Globe {
     [238, 351].forEach((idx) => this.hexsphere.showIcon('advisor', idx));
 
     const canvas = this.scene.renderer.domElement;
-    material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
+    this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
 
     this._onReady.forEach((fn) => fn(this));
 
@@ -91,8 +94,11 @@ class Globe {
     surfaceTexture.needsUpdate = true;
   }
 
-  render() {
+  render(timestamp) {
     this.scene.render();
+    if (this.material) {
+      this.material.uniforms.time.value = timestamp;
+    }
     requestAnimationFrame(this.render.bind(this));
   }
 }
