@@ -52,5 +52,6 @@ export default {
   background-repeat: no-repeat;
   opacity: 1;
   transition: 5s all;
+  image-rendering: pixelated;
 }
 </style>
