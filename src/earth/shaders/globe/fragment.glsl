@@ -63,6 +63,6 @@ void main() {
 
     // Apply cloud layer
     float scale=0.5 + sin(time/100000.)/2.;
-    float n = blender_noise(vertexPosition, scale, detail, roughness, distortion);
-    gl_FragColor = n < 0.5 ? base_color : base_color + vec4(n);
+    float n = blender_noise(vertexPosition + time/100000., scale, detail, roughness, distortion);
+    gl_FragColor = n < 0.58 ? base_color : base_color + vec4(n);
 }
