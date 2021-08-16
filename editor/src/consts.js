@@ -2,6 +2,7 @@ const POLICY_TYPE = [
   'Research',
   'Energy',
   'Diet',
+  'Agriculture',
   'Population',
   'Project',
   'Transportation',

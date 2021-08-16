@@ -4,18 +4,27 @@
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
 </nav>
 <template v-if="type == 'Policy'">
-  <Policy v-for="p in itemsOfType('Policy')" :policy="p" />
+  <Policy v-for="p in itemsOfType" :policy="p" />
   <button class="new-button" @click="() => addNew('Policy')">Add Policy</button>
 </template>
 <template v-else-if="type == 'Event'">
-  <Event v-for="e in itemsOfType('Event')" :event="e" />
+  <Event v-for="e in itemsOfType" :event="e" />
   <button class="new-button" @click="() => addNew('Event')">Add Event</button>
 </template>
+
+<ul id="toc">
+  <li v-for="i in tableOfContents"><a :href="`#${i.slug}`">{{i.label}}</a></li>
+</ul>
+
+<datalist id="arcs">
+  <option v-for="arc in storyArcs">{{arc}}</option>
+</datalist>
 </template>
 
 <script>
 import api from '../api';
 import uuid from '../uuid';
+import util from '../util';
 import state from '../state';
 import Event from './Event.vue';
 import Policy from './Policy.vue';
@@ -32,9 +41,6 @@ export default {
     Policy,
   },
   methods: {
-    itemsOfType(type) {
-      return Object.values(this.state.items).filter((i) => i._type == type).sort((a, b) => a._created < b._created);
-    },
     addNew(type) {
       api.update({
         id: uuid(),
@@ -42,6 +48,30 @@ export default {
         _type: type,
       });
       scroll(0,0);
+    }
+  },
+  computed: {
+    itemsOfType() {
+      return Object.values(this.state.items).filter((i) => i._type == this.type).sort((a, b) => a._created < b._created);
+    },
+    storyArcs() {
+      let arcs = Object.values(this.state.items).filter((i) => i._type == 'Event' && i.arc).map((e) => e.arc);
+      return [...new Set(arcs)];
+    },
+    tableOfContents() {
+      let key;
+      switch (this.type) {
+        case 'Event':
+          key = 'body';
+          break;
+        case 'Policy':
+          key = 'name';
+          break;
+      }
+      return this.itemsOfType.map((i) => ({
+        label: i[key],
+        slug: util.slugify(i[key])
+      }));
     }
   }
 }
@@ -124,5 +154,45 @@ nav {
   position: fixed;
   right: 1em;
   top: 1em;
+}
+
+.notes {
+  margin-top: 0.5em;
+  padding: 0 0.25em 0.25em 0.25em;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+}
+.notes label {
+  cursor: pointer;
+  text-decoration: underline;
+  user-select: none;
+}
+
+#toc {
+  top: 0;
+  left: 0;
+  width: 260px;
+  padding: 0.5em;
+  position: fixed;
+  height: 100vh;
+}
+#toc li {
+  margin: 0.25em 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  color: #aaa;
+  border-bottom: 1px solid transparent;
+}
+#toc li a {
+  color: #aaa;
+  text-decoration: none;
+}
+#toc li:hover {
+  color: #000;
+  border-bottom: 1px solid #000;
+}
+#toc li:hover a {
+  color: #000;
 }
 </style>
