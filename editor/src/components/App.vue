@@ -12,9 +12,10 @@
   <button class="new-button" @click="() => addNew('Event')">Add Event</button>
 </template>
 
-<ul id="toc">
-  <li v-for="i in tableOfContents"><a :href="`#${i.slug}`">{{i.label}}</a></li>
+<ul id="toc" v-if="tocOpen">
+  <li v-for="i in tableOfContents"><a :href="`#${i.id}`">{{i.label || '(empty)'}}</a></li>
 </ul>
+<div class="toc-toggle" @click="() => tocOpen = !tocOpen">{{tocOpen ? 'Hide' : 'Show'}} TOC</div>
 
 <datalist id="arcs">
   <option v-for="arc in storyArcs">{{arc}}</option>
@@ -33,6 +34,7 @@ export default {
   data() {
     return {
       type: 'Event',
+      tocOpen: true,
       state
     }
   },
@@ -69,8 +71,8 @@ export default {
           break;
       }
       return this.itemsOfType.map((i) => ({
+        id: i.id,
         label: i[key],
-        slug: util.slugify(i[key])
       }));
     }
   }
@@ -172,9 +174,11 @@ nav {
   top: 0;
   left: 0;
   width: 260px;
-  padding: 0.5em;
+  padding: 2em 0.5em 0.5em 0.5em;
   position: fixed;
   height: 100vh;
+  overflow-y: scroll;
+  background: #fff;
 }
 #toc li {
   margin: 0.25em 0;
@@ -194,5 +198,18 @@ nav {
 }
 #toc li:hover a {
   color: #000;
+}
+.toc-toggle {
+  position: fixed;
+  left: 0.6em;
+  top: 1em;
+  font-size: 0.8em;
+  cursor: pointer;
+  z-index: 1;
+  color: #aaa;
+}
+.toc-toggle:hover {
+  color: #000;
+  text-decoration: underline;
 }
 </style>

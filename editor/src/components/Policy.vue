@@ -1,5 +1,5 @@
 <template>
-<li class="policy" :id="slug">
+<li class="policy" :id="policy.id">
   <div>
     <label>
       Name
@@ -86,11 +86,6 @@ export default {
   methods: {
     save() {
       api.update(this.localData);
-    }
-  },
-  computed: {
-    slug() {
-      return util.slugify(this.localData.name);
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-<li class="event" :id="slug">
+<li class="event" :id="event.id">
   <div>
     <label>
       Description
@@ -107,11 +107,6 @@ export default {
   methods: {
     save() {
       api.update(this.localData);
-    }
-  },
-  computed: {
-    slug() {
-      return util.slugify(this.localData.body);
     }
   }
 }
