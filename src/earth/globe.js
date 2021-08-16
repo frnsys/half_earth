@@ -5,6 +5,12 @@ import vertexShader from './shaders/globe/vertex.glsl';
 import fragmentShader from './shaders/globe/fragment.glsl';
 import * as THREE from 'three';
 
+import Stats from 'stats.js';
+
+let stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
+
 const texLoader = new THREE.TextureLoader();
 
 const Surface = RPC.initialize(
@@ -95,10 +101,12 @@ class Globe {
   }
 
   render(timestamp) {
+    stats.begin();
     this.scene.render();
     if (this.material) {
       this.material.uniforms.time.value = timestamp;
     }
+    stats.end();
     requestAnimationFrame(this.render.bind(this));
   }
 }

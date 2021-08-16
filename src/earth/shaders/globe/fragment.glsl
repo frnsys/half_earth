@@ -10,14 +10,8 @@ uniform vec3 screenRes;
 uniform float time;
 
 #include "./lib/bit_dither.glsl"
-#include "./lib/blender_noise.glsl"
+#include "./lib/clouds.glsl"
 /* #include "./lib/detect_edges.glsl" */
-
-// For cloud layer
-const float detail = 12.160;
-const float roughness = 0.625;
-const float distortion = 1.050;
-
 
 void main() {
     // Heightmap coloring
@@ -57,12 +51,12 @@ void main() {
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere * sphereShadow), 1.0); */
     /* gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0); */
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere * sphereShadow) * multiplier, 1.0); */
-    /* gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0); */
+    gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0);
 
     vec4 base_color = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0);
 
     // Apply cloud layer
-    float scale=0.5 + sin(time/100000.)/2.;
-    float n = blender_noise(vertexPosition + time/100000., scale, detail, roughness, distortion);
+    float scale = 0.25 + sin(time/200000.)/2.;
+    float n = clouds(vertexPosition + time/200000., scale);
     gl_FragColor = n < 0.58 ? base_color : base_color + vec4(n);
 }
