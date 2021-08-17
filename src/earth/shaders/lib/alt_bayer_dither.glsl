@@ -63,7 +63,7 @@ float _dither( mat4 m, ivec2 p )
 
 vec3 alt_bayer_dither(vec3 c) {
     ivec2 p = ivec2(mod( gl_FragCoord.xy, 8.0 ));
-	c = pow( c, vec3(2.2) );
+	c = pow( c, vec3(1.5) );
 	c -= 1.0/255.0;
 
 	vec3 d = vec3(0.0);

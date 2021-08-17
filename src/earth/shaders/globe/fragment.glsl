@@ -21,7 +21,7 @@ void main() {
     vec3 shadows = texture2D(shadows, vertexUV).rgb;
 
     // Atmospheric glow and sphere shadow, to give more depth
-    float intensity = 1.20 - dot(vertexNormal, vec3(0.0, 0.0, 1.0));
+    float intensity = 1.2 - dot(vertexNormal, vec3(0.0, 0.0, 1.0));
     vec3 atmosphere = vec3(0.3, 0.3, 0.3) * pow(intensity, 3.);
     float sphereShadow = clamp(dot(vertexNormal, vec3(-2.0, 3.0, 3.0)), -0.5, 1.0);
 
