@@ -102,6 +102,8 @@ For now only looking at the `dist/main.js` resulting from the production build c
 
 Right now `dist/main.js` comes out at about 1.8MB. Commenting out imports to or that rely on `three.js` reduces this by ~500KB (from what I looked at I thought the version of `three.js` I'm using should allow for tree-shaking which should reduce this, but doesn't look like it is. Might be missing something...). Commenting out imports to or that rely on Vue reduces this by another ~300KB. The remaining 1MB is almost entirely from `hector-wasm` (~200KB of that is from the scenario import; that can probably be reduced). I think `three.js` and `hector-wasm` will be the only large dependencies; hopefully most of the other game logic can be implemented in Rust and so have a relatively small footprint.
 
+This puts three.js's minified size at 613.2kb: <https://bundlephobia.com/package/three@0.131.3>
+
 For `three.js`, one workaround might be this: <https://gist.github.com/drcmda/974f84240a329fa8a9ce04bbdaffc04d>, i.e. creating a proxy `three.js` file to manually export only the parts that are needed.
 
 The inclusion of `src/globe/worker.js` creates a couple additional `.js` files (72KB total), and since it's what interacts with the Rust code also brings in that corresponding `.wasm` file (24KB).

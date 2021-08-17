@@ -1,4 +1,4 @@
-import util from './util';
+import png from './png';
 import {EarthSurface} from 'half-earth-engine';
 import { memory } from 'half-earth-engine/half_earth_engine_bg.wasm';
 import loadHector from 'hector-wasm';
@@ -33,8 +33,8 @@ class Surface {
 
   async init() {
     let loadLabels = Promise.all([
-      util.loadPNG(biomeLabelsSrc),
-      util.loadPNG(biomeLookupSrc)
+      png.load(biomeLabelsSrc),
+      png.load(biomeLookupSrc)
     ]).then(([labels, lookup]) => {
       this._surface = EarthSurface.new(
         labels.data, labels.size.width, labels.size.height, scale,

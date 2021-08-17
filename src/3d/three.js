@@ -5,7 +5,6 @@
 //  2. Refer to <https://github.com/mrdoob/three.js/blob/2510609955cd3710b267c8aba69ce1ef6ba97ed6/src/Three.js> and add in the missing export.
 
 export * from 'three/src/constants.js';
-export * from 'three/src/core/BufferAttribute.js';
 export { Raycaster } from 'three/src/core/Raycaster.js';
 export { TextureLoader } from 'three/src/loaders/TextureLoader.js';
 export { EventDispatcher } from 'three/src/core/EventDispatcher.js';
@@ -19,7 +18,8 @@ export { Quaternion } from 'three/src/math/Quaternion.js';
 export { Spherical } from 'three/src/math/Spherical.js';
 export { DataTexture } from 'three/src/textures/DataTexture.js';
 export { Mesh } from 'three/src/objects/Mesh.js';
-export { MeshBasicMaterial, SpriteMaterial, ShaderMaterial } from 'three/src/materials/Materials.js';
+export { SpriteMaterial, ShaderMaterial } from 'three/src/materials/Materials.js';
 export { SphereGeometry } from 'three/src/geometries/Geometries.js';
-export { BufferGeometry } from 'three/src/core/BufferGeometry.js';
 export { Sprite } from 'three/src/objects/Sprite.js';
+// export * from 'three/src/core/BufferAttribute.js';
+// export { BufferGeometry } from 'three/src/core/BufferGeometry.js';

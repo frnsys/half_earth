@@ -5,7 +5,6 @@
   <Planning v-else-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
   <Report v-else-if="state.phase == 'REPORT'" />
-
 </template>
 
 <script>

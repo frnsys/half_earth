@@ -13,10 +13,10 @@ tooltip.style.position = 'fixed';
 tooltip.style.display = 'none';
 
 const texLoader = new THREE.TextureLoader();
-const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true});
-const hexMaterialFocus = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
-hexMaterial.opacity = 0.1;
-hexMaterialFocus.opacity = 0.1;
+// const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true});
+// const hexMaterialFocus = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
+// hexMaterial.opacity = 0.1;
+// hexMaterialFocus.opacity = 0.1;
 const raycaster = new THREE.Raycaster();
 
 const iconNames = ['alert', 'advisor'];
