@@ -6,7 +6,8 @@
 <template>
 <ul class="cards"
   :class="{dragging:dragging}"
-  @mousedown="startDrag">
+  @mousedown="startDrag"
+  @touchstart="startDrag">
   <slot></slot>
 </ul>
 </template>
@@ -43,18 +44,22 @@ export default {
   mounted() {
     document.addEventListener('mousemove', this.drag);
     document.addEventListener('mouseup', this.endDrag);
+    document.addEventListener('touchmove', this.drag);
+    document.addEventListener('touchend', this.endDrag);
   },
   unmounted() {
     document.removeEventListener('mousemove', this.drag);
     document.removeEventListener('mouseup', this.endDrag);
+    document.removeEventListener('touchmove', this.drag);
+    document.removeEventListener('touchend', this.endDrag);
   },
 
   methods: {
     drag(ev) {
       if (!this.down) return;
       this.dragging = true;
-      const dx = ev.clientX - this.pos.x;
-      const dy = ev.clientY - this.pos.y;
+      const dx = (ev.clientX || ev.touches[0].clientX) - this.pos.x;
+      const dy = (ev.clientY || ev.touches[0].clientY) - this.pos.y;
 
       // Scroll the element
       this.$el.scrollTop = this.pos.top - dy;
@@ -67,8 +72,8 @@ export default {
       this.down = true;
       this.pos = {
         // Current mouse position
-        x: ev.clientX,
-        y: ev.clientY,
+        x: (ev.clientX || ev.touches[0].clientX),
+        y: (ev.clientY || ev.touches[0].clientY),
 
         // Current scroll
         left: this.$el.scrollLeft,
