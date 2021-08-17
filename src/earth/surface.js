@@ -103,14 +103,14 @@ class Surface {
         .then((resp) => resp.json()),
     ]).then(([{Hector, run}, config]) => {
       this._hectorRun = () => {
-        return run(config, this.emissions, outputVars);
+        return run(config, this.emissions, hectorOutputVars);
       };
       this._hectorRun;
     });
 
     ready.then((run) => {
       // Calculate new avg global temp
-      let results = this._hectorRun(emissions);
+      let results = this._hectorRun(this.emissions);
       let avgGlobalTemp = results['temperature.Tgav'];
 
       // Calculate biome changes
