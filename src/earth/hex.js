@@ -52,30 +52,29 @@ class HexSphere {
     this.scene = scene;
     this.hexasphere = new Hexasphere(radius, subdivisions, tileWidth);
     this.hexasphere.tiles.forEach((tile, idx) => {
-      let geometry = new THREE.BufferGeometry();
-      let vertices = new Float32Array(tile.boundary.map((bp) => [bp.x, bp.y, bp.z]).flat());
-      geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
-      // Create faces
-      if (tile.boundary.length > 5) {
-        // Hexagon
-        geometry.setIndex([
-          0, 1, 2,
-          0, 2, 3,
-          3, 5, 0,
-          3, 4, 5,
-        ]);
-      } else {
-        // Pentagon
-        geometry.setIndex([
-          0, 1, 2,
-          0, 2, 3,
-          0, 3, 4,
-        ]);
-      }
-
       // We don't really need to render the hexes,
       // and not rendering them saves many FPS
+      // let geometry = new THREE.BufferGeometry();
+      // let vertices = new Float32Array(tile.boundary.map((bp) => [bp.x, bp.y, bp.z]).flat());
+      // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+      // // Create faces
+      // if (tile.boundary.length > 5) {
+      //   // Hexagon
+      //   geometry.setIndex([
+      //     0, 1, 2,
+      //     0, 2, 3,
+      //     3, 5, 0,
+      //     3, 4, 5,
+      //   ]);
+      // } else {
+      //   // Pentagon
+      //   geometry.setIndex([
+      //     0, 1, 2,
+      //     0, 2, 3,
+      //     0, 3, 4,
+      //   ]);
+      // }
       // let mesh = new THREE.Mesh(geometry, hexMaterial);
       // tile.mesh = mesh;
       // tile.mesh.idx = idx;
@@ -87,7 +86,6 @@ class HexSphere {
 
       let center = tile.centerPoint;
       tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
-
     });
 
     // Interaction
