@@ -7,11 +7,9 @@ uniform sampler2D shadows;
 uniform sampler2D satTexture;
 uniform sampler2D biomesTexture;
 uniform vec3 screenRes;
-uniform float time;
 
-#include "./lib/bit_dither.glsl"
-#include "./lib/clouds.glsl"
-/* #include "./lib/detect_edges.glsl" */
+#include "../lib/bit_dither.glsl"
+/* #include "../lib/detect_edges.glsl" */
 
 void main() {
     // Heightmap coloring
@@ -52,11 +50,4 @@ void main() {
     /* gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0); */
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere * sphereShadow) * multiplier, 1.0); */
     gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0);
-
-    vec4 base_color = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0);
-
-    // Apply cloud layer
-    float scale = 0.25 + sin(time/200000.)/2.;
-    float n = clouds(vertexPosition + time/200000., scale);
-    gl_FragColor = n < 0.58 ? base_color : base_color + vec4(n);
 }

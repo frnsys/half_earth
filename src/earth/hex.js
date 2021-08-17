@@ -74,9 +74,12 @@ class HexSphere {
         ]);
       }
 
-      let mesh = new THREE.Mesh(geometry, hexMaterial);
-      tile.mesh = mesh;
-      scene.add(tile.mesh);
+      // We don't really need to render the hexes,
+      // and not rendering them saves many FPS
+      // let mesh = new THREE.Mesh(geometry, hexMaterial);
+      // tile.mesh = mesh;
+      // tile.mesh.idx = idx;
+      // scene.add(tile.mesh);
 
       let bnd = tile.boundary;
       let normal = calculateSurfaceNormal(bnd[1], bnd[2], bnd[3]);
@@ -85,7 +88,6 @@ class HexSphere {
       let center = tile.centerPoint;
       tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
 
-      tile.mesh.idx = idx;
     });
 
     // Interaction
@@ -115,7 +117,12 @@ class HexSphere {
     sprite.scale.set(0.5, 0.5, 0.5);
     sprite.position.copy(
       tile.centerPointVec.add(tile.normal.multiplyScalar(2.)));
-    tile.mesh.add(sprite);
+
+    // See note above; we aren't rendering the hex tiles
+    // to save FPS
+    // tile.mesh.add(sprite);
+
+    this.scene.add(sprite);
     this.selectables.push(sprite);
   }
 

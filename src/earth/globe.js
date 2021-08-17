@@ -1,8 +1,10 @@
 import RPC from './rpc';
 import HexSphere from './hex';
 import Scene from '../3d/scene';
-import vertexShader from './shaders/globe/vertex.glsl';
-import fragmentShader from './shaders/globe/fragment.glsl';
+import globeVert from './shaders/globe/vertex.glsl';
+import globeFrag from './shaders/globe/fragment.glsl';
+import cloudsVert from './shaders/clouds/vertex.glsl';
+import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
 
 import debug from '../debug';
@@ -55,9 +57,6 @@ class Globe {
 
     this.material = new THREE.ShaderMaterial({
       uniforms: {
-        time: {
-          value: 0.0
-        },
         heightmap: {
           value: texLoader.load('./assets/surface/heightmap.png')
         },
@@ -74,12 +73,12 @@ class Globe {
           value: new THREE.Vector3()
         }
       },
-      vertexShader: vertexShader,
-      fragmentShader: fragmentShader
+      vertexShader: globeVert,
+      fragmentShader: globeFrag
     });
 
     const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(5, 256, 256),
+      new THREE.SphereGeometry(5, 32, 32),
       this.material
     );
     this.scene.add(sphere);
@@ -87,8 +86,24 @@ class Globe {
     this.hexsphere = new HexSphere(this.scene, 5.2, 12, 0.98);
 
     // TODO add test icons to sphere
-    [52, 128, 191].forEach((idx) => this.hexsphere.showIcon('alert', idx));
+    [52, 32, 191].forEach((idx) => this.hexsphere.showIcon('alert', idx));
     [238, 351].forEach((idx) => this.hexsphere.showIcon('advisor', idx));
+
+    this.cloudsMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        time: {
+          value: 0.0
+        }
+      },
+      vertexShader: cloudsVert,
+      fragmentShader: cloudsFrag
+    });
+    this.cloudsMaterial.transparent = true;
+    const clouds = new THREE.Mesh(
+      new THREE.SphereGeometry(5.3, 32, 32),
+      this.cloudsMaterial
+    );
+    this.scene.add(clouds);
 
     const canvas = this.scene.renderer.domElement;
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
@@ -111,8 +126,8 @@ class Globe {
   render(timestamp) {
     if (debug.fps) stats.begin();
     this.scene.render();
-    if (this.material) {
-      this.material.uniforms.time.value = timestamp;
+    if (this.cloudsMaterial) {
+      this.cloudsMaterial.uniforms.time.value = timestamp;
     }
     if (debug.fps) stats.end();
     requestAnimationFrame(this.render.bind(this));
