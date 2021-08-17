@@ -51,7 +51,12 @@ class Surface {
       // and re-copy whenever it updates.
       let pixelsPtr = this._surface.surface();
       this._pixels = new Uint8Array(memory.buffer, pixelsPtr, this.width * this.height * 3);
-      this.pixelsBuf = new SharedArrayBuffer(memory.buffer.byteLength);
+
+      // Actually we aren't using SharedArrayBuffer because support
+      // is still kind of uneven. Perhaps by the game's release we can switch over.
+      // But for now just use a regular ArrayBuffer and send it via the RPC
+      // this.pixelsBuf = new SharedArrayBuffer(memory.buffer.byteLength);
+      this.pixelsBuf = new ArrayBuffer(memory.buffer.byteLength);
       this.pixels = new Uint8Array(this.pixelsBuf);
       this.pixels.set(this._pixels);
     });
@@ -124,7 +129,8 @@ class Surface {
   updateTexture() {
     this._surface.update_surface();
 
-    // Update the shared array buffer
+    // Update the (shared) array buffer
+    // so the main thread has it
     this.pixels.set(this._pixels);
   }
 }

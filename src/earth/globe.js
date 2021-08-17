@@ -52,8 +52,8 @@ class Globe {
     let width = await this.surface.width;
     let height = await this.surface.height;
     let pixels = new Uint8Array(pixelsBuf);
-    let surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
-    surfaceTexture.flipY = true;
+    this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
+    this.surfaceTexture.flipY = true;
 
     this.material = new THREE.ShaderMaterial({
       uniforms: {
@@ -67,7 +67,7 @@ class Globe {
           value: texLoader.load('./assets/surface/satellite.bw.jpg')
         },
         biomesTexture: {
-          value: surfaceTexture
+          value: this.surfaceTexture
         },
         screenRes: {
           value: new THREE.Vector3()
@@ -110,8 +110,21 @@ class Globe {
 
     this._onReady.forEach((fn) => fn(this));
 
+    await this.updateSurface();
+  }
+
+  async updateSurface() {
+    // Since SharedArrayBuffer support is lacking
+    // in some mobile browsers, do this instead.
     await this.surface.updateTexture();
-    surfaceTexture.needsUpdate = true;
+    let newPixelsBuf = await this.surface.pixelsBuf;
+    let newPixels = new Uint8Array(newPixelsBuf);
+    this.surfaceTexture.image.data.set(newPixels);
+    this.surfaceTexture.needsUpdate = true;
+
+    // With SharedArrayBuffer we'd only need to do:
+    // await this.surface.updateTexture();
+    // this.surfaceTexture.needsUpdate = true;
   }
 
   // Calculate world update.
@@ -120,7 +133,7 @@ class Globe {
   async addEmissionsThenUpdate(emissions) {
     await this.surface.addEmissions(emissions);
     await this.surface.updateBiomes();
-    surfaceTexture.needsUpdate = true;
+    await this.updateSurface();
   }
 
   render(timestamp) {
