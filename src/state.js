@@ -12,7 +12,7 @@ function randEnum(en) {
 }
 
 const init = {
-  phase: 'PLANNING',
+  phase: 'GLOBE',
   time: {
     start: 2025,
     end: 2100

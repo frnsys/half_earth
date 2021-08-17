@@ -2,6 +2,9 @@
   <Planning v-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
   <Report v-else-if="state.phase == 'REPORT'" />
+
+  <!-- for deb purposes -->
+  <Globe v-else-if="state.phase == 'GLOBE'" />
 </template>
 
 <script>
@@ -9,6 +12,7 @@ import state from '../state';
 import Stream from './stream/Stream.vue';
 import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
+import Globe from './Globe.vue';
 export default {
   data() {
     return {
@@ -18,7 +22,8 @@ export default {
   components: {
     Stream,
     Planning,
-    Report
+    Report,
+    Globe
   },
 }
 </script>
