@@ -8,7 +8,8 @@ uniform sampler2D satTexture;
 uniform sampler2D biomesTexture;
 uniform vec3 screenRes;
 
-#include "../lib/bit_dither.glsl"
+/* #include "../lib/bit_dither.glsl" */
+#include "../lib/simple_dither.glsl"
 /* #include "../lib/detect_edges.glsl" */
 
 void main() {
@@ -28,7 +29,7 @@ void main() {
     /* vec3 color = scale2x(biomesTexture, vertexUV).rgb; */
 
     // Add satellite texture
-    /* color *= texture2D(satTexture, vertexUV).r * 1.5; */
+    color *= texture2D(satTexture, vertexUV).r * 1.5;
 
     // Add light edge highlighting
     vec3 shadows = texture2D(shadows, vertexUV).rgb;
@@ -42,12 +43,12 @@ void main() {
 
     // A kind of digital display effect?
     // Probably too distracting
-    vec2 checker = step(0.5, fract(vertexUV.xy * 1000.));
-    float multiplier = (1. + (checker.x * checker.y * 0.5));
+    /* vec2 checker = step(0.5, fract(vertexUV.xy * 1000.)); */
+    /* float multiplier = (1. + (checker.x * checker.y * 0.5)); */
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere), 1.0) * multiplier; */
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere), 1.0); */
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere * sphereShadow), 1.0); */
     /* gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0); */
     /* gl_FragColor = vec4(bit_dither((shadows * color * edges) + atmosphere * sphereShadow) * multiplier, 1.0); */
-    gl_FragColor = vec4(bit_dither((shadows * color) + atmosphere * sphereShadow) * multiplier, 1.0);
+    gl_FragColor = vec4(simple_dither((shadows * color) + atmosphere * sphereShadow), 1.0);
 }

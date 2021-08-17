@@ -16,7 +16,7 @@ vec3 bit_dither(vec3 color) {
    	// Get source color
 
     // Dither
-    color += ditherTable[int( coor.x ) % 4][int( coor.y ) % 4] * 0.005; // last number is dithering strength
+    color += ditherTable[int(mod(coor.x, 4.))][int(mod(coor.y, 4.))] * 0.005; // last number is dithering strength
 
     // Reduce colors
     color = floor(color * COLOR_FACTOR) / COLOR_FACTOR;

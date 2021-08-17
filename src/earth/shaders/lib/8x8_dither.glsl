@@ -4,7 +4,8 @@ const mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
 
 vec3 dither8x8(vec3 color) {
   // https://github.com/hughsk/glsl-luma
-  float brightness = dot(color, vec3(0.299, 0.587, 0.114));
+  /* float brightness = dot(color, vec3(0.299, 0.587, 0.114)); */
+  float brightness = dot(color, vec3(0.7));
   vec2 position = gl_FragCoord.xy;
 
   int x = int(mod(position.x, 8.0));
