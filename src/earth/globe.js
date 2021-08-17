@@ -5,11 +5,19 @@ import vertexShader from './shaders/globe/vertex.glsl';
 import fragmentShader from './shaders/globe/fragment.glsl';
 import * as THREE from 'three';
 
+import debug from '../debug';
 import Stats from 'stats.js';
 
-let stats = new Stats();
-stats.showPanel(0);
-document.body.appendChild(stats.dom);
+if (process.env.NODE_ENV === 'development') {
+  console.log('this only shows up in dev builds');
+}
+
+let stats;
+if (debug.fps) {
+  stats = new Stats();
+  stats.showPanel(0);
+  document.body.appendChild(stats.dom);
+}
 
 const texLoader = new THREE.TextureLoader();
 
@@ -101,12 +109,12 @@ class Globe {
   }
 
   render(timestamp) {
-    stats.begin();
+    if (debug.fps) stats.begin();
     this.scene.render();
     if (this.material) {
       this.material.uniforms.time.value = timestamp;
     }
-    stats.end();
+    if (debug.fps) stats.end();
     requestAnimationFrame(this.render.bind(this));
   }
 }

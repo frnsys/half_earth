@@ -1,10 +1,11 @@
 <template>
-  <Planning v-if="state.phase == 'PLANNING'" />
+  <!-- for dev purposes -->
+  <Globe v-if="debug.globe" />
+
+  <Planning v-else-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
   <Report v-else-if="state.phase == 'REPORT'" />
 
-  <!-- for deb purposes -->
-  <Globe v-else-if="state.phase == 'GLOBE'" />
 </template>
 
 <script>
