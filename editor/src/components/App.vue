@@ -14,7 +14,7 @@
 
 <ul id="toc" v-if="tocOpen">
   <li v-for="i in tableOfContents">
-    <a :href="`#${i.id}`" :class="{invalid: i.invalid}">{{i.label || '(empty)'}}</a>
+    <a :href="`#${i.id}`" :class="{invalid: i.invalid}"><span class="question-icon" v-if="i.questions">?</span>{{i.label || '(empty)'}}</a>
   </li>
 </ul>
 <div class="toc-toggle" @click="() => tocOpen = !tocOpen">{{tocOpen ? 'Hide' : 'Show'}} TOC</div>
@@ -65,14 +65,17 @@ export default {
     tableOfContents() {
       let key;
       let required;
+      let questions;
       switch (this.type) {
         case 'Event':
           key = 'body';
           required = ['body', 'area', 'conditions', 'effects'];
+          questions = ['body', 'conditions', 'effects', 'variations', 'responses'];
           break;
         case 'Policy':
           key = 'name';
           required = ['name', 'type', 'description', 'requirements', 'effects'];
+          questions = ['name', 'description', 'requirements', 'effects'];
           break;
       }
       return this.itemsOfType.map((i) => ({
@@ -81,6 +84,10 @@ export default {
         invalid: required.some((k) => {
           let val = i[k];
           return !(val && val.length > 0);
+        }),
+        questions: questions.some((k) => {
+          let val = i[k];
+          return val && val.includes('?');
         })
       }));
     }
@@ -146,6 +153,9 @@ fieldset > div:first-child {
 input.invalid, textarea.invalid, select.invalid {
   background: #ff00001c;
 }
+input.question, textarea.question, select.question {
+  background: #ffefa5;
+}
 input.title, textarea.title {
   font-size: 1.5em;
   border: none;
@@ -157,17 +167,28 @@ input.title, textarea.title {
 .item {
   position: relative;
 }
-.missing-indicator {
+.indicators {
   position: absolute;
   left: calc(100% + 0.5em);
+}
+.indicator {
   font-size: 0.75em;
-  background: #f54242;
   padding: 0.25em;
   white-space: nowrap;
   border-radius: 0.25em;
-  color: #fff;
   font-weight: bold;
+  margin-bottom: 0.25em;
+  display: inline-block;
+}
+.indicator--missing {
+  color: #fff;
+  background: #f54242;
   border: 1px solid #a22727;
+}
+.indicator--question {
+  color: #000;
+  background: #efcf40;
+  border: 1px solid #927c18;
 }
 
 ul, li {
@@ -234,6 +255,9 @@ nav {
 #toc li a.invalid {
   color: #f54242;
 }
+#toc li a.question {
+  color: #efcf40;
+}
 #toc li:hover {
   color: #000;
   border-bottom: 1px solid #000;
@@ -249,9 +273,21 @@ nav {
   cursor: pointer;
   z-index: 1;
   color: #aaa;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 0.1em;
+  border-radius: 0.2em;
 }
 .toc-toggle:hover {
   color: #000;
   text-decoration: underline;
+}
+.question-icon {
+  color: #000;
+  background: #EFCF40;
+  font-size: 0.8em;
+  vertical-align: super;
+	border-radius: 10em;
+	padding: 0 0.3em;
 }
 </style>
