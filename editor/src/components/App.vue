@@ -13,7 +13,9 @@
 </template>
 
 <ul id="toc" v-if="tocOpen">
-  <li v-for="i in tableOfContents"><a :href="`#${i.id}`">{{i.label || '(empty)'}}</a></li>
+  <li v-for="i in tableOfContents">
+    <a :href="`#${i.id}`" :class="{invalid: i.invalid}">{{i.label || '(empty)'}}</a>
+  </li>
 </ul>
 <div class="toc-toggle" @click="() => tocOpen = !tocOpen">{{tocOpen ? 'Hide' : 'Show'}} TOC</div>
 
@@ -62,17 +64,24 @@ export default {
     },
     tableOfContents() {
       let key;
+      let required;
       switch (this.type) {
         case 'Event':
           key = 'body';
+          required = ['body', 'area', 'conditions', 'effects'];
           break;
         case 'Policy':
           key = 'name';
+          required = ['name', 'type', 'description', 'requirements', 'effects'];
           break;
       }
       return this.itemsOfType.map((i) => ({
         id: i.id,
         label: i[key],
+        invalid: required.some((k) => {
+          let val = i[k];
+          return !(val && val.length > 0);
+        })
       }));
     }
   }
@@ -221,6 +230,9 @@ nav {
 #toc li a {
   color: #aaa;
   text-decoration: none;
+}
+#toc li a.invalid {
+  color: #f54242;
 }
 #toc li:hover {
   color: #000;
