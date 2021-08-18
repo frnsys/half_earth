@@ -109,6 +109,10 @@ textarea {
   max-width: 100%;
   resize: none;
 }
+input, textarea, select {
+  border: 1px solid #999;
+  border-radius: 2px;
+}
 button {
   cursor: pointer;
   font-family: 'Arial', sans-serif;
@@ -129,6 +133,32 @@ fieldset > div textarea {
 }
 fieldset > div:first-child {
   margin-left: 0;
+}
+input.invalid, textarea.invalid, select.invalid {
+  background: #ff00001c;
+}
+input.title, textarea.title {
+  font-size: 1.5em;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #000;
+  font-weight: bold;
+}
+
+.item {
+  position: relative;
+}
+.missing-indicator {
+  position: absolute;
+  left: calc(100% + 0.5em);
+  font-size: 0.75em;
+  background: #f54242;
+  padding: 0.25em;
+  white-space: nowrap;
+  border-radius: 0.25em;
+  color: #fff;
+  font-weight: bold;
+  border: 1px solid #a22727;
 }
 
 ul, li {

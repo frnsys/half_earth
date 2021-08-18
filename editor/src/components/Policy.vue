@@ -1,11 +1,11 @@
 <template>
-<li class="policy" :id="policy.id">
+<li class="item" :id="policy.id">
   <div>
     <label>
       Name
       <Tip>A name describing the policy.</Tip>
     </label>
-    <input class="policy--name" type="text" v-model="localData.name" @blur="save" />
+    <input class="title" type="text" v-model="localData.name" @blur="save" />
   </div>
   <div>
     <label>
@@ -90,12 +90,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.policy--name {
-  font-size: 1.5em;
-  border: none;
-  border-bottom: 1px solid #000;
-  font-weight: bold;
-}
-</style>

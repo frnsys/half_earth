@@ -1,11 +1,12 @@
 <template>
-<li class="event" :id="event.id">
+<li class="item" :id="event.id">
+  <div class="missing-indicator" v-if="invalid.length > 0">Missing data</div>
   <div>
     <label>
       Description
       <Tip>A 1-2 sentence description of the event. You can include variables (just capitalize them).</Tip>
     </label>
-    <textarea class="event--body" v-model="localData.body" @blur="save" placeholder="Event description" />
+    <textarea class="title" v-model="localData.body" @blur="save" placeholder="Event description" :class="{invalid: invalid.includes('body')}"/>
   </div>
   <fieldset>
     <div>
@@ -13,7 +14,7 @@
         Area
         <Tip>The area of the event--is this something global or does it happen in a specific location on the globe?</Tip>
       </label>
-      <select v-model="localData.area" @change="save">
+      <select v-model="localData.area" @change="save" :class="{invalid: invalid.includes('area')}">
         <option v-for="t in EVENT_AREA" :value="t">{{t}}</option>
       </select>
     </div>
@@ -38,14 +39,14 @@
         Conditions
         <Tip>Under what conditions the event is likely/becomes more likely to occur. If this is a "Local" event, also detail the criteria for candidate locations (e.g. it has to be on a coast)</Tip>
       </label>
-      <textarea v-model="localData.conditions" placeholder="Conditions influencing event probability" @blur="save" />
+      <textarea v-model="localData.conditions" placeholder="Conditions influencing event probability" @blur="save" :class="{invalid: invalid.includes('conditions')}"/>
     </div>
     <div>
       <label>
         Effects
         <Tip>What are the impacts of the event, just by occurring/before the player responds?</Tip>
       </label>
-      <textarea v-model="localData.effects" placeholder="Impacts of the event" @blur="save" />
+      <textarea v-model="localData.effects" placeholder="Impacts of the event" @blur="save" :class="{invalid: invalid.includes('effects')}"/>
     </div>
   </fieldset>
   <div>
@@ -96,6 +97,14 @@ export default {
       });
     });
   },
+  computed: {
+    invalid() {
+      return ['body', 'area', 'conditions', 'effects'].filter((k) => {
+        let val = this.localData[k];
+        return !(val && val.length > 0);
+      });
+    }
+  },
   watch: {
     event(newEvent) {
       this.localData = Object.assign({}, newEvent);
@@ -111,12 +120,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.event--body {
-  font-size: 1.5em;
-  border: none;
-  border-bottom: 1px solid #000;
-  font-weight: bold;
-}
-</style>
