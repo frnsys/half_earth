@@ -13,17 +13,10 @@
 </template>
 
 <script>
+import animate from 'lib/anim';
 
 // For animating snap-to-center
-// <https://gist.github.com/andjosh/6764939>
 const duration = 150; // ms
-function easeInOutQuad(t, b, c, d) {
-  t /= d/2;
-	if (t < 1) return c/2*t*t + b;
-	t--;
-	return -c/2 * (t*(t-2) - 1) + b;
-};
-
 
 export default {
   data() {
@@ -67,7 +60,7 @@ export default {
     },
     startDrag(ev) {
       // Stop snap-to-center animation if there is one
-      if (this.animation) cancelAnimationFrame(this.animation);
+      if (this.animation) this.animation.stop();
 
       this.down = true;
       this.pos = {
@@ -104,18 +97,11 @@ export default {
 
         if (target) {
           // Animate snap-to-center
-          let to = target.child.offsetLeft - rect.width/2 + target.width/2;
-          let start = this.$el.scrollLeft,
-            change = to - start,
-            currentTime = performance.now();
-
-          let update = (timestamp) => {
-            this.$el.scrollLeft = easeInOutQuad(timestamp - currentTime, start, change, duration);
-            if (timestamp - currentTime < duration) {
-              this.animation = requestAnimationFrame(update);
-            }
-          };
-          this.animation = requestAnimationFrame(update);
+          let start = this.$el.scrollLeft;
+          let end = target.child.offsetLeft - rect.width/2 + target.width/2;
+          this.animation = animate(start, end, duration, (val) => {
+            this.$el.scrollLeft = val;
+          });
         }
       }
     }

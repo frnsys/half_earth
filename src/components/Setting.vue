@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {Howl, Howler} from 'howler';
+import Sound from 'lib/sound';
 
 export default {
   props: {
@@ -19,8 +19,7 @@ export default {
   },
   mounted() {
     // Requires user interaction to play
-    this.sound = new Howl({
-      src: [this.audio],
+    this.sound = new Sound(this.audio, {
       loop: true,
       volume: 0,
     });

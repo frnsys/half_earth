@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import util from '../../util';
+import util from 'lib/util';
 import Card from './Card.vue'
 import Cards from '../Cards.vue'
 import Response from './Response.vue'

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import util from '../../util';
+import util from 'lib/util';
 
 // TODO basically none of this is being used right now
 

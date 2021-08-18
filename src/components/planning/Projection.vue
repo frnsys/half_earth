@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Chart from '../../chart';
+import Chart from 'lib/chart';
 
 export default {
   props: {
