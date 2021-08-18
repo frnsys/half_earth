@@ -1,6 +1,7 @@
 use super::utils;
 use wasm_bindgen::prelude::*;
 
+// The scale patterns take up a fair amount of space; any way to reduce this?
 include!("../../assets/src/scaling_patterns/out/scale_patterns.in");
 include!("../../assets/src/biome_lookup/out/biome_lookup.in");
 
@@ -8,8 +9,8 @@ type BiomeLabel = u8;
 
 const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
-const INTENSITY: f64 = 25.;
-const BASE_TEMP: f64 = 15.;
+const INTENSITY: f32 = 25.;
+const BASE_TEMP: f32 = 15.;
 
 
 // Biome colors
@@ -96,7 +97,7 @@ impl EarthSurface {
         self.pixels.as_ptr()
     }
 
-    pub fn update_biomes(&mut self, tgav: f64) {
+    pub fn update_biomes(&mut self, tgav: f32) {
         // Above we assert that TEMP_PATTERN_W, TEMP_PATTERN_B, and tgav are all the same size,
         // so no scaling necessary.
         // Add 15 to tgav to get actual temperature (this is what `hectorui` does).
@@ -130,7 +131,7 @@ impl EarthSurface {
 
 // The biome changing logic
 // If the biome hasn't changed, return None
-fn biome_for_temp(biome: &mut BiomeLabel, temp: f64, precip: f64, lookup: &[BiomeLabel]) -> BiomeLabel {
+fn biome_for_temp(biome: &mut BiomeLabel, temp: f32, precip: f32, lookup: &[BiomeLabel]) -> BiomeLabel {
     if *biome == 255 { // Water
         255
     } else {
@@ -201,7 +202,7 @@ pub fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
 }
 
 fn compute_intensity(r: usize, g: usize, b: usize) -> usize {
-    let avg = (r + g + b) as f64 / 3.;
+    let avg = (r + g + b) as f32 / 3.;
     ((avg * INTENSITY) / 255.).round() as usize
 }
 
@@ -267,7 +268,7 @@ Important note: If using `temperature.Tgav` from Hector,
 add 15 to it (the base temperature) before passing it here.
 This is what they do in `hectorui`.
 */
-fn pscl_apply<'a>(pscl_w: &'a [f64], pscl_b: &'a [f64], tgav: f64) -> impl Iterator<Item=f64> + 'a {
+fn pscl_apply<'a>(pscl_w: &'a [f32], pscl_b: &'a [f32], tgav: f32) -> impl Iterator<Item=f32> + 'a {
     pscl_w.iter().zip(pscl_b).map(move |(w_i, b_i)| w_i * tgav + b_i)
 }
 
@@ -279,15 +280,15 @@ mod test {
 
     #[test]
     fn test_pscl_apply() {
-        let pscl_w: [f64; 6] = [ 0., 1., 0., 0.5, 1.0, 0.];
-        let pscl_b: [f64; 6] = [-1., 1., 0., 0., 0.5, 0.5];
+        let pscl_w: [f32; 6] = [ 0., 1., 0., 0.5, 1.0, 0.];
+        let pscl_b: [f32; 6] = [-1., 1., 0., 0., 0.5, 0.5];
         let tgav = 8.;
         let expected = vec![-1., 9., 0., 4., 8.5, 0.5];
-        let map: Vec<f64> = pscl_apply(&pscl_w, &pscl_b, tgav).collect();
+        let map: Vec<f32> = pscl_apply(&pscl_w, &pscl_b, tgav).collect();
 
         assert!(map.len() == expected.len());
         assert!(map.iter().zip(expected)
-                .all(|(x1,x2)| approx_eq!(f64, *x1, x2, epsilon=1e-8)))
+                .all(|(x1,x2)| approx_eq!(f32, *x1, x2, epsilon=1e-8)))
     }
 
     #[test]
