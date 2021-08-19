@@ -3,14 +3,22 @@
   <div class="tab" :class="{selected: type == 'Policy'}" @click="() => type = 'Policy'">Policies</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
 </nav>
-<template v-if="type == 'Policy'">
-  <Policy v-for="p in itemsOfType" :policy="p" />
-  <button class="new-button" @click="() => addNew('Policy')">Add Policy</button>
-</template>
-<template v-else-if="type == 'Event'">
-  <Event v-for="e in itemsOfType" :event="e" />
-  <button class="new-button" @click="() => addNew('Event')">Add Event</button>
-</template>
+<div class="items">
+  <template v-if="type == 'Policy'">
+    <Policy v-for="p in itemsOfType" :policy="p" />
+  </template>
+  <template v-else-if="type == 'Event'">
+    <Event v-for="e in itemsOfType" :event="e" />
+  </template>
+</div>
+<div class="sidebar">
+  <button @click="() => addNew(type)">Add {{type}}</button>
+  <h6>Filter by {{type == 'Event' ? 'story arc' : 'policy type'}}</h6>
+  <ul class="filters">
+    <li :class="{selected: filter == null}" @click="() => filter = null">All</li>
+    <li v-for="f in filters" :class="{selected: filter == f}" @click="() => filter = f">{{f}}</li>
+  </ul>
+</div>
 
 <ul id="toc" v-if="tocOpen">
   <li v-for="i in tableOfContents">
@@ -29,6 +37,7 @@ import api from '../api';
 import uuid from '../uuid';
 import util from '../util';
 import state from '../state';
+import consts from '../consts';
 import Event from './Event.vue';
 import Policy from './Policy.vue';
 
@@ -37,6 +46,7 @@ export default {
     return {
       type: 'Event',
       tocOpen: true,
+      filter: null,
       state
     }
   },
@@ -54,13 +64,27 @@ export default {
       scroll(0,0);
     }
   },
+  watch: {
+    type(_) {
+      this.filter = null;
+    }
+  },
   computed: {
     itemsOfType() {
-      return Object.values(this.state.items).filter((i) => i._type == this.type).sort((a, b) => a._created < b._created);
+      return Object.values(this.state.items)
+        .filter((i) => i._type == this.type)
+        .filter((i) => {
+          return this.filter == null || (this.type == 'Event' ? i.arc : i.type) == this.filter;
+        })
+        .sort((a, b) => a._created < b._created);
     },
     storyArcs() {
-      let arcs = Object.values(this.state.items).filter((i) => i._type == 'Event' && i.arc).map((e) => e.arc);
+      let arcs = Object.values(this.state.items)
+        .filter((i) => i._type == 'Event' && i.arc).map((e) => e.arc);
       return [...new Set(arcs)];
+    },
+    filters() {
+      return this.type == 'Event' ? this.storyArcs : consts.POLICY_TYPE;
     },
     tableOfContents() {
       let key;
@@ -70,12 +94,12 @@ export default {
         case 'Event':
           key = 'body';
           required = ['body', 'area', 'conditions', 'effects'];
-          questions = ['body', 'conditions', 'effects', 'variations', 'responses'];
+          questions = ['body', 'conditions', 'effects', 'variations', 'responses', 'notes'];
           break;
         case 'Policy':
           key = 'name';
           required = ['name', 'type', 'description', 'requirements', 'effects'];
-          questions = ['name', 'description', 'requirements', 'effects'];
+          questions = ['name', 'description', 'requirements', 'effects', 'notes'];
           break;
       }
       return this.itemsOfType.map((i) => ({
@@ -197,7 +221,7 @@ ul, li {
   list-style-type: none;
 }
 
-li {
+.items li {
   margin: 4em 0;
 }
 
@@ -212,10 +236,27 @@ nav {
   border-bottom: 2px solid #000;
 }
 
-.new-button {
+h6 {
+  margin-bottom: 0;
+  font-weight: normal;
+  border-bottom: 1px solid #000;
+}
+.sidebar {
   position: fixed;
   right: 1em;
   top: 1em;
+}
+.filters li {
+  margin: 0.25em 0;
+  cursor: pointer;
+  color: #aaa;
+}
+.filters li:hover {
+  color: #000;
+}
+.filters li.selected {
+  color: #000;
+  text-decoration: underline;
 }
 
 .notes {
@@ -226,8 +267,13 @@ nav {
 }
 .notes label {
   cursor: pointer;
-  text-decoration: underline;
   user-select: none;
+}
+.notes-icon {
+	color: #fff;
+	background: #484848;
+	border-radius: 10em;
+	padding: 0 0.45em;
 }
 
 #toc {

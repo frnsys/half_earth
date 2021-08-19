@@ -50,10 +50,10 @@
   </div>
   <div class="notes">
     <label @click="() => expandNotes = !expandNotes">
-      Notes, References, &amp; Discussion
+      <span><span class="notes-icon" v-if="localData.notes && localData.notes.length > 0">!</span> Notes, References, &amp; Discussion</span>
       <div class="notes--toggle">Toggle</div>
     </label>
-    <textarea v-if="expandNotes" v-model="localData.notes" placeholder="Write any notes or discussion for others" @blur="save" />
+    <textarea v-if="expandNotes" v-model="localData.notes" placeholder="Write any notes or discussion for others" @blur="save" :class="flags('notes')"/>
   </div>
 </li>
 </template>
@@ -90,7 +90,7 @@ export default {
       });
     },
     questions() {
-      return ['name', 'description', 'requirements', 'effects'].filter((k) => {
+      return ['name', 'description', 'requirements', 'effects', 'notes'].filter((k) => {
         let val = this.localData[k];
         return val && val.includes('?');
       });
