@@ -1,7 +1,7 @@
 <template>
   <Setting
-      background="assets/settings/bgs/redwood_forest.png"
-      audio="assets/settings/audio/463903__burghrecords__birds-in-spring-scotland.mp3" />
+      background="assets/settings/bgs/redwood_forest.webp"
+      audio="assets/settings/audio/463903__burghrecords__birds-in-spring-scotland.webm" />
 
   <Hud />
 
