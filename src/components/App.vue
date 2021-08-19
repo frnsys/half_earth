@@ -2,6 +2,7 @@
   <!-- for dev purposes -->
   <Globe v-if="debug.globe" />
   <EventSwipe v-else-if="debug.swipe" />
+  <EventDialogue v-else-if="debug.dialogue" />
 
   <Planning v-else-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
@@ -13,8 +14,11 @@ import state from '../state';
 import Stream from './stream/Stream.vue';
 import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
-import EventSwipe from './stream/EventSwipe.vue';
 import Globe from './Globe.vue';
+
+import EventSwipe from './stream/EventSwipe.vue';
+import EventDialogue from './stream/EventDialogue.vue';
+
 export default {
   data() {
     return {
@@ -26,13 +30,14 @@ export default {
     Planning,
     Report,
     Globe,
-    EventSwipe
+    EventSwipe,
+    EventDialogue,
   },
 }
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
 
 * {
   box-sizing: border-box;
