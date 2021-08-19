@@ -7,20 +7,26 @@ function easeInOutQuad(t, b, c, d) {
 };
 
 // Duration in ms
+// Can pass in arrays for start and end to animate
+// multiple values at once.
 function animate(start, end, duration, updateFn) {
   // Object to manage the animation
   let anim = {};
 
+  if (!Array.isArray(start)) start = [start];
+  if (!Array.isArray(end)) end = [end];
+
   // Setup and start the animation
-  let change = end - start;
+  let changes = start.map((s, i) => end[i] - s);
   let startTime = performance.now();
   let update = (timestamp) => {
-    let val = easeInOutQuad(timestamp - startTime, start, change, duration);
-    updateFn(val);
-    if (timestamp - startTime < duration) {
+    let elapsed = timestamp - startTime;
+    let vals = start.map((s, i) => easeInOutQuad(elapsed, s, changes[i], duration));
+    updateFn(...vals);
+    if (elapsed < duration) {
       anim.id = requestAnimationFrame(update);
     } else {
-      updateFn(end);
+      updateFn(...end);
     }
   };
   anim.id = requestAnimationFrame(update);

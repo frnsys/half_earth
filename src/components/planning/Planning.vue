@@ -28,11 +28,11 @@
         </template>
         <div class="planning--pc-wager">
           <template v-if="state.plan.targets[vari].wager < 0">
-            {{state.plan.targets[vari].wager}}PC penalty
+            {{state.plan.targets[vari].wager}}🗳️ penalty
             <Tip>People will not like this backtracking and you'll lose support.</Tip>
           </template>
           <template v-else>
-            {{state.plan.targets[vari].wager}}PC stake
+            {{state.plan.targets[vari].wager}}🗳️ stake
             <Tip>If you reach this target, you'll earn this much PC. If you fail, you'll lose this much.</Tip>
           </template>
         </div>

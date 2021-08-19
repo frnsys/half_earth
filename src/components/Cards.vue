@@ -52,14 +52,14 @@ export default {
     drag(ev) {
       if (!this.down) return;
       this.dragging = true;
-      const dx = (ev.clientX || ev.touches[0].clientX) - this.pos.x;
-      const dy = (ev.clientY || ev.touches[0].clientY) - this.pos.y;
+      const dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
+      const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
       // Scroll the element
-      this.$el.scrollTop = this.pos.top - dy;
       let prev = this.$el.scrollLeft;
+      this.$el.scrollTop = this.pos.top - dy;
       this.$el.scrollLeft = this.pos.left - dx;
-      let diff = this.$el.scrollLeft - prev;
+      let diff = this.$el.scrollLeft - prev; // For momentum
 
       this.vel = diff;
     },
@@ -74,8 +74,8 @@ export default {
       this.down = true;
       this.pos = {
         // Current mouse position
-        x: (ev.clientX || ev.touches[0].clientX),
-        y: (ev.clientY || ev.touches[0].clientY),
+        x: (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX),
+        y: (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY),
 
         // Current scroll
         left: this.$el.scrollLeft,

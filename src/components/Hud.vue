@@ -11,7 +11,7 @@
       </li>
     </ul>
 
-    <div>{{state.player.political_capital}}PC</div>
+    <div>{{state.player.political_capital}}🗳️</div>
   </div>
 </template>
 

@@ -1,6 +1,7 @@
 <template>
   <!-- for dev purposes -->
   <Globe v-if="debug.globe" />
+  <EventSwipe v-else-if="debug.swipe" />
 
   <Planning v-else-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
@@ -12,6 +13,7 @@ import state from '../state';
 import Stream from './stream/Stream.vue';
 import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
+import EventSwipe from './stream/EventSwipe.vue';
 import Globe from './Globe.vue';
 export default {
   data() {
@@ -23,7 +25,8 @@ export default {
     Stream,
     Planning,
     Report,
-    Globe
+    Globe,
+    EventSwipe
   },
 }
 </script>
