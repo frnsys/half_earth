@@ -76,7 +76,7 @@ export default {
         .filter((i) => {
           return this.filter == null || (this.type == 'Event' ? i.arc : i.type) == this.filter;
         })
-        .sort((a, b) => a._created < b._created);
+        .sort((a, b) => a._created < b._created ? 1 : -1);
     },
     storyArcs() {
       let arcs = Object.values(this.state.items)
