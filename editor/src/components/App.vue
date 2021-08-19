@@ -13,8 +13,11 @@
 </div>
 <div class="sidebar">
   <button @click="() => addNew(type)">Add {{type}}</button>
-  <h6>Filter by {{type == 'Event' ? 'story arc' : 'policy type'}}</h6>
-  <ul class="filters">
+  <div class="filters--header">
+    <div>Filter by {{type == 'Event' ? 'story arc' : 'policy type'}}</div>
+    <div class="toggle" @click="() => filtersOpen = !filtersOpen">{{filtersOpen ? 'Hide' : 'Show'}}</div>
+  </div>
+  <ul class="filters" v-if="filtersOpen">
     <li :class="{selected: filter == null}" @click="() => filter = null">All</li>
     <li v-for="f in filters" :class="{selected: filter == f}" @click="() => filter = f">{{f}}</li>
   </ul>
@@ -25,7 +28,10 @@
     <a :href="`#${i.id}`" :class="{invalid: i.invalid}"><span class="question-icon" v-if="i.questions">?</span>{{i.label || '(empty)'}}</a>
   </li>
 </ul>
-<div class="toc-toggle" @click="() => tocOpen = !tocOpen">{{tocOpen ? 'Hide' : 'Show'}} TOC</div>
+<div class="toc-meta">
+  <div class="toggle" @click="() => tocOpen = !tocOpen">{{tocOpen ? 'Hide' : 'Show'}} TOC</div>
+  <div class="count">{{itemsOfType.length}} items</div>
+</div>
 
 <datalist id="arcs">
   <option v-for="arc in storyArcs">{{arc}}</option>
@@ -46,6 +52,7 @@ export default {
     return {
       type: 'Event',
       tocOpen: true,
+      filtersOpen: true,
       filter: null,
       state
     }
@@ -236,15 +243,21 @@ nav {
   border-bottom: 2px solid #000;
 }
 
-h6 {
-  margin-bottom: 0;
-  font-weight: normal;
-  border-bottom: 1px solid #000;
-}
 .sidebar {
   position: fixed;
   right: 1em;
   top: 1em;
+  width: 160px;
+}
+.filters--header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #000;
+  font-size: 0.75em;
+  margin-top: 1em;
+}
+.filters--header .toggle {
+  font-size: 0.7em;
 }
 .filters li {
   margin: 0.25em 0;
@@ -311,22 +324,13 @@ h6 {
 #toc li:hover a {
   color: #000;
 }
-.toc-toggle {
+.toc-meta {
   position: fixed;
   left: 0.6em;
   top: 1em;
-  font-size: 0.8em;
-  cursor: pointer;
   z-index: 1;
-  color: #aaa;
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 0.1em;
-  border-radius: 0.2em;
-}
-.toc-toggle:hover {
-  color: #000;
-  text-decoration: underline;
+  font-size: 0.8em;
+  display: flex;
 }
 .question-icon {
   color: #000;
@@ -335,5 +339,22 @@ h6 {
   vertical-align: super;
 	border-radius: 10em;
 	padding: 0 0.3em;
+}
+
+.toggle {
+  cursor: pointer;
+  color: #aaa;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 0.1em;
+  border-radius: 0.2em;
+}
+.toggle:hover {
+  color: #000;
+  border: 1px solid #000;
+}
+.count {
+  margin-left: 0.5em;
+  line-height: 1.5;
 }
 </style>
