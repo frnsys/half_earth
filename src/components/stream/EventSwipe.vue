@@ -6,7 +6,7 @@
   </div>
   <div class="center-thing">
     <div ref="option-left" class="option option-left">Option C</div>
-    <Draggable @drag="onCardDrag" @dragStop="resetOption">
+    <Draggable ref="draggable" @drag="onCardDrag" @dragStop="resetOption">
       <div class="test-card">testing</div>
     </Draggable>
     <div ref="option-right" class="option option-right">Option D</div>
@@ -70,6 +70,7 @@ export default {
           optEl.classList.remove('selected');
         }
         this.optionDir = dir;
+        draggable.$el.style.opacity = `${100-p*1.75}%`;
       }
     },
     resetOption() {
@@ -77,6 +78,7 @@ export default {
         let optEl = this.$refs[`option-${this.optionDir}`];
         optEl.style[this.optionDir] = 0;
         optEl.classList.remove('selected');
+        this.$refs.draggable.$el.style.opacity = 1;
       }
     }
   }
