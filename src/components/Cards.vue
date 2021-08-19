@@ -23,6 +23,7 @@ export default {
     return {
       down: false,
       dragging: false,
+      vel: 0,
       pos: {
         x: 0,
         y: 0,
@@ -56,11 +57,19 @@ export default {
 
       // Scroll the element
       this.$el.scrollTop = this.pos.top - dy;
+      let prev = this.$el.scrollLeft;
       this.$el.scrollLeft = this.pos.left - dx;
+      let diff = this.$el.scrollLeft - prev;
+
+      this.vel = diff;
     },
     startDrag(ev) {
       // Stop snap-to-center animation if there is one
       if (this.animation) this.animation.stop();
+
+      // Stop momentum if any
+      if (this.momentum) cancelAnimationFrame(this.momentum);
+      this.momentum = null;
 
       this.down = true;
       this.pos = {
@@ -73,36 +82,49 @@ export default {
         top: this.$el.scrollTop,
       };
     },
+    snapToCenter() {
+      // Horizontal snap-to-center
+      let rect = this.$el.getBoundingClientRect();
+      let scrollLeft = this.$el.scrollLeft;
+      let centerOffset = scrollLeft + rect.width/2;
+
+      // Find the child closest to the center
+      let target = [...this.$el.children].reduce((acc, child) => {
+        let childRect = child.getBoundingClientRect();
+        let childCenterOffset = child.offsetLeft + childRect.width/2;
+        let offset = Math.abs(childCenterOffset - centerOffset);
+        if (!acc || offset < acc.offset) {
+          return {child, offset, width: childRect.width};
+        } else {
+          return acc;
+        }
+      }, null);
+
+      if (target) {
+        // Animate snap-to-center
+        let start = this.$el.scrollLeft;
+        let end = target.child.offsetLeft - rect.width/2 + target.width/2;
+        this.animation = animate(start, end, duration, (val) => {
+          this.$el.scrollLeft = val;
+        });
+      }
+    },
     endDrag(ev) {
       this.down = false;
       if (this.dragging) {
         this.dragging = false;
 
-        // Horizontal snap-to-center
-        let rect = this.$el.getBoundingClientRect();
-        let scrollLeft = this.$el.scrollLeft;
-        let centerOffset = scrollLeft + rect.width/2;
-
-        // Find the child closest to the center
-        let target = [...this.$el.children].reduce((acc, child) => {
-          let childRect = child.getBoundingClientRect();
-          let childCenterOffset = child.offsetLeft + childRect.width/2;
-          let offset = Math.abs(childCenterOffset - centerOffset);
-          if (!acc || offset < acc.offset) {
-            return {child, offset, width: childRect.width};
-          } else {
-            return acc;
-          }
-        }, null);
-
-        if (target) {
-          // Animate snap-to-center
-          let start = this.$el.scrollLeft;
-          let end = target.child.offsetLeft - rect.width/2 + target.width/2;
-          this.animation = animate(start, end, duration, (val) => {
-            this.$el.scrollLeft = val;
-          });
-        }
+        // Momentum
+        this.applyMomentum();
+      }
+    },
+    applyMomentum() {
+      this.$el.scrollLeft += this.vel;
+      this.vel *= 0.95;
+      if (Math.abs(this.vel) > 0.5){
+        this.momentum = requestAnimationFrame(this.applyMomentum);
+      } else {
+        this.snapToCenter();
       }
     }
   }
