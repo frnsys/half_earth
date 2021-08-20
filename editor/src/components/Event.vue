@@ -66,9 +66,11 @@
     </label>
     <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
   </div>
-  <div class="notes">
+  <div class="notes" >
     <label @click="() => expandNotes = !expandNotes">
-      <span><span class="notes-icon" v-if="localData.notes && localData.notes.length > 0">!</span> Notes, References, &amp; Discussion</span>
+      <span>
+        <span class="notes-icon question" v-if="flags('notes').question">?</span>
+        <span class="notes-icon" v-if="localData.notes && localData.notes.length > 0">!</span> Notes, References, &amp; Discussion</span>
       <div class="notes--toggle">Toggle</div>
     </label>
     <textarea v-if="expandNotes" v-model="localData.notes" placeholder="Write any notes or discussion for others" @blur="save" :class="flags('notes')"/>

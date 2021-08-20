@@ -288,6 +288,12 @@ nav {
 	border-radius: 10em;
 	padding: 0 0.45em;
 }
+.notes-icon.question {
+  color: #000;
+  background: #EFCF40;
+  margin-right: 0.25em;
+  padding: 0 0.3em;
+}
 
 #toc {
   top: 0;
