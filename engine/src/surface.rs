@@ -55,7 +55,7 @@ pub struct EarthSurface {
 impl EarthSurface {
     pub fn new(biomes: Vec<BiomeLabel>, width: usize, height: usize, scale: usize,
                lookup: Vec<BiomeLabel>) -> EarthSurface {
-        // utils::set_panic_hook();
+        utils::set_panic_hook();
 
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
         pixels = nearest_neighbor_scale(&pixels, width, height, scale);
@@ -130,7 +130,6 @@ impl EarthSurface {
 }
 
 // The biome changing logic
-// If the biome hasn't changed, return None
 fn biome_for_temp(biome: &mut BiomeLabel, temp: f32, precip: f32, lookup: &[BiomeLabel]) -> BiomeLabel {
     if *biome == 255 { // Water
         255

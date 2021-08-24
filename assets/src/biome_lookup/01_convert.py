@@ -77,8 +77,8 @@ x_min = biomes[x_var].min()
 x_max = biomes[x_var].max()
 y_min = biomes[y_var].min()
 y_max = biomes[y_var].max()
-x_step = (x_max - x_min)/n_squares_per_side
-y_step = (y_max - y_min)/n_squares_per_side
+x_step = (x_max - x_min)/(n_squares_per_side - 1)
+y_step = (y_max - y_min)/(n_squares_per_side - 1)
 
 mapping = []
 for y_ in range(n_squares_per_side):
@@ -118,8 +118,8 @@ def lookup_biome(temp, precip):
     idx = y * n_squares_per_side + x
     return mapping[int(idx)]
 
-print(lookup_biome(10, 100))
-print(lookup_biome(29, 0))
+# print(lookup_biome(10, 100))
+# print(lookup_biome(29, 0))
 
 # 255 for None
 labels = np.array([biome_to_labels[biome] if biome is not None else 255 for biome in mapping])
@@ -131,11 +131,11 @@ subprocess.run(['pngquant', '/tmp/biomes.png', '--speed', '1', '--force', '-o', 
 
 with open('out/biome_lookup.in', 'w') as f:
     size_rs = 'const BIOME_SIZE: usize = {};'.format(n_squares_per_side)
-    x_min_rs = 'const BIOME_TEMP_MIN: f64 = {};'.format(x_min)
-    x_max_rs = 'const BIOME_TEMP_MAX: f64 = {};'.format(x_max)
-    x_step_rs = 'const BIOME_TEMP_STEP: f64 = {};'.format(x_step)
-    y_min_rs = 'const BIOME_PRECIP_MIN: f64 = {};'.format(y_min)
-    y_max_rs = 'const BIOME_PRECIP_MAX: f64 = {};'.format(y_max)
-    y_step_rs = 'const BIOME_PRECIP_STEP: f64 = {};'.format(y_step)
+    x_min_rs = 'const BIOME_TEMP_MIN: f32 = {};'.format(x_min)
+    x_max_rs = 'const BIOME_TEMP_MAX: f32 = {};'.format(x_max)
+    x_step_rs = 'const BIOME_TEMP_STEP: f32 = {};'.format(x_step)
+    y_min_rs = 'const BIOME_PRECIP_MIN: f32 = {};'.format(y_min)
+    y_max_rs = 'const BIOME_PRECIP_MAX: f32 = {};'.format(y_max)
+    y_step_rs = 'const BIOME_PRECIP_STEP: f32 = {};'.format(y_step)
     f.write('\n'.join([
         size_rs, x_min_rs, x_max_rs, x_step_rs, y_min_rs, y_max_rs, y_step_rs]))

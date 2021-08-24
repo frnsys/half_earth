@@ -119,3 +119,82 @@ For the `hector-wasm` integration I changed it so that the config and scenario d
 Total size for `dist/main.js` and the worker files (including the `.wasm`) is 1.532MB, original size for all these was 1.896MB, so overall savings of about 364KB.
 
 After reconfiguring `hector-wasm` to have its `.wasm` file separate from the Javascript, the total file size of the workers went down to 112KB (so down 688KB). The total file size across `dist/main.js` and the workers is 828KB. A big chunk of those savings are from moving the `.wasm` file out of the JS--the total size of the `.wasm` files are now 464KB. So the total file size is still 1.292MB, but that was another 240KB savings.
+
+## 8/24: Debugging Rust WASM error
+
+When testing biome changes over time, I got this error in the JS console:
+
+```
+RuntimeError: unreachable executed 6ed81d2d4eee6340b340.module.wasm:15536:1
+```
+
+Soon followed by:
+
+```
+Error: recursive use of an object detected which would lead to unsafe aliasing in rust src_earth_worker_js.js:122:11
+    __wbindgen_throw http://localhost:8080/dist/src_earth_worker_js.js:122
+    <anonymous> http://localhost:8080/dist/6ed81d2d4eee6340b340.module.wasm:20261
+    <anonymous> http://localhost:8080/dist/6ed81d2d4eee6340b340.module.wasm:20288
+    <anonymous> http://localhost:8080/dist/6ed81d2d4eee6340b340.module.wasm:19229
+    <anonymous> http://localhost:8080/dist/6ed81d2d4eee6340b340.module.wasm:18411
+    update_surface http://localhost:8080/dist/src_earth_worker_js.js:104
+    updateTexture http://localhost:8080/dist/src_earth_worker_js.js:1122
+    prepare http://localhost:8080/dist/src_earth_worker_js.js:958
+```
+
+For `src_earth_worker_js.js`:
+
+Line 122:
+```
+function __wbindgen_throw(arg0, arg1) {
+    throw new Error(getStringFromWasm0(arg0, arg1));
+};
+```
+
+Line 104:
+```
+update_surface() {
+    _half_earth_engine_bg_wasm__WEBPACK_IMPORTED_MODULE_0__.earthsurface_update_surface(this.ptr);
+}
+```
+
+Line 1122:
+```
+updateTexture() {
+    this._surface.update_surface();
+
+    // Update the (shared) array buffer
+    // so the main thread has it
+    this.pixels.set(this._pixels);
+  }
+```
+
+Line 958:
+```
+  // Call a method on the wrapped class instance.
+  // This can handle async methods as well
+  case TYPE.CALL: {
+    const {id, key, args} = data;
+    let ret = instances[id][key](...args);
+    Promise.resolve(ret).then((ret) => {
+      postMessage({reqId, resp: ret});
+    });
+  } break;
+}
+```
+
+So something in the rust `update_surface` method, which basically just wraps `oil_paint_effect`.
+
+Looked at these threads:
+- <https://github.com/rustwasm/wasm-bindgen/issues/1578>
+- <https://github.com/rustwasm/wasm-bindgen/issues/2486>
+
+Issue 2486 suggests setting the panic hook, which gave a Rust traceback:
+
+```
+panicked at 'index out of bounds: the len is 1600 but the index is 1640', src/surface.rs:145:9
+```
+
+The biome lookup table is 40x40 (hence len 1600 when flattened), so this is probably an indexing flub.
+
+Update: yeah I was calculating the biome lookup indices incorrectly. Fixed now
