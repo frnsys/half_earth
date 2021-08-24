@@ -141,9 +141,9 @@ class HexSphere {
       const mesh = intersects[0].object;
       const pos = mesh.position;
       this.centerOnPosition(pos);
-      let tile = mesh.parent;
-      tile.material = hexMaterialFocus;
-      this._onClick.forEach((fn) => fn(tile));
+      // let tile = mesh.parent;
+      // tile.material = hexMaterialFocus;
+      // this._onClick.forEach((fn) => fn(tile));
 
       // TODO this gets the correct position but is hacky
       // WE can just flag an active tooltip and update its position
