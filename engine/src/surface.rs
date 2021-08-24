@@ -12,33 +12,27 @@ const RADIUS: usize = 3;
 const INTENSITY: f32 = 25.;
 const BASE_TEMP: f32 = 15.;
 
-
-// Biome colors
-const COLORS: [Color; 17] = [
-  (21,120,194),  // Water Bodies
-  (27,100,6),    // Evergreen Needleleaf Forests
-  (55,172,81),   // Evergreen Broadleaf Forests
-  (27,114,24),   // Deciduous Needleleaf Forests
-  (10,120,70),   // Deciduous Broadleaf Forests
-  (23,112,57),   // Mixed Forests
-  (127,171,98),  // Closed Shrublands
-  (178,130,44),  // Open Shrublands
-  (55,180,92),   // Woody Savannas
-  (239,191,57),  // Savannas
-  (57,166,100),  // Grasslands
-  (78,84,32),    // Permanent Wetlands
-  (200,247,142), // Croplands
-  (171,234,226), // Urban and Built-up Lands
-  (219,225,120), // Cropland/Natural Vegetation Mosaics
-  (201,225,244), // Permanent Snow and Ice
-  (234,171,68),  // Barren
-];
-
 // Technically should be u8
 // but we need larger numbers,
 // which we later divide down to fit u8
 type BigColor = (usize, usize, usize);
 type Color = (u8, u8, u8);
+
+// Biome colors
+const COLORS: [Color; 12] = [
+  (21,120,194),  // Water Bodies
+  (180,194,192), // Urban and Built-up Lands
+  (200,247,142), // Croplands
+  (201,225,244), // Tundra
+  (106,196,106), // Temperate grassland/desert
+  (234,171,68),  // Subtropical desert
+  (185,232,118), // Tropical seasonal forest/savanna
+  (10,120,70),   // Boreal forest
+  (27,114,24),   // Temperate seasonal forest
+  (127,171,98),  // Woodland/shrubland
+  (55,172,81),   // Temperate rain forest
+  (27,100,6),    // Tropical rain forest
+];
 
 #[wasm_bindgen]
 pub struct EarthSurface {
@@ -108,7 +102,7 @@ impl EarthSurface {
                 // 1 kg/m2/s = 1 mm/s
                 // 31536000 seconds per year, which yields mm/year
                 let precip_cm_year = precip * 31536000. / 10.;
-                let label = biome_for_temp(biome, temp, precip_cm_year, &self.biome_lookup);
+                let label = biome_for_temp(biome, temp, 0., &self.biome_lookup);
                 if *biome != label {
                     *biome = label;
                     let color = color_for_biome(label as usize);
@@ -131,17 +125,20 @@ impl EarthSurface {
 
 // The biome changing logic
 fn biome_for_temp(biome: &mut BiomeLabel, temp: f32, precip: f32, lookup: &[BiomeLabel]) -> BiomeLabel {
-    if *biome == 255 { // Water
-        255
-    } else {
-        // Clamp to known range
-        let temp_ = temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);
-        let precip_ = precip.clamp(BIOME_PRECIP_MIN, BIOME_PRECIP_MAX);
+    match *biome {
+        0 => 0, // Water
+        1 => 1, // Urban & built-up
+        2 => 2, // Croplands,
+        _ => {
+            // Clamp to known range
+            let temp_ = temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);
+            let precip_ = precip.clamp(BIOME_PRECIP_MIN, BIOME_PRECIP_MAX);
 
-        let x = ((temp_ - BIOME_TEMP_MIN) / BIOME_TEMP_STEP).floor() as usize;
-        let y = ((precip_ - BIOME_PRECIP_MIN) / BIOME_PRECIP_STEP).floor() as usize;
-        let idx = y * BIOME_SIZE + x;
-        lookup[idx]
+            let x = ((temp_ - BIOME_TEMP_MIN) / BIOME_TEMP_STEP).floor() as usize;
+            let y = ((precip_ - BIOME_PRECIP_MIN) / BIOME_PRECIP_STEP).floor() as usize;
+            let idx = y * BIOME_SIZE + x;
+            lookup[idx]
+        }
     }
 }
 
@@ -153,11 +150,7 @@ fn scale_idx(idx: usize, width: usize, scale: usize) -> usize {
 }
 
 fn color_for_biome(label: usize) -> Color {
-    if label == 255 {
-        COLORS[0]
-    } else {
-        COLORS[label]
-    }
+    COLORS[label]
 }
 
 // Convert biome labels to RGB

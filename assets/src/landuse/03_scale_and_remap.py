@@ -58,6 +58,38 @@ target_height = target_width/2
 #     0: 0
 # }
 
+# Remap the IGBP land use labels
+# to be consistent with biome lookup's biomes.
+# This is a very inexact/inaccurate mapping...but not
+# sure if it can be much better.
+# See the included `igbp_land_use.png`.
+#
+# Reserve:
+# - 0 for water
+# - 1 for cropland
+# - 2 for urban/built-up lands
+remapping = {
+    17: 0,  # Water Bodies
+    255: 0, # Unclassified usually water
+    12: 1,  # Croplands
+    14: 1,  # Croplands
+    13: 2,  # Urban and built-up lands
+    15: 3,  # Permanent Snow and Ice -> Tundra
+    10: 4,  # Grasslands -> Temperate grassland/desert
+    16: 5,  # Barren -> Subtropical desert
+    9: 6,   # Savannas -> Tropical seasonal forest/savanna
+    8: 7,   # Woody Savannas -> Boreal forest
+    1: 7,   # Evergreen Needleleaf Forests -> Boreal forest
+    4: 8,   # Deciduous Broadleaf Forests -> Temperate seasonal forest
+    3: 8,   # Deciduous Needleless Forests -> Temperate seasonal forest
+    6: 9,   # Closed Shrublands -> Woodland/shrubland
+    7: 9,   # Open Shrublands -> Woodland/shrubland
+    5: 10,  # Mixed Forests -> Temperate rain forest
+    11: 10, # Permanent Wetlands -> Temperate rain forest
+    2: 11,  # Evergreen Broadleaf Forests -> Tropical rain forest
+}
+
+
 def to_image(data, outpath, colormap=None, normalize=True):
     data = reshape_as_image(data)
     if data.dtype == np.uint8:
@@ -100,8 +132,14 @@ def remap(dataset, mapping, outpath):
     # Remap land classification labels
     # so we only have cropland and urban/built-up development
     data = dataset.read()
+    idxs = []
     for key, val in mapping.items():
-        data[data == key] = val
+        idxs.append((
+            np.where(data == key),
+            val
+        ))
+    for idx, val in idxs:
+        data[idx] = val
 
     # Save remapped geotiff
     kwargs = dataset.meta.copy()
@@ -154,8 +192,8 @@ if __name__ == '__main__':
         dataset = rasterio.open(outname)
         im = to_image(dataset.read(), '/tmp/mosaic_scaled.png')
 
-        # Remap water to white (which is unclassified, which is mostly if not entirely water)
-        remapped_dataset = remap(dataset, {17: 255}, '/tmp/grid_landuse.tif')
+        # Apply remapping
+        remapped_dataset = remap(dataset, remapping, '/tmp/grid_landuse.tif')
         im = to_image(remapped_dataset.read(), '/tmp/grid_landuse.png', normalize=False)
         subprocess.run(['pngquant', '/tmp/grid_landuse.png', '--speed', '1', '--force', '-o', 'out/grid_landuse.png'])
 

@@ -36,17 +36,23 @@ biome_to_colors = {
     'Temperate rain forest': '#75A95E',
     'Tropical rain forest': '#317A22',
 }
+
+# Reserve:
+# - 0 for water
+# - 1 for cropland
+# - 2 for urban/built-up lands
 biome_to_labels = {
-    'Tundra': 0,
-    'Temperate grassland/desert': 1,
-    'Subtropical desert': 2,
-    'Tropical seasonal forest/savanna': 3,
-    'Boreal forest': 4,
-    'Temperate seasonal forest': 5,
-    'Woodland/shrubland': 6,
-    'Temperate rain forest': 7,
-    'Tropical rain forest': 8,
+    'Tundra': 3,
+    'Temperate grassland/desert': 4,
+    'Subtropical desert': 5,
+    'Tropical seasonal forest/savanna': 6,
+    'Boreal forest': 7,
+    'Temperate seasonal forest': 8,
+    'Woodland/shrubland': 9,
+    'Temperate rain forest': 10,
+    'Tropical rain forest': 11,
 }
+labels_to_biome = {v: k for k, v in biome_to_labels.items()}
 
 # Build the biome temp/precip range polygons
 polys = []
@@ -104,6 +110,7 @@ for y_ in range(n_squares_per_side):
 plt.xlabel(x_var)
 plt.ylabel(y_var)
 plt.show()
+plt.close()
 
 def lookup_biome(temp, precip):
     # Can either throw:
@@ -124,6 +131,39 @@ def lookup_biome(temp, precip):
 # 255 for None
 labels = np.array([biome_to_labels[biome] if biome is not None else 255 for biome in mapping])
 labels = np.reshape(labels, (n_squares_per_side, n_squares_per_side))
+
+# Extend the biome labels to fill the entire image,
+# because otherwise the "empty" (255) values are interpreted
+# as water labels.
+# Probably a nicer way of doing this...
+for row_idx, row in enumerate(labels):
+    valid_idxs = np.argwhere(row != 255).flatten()
+    for idx, v in enumerate(row):
+        if v == 255:
+            # Fill with closest non-255 value.
+            # First look to closest non-255 value in the same row and use that.
+            if len(valid_idxs) > 0:
+                closest_idx = min(valid_idxs, key=lambda i: abs(idx-i))
+                row[idx] = row[closest_idx]
+
+            # If the entire row is 255 values, then look to the closest non-255
+            # value in the same column and use that.
+            else:
+                valid_col_idxs = np.argwhere(labels[:,idx] != 255).flatten()
+                closest_idx = min(valid_col_idxs, key=lambda i: abs(row_idx-i))
+                row[idx] = labels[:,idx][closest_idx]
+
+# Show extended version
+size = 20
+for y, row in enumerate(labels):
+    for x, label in enumerate(row):
+        pts = [(x, y), (x, y+size), (x+size, y+size), (x+size, y)]
+        rect = Polygon(pts)
+        color = biome_to_colors[labels_to_biome[label]]
+        plt.fill(*rect.exterior.xy, color,
+                alpha=0.5,
+                linewidth=0.25, edgecolor='#000000')
+# plt.show()
 
 im = Image.fromarray(labels.astype('uint8'), 'L')
 im.save('/tmp/biomes.png')
