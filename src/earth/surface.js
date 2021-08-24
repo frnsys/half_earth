@@ -116,7 +116,9 @@ class Surface {
     ready.then((run) => {
       // Calculate new avg global temp
       let results = this._hectorRun(this.emissions);
-      let avgGlobalTemp = results['temperature.Tgav'];
+      let avgGlobalTemps = results['temperature.Tgav'];
+      let avgGlobalTemp = avgGlobalTemps[avgGlobalTemps.length - 1];
+      console.log(`avgGlobalTemp: ${avgGlobalTemp}`);
 
       // Calculate biome changes
       this._surface.update_biomes(avgGlobalTemp);
