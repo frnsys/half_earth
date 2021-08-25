@@ -1,5 +1,6 @@
 <template>
 <div id="event-area">
+  <Globe />
   <div ref="option-top" class="option option-top">
     Option A
     <p>These are some details.</p>
@@ -21,6 +22,7 @@
 <script>
 import util from 'lib/util';
 import Draggable from './Draggable.vue';
+import Globe from '../Globe.vue';
 
 export default {
   data() {
@@ -29,6 +31,7 @@ export default {
     }
   },
   components: {
+    Globe,
     Draggable
   },
   methods: {
@@ -61,7 +64,7 @@ export default {
         // How much of the card needs to be offscreen to choose the option.
         // Vertical drag distance is longer on phones, so require less of the
         // card to be offscreen.
-        let pOff = dir == 'top' || dir == 'bottom' ? 1/10 : 1/5;
+        let pOff = dir == 'top' || dir == 'bottom' ? 1/16 : 1/10;
         let p = Math.min(50, 50 * offscreen[dir]/pOff);
         optEl.style[dir] = `${p}%`;
         if (p >= 50) {
@@ -71,6 +74,7 @@ export default {
         }
         this.optionDir = dir;
         draggable.$el.style.opacity = `${100-p*1.75}%`;
+        optEl.style.background = `rgba(255,255,255,${p*2/100})`;
       }
     },
     resetOption() {
@@ -79,6 +83,7 @@ export default {
         optEl.style[this.optionDir] = 0;
         optEl.classList.remove('selected');
         this.$refs.draggable.$el.style.opacity = 1;
+        optEl.style.background = `rgba(255,255,255,0)`;
       }
     }
   }
@@ -101,9 +106,15 @@ export default {
   z-index: 2;
   max-width: 200px;
 
+  padding: 1em;
+  border-radius: 1em;
+
   /* So it doesn't interfere with draggable interaction */
   user-select: none;
   pointer-events: none;
+}
+.option p {
+  margin-bottom: 0;
 }
 .option.selected {
   color: #43CC70;
@@ -115,20 +126,26 @@ export default {
   transform: translate(0, 50%);
 }
 .option-left {
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -50%);
+  left: 0;
+  top: 50%;
 }
 .option-right {
-  transform: translate(50%, 0);
+  transform: translate(50%, -50%);
+  right: 0;
+  top: 50%;
 }
 
 .center-thing {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  position: relative;
 }
 .center-thing .option {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  position: absolute;
 }
 
 .test-card {
@@ -141,4 +158,16 @@ export default {
   text-align: center;
 }
 
+#event-area {
+  position: relative;
+  min-height: 100vh;
+}
+#event-area #globe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+}
 </style>
