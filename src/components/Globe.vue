@@ -20,27 +20,28 @@ export default {
       this.globe = new Globe(this.$el);
       this.globe.render();
 
-      const incrementYear = () => {
-        let curYear = startYear + i;
-        if (curYear < 2050) {
-          console.log(`Year: ${curYear}`);
-          let update = {};
-          Object.keys(emissionsData.data).forEach((k) => {
-            update[k] = emissionsData.data[k][i];
-          });
-          i++;
-          this.globe.addEmissionsThenUpdate(update).then(() => {
-            setTimeout(() => {
-              incrementYear();
-            }, 2000);
-          });
-        }
-      };
-      this.globe.init().then(() => {
-        setTimeout(() => {
-          incrementYear();
-        }, 2000);
-      });
+      // For testing biome updates
+      // const incrementYear = () => {
+      //   let curYear = startYear + i;
+      //   if (curYear < 2050) {
+      //     console.log(`Year: ${curYear}`);
+      //     let update = {};
+      //     Object.keys(emissionsData.data).forEach((k) => {
+      //       update[k] = emissionsData.data[k][i];
+      //     });
+      //     i++;
+      //     this.globe.addEmissionsThenUpdate(update).then(() => {
+      //       setTimeout(() => {
+      //         incrementYear();
+      //       }, 2000);
+      //     });
+      //   }
+      // };
+      // this.globe.init().then(() => {
+      //   setTimeout(() => {
+      //     incrementYear();
+      //   }, 2000);
+      // });
     });
   }
 }
