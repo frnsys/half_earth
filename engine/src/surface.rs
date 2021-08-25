@@ -8,8 +8,12 @@ include!("../../assets/src/biome_lookup/out/biome_lookup.in");
 type BiomeLabel = u8;
 
 const STRIDE: usize = 3; // For r,g,b
+
+// Set the radius to 1 if you need to debug
+// the underlying biome labels with no effect
 const RADIUS: usize = 3;
 const INTENSITY: f32 = 25.;
+
 const BASE_TEMP: f32 = 15.;
 
 // Technically should be u8
@@ -52,7 +56,7 @@ impl EarthSurface {
 
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
         pixels = nearest_neighbor_scale(&pixels, width, height, scale);
-        let intensities = compute_intensities(&pixels);
+        let intensities = compute_intensities(&pixels).collect();
 
         // Assert they have the same number of values
         // (assumes they are the same aspect ratio)
@@ -94,14 +98,15 @@ impl EarthSurface {
         // Above we assert that TEMP_PATTERN_W, TEMP_PATTERN_B, and tgav are all the same size,
         // so no scaling necessary.
         // Add 15 to tgav to get actual temperature (this is what `hectorui` does).
-        for (idx, ((temp, precip), biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, BASE_TEMP + tgav)
-            .zip(pscl_apply(&PRECIP_PATTERN_W, &PRECIP_PATTERN_B, BASE_TEMP + tgav))
+        let global_temp = BASE_TEMP + tgav;
+        for (idx, ((temp, precip), biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, global_temp)
+            .zip(pscl_apply(&PRECIP_PATTERN_W, &PRECIP_PATTERN_B, global_temp))
             .zip(self.biomes.iter_mut()).enumerate() {
                 // In kg/m2/s, convert to cm/year
                 // 1 kg/m2/s = 1 mm/s
                 // 31536000 seconds per year, which yields mm/year
                 let precip_cm_year = precip * 31536000. / 10.;
-                let label = biome_for_temp(biome, temp, 0., &self.biome_lookup);
+                let label = biome_for_temp(biome, temp, precip_cm_year, &self.biome_lookup);
                 if *biome != label {
                     *biome = label;
                     let color = color_for_biome(label as usize);
@@ -112,15 +117,14 @@ impl EarthSurface {
                     // Update intensities
                     // Then you can run `update_surface()` to update the surface pixels
                     let intensity = compute_intensity(r,g,b);
-                    let scaled_idx = scale_idx(idx, self.width, self.scale);
-                    for i in 0..self.scale {
-                        let ii = scaled_idx + (i * self.width * self.scale);
-                        self.intensities[ii..ii+self.scale].fill(((r,g,b), intensity));
+                    for i in scaled_px_indices(idx, self.width/self.scale, self.scale) {
+                        self.intensities[i..i+self.scale].fill(((r,g,b), intensity));
                     }
                 }
         }
     }
 }
+
 
 // The biome changing logic
 fn biome_for_temp(biome: &mut BiomeLabel, temp: f32, precip: f32, lookup: &[BiomeLabel]) -> BiomeLabel {
@@ -145,6 +149,11 @@ fn scale_idx(idx: usize, width: usize, scale: usize) -> usize {
     let x = (idx % width) * scale;
     let y = (idx / width) * scale;
     (y * scaled_width) + x
+}
+
+fn scaled_px_indices(idx: usize, width: usize, scale: usize) -> impl Iterator<Item=usize> {
+    let scaled_idx = scale_idx(idx, width, scale);
+    (0..scale).map(move |i| scaled_idx + (i * width * scale))
 }
 
 fn color_for_biome(label: usize) -> Color {
@@ -182,13 +191,13 @@ fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize)
 }
 
 // Compute pixel intensities, for applying the oil paint effect
-pub fn compute_intensities(img: &[u8]) -> Vec<(BigColor, usize)> {
+pub fn compute_intensities<'a>(img: &'a [u8]) -> impl Iterator<Item=(BigColor, usize)> + 'a {
     img.chunks_exact(3).map(|rgb| {
         let r = rgb[0] as usize;
         let g = rgb[1] as usize;
         let b = rgb[2] as usize;
         ((r,g,b), compute_intensity(r,g,b))
-    }).collect()
+    })
 }
 
 fn compute_intensity(r: usize, g: usize, b: usize) -> usize {
@@ -328,14 +337,38 @@ mod test {
     }
 
     #[test]
-    fn test_earth_surface_update_biomes() {
-        // let biomes: Vec<usize> = (0..TEMP_PATTERN_W.len()).map(|_| 0).collect();
-        // let width = 320;
-        // let height = 160;
-        // let scale = 2;
-        // let mut surface = EarthSurface::new(biomes, width, height, scale);
+    fn test_scaled_indices() {
+        let scale = 3;
+        let width = 2;
+        let mut scaled_image = vec![
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 1, 1, 1,
+            0, 0, 0, 1, 1, 1,
+            0, 0, 0, 1, 1, 1,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+        ];
 
-        // surface.update_biomes(1000.);
-        // TODO implement an actual test
+        let idx = 3;
+        for i in scaled_px_indices(idx, width, scale) {
+            assert!(&scaled_image[i..i+scale] == &[1, 1, 1]);
+            scaled_image[i..i+scale].fill(2);
+        }
+
+        let expected_image = vec![
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 2, 2, 2,
+            0, 0, 0, 2, 2, 2,
+            0, 0, 0, 2, 2, 2,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+        ];
+        assert!(expected_image == scaled_image);
     }
 }

@@ -423,7 +423,7 @@ function load(url) {
 
     // There are a variety of PNG color types;
     // this converts them into a consistent RGBA type
-    var rgba = toRGBA8(png);
+    let rgba = toRGBA8(png);
 
     // Data is flat RGBA values
     // since the images we're working with is grayscale,
