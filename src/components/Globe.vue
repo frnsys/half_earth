@@ -19,6 +19,7 @@ export default {
     getGlobe().then(({default: Globe}) => {
       this.globe = new Globe(this.$el);
       this.globe.render();
+      this.globe.init();
 
       // For testing biome updates
       // const incrementYear = () => {
