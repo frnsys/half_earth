@@ -19,3 +19,5 @@ The following biomes are used:
     - Include files for the Rust code (`out/biome_lookup.in`) which describe the min, max, and step sizes for the `x` (temperature) and `y` (precipitation) axes for translating a given temperature and precipitation to a 1d index for the PNG.
 
 ![](biomes.png)
+
+If you want to preview how this lookup is applied, see `../scaling_patterns/03_preview.py` (the `preview_biomes_lookup.png` output).

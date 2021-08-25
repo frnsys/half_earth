@@ -40,17 +40,16 @@ biome_to_colors = {
 # Reserve:
 # - 0 for water
 # - 1 for cropland
-# - 2 for urban/built-up lands
 biome_to_labels = {
-    'Tundra': 3,
-    'Temperate grassland/desert': 4,
-    'Subtropical desert': 5,
-    'Tropical seasonal forest/savanna': 6,
-    'Boreal forest': 7,
-    'Temperate seasonal forest': 8,
-    'Woodland/shrubland': 9,
-    'Temperate rain forest': 10,
-    'Tropical rain forest': 11,
+    'Tundra': 2,
+    'Temperate grassland/desert': 3,
+    'Subtropical desert': 4,
+    'Tropical seasonal forest/savanna': 5,
+    'Boreal forest': 6,
+    'Temperate seasonal forest': 7,
+    'Woodland/shrubland': 8,
+    'Temperate rain forest': 9,
+    'Tropical rain forest': 10,
 }
 labels_to_biome = {v: k for k, v in biome_to_labels.items()}
 
@@ -132,6 +131,7 @@ def lookup_biome(temp, precip):
 labels = np.array([biome_to_labels[biome] if biome is not None else 255 for biome in mapping])
 labels = np.reshape(labels, (n_squares_per_side, n_squares_per_side))
 
+
 # Extend the biome labels to fill the entire image,
 # because otherwise the "empty" (255) values are interpreted
 # as water labels.
@@ -166,8 +166,7 @@ for y, row in enumerate(labels):
 # plt.show()
 
 im = Image.fromarray(labels.astype('uint8'), 'L')
-im.save('/tmp/biomes.png')
-subprocess.run(['pngquant', '/tmp/biomes.png', '--speed', '1', '--force', '-o', 'out/biomes.png'])
+im.save('out/biomes.png')
 
 with open('out/biome_lookup.in', 'w') as f:
     size_rs = 'const BIOME_SIZE: usize = {};'.format(n_squares_per_side)

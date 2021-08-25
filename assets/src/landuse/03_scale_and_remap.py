@@ -67,26 +67,25 @@ target_height = target_width/2
 # Reserve:
 # - 0 for water
 # - 1 for cropland
-# - 2 for urban/built-up lands
 remapping = {
     17: 0,  # Water Bodies
     255: 0, # Unclassified usually water
     12: 1,  # Croplands
     14: 1,  # Croplands
-    13: 2,  # Urban and built-up lands
-    15: 3,  # Permanent Snow and Ice -> Tundra
-    10: 4,  # Grasslands -> Temperate grassland/desert
-    16: 5,  # Barren -> Subtropical desert
-    9: 6,   # Savannas -> Tropical seasonal forest/savanna
-    8: 7,   # Woody Savannas -> Boreal forest
-    1: 7,   # Evergreen Needleleaf Forests -> Boreal forest
-    4: 8,   # Deciduous Broadleaf Forests -> Temperate seasonal forest
-    3: 8,   # Deciduous Needleless Forests -> Temperate seasonal forest
-    6: 9,   # Closed Shrublands -> Woodland/shrubland
-    7: 9,   # Open Shrublands -> Woodland/shrubland
-    5: 10,  # Mixed Forests -> Temperate rain forest
-    11: 10, # Permanent Wetlands -> Temperate rain forest
-    2: 11,  # Evergreen Broadleaf Forests -> Tropical rain forest
+    13: 3,  # Urban and built-up lands -> Temperate grassland/desert
+    15: 2,  # Permanent Snow and Ice -> Tundra
+    10: 3,  # Grasslands -> Temperate grassland/desert
+    16: 4,  # Barren -> Subtropical desert
+    9: 5,   # Savannas -> Tropical seasonal forest/savanna
+    8: 6,   # Woody Savannas -> Boreal forest
+    1: 6,   # Evergreen Needleleaf Forests -> Boreal forest
+    4: 7,   # Deciduous Broadleaf Forests -> Temperate seasonal forest
+    3: 7,   # Deciduous Needleless Forests -> Temperate seasonal forest
+    6: 8,   # Closed Shrublands -> Woodland/shrubland
+    7: 8,   # Open Shrublands -> Woodland/shrubland
+    5: 9,  # Mixed Forests -> Temperate rain forest
+    11: 9, # Permanent Wetlands -> Temperate rain forest
+    2: 10,  # Evergreen Broadleaf Forests -> Tropical rain forest
 }
 
 
@@ -130,7 +129,6 @@ def to_image(data, outpath, colormap=None, normalize=True):
 
 def remap(dataset, mapping, outpath):
     # Remap land classification labels
-    # so we only have cropland and urban/built-up development
     data = dataset.read()
     idxs = []
     for key, val in mapping.items():

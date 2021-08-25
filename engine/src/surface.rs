@@ -19,9 +19,8 @@ type BigColor = (usize, usize, usize);
 type Color = (u8, u8, u8);
 
 // Biome colors
-const COLORS: [Color; 12] = [
+const COLORS: [Color; 11] = [
   (21,120,194),  // Water Bodies
-  (180,194,192), // Urban and Built-up Lands
   (200,247,142), // Croplands
   (201,225,244), // Tundra
   (106,196,106), // Temperate grassland/desert
@@ -31,7 +30,7 @@ const COLORS: [Color; 12] = [
   (27,114,24),   // Temperate seasonal forest
   (127,171,98),  // Woodland/shrubland
   (55,172,81),   // Temperate rain forest
-  (27,100,6),    // Tropical rain forest
+  (26,176,59),   // Tropical rain forest
 ];
 
 #[wasm_bindgen]
@@ -127,8 +126,7 @@ impl EarthSurface {
 fn biome_for_temp(biome: &mut BiomeLabel, temp: f32, precip: f32, lookup: &[BiomeLabel]) -> BiomeLabel {
     match *biome {
         0 => 0, // Water
-        1 => 1, // Urban & built-up
-        2 => 2, // Croplands,
+        1 => 1, // Cropland,
         _ => {
             // Clamp to known range
             let temp_ = temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);

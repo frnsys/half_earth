@@ -33,6 +33,8 @@ _Warning: This creates some large intermediary files (>10GB total)._
 2. Run `02_process.sh` to mosaic the HDF files and project to EPSG:4326.
 3. Run `03_scale_and_remap.py` to scale and remap the labels and generate an output PNG map of landuse labels for the frontend.
 
+If you want to preview how the landuse/biome labels, see `../scaling_patterns/03_preview.py` (the `preview_biomes_base.png` output).
+
 # Data
 
 - [MCD12Q1 v006: MODIS/Terra+Aqua Land Cover Type Yearly L3 Global 500 m SIN Grid](https://lpdaac.usgs.gov/products/mcd12q1v006/)
