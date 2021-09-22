@@ -1,4 +1,11 @@
+mod plan;
+mod kinds;
 mod utils;
+// mod world;
+// mod player;
+// mod events;
+mod sectors;
+mod regions;
 pub mod surface;
 
 // When the `wee_alloc` feature is enabled,
