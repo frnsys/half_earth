@@ -2,16 +2,18 @@ use std::collections::HashSet;
 use super::kinds::{Resource, ResourceMap};
 
 const STATUS_CHANGE_STEPS: u8 = 3;
+const BASE_YIELD_RATE: f32 = 0.001;
+const MAX_EXPLOITATION: u8 = 10;
+
+pub type CellIdx = usize;
 
 #[derive(Debug, PartialEq)]
 pub enum Status {
     Available,
     Building(u8),
-    Active,
+    Active(u8),
     Decommissioning(u8)
 }
-
-pub type CellIdx = usize;
 
 #[derive(Debug)]
 pub struct Cell {
@@ -26,8 +28,13 @@ pub struct CellGrid<const N: usize> {
     index: ResourceMap<HashSet<CellIdx>>
 }
 
+fn yielded_resources(exploitation_level: u8) -> f32 {
+    (exploitation_level as f32) * BASE_YIELD_RATE
+}
+
 impl<const N: usize> CellGrid<N> {
     fn new(cells: [Cell; N]) -> CellGrid<N> {
+        // Build resource index
         let mut index: ResourceMap<HashSet<CellIdx>> = resources!();
         for (i, cell) in cells.iter().enumerate() {
             for (k, v) in cell.resources.items() {
@@ -46,11 +53,12 @@ impl<const N: usize> CellGrid<N> {
         idxs.iter().filter_map(|idx| {
             let cell = &self.cells[*idx];
             match cell.status {
-                Status::Active => Some(cell.resources),
+                Status::Active(i) => Some(cell.resources * (i as f32) * BASE_YIELD_RATE),
                 _ => None
             }
         }).fold(resources!(), |acc, res| {
-            acc + res
+            acc += res;
+            acc
         })
     }
 
@@ -58,11 +66,12 @@ impl<const N: usize> CellGrid<N> {
         idxs.iter().filter_map(|idx| {
             let cell = &self.cells[*idx];
             match cell.status {
-                Status::Active|Status::Building(_) => Some(cell.resources),
+                Status::Active(_)|Status::Building(_) => Some(cell.resources * yielded_resources(MAX_EXPLOITATION)),
                 _ => None
             }
         }).fold(resources!(), |acc, res| {
-            acc + res
+            acc += res;
+            acc
         })
     }
 
@@ -91,7 +100,7 @@ impl<const N: usize> CellGrid<N> {
         let weights: ResourceMap<f32> = *needed/total_need;
         let mut cells: Vec<(CellIdx, f32)> = idxs.iter().filter_map(|idx| {
             let cell = &self.cells[*idx];
-            // TODO could also minize resources that *aren't* needed
+            // TODO could also minimize resources that *aren't* needed
             let potential = cell.resources.items().iter().fold(0., |acc, (k, v)| {
                       // How much of the resource is available,
                       // up to how much is actually needed (to minimize excess/waste)
@@ -106,42 +115,86 @@ impl<const N: usize> CellGrid<N> {
         cells
     }
 
+    // TODO this doesn't expand by a specific amount
     // Claim new cells that are most suited to providing the required resources
-    pub fn expand_resources(&mut self, deficit: &ResourceMap<f32>, n_expansions: usize) -> Vec<CellIdx> {
-        let idxs = self.find_cells_for_resources(&deficit).iter().cloned()
-            .filter(|idx| self.cells[*idx].status == Status::Available).collect();
-        let cells = self.cells_by_potential(&idxs, deficit);
+    pub fn expand_resources(&mut self, idxs: Vec<CellIdx>, deficit: &ResourceMap<f32>, n_expansions: usize) -> Vec<CellIdx> {
+        // Expand exploitation of existing cells
+        let underexploited: Vec<&Cell> = idxs.iter().filter_map(|idx| {
+            let cell = &self.cells[*idx];
+            match cell.status {
+                Status::Active(i) => {
+                    if i < MAX_EXPLOITATION {
+                        cell.status = Status::Active(i+1);
+                        Some(cell)
+                    } else {
+                        None
+                    }
+                },
+                _ => None
+            }
+        }).collect();
 
-        let n_expands = cells.len().min(n_expansions);
-        cells[..n_expands].iter().map(|(idx, _)| {
-            self.cells[*idx].status = Status::Building(0);
-            *idx
-        }).collect()
+        // If all existing resources are at max exploitation,
+        // search for new resource cells
+        if underexploited.is_empty() {
+            let idxs = self.find_cells_for_resources(&deficit).iter().cloned()
+                .filter(|idx| self.cells[*idx].status == Status::Available).collect();
+            let cells = self.cells_by_potential(&idxs, deficit);
+
+            let n_expands = cells.len().min(n_expansions);
+            cells[..n_expands].iter().map(|(idx, _)| {
+                self.cells[*idx].status = Status::Building(0);
+                *idx
+            }).collect()
+        } else {
+            idxs
+        }
     }
 
+    // TODO this doesn't contract by a specific amount
     // The assumption here is that resource contraction should happen as quickly as possible, i.e.
     // get rid of the highest surplus resource capacity cells first, i.e. get rid of as few cells
     // as possible. The downside is that it frees up land the slowest too (unless land is the
     // surplus resource; so maybe that's fine since we explicitly track land as a resource?)
-    pub fn contract_resources(&mut self, idxs: &Vec<CellIdx>, surplus: &ResourceMap<f32>, transition_speed: f32) -> Vec<CellIdx> {
-        // TODO This feels like it can be cleaner/simplified
-        let to_reduce: Vec<Resource> = surplus.keys().iter().filter(|k| surplus[**k] > 0.).cloned().collect();
-        let mut reduce_by = *surplus * transition_speed;
-        let cells = self.cells_by_potential(idxs, surplus);
-
-        let mut to_keep = Vec::with_capacity(cells.len());
-        for (idx, _) in cells.iter() {
-            if to_reduce.iter().any(|k| reduce_by[*k] <= 0.) {
-                to_keep.push(*idx);
-            } else {
-                reduce_by -= self.cells[*idx].resources;
+    pub fn contract_resources(&mut self, idxs: Vec<CellIdx>, surplus: &ResourceMap<f32>, transition_speed: f32) -> Vec<CellIdx> {
+        // Contract exploitation of existing cells
+        let to_keep: Vec<CellIdx> = idxs.iter().filter_map(|idx| {
+            let cell = &self.cells[*idx];
+            match cell.status {
+                Status::Active(i) => {
+                    if i > 0 {
+                        cell.status = Status::Active(i-1);
+                        Some(*idx)
+                    } else {
+                        cell.status = Status::Decommissioning(0);
+                        None
+                    }
+                },
+                Status::Building(_) => Some(*idx), // Keep in-development? Should probably stop yeah?
+                _ => None
             }
-        }
+        }).collect();
         to_keep
     }
 
     // TODO test
-    pub fn deduct_resources(&mut self, idxs: &Vec<CellIdx>, resources: &ResourceMap<f32>) {
+    pub fn deduct_resources(&mut self, idxs: &Vec<CellIdx>, consumed: &ResourceMap<f32>) {
+        let keys: Vec<Resource> = consumed.keys().iter().filter(|k| consumed[**k] > 0.).cloned().collect();
+        for idx in idxs {
+            let cell = &self.cells[*idx];
+            match cell.status {
+                Status::Active(i) => {
+                    let yielded = cell.resources * yielded_resources(i);
+                    for key in &keys {
+                        cell.resources[*key] -= yielded[*key];
+                    }
+                }
+                _ => {}
+            }
+            if keys.iter().any(|k| consumed[*k] <= 0.) {
+                break;
+            }
+        }
     }
 
     fn update_cells(&mut self) {
@@ -149,7 +202,7 @@ impl<const N: usize> CellGrid<N> {
             match cell.status {
                 Status::Building(step) => {
                     if step >= STATUS_CHANGE_STEPS {
-                        cell.status = Status::Active;
+                        cell.status = Status::Active(1);
                     } else {
                         cell.status = Status::Building(step+1);
                     }
@@ -170,6 +223,11 @@ impl<const N: usize> CellGrid<N> {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    // TODO test deduct resources
+    // TODO test yield changes
+    // TODO test expand resources increases exploitation first
+    // TODO test contract resources
 
     #[test]
     fn test_cells_for_resources() {
@@ -202,7 +260,7 @@ mod test {
     #[test]
     fn test_resources_for_sector() {
         let cells = [Cell {
-            status: Status::Active,
+            status: Status::Active(1),
             resources: resources!(water: 1.0, soil: 0.5)
         }, Cell {
             status: Status::Building(0),
@@ -228,7 +286,7 @@ mod test {
     #[test]
     fn test_planned_resources_for_sector() {
         let cells = [Cell {
-            status: Status::Active,
+            status: Status::Active(1),
             resources: resources!(water: 1.0, soil: 0.5)
         }, Cell {
             status: Status::Building(0),
@@ -269,7 +327,7 @@ mod test {
         }
 
         grid.update_cells();
-        assert_eq!(grid.cells[0].status, Status::Active);
+        assert_eq!(grid.cells[0].status, Status::Active(1));
         assert_eq!(grid.cells[1].status, Status::Available);
     }
 
@@ -282,7 +340,7 @@ mod test {
             status: Status::Available,
             resources: resources!(soil: 2.0, labor: 3.0)
         }, Cell {
-            status: Status::Active,
+            status: Status::Active(1),
             resources: resources!(soil: 2.0, labor: 3.0, sun: 2.0)
         }, Cell {
             status: Status::Available,
@@ -311,13 +369,13 @@ mod test {
             status: Status::Available,
             resources: resources!(soil: 2.0, labor: 3.0)
         }, Cell {
-            status: Status::Active,
+            status: Status::Active(1),
             resources: resources!(soil: 2.0, labor: 3.0, sun: 2.0)
         }, Cell {
-            status: Status::Active,
+            status: Status::Active(1),
             resources: resources!(soil: 2.0, labor: 1.0, sun: 1.0)
         }, Cell {
-            status: Status::Active,
+            status: Status::Active(1),
             resources: resources!(sun: 2.0, labor: 1.5, soil: 4.0)
         }];
         let mut grid = CellGrid::new(cells);

@@ -1,9 +1,18 @@
 use super::plan;
 use std::hash::Hash;
-use enum_map::{EnumMap, enum_map, Enum};
+use enum_map::{Enum, EnumMap, enum_map};
 use super::regions::{CellIdx, CellGrid};
-use super::kinds::{Resource, Sector, SectorMap, ResourceMap, ByproductMap};
+use super::kinds::{ResourceMap, ByproductMap};
 use arrayvec::ArrayVec;
+
+// Sectors:
+// Agriculture,        // Calories
+// Materials,          // Tons
+// Energy,             // MWh
+// Projects,           // Units of progress/maintenance
+// Other               // All other needs, each output is a "person"
+//                     // whose per-capita resource needs have been met
+
 
 pub trait Output: Copy + Enum<f32> + Hash + PartialEq + Eq {}
 
@@ -57,11 +66,10 @@ struct Modifier {
 // An Industry is a bundle of Processes
 // and Modifiers
 struct Industry<T: SectorDetails, const N: usize> {
-    kind: Sector,
     processes: [Process<T>; N],
     mix: [f32; N],
     cells: Vec<CellIdx>,
-    modifiers: Vec<Modifier> // TODO array?
+    modifiers: Vec<Modifier>
 }
 
 impl<T: SectorDetails, const N: usize> Industry<T, N> {
@@ -87,7 +95,7 @@ impl<T: SectorDetails, const N: usize> Industry<T, N> {
         // of some resources in surplus and some in deficit
         let growth_rate = 0.2; // TODO
         let n_expansions = (self.cells.len() as f32 * growth_rate) as usize;
-        self.cells = grid.expand_resources(&gap, n_expansions);
+        self.cells = grid.expand_resources(&self.cells, &gap, n_expansions);
 
         let transition_speed = 0.1;
         self.cells = grid.contract_resources(&self.cells, &gap, transition_speed);
@@ -128,7 +136,6 @@ impl<T: SectorDetails, const N: usize> Industry<T, N> {
             mixes_by_output[proc.output] += p;
         };
 
-        // TODO clean up??
         self.processes.iter().zip(self.mix).map(|(proc, p)| {
             // Locked processes should have p == 0.
             plan::ProductionOrder {
@@ -141,22 +148,29 @@ impl<T: SectorDetails, const N: usize> Industry<T, N> {
     }
 
     // TODO transition_speed is per month, can increase at the expense of decommission risk (mine leakages and what not)
-    fn update_mix(&mut self, orders: &[plan::ProductionOrder<T::Output>], demand: &EnumMap<T::Output, f32>, resource_weights: &ResourceMap<f32>, transition_speed: f32) {
+    fn update_mix(&mut self,
+                  orders: &[plan::ProductionOrder<T::Output>],
+                  demand: &EnumMap<T::Output, f32>,
+                  resource_weights: &ResourceMap<f32>,
+                  transition_speed: f32) {
         let target_mix = plan::calculate_mix(&orders, &demand, &resource_weights);
         for ((cur, target), process) in self.mix.iter_mut().zip(target_mix).zip(&self.processes) {
             if process.unlocked {
+                let cur = *cur;
+
                 // Phase out banned processes
-                if process.banned && *cur > 0.{
-                    *cur -= transition_speed;
+                if process.banned && cur > 0.{
+                    cur -= transition_speed;
                 } else if !process.banned {
-                    if *cur < target {
-                        *cur += transition_speed;
-                    } else if *cur > target {
-                        *cur -= transition_speed;
+                    if cur < target {
+                        cur += transition_speed;
+                    } else if cur > target {
+                        cur -= transition_speed;
                     }
                 }
             }
         }
+
         // Renormalize
         let total: f32 = self.mix.iter().sum();
         for share in &mut self.mix {
@@ -182,89 +196,6 @@ struct Energy {
 impl SectorDetails for Energy {
     type Output = Power;
 }
-
-// fn planetary_production(cells: &[Cell], demand: &SectorMap<f32>) {
-//     // TODO this also needs to account for resources needed for projects and what not
-
-//     // TODO could probably update this as part of the use_change function
-//     let mut resources_per_sector: SectorMap<ResourceMap<f32>> = sectors!();
-//     let mut planned_resources_per_sector: SectorMap<ResourceMap<f32>> = sectors!();
-//     // for cell in cells {
-//     //     for user in cell.users {
-//     //         match user {
-//     //             // Needs to be built-up enough before it contributes resources
-//     //             Some((sec, readiness)) => {
-//     //                 if readiness > 3 {
-//     //                     resources_per_sector[sec] += cell.resources/3.;
-//     //                 }
-//     //                 planned_resources_per_sector[sec] += cell.resources/3.;
-//     //             },
-//     //             None => (),
-//     //         }
-//     //     }
-//     // }
-
-//     let ind_ag = Process {
-//         unlocked: true,
-//         banned: false,
-//         reqs: resources!(land: 1.0, energy: 2.0),
-//         byproducts: ByproductMap {co2: 1.0, pollution: 0.5},
-//         details: Agriculture {
-//             soil_impact: true,
-//             pesticides: Amount::High,
-//             fertilizer: Amount::High,
-//             livestock: true,
-//             meat: true
-//         }
-//     };
-//     let regen_ag = Process {
-//         unlocked: true,
-//         banned: false,
-//         reqs: resources!(land: 2.0, energy: 1.0),
-//         byproducts: ByproductMap {co2: 0.2, pollution: 0.2},
-//         details: Agriculture {
-//             soil_impact: false,
-//             pesticides: Amount::Low,
-//             fertilizer: Amount::Low,
-//             livestock: true,
-//             meat: true
-//         }
-//     };
-//     let ind = Industry {
-//         cells: vec![],
-//         kind: Sector::Agriculture,
-//         processes: [ind_ag, regen_ag],
-//         mix: [0.8, 0.2],
-//         modifiers: vec![]
-//     };
-
-//     let mut sector_capacities: SectorMap<f32> = sectors!();
-
-//     let orders = ind.production_orders(demand[ind.kind]);
-//     let (produced, consumed, byproducts) = plan::calculate_production(&orders, &resources_per_sector[ind.kind]);
-//     let required = plan::calculate_required(&orders);
-//     sector_capacities[ind.kind] = produced.iter().sum();
-//     let gap = required - consumed;
-
-//     // TODO resource depletion, need to modify from cells
-
-//     // TODO expand/contract cell use
-//     // let next_available = available.clone();
-//     // for (k, v) in requirement_gap.items() {
-//     //     if v > 0. {
-//     //         match k {
-//     //             Resource::Land => {
-//     //                 // TODO check available resources in regions
-//     //                 // also apply limit, e.g. if only 50% of land can be used
-//     //                 next_available[k] += v * 0.1; // transition speed
-//     //             },
-//     //             _ => () // TODO
-//     //         }
-//     //     } else {
-//     //         // Take some out of commission
-//     //     }
-//     // }
-// }
 
 #[cfg(test)]
 mod test {
@@ -447,104 +378,5 @@ mod test {
         // Nothing should be produced b/c we have no labor
         assert_eq!(produced, [0., 0.]);
     }
-
-    // #[test]
-    // fn test_gen() {
-    //     let ind_ag = Process {
-    //         unlocked: true,
-    //         permitted: true,
-    //         reqs: resources!(land: 1.1, energy: 1.2),
-    //         byproducts: ByproductMap {co2: 0.1, pollution: 0.1},
-    //         details: Agriculture {
-    //             soil_impact: true,
-    //             pesticides: Amount::High,
-    //             fertilizer: Amount::High,
-    //             livestock: true,
-    //             meat: true
-    //         }
-    //     };
-    //     let regen_ag = Process {
-    //         unlocked: true,
-    //         permitted: true,
-    //         reqs: resources!(land: 1.2, energy: 1.0),
-    //         byproducts: ByproductMap {co2: 0.2, pollution: 0.2},
-    //         details: Agriculture {
-    //             soil_impact: false,
-    //             pesticides: Amount::Low,
-    //             fertilizer: Amount::Low,
-    //             livestock: true,
-    //             meat: true
-    //         }
-    //     };
-    //     let agriculture = Industry {
-    //         kind: Sector::Agriculture,
-    //         processes: [ind_ag, regen_ag],
-    //         mix: [0.8, 0.2]
-    //     };
-
-    //     let demand = sectors!(agriculture: 1000.);
-    //     let ag_orders = agriculture.production_orders(demand.agriculture);
-    //     let available = resources!(
-    //         land: 200.,
-    //         energy: 129.
-    //     );
-    //     println!("{:?}", ag_orders);
-    //     let (produced, consumed, byproducts) = plan::calculate_production(&ag_orders, Some(available));
-    //     println!("{:?}", consumed);
-    //     println!("{:?}", byproducts);
-    //     let mut sector_capacities: SectorMap<f32> = sectors!();
-    //     let (_, required, _) = plan::calculate_production(&ag_orders, None);
-    //     for (amount, order) in produced.iter().zip(ag_orders) {
-    //         println!("AMOUNT: {:?}", amount);
-    //         println!("{:?}", order.kind);
-    //         sector_capacities[order.kind] += amount;
-    //     }
-    //     println!("REQUIRED {:?}", required);
-    //     println!("{:?}", sector_capacities);
-    //     // TODO close gap
-    //     let requirement_gap = required - consumed; // TODO
-
-    //     let next_available = available.clone();
-    //     for (k, v) in requirement_gap.items() {
-    //         if v > 0. {
-    //             match k {
-    //                 Resource::Land => {
-    //                     // TODO check available resources in regions
-    //                     // also apply limit, e.g. if only 50% of land can be used
-    //                     next_available[k] += v * 0.1; // transition speed
-    //                 },
-    //                 _ => () // TODO
-    //             }
-    //         } else {
-    //             // Take some out of commission
-    //         }
-    //     }
-
-    //     // Weight based on resource scarcity
-    //     let weights = resources!(
-    //         land: required.land/next_available.land,
-    //         energy: required.energy/next_available.energy
-    //     );
-
-    //     // TODO This is what would happen in a step
-    //     // Mix transition
-    //     // TODO test this
-    //     // Weight based on resource scarcity
-    //     // let transition_speed = 0.01; // per month, can increase at the expense of decommission risk (mine leakages and what not)
-    //     // let target_mix = plan::calculate_mix(&ag_orders, &weights); // This is the target mix
-    //     // for (cur, target) in agriculture.mix.iter_mut().zip(target_mix) {
-    //     //     if *cur < target {
-    //     //         *cur += transition_speed;
-    //     //     } else if *cur > target {
-    //     //         *cur -= transition_speed;
-    //     //     }
-    //     // }
-
-    //     // TODO want to get event probabilities (event system)
-    //     // TODO calculate demand (population projections etc)
-    //     // TODO regions: how are they selected/related to industry?
-    //         // Are different regions "claimed" by an industry? and then only go into that resource
-    //         // pool?
-    // }
 }
 

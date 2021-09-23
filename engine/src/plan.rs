@@ -4,7 +4,6 @@ use std::collections::HashMap;
 use super::kinds::{ResourceMap, ByproductMap};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
 
-// Requirements, Amount
 #[derive(Debug)]
 pub struct ProductionOrder<O: Output> {
     pub output: O,
@@ -13,8 +12,6 @@ pub struct ProductionOrder<O: Output> {
     pub amount: f32
 }
 
-// TODO this is calculated on a per-sector basis, should it be per-process?
-// TODO if we have resources on a per-process basis, then we don't really need this problem
 pub fn calculate_production<O: Output>(orders: &[ProductionOrder<O>], limits: &ResourceMap<f32>) -> (Vec<f32>, ResourceMap<f32>, ByproductMap<f32>) {
     let mut vars = variables!();
     let mut consumed_resources: ResourceMap<Expression> = resources!();
@@ -104,7 +101,7 @@ pub fn calculate_mix<O: Output>(orders: &[ProductionOrder<O>], demand: &EnumMap<
 mod test {
     use super::*;
     use float_cmp::approx_eq;
-    use enum_map::{enum_map, Enum};
+    use enum_map::{Enum, enum_map};
 
     #[derive(Clone, Copy, Enum, Hash, PartialEq, Eq)]
     enum Widget {
