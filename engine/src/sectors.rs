@@ -1,7 +1,7 @@
 use super::plan;
 use std::hash::Hash;
 use enum_map::{EnumMap, enum_map, Enum};
-use super::regions::CellIdx;
+use super::regions::{CellIdx, CellGrid};
 use super::kinds::{Resource, Sector, SectorMap, ResourceMap, ByproductMap};
 use arrayvec::ArrayVec;
 
@@ -65,6 +65,49 @@ struct Industry<T: SectorDetails, const N: usize> {
 }
 
 impl<T: SectorDetails, const N: usize> Industry<T, N> {
+    pub fn produce<const M: usize>(&mut self, demand: &EnumMap<T::Output, f32>, grid: &mut CellGrid<M>) -> (EnumMap<T::Output, f32>, ByproductMap<f32>) {
+        // Generate production orders based on current process mix and demand
+        let orders = self.production_orders(&demand);
+
+        // Get active resources for this sector
+        let resources = grid.resources_for_cells(&self.cells);
+
+        // TODO check/test this now that we have output subtypes
+        // Calculate the sector's output
+        let (produced, consumed, byproducts) = plan::calculate_production(&orders, &resources);
+
+        // TODO deduct consumed resources from cells
+
+        // Get resource deficit/surplus
+        let required = plan::calculate_required(&orders);
+        let gap = required - consumed;
+
+        // Adjust resource amounts
+        // TODO expand/contract should be combined, since there may very well be a mix
+        // of some resources in surplus and some in deficit
+        let growth_rate = 0.2; // TODO
+        let n_expansions = (self.cells.len() as f32 * growth_rate) as usize;
+        self.cells = grid.expand_resources(&gap, n_expansions);
+
+        let transition_speed = 0.1;
+        self.cells = grid.contract_resources(&self.cells, &gap, transition_speed);
+
+        // Weigh resources by scarcity
+        let resource_weights = required/resources;
+
+        // Update mix according to resource scarcity
+        let transition_speed = 0.1; // TODO
+        self.update_mix(&orders, &demand, &resource_weights, transition_speed);
+
+        // Calculate production per output type
+        let mut produced_by_type = enum_map! { _ => 0. };
+        for (amount, process) in produced.iter().zip(&self.processes) {
+            produced_by_type[process.output] += amount;
+        }
+
+        (produced_by_type, byproducts)
+    }
+
     fn active_modifiers(&self) -> (ResourceMap<f32>, ByproductMap<f32>) {
         self.modifiers.iter().filter(|m| m.active).fold(
             (resources!(), byproducts!()),
@@ -98,8 +141,8 @@ impl<T: SectorDetails, const N: usize> Industry<T, N> {
     }
 
     // TODO transition_speed is per month, can increase at the expense of decommission risk (mine leakages and what not)
-    fn update_mix(&mut self, orders: &[plan::ProductionOrder<T::Output>], output_weights: &EnumMap<T::Output, f32>, resource_weights: &ResourceMap<f32>, transition_speed: f32) {
-        let target_mix = plan::calculate_mix(&orders, &output_weights, &resource_weights); // This is the target mix
+    fn update_mix(&mut self, orders: &[plan::ProductionOrder<T::Output>], demand: &EnumMap<T::Output, f32>, resource_weights: &ResourceMap<f32>, transition_speed: f32) {
+        let target_mix = plan::calculate_mix(&orders, &demand, &resource_weights);
         for ((cur, target), process) in self.mix.iter_mut().zip(target_mix).zip(&self.processes) {
             if process.unlocked {
                 // Phase out banned processes

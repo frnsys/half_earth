@@ -21,7 +21,7 @@ pub struct Cell {
     pub resources: ResourceMap<f32>,
 }
 
-struct CellGrid<const N: usize> {
+pub struct CellGrid<const N: usize> {
     cells: [Cell; N],
     index: ResourceMap<HashSet<CellIdx>>
 }
@@ -42,7 +42,7 @@ impl<const N: usize> CellGrid<N> {
         }
     }
 
-    fn resources_for_cells(&self, idxs: &[CellIdx]) -> ResourceMap<f32> {
+    pub fn resources_for_cells(&self, idxs: &[CellIdx]) -> ResourceMap<f32> {
         idxs.iter().filter_map(|idx| {
             let cell = &self.cells[*idx];
             match cell.status {
@@ -87,8 +87,8 @@ impl<const N: usize> CellGrid<N> {
     }
 
     fn cells_by_potential(&self, idxs: &Vec<CellIdx>, needed: &ResourceMap<f32>) -> Vec<(CellIdx, f32)> {
-        let total_need = needed.values().iter().sum();
-        let weights = *needed/total_need;
+        let total_need: f32 = needed.values().iter().sum();
+        let weights: ResourceMap<f32> = *needed/total_need;
         let mut cells: Vec<(CellIdx, f32)> = idxs.iter().filter_map(|idx| {
             let cell = &self.cells[*idx];
             // TODO could also minize resources that *aren't* needed
@@ -107,7 +107,7 @@ impl<const N: usize> CellGrid<N> {
     }
 
     // Claim new cells that are most suited to providing the required resources
-    fn expand_resources(&mut self, deficit: &ResourceMap<f32>, n_expansions: usize) -> Vec<CellIdx> {
+    pub fn expand_resources(&mut self, deficit: &ResourceMap<f32>, n_expansions: usize) -> Vec<CellIdx> {
         let idxs = self.find_cells_for_resources(&deficit).iter().cloned()
             .filter(|idx| self.cells[*idx].status == Status::Available).collect();
         let cells = self.cells_by_potential(&idxs, deficit);
@@ -123,7 +123,7 @@ impl<const N: usize> CellGrid<N> {
     // get rid of the highest surplus resource capacity cells first, i.e. get rid of as few cells
     // as possible. The downside is that it frees up land the slowest too (unless land is the
     // surplus resource; so maybe that's fine since we explicitly track land as a resource?)
-    fn contract_resources(&mut self, idxs: &Vec<CellIdx>, surplus: &ResourceMap<f32>, transition_speed: f32) -> Vec<CellIdx> {
+    pub fn contract_resources(&mut self, idxs: &Vec<CellIdx>, surplus: &ResourceMap<f32>, transition_speed: f32) -> Vec<CellIdx> {
         // TODO This feels like it can be cleaner/simplified
         let to_reduce: Vec<Resource> = surplus.keys().iter().filter(|k| surplus[**k] > 0.).cloned().collect();
         let mut reduce_by = *surplus * transition_speed;
@@ -138,6 +138,10 @@ impl<const N: usize> CellGrid<N> {
             }
         }
         to_keep
+    }
+
+    // TODO test
+    pub fn deduct_resources(&mut self, idxs: &Vec<CellIdx>, resources: &ResourceMap<f32>) {
     }
 
     fn update_cells(&mut self) {

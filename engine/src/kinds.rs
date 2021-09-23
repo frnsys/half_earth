@@ -141,6 +141,18 @@ macro_rules! define_enum_map {
                     }
                 }
             }
+
+            impl Div<[<$name Map>]<f32>> for [<$name Map>]<f32> {
+                type Output = Self;
+
+                fn div(self, rhs: Self) -> Self {
+                    Self {
+                        $(
+                            [<$field:lower>]: self.[<$field:lower>]/rhs.[<$field:lower>],
+                        )*
+                    }
+                }
+            }
         }
     }
 }

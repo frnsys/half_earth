@@ -66,7 +66,7 @@ pub fn calculate_required<O: Output>(orders: &[ProductionOrder<O>]) -> ResourceM
     })
 }
 
-pub fn calculate_mix<O: Output>(orders: &[ProductionOrder<O>], output_demand: &EnumMap<O, f32>, resource_weights: &ResourceMap<f32>) -> Vec<f32> {
+pub fn calculate_mix<O: Output>(orders: &[ProductionOrder<O>], demand: &EnumMap<O, f32>, resource_weights: &ResourceMap<f32>) -> Vec<f32> {
     let mut vars = variables!();
     let mut total_intensity: Expression = 0.into();
 
@@ -89,7 +89,7 @@ pub fn calculate_mix<O: Output>(orders: &[ProductionOrder<O>], output_demand: &E
         .using(default_solver);
 
     for (k, v) in total_produced.iter() {
-        problem = problem.with(v.clone().geq(output_demand[*k] as f64));
+        problem = problem.with(v.clone().geq(demand[*k] as f64));
     }
 
     let solution = problem.solve().unwrap();
@@ -193,12 +193,12 @@ mod test {
             land: 1.,
             energy: 0.8
         );
-        let output_demand = enum_map! {
+        let demand = enum_map! {
             Widget::Basic => 10.,
             Widget::Advanced => 5.,
         };
 
-        let shares = calculate_mix(&orders, &output_demand, &resource_weights);
+        let shares = calculate_mix(&orders, &demand, &resource_weights);
 
         // Basic widgets should only be produced using the second process
         // because it's more land efficient.
