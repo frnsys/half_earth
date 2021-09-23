@@ -1,11 +1,13 @@
-use super::{resources, byproducts};
-use super::kinds::{Sector, ResourceMap, ByproductMap};
+use enum_map::EnumMap;
+use super::sectors::Output;
+use std::collections::HashMap;
+use super::kinds::{ResourceMap, ByproductMap};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
 
 // Requirements, Amount
 #[derive(Debug)]
-pub struct ProductionOrder {
-    pub kind: Sector,
+pub struct ProductionOrder<O: Output> {
+    pub output: O,
     pub reqs: ResourceMap<f32>,
     pub byproducts: ByproductMap<f32>,
     pub amount: f32
@@ -13,7 +15,7 @@ pub struct ProductionOrder {
 
 // TODO this is calculated on a per-sector basis, should it be per-process?
 // TODO if we have resources on a per-process basis, then we don't really need this problem
-pub fn calculate_production(orders: &[ProductionOrder], limits: &ResourceMap<f32>) -> (Vec<f32>, ResourceMap<f32>, ByproductMap<f32>) {
+pub fn calculate_production<O: Output>(orders: &[ProductionOrder<O>], limits: &ResourceMap<f32>) -> (Vec<f32>, ResourceMap<f32>, ByproductMap<f32>) {
     let mut vars = variables!();
     let mut consumed_resources: ResourceMap<Expression> = resources!();
     let mut created_byproducts: ByproductMap<Expression> = byproducts!();
@@ -57,33 +59,42 @@ pub fn calculate_production(orders: &[ProductionOrder], limits: &ResourceMap<f32
     (produced, consumed, byproducts)
 }
 
-pub fn calculate_required(orders: &[ProductionOrder]) -> ResourceMap<f32> {
+pub fn calculate_required<O: Output>(orders: &[ProductionOrder<O>]) -> ResourceMap<f32> {
     orders.iter().fold(resources!(), |mut acc, order| {
         acc += order.reqs * order.amount;
         acc
     })
 }
 
-pub fn calculate_mix(orders: &[ProductionOrder], weights: &ResourceMap<f32>) -> Vec<f32> {
+pub fn calculate_mix<O: Output>(orders: &[ProductionOrder<O>], output_demand: &EnumMap<O, f32>, resource_weights: &ResourceMap<f32>) -> Vec<f32> {
     let mut vars = variables!();
-    let mut total_produced: Expression = 0.into();
     let mut total_intensity: Expression = 0.into();
+
+    // Track production per output subtype
+    // TODO would like to not use a HashMap here because then it requires Hash + PartialEq + Eq on
+    // Output, kind of messy
+    let mut total_produced: HashMap<O, Expression> = HashMap::default();
+
     let amounts: Vec<Variable> = orders.iter().map(|order| {
         let amount_to_produce = vars.add(variable().min(0));
-        total_produced += amount_to_produce;
-        total_intensity += amount_to_produce * order.reqs.energy * weights.energy;
-        total_intensity += amount_to_produce * order.reqs.land * weights.land;
+        *total_produced.entry(order.output).or_default() += amount_to_produce;
+        for (k, v) in order.reqs.items() {
+            total_intensity += amount_to_produce * v * resource_weights[k];
+        }
         amount_to_produce
     }).collect();
 
-    let solution = vars
+    let mut problem = vars
         .minimise(total_intensity)
-        .using(default_solver)
-        .with(total_produced.clone().geq(1000.)) // Just so non-zero values are returned
-        .solve()
-        .unwrap();
+        .using(default_solver);
 
-    let total_produced = solution.eval(total_produced);
+    for (k, v) in total_produced.iter() {
+        problem = problem.with(v.clone().geq(output_demand[*k] as f64));
+    }
+
+    let solution = problem.solve().unwrap();
+
+    let total_produced: f64 = total_produced.values().map(|produced| solution.eval(produced)).sum();
     let shares: Vec<f32> = amounts.iter().map(|var| (solution.value(*var)/total_produced) as f32).collect();
     shares
 }
@@ -93,39 +104,47 @@ pub fn calculate_mix(orders: &[ProductionOrder], weights: &ResourceMap<f32>) -> 
 mod test {
     use super::*;
     use float_cmp::approx_eq;
+    use enum_map::{enum_map, Enum};
 
-    fn gen_orders() -> Vec<ProductionOrder> {
-        let steel_demand = 10.;
-        let energy_demand = 5.;
+    #[derive(Clone, Copy, Enum, Hash, PartialEq, Eq)]
+    enum Widget {
+        Basic,
+        Advanced
+    }
+    impl Output for Widget {}
 
-        let steel = ProductionOrder {
-            kind: Sector::Materials,
+    fn gen_orders() -> Vec<ProductionOrder<Widget>> {
+        let basic_demand = 10.;
+        let advanced_demand = 5.;
+
+        let basic_a = ProductionOrder {
+            output: Widget::Basic,
             reqs: resources!(
                 energy: 1.,
                 land: 1.1),
             byproducts: byproducts!(),
-            amount: steel_demand * 0.25,
+            amount: basic_demand * 0.25,
         };
 
-        let stainless_steel = ProductionOrder {
-            kind: Sector::Materials,
+        let basic_b = ProductionOrder {
+            output: Widget::Basic,
             reqs: resources!(
                 energy: 1.1,
                 land: 1.),
             byproducts: byproducts!(),
-            amount: steel_demand * 0.75,
+            amount: basic_demand * 0.75,
         };
 
-        let solar = ProductionOrder {
-            kind: Sector::Energy,
+        let advanced_a = ProductionOrder {
+            output: Widget::Advanced,
             reqs: resources!(
                 energy: 0.1,
                 land: 2.),
             byproducts: byproducts!(),
-            amount: energy_demand * 1.
+            amount: advanced_demand * 1.
         };
 
-        vec![steel, stainless_steel, solar]
+        vec![basic_a, basic_b, advanced_a]
     }
 
 
@@ -170,12 +189,20 @@ mod test {
         let orders = gen_orders();
 
         // Bias towards minimizing land use
-        let weights = resources!(
+        let resource_weights = resources!(
             land: 1.,
             energy: 0.8
         );
+        let output_demand = enum_map! {
+            Widget::Basic => 10.,
+            Widget::Advanced => 5.,
+        };
 
-        let shares = calculate_mix(&orders[..2], &weights);
-        assert_eq!(shares, vec![0.0, 1.0]);
+        let shares = calculate_mix(&orders, &output_demand, &resource_weights);
+
+        // Basic widgets should only be produced using the second process
+        // because it's more land efficient.
+        // Overall shares of each output subtype should remain unchanged.
+        assert_eq!(shares, vec![0.0, 0.6666667, 0.33333334]);
     }
 }

@@ -1,5 +1,6 @@
-mod plan;
+#[macro_use]
 mod kinds;
+mod plan;
 mod utils;
 // mod world;
 // mod player;

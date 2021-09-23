@@ -148,6 +148,7 @@ macro_rules! define_enum_map {
 define_enum_map!(Resource {
     Land,
     Energy,
+    Feed,
     Material,
     Sun,
     Wind,
@@ -165,13 +166,15 @@ define_enum_map!(Sector {
     Agriculture,        // Calories
     Materials,          // Tons
     Energy,             // MWh
-    Water               // ?
+    Projects,           // Units of progress/maintenance
+    Other               // All other needs, each output is a "person"
+                        // whose per-capita resource needs have been met
 });
 
 // TODO would like to define these as part of the `define_enum_map`
 // macro but it looks like nested macros aren't well supported?
 /// Macro for quickly creating a maps with default values.
-#[macro_export]
+#[macro_use]
 macro_rules! resources {
     () => {
         ResourceMap::default()
@@ -187,7 +190,7 @@ macro_rules! resources {
     };
 }
 
-#[macro_export]
+#[macro_use]
 macro_rules! byproducts {
     () => {
         ByproductMap::default()

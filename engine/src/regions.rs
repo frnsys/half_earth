@@ -1,4 +1,3 @@
-use super::resources;
 use std::collections::HashSet;
 use super::kinds::{Resource, ResourceMap};
 
