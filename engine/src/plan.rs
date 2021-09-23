@@ -11,7 +11,9 @@ pub struct ProductionOrder {
     pub amount: f32
 }
 
-pub fn calculate_production(orders: &[ProductionOrder], limits: Option<ResourceMap<f32>>) -> (Vec<f32>, ResourceMap<f32>, ByproductMap<f32>) {
+// TODO this is calculated on a per-sector basis, should it be per-process?
+// TODO if we have resources on a per-process basis, then we don't really need this problem
+pub fn calculate_production(orders: &[ProductionOrder], limits: &ResourceMap<f32>) -> (Vec<f32>, ResourceMap<f32>, ByproductMap<f32>) {
     let mut vars = variables!();
     let mut consumed_resources: ResourceMap<Expression> = resources!();
     let mut created_byproducts: ByproductMap<Expression> = byproducts!();
@@ -33,25 +35,15 @@ pub fn calculate_production(orders: &[ProductionOrder], limits: Option<ResourceM
         amount_to_produce
     }).collect();
 
-    let solution = match limits {
-        Some(available) => {
-            let mut problem = vars
-                .maximise(filled_demand)
-                .using(default_solver);
+    let mut problem = vars
+        .maximise(filled_demand)
+        .using(default_solver);
 
-            for k in consumed_resources.keys() {
-                problem = problem.with(consumed_resources[k].clone().leq(available[k]));
-            }
-            problem.solve().unwrap()
-        },
-        None => {
-            vars
-                .maximise(filled_demand)
-                .using(default_solver)
-                .solve()
-                .unwrap()
-        }
-    };
+    for k in consumed_resources.keys() {
+        problem = problem.with(consumed_resources[k].clone().leq(limits[k]));
+    }
+
+    let solution =  problem.solve().unwrap();
 
     let produced: Vec<f32> = amounts.iter().map(|var| solution.value(*var) as f32).collect();
     let mut consumed = resources!();
@@ -65,6 +57,12 @@ pub fn calculate_production(orders: &[ProductionOrder], limits: Option<ResourceM
     (produced, consumed, byproducts)
 }
 
+pub fn calculate_required(orders: &[ProductionOrder]) -> ResourceMap<f32> {
+    orders.iter().fold(resources!(), |mut acc, order| {
+        acc += order.reqs * order.amount;
+        acc
+    })
+}
 
 pub fn calculate_mix(orders: &[ProductionOrder], weights: &ResourceMap<f32>) -> Vec<f32> {
     let mut vars = variables!();
@@ -139,7 +137,7 @@ mod test {
             energy: 6.
         );
 
-        let (produced, consumed, _byproducts) = calculate_production(&orders, Some(available_resources));
+        let (produced, consumed, _byproducts) = calculate_production(&orders, &available_resources);
 
         let expected = [2.5, 2.89, 3.18];
         assert!(produced.len() == expected.len());
@@ -157,23 +155,14 @@ mod test {
     }
 
     #[test]
-    fn test_calculate_production_without_limits() {
+    fn test_calculated_required() {
         let orders = gen_orders();
-        let (produced, consumed, _byproducts) = calculate_production(&orders, None);
-
-        let expected = [2.5, 7.5, 5.0];
-        assert!(produced.len() == expected.len());
-        assert!(produced.iter().zip(expected)
-                .all(|(x1,x2)| approx_eq!(f32, *x1, x2, epsilon=1e-2)));
-
+        let required = calculate_required(&orders);
         let expected = resources!(
             land: 20.25,
             energy: 11.25
         );
-        assert_eq!(consumed, expected);
-
-        // Should have created enough to meet total demand
-        assert_eq!(produced.iter().sum::<f32>(), 15.);
+        assert_eq!(required, expected);
     }
 
     #[test]

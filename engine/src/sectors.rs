@@ -1,5 +1,5 @@
 use super::plan;
-use super::regions::Cell;
+use super::regions::{Cell, CellIdx};
 use super::{sectors, resources, byproducts};
 use super::kinds::{Resource, Sector, SectorMap, ResourceMap, ByproductMap};
 use arrayvec::ArrayVec;
@@ -26,6 +26,7 @@ struct Process<T> {
 // emissions penalty).
 // Modifiers are industry-wide; i.e. they apply to all processes for a given industry.
 struct Modifier {
+    // pub output: f32,
     pub active: bool,
     pub reqs: ResourceMap<f32>,
     pub byproducts: ByproductMap<f32>,
@@ -37,6 +38,7 @@ struct Industry<T, const N: usize> {
     kind: Sector,
     processes: [Process<T>; N],
     mix: [f32; N],
+    cells: Vec<CellIdx>,
     modifiers: Vec<Modifier> // TODO array?
 }
 
@@ -116,20 +118,20 @@ fn planetary_production(cells: &[Cell], demand: &SectorMap<f32>) {
     // TODO could probably update this as part of the use_change function
     let mut resources_per_sector: SectorMap<ResourceMap<f32>> = sectors!();
     let mut planned_resources_per_sector: SectorMap<ResourceMap<f32>> = sectors!();
-    for cell in cells {
-        for user in cell.users {
-            match user {
-                // Needs to be built-up enough before it contributes resources
-                Some((sec, readiness)) => {
-                    if readiness > 3 {
-                        resources_per_sector[sec] += cell.resources/3.;
-                    }
-                    planned_resources_per_sector[sec] += cell.resources/3.;
-                },
-                None => (),
-            }
-        }
-    }
+    // for cell in cells {
+    //     for user in cell.users {
+    //         match user {
+    //             // Needs to be built-up enough before it contributes resources
+    //             Some((sec, readiness)) => {
+    //                 if readiness > 3 {
+    //                     resources_per_sector[sec] += cell.resources/3.;
+    //                 }
+    //                 planned_resources_per_sector[sec] += cell.resources/3.;
+    //             },
+    //             None => (),
+    //         }
+    //     }
+    // }
 
     let ind_ag = Process {
         unlocked: true,
@@ -158,25 +160,18 @@ fn planetary_production(cells: &[Cell], demand: &SectorMap<f32>) {
         }
     };
     let ind = Industry {
+        cells: vec![],
         kind: Sector::Agriculture,
         processes: [ind_ag, regen_ag],
         mix: [0.8, 0.2],
-        modifiers: vec![Modifier {
-            active: false,
-            reqs: resources!(labor: 1.),
-            byproducts: byproducts!(),
-        }, Modifier {
-            active: false,
-            reqs: resources!(labor: 0.5),
-            byproducts: byproducts!(pollution: 1.),
-        }]
+        modifiers: vec![]
     };
 
     let mut sector_capacities: SectorMap<f32> = sectors!();
 
     let orders = ind.production_orders(demand[ind.kind]);
-    let (produced, consumed, byproducts) = plan::calculate_production(&orders, Some(resources_per_sector[ind.kind]));
-    let (_, required, _) = plan::calculate_production(&orders, None);
+    let (produced, consumed, byproducts) = plan::calculate_production(&orders, &resources_per_sector[ind.kind]);
+    let required = plan::calculate_required(&orders);
     sector_capacities[ind.kind] = produced.iter().sum();
     let gap = required - consumed;
 
@@ -236,6 +231,7 @@ mod test {
             kind: Sector::Agriculture,
             processes: [ind_ag, regen_ag],
             mix: [0.8, 0.2],
+            cells: vec![],
             modifiers: vec![Modifier {
                 active: false,
                 reqs: resources!(labor: 1.),
@@ -306,12 +302,12 @@ mod test {
             energy: 200.
         );
 
-        let (produced, _consumed, _byproducts) = plan::calculate_production(&orders, Some(available));
+        let (produced, _consumed, _byproducts) = plan::calculate_production(&orders, &available);
 
         // Not enough resources, should have produced less than demand
         assert!(produced.iter().sum::<f32>() < demand);
 
-        let (_, required, _) = plan::calculate_production(&orders, None);
+        let required = plan::calculate_required(&orders);
 
         assert_eq!(required, resources!(
             land: 1200.,
@@ -361,7 +357,7 @@ mod test {
             energy: 2000.,
             labor: 0.
         );
-        let (produced, _consumed, _byproducts) = plan::calculate_production(&orders, Some(available));
+        let (produced, _consumed, _byproducts) = plan::calculate_production(&orders, &available);
 
         // Nothing should be produced b/c we have no labor
         assert_eq!(produced, [0., 0.]);

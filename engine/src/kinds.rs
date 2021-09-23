@@ -1,5 +1,5 @@
 use paste::paste;
-use std::ops::{Add, AddAssign, Sub, Mul, Div, Index, IndexMut};
+use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, Div, Index, IndexMut};
 
 macro_rules! count {
     () => (0usize);
@@ -11,7 +11,7 @@ macro_rules! count {
 /// those enum variants.
 macro_rules! define_enum_map {
     ($name:ident { $($field:ident),* }) => {
-        #[derive(Debug, Copy, Clone)]
+        #[derive(Debug, Copy, Clone, PartialEq)]
         pub enum $name {
             $(
                 $field,
@@ -39,6 +39,12 @@ macro_rules! define_enum_map {
                 pub fn items(&self) -> [($name, T); count!($($field)*)] {
                     [$(
                         ($name::$field, self.[<$field:lower>]),
+                    )*]
+                }
+
+                pub fn values(&self) -> [T; count!($($field)*)] {
+                    [$(
+                        self.[<$field:lower>],
                     )*]
                 }
             }
@@ -101,6 +107,15 @@ macro_rules! define_enum_map {
                 }
             }
 
+            // Map<f32> += Map<f32>
+            impl SubAssign for [<$name Map>]<f32> {
+                fn sub_assign(&mut self, rhs: Self) {
+                    $(
+                        self.[<$field:lower>] -= rhs.[<$field:lower>];
+                    )*
+                }
+            }
+
             // Map * f32
             impl Mul<f32> for [<$name Map>]<f32> {
                 type Output = Self;
@@ -136,7 +151,7 @@ define_enum_map!(Resource {
     Material,
     Sun,
     Wind,
-    Soil,
+    Soil, // Fertile land
     Water,
     Labor
 });
@@ -149,11 +164,8 @@ define_enum_map!(Byproduct {
 define_enum_map!(Sector {
     Agriculture,        // Calories
     Materials,          // Tons
-    Transportation,     // Km
     Energy,             // MWh
-    Environment,        // ?
-    Health,             // ?
-    Housing             // ?
+    Water               // ?
 });
 
 // TODO would like to define these as part of the `define_enum_map`
