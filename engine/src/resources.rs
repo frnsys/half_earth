@@ -19,6 +19,9 @@ pub enum Status {
 pub struct Cell {
     pub status: Status,
 
+    // Currently exploited resource
+    pub resource: Option<Resource>,
+
     // Resources available in this cell, and in what quantity
     pub resources: ResourceMap<f32>,
 }
@@ -117,10 +120,10 @@ impl<const N: usize> CellGrid<N> {
 
     // TODO this doesn't expand by a specific amount
     // Claim new cells that are most suited to providing the required resources
-    pub fn expand_resources(&mut self, idxs: Vec<CellIdx>, deficit: &ResourceMap<f32>, n_expansions: usize) -> Vec<CellIdx> {
+    pub fn expand_resources(&mut self, idxs: &Vec<CellIdx>, deficit: &ResourceMap<f32>, n_expansions: usize) -> Vec<CellIdx> {
         // Expand exploitation of existing cells
         let underexploited: Vec<&Cell> = idxs.iter().filter_map(|idx| {
-            let cell = &self.cells[*idx];
+            let cell = &mut self.cells[*idx];
             match cell.status {
                 Status::Active(i) => {
                     if i < MAX_EXPLOITATION {
@@ -147,7 +150,7 @@ impl<const N: usize> CellGrid<N> {
                 *idx
             }).collect()
         } else {
-            idxs
+            idxs.to_vec()
         }
     }
 
@@ -156,10 +159,10 @@ impl<const N: usize> CellGrid<N> {
     // get rid of the highest surplus resource capacity cells first, i.e. get rid of as few cells
     // as possible. The downside is that it frees up land the slowest too (unless land is the
     // surplus resource; so maybe that's fine since we explicitly track land as a resource?)
-    pub fn contract_resources(&mut self, idxs: Vec<CellIdx>, surplus: &ResourceMap<f32>, transition_speed: f32) -> Vec<CellIdx> {
+    pub fn contract_resources(&mut self, idxs: &Vec<CellIdx>, surplus: &ResourceMap<f32>, transition_speed: f32) -> Vec<CellIdx> {
         // Contract exploitation of existing cells
         let to_keep: Vec<CellIdx> = idxs.iter().filter_map(|idx| {
-            let cell = &self.cells[*idx];
+            let cell = &mut self.cells[*idx];
             match cell.status {
                 Status::Active(i) => {
                     if i > 0 {
@@ -181,7 +184,7 @@ impl<const N: usize> CellGrid<N> {
     pub fn deduct_resources(&mut self, idxs: &Vec<CellIdx>, consumed: &ResourceMap<f32>) {
         let keys: Vec<Resource> = consumed.keys().iter().filter(|k| consumed[**k] > 0.).cloned().collect();
         for idx in idxs {
-            let cell = &self.cells[*idx];
+            let cell = &mut self.cells[*idx];
             match cell.status {
                 Status::Active(i) => {
                     let yielded = cell.resources * yielded_resources(i);

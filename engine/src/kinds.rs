@@ -107,7 +107,7 @@ macro_rules! define_enum_map {
                 }
             }
 
-            // Map<f32> += Map<f32>
+            // Map<f32> -= Map<f32>
             impl SubAssign for [<$name Map>]<f32> {
                 fn sub_assign(&mut self, rhs: Self) {
                     $(
@@ -118,6 +118,7 @@ macro_rules! define_enum_map {
 
             // Map * f32
             impl Mul<f32> for [<$name Map>]<f32> {
+            // impl<T: Mul + Mul<Output = T>> Mul for [<$name Map>]<T> {
                 type Output = Self;
 
                 fn mul(self, rhs: f32) -> Self {
@@ -158,12 +159,10 @@ macro_rules! define_enum_map {
 }
 
 define_enum_map!(Resource {
-    Land,
     Sun,
     Wind,
     Soil, // Fertile land
     Water,
-    Labor,
 
     // Outputs from other sectors
     Energy,

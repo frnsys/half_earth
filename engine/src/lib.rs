@@ -1,12 +1,11 @@
 #[macro_use]
 mod kinds;
-mod plan;
 mod utils;
 // mod world;
 // mod player;
 // mod events;
-mod sectors;
-mod regions;
+mod resources;
+mod production;
 pub mod surface;
 
 // When the `wee_alloc` feature is enabled,

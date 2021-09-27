@@ -1,4 +1,5 @@
 use enum_map::EnumMap;
+
 use super::sectors::Output;
 use std::collections::HashMap;
 use super::kinds::{ResourceMap, ByproductMap};
@@ -21,13 +22,11 @@ pub fn calculate_production<O: Output>(orders: &[ProductionOrder<O>], limits: &R
     let amounts: Vec<Variable> = orders.iter().map(|order| {
         let amount_to_produce = vars.add(variable().min(0).max(order.amount));
 
-        // TODO better objective function
         // Add 1. to avoid zero division issues
-        filled_demand += (amount_to_produce/order.amount)/(order.byproducts.co2+order.byproducts.pollution+1.) + order.amount;
+        filled_demand += amount_to_produce/(order.amount + 1.);
 
-        for (k, v) in order.reqs.items() {
-            consumed_resources[k] += amount_to_produce * v;
-        }
+        // TODO?
+        consumed_resources += order.reqs * amount_to_produce;
         for (k, v) in order.byproducts.items() {
             created_byproducts[k] += amount_to_produce * v;
         }

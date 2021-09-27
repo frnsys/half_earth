@@ -85,6 +85,7 @@ impl<T: SectorDetails, const N: usize> Industry<T, N> {
         let (produced, consumed, byproducts) = plan::calculate_production(&orders, &resources);
 
         // TODO deduct consumed resources from cells
+        // TODO renewable resources need a replenish rate
 
         // Get resource deficit/surplus
         let required = plan::calculate_required(&orders);
