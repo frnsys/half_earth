@@ -6,13 +6,9 @@ mod resources;
 
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap};
 pub use self::sectors::{Sector, Modifier};
-pub use self::processes::{Process, ProcessDetails};
+pub use self::processes::{Process, ProcessDetails, Amount};
+pub use self::planner::ProductionOrder;
 
-// TODO in resources:
-// - deduct consumed resources from cells
-// - renewable resources need a replenish rate
-// - electricity doesn't stock except based on how much battery you have
-// - reqsource reuqirements of extraction, or ist hat already captured upstream?
 
 pub fn produce(sectors: &mut [sectors::Sector], demand: &OutputMap<f32>, resources: &ResourceMap<f32>) -> (OutputMap<f32>, ResourceMap<f32>, ByproductMap<f32>) {
     // Generate production orders based on current process mixes and demand

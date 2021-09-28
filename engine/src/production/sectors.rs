@@ -1,6 +1,6 @@
 use super::planner;
-use super::processes::{Process, ProcessDetails, Amount};
-use crate::kinds::{ResourceMap, ByproductMap, OutputMap, Output};
+use super::processes::Process;
+use crate::kinds::{ResourceMap, ByproductMap, OutputMap};
 
 // Modifiers are added to Sectors as Event effects.
 // For example: a labor requirement penalty, or additional emissions (e.g. a fugitive/black market
@@ -89,6 +89,8 @@ impl Sector {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::kinds::Output;
+    use crate::production::{Amount, ProcessDetails};
     use float_cmp::assert_approx_eq;
 
     fn gen_sector() -> Sector {

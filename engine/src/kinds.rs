@@ -214,8 +214,7 @@ define_enum_map!(Output {
     MeatCalories,
     Concrete,
     Steel,
-    ProjectConstruction,
-    ProjectMaintenance,
+    Project,
     General
 });
 

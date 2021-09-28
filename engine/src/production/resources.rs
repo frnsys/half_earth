@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use crate::kinds::{Resource, ResourceMap};
 
 const STATUS_CHANGE_STEPS: u8 = 3;
@@ -32,7 +31,7 @@ pub struct Cell {
 
 pub struct CellGrid<const N: usize> {
     cells: [Cell; N],
-    index: ResourceMap<HashSet<CellIdx>>,
+    index: ResourceMap<Vec<CellIdx>>,
 
     // How fast each resource replenishes
     //  rate == 0.0 means non-renewable
@@ -48,11 +47,11 @@ fn yielded_resources(exploitation_level: u8) -> f32 {
 impl<const N: usize> CellGrid<N> {
     fn new(cells: [Cell; N], refresh_rates: ResourceMap<f32>) -> CellGrid<N> {
         // Build resource index
-        let mut index: ResourceMap<HashSet<CellIdx>> = resources!();
+        let mut index: ResourceMap<Vec<CellIdx>> = resources!();
         for (i, cell) in cells.iter().enumerate() {
             for (k, v) in cell.resources.items() {
                 if *v > 0. {
-                    index[k].insert(i);
+                    index[k].push(i);
                 }
             }
         }
