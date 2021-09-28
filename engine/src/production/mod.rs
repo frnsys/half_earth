@@ -8,6 +8,7 @@ use crate::kinds::{OutputMap, ResourceMap, ByproductMap};
 pub use self::sectors::{Sector, Modifier};
 pub use self::processes::{Process, ProcessDetails, Amount};
 pub use self::planner::ProductionOrder;
+pub use self::resources::CellGrid;
 
 
 pub fn produce(sectors: &mut [sectors::Sector], demand: &OutputMap<f32>, resources: &ResourceMap<f32>) -> (OutputMap<f32>, ResourceMap<f32>, ByproductMap<f32>) {

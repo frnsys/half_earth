@@ -1,21 +1,18 @@
-use super::kinds::SectorMap;
-
-struct World {
-    emissions: i32,       // GtCO2eq
+#[derive(Default)]
+pub struct Earth {
+    emissions: f32,       // GtCO2eq
     atmospheric_ghg: f32, // ppm
-    biodiversity: i32,    // species index? <http://www.coastalwiki.org/wiki/Measurements_of_biodiversity>
+    biodiversity: f32,    // species index? <http://www.coastalwiki.org/wiki/Measurements_of_biodiversity>
     temperature: f32,     // global temp avg, C
     precipitation: f32,   // global precip avg
     sea_level_rise: f32,  // meters
     ozone_health: f32 // TODO ??
 }
 
-struct Region<'a> {
+#[derive(Default)]
+pub struct Region<'a> {
     name: &'a str,
     population: u32,
-
-    // Per capita demand for each sector
-    demand: SectorMap<f32>,
 
     health: f32,
     safety: f32,

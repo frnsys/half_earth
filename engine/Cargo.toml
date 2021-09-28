@@ -13,8 +13,10 @@ default = ["console_error_panic_hook"]
 
 [dependencies]
 paste = "1.0"
+rand = "0.8"
 wasm-bindgen = "0.2.63"
 good_lp = { git = "https://github.com/frnsys/good_lp", features = ["minilp"], default-features = false }
+getrandom = { version = "0.2", features = ["js"] }
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires

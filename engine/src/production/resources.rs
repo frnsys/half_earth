@@ -9,6 +9,7 @@ pub type CellIdx = usize;
 #[derive(Debug, PartialEq)]
 pub enum Status {
     Available,
+    Occupied,
     Developing(u8),
     Active(u8),
     Decommissioning(u8)
@@ -29,8 +30,9 @@ pub struct Cell {
     pub resources: ResourceMap<f32>,
 }
 
-pub struct CellGrid<const N: usize> {
-    cells: [Cell; N],
+#[derive(Default)]
+pub struct CellGrid {
+    cells: Vec<Cell>,
     index: ResourceMap<Vec<CellIdx>>,
 
     // How fast each resource replenishes
@@ -44,8 +46,8 @@ fn yielded_resources(exploitation_level: u8) -> f32 {
     (exploitation_level as f32) * BASE_YIELD_RATE
 }
 
-impl<const N: usize> CellGrid<N> {
-    fn new(cells: [Cell; N], refresh_rates: ResourceMap<f32>) -> CellGrid<N> {
+impl CellGrid {
+    fn new(cells: Vec<Cell>, refresh_rates: ResourceMap<f32>) -> CellGrid {
         // Build resource index
         let mut index: ResourceMap<Vec<CellIdx>> = resources!();
         for (i, cell) in cells.iter().enumerate() {
@@ -310,8 +312,8 @@ mod test {
     use super::*;
     use float_cmp::assert_approx_eq;
 
-    fn gen_cell_grid() -> CellGrid<5> {
-        CellGrid::new([Cell {
+    fn gen_cell_grid() -> CellGrid {
+        CellGrid::new(vec![Cell {
             status: Status::Available,
             resource: None,
             limits: resources!(sun: 0.2, wind: 0.2, water: 0.5),
@@ -443,7 +445,7 @@ mod test {
 
     #[test]
     fn test_adjust_resources() {
-        let mut grid = CellGrid::new([Cell {
+        let mut grid = CellGrid::new(vec![Cell {
             status: Status::Active(1),
             resource: Some(Resource::Water),
             limits: resources!(sun: 0.2, wind: 0.2, water: 0.5),

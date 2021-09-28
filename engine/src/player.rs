@@ -1,3 +1,4 @@
-struct Player {
-    political_capital: u16,
+#[derive(Default)]
+pub struct Player {
+    political_capital: usize,
 }

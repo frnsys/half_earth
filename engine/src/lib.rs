@@ -1,11 +1,12 @@
 #[macro_use]
 mod kinds;
+mod game;
 mod utils;
 mod effects;
 mod projects;
-// mod world;
-// mod player;
-// mod events;
+mod earth;
+mod player;
+mod events;
 mod production;
 pub mod surface;
 

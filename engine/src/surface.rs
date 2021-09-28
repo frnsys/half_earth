@@ -1,4 +1,4 @@
-use super::utils;
+use crate::utils;
 use wasm_bindgen::prelude::*;
 
 // The scale patterns take up a fair amount of space; any way to reduce this?
