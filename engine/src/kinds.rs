@@ -23,7 +23,7 @@ macro_rules! define_enum_map {
             #[derive(Default, Clone, Copy, Debug, PartialEq)]
             pub struct [<$name Map>]<T> {
                 $(
-                    pub [<$field:lower>]: T,
+                    pub [<$field:snake>]: T,
                 )*
             }
 
@@ -38,19 +38,19 @@ macro_rules! define_enum_map {
             impl<T> [<$name Map>]<T> {
                 pub fn items(&self) -> [($name, &T); count!($($field)*)] {
                     [$(
-                        ($name::$field, &self.[<$field:lower>]),
+                        ($name::$field, &self.[<$field:snake>]),
                     )*]
                 }
 
                 pub fn values(&self) -> [&T; count!($($field)*)] {
                     [$(
-                        &self.[<$field:lower>],
+                        &self.[<$field:snake>],
                     )*]
                 }
 
                 pub fn items_mut(&mut self) -> [($name, &mut T); count!($($field)*)] {
                     [$(
-                        ($name::$field, &mut self.[<$field:lower>]),
+                        ($name::$field, &mut self.[<$field:snake>]),
                     )*]
                 }
             }
@@ -62,7 +62,7 @@ macro_rules! define_enum_map {
                 fn index(&self, key: $name) -> &Self::Output {
                     match key {
                         $(
-                            $name::$field => &self.[<$field:lower>],
+                            $name::$field => &self.[<$field:snake>],
                         )*
                     }
                 }
@@ -72,7 +72,7 @@ macro_rules! define_enum_map {
                 fn index_mut(&mut self, key: $name) -> &mut Self::Output {
                     match key {
                         $(
-                            $name::$field => &mut self.[<$field:lower>],
+                            $name::$field => &mut self.[<$field:snake>],
                         )*
                     }
                 }
@@ -85,7 +85,7 @@ macro_rules! define_enum_map {
                 fn add(self, rhs: Self) -> Self {
                     Self {
                         $(
-                            [<$field:lower>]: self.[<$field:lower>] + rhs.[<$field:lower>],
+                            [<$field:snake>]: self.[<$field:snake>] + rhs.[<$field:snake>],
                         )*
                     }
                 }
@@ -95,7 +95,7 @@ macro_rules! define_enum_map {
             impl AddAssign for [<$name Map>]<f32> {
                 fn add_assign(&mut self, rhs: Self) {
                     $(
-                        self.[<$field:lower>] += rhs.[<$field:lower>];
+                        self.[<$field:snake>] += rhs.[<$field:snake>];
                     )*
                 }
             }
@@ -107,7 +107,7 @@ macro_rules! define_enum_map {
                 fn sub(self, rhs: Self) -> Self {
                     Self {
                         $(
-                            [<$field:lower>]: self.[<$field:lower>] - rhs.[<$field:lower>],
+                            [<$field:snake>]: self.[<$field:snake>] - rhs.[<$field:snake>],
                         )*
                     }
                 }
@@ -117,7 +117,7 @@ macro_rules! define_enum_map {
             impl SubAssign for [<$name Map>]<f32> {
                 fn sub_assign(&mut self, rhs: Self) {
                     $(
-                        self.[<$field:lower>] -= rhs.[<$field:lower>];
+                        self.[<$field:snake>] -= rhs.[<$field:snake>];
                     )*
                 }
             }
@@ -130,7 +130,7 @@ macro_rules! define_enum_map {
                 fn mul(self, rhs: f32) -> Self {
                     Self {
                         $(
-                            [<$field:lower>]: self.[<$field:lower>] * rhs,
+                            [<$field:snake>]: self.[<$field:snake>] * rhs,
                         )*
                     }
                 }
@@ -143,7 +143,7 @@ macro_rules! define_enum_map {
                 fn div(self, rhs: f32) -> Self {
                     Self {
                         $(
-                            [<$field:lower>]: self.[<$field:lower>]/rhs,
+                            [<$field:snake>]: self.[<$field:snake>]/rhs,
                         )*
                     }
                 }
@@ -155,11 +155,28 @@ macro_rules! define_enum_map {
                 fn div(self, rhs: Self) -> Self {
                     Self {
                         $(
-                            [<$field:lower>]: self.[<$field:lower>]/rhs.[<$field:lower>],
+                            [<$field:snake>]: self.[<$field:snake>]/rhs.[<$field:snake>],
                         )*
                     }
                 }
             }
+
+
+            // See: <https://github.com/rust-lang/rust/issues/35853>
+            // macro_rules! [<$name:snake s>] {
+            //     () => {
+            //         [<$name Map>]::default()
+            //     };
+            //     ($($subfield:ident: $subvalue:expr),*) => {
+            //         {
+            //             let mut map = [<$name Map>]::default();
+            //             $(
+            //                 map.$subfield = $subvalue;
+            //             )*
+            //             map
+            //         }
+            //     };
+            // }
         }
     }
 }
@@ -171,24 +188,27 @@ define_enum_map!(Resource {
     Water,
     Biomass, // Lumber?
 
+    Coal,
+    Oil,
+    Uranium,
+    Lithium,
+
     // Outputs from other sectors
+    Labor,
     Energy,
     Feed,
     Material,
-    CO2,
-    Uranium,
-    Lithium
+    Co2
 });
 
 define_enum_map!(Byproduct {
-    CO2,
+    Co2,
     Pollution
 });
 
 
 define_enum_map!(Output {
     Fuel,
-    CO2Sequestration,
     Electricity,
     PlantCalories,
     MeatCalories,
@@ -201,7 +221,7 @@ define_enum_map!(Output {
 
 
 // Would like to define these as part of the `define_enum_map`
-// macro but it looks like nested macros aren't well supported
+// macro but it looks like nested macros aren't well supported.
 /// Macro for quickly creating a maps with default values.
 macro_rules! resources {
     () => {
@@ -225,6 +245,21 @@ macro_rules! byproducts {
     ($($field:ident: $value:expr),*) => {
         {
             let mut map = ByproductMap::default();
+            $(
+                map.$field = $value;
+            )*
+            map
+        }
+    };
+}
+
+macro_rules! outputs {
+    () => {
+        OutputMap::default()
+    };
+    ($($field:ident: $value:expr),*) => {
+        {
+            let mut map = OutputMap::default();
             $(
                 map.$field = $value;
             )*

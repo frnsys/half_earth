@@ -9,6 +9,13 @@ pub struct ProductionOrder {
     pub amount: f32
 }
 
+
+/// With a constrained amount of resources, allocate the available resources across the provided
+/// production orders/processes.
+/// Returns the amount produced for each provided order, the consumed resources, and the byproducts
+/// of production.
+/// This is currently formulated as a linear programming problem, but ideally we have a non-linear
+/// formulation instead (see dev notes).
 pub fn calculate_production(orders: &[ProductionOrder], limits: &ResourceMap<f32>) -> (Vec<f32>, ResourceMap<f32>, ByproductMap<f32>) {
     let mut vars = variables!();
     let mut consumed_resources: ResourceMap<Expression> = resources!();
@@ -52,6 +59,8 @@ pub fn calculate_production(orders: &[ProductionOrder], limits: &ResourceMap<f32
     (produced, consumed, byproducts)
 }
 
+/// Calculate the total required resources to completely
+/// meet the demand of the provided production orders.
 pub fn calculate_required(orders: &[ProductionOrder]) -> ResourceMap<f32> {
     orders.iter().fold(resources!(), |mut acc, order| {
         acc += order.reqs * order.amount;
@@ -59,6 +68,9 @@ pub fn calculate_required(orders: &[ProductionOrder]) -> ResourceMap<f32> {
     })
 }
 
+/// Calculate the ideal mix of production processes based on demand and resource weights.
+/// Here "ideal" means one that minimizes resource usages, weighted by the provided resource
+/// weights, while meeting demand.
 pub fn calculate_mix(orders: &[ProductionOrder], demand: &OutputMap<f32>, resource_weights: &ResourceMap<f32>) -> Vec<f32> {
     let mut vars = variables!();
     let mut total_intensity: Expression = 0.into();
@@ -79,8 +91,21 @@ pub fn calculate_mix(orders: &[ProductionOrder], demand: &OutputMap<f32>, resour
         .minimise(total_intensity)
         .using(default_solver);
 
-    for (produced, demand) in total_produced.values().iter().zip(demand.values()) {
-        problem = problem.with((*produced).clone().geq(*demand as f64));
+    let empty_expression: Expression = 0.into();
+    for ((k, produced), demand) in total_produced.items().iter().zip(demand.values()) {
+        if *demand > 0. {
+            // Impossible to create a mix that satisfies this demand because
+            // no provided orders/processes produce the demanded output.
+            // Just print a warning--in the final game all processes for a sector will
+            // always be present, thus encompassing all outputs for that sector;
+            // so there will (should) be no cases where this will occur.
+            if **produced == empty_expression {
+                println!("Non-zero demand for {:?} but no provided production orders produce this output.", k);
+            } else {
+                let constraint = (*produced).clone().geq(*demand as f64);
+                problem = problem.with(constraint);
+            }
+        }
     }
 
     let solution = problem.solve().unwrap();
@@ -91,109 +116,101 @@ pub fn calculate_mix(orders: &[ProductionOrder], demand: &OutputMap<f32>, resour
 }
 
 
-// #[cfg(test)]
-// mod test {
-//     use super::*;
-//     use float_cmp::approx_eq;
-//     use enum_map::{Enum, enum_map};
+#[cfg(test)]
+mod test {
+    use super::*;
+    use float_cmp::approx_eq;
 
-//     #[derive(Clone, Copy, Enum, Hash, PartialEq, Eq)]
-//     enum Widget {
-//         Basic,
-//         Advanced
-//     }
-//     impl Output for Widget {}
+    fn gen_orders() -> Vec<ProductionOrder> {
+        let fuel_demand = 10.;
+        let electricity_demand = 5.;
 
-//     fn gen_orders() -> Vec<ProductionOrder<Widget>> {
-//         let basic_demand = 10.;
-//         let advanced_demand = 5.;
+        let a = ProductionOrder {
+            output: Output::Fuel,
+            reqs: resources!(
+                sun: 1.,
+                water: 1.1),
+            byproducts: byproducts!(),
+            amount: fuel_demand * 0.25,
+        };
 
-//         let basic_a = ProductionOrder {
-//             output: Widget::Basic,
-//             reqs: resources!(
-//                 energy: 1.,
-//                 land: 1.1),
-//             byproducts: byproducts!(),
-//             amount: basic_demand * 0.25,
-//         };
+        let b = ProductionOrder {
+            output: Output::Fuel,
+            reqs: resources!(
+                sun: 1.1,
+                water: 1.),
+            byproducts: byproducts!(),
+            amount: fuel_demand * 0.75,
+        };
 
-//         let basic_b = ProductionOrder {
-//             output: Widget::Basic,
-//             reqs: resources!(
-//                 energy: 1.1,
-//                 land: 1.),
-//             byproducts: byproducts!(),
-//             amount: basic_demand * 0.75,
-//         };
+        let c = ProductionOrder {
+            output: Output::Electricity,
+            reqs: resources!(
+                sun: 0.1,
+                water: 2.),
+            byproducts: byproducts!(),
+            amount: electricity_demand * 1.
+        };
 
-//         let advanced_a = ProductionOrder {
-//             output: Widget::Advanced,
-//             reqs: resources!(
-//                 energy: 0.1,
-//                 land: 2.),
-//             byproducts: byproducts!(),
-//             amount: advanced_demand * 1.
-//         };
-
-//         vec![basic_a, basic_b, advanced_a]
-//     }
+        vec![a, b, c]
+    }
 
 
-//     #[test]
-//     fn test_calculate_production_with_limits() {
-//         let orders = gen_orders();
-//         let available_resources = resources!(
-//             land: 12.,
-//             energy: 6.
-//         );
+    #[test]
+    fn test_calculate_production_with_limits() {
+        let orders = gen_orders();
+        let available_resources = resources!(
+            sun: 6.,
+            water: 12.
+        );
 
-//         let (produced, consumed, _byproducts) = calculate_production(&orders, &available_resources);
+        let (produced, consumed, _byproducts) = calculate_production(&orders, &available_resources);
 
-//         let expected = [2.5, 2.89, 3.18];
-//         assert!(produced.len() == expected.len());
-//         assert!(produced.iter().zip(expected)
-//                 .all(|(x1,x2)| approx_eq!(f32, *x1, x2, epsilon=1e-2)));
+        let expected = [2.5, 2.89, 3.18];
+        assert!(produced.len() == expected.len());
+        assert!(produced.iter().zip(expected)
+                .all(|(x1,x2)| approx_eq!(f32, *x1, x2, epsilon=1e-2)));
 
-//         let expected = resources!(
-//             land: 12.,
-//             energy: 6.
-//         );
-//         assert_eq!(consumed, expected);
+        let expected = resources!(
+            sun: 6.,
+            water: 12.
+        );
+        assert_eq!(consumed, expected);
 
-//         // Should not have created enough to meet total demand
-//         assert!(produced.iter().sum::<f32>() < 15.);
-//     }
+        // Should not have created enough to meet total demand
+        assert!(produced.iter().sum::<f32>() < 15.);
+    }
 
-//     #[test]
-//     fn test_calculated_required() {
-//         let orders = gen_orders();
-//         let required = calculate_required(&orders);
-//         let expected = resources!(
-//             land: 20.25,
-//             energy: 11.25
-//         );
-//         assert_eq!(required, expected);
-//     }
+    #[test]
+    fn test_calculated_required() {
+        let orders = gen_orders();
+        let required = calculate_required(&orders);
+        let expected = resources!(
+            sun: 11.25,
+            water: 20.25
+        );
+        assert_eq!(required, expected);
+    }
 
-//     #[test]
-//     fn test_calculate_mix() {
-//         let orders = gen_orders();
+    #[test]
+    fn test_calculate_mix() {
+        let orders = gen_orders();
 
-//         // Bias towards minimizing land use
-//         let resource_weights = resources!(
-//             land: 1.,
-//             energy: 0.8
-//         );
-//         let demand = enum_map! {
-//             Widget::Basic => 10.,
-//             Widget::Advanced => 5.,
-//         };
+        // Bias towards minimizing land water
+        let resource_weights = resources!(
+            sun: 0.8,
+            water: 1.
+        );
+        let demand = outputs!(
+            fuel: 10.,
+            electricity: 5.
+        );
 
-//         let shares = calculate_mix(&orders, &demand, &resource_weights);
+        let shares = calculate_mix(&orders, &demand, &resource_weights);
 
-//         // Basic widgets should only be produced using the second process
-//         // because it's more land efficient.
-//         // Overall shares of each output subtype should remain unchanged.
-//         assert_eq!(shares, vec![0.0, 0.6666667, 0.33333334]);
-//     }
-// }
+        // Fuel should only be produced using the second process
+        // because it's more land efficient.
+        // Overall shares of each output subtype should remain unchanged.
+        assert_eq!(shares, vec![0.0, 0.6666667, 0.33333334]);
+    }
+}

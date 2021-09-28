@@ -23,7 +23,7 @@ pub struct Cell {
     pub resource: Option<Resource>,
 
     // Amount of resources theorically available in this cell
-    pub limit: ResourceMap<f32>,
+    pub limits: ResourceMap<f32>,
 
     // Amount of resources actually available in this cell,
     // i.e. reflects how much has been extracted
@@ -112,7 +112,7 @@ impl<const N: usize> CellGrid<N> {
             if let Some(r) = cell.resource {
                 match cell.status {
                     Status::Active(i) => {
-                        let amount = cell.resources[r] * yielded_resources(i);
+                        let amount = f32::min(cell.limits[r] * yielded_resources(i), cell.resources[r]);
                         resources[r] += amount;
                         cell.resources[r] -= amount;
                     }
@@ -127,7 +127,7 @@ impl<const N: usize> CellGrid<N> {
     pub fn refresh_resources(&mut self, idxs: &[CellIdx]) {
         for idx in idxs {
             let cell = &mut self.cells[*idx];
-            for (k, limit) in cell.limit.items() {
+            for (k, limit) in cell.limits.items() {
                 cell.resources[k] = f32::min(
                     cell.resources[k] + (self.refresh_rates[k] * limit), *limit)
             }
@@ -138,9 +138,8 @@ impl<const N: usize> CellGrid<N> {
     /// at already-developed cells or starting development in new cells) or by contracting
     /// (reducing extraction, halting development, or decommissioning).
     pub fn adjust_resources(&mut self, idxs: &mut Vec<CellIdx>, changes: &mut ResourceMap<f32>) {
-        // Get underexploited cells for each TODO
         let mut existing: ResourceMap<Vec<(CellIdx, f32)>> = resources!();
-        for idx in idxs {
+        for idx in idxs.iter() {
             let cell = &self.cells[*idx];
             if let Some(r) = cell.resource {
                 let should_expand = changes[r] > 0.;
@@ -235,6 +234,8 @@ impl<const N: usize> CellGrid<N> {
                         cell.status = Status::Developing(0);
                         cell.resource = Some(r);
 
+                        idxs.push(idx);
+
                         let base_yield = cell.resources[r] * yielded_resources(1);
                         *change -= base_yield;
 
@@ -255,10 +256,10 @@ impl<const N: usize> CellGrid<N> {
                         // Decrease exploitation rate by 1 tick,
                         // or start decommissioning
                         Status::Active(i) => {
-                            if i > 0 {
+                            if i > 1 {
                                 cell.status = Status::Active(i-1);
                             } else {
-                                cell.status = Status::Decommissioning(3);
+                                cell.status = Status::Decommissioning(STATUS_CHANGE_STEPS);
                             }
                             *change += yield_change;
                         },
@@ -280,7 +281,7 @@ impl<const N: usize> CellGrid<N> {
     }
 
     /// Update cell development/decommissioning progress.
-    fn update_cells(&mut self, idxs: &Vec<CellIdx>) {
+    fn update_cells(&mut self, idxs: &[CellIdx]) {
         for idx in idxs {
             let cell = &mut self.cells[*idx];
             match cell.status {
@@ -292,11 +293,11 @@ impl<const N: usize> CellGrid<N> {
                     }
                 },
                 Status::Decommissioning(step) => {
-                    if step >= STATUS_CHANGE_STEPS {
+                    if step <= 1 {
                         cell.status = Status::Available;
                         cell.resource = None;
                     } else {
-                        cell.status = Status::Decommissioning(step+1);
+                        cell.status = Status::Decommissioning(step-1);
                     }
                 },
                 _ => ()
@@ -305,175 +306,238 @@ impl<const N: usize> CellGrid<N> {
     }
 }
 
-// #[cfg(test)]
-// mod test {
-//     use super::*;
+#[cfg(test)]
+mod test {
+    use super::*;
+    use float_cmp::assert_approx_eq;
 
-//     // TODO test deduct resources
-//     // TODO test yield changes
-//     // TODO test expand resources increases exploitation first
-//     // TODO test contract resources
+    fn gen_cell_grid() -> CellGrid<5> {
+        CellGrid::new([Cell {
+            status: Status::Available,
+            resource: None,
+            limits: resources!(sun: 0.2, wind: 0.2, water: 0.5),
+            resources: resources!(sun: 0.2, wind: 0.2, water: 0.5)
+        }, Cell {
+            status: Status::Active(1),
+            resource: Some(Resource::Sun),
+            limits: resources!(sun: 0.3, wind: 0.3, water: 0.2),
+            resources: resources!(sun: 0.3, wind: 0.3, water: 0.2)
+        }, Cell {
+            status: Status::Developing(1),
+            resource: Some(Resource::Water),
+            limits: resources!(sun: 0.3, wind: 0.3, water: 0.6),
+            resources: resources!(sun: 0.3, wind: 0.3, water: 0.6)
+        }, Cell {
+            status: Status::Decommissioning(2),
+            resource: Some(Resource::Wind),
+            limits: resources!(sun: 0.3, wind: 0.3, water: 0.8),
+            resources: resources!(sun: 0.3, wind: 0.3, water: 0.8)
+        }, Cell {
+            status: Status::Available,
+            resource: None,
+            limits: resources!(sun: 0.3, wind: 0.5, water: 0.2),
+            resources: resources!(sun: 0.3, wind: 0.5, water: 0.2)
+        }], resources!(
+            sun: 1.0,
+            wind: 1.0,
+            water: 0.01))
+    }
 
-//     #[test]
-//     fn test_cells_for_resources() {
-//         let cells = [Cell {
-//             status: Status::Available,
-//             resources: resources!(water: 1.0, soil: 0.5)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 3.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 1.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(sun: 2.0, labor: 1.0)
-//         }];
-//         let grid = CellGrid::new(cells);
+    #[test]
+    fn test_resources() {
+        let grid = gen_cell_grid();
 
-//         // Should only return cell indices where
-//         // soil and labor is present
-//         let required = resources!(soil: 0.2, labor: 0.3);
-//         let idxs = grid.find_cells_for_resources(&required);
+        // Only active extracted resources should
+        // be non-zero
+        let idxs = [0, 1, 2, 3, 4];
+        let resources = grid.resources(&idxs);
+        assert_eq!(resources, resources!(
+            sun: 0.3 * yielded_resources(1)
+        ));
 
-//         let mut expected = HashSet::default();
-//         expected.insert(1);
-//         expected.insert(2);
-//         assert_eq!(idxs, expected);
-//     }
+        // If no active resources, should all be zero
+        let idxs = [0, 2, 3, 4];
+        let resources = grid.resources(&idxs);
+        assert_eq!(resources, resources!());
+    }
 
-//     #[test]
-//     fn test_resources_for_sector() {
-//         let cells = [Cell {
-//             status: Status::Active(1),
-//             resources: resources!(water: 1.0, soil: 0.5)
-//         }, Cell {
-//             status: Status::Developing(0),
-//             resources: resources!(soil: 2.0, labor: 3.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 1.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(sun: 2.0, labor: 1.0)
-//         }];
-//         let grid = CellGrid::new(cells);
-//         let idxs = [0, 1];
-//         let resources = grid.resources_for_cells(&idxs);
-//         let expected = resources!(
-//             water: 1.,
-//             labor: 0.,
-//             soil: 0.5
-//         );
-//         assert_eq!(resources, expected);
-//     }
+    #[test]
+    fn test_planned_resources() {
+        let grid = gen_cell_grid();
 
-//     #[test]
-//     fn test_planned_resources_for_sector() {
-//         let cells = [Cell {
-//             status: Status::Active(1),
-//             resources: resources!(water: 1.0, soil: 0.5)
-//         }, Cell {
-//             status: Status::Developing(0),
-//             resources: resources!(soil: 2.0, labor: 3.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 1.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(sun: 2.0, labor: 1.0)
-//         }];
-//         let grid = CellGrid::new(cells);
-//         let idxs = [0, 1];
-//         let resources = grid.planned_resources_for_cells(&idxs);
-//         let expected = resources!(
-//             water: 1.,
-//             labor: 3.,
-//             soil: 2.5
-//         );
-//         assert_eq!(resources, expected);
-//     }
+        // Only active and planned extracted resources
+        // should be non-zero
+        let idxs = [0, 1, 2, 3, 4];
+        let resources = grid.planned_resources(&idxs);
+        assert_eq!(resources, resources!(
+            sun: 0.3 * yielded_resources(1),
+            water: 0.6 * yielded_resources(1)
+        ));
 
-//     #[test]
-//     fn test_update_cells() {
-//         let cells = [Cell {
-//             status: Status::Developing(0),
-//             resources: resources!(water: 1.0, soil: 0.5)
-//         }, Cell {
-//             status: Status::Decommissioning(0),
-//             resources: resources!(soil: 2.0, labor: 3.0)
-//         }];
-//         let mut grid = CellGrid::new(cells);
+        // If no active or planned resources, should all be zero
+        let idxs = [0, 3, 4];
+        let resources = grid.planned_resources(&idxs);
+        assert_eq!(resources, resources!());
+    }
 
-//         for i in 1..=STATUS_CHANGE_STEPS {
-//             grid.update_cells();
-//             assert_eq!(grid.cells[0].status, Status::Developing(i));
-//             assert_eq!(grid.cells[1].status, Status::Decommissioning(i));
-//         }
+    #[test]
+    fn test_extract_resources() {
+        let mut grid = gen_cell_grid();
 
-//         grid.update_cells();
-//         assert_eq!(grid.cells[0].status, Status::Active(1));
-//         assert_eq!(grid.cells[1].status, Status::Available);
-//     }
+        // Only active extracted resources should be applied
+        let idxs = [0, 1, 2, 3, 4];
+        let resources = grid.extract_resources(&idxs);
+        assert_eq!(resources, resources!(
+            sun: 0.3 * yielded_resources(1)
+        ));
+        assert_approx_eq!(f32, grid.cells[1].resources.sun, 0.3 - (0.3 * yielded_resources(1)));
 
-//     #[test]
-//     fn test_expand_resources() {
-//         let cells = [Cell {
-//             status: Status::Developing(0),
-//             resources: resources!(sun: 8.0, soil: 3.5, labor: 5.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 3.0)
-//         }, Cell {
-//             status: Status::Active(1),
-//             resources: resources!(soil: 2.0, labor: 3.0, sun: 2.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 1.0, sun: 1.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(sun: 2.0, labor: 1.5, soil: 4.0)
-//         }];
-//         let mut grid = CellGrid::new(cells);
-//         let deficit = resources!(
-//             soil: 2.,
-//             labor: 4.
-//         );
-//         let n_expansions = 2;
-//         let idxs = grid.expand_resources(&deficit, n_expansions);
-//         let expected = vec![1, 4];
-//         assert_eq!(idxs, expected);
-//     }
+        // Additional extraction should happen as a percent of the cell's resource limit,
+        // *not* the current remaining amount (otherwise we get 10% of 10% of 10% etc)
+        let _resources = grid.extract_resources(&idxs);
+        assert_approx_eq!(f32, grid.cells[1].resources.sun, 0.3 - (0.3 * yielded_resources(2)));
 
-//     #[test]
-//     fn test_contract_resources() {
-//         let cells = [Cell {
-//             status: Status::Developing(0),
-//             resources: resources!(sun: 8.0, soil: 3.5, labor: 5.0)
-//         }, Cell {
-//             status: Status::Available,
-//             resources: resources!(soil: 2.0, labor: 3.0)
-//         }, Cell {
-//             status: Status::Active(1),
-//             resources: resources!(soil: 2.0, labor: 3.0, sun: 2.0)
-//         }, Cell {
-//             status: Status::Active(1),
-//             resources: resources!(soil: 2.0, labor: 1.0, sun: 1.0)
-//         }, Cell {
-//             status: Status::Active(1),
-//             resources: resources!(sun: 2.0, labor: 1.5, soil: 4.0)
-//         }];
-//         let mut grid = CellGrid::new(cells);
-//         let surplus = resources!(
-//             soil: 1.0,
-//             sun: 1.0,
-//             labor: 4.0
-//         );
+        // Amount extracted should never be more than what's left,
+        // and remaining resource amount should never be negative
+        grid.cells[1].resources.sun = 0.3;
+        grid.cells[1].status = Status::Active(255);
+        for _ in 0..20 {
+            let remaining = grid.cells[1].resources.sun;
+            let resources = grid.extract_resources(&idxs);
+            assert!(resources.sun <= remaining);
+        }
+        assert_eq!(grid.cells[1].resources.sun, 0.);
 
-//         let idxs = vec![2,3,4];
-//         let transition_speed = 0.2;
-//         let kept_idxs = grid.contract_resources(&idxs, &surplus, transition_speed);
-//         let expected = vec![4, 3];
-//         assert_eq!(kept_idxs, expected);
-//     }
-// }
+        // If no active resources, should all be zero
+        let idxs = [0, 2, 3, 4];
+        let resources = grid.extract_resources(&idxs);
+        assert_eq!(resources, resources!());
+    }
+
+    #[test]
+    fn test_refresh_resources() {
+        let mut grid = gen_cell_grid();
+
+        grid.cells[0].status = Status::Active(10);
+        grid.cells[0].resource = Some(Resource::Uranium);
+        grid.cells[0].resources[Resource::Uranium] = 1.;
+
+        grid.cells[2].status = Status::Active(1);
+        grid.cells[2].resource = Some(Resource::Water);
+
+        let idxs = [0, 1, 2, 3, 4];
+        let _resources = grid.extract_resources(&idxs);
+        assert_eq!(grid.cells[1].resources.sun, 0.3 - (0.3 * yielded_resources(1)));
+
+        let remaining_water = grid.cells[2].resources.water;
+        let _resources = grid.refresh_resources(&idxs);
+
+        // Sun should be fully refreshed
+        assert_eq!(grid.cells[1].resources.sun, 0.3);
+
+        // Water should be somewhat refreshed
+        assert!(grid.cells[2].resources.water > remaining_water);
+
+        // Uranium should not be refreshed
+        assert!(grid.cells[0].resources.uranium < 1.);
+    }
+
+    #[test]
+    fn test_adjust_resources() {
+        let mut grid = CellGrid::new([Cell {
+            status: Status::Active(1),
+            resource: Some(Resource::Water),
+            limits: resources!(sun: 0.2, wind: 0.2, water: 0.5),
+            resources: resources!(sun: 0.2, wind: 0.2, water: 0.5)
+        }, Cell {
+            status: Status::Active(1),
+            resource: Some(Resource::Sun),
+            limits: resources!(sun: 0.3, wind: 0.3, water: 0.2),
+            resources: resources!(sun: 0.3, wind: 0.3, water: 0.2)
+        }, Cell {
+            status: Status::Developing(1),
+            resource: Some(Resource::Sun),
+            limits: resources!(sun: 0.3, wind: 0.3, water: 0.6),
+            resources: resources!(sun: 0.3, wind: 0.3, water: 0.6)
+        }, Cell {
+            status: Status::Decommissioning(2),
+            resource: Some(Resource::Wind),
+            limits: resources!(sun: 0.3, wind: 0.3, water: 0.8),
+            resources: resources!(sun: 0.3, wind: 0.3, water: 0.8)
+        }, Cell {
+            status: Status::Available,
+            resource: None,
+            limits: resources!(sun: 0.3, wind: 0.5, water: 0.2),
+            resources: resources!(sun: 0.3, wind: 0.5, water: 0.2)
+        }], resources!(
+            sun: 1.0,
+            wind: 1.0,
+            water: 0.01));
+
+        // Only the currently in-use cells
+        let mut idxs = vec![0, 1, 2, 3];
+
+        let mut changes = resources!(
+            water: 1.0,
+            wind: 1.0,
+            sun: -1.0
+        );
+        grid.adjust_resources(&mut idxs, &mut changes);
+
+        // Expand capacity for wind
+        assert_eq!(grid.cells[3].status, Status::Developing(2)); // Reverse decommissioning
+        assert_eq!(grid.cells[4].status, Status::Developing(0)); // Develop new resource
+        assert!(changes.wind < 1.0);
+
+        // Expand capacity for water
+        assert_eq!(grid.cells[0].status, Status::Active(2)); // Increase exploitation
+        assert!(changes.water < 1.0);
+
+        // Contract capacity for sun
+        assert_eq!(grid.cells[1].status, Status::Decommissioning(3)); // Decommission active
+        assert_eq!(grid.cells[2].status, Status::Decommissioning(1)); // Reverse development
+        assert!(changes.sun > -1.0);
+
+        // Should now include the last cell since it's being developed
+        assert_eq!(idxs, vec![0, 1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn test_update_cells() {
+        let mut grid = gen_cell_grid();
+        let idxs = [0, 1, 2, 3, 4];
+
+        grid.update_cells(&idxs);
+
+        // Unchanged
+        assert_eq!(grid.cells[0].status, Status::Available);
+        assert_eq!(grid.cells[1].status, Status::Active(1));
+        assert_eq!(grid.cells[4].status, Status::Available);
+
+        // Changed
+        assert_eq!(grid.cells[2].status, Status::Developing(2));
+        assert_eq!(grid.cells[3].status, Status::Decommissioning(1));
+
+        grid.update_cells(&idxs);
+
+        // Unchanged
+        assert_eq!(grid.cells[0].status, Status::Available);
+        assert_eq!(grid.cells[1].status, Status::Active(1));
+        assert_eq!(grid.cells[4].status, Status::Available);
+
+        // Changed
+        assert_eq!(grid.cells[2].status, Status::Developing(3));
+        assert_eq!(grid.cells[3].status, Status::Available);
+
+        grid.update_cells(&idxs);
+
+        // Unchanged
+        assert_eq!(grid.cells[0].status, Status::Available);
+        assert_eq!(grid.cells[1].status, Status::Active(1));
+        assert_eq!(grid.cells[3].status, Status::Available);
+        assert_eq!(grid.cells[4].status, Status::Available);
+
+        // Changed
+        assert_eq!(grid.cells[2].status, Status::Active(1));
+    }
+}

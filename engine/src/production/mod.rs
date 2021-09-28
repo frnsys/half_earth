@@ -1,9 +1,12 @@
+#[macro_use]
+mod processes;
 mod sectors;
 mod planner;
 mod resources;
 
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap};
-pub use self::sectors::{Sector, Process, ProcessDetails, Modifier};
+pub use self::sectors::{Sector, Modifier};
+pub use self::processes::{Process, ProcessDetails};
 
 // TODO in resources:
 // - deduct consumed resources from cells
