@@ -71,7 +71,7 @@ pub fn calculate_required(orders: &[ProductionOrder]) -> ResourceMap<f32> {
 /// Calculate the ideal mix of production processes based on demand and resource weights.
 /// Here "ideal" means one that minimizes resource usages, weighted by the provided resource
 /// weights, while meeting demand.
-// TODO processes intead of orders
+/// This is intended to be used on a per-sector basis.
 pub fn calculate_mix(orders: &[ProductionOrder], demand: &OutputMap<f32>, resource_weights: &ResourceMap<f32>) -> Vec<f32> {
     let mut vars = variables!();
     let mut total_intensity: Expression = 0.into();

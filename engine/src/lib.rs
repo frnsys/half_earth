@@ -1,6 +1,8 @@
 #[macro_use]
 mod kinds;
 mod utils;
+mod effects;
+mod projects;
 // mod world;
 // mod player;
 // mod events;
