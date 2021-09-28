@@ -13,7 +13,6 @@ default = ["console_error_panic_hook"]
 
 [dependencies]
 wasm-bindgen = "0.2.63"
-arrayvec = "0.7.1"
 paste = "1.0"
 enum-map = "1.1.1"
 good_lp = { git = "https://github.com/frnsys/good_lp", features = ["minilp"], default-features = false }

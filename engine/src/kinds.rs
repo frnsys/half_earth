@@ -35,16 +35,22 @@ macro_rules! define_enum_map {
                 }
             }
 
-            impl<T: Copy> [<$name Map>]<T> {
-                pub fn items(&self) -> [($name, T); count!($($field)*)] {
+            impl<T> [<$name Map>]<T> {
+                pub fn items(&self) -> [($name, &T); count!($($field)*)] {
                     [$(
-                        ($name::$field, self.[<$field:lower>]),
+                        ($name::$field, &self.[<$field:lower>]),
                     )*]
                 }
 
-                pub fn values(&self) -> [T; count!($($field)*)] {
+                pub fn values(&self) -> [&T; count!($($field)*)] {
                     [$(
-                        self.[<$field:lower>],
+                        &self.[<$field:lower>],
+                    )*]
+                }
+
+                pub fn items_mut(&mut self) -> [($name, &mut T); count!($($field)*)] {
+                    [$(
+                        ($name::$field, &mut self.[<$field:lower>]),
                     )*]
                 }
             }
@@ -163,16 +169,34 @@ define_enum_map!(Resource {
     Wind,
     Soil, // Fertile land
     Water,
+    Biomass, // Lumber?
 
     // Outputs from other sectors
     Energy,
     Feed,
-    Material
+    Material,
+    CO2,
+    Uranium,
+    Lithium
 });
 
 define_enum_map!(Byproduct {
     CO2,
     Pollution
+});
+
+
+define_enum_map!(Output {
+    Fuel,
+    CO2Sequestration,
+    Electricity,
+    PlantCalories,
+    MeatCalories,
+    Concrete,
+    Steel,
+    ProjectConstruction,
+    ProjectMaintenance,
+    General
 });
 
 

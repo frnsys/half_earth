@@ -4,7 +4,6 @@ mod utils;
 // mod world;
 // mod player;
 // mod events;
-mod resources;
 mod production;
 pub mod surface;
 
