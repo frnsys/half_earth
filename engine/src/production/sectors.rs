@@ -17,7 +17,8 @@ pub struct Modifier {
 // and Modifiers
 pub struct Sector {
     processes: Vec<(Process, f32)>,
-    modifiers: Vec<Modifier>
+    modifiers: Vec<Modifier>,
+    momentum: f32,
 }
 
 impl Sector {
@@ -55,23 +56,22 @@ impl Sector {
 
     /// Update this sector's process mix to better match
     /// the demand and resource weights (by scarcity).
-    /// This mix adjustment happens at a speed of `transition_speed`.
+    /// This mix adjustment happens at a speed of `sector.momentum`.
     pub fn update_mix(&mut self,
                   orders: &[planner::ProductionOrder],
                   demand: &OutputMap<f32>,
-                  resource_weights: &ResourceMap<f32>,
-                  transition_speed: f32) {
+                  resource_weights: &ResourceMap<f32>) {
         let target_mix = planner::calculate_mix(&orders, &demand, &resource_weights);
         for ((process, mix_share), target) in self.processes.iter_mut().zip(target_mix) {
             if process.unlocked {
                 // Phase out banned processes
                 if process.banned && *mix_share > 0.{
-                    *mix_share = transition_speed;
+                    *mix_share = self.momentum;
                 } else if !process.banned {
                     if *mix_share < target {
-                        *mix_share += transition_speed;
+                        *mix_share += self.momentum;
                     } else if *mix_share > target {
-                        *mix_share -= transition_speed;
+                        *mix_share -= self.momentum;
                     }
                 }
                 *mix_share = f32::max(*mix_share, 0.);
@@ -121,6 +121,7 @@ mod test {
             )
         };
         let agriculture = Sector {
+            momentum: 0.1,
             processes: vec![(ind_ag, 0.8), (regen_ag, 0.2)],
             modifiers: vec![Modifier {
                 active: false,
@@ -154,8 +155,7 @@ mod test {
         // The process is less water intensive but more sun intensive
         // than the second. Because of our weighting, this first process
         // should gain a greater share of the production mix.
-        let transition_speed = 0.1;
-        agriculture.update_mix(&orders, &demand, &resource_weights, transition_speed);
+        agriculture.update_mix(&orders, &demand, &resource_weights);
         let mix: Vec<f32> = agriculture.processes.iter().map(|(_, mix_share)| *mix_share).collect();
         assert_approx_eq!(f32, mix[0], 0.9);
         assert_approx_eq!(f32, mix[1], 0.1);
@@ -182,8 +182,7 @@ mod test {
 
         // Although the second process requires no land,
         // the mix shouldn't have changed because that process is locked.
-        let transition_speed = 0.1;
-        agriculture.update_mix(&orders, &demand, &resource_weights, transition_speed);
+        agriculture.update_mix(&orders, &demand, &resource_weights);
         let mix: Vec<f32> = agriculture.processes.iter().map(|(_, mix_share)| *mix_share).collect();
         assert_approx_eq!(f32, mix[0], 1.0);
         assert_approx_eq!(f32, mix[1], 0.0);

@@ -60,7 +60,7 @@ impl EventPool {
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Event {
     /// An id linking this event
     /// to user-facing details
@@ -81,13 +81,13 @@ pub struct Event {
     prob: &'static dyn Probability,
 
     /// Choices the player chooses from.
-    choices: Vec<Choice>,
+    pub choices: Vec<Choice>,
 
     /// Effects applied when this event occurs.
-    effects: Vec<Effect>
+    pub effects: Vec<Effect>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Choice {
     id: usize,
     effects: Vec<Effect>,
@@ -95,7 +95,7 @@ pub struct Choice {
     /// A function that takes the current
     /// game state and returns whether or not
     /// this choice is available.
-    condition: Option<Box<dyn Condition>>
+    condition: &'static dyn Condition
 }
 
 

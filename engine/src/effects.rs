@@ -2,17 +2,17 @@ use crate::game::State;
 use crate::kinds::Output;
 use crate::events::Event;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum WorldVariable {
     Emissions,
     Biodiversity,
     Temperature,
     Precipitation,
     SeaLevelRise,
-    OzoneHealth
+    OzoneDamage
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum LocalVariable {
     Population,
     Health,
@@ -21,7 +21,7 @@ pub enum LocalVariable {
     Satiety
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Effect {
     /// Influence demand for output
     Demand(Output, f32),

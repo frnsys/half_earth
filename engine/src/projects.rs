@@ -5,7 +5,7 @@ use crate::kinds::{ResourceMap, ByproductMap, Output};
 const MAINTENANCE_POINTS: f32 = 100.;
 
 #[derive(Debug, PartialEq)]
-enum Status {
+pub enum Status {
     Inactive,
     Building(f32),
     Active,
@@ -13,21 +13,29 @@ enum Status {
     Finished,
 }
 
-struct Project {
-    status: Status,
+impl Default for Status {
+    fn default() -> Self {
+        Status::Inactive
+    }
+}
+
+
+#[derive(Default)]
+pub struct Project {
+    pub status: Status,
     req_points: f32,
     ongoing: bool,
     build_reqs: ResourceMap<f32>,
     maintenance_reqs: ResourceMap<f32>,
     byproducts: ByproductMap<f32>,
-    effects: Vec<Effect>
+    pub effects: Vec<Effect>
 }
 
 impl Project {
     /// Projects are constructed and maintained as part of the
     /// general production system. Points are "produced" and
     /// go towards their construction or maintenance.
-    fn production_order(&self) -> Option<ProductionOrder> {
+    pub fn production_order(&self) -> Option<ProductionOrder> {
         match self.status {
             Status::Building(points) => {
                 Some(ProductionOrder {
@@ -49,7 +57,7 @@ impl Project {
         }
     }
 
-    fn apply_points(&mut self, points: f32) {
+    pub fn apply_points(&mut self, points: f32) {
         match &mut self.status {
             Status::Building(p) => {
                 *p += points;
