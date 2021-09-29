@@ -1,5 +1,9 @@
 use crate::kinds::{Resource, ResourceMap};
 
+// TODO should this not be a cell grid and more amorphous? Just based on where resources
+// are in the world world?
+// TODO shoudl this also be where biome emissions/etc are held?
+
 const STATUS_CHANGE_STEPS: u8 = 3;
 const BASE_YIELD_RATE: f32 = 0.001;
 const MAX_EXPLOITATION: u8 = 10;
@@ -227,6 +231,7 @@ impl CellGrid {
                     let mut cands: Vec<(CellIdx, f32)> = self.index[r].iter()
                         .filter_map(|idx| {
                             let cell = &self.cells[*idx];
+                            // TODO handle Status::Occupied cells
                             if cell.status == Status::Available {
                                 Some((*idx, cell.resources[r]))
                             } else {

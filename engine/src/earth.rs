@@ -47,7 +47,7 @@ impl Region<'_> {
     }
 
     pub fn habitability(&self) -> f32 {
-        // Factors:
+        // TODO Factors:
         // - regional temp, precip, sea_level_rise, health, safety,
         // - number of negative events
         todo!()

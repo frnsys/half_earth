@@ -6,6 +6,7 @@ use crate::earth::{Earth, Region};
 use crate::production::{Sector, CellGrid, ProductionOrder, produce, calculate_required};
 use crate::kinds::{Output, OutputMap, ResourceMap, ByproductMap};
 
+
 #[derive(Default)]
 pub struct State<'a> {
     earth: Earth,
