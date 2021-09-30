@@ -156,12 +156,12 @@ export default {
           break;
         case 'Project':
           key = 'name';
-          required = ['name', 'description'];
+          required = ['name', 'description', 'type'];
           questions = ['name', 'description', 'notes'];
           break;
         case 'Process':
           key = 'name';
-          required = ['name', 'description'];
+          required = ['name', 'description', 'output'];
           questions = ['name', 'description', 'notes'];
           break;
         case 'Region':
@@ -181,7 +181,7 @@ export default {
         label: i[key],
         invalid: required.some((k) => {
           let val = i[k];
-          return !(val && val.length > 0);
+          return !(val && val !== '');
         }),
         questions: questions.some((k) => {
           let val = i[k];
@@ -241,6 +241,7 @@ fieldset > div {
   margin-left: 0.5em;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 fieldset > div textarea {
   flex-grow: 1;

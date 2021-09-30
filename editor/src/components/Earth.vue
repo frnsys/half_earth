@@ -13,36 +13,35 @@
         Emissions (GtCO2eq, or per-GHG?)
         <Tip>Starting global emissions.</Tip>
       </label>
-      <input v-model="localData.emissions" type="number" min="0">
+      <input v-model="localData.emissions" type="number" min="0" @blur="save" :class="flags('emissions')">
     </div>
     <div>
       <label>
         Atmospheric GHG (ppm)
         <Tip>Starting atmospheric GHGs.</Tip>
       </label>
-      <input v-model="localData.atmospheric_ghg" type="number" min="0">
+      <input v-model="localData.atmospheric_ghg" type="number" min="0" @blur="save" :class="flags('atmospheric_ghg')">
     </div>
     <div>
       <label>
         Biodiversity (unit?)
         <Tip>Starting biodiversity.</Tip>
       </label>
-      <input v-model="localData.biodiversity" type="number" min="0">
+      <input v-model="localData.biodiversity" type="number" min="0" @blur="save" :class="flags('biodiversity')">
     </div>
     <div>
       <label>
         Temperature (C)
         <Tip>Starting global temperature average.</Tip>
       </label>
-      <input v-model="localData.temperature" type="number" min="0">
+      <input v-model="localData.temperature" type="number" min="0" @blur="save" :class="flags('temperature')">
     </div>
-
     <div>
       <label>
         Ozone Damage (% eroded)
         <Tip>Starting ozone layer damage.</Tip>
       </label>
-      <input v-model="localData.ozone_damage" type="number" min="0">
+      <input v-model="localData.ozone_damage" type="number" min="0" @blur="save" :class="flags('ozone_damage')">
     </div>
   </fieldset>
 

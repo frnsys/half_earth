@@ -20,28 +20,28 @@
         Satiety
         <Tip>Starting "satiety", a catch-all for none-baseline-survival satisfication, like agency, community, etc, from 0 to 1, with 0 being a region filled with isolated lonely people and no social cohesion, and 1 being a communist utopia.</Tip>
       </label>
-      <input v-model="localData.satiety" type="number" min="0">
+      <input v-model="localData.satiety" type="number" min="0" @blur="save" :class="flags('satiety')">
     </div>
     <div>
       <label>
         Health
         <Tip>Starting public health, from 0 to 1, with 1 being everyone in perfect health with perfect access to top-quality healthcare and 0 being no healthcare system whatsoever amidst widespread pollution and contamination.</Tip>
       </label>
-      <input v-model="localData.health" type="number" min="0">
+      <input v-model="localData.health" type="number" min="0" @blur="save" :class="flags('health')">
     </div>
     <div>
       <label>
         Safety
         <Tip>Starting public safety, from 0 to 1, with 1 meaning no one is ever worried about crime or harm, and 0 means everyone is living in constant fear.</Tip>
       </label>
-      <input v-model="localData.safety" type="number" min="0">
+      <input v-model="localData.safety" type="number" min="0" @blur="save" :class="flags('safety')">
     </div>
     <div>
       <label>
         Outlook
         <Tip>Starting outlook, from 0 to 1, with 1 meaning people are excited and optimistic about the future, and 0 meaning a region full of hopeless nihilists.</Tip>
       </label>
-      <input v-model="localData.outlook" type="number" min="0">
+      <input v-model="localData.outlook" type="number" min="0" @blur="save" :class="flags('outlook')">
     </div>
   </fieldset>
   <div class="field-group">

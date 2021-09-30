@@ -31,7 +31,7 @@ export default {
     invalid() {
       return this.validateKeys.filter((k) => {
         let val = this.localData[k];
-        return !(val && val.length > 0);
+        return !(val && val !== '');
       });
     },
     questions() {

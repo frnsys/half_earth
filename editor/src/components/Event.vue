@@ -32,7 +32,29 @@
   </div>
 
   <div class="field-group">
+    <h3>Event Effects</h3>
     <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
+  </div>
+
+  <div class="choices">
+    <div class="field-group" v-for="(choice, i) in localData.choices">
+      <h3>Choice {{i+1}}</h3>
+      <div>
+        <label>
+          Choice Text
+          <Tip>The text representing this choice, presented to the player.</Tip>
+        </label>
+        <input type="text" placeholder="Choice text" v-model="choice.text" @blur="save" :class="choiceFlag(i, 'text')" />
+      </div>
+      <div>
+        <label>
+          Conditions (optional)
+          <Tip>A player can't select this choice if these conditions are false.</Tip>
+        </label>
+      </div>
+      <input type="text" placeholder="Condition(s)" v-model="choice.condition" @blur="save"/>
+      <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
+    </div>
   </div>
 
   <div>
@@ -51,6 +73,26 @@
 import ItemMixin from './ItemMixin';
 
 export default {
+  mounted() {
+    if (!this.localData.choices) {
+      this.localData.choices = [...Array(4)].map(() => ({
+        text: '',
+        condition: '',
+        effects: []
+      }));
+      this.save();
+    }
+  },
+  methods: {
+    saveChoiceEffects(i, effects) {
+      this.localData.choices[i].effects = effects;
+      this.save();
+    },
+    choiceFlag(i, key) {
+      let val = this.localData.choices[i][key];
+      return {invalid: !(val && val.length > 0)};
+    }
+  },
   computed: {
     validateKeys() {
       return ['name', 'description'];
@@ -62,3 +104,14 @@ export default {
   mixins: [ItemMixin]
 };
 </script>
+
+<style>
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.choices .field-group {
+  width: 49%;
+}
+</style>

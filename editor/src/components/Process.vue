@@ -71,7 +71,7 @@ import ItemMixin from './ItemMixin';
 export default {
   computed: {
     validateKeys() {
-      return ['name', 'description'];
+      return ['name', 'description', 'output'];
     },
     questionKeys() {
       return ['name', 'description'];
