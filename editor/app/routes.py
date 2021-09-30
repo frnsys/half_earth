@@ -1,7 +1,6 @@
-import json
-from flask import Blueprint, render_template, request, jsonify
-from flask_socketio import SocketIO, emit
 from .db import Database
+from flask_socketio import SocketIO, emit
+from flask import Blueprint, render_template, request, jsonify
 
 bp = Blueprint('main', __name__)
 db = Database('data.json')

@@ -1,20 +1,32 @@
 <template>
 <nav>
-  <div class="tab" :class="{selected: type == 'Policy'}" @click="() => type = 'Policy'">Policies</div>
+  <div class="tab" :class="{selected: type == 'Process'}" @click="() => type = 'Process'">Processes</div>
+  <div class="tab" :class="{selected: type == 'Project'}" @click="() => type = 'Project'">Projects</div>
+  <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
+  <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
 </nav>
 <div class="items">
-  <template v-if="type == 'Policy'">
-    <Policy v-for="p in itemsOfType" :policy="p" />
+  <template v-if="type == 'Process'">
+    <Process v-for="p in itemsOfType" :item="p" />
+  </template>
+  <template v-if="type == 'Project'">
+    <Project v-for="p in itemsOfType" :item="p" />
+  </template>
+  <template v-if="type == 'Region'">
+    <Region v-for="r in itemsOfType" :item="r" />
   </template>
   <template v-else-if="type == 'Event'">
-    <Event v-for="e in itemsOfType" :event="e" />
+    <Event v-for="e in itemsOfType" :item="e" />
+  </template>
+  <template v-if="type == 'Earth'">
+    <Earth v-for="e in itemsOfType" :item="e" />
   </template>
 </div>
 <div class="sidebar">
   <button @click="() => addNew(type)">Add {{type}}</button>
   <div class="filters--header">
-    <div>Filter by {{type == 'Event' ? 'story arc' : 'policy type'}}</div>
+    <div>Filter by {{filterType}}</div>
     <div class="toggle" @click="() => filtersOpen = !filtersOpen">{{filtersOpen ? 'Hide' : 'Show'}}</div>
   </div>
   <ul class="filters" v-if="filtersOpen">
@@ -45,12 +57,15 @@ import util from '../util';
 import state from '../state';
 import consts from '../consts';
 import Event from './Event.vue';
-import Policy from './Policy.vue';
+import Region from './Region.vue';
+import Project from './Project.vue';
+import Process from './Process.vue';
+import Earth from './Earth.vue';
 
 export default {
   data() {
     return {
-      type: 'Event',
+      type: 'Project',
       tocOpen: true,
       filtersOpen: true,
       filter: null,
@@ -59,7 +74,10 @@ export default {
   },
   components: {
     Event,
-    Policy,
+    Earth,
+    Region,
+    Project,
+    Process,
   },
   methods: {
     addNew(type) {
@@ -81,7 +99,7 @@ export default {
       return Object.values(this.state.items)
         .filter((i) => i._type == this.type)
         .filter((i) => {
-          return this.filter == null || (this.type == 'Event' ? i.arc : i.type) == this.filter;
+          return this.filter == null || i[this.filterKey] == this.filter;
         })
         .sort((a, b) => a._created < b._created ? 1 : -1);
     },
@@ -90,8 +108,41 @@ export default {
         .filter((i) => i._type == 'Event' && i.arc).map((e) => e.arc);
       return [...new Set(arcs)];
     },
+    filterKey() {
+      switch (this.type) {
+        case 'Event':
+          return 'arc';
+        case 'Project':
+          return 'type';
+        case 'Process':
+          return 'output';
+        default:
+          return '';
+      }
+    },
+    filterType() {
+      switch (this.type) {
+        case 'Event':
+          return 'story arc';
+        case 'Project':
+          return 'project type';
+        case 'Process':
+          return 'output type';
+        default:
+          return '';
+      }
+    },
     filters() {
-      return this.type == 'Event' ? this.storyArcs : consts.POLICY_TYPE;
+      switch (this.type) {
+        case 'Event':
+          return this.storyArcs;
+        case 'Project':
+          return ['Project', 'Research', 'Policy'];
+        case 'Process':
+          return Object.keys(consts.OUTPUTS);
+        default:
+          return [];
+      }
     },
     tableOfContents() {
       let key;
@@ -99,15 +150,31 @@ export default {
       let questions;
       switch (this.type) {
         case 'Event':
-          key = 'body';
-          required = ['body', 'area', 'conditions', 'effects'];
-          questions = ['body', 'conditions', 'effects', 'variations', 'responses', 'notes'];
-          break;
-        case 'Policy':
           key = 'name';
-          required = ['name', 'type', 'description', 'requirements', 'effects'];
-          questions = ['name', 'description', 'requirements', 'effects', 'notes'];
+          required = ['name', 'description'];
+          questions = ['name', 'description', 'notes'];
           break;
+        case 'Project':
+          key = 'name';
+          required = ['name', 'description'];
+          questions = ['name', 'description', 'notes'];
+          break;
+        case 'Process':
+          key = 'name';
+          required = ['name', 'description'];
+          questions = ['name', 'description', 'notes'];
+          break;
+        case 'Region':
+          key = 'name';
+          required = ['name', 'description', 'countries', 'satiety', 'safety', 'health', 'outlook'];
+          questions = ['name', 'description', 'countries', 'notes'];
+          break;
+        case 'Earth':
+          key = 'year';
+          required =['year', 'emissions', 'atmospheric_ghg', 'biodiversity', 'temperature', 'ozone_damage'];
+          questions = ['year'];
+          break;
+
       }
       return this.itemsOfType.map((i) => ({
         id: i.id,
@@ -144,7 +211,7 @@ label {
   font-size: 0.7em;
   display: flex;
   justify-content: space-between;
-  margin-top: 0.3em;
+  margin-top: 0.6em;
   font-family: 'Arial', sans-serif;
 }
 input, textarea, select {
@@ -181,6 +248,35 @@ fieldset > div textarea {
 fieldset > div:first-child {
   margin-left: 0;
 }
+.field-group {
+  padding: 0.1em 0.5em 0.5em 0.5em;
+  background: #f5f5f5;
+  border: 1px solid #aaa;
+  margin: 0.5em 0;
+}
+.field-group label {
+	background: #ddd;
+	padding: 0.1em 0.0 0.1em 0.25em;
+}
+.field-group h3 {
+  margin: 0.4em 0 0 0;
+  font-size: 1em;
+}
+.checkbox {
+	display: inline-block;
+	background: #eee;
+	padding: 0.1em 0.25em 0.2em 0.1em;
+	border: 1px solid #aaa;
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+}
+.checkbox > input, .checkbox > label {
+  width: auto;
+  display: inline;
+}
+.checkbox .tip {
+  font-size: 0.75em;
+}
 input.invalid, textarea.invalid, select.invalid {
   background: #ff00001c;
 }
@@ -194,33 +290,56 @@ input.title, textarea.title {
   border-bottom: 1px solid #000;
   font-weight: bold;
 }
+.units {
+  color: #777;
+  font-size: 0.9em;
+  margin-top: 1px;
+  margin-left: 5px;
+}
+.kind-quantities {
+  display: grid;
+  margin: 0.25em 0;
+  grid-gap: 5px;
+  justify-content: space-between;
+  grid-template-columns: repeat(7, 90px);
+}
+.kind-quantities::after {
+  content: "";
+  flex: auto;
+}
+.kind-quantities > div {
+  width: 90px;
+  border: 1px solid #aaa;
+}
+.kind-quantities > div input {
+  border: 0;
+  border-radius: 0;
+}
+.kind-quantities > div label {
+  background: #eee;
+  margin-top: 0;
+  padding: 1px;
+  border-bottom: 1px solid #ccc;
+  text-decoration: none;
+}
+
+/* Hide number input arrows */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
 .item {
   position: relative;
 }
-.indicators {
-  position: absolute;
-  left: calc(100% + 0.5em);
-}
-.indicator {
-  font-size: 0.75em;
-  padding: 0.25em;
-  white-space: nowrap;
-  border-radius: 0.25em;
-  font-weight: bold;
-  margin-bottom: 0.25em;
-  display: inline-block;
-}
-.indicator--missing {
-  color: #fff;
-  background: #f54242;
-  border: 1px solid #a22727;
-}
-.indicator--question {
-  color: #000;
-  background: #efcf40;
-  border: 1px solid #927c18;
-}
+
 
 ul, li {
   margin: 0;
@@ -235,12 +354,17 @@ ul, li {
 nav {
   display: flex;
   justify-content: space-around;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.5em;
 }
 .tab {
   cursor: pointer;
+  padding: 0.25em 0.5em;
 }
 .tab:hover, .tab.selected {
-  border-bottom: 2px solid #000;
+  background: #000;
+  color: #fff;
+  border-radius: 0.2em;
 }
 
 .sidebar {
@@ -270,29 +394,6 @@ nav {
 .filters li.selected {
   color: #000;
   text-decoration: underline;
-}
-
-.notes {
-  margin-top: 0.5em;
-  padding: 0 0.25em 0.25em 0.25em;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-}
-.notes label {
-  cursor: pointer;
-  user-select: none;
-}
-.notes-icon {
-	color: #fff;
-	background: #484848;
-	border-radius: 10em;
-	padding: 0 0.45em;
-}
-.notes-icon.question {
-  color: #000;
-  background: #EFCF40;
-  margin-right: 0.25em;
-  padding: 0 0.3em;
 }
 
 #toc {

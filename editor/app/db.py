@@ -16,8 +16,8 @@ class Database:
             self.data = {}
 
     def save(self):
+        backup_path = '/tmp/{}.json'.format(datetime.utcnow())
         if os.path.exists(self.path):
-            backup_path = '/tmp/{}.json'.format(datetime.utcnow())
             shutil.copyfile(self.path, backup_path)
         try:
             with open(self.path, 'w') as f:
