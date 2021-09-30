@@ -1,139 +1,117 @@
 <template>
-<li class="item" :id="event.id">
-  <div class="indicators">
-    <div class="indicator indicator--missing" v-if="invalid.length > 0">Missing data</div>
-    <div class="indicator indicator--question" v-if="questions.length > 0">Question(s)</div>
+<li class="item" :id="item.id" ref="root">
+  <div>
+    <label>
+      Name
+      <Tip>The name of the event</Tip>
+    </label>
+    <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
   </div>
+  <div>
+    <label>
+      Story Arc (optional)
+      <Tip>If the event is part of or triggers an arc, note the arc name here</Tip>
+    </label>
+    <input type="text" list="arcs" v-model="localData.arc" @blur="save" />
+  </div>
+
   <div>
     <label>
       Description
-      <Tip>A 1-2 sentence description of the event. You can include variables (just capitalize them).</Tip>
+      <Tip>A more detailed narrative description of the event.</Tip>
     </label>
-    <textarea class="title" v-model="localData.body" @blur="save" placeholder="Event description" :class="flags('body')"/>
+    <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
   </div>
-  <fieldset>
-    <div>
-      <label>
-        Area
-        <Tip>The area of the event--is this something global or does it happen in a specific location on the globe?</Tip>
-      </label>
-      <select v-model="localData.area" @change="save" :class="flags('area')">
-        <option v-for="t in EVENT_AREA" :value="t">{{t}}</option>
-      </select>
-    </div>
-    <div>
-      <label>
-        Story Arc (optional)
-        <Tip>If the event is part of or triggers an arc, note the arc name here</Tip>
-      </label>
-      <input type="text" list="arcs" v-model="localData.arc" @blur="save" />
-    </div>
-  </fieldset>
+
   <div>
     <label>
-      Variations (optional)
-      <Tip>Variations on how the event can occur and the conditions they require. Some events, for example, may be less or more severe depending on past player actions.</Tip>
+      Probability Function
+      <Tip>Write out the probability of this event occurring as an equation. The result must be a float that's greater than 0, ideally in the range [0-1]; values higher than 1 are just treated as 1 (i.e. guaranteed to happen). Use whatever variables you like.</Tip>
     </label>
-    <textarea v-model="localData.variations" placeholder="Variations on the event" @blur="save" :class="flags('variations')"/>
+    <input type="text" placeholder="(world.temperature - 1.5)/2." v-model="localData.probability" @blur="save" :class="flags('description')" />
   </div>
-  <fieldset>
-    <div>
-      <label>
-        Conditions
-        <Tip>Under what conditions the event is likely/becomes more likely to occur. If this is a "Local" event, also detail the criteria for candidate locations (e.g. it has to be on a coast)</Tip>
-      </label>
-      <textarea v-model="localData.conditions" placeholder="Conditions influencing event probability" @blur="save" :class="flags('conditions')"/>
+
+  <div class="field-group">
+    <h3>Event Effects</h3>
+    <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
+  </div>
+
+  <div class="choices">
+    <div class="field-group" v-for="(choice, i) in localData.choices">
+      <h3>Choice {{i+1}}</h3>
+      <div>
+        <label>
+          Choice Text
+          <Tip>The text representing this choice, presented to the player.</Tip>
+        </label>
+        <input type="text" placeholder="Choice text" v-model="choice.text" @blur="save" :class="choiceFlag(i, 'text')" />
+      </div>
+      <div>
+        <label>
+          Conditions (optional)
+          <Tip>A player can't select this choice if these conditions are false.</Tip>
+        </label>
+      </div>
+      <input type="text" placeholder="Condition(s)" v-model="choice.condition" @blur="save"/>
+      <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
     </div>
-    <div>
-      <label>
-        Effects
-        <Tip>What are the impacts of the event, just by occurring/before the player responds?</Tip>
-      </label>
-      <textarea v-model="localData.effects" placeholder="Impacts of the event" @blur="save" :class="flags('effects')"/>
-    </div>
-  </fieldset>
+  </div>
+
   <div>
     <label>
-      Responses (optional)
-      <Tip>What can the player do to respond? What responses are available can be influenced by other decisions, like policies, resources, and projects.</Tip>
-    </label>
-    <textarea v-model="localData.responses" placeholder="Player responses" @blur="save" :class="flags('responses')"/>
-  </div>
-  <div>
-    <label>
-      Flavor Text/Dialogue (optional)
-      <Tip>Possible dialogue or other flavor to text to accompany the event (e.g. an advisor introducing the event, giving suggestions on what to do, etc).</Tip>
+      Flavor Text/Dialogue
+      <Tip>Advisor dialogue introducing the event.</Tip>
     </label>
     <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
   </div>
-  <div class="notes" >
-    <label @click="() => expandNotes = !expandNotes">
-      <span>
-        <span class="notes-icon question" v-if="flags('notes').question">?</span>
-        <span class="notes-icon" v-if="localData.notes && localData.notes.length > 0">!</span> Notes, References, &amp; Discussion</span>
-      <div class="notes--toggle">Toggle</div>
-    </label>
-    <textarea v-if="expandNotes" v-model="localData.notes" placeholder="Write any notes or discussion for others" @blur="save" :class="flags('notes')"/>
-  </div>
+
+  <Notes :notes="localData.notes" @blur="saveNotes" />
 </li>
 </template>
 
 <script>
-import api from '../api';
-import util from '../util';
-import Tip from './Tip.vue';
+import ItemMixin from './ItemMixin';
 
 export default {
-  props: ['event'],
-  data() {
-    return {
-      expandNotes: false,
-      localData: Object.assign({}, this.event)
-    };
-  },
-  components: {
-    Tip
-  },
   mounted() {
-    this.$el.querySelectorAll('textarea').forEach((el) => {
-      util.resizeTextArea(el);
-      el.addEventListener('input', () => {
-        util.resizeTextArea(el);
-      });
-    });
-  },
-  computed: {
-    invalid() {
-      return ['body', 'area', 'conditions', 'effects'].filter((k) => {
-        let val = this.localData[k];
-        return !(val && val.length > 0);
-      });
-    },
-    questions() {
-      return ['body', 'conditions', 'effects', 'variations', 'responses', 'notes'].filter((k) => {
-        let val = this.localData[k];
-        return val && val.includes('?');
-      });
-    }
-  },
-  watch: {
-    event(newEvent) {
-      this.localData = Object.assign({}, newEvent);
-      this.$el.querySelectorAll('textarea').forEach((el) => {
-        util.resizeTextArea(el);
-      });
+    if (!this.localData.choices) {
+      this.localData.choices = [...Array(4)].map(() => ({
+        text: '',
+        condition: '',
+        effects: []
+      }));
+      this.save();
     }
   },
   methods: {
-    save() {
-      api.update(this.localData);
+    saveChoiceEffects(i, effects) {
+      this.localData.choices[i].effects = effects;
+      this.save();
     },
-    flags(key) {
-      return {
-        invalid: this.invalid.includes(key),
-        question: this.questions.includes(key)
-      }
+    choiceFlag(i, key) {
+      let val = this.localData.choices[i][key];
+      return {invalid: !(val && val.length > 0)};
     }
-  }
-}
+  },
+  computed: {
+    validateKeys() {
+      return ['name', 'description'];
+    },
+    questionKeys() {
+      return ['name', 'description'];
+    },
+  },
+  mixins: [ItemMixin]
+};
 </script>
+
+<style>
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.choices .field-group {
+  width: 49%;
+}
+</style>

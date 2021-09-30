@@ -19,7 +19,7 @@ export default {
     },
     width: {
       type: Number,
-      default: 320
+      default: 220
     }
   },
   data() {
