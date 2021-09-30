@@ -5,8 +5,9 @@
   <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
   <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
+  <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
 </nav>
-<div class="items">
+<div class="items" :class="type">
   <template v-if="type == 'Process'">
     <Process v-for="p in itemsOfType" :item="p" />
   </template>
@@ -21,6 +22,9 @@
   </template>
   <template v-if="type == 'Earth'">
     <Earth v-for="e in itemsOfType" :item="e" />
+  </template>
+  <template v-if="type == 'Variable'">
+    <Variable v-for="v in itemsOfType" :item="v" />
   </template>
 </div>
 <div class="sidebar">
@@ -61,6 +65,7 @@ import Region from './Region.vue';
 import Project from './Project.vue';
 import Process from './Process.vue';
 import Earth from './Earth.vue';
+import Variable from './Variable.vue';
 
 export default {
   data() {
@@ -78,6 +83,7 @@ export default {
     Region,
     Project,
     Process,
+    Variable,
   },
   methods: {
     addNew(type) {
@@ -174,7 +180,11 @@ export default {
           required =['year', 'emissions', 'atmospheric_ghg', 'biodiversity', 'temperature', 'ozone_damage'];
           questions = ['year'];
           break;
-
+        case 'Variable':
+          key = 'name';
+          required =['name', 'desc']
+          questions = ['desc'];
+          break;
       }
       return this.itemsOfType.map((i) => ({
         id: i.id,
@@ -263,20 +273,24 @@ fieldset > div:first-child {
   margin: 0.4em 0 0 0;
   font-size: 1em;
 }
-.checkbox {
-	display: inline-block;
-	background: #eee;
-	padding: 0.1em 0.25em 0.2em 0.1em;
-	border: 1px solid #aaa;
-  margin-right: 1em;
-  margin-bottom: 0.5em;
+.radio {
+  display: flex;
+  margin-top: 0.5em;
 }
-.checkbox > input, .checkbox > label {
-  width: auto;
-  display: inline;
+.radio > div {
+  display: flex;
+  align-items: center;
+  margin-left: 0.25em;
 }
-.checkbox .tip {
-  font-size: 0.75em;
+.radio label {
+  background: none;
+  margin: 0;
+}
+.radio > div input {
+  margin: 0 0.5em;
+}
+fieldset .checkbox {
+  flex: 0.2;
 }
 input.invalid, textarea.invalid, select.invalid {
   background: #ff00001c;
@@ -464,5 +478,9 @@ nav {
 .count {
   margin-left: 0.5em;
   line-height: 1.5;
+}
+
+.Variable .item {
+  margin: 0.5em 0;
 }
 </style>

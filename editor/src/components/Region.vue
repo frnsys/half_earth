@@ -1,5 +1,5 @@
 <template>
-<li class="item" :id="item.id" ref="root">
+<li class="item" :key="item.id" :id="item.id" ref="root">
   <div>
     <label>
       Name

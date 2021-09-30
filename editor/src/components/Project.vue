@@ -1,5 +1,5 @@
 <template>
-<li class="item" :id="item.id" ref="root">
+<li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
   <div class="indicators">
     <div class="indicator indicator--missing" v-if="invalid.length > 0">Missing data</div>
@@ -12,17 +12,26 @@
     </label>
     <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
   </div>
-  <div>
-    <label>
-      Type
-      <Tip>The type of project.</Tip>
-    </label>
-    <select v-model="localData.type" @change="save" :class="flags('type')">
-      <option value="Initiative">Initiative</option>
-      <option value="Policy">Policy</option>
-      <option value="Research">Research</option>
-    </select>
-  </div>
+  <fieldset>
+    <div>
+      <label>
+        Type
+        <Tip>The type of project.</Tip>
+      </label>
+      <select v-model="localData.type" @change="save" :class="flags('type')">
+        <option value="Initiative">Initiative</option>
+        <option value="Policy">Policy</option>
+        <option value="Research">Research</option>
+      </select>
+    </div>
+    <div class="checkbox">
+      <label :for="`${item.id}_ongoing`">
+        Ongoing
+        <Tip>Is this a one-and-done project, or does it need continued maintenance?</Tip>
+      </label>
+      <input type="checkbox" :id="`${item.id}_ongoing`" v-model="localData.ongoing" @change="save">
+    </div>
+  </fieldset>
   <div>
     <label>
       Description
@@ -31,7 +40,7 @@
     <textarea v-model="localData.description" placeholder="A brief description" @blur="save" :class="flags('description')"/>
   </div>
   <div class="field-group">
-    <h3>Construction/Implementation (per year)</h3>
+    <h3>Implementation (per year)</h3>
     <div>
       <label>
         Resource Requirements
@@ -47,7 +56,7 @@
       <Byproducts :byproducts="localData.construction_byproducts" @update="saveData('construction_byproducts', $event)"/>
     </div>
   </div>
-  <div class="field-group">
+  <div class="field-group" v-if="localData.ongoing">
     <h3>Maintenance (per year)</h3>
     <div>
       <label>

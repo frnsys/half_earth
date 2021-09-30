@@ -1,5 +1,5 @@
 <template>
-<li class="item" :id="item.id" ref="root">
+<li class="item" :key="item.id" :id="item.id" ref="root">
   <div>
     <label>
       Name
@@ -7,15 +7,24 @@
     </label>
     <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
   </div>
-  <div>
-    <label>
-      Output
-      <Tip>What this output produces.</Tip>
-    </label>
-    <select v-model="localData.output" @change="save" :class="flags('output')">
-      <option v-for="k in Object.keys(OUTPUTS)">{{k}} ({{OUTPUTS[k]}})</option>
-    </select>
-  </div>
+  <fieldset>
+    <div>
+      <label>
+        Output
+        <Tip>What this output produces.</Tip>
+      </label>
+      <select v-model="localData.output" @change="save" :class="flags('output')">
+        <option v-for="k in Object.keys(OUTPUTS)">{{k}} ({{OUTPUTS[k]}})</option>
+      </select>
+    </div>
+    <div class="checkbox">
+      <label :for="`${item.id}_locked`">
+        Locked
+        <Tip>Is this process available to the player at the start?</Tip>
+      </label>
+      <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+    </div>
+  </fieldset>
   <div>
     <label>
       Description
@@ -46,7 +55,7 @@
       Process Features
       <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
     </label>
-    <div class="checkbox" v-for="k in Object.keys(PROCESS_FEATURES)">
+    <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
       <input type="checkbox" :id="`${item.id}_${k}`">
       <label :for="`${item.id}_${k}`">{{k}}</label>
       <Tip>{{PROCESS_FEATURES[k]}}</Tip>
@@ -81,3 +90,20 @@ export default {
 };
 </script>
 
+<style>
+.checkbox-feature {
+	display: inline-block;
+	background: #eee;
+	padding: 0.1em 0.25em 0.2em 0.1em;
+	border: 1px solid #aaa;
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+}
+.checkbox-feature > input, .checkbox-feature > label {
+  width: auto;
+  display: inline;
+}
+.checkbox-feature .tip {
+  font-size: 0.75em;
+}
+</style>

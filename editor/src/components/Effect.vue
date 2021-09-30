@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="effect">
   <fieldset>
     <div>
       <label>Effect Type</label>
