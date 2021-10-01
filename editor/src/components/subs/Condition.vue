@@ -28,7 +28,7 @@
       </div>
       <div>
         <label>Value</label>
-        <input type="number" :value="localData.value" @change="update" :class="flags('value')"/>
+        <input type="number" v-model="localData.value" @change="update" :class="flags('value')"/>
       </div>
     </template>
   </fieldset>

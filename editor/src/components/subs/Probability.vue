@@ -3,7 +3,7 @@
   <select v-model="localData.type" @change="update">
     <option v-for="type in PROBABILITIES" :value="type">{{type}}</option>
   </select>
-  <Conditions :conditions="localData.conditions" />
+  <Conditions :conditions="localData.conditions" @update="update" />
 </div>
 </template>
 
@@ -20,5 +20,10 @@ export default {
   components: {
     Conditions
   },
+  methods: {
+    update() {
+      this.$emit('update', this.localData);
+    },
+  }
 }
 </script>
