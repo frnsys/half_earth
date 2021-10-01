@@ -29,6 +29,13 @@
       </label>
       <input type="checkbox" :id="`${item.id}_decision`" v-model="localData.decision" @change="save">
     </div>
+    <div class="checkbox">
+      <label :for="`${item.id}_local`">
+        Local
+        <Tip>Is this event something that happens locally or globally?</Tip>
+      </label>
+      <input type="checkbox" :id="`${item.id}_local`" v-model="localData.local" @change="save">
+    </div>
   </fieldset>
 
   <div>
@@ -39,13 +46,7 @@
     <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
   </div>
 
-  <div>
-    <label>
-      Probability Function
-      <Tip>Write out the probability of this event occurring as an equation. The result must be a float that's greater than 0, ideally in the range [0-1]; values higher than 1 are just treated as 1 (i.e. guaranteed to happen). Use whatever variables you like.</Tip>
-    </label>
-    <input type="text" placeholder="(world.temperature - 1.5)/2." v-model="localData.probability" @blur="save" :class="flags('probability')" />
-  </div>
+  <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
 
   <div class="field-group">
     <h3>Event Effects</h3>
@@ -63,12 +64,8 @@
         <input type="text" placeholder="Choice text" v-model="choice.text" @blur="save" :class="choiceFlag(i, 'text')" />
       </div>
       <div>
-        <label>
-          Conditions (optional)
-          <Tip>A player can't select this choice if these conditions are false.</Tip>
-        </label>
+        <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
       </div>
-      <input type="text" placeholder="Condition(s)" v-model="choice.condition" @blur="save"/>
 
       <div class="radio">
         <label>Type:</label>
@@ -124,6 +121,10 @@ export default {
       this.localData.choices[i].effects = effects;
       this.save();
     },
+    saveChoiceConditions(i, conditions) {
+      this.localData.choices[i].conditions = conditions;
+      this.save();
+    },
     choiceFlag(i, key) {
       let val = this.localData.choices[i][key];
       return {invalid: !(val && val.length > 0)};
@@ -131,7 +132,7 @@ export default {
   },
   computed: {
     validateKeys() {
-      return ['name', 'description', 'probability'];
+      return ['name', 'description'];
     },
     questionKeys() {
       return ['name', 'description'];

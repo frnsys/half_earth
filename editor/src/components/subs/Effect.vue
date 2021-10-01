@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import state from '../state';
-import consts from '../consts';
+import state from '../../state';
+import consts from '../../consts';
 import SlimSelect from 'slim-select';
 
 export default {
@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style>
-@import '../../node_modules/slim-select/dist/slimselect.min.css';
+@import '../../../node_modules/slim-select/dist/slimselect.min.css';
 .ss-main .ss-single-selected {
   height: 20px;
   font-size: 14px;

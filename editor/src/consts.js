@@ -23,7 +23,7 @@ const RESOURCES = {
   'Labor': 'hours',
   'Fuel': 'barrels?',
   'Electricity': 'kWh',
-  'Feed': 'units',
+  'PlantCalories': 'kcals',
   'Material': 'tons',
   'CO2': 'tons',
   'Concrete': 'tons',
@@ -47,6 +47,56 @@ const PROCESS_FEATURES = {
   'Intermittent': 'For electricity sources; if the supply is intermittent',
 }
 
+const COMPARATORS = ['<', '<=', '==', '!=', '>=', '>'];
+const CONDITIONS = {
+  LocalVariable: {
+    compare: true,
+    choices: [
+      'Population', 'Health',
+      'Safety', 'Outlook', 'Satiety']
+  },
+  WorldVariable: {
+    compare: true,
+    choices: [
+      'Year', 'Population', 'Emissions',
+      'Biodiversity', 'Temperature',
+      'tgav', 'Precipitation', 'SeaLevelRise',
+      'OzoneDamage', 'Outlook',
+      'LandUsePercent']
+  },
+  Demand: {
+    compare: true,
+    choices: Object.keys(OUTPUTS),
+  },
+  Output: {
+    compare: true,
+    choices: Object.keys(OUTPUTS),
+  },
+  ProcessMixShare: {
+    compare: true,
+    entity: 'Process',
+  },
+  ProcessMixShareFeature: {
+    compare: true,
+    choices: PROCESS_FEATURES,
+  },
+  ProjectActive: {
+    entity: 'Project',
+  },
+  ProjectFinished: {
+    entity: 'Project',
+  },
+  ProjectStalled: {
+    entity: 'Project',
+  },
+  Flag: {
+    entity: 'Flag',
+  },
+  RunsPlayed: {
+    compare: true,
+  },
+}
+
 const EFFECTS = {
   LocalVariable: {
     choices: [
@@ -62,7 +112,7 @@ const EFFECTS = {
       'Population', 'Emissions',
       'Biodiversity', 'Temperature',
       'Precipitation', 'SeaLevelRise',
-      'OzoneDamage'],
+      'OzoneDamage', 'Outlook'],
     params: {
       'Change': Number
     }
@@ -71,14 +121,21 @@ const EFFECTS = {
   Demand: {
     choices: Object.keys(OUTPUTS),
     params: {
-      'Change': Number
+      'PercentChange': Number
     }
   },
 
   Output: {
     choices: Object.keys(OUTPUTS),
     params: {
-      'Change': Number
+      'PercentChange': Number
+    }
+  },
+
+  Resource: {
+    choices: Object.keys(RESOURCES),
+    params: {
+      'PercentChange': Number
     }
   },
 
@@ -91,9 +148,26 @@ const EFFECTS = {
 
   AddEvent: {
     entity: 'Event'
-  }
+  },
+
+  UnlocksProject: {
+    entity: 'Project'
+  },
+
+  SetFlag: {
+    entity: 'Flag'
+  },
 };
 
+const PROBABILITIES = [
+  'Impossible',
+  'Improbable',
+  'Rare',
+  'Unlikely',
+  'Random',
+  'Likely',
+  'Guaranteed'
+];
 
 export default {
   OUTPUTS,
@@ -101,4 +175,7 @@ export default {
   BYPRODUCTS,
   PROCESS_FEATURES,
   EFFECTS,
+  COMPARATORS,
+  CONDITIONS,
+  PROBABILITIES,
 };

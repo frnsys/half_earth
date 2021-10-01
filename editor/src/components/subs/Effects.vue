@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import uuid from '../uuid';
+import uuid from '../../uuid';
 import Effect from './Effect.vue';
 
 export default {

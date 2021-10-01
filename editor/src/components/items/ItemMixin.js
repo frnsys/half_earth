@@ -1,12 +1,14 @@
-import api from '../api';
-import util from '../util';
-import Tip from './Tip.vue';
-import Flags from './Flags.vue';
-import Notes from './Notes.vue';
-import Effects from './Effects.vue';
-import Outputs from './Outputs.vue';
-import Resources from './Resources.vue';
-import Byproducts from './Byproducts.vue';
+import api from '../../api';
+import util from '../../util';
+import Tip from '../Tip.vue';
+import Flags from '../Flags.vue';
+import Notes from '../Notes.vue';
+import Effects from '../subs/Effects.vue';
+import Outputs from '../subs/Outputs.vue';
+import Resources from '../subs/Resources.vue';
+import Byproducts from '../subs/Byproducts.vue';
+import Conditions from '../subs/Conditions.vue';
+import Probabilities from '../subs/Probabilities.vue';
 
 export default {
   props: ['item'],
@@ -17,7 +19,8 @@ export default {
   },
   components: {
     Tip, Flags, Notes, Effects,
-    Outputs, Resources, Byproducts
+    Outputs, Resources, Byproducts,
+    Conditions, Probabilities
   },
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {

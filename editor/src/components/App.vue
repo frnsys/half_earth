@@ -5,7 +5,7 @@
   <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
   <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
-  <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
+  <div class="tab" :class="{selected: type == 'Flag'}" @click="() => type = 'Flag'">Flags</div>
 </nav>
 <div class="items" :class="type">
   <template v-if="type == 'Process'">
@@ -23,17 +23,17 @@
   <template v-if="type == 'Earth'">
     <Earth v-for="e in itemsOfType" :item="e" />
   </template>
-  <template v-if="type == 'Variable'">
-    <Variable v-for="v in itemsOfType" :item="v" />
+  <template v-if="type == 'Flag'">
+    <Flag v-for="f in itemsOfType" :item="f" />
   </template>
 </div>
 <div class="sidebar">
   <button @click="() => addNew(type)">Add {{type}}</button>
-  <div class="filters--header">
+  <div v-if="filterType" class="filters--header">
     <div>Filter by {{filterType}}</div>
     <div class="toggle" @click="() => filtersOpen = !filtersOpen">{{filtersOpen ? 'Hide' : 'Show'}}</div>
   </div>
-  <ul class="filters" v-if="filtersOpen">
+  <ul class="filters" v-if="filtersOpen && filterType">
     <li :class="{selected: filter == null}" @click="() => filter = null">All</li>
     <li v-for="f in filters" :class="{selected: filter == f}" @click="() => filter = f">{{f}}</li>
   </ul>
@@ -60,12 +60,12 @@ import uuid from '../uuid';
 import util from '../util';
 import state from '../state';
 import consts from '../consts';
-import Event from './Event.vue';
-import Region from './Region.vue';
-import Project from './Project.vue';
-import Process from './Process.vue';
-import Earth from './Earth.vue';
-import Variable from './Variable.vue';
+import Event from './items/Event.vue';
+import Region from './items/Region.vue';
+import Project from './items/Project.vue';
+import Process from './items/Process.vue';
+import Earth from './items/Earth.vue';
+import Flag from './items/Flag.vue';
 
 export default {
   data() {
@@ -83,7 +83,7 @@ export default {
     Region,
     Project,
     Process,
-    Variable,
+    Flag,
   },
   methods: {
     addNew(type) {
@@ -180,7 +180,7 @@ export default {
           required =['year', 'emissions', 'atmospheric_ghg', 'biodiversity', 'temperature', 'ozone_damage'];
           questions = ['year'];
           break;
-        case 'Variable':
+        case 'Flag':
           key = 'name';
           required =['name', 'desc']
           questions = ['desc'];
@@ -478,9 +478,5 @@ nav {
 .count {
   margin-left: 0.5em;
   line-height: 1.5;
-}
-
-.Variable .item {
-  margin: 0.5em 0;
 }
 </style>
