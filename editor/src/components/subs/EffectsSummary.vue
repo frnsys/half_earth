@@ -1,7 +1,8 @@
 <template>
 <ul class="effects-summary">
-  <li v-for="effect in localData" :key="effect.id" class="effect-summary" :class="flags(effect)">
-    {{summarizeEffect(effect)}}
+  <li v-for="effect in localData" :key="effect.id" class="summary-pill" :class="flags(effect)">
+    <div>{{label(effect)}}</div>
+    <div>{{value(effect)}}</div>
   </li>
 </ul>
 </template>
@@ -39,49 +40,35 @@ export default {
       }
       return {invalid};
     },
-    summarizeEffect(effect) {
+    label(effect) {
       let spec = consts.EFFECTS[effect.type];
-      let str = `${effect.type}`
+      let label = `${effect.type}`
       if (spec.choices) {
-        str += `.${effect.subtype}`
+        label += `.${effect.subtype}`
       }
+      return label;
+    },
+    value(effect) {
+      let spec = consts.EFFECTS[effect.type];
+      let value = '';
       if (spec.entity) {
         let items = this.itemsOfType(spec.entity);
         let match = items.find(el => el.id == effect.entity);
-        str += ` 🠖 ${match.name}`;
+        value += `${match.name}`;
       }
       if (spec.params) {
-        str += ` 🠖 ${Object.keys(spec.params).map((k) => {
-          return (effect.params[k] !== undefined && effect.params[k] !== '') ? effect.params[k] : '[MISSING]';
+        value += `${Object.keys(spec.params).map((k) => {
+          return (effect.params[k] !== undefined && effect.params[k] !== '') ? `${effect.params[k] > 0 ? '+' : ''}${effect.params[k]}` : '[MISSING]';
         }).join(',')}`;
       }
-      return str;
+      return value;
     }
   }
 }
 </script>
 
 <style>
-.effects-summary .effect-summary {
-  font-size: 0.7em;
-  display: inline-block !important;
-  padding: 0.25em;
+.effects-summary .summary-pill > div:first-child {
   background: #DEEF8D;
-  border-radius: 0.2em;
-  border: 1px solid #979869;
-  margin: 0.1em 0.5em 0.1em 0 !important;
-  line-height: 1;
-}
-.effects-summary .effect-summary.invalid {
-  background: #D82828;
-  border: 1px solid #613232;
-  color: #fff;
-  font-weight: bold;
-}
-.effects-summary .effect-summary.invalid::before {
-  content: '!';
-  padding: 0 0.5em;
-  font-weight: bold;
-  color: #fff;
 }
 </style>

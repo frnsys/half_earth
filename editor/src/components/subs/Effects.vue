@@ -71,7 +71,6 @@ export default {
   margin-left: 0.5em;
 }
 .effects li {
-  margin: 0 !important;
   display: flex;
   align-items: end;
 }

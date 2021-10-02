@@ -13,11 +13,9 @@
     </div>
   </div>
   <ul v-else-if="validByproducts.length > 0" class="kind-summaries">
-    <li v-for="k in validByproducts">
-      <div class="kind-summary">
-        <div class="kind-name">{{k}}</div>
-        <div class="kind-value">{{localData[k]}} {{BYPRODUCTS[k]}}</div>
-      </div>
+    <li v-for="k in validByproducts" class="summary-pill">
+      <div>{{k}}</div>
+      <div>{{localData[k]}} {{BYPRODUCTS[k]}}</div>
     </li>
   </ul>
   <div v-else>
@@ -40,7 +38,7 @@ export default {
   computed: {
     validByproducts() {
       return Object.keys(consts.BYPRODUCTS).filter((k) => {
-        return this.localData[k] !== undefined && this.localData[k] !== '' && this.localData[k] > 0;
+        return this.localData[k] !== undefined && this.localData[k] !== '';
       });
     }
   }

@@ -1,8 +1,11 @@
 <template>
 <ul class="conditions-summary">
   <template v-for="(condition, i) in localData" :key="condition.id">
-    <li :class="flags(condition)">{{summarizeCondition(condition)}}</li>
-    <template v-if="i < localData.length - 1"> AND </template>
+    <li class="summary-pill" :class="flags(condition)">
+      <div>{{label(condition)}}</div>
+      <div>{{value(condition)}}</div>
+    </li>
+    <span class="condition-and" v-if="i < localData.length - 1"> AND </span>
   </template>
 </ul>
 </template>
@@ -40,49 +43,39 @@ export default {
       }
       return {invalid};
     },
-    summarizeCondition(condition) {
+    label(condition) {
       let spec = consts.CONDITIONS[condition.type];
-      let str = `${condition.type}`
+      let label = `${condition.type}`
       if (spec.choices) {
-        str += `.${condition.subtype}`
+        label += `.${condition.subtype}`
       }
+      return label;
+    },
+    value(condition) {
+      let spec = consts.CONDITIONS[condition.type];
+      let value = '';
       if (spec.entity) {
         let items = this.itemsOfType(spec.entity);
         let match = items.find(el => el.id == condition.entity);
-        str += `==${match.name}`;
+        value += `${match.name}`;
       }
       if (spec.compare) {
-        str += ` ${condition.comparator} ${(condition.value !== undefined && condition.value !== '') ? condition.value : '[MISSING]'}`;
+        value += ` ${condition.comparator} ${(condition.value !== undefined && condition.value !== '') ? condition.value : '[MISSING]'}`;
       }
-      return str;
+      return value;
     }
   }
 }
 </script>
 
 <style>
-.conditions-summary {
-  font-size: 0.7em;
-  margin: 0.5em 0 0 0;
+.conditions-summary .summary-pill {
+  margin-right: 0;
 }
-.conditions-summary > li {
-  display: inline-block;
-  padding: 0.25em;
-  border: 1px solid #374ab2;
+.conditions-summary .summary-pill > div:first-child {
   background: #699DF4;
-  border-radius: 0.2em;
 }
-.conditions-summary > li.invalid {
-  background: #D82828;
-  border: 1px solid #613232;
-  color: #fff;
-  font-weight: bold;
+.condition-and {
+  font-size: 0.7em;
 }
-.conditions-summary > li.invalid::before {
-  content: '!';
-  padding: 0 0.5em;
-  font-weight: bold;
-  color: #fff;
-}
-
 </style>

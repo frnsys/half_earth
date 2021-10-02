@@ -2,10 +2,10 @@
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <div>
     <label>
-      Name
-      <Tip>The name of the event</Tip>
+      Short Name
+      <Tip>The short name of the event</Tip>
     </label>
-    <textarea class="title" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+    <input type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
   </div>
 
   <div>
@@ -13,7 +13,7 @@
       Description
       <Tip>A more detailed narrative description of the event.</Tip>
     </label>
-    <textarea placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
+    <textarea class="title" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
   </div>
 
   <fieldset>

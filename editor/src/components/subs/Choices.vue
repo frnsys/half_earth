@@ -120,7 +120,7 @@ export default {
   padding: 0;
 }
 .choice-text {
-  margin: 1em 0 0.5em 0;
+  margin: 2em 0 1em;
   font-weight: bold;
 }
 .choice-summary {
@@ -140,12 +140,12 @@ export default {
 .choice-type {
 	text-transform: uppercase;
 	position: absolute;
-	right: -1.5em;
-	top: -0.5em;
+	right: 50%;
 	font-size: 0.6em;
-	background: #333;
-	color: #fff;
+  background: #ffc9b3;
 	padding: 0.2em 0.4em;
 	border-radius: 0.2em;
+	border: 1px solid #000;
+	transform: translate(50%, -50%);
 }
 </style>

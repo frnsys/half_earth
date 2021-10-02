@@ -122,7 +122,7 @@ export default {
   display: inline-block;
   padding: 0.25em;
   border: 1px solid #856363;
-  background: #F49D69;
+  background: #FABA93;
   border-radius: 0.2em;
   width: 70px;
 }

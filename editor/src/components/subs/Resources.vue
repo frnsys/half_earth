@@ -13,11 +13,9 @@
     </div>
   </div>
   <ul v-else-if="validResources.length > 0" class="kind-summaries">
-    <li v-for="k in validResources">
-      <div class="kind-summary">
-        <div class="kind-name">{{k}}</div>
-        <div class="kind-value">{{localData[k]}} {{RESOURCES[k]}}</div>
-      </div>
+    <li v-for="k in validResources" class="summary-pill">
+      <div>{{k}}</div>
+      <div>{{localData[k]}} {{RESOURCES[k]}}</div>
     </li>
   </ul>
   <div v-else>

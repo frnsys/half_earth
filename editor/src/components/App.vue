@@ -481,26 +481,8 @@ nav {
   line-height: 1.5;
 }
 
-.kind-summaries li {
-  display: inline-block;
-}
-.kind-summary {
-  font-size: 0.7em;
-  display: flex;
-  border: 1px solid #aaa;
-  border-radius: 0.2em;
-  margin: 0.5em 0.5em 0 0;
-}
-.kind-name {
-  padding: 0.1em 0.4em;
-  border-right: 1px solid #aaa;
-  background: #e9d06d;
-}
-.kind-value {
-  padding: 0.1em 0.4em;
-}
 .missing-defined {
-  background: #D82828;
+  background: #F54242;
   border: 1px solid #613232;
   color: #fff;
   margin: 0.5em auto;
@@ -509,5 +491,42 @@ nav {
   border-radius: 0.2em;
   text-align: center;
   font-size: 0.8em;
+}
+
+.summary-pill {
+  display: inline-flex !important;
+  font-size: 0.7em;
+  border: 1px solid #000;
+  border-radius: 0.2em;
+  margin: 0.1em 0.5em 0.1em 0;
+  line-height: 1;
+  background: #ececec;
+  vertical-align: middle;
+}
+.summary-pill > div {
+  padding: 0.2em 0.3em;
+}
+.summary-pill > div:first-child {
+  border-right: 1px solid #000;
+  display: flex;
+  align-items: center;
+}
+.summary-pill.invalid > div:first-child {
+  background: #F54242;
+}
+.summary-pill.invalid {
+  background: #F54242;
+  color: #fff;
+  font-weight: bold;
+}
+.summary-pill.invalid::before {
+  content: '!';
+  padding: 0 0.5em;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1.3;
+}
+.kind-summaries .summary-pill > div:first-child {
+  background: #e9d06d;
 }
 </style>
