@@ -48,10 +48,10 @@ export default {
       if (spec.entity) {
         let items = this.itemsOfType(spec.entity);
         let match = items.find(el => el.id == effect.entity);
-        str += `:${match.name}`;
+        str += ` 🠖 ${match.name}`;
       }
       if (spec.params) {
-        str += `:${Object.keys(spec.params).map((k) => {
+        str += ` 🠖 ${Object.keys(spec.params).map((k) => {
           return (effect.params[k] !== undefined && effect.params[k] !== '') ? effect.params[k] : '[MISSING]';
         }).join(',')}`;
       }
@@ -70,6 +70,7 @@ export default {
   border-radius: 0.2em;
   border: 1px solid #979869;
   margin: 0.1em 0.5em 0.1em 0 !important;
+  line-height: 1;
 }
 .effects-summary .effect-summary.invalid {
   background: #D82828;
