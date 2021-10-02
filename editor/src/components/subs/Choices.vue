@@ -38,6 +38,7 @@
       </template>
       <div v-else :class="flags(choice)" class="choice-summary">
         <div v-if="choice.text">
+          <div class="choice-type" v-if="choice.type && choice.type !== 'none'">{{ choice.type }}</div>
           <div class="choice-text">{{ choice.text }}</div>
           <template v-if="choice.effects && choice.effects.length > 0">
             <EffectsSummary :effects="choice.effects" />
@@ -125,6 +126,7 @@ export default {
 .choice-summary {
   display: flex;
   height: 100%;
+  position: relative;
 }
 .choice-summary.invalid {
   align-items: center;
@@ -134,5 +136,16 @@ export default {
 }
 .choice-conditions span {
   font-size: 0.8em;
+}
+.choice-type {
+	text-transform: uppercase;
+	position: absolute;
+	right: -1.5em;
+	top: -0.5em;
+	font-size: 0.6em;
+	background: #333;
+	color: #fff;
+	padding: 0.2em 0.4em;
+	border-radius: 0.2em;
 }
 </style>
