@@ -7,6 +7,15 @@
     </label>
     <textarea class="title" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
   </div>
+
+  <div>
+    <label>
+      Description
+      <Tip>A more detailed narrative description of the event.</Tip>
+    </label>
+    <textarea placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
+  </div>
+
   <fieldset>
     <div>
       <label>
@@ -38,57 +47,9 @@
     </div>
   </fieldset>
 
-  <div>
-    <label>
-      Description
-      <Tip>A more detailed narrative description of the event.</Tip>
-    </label>
-    <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
-  </div>
-
   <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
-
-  <div class="field-group">
-    <h3>Event Effects</h3>
-    <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
-  </div>
-
-  <div class="choices" v-if="localData.decision">
-    <div class="field-group" v-for="(choice, i) in localData.choices">
-      <h3>Choice {{i+1}}</h3>
-      <div>
-        <label>
-          Choice Text
-          <Tip>The text representing this choice, presented to the player.</Tip>
-        </label>
-        <input type="text" placeholder="Choice text" v-model="choice.text" @blur="save" :class="choiceFlag(i, 'text')" />
-      </div>
-      <div>
-        <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
-      </div>
-
-      <div class="radio">
-        <label>Type:</label>
-        <div>
-          <label :for="`${item.id}-${i}-none`">None</label>
-          <input :id="`${item.id}-${i}-none`" type="radio" v-model="choice.type" value="none" @change="save">
-        </div>
-        <div>
-          <label :for="`${item.id}-${i}-malthusian`">Malthusian</label>
-          <input :id="`${item.id}-${i}-malthusian`" type="radio" v-model="choice.type" value="malthusian" @change="save">
-        </div>
-        <div>
-          <label :for="`${item.id}-${i}-falc`">FALC</label>
-          <input :id="`${item.id}-${i}-falc`" type="radio" v-model="choice.type" value="falc" @change="save">
-        </div>
-        <div>
-          <label :for="`${item.id}-${i}-hes`">HES</label>
-          <input :id="`${item.id}-${i}-hes`" type="radio" v-model="choice.type" value="hes" @change="save">
-        </div>
-      </div>
-      <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
-    </div>
-  </div>
+  <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
+  <Choices :id="item.id" :choices="localData.choices" v-if="localData.decision" @update="saveData('choices', $event)"/>
 
   <div>
     <label>
@@ -104,8 +65,12 @@
 
 <script>
 import ItemMixin from './ItemMixin';
+import Choices from '../subs/Choices.vue';
 
 export default {
+  components: {
+    Choices
+  },
   mounted() {
     if (!this.localData.choices) {
       this.localData.choices = [...Array(4)].map(() => ({
@@ -114,20 +79,6 @@ export default {
         effects: []
       }));
       this.save();
-    }
-  },
-  methods: {
-    saveChoiceEffects(i, effects) {
-      this.localData.choices[i].effects = effects;
-      this.save();
-    },
-    saveChoiceConditions(i, conditions) {
-      this.localData.choices[i].conditions = conditions;
-      this.save();
-    },
-    choiceFlag(i, key) {
-      let val = this.localData.choices[i][key];
-      return {invalid: !(val && val.length > 0)};
     }
   },
   computed: {
@@ -141,14 +92,3 @@ export default {
   mixins: [ItemMixin]
 };
 </script>
-
-<style>
-.choices {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-.choices .field-group {
-  width: 49%;
-}
-</style>

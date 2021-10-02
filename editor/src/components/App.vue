@@ -268,10 +268,11 @@ fieldset > div:first-child {
 .field-group label {
 	background: #ddd;
 	padding: 0.1em 0.0 0.1em 0.25em;
+  align-items: center;
 }
 .field-group h3 {
   margin: 0.4em 0 0 0;
-  font-size: 1em;
+  font-size: 0.7em;
 }
 .radio {
   display: flex;
@@ -362,7 +363,7 @@ ul, li {
   list-style-type: none;
 }
 
-.items li {
+.items .item {
   margin: 4em 0;
 }
 
@@ -478,5 +479,35 @@ nav {
 .count {
   margin-left: 0.5em;
   line-height: 1.5;
+}
+
+.kind-summaries li {
+  display: inline-block;
+}
+.kind-summary {
+  font-size: 0.7em;
+  display: flex;
+  border: 1px solid #aaa;
+  border-radius: 0.2em;
+  margin: 0.5em 0.5em 0 0;
+}
+.kind-name {
+  padding: 0.1em 0.4em;
+  border-right: 1px solid #aaa;
+  background: #e9d06d;
+}
+.kind-value {
+  padding: 0.1em 0.4em;
+}
+.missing-defined {
+  background: #D82828;
+  border: 1px solid #613232;
+  color: #fff;
+  margin: 0.5em auto;
+  display: block;
+  width: 50px;
+  border-radius: 0.2em;
+  text-align: center;
+  font-size: 0.8em;
 }
 </style>

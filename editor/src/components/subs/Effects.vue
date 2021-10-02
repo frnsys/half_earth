@@ -2,25 +2,34 @@
 <div class="effects">
   <label>
     Effects
-    <button @click="addEffect">+ Effect</button>
+    <div>
+      <button @click="addEffect">+ Effect</button>
+      <button v-if="toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+    </div>
   </label>
-  <ul v-for="effect in localData" :key="effect.id">
-    <li><Effect :effect="effect" @update="update" /> <button @click="() => deleteEffect(effect)">X</button></li>
+  <ul v-if="editing">
+    <li v-for="effect in localData" :key="effect.id">
+      <Effect :effect="effect" @update="update" /> <button @click="() => deleteEffect(effect)">X</button>
+    </li>
   </ul>
+  <EffectsSummary v-else :effects="localData" />
 </div>
 </template>
 
 <script>
 import uuid from '../../uuid';
 import Effect from './Effect.vue';
+import EffectsSummary from './EffectsSummary.vue';
 
 export default {
-  props: ['effects'],
+  props: ['effects', 'toggle'],
   components: {
-    Effect
+    Effect,
+    EffectsSummary
   },
   data() {
     return {
+      editing: this.toggle ? false : true,
       localData: this.effects || []
     };
   },
@@ -40,17 +49,26 @@ export default {
         params: {'Change': 0}
       });
       this.update();
+      this.editing = true;
     },
   }
 }
 </script>
 
 <style>
+.effects {
+	background: #f5f5f5;
+	padding: 0 0.5em 0.5em 0.5em;
+	border: 1px solid #aaa;
+	margin-top: 0.5em;
+}
 .effects label {
   align-items: center;
 }
 .effects label button {
   font-size: 0.95em;
+  line-height: 1.2;
+  margin-left: 0.5em;
 }
 .effects li {
   margin: 0 !important;

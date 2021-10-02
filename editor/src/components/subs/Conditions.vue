@@ -2,10 +2,14 @@
 <div class="conditions">
   <label>
     Conditions
-    <button @click="addCondition">+ Condition</button>
+    <div>
+      <button @click="addCondition">+ Condition</button>
+    </div>
   </label>
-  <ul v-for="condition in localData" :key="condition.id">
-    <li><Condition :condition="condition" @update="update" /> <button @click="() => deleteCondition(condition)">X</button></li>
+  <ul>
+    <li v-for="condition in localData" :key="condition.id">
+      <Condition :condition="condition" @update="update" /> <button @click="() => deleteCondition(condition)">X</button>
+    </li>
   </ul>
 </div>
 </template>
@@ -17,7 +21,7 @@ import Condition from './Condition.vue';
 export default {
   props: ['conditions'],
   components: {
-    Condition
+    Condition,
   },
   data() {
     return {
@@ -52,6 +56,8 @@ export default {
 }
 .conditions label button {
   font-size: 0.95em;
+  margin-left: 0.5em;
+  line-height: 1.2;
 }
 .conditions li {
   margin: 0 !important;
@@ -65,4 +71,3 @@ export default {
   flex: 1;
 }
 </style>
-

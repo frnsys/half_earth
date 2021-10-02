@@ -41,42 +41,16 @@
   </div>
   <div class="field-group">
     <h3>Implementation (per year)</h3>
-    <div>
-      <label>
-        Resource Requirements
-        <Tip>What resources are required for the projects's construction</Tip>
-      </label>
-      <Resources :resources="localData.construction" @update="saveData('construction', $event)"/>
-    </div>
-    <div>
-      <label>
-        Byproducts
-        <Tip>The byproducts of the project's construction</Tip>
-      </label>
-      <Byproducts :byproducts="localData.construction_byproducts" @update="saveData('construction_byproducts', $event)"/>
-    </div>
+    <Resources :resources="localData.construction" @update="saveData('construction', $event)"/>
+    <Byproducts :byproducts="localData.construction_byproducts" @update="saveData('construction_byproducts', $event)"/>
   </div>
   <div class="field-group" v-if="localData.ongoing">
     <h3>Maintenance (per year)</h3>
-    <div>
-      <label>
-        Resource Requirements
-        <Tip>What resources are required for the projects's maintenance</Tip>
-      </label>
-      <Resources :resources="localData.maintenance" @update="saveData('maintenance', $event)"/>
-    </div>
-    <div>
-      <label>
-        Byproducts
-        <Tip>The byproducts of the project's maintenance</Tip>
-      </label>
-      <Byproducts :byproducts="localData.maintenance_byproducts" @update="saveData('maintenance_byproducts', $event)"/>
-    </div>
+    <Resources :resources="localData.maintenance" @update="saveData('maintenance', $event)"/>
+    <Byproducts :byproducts="localData.maintenance_byproducts" @update="saveData('maintenance_byproducts', $event)"/>
   </div>
 
-  <div class="field-group">
-    <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
-  </div>
+  <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
 
   <div>
     <label>

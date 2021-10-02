@@ -27,3 +27,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.probability > select {
+  background: #F49D69;
+}
+</style>

@@ -34,20 +34,8 @@
   </div>
 
   <div class="field-group">
-    <div>
-      <label>
-        Resource Requirements
-        <Tip>What resources are required per unit output of the process.</Tip>
-      </label>
-      <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
-    </div>
-    <div>
-      <label>
-        Byproducts
-        <Tip>The byproducts per unit output of the process.</Tip>
-      </label>
-      <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
-    </div>
+    <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
+    <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
   </div>
 
   <div>

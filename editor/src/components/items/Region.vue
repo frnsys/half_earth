@@ -53,13 +53,7 @@
       </label>
       <Outputs :outputs="localData.demand" @update="saveData('demand', $event)"/>
     </div>
-    <div>
-      <label>
-        Everything Else
-        <Tip>Other per-capita demand not captured by the above.</Tip>
-      </label>
-      <Resources :resources="localData.other_demand" @update="saveData('other_demand', $event)"/>
-    </div>
+    <Resources :resources="localData.other_demand" @update="saveData('other_demand', $event)"/>
   </div>
 
   <div>

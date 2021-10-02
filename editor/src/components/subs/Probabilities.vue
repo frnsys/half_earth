@@ -2,10 +2,13 @@
 <div class="probabilities">
   <label>
     Probabilities
-    <button @click="addProbability">+ Probability</button>
+    <div>
+      <button @click="addProbability">+ Probability</button>
+      <button @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+    </div>
   </label>
-  <ul v-for="(probability, i) in localData" :key="probability.id">
-    <li>
+  <ul v-if="editing">
+    <li v-for="(probability, i) in localData" :key="probability.id">
       <Probability :probability="probability" @update="update" />
       <div class="subitem-actions">
         <button @click="() => deleteProbability(probability)">X</button>
@@ -14,20 +17,30 @@
       </div>
     </li>
   </ul>
+  <ul v-else class="probabilities-summary">
+    <li v-for="probability in localData" :key="probability.id">
+      <div class="probability-type">{{ probability.type }}</div>
+      <span> if </span>
+      <ConditionsSummary :conditions="probability.conditions" />
+    </li>
+  </ul>
 </div>
 </template>
 
 <script>
 import uuid from '../../uuid';
 import Probability from './Probability.vue';
+import ConditionsSummary from './ConditionsSummary.vue';
 
 export default {
   props: ['probabilities'],
   components: {
-    Probability
+    Probability,
+    ConditionsSummary
   },
   data() {
     return {
+      editing: false,
       localData: this.probabilities || []
     };
   },
@@ -53,6 +66,7 @@ export default {
         conditions: [],
       });
       this.update();
+      this.editing = true;
     },
   }
 }
@@ -65,7 +79,7 @@ export default {
 	border: 1px solid #aaa;
 	margin-top: 0.5em;
 }
-.probabilities li {
+.probabilities > ul > li {
   margin: 0.5em 0 0 0 !important;
   display: flex;
   background: #e8e8e8;
@@ -80,6 +94,8 @@ export default {
 }
 .probabilities > label button {
   font-size: 0.9em;
+  line-height: 1.2;
+  margin-left: 0.5em;
 }
 .probability {
   flex: 1;
@@ -90,5 +106,24 @@ export default {
 .subitem-actions button {
   display: block;
 }
+.probabilities-summary .conditions-summary {
+  margin: 0;
+  display: inline-block;
+}
+.probabilities-summary > li {
+  display: block !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: 0 !important;
+	border: 0 !important;
+}
+.probability-type {
+  font-size: 0.7em;
+  display: inline-block;
+  padding: 0.25em;
+  border: 1px solid #856363;
+  background: #F49D69;
+  border-radius: 0.2em;
+  width: 70px;
+}
 </style>
-

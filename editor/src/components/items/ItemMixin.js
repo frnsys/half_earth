@@ -20,7 +20,7 @@ export default {
   components: {
     Tip, Flags, Notes, Effects,
     Outputs, Resources, Byproducts,
-    Conditions, Probabilities
+    Conditions, Probabilities,
   },
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {
