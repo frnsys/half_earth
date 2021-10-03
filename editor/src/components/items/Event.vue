@@ -16,8 +16,8 @@
     <textarea class="title" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
   </div>
 
-  <div v-if="variables.length > 0">
-    Variables:
+  <div class="event-variables" v-if="variables.length > 0">
+      <span>Variables:</span>
       <div class="summary-pill event-variable" v-for="v in variables" :class="{invalid:v.invalid}">
         <div>{{v.name}}</div>
         <div>
@@ -123,3 +123,26 @@ export default {
   mixins: [ItemMixin]
 };
 </script>
+
+<style>
+.event-variables {
+	background: #eee;
+	padding: 0.25em;
+  border: 1px solid #aaa;
+}
+.event-variables > span {
+	font-size: 0.8em;
+	margin-right: 0.5em;
+}
+.event-variables .summary-pill > div:first-child {
+  background: #ffc1fb;
+}
+.event-variables .summary-pill > div {
+  background: #c3c3c3;
+}
+.event-variable .tip-icon {
+  color: #2e2a2a;
+  border-color: #2e2a2a;
+  background: #eee;
+}
+</style>
