@@ -16,6 +16,17 @@
     <textarea class="title" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
   </div>
 
+  <div v-if="variables.length > 0">
+    Variables:
+      <div class="summary-pill event-variable" v-for="v in variables" :class="{invalid:v.invalid}">
+        <div>{{v.name}}</div>
+        <div>
+          <Tip v-if="v.values.length > 0" :width="100"><div v-for="val in v.values">{{val}}</div></Tip>
+          <template v-else>NO VALUES DEFINED</template>
+        </div>
+      </div>
+  </div>
+
   <fieldset>
     <div>
       <label>
@@ -64,6 +75,7 @@
 </template>
 
 <script>
+import state from '../../state';
 import ItemMixin from './ItemMixin';
 import Choices from '../subs/Choices.vue';
 
@@ -87,6 +99,25 @@ export default {
     },
     questionKeys() {
       return ['name', 'description'];
+    },
+    variables() {
+      let definedVariables = Object.values(state.items)
+        .filter((i) => i._type == 'Variable')
+        .reduce((acc, v) => {
+          acc[v.name] = (v.values || '').split('\n').filter((x) => x !== '');
+          return acc;
+        }, {});
+      let matches = [...(this.localData.description || '').matchAll('\{([a-z_]+)\}')];
+      return matches.map((group) => {
+        let name = group[1];
+        let defined = Object.keys(definedVariables).includes(name);
+        let values = definedVariables[name];
+        return {
+          name,
+          values,
+          invalid: (!defined) || values.length == 0
+        }
+      });
     },
   },
   mixins: [ItemMixin]

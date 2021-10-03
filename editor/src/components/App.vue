@@ -6,6 +6,7 @@
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
   <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
   <div class="tab" :class="{selected: type == 'Flag'}" @click="() => type = 'Flag'">Flags</div>
+  <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
 </nav>
 <div class="items" :class="type">
   <template v-if="type == 'Process'">
@@ -25,6 +26,9 @@
   </template>
   <template v-if="type == 'Flag'">
     <Flag v-for="f in itemsOfType" :item="f" />
+  </template>
+  <template v-if="type == 'Variable'">
+    <Variable v-for="v in itemsOfType" :item="v" />
   </template>
 </div>
 <div class="sidebar">
@@ -65,6 +69,7 @@ import Region from './items/Region.vue';
 import Project from './items/Project.vue';
 import Process from './items/Process.vue';
 import Earth from './items/Earth.vue';
+import Variable from './items/Variable.vue';
 import Flag from './items/Flag.vue';
 
 export default {
@@ -84,6 +89,7 @@ export default {
     Project,
     Process,
     Flag,
+    Variable,
   },
   methods: {
     addNew(type) {
@@ -182,8 +188,13 @@ export default {
           break;
         case 'Flag':
           key = 'name';
-          required =['name', 'desc']
+          required =['name', 'desc'];
           questions = ['desc'];
+          break;
+        case 'Variable':
+          key = 'name';
+          required =['name', 'values'];
+          questions = ['name', 'values'];
           break;
       }
       return this.itemsOfType.map((i) => ({
