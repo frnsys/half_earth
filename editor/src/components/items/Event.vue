@@ -2,14 +2,6 @@
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <div>
     <label>
-      Short Name
-      <Tip>The short name of the event</Tip>
-    </label>
-    <input type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
-  </div>
-
-  <div>
-    <label>
       Description
       <Tip>A more detailed narrative description of the event.</Tip>
     </label>
@@ -28,6 +20,13 @@
   </div>
 
   <fieldset>
+    <div>
+      <label>
+        Short Name
+        <Tip>The short name of the event to uniquely identify this event.</Tip>
+      </label>
+      <input type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+    </div>
     <div>
       <label>
         Story Arc (optional)
