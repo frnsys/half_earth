@@ -2,34 +2,27 @@
 <div class="effects">
   <label>
     Effects
-    <div>
-      <button @click="addEffect">+ Effect</button>
-      <button v-if="toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
-    </div>
+    <button @click="addEffect">+ Effect</button>
   </label>
-  <ul v-if="editing">
+  <ul>
     <li v-for="effect in localData" :key="effect.id">
       <Effect :effect="effect" @update="update" /> <button @click="() => deleteEffect(effect)">X</button>
     </li>
   </ul>
-  <EffectsSummary v-else :effects="localData" />
 </div>
 </template>
 
 <script>
 import uuid from '../../uuid';
 import Effect from './Effect.vue';
-import EffectsSummary from './EffectsSummary.vue';
 
 export default {
-  props: ['effects', 'toggle'],
+  props: ['effects'],
   components: {
     Effect,
-    EffectsSummary
   },
   data() {
     return {
-      editing: this.toggle ? false : true,
       localData: this.effects || []
     };
   },
@@ -49,7 +42,6 @@ export default {
         params: {'Change': 0}
       });
       this.update();
-      this.editing = true;
     },
   }
 }

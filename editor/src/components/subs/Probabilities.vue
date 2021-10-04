@@ -2,12 +2,9 @@
 <div class="probabilities">
   <label>
     Probabilities
-    <div>
-      <button @click="addProbability">+ Probability</button>
-      <button @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
-    </div>
+    <button @click="addProbability">+ Probability</button>
   </label>
-  <ul v-if="editing">
+  <ul>
     <li v-for="(probability, i) in localData" :key="probability.id">
       <Probability :probability="probability" @update="update" />
       <div class="subitem-actions">
@@ -15,13 +12,6 @@
         <button v-if="i > 0" @click="() => moveProbability(i, i-1)">ᐱ</button>
         <button v-if="i < localData.length - 1" @click="() => moveProbability(i, i+1)">ᐯ</button>
       </div>
-    </li>
-  </ul>
-  <ul v-else class="probabilities-summary">
-    <li v-for="probability in localData" :key="probability.id">
-      <div class="probability-type">{{ probability.type }}</div>
-      <span> if </span>
-      <ConditionsSummary :conditions="probability.conditions" />
     </li>
   </ul>
 </div>
@@ -40,7 +30,6 @@ export default {
   },
   data() {
     return {
-      editing: false,
       localData: this.probabilities || []
     };
   },
@@ -66,7 +55,6 @@ export default {
         conditions: [],
       });
       this.update();
-      this.editing = true;
     },
   }
 }
@@ -105,25 +93,5 @@ export default {
 }
 .subitem-actions button {
   display: block;
-}
-.probabilities-summary .conditions-summary {
-  margin: 0;
-  display: inline-block;
-}
-.probabilities-summary > li {
-  display: block !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	background: 0 !important;
-	border: 0 !important;
-}
-.probability-type {
-  font-size: 0.7em;
-  display: inline-block;
-  padding: 0.25em;
-  border: 1px solid #856363;
-  background: #FABA93;
-  border-radius: 0.2em;
-  width: 70px;
 }
 </style>

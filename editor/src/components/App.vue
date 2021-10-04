@@ -1,12 +1,12 @@
 <template>
 <nav>
+  <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
+  <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
   <div class="tab" :class="{selected: type == 'Process'}" @click="() => type = 'Process'">Processes</div>
   <div class="tab" :class="{selected: type == 'Project'}" @click="() => type = 'Project'">Projects</div>
-  <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
-  <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
-  <div class="tab" :class="{selected: type == 'Flag'}" @click="() => type = 'Flag'">Flags</div>
   <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
+  <div class="tab" :class="{selected: type == 'Flag'}" @click="() => type = 'Flag'">Flags</div>
 </nav>
 <div class="items" :class="type">
   <template v-if="type == 'Process'">
@@ -71,6 +71,7 @@ import Process from './items/Process.vue';
 import Earth from './items/Earth.vue';
 import Variable from './items/Variable.vue';
 import Flag from './items/Flag.vue';
+import validate from '../validate';
 
 export default {
   data() {
@@ -157,54 +158,14 @@ export default {
       }
     },
     tableOfContents() {
-      let key;
-      let required;
-      let questions;
-      switch (this.type) {
-        case 'Event':
-          key = 'name';
-          required = ['name', 'description'];
-          questions = ['name', 'description', 'notes'];
-          break;
-        case 'Project':
-          key = 'name';
-          required = ['name', 'description', 'type'];
-          questions = ['name', 'description', 'notes'];
-          break;
-        case 'Process':
-          key = 'name';
-          required = ['name', 'description', 'output'];
-          questions = ['name', 'description', 'notes'];
-          break;
-        case 'Region':
-          key = 'name';
-          required = ['name', 'description', 'countries', 'satiety', 'safety', 'health', 'outlook'];
-          questions = ['name', 'description', 'countries', 'notes'];
-          break;
-        case 'Earth':
-          key = 'year';
-          required =['year', 'emissions', 'atmospheric_ghg', 'biodiversity', 'temperature', 'ozone_damage'];
-          questions = ['year'];
-          break;
-        case 'Flag':
-          key = 'name';
-          required =['name', 'desc'];
-          questions = ['desc'];
-          break;
-        case 'Variable':
-          key = 'name';
-          required =['name', 'values'];
-          questions = ['name', 'values'];
-          break;
-      }
+      let spec = validate[this.type];
       return this.itemsOfType.map((i) => ({
         id: i.id,
-        label: i[key],
-        invalid: required.some((k) => {
-          let val = i[k];
-          return !(val && val !== '');
+        label: i[spec.key],
+        invalid: !spec.required.every((k) => {
+          return spec.validateKey(i, k);
         }),
-        questions: questions.some((k) => {
+        questions: spec.questions.some((k) => {
           let val = i[k];
           return val && val.includes('?');
         })
@@ -364,7 +325,10 @@ input[type=number] {
 }
 
 .item {
-  position: relative;
+	position: relative;
+	background: #f8f8f8;
+	padding: 0.25em 0.5em;
+  border: 1px solid #aaa;
 }
 
 
@@ -375,7 +339,7 @@ ul, li {
 }
 
 .items .item {
-  margin: 4em 0;
+  margin: 2em 0;
 }
 
 nav {
@@ -496,12 +460,12 @@ nav {
   background: #F54242;
   border: 1px solid #613232;
   color: #fff;
-  margin: 0.5em auto;
-  display: block;
-  width: 50px;
+  display: inline-block;
   border-radius: 0.2em;
   text-align: center;
   font-size: 0.8em;
+  margin: 0.25em 0;
+  padding: 0 0.25em;
 }
 
 .summary-pill {
@@ -516,11 +480,12 @@ nav {
 }
 .summary-pill > div {
   padding: 0.2em 0.3em;
+  border-left: 1px solid #000;
 }
 .summary-pill > div:first-child {
-  border-right: 1px solid #000;
   display: flex;
   align-items: center;
+  border-left: none;
 }
 .summary-pill.invalid > div:first-child {
   background: #F54242;
@@ -539,5 +504,56 @@ nav {
 }
 .kind-summaries .summary-pill > div:first-child {
   background: #e9d06d;
+}
+
+.item-meta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(0, -50%);
+  display: flex;
+  width: 100%;
+}
+.meta-pill {
+	font-size: 0.7em;
+	border: 1px solid #000;
+	padding: 0.1em 0.2em;
+	border-radius: 0.2em;
+  background: #d282ff;
+  margin-right: 0.5em;
+  line-height: 1;
+}
+.item-summary {
+  padding: 0.5em;
+  position: relative;
+}
+.item-summary-details {
+  display: flex;
+  margin: 1em 0;
+  border-top: 1px solid #aaa;
+  padding-top: 1em;
+}
+.item-summary-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+.item-summary-title.invalid,
+.item-summary-desc.invalid {
+  color: #F54242;
+  text-align: center;
+}
+.item-missing.invalid {
+  color: #F54242;
+  font-weight: bold;
+  text-align: center;
+}
+.edit-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  transform: translate(0, -50%);
+  font-size: 1.2em;
 }
 </style>

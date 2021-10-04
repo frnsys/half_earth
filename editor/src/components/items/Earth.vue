@@ -1,5 +1,6 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
+  <Flags :invalid="invalid" :questions="questions" />
   <div>
     <label>
       Year
@@ -24,10 +25,10 @@
     </div>
     <div>
       <label>
-        Biodiversity (unit?)
-        <Tip>Starting biodiversity.</Tip>
+        Extinction Rate (e/msy)
+        <Tip>Starting extinction rate.</Tip>
       </label>
-      <input v-model="localData.biodiversity" type="number" min="0" @blur="save" :class="flags('biodiversity')">
+      <input v-model="localData.extinction_rate" type="number" min="0" @blur="save" :class="flags('extinction_rate')">
     </div>
     <div>
       <label>
@@ -59,16 +60,7 @@
 
 <script>
 import ItemMixin from './ItemMixin';
-
 export default {
-  computed: {
-    validateKeys() {
-      return ['year', 'emissions', 'atmospheric_ghg', 'biodiversity', 'temperature', 'ozone_damage'];
-    },
-    questionKeys() {
-      return ['year'];
-    },
-  },
   mixins: [ItemMixin]
 };
 </script>

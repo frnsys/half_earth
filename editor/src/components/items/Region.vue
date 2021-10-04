@@ -1,18 +1,12 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
+  <Flags :invalid="invalid" :questions="questions" />
   <div>
     <label>
       Name
       <Tip>The name of the region.</Tip>
     </label>
     <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
-  </div>
-  <div>
-    <label>
-      Countries
-      <Tip>The countries that are aggreated to form this region.</Tip>
-    </label>
-    <input type="text" placeholder="Countries" v-model="localData.countries" @blur="save" :class="flags('countries')" />
   </div>
   <fieldset>
     <div>
@@ -70,16 +64,7 @@
 
 <script>
 import ItemMixin from './ItemMixin';
-
 export default {
-  computed: {
-    validateKeys() {
-      return ['name', 'description', 'countries', 'satiety', 'safety', 'health', 'outlook'];
-    },
-    questionKeys() {
-      return ['name', 'description', 'countries'];
-    },
-  },
   mixins: [ItemMixin]
 };
 </script>

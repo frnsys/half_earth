@@ -2,53 +2,37 @@
 <div class="responses">
   <label>
     Responses
-    <button @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
   </label>
   <div class="choices">
     <div class="field-group" v-for="(choice, i) in localData">
-      <template v-if="editing">
-        <div>
-          <label>
-            Choice Text
-            <Tip>The text representing this choice, presented to the player.</Tip>
-          </label>
-          <input type="text" placeholder="Choice text" v-model="choice.text" @blur="update" :class="choiceFlag(i, 'text')" />
-        </div>
-        <div class="radio">
-          <label>Type:</label>
-          <div>
-            <label :for="`${id}-${i}-none`">None</label>
-            <input :id="`${id}-${i}-none`" type="radio" v-model="choice.type" value="none" @change="update">
-          </div>
-          <div>
-            <label :for="`${id}-${i}-malthusian`">Malthusian</label>
-            <input :id="`${id}-${i}-malthusian`" type="radio" v-model="choice.type" value="malthusian" @change="update">
-          </div>
-          <div>
-            <label :for="`${id}-${i}-falc`">FALC</label>
-            <input :id="`${id}-${i}-falc`" type="radio" v-model="choice.type" value="falc" @change="update">
-          </div>
-          <div>
-            <label :for="`${id}-${i}-hes`">HES</label>
-            <input :id="`${id}-${i}-hes`" type="radio" v-model="choice.type" value="hes" @change="update">
-          </div>
-        </div>
-        <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
-        <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
-      </template>
-      <div v-else :class="flags(choice)" class="choice-summary">
-        <div v-if="choice.text">
-          <div class="choice-type" v-if="choice.type && choice.type !== 'none'">{{ choice.type }}</div>
-          <div class="choice-text">{{ choice.text }}</div>
-          <template v-if="choice.effects && choice.effects.length > 0">
-            <EffectsSummary :effects="choice.effects" />
-          </template>
-          <div class="choice-conditions" v-if="choice.conditions && choice.conditions.length > 0">
-            <span>Available if:</span> <ConditionsSummary :conditions="choice.conditions" />
-          </div>
-        </div>
-        <div class="missing-defined" v-else>None</div>
+      <div>
+        <label>
+          Choice Text
+          <Tip>The text representing this choice, presented to the player.</Tip>
+        </label>
+        <input type="text" placeholder="Choice text" v-model="choice.text" @blur="update" :class="choiceFlag(i, 'text')" />
       </div>
+      <div class="radio">
+        <label>Type:</label>
+        <div>
+          <label :for="`${id}-${i}-none`">None</label>
+          <input :id="`${id}-${i}-none`" type="radio" v-model="choice.type" value="none" @change="update">
+        </div>
+        <div>
+          <label :for="`${id}-${i}-malthusian`">Malthusian</label>
+          <input :id="`${id}-${i}-malthusian`" type="radio" v-model="choice.type" value="malthusian" @change="update">
+        </div>
+        <div>
+          <label :for="`${id}-${i}-falc`">FALC</label>
+          <input :id="`${id}-${i}-falc`" type="radio" v-model="choice.type" value="falc" @change="update">
+        </div>
+        <div>
+          <label :for="`${id}-${i}-hes`">HES</label>
+          <input :id="`${id}-${i}-hes`" type="radio" v-model="choice.type" value="hes" @change="update">
+        </div>
+      </div>
+      <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
+      <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
     </div>
   </div>
 </div>
@@ -58,18 +42,14 @@
 import Tip from '../Tip.vue';
 import Effects from './Effects.vue';
 import Conditions from './Conditions.vue';
-import EffectsSummary from './EffectsSummary.vue';
-import ConditionsSummary from './ConditionsSummary.vue';
 
 export default {
   props: ['id', 'choices'],
   components: {
     Tip, Effects, Conditions,
-    EffectsSummary, ConditionsSummary
   },
   data() {
     return {
-      editing: false,
       localData: this.choices || []
     };
   },
@@ -118,34 +98,5 @@ export default {
 .choices .effects {
   border: none;
   padding: 0;
-}
-.choice-text {
-  margin: 2em 0 1em;
-  font-weight: bold;
-}
-.choice-summary {
-  display: flex;
-  height: 100%;
-  position: relative;
-}
-.choice-summary.invalid {
-  align-items: center;
-}
-.choice-summary .conditions-summary {
-  display: inline-block;
-}
-.choice-conditions span {
-  font-size: 0.8em;
-}
-.choice-type {
-	text-transform: uppercase;
-	position: absolute;
-	right: 50%;
-	font-size: 0.6em;
-  background: #ffc9b3;
-	padding: 0.2em 0.4em;
-	border-radius: 0.2em;
-	border: 1px solid #000;
-	transform: translate(50%, -50%);
 }
 </style>

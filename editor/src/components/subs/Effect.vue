@@ -19,11 +19,19 @@
         <option v-for="choice in itemsOfType(spec.entity)" :value="choice.id">{{choice.name}}</option>
       </select>
     </div>
-    <div>
+    <div class="effect-params">
       <div v-if="spec.params" v-for="name in Object.keys(spec.params)">
         <template v-if="spec.params[name] == Number">
           <label>{{name}}</label>
           <input type="number" :value="localData.params[name]" @change="(ev) => updateParam(name, ev.target.value)" :class="paramFlags(name)"/>
+        </template>
+        <template v-if="spec.params[name] == String">
+          <label>{{name}}</label>
+          <input type="text" :value="localData.params[name]" @change="(ev) => updateParam(name, ev.target.value)" :class="paramFlags(name)"/>
+        </template>
+        <template v-if="spec.params[name] == Boolean">
+          <label>{{name}}</label>
+          <input type="checkbox" :value="localData.params[name]" @change="(ev) => updateParam(name, ev.target.checked)" :class="paramFlags(name)"/>
         </template>
       </div>
     </div>
@@ -96,7 +104,7 @@ export default {
     },
     paramFlags(name) {
       return {
-        invalid: this.localData.params[name] === undefined || this.localData.params[name] == ''
+        invalid: this.localData.params[name] === undefined || this.localData.params[name] === ''
       };
     }
   }
@@ -113,8 +121,18 @@ export default {
   border: 1px solid #999;
   color: #000;
 }
-
 .ss-main.invalid .ss-single-selected {
   background: #F6DADA;
+}
+
+.effect-params {
+  flex-direction: row;
+}
+.effect-params > div {
+  flex: 1;
+  margin-right: 0.5em;
+}
+.effect-params > div:last-child {
+  margin-right: 0;
 }
 </style>

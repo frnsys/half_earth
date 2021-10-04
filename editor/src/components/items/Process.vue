@@ -1,78 +1,109 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
-  <div>
-    <label>
-      Name
-      <Tip>The name of the process.</Tip>
-    </label>
-    <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
-  </div>
-  <fieldset>
+  <Flags :invalid="invalid" :questions="questions" />
+  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <template v-if="editing">
     <div>
       <label>
-        Output
-        <Tip>What this output produces.</Tip>
+        Name
+        <Tip>The name of the process.</Tip>
       </label>
-      <select v-model="localData.output" @change="save" :class="flags('output')">
-        <option v-for="k in Object.keys(OUTPUTS)">{{k}} ({{OUTPUTS[k]}})</option>
-      </select>
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
     </div>
-    <div class="checkbox">
-      <label :for="`${item.id}_locked`">
-        Locked
-        <Tip>Is this process available to the player at the start?</Tip>
+    <fieldset>
+      <div>
+        <label>
+          Output
+          <Tip>What this output produces.</Tip>
+        </label>
+        <select v-model="localData.output" @change="save" :class="flags('output')">
+          <option v-for="k in Object.keys(OUTPUTS)" :value="k">{{k}} ({{OUTPUTS[k]}})</option>
+        </select>
+      </div>
+      <div class="checkbox">
+        <label :for="`${item.id}_locked`">
+          Locked
+          <Tip>Is this process available to the player at the start?</Tip>
+        </label>
+        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+      </div>
+    </fieldset>
+    <div>
+      <label>
+        Description
+        <Tip>A 1-2 sentence description of the process.</Tip>
       </label>
-      <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+      <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
     </div>
-  </fieldset>
-  <div>
-    <label>
-      Description
-      <Tip>A 1-2 sentence description of the process.</Tip>
-    </label>
-    <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
-  </div>
 
-  <div class="field-group">
-    <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
-    <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
-  </div>
+    <div class="field-group">
+      <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
+      <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
+    </div>
 
-  <div>
-    <label>
-      Process Features
-      <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
-    </label>
-    <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
-      <input type="checkbox" :id="`${item.id}_${k}`">
-      <label :for="`${item.id}_${k}`">{{k}}</label>
-      <Tip>{{PROCESS_FEATURES[k]}}</Tip>
+    <div>
+      <label>
+        Process Features
+        <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
+      </label>
+      <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
+        <input :checked="localData.features[k]" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
+        <label :for="`${item.id}_${k}`">{{k}}</label>
+        <Tip>{{PROCESS_FEATURES[k]}}</Tip>
+      </div>
+    </div>
+
+    <div>
+      <label>
+        Flavor Text/Dialogue
+        <Tip>Advisor dialogue introducing the event.</Tip>
+      </label>
+      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
+    </div>
+
+    <Notes :notes="localData.notes" @blur="saveNotes" />
+  </template>
+
+  <div v-else class="process-summary item-summary">
+    <div class="item-meta">
+      <div class="meta-pill">{{localData.output}}</div>
+      <div class="meta-pill" v-if="localData.locked">Locked</div>
+    </div>
+    <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
+    <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
+    <p class="item-summary-desc" v-if="localData.description">{{localData.description}}</p>
+    <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+    <div class="item-summary-details">
+      <div>
+        <span>Per {{OUTPUTS[localData.output]}}:</span>
+        <ResourcesSummary :resources="localData.reqs" />
+        <ByproductsSummary :byproducts="localData.byproducts" />
+      </div>
+      <div>
+        <template v-for="k in Object.keys(PROCESS_FEATURES)">
+          <div class="summary-pill feature-pill" v-if="localData.features[k]"><div>{{k}}</div></div>
+        </template>
+      </div>
+
     </div>
   </div>
-
-  <div>
-    <label>
-      Flavor Text/Dialogue
-      <Tip>Advisor dialogue introducing the event.</Tip>
-    </label>
-    <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
-  </div>
-
-  <Notes :notes="localData.notes" @blur="saveNotes" />
 </li>
 </template>
 
 <script>
 import ItemMixin from './ItemMixin';
-
 export default {
-  computed: {
-    validateKeys() {
-      return ['name', 'description', 'output'];
-    },
-    questionKeys() {
-      return ['name', 'description'];
-    },
+  mounted() {
+    if (!this.localData.features) {
+      this.localData.features = {};
+      this.save();
+    }
+  },
+  methods: {
+    updateFeature(key, val) {
+      this.localData.features[key] = val;
+      this.save();
+    }
   },
   mixins: [ItemMixin]
 };
@@ -93,5 +124,15 @@ export default {
 }
 .checkbox-feature .tip {
   font-size: 0.75em;
+}
+
+.process-summary .item-summary-details > * {
+  width: 50%;
+}
+.process-summary .meta-pill:first-child {
+	background: #82ff9b;
+}
+.process-summary .feature-pill {
+  background: #98dca6;
 }
 </style>

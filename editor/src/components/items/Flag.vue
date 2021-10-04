@@ -1,5 +1,6 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
+  <Flags :invalid="invalid" :questions="questions" />
   <fieldset>
     <div class="flag-name">
       <label>
@@ -21,16 +22,7 @@
 
 <script>
 import ItemMixin from './ItemMixin';
-
 export default {
-  computed: {
-    validateKeys() {
-      return ['name', 'desc'];
-    },
-    questionKeys() {
-      return ['name', 'desc'];
-    },
-  },
   mixins: [ItemMixin]
 };
 </script>

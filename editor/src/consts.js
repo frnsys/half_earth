@@ -1,10 +1,10 @@
 const OUTPUTS = {
   'Fuel': 'barrels?',
   'Electricity':	'kWh',
-  'PlantCalories': 'kcals',
-  'MeatCalories': 'kcals',
-  'Concrete': 'tons',
-  'Steel': 'tons',
+  'PlantCalories': 'kcal',
+  'MeatCalories': 'kcal',
+  'Concrete': 'ton',
+  'Steel': 'ton',
   // 'Project': 'points',	// Used for projects/policies/research
   // 'Misc': 'points',	    // Catch-all for outputs not represented here, e.g. healthcare, transportation, etc
 };
@@ -35,7 +35,7 @@ const BYPRODUCTS = {
   'CO2': 'tons',
   'Methane': 'tons',
   'Pollution': 'ppm?',
-  'Biodiversity': 'units?',
+  'Biodiversity': 'e/msy',
 }
 
 const PROCESS_FEATURES = {
@@ -53,7 +53,8 @@ const CONDITIONS = {
     compare: true,
     choices: [
       'Population', 'Health',
-      'Safety', 'Outlook', 'Satiety']
+      'Safety', 'Outlook', 'Satiety',
+      'Contentedness', 'Habitability']
   },
   WorldVariable: {
     compare: true,
@@ -89,6 +90,9 @@ const CONDITIONS = {
   ProjectStalled: {
     entity: 'Project',
   },
+  ProjectHalted: {
+    entity: 'Project',
+  },
   Flag: {
     entity: 'Flag',
   },
@@ -101,7 +105,8 @@ const EFFECTS = {
   LocalVariable: {
     choices: [
       'Population', 'Health',
-      'Safety', 'Outlook', 'Satiety'],
+      'Safety', 'Outlook', 'Satiety',
+      'BaseHabitability'],
     params: {
       'Change': Number
     }
@@ -142,12 +147,12 @@ const EFFECTS = {
   TriggerEvent: {
     entity: 'Event',
     params: {
-      'Delay (months)': Number
+      'Delay (months)': Number,
     }
   },
 
   AddEvent: {
-    entity: 'Event'
+    entity: 'Event',
   },
 
   UnlocksProject: {

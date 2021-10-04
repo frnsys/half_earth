@@ -9,11 +9,18 @@ import Resources from '../subs/Resources.vue';
 import Byproducts from '../subs/Byproducts.vue';
 import Conditions from '../subs/Conditions.vue';
 import Probabilities from '../subs/Probabilities.vue';
+import ProbabilitiesSummary from '../subs/ProbabilitiesSummary.vue';
+import EffectsSummary from '../subs/EffectsSummary.vue';
+import ChoicesSummary from '../subs/ChoicesSummary.vue';
+import ResourcesSummary from '../subs/ResourcesSummary.vue';
+import ByproductsSummary from '../subs/ByproductsSummary.vue';
+import validate from '../../validate';
 
 export default {
   props: ['item'],
   data() {
     return {
+      editing: false,
       localData: Object.assign({}, this.item)
     };
   },
@@ -21,6 +28,9 @@ export default {
     Tip, Flags, Notes, Effects,
     Outputs, Resources, Byproducts,
     Conditions, Probabilities,
+    ProbabilitiesSummary, EffectsSummary,
+    ChoicesSummary, ResourcesSummary,
+    ByproductsSummary
   },
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {
@@ -31,14 +41,17 @@ export default {
     });
   },
   computed: {
+    validator() {
+      let type = this.localData._type;
+      return validate[type];
+    },
     invalid() {
-      return this.validateKeys.filter((k) => {
-        let val = this.localData[k];
-        return !(val && val !== '');
+      return this.validator.required.filter((k) => {
+        return !this.validateKey(k);
       });
     },
     questions() {
-      return this.questionKeys.filter((k) => {
+      return this.validator.questions.filter((k) => {
         let val = this.localData[k];
         return val && val.includes('?');
       });
@@ -69,6 +82,12 @@ export default {
         invalid: this.invalid.includes(key),
         question: this.questions.includes(key)
       }
+    },
+    validateKey(key) {
+      return this.validator.validateKey(this.localData, key);
+    },
+    defined(key) {
+      return this.localData[key] !== undefined && this.localData[key] !== '';
     }
   }
 };
