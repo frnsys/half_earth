@@ -57,7 +57,7 @@ export default {
   border: 1px solid #888;
   margin-bottom: 0.2em;
   background: #e0e0e0;
-  padding: 0 1em 1em 1em;
+  padding: 1em;
   border-radius: 0.2em;
 }
 .choice-summary.invalid {

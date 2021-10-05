@@ -11,8 +11,20 @@ function requireAtLeastOne(val) {
   return val !== undefined && val.length > 0;
 }
 
+function requireNonEmptyObj(val) {
+  return val !== undefined && Object.keys(val).length > 0;
+}
+
 function requireOneOfChoice(val, choices) {
   return choices.includes(val);
+}
+
+function requirePositive(val) {
+  return val !== undefined && val !== '' && val > 0.;
+}
+
+function requirePositiveInclZero(val) {
+  return val !== undefined && val !== '' && val >= 0.;
 }
 
 function requireResources(resources) {
@@ -20,6 +32,39 @@ function requireResources(resources) {
     return resources[k] !== undefined && resources[k] !== '' && resources[k] > 0;
   });
   return valid.length > 0;
+}
+
+function _itemEffects() {
+  return Object.values(state.items).flatMap((item) => {
+    return item.effects || [];
+  });
+}
+
+// Check if something unlocks this item
+function hasUnlocker(item) {
+  switch (item._type) {
+    case 'Event': {
+      return _itemEffects().some((effect) => {
+        let validType = effect.type == 'AddEvent' || effect.type == 'TriggerEvent';
+        return validType && effect.entity === item.id;
+      });
+    }
+    case 'Project': {
+      return _itemEffects().some((effect) => {
+        let validType = effect.type == 'UnlocksProject';
+        return validType && effect.entity === item.id;
+      });
+    }
+    case 'Process': {
+      return _itemEffects().some((effect) => {
+        let validType = effect.type == 'UnlocksProcess';
+        return validType && effect.entity === item.id;
+      });
+    }
+    default: {
+      return true
+    }
+  }
 }
 
 function validateBasic(item, key, required) {
@@ -35,7 +80,7 @@ function validateBasic(item, key, required) {
 
 function validateProbabilities(probs) {
   return probs.every((prob) => {
-    return requireAtLeastOne(prob.conditions) && validateConditions(prob.conditions);
+    return prob.conditions.length === 0 || (requireAtLeastOne(prob.conditions) && validateConditions(prob.conditions));
   });
 }
 
@@ -84,6 +129,12 @@ function validateEffects(effects) {
   });
 }
 
+function validateOutcomes(outcomes) {
+  return outcomes.every((outcome) => {
+    return requireAtLeastOne(outcome.text) && validateEffects(outcome.effects) && validateProbabilities([outcome.probability]);
+  });
+}
+
 function validateVariables(variables) {
   let definedVariables =  Object.values(state.items)
     .filter((i) => i._type == 'Variable')
@@ -101,10 +152,9 @@ function validateVariables(variables) {
 const SPECS = {
   Event: {
     key: 'name',
-    required: ['name', 'effects', 'probabilities', 'description', 'variables'],
-    questions: ['name', 'description', 'notes'],
+    validate: ['name', 'effects', 'probabilities', 'description', 'variables', 'locked'],
+    questions: ['notes'],
     validateKey: (item, key) => {
-      // TODO variables
       switch (key) {
         case 'name':
           return requireAtLeastOne(item.name);
@@ -116,6 +166,9 @@ const SPECS = {
           return requireAtLeastOne(item.probabilities) && validateProbabilities(item.probabilities);
         case 'variables':
           return validateVariables(item.variables);
+        case 'locked':
+          if (item.locked === undefined) item.locked = false;
+          return item.locked == hasUnlocker(item);
         default:
           return true;
       }
@@ -124,7 +177,7 @@ const SPECS = {
 
   Project: {
     key: 'name',
-    required: ['name', 'description', 'type', 'effects', 'construction'],
+    validate: ['name', 'description', 'type', 'effects', 'construction', 'years', 'locked', 'outcomes'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -133,11 +186,18 @@ const SPECS = {
         case 'description':
           return requireAtLeastOne(item.description);
         case 'construction':
-          return requireAtLeastOne(item.construction) && requireResources(item.construction);
+          return requireNonEmptyObj(item.construction) && requireResources(item.construction);
         case 'type':
           return requireOneOfChoice(item.type, ['Initiative', 'Policy', 'Research']);
         case 'effects':
           return requireAtLeastOne(item.effects) && validateEffects(item.effects);
+        case 'years':
+          return requirePositive(item.years);
+        case 'outcomes':
+          return validateOutcomes(item.outcomes);
+        case 'locked':
+          if (item.locked === undefined) item.locked = false;
+          return item.locked == hasUnlocker(item);
         default:
           return true;
       }
@@ -146,7 +206,7 @@ const SPECS = {
 
   Process: {
     key: 'name',
-    required: ['name', 'description', 'output'],
+    validate: ['name', 'description', 'output', 'mix_share', 'locked'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -156,6 +216,11 @@ const SPECS = {
           return requireAtLeastOne(item.description);
         case 'output':
           return requireOneOfChoice(item.output, Object.keys(consts.OUTPUTS));
+        case 'mix_share':
+          return requirePositiveInclZero(item.mix_share);
+        case 'locked':
+          if (item.locked === undefined) item.locked = false;
+          return item.locked == hasUnlocker(item);
         default:
           return true;
       }
@@ -164,37 +229,37 @@ const SPECS = {
 
   Region: {
     key: 'name',
-    required: ['name', 'satiety', 'safety', 'health', 'outlook'],
+    validate: ['name', 'safety', 'health', 'outlook'],
     questions: ['name', 'notes'],
     validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Region.required);
+      return validateBasic(item, key, SPECS.Region.validate);
     }
   },
 
   Earth: {
     key: 'year',
-    required: ['year', 'emissions', 'atmospheric_ghg', 'extinction_rate', 'temperature', 'ozone_damage'],
+    validate: ['year', 'co2_emissions', 'ch4_emissions', 'n2o_emissions', 'extinction_rate', 'temperature'],
     questions: ['notes'],
     validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Earth.required);
+      return validateBasic(item, key, SPECS.Earth.validate);
     }
   },
 
   Flag: {
     key: 'name',
-    required: ['name', 'desc'],
+    validate: ['name', 'desc'],
     questions: ['desc'],
     validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Flag.required);
+      return validateBasic(item, key, SPECS.Flag.validate);
     }
   },
 
   Variable: {
     key: 'name',
-    required: ['name', 'values'],
+    validate: ['name', 'values'],
     questions: ['name', 'values'],
     validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Variable.required);
+      return validateBasic(item, key, SPECS.Variable.validate);
     }
   }
 }

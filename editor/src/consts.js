@@ -1,10 +1,11 @@
 const OUTPUTS = {
   'Fuel': 'barrels?',
-  'Electricity':	'kWh',
-  'PlantCalories': 'kcal',
-  'MeatCalories': 'kcal',
-  'Concrete': 'ton',
-  'Steel': 'ton',
+  'Electricity':	'TWh',
+  'PlantCalories': 'kcals',
+  'AnimalCalories': 'kcals',
+  'Concrete': 'tons',
+  'Steel': 'tons',
+  'Minerals': 'tons',
   // 'Project': 'points',	// Used for projects/policies/research
   // 'Misc': 'points',	    // Catch-all for outputs not represented here, e.g. healthcare, transportation, etc
 };
@@ -13,7 +14,7 @@ const RESOURCES = {
   'Sun': '?units',
   'Wind': '?units',
   'Soil': '?units',
-  'Water': '?units',
+  'Water': 'm3',
   'Biomass?': '?units',
   'Lumber?': '?units',
   'Coal': 'tons',
@@ -22,9 +23,9 @@ const RESOURCES = {
   'Lithium': '?units',
   'Labor': 'hours',
   'Fuel': 'barrels?',
-  'Electricity': 'kWh',
+  'Electricity': 'TWh',
   'PlantCalories': 'kcals',
-  'Material': 'tons',
+  'Minerals': 'tons',
   'CO2': 'tons',
   'Concrete': 'tons',
   'Steel': 'tons',
@@ -44,7 +45,10 @@ const PROCESS_FEATURES = {
   'UsesPesticides': 'For agriculture; does the process use a significant amount of pesticides',
   'UsesSynFertilizer': 'For agriculture; does the process use a significant amount of synthetic fertilizer',
   'UsesLivestock': 'For agriculture; does the process use a significant amount of livestock',
-  'Intermittent': 'For electricity sources; if the supply is intermittent',
+  'IsIntermittent': 'For electricity sources; if the supply is intermittent',
+  'IsNuclear': 'For electricity sources, if the supply is nuclear',
+  'IsSolar': 'For electricity sources, if the supply is solar',
+  'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
 }
 
 const COMPARATORS = ['<', '<=', '==', '!=', '>=', '>'];
@@ -53,7 +57,7 @@ const CONDITIONS = {
     compare: true,
     choices: [
       'Population', 'Health',
-      'Safety', 'Outlook', 'Satiety',
+      'Safety', 'Outlook',
       'Contentedness', 'Habitability']
   },
   WorldVariable: {
@@ -61,9 +65,9 @@ const CONDITIONS = {
     choices: [
       'Year', 'Population', 'Emissions',
       'Biodiversity', 'Temperature',
-      'tgav', 'Precipitation', 'SeaLevelRise',
-      'OzoneDamage', 'Outlook',
-      'LandUsePercent']
+      'Precipitation', 'SeaLevelRise',
+      'Outlook', 'Contentedness',
+      'ResourceIntensity']
   },
   Demand: {
     compare: true,
@@ -73,15 +77,30 @@ const CONDITIONS = {
     compare: true,
     choices: Object.keys(OUTPUTS),
   },
+  OutputDemandGap: {
+    compare: true,
+    choices: Object.keys(OUTPUTS),
+  },
+  Resource: {
+    compare: true,
+    choices: Object.keys(RESOURCES),
+  },
+  ResourceDemandGap: {
+    compare: true,
+    choices: Object.keys(RESOURCES),
+  },
   ProcessMixShare: {
     compare: true,
     entity: 'Process',
   },
   ProcessMixShareFeature: {
     compare: true,
-    choices: PROCESS_FEATURES,
+    choices: Object.keys(PROCESS_FEATURES),
   },
   ProjectActive: {
+    entity: 'Project',
+  },
+  ProjectInactive: {
     entity: 'Project',
   },
   ProjectFinished: {
@@ -105,7 +124,7 @@ const EFFECTS = {
   LocalVariable: {
     choices: [
       'Population', 'Health',
-      'Safety', 'Outlook', 'Satiety',
+      'Safety', 'Outlook',
       'BaseHabitability'],
     params: {
       'Change': Number
@@ -114,10 +133,20 @@ const EFFECTS = {
 
   WorldVariable: {
     choices: [
-      'Population', 'Emissions',
+      'Population', 'Emissions', 'Health',
+      'Safety',
       'Biodiversity', 'Temperature',
       'Precipitation', 'SeaLevelRise',
-      'OzoneDamage', 'Outlook'],
+      'Outlook'],
+    params: {
+      'Change': Number
+    }
+  },
+
+  PlayerVariable: {
+    choices: [
+      'PoliticalCapital',
+    ],
     params: {
       'Change': Number
     }
@@ -132,6 +161,13 @@ const EFFECTS = {
 
   Output: {
     choices: Object.keys(OUTPUTS),
+    params: {
+      'PercentChange': Number
+    }
+  },
+
+  OutputForFeature: {
+    choices: Object.keys(PROCESS_FEATURES),
     params: {
       'PercentChange': Number
     }
@@ -159,8 +195,18 @@ const EFFECTS = {
     entity: 'Project'
   },
 
+  UnlocksProcess: {
+    entity: 'Process'
+  },
+
   SetFlag: {
     entity: 'Flag'
+  },
+
+  RegionLeave: {
+  },
+
+  Migration: {
   },
 };
 

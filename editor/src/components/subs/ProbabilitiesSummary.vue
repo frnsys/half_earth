@@ -2,8 +2,10 @@
 <ul class="probabilities-summary">
   <li v-for="probability in localData" :key="probability.id">
     <div class="probability-type">{{ probability.type }}</div>
-    <span> if </span>
-    <ConditionsSummary :conditions="probability.conditions" />
+    <template v-if="probability.conditions.length > 0 ">
+      <span> if </span>
+      <ConditionsSummary :conditions="probability.conditions" />
+    </template>
   </li>
 </ul>
 </template>

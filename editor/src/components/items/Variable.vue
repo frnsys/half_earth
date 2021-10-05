@@ -17,6 +17,7 @@
       <textarea placeholder="Values" v-model="localData.values" @blur="save" :class="flags('values')" />
     </div>
   </fieldset>
+  <Notes :notes="localData.notes" @blur="saveNotes" />
 </li>
 </template>
 

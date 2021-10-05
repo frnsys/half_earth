@@ -20,6 +20,13 @@
           <option v-for="k in Object.keys(OUTPUTS)" :value="k">{{k}} ({{OUTPUTS[k]}})</option>
         </select>
       </div>
+      <div>
+        <label>
+          Mix Share
+          <Tip>The mix share (%) of this process for its output.</Tip>
+        </label>
+        <input type="number" min="0" v-model="localData.mix_share" @change="save" :class="flags('mix_share')" />
+      </div>
       <div class="checkbox">
         <label :for="`${item.id}_locked`">
           Locked
@@ -47,7 +54,7 @@
         <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
       </label>
       <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
-        <input :checked="localData.features[k]" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
+        <input :checked="getFeature(k)" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
         <label :for="`${item.id}_${k}`">{{k}}</label>
         <Tip>{{PROCESS_FEATURES[k]}}</Tip>
       </div>
@@ -67,7 +74,12 @@
   <div v-else class="process-summary item-summary">
     <div class="item-meta">
       <div class="meta-pill">{{localData.output}}</div>
-      <div class="meta-pill" v-if="localData.locked">Locked</div>
+      <div class="meta-pill split-pill" :class="flags('mix_share')">
+        <div>Mix Share</div>
+        <div>{{flags('mix_share').invalid ? 'MISSING' : localData.mix_share }}%</div>
+      </div>
+      <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
+      <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
@@ -75,17 +87,17 @@
     <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
     <div class="item-summary-details">
       <div>
-        <span>Per {{OUTPUTS[localData.output]}}:</span>
+        <h5>Per {{OUTPUTS[localData.output]}}:</h5>
         <ResourcesSummary :resources="localData.reqs" />
         <ByproductsSummary :byproducts="localData.byproducts" />
       </div>
       <div>
-        <template v-for="k in Object.keys(PROCESS_FEATURES)">
+        <template v-for="k in Object.keys(PROCESS_FEATURES)" v-if="localData.features">
           <div class="summary-pill feature-pill" v-if="localData.features[k]"><div>{{k}}</div></div>
         </template>
       </div>
-
     </div>
+    <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
 </template>
@@ -103,6 +115,9 @@ export default {
     updateFeature(key, val) {
       this.localData.features[key] = val;
       this.save();
+    },
+    getFeature(key) {
+      return this.localData.features ? this.localData.features[key] : false;
     }
   },
   mixins: [ItemMixin]

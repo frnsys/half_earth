@@ -1,64 +1,83 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
-  <div>
-    <label>
-      Name
-      <Tip>The name of the region.</Tip>
-    </label>
-    <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
-  </div>
-  <fieldset>
+  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <template v-if="editing">
     <div>
       <label>
-        Satiety
-        <Tip>Starting "satiety", a catch-all for none-baseline-survival satisfication, like agency, community, etc, from 0 to 1, with 0 being a region filled with isolated lonely people and no social cohesion, and 1 being a communist utopia.</Tip>
+        Name
+        <Tip>The name of the region.</Tip>
       </label>
-      <input v-model="localData.satiety" type="number" min="0" @blur="save" :class="flags('satiety')">
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
     </div>
-    <div>
-      <label>
-        Health
-        <Tip>Starting public health, from 0 to 1, with 1 being everyone in perfect health with perfect access to top-quality healthcare and 0 being no healthcare system whatsoever amidst widespread pollution and contamination.</Tip>
-      </label>
-      <input v-model="localData.health" type="number" min="0" @blur="save" :class="flags('health')">
+    <fieldset>
+      <div>
+        <label>
+          Health
+          <Tip>Starting public health, from 0 to 1, with 1 being everyone in perfect health with perfect access to top-quality healthcare and 0 being no healthcare system whatsoever amidst widespread pollution and contamination.</Tip>
+        </label>
+        <input v-model="localData.health" type="number" min="0" @blur="save" :class="flags('health')">
+      </div>
+      <div>
+        <label>
+          Safety
+          <Tip>Starting public safety, from 0 to 1, with 1 meaning no one is ever worried about crime or harm, and 0 means everyone is living in constant fear.</Tip>
+        </label>
+        <input v-model="localData.safety" type="number" min="0" @blur="save" :class="flags('safety')">
+      </div>
+      <div>
+        <label>
+          Outlook
+          <Tip>Starting outlook, from 0 to 1, with 1 meaning people are excited and optimistic about the future, and 0 meaning a region full of hopeless nihilists.</Tip>
+        </label>
+        <input v-model="localData.outlook" type="number" min="0" @blur="save" :class="flags('outlook')">
+      </div>
+    </fieldset>
+    <div class="field-group">
+      <h3>Starting Per-Capita Demand</h3>
+      <div>
+        <label>
+          Output Demand
+          <Tip>Per-capita demand captured by process outputs.</Tip>
+        </label>
+        <Outputs :outputs="localData.demand" @update="saveData('demand', $event)"/>
+      </div>
+      <Resources :resources="localData.other_demand" @update="saveData('other_demand', $event)"/>
     </div>
-    <div>
-      <label>
-        Safety
-        <Tip>Starting public safety, from 0 to 1, with 1 meaning no one is ever worried about crime or harm, and 0 means everyone is living in constant fear.</Tip>
-      </label>
-      <input v-model="localData.safety" type="number" min="0" @blur="save" :class="flags('safety')">
-    </div>
-    <div>
-      <label>
-        Outlook
-        <Tip>Starting outlook, from 0 to 1, with 1 meaning people are excited and optimistic about the future, and 0 meaning a region full of hopeless nihilists.</Tip>
-      </label>
-      <input v-model="localData.outlook" type="number" min="0" @blur="save" :class="flags('outlook')">
-    </div>
-  </fieldset>
-  <div class="field-group">
-    <h3>Starting Per-Capita Demand</h3>
-    <div>
-      <label>
-        Output Demand
-        <Tip>Per-capita demand captured by procsss outputs.</Tip>
-      </label>
-      <Outputs :outputs="localData.demand" @update="saveData('demand', $event)"/>
-    </div>
-    <Resources :resources="localData.other_demand" @update="saveData('other_demand', $event)"/>
-  </div>
 
-  <div>
-    <label>
-      Flavor Text/Dialogue
-      <Tip>Advisor dialogue introducing the event.</Tip>
-    </label>
-    <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
-  </div>
+    <div>
+      <label>
+        Flavor Text/Dialogue
+        <Tip>Advisor dialogue introducing the event.</Tip>
+      </label>
+      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
+    </div>
 
-  <Notes :notes="localData.notes" @blur="saveNotes" />
+    <Notes :notes="localData.notes" @blur="saveNotes" />
+  </template>
+  <div v-else class="region-summary item-summary">
+    <div class="item-meta">
+      <div class="meta-pill split-pill" :class="{invalid: !localData.health}">
+        <div>Health</div><div>{{localData.health || 'MISSING'}}</div>
+      </div>
+      <div class="meta-pill split-pill" :class="{invalid: !localData.safety}">
+        <div>Safety</div><div>{{localData.safety || 'MISSING'}}</div>
+      </div>
+      <div class="meta-pill split-pill" :class="{invalid: !localData.outlook}">
+        <div>Outlook</div><div>{{localData.outlook || 'MISSING'}}</div>
+      </div>
+    </div>
+    <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
+    <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
+    <div class="item-summary-details">
+      <div>
+        <div>Starting per-capita demand</div>
+        <OutputsSummary :outputs="localData.demand" />
+        <ResourcesSummary :resources="localData.other_demand" />
+      </div>
+    </div>
+    <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
+  </div>
 </li>
 </template>
 

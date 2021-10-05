@@ -6,7 +6,7 @@
     <div>
       <label>
         Description
-        <Tip>A more detailed narrative description of the event.</Tip>
+        <Tip>A more detailed narrative description of the event. Each line is a separate dialogue bubble.</Tip>
       </label>
       <textarea class="title" placeholder="Description" v-model="localData.description" @blur="(ev) => saveDescription(ev.target.value)" :class="flags('description')" />
     </div>
@@ -58,6 +58,14 @@
         </label>
         <input type="checkbox" :id="`${item.id}_local`" v-model="localData.local" @change="save">
       </div>
+      <div class="checkbox">
+        <label :for="`${item.id}_locked`">
+          Locked
+          <Tip>Does this event start locked?</Tip>
+        </label>
+        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+      </div>
+
     </fieldset>
 
     <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
@@ -79,9 +87,10 @@
       <div class="meta-pill">{{localData.name}}</div>
       <div class="meta-pill arc-pill" v-if="localData.arc">{{localData.arc}}</div>
       <div class="meta-pill">{{localData.local ? 'Local': 'Global'}}</div>
-      <div class="meta-pill" v-if="localData.repeats">Repeats</div>
+      <div class="meta-pill" v-if="localData.repeats">⭯ Repeats</div>
+      <div class="meta-pill" v-if="localData.locked">Locked</div>
     </div>
-    <div class="item-summary-title" v-if="localData.description">{{localData.description}}</div>
+    <div class="item-summary-title" v-if="localData.description" v-html="descriptionHtml"></div>
     <div class="item-summary-title invalid" v-else>[MISSING DESCRIPTION]</div>
     <div class="event-variables" v-if="varMetas.length > 0">
         <span>Variables:</span>
@@ -94,13 +103,14 @@
         </div>
     </div>
     <div class="item-summary-details">
-      <ProbabilitiesSummary v-if="defined('probabilities')" :probabilities="localData.probabilities" />
+      <ProbabilitiesSummary v-if="definedWithValues('probabilities')" :probabilities="localData.probabilities" />
       <div class="item-missing invalid" v-else>[MISSING PROBABILITIES]</div>
 
-      <EffectsSummary v-if="defined('effects')" :effects="localData.effects" />
+      <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
       <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
     </div>
     <ChoicesSummary :choices="localData.choices" v-if="localData.decision" />
+    <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
 </template>
@@ -140,6 +150,9 @@ export default {
     },
   },
   computed: {
+    descriptionHtml() {
+      return this.localData.description.replaceAll('\n', '<br />');
+    },
     definedVariables() {
       return Object.values(state.items)
         .filter((i) => i._type == 'Variable')

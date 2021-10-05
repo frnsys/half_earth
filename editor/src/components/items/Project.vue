@@ -22,12 +22,33 @@
           <option value="Research">Research</option>
         </select>
       </div>
+      <div>
+        <label>
+          Years to Completion
+          <Tip>For uncertain projects, this is the minimum years required to start rolling for success.</Tip>
+        </label>
+        <input type="number" v-model="localData.years" @change="save" :class="flags('years')"/>
+      </div>
+      <div class="checkbox">
+        <label :for="`${item.id}_uncertain`">
+          Uncertain
+          <Tip>Is this project guaranteed to finish or not?</Tip>
+        </label>
+        <input type="checkbox" :id="`${item.id}_uncertain`" v-model="localData.uncertain" @change="save">
+      </div>
       <div class="checkbox">
         <label :for="`${item.id}_ongoing`">
           Ongoing
           <Tip>Is this a one-and-done project, or does it need continued maintenance?</Tip>
         </label>
         <input type="checkbox" :id="`${item.id}_ongoing`" v-model="localData.ongoing" @change="save">
+      </div>
+      <div class="checkbox">
+        <label :for="`${item.id}_locked`">
+          Locked
+          <Tip>Is this process available to the player at the start?</Tip>
+        </label>
+        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
       </div>
     </fieldset>
     <div>
@@ -50,6 +71,8 @@
 
     <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
 
+    <Outcomes :outcomes="localData.outcomes" @update="saveData('outcomes', $event)" />
+
     <div>
       <label>
         Flavor Text/Dialogue
@@ -64,20 +87,26 @@
   <div v-else class="project-summary item-summary">
     <div class="item-meta">
       <div class="meta-pill">{{localData.type}}</div>
+      <div class="meta-pill split-pill" :class="{invalid: !localData.years}">
+        <div>Years</div>
+        <div>{{localData.years || 'MISSING'}}</div>
+      </div>
+      <div class="meta-pill" v-if="localData.uncertain">Uncertain</div>
+      <div class="meta-pill" v-if="localData.locked">Locked</div>
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
-    <p class="item-summary-desc" v-if="localData.description">{{localData.description}}</p>
+    <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
     <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
     <div class="item-summary-details">
       <div>
         <div>
-          <div>Implementation (per year)</div>
+          <h5>Implementation (per year)</h5>
           <ResourcesSummary :resources="localData.construction" />
           <ByproductsSummary :byproducts="localData.construction_byproducts" />
         </div>
         <div v-if="localData.ongoing">
-          <div>Maintenance (per year)</div>
+          <h5>Maintenance (per year)</h5>
           <ResourcesSummary :resources="localData.maintenance" />
           <ByproductsSummary :byproducts="localData.maintenance_byproducts" />
         </div>
@@ -86,13 +115,37 @@
       <EffectsSummary v-if="defined('effects')" :effects="localData.effects" />
       <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
     </div>
+    <h5>Outcomes</h5>
+    <OutcomesSummary :outcomes="localData.outcomes" />
+    <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
 </template>
 
 <script>
+import uuid from '../../uuid';
 import ItemMixin from './ItemMixin';
 export default {
+  mounted() {
+    if (!this.localData.outcomes) {
+      // Default outcome
+      this.localData.outcomes = [{
+        id: uuid(),
+        effects: [],
+        probability: {
+          id: uuid(),
+          type: 'Guaranteed',
+          conditions: [],
+        }
+      }];
+      this.save();
+    }
+  },
+  computed: {
+    descriptionHtml() {
+      return this.localData.description.replaceAll('\n', '<br />');
+    },
+  },
   mixins: [ItemMixin]
 };
 </script>
@@ -103,5 +156,8 @@ export default {
 }
 .project-summary .meta-pill:first-child {
 	background: #82ff9b;
+}
+.project-summary .meta-pill:nth-child(2) {
+  background: #9eb4c7;
 }
 </style>

@@ -74,9 +74,24 @@ import Flag from './items/Flag.vue';
 import validate from '../validate';
 
 export default {
+  updated() {
+    // Kind of hacky way to jump to the hash/id
+    // after loading in the data, but only
+    // after the first load
+    if (!this.loaded) {
+      this.loaded = true;
+      if (window.location.hash) {
+        const el = document.getElementById(window.location.hash.substr(1));
+        el && el.scrollIntoView();
+      }
+    }
+  },
   data() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type') || 'Event';
     return {
-      type: 'Project',
+      type,
+      loaded: false,
       tocOpen: true,
       filtersOpen: true,
       filter: null,
@@ -112,7 +127,9 @@ export default {
       return Object.values(this.state.items)
         .filter((i) => i._type == this.type)
         .filter((i) => {
-          return this.filter == null || i[this.filterKey] == this.filter;
+          return this.filter == null
+            || i[this.filterKey] == this.filter
+            || this.filter == '(none)' && (i[this.filterKey] === undefined || i[this.filterKey] === '');
         })
         .sort((a, b) => a._created < b._created ? 1 : -1);
     },
@@ -148,7 +165,7 @@ export default {
     filters() {
       switch (this.type) {
         case 'Event':
-          return this.storyArcs;
+          return ['(none)'].concat(this.storyArcs);
         case 'Project':
           return ['Project', 'Research', 'Policy'];
         case 'Process':
@@ -159,10 +176,10 @@ export default {
     },
     tableOfContents() {
       let spec = validate[this.type];
-      return this.itemsOfType.map((i) => ({
+      let toc = this.itemsOfType.map((i) => ({
         id: i.id,
         label: i[spec.key],
-        invalid: !spec.required.every((k) => {
+        invalid: !spec.validate.every((k) => {
           return spec.validateKey(i, k);
         }),
         questions: spec.questions.some((k) => {
@@ -170,6 +187,8 @@ export default {
           return val && val.includes('?');
         })
       }));
+      toc.sort((a, b) => (a.label || '').localeCompare((b.label || '')));
+      return toc;
     }
   }
 }
@@ -478,6 +497,13 @@ nav {
   background: #ececec;
   vertical-align: middle;
 }
+.summary-pill a {
+  text-decoration: none;
+  color: #000;
+}
+.summary-pill .has-url:hover {
+  background: yellow;
+}
 .summary-pill > div {
   padding: 0.2em 0.3em;
   border-left: 1px solid #000;
@@ -523,6 +549,22 @@ nav {
   margin-right: 0.5em;
   line-height: 1;
 }
+.meta-pill.invalid {
+  background: #F54242 !important;
+}
+.meta-pill.split-pill {
+  display: flex;
+  padding: 0;
+  background: #dfdfdf;
+}
+.meta-pill.split-pill > div {
+  padding: 0.1em 0.2em;
+}
+.meta-pill.split-pill > div:first-child {
+  border-right: 1px solid #000;
+  background: #B2EAEC;
+}
+
 .item-summary {
   padding: 0.5em;
   position: relative;
@@ -537,6 +579,15 @@ nav {
   font-size: 1.2em;
   font-weight: bold;
   margin: 0.5em 0;
+}
+.item-summary-flavor {
+  margin: 1em 0;
+}
+.item-summary-notes {
+  font-size: 0.7em;
+}
+.item-summary-notes a {
+  color: #3639ff;
 }
 .item-summary-title.invalid,
 .item-summary-desc.invalid {
@@ -555,5 +606,10 @@ nav {
   z-index: 1;
   transform: translate(0, -50%);
   font-size: 1.2em;
+}
+
+h5 {
+  margin: 0;
+  font-weight: normal;
 }
 </style>

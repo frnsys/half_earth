@@ -8,13 +8,17 @@ import Outputs from '../subs/Outputs.vue';
 import Resources from '../subs/Resources.vue';
 import Byproducts from '../subs/Byproducts.vue';
 import Conditions from '../subs/Conditions.vue';
+import Outcomes from '../subs/Outcomes.vue';
+import OutcomesSummary from '../subs/OutcomesSummary.vue';
 import Probabilities from '../subs/Probabilities.vue';
 import ProbabilitiesSummary from '../subs/ProbabilitiesSummary.vue';
 import EffectsSummary from '../subs/EffectsSummary.vue';
 import ChoicesSummary from '../subs/ChoicesSummary.vue';
 import ResourcesSummary from '../subs/ResourcesSummary.vue';
 import ByproductsSummary from '../subs/ByproductsSummary.vue';
+import OutputsSummary from '../subs/OutputsSummary.vue';
 import validate from '../../validate';
+import Autolinker from 'autolinker';
 
 export default {
   props: ['item'],
@@ -30,7 +34,8 @@ export default {
     Conditions, Probabilities,
     ProbabilitiesSummary, EffectsSummary,
     ChoicesSummary, ResourcesSummary,
-    ByproductsSummary
+    ByproductsSummary, OutputsSummary,
+    Outcomes, OutcomesSummary,
   },
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {
@@ -38,15 +43,24 @@ export default {
       el.addEventListener('input', () => {
         util.resizeTextArea(el);
       });
+      el.addEventListener('focus', () => {
+        util.resizeTextArea(el);
+      });
     });
   },
   computed: {
+    notesHtml() {
+      return Autolinker.link(this.localData.notes.replaceAll('\n', '<br />'));
+    },
+    flavorHtml() {
+      return this.localData.flavor.replaceAll('\n', '<br />');
+    },
     validator() {
       let type = this.localData._type;
       return validate[type];
     },
     invalid() {
-      return this.validator.required.filter((k) => {
+      return this.validator.validate.filter((k) => {
         return !this.validateKey(k);
       });
     },
@@ -88,6 +102,9 @@ export default {
     },
     defined(key) {
       return this.localData[key] !== undefined && this.localData[key] !== '';
+    },
+    definedWithValues(key) {
+      return this.localData[key] !== undefined && this.localData[key] !== '' && this.localData[key].length > 0;
     }
   }
 };

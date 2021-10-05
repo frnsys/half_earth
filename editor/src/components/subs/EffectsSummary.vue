@@ -2,7 +2,7 @@
 <ul class="effects-summary">
   <li v-for="effect in localData" :key="effect.id" class="summary-pill" :class="flags(effect)">
     <div>{{label(effect)}}</div>
-    <div v-if="entity(effect)">{{entity(effect)}}</div>
+    <div v-if="entity(effect)" class="has-url"><a :href="entity(effect).url">{{entity(effect).name}}</a></div>
     <div v-if="params(effect)">{{params(effect)}}</div>
     <div v-if="hasEvent(effect)" :style="{background: '#c3c3c3', padding: '0.15em 0'}">
       <Tip :width="120">If this effect is part of an event, the event's variable values will be passed to this event.</Tip>
@@ -15,6 +15,19 @@
 import state from '../../state';
 import consts from '../../consts';
 import Tip from '../Tip.vue';
+
+function formatParam(k, val) {
+  switch (k) {
+    case 'Change':
+      return `${val > 0 ? '+' : ''}${val}`;
+    case 'PercentChange':
+      return `${val > 0 ? '+' : ''}${val}%`;
+    case 'Delay (months)':
+      return `${val} months`;
+    default:
+      return `${val}`;
+  }
+}
 
 export default {
   props: ['effects'],
@@ -61,17 +74,22 @@ export default {
     },
     entity(effect) {
       let spec = consts.EFFECTS[effect.type];
-      let value = '';
       if (spec.entity) {
         if (effect.entity) {
           let items = this.itemsOfType(spec.entity);
           let match = items.find(el => el.id == effect.entity);
-          value += `${match.name}`;
+          return {
+            url: `/?type=${match._type}#${match.id}`,
+            name: match.name,
+          };
         } else {
-          value += '[MISSING]';
+          return {
+            url: '',
+            name: '[MISSING]'
+          };
         }
       }
-      return value;
+      return null;
     },
     params(effect) {
       let spec = consts.EFFECTS[effect.type];
@@ -81,13 +99,7 @@ export default {
           let defined = effect.params[k] !== undefined && effect.params[k] !== '';
           if (!defined) return '[MISSING]';
           if (spec.params[k] == Number) {
-            if (k.includes('Change')) {
-              return `${effect.params[k] > 0 ? '+' : ''}${effect.params[k]}`;
-            } else {
-              return `${effect.params[k]}`;
-            }
-          } else {
-            return `${effect.params[k]}`;
+            return formatParam(k, effect.params[k]);
           }
         }).join(',')}`;
       }
