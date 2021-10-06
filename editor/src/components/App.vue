@@ -10,25 +10,25 @@
 </nav>
 <div class="items" :class="type">
   <template v-if="type == 'Process'">
-    <Process v-for="p in itemsOfType" :item="p" />
+    <Process v-for="p in itemsOfCurrentType" :item="p" />
   </template>
   <template v-if="type == 'Project'">
-    <Project v-for="p in itemsOfType" :item="p" />
+    <Project v-for="p in itemsOfCurrentType" :item="p" />
   </template>
   <template v-if="type == 'Region'">
-    <Region v-for="r in itemsOfType" :item="r" />
+    <Region v-for="r in itemsOfCurrentType" :item="r" />
   </template>
   <template v-else-if="type == 'Event'">
-    <Event v-for="e in itemsOfType" :item="e" />
+    <Event v-for="e in itemsOfCurrentType" :item="e" />
   </template>
   <template v-if="type == 'Earth'">
-    <Earth v-for="e in itemsOfType" :item="e" />
+    <Earth v-for="e in itemsOfCurrentType" :item="e" />
   </template>
   <template v-if="type == 'Flag'">
-    <Flag v-for="f in itemsOfType" :item="f" />
+    <Flag v-for="f in itemsOfCurrentType" :item="f" />
   </template>
   <template v-if="type == 'Variable'">
-    <Variable v-for="v in itemsOfType" :item="v" />
+    <Variable v-for="v in itemsOfCurrentType" :item="v" />
   </template>
 </div>
 <div class="sidebar">
@@ -50,8 +50,10 @@
 </ul>
 <div class="toc-meta">
   <div class="toggle" @click="() => tocOpen = !tocOpen">{{tocOpen ? 'Hide' : 'Show'}} TOC</div>
-  <div class="count">{{itemsOfType.length}} items</div>
+  <div class="count">{{itemsOfCurrentType.length}} items</div>
 </div>
+
+<Graph :items="state.items" />
 
 <datalist id="arcs">
   <option v-for="arc in storyArcs">{{arc}}</option>
@@ -72,6 +74,8 @@ import Earth from './items/Earth.vue';
 import Variable from './items/Variable.vue';
 import Flag from './items/Flag.vue';
 import validate from '../validate';
+
+import Graph from './Graph.vue';
 
 export default {
   updated() {
@@ -106,6 +110,7 @@ export default {
     Process,
     Flag,
     Variable,
+    Graph
   },
   methods: {
     addNew(type) {
@@ -115,7 +120,11 @@ export default {
         _type: type,
       });
       scroll(0,0);
-    }
+    },
+    itemsOfType(type) {
+      return Object.values(this.state.items)
+        .filter((i) => i._type == type);
+    },
   },
   watch: {
     type(_) {
@@ -123,10 +132,9 @@ export default {
     }
   },
   computed: {
-    itemsOfType() {
-      return Object.values(this.state.items)
-        .filter((i) => i._type == this.type)
-        .filter((i) => {
+    itemsOfCurrentType() {
+      return this.itemsOfType(this.type)
+      .filter((i) => {
           return this.filter == null
             || i[this.filterKey] == this.filter
             || this.filter == '(none)' && (i[this.filterKey] === undefined || i[this.filterKey] === '');
@@ -176,7 +184,7 @@ export default {
     },
     tableOfContents() {
       let spec = validate[this.type];
-      let toc = this.itemsOfType.map((i) => ({
+      let toc = this.itemsOfCurrentType.map((i) => ({
         id: i.id,
         label: i[spec.key],
         invalid: !spec.validate.every((k) => {

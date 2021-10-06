@@ -1,0 +1,548 @@
+<template>
+<div class="graph"
+  @mousedown="dragStart"
+  @mouseup="dragEnd"
+  @mousemove="pan"
+  :class="expanded ? '' : 'graph-collapsed'" @click="expand">
+  <div v-if="expanded" class="graph-collapse" @click="collapse">X</div>
+  <div class="graph-body" :style="offsets">
+    <svg :style="size">
+      <template v-for="edge in edges">
+        <path class="graph-edge" :d="edge.path" />
+      </template>
+    </svg>
+    <template v-for="node in nodes">
+      <div class="graph-node" :style="node.style" :class="node.type">
+        <div class="graph-tags">
+          <div class="graph-type">{{node.type}}</div>
+          <div class="graph-subtype" :class="{invalid: !node.subtype}">{{node.subtype ? node.subtype : '[Missing]'}}</div>
+        </div>
+        <div class="graph-invalid" v-if="!node.valid" title="Item has invalid or missing data">!</div>
+        <div class="graph-node-body">
+          <a @click="collapse" :href="`/?type=${node.type}#${node.id}`">{{node.text}}</a>
+        </div>
+        <div class="graph-node-details">
+          <template v-if="node.type === 'Event'">
+            <div class="graph-node-details-meta">
+              <div class="meta-pill invalid" v-if="!node.valid">Invalid/Missing Data</div>
+              <div class="meta-pill">{{node.data.local ? 'Local': 'Global'}}</div>
+              <div class="meta-pill" v-if="node.data.repeats">⭯ Repeats</div>
+              <div class="meta-pill" v-if="node.data.locked">Locked</div>
+            </div>
+            <p>{{node.data.description}}</p>
+            <ProbabilitiesSummary :probabilities="node.data.probabilities" />
+            <EffectsSummary :effects="node.data.effects" />
+          </template>
+
+          <template v-if="node.type === 'Project'">
+            <div class="graph-node-details-meta">
+              <div class="meta-pill invalid" v-if="!node.valid">Invalid/Missing Data</div>
+              <div class="meta-pill split-pill">
+                <div>Years</div>
+                <div>{{node.data.years || 'MISSING'}}</div>
+              </div>
+              <div class="meta-pill" v-if="node.data.uncertain">Uncertain</div>
+              <div class="meta-pill" v-if="node.data.locked">Locked</div>
+            </div>
+            <p>{{node.data.description}}</p>
+            <div>
+              <h5>Implementation (per year)</h5>
+              <ResourcesSummary :resources="node.data.construction" />
+              <ByproductsSummary :byproducts="node.data.construction_byproducts" />
+            </div>
+            <div v-if="node.data.ongoing">
+              <h5>Maintenance (per year)</h5>
+              <ResourcesSummary :resources="node.data.maintenance" />
+              <ByproductsSummary :byproducts="node.data.maintenance_byproducts" />
+            </div>
+            <EffectsSummary :effects="node.data.effects" />
+            <OutcomesSummary :outcomes="node.data.outcomes" />
+          </template>
+
+          <template v-if="node.type === 'Process'">
+            <div class="graph-node-details-meta">
+              <div class="meta-pill invalid" v-if="!node.valid">Invalid/Missing Data</div>
+              <div class="meta-pill split-pill">
+                <div>Mix Share</div>
+                <div>{{ node.data.mix_share }}%</div>
+              </div>
+              <div class="meta-pill" v-if="node.data.locked">Locked</div>
+            </div>
+            <p>{{node.data.description}}</p>
+            <h5>Per {{OUTPUTS[node.data.output]}}:</h5>
+            <ResourcesSummary :resources="node.data.reqs" />
+            <ByproductsSummary :byproducts="node.data.byproducts" />
+            <div>
+              <template v-for="k in Object.keys(PROCESS_FEATURES)" v-if="node.data.features">
+                <div class="summary-pill feature-pill" v-if="node.data.features[k]"><div>{{k}}</div></div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+</template>
+
+<script>
+import { Bezier } from "bezier-js";
+import ResourcesSummary from './subs/ResourcesSummary.vue';
+import ByproductsSummary from './subs/ByproductsSummary.vue';
+import OutcomesSummary from './subs/OutcomesSummary.vue';
+import EffectsSummary from './subs/EffectsSummary.vue';
+import ProbabilitiesSummary from './subs/ProbabilitiesSummary.vue';
+import validate from '../validate';
+
+function childrenForEffect(effect) {
+  switch (effect.type) {
+    case 'AddEvent':
+      return [effect.entity];
+    case 'TriggerEvent':
+      return [effect.entity];
+    case 'UnlocksProject':
+      return [effect.entity];
+    case 'UnlocksProcess':
+      return [effect.entity];
+    default:
+      return [];
+  }
+}
+
+function subtypeForItem(item) {
+  switch (item._type) {
+    case 'Event':
+      return item.arc || '(no arc)';
+    case 'Project':
+      return item.type;
+    case 'Process':
+      return item.output;
+  }
+}
+
+export default {
+  props: ['items'],
+  components: {
+    ProbabilitiesSummary,
+    EffectsSummary,
+    OutcomesSummary,
+    ResourcesSummary,
+    ByproductsSummary
+  },
+  data() {
+    return {
+      nodes: {},
+      edges: [],
+
+      expanded: false,
+
+      height: 0,
+      width: 0,
+      offsetX: 0,
+      offsetY: 0,
+      mousedown: false,
+      mouseprev: null
+    };
+  },
+  mounted() {
+    this.updateElements();
+  },
+  watch: {
+    items() {
+      this.updateElements();
+    }
+  },
+  computed: {
+    tree() {
+      return Object.values(this.items).filter((item) => {
+        return ['Event', 'Project', 'Process'].includes(item._type);
+      }).reduce((acc, item) => {
+        acc[item.id] = item;
+        return acc;
+      }, {});
+    },
+    size() {
+      return {
+        width: `${this.width}px`,
+        height: `${this.height}px`
+      }
+    },
+    offsets() {
+      return {
+        top: `${this.offsetY}px`,
+        left: `${this.offsetX}px`
+      }
+    }
+  },
+  methods: {
+    validateItem(item) {
+      let spec = validate[item._type];
+      let valid = spec.validate.every((k) => {
+        return spec.validateKey(item, k);
+      });
+      return valid;
+    },
+    collapse(ev) {
+      this.expanded = false;
+      document.body.style.overflow = 'auto';
+      ev.stopPropagation();
+    },
+    expand() {
+      if (!this.expanded) this.expanded = true;
+      document.body.style.overflow = 'hidden';
+    },
+    dragStart(ev) {
+      if (!this.expanded) return;
+      if (ev.which !== 1) return; // Left mouse only
+      this.mousedown = true;
+      this.mouseprev = {
+        x: ev.clientX,
+        y: ev.clientY,
+      };
+    },
+    dragEnd() {
+      this.mousedown = false;
+    },
+    pan(ev) {
+      if (this.mousedown) {
+        let x = ev.clientX;
+        let y = ev.clientY;
+        let deltaX = x - this.mouseprev.x;
+        let deltaY = y - this.mouseprev.y;
+        this.offsetX += deltaX;
+        this.offsetY += deltaY;
+        this.mouseprev = {x, y};
+      }
+    },
+    childrenForItem(item) {
+      switch (item._type) {
+        case 'Event':
+          return (item.effects || []).flatMap((effect) => childrenForEffect(effect));
+        case 'Project':
+          return (item.effects || []).flatMap((effect) => childrenForEffect(effect));
+        default:
+          return [];
+      }
+    },
+    getDescendants(node) {
+      let children = this.childrenForItem(this.tree[node]);
+      return children.concat(children.flatMap((ch) => this.getDescendants(ch)));
+    },
+    getMaxDepths(nodes, depths, depth) {
+      depths = depths || {};
+      depth = depth || 0;
+      nodes.forEach((node) => {
+        depths[node] = depth;
+        this.getMaxDepths(this.childrenForItem(this.tree[node]), depths, depth+1);
+      });
+      return depths;
+    },
+    getRoots() {
+      let parents = Object.keys(this.tree).reduce((acc, k) => {
+        acc[k] = [];
+        return acc;
+      }, {});
+      Object.keys(this.tree).forEach((k) => {
+        this.childrenForItem(this.tree[k]).forEach((ch) => {
+          parents[ch].push(k);
+        });
+      });
+      let roots = Object.keys(parents)
+        .filter((k) => parents[k].length === 0)
+        .filter((k) => ['Event', 'Project'].includes(this.items[k]._type));
+
+      let descendants = {};
+      roots.forEach((root) => {
+        descendants[root] = this.getDescendants(root);
+      });
+
+      let maxDepths = this.getMaxDepths(roots);
+      return {roots, descendants, maxDepths};
+    },
+    dataForNode(node) {
+      let data = this.items[node];
+      return {
+        id: node,
+        text: data.name || '[MISSING NAME]',
+        type: data._type,
+        subtype: subtypeForItem(data),
+        valid: this.validateItem(data),
+        data
+      };
+    },
+    updateElements() {
+      let {roots, descendants, maxDepths} = this.getRoots(this.tree);
+      let nodes = {};
+      let edges = [];
+
+      const nodeHeight = 60;
+      const nodeWidth = 120;
+      const nodeSpacing = 20;
+      const edgeHeight = 4;
+      let y = 0;
+
+      const recurseChildren = (parent) => {
+        let paNode = nodes[parent];
+        let data = this.tree[parent];
+        let y = paNode.y;
+        this.childrenForItem(data).forEach((ch, i) => {
+          let existing = nodes[ch];
+          if (!existing) {
+            if (i > 0) {
+              y += nodeHeight + nodeSpacing;
+            }
+            let x = maxDepths[ch] * (nodeWidth + nodeSpacing) + nodeSpacing;
+            nodes[ch] = {
+              x, y,
+              style: {
+                top: `${y}px`,
+                left: `${x}px`,
+                height: `${nodeHeight}px`,
+                width: `${nodeWidth}px`,
+              },
+              ...this.dataForNode(ch)
+            };
+          }
+          let node = nodes[ch];
+          let start = {
+            x: paNode.x + nodeWidth,
+            y: paNode.y + nodeHeight/2
+          };
+          let end = {
+            x: node.x,
+            y: node.y + nodeHeight/2,
+          };
+          let p1 = {
+            x: end.x,
+            y: start.y,
+          };
+          let p2 = {
+            x: start.x,
+            y: end.y,
+          };
+          let bez = new Bezier(start, p1, p2, end);
+          edges.push({
+            path: bez.toSVG()
+          });
+          recurseChildren(ch);
+        });
+        return y;
+      }
+
+      let nextIdx = 0;
+      while (roots.length > 0) {
+        let root = roots.splice(nextIdx, 1);
+
+        y += nodeSpacing;
+        let x = nodeSpacing;
+        nodes[root] = {
+          x, y,
+          style: {
+            top: `${y}px`,
+            left: `${x}px`,
+            height: `${nodeHeight}px`,
+            width: `${nodeWidth}px`,
+          },
+          ...this.dataForNode(root)
+        };
+        y = recurseChildren(root) + nodeHeight;
+
+        if (roots.length === 0) break;
+
+        // Try to find the next root that shares the most descendants with this one
+        let nextRoot = roots.reduce((acc, otherRoot) => {
+          let setA = new Set(descendants[root]);
+          let setB = new Set(descendants[otherRoot]);
+          let commonDescendants = new Set([...setA].filter(x => setB.has(x)));
+          let n = commonDescendants.size;
+          if (acc === null || n > acc.count) {
+            return {cand: otherRoot, count: n};
+          } else {
+            return acc;
+          }
+        }, null);
+        nextIdx = roots.indexOf(nextRoot.cand);
+      }
+
+      this.nodes = nodes;
+      this.edges = edges;
+      this.height = Object.values(nodes).reduce((acc, node) => {
+        return Math.max(node.y + nodeHeight, acc);
+      }, 0);
+      this.width = Object.values(nodes).reduce((acc, node) => {
+        return Math.max(node.x + nodeWidth, acc);
+      }, 0);
+    }
+  },
+}
+</script>
+
+<style>
+.graph {
+  width: 100%;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  position: fixed;
+  background: #222;
+  overflow: hidden;
+  z-index: 10;
+}
+.graph-body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: move;
+}
+.graph-node {
+  position: absolute;
+  padding: 0.25em 0.5em;
+  background: #eee;
+  border: 2px solid #FFC049;
+  border-radius: 0.2em;
+  display: inline-block;
+  font-size: 0.8em;
+	cursor: help;
+}
+.graph-edge {
+	stroke: #FFC049;
+	fill: none;
+	stroke-width: 3px;
+}
+.graph svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.graph-tags {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(0, -75%);
+  font-size: 0.6em;
+  display: flex;
+}
+.graph-tags > div {
+  border: 1px solid #000;
+  border-radius: 0.2em;
+  padding: 0.1em 0.2em;
+  margin-right: 0.5em;
+  background: #83C8F2;
+}
+.graph-tags > div.invalid {
+  background: #ff4949
+}
+
+.graph-node.Process {
+  border-color: #29B66D;
+}
+.graph-node.Process .graph-type {
+  background: #29B66D;
+}
+.graph-node.Project {
+  border-color: #7E6CFF;
+}
+.graph-node.Project .graph-type {
+  background: #7E6CFF;
+}
+.graph-node.Event {
+  border-color: #FF736C;
+}
+.graph-node.Event .graph-type {
+  background: #FF736C;
+}
+.graph-subtype {
+  right: 0;
+  left: auto;
+}
+.graph-node-body {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  line-height: 1.1;
+}
+.graph-node-body a {
+  color: #000;
+  text-decoration: none;
+}
+.graph-node-body a:hover {
+  text-decoration: underline;
+}
+
+.graph-collapsed {
+	width: 120px;
+	height: 60px;
+	box-shadow: 2px 2px 12px rgb(0, 0, 0.8);
+	opacity: 0.75;
+	right: 1em;
+	left: auto;
+	bottom: 1em;
+	top: auto;
+  user-select: none;
+}
+.graph-collapsed:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.graph-collapsed .graph-body {
+  transform: scale(0.5);
+  cursor: pointer;
+}
+
+.graph-collapse {
+	position: absolute;
+	right: 1em;
+	top: 0.5em;
+	color: #aaa;
+	font-size: 2em;
+	cursor: pointer;
+	opacity: 0.7;
+  user-select: none;
+  z-index: 20;
+}
+.graph-collapse:hover {
+  opacity: 1;
+}
+
+.graph-node:hover .graph-node-details {
+  display: block;
+}
+.graph-node-details {
+  font-size: 0.8em;
+	padding: 0.5em;
+  background: #fff7ee;
+	position: absolute;
+  border: 1px solid #201f1f;
+	display: none;
+	box-shadow: 1px 1px 6px rgba(0,0,0,0.9);
+  z-index: 2;
+  left: 5%;
+  border-radius: 0.2em;
+  min-width: 200px;
+  pointer-events: none;
+}
+.graph-node-details-meta {
+  display: flex;
+  width: 100%;
+}
+
+.graph-invalid {
+	position: absolute;
+	right: 0;
+	top: 0;
+	transform: translate(0, -75%);
+	background: #FF4949;
+	color: #000;
+	padding: 0.1em 0.38em;
+	line-height: 1;
+	border-radius: 20em;
+	font-size: 0.75em;
+	border: 1px solid #9f2727;
+	text-shadow: 0 0 2px rgba(0,0,0,0.5);
+	font-weight: bold;
+}
+</style>
