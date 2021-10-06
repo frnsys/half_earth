@@ -363,6 +363,7 @@ export default {
       const edgeHeight = 4;
       let y = 0;
 
+      const nodesByPositions = {};
       const recurseChildren = (parent) => {
         let paNode = nodes[parent];
         let y = paNode.y;
@@ -373,16 +374,22 @@ export default {
               y += nodeHeight + nodeSpacing;
             }
             let x = maxDepths[ch] * (nodeWidth + nodeSpacing) + nodeSpacing;
+            let adj = ((nodesByPositions[x] || {})[y] ? nodeHeight + nodeSpacing : 0);
+            let yAdj = y + adj;
             nodes[ch] = {
-              x, y,
+              x, y: yAdj,
               style: {
-                top: `${y}px`,
+                top: `${yAdj}px`,
                 left: `${x}px`,
                 height: `${nodeHeight}px`,
                 width: `${nodeWidth}px`,
               },
               ...this.dataForNode(ch)
             };
+            if (!(x in nodesByPositions)) {
+              nodesByPositions[x] = {};
+            }
+            nodesByPositions[x][yAdj] = true;
           }
           let node = nodes[ch];
           let start = {
