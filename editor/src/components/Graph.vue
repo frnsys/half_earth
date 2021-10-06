@@ -24,6 +24,22 @@
         <div class="graph-node-body">
           <a @click="collapse" :href="`/?type=${node.type}#${node.id}`">{{node.text}}</a>
         </div>
+        <div class="graph-node-icons">
+          <template v-if="node.type === 'Event'">
+            <div>
+              <img class="graph-icon" v-for="factor in eventFactors(node.data)" :src="icon(factor)" />
+            </div>
+            <div>
+              <img class="graph-icon" v-for="effect in displayEffects(node.data)" :src="icon(effect)" />
+            </div>
+          </template>
+
+          <template v-if="node.type === 'Project'">
+            <div>
+              <img class="graph-icon" v-for="effect in displayEffects(node.data)" :src="icon(effect)" />
+            </div>
+          </template>
+        </div>
         <div class="graph-node-details">
           <template v-if="node.type === 'Event'">
             <div class="graph-node-details-meta">
@@ -98,6 +114,31 @@ import ProbabilitiesSummary from './subs/ProbabilitiesSummary.vue';
 import validate from '../validate';
 import consts from '../consts';
 
+const icons = {
+  Global: 'globe.png',
+  Outlook: 'crystal_ball.png',
+  Biodiversity: 'whale.png',
+  Locked: 'locked.png',
+  Contentedness: 'face.png',
+  Local: 'local.png',
+  Other: 'other_2.png',
+  Temperature: 'temperature.png',
+  Repeats: 'repeats.png',
+  SeaLevelRise: 'wave.png',
+  Habitability: 'tent_2.png',
+  Health: 'heart.png',
+  Population: 'people.png',
+  Safety: 'gun.png',
+  Flag: 'flag.png',
+  RunsPlayed: 'replays.png',
+  PoliticalCapital: 'ballot_box.png',
+  Year: 'calendar.png',
+  Emissions: 'cloud.png',
+  Precipitation: 'rain.png',
+  ResourceIntensity: 'pickaxe.png',
+  Output: 'factory.png',
+};
+
 function childrenForEffect(effect) {
   switch (effect.type) {
     case 'AddEvent':
@@ -123,6 +164,30 @@ function subtypeForItem(item) {
       return item.output;
   }
 }
+
+const displayFactors = [
+  'LocalVariable',
+  'WorldVariable',
+
+  'Demand',
+  'Output',
+  'OutputDemandGap',
+  'Resource',
+  'ResourceDemandGap',
+  'Flag',
+  'RunsPlayed'
+];
+const displayEffects = [
+  'LocalVariable',
+  'WorldVariable',
+  'PlayerVariable',
+
+  'Demand',
+  'Output',
+  'OutputForFeature',
+  'Resource',
+  'SetFlag',
+];
 
 export default {
   props: ['items'],
@@ -177,6 +242,43 @@ export default {
     }
   },
   methods: {
+    icon(label) {
+      return `/static/icons/${icons[label] || icons['Other']}`;
+    },
+    eventFactors(event) {
+      let factors = new Set();
+      (event.probabilities || []).forEach((prob) => {
+        prob.conditions.forEach((cond) => {
+          if (displayFactors.includes(cond.type)) {
+            if (cond.type == 'Flag') {
+              factors.add('Flag');
+            } else if (cond.type == 'RunsPlayed') {
+              factors.add('RunsPlayed');
+            } else if (cond.type == 'Output') {
+              factors.add('Output');
+            } else {
+              factors.add(cond.subtype);
+            }
+          }
+        });
+      });
+      return factors;
+    },
+    displayEffects(item) {
+      let effects = new Set();
+      (item.effects || []).forEach((effect) => {
+        if (displayEffects.includes(effect.type)) {
+          if (effect.type == 'SetFlag') {
+            effects.add('Flag');
+          } else if (effect.type == 'Output') {
+            effects.add('Output');
+          } else {
+            effects.add(effect.subtype);
+          }
+        }
+      });
+      return effects;
+    },
     search(ev) {
       if (ev.key === 'Enter') {
         let query = ev.target.value;
@@ -648,5 +750,25 @@ export default {
 	border: 1px solid #9f2727;
 	text-shadow: 0 0 2px rgba(0,0,0,0.5);
 	font-weight: bold;
+}
+
+.graph-node-icons {
+	position: absolute;
+	bottom: 0;
+	transform: translate(0, 50%);
+	left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+}
+.graph-node-icons > div {
+	display: flex;
+	background: rgba(0,0,0,0.8);
+	padding: 2px;
+	border-radius: 0.2em;
+	line-height: 1;
+}
+.graph-icon {
+  width: 14px;
 }
 </style>

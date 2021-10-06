@@ -147,7 +147,7 @@ export default {
 .process-summary .meta-pill:first-child {
 	background: #82ff9b;
 }
-.process-summary .feature-pill {
+.feature-pill {
   background: #98dca6;
 }
 </style>
