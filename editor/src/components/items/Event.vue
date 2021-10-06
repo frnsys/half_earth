@@ -88,7 +88,8 @@
       <div class="meta-pill arc-pill" v-if="localData.arc">{{localData.arc}}</div>
       <div class="meta-pill">{{localData.local ? 'Local': 'Global'}}</div>
       <div class="meta-pill" v-if="localData.repeats">⭯ Repeats</div>
-      <div class="meta-pill" v-if="localData.locked">Locked</div>
+      <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
+      <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
     <div class="item-summary-title" v-if="localData.description" v-html="descriptionHtml"></div>
     <div class="item-summary-title invalid" v-else>[MISSING DESCRIPTION]</div>

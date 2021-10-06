@@ -92,7 +92,8 @@
         <div>{{localData.years || 'MISSING'}}</div>
       </div>
       <div class="meta-pill" v-if="localData.uncertain">Uncertain</div>
-      <div class="meta-pill" v-if="localData.locked">Locked</div>
+      <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
+      <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>

@@ -4,7 +4,10 @@
   @mouseup="dragEnd"
   @mousemove="pan"
   :class="expanded ? '' : 'graph-collapsed'" @click="expand">
-  <div v-if="expanded" class="graph-collapse" @click="collapse">X</div>
+  <div class="graph-controls" v-if="expanded">
+    <input type="text" placeholder="Search" @keyup="search" />
+    <div class="graph-collapse" @click="collapse">X</div>
+  </div>
   <div class="graph-body" :style="offsets">
     <svg :style="size">
       <template v-for="edge in edges">
@@ -93,6 +96,7 @@ import OutcomesSummary from './subs/OutcomesSummary.vue';
 import EffectsSummary from './subs/EffectsSummary.vue';
 import ProbabilitiesSummary from './subs/ProbabilitiesSummary.vue';
 import validate from '../validate';
+import consts from '../consts';
 
 function childrenForEffect(effect) {
   switch (effect.type) {
@@ -134,6 +138,13 @@ export default {
       nodes: {},
       edges: [],
 
+      tree: [],
+      children: {},
+
+      query: null,
+      matchIdx: 0,
+      matches: [],
+
       expanded: false,
 
       height: 0,
@@ -144,23 +155,14 @@ export default {
       mouseprev: null
     };
   },
-  mounted() {
-    this.updateElements();
-  },
   watch: {
     items() {
-      this.updateElements();
+      if (this.expanded) {
+        this.updateElements();
+      }
     }
   },
   computed: {
-    tree() {
-      return Object.values(this.items).filter((item) => {
-        return ['Event', 'Project', 'Process'].includes(item._type);
-      }).reduce((acc, item) => {
-        acc[item.id] = item;
-        return acc;
-      }, {});
-    },
     size() {
       return {
         width: `${this.width}px`,
@@ -175,6 +177,32 @@ export default {
     }
   },
   methods: {
+    search(ev) {
+      if (ev.key === 'Enter') {
+        let query = ev.target.value;
+        if (this.query !== query) {
+          let regex = new RegExp(query, 'gi');
+          this.matches = Object.values(this.nodes).filter((node) => {
+            return node.text.match(regex) !== null;
+          });
+          this.matchIdx = 0;
+          this.query = query;
+        } else {
+          this.matchIdx++;
+          if (this.matchIdx > this.matches.length - 1) {
+            this.matchIdx = 0;
+          }
+        }
+        if (this.matches.length > 0) {
+          let node = this.matches[this.matchIdx];
+          this.offsetY = -node.y;
+        }
+      }
+    },
+    itemsOfType(type) {
+      return Object.values(this.items)
+        .filter((i) => i._type == type);
+    },
     validateItem(item) {
       let spec = validate[item._type];
       let valid = spec.validate.every((k) => {
@@ -189,6 +217,7 @@ export default {
     },
     expand() {
       if (!this.expanded) this.expanded = true;
+      this.updateElements();
       document.body.style.overflow = 'hidden';
     },
     dragStart(ev) {
@@ -214,18 +243,8 @@ export default {
         this.mouseprev = {x, y};
       }
     },
-    childrenForItem(item) {
-      switch (item._type) {
-        case 'Event':
-          return (item.effects || []).flatMap((effect) => childrenForEffect(effect));
-        case 'Project':
-          return (item.effects || []).flatMap((effect) => childrenForEffect(effect));
-        default:
-          return [];
-      }
-    },
     getDescendants(node) {
-      let children = this.childrenForItem(this.tree[node]);
+      let children = this.children[node];
       return children.concat(children.flatMap((ch) => this.getDescendants(ch)));
     },
     getMaxDepths(nodes, depths, depth) {
@@ -233,7 +252,7 @@ export default {
       depth = depth || 0;
       nodes.forEach((node) => {
         depths[node] = depth;
-        this.getMaxDepths(this.childrenForItem(this.tree[node]), depths, depth+1);
+        this.getMaxDepths(this.children[node], depths, depth+1);
       });
       return depths;
     },
@@ -243,7 +262,7 @@ export default {
         return acc;
       }, {});
       Object.keys(this.tree).forEach((k) => {
-        this.childrenForItem(this.tree[k]).forEach((ch) => {
+        this.children[k].forEach((ch) => {
           parents[ch].push(k);
         });
       });
@@ -270,22 +289,84 @@ export default {
         data
       };
     },
+    updateTree() {
+      this.tree = Object.values(this.items).filter((item) => {
+        return ['Event', 'Project', 'Process'].includes(item._type);
+      }).reduce((acc, item) => {
+        acc[item.id] = item;
+        return acc;
+      }, {});
+    },
+    updateChildren() {
+      let children = Object.keys(this.tree).reduce((acc, id) => {
+        acc[id] = [];
+        return acc;
+      }, {});
+
+      let processesByFeature = Object.values(this.tree).filter((item) => {
+        return item._type == 'Process';
+      }).reduce((acc, process) => {
+        Object.keys(consts.PROCESS_FEATURES).forEach((feat) => {
+          if (process.features[feat]) {
+            acc[feat].push(process.id);
+          }
+        });
+        return acc;
+      }, Object.keys(consts.PROCESS_FEATURES).reduce((acc, feat) => {
+        acc[feat] = [];
+        return acc;
+      }, {}));
+
+      Object.values(this.tree).forEach((item) => {
+        switch (item._type) {
+          case 'Event': {
+            let chs = (item.effects || []).flatMap((effect) => childrenForEffect(effect));
+            children[item.id].push(...chs);
+
+            // Figure out if this event is influenced by any projects or processes
+            (item.probabilities || []).forEach((prob) => {
+              prob.conditions.forEach((cond) => {
+                if (cond.type.startsWith('Project') || cond.type == 'ProcessMixShare') {
+                  children[cond.entity].push(item.id);
+                } else if (cond.type == 'ProcessMixShareFeature') {
+                  processesByFeature[cond.subtype].forEach((id) => {
+                    children[id].push(item.id);
+                  });
+                }
+              });
+            });
+            break;
+          }
+
+          case 'Project': {
+            let chs = (item.effects || []).flatMap((effect) => childrenForEffect(effect));
+            children[item.id].push(...chs);
+            break;
+          }
+          default:
+            break;
+        }
+      });
+      this.children = children;
+    },
     updateElements() {
+      this.updateTree();
+      this.updateChildren();
+
       let {roots, descendants, maxDepths} = this.getRoots(this.tree);
       let nodes = {};
       let edges = [];
 
-      const nodeHeight = 60;
-      const nodeWidth = 120;
+      const nodeHeight = 70;
+      const nodeWidth = 140;
       const nodeSpacing = 20;
       const edgeHeight = 4;
       let y = 0;
 
       const recurseChildren = (parent) => {
         let paNode = nodes[parent];
-        let data = this.tree[parent];
         let y = paNode.y;
-        this.childrenForItem(data).forEach((ch, i) => {
+        this.children[parent].forEach((ch, i) => {
           let existing = nodes[ch];
           if (!existing) {
             if (i > 0) {
@@ -423,13 +504,13 @@ export default {
   top: 0;
   left: 0;
   transform: translate(0, -75%);
-  font-size: 0.6em;
+  font-size: 0.75em;
   display: flex;
 }
 .graph-tags > div {
   border: 1px solid #000;
   border-radius: 0.2em;
-  padding: 0.1em 0.2em;
+  padding: 0 0.2em;
   margin-right: 0.5em;
   background: #83C8F2;
 }
@@ -493,16 +574,25 @@ export default {
   cursor: pointer;
 }
 
-.graph-collapse {
+.graph-controls {
 	position: absolute;
 	right: 1em;
 	top: 0.5em;
-	color: #aaa;
-	font-size: 2em;
+  z-index: 20;
+  display: flex;
+}
+.graph-controls input {
+	font-size: 1.4em;
+	width: 10em;
+	margin-right: 0.5em;
+  background: #aaa;
+}
+.graph-collapse {
 	cursor: pointer;
 	opacity: 0.7;
   user-select: none;
-  z-index: 20;
+	color: #aaa;
+	font-size: 2em;
 }
 .graph-collapse:hover {
   opacity: 1;
@@ -512,7 +602,6 @@ export default {
   display: block;
 }
 .graph-node-details {
-  font-size: 0.8em;
 	padding: 0.5em;
   background: #fff7ee;
 	position: absolute;
@@ -522,12 +611,20 @@ export default {
   z-index: 2;
   left: 5%;
   border-radius: 0.2em;
-  min-width: 200px;
+  min-width: 240px;
   pointer-events: none;
 }
 .graph-node-details-meta {
   display: flex;
   width: 100%;
+  font-size: 1.1em;
+}
+.graph-node-details .probability-type,
+.graph-node-details .summary-pill {
+  font-size: 0.75em;
+}
+.graph-node-details .probability-type {
+  padding: 0 0.25em;
 }
 
 .graph-invalid {
@@ -540,7 +637,7 @@ export default {
 	padding: 0.1em 0.38em;
 	line-height: 1;
 	border-radius: 20em;
-	font-size: 0.75em;
+	font-size: 0.8em;
 	border: 1px solid #9f2727;
 	text-shadow: 0 0 2px rgba(0,0,0,0.5);
 	font-weight: bold;
