@@ -53,7 +53,7 @@
     </fieldset>
     <fieldset class="big-group">
       <div>
-        <Image :image="localData.image" @update="saveData('image', $event)" />
+        <Image :image="localData.image" :attribution="localData.image_attribution" @image="saveData('image', $event)" @update="saveData('image_attribution', $event)"/>
         <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
       </div>
       <div>
@@ -110,7 +110,10 @@
         <EffectsSummary v-if="defined('effects')" :effects="localData.effects" />
         <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
       </div>
-        <img class="item-summary-image image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
+      <div class="item-summary-image">
+        <img class="image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
+        <div class="image-attribution">{{localData.image_attribution}}</div>
+      </div>
     </fieldset>
     <div class="item-summary-details">
       <div>

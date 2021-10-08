@@ -3,6 +3,7 @@
   <img class="image-preview" v-if="image" :src="`/image/${image}`"/>
   <div>
     <label>Upload Image</label>
+    <input type="text" placeholder="Attribution credit" v-model="attribution" @blur="$emit('update', attribution)" />
     <input type="file" ref="input" @change="uploadImage" />
   </div>
 </div>
@@ -10,7 +11,7 @@
 
 <script>
 export default {
-  props: ['image'],
+  props: ['image', 'attribution'],
   methods: {
     uploadImage() {
       let img = this.$refs.input.files[0];
@@ -33,7 +34,7 @@ export default {
           return res.json();
         })
         .then(({filename}) => {
-          this.$emit('update', filename);
+          this.$emit('image', filename);
         });
     },
   },
@@ -53,6 +54,7 @@ export default {
   display: block;
   margin: 0 auto;
   border: 1px solid #222;
+  border-radius: 0.2em;
 }
 .image-form > div {
 	padding: 0 0.5em 0.5em 0.5em;

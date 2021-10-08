@@ -371,6 +371,7 @@ input[type=number] {
 	background: #f8f8f8;
 	padding: 0.25em 0.5em;
   border: 1px solid #aaa;
+  border-radius: 0.2em;
 }
 
 
@@ -612,6 +613,7 @@ nav {
 }
 .item-summary-notes {
   font-size: 0.7em;
+  margin: 1em 0 0 0;
 }
 .item-summary-notes a {
   color: #3639ff;
@@ -651,5 +653,11 @@ h5 {
 
 .outputs-summary, .resources-summary, .byproducts-summary {
   display: inline-block;
+}
+
+.image-attribution {
+  font-size: 0.7em;
+  font-style: italic;
+  color: #555;
 }
 </style>
