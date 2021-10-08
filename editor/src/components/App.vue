@@ -270,11 +270,15 @@ fieldset > div textarea {
 fieldset > div:first-child {
   margin-left: 0;
 }
+fieldset.big-group > div {
+  justify-content: start;
+}
 .field-group {
   padding: 0.1em 0.5em 0.5em 0.5em;
   background: #f5f5f5;
   border: 1px solid #aaa;
   margin: 0.5em 0;
+  border-radius: 0.2em;
 }
 .field-group label {
 	background: #ddd;
@@ -611,6 +615,10 @@ nav {
 }
 .item-summary-notes a {
   color: #3639ff;
+}
+.item-summary-image {
+  max-width: 260px;
+  margin: 0 1em 0 0;
 }
 .item-summary-title.invalid,
 .item-summary-desc.invalid {

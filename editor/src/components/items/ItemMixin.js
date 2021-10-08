@@ -3,6 +3,7 @@ import util from '../../util';
 import Tip from '../Tip.vue';
 import Flags from '../Flags.vue';
 import Notes from '../Notes.vue';
+import Image from '../Image.vue';
 import Effects from '../subs/Effects.vue';
 import Outputs from '../subs/Outputs.vue';
 import Resources from '../subs/Resources.vue';
@@ -29,7 +30,7 @@ export default {
     };
   },
   components: {
-    Tip, Flags, Notes, Effects,
+    Tip, Flags, Notes, Image, Effects,
     Outputs, Resources, Byproducts,
     Conditions, Probabilities,
     ProbabilitiesSummary, EffectsSummary,

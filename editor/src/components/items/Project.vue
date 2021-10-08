@@ -51,25 +51,31 @@
         <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
       </div>
     </fieldset>
-    <div>
-      <label>
-        Description
-        <Tip>A 1-2 sentence description of the project.</Tip>
-      </label>
-      <textarea v-model="localData.description" placeholder="A brief description" @blur="save" :class="flags('description')"/>
-    </div>
-    <div class="field-group">
-      <h3>Implementation (per year)</h3>
-      <Resources :resources="localData.construction" @update="saveData('construction', $event)"/>
-      <Byproducts :byproducts="localData.construction_byproducts" @update="saveData('construction_byproducts', $event)"/>
-    </div>
-    <div class="field-group" v-if="localData.ongoing">
-      <h3>Maintenance (per year)</h3>
-      <Resources :resources="localData.maintenance" @update="saveData('maintenance', $event)"/>
-      <Byproducts :byproducts="localData.maintenance_byproducts" @update="saveData('maintenance_byproducts', $event)"/>
-    </div>
-
-    <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
+    <fieldset class="big-group">
+      <div>
+        <Image :image="localData.image" @update="saveData('image', $event)" />
+        <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
+      </div>
+      <div>
+        <div>
+          <label>
+            Description
+            <Tip>A 1-2 sentence description of the project.</Tip>
+          </label>
+          <textarea v-model="localData.description" placeholder="A brief description" @blur="save" :class="flags('description')"/>
+        </div>
+        <div class="field-group">
+          <h3>Implementation (per year)</h3>
+          <Resources :resources="localData.construction" @update="saveData('construction', $event)"/>
+          <Byproducts :byproducts="localData.construction_byproducts" @update="saveData('construction_byproducts', $event)"/>
+        </div>
+        <div class="field-group" v-if="localData.ongoing">
+          <h3>Maintenance (per year)</h3>
+          <Resources :resources="localData.maintenance" @update="saveData('maintenance', $event)"/>
+          <Byproducts :byproducts="localData.maintenance_byproducts" @update="saveData('maintenance_byproducts', $event)"/>
+        </div>
+      </div>
+    </fieldset>
 
     <Outcomes :outcomes="localData.outcomes" @update="saveData('outcomes', $event)" />
 
@@ -95,10 +101,17 @@
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
-    <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
-    <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
-    <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
-    <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+    <fieldset>
+      <div>
+        <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
+        <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
+        <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
+        <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+        <EffectsSummary v-if="defined('effects')" :effects="localData.effects" />
+        <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
+      </div>
+        <img class="item-summary-image image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
+    </fieldset>
     <div class="item-summary-details">
       <div>
         <div>
@@ -112,9 +125,6 @@
           <ByproductsSummary :byproducts="localData.maintenance_byproducts" />
         </div>
       </div>
-
-      <EffectsSummary v-if="defined('effects')" :effects="localData.effects" />
-      <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
     </div>
     <h5>Outcomes</h5>
     <OutcomesSummary :outcomes="localData.outcomes" />

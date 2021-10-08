@@ -113,6 +113,7 @@
               </template>
             </div>
           </template>
+          <img class="image-preview" v-if="node.data.image" :src="`/image/${node.data.image}`"/>
         </div>
       </div>
     </template>
@@ -688,6 +689,7 @@ export default {
 	bottom: 1em;
 	top: auto;
   user-select: none;
+  border-radius: 0.2em;
 }
 .graph-collapsed:hover {
   cursor: pointer;
@@ -810,5 +812,10 @@ export default {
 .graph-pill > div:first-child {
 	background: #FFC049;
   border-right: 1px solid #000;
+}
+
+.graph-node-details .image-preview {
+  margin-bottom: 0.5em;
+  border-radius: 0.2em;
 }
 </style>

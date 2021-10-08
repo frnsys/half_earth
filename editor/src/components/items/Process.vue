@@ -59,23 +59,26 @@
       <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
     </div>
 
-    <div class="process-group">
+    <fieldset class="big-group">
+      <div>
+        <Image :image="localData.image" @update="saveData('image', $event)" />
+      </div>
       <div>
         <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
         <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
-      </div>
-      <div>
-        <label>
-          Process Features
-          <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
-        </label>
-        <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
-          <input :checked="getFeature(k)" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
-          <label :for="`${item.id}_${k}`">{{k}}</label>
-          <Tip>{{PROCESS_FEATURES[k]}}</Tip>
+        <div>
+          <label>
+            Process Features
+            <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
+          </label>
+          <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
+            <input :checked="getFeature(k)" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
+            <label :for="`${item.id}_${k}`">{{k}}</label>
+            <Tip>{{PROCESS_FEATURES[k]}}</Tip>
+          </div>
         </div>
       </div>
-    </div>
+    </fieldset>
 
     <div>
       <label>
@@ -101,19 +104,24 @@
         <div class="meta-pill feature-pill" v-if="localData.features[k]"><div>{{k}}</div></div>
       </template>
     </div>
-    <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
-    <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
-    <p class="item-summary-desc" v-if="localData.description">{{localData.description}}</p>
-    <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
-    <div>
-      <h5 class="kinds-summary-label">Per {{OUTPUTS[localData.output]}}:</h5>
-      <div class="summary-pill feedstock-pill">
-        <div>{{localData.feedstock || '[MISSING]'}}</div>
-        <div>{{localData.feedstock_amount || '[MISSING]'}} {{FEEDSTOCKS[localData.feedstock]}}</div>
+    <fieldset>
+      <div>
+        <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
+        <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
+        <p class="item-summary-desc" v-if="localData.description">{{localData.description}}</p>
+        <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+        <div>
+          <h5 class="kinds-summary-label">Per {{OUTPUTS[localData.output]}}:</h5>
+          <div class="summary-pill feedstock-pill">
+            <div>{{localData.feedstock || '[MISSING]'}}</div>
+            <div>{{localData.feedstock_amount || '[MISSING]'}} {{FEEDSTOCKS[localData.feedstock]}}</div>
+          </div>
+          <ResourcesSummary :resources="localData.reqs" />
+          <ByproductsSummary :byproducts="localData.byproducts" />
+        </div>
       </div>
-      <ResourcesSummary :resources="localData.reqs" />
-      <ByproductsSummary :byproducts="localData.byproducts" />
-    </div>
+      <img class="item-summary-image image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
+    </fieldset>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -168,12 +176,6 @@ export default {
   background: #98dca6;
 }
 
-.process-group {
-  display: flex;
-}
-.process-group > div:first-child {
-  padding-right: 0.5em;
-}
 .feedstock-pill > div:first-child {
   background: #9898fd;
 }
