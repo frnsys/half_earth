@@ -34,6 +34,13 @@ function requireResources(resources) {
   return valid.length > 0;
 }
 
+function requireByproducts(byproducts) {
+  let valid = Object.keys(consts.BYPRODUCTS).filter((k) => {
+    return byproducts[k] !== undefined && byproducts[k] !== '' && byproducts[k] > 0;
+  });
+  return valid.length > 0;
+}
+
 function _itemEffects() {
   return Object.values(state.items).flatMap((item) => {
     return item.effects || [];
@@ -194,7 +201,7 @@ const SPECS = {
         case 'years':
           return requirePositive(item.years);
         case 'outcomes':
-          return validateOutcomes(item.outcomes);
+          return validateOutcomes(item.outcomes || []);
         case 'locked':
           if (item.locked === undefined) item.locked = false;
           return item.locked == hasUnlocker(item);
@@ -206,7 +213,7 @@ const SPECS = {
 
   Process: {
     key: 'name',
-    validate: ['name', 'description', 'output', 'mix_share', 'locked'],
+    validate: ['name', 'description', 'output', 'mix_share', 'locked', 'feedstock', 'feedstock_amount'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -216,6 +223,10 @@ const SPECS = {
           return requireAtLeastOne(item.description);
         case 'output':
           return requireOneOfChoice(item.output, Object.keys(consts.OUTPUTS));
+        case 'feedstock':
+          return requireOneOfChoice(item.feedstock, Object.keys(consts.FEEDSTOCKS));
+        case 'feedstock_amount':
+          return requirePositiveInclZero(item.feedstock_amount);
         case 'mix_share':
           return requirePositiveInclZero(item.mix_share);
         case 'locked':
@@ -229,10 +240,15 @@ const SPECS = {
 
   Region: {
     key: 'name',
-    validate: ['name', 'safety', 'health', 'outlook'],
+    validate: ['name', 'health', 'outlook', 'income_level'],
     questions: ['name', 'notes'],
     validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Region.validate);
+      switch (key) {
+        case 'income_level':
+          return requireOneOfChoice(item.income_level, consts.INCOME_LEVELS);
+        default:
+          return validateBasic(item, key, SPECS.Region.validate);
+      }
     }
   },
 
@@ -260,6 +276,31 @@ const SPECS = {
     questions: ['name', 'values'],
     validateKey: (item, key) => {
       return validateBasic(item, key, SPECS.Variable.validate);
+    }
+  },
+
+  Const: {
+    key: 'name',
+    validate: ['name', 'value'],
+    questions: ['name', 'value'],
+    validateKey: (item, key) => {
+      return validateBasic(item, key, SPECS.Const.validate);
+    }
+  },
+
+  Industry: {
+    key: 'name',
+    validate: ['name', 'resources'],
+    questions: [],
+    validateKey: (item, key) => {
+      switch (key) {
+        case 'name':
+          return requireAtLeastOne(item.name);
+        case 'resources':
+          return requireNonEmptyObj(item.resources) && requireResources(item.resources);
+        default:
+          return true;
+      }
     }
   }
 }

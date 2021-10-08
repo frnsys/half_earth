@@ -2,11 +2,13 @@
 <nav>
   <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
   <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
+  <div class="tab" :class="{selected: type == 'Industry'}" @click="() => type = 'Industry'">Industries</div>
   <div class="tab" :class="{selected: type == 'Process'}" @click="() => type = 'Process'">Processes</div>
   <div class="tab" :class="{selected: type == 'Project'}" @click="() => type = 'Project'">Projects</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
   <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
   <div class="tab" :class="{selected: type == 'Flag'}" @click="() => type = 'Flag'">Flags</div>
+  <div class="tab" :class="{selected: type == 'Const'}" @click="() => type = 'Const'">Consts</div>
 </nav>
 <div class="items" :class="type">
   <template v-if="type == 'Process'">
@@ -27,8 +29,14 @@
   <template v-if="type == 'Flag'">
     <Flag v-for="f in itemsOfCurrentType" :item="f" />
   </template>
+  <template v-if="type == 'Const'">
+    <Const v-for="f in itemsOfCurrentType" :item="f" />
+  </template>
   <template v-if="type == 'Variable'">
     <Variable v-for="v in itemsOfCurrentType" :item="v" />
+  </template>
+  <template v-if="type == 'Industry'">
+    <Industry v-for="v in itemsOfCurrentType" :item="v" />
   </template>
 </div>
 <div class="sidebar">
@@ -72,7 +80,9 @@ import Project from './items/Project.vue';
 import Process from './items/Process.vue';
 import Earth from './items/Earth.vue';
 import Variable from './items/Variable.vue';
+import Industry from './items/Industry.vue';
 import Flag from './items/Flag.vue';
+import Const from './items/Const.vue';
 import validate from '../validate';
 
 import Graph from './Graph.vue';
@@ -110,6 +120,8 @@ export default {
     Process,
     Flag,
     Variable,
+    Const,
+    Industry,
     Graph
   },
   methods: {
@@ -123,7 +135,7 @@ export default {
     },
     itemsOfType(type) {
       return Object.values(this.state.items)
-        .filter((i) => i._type == type);
+        .filter((i) => i._type == type && !i.deleted);
     },
   },
   watch: {
@@ -312,11 +324,9 @@ input.title, textarea.title {
   margin-left: 5px;
 }
 .kind-quantities {
-  display: grid;
+  display: flex;
   margin: 0.25em 0;
-  grid-gap: 5px;
   justify-content: space-between;
-  grid-template-columns: repeat(7, 90px);
 }
 .kind-quantities::after {
   content: "";
@@ -325,6 +335,7 @@ input.title, textarea.title {
 .kind-quantities > div {
   width: 90px;
   border: 1px solid #aaa;
+  margin-right: 0.5em;
 }
 .kind-quantities > div input {
   border: 0;
@@ -539,6 +550,10 @@ nav {
 .kind-summaries .summary-pill > div:first-child {
   background: #e9d06d;
 }
+.kinds-summary-label {
+  display: inline-block;
+  margin-right: 0.5em;
+}
 
 .item-meta {
   position: absolute;
@@ -619,5 +634,14 @@ nav {
 h5 {
   margin: 0;
   font-weight: normal;
+}
+
+.additional-actions {
+  margin: 0.5em 0;
+  text-align: right;
+}
+
+.outputs-summary, .resources-summary, .byproducts-summary {
+  display: inline-block;
 }
 </style>

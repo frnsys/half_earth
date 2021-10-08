@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="outputs-summary">
   <ul v-if="validOutputs.length > 0" class="kind-summaries">
     <li v-for="k in validOutputs" class="summary-pill">
       <div>{{k}}</div>

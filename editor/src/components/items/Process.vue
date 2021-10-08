@@ -22,6 +22,22 @@
       </div>
       <div>
         <label>
+          Feedstock
+          <Tip>The main feedstock this process depends on.</Tip>
+        </label>
+        <select v-model="localData.feedstock" @change="save" :class="flags('feedstock')">
+          <option v-for="k in Object.keys(FEEDSTOCKS)" :value="k">{{k}} ({{FEEDSTOCKS[k]}})</option>
+        </select>
+      </div>
+      <div>
+        <label>
+          Feedstock per output
+          <Tip>Amount of feedstock required per unit output</Tip>
+        </label>
+        <input type="number" min="0" v-model="localData.feedstock_amount" @change="save" :class="flags('feedstock_amount')" />
+      </div>
+      <div>
+        <label>
           Mix Share
           <Tip>The mix share (%) of this process for its output.</Tip>
         </label>
@@ -43,20 +59,21 @@
       <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
     </div>
 
-    <div class="field-group">
-      <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
-      <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
-    </div>
-
-    <div>
-      <label>
-        Process Features
-        <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
-      </label>
-      <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
-        <input :checked="getFeature(k)" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
-        <label :for="`${item.id}_${k}`">{{k}}</label>
-        <Tip>{{PROCESS_FEATURES[k]}}</Tip>
+    <div class="process-group">
+      <div>
+        <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
+        <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
+      </div>
+      <div>
+        <label>
+          Process Features
+          <Tip>Special flags indicating additional process features/details. Used by (for example) events.</Tip>
+        </label>
+        <div class="checkbox-feature" v-for="k in Object.keys(PROCESS_FEATURES)">
+          <input :checked="getFeature(k)" type="checkbox" :id="`${item.id}_${k}`" @change="(ev) => updateFeature(k, ev.target.checked)">
+          <label :for="`${item.id}_${k}`">{{k}}</label>
+          <Tip>{{PROCESS_FEATURES[k]}}</Tip>
+        </div>
       </div>
     </div>
 
@@ -80,22 +97,22 @@
       </div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
+      <template v-for="k in Object.keys(PROCESS_FEATURES)" v-if="localData.features">
+        <div class="meta-pill feature-pill" v-if="localData.features[k]"><div>{{k}}</div></div>
+      </template>
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
     <p class="item-summary-desc" v-if="localData.description">{{localData.description}}</p>
     <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
-    <div class="item-summary-details">
-      <div>
-        <h5>Per {{OUTPUTS[localData.output]}}:</h5>
-        <ResourcesSummary :resources="localData.reqs" />
-        <ByproductsSummary :byproducts="localData.byproducts" />
+    <div>
+      <h5 class="kinds-summary-label">Per {{OUTPUTS[localData.output]}}:</h5>
+      <div class="summary-pill feedstock-pill">
+        <div>{{localData.feedstock || '[MISSING]'}}</div>
+        <div>{{localData.feedstock_amount || '[MISSING]'}} {{FEEDSTOCKS[localData.feedstock]}}</div>
       </div>
-      <div>
-        <template v-for="k in Object.keys(PROCESS_FEATURES)" v-if="localData.features">
-          <div class="summary-pill feature-pill" v-if="localData.features[k]"><div>{{k}}</div></div>
-        </template>
-      </div>
+      <ResourcesSummary :resources="localData.reqs" />
+      <ByproductsSummary :byproducts="localData.byproducts" />
     </div>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
@@ -147,7 +164,17 @@ export default {
 .process-summary .meta-pill:first-child {
 	background: #82ff9b;
 }
-.feature-pill {
+.meta-pill.feature-pill {
   background: #98dca6;
+}
+
+.process-group {
+  display: flex;
+}
+.process-group > div:first-child {
+  padding-right: 0.5em;
+}
+.feedstock-pill > div:first-child {
+  background: #9898fd;
 }
 </style>

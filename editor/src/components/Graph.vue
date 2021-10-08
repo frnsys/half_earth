@@ -8,6 +8,7 @@
     <input type="text" placeholder="Search" @keyup="search" />
     <div class="graph-collapse" @click="collapse">X</div>
   </div>
+  <div v-if="!expanded" class="graph-expand-icon"><img src="/static/graph.png" /></div>
   <div class="graph-body" :style="offsets">
     <svg :style="size">
       <template v-for="edge in edges">
@@ -35,8 +36,23 @@
           </template>
 
           <template v-if="node.type === 'Project'">
+            <div class="graph-pill">
+              <div>Years</div>
+              <div>{{node.data.years || 'X'}}</div>
+            </div>
             <div>
               <img class="graph-icon" v-for="effect in displayEffects(node.data)" :src="icon(effect)" />
+            </div>
+          </template>
+
+          <template v-if="node.type === 'Process'">
+            <div class="graph-pill">
+              <div>{{node.data.feedstock}}</div>
+              <div>{{node.data.feedstock_amount || 'X'}} {{FEEDSTOCKS[node.data.feedstock]}}</div>
+            </div>
+            <div class="graph-pill">
+              <div>Mix</div>
+              <div>{{node.data.mix_share || 'X'}}%</div>
             </div>
           </template>
         </div>
@@ -128,7 +144,6 @@ const icons = {
   Habitability: 'tent_2.png',
   Health: 'heart.png',
   Population: 'people.png',
-  Safety: 'gun.png',
   Flag: 'flag.png',
   RunsPlayed: 'replays.png',
   PoliticalCapital: 'ballot_box.png',
@@ -770,5 +785,30 @@ export default {
 }
 .graph-icon {
   width: 14px;
+}
+
+.graph-expand-icon {
+	align-items: center;
+	display: flex;
+	height: 100%;
+}
+.graph-expand-icon img {
+	height: 32px;
+	margin: 0 auto;
+	display: block;
+}
+
+.graph-node-icons .graph-pill {
+	border: 1px solid;
+	font-size: 0.75em;
+	padding: 0;
+  background: #eee;
+}
+.graph-pill > div {
+  padding: 1px 2px;
+}
+.graph-pill > div:first-child {
+	background: #FFC049;
+  border-right: 1px solid #000;
 }
 </style>

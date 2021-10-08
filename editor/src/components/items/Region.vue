@@ -13,17 +13,19 @@
     <fieldset>
       <div>
         <label>
+          Income Level
+          <Tip>Starting income level for the region. This is used to scale per-capita impacts/demand.</Tip>
+        </label>
+        <select v-model="localData.income_level" @change="save" :class="flags('income_level')">
+          <option v-for="k in INCOME_LEVELS" :value="k">{{k}}</option>
+        </select>
+      </div>
+      <div>
+        <label>
           Health
           <Tip>Starting public health, from 0 to 1, with 1 being everyone in perfect health with perfect access to top-quality healthcare and 0 being no healthcare system whatsoever amidst widespread pollution and contamination.</Tip>
         </label>
         <input v-model="localData.health" type="number" min="0" @blur="save" :class="flags('health')">
-      </div>
-      <div>
-        <label>
-          Safety
-          <Tip>Starting public safety, from 0 to 1, with 1 meaning no one is ever worried about crime or harm, and 0 means everyone is living in constant fear.</Tip>
-        </label>
-        <input v-model="localData.safety" type="number" min="0" @blur="save" :class="flags('safety')">
       </div>
       <div>
         <label>
@@ -33,18 +35,6 @@
         <input v-model="localData.outlook" type="number" min="0" @blur="save" :class="flags('outlook')">
       </div>
     </fieldset>
-    <div class="field-group">
-      <h3>Starting Per-Capita Demand</h3>
-      <div>
-        <label>
-          Output Demand
-          <Tip>Per-capita demand captured by process outputs.</Tip>
-        </label>
-        <Outputs :outputs="localData.demand" @update="saveData('demand', $event)"/>
-      </div>
-      <Resources :resources="localData.other_demand" @update="saveData('other_demand', $event)"/>
-    </div>
-
     <div>
       <label>
         Flavor Text/Dialogue
@@ -54,14 +44,18 @@
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
+
+    <div class="additional-actions">
+      <button @click="delete">Delete</button>
+    </div>
   </template>
   <div v-else class="region-summary item-summary">
     <div class="item-meta">
+      <div class="meta-pill split-pill" :class="{invalid: !localData.income_level}">
+        <div>Income Level</div><div>{{localData.income_level || 'MISSING'}}</div>
+      </div>
       <div class="meta-pill split-pill" :class="{invalid: !localData.health}">
         <div>Health</div><div>{{localData.health || 'MISSING'}}</div>
-      </div>
-      <div class="meta-pill split-pill" :class="{invalid: !localData.safety}">
-        <div>Safety</div><div>{{localData.safety || 'MISSING'}}</div>
       </div>
       <div class="meta-pill split-pill" :class="{invalid: !localData.outlook}">
         <div>Outlook</div><div>{{localData.outlook || 'MISSING'}}</div>
@@ -69,13 +63,6 @@
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
-    <div class="item-summary-details">
-      <div>
-        <div>Starting per-capita demand</div>
-        <OutputsSummary :outputs="localData.demand" />
-        <ResourcesSummary :resources="localData.other_demand" />
-      </div>
-    </div>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -84,6 +71,14 @@
 <script>
 import ItemMixin from './ItemMixin';
 export default {
+  methods: {
+    delete() {
+      if (confirm('Are you sure you want to delete this?')) {
+        this.localData.deleted = true;
+        this.save();
+      }
+    }
+  },
   mixins: [ItemMixin]
 };
 </script>

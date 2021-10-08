@@ -1,42 +1,35 @@
 const OUTPUTS = {
-  'Fuel': 'barrels?',
-  'Electricity':	'TWh',
+  'Fuel': 'kWh',
+  'Electricity':	'kWh',
   'PlantCalories': 'kcals',
   'AnimalCalories': 'kcals',
-  'Concrete': 'tons',
-  'Steel': 'tons',
-  'Minerals': 'tons',
   // 'Project': 'points',	// Used for projects/policies/research
   // 'Misc': 'points',	    // Catch-all for outputs not represented here, e.g. healthcare, transportation, etc
 };
 
 const RESOURCES = {
-  'Sun': '?units',
-  'Wind': '?units',
-  'Soil': '?units',
+  'Land': 'm2',
   'Water': 'm3',
-  'Biomass?': '?units',
-  'Lumber?': '?units',
+  'Fuel': 'kWh',
+  'Electricity': 'kWh',
+}
+
+const FEEDSTOCKS = {
+  'Sun': 'kWh/m2',
+  'Wind': 'm/s',
+  'Soil': 'ferts',
   'Coal': 'tons',
-  'Oil': '?units',
-  'Uranium': '?units',
-  'Lithium': '?units',
-  'Labor': 'hours',
-  'Fuel': 'barrels?',
-  'Electricity': 'TWh',
-  'PlantCalories': 'kcals',
-  'Minerals': 'tons',
-  'CO2': 'tons',
-  'Concrete': 'tons',
-  'Steel': 'tons',
-  'Land': 'ha',
+  'Oil': 'barrels',
+  'NaturalGas': 'm3',
+  'Uranium': 'tons',
+  'Lithium': 'tons',
 };
 
 const BYPRODUCTS = {
-  'CO2': 'tons',
-  'Methane': 'tons',
+  'CO2': 'µt',
+  'Methane': 'µt',
   'Pollution': 'ppm?',
-  'Biodiversity': 'e/msy',
+  'Biodiversity': 'pressure',
 }
 
 const PROCESS_FEATURES = {
@@ -51,13 +44,19 @@ const PROCESS_FEATURES = {
   'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
 }
 
+const INCOME_LEVELS = [
+  'Low',
+  'Lower-Middle',
+  'Upper-Middle',
+  'High'
+];
+
 const COMPARATORS = ['<', '<=', '==', '!=', '>=', '>'];
 const CONDITIONS = {
   LocalVariable: {
     compare: true,
     choices: [
-      'Population', 'Health',
-      'Safety', 'Outlook',
+      'Population', 'Health', 'Outlook',
       'Contentedness', 'Habitability']
   },
   WorldVariable: {
@@ -84,6 +83,10 @@ const CONDITIONS = {
   Resource: {
     compare: true,
     choices: Object.keys(RESOURCES),
+  },
+  Feedstock: {
+    compare: true,
+    choices: Object.keys(FEEDSTOCKS),
   },
   ResourceDemandGap: {
     compare: true,
@@ -124,8 +127,7 @@ const EFFECTS = {
   LocalVariable: {
     choices: [
       'Population', 'Health',
-      'Safety', 'Outlook',
-      'BaseHabitability'],
+      'Outlook', 'BaseHabitability'],
     params: {
       'Change': Number
     }
@@ -134,7 +136,6 @@ const EFFECTS = {
   WorldVariable: {
     choices: [
       'Population', 'Emissions', 'Health',
-      'Safety',
       'Biodiversity', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook'],
@@ -175,6 +176,13 @@ const EFFECTS = {
 
   Resource: {
     choices: Object.keys(RESOURCES),
+    params: {
+      'PercentChange': Number
+    }
+  },
+
+  Feedstock: {
+    choices: Object.keys(FEEDSTOCKS),
     params: {
       'PercentChange': Number
     }
@@ -224,9 +232,11 @@ export default {
   OUTPUTS,
   RESOURCES,
   BYPRODUCTS,
+  FEEDSTOCKS,
   PROCESS_FEATURES,
   EFFECTS,
   COMPARATORS,
   CONDITIONS,
   PROBABILITIES,
+  INCOME_LEVELS
 };
