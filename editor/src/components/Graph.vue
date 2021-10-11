@@ -17,7 +17,7 @@
     </svg>
     <template v-for="node in nodes">
       <div class="graph-node" :style="node.style" :class="node.type">
-        <img class="graph-node-image" v-if="node.data.image" :style="{backgroundImage: `url(/image/${node.data.image})`}" />
+        <img class="graph-node-image" v-if="node.data.image" :style="{backgroundImage: `url(/image/${node.data.image.image})`}" />
         <div class="graph-tags">
           <div class="graph-type">{{node.type}}</div>
           <div class="graph-subtype" :class="{invalid: !node.subtype}">{{node.subtype ? node.subtype : '[Missing]'}}</div>

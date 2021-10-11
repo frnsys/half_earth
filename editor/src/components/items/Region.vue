@@ -34,6 +34,13 @@
         </label>
         <input v-model="localData.outlook" type="number" min="0" @blur="save" :class="flags('outlook')">
       </div>
+      <div>
+        <label>
+          Starting Population
+          <Tip>Starting population</Tip>
+        </label>
+        <input v-model="localData.population" type="number" min="0" @blur="save" :class="flags('population')">
+      </div>
     </fieldset>
     <div>
       <label>
@@ -59,6 +66,9 @@
       </div>
       <div class="meta-pill split-pill" :class="{invalid: !localData.outlook}">
         <div>Outlook</div><div>{{localData.outlook || 'MISSING'}}</div>
+      </div>
+      <div class="meta-pill split-pill" :class="{invalid: !localData.population}">
+        <div>Population</div><div>{{localData.population || 'MISSING'}}</div>
       </div>
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>

@@ -54,7 +54,7 @@
 
     <fieldset class="big-group">
       <div>
-        <Image :image="localData.image" :attribution="localData.image_attribution" @image="saveData('image', $event)" @update="saveData('image_attribution', $event)"/>
+        <Image :image="localData.image" @update="saveData('image', $event)" />
       </div>
       <div>
         <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
@@ -115,9 +115,9 @@
           <ByproductsSummary :byproducts="localData.byproducts" />
         </div>
       </div>
-      <div class="item-summary-image">
-        <img class="image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
-        <div class="image-attribution">{{localData.image_attribution}}</div>
+      <div class="item-summary-image" v-if="localData.image">
+        <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
+        <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
     </fieldset>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
