@@ -18,6 +18,9 @@
     </div>
   </fieldset>
   <Notes :notes="localData.notes" @blur="saveNotes" />
+  <div class="additional-actions">
+    <button @click="delete">Delete</button>
+  </div>
 </li>
 </template>
 

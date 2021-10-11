@@ -1,34 +1,33 @@
 const OUTPUTS = {
   'Fuel': 'kWh',
   'Electricity':	'kWh',
-  'PlantCalories': 'kcals',
-  'AnimalCalories': 'kcals',
-  // 'Project': 'points',	// Used for projects/policies/research
-  // 'Misc': 'points',	    // Catch-all for outputs not represented here, e.g. healthcare, transportation, etc
+  'PlantCalories': 'kcal',
+  'AnimalCalories': 'kcal',
+  // 'Project': 'point',	// Used for projects/policies/research
+  // 'Misc': 'point',	    // Catch-all for outputs not represented here, e.g. healthcare, transportation, etc
 };
 
 const RESOURCES = {
   'Land': 'm2',
-  'Water': 'm3',
+  'Water': 'L',
   'Fuel': 'kWh',
   'Electricity': 'kWh',
 }
 
 const FEEDSTOCKS = {
-  'Sun': 'kWh/m2',
-  'Wind': 'm/s',
-  'Soil': 'ferts',
-  'Coal': 'tons',
-  'Oil': 'barrels',
-  'NaturalGas': 'm3',
-  'Uranium': 'tons',
-  'Lithium': 'tons',
+  'Other': 'n/a',
+  'Soil': 'fert',
+  'Coal': 'g',
+  'Oil': 'L',
+  'NaturalGas': 'L',
+  'Uranium': 'g',
+  'Lithium': 'g',
 };
 
 const BYPRODUCTS = {
-  'CO2': 'µt',
-  'Methane': 'µt',
-  'Pollution': 'ppm?',
+  'CO2': 'g',
+  'CH4': 'g',
+  'N2O': 'g',
   'Biodiversity': 'pressure',
 }
 

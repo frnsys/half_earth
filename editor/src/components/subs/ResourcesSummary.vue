@@ -25,7 +25,7 @@ export default {
   computed: {
     validResources() {
       return Object.keys(consts.RESOURCES).filter((k) => {
-        return this.localData[k] !== undefined && this.localData[k] !== '' && this.localData[k] > 0;
+        return this.localData[k] !== undefined && this.localData[k] !== '';
       });
     }
   }

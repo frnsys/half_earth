@@ -92,6 +92,12 @@ export default {
       this.localData[key] = data;
       this.save();
     },
+    delete() {
+      if (confirm('Are you sure you want to delete this?')) {
+        this.localData.deleted = true;
+        this.save();
+      }
+    },
     flags(key) {
       return {
         invalid: this.invalid.includes(key),

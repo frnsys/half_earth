@@ -4,6 +4,7 @@ import consts from './consts';
 function itemsOfType(type) {
   return Object.values(state.items)
     .filter((i) => i._type == type)
+    .filter((i) => !i.deleted)
     .sort((a, b) => a._created < b._created ? 1 : -1);
 }
 
@@ -29,22 +30,30 @@ function requirePositiveInclZero(val) {
 
 function requireResources(resources) {
   let valid = Object.keys(consts.RESOURCES).filter((k) => {
-    return resources[k] !== undefined && resources[k] !== '' && resources[k] > 0;
+    return resources[k] !== undefined && resources[k] !== '' && resources[k] !== 0;
   });
   return valid.length > 0;
 }
 
 function requireByproducts(byproducts) {
   let valid = Object.keys(consts.BYPRODUCTS).filter((k) => {
-    return byproducts[k] !== undefined && byproducts[k] !== '' && byproducts[k] > 0;
+    return byproducts[k] !== undefined && byproducts[k] !== '' && byproducts[k] !== 0;
   });
   return valid.length > 0;
 }
 
 function _itemEffects() {
-  return Object.values(state.items).flatMap((item) => {
-    return item.effects || [];
-  });
+  return Object.values(state.items)
+    .filter((i) => !i.deleted)
+    .flatMap((item) => {
+      let effects = item.effects || [];
+      if (item.outcomes) {
+        item.outcomes.forEach((o) => {
+          effects = effects.concat(o.effects || []);
+        });
+      }
+      return effects;
+    });
 }
 
 // Check if something unlocks this item
@@ -145,6 +154,7 @@ function validateOutcomes(outcomes) {
 function validateVariables(variables) {
   let definedVariables =  Object.values(state.items)
     .filter((i) => i._type == 'Variable')
+    .filter((i) => !i.deleted)
     .reduce((acc, v) => {
       acc[v.name] = (v.values || '').split('\n').filter((x) => x !== '');
       return acc;
@@ -184,7 +194,7 @@ const SPECS = {
 
   Project: {
     key: 'name',
-    validate: ['name', 'description', 'type', 'effects', 'construction', 'years', 'locked', 'outcomes'],
+    validate: ['name', 'description', 'type', 'effects', 'years', 'locked', 'outcomes'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -192,8 +202,6 @@ const SPECS = {
           return requireAtLeastOne(item.name);
         case 'description':
           return requireAtLeastOne(item.description);
-        case 'construction':
-          return requireNonEmptyObj(item.construction) && requireResources(item.construction);
         case 'type':
           return requireOneOfChoice(item.type, ['Initiative', 'Policy', 'Research']);
         case 'effects':
@@ -213,14 +221,12 @@ const SPECS = {
 
   Process: {
     key: 'name',
-    validate: ['name', 'description', 'output', 'mix_share', 'locked', 'feedstock', 'feedstock_amount'],
-    questions: ['name', 'description', 'notes'],
+    validate: ['name', 'output', 'mix_share', 'locked', 'feedstock', 'feedstock_amount', 'resources', 'byproducts'],
+    questions: ['name', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
         case 'name':
           return requireAtLeastOne(item.name);
-        case 'description':
-          return requireAtLeastOne(item.description);
         case 'output':
           return requireOneOfChoice(item.output, Object.keys(consts.OUTPUTS));
         case 'feedstock':
@@ -229,6 +235,10 @@ const SPECS = {
           return requirePositiveInclZero(item.feedstock_amount);
         case 'mix_share':
           return requirePositiveInclZero(item.mix_share);
+        case 'byproducts':
+          return requireNonEmptyObj(item.byproducts) && requireByproducts(item.byproducts);
+        case 'resources':
+          return requireNonEmptyObj(item.resources) && requireResources(item.resources);
         case 'locked':
           if (item.locked === undefined) item.locked = false;
           return item.locked == hasUnlocker(item);

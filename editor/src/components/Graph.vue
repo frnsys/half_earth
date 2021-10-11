@@ -17,6 +17,7 @@
     </svg>
     <template v-for="node in nodes">
       <div class="graph-node" :style="node.style" :class="node.type">
+        <img class="graph-node-image" v-if="node.data.image" :style="{backgroundImage: `url(/image/${node.data.image})`}" />
         <div class="graph-tags">
           <div class="graph-type">{{node.type}}</div>
           <div class="graph-subtype" :class="{invalid: !node.subtype}">{{node.subtype ? node.subtype : '[Missing]'}}</div>
@@ -105,7 +106,7 @@
             </div>
             <p>{{node.data.description}}</p>
             <h5>Per {{OUTPUTS[node.data.output]}}:</h5>
-            <ResourcesSummary :resources="node.data.reqs" />
+            <ResourcesSummary :resources="node.data.resources" />
             <ByproductsSummary :byproducts="node.data.byproducts" />
             <div>
               <template v-for="k in Object.keys(PROCESS_FEATURES)" v-if="node.data.features">
@@ -153,6 +154,7 @@ const icons = {
   Precipitation: 'rain.png',
   ResourceIntensity: 'pickaxe.png',
   Output: 'factory.png',
+  Unlocks: 'unlocked.png',
 };
 
 function childrenForEffect(effect) {
@@ -291,6 +293,8 @@ export default {
           } else {
             effects.add(effect.subtype);
           }
+        } else if (effect.type.startsWith('Unlocks')) {
+            effects.add('Unlocks');
         }
       });
       return effects;
@@ -424,11 +428,13 @@ export default {
       let processesByFeature = Object.values(this.tree).filter((item) => {
         return item._type == 'Process';
       }).reduce((acc, process) => {
-        Object.keys(consts.PROCESS_FEATURES).forEach((feat) => {
-          if (process.features[feat]) {
-            acc[feat].push(process.id);
-          }
-        });
+        if (process.features) {
+          Object.keys(consts.PROCESS_FEATURES).forEach((feat) => {
+            if (process.features[feat]) {
+              acc[feat].push(process.id);
+            }
+          });
+        }
         return acc;
       }, Object.keys(consts.PROCESS_FEATURES).reduce((acc, feat) => {
         acc[feat] = [];
@@ -817,5 +823,18 @@ export default {
 .graph-node-details .image-preview {
   margin-bottom: 0.5em;
   border-radius: 0.2em;
+}
+
+.graph-node-image {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	background-size: cover;
+	width: 36px;
+	height: 36px;
+	background-position: center center;
+	border-radius: 0.2em;
+	border: 1px solid;
+	transform: translate(25%, 0);
 }
 </style>

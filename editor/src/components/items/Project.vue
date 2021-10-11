@@ -54,7 +54,6 @@
     <fieldset class="big-group">
       <div>
         <Image :image="localData.image" :attribution="localData.image_attribution" @image="saveData('image', $event)" @update="saveData('image_attribution', $event)"/>
-        <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
       </div>
       <div>
         <div>
@@ -64,16 +63,7 @@
           </label>
           <textarea v-model="localData.description" placeholder="A brief description" @blur="save" :class="flags('description')"/>
         </div>
-        <div class="field-group">
-          <h3>Implementation (per year)</h3>
-          <Resources :resources="localData.construction" @update="saveData('construction', $event)"/>
-          <Byproducts :byproducts="localData.construction_byproducts" @update="saveData('construction_byproducts', $event)"/>
-        </div>
-        <div class="field-group" v-if="localData.ongoing">
-          <h3>Maintenance (per year)</h3>
-          <Resources :resources="localData.maintenance" @update="saveData('maintenance', $event)"/>
-          <Byproducts :byproducts="localData.maintenance_byproducts" @update="saveData('maintenance_byproducts', $event)"/>
-        </div>
+        <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
       </div>
     </fieldset>
 
@@ -88,6 +78,10 @@
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
+
+    <div class="additional-actions">
+      <button @click="delete">Delete</button>
+    </div>
   </template>
 
   <div v-else class="project-summary item-summary">
@@ -101,7 +95,7 @@
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
-    <fieldset>
+    <fieldset class="big-group">
       <div>
         <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
         <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
@@ -115,20 +109,6 @@
         <div class="image-attribution">{{localData.image_attribution}}</div>
       </div>
     </fieldset>
-    <div class="item-summary-details">
-      <div>
-        <div>
-          <h5>Implementation (per year)</h5>
-          <ResourcesSummary :resources="localData.construction" />
-          <ByproductsSummary :byproducts="localData.construction_byproducts" />
-        </div>
-        <div v-if="localData.ongoing">
-          <h5>Maintenance (per year)</h5>
-          <ResourcesSummary :resources="localData.maintenance" />
-          <ByproductsSummary :byproducts="localData.maintenance_byproducts" />
-        </div>
-      </div>
-    </div>
     <h5>Outcomes</h5>
     <OutcomesSummary :outcomes="localData.outcomes" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>

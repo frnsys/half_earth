@@ -71,14 +71,6 @@
 <script>
 import ItemMixin from './ItemMixin';
 export default {
-  methods: {
-    delete() {
-      if (confirm('Are you sure you want to delete this?')) {
-        this.localData.deleted = true;
-        this.save();
-      }
-    }
-  },
   mixins: [ItemMixin]
 };
 </script>

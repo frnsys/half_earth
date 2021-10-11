@@ -26,7 +26,7 @@ export default {
   computed: {
     validByproducts() {
       return Object.keys(consts.BYPRODUCTS).filter((k) => {
-        return this.localData[k] !== undefined && this.localData[k] !== '' && this.localData[k] !== 0;
+        return this.localData[k] !== undefined && this.localData[k] !== '';
       });
     }
   }

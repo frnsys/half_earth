@@ -51,20 +51,13 @@
         <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
       </div>
     </fieldset>
-    <div>
-      <label>
-        Description
-        <Tip>A 1-2 sentence description of the process.</Tip>
-      </label>
-      <input type="text" placeholder="Description" v-model="localData.description" @blur="save" :class="flags('description')" />
-    </div>
 
     <fieldset class="big-group">
       <div>
         <Image :image="localData.image" :attribution="localData.image_attribution" @image="saveData('image', $event)" @update="saveData('image_attribution', $event)"/>
       </div>
       <div>
-        <Resources :resources="localData.reqs" @update="saveData('reqs', $event)"/>
+        <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
         <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
         <div>
           <label>
@@ -89,6 +82,10 @@
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
+
+    <div class="additional-actions">
+      <button @click="delete">Delete</button>
+    </div>
   </template>
 
   <div v-else class="process-summary item-summary">
@@ -104,19 +101,17 @@
         <div class="meta-pill feature-pill" v-if="localData.features[k]"><div>{{k}}</div></div>
       </template>
     </div>
-    <fieldset>
+    <fieldset class="big-group">
       <div>
         <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
         <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
-        <p class="item-summary-desc" v-if="localData.description">{{localData.description}}</p>
-        <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
         <div>
           <h5 class="kinds-summary-label">Per {{OUTPUTS[localData.output]}}:</h5>
           <div class="summary-pill feedstock-pill">
             <div>{{localData.feedstock || '[MISSING]'}}</div>
             <div>{{localData.feedstock_amount || '[MISSING]'}} {{FEEDSTOCKS[localData.feedstock]}}</div>
           </div>
-          <ResourcesSummary :resources="localData.reqs" />
+          <ResourcesSummary :resources="localData.resources" />
           <ByproductsSummary :byproducts="localData.byproducts" />
         </div>
       </div>
