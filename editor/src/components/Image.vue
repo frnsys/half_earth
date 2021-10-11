@@ -1,52 +1,47 @@
 <template>
 <div class="image-form">
-  <img class="image-preview" v-if="image" :src="`/image/${image}`"/>
-  <div>
-    <label>Upload Image</label>
-    <input type="text" placeholder="Attribution credit" v-model="attribution" @blur="$emit('update', attribution)" />
-    <input type="file" ref="input" @change="uploadImage" />
-  </div>
+  <img class="image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
+  <div class="image-attribution-preview">{{localData.attribution}}</div>
+  <button @click="editing = true">✎</button>
+  <ImageEditor v-if="editing" :image="localData" @update="update($event)" @close="editing = false" />
 </div>
 </template>
 
 <script>
+import ImageEditor from './ImageEditor.vue';
+
 export default {
-  props: ['image', 'attribution'],
-  methods: {
-    uploadImage() {
-      let img = this.$refs.input.files[0];
-      if (!img) return;
-
-      let formData = new FormData();
-      formData.append('image', img);
-
-      return fetch('/image', {
-        headers: {
-          'Accept': 'application/json',
-        },
-        method: 'POST',
-        body: formData
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`Response ${res.status}`);
-          }
-          return res.json();
-        })
-        .then(({filename}) => {
-          this.$emit('image', filename);
-        });
-    },
+  props: ['image'],
+  components: {
+    ImageEditor
   },
+  data() {
+    return {
+      editing: false,
+      localData: Object.assign({}, this.image)
+    }
+  },
+  methods: {
+    update(data) {
+      this.localData = data;
+      this.$emit('update', data);
+    }
+  }
 };
 </script>
 
 <style>
 .image-form {
-	background: #222;
-	color: #fff;
   margin: 0.5em 0 0 0;
   border-radius: 0.2em;
+  min-height: 160px;
+  position: relative;
+  background: #eee;
+}
+.image-form > button {
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
 }
 .image-preview {
   max-width: 100%;
@@ -56,7 +51,14 @@ export default {
   border: 1px solid #222;
   border-radius: 0.2em;
 }
-.image-form > div {
-	padding: 0 0.5em 0.5em 0.5em;
+.image-attribution-preview {
+  position: absolute;
+  left: 0.5em;
+  bottom: 0.5em;
+  font-size: 0.7em;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 0 0.2em;
+  border-radius: 0.2em;
 }
 </style>
