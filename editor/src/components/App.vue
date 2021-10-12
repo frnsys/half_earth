@@ -1,4 +1,6 @@
 <template>
+<Calibration v-if="calibrationOpen" @close="calibrationOpen = false" />
+<div class="calibration-open" v-else @click="calibrationOpen = true">Calibration</div>
 <nav>
   <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
   <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
@@ -84,8 +86,9 @@ import Industry from './items/Industry.vue';
 import Flag from './items/Flag.vue';
 import Const from './items/Const.vue';
 import validate from '../validate';
-
 import Graph from './Graph.vue';
+
+import Calibration from './Calibration.vue';
 
 export default {
   updated() {
@@ -109,7 +112,8 @@ export default {
       tocOpen: true,
       filtersOpen: true,
       filter: null,
-      state
+      state,
+      calibrationOpen: false
     }
   },
   components: {
@@ -122,7 +126,8 @@ export default {
     Variable,
     Const,
     Industry,
-    Graph
+    Graph,
+    Calibration
   },
   methods: {
     addNew(type) {
@@ -659,5 +664,22 @@ h5 {
   font-size: 0.7em;
   font-style: italic;
   color: #555;
+}
+
+.calibration-open {
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  text-decortion: underline;
+  z-index: 20;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  padding: 0.1em 0.2em;
+  cursor: pointer;
+}
+.calibration-open:hover {
+  background: #000;
 }
 </style>
