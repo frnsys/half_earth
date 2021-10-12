@@ -39,7 +39,7 @@ const PROCESS_FEATURES = {
   'UsesLivestock': 'For agriculture; does the process use a significant amount of livestock',
   'IsIntermittent': 'For electricity sources; if the supply is intermittent',
   'IsNuclear': 'For electricity sources, if the supply is nuclear',
-  'IsSolar': 'For electricity sources, if the supply is solar',
+  'IsSolar': 'If the process depends on sunlight',
   'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
 }
 
@@ -65,7 +65,7 @@ const CONDITIONS = {
       'Biodiversity', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook', 'Contentedness',
-      'ResourceIntensity']
+      'ResourceIntensity', 'WaterStress',]
   },
   Demand: {
     compare: true,

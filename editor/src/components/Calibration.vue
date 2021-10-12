@@ -70,7 +70,10 @@
           'Reference': refLine('Uranium')}"></LineChart>
       <LineChart v-if="data.feedstocks" title="Lithium (BAU)"
         :y="years"
-        :xs="{'Lithium (t)': data.feedstocks['Lithium']}"></LineChart>
+        :xs="{
+          'Lithium (t)': data.feedstocks['Lithium'],
+          'Reference': refLine('Lithium'),
+        }"></LineChart>
     </div>
   </div>
 </div>
@@ -95,7 +98,8 @@ const referenceValues = {
   'N2O': 3.3, // 2014, Mt, https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020GB006698
   'Land': 104000, // km2, total habitable land area
   'Electricity': 27000, // TWh, https://www.iea.org/data-and-statistics/charts/electricity-generation-by-fuel-and-scenario-2018-2040
-  'Fuel': 156.75 // TWh, https://www.eia.gov/todayinenergy/detail.php?id=46596
+  'Fuel': 156.75, // TWh, https://www.eia.gov/todayinenergy/detail.php?id=46596
+  'Lithium': 57700 // 2019, t, https://pubs.usgs.gov/periodicals/mcs2020/mcs2020-lithium.pdf
 };
 
 function defaultObj(obj, defaultFn) {
