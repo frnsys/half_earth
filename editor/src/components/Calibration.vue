@@ -2,49 +2,75 @@
 <div class="calibration">
   <div class="calibration-close" @click="close">X</div>
   <div class="calibration-body">
-    <div class="calibration-pair">
+    <div class="calibration-multi">
       <LineChart title="Regional Populations (BAU)" :y="years" :xs="data.populations.regions"></LineChart>
       <LineChart title="Global Population (BAU)" :y="years" :xs="{Global: data.populations.global}"></LineChart>
     </div>
-    <div class="calibration-pair">
+    <div class="calibration-multi">
       <LineChart v-if="data.demands" title="Calories (BAU; Tcals)"
         :y="years"
         :xs="{'Animal Calories': data.demands['AnimalCalories'], 'Plant Calories': data.demands['PlantCalories']}"></LineChart>
       <LineChart v-if="data.demands" title="Energy (BAU; TWh)"
         :y="years"
-        :xs="{'Electricity': data.demands['Electricity'], 'Fuel': data.demands['Fuel']}"></LineChart>
+        :xs="{
+          'Electricity': data.demands['Electricity'],
+          'Reference (Electricity)': refLine('Electricity'),
+          'Fuel': data.demands['Fuel'],
+          'Reference (Fuel)': refLine('Fuel')}"></LineChart>
     </div>
-    <div class="calibration-pair">
-      <LineChart v-if="data.demands" title="Water (BAU; km3)"
+    <div class="calibration-multi">
+      <LineChart v-if="data.demands" title="Water (BAU)"
         :y="years"
-        :xs="{'Water': data.demands['Water']}"></LineChart>
-      <LineChart v-if="data.demands" title="Land (BAU; km2)"
+        :xs="{'Water (km3)': data.demands['Water'], 'Reference': refLine('Water')}"></LineChart>
+      <LineChart v-if="data.demands" title="Land (BAU)"
         :y="years"
-        :xs="{'Land': data.demands['Land']}"></LineChart>
+        :xs="{
+          'Land (km2)': data.demands['Land'],
+          'Reference': refLine('Land')}"></LineChart>
     </div>
-    <div class="calibration-pair">
-      <LineChart v-if="data.byproducts" title="CO2 (BAU; Gt)"
+    <div class="calibration-multi">
+      <LineChart v-if="data.byproducts" title="CO2 (BAU)"
         :y="years"
-        :xs="{'CO2': data.byproducts['CO2']}"></LineChart>
-      <LineChart v-if="data.byproducts" title="CH4 and N2O (BAU; Mt)"
+        :xs="{
+          'CO2 (Gt)': data.byproducts['CO2'],
+          'Reference (2016)': refLine('CO2')}"></LineChart>
+      <LineChart v-if="data.byproducts" title="CH4 (BAU)"
         :y="years"
-        :xs="{'CH4': data.byproducts['CH4'], 'N2O': data.byproducts['N2O']}"></LineChart>
+        :xs="{
+          'CH4': data.byproducts['CH4'],
+          'Reference (CH4)': refLine('CH4')}"></LineChart>
+      <LineChart v-if="data.byproducts" title="N2O (BAU)"
+        :y="years"
+        :xs="{
+          'N2O': data.byproducts['N2O'],
+          'Reference (N2O, 2014)': refLine('N2O')}"></LineChart>
     </div>
-    <div class="calibration-pair">
-      <LineChart v-if="data.feedstocks" title="Oil (BAU; m3)"
+    <div class="calibration-multi">
+      <LineChart v-if="data.feedstocks" title="Oil (BAU)"
         :y="years"
-        :xs="{'Oil': data.feedstocks['Oil']}"></LineChart>
-      <LineChart v-if="data.feedstocks" title="Coal and Natural Gas (BAU; t, m3)"
+        :xs="{
+          'Oil (m3)': data.feedstocks['Oil'],
+          'Reference (2016)': refLine('Oil')}"></LineChart>
+      <LineChart v-if="data.feedstocks" title="Coal (BAU)"
         :y="years"
-        :xs="{'Coal': data.feedstocks['Coal'], 'Natural Gas': data.feedstocks['NaturalGas']}"></LineChart>
+        :xs="{
+          'Coal (Gt)': data.feedstocks['Coal'],
+          'Reference (2016)': refLine('Coal')}"></LineChart>
+      <LineChart v-if="data.feedstocks" title="Natural Gas (BAU)"
+        :y="years"
+        :xs="{
+          'Natural Gas (m3)': data.feedstocks['NaturalGas'],
+          'Reference (2017)': refLine('Natural Gas')}"></LineChart>
     </div>
-    <div class="calibration-pair">
-      <LineChart v-if="data.feedstocks" title="Uranium (BAU; t)"
+    <div class="calibration-multi">
+      <LineChart v-if="data.feedstocks" title="Uranium (BAU)"
         :y="years"
-        :xs="{'Uranium': data.feedstocks['Uranium']}"></LineChart>
-      <LineChart v-if="data.feedstocks" title="Lithium (BAU; t)"
+        :xs="{
+          'Uranium (t)': data.feedstocks['Uranium'],
+          'Reference': refLine('Uranium')}"></LineChart>
+      <LineChart v-if="data.feedstocks" title="Lithium (BAU)"
         :y="years"
-        :xs="{'Lithium': data.feedstocks['Lithium']}"></LineChart>
+        :xs="{'Lithium (t)': data.feedstocks['Lithium']}"></LineChart>
     </div>
   </div>
 </div>
@@ -57,6 +83,20 @@ import LineChart from './LineChart.vue';
 
 const n = 2100-2020;
 const years = [...Array(n).keys()].map((i) => 2020+i);
+
+const referenceValues = {
+  'Oil': 5.635, // 2016 consumption, in km3 (35,442,913,090 barrels)
+  'Water': 4600, // km3, https://www.nature.com/articles/s41545-019-0039-9
+  'Coal': 8.5, // 2016 consumption, in Gt
+  'Natural Gas': 3746, // 2017 consumption, in km3
+  'Uranium': 62800, // t, https://en.wikipedia.org/wiki/Peak_uranium
+  'CO2': 36.45, // 2019, Gt, https://ourworldindata.org/grapher/annual-co-emissions-by-region
+  'CH4': 570, // Mt, https://www.iea.org/reports/methane-tracker-2020
+  'N2O': 3.3, // 2014, Mt, https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020GB006698
+  'Land': 104000, // km2, total habitable land area
+  'Electricity': 27000, // TWh, https://www.iea.org/data-and-statistics/charts/electricity-generation-by-fuel-and-scenario-2018-2040
+  'Fuel': 156.75 // TWh, https://www.eia.gov/todayinenergy/detail.php?id=46596
+};
 
 function defaultObj(obj, defaultFn) {
   return Object.keys(obj).reduce((acc, key) => {
@@ -138,6 +178,9 @@ export default {
       document.body.style.overflow = 'hidden';
       this.$emit('close');
     },
+    refLine(k) {
+      return years.map(() => referenceValues[k]);
+    }
   },
   computed: {
     data() {
@@ -290,9 +333,9 @@ export default {
 
       feedstocks['Uranium'] = scale(feedstocks['Uranium'], 1e-6); // g to t
       feedstocks['Lithium'] = scale(feedstocks['Lithium'], 1e-6); // g to t
-      feedstocks['Oil'] = scale(feedstocks['Oil'], 1e-3); // L to m3
-      feedstocks['Coal'] = scale(feedstocks['Coal'], 1e-6); // g to t
-      feedstocks['NaturalGas'] = scale(feedstocks['NaturalGas'], 1e-3); // L to m3
+      feedstocks['Oil'] = scale(feedstocks['Oil'], 1e-12); // L to m3
+      feedstocks['Coal'] = scale(feedstocks['Coal'], 1e-15); // g to t
+      feedstocks['NaturalGas'] = scale(feedstocks['NaturalGas'], 1e-12); // L to m3
       return {
         populations: {
           global: globalPops,
@@ -320,10 +363,10 @@ export default {
 }
 .calibration-body {
 }
-.calibration-pair {
+.calibration-multi {
   display: flex;
 }
-.calibration-pair > .chart {
+.calibration-multi > .chart {
   flex: 1;
 }
 .calibration-close {

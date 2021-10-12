@@ -9,8 +9,8 @@ import Chart from 'chart.js/auto';
 
 const colors = [
   '#4287f5',
-  '#f54242',
   '#0fba76',
+  '#f54242',
   '#620fba',
   '#d6b20f',
   '#0d0aa8',
@@ -42,7 +42,9 @@ export default {
         label: label,
         fill: false,
         data: this.xs[label],
-        borderColor: colors[i],
+        borderColor: label.includes('Reference') ? '#FAAA70' : colors[i],
+        pointRadius: label.includes('Reference') ? 0 : 2,
+        borderWidth: 1,
       }));
       this.chart = new Chart(ctx, {
           type: 'line',
@@ -57,11 +59,6 @@ export default {
             scales: {
               y: {
                 beginAtZero: true
-              }
-            },
-            elements: {
-              point:{
-                radius: 2
               }
             },
             plugins: {
