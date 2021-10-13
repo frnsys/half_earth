@@ -354,6 +354,10 @@ https://www.eia.gov/tools/faqs/faq.php?id=667&t=6
 > - Petroleum liquids–0.08 gallons/kWh
 > - Natural gas–7.43 cubic feet/kWh
 
+Coal: 1.13 lbs/kWh = 0.0005125594 tonnes/kWh = 512.5594 g/kWh
+Petroleum liquids: 0.08 gal/kWh = 0.3636872 litres/kWh
+Natural gas: 7.43 ft3/kWh = 210.3942 litres/kWh
+
 ---
 
 https://ourworldindata.org/smallholder-food-production

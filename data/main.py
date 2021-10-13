@@ -10,6 +10,7 @@
 import ref
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from tqdm import tqdm
 from collections import defaultdict
 
@@ -20,7 +21,7 @@ income_group_names = [
     'High income'
 ]
 
-def per_capita_by_income_groups(csv, key, country_key='Entity', year_key='Year', is_per_capita=False):
+def per_capita_by_income_groups(csv, key, country_key='Entity', year_key='Year', is_per_capita=False, scale=1):
     df = pd.read_csv(csv)
     missing = []
     years = defaultdict(int)
@@ -52,7 +53,7 @@ def per_capita_by_income_groups(csv, key, country_key='Entity', year_key='Year',
 
         if is_per_capita:
             val *= population
-        group_vals[income_group].append((val, population))
+        group_vals[income_group].append((val * scale, population))
 
     group_pops = {}
     group_totals = {}
@@ -102,21 +103,65 @@ ch4_gwp = 84
 
 
 if __name__ == '__main__':
+    print('Income population change coefficients')
+    # Calculate polynomials for population projections
+    income_group_countries = defaultdict(list)
+    for country, years in ref.income_groups.items():
+        group = years[2016]
+        income_group_countries[group].append(country)
+
+    income_group_pop_changes = {}
+    for group, countries in income_group_countries.items():
+        trajectory = []
+        for year in range(2020, 2101):
+            changes = []
+            for country in countries:
+                pop_prev = ref.population_for_country_year(country, year-1)
+                pop_next = ref.population_for_country_year(country, year)
+                if pop_prev is None: continue
+                change = pop_next/pop_prev - 1
+                changes.append(change)
+            trajectory.append(np.mean(changes))
+        income_group_pop_changes[group] = trajectory
+
+    for group, vals in income_group_pop_changes.items():
+        y = np.array(vals)
+        X = np.array(list(range(0, len(y))))
+        coefs = np.polyfit(X, y, 3)
+        # p = np.poly1d(coefs)
+        # plt.title(group)
+        # plt.plot(X, y, '.', X, p(X), '-')
+        # plt.show()
+        print(group)
+        for coef in coefs[::-1]: # polyfit returns coefs in opposite order
+            print(' ', coef)
+
+    print('Starting populations for regions')
+    year = 2022
+    for region, countries in ref.region_to_countries.items():
+        print(region)
+        pop = sum(filter(None, [ref.population_for_country_year(c, year) for c in countries]))
+        print(' ', pop)
+
     # https://ourworldindata.org/grapher/municipal-water-withdrawal
-    title('Municipal/household water withdrawals (m3/year):')
-    per_capita_by_income_groups('src/municipal-water-withdrawal.csv', 'Municipal water withdrawal')
+    # Original data in m3/year, change to L/month
+    title('Municipal/household water withdrawals (L/month):')
+    per_capita_by_income_groups('src/municipal-water-withdrawal.csv', 'Municipal water withdrawal', scale=1000*1/12)
 
     # https://ourworldindata.org/grapher/industrial-water-withdrawal
-    title('Industrial water withdrawals (m3/year):')
-    ind_water_group_pops, ind_water_group_totals = per_capita_by_income_groups('src/industrial-water-withdrawal.csv', 'Industrial water withdrawal')
+    # Original data in m3/year, change to L/month
+    title('Industrial water withdrawals (L/month):')
+    ind_water_group_pops, ind_water_group_totals = per_capita_by_income_groups('src/industrial-water-withdrawal.csv', 'Industrial water withdrawal', scale=1000*1/12)
 
     # https://ourworldindata.org/grapher/per-capita-energy-use
-    title('Energy use (kWh/year):')
-    per_capita_by_income_groups('src/per-capita-energy-use.csv', 'Energy consumption per capita (kWh)', is_per_capita=True)
+    # Original data in kWh/year, change to kWh/month
+    title('Energy use (kWh/month):')
+    per_capita_by_income_groups('src/per-capita-energy-use.csv', 'Energy consumption per capita (kWh)', is_per_capita=True, scale=1/12)
 
     # https://ourworldindata.org/grapher/per-capita-electricity-consumption
-    title('Electricity use (kWh/year)')
-    per_capita_by_income_groups('src/per-capita-electricity-consumption.csv', 'Per capita electricity (kWh)', is_per_capita=True)
+    # Original data per year, chang eto per month
+    title('Electricity use (kWh/month)')
+    per_capita_by_income_groups('src/per-capita-electricity-consumption.csv', 'Per capita electricity (kWh)', is_per_capita=True, scale=1/12)
 
     print('(For fuel, calculate the difference b/w energy use per capita and electricity use per capita.)')
 
@@ -128,7 +173,8 @@ if __name__ == '__main__':
     print('\nTotal material LIC pop:', total_adj_material_pop)
 
     # https://ourworldindata.org/grapher/dietary-composition-by-country
-    title('Plant calories (kcal/day)')
+    # Original data in kcal/day, change to kcal/month
+    title('Plant calories (kcal/month)')
     _, plant_calorie_totals = per_capita_by_income_groups('src/dietary-composition-by-country.csv', [
        'Miscellaneous (FAO (2017))',
        'Alcoholic Beverages (FAO (2017))',
@@ -146,9 +192,10 @@ if __name__ == '__main__':
        'Maize (FAO (2017))',
        'Rice (FAO (2017))',
        'Wheat (FAO (2017))',
-    ], is_per_capita=True)
+    ], is_per_capita=True, scale=365/12)
 
-    title('Animal calories (kcal/day)')
+    # Original data in kcal/day, change to kcal/month
+    title('Animal calories (kcal/month)')
     _, animal_calorie_totals = per_capita_by_income_groups('src/dietary-composition-by-country.csv', [
        'Animal fats (FAO (2017))',
        'Fish & seafood (FAO (2017))',
@@ -159,7 +206,7 @@ if __name__ == '__main__':
        'Bovine Meat (FAO (2017))',
        'Eggs (FAO (2017))',
        'Milk (FAO (2017))',
-    ], is_per_capita=True)
+    ], is_per_capita=True, scale=365/12)
 
     title('Income groups for regions')
     income_levels = {'Low income': 1, 'Lower-middle income': 2, 'Upper-middle income': 3, 'High income': 4}
@@ -311,7 +358,7 @@ if __name__ == '__main__':
         fuel = ind_uses.get('coal', 0) + ind_uses.get('oil', 0) + ind_uses.get('natural_gas', 0)
         print('{:>15}'.format('fuel'), '{:.2f}kWh/lic/mo'.format(fuel))
 
-    title('Industrial water usage m3/lic/mo')
+    title('Industrial water usage L/lic/mo')
     print(sum(ind_water_group_totals.values())/sum(ind_water_group_pops.values())/12)
 
     title('Agriculture')
