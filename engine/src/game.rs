@@ -2,7 +2,8 @@ use rand::rngs::StdRng;
 use crate::player::Player;
 use crate::events::EventPool;
 use crate::projects::{Project, Status};
-use crate::earth::{Earth, Region};
+use crate::earth::Earth;
+use crate::regions::Region;
 use crate::production::{Sector, CellGrid, ProductionOrder, produce, calculate_required};
 use crate::kinds::{Output, OutputMap, ResourceMap, ByproductMap};
 

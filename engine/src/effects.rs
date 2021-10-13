@@ -1,44 +1,27 @@
 use crate::game::State;
-use crate::kinds::Output;
-use crate::events::Event;
-
-#[derive(Debug, Clone)]
-pub enum WorldVariable {
-    Emissions,
-    Biodiversity,
-    Temperature,
-    Precipitation,
-    SeaLevelRise,
-    OzoneDamage
-}
-
-#[derive(Debug, Clone)]
-pub enum LocalVariable {
-    Population,
-    Health,
-    Safety,
-    Outlook,
-    Satiety
-}
+use crate::kinds::{Resource,Output};
+use crate::production::{ProcessFeature, Feedstock};
+use crate::variables::{WorldVariable, LocalVariable, PlayerVariable};
 
 #[derive(Debug, Clone)]
 pub enum Effect {
-    /// Influence demand for output
+    LocalVariable(LocalVariable, f32),
+    WorldVariable(WorldVariable, f32),
+    PlayerVariable(PlayerVariable, f32),
+
+    Resource(Resource, f32),
     Demand(Output, f32),
-
-    /// Influence output produced
     Output(Output, f32),
+    OutputForFeature(ProcessFeature, f32),
+    Feedstock(Feedstock, f32),
 
-    /// Influence world/local variables
-    World(WorldVariable, f32),
-    Local(LocalVariable, f32),
+    AddEvent(u32),
+    TriggerEvent(u32, u32),
+    UnlocksProject(u32),
+    UnlocksProcess(u32),
 
-    /// Trigger an event after n steps (guaranteed)
-    TriggerEvent(Event, u8),
-
-    /// Adds an event to the event pool;
-    /// i.e. it's possible but not guaranteed to occur
-    AddEvent(Event),
+    Migration,
+    RegionLeave,
 }
 
 impl Effect {
@@ -48,16 +31,3 @@ impl Effect {
         // TODO apply the effect
     }
 }
-
-
-// use crate::game::State;
-
-// pub type Effect = Box<dyn EffectFn>;
-
-// pub trait EffectFn: Fn(&mut State) {}
-// impl<F> EffectFn for F where F: Fn(&mut State) {}
-// impl std::fmt::Debug for dyn EffectFn {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(f, "Effect")
-//     }
-// }

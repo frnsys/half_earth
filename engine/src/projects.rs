@@ -4,12 +4,13 @@ use crate::kinds::{ResourceMap, ByproductMap, Output};
 
 const MAINTENANCE_POINTS: f32 = 100.;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Status {
     Inactive,
     Building(f32),
     Active,
     Stalled,
+    Halted,
     Finished,
 }
 
@@ -22,11 +23,13 @@ impl Default for Status {
 
 #[derive(Default)]
 pub struct Project {
+    id: usize,
+    name: &'static str,
+    years: usize,
     pub status: Status,
-    req_points: f32,
     ongoing: bool,
-    build_reqs: ResourceMap<f32>,
-    maintenance_reqs: ResourceMap<f32>,
+    locked: bool,
+    resources: ResourceMap<f32>,
     byproducts: ByproductMap<f32>,
     pub effects: Vec<Effect>
 }

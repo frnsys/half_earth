@@ -129,7 +129,7 @@ export default {
     if (!this.localData.choices) {
       this.localData.choices = [...Array(4)].map(() => ({
         text: '',
-        condition: '',
+        conditions: [],
         effects: []
       }));
       this.save();

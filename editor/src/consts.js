@@ -65,7 +65,7 @@ const CONDITIONS = {
       'Biodiversity', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook', 'Contentedness',
-      'ResourceIntensity', 'WaterStress',]
+      'WaterStress',]
   },
   Demand: {
     compare: true,

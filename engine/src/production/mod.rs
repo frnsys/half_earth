@@ -6,7 +6,7 @@ mod resources;
 
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap};
 pub use self::sectors::{Sector, Modifier};
-pub use self::processes::{Process, ProcessDetails, Amount};
+pub use self::processes::{Process, ProcessFeature, Feedstock};
 pub use self::planner::{ProductionOrder, calculate_required};
 pub use self::resources::CellGrid;
 

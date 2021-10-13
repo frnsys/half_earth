@@ -1,5 +1,7 @@
 use crate::game::State;
 use crate::effects::Effect;
+use crate::condition::Condition;
+use crate::probability::Probability;
 use rand::{Rng, rngs::StdRng, seq::SliceRandom};
 
 // TODO arcs
@@ -62,6 +64,16 @@ impl EventPool {
 
 #[derive(Debug, Clone)]
 pub struct Event {
+    name: &'static str,
+
+    /// If this event requires
+    /// something else to enable it.
+    locked: bool,
+
+    /// Does this event happen locally
+    /// (i.e. in a region) or globally?
+    local: bool,
+
     /// An id linking this event
     /// to user-facing details
     /// (e.g. event text, etc).
@@ -71,14 +83,9 @@ pub struct Event {
     /// if it can only happens once.
     repeats: bool,
 
-    /// The id of the story arc this
-    /// event is a part of, if any.
-    arc: Option<usize>,
-
-    /// A function that takes the current
-    /// game state and returns the probability
-    /// of this event's occurrence.
-    prob: &'static dyn Probability,
+    /// The probabilities that
+    /// can trigger this event.
+    probabilities: Vec<Probability>,
 
     /// Choices the player chooses from.
     pub choices: Vec<Choice>,
@@ -89,31 +96,12 @@ pub struct Event {
 
 #[derive(Debug, Clone)]
 pub struct Choice {
-    id: usize,
     effects: Vec<Effect>,
 
     /// A function that takes the current
     /// game state and returns whether or not
     /// this choice is available.
-    condition: &'static dyn Condition
-}
-
-
-// Small hack so we can derive Debug
-pub trait Condition: Fn(&State) -> bool {}
-impl<F> Condition for F where F: Fn(&State) -> bool {}
-impl std::fmt::Debug for dyn Condition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Condition")
-    }
-}
-
-pub trait Probability: Fn(&State) -> f32 {}
-impl<F> Probability for F where F: Fn(&State) -> f32 {}
-impl std::fmt::Debug for dyn Probability {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Probability")
-    }
+    conditions: Vec<Condition>
 }
 
 

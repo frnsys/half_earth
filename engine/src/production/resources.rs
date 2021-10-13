@@ -305,6 +305,10 @@ impl CellGrid {
                         cell.status = Status::Developing(step+1);
                     }
                 },
+
+                // TODO should decommissioning take longer/have less impacts
+                // if a rewilding/remediation policy is in place? Or do we just assume
+                // that's the case?
                 Status::Decommissioning(step) => {
                     if step <= 1 {
                         cell.status = Status::Available;

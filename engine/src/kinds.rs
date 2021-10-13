@@ -182,28 +182,18 @@ macro_rules! define_enum_map {
 }
 
 define_enum_map!(Resource {
-    Sun,
-    Wind,
-    Soil, // Fertile land
+    Land,
     Water,
-    Biomass, // Lumber?
-
-    Coal,
-    Oil,
-    Uranium,
-    Lithium,
-
-    // Outputs from other sectors
     Labor,
-    Energy,
-    Feed,
-    Material,
-    Co2
+    Electricity,
+    Fuel
 });
 
 define_enum_map!(Byproduct {
     Co2,
-    Pollution
+    Ch4,
+    N2o,
+    Biodiversity
 });
 
 
@@ -211,11 +201,10 @@ define_enum_map!(Output {
     Fuel,
     Electricity,
     PlantCalories,
-    MeatCalories,
-    Concrete,
-    Steel,
-    Project,
-    General
+    AnimalCalories,
+
+    // Used for projects/policies/research
+    Project
 });
 
 

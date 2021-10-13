@@ -7,7 +7,13 @@ mod projects;
 mod earth;
 mod player;
 mod events;
+mod industries;
 mod production;
+mod content;
+mod regions;
+mod probability;
+mod condition;
+mod variables;
 pub mod surface;
 
 // When the `wee_alloc` feature is enabled,
