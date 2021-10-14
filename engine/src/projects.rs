@@ -152,7 +152,7 @@ mod test {
         assert_eq!(i, 1);
 
         // Now should be the first,
-        state.year = 10;
+        state.world.year = 10;
         let outcome = p.roll_outcome(&state, &mut rng);
         let (_outcome, i) = outcome.unwrap();
         assert_eq!(i, 0);

@@ -51,7 +51,7 @@ impl Region {
             Income::Low => 0,
             Income::LowerMiddle => 1,
             Income::UpperMiddle => 2,
-            Income::High => 4,
+            Income::High => 3,
         };
         for (k, v) in OUTPUT_DEMAND.items() {
             demand[k] += v[idx] * self.population;

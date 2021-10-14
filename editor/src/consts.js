@@ -62,7 +62,7 @@ const CONDITIONS = {
     compare: true,
     choices: [
       'Year', 'Population', 'Emissions',
-      'Biodiversity', 'Temperature',
+      'ExtinctionRate', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook', 'Contentedness',
       'WaterStress',]
@@ -135,7 +135,7 @@ const EFFECTS = {
   WorldVariable: {
     choices: [
       'Population', 'Emissions', 'Health',
-      'Biodiversity', 'Temperature',
+      'ExtinctionRate', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook'],
     params: {

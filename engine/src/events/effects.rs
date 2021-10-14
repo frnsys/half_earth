@@ -34,7 +34,7 @@ impl Effect {
                 if let Some(id) = region_id {
                     let region = &mut game.state.regions[id];
                     match var {
-                        LocalVariable::Population => region.population += *change,
+                        LocalVariable::Population => region.population *= 1. + *change/100.,
                         LocalVariable::Health => region.health += *change,
                         LocalVariable::Outlook => region.outlook += *change,
                         LocalVariable::Contentedness => region.base_contentedness += *change,
@@ -44,17 +44,17 @@ impl Effect {
             },
             Effect::WorldVariable(var, change) => {
                 match var {
-                    WorldVariable::Year => game.state.year += *change as usize,
-                    WorldVariable::Population => game.state.world.population += *change,
-                    WorldVariable::Emissions => game.state.world.emissions += *change,
-                    WorldVariable::Biodiversity => game.state.world.biodiversity += *change,
-                    WorldVariable::Outlook => game.state.world.outlook += *change,
+                    WorldVariable::Year => game.state.world.year += *change as usize,
+                    WorldVariable::Population => game.state.world.change_population(*change/100.),
+                    WorldVariable::Emissions => game.state.world.change_emissions(*change/100.),
+                    WorldVariable::ExtinctionRate => game.state.world.extinction_rate += *change,
+                    WorldVariable::Outlook => game.state.world.change_outlook(*change),
                     WorldVariable::Temperature => game.state.world.temperature += *change,
-                    WorldVariable::Contentedness => game.state.world.contentedness += *change,
+                    WorldVariable::Contentedness => game.state.world.change_contentedness(*change),
                     WorldVariable::WaterStress => game.state.world.water_stress += *change,
                     WorldVariable::SeaLevelRise => game.state.world.sea_level_rise += *change,
                     WorldVariable::Precipitation => game.state.world.precipitation += *change,
-                    WorldVariable::Health => game.state.world.health += *change,
+                    WorldVariable::Health => game.state.world.change_health(*change),
                 }
             }
             Effect::PlayerVariable(var, change) => {

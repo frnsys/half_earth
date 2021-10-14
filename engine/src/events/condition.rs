@@ -46,17 +46,17 @@ impl Condition {
             },
             Condition::WorldVariable(var, comp, other_val) => {
                 let val = match var {
-                    WorldVariable::Year => state.year as f32,
-                    WorldVariable::Population => state.world.population,
-                    WorldVariable::Emissions => state.world.emissions,
-                    WorldVariable::Biodiversity => state.world.biodiversity,
-                    WorldVariable::Outlook => state.world.outlook,
+                    WorldVariable::Year => state.world.year as f32,
+                    WorldVariable::Population => state.world.population(),
+                    WorldVariable::Emissions => state.world.emissions(),
+                    WorldVariable::ExtinctionRate => state.world.extinction_rate,
+                    WorldVariable::Health => state.world.health(),
+                    WorldVariable::Outlook => state.world.outlook(),
                     WorldVariable::Temperature => state.world.temperature,
-                    WorldVariable::Contentedness => state.world.contentedness,
+                    WorldVariable::Contentedness => state.world.contentedness(),
                     WorldVariable::WaterStress => state.world.water_stress,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise,
                     WorldVariable::Precipitation => state.world.precipitation,
-                    WorldVariable::Health => state.world.health,
                 };
                 comp.eval(val, *other_val)
             },

@@ -23,15 +23,9 @@ impl Game {
     /// Create a new instance of game with
     /// all the content loaded in
     pub fn new(difficulty: Difficulty) -> Game {
-        let world = match difficulty {
-            Difficulty::Easy => content::WORLDS[0],
-            Difficulty::Normal => content::WORLDS[1],
-            Difficulty::Hard => content::WORLDS[2],
-        };
-
         Game {
             state: State {
-                world,
+                world: content::world(difficulty),
                 player: Player {
                     political_capital: 100,
                 },
@@ -58,10 +52,7 @@ impl Game {
                 resources_demand: resources!(),
                 resources: resources!(),
                 feedstocks: feedstocks!(),
-                byproducts: byproducts!(),
-                extraction: ExtractionManager {
-                    // TODO
-                }
+                extraction: ExtractionManager::default(), // TODO get extraction rates
             },
             event_pool: EventPool::new(content::events()),
         }
@@ -102,7 +93,6 @@ pub struct State {
     pub resources_demand: ResourceMap<f32>,
     pub resources: ResourceMap<f32>,
     pub feedstocks: FeedstockMap<f32>,
-    pub byproducts: ByproductMap<f32>,
     extraction: ExtractionManager,
 }
 
@@ -130,13 +120,14 @@ impl State {
         let (mut produced_by_type, consumed_resources, consumed_feedstocks, byproducts) = produce(&orders, &self.resources, &self.feedstocks);
         produced_by_type *= self.output_modifier;
 
-        self.byproducts += byproducts;
+        self.world.co2_emissions = byproducts.co2;
+        self.world.ch4_emissions = byproducts.ch4;
+        self.world.n2o_emissions = byproducts.n2o;
+        // TODO biodiversity pressure/extinction rate...how to do that?
+
         self.feedstocks -= consumed_feedstocks;
         self.resources.fuel -= consumed_resources.fuel + produced_by_type.fuel;
         self.resources.electricity -= consumed_resources.electricity + produced_by_type.electricity;
-
-        // Calculate production shorfalls
-        let shortfalls = demand - produced_by_type;
 
         // Get resource deficit/surplus
         let (required_resources, required_feedstocks) = calculate_required(&orders);

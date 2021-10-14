@@ -206,7 +206,7 @@ mod test {
 
         // But if we set it so that event A's first condition
         // is met, it should also happen
-        state.year = 10;
+        state.world.year = 10;
         let events = pool.roll(&state, &mut rng);
         assert_eq!(events.len(), 2);
         assert_eq!(events[0].0.name, "Test Event A");

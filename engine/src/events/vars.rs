@@ -3,14 +3,14 @@ pub enum WorldVariable {
     Year,
     Population,
     Emissions,
-    Biodiversity,
+    ExtinctionRate,
+    Health,
     Outlook,
     Temperature,
     Contentedness,
     WaterStress,
     SeaLevelRise,
     Precipitation,
-    Health,
 }
 
 #[derive(Debug, Copy, Clone)]
