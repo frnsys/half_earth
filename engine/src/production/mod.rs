@@ -1,10 +1,8 @@
 #[macro_use]
 mod planner;
 mod processes;
-mod extraction;
 
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
-pub use self::extraction::ExtractionManager;
 pub use self::processes::{Process, ProcessFeature, update_mixes};
 pub use self::planner::{ProductionOrder, calculate_required};
 

@@ -3,7 +3,7 @@ use crate::regions::Income;
 use crate::kinds::{FeedstockMap, OutputMap};
 
 
-const FEEDSTOCK_RESERVES: FeedstockMap<f32> = FeedstockMap {
+pub const FEEDSTOCK_RESERVES: FeedstockMap<f32> = FeedstockMap {
     oil: 275370680000000.0,
     coal: 1.074,
     uranium: 7988600.0,

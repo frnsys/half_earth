@@ -3,10 +3,10 @@ use crate::world::World;
 use crate::player::Player;
 use crate::regions::Region;
 use crate::projects::{Project, Status};
-use crate::production::{ProductionOrder, Process, ExtractionManager, produce, calculate_required, update_mixes};
+use crate::production::{ProductionOrder, Process, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::events::{Flag, EventPool, Effect};
-use crate::content;
+use crate::{content, consts};
 
 pub enum Difficulty {
     Easy,
@@ -51,8 +51,7 @@ impl Game {
                 ),
                 resources_demand: resources!(),
                 resources: resources!(),
-                feedstocks: feedstocks!(),
-                extraction: ExtractionManager::default(), // TODO get extraction rates
+                feedstocks: consts::FEEDSTOCK_RESERVES,
             },
             event_pool: EventPool::new(content::events()),
         }
@@ -93,28 +92,24 @@ pub struct State {
     pub resources_demand: ResourceMap<f32>,
     pub resources: ResourceMap<f32>,
     pub feedstocks: FeedstockMap<f32>,
-    extraction: ExtractionManager,
 }
 
 
 impl State {
     pub fn step(&mut self, rng: &mut StdRng) -> Vec<(Effect, Option<usize>)> {
-        // Extract feedstocks
-        self.feedstocks += self.extraction.extract();
-
         // Aggregate demand across regions
         // TODO use self.output_demand
-        let mut demand = self.regions.iter().fold(outputs!(), |mut acc, region| {
+        self.output_demand = self.regions.iter().fold(outputs!(), |mut acc, region| {
             acc += region.demand();
             acc
         });
-        demand *= self.output_demand_modifier;
+        self.output_demand *= self.output_demand_modifier;
 
         // TODO industry demand
 
         // Generate production orders based on current process mixes and demand
         let orders: Vec<ProductionOrder> = self.processes.iter()
-            .map(|p| p.production_order(&demand)).collect();
+            .map(|p| p.production_order(&self.output_demand)).collect();
 
         // Run production function
         let (mut produced_by_type, consumed_resources, consumed_feedstocks, byproducts) = produce(&orders, &self.resources, &self.feedstocks);
@@ -137,10 +132,7 @@ impl State {
         let feedstock_weights = required_feedstocks / self.feedstocks;
 
         // Update mixes according to resource scarcity
-        update_mixes(&mut self.processes, &demand, &resource_weights, &feedstock_weights);
-
-        // Expand/contract extraction
-        self.extraction.adjust(&required_feedstocks);
+        update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights);
 
         // New effects to apply are gathered here.
         // (Mostly to avoid borrowing conflicts)
