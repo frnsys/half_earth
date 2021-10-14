@@ -1,5 +1,5 @@
 use crate::game::State;
-use rand::{Rng, rngs::StdRng, seq::SliceRandom};
+use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
 
 const MAX_EVENTS_PER_TURN: usize = 5;
@@ -22,7 +22,7 @@ impl EventPool {
         }
     }
 
-    pub fn roll<'a>(&'a mut self, state: &State, rng: &mut StdRng) -> Vec<(&'a Event, Option<usize>)> {
+    pub fn roll<'a>(&'a mut self, state: &State, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
         // Candidate event pool
         let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| !ev.locked).map(|ev| ev.id).collect();
         valid_ids.shuffle(rng);
@@ -37,8 +37,11 @@ impl EventPool {
             };
             if try_trigger {
                 let (ev_id, region_id, _) = self.queue[i];
-                let ev = &self.events[ev_id];
+                let ev = &mut self.events[ev_id];
                 if ev.roll(state, region_id, rng) {
+                    if !ev.repeats {
+                        ev.locked = true;
+                    }
                     self.triggered.push((ev_id, region_id));
                 }
                 self.queue.remove(i);
@@ -51,21 +54,25 @@ impl EventPool {
         // These events start with countdown 0;
         // i.e. we immediately trigger them if possible.
         for ev_id in valid_ids {
-            let ev = &self.events[ev_id];
+            let ev = &mut self.events[ev_id];
             if ev.local {
-                for region in &state.regions {
+                for region in &state.world.regions {
                     if ev.roll(state, Some(region.id), rng) {
+                        if !ev.repeats {
+                            ev.locked = true;
+                        }
                         self.triggered.push((ev_id, Some(region.id)));
                     }
                 }
             } else {
                 if ev.roll(state, None, rng) {
+                    if !ev.repeats {
+                        ev.locked = true;
+                    }
                     self.triggered.push((ev_id, None));
                 }
             }
         }
-
-        // TODO handle repeating events
 
         // Get the first MAX_EVENTS_PER_TURN triggered events
         let mut happening = Vec::new();
@@ -122,7 +129,7 @@ impl Event {
     }
 
     /// Roll to see if the event occurs.
-    fn roll(&self, state: &State, region_id: Option<usize>, rng: &mut StdRng) -> bool {
+    fn roll(&self, state: &State, region_id: Option<usize>, rng: &mut SmallRng) -> bool {
         match self.eval(state, region_id) {
             Some(likelihood) => {
                 let prob = likelihood.p();
@@ -155,7 +162,7 @@ mod test {
         vec![Event {
             id: 0,
             name: "Test Event A",
-            repeats: false,
+            repeats: true,
             locked: false,
             local: false,
             choices: vec![],
@@ -175,7 +182,7 @@ mod test {
         }, Event {
             id: 1,
             name: "Test Event B",
-            repeats: false,
+            repeats: true,
             locked: false,
             local: false,
             choices: vec![],
@@ -189,7 +196,7 @@ mod test {
 
     #[test]
     fn test_event_pool() {
-        let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = gen_events();
         let mut pool = EventPool {
             events,
@@ -215,11 +222,11 @@ mod test {
 
     #[test]
     fn test_event_pool_local() {
-        let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
-            repeats: false,
+            repeats: true,
             locked: false,
 
             // Note: set local to true so we know
@@ -248,7 +255,7 @@ mod test {
         };
 
         let mut state = State::default();
-        state.regions = vec![Region {
+        state.world.regions = vec![Region {
             id: 0,
             name: "Test Region A",
             population: 0.,
@@ -275,7 +282,7 @@ mod test {
         assert_eq!(events.len(), 0);
 
         // Set one region to satisfy conditions
-        state.regions[1].population = 10.;
+        state.world.regions[1].population = 10.;
         let events = pool.roll(&state, &mut rng);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
@@ -284,11 +291,11 @@ mod test {
 
     #[test]
     fn test_event_pool_countdown() {
-        let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
-            repeats: false,
+            repeats: true,
 
             // Note: locked so it doesn't trigger on its own
             locked: true,

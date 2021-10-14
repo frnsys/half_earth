@@ -3,8 +3,9 @@ use crate::kinds::{Resource, Output};
 use crate::production::ProcessFeature;
 use crate::projects::Status as ProjectStatus;
 use super::{WorldVariable, LocalVariable};
+use serde::Serialize;
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum Flag {
     IsMalthusian,
     IsFALC,
@@ -31,7 +32,7 @@ impl Condition {
         match self {
             Condition::LocalVariable(var, comp, other_val) => {
                 if let Some(id) = region_id {
-                    let region = &state.regions[id];
+                    let region = &state.world.regions[id];
                     let val = match var {
                         LocalVariable::Population => region.population,
                         LocalVariable::Health => region.health,

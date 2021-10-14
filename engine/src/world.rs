@@ -1,6 +1,8 @@
+use serde::Serialize;
 use crate::regions::Region;
+use crate::kinds::OutputMap;
 
-#[derive(Default)]
+#[derive(Default, Serialize)]
 pub struct World {
     pub year: usize,
     pub extinction_rate: f32,
@@ -19,6 +21,10 @@ impl World {
         self.regions.iter().map(|r| r.population).sum()
     }
 
+    pub fn lic_population(&self) -> f32 {
+        self.regions.iter().map(|r| r.lic_population()).sum()
+    }
+
     pub fn contentedness(&self) -> f32 {
         self.regions.iter().map(|r| r.contentedness()).sum::<f32>()/self.regions.len() as f32
     }
@@ -31,8 +37,19 @@ impl World {
         self.regions.iter().map(|r| r.outlook).sum::<f32>()/self.regions.len() as f32
     }
 
+    pub fn habitability(&self) -> f32 {
+        self.regions.iter().map(|r| r.habitability()).sum()
+    }
+
     pub fn emissions(&self) -> f32 {
         self.co2_emissions + (self.n2o_emissions * 298.) + (self.ch4_emissions * 36.)
+    }
+
+    pub fn demand(&self) -> OutputMap<f32> {
+        self.regions.iter().fold(outputs!(), |mut acc, region| {
+            acc += region.demand();
+            acc
+        })
     }
 
     pub fn change_population(&mut self, percent: f32) {

@@ -4,7 +4,6 @@ mod game;
 mod utils;
 mod projects;
 mod world;
-mod player;
 mod events;
 mod industries;
 mod production;

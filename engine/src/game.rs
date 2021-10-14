@@ -1,17 +1,43 @@
-use rand::rngs::StdRng;
 use crate::world::World;
-use crate::player::Player;
-use crate::regions::Region;
+use crate::industries::Industry;
 use crate::projects::{Project, Status};
 use crate::production::{ProductionOrder, Process, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::events::{Flag, EventPool, Effect};
 use crate::{content, consts};
+use rand::{SeedableRng, rngs::SmallRng};
+use serde::Serialize;
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 pub enum Difficulty {
     Easy,
     Normal,
     Hard
+}
+
+#[wasm_bindgen]
+pub struct GameInterface {
+    rng: SmallRng,
+    game: Game,
+}
+
+#[wasm_bindgen]
+impl GameInterface {
+    pub fn new(difficulty: Difficulty) -> GameInterface {
+        GameInterface {
+            rng: SmallRng::from_entropy(),
+            game: Game::new(difficulty),
+        }
+    }
+
+    pub fn step(&mut self) {
+        self.game.step(&mut self.rng);
+    }
+
+    pub fn state(&self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
+    }
 }
 
 pub struct Game {
@@ -25,13 +51,11 @@ impl Game {
     pub fn new(difficulty: Difficulty) -> Game {
         Game {
             state: State {
+                political_capital: 100,
                 world: content::world(difficulty),
-                player: Player {
-                    political_capital: 100,
-                },
-                regions: content::regions(),
                 projects: content::projects(),
                 processes: content::processes(),
+                industries: content::industries(),
                 flags: Vec::new(),
                 runs: 0,
 
@@ -57,7 +81,7 @@ impl Game {
         }
     }
 
-    pub fn step(&mut self, rng: &mut StdRng) {
+    pub fn step(&mut self, rng: &mut SmallRng) {
         let mut effects = self.state.step(rng);
 
         // Roll for events and collect effects
@@ -74,15 +98,15 @@ impl Game {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Serialize)]
 pub struct State {
     pub world: World,
-    pub player: Player,
-    pub regions: Vec<Region>,
+    pub runs: usize,
+    pub flags: Vec<Flag>,
+    pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
-    pub flags: Vec<Flag>,
-    pub runs: usize,
+    pub political_capital: usize,
 
     // Modifiers should start as all 1.
     pub output: OutputMap<f32>,
@@ -94,27 +118,34 @@ pub struct State {
     pub feedstocks: FeedstockMap<f32>,
 }
 
-
 impl State {
-    pub fn step(&mut self, rng: &mut StdRng) -> Vec<(Effect, Option<usize>)> {
+    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(Effect, Option<usize>)> {
         // Aggregate demand across regions
-        // TODO use self.output_demand
-        self.output_demand = self.regions.iter().fold(outputs!(), |mut acc, region| {
-            acc += region.demand();
-            acc
-        });
-        self.output_demand *= self.output_demand_modifier;
+        self.output_demand = self.world.demand() * self.output_demand_modifier;
 
-        // TODO industry demand
+        // Demand and impacts from non-modeled industries
+        let lic_pop = self.world.lic_population();
+        let industry_demand = self.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources) * lic_pop;
+        let industry_byproducts = self.industries.iter().fold(byproducts!(), |acc, ind| acc + ind.byproducts) * lic_pop;
+        self.output_demand.fuel += industry_demand.fuel;
+        self.output_demand.electricity += industry_demand.electricity;
+
+        // TODO water stress
+        // industry_demand.water
+        // consumed_resources.water
 
         // Generate production orders based on current process mixes and demand
         let orders: Vec<ProductionOrder> = self.processes.iter()
             .map(|p| p.production_order(&self.output_demand)).collect();
 
         // Run production function
-        let (mut produced_by_type, consumed_resources, consumed_feedstocks, byproducts) = produce(&orders, &self.resources, &self.feedstocks);
+        let (mut produced_by_type,
+             consumed_resources,
+             consumed_feedstocks,
+             mut byproducts) = produce(&orders, &self.resources, &self.feedstocks);
         produced_by_type *= self.output_modifier;
 
+        byproducts += industry_byproducts;
         self.world.co2_emissions = byproducts.co2;
         self.world.ch4_emissions = byproducts.ch4;
         self.world.n2o_emissions = byproducts.n2o;
@@ -136,11 +167,12 @@ impl State {
 
         // New effects to apply are gathered here.
         // (Mostly to avoid borrowing conflicts)
+        // (Effect, Option<RegionId>)
         let mut effects: Vec<(Effect, Option<usize>)> = Vec::new();
 
         // Advance projects
         for project in self.projects.iter_mut().filter(|p| match p.status {
-            Status::Building(_) => true,
+            Status::Building => true,
             _ => false
         }) {
             let completed = project.build();
@@ -153,7 +185,7 @@ impl State {
 
         for project in &self.projects {
             match project.roll_outcome(self, rng) {
-                Some((outcome, i)) => {
+                Some((outcome, _i)) => {
                     for effect in &outcome.effects {
                         effects.push((effect.clone(), None));
                     }

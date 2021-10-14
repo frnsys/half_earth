@@ -5,10 +5,10 @@ use crate::kinds::{FeedstockMap, OutputMap};
 
 pub const FEEDSTOCK_RESERVES: FeedstockMap<f32> = FeedstockMap {
     oil: 275370680000000.0,
-    coal: 1.074,
-    uranium: 7988600.0,
+    coal: 1074000000000000.0,
+    uranium: 7988600000000.0,
     lithium: 80000000.0,
-    natural_gas: 0.0,
+    natural_gas: 205495355718144000.0,
     soil: 0.0,
     other: 0.0
 };
@@ -22,42 +22,42 @@ pub fn income_pop_change(pop: f32, income: &Income) -> f32 {
     }
 }
 
-pub const OUTPUT_DEMAND: OutputMap<[f32; 4]> = OutputMap {
-    electricity: [
-        12.647,
-        80.881867,
-        368.96432,
-        750.5439
-    ],
-    fuel: [
-        84.823,
-        478.748,
-        1842.78168 ,
-        4111.4561
-    ],
-    animal_calories: [
-        5188.17,
-        8453.8519,
-        19610.3814,
-        26695.9236
-    ],
-    plant_calories: [
-        65101.22,
-        69593.2533,
-        73597.3736,
-        75062.28
-    ]
-};
+pub const OUTPUT_DEMAND: [OutputMap<f32>; 4] = [
+    OutputMap {
+        fuel: 84.823,
+        electricity: 12.647,
+        animal_calories: 5188.17,
+        plant_calories: 65101.22
+    },
+    OutputMap {
+        fuel: 478.748,
+        electricity: 80.881867,
+        animal_calories: 8453.8519,
+        plant_calories: 69593.2533
+    },
+    OutputMap {
+        fuel: 1842.78168,
+        electricity: 368.96432,
+        animal_calories: 19610.3814,
+        plant_calories: 73597.3736
+    },
+    OutputMap {
+        fuel: 4111.4561,
+        electricity: 750.5439,
+        animal_calories: 26695.9236,
+        plant_calories: 75062.28
+    }
+];
 
-const LAND_LIMIT: f32 = 104000000000.0;
-const WATER_LIMIT: f32 = 45500000000000000.0;
-const WATER_BY_INCOME: [f32; 4] = [
+pub const LAND_LIMIT: f32 = 104000000000.0;
+pub const WATER_LIMIT: f32 = 45500000000000000.0;
+pub const WATER_BY_INCOME: [f32; 4] = [
     2040.4095,
     4552.624175,
     5839.79276,
     11648.18348
 ];
-const MATERIALS_BY_INCOME: [f32; 4] = [
+pub const MATERIALS_BY_INCOME: [f32; 4] = [
     2.253141687346895,
     4.3768,
     15.430,

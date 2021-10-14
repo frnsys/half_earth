@@ -1,4 +1,5 @@
 use paste::paste;
+use serde::Serialize;
 use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, Index, IndexMut};
 
 macro_rules! count {
@@ -11,7 +12,7 @@ macro_rules! count {
 /// those enum variants.
 macro_rules! define_enum_map {
     ($name:ident { $($field:ident),* }) => {
-        #[derive(Debug, Copy, Clone, PartialEq)]
+        #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
         pub enum $name {
             $(
                 $field,
@@ -20,7 +21,7 @@ macro_rules! define_enum_map {
 
         paste! {
             // Define map
-            #[derive(Default, Clone, Copy, Debug, PartialEq)]
+            #[derive(Default, Clone, Copy, Debug, PartialEq, Serialize)]
             pub struct [<$name Map>]<T> {
                 $(
                     pub [<$field:snake>]: T,
@@ -130,6 +131,19 @@ macro_rules! define_enum_map {
                     Self {
                         $(
                             [<$field:snake>]: self.[<$field:snake>] * rhs,
+                        )*
+                    }
+                }
+            }
+
+            // Map * Map
+            impl Mul for [<$name Map>]<f32> {
+                type Output = Self;
+
+                fn mul(self, rhs: Self) -> Self {
+                    Self {
+                        $(
+                            [<$field:snake>]: self.[<$field:snake>] * rhs.[<$field:snake>],
                         )*
                     }
                 }

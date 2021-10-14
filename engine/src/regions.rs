@@ -1,6 +1,8 @@
+use crate::consts;
 use crate::kinds::OutputMap;
-use crate::consts::{OUTPUT_DEMAND, income_pop_change};
+use serde::Serialize;
 
+#[derive(Serialize)]
 pub struct Region {
     pub id: usize,
 
@@ -42,7 +44,7 @@ impl Region {
     }
 
     pub fn pop_change(&mut self) {
-        self.population = income_pop_change(self.population, &self.income);
+        self.population = consts::income_pop_change(self.population, &self.income);
     }
 
     pub fn demand(&self) -> OutputMap<f32> {
@@ -53,13 +55,28 @@ impl Region {
             Income::UpperMiddle => 2,
             Income::High => 3,
         };
-        for (k, v) in OUTPUT_DEMAND.items() {
-            demand[k] += v[idx] * self.population;
+        for (k, v) in consts::OUTPUT_DEMAND[idx].items() {
+            demand[k] += v * self.population;
         }
         demand
     }
+
+    /// Low-income capita population;
+    /// i.e. equivalent population with the same
+    /// aggregate consumption but each individual
+    /// consumes at a low-income level
+    pub fn lic_population(&self) -> f32 {
+        let idx = match self.income {
+            Income::Low => 0,
+            Income::LowerMiddle => 1,
+            Income::UpperMiddle => 2,
+            Income::High => 3,
+        };
+        self.population * consts::MATERIALS_BY_INCOME[idx]/consts::MATERIALS_BY_INCOME[0]
+    }
 }
 
+#[derive(Serialize)]
 pub enum Income {
     Low,
     LowerMiddle,

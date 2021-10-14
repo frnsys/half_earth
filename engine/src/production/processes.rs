@@ -1,3 +1,4 @@
+use serde::Serialize;
 use super::{ProductionOrder, planner};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Output, Feedstock};
 
@@ -16,7 +17,7 @@ pub enum ProcessFeature {
     IsCCS,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Process {
     pub id: usize,
     pub name: &'static str,
@@ -29,6 +30,8 @@ pub struct Process {
     pub resources: ResourceMap<f32>,
     pub byproducts: ByproductMap<f32>,
     pub feedstock: (Feedstock, f32),
+
+    #[serde(skip_serializing)]
     pub features: Vec<ProcessFeature>,
 
     // If the player has unlocked and/or banned

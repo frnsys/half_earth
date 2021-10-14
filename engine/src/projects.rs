@@ -1,11 +1,13 @@
 use crate::game::State;
 use crate::events::{Effect, Probability};
-use rand::{Rng, rngs::StdRng};
+use rand::{Rng, rngs::SmallRng};
+use serde::Serialize;
 
+#[derive(Serialize)]
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Status {
     Inactive,
-    Building(f32),
+    Building,
     Active,
     Stalled,
     Halted,
@@ -23,6 +25,7 @@ pub struct Outcome {
     pub probability: Probability,
 }
 
+#[derive(Serialize)]
 #[derive(Default)]
 pub struct Project {
     pub id: usize,
@@ -30,8 +33,13 @@ pub struct Project {
     pub years: usize,
     pub ongoing: bool,
     pub locked: bool,
+    pub progress: f32,
     pub status: Status,
+
+    #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
+
+    #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
 }
 
@@ -39,9 +47,9 @@ impl Project {
     /// Advance this project's implementation by one month.
     pub fn build(&mut self) -> bool {
         match &mut self.status {
-            Status::Building(years) => {
-                *years += 1./12.;
-                if (*years - self.years as f32).abs() <= 1e-4 {
+            Status::Building => {
+                self.progress += 1./12.;
+                if (self.progress - self.years as f32).abs() <= 1e-4 {
                     if self.ongoing {
                         self.status = Status::Active;
                     } else {
@@ -57,7 +65,7 @@ impl Project {
     }
 
     /// Roll to see the outcome of this project
-    pub fn roll_outcome(&self, state: &State, rng: &mut StdRng) -> Option<(&Outcome, usize)> {
+    pub fn roll_outcome(&self, state: &State, rng: &mut SmallRng) -> Option<(&Outcome, usize)> {
         let mut outcome = None;
         for (i, o) in self.outcomes.iter().enumerate() {
             match o.probability.eval(state, None) {
@@ -90,7 +98,8 @@ mod test {
             years: 1,
             ongoing: false,
             locked: false,
-            status: Status::Building(0.),
+            status: Status::Building,
+            progress: 0.,
             effects: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],
@@ -107,7 +116,8 @@ mod test {
         assert_eq!(p.status, Status::Finished);
 
         p.ongoing = true;
-        p.status = Status::Building(0.);
+        p.status = Status::Building;
+        p.progress = 0.;
         for _ in 0..12 {
             p.build();
         }
@@ -116,14 +126,15 @@ mod test {
 
     #[test]
     fn test_project_outcomes() {
-        let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let p = Project {
             id: 0,
             name: "Test Project",
             years: 1,
             ongoing: false,
             locked: false,
-            status: Status::Building(0.),
+            status: Status::Building,
+            progress: 0.,
             effects: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],

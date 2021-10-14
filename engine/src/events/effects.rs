@@ -32,7 +32,7 @@ impl Effect {
         match self {
             Effect::LocalVariable(var, change) => {
                 if let Some(id) = region_id {
-                    let region = &mut game.state.regions[id];
+                    let region = &mut game.state.world.regions[id];
                     match var {
                         LocalVariable::Population => region.population *= 1. + *change/100.,
                         LocalVariable::Health => region.health += *change,
@@ -59,7 +59,7 @@ impl Effect {
             }
             Effect::PlayerVariable(var, change) => {
                 match var {
-                    PlayerVariable::PoliticalCapital => game.state.player.political_capital += *change as usize,
+                    PlayerVariable::PoliticalCapital => game.state.political_capital += *change as usize,
                 }
             },
             Effect::Resource(resource, pct_change) => {
@@ -93,12 +93,13 @@ impl Effect {
             },
             Effect::Migration => {
                 if let Some(id) = region_id {
-                    let leave_pop = game.state.regions[id].population * MIGRATION_WAVE_PERCENT_POP;
-                    game.state.regions[id].population -= leave_pop;
+                    let leave_pop = game.state.world.regions[id].population * MIGRATION_WAVE_PERCENT_POP;
+                    game.state.world.regions[id].population -= leave_pop;
 
                     // Find the most habitable regions
-                    let mean_habitability: f32 = game.state.regions.iter().map(|r| r.habitability()).sum();
-                    let target_regions: Vec<&mut Region> = game.state.regions.iter_mut().filter(|r| r.id != id && r.habitability() > mean_habitability).collect();
+                    let mean_habitability: f32 = game.state.world.habitability();
+                    let target_regions: Vec<&mut Region> = game.state.world.regions.iter_mut()
+                        .filter(|r| r.id != id && r.habitability() > mean_habitability).collect();
                     let per_region = leave_pop/target_regions.len() as f32;
                     for region in target_regions {
                         region.population += per_region;
@@ -108,7 +109,7 @@ impl Effect {
             },
             Effect::RegionLeave => {
                 if let Some(id) = region_id {
-                    game.state.regions[id].seceded = true;
+                    game.state.world.regions[id].seceded = true;
                 }
             }
         }
