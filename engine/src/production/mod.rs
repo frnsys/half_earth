@@ -1,25 +1,23 @@
 #[macro_use]
-mod processes;
-mod sectors;
 mod planner;
-mod resources;
+mod processes;
+mod extraction;
 
-use crate::kinds::{OutputMap, ResourceMap, ByproductMap};
-pub use self::sectors::{Sector, Modifier};
-pub use self::processes::{Process, ProcessFeature, Feedstock};
+use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
+pub use self::extraction::ExtractionManager;
+pub use self::processes::{Process, ProcessFeature, update_mixes};
 pub use self::planner::{ProductionOrder, calculate_required};
-pub use self::resources::CellGrid;
 
 
-pub fn produce(orders: &[ProductionOrder], resources: &ResourceMap<f32>) -> (OutputMap<Vec<f32>>, ResourceMap<f32>, ByproductMap<f32>) {
-    // Calculate the sector's output
-    let (produced, consumed, byproducts) = planner::calculate_production(&orders, &resources);
+pub fn produce(orders: &[ProductionOrder], resources: &ResourceMap<f32>, feedstocks: &FeedstockMap<f32>) -> (OutputMap<f32>, ResourceMap<f32>, FeedstockMap<f32>, ByproductMap<f32>) {
+    // Calculate the output
+    let (produced, consumed_r, consumed_f, byproducts) = planner::calculate_production(&orders, &resources, &feedstocks);
 
     // Calculate production per output type
-    let mut produced_by_type: OutputMap<Vec<f32>> = OutputMap::default();
+    let mut produced_by_type: OutputMap<f32> = OutputMap::default();
     for (amount, order) in produced.iter().zip(orders) {
-        produced_by_type[order.output].push(*amount);
+        produced_by_type[order.process.output] += amount * order.process.output_modifier;
     }
 
-    (produced_by_type, consumed, byproducts)
+    (produced_by_type, consumed_r, consumed_f, byproducts)
 }

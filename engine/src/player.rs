@@ -1,4 +1,4 @@
 #[derive(Default)]
 pub struct Player {
-    political_capital: usize,
+    pub political_capital: usize,
 }

@@ -1,7 +1,7 @@
 use crate::kinds::{ResourceMap, ByproductMap};
 
 pub struct Industry {
-    name: &'static str,
-    resources: ResourceMap<f32>,
-    byproducts: ByproductMap<f32>,
+    pub name: &'static str,
+    pub resources: ResourceMap<f32>,
+    pub byproducts: ByproductMap<f32>,
 }

@@ -67,12 +67,6 @@
       </div>
     </fieldset>
 
-    <div v-if="localData.type == 'Initiative'">
-      <h3>Implementation (per year)</h3>
-      <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
-      <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
-    </div>
-
     <Outcomes :outcomes="localData.outcomes" @update="saveData('outcomes', $event)" />
 
     <div>
@@ -115,11 +109,6 @@
         <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
     </fieldset>
-    <div v-if="localData.type == 'Initiative'">
-        <h5>Implementation (per year)</h5>
-        <ResourcesSummary :resources="localData.resources" />
-        <ByproductsSummary :byproducts="localData.byproducts" />
-      </div>
     <h5>Outcomes</h5>
     <OutcomesSummary :outcomes="localData.outcomes" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>

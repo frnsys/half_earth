@@ -1,113 +1,184 @@
 use rand::rngs::StdRng;
+use crate::world::World;
 use crate::player::Player;
-use crate::events::EventPool;
-use crate::projects::{Project, Status};
-use crate::earth::Earth;
 use crate::regions::Region;
-use crate::production::{Sector, CellGrid, ProductionOrder, produce, calculate_required};
-use crate::kinds::{Output, OutputMap, ResourceMap, ByproductMap};
+use crate::projects::{Project, Status};
+use crate::production::{ProductionOrder, Process, ExtractionManager, produce, calculate_required, update_mixes};
+use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
+use crate::events::{Flag, EventPool, Effect};
+use crate::content;
 
+pub enum Difficulty {
+    Easy,
+    Normal,
+    Hard
+}
+
+pub struct Game {
+    pub state: State,
+    pub event_pool: EventPool,
+}
+
+impl Game {
+    /// Create a new instance of game with
+    /// all the content loaded in
+    pub fn new(difficulty: Difficulty) -> Game {
+        let world = match difficulty {
+            Difficulty::Easy => content::WORLDS[0],
+            Difficulty::Normal => content::WORLDS[1],
+            Difficulty::Hard => content::WORLDS[2],
+        };
+
+        Game {
+            state: State {
+                world,
+                player: Player {
+                    political_capital: 100,
+                },
+                regions: content::regions(),
+                projects: content::projects(),
+                processes: content::processes(),
+                flags: Vec::new(),
+                runs: 0,
+
+                output: outputs!(),
+                output_modifier: outputs!(
+                    fuel: 1.,
+                    electricity: 1.,
+                    animal_calories: 1.,
+                    plant_calories: 1.
+                ),
+                output_demand: outputs!(),
+                output_demand_modifier: outputs!(
+                    fuel: 1.,
+                    electricity: 1.,
+                    animal_calories: 1.,
+                    plant_calories: 1.
+                ),
+                resources_demand: resources!(),
+                resources: resources!(),
+                feedstocks: feedstocks!(),
+                byproducts: byproducts!(),
+                extraction: ExtractionManager {
+                    // TODO
+                }
+            },
+            event_pool: EventPool::new(content::events()),
+        }
+    }
+
+    pub fn step(&mut self, rng: &mut StdRng) {
+        let mut effects = self.state.step(rng);
+
+        // Roll for events and collect effects
+        let events = self.event_pool.roll(&self.state, rng);
+        for (event, region_id) in events {
+            for effect in &event.effects {
+                effects.push((effect.clone(), region_id));
+            }
+        }
+
+        for (effect, region_id) in effects {
+            effect.apply(self, region_id);
+        }
+    }
+}
 
 #[derive(Default)]
-pub struct State<'a> {
-    earth: Earth,
-    player: Player,
-    resources: CellGrid,
-    stocks: ResourceMap<f32>,
-    byproducts: ByproductMap<f32>,
-    regions: Vec<Region<'a>>,
-    projects: Vec<Project>,
-    sectors: Vec<Sector>,
+pub struct State {
+    pub world: World,
+    pub player: Player,
+    pub regions: Vec<Region>,
+    pub projects: Vec<Project>,
+    pub processes: Vec<Process>,
+    pub flags: Vec<Flag>,
+    pub runs: usize,
+
+    // Modifiers should start as all 1.
+    pub output: OutputMap<f32>,
+    pub output_modifier: OutputMap<f32>,
+    pub output_demand: OutputMap<f32>,
+    pub output_demand_modifier: OutputMap<f32>,
+    pub resources_demand: ResourceMap<f32>,
+    pub resources: ResourceMap<f32>,
+    pub feedstocks: FeedstockMap<f32>,
+    pub byproducts: ByproductMap<f32>,
+    extraction: ExtractionManager,
 }
 
 
-impl State<'_> {
-    // Event pool is kept outside of the state to avoid borrowing conflicts,
-    // since `EventPool::roll` takes `self` as an argument
-    pub fn step(&mut self, event_pool: &mut EventPool, rng: &mut StdRng) {
-        self.resources.update_cells();
-        self.resources.refresh_resources();
-        self.stocks += self.resources.extract_resources();
+impl State {
+    pub fn step(&mut self, rng: &mut StdRng) -> Vec<(Effect, Option<usize>)> {
+        // Extract feedstocks
+        self.feedstocks += self.extraction.extract();
 
         // Aggregate demand across regions
-        let demand = self.regions.iter().fold(outputs!(), |mut acc, region| {
-            acc += region.demand * (region.population as f32);
+        // TODO use self.output_demand
+        let mut demand = self.regions.iter().fold(outputs!(), |mut acc, region| {
+            acc += region.demand();
             acc
         });
+        demand *= self.output_demand_modifier;
+
+        // TODO industry demand
 
         // Generate production orders based on current process mixes and demand
-        let mut orders: Vec<ProductionOrder> = self.sectors.iter()
-            .map(|s| s.production_orders(&demand)).flatten().collect();
-
-        // Merge in production orders for projects
-        for project in &self.projects {
-            match project.production_order() {
-                Some(order) => orders.push(order),
-                _ => ()
-            }
-        }
+        let orders: Vec<ProductionOrder> = self.processes.iter()
+            .map(|p| p.production_order(&demand)).collect();
 
         // Run production function
-        let (produced_by_type, consumed, byproducts) = produce(&orders, &self.stocks);
+        let (mut produced_by_type, consumed_resources, consumed_feedstocks, byproducts) = produce(&orders, &self.resources, &self.feedstocks);
+        produced_by_type *= self.output_modifier;
+
         self.byproducts += byproducts;
-        self.stocks -= consumed;
+        self.feedstocks -= consumed_feedstocks;
+        self.resources.fuel -= consumed_resources.fuel + produced_by_type.fuel;
+        self.resources.electricity -= consumed_resources.electricity + produced_by_type.electricity;
 
         // Calculate production shorfalls
-        let mut amount_by_type = outputs!();
-        for (k, amounts) in produced_by_type.items() {
-            amount_by_type[k] = amounts.iter().sum();
-        }
-        let shortfalls = demand - amount_by_type;
+        let shortfalls = demand - produced_by_type;
 
         // Get resource deficit/surplus
-        let required = calculate_required(&orders);
+        let (required_resources, required_feedstocks) = calculate_required(&orders);
 
         // Weigh resources by scarcity
-        let resource_weights = required / self.stocks;
+        let resource_weights = required_resources / self.resources;
+        let feedstock_weights = required_feedstocks / self.feedstocks;
 
-        // Update mix according to resource scarcity
-        let orders_by_sector: Vec<Vec<ProductionOrder>> = self.sectors.iter().map(|s| s.production_orders(&demand)).collect();
-        for (sector, orders) in self.sectors.iter_mut().zip(orders_by_sector) {
-            sector.update_mix(&orders, &demand, &resource_weights);
-        }
+        // Update mixes according to resource scarcity
+        update_mixes(&mut self.processes, &demand, &resource_weights, &feedstock_weights);
 
-        // Identify resource shortages/surpluses
-        let planned = self.resources.planned_resources();
-        let mut gaps = required - planned;
-
-        // Adjust resource extraction
-        self.resources.adjust_resources(&mut gaps);
+        // Expand/contract extraction
+        self.extraction.adjust(&required_feedstocks);
 
         // New effects to apply are gathered here.
         // (Mostly to avoid borrowing conflicts)
-        let mut effects = Vec::new();
+        let mut effects: Vec<(Effect, Option<usize>)> = Vec::new();
 
-        // Apply points to projects
-        let in_the_works = self.projects.iter_mut().filter(|p| p.production_order().is_some());
-        for (project, points) in in_the_works.zip(&produced_by_type[Output::Project]) {
-            let maintenance = project.status == Status::Active || project.status == Status::Finished;
-            project.apply_points(*points);
-            match project.status {
-                Status::Active|Status::Finished => {
-                    if !maintenance {
-                        effects.extend_from_slice(&project.effects);
-                    }
-                },
-                Status::Stalled => {
-                    // TODO withdraw effect
-                },
-                _ => ()
+        // Advance projects
+        for project in self.projects.iter_mut().filter(|p| match p.status {
+            Status::Building(_) => true,
+            _ => false
+        }) {
+            let completed = project.build();
+            if completed {
+                for effect in &project.effects {
+                    effects.push((effect.clone(), None));
+                }
             }
         }
 
-        // Roll for events and collect effects
-        let events = event_pool.roll(self, rng);
-        for event in events {
-            effects.extend_from_slice(&event.effects);
+        for project in &self.projects {
+            match project.roll_outcome(self, rng) {
+                Some((outcome, i)) => {
+                    for effect in &outcome.effects {
+                        effects.push((effect.clone(), None));
+                    }
+                },
+                None => ()
+            }
         }
 
-        for effect in &effects {
-            effect.apply(self);
-        }
+        effects
     }
 }

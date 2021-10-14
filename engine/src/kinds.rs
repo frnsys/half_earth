@@ -1,5 +1,5 @@
 use paste::paste;
-use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, Div, Index, IndexMut};
+use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, Index, IndexMut};
 
 macro_rules! count {
     () => (0usize);
@@ -124,7 +124,6 @@ macro_rules! define_enum_map {
 
             // Map * f32
             impl Mul<f32> for [<$name Map>]<f32> {
-            // impl<T: Mul + Mul<Output = T>> Mul for [<$name Map>]<T> {
                 type Output = Self;
 
                 fn mul(self, rhs: f32) -> Self {
@@ -133,6 +132,15 @@ macro_rules! define_enum_map {
                             [<$field:snake>]: self.[<$field:snake>] * rhs,
                         )*
                     }
+                }
+            }
+
+            // Map<f32> *= Map<f32>
+            impl MulAssign for [<$name Map>]<f32> {
+                fn mul_assign(&mut self, rhs: Self) {
+                    $(
+                        self.[<$field:snake>] *= rhs.[<$field:snake>];
+                    )*
                 }
             }
 
@@ -196,17 +204,22 @@ define_enum_map!(Byproduct {
     Biodiversity
 });
 
-
 define_enum_map!(Output {
     Fuel,
     Electricity,
     PlantCalories,
-    AnimalCalories,
-
-    // Used for projects/policies/research
-    Project
+    AnimalCalories
 });
 
+define_enum_map!(Feedstock {
+    Soil,
+    Oil,
+    Coal,
+    Uranium,
+    Lithium,
+    NaturalGas,
+    Other
+});
 
 // Would like to define these as part of the `define_enum_map`
 // macro but it looks like nested macros aren't well supported.
@@ -248,6 +261,21 @@ macro_rules! outputs {
     ($($field:ident: $value:expr),*) => {
         {
             let mut map = OutputMap::default();
+            $(
+                map.$field = $value;
+            )*
+            map
+        }
+    };
+}
+
+macro_rules! feedstocks {
+    () => {
+        FeedstockMap::default()
+    };
+    ($($field:ident: $value:expr),*) => {
+        {
+            let mut map = FeedstockMap::default();
             $(
                 map.$field = $value;
             )*

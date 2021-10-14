@@ -210,6 +210,11 @@ const EFFECTS = {
     entity: 'Flag'
   },
 
+  SetProjectStatus: {
+    entity: 'Project',
+    choices: ['Active', 'Stalled', 'Halted'],
+  },
+
   RegionLeave: {
   },
 

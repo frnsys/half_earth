@@ -262,12 +262,12 @@ const SPECS = {
     }
   },
 
-  Earth: {
+  World: {
     key: 'year',
     validate: ['year', 'co2_emissions', 'ch4_emissions', 'n2o_emissions', 'extinction_rate', 'temperature'],
     questions: ['notes'],
     validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Earth.validate);
+      return validateBasic(item, key, SPECS.World.validate);
     }
   },
 

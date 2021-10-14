@@ -2,18 +2,15 @@
 mod kinds;
 mod game;
 mod utils;
-mod effects;
 mod projects;
-mod earth;
+mod world;
 mod player;
 mod events;
 mod industries;
 mod production;
-mod content;
+mod consts;
 mod regions;
-mod probability;
-mod condition;
-mod variables;
+mod content;
 pub mod surface;
 
 // When the `wee_alloc` feature is enabled,

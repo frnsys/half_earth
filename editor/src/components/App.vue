@@ -2,7 +2,7 @@
 <Calibration v-if="calibrationOpen" @close="calibrationOpen = false" />
 <div class="calibration-open" v-else @click="calibrationOpen = true">Calibration</div>
 <nav>
-  <div class="tab" :class="{selected: type == 'Earth'}" @click="() => type = 'Earth'">Earths</div>
+  <div class="tab" :class="{selected: type == 'World'}" @click="() => type = 'World'">Worlds</div>
   <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
   <div class="tab" :class="{selected: type == 'Industry'}" @click="() => type = 'Industry'">Industries</div>
   <div class="tab" :class="{selected: type == 'Process'}" @click="() => type = 'Process'">Processes</div>
@@ -25,8 +25,8 @@
   <template v-else-if="type == 'Event'">
     <Event v-for="e in itemsOfCurrentType" :item="e" />
   </template>
-  <template v-if="type == 'Earth'">
-    <Earth v-for="e in itemsOfCurrentType" :item="e" />
+  <template v-if="type == 'World'">
+    <World v-for="e in itemsOfCurrentType" :item="e" />
   </template>
   <template v-if="type == 'Flag'">
     <Flag v-for="f in itemsOfCurrentType" :item="f" />
@@ -80,7 +80,7 @@ import Event from './items/Event.vue';
 import Region from './items/Region.vue';
 import Project from './items/Project.vue';
 import Process from './items/Process.vue';
-import Earth from './items/Earth.vue';
+import World from './items/World.vue';
 import Variable from './items/Variable.vue';
 import Industry from './items/Industry.vue';
 import Flag from './items/Flag.vue';
@@ -118,7 +118,7 @@ export default {
   },
   components: {
     Event,
-    Earth,
+    World,
     Region,
     Project,
     Process,

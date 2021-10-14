@@ -20,7 +20,6 @@ pub enum LocalVariable {
     Outlook,
     Contentedness,
     Habitability,
-    BaseHabitability,
 }
 
 #[derive(Debug, Copy, Clone)]
