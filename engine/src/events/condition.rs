@@ -7,9 +7,9 @@ use serde::Serialize;
 
 #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum Flag {
-    IsMalthusian,
+    IsHES,
     IsFALC,
-    IsHES
+    IsMalthusian,
 }
 
 #[derive(Debug, Copy, Clone)]

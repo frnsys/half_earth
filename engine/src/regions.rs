@@ -33,14 +33,14 @@ pub struct Region {
 impl Region {
     // Simple mean
     pub fn contentedness(&self) -> f32 {
-        (self.health + self.outlook)/2.
+        self.base_contentedness + (self.health + self.outlook)/2.
     }
 
     pub fn habitability(&self) -> f32 {
         // TODO Factors:
         // - regional temp, precip, sea_level_rise, health, safety,
         // - number of negative events
-        todo!()
+        self.base_habitability + self.health
     }
 
     pub fn pop_change(&mut self) {

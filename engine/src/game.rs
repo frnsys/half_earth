@@ -7,6 +7,7 @@ use crate::events::{Flag, EventPool, Effect};
 use crate::{content, consts};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
+use crate::utils;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -25,24 +26,35 @@ pub struct GameInterface {
 #[wasm_bindgen]
 impl GameInterface {
     pub fn new(difficulty: Difficulty) -> GameInterface {
+        // So we get tracebacks in the console
+        utils::set_panic_hook();
+
         GameInterface {
             rng: SmallRng::from_entropy(),
             game: Game::new(difficulty),
         }
     }
 
-    pub fn step(&mut self) {
-        self.game.step(&mut self.rng);
+    pub fn step(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.step(&mut self.rng))?)
     }
 
     pub fn state(&self) -> Result<JsValue, JsValue> {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
+    }
+
+    pub fn set_event_choice(&mut self, event_id: usize, region_id: Option<usize>, choice_id: usize) {
+        let effects = self.game.set_event_choice(event_id, choice_id);
+        for effect in effects {
+            effect.apply(&mut self.game, region_id);
+        }
     }
 }
 
 pub struct Game {
     pub state: State,
     pub event_pool: EventPool,
+    // choice_history: [usize; 3],
 }
 
 impl Game {
@@ -74,18 +86,20 @@ impl Game {
                     plant_calories: 1.
                 ),
                 resources_demand: resources!(),
-                resources: resources!(),
+                resources: consts::STARTING_RESOURCES,
                 feedstocks: consts::FEEDSTOCK_RESERVES,
             },
             event_pool: EventPool::new(content::events()),
         }
     }
 
-    pub fn step(&mut self, rng: &mut SmallRng) {
+    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
         let mut effects = self.state.step(rng);
 
         // Roll for events and collect effects
         let events = self.event_pool.roll(&self.state, rng);
+        let event_ids = events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect();
+
         for (event, region_id) in events {
             for effect in &event.effects {
                 effects.push((effect.clone(), region_id));
@@ -95,6 +109,35 @@ impl Game {
         for (effect, region_id) in effects {
             effect.apply(self, region_id);
         }
+
+        event_ids
+    }
+
+    pub fn set_event_choice(&mut self, event_id: usize, choice_id: usize) -> Vec<Effect> {
+        let (effects, kind) = self.event_pool.events[event_id].set_choice(choice_id);
+
+        // TODO
+        // If 20 decisions have been made,
+        // set player flag
+        // self.choice_history.push(*kind);
+        // if self.choice_history.len() >= 10 {
+        //     let flag_set = self.state.flags.iter().any(|f| match flag {
+        //         Flag::IsHES | Flag::IsFALC | Flag::IsMalthusian => true,
+        //         _ => false
+        //     });
+        //     if !flag_set {
+        //         let mut counts = [0; 3];
+        //         for kind in self.choice_history {
+        //             match kind {
+        //                 ChoiceType::HES => counts[0] += 1,
+        //                 ChoiceType::FALC => counts[1] += 1,
+        //                 ChoiceType::Malthusian => counts[2] += 1,
+        //             }
+        //         }
+        //         let idx = array.iter().enumerate().max_by(|&(_, item)| item);
+        //     }
+        // }
+        effects.clone()
     }
 }
 
@@ -120,6 +163,8 @@ pub struct State {
 
 impl State {
     pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(Effect, Option<usize>)> {
+        self.world.year += 1;
+
         // Aggregate demand across regions
         self.output_demand = self.world.demand() * self.output_demand_modifier;
 

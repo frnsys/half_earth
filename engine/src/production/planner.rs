@@ -48,22 +48,27 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
         problem = problem.with(consumed_feedstocks[k].clone().leq(feedstocks[k]));
     }
 
-    let solution =  problem.solve().unwrap();
-
-    let produced: Vec<f32> = amounts.iter().map(|var| solution.value(*var) as f32).collect();
     let mut consumed_r = resources!();
     let mut consumed_f = feedstocks!();
-    for k in consumed_resources.keys() {
-        consumed_r[k] = solution.eval(consumed_resources[k].clone()) as f32;
-    }
-    for k in consumed_feedstocks.keys() {
-        consumed_f[k] = solution.eval(consumed_feedstocks[k].clone()) as f32;
-    }
-    let byproducts = byproducts!(
-        co2: solution.eval(created_byproducts.co2) as f32,
-        n2o: solution.eval(created_byproducts.n2o) as f32,
-        ch4: solution.eval(created_byproducts.ch4) as f32
-    );
+    let mut byproducts = byproducts!();
+
+    let produced: Vec<f32> = match problem.solve() {
+        Ok(solution) => {
+            for k in consumed_resources.keys() {
+                consumed_r[k] = solution.eval(consumed_resources[k].clone()) as f32;
+            }
+            for k in consumed_feedstocks.keys() {
+                consumed_f[k] = solution.eval(consumed_feedstocks[k].clone()) as f32;
+            }
+            for k in created_byproducts.keys() {
+                byproducts[k] = solution.eval(created_byproducts[k].clone()) as f32;
+            }
+            amounts.iter().map(|var| solution.value(*var) as f32).collect()
+        },
+        Err(_) => {
+            amounts.iter().map(|_| 0.).collect()
+        }
+    };
     (produced, consumed_r, consumed_f, byproducts)
 }
 
@@ -127,10 +132,15 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
         }
     }
 
-    let solution = problem.solve().unwrap();
-
-    let total_produced: f64 = total_produced.values().iter().map(|produced| solution.eval(*produced)).sum();
-    let shares: Vec<f32> = amounts.iter().map(|var| (solution.value(*var)/total_produced) as f32).collect();
+    let shares: Vec<f32> = match problem.solve() {
+        Ok(solution) => {
+            let total_produced: f64 = total_produced.values().iter().map(|produced| solution.eval(*produced)).sum();
+            amounts.iter().map(|var| (solution.value(*var)/total_produced) as f32).collect()
+        },
+        Err(_) => {
+            amounts.iter().map(|_| 0.).collect()
+        }
+    };
     shares
 }
 

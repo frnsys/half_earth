@@ -206,7 +206,6 @@ macro_rules! define_enum_map {
 define_enum_map!(Resource {
     Land,
     Water,
-    Labor,
     Electricity,
     Fuel
 });

@@ -6,7 +6,7 @@ use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Choice, ChoiceType, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::Status as ProjectStatus;
 
 
@@ -1953,25 +1953,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-                Choice {
-                    effects: vec![
-                        Effect::Resource(Resource::Labor, -0.2),
-                        Effect::LocalVariable(LocalVariable::Population, -1.0)
-                    ],
-                    conditions: vec![
-
-                    ]
-                },
-                Choice {
-                    effects: vec![
-                        Effect::LocalVariable(LocalVariable::Population, -2.0)
-                    ],
-                    conditions: vec![
-
-                    ]
-                }
-            ]
+            choices: vec![]
         },
         Event {
             id: 1,
@@ -1985,9 +1967,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 2,
@@ -2019,9 +1999,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 3,
@@ -2058,9 +2036,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 4,
@@ -2085,9 +2061,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 5,
@@ -2113,9 +2087,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 6,
@@ -2141,9 +2113,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 7,
@@ -2180,9 +2150,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 8,
@@ -2207,9 +2175,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 9,
@@ -2243,9 +2209,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 10,
@@ -2270,9 +2234,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 11,
@@ -2293,9 +2255,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 12,
@@ -2315,9 +2275,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 13,
@@ -2336,9 +2294,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 14,
@@ -2363,9 +2319,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 15,
@@ -2391,9 +2345,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 16,
@@ -2413,9 +2365,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 17,
@@ -2434,9 +2384,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 18,
@@ -2457,9 +2405,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 19,
@@ -2475,9 +2421,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 20,
@@ -2502,9 +2446,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 21,
@@ -2539,9 +2481,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 22,
@@ -2574,9 +2514,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 23,
@@ -2608,9 +2546,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 24,
@@ -2629,9 +2565,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 25,
@@ -2664,9 +2598,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 26,
@@ -2686,9 +2618,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 27,
@@ -2715,9 +2645,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 28,
@@ -2749,9 +2677,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 29,
@@ -2770,9 +2696,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 30,
@@ -2798,9 +2722,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 31,
@@ -2827,9 +2749,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 32,
@@ -2848,9 +2768,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 33,
@@ -2870,9 +2788,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 34,
@@ -2891,9 +2807,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 35,
@@ -2912,9 +2826,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 36,
@@ -2933,9 +2845,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 37,
@@ -2954,9 +2864,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 38,
@@ -2975,9 +2883,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 39,
@@ -2997,9 +2903,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 40,
@@ -3028,9 +2932,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 41,
@@ -3058,9 +2960,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 42,
@@ -3079,9 +2979,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 43,
@@ -3101,9 +2999,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 44,
@@ -3123,9 +3019,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 45,
@@ -3144,9 +3038,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 46,
@@ -3165,9 +3057,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 47,
@@ -3181,9 +3071,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 48,
@@ -3202,9 +3090,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 49,
@@ -3217,15 +3103,13 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Guaranteed,
+                    likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ResourceDemandGap(Resource::Labor, Comparator::LessEqual, -0.25)
+                        Condition::WorldVariable(WorldVariable::Emissions, Comparator::Greater, 0.)
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 50,
@@ -3244,9 +3128,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 51,
@@ -3284,9 +3166,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 52,
@@ -3295,8 +3175,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.1),
-                Effect::Resource(Resource::Labor, -0.05)
+                Effect::Output(Output::PlantCalories, -0.1)
             ],
             probabilities: vec![
                 Probability {
@@ -3312,9 +3191,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 53,
@@ -3328,9 +3205,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 54,
@@ -3344,9 +3219,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 55,
@@ -3366,9 +3239,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 56,
@@ -3387,9 +3258,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 57,
@@ -3408,9 +3277,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 58,
@@ -3429,9 +3296,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 59,
@@ -3451,9 +3316,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 60,
@@ -3472,9 +3335,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 61,
@@ -3493,9 +3354,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 62,
@@ -3522,9 +3381,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 63,
@@ -3549,9 +3406,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 64,
@@ -3576,9 +3431,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 65,
@@ -3598,9 +3451,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 66,
@@ -3620,9 +3471,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 67,
@@ -3642,9 +3491,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 68,
@@ -3676,9 +3523,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 69,
@@ -3704,9 +3549,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 70,
@@ -3715,7 +3558,6 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::Resource(Resource::Labor, -0.05),
                 Effect::LocalVariable(LocalVariable::Health, -1.0)
             ],
             probabilities: vec![
@@ -3738,9 +3580,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 71,
@@ -3766,9 +3606,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 72,
@@ -3787,9 +3625,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 73,
@@ -3808,9 +3644,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 74,
@@ -3830,9 +3664,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 75,
@@ -3847,9 +3679,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 76,
@@ -3863,9 +3693,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 77,
@@ -3879,9 +3707,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 78,
@@ -3895,9 +3721,7 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 79,
@@ -3916,9 +3740,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         },
         Event {
             id: 80,
@@ -3937,9 +3759,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![
-
-            ]
+            choices: vec![]
         }
     ]
 }

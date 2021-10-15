@@ -138,10 +138,24 @@ impl Event {
             None => false
         }
     }
+
+    pub fn set_choice(&self, choice_id: usize) -> (&Vec<Effect>, &ChoiceType) {
+        let choice = &self.choices[choice_id];
+        (&choice.effects, &choice.kind)
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum ChoiceType {
+    HES,
+    FALC,
+    Malthusian,
+    None
 }
 
 #[derive(Debug, Clone)]
 pub struct Choice {
+    pub kind: ChoiceType,
     pub effects: Vec<Effect>,
 
     /// A function that takes the current
