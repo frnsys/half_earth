@@ -13,6 +13,8 @@ import Outcomes from '../subs/Outcomes.vue';
 import OutcomesSummary from '../subs/OutcomesSummary.vue';
 import Probabilities from '../subs/Probabilities.vue';
 import ProbabilitiesSummary from '../subs/ProbabilitiesSummary.vue';
+import Dialogue from '../subs/Dialogue.vue';
+import DialogueSummary from '../subs/DialogueSummary.vue';
 import EffectsSummary from '../subs/EffectsSummary.vue';
 import ChoicesSummary from '../subs/ChoicesSummary.vue';
 import ResourcesSummary from '../subs/ResourcesSummary.vue';
@@ -35,6 +37,7 @@ export default {
     Conditions, Probabilities,
     ProbabilitiesSummary, EffectsSummary,
     ChoicesSummary, ResourcesSummary,
+    Dialogue, DialogueSummary,
     ByproductsSummary, OutputsSummary,
     Outcomes, OutcomesSummary,
   },

@@ -232,6 +232,22 @@ const PROBABILITIES = [
   'Guaranteed'
 ];
 
+const SPEAKERS = [
+  'Economist',
+  'Ecologist',
+  'Climatologist',
+  'Geoengineer',
+  'Farmer',
+  'Alien',
+  'Citizen',
+  'Agronomist',
+  'Doom Cultist',
+  'Meat Militia',
+  'Envoy',
+  'Space Enthusiast',
+  'Epidemiologist',
+];
+
 export default {
   OUTPUTS,
   RESOURCES,
@@ -242,5 +258,6 @@ export default {
   COMPARATORS,
   CONDITIONS,
   PROBABILITIES,
-  INCOME_LEVELS
+  INCOME_LEVELS,
+  SPEAKERS
 };

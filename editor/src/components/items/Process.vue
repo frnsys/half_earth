@@ -73,14 +73,6 @@
       </div>
     </fieldset>
 
-    <div>
-      <label>
-        Flavor Text/Dialogue
-        <Tip>Advisor dialogue introducing the event.</Tip>
-      </label>
-      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
-    </div>
-
     <Notes :notes="localData.notes" @blur="saveNotes" />
 
     <div class="additional-actions">

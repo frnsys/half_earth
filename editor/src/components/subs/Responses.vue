@@ -2,7 +2,6 @@
 <div class="responses">
   <label>
     Responses
-    <button @click="addResponse">+ Response</button>
   </label>
   <div class="choices">
     <div class="field-group" v-for="(choice, i) in localData">
@@ -11,7 +10,7 @@
           Choice Text
           <Tip>The text representing this choice, presented to the player.</Tip>
         </label>
-        <input type="text" placeholder="Choice text" v-model="choice.text" @blur="update" :class="choiceFlag(i, 'text')" />
+        <input type="text" placeholder="Text" v-model="choice.text" @blur="update" :class="choiceFlag(i, 'text')" />
       </div>
       <div class="radio">
         <label>Type:</label>
@@ -32,15 +31,8 @@
           <input :id="`${id}-${i}-hes`" type="radio" v-model="choice.type" value="hes" @change="update">
         </div>
       </div>
-      <fieldset>
-        <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
-        <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
-      </fieldset>
-      <Dialogue :id="`${id}-${i}`" :dialogue="choice.dialogue" @update="saveDialogue(i, $event)"/>
-
-      <div class="subitem-actions">
-        <button @click="() => deleteResponse(choice)">X</button>
-      </div>
+      <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
+      <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
     </div>
   </div>
 </div>
@@ -56,40 +48,18 @@ export default {
   components: {
     Tip, Effects, Conditions,
   },
-  beforeCreate: function () {
-    // Hack around circular references
-    this.$options.components.Dialogue = require('./Dialogue.vue').default
-  },
   data() {
     return {
       localData: this.choices || []
     };
   },
   methods: {
-    addResponse() {
-      this.localData.push({
-        text: '',
-        type: 'none',
-        effects: [],
-        conditions: [],
-        dialogue: null
-      });
-      this.update();
-    },
-    deleteResponse(choice) {
-      this.localData = this.localData.filter((e) => e != choice);
-      this.update();
-    },
     flags(choice) {
       let invalid = choice.text === undefined || choice.text === '';
       return {invalid};
     },
     update() {
       this.$emit('update', this.localData);
-    },
-    saveDialogue(i, dialogue) {
-      this.localData[i].dialogue = dialogue;
-      this.update();
     },
     saveChoiceEffects(i, effects) {
       this.localData[i].effects = effects;
@@ -123,19 +93,11 @@ export default {
   justify-content: space-around;
 }
 .choices .field-group {
-  width: 100%;
-  position: relative;
+  width: 49%;
 }
 .choices .effects {
   border: none;
   padding: 0;
-  margin: 0;
-}
-.responses .subitem-actions {
-	position: absolute;
-	top: 0;
-	right: 0;
-	transform: translate(0, -50%);
-	font-size: 0.8em;
 }
 </style>
+

@@ -14,13 +14,6 @@
       <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
       <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
     </div>
-    <div>
-      <label>
-        Flavor Text/Dialogue
-        <Tip>Advisor dialogue introducing the event.</Tip>
-      </label>
-      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
-    </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
   </template>

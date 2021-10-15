@@ -45,13 +45,6 @@
         <input type="checkbox" :id="`${item.id}_repeats`" v-model="localData.repeats" @change="save">
       </div>
       <div class="checkbox">
-        <label :for="`${item.id}_decision`">
-          Decision
-          <Tip>Is this an informative event or does the player need to make a decision?</Tip>
-        </label>
-        <input type="checkbox" :id="`${item.id}_decision`" v-model="localData.decision" @change="save">
-      </div>
-      <div class="checkbox">
         <label :for="`${item.id}_local`">
           Local
           <Tip>Is this event something that happens locally or globally?</Tip>
@@ -70,15 +63,10 @@
 
     <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
     <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
-    <Choices :id="item.id" :choices="localData.choices" v-if="localData.decision" @update="saveData('choices', $event)"/>
 
-    <div>
-      <label>
-        Flavor Text/Dialogue
-        <Tip>Advisor dialogue introducing the event.</Tip>
-      </label>
-      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
-    </div>
+    <h4 class="dialogue-label">Dialogue</h4>
+    <Dialogue :id="item.id" :dialogue="localData.dialogue" @update="saveData('dialogue', $event)"/>
+
     <Notes :notes="localData.notes" @blur="saveNotes" />
   </template>
 
@@ -110,7 +98,7 @@
       <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
       <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
     </div>
-    <ChoicesSummary :choices="localData.choices" v-if="localData.decision" />
+    <DialogueSummary :dialogue="localData.dialogue" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -119,21 +107,9 @@
 <script>
 import state from '../../state';
 import ItemMixin from './ItemMixin';
-import Choices from '../subs/Choices.vue';
 
 export default {
-  components: {
-    Choices
-  },
   mounted() {
-    if (!this.localData.choices) {
-      this.localData.choices = [...Array(4)].map(() => ({
-        text: '',
-        conditions: [],
-        effects: []
-      }));
-      this.save();
-    }
     if (!this.localData.variables) {
       this.parseVariables();
       this.save();
@@ -205,5 +181,9 @@ export default {
 }
 .event-summary .arc-pill {
   background: #9eb4c7;
+}
+.dialogue-label {
+  margin: 0.5em 0 0 0;
+  border-bottom: 1px solid black;
 }
 </style>
