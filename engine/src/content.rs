@@ -7,7 +7,7 @@ use crate::projects::{Project, Outcome};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, ChoiceType, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
-use crate::projects::Status as ProjectStatus;
+use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 
 
 
@@ -1074,56 +1074,66 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 0,
             name: "Cloud Brightening",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 1,
             name: "Veganism Mandate",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 2,
             name: "Remediation and Restoration",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProject(38)
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 3,
             name: "Nuclear Fusion",
-            years: 20,
+            cost: 20,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
@@ -1150,661 +1160,793 @@ pub fn projects() -> Vec<Project> {
                         ]
                     }
                 }
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 4,
             name: "Perennial Cereals",
-            years: 5,
+            cost: 5,
             progress: 0.0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 5,
             name: "Universal Abortions & Contraceptives",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 6,
             name: "One-Child Policy",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 7,
             name: "Indigenous Land Management",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 8,
             name: "Battery Storage Network",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 9,
             name: "Solar Radiation Management",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1)
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 10,
             name: "Expand & Upgrade Public Transit",
-            years: 5,
+            cost: 5,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 11,
             name: "Long-Range Electric Aviation",
-            years: 10,
+            cost: 10,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 12,
             name: "Closed Borders",
-            years: 1,
+            cost: 1,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 13,
             name: "Iron Fillings",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 14,
             name: "Green Hydrogen",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProject(15)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 15,
             name: "Hydrogen Transport Network",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 16,
-            name: "III-V Semiconductors solar panels and perovskite-based panels",
-            years: 10,
+            name: "Next-Gen Solar PV",
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 17,
             name: "Floating Wind Turbines",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProcess(3)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 18,
             name: "Battery Technology?",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 19,
             name: "De-extinction",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProject(20)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 20,
             name: "De-extinction Initiative",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 21,
             name: "Global Passive House Mandate",
-            years: 10,
+            cost: 10,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 22,
             name: "Car Ban",
-            years: 10,
+            cost: 10,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 23,
             name: "Direct Air Capture",
-            years: 20,
+            cost: 20,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 24,
             name: "Co-Generation",
-            years: 10,
+            cost: 10,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 25,
             name: "Restrictions on Air Travel",
-            years: 2,
+            cost: 2,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 26,
             name: "Wood Skyscrapers",
-            years: 5,
+            cost: 5,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 27,
             name: "Vegetarian Mandate",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 28,
             name: "Back to the Land",
-            years: 10,
+            cost: 10,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 29,
             name: "3rd Generation Biofuels",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 30,
             name: "Thorium Reactor",
-            years: 20,
+            cost: 20,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProcess(6)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 31,
             name: "Breeder Reactor",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProcess(7)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 32,
             name: "Mini Nuclear Reactor",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 33,
             name: "Asteroid Mining",
-            years: 15,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 34,
-            name: "Closed-System Ecologies (Biosphere III)",
-            years: 10,
+            name: "Biosphere III",
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 35,
             name: "Space Cans",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 36,
             name: "Traditional animal husbandry mandate",
-            years: 5,
+            cost: 5,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 37,
             name: "Land Expansion",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 38,
             name: "Phytomining",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 39,
             name: "Cloud Seeding",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 40,
             name: "Ban on deep sea mining",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 41,
             name: "Agricultural robotics",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 42,
             name: "The Ark",
-            years: 10,
+            cost: 10,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 43,
             name: "Expand recycling infrastructure",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 44,
             name: "Alternative Refrigerants",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 45,
-            name: "Drought-Resistant Crop Varieties",
-            years: 10,
+            name: "Drought-Resistant Crops",
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 46,
             name: "Electrification",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 47,
             name: "Hempcrete",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
@@ -1820,97 +1962,117 @@ pub fn projects() -> Vec<Project> {
                         ]
                     }
                 }
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 48,
             name: "Orbital Mirror Array",
-            years: 20,
+            cost: 20,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 49,
             name: "Carbon-Negative Concrete",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 50,
             name: "Hydrogen Steel",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 51,
             name: "Electric-Arc Furnaces",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 52,
             name: "Cellular Meat",
-            years: 20,
+            cost: 10,
             progress: 0.0,
             effects: vec![
                 Effect::UnlocksProcess(2)
             ],
+            kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         },
         Project {
             id: 53,
             name: "Mass CCS",
-            years: 10,
+            cost: 15,
             progress: 0.0,
             effects: vec![
 
             ],
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
 
-            ]
+            ],
+            estimate: 0,
+            points: 0
         }
     ]
 }
@@ -2100,12 +2262,6 @@ pub fn events() -> Vec<Event> {
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
             ],
             probabilities: vec![
-                Probability {
-                    likelihood: Likelihood::Likely,
-                    conditions: vec![
-                        Condition::ProjectStatus(2, ProjectStatus::Stalled)
-                    ]
-                },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
@@ -3740,7 +3896,35 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ],
+                    kind: ChoiceType::None
+                },
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ],
+                    kind: ChoiceType::None
+                },
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ],
+                    kind: ChoiceType::None
+                }
+            ]
         },
         Event {
             id: 80,

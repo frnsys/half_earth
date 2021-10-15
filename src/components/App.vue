@@ -1,38 +1,35 @@
 <template>
-  <!-- for dev purposes -->
-  <Globe v-if="debug.globe" />
-  <EventSwipe v-else-if="debug.swipe" />
-  <EventDialogue v-else-if="debug.dialogue" />
-
-  <Planning v-else-if="state.phase == 'PLANNING'" />
-  <Stream v-else-if="state.phase == 'IMPLEMENTATION'" />
+  <Interstitial v-if="dialogue" :dialogue="dialogue" />
+  <Planning v-if="state.phase == 'PLANNING'" />
+  <Stream v-else-if="state.phase == 'EVENTS'" />
   <Report v-else-if="state.phase == 'REPORT'" />
 </template>
 
 <script>
 import state from '../state';
-import Stream from './stream/Stream.vue';
+import Stream from './events/Stream.vue';
 import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
-import Globe from './Globe.vue';
-
-import EventSwipe from './stream/EventSwipe.vue';
-import EventDialogue from './stream/EventDialogue.vue';
 
 export default {
   data() {
     return {
-      state
+      state,
+      dialogue: null
     };
   },
   components: {
     Stream,
     Planning,
     Report,
-    Globe,
-    EventSwipe,
-    EventDialogue,
   },
+  mounted() {
+    fetch('/assets/content/events/79.json').then((resp) => {
+      return resp.json();
+    }).then(({dialogue}) => {
+      this.dialogue = dialogue;
+    });
+  }
 }
 </script>
 
@@ -58,6 +55,7 @@ main {
   max-width: 480px;
   margin: 0 auto;
   overflow-x: hidden;
+  position: relative;
 
   display: flex;
   flex-direction: column;
@@ -68,11 +66,15 @@ button {
   padding: 0.5em 1em;
   border: 1px solid #000;
   cursor: pointer;
-  background: #fff;
+  background: #B9B9B9;
+  border-top: 2px solid #F1F1F1;
+  border-left: 2px solid #F1F1F1;
+  border-right: 2px solid #5D5D5D;
+  border-bottom: 2px solid #5D5D5D;
+  border-radius: 3px;
 }
 button:hover {
-  background: #000;
-  color: #fff;
+  background: #D3D3D3;
 }
 button:disabled {
   opacity: 0.5;
@@ -102,5 +104,9 @@ figure {
   font-size: 0.6em;
   font-style: italic;
   color: #888;
+}
+
+img {
+  max-width: 100%;
 }
 </style>

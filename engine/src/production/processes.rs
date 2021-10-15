@@ -62,15 +62,10 @@ pub fn update_mixes(
     let target_mix = planner::calculate_mix(&processes, &demand, &resource_weights, &feedstock_weights);
     for (process, target) in processes.iter_mut().zip(target_mix) {
         if !process.locked {
-            // Phase out banned processes
-            if process.banned && process.mix_share > 0.{
-                process.mix_share = MIX_CHANGE_SPEED;
-            } else if !process.banned {
-                if process.mix_share < target {
-                    process.mix_share += MIX_CHANGE_SPEED;
-                } else if process.mix_share > target {
-                    process.mix_share -= MIX_CHANGE_SPEED;
-                }
+            if process.mix_share < target {
+                process.mix_share += MIX_CHANGE_SPEED;
+            } else if process.mix_share > target {
+                process.mix_share -= MIX_CHANGE_SPEED;
             }
             process.mix_share = f32::max(process.mix_share, 0.);
         }

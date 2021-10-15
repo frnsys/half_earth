@@ -192,7 +192,7 @@ export default {
         case 'Event':
           return ['(none)'].concat(this.storyArcs);
         case 'Project':
-          return ['Project', 'Research', 'Policy'];
+          return ['Initiative', 'Research', 'Policy'];
         case 'Process':
           return Object.keys(consts.OUTPUTS);
         default:

@@ -24,10 +24,10 @@
       </div>
       <div>
         <label>
-          Years to Completion
-          <Tip>For uncertain projects, this is the minimum years required to start rolling for success.</Tip>
+          Cost/Years to Completion
+          <Tip>Political capital cost for policies, otherwise years to completion. For uncertain projects, this is the minimum years required to start rolling for success.</Tip>
         </label>
-        <input type="number" v-model="localData.years" @change="save" :class="flags('years')"/>
+        <input type="number" v-model="localData.cost" @change="save" :class="flags('cost')"/>
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_uncertain`">
@@ -87,9 +87,9 @@
   <div v-else class="project-summary item-summary">
     <div class="item-meta">
       <div class="meta-pill">{{localData.type}}</div>
-      <div class="meta-pill split-pill" :class="{invalid: !localData.years}">
-        <div>Years</div>
-        <div>{{localData.years || 'MISSING'}}</div>
+      <div class="meta-pill split-pill" :class="{invalid: !localData.cost}">
+        <div>{{localData.type == 'Policy' ? 'Cost' : 'Years'}}</div>
+        <div>{{localData.cost || 'MISSING'}}</div>
       </div>
       <div class="meta-pill" v-if="localData.uncertain">Uncertain</div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>

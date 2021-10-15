@@ -5,6 +5,8 @@
 - Main libraries used for the UI are three.js and Vue.
 - Some of the assets are generated programmatically; look in `assets/src/` for the scripts.
 
+1. Use the editor in `editor/` to update game content, then run `parse_content.py` to parse the editor data into Rust code and JSON assets. See `update_content.sh`
+
 ## Setup
 
 ```

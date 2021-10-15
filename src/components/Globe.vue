@@ -20,6 +20,7 @@ export default {
       this.globe = new Globe(this.$el);
       this.globe.render();
       this.globe.init();
+      if (this.onReady) this.onReady(this.globe);
 
       // For testing biome updates
       // const incrementYear = () => {
@@ -44,6 +45,11 @@ export default {
       //   }, 2000);
       // });
     });
+  },
+  methods: {
+    onReady(fn) {
+      this.onReady = fn;
+    }
   }
 }
 </script>

@@ -1,6 +1,6 @@
 use crate::world::World;
 use crate::industries::Industry;
-use crate::projects::{Project, Status};
+use crate::projects::{Project, Status, Type};
 use crate::production::{ProductionOrder, Process, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::events::{Flag, EventPool, Effect};
@@ -48,6 +48,38 @@ impl GameInterface {
         for effect in effects {
             effect.apply(&mut self.game, region_id);
         }
+    }
+
+    pub fn set_project_points(&mut self, project_id: usize, points: usize) {
+        self.game.state.projects[project_id].set_points(points);
+    }
+
+    pub fn start_project(&mut self, project_id: usize) {
+        let project = &mut self.game.state.projects[project_id];
+        if project.kind == Type::Policy {
+            project.status = Status::Active;
+        } else {
+            project.status = Status::Building;
+        }
+    }
+
+    pub fn stop_project(&mut self, project_id: usize) {
+        let project = &mut self.game.state.projects[project_id];
+        if project.progress > 0. {
+            project.status = Status::Halted;
+        } else {
+            project.status = Status::Inactive;
+        }
+    }
+
+    pub fn ban_process(&mut self, process_id: usize) {
+        let process = &mut self.game.state.processes[process_id];
+        process.banned = true;
+    }
+
+    pub fn unban_process(&mut self, process_id: usize) {
+        let process = &mut self.game.state.processes[process_id];
+        process.banned = false;
     }
 }
 

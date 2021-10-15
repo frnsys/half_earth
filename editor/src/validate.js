@@ -194,7 +194,7 @@ const SPECS = {
 
   Project: {
     key: 'name',
-    validate: ['name', 'description', 'type', 'effects', 'years', 'locked', 'outcomes'],
+    validate: ['name', 'description', 'type', 'effects', 'cost', 'locked', 'outcomes'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -206,8 +206,8 @@ const SPECS = {
           return requireOneOfChoice(item.type, ['Initiative', 'Policy', 'Research']);
         case 'effects':
           return requireAtLeastOne(item.effects) && validateEffects(item.effects);
-        case 'years':
-          return requirePositive(item.years);
+        case 'cost':
+          return requirePositive(item.cost);
         case 'outcomes':
           return validateOutcomes(item.outcomes || []);
         case 'locked':

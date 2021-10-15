@@ -1,17 +1,18 @@
 <template>
   <div class="hud">
-    <div>{{state.player.year}}</div>
-
-    <ul class="hud--indicators">
-      <li v-for="(d, vari) in estimates">
-        <b>{{VARI_ICONS[vari]}}</b>
-        <span v-if="vari in state.plan.targets" :class="{achieved: d.value * state.plan.targets[vari].valence >= state.plan.targets[vari].value * state.plan.targets[vari].valence}">{{d.value}}/{{state.plan.targets[vari].value}}</span>
-        <span v-else>{{d.value}}</span>
-        <span class="estimate">{{d.change >= 0 ? '+' : '-'}}{{Math.abs(d.change)}}</span>
-      </li>
-    </ul>
-
-    <div>{{state.player.political_capital}}🗳️</div>
+    <div>{{state.gameState.world.year}}</div>
+    <div>
+      <img src="/assets/icons/extinction.png">{{state.gameState.world.extinction_rate.toFixed(0)}}
+    </div>
+    <div>
+      <img src="/assets/icons/contentedness.png">{{contentedness.toFixed(0)}}
+    </div>
+    <div>
+      <img src="/assets/icons/emissions.png">{{emissions.toFixed(0)}}
+    </div>
+    <div>
+      <img src="/assets/icons/warming.png">+{{state.gameState.world.temperature.toFixed(1)}}°C
+    </div>
   </div>
 </template>
 
@@ -24,26 +25,14 @@ export default {
     };
   },
   computed: {
-    estimates() {
-      const estimates = {};
-
-      Object.keys(state.world).forEach((k) => {
-        estimates[k] = {
-          change: state.world[k].baseChange,
-          value: state.world[k].value
-        };
-      });
-
-      // Event effects
-      state.events.forEach((ev) => {
-        Object.keys(ev.impacts).forEach((k) => {
-          estimates[k].change += ev.impacts[k];
-        });
-      });
-
-      // TODO other factors
-
-      return estimates;
+    contentedness() {
+      return state.gameState.world.regions.reduce((acc, r) => {
+        return acc + r.base_contentedness + (r.health + r.outlook)/2;
+      }, 0)/state.gameState.world.regions.length;
+    },
+    emissions() {
+      let world = state.gameState.world;
+      return world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.);
     }
   }
 };
@@ -57,16 +46,11 @@ export default {
   justify-content: space-between;
   padding: 0 0.5em;
   font-size: 0.75em;
+  z-index: 1;
 }
-
-.hud--indicators li {
-  display: inline-block;
-  margin: 0 0.25em;
-}
-
-.estimate {
-	color: #888;
-	padding: 0 0.1em;
-	margin-left: 0.2em;
+.hud img {
+  width: 13px;
+  vertical-align: middle;
+  margin-right: 2px;
 }
 </style>

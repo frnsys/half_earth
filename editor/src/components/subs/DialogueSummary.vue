@@ -1,6 +1,6 @@
 <template>
 <div class="dialogue-summary">
-  <div>[{{localData.speaker}}]: "{{localData.text || "MISSING TEXT"}}"</div>
+  <div>[{{localData.speaker || "MISSING SPEAKER"}}]: "{{localData.text || "MISSING TEXT"}}"</div>
   <ChoicesSummary :choices="localData.choices" />
 </div>
 </template>

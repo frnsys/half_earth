@@ -1,168 +1,61 @@
 <template>
-  <Setting
-      background="assets/settings/bgs/redwood_forest.webp"
-      audio="assets/settings/audio/463903__burghrecords__birds-in-spring-scotland.webm" />
-
-  <Hud />
-
-  <Window :title="`${state.player.year}-${state.player.year+5} Planning - ${phase === 0 ? 'Targets' : 'Projects'}`">
-    <div v-if="phase === 0" :set="vari = targetVars[targetVar]" class="planning--target">
-      <h2>{{VARI_ICONS[vari]}}{{vari}}</h2>
-      <Fader
-        :steps="10"
-        :value="state.plan.targets[vari].value"
-        :current="state.world[vari].value"
-        :reverse="state.plan.targets[vari].valence < 0"
-        :minLabel="state.world[vari].labels.min"
-        :maxLabel="state.world[vari].labels.max"
-        @change="(value) => updateTarget(vari, value)"
-        />
-      <div class="planning--ambition">
-        <span v-if="state.plan.targets[vari].wager < 0" class="planning--warning">Regression</span>
-        <template v-else>
-          <span v-if="state.plan.targets[vari].wager < 1">Business as Usual</span>
-          <span v-else-if="state.plan.targets[vari].wager < 4">Milquetoast</span>
-          <span v-else-if="state.plan.targets[vari].wager < 9">Modest</span>
-          <span v-else-if="state.plan.targets[vari].wager < 16">Ambitious</span>
-          <span v-else>Impossible</span>
-        </template>
-        <div class="planning--pc-wager">
-          <template v-if="state.plan.targets[vari].wager < 0">
-            {{state.plan.targets[vari].wager}}🗳️ penalty
-            <Tip>People will not like this backtracking and you'll lose support.</Tip>
-          </template>
-          <template v-else>
-            {{state.plan.targets[vari].wager}}🗳️ stake
-            <Tip>If you reach this target, you'll earn this much PC. If you fail, you'll lose this much.</Tip>
-          </template>
-        </div>
-      </div>
-      <figure>
-        <Projection
-          :startYear="state.time.start"
-          :endYear="state.time.end"
-          :pastValues="state.world[vari].history.concat(state.world[vari].value)"
-          :currentTargetValue="state.plan.targets[vari].value"
-          :finalTargetValue="state.world[vari].preindustrial" />
-      </figure>
-      <p class="help">
-        Set targets for the next five years. Harder targets can earn you more PC, but also risk losing more. Backtracking on a target has a PC cost.
-      </p>
-      <p class="help">
-        Should backtracking targets be allowed at all? Can you only set targets in the "forward" direction from the current value?
-      </p>
-    </div>
-
-    <div v-else-if="phase === 1">
-      <Cards>
-        <li v-for="p in state.projects">
-          <Project @click="() => toggleProject(p)" :class="{selected: state.player.projects.includes(p)}" :project="p">
-            <template v-slot:costs>
-              <div class="meta meta-top">
-                <div v-if="p.popularity < 0">😡{{pcCost(p)}}PC</div>
-              </div>
-            </template>
-          </Project>
-        </li>
-      </Cards>
-
-      <p class="help">Set ongoing research initiatives, projects, and policies.</p>
-    </div>
-
-    <div class="actions">
-      <button @click="prev" v-if="phase > 0">Back</button>
-      <button @click="prev" v-if="phase == 0 && targetVar > 0">Back</button>
-      <button @click="next" v-if="phase < 1">Next</button>
-      <button @click="next" v-if="phase == 1">Done</button>
-    </div>
-  </Window>
+<Hud />
+<div class="planning">
+  <Research v-if="page == PAGES.RESEARCH" @close="page = null" />
+  <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
+  <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
+  <Processes v-else-if="page == PAGES.PROCESSES" @close="page = null" />
+  <div v-else class="planning--menu">
+    <button v-for="p in Object.keys(PAGES)" @click="select(p)">
+      <img v-if="p == 'CONTINUE'" src="/assets/placeholders/earth_win98.png" />
+      <img v-else-if="p == 'POLICIES'" src="/assets/placeholders/policy_win98.png" />
+      <img v-else-if="p == 'RESEARCH'" src="/assets/placeholders/research_win98.png" />
+      <img v-else-if="p == 'INITIATIVES'" src="/assets/placeholders/initiatives_win98.png" />
+      <img v-else-if="p == 'PROCESSES'" src="/assets/placeholders/processes_win98.png" />
+      <img v-else src="/assets/placeholders/chart.png" />
+      {{p}}
+    </button>
+  </div>
+</div>
 </template>
 
 <script>
 import state from '../../state';
+import Research from './Research.vue';
+import Policies from './Policies.vue';
+import Initiatives from './Initiatives.vue';
+import Processes from './Processes.vue';
 import Hud from '../Hud.vue';
-import Window from '../Window.vue';
-import Fader from './Fader.vue';
-import Project from './Project.vue';
-import Projection from './Projection.vue';
-import Setting from '../Setting.vue';
-import Tip from '../Tip.vue';
-import Cards from '../Cards.vue';
 
-const targetVars = Object.keys(state.plan.targets);
+const PAGES = {
+  RESEARCH: 0,
+  INITIATIVES: 1,
+  POLICIES: 2,
+  PROCESSES: 3,
+  DASHBOARD: 4,
+  CONTINUE: 5
+}
 
 export default {
-  created() {
-    this.targetVars = targetVars;
+  components: {
+    Hud,
+    Research,
+    Policies,
+    Initiatives,
+    Processes
   },
   data() {
     return {
-      state,
-      phase: 0,
-      targetVar: 0
-    };
-  },
-  components: {
-    Hud,
-    Tip,
-    Cards,
-    Project,
-    Setting,
-    Window,
-    Fader,
-    Projection
+      PAGES,
+      page: null,
+    }
   },
   methods: {
-    prev() {
-      if (this.phase > 0) {
-        this.phase--;
+    select(p) {
+      if (PAGES[p] == PAGES.CONTINUE) {
+        state.phase = 'EVENTS';
       } else {
-        this.targetVar--;
-      }
-    },
-    next() {
-      if (this.phase < 1) {
-        if (this.targetVar >= targetVars.length - 1) {
-          this.phase++;
-        } else {
-          this.targetVar++;
-        }
-      } else {
-        state.phase = 'IMPLEMENTATION';
-      }
-    },
-    updateTarget(vari, value) {
-      this.state.plan.targets[vari].value = value;
-      this.calculatePCWager(vari);
-    },
-    calculatePCWager(vari) {
-      let val = state.plan.targets[vari].value;
-      let valence = state.plan.targets[vari].valence;
-      let mult = 1;
-      if (val * valence < state.world[vari].value * valence) { // Penalty
-        mult = -1;
-      }
-      let wager = (val - state.world[vari].value)**2;
-      state.plan.targets[vari].wager = wager * mult;
-    },
-    pcCost(project) {
-      // TODO better calculation
-      return project.popularity < 0 ? project.popularity * 5 : 0;
-    },
-    toggleProject(project) {
-      let pcCost = this.pcCost(project);
-      if (state.player.projects.includes(project)) {
-        state.player.projects = state.player.projects.filter((p) => p != project);
-        if (project.popularity < 0) {
-          state.player.political_capital += pcCost;
-        }
-      } else {
-        if (project.popularity < 0 && state.player.political_capital >= pcCost) {
-          state.player.projects.push(project);
-          state.player.political_capital -= pcCost;
-        } else {
-          state.player.projects.push(project);
-        }
+        this.page = PAGES[p];
       }
     }
   }
@@ -170,23 +63,74 @@ export default {
 </script>
 
 <style>
-.planning--target h2 {
-  text-align: center;
-  font-weight: normal;
-  margin: 0;
-  font-size: 1em;
+.planning {
+  background: #ffecc7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.planning--ambition {
-  text-align: center;
-  margin: 0.5em 0 1em 0;
-  font-size: 0.9em;
+.planning--menu {
+  padding: 1em;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
-.planning--pc-wager {
-  text-align: center;
-  font-size: 0.8em;
-  color: #888;
+.planning--menu button {
+  width: 96px;
+  height: 96px;
+  padding: 0.25em 0.5em;
+  border-width: 4px;
+  justify-self: center;
+  margin-bottom: 1em;
 }
-.planning--warning {
-  color: red;
+.planning--menu img {
+  max-width: 100%;
+}
+
+.pip {
+  width: 32px;
+}
+.pips {
+  padding: 1em 0.5em 0.5em;
+  margin: 1em;
+  border: 1px solid #454340;
+  width: calc(320px + 1em + 2px);
+  position: relative;
+}
+.pips--label {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #FFECC7;
+  border: 1px solid #454340;
+  padding: 0 0.5em;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  text-align: center;
+  width: 120px;
+}
+.pip-in-use {
+  opacity: 0.5;
+}
+
+.planning--page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.planning--page .cards {
+  flex: 1;
+}
+.planning--page .card header img {
+  width: 12px;
+}
+
+.planning--page > header {
+  padding: 0.5em;
+  display: flex;
+}
+.planning--page .back {
+  width: 32px;
+  cursor: pointer;
 }
 </style>

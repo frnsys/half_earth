@@ -149,10 +149,11 @@ export default {
   pointer-events: none;
 }
 .cards li {
-  display: inline-block;
+  display: inline-flex;
   margin: 0 0.5em;
   vertical-align: top;
   white-space: normal;
+  user-select: none;
 }
 
 /* Margin on either side so

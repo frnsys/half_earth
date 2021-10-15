@@ -1,38 +1,23 @@
 import {reactive} from 'vue';
-import consts from './consts';
-import events from './content/events';
-import projects from './content/projects';
-
-function randChoice(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function randEnum(en) {
-  return randChoice(Object.values(en));
-}
 
 const init = {
+  gameState: null,
   phase: 'PLANNING',
-  time: {
-    start: 2025,
-    end: 2100
+  points: {
+    Research: {
+      total: 10,
+      available: 10,
+    },
+    Initiative: {
+      total: 10,
+      available: 10,
+    },
+    Policy: {
+      total: 10,
+      available: 10,
+    },
   },
-  player: {
-    year: 2025,
-    projects: [],
-    political_capital: 10,
-    resources: {
-      energy: {
-        value: 10,
-        baseChange: 2
-      },
-      labor: {
-        value: 10,
-        baseChange: 1
-      }
-      // TODO
-    }
-  },
+
   plan: {
     targets: {
       biodiversity: {
@@ -80,8 +65,16 @@ const init = {
       preindustrial: 0
     },
   },
-
-  projects, events
+  projects: [],
+  processes: [],
 }
 
-export default reactive(init);
+const state = reactive(init);
+fetch('/assets/content/projects.json')
+  .then((resp) => resp.json())
+  .then((json) => state.projects = json);
+fetch('/assets/content/processes.json')
+  .then((resp) => resp.json())
+  .then((json) => state.processes = json);
+
+export default state;

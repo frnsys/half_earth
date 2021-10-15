@@ -38,8 +38,8 @@
 
           <template v-if="node.type === 'Project'">
             <div class="graph-pill">
-              <div>Years</div>
-              <div>{{node.data.years || 'X'}}</div>
+              <div>Cost/Years</div>
+              <div>{{node.data.cost || 'X'}}</div>
             </div>
             <div>
               <img class="graph-icon" v-for="effect in displayEffects(node.data)" :src="icon(effect)" />
@@ -74,8 +74,8 @@
             <div class="graph-node-details-meta">
               <div class="meta-pill invalid" v-if="!node.valid">Invalid/Missing Data</div>
               <div class="meta-pill split-pill">
-                <div>Years</div>
-                <div>{{node.data.years || 'MISSING'}}</div>
+                <div>Cost</div>
+                <div>{{node.data.cost || 'MISSING'}}</div>
               </div>
               <div class="meta-pill" v-if="node.data.uncertain">Uncertain</div>
               <div class="meta-pill" v-if="node.data.locked">Locked</div>
