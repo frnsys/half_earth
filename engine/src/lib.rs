@@ -1,6 +1,5 @@
 #[macro_use]
 mod kinds;
-mod game;
 mod utils;
 mod projects;
 mod world;
@@ -10,6 +9,7 @@ mod production;
 mod consts;
 mod regions;
 mod content;
+pub mod game;
 pub mod surface;
 
 // When the `wee_alloc` feature is enabled,

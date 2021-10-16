@@ -38,7 +38,7 @@ impl World {
     }
 
     pub fn habitability(&self) -> f32 {
-        self.regions.iter().map(|r| r.habitability()).sum()
+        self.regions.iter().map(|r| r.habitability()).sum::<f32>()/self.regions.len() as f32
     }
 
     pub fn emissions(&self) -> f32 {

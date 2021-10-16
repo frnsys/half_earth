@@ -1,4 +1,5 @@
 use crate::game::State;
+use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
 
@@ -23,8 +24,17 @@ impl EventPool {
     }
 
     pub fn roll<'a>(&'a mut self, state: &State, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
+        // Prevent duplicate events
+        let mut existing: HashSet<usize> = HashSet::new();
+        for (ev_id, _, _) in &self.queue {
+            existing.insert(*ev_id);
+        }
+        for (ev_id, _, ) in &self.triggered {
+            existing.insert(*ev_id);
+        }
+
         // Candidate event pool
-        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| !ev.locked).map(|ev| ev.id).collect();
+        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| !ev.locked && !existing.contains(&ev.id)).map(|ev| ev.id).collect();
         valid_ids.shuffle(rng);
 
         // Tick queued countdowns

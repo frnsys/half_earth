@@ -42,6 +42,7 @@ function requireByproducts(byproducts) {
   return valid.length > 0;
 }
 
+// Get all effects associated with an item
 function _itemEffects() {
   return Object.values(state.items)
     .filter((i) => !i.deleted)

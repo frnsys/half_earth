@@ -3,8 +3,6 @@ const OUTPUTS = {
   'Electricity':	'kWh',
   'PlantCalories': 'kcal',
   'AnimalCalories': 'kcal',
-  // 'Project': 'point',	// Used for projects/policies/research
-  // 'Misc': 'point',	    // Catch-all for outputs not represented here, e.g. healthcare, transportation, etc
 };
 
 const RESOURCES = {

@@ -1,5 +1,5 @@
 use super::processes::Process;
-use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap};
+use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Feedstock};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
 
 #[derive(Debug)]
@@ -22,7 +22,10 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
 
     let mut filled_demand: Expression = 0.into();
     let amounts: Vec<Variable> = orders.iter().map(|order| {
-        let amount_to_produce = vars.add(variable().min(0).max(order.amount));
+        // Ran into issues where solutions couldn't be found if the min was set to
+        // 0. I can't figure out why because it seems under the constraints provided
+        // a valid solution will always be for all `amount_to_produce` to equal 0.
+        let amount_to_produce = vars.add(variable().min(0.).max(order.amount));
 
         // Add 1. to avoid zero division issues
         filled_demand += amount_to_produce/(order.amount + 1.);
@@ -33,7 +36,14 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
         for (k, v) in order.process.byproducts.items() {
             created_byproducts[k] += amount_to_produce * *v;
         }
-        consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * order.process.feedstock.1;
+
+        // Ignore "Other" feedstock
+        match order.process.feedstock.0 {
+            Feedstock::Other | Feedstock::Soil => (),
+            _ => {
+                consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * order.process.feedstock.1;
+            }
+        }
         amount_to_produce
     }).collect();
 
@@ -44,28 +54,41 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
     for k in consumed_resources.keys() {
         problem = problem.with(consumed_resources[k].clone().leq(resources[k]));
     }
-    for k in consumed_feedstocks.keys() {
-        problem = problem.with(consumed_feedstocks[k].clone().leq(feedstocks[k]));
-    }
+    // for k in consumed_feedstocks.keys() {
+    //     // Ignore "Other" feedstock
+    //     match k {
+    //         Feedstock::Other | Feedstock::Soil => (),
+    //         _ => {
+    //             problem = problem.with(consumed_feedstocks[k].clone().leq(feedstocks[k]));
+    //         }
+    //     }
+    // }
 
     let mut consumed_r = resources!();
     let mut consumed_f = feedstocks!();
     let mut byproducts = byproducts!();
 
+    // Ensure values are min 0,
+    // slight negatives might occur because of the -1 min constraint above,
+    // but these are usually negligible amounts
     let produced: Vec<f32> = match problem.solve() {
         Ok(solution) => {
             for k in consumed_resources.keys() {
-                consumed_r[k] = solution.eval(consumed_resources[k].clone()) as f32;
+                consumed_r[k] = f32::max(solution.eval(consumed_resources[k].clone()) as f32, 0.);
             }
             for k in consumed_feedstocks.keys() {
-                consumed_f[k] = solution.eval(consumed_feedstocks[k].clone()) as f32;
+                consumed_f[k] = f32::max(solution.eval(consumed_feedstocks[k].clone()) as f32, 0.);
             }
+            // Byproducts are ok to be negative (e.g. CO2 sequestration)
             for k in created_byproducts.keys() {
                 byproducts[k] = solution.eval(created_byproducts[k].clone()) as f32;
             }
-            amounts.iter().map(|var| solution.value(*var) as f32).collect()
+            amounts.iter().map(|var| f32::max(solution.value(*var) as f32, 0.)).collect()
         },
-        Err(_) => {
+        Err(err) => {
+            println!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            println!("Planner error: {:?}", err);
+            println!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             amounts.iter().map(|_| 0.).collect()
         }
     };

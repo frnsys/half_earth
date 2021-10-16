@@ -1,6 +1,6 @@
 import api from './api';
 import {reactive} from 'vue';
-import { io } from "socket.io-client";
+import {io} from "socket.io-client";
 
 const state = reactive({
   items: {},

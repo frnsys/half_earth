@@ -120,6 +120,9 @@ impl Game {
                 resources_demand: resources!(),
                 resources: consts::STARTING_RESOURCES,
                 feedstocks: consts::FEEDSTOCK_RESERVES,
+                produced: outputs!(),
+                consumed_resources: resources!(),
+                consumed_feedstocks: feedstocks!(),
             },
             event_pool: EventPool::new(content::events()),
         }
@@ -191,6 +194,9 @@ pub struct State {
     pub resources_demand: ResourceMap<f32>,
     pub resources: ResourceMap<f32>,
     pub feedstocks: FeedstockMap<f32>,
+    pub produced: OutputMap<f32>,
+    pub consumed_resources: ResourceMap<f32>,
+    pub consumed_feedstocks: FeedstockMap<f32>,
 }
 
 impl State {
@@ -210,17 +216,30 @@ impl State {
         // TODO water stress
         // industry_demand.water
         // consumed_resources.water
+        // TODO add resources_demand
 
         // Generate production orders based on current process mixes and demand
         let orders: Vec<ProductionOrder> = self.processes.iter()
             .map(|p| p.production_order(&self.output_demand)).collect();
 
+        // TODO better calculation of electricity/fuel required for ag
+        let (init_required_resources, _) = calculate_required(&orders);
+        self.output_demand.fuel += init_required_resources.fuel;
+        self.output_demand.electricity += init_required_resources.electricity;
+
+        // Recalculate orders with new energy requirements
+        let orders: Vec<ProductionOrder> = self.processes.iter()
+            .map(|p| p.production_order(&self.output_demand)).collect();
+
         // Run production function
-        let (mut produced_by_type,
+        let (produced_by_type,
              consumed_resources,
              consumed_feedstocks,
              mut byproducts) = produce(&orders, &self.resources, &self.feedstocks);
-        produced_by_type *= self.output_modifier;
+        self.produced = produced_by_type * self.output_modifier;
+
+        self.consumed_resources = consumed_resources;
+        self.consumed_feedstocks = consumed_feedstocks;
 
         byproducts += industry_byproducts;
         self.world.co2_emissions = byproducts.co2;
@@ -228,9 +247,13 @@ impl State {
         self.world.n2o_emissions = byproducts.n2o;
         // TODO biodiversity pressure/extinction rate...how to do that?
 
+        // Float imprecision sometimes causes these values
+        // to be slightly negative, so ensure they aren't
         self.feedstocks -= consumed_feedstocks;
-        self.resources.fuel -= consumed_resources.fuel + produced_by_type.fuel;
-        self.resources.electricity -= consumed_resources.electricity + produced_by_type.electricity;
+        self.resources.fuel -= consumed_resources.fuel - self.produced.fuel;
+        self.resources.fuel = self.resources.fuel.max(0.);
+        self.resources.electricity -= consumed_resources.electricity - self.produced.electricity;
+        self.resources.electricity = self.resources.electricity.max(0.);
 
         // Get resource deficit/surplus
         let (required_resources, required_feedstocks) = calculate_required(&orders);

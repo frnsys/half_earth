@@ -409,7 +409,7 @@ def indent(text, levels=1):
 
 if __name__ == '__main__':
     # Parse items into groups and so on
-    items = json.load(open('content.json'))
+    items = json.load(open('editor/data.json'))
     items_by_type = defaultdict(list)
     for id, item in items.items():
         if item.get('deleted'): continue
