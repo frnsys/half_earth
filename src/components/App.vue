@@ -10,6 +10,7 @@ import state from '../state';
 import Stream from './events/Stream.vue';
 import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
+import Interstitial from './interstitials/Interstitial.vue';
 
 export default {
   data() {
@@ -22,6 +23,7 @@ export default {
     Stream,
     Planning,
     Report,
+    Interstitial,
   },
   mounted() {
     fetch('/assets/content/events/79.json').then((resp) => {
