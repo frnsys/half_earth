@@ -2,6 +2,7 @@ import png from './png';
 import {EarthSurface} from 'half-earth-engine';
 import { memory } from 'half-earth-engine/half_earth_engine_bg.wasm';
 import loadHector from 'hector-wasm';
+import defaultEmissions from '../../assets/hector/rcp45.default_emissions.json';
 
 // A grayscale image where each value
 // indicates the label of that pixel
@@ -87,8 +88,30 @@ class Surface {
    * for the required keys.
    */
   addEmissions(emissions) {
-    Object.keys(emissions).forEach((k) => {
-      this.emissions['data'][k].push(emissions[k]);
+    Object.keys(defaultEmissions).forEach((k) => {
+      let val = emissions[k] !== undefined ? emissions[k] : defaultEmissions[k];
+      this.emissions['data'][k].push(val);
+    });
+  }
+
+  updateTemperature() {
+    let ready = this._hectorRun ? Promise.resolve(this._hectorRun) : Promise.all([
+        loadHector(),
+        fetch('/assets/hector/config.json')
+          .then((resp) => resp.json()),
+      ]).then(([{Hector, run}, config]) => {
+        this._hectorRun = () => {
+          return run(config, this.emissions, hectorOutputVars);
+        };
+        this._hectorRun;
+      });
+
+    return ready.then((run) => {
+      // Calculate new avg global temp
+      let results = this._hectorRun(this.emissions);
+      let avgGlobalTemps = results['temperature.Tgav'];
+      let avgGlobalTemp = avgGlobalTemps[avgGlobalTemps.length - 1];
+      return avgGlobalTemp;
     });
   }
 
@@ -101,30 +124,12 @@ class Surface {
    * e.g. `surfaceTexture.needsUpdate = true;`, for the new data to
    * actually show up.
    */
-  updateBiomes() {
-    let ready = this._hectorRun ? Promise.resolve(this._hectorRun) : Promise.all([
-      loadHector(),
-      fetch('/assets/hector/config.json')
-        .then((resp) => resp.json()),
-    ]).then(([{Hector, run}, config]) => {
-      this._hectorRun = () => {
-        return run(config, this.emissions, hectorOutputVars);
-      };
-      this._hectorRun;
-    });
+  updateBiomes(avgGlobalTemp) {
+    // Calculate biome changes
+    this._surface.update_biomes(avgGlobalTemp);
 
-    ready.then((run) => {
-      // Calculate new avg global temp
-      let results = this._hectorRun(this.emissions);
-      let avgGlobalTemps = results['temperature.Tgav'];
-      let avgGlobalTemp = avgGlobalTemps[avgGlobalTemps.length - 1];
-
-      // Calculate biome changes
-      this._surface.update_biomes(avgGlobalTemp);
-
-      // Update the pixel buffer.
-      this.updateTexture();
-    });
+    // Update the pixel buffer.
+    this.updateTexture();
   }
 
   updateTexture() {

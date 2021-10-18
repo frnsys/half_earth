@@ -26,6 +26,7 @@ use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, ChoiceType, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
+use crate::events::{Type as EventType};
 '''
 
 world_fn_template = \
@@ -101,6 +102,7 @@ specs = {
     'Event': {
         'id': None,
         'name': None,
+        'type': None,
         'locked': 'false',
         'local': 'false',
         'repeats': 'false',
@@ -258,6 +260,8 @@ def define_field(k, v, item):
         v = '"{}"'.format(v)
     elif k == 'type' and item['_type'] == 'Project':
         return 'kind: ProjectType::{}'.format(v)
+    elif k == 'type' and item['_type'] == 'Event':
+        return 'kind: EventType::{}'.format(v)
     elif k == 'output':
         return 'output: Output::{}'.format(v)
     elif k == 'feedstock':
@@ -579,3 +583,20 @@ if __name__ == '__main__':
         processes.append(process)
     with open('assets/content/processes.json', 'w') as f:
         json.dump(processes, f)
+
+    regions = []
+    for region in items_by_type['Region']:
+        regions.append({
+            'name': region['name'],
+        })
+    with open('assets/content/regions.json', 'w') as f:
+        json.dump(regions, f)
+
+    # Create default emissions for everything else
+    # Just use the last value
+    rcp = json.load(open('assets/hector/rcp45.to_2050.json', 'r'))
+    defaults = {}
+    for k, vals in rcp['data'].items():
+        defaults[k] = vals[-1]
+    with open('assets/hector/rcp45.default_emissions.json', 'w') as f:
+        json.dump(defaults, f)

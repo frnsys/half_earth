@@ -3,8 +3,13 @@ import {GameInterface, Difficulty} from 'half-earth-engine';
 
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
-const game = GameInterface.new(Difficulty.Normal);
+let game = GameInterface.new(Difficulty.Normal);
 state.gameState = game.state();
+
+function newRun() {
+  game = GameInterface.new(Difficulty.Normal);
+  state.gameState = game.state();
+}
 
 function step() {
   let events = game.step();
@@ -43,6 +48,24 @@ function unbanProcess(processId) {
   state.gameState = game.state();
 }
 
-export default {step, selectChoice,
+function rollPlanningEvents() {
+  let events = game.roll_planning_events();
+  state.gameState = game.state();
+  return events;
+}
+
+function rollBreaksEvents() {
+  let events = game.roll_breaks_events();
+  state.gameState = game.state();
+  return events;
+}
+
+function setTgav(tgav) {
+  game.set_tgav(tgav);
+  state.gameState = game.state();
+}
+
+export default {newRun, step, selectChoice,
   setProjectPoints, startProject, stopProject,
-  banProcess, unbanProcess};
+  banProcess, unbanProcess, setTgav,
+  rollPlanningEvents, rollBreaksEvents};

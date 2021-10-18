@@ -8,7 +8,7 @@
       <img src="/assets/icons/contentedness.png">{{contentedness.toFixed(0)}}
     </div>
     <div>
-      <img src="/assets/icons/emissions.png">{{emissions.toFixed(0)}}
+      <img src="/assets/icons/emissions.png">{{emissions.toFixed(1)}}
     </div>
     <div>
       <img src="/assets/icons/warming.png">+{{state.gameState.world.temperature.toFixed(1)}}°C
@@ -32,7 +32,7 @@ export default {
     },
     emissions() {
       let world = state.gameState.world;
-      return world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.);
+      return (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
     }
   }
 };

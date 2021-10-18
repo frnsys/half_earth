@@ -1,5 +1,6 @@
 <template>
 <Hud />
+<Interstitial v-if="event" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
 <div class="planning">
   <Research v-if="page == PAGES.RESEARCH" @close="page = null" />
   <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
@@ -20,12 +21,14 @@
 </template>
 
 <script>
+import game from '../../game';
 import state from '../../state';
 import Research from './Research.vue';
 import Policies from './Policies.vue';
 import Initiatives from './Initiatives.vue';
 import Processes from './Processes.vue';
 import Hud from '../Hud.vue';
+import EventsMixin from '../EventsMixin';
 
 const PAGES = {
   RESEARCH: 0,
@@ -37,6 +40,7 @@ const PAGES = {
 }
 
 export default {
+  mixins: [EventsMixin],
   components: {
     Hud,
     Research,
@@ -45,9 +49,12 @@ export default {
     Processes
   },
   data() {
+    let events = game.rollPlanningEvents();
     return {
       PAGES,
       page: null,
+      events,
+      eventIdx: events.length > 0 ? 0 : null
     }
   },
   methods: {

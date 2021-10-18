@@ -2,7 +2,7 @@
 <Hud />
 <div id="event-stream">
   <Globe id="stream-globe" ref="globe" />
-  <EventSwipe v-if="event" :event="event" @selected="selectChoice" />
+  <Dialogue v-if="event" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
 </div>
 </template>
 
@@ -12,14 +12,15 @@ import state from '../../state';
 import Hud from '../Hud.vue';
 import Globe from '../Globe.vue'
 import EventSwipe from './EventSwipe.vue'
+import EventsMixin from '../EventsMixin';
+
+/* <EventSwipe v-if="event" :event="event" @selected="selectChoice" /> */
 
 export default {
+  mixins: [EventsMixin],
   data() {
     return {
       state,
-      events: [],
-      event: null,
-      eventIdx: 0,
     };
   },
   components: {
@@ -28,47 +29,53 @@ export default {
     EventSwipe,
   },
   mounted() {
-    this.nextTurn();
     this.$refs.globe.onReady = (globe) => {
       this.globe = globe;
-      this.showEvent();
+      this.nextTurn();
+      this.showEventOnGlobe();
     };
   },
-  methods: {
-    async loadEvent(id) {
-      return await fetch(`/assets/content/events/${id}.json`)
-        .then((resp) => resp.json());
-    },
-    nextTurn() {
-      if (state.gameState) {
-        // Lose state
-        if (state.gameState.political_capital <= 0) {
-          alert('You\'ve lost your planning mandate! You lose');
-          return;
-        }
+  watch: {
+    eventIdx(val) {
+      // Finished events, go to next turn
+      if (val === null) {
+        this.nextTurn();
 
-        // Go to planning phase
-        if (state.gameState.world.year % 5 == 0) {
-          state.phase = 'REPORT';
-          return;
-        }
+      // Show on globe
+      } else {
+        this.showEventOnGlobe();
+      }
+    }
+  },
+  methods: {
+    nextTurn() {
+      // Go to report phase
+      if (state.gameState.world.year % 5 == 0) {
+        state.phase = 'REPORT';
+        return;
       }
 
       this.eventIdx = 0;
       this.events = game.step();
+      let emissions = {
+        // Hector separates out FFI and LUC emissions
+        // but we lump them together
+        // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
+        'ffi_emissions': state.gameState.world.co2_emissions * 12/44 * 1e-15, // Pg C/y
+        'CH4_emissions': state.gameState.world.ch4_emissions * 1e-12, // Tg/y
+        'N2O_emissions': state.gameState.world.n2o_emissions * 1e-12, // Tg/y
+      };
+      console.log(emissions);
+      this.globe.addEmissionsThenUpdate({}).then((tgav) => {
+        console.log(`New TGAV: ${tgav}C`);
+        game.setTgav(tgav);
+      });
+      this.showEvent();
 
       // Go to next turn if no events
       if (this.events.length === 0) this.nextTurn();
     },
-    nextEvent() {
-      if (this.eventIdx >= this.events.length - 1) {
-        this.nextTurn();
-      } else {
-        this.eventIdx++;
-        this.showEvent();
-      }
-    },
-    showEvent() {
+    showEventOnGlobe() {
       let [eventId, regionId] = this.events[this.eventIdx];
       if (this.globe && regionId) {
         // TODO
@@ -78,23 +85,7 @@ export default {
         /*   this.globe.hexsphere.centerOnIndex(idx); */
         /* } */
       }
-      this.loadEvent(eventId).then((ev) => {
-        this.event = ev;
-
-        // Parse/fill in variables
-        let vars = [...ev.text.matchAll('{([a-z]+)}')];
-        let ctx = {'region': 'PLANET EARTH'} // TODO just testing
-        for (const match of vars) {
-          ev.text = ev.text.replaceAll(match[0], ctx[match[1]]);
-        }
-      });
     },
-    selectChoice(idx) {
-      // TODO skipping this until we figure out dialogue or swipe events
-      /* let [eventId, regionId] = this.events[this.eventIdx]; */
-      /* game.selectChoice(eventId, regionId, idx); */
-      this.nextEvent();
-    }
   },
 }
 </script>

@@ -25,8 +25,6 @@
 <script>
 import state from '../state';
 
-
-
 export default {
   props: ['dialogue'],
   data() {
@@ -41,6 +39,8 @@ export default {
   },
   methods: {
     endDialogue() {
+      if (this.revealAnim) clearInterval(this.revealAnim);
+      this.current = null;
       this.$emit('done');
     },
     playDialogue() {
@@ -80,8 +80,10 @@ export default {
     },
     skipReveal() {
       if (this.revealAnim) clearInterval(this.revealAnim);
-      this.$refs.body.innerText = this.current.text;
-      this.showChoices = true;
+      if (this.current !== null) {
+        this.$refs.body.innerText = this.current.text;
+        this.showChoices = true;
+      }
     }
   },
 }

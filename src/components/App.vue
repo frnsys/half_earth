@@ -1,8 +1,8 @@
 <template>
-  <Interstitial v-if="dialogue" :dialogue="dialogue" />
   <Planning v-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'EVENTS'" />
   <Report v-else-if="state.phase == 'REPORT'" />
+  <Break v-else-if="state.phase == 'BREAK'" />
 </template>
 
 <script>
@@ -10,28 +10,20 @@ import state from '../state';
 import Stream from './events/Stream.vue';
 import Planning from './planning/Planning.vue';
 import Report from './Report.vue';
-import Interstitial from './interstitials/Interstitial.vue';
+import Break from './Break.vue';
 
 export default {
   data() {
     return {
       state,
-      dialogue: null
     };
   },
   components: {
     Stream,
     Planning,
     Report,
-    Interstitial,
+    Break,
   },
-  mounted() {
-    fetch('/assets/content/events/79.json').then((resp) => {
-      return resp.json();
-    }).then(({dialogue}) => {
-      this.dialogue = dialogue;
-    });
-  }
 }
 </script>
 

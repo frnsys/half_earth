@@ -6,6 +6,7 @@ import globeFrag from './shaders/globe/fragment.glsl';
 import cloudsVert from './shaders/clouds/vertex.glsl';
 import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
+import state from '../state';
 
 import debug from '../debug';
 import Stats from 'stats.js';
@@ -27,8 +28,6 @@ const Surface = RPC.initialize(
   new Worker(new URL('./worker.js', import.meta.url))
 );
 
-const startYear = 2020;
-
 class Globe {
   constructor(el) {
     let width = el.clientWidth;
@@ -45,6 +44,7 @@ class Globe {
   }
 
   async init() {
+    let startYear = state.gameState.world.year;
     this.surface = await new Surface(startYear);
     await this.surface.init();
 
@@ -132,8 +132,10 @@ class Globe {
   // for what `emissions` should look like.
   async addEmissionsThenUpdate(emissions) {
     await this.surface.addEmissions(emissions);
-    await this.surface.updateBiomes();
+    let tgav = await this.surface.updateTemperature();
+    await this.surface.updateBiomes(tgav);
     await this.updateSurface();
+    return tgav;
   }
 
   render(timestamp) {
