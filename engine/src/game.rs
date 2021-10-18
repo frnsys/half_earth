@@ -1,9 +1,9 @@
 use crate::world::World;
 use crate::industries::Industry;
-use crate::projects::{Project, Status, Type};
+use crate::projects::{Project, Status, Type as ProjectType};
 use crate::production::{ProductionOrder, Process, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
-use crate::events::{Flag, EventPool, Effect};
+use crate::events::{Flag, EventPool, Effect, Type as EventType};
 use crate::{content, consts};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
@@ -56,7 +56,7 @@ impl GameInterface {
 
     pub fn start_project(&mut self, project_id: usize) {
         let project = &mut self.game.state.projects[project_id];
-        if project.kind == Type::Policy {
+        if project.kind == ProjectType::Policy {
             project.status = Status::Active;
         } else {
             project.status = Status::Building;
@@ -80,6 +80,18 @@ impl GameInterface {
     pub fn unban_process(&mut self, process_id: usize) {
         let process = &mut self.game.state.processes[process_id];
         process.banned = false;
+    }
+
+    pub fn roll_planning_events(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_apply_events_of_kind(EventType::Planning, &mut self.rng))?)
+    }
+
+    pub fn roll_breaks_events(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_apply_events_of_kind(EventType::Breaks, &mut self.rng))?)
+    }
+
+    pub fn set_tgav(&mut self, tgav: f32) {
+        self.game.state.world.temperature = tgav;
     }
 }
 
@@ -139,10 +151,19 @@ impl Game {
     }
 
     pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
-        let mut effects = self.state.step(rng);
+        let effects = self.state.step(rng);
+        for (effect, region_id) in effects {
+            effect.apply(self, region_id);
+        }
+
+        self.roll_apply_events_of_kind(EventType::World, rng)
+    }
+
+    pub fn roll_apply_events_of_kind(&mut self, kind: EventType, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
+        let mut effects = vec![];
 
         // Roll for events and collect effects
-        let events = self.event_pool.roll(&self.state, rng);
+        let events = self.event_pool.roll_for_kind(kind, &self.state, rng);
         let event_ids = events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect();
 
         for (event, region_id) in events {
@@ -157,6 +178,7 @@ impl Game {
 
         event_ids
     }
+
 
     pub fn set_event_choice(&mut self, event_id: usize, choice_id: usize) -> Vec<Effect> {
         let (effects, kind) = self.event_pool.events[event_id].set_choice(choice_id);

@@ -8,6 +8,7 @@ use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, ChoiceType, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
+use crate::events::{Type as EventType};
 
 
 
@@ -2082,6 +2083,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 0,
             name: "Heatwaves",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2120,6 +2122,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 1,
             name: "Crop Failures",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2134,6 +2137,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 2,
             name: "Great Barrier Reef declared dead",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2166,6 +2170,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 3,
             name: "Novel Disease",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2203,6 +2208,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 4,
             name: "Species Flourishing",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2228,6 +2234,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 5,
             name: "Species Collapse",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2254,6 +2261,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 6,
             name: "Land restoration programs backtrack",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2274,6 +2282,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 7,
             name: "Unrest - Protest",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2311,6 +2320,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 8,
             name: "Unrest - Riots",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: true,
@@ -2336,6 +2346,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 9,
             name: "Wildfires - Severe",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2370,6 +2381,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 10,
             name: "Unrest - Revolts",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: false,
@@ -2395,6 +2407,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 11,
             name: "Wildfires - Smoke",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: false,
@@ -2416,6 +2429,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 12,
             name: "Unrest - Secession",
+            kind: EventType::Planning,
             locked: true,
             local: true,
             repeats: false,
@@ -2436,6 +2450,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 13,
             name: "Wildfires - Ancient Loss",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: false,
@@ -2455,6 +2470,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 14,
             name: "Wet-Bulb Event",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2480,6 +2496,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 15,
             name: "Permafrost Melting",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2506,6 +2523,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 16,
             name: "Permafrost Contagion",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -2526,6 +2544,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 17,
             name: "Fish Depletion",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2545,6 +2564,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 18,
             name: "Massive Thunderstorms",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2566,6 +2586,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 19,
             name: "Blue Ocean Event",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2582,6 +2603,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 20,
             name: "Mosquito Disease",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: false,
@@ -2607,6 +2629,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 21,
             name: "Brownouts",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2642,6 +2665,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 22,
             name: "Nuclear Meltdown",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2675,6 +2699,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 23,
             name: "Nuclear Waste",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2707,6 +2732,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 24,
             name: "Species Death",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2726,6 +2752,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 25,
             name: "Flooding",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2759,6 +2786,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 26,
             name: "Ozone Depletion",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2779,6 +2807,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 27,
             name: "Migrations - No Borders",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -2806,6 +2835,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 28,
             name: "Island Abandoned",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -2838,6 +2868,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 29,
             name: "SRM - SAD",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2857,6 +2888,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 30,
             name: "Urban Gardening",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2883,6 +2915,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 31,
             name: "Urban Farming",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -2910,6 +2943,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 32,
             name: "SRM - Crop Yields",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2929,6 +2963,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 33,
             name: "UFO Visit",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -2949,6 +2984,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 34,
             name: "UFO Gift",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -2968,6 +3004,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 35,
             name: "UFO War",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -2987,6 +3024,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 36,
             name: "New Cuisine",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3006,6 +3044,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 37,
             name: "Meat Militia",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3025,6 +3064,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 38,
             name: "Plant UV Exposure",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3044,6 +3084,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 39,
             name: "Ozone Health",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3064,6 +3105,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 40,
             name: "Migrations - Borders",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: true,
@@ -3093,6 +3135,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 41,
             name: "Migrations - Border Attack",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: true,
@@ -3121,6 +3164,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 42,
             name: "Doom Cult - Formation",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3140,6 +3184,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 43,
             name: "Doom Cult - Spreading",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3160,6 +3205,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 44,
             name: "Doom Cult - Acceleration",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3180,6 +3226,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 45,
             name: "Doom Cult - Attacks",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: true,
@@ -3199,6 +3246,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 46,
             name: "Rivals - Formation",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3218,6 +3266,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 47,
             name: "Rerualization",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3232,6 +3281,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 48,
             name: "Green Meanies - Formation",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3251,6 +3301,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 49,
             name: "Success - Leisure",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3270,6 +3321,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 50,
             name: "Invasive Wines",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3289,6 +3341,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 51,
             name: "Pollinator - Decline",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3327,6 +3380,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 52,
             name: "Pollinator - Collapse",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3352,6 +3406,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 53,
             name: "Ocean Acidification",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3366,6 +3421,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 54,
             name: "Ocean Microorganisms",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3380,6 +3436,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 55,
             name: "Waste Leakage",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -3400,6 +3457,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 56,
             name: "Flooded Farms",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -3419,6 +3477,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 57,
             name: "SRM - Solar Impacts",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3438,6 +3497,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 58,
             name: "Black Market - Gasoline",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3457,6 +3517,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 59,
             name: "Black Market - Meat",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3477,6 +3538,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 60,
             name: "Coffee and Chocolate Decline",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3496,6 +3558,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 61,
             name: "Sewage Overflow",
+            kind: EventType::World,
             locked: true,
             local: true,
             repeats: true,
@@ -3515,6 +3578,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 62,
             name: "Amazon Savannah",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3542,6 +3606,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 63,
             name: "Locust Infestation",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3567,6 +3632,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 64,
             name: "Forest Infestation",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3592,6 +3658,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 65,
             name: "CO2 Leak",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -3612,6 +3679,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 66,
             name: "SRM - Monsoon",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3632,6 +3700,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 67,
             name: "Iron Fillings Dead Ocean",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3652,6 +3721,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 68,
             name: "West Antarctic Collapse",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3684,6 +3754,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 69,
             name: "Polar Vortex",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3710,6 +3781,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 70,
             name: "Mega Dust Storms",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: true,
@@ -3741,6 +3813,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 71,
             name: "Large Derecho Storm",
+            kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
@@ -3760,6 +3833,24 @@ pub fn events() -> Vec<Event> {
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
+                },
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+
+                    ]
                 }
             ],
             choices: vec![]
@@ -3767,6 +3858,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 72,
             name: "Ice Sheet Tsunami",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3786,6 +3878,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 73,
             name: "SRM - Assassination",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: true,
@@ -3805,6 +3898,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 74,
             name: "SRM - Respiratory Problems",
+            kind: EventType::World,
             locked: true,
             local: false,
             repeats: false,
@@ -3825,6 +3919,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 75,
             name: "Greenland Collapse",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3840,6 +3935,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 76,
             name: "Hot Soil Emissions",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3854,6 +3950,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 77,
             name: "First 100m-Inhabitant City",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3868,6 +3965,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 78,
             name: "Ex-Urban Explosion",
+            kind: EventType::World,
             locked: false,
             local: false,
             repeats: false,
@@ -3882,6 +3980,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 79,
             name: "The Ark Proposal",
+            kind: EventType::Planning,
             locked: false,
             local: false,
             repeats: false,
@@ -3929,6 +4028,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 80,
             name: "Gosplant Sentience",
+            kind: EventType::Planning,
             locked: false,
             local: false,
             repeats: false,
@@ -3944,6 +4044,36 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![]
+        },
+        Event {
+            id: 81,
+            name: "Planning Intro",
+            kind: EventType::Planning,
+            locked: false,
+            local: false,
+            repeats: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            choices: vec![
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ],
+                    kind: ChoiceType::None
+                }
+            ]
         }
     ]
 }

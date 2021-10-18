@@ -170,12 +170,14 @@ function validateVariables(variables) {
 const SPECS = {
   Event: {
     key: 'name',
-    validate: ['name', 'effects', 'probabilities', 'description', 'variables', 'locked'],
+    validate: ['name', 'effects', 'probabilities', 'description', 'variables', 'locked', 'type'],
     questions: ['notes'],
     validateKey: (item, key) => {
       switch (key) {
         case 'name':
           return requireAtLeastOne(item.name);
+        case 'type':
+          return requireOneOfChoice(item.type, consts.EVENT_TYPES);
         case 'description':
           return requireAtLeastOne(item.description);
         case 'effects':

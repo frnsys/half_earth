@@ -23,7 +23,7 @@ impl EventPool {
         }
     }
 
-    pub fn roll<'a>(&'a mut self, state: &State, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
+    pub fn roll_for_kind<'a>(&'a mut self, kind: Type, state: &State, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
         // Prevent duplicate events
         let mut existing: HashSet<usize> = HashSet::new();
         for (ev_id, _, _) in &self.queue {
@@ -34,16 +34,20 @@ impl EventPool {
         }
 
         // Candidate event pool
-        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| !ev.locked && !existing.contains(&ev.id)).map(|ev| ev.id).collect();
+        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| ev.kind == kind && !ev.locked && !existing.contains(&ev.id)).map(|ev| ev.id).collect();
         valid_ids.shuffle(rng);
 
         // Tick queued countdowns
         let mut i = 0;
         while i < self.queue.len() {
             let try_trigger = {
-                let (_, _, countdown) = &mut self.queue[i];
-                *countdown -= 1;
-                *countdown <= 0
+                let (ev_id, _, countdown) = &mut self.queue[i];
+                if self.events[*ev_id].kind == kind {
+                    *countdown -= 1;
+                    *countdown <= 0
+                } else {
+                    false
+                }
             };
             if try_trigger {
                 let (ev_id, region_id, _) = self.queue[i];
@@ -95,6 +99,13 @@ impl EventPool {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum Type {
+    World,
+    Planning,
+    Breaks,
+    Icon
+}
 
 #[derive(Debug, Clone)]
 pub struct Event {
@@ -112,6 +123,9 @@ pub struct Event {
     /// to user-facing details
     /// (e.g. event text, etc).
     pub id: usize,
+
+    /// This event's type
+    pub kind: Type,
 
     /// If this event can repeat or
     /// if it can only happens once.
@@ -186,6 +200,7 @@ mod test {
         vec![Event {
             id: 0,
             name: "Test Event A",
+            kind: Type::World,
             repeats: true,
             locked: false,
             local: false,
@@ -206,6 +221,7 @@ mod test {
         }, Event {
             id: 1,
             name: "Test Event B",
+            kind: Type::World,
             repeats: true,
             locked: false,
             local: false,
@@ -229,7 +245,7 @@ mod test {
         };
 
         let mut state = State::default();
-        let events = pool.roll(&state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
 
         // Only event B should happen
         assert_eq!(events.len(), 1);
@@ -238,7 +254,7 @@ mod test {
         // But if we set it so that event A's first condition
         // is met, it should also happen
         state.world.year = 10;
-        let events = pool.roll(&state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
         assert_eq!(events.len(), 2);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[1].0.name, "Test Event B");
@@ -250,6 +266,7 @@ mod test {
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
+            kind: Type::World,
             repeats: true,
             locked: false,
 
@@ -300,14 +317,14 @@ mod test {
             base_habitability: 0.,
             base_contentedness: 0.,
         }];
-        let events = pool.roll(&state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
 
         // No events should happen
         assert_eq!(events.len(), 0);
 
         // Set one region to satisfy conditions
         state.world.regions[1].population = 10.;
-        let events = pool.roll(&state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[0].1, Some(1));
@@ -319,6 +336,7 @@ mod test {
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
+            kind: Type::World,
             repeats: true,
 
             // Note: locked so it doesn't trigger on its own
@@ -341,11 +359,11 @@ mod test {
         let state = State::default();
 
         // No events should happen
-        let events = pool.roll(&state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
         assert_eq!(events.len(), 0);
 
         // Countdown finished
-        let events = pool.roll(&state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
         assert_eq!(events.len(), 1);
     }
 }

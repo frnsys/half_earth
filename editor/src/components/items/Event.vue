@@ -33,9 +33,18 @@
       <div>
         <label>
           Story Arc (optional)
-          <Tip>If the event is part of or triggers an arc, note the arc name here</Tip>
+          <Tip>If the event is part of or triggers an arc, note the arc name here.</Tip>
         </label>
         <input type="text" list="arcs" v-model="localData.arc" @blur="save" />
+      </div>
+      <div>
+        <label>
+          Event Type
+          <Tip>"World" = shows up in the world/event stream; "Planning" = shows up during planning sessions; "Breaks" = shows up between runs; "Icon" = shows up in the world/event stream, but only as an icon.</Tip>
+        </label>
+        <select v-model="localData.type" @change="save" :class="flags('type')">
+          <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
+        </select>
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_repeats`">
@@ -73,6 +82,7 @@
   <div v-else class="event-summary item-summary">
     <div class="item-meta">
       <div class="meta-pill">{{localData.name}}</div>
+      <div class="meta-pill type-pill" :class="flags('type')">{{localData.type || 'MISSING TYPE'}}</div>
       <div class="meta-pill arc-pill" v-if="localData.arc">{{localData.arc}}</div>
       <div class="meta-pill">{{localData.local ? 'Local': 'Global'}}</div>
       <div class="meta-pill" v-if="localData.repeats">⭯ Repeats</div>
@@ -181,6 +191,9 @@ export default {
 }
 .event-summary .arc-pill {
   background: #9eb4c7;
+}
+.event-summary .type-pill {
+  background: #e7cb5d;
 }
 .dialogue-label {
   margin: 0.5em 0 0 0;

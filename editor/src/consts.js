@@ -246,6 +246,13 @@ const SPEAKERS = [
   'Epidemiologist',
 ];
 
+const EVENT_TYPES = [
+  'World',    // Occur in the world/event stream
+  'Planning', // Occur during planning sessions
+  'Breaks',   // Occur between runs
+  'Icon',     // Occur in the world/event stream, but only as icons
+];
+
 export default {
   OUTPUTS,
   RESOURCES,
@@ -257,5 +264,6 @@ export default {
   CONDITIONS,
   PROBABILITIES,
   INCOME_LEVELS,
-  SPEAKERS
+  SPEAKERS,
+  EVENT_TYPES
 };
