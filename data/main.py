@@ -144,24 +144,24 @@ if __name__ == '__main__':
         print(' ', pop)
 
     # https://ourworldindata.org/grapher/municipal-water-withdrawal
-    # Original data in m3/year, change to L/month
-    title('Municipal/household water withdrawals (L/month):')
-    per_capita_by_income_groups('src/municipal-water-withdrawal.csv', 'Municipal water withdrawal', scale=1000*1/12)
+    # Original data in m3/year, change to L/year
+    title('Municipal/household water withdrawals (L/year):')
+    per_capita_by_income_groups('src/municipal-water-withdrawal.csv', 'Municipal water withdrawal', scale=1000)
 
     # https://ourworldindata.org/grapher/industrial-water-withdrawal
-    # Original data in m3/year, change to L/month
-    title('Industrial water withdrawals (L/month):')
-    ind_water_group_pops, ind_water_group_totals = per_capita_by_income_groups('src/industrial-water-withdrawal.csv', 'Industrial water withdrawal', scale=1000*1/12)
+    # Original data in m3/year, change to L/year
+    title('Industrial water withdrawals (L/year):')
+    ind_water_group_pops, ind_water_group_totals = per_capita_by_income_groups('src/industrial-water-withdrawal.csv', 'Industrial water withdrawal', scale=1000)
 
     # https://ourworldindata.org/grapher/per-capita-energy-use
-    # Original data in kWh/year, change to kWh/month
-    title('Energy use (kWh/month):')
-    per_capita_by_income_groups('src/per-capita-energy-use.csv', 'Energy consumption per capita (kWh)', is_per_capita=True, scale=1/12)
+    # Original data in kWh/year
+    title('Energy use (kWh/year):')
+    per_capita_by_income_groups('src/per-capita-energy-use.csv', 'Energy consumption per capita (kWh)', is_per_capita=True)
 
     # https://ourworldindata.org/grapher/per-capita-electricity-consumption
-    # Original data per year, chang eto per month
-    title('Electricity use (kWh/month)')
-    per_capita_by_income_groups('src/per-capita-electricity-consumption.csv', 'Per capita electricity (kWh)', is_per_capita=True, scale=1/12)
+    # Original data per year
+    title('Electricity use (kWh/year)')
+    per_capita_by_income_groups('src/per-capita-electricity-consumption.csv', 'Per capita electricity (kWh)', is_per_capita=True)
 
     print('(For fuel, calculate the difference b/w energy use per capita and electricity use per capita.)')
 
@@ -173,8 +173,8 @@ if __name__ == '__main__':
     print('\nTotal material LIC pop:', total_adj_material_pop)
 
     # https://ourworldindata.org/grapher/dietary-composition-by-country
-    # Original data in kcal/day, change to kcal/month
-    title('Plant calories (kcal/month)')
+    # Original data in kcal/day
+    title('Plant calories (kcal/year)')
     _, plant_calorie_totals = per_capita_by_income_groups('src/dietary-composition-by-country.csv', [
        'Miscellaneous (FAO (2017))',
        'Alcoholic Beverages (FAO (2017))',
@@ -192,10 +192,10 @@ if __name__ == '__main__':
        'Maize (FAO (2017))',
        'Rice (FAO (2017))',
        'Wheat (FAO (2017))',
-    ], is_per_capita=True, scale=365/12)
+    ], is_per_capita=True, scale=365)
 
-    # Original data in kcal/day, change to kcal/month
-    title('Animal calories (kcal/month)')
+    # Original data in kcal/day, change to kcal/year
+    title('Animal calories (kcal/year)')
     _, animal_calorie_totals = per_capita_by_income_groups('src/dietary-composition-by-country.csv', [
        'Animal fats (FAO (2017))',
        'Fish & seafood (FAO (2017))',
@@ -206,7 +206,7 @@ if __name__ == '__main__':
        'Bovine Meat (FAO (2017))',
        'Eggs (FAO (2017))',
        'Milk (FAO (2017))',
-    ], is_per_capita=True, scale=365/12)
+    ], is_per_capita=True, scale=365)
 
     title('Income groups for regions')
     income_levels = {'Low income': 1, 'Lower-middle income': 2, 'Upper-middle income': 3, 'High income': 4}
@@ -342,7 +342,7 @@ if __name__ == '__main__':
         }
     }
     # https://ourworldindata.org/emissions-by-sector#sector-by-sector-where-do-global-greenhouse-gas-emissions-come-from
-    co2_emissions = 49.4e12 # 2016, gCO2eq/year
+    co2_emissions = 4.94e16 # 2016, gCO2eq/year
 
     for industry, usages in industries.items():
         print(industry)
@@ -351,27 +351,25 @@ if __name__ == '__main__':
             val = co2_emissions if k == 'co2' else energy[k]
             usage = val * p
             unit = 'gCO2eq' if k == 'co2' else 'kWh'
-            per_low_income_capita = usage/total_adj_material_pop
-            per_low_income_capita_per_month = per_low_income_capita/12
-            ind_uses[k] = per_low_income_capita_per_month
-            print('{:>15}'.format(k), '{:.2f}{}/lic/mo'.format(per_low_income_capita_per_month, unit))
+            ind_uses[k] = usage/total_adj_material_pop # should be per year
+            print('{:>15}'.format(k), '{:.2f}{}/lic/year'.format(ind_uses[k], unit))
         fuel = ind_uses.get('coal', 0) + ind_uses.get('oil', 0) + ind_uses.get('natural_gas', 0)
-        print('{:>15}'.format('fuel'), '{:.2f}kWh/lic/mo'.format(fuel))
+        print('{:>15}'.format('fuel'), '{:.2f}kWh/lic/year'.format(fuel))
 
-    title('Industrial water usage L/lic/mo')
-    print(sum(ind_water_group_totals.values())/sum(ind_water_group_pops.values())/12)
+    title('Industrial water usage L/lic/year')
+    print(sum(ind_water_group_totals.values())/sum(ind_water_group_pops.values()))
 
     title('Agriculture')
 
     # Not sure what year this land use data is for
     # https://ourworldindata.org/land-use#breakdown-of-global-land-use-today
     print('  Land (m2/kcal):')
-    livestock_land_use = 40e9 # m2, this includes crop and grazing land
+    livestock_land_use = 4e13 # m2, this includes crop and grazing land
     total_animal_calories = sum(animal_calorie_totals.values())
     print('    Animal Conventional:', livestock_land_use/total_animal_calories)
     print('    Animal Organic:', livestock_land_use/total_animal_calories/organic_yield)
 
-    crop_land_use = 11e9 # m2, this does not include crop and grazing land
+    crop_land_use = 1.1e13 # m2, this does not include crop and grazing land
     total_plant_calories = sum(plant_calorie_totals.values())
     land_use_per_plant_calorie = crop_land_use/total_plant_calories
     print('    Plant Conventional:', land_use_per_plant_calorie)
@@ -397,6 +395,7 @@ if __name__ == '__main__':
     animal_calorie_ch4 ={
         'Livestock & manure': 0.058
     }
+    # import ipdb; ipdb.set_trace()
 
     print('  CO2 (gCO2/kcal):')
     co2_per_plant_calorie = (sum(crop_calorie_co2.values()) * co2_emissions)/total_crop_calories
@@ -420,11 +419,8 @@ if __name__ == '__main__':
     print('    Animal Organic:', ch4_per_animal_calorie/organic_yield)
 
     # Agriculture energy
-    # https://www.iea.org/reports/key-world-energy-statistics-2021/final-consumption
-    # https://iea.blob.core.windows.net/assets/52f66a88-0b63-4ad2-94a5-29d36e864b82/KeyWorldEnergyStatistics2021.pdf
-    # These percentages include some things other than agriculture but probably ballpark enough
     print('  Electricity (kWh/kcal):')
-    ag_electricity = energy['electricity'] * 0.085
+    ag_electricity = 588941670000 # kWh, for 2015, https://energyeducation.ca/encyclopedia/Agricultural_energy_use
     kwh_per_plant_calorie = ag_electricity/total_crop_calories
     kwh_per_animal_calorie = kwh_per_plant_calorie/feed_conversion_efficiency
     print('    Plant Conventional:', kwh_per_plant_calorie)
@@ -434,7 +430,7 @@ if __name__ == '__main__':
     print('    Animal Organic:', kwh_per_animal_calorie/organic_yield)
 
     print('  Fuel (kWh/kcal):')
-    ag_fuel = energy['oil'] * 0.054 + energy['coal'] * 0.042
+    ag_fuel = 1.6551e+12 # kWh, for 2016, https://energyeducation.ca/encyclopedia/Agricultural_energy_use
     fuel_per_plant_calorie = ag_fuel/total_crop_calories
     fuel_per_animal_calorie = fuel_per_plant_calorie/feed_conversion_efficiency
     print('    Plant Conventional:', fuel_per_plant_calorie)

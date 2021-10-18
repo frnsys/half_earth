@@ -93,37 +93,47 @@ impl Game {
     /// Create a new instance of game with
     /// all the content loaded in
     pub fn new(difficulty: Difficulty) -> Game {
-        Game {
-            state: State {
-                political_capital: 100,
-                world: content::world(difficulty),
-                projects: content::projects(),
-                processes: content::processes(),
-                industries: content::industries(),
-                flags: Vec::new(),
-                runs: 0,
+        let mut state = State {
+            political_capital: 100,
+            world: content::world(difficulty),
+            projects: content::projects(),
+            processes: content::processes(),
+            industries: content::industries(),
+            flags: Vec::new(),
+            runs: 0,
 
-                output: outputs!(),
-                output_modifier: outputs!(
-                    fuel: 1.,
-                    electricity: 1.,
-                    animal_calories: 1.,
-                    plant_calories: 1.
-                ),
-                output_demand: outputs!(),
-                output_demand_modifier: outputs!(
-                    fuel: 1.,
-                    electricity: 1.,
-                    animal_calories: 1.,
-                    plant_calories: 1.
-                ),
-                resources_demand: resources!(),
-                resources: consts::STARTING_RESOURCES,
-                feedstocks: consts::FEEDSTOCK_RESERVES,
-                produced: outputs!(),
-                consumed_resources: resources!(),
-                consumed_feedstocks: feedstocks!(),
-            },
+            output: outputs!(),
+            output_modifier: outputs!(
+                fuel: 1.,
+                electricity: 1.,
+                animal_calories: 1.,
+                plant_calories: 1.
+            ),
+            output_demand: outputs!(),
+            output_demand_modifier: outputs!(
+                fuel: 1.,
+                electricity: 1.,
+                animal_calories: 1.,
+                plant_calories: 1.
+            ),
+            resources_demand: resources!(),
+            resources: consts::STARTING_RESOURCES,
+            feedstocks: consts::FEEDSTOCK_RESERVES,
+            byproducts: byproducts!(),
+            produced: outputs!(),
+            consumed_resources: resources!(),
+            consumed_feedstocks: feedstocks!(),
+        };
+
+        let (output_demand, _) = state.calculate_demand();
+        let orders: Vec<ProductionOrder> = state.processes.iter()
+            .map(|p| p.production_order(&output_demand)).collect();
+        let (required_resources, _) = calculate_required(&orders);
+        state.resources.electricity = required_resources.electricity;
+        state.resources.fuel = required_resources.fuel;
+
+        Game {
+            state,
             event_pool: EventPool::new(content::events()),
         }
     }
@@ -191,6 +201,7 @@ pub struct State {
     pub output_modifier: OutputMap<f32>,
     pub output_demand: OutputMap<f32>,
     pub output_demand_modifier: OutputMap<f32>,
+    pub byproducts: ByproductMap<f32>,
     pub resources_demand: ResourceMap<f32>,
     pub resources: ResourceMap<f32>,
     pub feedstocks: FeedstockMap<f32>,
@@ -200,34 +211,40 @@ pub struct State {
 }
 
 impl State {
-    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(Effect, Option<usize>)> {
-        self.world.year += 1;
-
+    pub fn calculate_demand(&self) -> (OutputMap<f32>, ResourceMap<f32>) {
         // Aggregate demand across regions
-        self.output_demand = self.world.demand() * self.output_demand_modifier;
+        let mut output_demand = outputs!();
+
+        // Ignore electric/fuel, captured by everything else
+        let world_demand = self.world.demand();
+        output_demand.animal_calories += world_demand.animal_calories;
+        output_demand.plant_calories += world_demand.plant_calories;
 
         // Demand and impacts from non-modeled industries
         let lic_pop = self.world.lic_population();
         let industry_demand = self.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources) * lic_pop;
-        let industry_byproducts = self.industries.iter().fold(byproducts!(), |acc, ind| acc + ind.byproducts) * lic_pop;
-        self.output_demand.fuel += industry_demand.fuel;
-        self.output_demand.electricity += industry_demand.electricity;
+        output_demand.fuel += industry_demand.fuel;
+        output_demand.electricity += industry_demand.electricity;
 
-        // TODO water stress
-        // industry_demand.water
-        // consumed_resources.water
-        // TODO add resources_demand
+        // Water and land demand
+        let mut resources_demand = resources!();
+        resources_demand.water += industry_demand.water;
+        resources_demand.land += industry_demand.land;
+
+        // Apply modifiers
+        (output_demand * self.output_demand_modifier, resources_demand)
+    }
+
+    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(Effect, Option<usize>)> {
+        let (output_demand, resources_demand) = self.calculate_demand();
+        self.output_demand = output_demand;
+        self.resources_demand = resources_demand;
+        self.byproducts = byproducts!();
+
+        let lic_pop = self.world.lic_population();
+        self.byproducts += self.industries.iter().fold(byproducts!(), |acc, ind| acc + ind.byproducts) * lic_pop;
 
         // Generate production orders based on current process mixes and demand
-        let orders: Vec<ProductionOrder> = self.processes.iter()
-            .map(|p| p.production_order(&self.output_demand)).collect();
-
-        // TODO better calculation of electricity/fuel required for ag
-        let (init_required_resources, _) = calculate_required(&orders);
-        self.output_demand.fuel += init_required_resources.fuel;
-        self.output_demand.electricity += init_required_resources.electricity;
-
-        // Recalculate orders with new energy requirements
         let orders: Vec<ProductionOrder> = self.processes.iter()
             .map(|p| p.production_order(&self.output_demand)).collect();
 
@@ -235,13 +252,15 @@ impl State {
         let (produced_by_type,
              consumed_resources,
              consumed_feedstocks,
-             mut byproducts) = produce(&orders, &self.resources, &self.feedstocks);
+             byproducts) = produce(&orders, &self.resources, &self.feedstocks);
         self.produced = produced_by_type * self.output_modifier;
+        self.byproducts += byproducts;
 
         self.consumed_resources = consumed_resources;
         self.consumed_feedstocks = consumed_feedstocks;
+        self.resources_demand.water += consumed_resources.water;
+        self.resources_demand.land += consumed_resources.land;
 
-        byproducts += industry_byproducts;
         self.world.co2_emissions = byproducts.co2;
         self.world.ch4_emissions = byproducts.ch4;
         self.world.n2o_emissions = byproducts.n2o;
@@ -252,6 +271,7 @@ impl State {
         self.feedstocks -= consumed_feedstocks;
         self.resources.fuel -= consumed_resources.fuel - self.produced.fuel;
         self.resources.fuel = self.resources.fuel.max(0.);
+        // TODO electricity from past turn should just disappear unless storage network is built
         self.resources.electricity -= consumed_resources.electricity - self.produced.electricity;
         self.resources.electricity = self.resources.electricity.max(0.);
 
@@ -293,6 +313,8 @@ impl State {
                 None => ()
             }
         }
+
+        self.world.year += 1;
 
         effects
     }

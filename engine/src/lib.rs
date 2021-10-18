@@ -1,16 +1,16 @@
 #[macro_use]
-mod kinds;
+pub mod kinds;
 mod utils;
 mod projects;
 mod world;
 mod events;
 mod industries;
-mod production;
 mod consts;
 mod regions;
 mod content;
 pub mod game;
 pub mod surface;
+pub mod production;
 
 // When the `wee_alloc` feature is enabled,
 // use `wee_alloc` as the global allocator.

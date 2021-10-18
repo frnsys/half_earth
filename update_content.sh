@@ -1,6 +1,6 @@
 #!/bin/bash
 HOST=$1
-if [ -z "$HOST" ];
+if [ -z "$HOST" ]; then
     echo "Specify the host to get editor data from, e.g. foo@bar"
     exit
 fi

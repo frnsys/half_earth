@@ -237,6 +237,7 @@ define_enum_map!(Feedstock {
 // Would like to define these as part of the `define_enum_map`
 // macro but it looks like nested macros aren't well supported.
 /// Macro for quickly creating a maps with default values.
+#[macro_export]
 macro_rules! resources {
     () => {
         ResourceMap::default()
@@ -252,6 +253,7 @@ macro_rules! resources {
     };
 }
 
+#[macro_export]
 macro_rules! byproducts {
     () => {
         ByproductMap::default()
@@ -267,6 +269,7 @@ macro_rules! byproducts {
     };
 }
 
+#[macro_export]
 macro_rules! outputs {
     () => {
         OutputMap::default()
@@ -282,6 +285,7 @@ macro_rules! outputs {
     };
 }
 
+#[macro_export]
 macro_rules! feedstocks {
     () => {
         FeedstockMap::default()

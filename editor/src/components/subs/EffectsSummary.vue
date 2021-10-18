@@ -22,8 +22,8 @@ function formatParam(k, val) {
       return `${val > 0 ? '+' : ''}${val}`;
     case 'PercentChange':
       return `${val > 0 ? '+' : ''}${val}%`;
-    case 'Delay (months)':
-      return `${val} months`;
+    case 'Delay (years)':
+      return `${val} years`;
     default:
       return `${val}`;
   }

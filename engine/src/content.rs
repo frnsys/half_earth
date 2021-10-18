@@ -266,7 +266,7 @@ pub fn industries() -> Vec<Industry> {
             name: "Iron and Steel",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 22.19,
+                fuel: 101.26,
                 land: 0.0,
                 water: 0.0
             ),
@@ -280,7 +280,7 @@ pub fn industries() -> Vec<Industry> {
             name: "Road Transport",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 135.68,
+                fuel: 619.08,
                 land: 0.0,
                 water: 0.0
             ),
@@ -294,7 +294,7 @@ pub fn industries() -> Vec<Industry> {
             name: "Aviation",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 23.72,
+                fuel: 108.21,
                 land: 0.0,
                 water: 0.0
             ),
@@ -308,7 +308,7 @@ pub fn industries() -> Vec<Industry> {
             name: "Shipping",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 20.68,
+                fuel: 94.37,
                 land: 0.0,
                 water: 0.0
             ),
@@ -322,13 +322,13 @@ pub fn industries() -> Vec<Industry> {
             name: "Chemical",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 4.9,
+                fuel: 22.34,
                 land: 0.0,
                 water: 0.0
             ),
             byproducts: byproducts!(
-                co2: 6.38,
                 ch4: 0.0,
+                co2: 29.13,
                 n2o: 0.0
             )
         },
@@ -336,36 +336,36 @@ pub fn industries() -> Vec<Industry> {
             name: "Concrete",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 14.16,
+                fuel: 64.63,
                 water: 0.0
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: 8.71,
+                co2: 39.72,
                 n2o: 0.0
             )
         },
         Industry {
             name: "Buildings",
             resources: resources!(
-                electricity: 63.96,
-                fuel: 65.95,
+                electricity: 291.83,
+                fuel: 300.93,
                 land: 0.0,
-                water: 425.0
+                water: 24484.91379101743
             ),
             byproducts: byproducts!(
-                co2: 0.0,
                 ch4: 0.0,
+                co2: 0.0,
                 n2o: 0.0
             )
         },
         Industry {
             name: "Other Industry",
             resources: resources!(
-                electricity: 58.47,
-                fuel: 146.09,
+                electricity: 266.8,
+                fuel: 666.58,
                 land: 0.0,
-                water: 915.0
+                water: 10975.989104986089
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
@@ -385,8 +385,8 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.025,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.0925,
-                fuel: 0.0926,
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.1268,
                 water: 986.4
             ),
@@ -412,7 +412,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0,
             feedstock: (Feedstock::Lithium, 0.00012),
             resources: resources!(
-                electricity: 4.6e-07,
+                electricity: 0.0,
                 fuel: 0.0,
                 land: 0.000119,
                 water: 9.28e-05
@@ -460,7 +460,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 0.0556,
+                electricity: 0.0,
                 fuel: 0.0,
                 land: 0.0,
                 water: 0.022
@@ -484,14 +484,14 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.0636,
-                fuel: 0.0986,
-                land: 0.001,
+                electricity: 5.298671969354342e-05,
+                fuel: 0.00014890832867163858,
+                land: 0.0027570558941118154,
                 water: 2.03
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: -43.347,
+                co2: -0.1187595878476001,
                 n2o: 0.0
             ),
             locked: false,
@@ -509,14 +509,14 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.52983,
-                fuel: 0.82143,
-                land: 0.0171,
+                electricity: 0.00044155599744619513,
+                fuel: 0.0012409027389303216,
+                land: 0.04678277928729847,
                 water: 5.29
             ),
             byproducts: byproducts!(
-                ch4: 0.01456,
-                co2: 0.52983,
+                ch4: 0.03989345809939511,
+                co2: -0.9896632320633342,
                 n2o: 0.0
             ),
             locked: false,
@@ -571,23 +571,23 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.6775,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.042,
-                fuel: 0.0651,
-                land: 0.00066417,
+                electricity: 3.4971234997738656e-05,
+                fuel: 9.827949692328147e-05,
+                land: 0.0018196568901137982,
                 water: 1.34
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: 0.0771,
-                n2o: 0.0001473
+                co2: 0.21120205102817205,
+                n2o: 0.0004035833376284048
             ),
             locked: false,
             banned: false,
             features: vec![
                 ProcessFeature::DegradesSoil,
+                ProcessFeature::IsSolar,
                 ProcessFeature::UsesPesticides,
-                ProcessFeature::UsesSynFertilizer,
-                ProcessFeature::IsSolar
+                ProcessFeature::UsesSynFertilizer
             ],
             output_modifier: 1.0
         },
@@ -598,14 +598,14 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0025,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.0636,
-                fuel: 0.0986,
-                land: 0.001,
+                electricity: 5.298671969354342e-05,
+                fuel: 0.00014890832867163858,
+                land: 0.0027570558941118154,
                 water: 2.03
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: 0.1168,
+                co2: 0.3200031076184425,
                 n2o: 0.0
             ),
             locked: false,
@@ -623,15 +623,15 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.9975,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.34969,
-                fuel: 0.54214,
-                land: 0.01123,
+                electricity: 0.0002914269583144888,
+                fuel: 0.0008189958076940122,
+                land: 0.030876634329616993,
                 water: 3.489
             ),
             byproducts: byproducts!(
-                ch4: 0.0096,
-                co2: 0.6424,
-                n2o: 0.001228
+                ch4: 0.026329682345600774,
+                co2: 1.7600170919014337,
+                n2o: 0.0033631944802367066
             ),
             locked: false,
             banned: false,
@@ -650,14 +650,14 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0025,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.52983,
-                fuel: 0.82143,
-                land: 0.0171,
+                electricity: 0.00044155599744619513,
+                fuel: 0.0012409027389303216,
+                land: 0.04678277928729847,
                 water: 5.29
             ),
             byproducts: byproducts!(
-                ch4: 0.01456,
-                co2: 0.97334,
+                ch4: 0.03989345809939511,
+                co2: 2.666692563487021,
                 n2o: 0.0
             ),
             locked: false,
@@ -670,20 +670,20 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 12,
-            name: "Oil Power Generation",
+            name: "Petroleum Power Generation",
             output: Output::Electricity,
             mix_share: 0.031,
             feedstock: (Feedstock::Oil, 0.3636872),
             resources: resources!(
-                electricity: 0.1666667,
-                fuel: 0.1666667,
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.00017562346,
                 water: 3.68
             ),
             byproducts: byproducts!(
+                ch4: 0.6191,
                 co2: 1005.0,
-                n2o: 0.0,
-                ch4: 0.6191
+                n2o: 0.0
             ),
             locked: false,
             banned: false,
@@ -699,8 +699,8 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.36700000000000005,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
-                electricity: 0.00887,
-                fuel: 0.00887,
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.000114,
                 water: 0.00392
             ),
@@ -723,8 +723,8 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.235,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
-                electricity: 0.01325,
-                fuel: 0.01325,
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 2.54e-05,
                 water: 2.3688
             ),
@@ -747,8 +747,8 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.10400000000000001,
             feedstock: (Feedstock::Uranium, 0.0009),
             resources: resources!(
-                electricity: 0.1,
-                fuel: 0.1,
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.000119,
                 water: 2.13666
             ),
@@ -771,7 +771,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.158,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 0.01,
+                electricity: 0.0,
                 fuel: 0.0,
                 land: 0.0065,
                 water: 1530.5
@@ -795,7 +795,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.053,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 0.0556,
+                electricity: 0.0,
                 fuel: 0.0,
                 land: 0.00228,
                 water: 0.022
@@ -819,7 +819,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0265,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 0.083,
+                electricity: 0.0,
                 fuel: 0.0,
                 land: 0.0114,
                 water: 0.557
@@ -839,19 +839,19 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 19,
-            name: "Oil",
+            name: "Petroleum",
             output: Output::Fuel,
             mix_share: 0.5267000000000001,
             feedstock: (Feedstock::Oil, 0.3636872),
             resources: resources!(
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.00017562346,
-                water: 3.68,
-                fuel: 0.1666667,
-                electricity: 0.1666667
+                water: 3.68
             ),
             byproducts: byproducts!(
-                co2: 1005.0,
                 ch4: 0.6191,
+                co2: 266.0,
                 n2o: 0.0
             ),
             locked: false,
@@ -868,14 +868,14 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.2138,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 2.54e-05,
-                water: 2.3688,
-                fuel: 0.01325,
-                electricity: 0.01325
+                water: 2.3688
             ),
             byproducts: byproducts!(
-                co2: 410.9589,
                 ch4: 2.7,
+                co2: 410.9589,
                 n2o: 0.0
             ),
             locked: false,
@@ -892,15 +892,15 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.1356,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.1268,
-                water: 986.4,
-                fuel: 0.0926,
-                electricity: 0.0926
+                water: 986.4
             ),
             byproducts: byproducts!(
-                n2o: 0.06337,
                 ch4: 0.0,
-                co2: 699.488
+                co2: 699.488,
+                n2o: 0.06337
             ),
             locked: false,
             banned: false,
@@ -918,15 +918,15 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.12390000000000001,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
+                electricity: 0.0,
+                fuel: 0.0,
                 land: 0.000114,
-                water: 0.00392,
-                fuel: 0.00887,
-                electricity: 0.00887
+                water: 0.00392
             ),
             byproducts: byproducts!(
+                ch4: 0.57829,
                 co2: 1000.0,
-                n2o: 0.0,
-                ch4: 0.57829
+                n2o: 0.0
             ),
             locked: false,
             banned: false,
@@ -966,14 +966,14 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.32,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
-                electricity: 0.03468,
-                fuel: 0.053766,
-                land: 0.0005489,
+                electricity: 2.890184710556914e-05,
+                fuel: 8.122272472998469e-05,
+                land: 0.0015038486695155358,
                 water: 1.1085
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: 0.06371,
+                co2: 0.17454714961005954,
                 n2o: 0.0
             ),
             locked: false,
@@ -1048,7 +1048,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0005,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 0.625,
+                electricity: 0.0,
                 fuel: 0.0,
                 land: 0.0057,
                 water: 0.00414

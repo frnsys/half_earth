@@ -22,7 +22,7 @@
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
     <div>
-      <h5 class="kinds-summary-label">Per low-income-capita (LIC) per month:</h5>
+      <h5 class="kinds-summary-label">Per low-income-capita (LIC) per year:</h5>
       <ResourcesSummary :resources="localData.resources" />
       <ByproductsSummary :byproducts="localData.byproducts" :required="false" />
     </div>

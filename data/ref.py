@@ -112,6 +112,9 @@ except FileNotFoundError:
     with open('/tmp/populations.json', 'w') as f:
         json.dump(populations, f)
 
+    # Reload, so keys are in proper form
+    populations = json.load(open('/tmp/populations.json'))
+
 def population_for_country_year(country, year):
     name = get_standard_name(country)
     return populations.get(name, {}).get(str(year))

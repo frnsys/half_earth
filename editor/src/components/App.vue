@@ -682,4 +682,26 @@ h5 {
 .calibration-open:hover {
   background: #000;
 }
+
+@media only screen and (max-width: 480px) {
+  nav {
+    flex-wrap: wrap;
+  }
+  #toc, .toc-meta, .graph, .calibration-open,
+  .filters, .filters--header {
+    display: none;
+  }
+  .sidebar {
+    top: auto;
+    width: auto;
+    bottom: 1em;
+  }
+  .sidebar button {
+    background: #111;
+    color: #fff;
+    border-radius: 0.2em;
+    border: 1px solid black;
+    font-size: 1.1em;
+  }
+}
 </style>

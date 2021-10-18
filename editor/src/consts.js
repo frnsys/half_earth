@@ -188,7 +188,7 @@ const EFFECTS = {
   TriggerEvent: {
     entity: 'Event',
     params: {
-      'Delay (months)': Number,
+      'Delay (years)': Number,
     }
   },
 

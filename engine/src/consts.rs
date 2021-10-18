@@ -16,7 +16,7 @@ pub const FEEDSTOCK_RESERVES: FeedstockMap<f32> = FeedstockMap {
 pub const STARTING_RESOURCES: ResourceMap<f32> = ResourceMap {
     fuel: 141397300000000.0,
     electricity: 26936000000000.0,
-    land: 104000000000.0,
+    land: 104000000000000.0,
     water: 45500000000000000.0
 };
 
@@ -33,26 +33,26 @@ pub const OUTPUT_DEMAND: [OutputMap<f32>; 4] = [
     OutputMap {
         fuel: 84.823,
         electricity: 12.647,
-        animal_calories: 5188.17,
-        plant_calories: 65101.22
+        animal_calories: 62258.01225379132,
+        plant_calories: 781214.6569453699
     },
     OutputMap {
         fuel: 478.748,
         electricity: 80.881867,
-        animal_calories: 8453.8519,
-        plant_calories: 69593.2533
+        animal_calories: 101446.22307270509,
+        plant_calories: 835119.0398573277
     },
     OutputMap {
         fuel: 1842.78168,
         electricity: 368.96432,
-        animal_calories: 19610.3814,
-        plant_calories: 73597.3736
+        animal_calories: 235324.57700012674,
+        plant_calories: 883168.4828934266
     },
     OutputMap {
         fuel: 4111.4561,
         electricity: 750.5439,
-        animal_calories: 26695.9236,
-        plant_calories: 75062.28
+        animal_calories: 320351.0835388199,
+        plant_calories: 900747.3812494389
     }
 ];
 
