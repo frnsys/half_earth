@@ -4,10 +4,8 @@ pub enum WorldVariable {
     Population,
     Emissions,
     ExtinctionRate,
-    Health,
     Outlook,
     Temperature,
-    Contentedness,
     WaterStress,
     SeaLevelRise,
     Precipitation,
@@ -16,9 +14,7 @@ pub enum WorldVariable {
 #[derive(Debug, Copy, Clone)]
 pub enum LocalVariable {
     Population,
-    Health,
     Outlook,
-    Contentedness,
     Habitability,
 }
 

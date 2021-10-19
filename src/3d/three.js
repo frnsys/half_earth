@@ -21,5 +21,10 @@ export { Mesh } from 'three/src/objects/Mesh.js';
 export { SpriteMaterial, ShaderMaterial } from 'three/src/materials/Materials.js';
 export { SphereGeometry } from 'three/src/geometries/Geometries.js';
 export { Sprite } from 'three/src/objects/Sprite.js';
-// export * from 'three/src/core/BufferAttribute.js';
-// export { BufferGeometry } from 'three/src/core/BufferGeometry.js';
+
+// For showing hex tiles
+export * from 'three/src/core/BufferAttribute.js';
+export { BufferGeometry } from 'three/src/core/BufferGeometry.js';
+export { MeshBasicMaterial } from 'three/src/materials/Materials.js';
+export { TextGeometry } from 'three/src/geometries/Geometries.js';
+export { FontLoader } from 'three/src/loaders/FontLoader.js';

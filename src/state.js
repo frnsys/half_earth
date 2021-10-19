@@ -2,7 +2,15 @@ import {reactive} from 'vue';
 
 const init = {
   gameState: null,
-  phase: 'PLANNING',
+  phase: 'EVENTS',
+
+  // Compare beginning and end
+  cycleStartState: {
+    emissions: 0,
+    extinctionRate: 0,
+    contentedness: 0
+  },
+
   points: {
     Research: {
       total: 10,
@@ -18,53 +26,6 @@ const init = {
     },
   },
 
-  plan: {
-    targets: {
-      biodiversity: {
-        value: 5,
-        wager: 0,
-        valence: 1,
-      },
-      carbon: {
-        value: 5,
-        wager: 0,
-        valence: -1
-      }
-    },
-  },
-  world: {
-    biodiversity: {
-      value: 5,
-      baseChange: -1,
-      history: [],
-      preindustrial: 10,
-      labels: {
-        max: 'Eden Earth',
-        min: 'Dead Planet'
-      }
-    },
-    carbon: {
-      value: 5,
-      baseChange: 1,
-      history: [],
-      preindustrial: 0,
-      labels: {
-        max: 'Stability',
-        min: 'Hot House'
-      }
-    },
-    contentedness: {
-      value: 5,
-      baseChange: 0,
-      history: []
-    },
-    temperature: {
-      value: 1,
-      baseChange: 0.025,
-      history: [],
-      preindustrial: 0
-    },
-  },
   projects: [],
   processes: [],
 }

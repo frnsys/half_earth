@@ -5,10 +5,10 @@
       <img src="/assets/icons/extinction.png">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
     <div>
-      <img src="/assets/icons/contentedness.png">{{contentedness.toFixed(0)}}
+      <img src="/assets/icons/contentedness.png">{{state.gameState.contentedness.toFixed(0)}}
     </div>
     <div>
-      <img src="/assets/icons/emissions.png">{{emissions.toFixed(1)}}
+      <img src="/assets/icons/emissions.png">{{state.gameState.emissions.toFixed(1)}}
     </div>
     <div>
       <img src="/assets/icons/warming.png">+{{state.gameState.world.temperature.toFixed(1)}}°C
@@ -24,17 +24,6 @@ export default {
       state,
     };
   },
-  computed: {
-    contentedness() {
-      return state.gameState.world.regions.reduce((acc, r) => {
-        return acc + r.base_contentedness + (r.health + r.outlook)/2;
-      }, 0)/state.gameState.world.regions.length;
-    },
-    emissions() {
-      let world = state.gameState.world;
-      return (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
-    }
-  }
 };
 </script>
 

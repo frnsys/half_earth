@@ -9,7 +9,7 @@ function itemsOfType(type) {
 }
 
 function requireAtLeastOne(val) {
-  return val !== undefined && val.length > 0;
+  return val !== undefined && val !== null && val.length > 0;
 }
 
 function requireNonEmptyObj(val) {
@@ -167,10 +167,16 @@ function validateVariables(variables) {
   });
 }
 
+function validateDialogue(dialogue) {
+  return dialogue !== undefined && dialogue.lines && dialogue.lines.length > 0 && dialogue.lines.every((l) => {
+    return requireOneOfChoice(l.speaker, consts.SPEAKERS) && requireAtLeastOne(l.text);
+  });
+}
+
 const SPECS = {
   Event: {
     key: 'name',
-    validate: ['name', 'effects', 'probabilities', 'description', 'variables', 'locked', 'type'],
+    validate: ['name', 'probabilities', 'variables', 'locked', 'type', 'dialogue'],
     questions: ['notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -178,8 +184,12 @@ const SPECS = {
           return requireAtLeastOne(item.name);
         case 'type':
           return requireOneOfChoice(item.type, consts.EVENT_TYPES);
-        case 'description':
-          return requireAtLeastOne(item.description);
+        case 'dialogue':
+          if (item.type == 'Icon') {
+            return true
+          } else {
+            return validateDialogue(item.dialogue);
+          }
         case 'effects':
           return requireAtLeastOne(item.effects) && validateEffects(item.effects);
         case 'probabilities':

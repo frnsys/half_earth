@@ -29,10 +29,6 @@ impl World {
         self.regions.iter().map(|r| r.contentedness()).sum::<f32>()/self.regions.len() as f32
     }
 
-    pub fn health(&self) -> f32 {
-        self.regions.iter().map(|r| r.health).sum::<f32>()/self.regions.len() as f32
-    }
-
     pub fn outlook(&self) -> f32 {
         self.regions.iter().map(|r| r.outlook).sum::<f32>()/self.regions.len() as f32
     }
@@ -64,16 +60,9 @@ impl World {
         }
     }
 
-    pub fn change_health(&mut self, amount: f32) {
-        for region in &mut self.regions {
-            region.health += amount;
-        }
-    }
-
     pub fn change_contentedness(&mut self, amount: f32) {
         for region in &mut self.regions {
-            region.health += amount/2.;
-            region.outlook += amount/2.;
+            region.outlook += amount;
         }
     }
 

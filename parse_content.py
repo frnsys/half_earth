@@ -54,13 +54,10 @@ specs = {
         'extinction_rate': 0.,
         'temperature': 0.,
     },
-        # These are all computed later
-        # 'population', 'contentedness', 'health', 'outlook', 'sea_level_rise', 'water_stress', 'precipitation'],
     'Region': {
         'id': None,
         'name': None,
         'income_level': None,
-        'health': 100,
         'outlook': 100,
         'population': None,
         'base_habitability': 100,
@@ -287,9 +284,8 @@ def define_field(k, v, item):
         return 'conditions: vec![\n{}\n]'.format(
                     indent(',\n'.join(define_condition(e) for e in v)))
     elif k == 'choices':
-        choices = [c for c in v if c['text']]
         return 'choices: vec![\n{}\n]'.format(
-                    indent(',\n'.join(define_choice(c) for c in choices)))
+                    indent(',\n'.join(define_choice(c) for c in v)))
     elif k == 'dialogue':
         # The Rust code only needs the choices (their conditions/effects)
         # so extract those from the dialogue
@@ -365,11 +361,13 @@ def extract_choices_and_dialogue(dialogue):
 
 def extract_dialogue(dialogue):
     return {
-        'text': dialogue.get('text', ''),
-        'speaker': dialogue.get('speaker', ''),
+        'lines': [{
+            'text': line.get('text', ''),
+            'speaker': line.get('speaker', ''),
+        } for line in dialogue.get('lines', [])],
         'choices': [{
             'id': c['id'],
-            'text': c['text'],
+            'text': c.get('text') or '...',
             'dialogue': extract_dialogue(c['dialogue']) if c.get('dialogue') else None
         } for c in dialogue.get('choices', [])]
     }
@@ -532,15 +530,26 @@ if __name__ == '__main__':
         f.write('\n\n'.join(rust_output))
 
     # Javascript exports
+    icon_events = {}
     for ev in items_by_type['Event']:
         id = ev['id']
         event = {
             'arc': ev.get('arc', ''),
-            'text': ev['description'],
-            'dialogue': extract_choices_and_dialogue(ev.get('dialogue', {}))
+            'dialogue': extract_choices_and_dialogue(ev.get('dialogue', {})),
         }
         with open('assets/content/events/{}.json'.format(id), 'w') as f:
             json.dump(event, f)
+
+        if ev['type'] == 'Icon':
+            id = ev['id']
+            # kinda hacky
+            outlook_effect = sum(int(e['params']['Change']) for e in ev['effects'] if e['subtype'] == 'Outlook')
+            icon_events[id] = {
+                'icon': ev['icon'],
+                'outlookChange': outlook_effect,
+            }
+    with open('assets/content/icon_events.json', 'w') as f:
+        json.dump(icon_events, f)
 
     projects = []
     for p in items_by_type['Project']:

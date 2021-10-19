@@ -42,7 +42,6 @@ pub fn regions() -> Vec<Region> {
             id: 0,
             name: "Northern America",
             income: Income::High,
-            health: 80.15,
             outlook: 100.0,
             population: 373318358.0,
             base_habitability: 100.0,
@@ -53,7 +52,6 @@ pub fn regions() -> Vec<Region> {
             id: 1,
             name: "Central America",
             income: Income::LowerMiddle,
-            health: 63.45,
             outlook: 100.0,
             population: 183739076.0,
             base_habitability: 100.0,
@@ -64,7 +62,6 @@ pub fn regions() -> Vec<Region> {
             id: 2,
             name: "Southern America",
             income: Income::UpperMiddle,
-            health: 64.8,
             outlook: 100.0,
             population: 437694436.0,
             base_habitability: 100.0,
@@ -75,7 +72,6 @@ pub fn regions() -> Vec<Region> {
             id: 3,
             name: "Caribbean",
             income: Income::High,
-            health: 63.1,
             outlook: 100.0,
             population: 43977555.0,
             base_habitability: 100.0,
@@ -86,7 +82,6 @@ pub fn regions() -> Vec<Region> {
             id: 4,
             name: "Northern Africa",
             income: Income::LowerMiddle,
-            health: 62.5,
             outlook: 100.0,
             population: 254985181.0,
             base_habitability: 100.0,
@@ -97,7 +92,6 @@ pub fn regions() -> Vec<Region> {
             id: 5,
             name: "Middle Africa",
             income: Income::LowerMiddle,
-            health: 43.5,
             outlook: 100.0,
             population: 190463603.0,
             base_habitability: 100.0,
@@ -108,7 +102,6 @@ pub fn regions() -> Vec<Region> {
             id: 6,
             name: "Western Africa",
             income: Income::Low,
-            health: 44.3,
             outlook: 100.0,
             population: 423239061.0,
             base_habitability: 100.0,
@@ -119,7 +112,6 @@ pub fn regions() -> Vec<Region> {
             id: 7,
             name: "Eastern Africa",
             income: Income::Low,
-            health: 44.45,
             outlook: 100.0,
             population: 468849237.0,
             base_habitability: 100.0,
@@ -130,7 +122,6 @@ pub fn regions() -> Vec<Region> {
             id: 8,
             name: "Southern Africa",
             income: Income::UpperMiddle,
-            health: 51.1,
             outlook: 100.0,
             population: 69191678.0,
             base_habitability: 100.0,
@@ -141,7 +132,6 @@ pub fn regions() -> Vec<Region> {
             id: 9,
             name: "Western Asia",
             income: Income::UpperMiddle,
-            health: 76.35,
             outlook: 100.0,
             population: 288359967.0,
             base_habitability: 100.0,
@@ -152,7 +142,6 @@ pub fn regions() -> Vec<Region> {
             id: 10,
             name: "Central Asia",
             income: Income::LowerMiddle,
-            health: 60.4,
             outlook: 100.0,
             population: 76474800.0,
             base_habitability: 100.0,
@@ -163,7 +152,6 @@ pub fn regions() -> Vec<Region> {
             id: 11,
             name: "Southern Asia",
             income: Income::LowerMiddle,
-            health: 51.7,
             outlook: 100.0,
             population: 1983914039.0,
             base_habitability: 100.0,
@@ -174,7 +162,6 @@ pub fn regions() -> Vec<Region> {
             id: 12,
             name: "South-eastern Asia",
             income: Income::UpperMiddle,
-            health: 52.0,
             outlook: 100.0,
             population: 681491532.0,
             base_habitability: 100.0,
@@ -185,7 +172,6 @@ pub fn regions() -> Vec<Region> {
             id: 13,
             name: "Eastern Asia",
             income: Income::UpperMiddle,
-            health: 75.9,
             outlook: 100.0,
             population: 1686247807.0,
             base_habitability: 100.0,
@@ -196,7 +182,6 @@ pub fn regions() -> Vec<Region> {
             id: 14,
             name: "Oceania",
             income: Income::UpperMiddle,
-            health: 76.14,
             outlook: 100.0,
             population: 12788202.0,
             base_habitability: 100.0,
@@ -207,7 +192,6 @@ pub fn regions() -> Vec<Region> {
             id: 15,
             name: "Western Europe",
             income: Income::High,
-            health: 88.2,
             outlook: 100.0,
             population: 196908712.0,
             base_habitability: 100.0,
@@ -218,7 +202,6 @@ pub fn regions() -> Vec<Region> {
             id: 16,
             name: "Southern Europe",
             income: Income::High,
-            health: 84.5,
             outlook: 100.0,
             population: 151644503.0,
             base_habitability: 100.0,
@@ -229,7 +212,6 @@ pub fn regions() -> Vec<Region> {
             id: 17,
             name: "Eastern Europe",
             income: Income::UpperMiddle,
-            health: 74.4,
             outlook: 100.0,
             population: 291862973.0,
             base_habitability: 100.0,
@@ -240,7 +222,6 @@ pub fn regions() -> Vec<Region> {
             id: 18,
             name: "Northern Europe",
             income: Income::High,
-            health: 87.1,
             outlook: 100.0,
             population: 106951178.0,
             base_habitability: 100.0,
@@ -251,7 +232,6 @@ pub fn regions() -> Vec<Region> {
             id: 19,
             name: "Australasia",
             income: Income::High,
-            health: 89.22,
             outlook: 100.0,
             population: 30966994.0,
             base_habitability: 100.0,
@@ -2088,8 +2068,7 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -10.0),
-                Effect::LocalVariable(LocalVariable::Population, -1.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -2117,7 +2096,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 1,
@@ -2132,11 +2113,13 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 2,
-            name: "Great Barrier Reef declared dead",
+            name: "Great Barrier Reef Dead",
             kind: EventType::World,
             locked: false,
             local: false,
@@ -2165,7 +2148,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 3,
@@ -2175,7 +2160,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Population, -1.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -2203,7 +2188,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 4,
@@ -2211,7 +2198,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             local: false,
-            repeats: true,
+            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
@@ -2229,7 +2216,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 5,
@@ -2237,7 +2226,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             local: false,
-            repeats: true,
+            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
@@ -2256,7 +2245,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 6,
@@ -2277,7 +2268,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 7,
@@ -2285,7 +2278,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             local: true,
-            repeats: true,
+            repeats: false,
             effects: vec![
                 Effect::AddEvent(8)
             ],
@@ -2293,29 +2286,48 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.25)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.25)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.4)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.4)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.6)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.6)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.8)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.8)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ],
+                    kind: ChoiceType::None
+                },
+                Choice {
+                    effects: vec![
+                        Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+                    ],
+                    conditions: vec![
+
+                    ],
+                    kind: ChoiceType::None
+                }
+            ]
         },
         Event {
             id: 8,
@@ -2331,30 +2343,34 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.1)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.25)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 9,
-            name: "Wildfires - Severe",
+            name: "Wildfires - Intro",
             kind: EventType::World,
             locked: false,
             local: true,
             repeats: true,
             effects: vec![
-                Effect::AddEvent(11),
                 Effect::AddEvent(13),
                 Effect::WorldVariable(WorldVariable::Emissions, 1.0),
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0),
+                Effect::AddEvent(82),
+                Effect::AddEvent(83),
+                Effect::AddEvent(84)
             ],
             probabilities: vec![
                 Probability {
@@ -2376,7 +2392,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 10,
@@ -2392,17 +2410,19 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.1)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.15)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 15.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 11,
@@ -2414,7 +2434,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.05),
                 Effect::Output(Output::PlantCalories, -0.02),
-                Effect::LocalVariable(LocalVariable::Health, -1.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -2424,7 +2444,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 12,
@@ -2441,11 +2463,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Contentedness, Comparator::LessEqual, 0.2)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 20.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 13,
@@ -2465,7 +2489,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 14,
@@ -2475,23 +2501,25 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Population, -5.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -15.0)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 15,
@@ -2501,7 +2529,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 10.0),
+                Effect::WorldVariable(WorldVariable::Emissions, 100.0),
                 Effect::AddEvent(16)
             ],
             probabilities: vec![
@@ -2518,7 +2546,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 16,
@@ -2528,8 +2558,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::WorldVariable(WorldVariable::Population, -0.5)
+                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -2539,13 +2568,15 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 17,
             name: "Fish Depletion",
             kind: EventType::World,
-            locked: false,
+            locked: true,
             local: false,
             repeats: false,
             effects: vec![
@@ -2559,7 +2590,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 18,
@@ -2570,7 +2603,6 @@ pub fn events() -> Vec<Event> {
             repeats: true,
             effects: vec![
                 Effect::Output(Output::Electricity, -0.05),
-                Effect::LocalVariable(LocalVariable::Health, -1.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
@@ -2581,7 +2613,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 19,
@@ -2596,19 +2630,26 @@ pub fn events() -> Vec<Event> {
                 Effect::Feedstock(Feedstock::Oil, 0.1)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 2.5)
+                    ]
+                }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 20,
             name: "Mosquito Disease",
             kind: EventType::World,
             locked: false,
-            local: true,
+            local: false,
             repeats: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -2624,7 +2665,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 21,
@@ -2634,7 +2677,6 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
@@ -2660,7 +2702,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 22,
@@ -2670,7 +2714,6 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -3.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -3.0),
                 Effect::OutputForFeature(ProcessFeature::IsNuclear, -0.05)
             ],
@@ -2694,7 +2737,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 23,
@@ -2704,7 +2749,6 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
@@ -2727,7 +2771,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 24,
@@ -2735,7 +2781,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             local: false,
-            repeats: true,
+            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
@@ -2747,7 +2793,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 25,
@@ -2757,7 +2805,6 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0),
                 Effect::TriggerEvent(61, 1)
             ],
@@ -2781,7 +2828,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 26,
@@ -2791,8 +2840,8 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::TriggerEvent(39, 12),
-                Effect::TriggerEvent(38, 18)
+                Effect::AddEvent(39),
+                Effect::AddEvent(38)
             ],
             probabilities: vec![
                 Probability {
@@ -2802,7 +2851,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 27,
@@ -2830,7 +2881,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 28,
@@ -2863,7 +2916,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 29,
@@ -2883,7 +2938,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 30,
@@ -2910,7 +2967,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 31,
@@ -2928,17 +2987,13 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::ProjectStatus(10, ProjectStatus::Finished),
-                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.1)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Random,
-                    conditions: vec![
                         Condition::ProjectStatus(22, ProjectStatus::Finished)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 32,
@@ -2948,7 +3003,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.05)
+                Effect::Output(Output::PlantCalories, -0.1)
             ],
             probabilities: vec![
                 Probability {
@@ -2958,7 +3013,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 33,
@@ -2979,7 +3036,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 34,
@@ -2995,11 +3054,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 6.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 5.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 35,
@@ -3009,17 +3070,19 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Population, -50.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -50.0)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 6.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::Greater, 5.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 36,
@@ -3029,7 +3092,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 1.0)
+                Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3039,7 +3102,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 37,
@@ -3059,7 +3124,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 38,
@@ -3069,7 +3136,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.05)
+                Effect::Output(Output::PlantCalories, -0.1)
             ],
             probabilities: vec![
                 Probability {
@@ -3079,7 +3146,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 39,
@@ -3089,7 +3158,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Health, -3.0),
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::AddEvent(73)
             ],
             probabilities: vec![
@@ -3100,7 +3169,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 40,
@@ -3110,7 +3181,6 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Population, -1.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0),
                 Effect::TriggerEvent(41, 6)
             ],
@@ -3130,7 +3200,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 41,
@@ -3140,7 +3212,6 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Population, -2.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -2.0)
             ],
             probabilities: vec![
@@ -3159,7 +3230,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 42,
@@ -3169,17 +3242,19 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::TriggerEvent(43, 6)
+                Effect::AddEvent(43)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 0.25)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 40.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 43,
@@ -3189,18 +3264,20 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -0.5),
-                Effect::TriggerEvent(44, 6)
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0),
+                Effect::AddEvent(44)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 0.25)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 30.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 44,
@@ -3210,18 +3287,20 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -0.5),
-                Effect::TriggerEvent(45, 6)
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0),
+                Effect::AddEvent(45)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 0.1)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 20.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 45,
@@ -3231,17 +3310,19 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -10.0)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 0.1)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 10.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 46,
@@ -3271,12 +3352,19 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, 10.0)
             ],
             probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
 
+                    ]
+                }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 48,
@@ -3296,7 +3384,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 49,
@@ -3306,7 +3396,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 3.0)
+                Effect::WorldVariable(WorldVariable::Outlook, 50.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3316,7 +3406,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 50,
@@ -3326,7 +3418,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 1.0)
+                Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3336,7 +3428,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 51,
@@ -3375,7 +3469,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 52,
@@ -3401,7 +3497,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 53,
@@ -3411,12 +3509,14 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-
+                Effect::AddEvent(17)
             ],
             probabilities: vec![
 
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 54,
@@ -3441,7 +3541,6 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
@@ -3452,7 +3551,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 56,
@@ -3460,19 +3561,21 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             local: true,
-            repeats: true,
+            repeats: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.05)
+                Effect::Output(Output::PlantCalories, -0.1)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 57,
@@ -3482,7 +3585,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::OutputForFeature(ProcessFeature::IsSolar, -0.05)
+                Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1)
             ],
             probabilities: vec![
                 Probability {
@@ -3492,7 +3595,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 58,
@@ -3512,7 +3617,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 59,
@@ -3533,7 +3640,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 60,
@@ -3549,11 +3658,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 61,
@@ -3563,7 +3674,7 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3573,7 +3684,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 62,
@@ -3583,9 +3696,9 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 2.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
-                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+                Effect::WorldVariable(WorldVariable::Emissions, 10.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 3.0),
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3601,7 +3714,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 63,
@@ -3627,7 +3742,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 64,
@@ -3653,7 +3770,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 65,
@@ -3663,8 +3782,8 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 1.0),
-                Effect::LocalVariable(LocalVariable::Health, -1.0)
+                Effect::WorldVariable(WorldVariable::Emissions, 5.0),
+                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3674,7 +3793,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 66,
@@ -3684,8 +3805,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.05),
-                Effect::LocalVariable(LocalVariable::Health, -1.0)
+                Effect::Output(Output::PlantCalories, -0.1)
             ],
             probabilities: vec![
                 Probability {
@@ -3695,7 +3815,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 67,
@@ -3705,8 +3827,8 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-                Effect::Demand(Output::PlantCalories, 0.1),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0),
+                Effect::AddEvent(17)
             ],
             probabilities: vec![
                 Probability {
@@ -3716,7 +3838,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 68,
@@ -3749,7 +3873,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 69,
@@ -3776,7 +3902,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 70,
@@ -3786,7 +3914,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3818,7 +3946,7 @@ pub fn events() -> Vec<Event> {
             local: true,
             repeats: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Health, -1.0),
+                Effect::LocalVariable(LocalVariable::Outlook, -5.0),
                 Effect::Output(Output::PlantCalories, -0.05)
             ],
             probabilities: vec![
@@ -3833,27 +3961,11 @@ pub fn events() -> Vec<Event> {
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
-                },
-                Probability {
-                    likelihood: Likelihood::Impossible,
-                    conditions: vec![
-
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Impossible,
-                    conditions: vec![
-
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Impossible,
-                    conditions: vec![
-
-                    ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 72,
@@ -3863,7 +3975,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3873,7 +3985,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 73,
@@ -3883,7 +3997,7 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -10.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3893,17 +4007,19 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 74,
             name: "SRM - Respiratory Problems",
             kind: EventType::World,
-            locked: true,
+            locked: false,
             local: false,
             repeats: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Health, -2.0),
+                Effect::WorldVariable(WorldVariable::Outlook, -10.0),
                 Effect::AddEvent(73)
             ],
             probabilities: vec![
@@ -3914,7 +4030,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 75,
@@ -3930,7 +4048,9 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 76,
@@ -3940,12 +4060,19 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Emissions, 5.0)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 77,
@@ -3960,7 +4087,9 @@ pub fn events() -> Vec<Event> {
             probabilities: vec![
 
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 78,
@@ -3970,12 +4099,19 @@ pub fn events() -> Vec<Event> {
             local: false,
             repeats: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
             ],
             probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
 
+                    ]
+                }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
             id: 79,
@@ -3996,24 +4132,6 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![
-                Choice {
-                    effects: vec![
-
-                    ],
-                    conditions: vec![
-
-                    ],
-                    kind: ChoiceType::None
-                },
-                Choice {
-                    effects: vec![
-
-                    ],
-                    conditions: vec![
-
-                    ],
-                    kind: ChoiceType::None
-                },
                 Choice {
                     effects: vec![
 
@@ -4064,16 +4182,182 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![
-                Choice {
-                    effects: vec![
 
-                    ],
+            ]
+        },
+        Event {
+            id: 82,
+            name: "Wildfires - 1",
+            kind: EventType::Icon,
+            locked: true,
+            local: true,
+            repeats: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Less, 1.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::ProjectStatus(7, ProjectStatus::Active)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 83,
+            name: "Wildfires - 2",
+            kind: EventType::Icon,
+            locked: true,
+            local: true,
+            repeats: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Less, 1.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProjectStatus(7, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::ProjectStatus(7, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 84,
+            name: "Wildfires - 3",
+            kind: EventType::Icon,
+            locked: true,
+            local: true,
+            repeats: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -3.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Less, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 4.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 85,
+            name: "Icon Test - 1",
+            kind: EventType::Icon,
+            locked: false,
+            local: true,
+            repeats: true,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, -3.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
                     conditions: vec![
 
-                    ],
-                    kind: ChoiceType::None
+                    ]
                 }
-            ]
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 86,
+            name: "Icon Test - 2",
+            kind: EventType::Icon,
+            locked: false,
+            local: true,
+            repeats: true,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+
+                    ]
+                }
+            ],
+            choices: vec![]
         }
     ]
 }

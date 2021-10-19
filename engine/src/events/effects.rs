@@ -35,9 +35,7 @@ impl Effect {
                     let region = &mut game.state.world.regions[id];
                     match var {
                         LocalVariable::Population => region.population *= 1. + *change/100.,
-                        LocalVariable::Health => region.health += *change,
                         LocalVariable::Outlook => region.outlook += *change,
-                        LocalVariable::Contentedness => region.base_contentedness += *change,
                         LocalVariable::Habitability => region.base_habitability += *change,
                     }
                 }
@@ -50,11 +48,9 @@ impl Effect {
                     WorldVariable::ExtinctionRate => game.state.world.extinction_rate += *change,
                     WorldVariable::Outlook => game.state.world.change_outlook(*change),
                     WorldVariable::Temperature => game.state.world.temperature += *change,
-                    WorldVariable::Contentedness => game.state.world.change_contentedness(*change),
                     WorldVariable::WaterStress => game.state.world.water_stress += *change,
                     WorldVariable::SeaLevelRise => game.state.world.sea_level_rise += *change,
                     WorldVariable::Precipitation => game.state.world.precipitation += *change,
-                    WorldVariable::Health => game.state.world.change_health(*change),
                 }
             }
             Effect::PlayerVariable(var, change) => {

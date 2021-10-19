@@ -1,3 +1,4 @@
+import game from '/src/game';
 import regions from '../../assets/content/regions.json';
 import Dialogue from './Dialogue.vue'
 import Interstitial from './interstitials/Interstitial.vue';
@@ -32,21 +33,29 @@ export default {
       }
     },
     showEvent() {
-      if (this.eventIdx !== null) {
+      if (this.eventIdx !== null && this.events.length > 0) {
         let [eventId, regionId] = this.events[this.eventIdx];
+        console.log(`Loading event id: ${eventId}`);
         this.loadEvent(eventId).then((ev) => {
+          console.log(ev);
           this.event = ev;
 
-          // Parse/fill in variables
-          let vars = [...ev.text.matchAll('{([a-z]+)}')];
-          let ctx = {};
-          if (regionId !== undefined) {
-            ctx['region'] = regions[regionId].name;
-        }
-          for (const match of vars) {
-            ev.text = ev.text.replaceAll(match[0], ctx[match[1]]);
+          // Set context variables
+          if (this.event.dialogue) {
+            let ctx = {};
+            if (regionId !== undefined) {
+              ctx['region'] = regions[regionId].name;
+            };
+            this.event.dialogue.context = ctx;
+          } else {
+            throw(`Event "${eventId}" missing dialogue!`);
           }
+
+          // Apply event effects
+          game.applyEvent(eventId, regionId);
         });
+      } else {
+        console.log('NO EVENTS');
       }
     },
     selectChoice(idx) {

@@ -53,8 +53,8 @@ const CONDITIONS = {
   LocalVariable: {
     compare: true,
     choices: [
-      'Population', 'Health', 'Outlook',
-      'Contentedness', 'Habitability']
+      'Population', 'Outlook',
+      'Habitability']
   },
   WorldVariable: {
     compare: true,
@@ -62,7 +62,7 @@ const CONDITIONS = {
       'Year', 'Population', 'Emissions',
       'ExtinctionRate', 'Temperature',
       'Precipitation', 'SeaLevelRise',
-      'Outlook', 'Contentedness',
+      'Outlook',
       'WaterStress',]
   },
   Demand: {
@@ -122,9 +122,7 @@ const CONDITIONS = {
 
 const EFFECTS = {
   LocalVariable: {
-    choices: [
-      'Population', 'Health',
-      'Outlook', 'BaseHabitability'],
+    choices: ['Outlook', 'Habitability'],
     params: {
       'Change': Number
     }
@@ -132,7 +130,7 @@ const EFFECTS = {
 
   WorldVariable: {
     choices: [
-      'Population', 'Emissions', 'Health',
+      'Emissions',
       'ExtinctionRate', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook'],
@@ -231,6 +229,7 @@ const PROBABILITIES = [
 ];
 
 const SPEAKERS = [
+  'Gossy',
   'Economist',
   'Ecologist',
   'Climatologist',
@@ -243,7 +242,9 @@ const SPEAKERS = [
   'Meat Militia',
   'Envoy',
   'Space Enthusiast',
-  'Epidemiologist',
+  'Health Czar',
+  'Energy Czar',
+  'Safety Czar',
 ];
 
 const EVENT_TYPES = [

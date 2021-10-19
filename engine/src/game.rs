@@ -82,12 +82,20 @@ impl GameInterface {
         process.banned = false;
     }
 
+    pub fn roll_icon_events(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Icon, &mut self.rng))?)
+    }
+
     pub fn roll_planning_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_apply_events_of_kind(EventType::Planning, &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, &mut self.rng))?)
     }
 
     pub fn roll_breaks_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_apply_events_of_kind(EventType::Breaks, &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Breaks, &mut self.rng))?)
+    }
+
+    pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
+        self.game.apply_event(event_id, region_id);
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {
@@ -156,29 +164,26 @@ impl Game {
             effect.apply(self, region_id);
         }
 
-        self.roll_apply_events_of_kind(EventType::World, rng)
+        self.roll_events_of_kind(EventType::World, rng)
     }
 
-    pub fn roll_apply_events_of_kind(&mut self, kind: EventType, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
-        let mut effects = vec![];
-
+    pub fn roll_events_of_kind(&mut self, kind: EventType, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
         // Roll for events and collect effects
         let events = self.event_pool.roll_for_kind(kind, &self.state, rng);
-        let event_ids = events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect();
+        events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect()
+    }
 
-        for (event, region_id) in events {
-            for effect in &event.effects {
-                effects.push((effect.clone(), region_id));
-            }
+    pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
+        let mut effects = vec![];
+        let event = &self.event_pool.events[event_id];
+        for effect in &event.effects {
+            effects.push((effect.clone(), region_id));
         }
 
         for (effect, region_id) in effects {
             effect.apply(self, region_id);
         }
-
-        event_ids
     }
-
 
     pub fn set_event_choice(&mut self, event_id: usize, choice_id: usize) -> Vec<Effect> {
         let (effects, kind) = self.event_pool.events[event_id].set_choice(choice_id);

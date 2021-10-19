@@ -37,6 +37,7 @@ class Globe {
     });
     el.appendChild(this.scene.renderer.domElement);
     this._onReady = [];
+    this.pings = [];
   }
 
   onReady(fn) {
@@ -83,11 +84,7 @@ class Globe {
     );
     this.scene.add(sphere);
 
-    this.hexsphere = new HexSphere(this.scene, 5.2, 12, 0.98);
-
-    // TODO add test icons to sphere
-    [52, 32, 191].forEach((idx) => this.hexsphere.showIcon('alert', idx));
-    [238, 351].forEach((idx) => this.hexsphere.showIcon('advisor', idx));
+    this.hexsphere = new HexSphere(this.scene, 5.2, 8, 0.98);
 
     this.cloudsMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -138,6 +135,12 @@ class Globe {
     return tgav;
   }
 
+  showIconText(icon, text, hexIdx) {
+    let iconMesh = this.hexsphere.showIcon(icon, hexIdx);
+    let textMesh = this.hexsphere.showTextAt(text, hexIdx, 0.5);
+    this.pings.push({text: textMesh, icon: iconMesh});
+  }
+
   render(timestamp) {
     if (debug.fps) stats.begin();
     this.scene.render();
@@ -145,6 +148,21 @@ class Globe {
       this.cloudsMaterial.uniforms.time.value = timestamp;
     }
     if (debug.fps) stats.end();
+    this.pings = this.pings.filter(({text, icon}) => {
+      text.lookAt(this.scene.camera.position);
+      text.position.y += 0.02;
+      text.material.opacity -= 0.005;
+      let done = text.material.opacity <= 0;
+      if (done) {
+        text.geometry.dispose();
+        text.material.dispose();
+        icon.geometry.dispose();
+        icon.material.dispose();
+        this.scene.remove(text);
+        this.scene.remove(icon);
+      }
+      return !done;
+    });
     requestAnimationFrame(this.render.bind(this));
   }
 }

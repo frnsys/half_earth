@@ -101,6 +101,9 @@ class Surface {
           .then((resp) => resp.json()),
       ]).then(([{Hector, run}, config]) => {
         this._hectorRun = () => {
+          // Only compute up to the current year,
+          // so the last returned tgav is the current tgav
+          config.core.endDate = this.emissions.startYear + this.emissions.data['ffi_emissions'].length;
           return run(config, this.emissions, hectorOutputVars);
         };
         this._hectorRun;

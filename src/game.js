@@ -4,68 +4,91 @@ import {GameInterface, Difficulty} from 'half-earth-engine';
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
 let game = GameInterface.new(Difficulty.Normal);
-state.gameState = game.state();
+
+function updateState() {
+  state.gameState = game.state();
+
+  let world = state.gameState.world;
+  state.gameState.contentedness = world.regions.reduce((acc, r) => {
+      return acc + r.base_contentedness + r.outlook;
+    }, 0)/world.regions.length;
+  state.gameState.emissions = (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
+}
+
 
 function newRun() {
   game = GameInterface.new(Difficulty.Normal);
-  state.gameState = game.state();
+  updateState();
 }
 
 function step() {
   let events = game.step();
-  state.gameState = game.state();
+  updateState();
   return events;
 }
 
 function selectChoice(eventId, regionId, choiceId) {
   game.set_event_choice(eventId, regionId, choiceId);
-  state.gameState = game.state();
+  updateState();
 }
 
 function setProjectPoints(projectId, points) {
   game.set_project_points(projectId, points);
-  state.gameState = game.state();
+  updateState();
 }
 
 
 function startProject(projectId) {
   game.start_project(projectId);
-  state.gameState = game.state();
+  updateState();
 }
 
 function stopProject(projectId) {
   game.stop_project(projectId);
-  state.gameState = game.state();
+  updateState();
 }
 
 function banProcess(processId) {
   game.ban_process(processId);
-  state.gameState = game.state();
+  updateState();
 }
 
 function unbanProcess(processId) {
   game.unban_process(processId);
-  state.gameState = game.state();
+  updateState();
 }
 
 function rollPlanningEvents() {
   let events = game.roll_planning_events();
-  state.gameState = game.state();
+  // updateState();
   return events;
 }
 
 function rollBreaksEvents() {
   let events = game.roll_breaks_events();
-  state.gameState = game.state();
+  // updateState();
   return events;
+}
+
+function rollIconEvents() {
+  let events = game.roll_icon_events();
+  // updateState();
+  return events;
+}
+
+function applyEvent(eventId, regionId) {
+  game.apply_event(eventId, regionId);
+  updateState();
 }
 
 function setTgav(tgav) {
   game.set_tgav(tgav);
-  state.gameState = game.state();
+  updateState();
 }
 
+updateState();
 export default {newRun, step, selectChoice,
   setProjectPoints, startProject, stopProject,
   banProcess, unbanProcess, setTgav,
-  rollPlanningEvents, rollBreaksEvents};
+  rollPlanningEvents, rollBreaksEvents, rollIconEvents,
+  applyEvent};

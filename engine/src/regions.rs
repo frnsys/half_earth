@@ -12,9 +12,6 @@ pub struct Region {
 
     pub income: Income,
 
-    /// Public health
-    pub health: f32,
-
     /// How hopeful are people in the region about the future?
     pub outlook: f32,
 
@@ -33,14 +30,14 @@ pub struct Region {
 impl Region {
     // Simple mean
     pub fn contentedness(&self) -> f32 {
-        self.base_contentedness + (self.health + self.outlook)/2.
+        self.base_contentedness + self.outlook
     }
 
     pub fn habitability(&self) -> f32 {
         // TODO Factors:
-        // - regional temp, precip, sea_level_rise, health, safety,
+        // - regional temp, precip, sea_level_rise
         // - number of negative events
-        self.base_habitability + self.health
+        self.base_habitability
     }
 
     pub fn pop_change(&mut self) {

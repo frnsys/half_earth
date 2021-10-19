@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import Hexasphere from 'hexasphere.js';
 
+// Show hex tiles and indices
+const showTiles = false;
+
 const tooltip = document.createElement('div');
 tooltip.id = 'tooltip';
 document.body.appendChild(tooltip);
@@ -13,13 +16,22 @@ tooltip.style.position = 'fixed';
 tooltip.style.display = 'none';
 
 const texLoader = new THREE.TextureLoader();
-// const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true});
-// const hexMaterialFocus = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
-// hexMaterial.opacity = 0.1;
-// hexMaterialFocus.opacity = 0.1;
 const raycaster = new THREE.Raycaster();
 
-const iconNames = ['alert', 'advisor'];
+// For showing tile indices
+const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true});
+hexMaterial.opacity = 0.5;
+const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: true});
+const loader = new THREE.FontLoader();
+let threeFont;
+loader.load('assets//fonts/helvetiker_bold.typeface.json', (font) => {
+  threeFont = font;
+});
+
+const iconNames = ['alert', 'advisor',
+  'wildfires_1', 'wildfires_2', 'wildfires_3',
+  'flood_1', 'flood_2', 'flood_3',
+  'hurricane_1', 'hurricane_2', 'hurricane_3'];
 const icons = iconNames.reduce((acc, name) => {
   const map = texLoader.load(`./assets/icons/${name}.png`);
   const iconMat = new THREE.SpriteMaterial({map});
@@ -54,31 +66,32 @@ class HexSphere {
     this.hexasphere.tiles.forEach((tile, idx) => {
       // We don't really need to render the hexes,
       // and not rendering them saves many FPS
-      // let geometry = new THREE.BufferGeometry();
-      // let vertices = new Float32Array(tile.boundary.map((bp) => [bp.x, bp.y, bp.z]).flat());
-      // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      if (showTiles) {
+        let geometry = new THREE.BufferGeometry();
+        let vertices = new Float32Array(tile.boundary.map((bp) => [bp.x, bp.y, bp.z]).flat());
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
-      // // Create faces
-      // if (tile.boundary.length > 5) {
-      //   // Hexagon
-      //   geometry.setIndex([
-      //     0, 1, 2,
-      //     0, 2, 3,
-      //     3, 5, 0,
-      //     3, 4, 5,
-      //   ]);
-      // } else {
-      //   // Pentagon
-      //   geometry.setIndex([
-      //     0, 1, 2,
-      //     0, 2, 3,
-      //     0, 3, 4,
-      //   ]);
-      // }
-      // let mesh = new THREE.Mesh(geometry, hexMaterial);
-      // tile.mesh = mesh;
-      // tile.mesh.idx = idx;
-      // scene.add(tile.mesh);
+        // Create faces
+        if (tile.boundary.length > 5) {
+          // Hexagon
+          geometry.setIndex([
+            0, 1, 2,
+            0, 2, 3,
+            3, 5, 0,
+            3, 4, 5,
+          ]);
+        } else {
+          // Pentagon
+          geometry.setIndex([
+            0, 1, 2,
+            0, 2, 3,
+            0, 3, 4,
+          ]);
+        }
+        let mesh = new THREE.Mesh(geometry, hexMaterial);
+        tile.mesh = mesh;
+        scene.add(tile.mesh);
+      }
 
       let bnd = tile.boundary;
       let normal = calculateSurfaceNormal(bnd[1], bnd[2], bnd[3]);
@@ -86,17 +99,41 @@ class HexSphere {
 
       let center = tile.centerPoint;
       tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
+
+      if (showTiles) {
+        this.showTextAt(`${idx}`, idx);
+      }
     });
 
     // Interaction
     this.mouse = new THREE.Vector2();
     scene.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     scene.renderer.domElement.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-    scene.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this), false);
     this.scene.controls.onUpdate.push(() => {
       tooltip.style.display = 'none';
     });
     this._onClick = [];
+  }
+
+  showTextAt(text, hexIdx, size) {
+    size = size || 0.2;
+    let tile = this.hexasphere.tiles[hexIdx];
+    const textGeom = new THREE.TextGeometry(text, {
+      size,
+      font: threeFont,
+      height: 0.05,
+      curveSegments: 2,
+      bevelEnabled: false,
+    });
+    textGeom.center();
+    let label = new THREE.Mesh(textGeom, textMaterial.clone());
+    label.position.copy(
+      tile.centerPointVec.add(tile.normal.multiplyScalar(1.1)));
+    this.scene.add(label);
+    label.lookAt(tile.normal);
+    let axis = new THREE.Vector3(0,1,0);
+    label.rotateOnAxis(axis, Math.PI);
+    return label;
   }
 
   get tiles() {
@@ -107,21 +144,19 @@ class HexSphere {
     this._onClick.push(fn);
   }
 
-  // TODO col/row addressing
   showIcon(iconName, hexIdx) {
+    console.log(`hexIdx: ${hexIdx}`);
+    console.log(`n tiles: ${this.hexasphere.tiles.length}`);
     let tile = this.hexasphere.tiles[hexIdx];
     let iconMat = icons[iconName];
     const sprite = new THREE.Sprite(iconMat);
-    sprite.scale.set(0.5, 0.5, 0.5);
+    sprite.scale.set(0.75, 0.75, 0.75);
     sprite.position.copy(
       tile.centerPointVec.add(tile.normal.multiplyScalar(2.)));
 
-    // See note above; we aren't rendering the hex tiles
-    // to save FPS
-    // tile.mesh.add(sprite);
-
     this.scene.add(sprite);
     this.selectables.push(sprite);
+    return sprite;
   }
 
   setMouse(ev) {
@@ -189,19 +224,6 @@ class HexSphere {
     ev.clientX = ev.touches[0].clientX;
     ev.clientY = ev.touches[0].clientY;
     this.onMouseDown(ev);
-  }
-
-  onMouseMove(ev) {
-    ev.preventDefault();
-    this.setMouse(ev);
-    raycaster.setFromCamera(this.mouse, this.scene.camera);
-
-    let intersects = raycaster.intersectObjects(this.selectables);
-    if (intersects.length > 0) {
-      // let mesh = intersects[0].object,
-      //     pos = intersects[0].point,
-      //     obj = mesh.obj;
-    }
   }
 }
 

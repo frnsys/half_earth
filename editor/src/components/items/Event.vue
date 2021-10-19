@@ -3,14 +3,6 @@
   <Flags :invalid="invalid" :questions="questions" />
   <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
   <template v-if="editing">
-    <div>
-      <label>
-        Description
-        <Tip>A more detailed narrative description of the event. Each line is a separate dialogue bubble.</Tip>
-      </label>
-      <textarea class="title" placeholder="Description" v-model="localData.description" @blur="(ev) => saveDescription(ev.target.value)" :class="flags('description')" />
-    </div>
-
     <div class="event-variables" v-if="varMetas.length > 0">
         <span>Variables:</span>
         <div class="summary-pill event-variable" v-for="v in varMetas" :class="{invalid:v.invalid}">
@@ -30,7 +22,7 @@
         </label>
         <input type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
       </div>
-      <div>
+      <div v-if="item.type != 'Icon'">
         <label>
           Story Arc (optional)
           <Tip>If the event is part of or triggers an arc, note the arc name here.</Tip>
@@ -45,6 +37,13 @@
         <select v-model="localData.type" @change="save" :class="flags('type')">
           <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
         </select>
+      </div>
+      <div v-if="item.type == 'Icon'">
+        <label>
+          Event Icon
+          <Tip>Filename of the event icon.</Tip>
+        </label>
+        <input type="text" v-model="localData.icon" @blur="save" />
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_repeats`">
@@ -67,14 +66,12 @@
         </label>
         <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
       </div>
-
     </fieldset>
 
     <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
     <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
 
-    <h4 class="dialogue-label">Dialogue</h4>
-    <Dialogue :id="item.id" :dialogue="localData.dialogue" @update="saveData('dialogue', $event)"/>
+    <Dialogue v-if="item.type !== 'Icon'" :id="item.id" :dialogue="localData.dialogue" @update="saveDialogue($event)"/>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
   </template>
@@ -89,8 +86,6 @@
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
-    <div class="item-summary-title" v-if="localData.description" v-html="descriptionHtml"></div>
-    <div class="item-summary-title invalid" v-else>[MISSING DESCRIPTION]</div>
     <div class="event-variables" v-if="varMetas.length > 0">
         <span>Variables:</span>
         <div class="summary-pill event-variable" v-for="v in varMetas" :class="{invalid:v.invalid}">
@@ -108,7 +103,7 @@
       <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
       <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
     </div>
-    <DialogueSummary :dialogue="localData.dialogue" />
+    <DialogueSummary v-if="item.type !== 'Icon'" :dialogue="localData.dialogue" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -127,19 +122,18 @@ export default {
   },
   methods: {
     parseVariables() {
-      let matches = [...(this.localData.description || '').matchAll('\{([a-z_]+)\}')];
+      let matches = this.dialogue.lines.map((l) => {
+        return [...(l.text || '').matchAll('\{([a-z_]+)\}')];
+      }).flat();
       this.localData.variables = matches.map((group) => group[1]);
     },
-    saveDescription(desc) {
-      this.localData.description = desc;
+    saveDialogue(dialogue) {
+      this.saveData('dialogue', dialogue);
       this.parseVariables();
       this.save();
     },
   },
   computed: {
-    descriptionHtml() {
-      return this.localData.description.replaceAll('\n', '<br />');
-    },
     definedVariables() {
       return Object.values(state.items)
         .filter((i) => i._type == 'Variable')
@@ -194,9 +188,5 @@ export default {
 }
 .event-summary .type-pill {
   background: #e7cb5d;
-}
-.dialogue-label {
-  margin: 0.5em 0 0 0;
-  border-bottom: 1px solid black;
 }
 </style>

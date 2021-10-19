@@ -15,6 +15,8 @@ export default {
   mixins: [EventsMixin],
   data() {
     let events = game.rollBreaksEvents();
+    console.log('breaks events:');
+    console.log(events);
     return {
       events,
       eventIdx: events.length > 0 ? 0 : null

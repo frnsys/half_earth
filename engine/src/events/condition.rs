@@ -35,9 +35,7 @@ impl Condition {
                     let region = &state.world.regions[id];
                     let val = match var {
                         LocalVariable::Population => region.population,
-                        LocalVariable::Health => region.health,
                         LocalVariable::Outlook => region.outlook,
-                        LocalVariable::Contentedness => region.contentedness(),
                         LocalVariable::Habitability => region.habitability(),
                     };
                     comp.eval(val, *other_val)
@@ -51,10 +49,8 @@ impl Condition {
                     WorldVariable::Population => state.world.population(),
                     WorldVariable::Emissions => state.world.emissions(),
                     WorldVariable::ExtinctionRate => state.world.extinction_rate,
-                    WorldVariable::Health => state.world.health(),
                     WorldVariable::Outlook => state.world.outlook(),
                     WorldVariable::Temperature => state.world.temperature,
-                    WorldVariable::Contentedness => state.world.contentedness(),
                     WorldVariable::WaterStress => state.world.water_stress,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise,
                     WorldVariable::Precipitation => state.world.precipitation,

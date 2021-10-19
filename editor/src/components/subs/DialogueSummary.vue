@@ -1,6 +1,6 @@
 <template>
 <div class="dialogue-summary">
-  <div>[{{localData.speaker || "MISSING SPEAKER"}}]: "{{localData.text || "MISSING TEXT"}}"</div>
+  <div v-for="line in localData.lines">[{{line.speaker || "MISSING SPEAKER"}}]: "{{line.text || "MISSING TEXT"}}"</div>
   <ChoicesSummary :choices="localData.choices" />
 </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     flags(dialogue) {
-      let invalid = dialogue.text === undefined || dialogue.text === '';
+      let invalid = dialogue.lines === undefined || dialogue.lines.length === 0;
       return {invalid};
     },
   }
