@@ -1,14 +1,14 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
-  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
   <template v-if="editing">
     <div>
       <label>
         Name
         <Tip>The name of the industry.</Tip>
       </label>
-      <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
     </div>
     <div class="field-group">
       <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>

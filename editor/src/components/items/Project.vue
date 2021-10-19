@@ -1,14 +1,14 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
-  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
   <template v-if="editing">
     <div>
       <label>
         Name
         <Tip>Name of the initiative/policy/research.</Tip>
       </label>
-      <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
     </div>
     <fieldset>
       <div>
@@ -16,7 +16,7 @@
           Type
           <Tip>The type of project.</Tip>
         </label>
-        <select v-model="localData.type" @change="save" :class="flags('type')">
+        <select v-model="localData.type" :class="flags('type')">
           <option value="Initiative">Initiative</option>
           <option value="Policy">Policy</option>
           <option value="Research">Research</option>
@@ -27,28 +27,28 @@
           Cost/Years to Completion
           <Tip>Political capital cost for policies, otherwise years to completion. For uncertain projects, this is the minimum years required to start rolling for success.</Tip>
         </label>
-        <input type="number" v-model="localData.cost" @change="save" :class="flags('cost')"/>
+        <input type="number" v-model="localData.cost" :class="flags('cost')"/>
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_uncertain`">
           Uncertain
           <Tip>Is this project guaranteed to finish or not?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_uncertain`" v-model="localData.uncertain" @change="save">
+        <input type="checkbox" :id="`${item.id}_uncertain`" v-model="localData.uncertain">
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_ongoing`">
           Ongoing
           <Tip>Is this a one-and-done project, or does it need continued maintenance?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_ongoing`" v-model="localData.ongoing" @change="save">
+        <input type="checkbox" :id="`${item.id}_ongoing`" v-model="localData.ongoing">
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_locked`">
           Locked
           <Tip>Is this process available to the player at the start?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked">
       </div>
     </fieldset>
     <fieldset class="big-group">
@@ -61,7 +61,7 @@
             Description
             <Tip>A 1-2 sentence description of the project.</Tip>
           </label>
-          <textarea v-model="localData.description" placeholder="A brief description" @blur="save" :class="flags('description')"/>
+          <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
         </div>
         <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
       </div>
@@ -74,7 +74,7 @@
         Flavor Text/Dialogue
         <Tip>Possible dialogue or other flavor to text to accompany the policy (e.g.an advisor giving their take on the policy when you first select/unlock it).</Tip>
       </label>
-      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
+      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" />
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
@@ -132,7 +132,7 @@ export default {
           conditions: [],
         }
       }];
-      this.save();
+      /* this.save(); */
     }
   },
   computed: {

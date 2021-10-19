@@ -1,7 +1,7 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
-  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
   <template v-if="editing">
     <div class="event-variables" v-if="varMetas.length > 0">
         <span>Variables:</span>
@@ -20,21 +20,21 @@
           Short Name
           <Tip>The short name of the event to uniquely identify this event.</Tip>
         </label>
-        <input type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+        <input type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
       </div>
       <div v-if="item.type != 'Icon'">
         <label>
           Story Arc (optional)
           <Tip>If the event is part of or triggers an arc, note the arc name here.</Tip>
         </label>
-        <input type="text" list="arcs" v-model="localData.arc" @blur="save" />
+        <input type="text" list="arcs" v-model="localData.arc" />
       </div>
       <div>
         <label>
           Event Type
           <Tip>"World" = shows up in the world/event stream; "Planning" = shows up during planning sessions; "Breaks" = shows up between runs; "Icon" = shows up in the world/event stream, but only as an icon.</Tip>
         </label>
-        <select v-model="localData.type" @change="save" :class="flags('type')">
+        <select v-model="localData.type" :class="flags('type')">
           <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
         </select>
       </div>
@@ -43,28 +43,28 @@
           Event Icon
           <Tip>Filename of the event icon.</Tip>
         </label>
-        <input type="text" v-model="localData.icon" @blur="save" />
+        <input type="text" v-model="localData.icon" />
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_repeats`">
           Repeats
           <Tip>Can this event occur more than once?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_repeats`" v-model="localData.repeats" @change="save">
+        <input type="checkbox" :id="`${item.id}_repeats`" v-model="localData.repeats">
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_local`">
           Local
           <Tip>Is this event something that happens locally or globally?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_local`" v-model="localData.local" @change="save">
+        <input type="checkbox" :id="`${item.id}_local`" v-model="localData.local">
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_locked`">
           Locked
           <Tip>Does this event start locked?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked">
       </div>
     </fieldset>
 
@@ -117,20 +117,22 @@ export default {
   mounted() {
     if (!this.localData.variables) {
       this.parseVariables();
-      this.save();
+      /* this.save(); */
     }
   },
   methods: {
     parseVariables() {
-      let matches = this.dialogue.lines.map((l) => {
-        return [...(l.text || '').matchAll('\{([a-z_]+)\}')];
-      }).flat();
-      this.localData.variables = matches.map((group) => group[1]);
+      if (this.dialogue) {
+        let matches = this.dialogue.lines.map((l) => {
+          return [...(l.text || '').matchAll('\{([a-z_]+)\}')];
+        }).flat();
+        this.localData.variables = matches.map((group) => group[1]);
+      }
     },
     saveDialogue(dialogue) {
       this.saveData('dialogue', dialogue);
       this.parseVariables();
-      this.save();
+      /* this.save(); */
     },
   },
   computed: {

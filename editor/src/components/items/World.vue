@@ -1,6 +1,6 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
-  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
   <Flags :invalid="invalid" :questions="questions" />
   <template v-if="editing">
     <div>
@@ -8,7 +8,7 @@
         Year
         <Tip>The starting year.</Tip>
       </label>
-      <input class="title" type="text" placeholder="Year" v-model="localData.year" @blur="save" :class="flags('year')" />
+      <input class="title" type="text" placeholder="Year" v-model="localData.year" :class="flags('year')" />
     </div>
     <fieldset>
       <div>
@@ -16,35 +16,35 @@
           CO2 Emissions (Gt/y)
           <Tip>Starting global CO2 emissions.</Tip>
         </label>
-        <input v-model="localData.co2_emissions" type="number" min="0" @blur="save" :class="flags('co2_emissions')">
+        <input v-model="localData.co2_emissions" type="number" min="0" :class="flags('co2_emissions')">
       </div>
       <div>
         <label>
           CH4 Emissions (Mt/y)
           <Tip>Starting global CH4 emissions.</Tip>
         </label>
-        <input v-model="localData.ch4_emissions" type="number" min="0" @blur="save" :class="flags('ch4_emissions')">
+        <input v-model="localData.ch4_emissions" type="number" min="0" :class="flags('ch4_emissions')">
       </div>
       <div>
         <label>
           N2O Emissions (Mt/y)
           <Tip>Starting global N2O emissions.</Tip>
         </label>
-        <input v-model="localData.n2o_emissions" type="number" min="0" @blur="save" :class="flags('n2o_emissions')">
+        <input v-model="localData.n2o_emissions" type="number" min="0" :class="flags('n2o_emissions')">
       </div>
       <div>
         <label>
           Extinction Rate (e/msy)
           <Tip>Starting extinction rate.</Tip>
         </label>
-        <input v-model="localData.extinction_rate" type="number" min="0" @blur="save" :class="flags('extinction_rate')">
+        <input v-model="localData.extinction_rate" type="number" min="0" :class="flags('extinction_rate')">
       </div>
       <div>
         <label>
           Temperature (C)
           <Tip>Starting global temperature average.</Tip>
         </label>
-        <input v-model="localData.temperature" type="number" min="0" @blur="save" :class="flags('temperature')">
+        <input v-model="localData.temperature" type="number" min="0" :class="flags('temperature')">
       </div>
     </fieldset>
 
@@ -53,7 +53,7 @@
         Flavor Text/Dialogue
         <Tip>Advisor dialogue introducing the event.</Tip>
       </label>
-      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
+      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" />
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />

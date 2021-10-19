@@ -89,11 +89,11 @@ export default {
     },
     saveNotes(notes) {
       this.localData.notes = notes;
-      this.save();
+      // this.save();
     },
     saveData(key, data) {
       this.localData[key] = data;
-      this.save();
+      // this.save();
     },
     delete() {
       if (confirm('Are you sure you want to delete this?')) {
@@ -115,6 +115,14 @@ export default {
     },
     definedWithValues(key) {
       return this.localData[key] !== undefined && this.localData[key] !== '' && this.localData[key].length > 0;
+    },
+    toggleEditing() {
+      this.editing = !this.editing;
+
+      // Save when you leave editing
+      if (!this.editing) {
+        this.save();
+      }
     }
   }
 };

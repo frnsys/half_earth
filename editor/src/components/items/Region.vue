@@ -1,14 +1,14 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
-  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
   <template v-if="editing">
     <div>
       <label>
         Name
         <Tip>The name of the region.</Tip>
       </label>
-      <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
     </div>
     <fieldset>
       <div>
@@ -16,7 +16,7 @@
           Income Level
           <Tip>Starting income level for the region. This is used to scale per-capita impacts/demand.</Tip>
         </label>
-        <select v-model="localData.income_level" @change="save" :class="flags('income_level')">
+        <select v-model="localData.income_level" :class="flags('income_level')">
           <option v-for="k in INCOME_LEVELS" :value="k">{{k}}</option>
         </select>
       </div>
@@ -25,21 +25,21 @@
           Health
           <Tip>Starting public health, from 0 to 1, with 1 being everyone in perfect health with perfect access to top-quality healthcare and 0 being no healthcare system whatsoever amidst widespread pollution and contamination.</Tip>
         </label>
-        <input v-model="localData.health" type="number" min="0" @blur="save" :class="flags('health')">
+        <input v-model="localData.health" type="number" min="0" :class="flags('health')">
       </div>
       <div>
         <label>
           Outlook
           <Tip>Starting outlook, from 0 to 1, with 1 meaning people are excited and optimistic about the future, and 0 meaning a region full of hopeless nihilists.</Tip>
         </label>
-        <input v-model="localData.outlook" type="number" min="0" @blur="save" :class="flags('outlook')">
+        <input v-model="localData.outlook" type="number" min="0" :class="flags('outlook')">
       </div>
       <div>
         <label>
           Starting Population
           <Tip>Starting population</Tip>
         </label>
-        <input v-model="localData.population" type="number" min="0" @blur="save" :class="flags('population')">
+        <input v-model="localData.population" type="number" min="0" :class="flags('population')">
       </div>
     </fieldset>
     <div>
@@ -47,7 +47,7 @@
         Flavor Text/Dialogue
         <Tip>Advisor dialogue introducing the event.</Tip>
       </label>
-      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" @blur="save" />
+      <textarea v-model="localData.flavor" placeholder="Flavor text and dialogue" />
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />

@@ -1,14 +1,14 @@
 <template>
 <li class="item" :key="item.id" :id="item.id" ref="root">
   <Flags :invalid="invalid" :questions="questions" />
-  <button class="edit-toggle" @click="() => this.editing = !this.editing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
   <template v-if="editing">
     <div>
       <label>
         Name
         <Tip>The name of the process.</Tip>
       </label>
-      <input class="title" type="text" placeholder="Name" v-model="localData.name" @blur="save" :class="flags('name')" />
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
     </div>
     <fieldset>
       <div>
@@ -16,7 +16,7 @@
           Output
           <Tip>What this output produces.</Tip>
         </label>
-        <select v-model="localData.output" @change="save" :class="flags('output')">
+        <select v-model="localData.output" :class="flags('output')">
           <option v-for="k in Object.keys(OUTPUTS)" :value="k">{{k}} ({{OUTPUTS[k]}})</option>
         </select>
       </div>
@@ -25,7 +25,7 @@
           Feedstock
           <Tip>The main feedstock this process depends on.</Tip>
         </label>
-        <select v-model="localData.feedstock" @change="save" :class="flags('feedstock')">
+        <select v-model="localData.feedstock" :class="flags('feedstock')">
           <option v-for="k in Object.keys(FEEDSTOCKS)" :value="k">{{k}} ({{FEEDSTOCKS[k]}})</option>
         </select>
       </div>
@@ -34,21 +34,21 @@
           Feedstock per output
           <Tip>Amount of feedstock required per unit output</Tip>
         </label>
-        <input type="number" min="0" v-model="localData.feedstock_amount" @change="save" :class="flags('feedstock_amount')" />
+        <input type="number" min="0" v-model="localData.feedstock_amount" :class="flags('feedstock_amount')" />
       </div>
       <div>
         <label>
           Mix Share
           <Tip>The mix share (%) of this process for its output.</Tip>
         </label>
-        <input type="number" min="0" v-model="localData.mix_share" @change="save" :class="flags('mix_share')" />
+        <input type="number" min="0" v-model="localData.mix_share" :class="flags('mix_share')" />
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_locked`">
           Locked
           <Tip>Is this process available to the player at the start?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked" @change="save">
+        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked">
       </div>
     </fieldset>
 
@@ -123,13 +123,13 @@ export default {
   mounted() {
     if (!this.localData.features) {
       this.localData.features = {};
-      this.save();
+      /* this.save(); */
     }
   },
   methods: {
     updateFeature(key, val) {
       this.localData.features[key] = val;
-      this.save();
+      /* this.save(); */
     },
     getFeature(key) {
       return this.localData.features ? this.localData.features[key] : false;
