@@ -11,4 +11,8 @@ function updateTransform(el, updates) {
   el.style.transform = Object.keys(transforms).reduce((acc, k) => acc += `${k}(${transforms[k]}) `, '');
 }
 
-export default {updateTransform};
+function sign(v) {
+  return `${v > 0 ? '+' : ''}${v}`;
+}
+
+export {updateTransform, sign};

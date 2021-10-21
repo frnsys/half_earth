@@ -66,7 +66,7 @@ function uploadImage(img) {
 }
 
 export default {
-  props: ['image'],
+  props: ['image', 'dimensions'],
   data() {
     return {
       state,
@@ -130,11 +130,11 @@ export default {
         'convert', 'input.jpg',
 
         // Scale down to exaggerate dithering effect
-        '-resize', '320x210^',
+        '-resize', `${this.dimensions}^`,
 
         // Crop for consistent sizing
         '-gravity', 'Center',
-        '-extent', '320x210',
+        '-extent', `${this.dimensions}`,
 
         // Apply dither
         '-dither', 'Floyd-Steinberg',
@@ -145,6 +145,7 @@ export default {
         '-filter', 'point',
         '-resize', '200%',
         'output.jpg'];
+
       const processedFiles = await Magick.Call(inputFiles, command);
       const blob = processedFiles[0]['blob'];
       this.$refs.output.src = URL.createObjectURL(blob);

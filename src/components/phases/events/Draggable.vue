@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import util from 'lib/util';
 import animate from 'lib/anim';
+import {updateTransform} from 'lib/util';
 
 export default {
   data() {
@@ -33,7 +33,7 @@ export default {
       // Stop snap-back animation if there is one
       if (this.animation) this.animation.stop();
 
-      util.updateTransform(this.$el, {rotate: '-2deg'});
+      updateTransform(this.$el, {rotate: '-2deg'});
       this.$el.style.cursor = 'grab';
 
       this.pos = {
@@ -62,7 +62,7 @@ export default {
         this.$el.style.top = `${top}px`;
         this.$el.style.left = `${left}px`;
       });
-      util.updateTransform(this.$el, {rotate: '0deg'});
+      updateTransform(this.$el, {rotate: '0deg'});
       this.$emit('dragStop', this);
     }
   }

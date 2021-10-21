@@ -16,62 +16,55 @@
 
     <fieldset>
       <div>
-        <label>
-          Short Name
-          <Tip>The short name of the event to uniquely identify this event.</Tip>
-        </label>
-        <input type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
-      </div>
-      <div v-if="item.type != 'Icon'">
-        <label>
-          Story Arc (optional)
-          <Tip>If the event is part of or triggers an arc, note the arc name here.</Tip>
-        </label>
-        <input type="text" list="arcs" v-model="localData.arc" />
+        <div>
+          <label>
+            Short Name
+            <Tip>The short name of the event to uniquely identify this event.</Tip>
+          </label>
+          <input type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
+        </div>
+        <div>
+          <label>
+            Event Type
+            <Tip>"World" = shows up in the world/event stream; "Planning" = shows up during planning sessions; "Breaks" = shows up between runs; "Icon" = shows up in the world/event stream, but only as an icon.</Tip>
+          </label>
+          <select v-model="localData.type" :class="flags('type')">
+            <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
+          </select>
+        </div>
+        <fieldset>
+          <div v-if="localData.type != 'Icon'">
+            <label>
+              Story Arc (optional)
+              <Tip>If the event is part of or triggers an arc, note the arc name here.</Tip>
+            </label>
+            <input type="text" list="arcs" v-model="localData.arc" />
+          </div>
+          <div v-if="localData.type == 'Icon'">
+            <label>
+              Event Icon
+              <Tip>Filename of the event icon.</Tip>
+            </label>
+            <input type="text" v-model="localData.icon" />
+          </div>
+          <div class="checkbox">
+            <label :for="`${item.id}_locked`">
+              Locked
+              <Tip>Does this event start locked?</Tip>
+            </label>
+            <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked">
+          </div>
+        </fieldset>
       </div>
       <div>
-        <label>
-          Event Type
-          <Tip>"World" = shows up in the world/event stream; "Planning" = shows up during planning sessions; "Breaks" = shows up between runs; "Icon" = shows up in the world/event stream, but only as an icon.</Tip>
-        </label>
-        <select v-model="localData.type" :class="flags('type')">
-          <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
-        </select>
-      </div>
-      <div v-if="item.type == 'Icon'">
-        <label>
-          Event Icon
-          <Tip>Filename of the event icon.</Tip>
-        </label>
-        <input type="text" v-model="localData.icon" />
-      </div>
-      <div class="checkbox">
-        <label :for="`${item.id}_repeats`">
-          Repeats
-          <Tip>Can this event occur more than once?</Tip>
-        </label>
-        <input type="checkbox" :id="`${item.id}_repeats`" v-model="localData.repeats">
-      </div>
-      <div class="checkbox">
-        <label :for="`${item.id}_local`">
-          Local
-          <Tip>Is this event something that happens locally or globally?</Tip>
-        </label>
-        <input type="checkbox" :id="`${item.id}_local`" v-model="localData.local">
-      </div>
-      <div class="checkbox">
-        <label :for="`${item.id}_locked`">
-          Locked
-          <Tip>Does this event start locked?</Tip>
-        </label>
-        <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked">
+        <Image v-if="localData.type != 'Icon'" :image="localData.image" :dimensions="'320x420'" @update="saveData('image', $event)" />
       </div>
     </fieldset>
 
     <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
     <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
 
-    <Dialogue v-if="item.type !== 'Icon'" :id="item.id" :dialogue="localData.dialogue" @update="saveDialogue($event)"/>
+    <Dialogue v-if="localData.type !== 'Icon'" :id="item.id" :dialogue="localData.dialogue" @update="saveDialogue($event)"/>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
   </template>
@@ -81,8 +74,6 @@
       <div class="meta-pill">{{localData.name}}</div>
       <div class="meta-pill type-pill" :class="flags('type')">{{localData.type || 'MISSING TYPE'}}</div>
       <div class="meta-pill arc-pill" v-if="localData.arc">{{localData.arc}}</div>
-      <div class="meta-pill">{{localData.local ? 'Local': 'Global'}}</div>
-      <div class="meta-pill" v-if="localData.repeats">⭯ Repeats</div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
@@ -103,7 +94,11 @@
       <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
       <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
     </div>
-    <DialogueSummary v-if="item.type !== 'Icon'" :dialogue="localData.dialogue" />
+    <div class="item-summary-image" v-if="localData.type != 'Icon' && localData.image">
+      <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
+      <div class="image-attribution">{{localData.image.attribution}}</div>
+    </div>
+    <DialogueSummary v-if="localData.type !== 'Icon'" :dialogue="localData.dialogue" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>

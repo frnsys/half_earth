@@ -216,6 +216,21 @@ const EFFECTS = {
 
   Migration: {
   },
+
+  ProjectRequest: {
+    choices:  ['Implement', 'Stop'],
+    entity: 'Project',
+    params: {
+      'Bounty': Number
+    }
+  },
+  ProcessRequest: {
+    choices: ['Ban', 'Unban'],
+    entity: 'Process',
+    params: {
+      'Bounty': Number
+    }
+  },
 };
 
 const PROBABILITIES = [

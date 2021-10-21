@@ -45,12 +45,12 @@
 </template>
 
 <script>
-import game from '../../game';
-import state from '../../state';
-import Cards from './Cards.vue';
+import game from '/src/game';
+import state from '/src/state';
 import Card from './Card.vue';
+import Cards from './Cards.vue';
 
-// Currently hardcoded,
+// TODO Currently hardcoded,
 // but should probably be determined in some way?
 const PC_COST = 2;
 

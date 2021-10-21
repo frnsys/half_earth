@@ -1,7 +1,7 @@
-import game from '../../game';
-import state from '../../state';
-import Cards from './Cards.vue';
+import game from '/src/game';
+import state from '/src/state';
 import Card from './Card.vue';
+import Cards from './Cards.vue';
 
 export default (type) => ({
   components: {

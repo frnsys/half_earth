@@ -1,4 +1,6 @@
-#[derive(Debug, Copy, Clone)]
+use serde::Serialize;
+
+#[derive(Debug, Copy, Clone, Serialize)]
 pub enum WorldVariable {
     Year,
     Population,
@@ -11,14 +13,14 @@ pub enum WorldVariable {
     Precipitation,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Serialize)]
 pub enum LocalVariable {
     Population,
     Outlook,
     Habitability,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Serialize)]
 pub enum PlayerVariable {
     PoliticalCapital,
 }

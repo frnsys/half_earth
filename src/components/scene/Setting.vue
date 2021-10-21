@@ -1,6 +1,8 @@
 <template>
   <div class="setting">
-    <div class="background" ref="background" :style="{backgroundImage:`url('${background}')`}"></div>
+    <div class="background"
+      ref="background"
+      :style="{backgroundImage:`url('${background}')`}"></div>
   </div>
 </template>
 

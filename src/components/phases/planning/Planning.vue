@@ -1,19 +1,15 @@
 <template>
 <Hud />
-<Interstitial v-if="event" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
+<Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" @select="selectChoice" />
 <div class="planning">
+  <h2>Gosplant</h2>
   <Research v-if="page == PAGES.RESEARCH" @close="page = null" />
   <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
   <Processes v-else-if="page == PAGES.PROCESSES" @close="page = null" />
   <div v-else class="planning--menu">
     <button v-for="p in Object.keys(PAGES)" @click="select(p)">
-      <img v-if="p == 'CONTINUE'" src="/assets/placeholders/earth_win98.png" />
-      <img v-else-if="p == 'POLICIES'" src="/assets/placeholders/policy_win98.png" />
-      <img v-else-if="p == 'RESEARCH'" src="/assets/placeholders/research_win98.png" />
-      <img v-else-if="p == 'INITIATIVES'" src="/assets/placeholders/initiatives_win98.png" />
-      <img v-else-if="p == 'PROCESSES'" src="/assets/placeholders/processes_win98.png" />
-      <img v-else src="/assets/placeholders/chart.png" />
+      <img :src="icon(p)" />
       {{p}}
     </button>
   </div>
@@ -21,14 +17,14 @@
 </template>
 
 <script>
-import game from '../../game';
-import state from '../../state';
+import game from '/src/game';
+import state from '/src/state';
 import Research from './Research.vue';
 import Policies from './Policies.vue';
-import Initiatives from './Initiatives.vue';
 import Processes from './Processes.vue';
-import Hud from '../Hud.vue';
-import EventsMixin from '../EventsMixin';
+import Initiatives from './Initiatives.vue';
+import EventsMixin from 'components/EventsMixin';
+import Hud from 'components/Hud.vue';
 
 const PAGES = {
   RESEARCH: 0,
@@ -48,13 +44,13 @@ export default {
     Initiatives,
     Processes
   },
+  created() {
+    this.PAGES = PAGES;
+  },
   data() {
-    let events = game.rollPlanningEvents();
     return {
-      PAGES,
       page: null,
-      events,
-      eventIdx: events.length > 0 ? 0 : null
+      events: game.rollPlanningEvents()
     }
   },
   methods: {
@@ -63,6 +59,22 @@ export default {
         state.phase = 'EVENTS';
       } else {
         this.page = PAGES[p];
+      }
+    },
+    icon(p) {
+      switch (p) {
+        case 'CONTINUE':
+          return "/assets/placeholders/earth_win98.png";
+        case 'POLICIES':
+          return "/assets/placeholders/policy_win98.png";
+        case 'RESEARCH':
+          return "/assets/placeholders/research_win98.png";
+        case 'INITIATIVES':
+          return "/assets/placeholders/initiatives_win98.png";
+        case 'PROCESSES':
+          return "/assets/placeholders/processes_win98.png";
+        default:
+          return "/assets/placeholders/chart.png";
       }
     }
   }
@@ -75,6 +87,11 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+.planning h2 {
+  text-align: center;
+  font-family: 'Andada Pro';
+  font-weight: normal;
 }
 .planning--menu {
   padding: 1em;

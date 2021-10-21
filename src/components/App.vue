@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import state from '../state';
-import Stream from './events/Stream.vue';
-import Planning from './planning/Planning.vue';
-import Report from './Report.vue';
-import Break from './Break.vue';
+import state from '/src/state';
+import Break from './phases/Break.vue';
+import Report from './phases/Report.vue';
+import Stream from './phases/events/Events.vue';
+import Planning from './phases/planning/Planning.vue';
 
 export default {
   data() {
@@ -19,16 +19,17 @@ export default {
     };
   },
   components: {
+    Break,
+    Report,
     Stream,
     Planning,
-    Report,
-    Break,
   },
 }
 </script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Andada+Pro&display=swap');
 
 * {
   box-sizing: border-box;

@@ -1,12 +1,13 @@
-use crate::game::Game;
+use crate::game::{Game, Request};
 use crate::regions::Region;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock};
 use super::{WorldVariable, LocalVariable, PlayerVariable};
+use serde::Serialize;
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Debug, Clone)]
 pub enum Effect {
     LocalVariable(LocalVariable, f32),
     WorldVariable(WorldVariable, f32),
@@ -22,6 +23,9 @@ pub enum Effect {
     TriggerEvent(usize, usize),
     UnlocksProject(usize),
     UnlocksProcess(usize),
+
+    ProjectRequest(usize, bool, usize),
+    ProcessRequest(usize, bool, usize),
 
     Migration,
     RegionLeave,
@@ -55,7 +59,7 @@ impl Effect {
             }
             Effect::PlayerVariable(var, change) => {
                 match var {
-                    PlayerVariable::PoliticalCapital => game.state.political_capital += *change as usize,
+                    PlayerVariable::PoliticalCapital => game.state.political_capital += *change as isize,
                 }
             },
             Effect::Resource(resource, pct_change) => {
@@ -78,14 +82,20 @@ impl Effect {
             Effect::AddEvent(id) => {
                 game.event_pool.events[*id].locked = false;
             },
-            Effect::TriggerEvent(id, months) => {
-                game.event_pool.queue.push((*id, region_id, *months));
+            Effect::TriggerEvent(id, years) => {
+                game.event_pool.queue_event(*id, region_id, *years);
             },
             Effect::UnlocksProject(id) => {
                 game.state.projects[*id].locked = false;
             },
             Effect::UnlocksProcess(id) => {
                 game.state.processes[*id].locked = false;
+            },
+            Effect::ProjectRequest(id, active, bounty) => {
+                game.state.requests.push((Request::Project, *id, *active, *bounty));
+            },
+            Effect::ProcessRequest(id, active, bounty) => {
+                game.state.requests.push((Request::Process, *id, *active, *bounty));
             },
             Effect::Migration => {
                 if let Some(id) = region_id {

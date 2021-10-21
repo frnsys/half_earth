@@ -4,7 +4,7 @@ use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Output, F
 
 const MIX_CHANGE_SPEED: f32 = 0.1;
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum ProcessFeature {
     BuildsSoil,
     DegradesSoil,

@@ -13,7 +13,7 @@
     </div>
     <div>
       <label>Line</label>
-      <input type="text" placeholder="Dialogue line" v-model="line.text" @blur="update" :class="lineFlag(i, 'text')" />
+      <input type="text" placeholder="Dialogue line" v-model.lazy="line.text" @blur="update" :class="lineFlag(i, 'text')" />
     </div>
     <div class="dialogue-actions">
       <button v-if="localData.lines.length > 1" @click="() => deleteLine(line)">X</button>

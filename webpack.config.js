@@ -62,6 +62,7 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       'lib': path.resolve('./src/lib'),
+      'components': path.resolve('./src/components'),
 
       // Proxy three.js exports to reduce bundle size
       'three$': path.resolve('./src/3d/three.js')

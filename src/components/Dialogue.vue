@@ -2,22 +2,28 @@
 <div class="dialogue" @click="advance" v-if="current">
   <div class="dialogue--speech">
     <div class="dialogue--speaker">
-      <img :src="`/assets/characters/${line.speaker}.png`" onerror="this.src='/assets/placeholders/character.png';" />
+      <img
+        :src="`/assets/characters/${line.speaker}.png`"
+        onerror="this.src='/assets/placeholders/character.png';" />
       <div class="dialogue--speaker-name">{{line.speaker}}</div>
     </div>
-    <div class="dialogue--body" ref="body"></div>
+    <div class="dialogue--body">
+      <div class="dialogue--text" ref="text"></div>
+      <div class="dialogue--effects" v-if="effects && revealed">
+        <div class="dialogue--effect" v-for="effect in effectTexts">
+          {{effect}}
+        </div>
+      </div>
+    </div>
   </div>
   <div class="dialogue--choices">
-    <template v-if="showChoices">
+    <template v-if="revealed && isLastLine">
       <div v-if="current.choices.length === 0" class="dialogue--choice" @click="endDialogue">
-        <p>(Continue)</p>
+        (Continue)
       </div>
       <template v-else v-for="choice, i in current.choices">
-        <div class="dialogue--choice" @click="(ev) => {
-            ev.stopImmediatePropagation();
-            this.selectChoice(i)
-          }">
-          <p>{{choice.text}}</p>
+        <div class="dialogue--choice" @click="(ev) => selectChoice(ev, i)">
+          {{choice.text}}
         </div>
       </template>
     </template>
@@ -26,17 +32,16 @@
 </template>
 
 <script>
-import state from '../state';
+import state from '/src/state';
+import {describeEffect} from '/src/effects';
 
 export default {
-  props: ['dialogue'],
+  props: ['dialogue', 'effects'],
   data() {
     return {
-      state,
-      readyNext: false,
-      showChoices: false,
       lineIdx: 0,
       current: this.dialogue,
+      revealed: false,
     }
   },
   mounted() {
@@ -47,10 +52,9 @@ export default {
   watch: {
     dialogue(newDialogue) {
       if (newDialogue !== null) {
+        this.revealed = false;
         this.current = newDialogue;
         this.lineIdx = 0;
-        this.readyNext = false;
-        this.showChoices = false;
         this.playDialogue();
       }
     }
@@ -71,33 +75,42 @@ export default {
         }
       }
       return text;
+    },
+    effectTexts(effect) {
+      let texts = [];
+      if (this.effects) {
+        this.effects.forEach((e) => {
+          let text = describeEffect(e);
+          if (text) texts.push(text);
+        });
+      }
+      return texts;
     }
   },
   methods: {
+    playDialogue() {
+      this.revealed = false;
+      this.revealText(this.lineText).then(() => {
+        this.revealed = true;
+      });
+    },
     endDialogue() {
       if (this.revealAnim) clearInterval(this.revealAnim);
       this.current = null;
+      this.revealed = false;
       this.$emit('done');
     },
-    playDialogue() {
-      this.readyNext = false;
-      this.revealText(this.lineText).then(() => {
-        if (this.isLastLine) {
-          this.showChoices = true;
-        } else {
-          this.readyNext = true;
-        }
-      });
-    },
-    selectChoice(i) {
+    selectChoice(ev, i) {
+      ev.stopImmediatePropagation();
+
       let choice = this.current.choices[i];
       this.$emit('select', choice.id);
 
-      this.current = this.current.choices[i].dialogue;
-      this.showChoices = false;
-      this.readyNext = false;
-      this.playDialogue();
-      if (!this.current) {
+      this.lineIdx = 0;
+      this.current = choice.dialogue;
+      if (this.current) {
+        this.playDialogue();
+      } else {
         this.endDialogue();
       }
     },
@@ -111,7 +124,7 @@ export default {
             // separate from innerText
             // b/c innerText will strip trailing spaces
             revealed += chars.shift();
-            this.$refs.body.innerText = revealed;
+            this.$refs.text.innerText = revealed;
             if (chars.length == 0) {
               clearInterval(this.revealAnim);
               this.revealAnim = null;
@@ -122,34 +135,28 @@ export default {
     },
     advance() {
       if (this.current === null) return;
-      if (this.readyNext) {
+      if (this.revealed && !this.isLastLine) {
         this.nextLine();
       } else {
         this.skipReveal();
       }
     },
     nextLine() {
-      if (!this.showChoices) {
-        // If this is the last line
-        // and there are no choices to advance
-        // the dialogue further, just end it
-        if (this.lastLine) {
-          this.endDialogue();
-        } else {
-          this.lineIdx++;
-          this.playDialogue();
-        }
+      // If this is the last line
+      // and there are no choices to advance
+      // the dialogue further, just end it
+      if (this.isLastLine && this.current.choices.length === 0) {
+        this.endDialogue();
+      } else {
+        this.lineIdx++;
+        this.playDialogue();
       }
     },
     skipReveal() {
       if (this.revealAnim) clearInterval(this.revealAnim);
       if (this.current !== null) {
-        this.$refs.body.innerText = this.lineText;
-        if (this.isLastLine) {
-          this.showChoices = true;
-        } else {
-          this.readyNext = true;
-        }
+        this.$refs.text.innerText = this.lineText;
+        this.revealed = true;
       }
     }
   },
@@ -168,6 +175,7 @@ export default {
   background: rgba(255,255,255,0.8);
   display: flex;
   flex-direction: column;
+  user-select: none;
 }
 
 .dialogue--speech {
@@ -182,16 +190,24 @@ export default {
   margin: 1em 0;
   padding: 0.5em;
   width: 100%;
-  user-select: none;
+  border-radius: 0.3em;
+  box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
 }
 .dialogue--speaker img {
   width: 72px;
+  display: block;
+  margin: 0 auto;
 }
 .dialogue--speaker {
   position: absolute;
   left: 0;
   bottom: 0;
-  transform: translate(10%, 95%);
+  transform: translate(0%, 95%);
+  background: #222;
+  border-radius: 0.3em;
+  padding: 0.25em;
+  max-width: 82px;
+  box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
 }
 .dialogue--speaker-name {
 	font-size: 0.8em;
@@ -201,6 +217,11 @@ export default {
 	color: #fff;
 	padding: 0 0 0.1em 0;
 	border-radius: 0.2em;
+}
+
+.dialogue--effect {
+  font-size: 0.8em;
+  text-align: right;
 }
 
 .dialogue--choices {
@@ -214,7 +235,9 @@ export default {
   padding: 0.5em;
   cursor: pointer;
   border: 1px solid #000;
+  border-radius: 0.3em;
   user-select: none;
+  box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
 }
 .dialogue--choice:hover {
   background: #FF6B56;

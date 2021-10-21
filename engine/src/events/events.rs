@@ -3,15 +3,13 @@ use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
 
-const MAX_EVENTS_PER_TURN: usize = 5;
-
 #[derive(Debug, Default)]
 pub struct EventPool {
     pub events: Vec<Event>,
 
     // (event id, region id, countdown)
-    pub queue: Vec<(usize, Option<usize>, usize)>,
-    pub triggered: Vec<(usize, Option<usize>)>,
+    pub queue: Vec<(Type, usize, Option<usize>, usize)>,
+    pub triggered: Vec<(Type, usize, Option<usize>)>,
 }
 
 impl EventPool {
@@ -23,13 +21,18 @@ impl EventPool {
         }
     }
 
-    pub fn roll_for_kind<'a>(&'a mut self, kind: Type, state: &State, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
+    pub fn queue_event(&mut self, id: usize, region_id: Option<usize>, years: usize) {
+        let kind = self.events[id].kind;
+        self.queue.push((kind, id, region_id, years));
+    }
+
+    pub fn roll_for_kind<'a>(&'a mut self, kind: Type, state: &State, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
         // Prevent duplicate events
         let mut existing: HashSet<usize> = HashSet::new();
-        for (ev_id, _, _) in &self.queue {
+        for (_, ev_id, _, _) in &self.queue {
             existing.insert(*ev_id);
         }
-        for (ev_id, _, ) in &self.triggered {
+        for (_, ev_id, _, ) in &self.triggered {
             existing.insert(*ev_id);
         }
 
@@ -41,7 +44,7 @@ impl EventPool {
         let mut i = 0;
         while i < self.queue.len() {
             let try_trigger = {
-                let (ev_id, _, countdown) = &mut self.queue[i];
+                let (_, ev_id, _, countdown) = &mut self.queue[i];
                 if self.events[*ev_id].kind == kind {
                     *countdown -= 1;
                     *countdown <= 0
@@ -50,13 +53,15 @@ impl EventPool {
                 }
             };
             if try_trigger {
-                let (ev_id, region_id, _) = self.queue[i];
+                let (_, ev_id, region_id, _) = self.queue[i];
                 let ev = &mut self.events[ev_id];
                 if ev.roll(state, region_id, rng) {
-                    if !ev.repeats {
+                    // All events except
+                    // for Icon events don't repeat
+                    if ev.kind != Type::Icon {
                         ev.locked = true;
                     }
-                    self.triggered.push((ev_id, region_id));
+                    self.triggered.push((ev.kind, ev_id, region_id));
                 }
                 self.queue.remove(i);
             } else {
@@ -69,21 +74,26 @@ impl EventPool {
         // i.e. we immediately trigger them if possible.
         for ev_id in valid_ids {
             let ev = &mut self.events[ev_id];
-            if ev.local {
+            // Only Icon-type events are local
+            if ev.kind == Type::Icon {
                 for region in &state.world.regions {
                     if ev.roll(state, Some(region.id), rng) {
-                        if !ev.repeats {
+                        // All events except
+                        // for Icon events don't repeat
+                        if ev.kind != Type::Icon {
                             ev.locked = true;
                         }
-                        self.triggered.push((ev_id, Some(region.id)));
+                        self.triggered.push((ev.kind, ev_id, Some(region.id)));
                     }
                 }
             } else {
                 if ev.roll(state, None, rng) {
-                    if !ev.repeats {
+                    // All events except
+                    // for Icon events don't repeat
+                    if ev.kind != Type::Icon {
                         ev.locked = true;
                     }
-                    self.triggered.push((ev_id, None));
+                    self.triggered.push((ev.kind, ev_id, None));
                 }
             }
         }
@@ -91,10 +101,24 @@ impl EventPool {
         // Get the first MAX_EVENTS_PER_TURN triggered events
         let mut happening = Vec::new();
         self.triggered.shuffle(rng);
-        let n = MAX_EVENTS_PER_TURN.min(self.triggered.len());
-        for (id, region_id) in self.triggered.drain(..n) {
-            happening.push((&self.events[id], region_id));
+        let n = self.triggered.len();
+
+        let mut i = 0;
+        while i < self.triggered.len() {
+            let (k, ev_id, region_id) = self.triggered[i];
+            if k == kind {
+                happening.push((&self.events[ev_id], region_id));
+                self.triggered.remove(i);
+                if let Some(n) = limit {
+                    if happening.len() >= n {
+                        break;
+                    }
+                }
+            } else {
+                i += 1;
+            }
         }
+
         happening
     }
 }
@@ -115,10 +139,6 @@ pub struct Event {
     /// something else to enable it.
     pub locked: bool,
 
-    /// Does this event happen locally
-    /// (i.e. in a region) or globally?
-    pub local: bool,
-
     /// An id linking this event
     /// to user-facing details
     /// (e.g. event text, etc).
@@ -126,10 +146,6 @@ pub struct Event {
 
     /// This event's type
     pub kind: Type,
-
-    /// If this event can repeat or
-    /// if it can only happens once.
-    pub repeats: bool,
 
     /// The probabilities that
     /// can trigger this event.
@@ -201,9 +217,7 @@ mod test {
             id: 0,
             name: "Test Event A",
             kind: Type::World,
-            repeats: true,
             locked: false,
-            local: false,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -222,9 +236,7 @@ mod test {
             id: 1,
             name: "Test Event B",
             kind: Type::World,
-            repeats: true,
             locked: false,
-            local: false,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -245,19 +257,18 @@ mod test {
         };
 
         let mut state = State::default();
-        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
 
         // Only event B should happen
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event B");
 
         // But if we set it so that event A's first condition
-        // is met, it should also happen
+        // is met, it should happen
         state.world.year = 10;
-        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
-        assert_eq!(events.len(), 2);
+        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
+        assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
-        assert_eq!(events[1].0.name, "Test Event B");
     }
 
     #[test]
@@ -266,13 +277,8 @@ mod test {
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
-            kind: Type::World,
-            repeats: true,
+            kind: Type::Icon,
             locked: false,
-
-            // Note: set local to true so we know
-            // to check against regions
-            local: true,
 
             choices: vec![],
             effects: vec![],
@@ -315,14 +321,14 @@ mod test {
             base_habitability: 0.,
             base_contentedness: 0.,
         }];
-        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
+        let events = pool.roll_for_kind(Type::Icon, &state, None, &mut rng);
 
         // No events should happen
         assert_eq!(events.len(), 0);
 
         // Set one region to satisfy conditions
         state.world.regions[1].population = 10.;
-        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
+        let events = pool.roll_for_kind(Type::Icon, &state, None, &mut rng);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[0].1, Some(1));
@@ -335,12 +341,10 @@ mod test {
             id: 0,
             name: "Test Event A",
             kind: Type::World,
-            repeats: true,
 
             // Note: locked so it doesn't trigger on its own
             locked: true,
 
-            local: false,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -350,18 +354,18 @@ mod test {
         }];
         let mut pool = EventPool {
             events,
-            queue: vec![(0, None, 2)],
+            queue: vec![(Type::World, 0, None, 2)],
             triggered: vec![],
         };
 
         let state = State::default();
 
         // No events should happen
-        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
         assert_eq!(events.len(), 0);
 
         // Countdown finished
-        let events = pool.roll_for_kind(Type::World, &state, &mut rng);
+        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
         assert_eq!(events.len(), 1);
     }
 }

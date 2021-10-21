@@ -16,7 +16,9 @@ const biomeLookupSrc = '/assets/surface/biomes.png';
 // Base emissions scenario for Hector
 const baseEmissionsScenario = '/assets/hector/rcp45.to_2050.json';
 
+// Earth surface scaling
 const scale = 4;
+
 const hectorOutputVars = {
   'temperature.Tgav': {
     'component': 'temperature',
@@ -109,7 +111,7 @@ class Surface {
         this._hectorRun;
       });
 
-    return ready.then((run) => {
+    return ready.then(() => {
       // Calculate new avg global temp
       let results = this._hectorRun(this.emissions);
       let avgGlobalTemps = results['temperature.Tgav'];

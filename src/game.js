@@ -5,6 +5,8 @@ import {GameInterface, Difficulty} from 'half-earth-engine';
 // also; this needs to be re-created for each run.
 let game = GameInterface.new(Difficulty.Normal);
 
+// Get the updated game state,
+// and compute some additional variables
 function updateState() {
   state.gameState = game.state();
 
@@ -16,27 +18,29 @@ function updateState() {
 }
 
 
+// Start a new run
 function newRun() {
   game = GameInterface.new(Difficulty.Normal);
   updateState();
 }
 
+// Step the game by one year
 function step() {
   let events = game.step();
   updateState();
   return events;
 }
 
-function selectChoice(eventId, regionId, choiceId) {
-  game.set_event_choice(eventId, regionId, choiceId);
+function changePoliticalCapital(amount) {
+  game.change_political_capital(amount);
   updateState();
 }
 
+// Set point allocation for a project
 function setProjectPoints(projectId, points) {
   game.set_project_points(projectId, points);
   updateState();
 }
-
 
 function startProject(projectId) {
   game.start_project(projectId);
@@ -60,25 +64,45 @@ function unbanProcess(processId) {
 
 function rollPlanningEvents() {
   let events = game.roll_planning_events();
-  // updateState();
   return events;
 }
 
 function rollBreaksEvents() {
   let events = game.roll_breaks_events();
-  // updateState();
   return events;
 }
 
 function rollIconEvents() {
   let events = game.roll_icon_events();
-  // updateState();
   return events;
 }
 
+function rollWorldEvents() {
+  let events = game.roll_world_events();
+  return events;
+}
+
+// Select a response to an event
+function selectChoice(eventId, regionId, choiceId) {
+  game.set_event_choice(eventId, regionId, choiceId);
+  updateState();
+}
+
+// Apply event effects
 function applyEvent(eventId, regionId) {
   game.apply_event(eventId, regionId);
   updateState();
+}
+
+// Check what requests were filled
+function checkRequests() {
+  return game.check_requests();
+}
+
+function completedProjects() {
+  let completed = game.collect_recently_completed();
+  updateState();
+  return completed;
 }
 
 function setTgav(tgav) {
@@ -87,8 +111,10 @@ function setTgav(tgav) {
 }
 
 updateState();
-export default {newRun, step, selectChoice,
+
+export default {newRun, step, setTgav,
+  changePoliticalCapital,
+  banProcess, unbanProcess,
   setProjectPoints, startProject, stopProject,
-  banProcess, unbanProcess, setTgav,
-  rollPlanningEvents, rollBreaksEvents, rollIconEvents,
-  applyEvent};
+  rollPlanningEvents, rollBreaksEvents, rollIconEvents, rollWorldEvents,
+  selectChoice, applyEvent, checkRequests, completedProjects};

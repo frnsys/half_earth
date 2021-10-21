@@ -3,7 +3,7 @@
   <img class="image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
   <div class="image-attribution-preview">{{localData.attribution}}</div>
   <button @click="editing = true">✎</button>
-  <ImageEditor v-if="editing" :image="localData" @update="update($event)" @close="editing = false" />
+  <ImageEditor v-if="editing" :image="localData" :dimensions="dimensions" @update="update($event)" @close="editing = false" />
 </div>
 </template>
 
@@ -11,7 +11,7 @@
 import ImageEditor from './ImageEditor.vue';
 
 export default {
-  props: ['image'],
+  props: ['image', 'dimensions'],
   components: {
     ImageEditor
   },

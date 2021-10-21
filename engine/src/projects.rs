@@ -33,8 +33,11 @@ impl Default for Type {
     }
 }
 
+#[derive(Serialize)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
+
+    #[serde(skip_serializing)]
     pub probability: Probability,
 }
 
@@ -58,7 +61,7 @@ pub struct Project {
     #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
 
-    #[serde(skip_serializing)]
+    // #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
 }
 

@@ -1,44 +1,45 @@
+// Mixin for components that need to load and present events
 import game from '/src/game';
-import regions from '../../assets/content/regions.json';
 import Dialogue from './Dialogue.vue'
-import Interstitial from './interstitials/Interstitial.vue';
+import Scene from './scene/Scene.vue';
+import regions from '/assets/content/regions.json';
 
 export default {
   data() {
     return {
       events: [],
       event: null,
-      eventIdx: null,
     };
   },
   components: {
+    Scene,
     Dialogue,
-    Interstitial,
   },
-  mounted() {
-    this.showEvent();
+  computed: {
+    hasEvent() {
+      return this.events.length > 0;
+    }
   },
   methods: {
+    // Load frontend event data
     async loadEvent(id) {
       return await fetch(`/assets/content/events/${id}.json`)
         .then((resp) => resp.json());
     },
     nextEvent() {
-      if (this.eventIdx < this.events.length - 1) {
-        this.eventIdx++;
+      this.event = null;
+      if (this.hasEvent) {
         this.showEvent();
       } else {
-        this.event = null;
-        this.eventIdx = null;
+        if (this.afterEvents) this.afterEvents();
       }
     },
     showEvent() {
-      if (this.eventIdx !== null && this.events.length > 0) {
-        let [eventId, regionId] = this.events[this.eventIdx];
-        console.log(`Loading event id: ${eventId}`);
+      if (this.hasEvent) {
+        let [eventId, regionId] = this.events.shift();
         this.loadEvent(eventId).then((ev) => {
-          console.log(ev);
           this.event = ev;
+          console.log(this.event);
 
           // Set context variables
           if (this.event.dialogue) {

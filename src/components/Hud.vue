@@ -1,6 +1,7 @@
 <template>
   <div class="hud">
     <div>{{state.gameState.world.year}}</div>
+    <div>{{state.gameState.political_capital}}PC</div>
     <div>
       <img src="/assets/icons/extinction.png">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
@@ -18,6 +19,9 @@
 
 <script>
 import state from '../state';
+
+// TODO tips on tap of hud icons
+
 export default {
   data() {
     return {

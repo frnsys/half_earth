@@ -1,43 +1,32 @@
 import * as THREE from 'three';
 import Hexasphere from 'hexasphere.js';
+import iconNames from '/assets/content/icons.json';
+import debug from '../debug';
 
-// Show hex tiles and indices
-const showTiles = false;
-
-const tooltip = document.createElement('div');
-tooltip.id = 'tooltip';
-document.body.appendChild(tooltip);
-tooltip.innerText = 'hello world\ntesting'; // TODO testing
-tooltip.style.padding = '0.25em 0.5em';
-tooltip.style.background = '#fff';
-tooltip.style.borderRadius = '0.5em';
-tooltip.style.textAlign = 'center';
-tooltip.style.position = 'fixed';
-tooltip.style.display = 'none';
-
-const texLoader = new THREE.TextureLoader();
 const raycaster = new THREE.Raycaster();
 
 // For showing tile indices
 const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true});
 hexMaterial.opacity = 0.5;
-const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: true});
+
+// For displaying text
 const loader = new THREE.FontLoader();
 let threeFont;
-loader.load('assets//fonts/helvetiker_bold.typeface.json', (font) => {
+loader.load('/assets/fonts/helvetiker_bold.typeface.json', (font) => {
   threeFont = font;
 });
+const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: true});
 
-const iconNames = ['alert', 'advisor',
-  'wildfires_1', 'wildfires_2', 'wildfires_3',
-  'flood_1', 'flood_2', 'flood_3',
-  'hurricane_1', 'hurricane_2', 'hurricane_3'];
+// Load icons
+const texLoader = new THREE.TextureLoader();
 const icons = iconNames.reduce((acc, name) => {
   const map = texLoader.load(`./assets/icons/${name}.png`);
   const iconMat = new THREE.SpriteMaterial({map});
   acc[name] = iconMat;
   return acc;
 }, {});
+
+const vertAxis = new THREE.Vector3(0,1,0);
 
 function vector(p1, p2) {
   return {
@@ -59,14 +48,15 @@ function calculateSurfaceNormal(p1, p2, p3) {
 }
 
 class HexSphere {
-  constructor(scene, radius, subdivisions, tileWidth) {
+  constructor(scene, parent, radius, subdivisions, tileWidth) {
     this.selectables = [];
     this.scene = scene;
+    this.parent = parent;
     this.hexasphere = new Hexasphere(radius, subdivisions, tileWidth);
     this.hexasphere.tiles.forEach((tile, idx) => {
       // We don't really need to render the hexes,
       // and not rendering them saves many FPS
-      if (showTiles) {
+      if (debug.showTiles) {
         let geometry = new THREE.BufferGeometry();
         let vertices = new Float32Array(tile.boundary.map((bp) => [bp.x, bp.y, bp.z]).flat());
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
@@ -90,7 +80,7 @@ class HexSphere {
         }
         let mesh = new THREE.Mesh(geometry, hexMaterial);
         tile.mesh = mesh;
-        scene.add(tile.mesh);
+        parent.add(tile.mesh);
       }
 
       let bnd = tile.boundary;
@@ -100,7 +90,7 @@ class HexSphere {
       let center = tile.centerPoint;
       tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
 
-      if (showTiles) {
+      if (debug.showTiles) {
         this.showTextAt(`${idx}`, idx);
       }
     });
@@ -109,31 +99,7 @@ class HexSphere {
     this.mouse = new THREE.Vector2();
     scene.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     scene.renderer.domElement.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-    this.scene.controls.onUpdate.push(() => {
-      tooltip.style.display = 'none';
-    });
     this._onClick = [];
-  }
-
-  showTextAt(text, hexIdx, size) {
-    size = size || 0.2;
-    let tile = this.hexasphere.tiles[hexIdx];
-    const textGeom = new THREE.TextGeometry(text, {
-      size,
-      font: threeFont,
-      height: 0.05,
-      curveSegments: 2,
-      bevelEnabled: false,
-    });
-    textGeom.center();
-    let label = new THREE.Mesh(textGeom, textMaterial.clone());
-    label.position.copy(
-      tile.centerPointVec.add(tile.normal.multiplyScalar(1.1)));
-    this.scene.add(label);
-    label.lookAt(tile.normal);
-    let axis = new THREE.Vector3(0,1,0);
-    label.rotateOnAxis(axis, Math.PI);
-    return label;
   }
 
   get tiles() {
@@ -145,8 +111,6 @@ class HexSphere {
   }
 
   showIcon(iconName, hexIdx) {
-    console.log(`hexIdx: ${hexIdx}`);
-    console.log(`n tiles: ${this.hexasphere.tiles.length}`);
     let tile = this.hexasphere.tiles[hexIdx];
     let iconMat = icons[iconName];
     const sprite = new THREE.Sprite(iconMat);
@@ -154,9 +118,35 @@ class HexSphere {
     sprite.position.copy(
       tile.centerPointVec.add(tile.normal.multiplyScalar(2.)));
 
-    this.scene.add(sprite);
+    this.parent.add(sprite);
     this.selectables.push(sprite);
     return sprite;
+  }
+
+  showTextAt(text, hexIdx, size) {
+    size = size || 0.2;
+
+    let tile = this.hexasphere.tiles[hexIdx];
+
+    const textGeom = new THREE.TextGeometry(text, {
+      size,
+      font: threeFont,
+      height: 0.05,
+      curveSegments: 2,
+      bevelEnabled: false,
+    });
+
+    // Center pivot
+    textGeom.center();
+
+    let label = new THREE.Mesh(textGeom, textMaterial.clone());
+
+    label.position.copy(
+      tile.centerPointVec.add(tile.normal.multiplyScalar(1.1)));
+    label.lookAt(tile.normal);
+    label.rotateOnAxis(vertAxis, Math.PI);
+    this.parent.add(label);
+    return label;
   }
 
   setMouse(ev) {
@@ -176,31 +166,6 @@ class HexSphere {
       const mesh = intersects[0].object;
       const pos = mesh.position;
       this.centerOnPosition(pos);
-      // let tile = mesh.parent;
-      // tile.material = hexMaterialFocus;
-      // this._onClick.forEach((fn) => fn(tile));
-
-      // TODO this gets the correct position but is hacky
-      // WE can just flag an active tooltip and update its position
-      // to the parent mesh on render
-      setTimeout(() => {
-        let screenPos = new THREE.Vector3();
-        screenPos = screenPos.setFromMatrixPosition(mesh.matrixWorld);
-        screenPos.project(this.scene.camera);
-
-        let width = this.scene.renderer.domElement.clientWidth;
-        let height = this.scene.renderer.domElement.clientHeight;
-        let widthHalf = width / 2;
-        let heightHalf = height / 2;
-
-        screenPos.x = (screenPos.x * widthHalf) + widthHalf;
-        screenPos.y = - (screenPos.y * heightHalf) + heightHalf;
-        screenPos.z = 0;
-        // tooltip.style.display = 'block'; // TODO not using tooltip at the moment
-        let box = tooltip.getBoundingClientRect();
-        tooltip.style.top = `${screenPos.y - box.height}px`;
-        tooltip.style.left = `${screenPos.x - box.width/2}px`;
-      }, 100);
     }
   }
 

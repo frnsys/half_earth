@@ -78,14 +78,17 @@ class Globe {
       fragmentShader: globeFrag
     });
 
-    const sphere = new THREE.Mesh(
+    // Create the earth
+    this.sphere = new THREE.Mesh(
       new THREE.SphereGeometry(5, 32, 32),
       this.material
     );
-    this.scene.add(sphere);
+    this.scene.add(this.sphere);
 
-    this.hexsphere = new HexSphere(this.scene, 5.2, 8, 0.98);
+    // Set up hexsphere for locating icons
+    this.hexsphere = new HexSphere(this.scene, this.sphere, 5.2, 8, 0.98);
 
+    // Create the clouds layer
     this.cloudsMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: {
@@ -100,7 +103,7 @@ class Globe {
       new THREE.SphereGeometry(5.3, 32, 32),
       this.cloudsMaterial
     );
-    this.scene.add(clouds);
+    this.sphere.add(clouds);
 
     const canvas = this.scene.renderer.domElement;
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
@@ -124,7 +127,8 @@ class Globe {
     // this.surfaceTexture.needsUpdate = true;
   }
 
-  // Calculate world update.
+  // Calculate new temperature anomaly
+  // and update surface biomes/coloring accordingly.
   // See comments for Surface.addEmissions
   // for what `emissions` should look like.
   async addEmissionsThenUpdate(emissions) {
@@ -135,23 +139,24 @@ class Globe {
     return tgav;
   }
 
+  // Show an icon and ping text
+  // at the specified hex
   showIconText(icon, text, hexIdx) {
     let iconMesh = this.hexsphere.showIcon(icon, hexIdx);
     let textMesh = this.hexsphere.showTextAt(text, hexIdx, 0.5);
     this.pings.push({text: textMesh, icon: iconMesh});
   }
 
-  render(timestamp) {
-    if (debug.fps) stats.begin();
-    this.scene.render();
-    if (this.cloudsMaterial) {
-      this.cloudsMaterial.uniforms.time.value = timestamp;
-    }
-    if (debug.fps) stats.end();
+  tickPings() {
+    // Update pings
     this.pings = this.pings.filter(({text, icon}) => {
+      // Keep text facing the camera
       text.lookAt(this.scene.camera.position);
+
+      // Move text pings up and fade out
       text.position.y += 0.02;
       text.material.opacity -= 0.005;
+
       let done = text.material.opacity <= 0;
       if (done) {
         text.geometry.dispose();
@@ -163,6 +168,26 @@ class Globe {
       }
       return !done;
     });
+  }
+
+  render(timestamp) {
+    if (debug.fps) stats.begin();
+
+    this.scene.render();
+
+    // Animate clouds
+    if (this.cloudsMaterial) {
+      this.cloudsMaterial.uniforms.time.value = timestamp;
+    }
+
+    // Rotate world
+    if (this.sphere) {
+      this.sphere.rotation.y += 0.003;
+    }
+    this.tickPings();
+
+    if (debug.fps) stats.end();
+
     requestAnimationFrame(this.render.bind(this));
   }
 }

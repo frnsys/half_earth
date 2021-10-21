@@ -3,12 +3,12 @@ pub mod kinds;
 mod utils;
 mod projects;
 mod world;
-mod events;
 mod industries;
 mod consts;
 mod regions;
 mod content;
 pub mod game;
+pub mod events;
 pub mod surface;
 pub mod production;
 

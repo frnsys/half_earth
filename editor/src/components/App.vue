@@ -43,14 +43,15 @@
 </div>
 <div class="sidebar">
   <button @click="() => addNew(type)">Add {{type}}</button>
-  <div v-if="filterType" class="filters--header">
-    <div>Filter by {{filterType}}</div>
-    <div class="toggle" @click="() => filtersOpen = !filtersOpen">{{filtersOpen ? 'Hide' : 'Show'}}</div>
+  <div v-for="f, i in filters">
+    <div class="filters--header">
+      <div>Filter by {{f.name}}</div>
+    </div>
+    <ul class="filters">
+      <li :class="{selected: filter[i] == null}" @click="() => filter[i] = null">All</li>
+      <li v-for="v in f.values" :class="{selected: filter[i] == v}" @click="() => filter[i] = v">{{v}}</li>
+    </ul>
   </div>
-  <ul class="filters" v-if="filtersOpen && filterType">
-    <li :class="{selected: filter == null}" @click="() => filter = null">All</li>
-    <li v-for="f in filters" :class="{selected: filter == f}" @click="() => filter = f">{{f}}</li>
-  </ul>
 </div>
 
 <ul id="toc" v-if="tocOpen">
@@ -110,8 +111,7 @@ export default {
       type,
       loaded: false,
       tocOpen: true,
-      filtersOpen: true,
-      filter: null,
+      filter: [],
       state,
       calibrationOpen: false
     }
@@ -145,16 +145,19 @@ export default {
   },
   watch: {
     type(_) {
-      this.filter = null;
+      this.filter = this.filters.map(() => null);
     }
   },
   computed: {
     itemsOfCurrentType() {
       return this.itemsOfType(this.type)
-      .filter((i) => {
-          return this.filter == null
-            || i[this.filterKey] == this.filter
-            || this.filter == '(none)' && (i[this.filterKey] === undefined || i[this.filterKey] === '');
+      .filter((item) => {
+          return this.filters.every((f, i) => {
+            let val = this.filter[i];
+            return val == null
+            || item[f.key] == val
+            || val == '(none)' && (i[f.key] === undefined || i[f.key] === '');
+          });
         })
         .sort((a, b) => a._created < b._created ? 1 : -1);
     },
@@ -163,38 +166,30 @@ export default {
         .filter((i) => i._type == 'Event' && i.arc).map((e) => e.arc);
       return [...new Set(arcs)];
     },
-    filterKey() {
-      switch (this.type) {
-        case 'Event':
-          return 'arc';
-        case 'Project':
-          return 'type';
-        case 'Process':
-          return 'output';
-        default:
-          return '';
-      }
-    },
-    filterType() {
-      switch (this.type) {
-        case 'Event':
-          return 'story arc';
-        case 'Project':
-          return 'project type';
-        case 'Process':
-          return 'output type';
-        default:
-          return '';
-      }
-    },
     filters() {
       switch (this.type) {
         case 'Event':
-          return ['(none)'].concat(this.storyArcs);
+          return [{
+            key: 'type',
+            name: 'type',
+            values: consts.EVENT_TYPES,
+          }, {
+            key: 'arc',
+            name: 'story arc',
+            values: ['(none)'].concat(this.storyArcs),
+          }]
         case 'Project':
-          return ['Initiative', 'Research', 'Policy'];
+          return [{
+            key: 'type',
+            name: 'project type',
+            values: ['Initiative', 'Research', 'Policy']
+          }]
         case 'Process':
-          return Object.keys(consts.OUTPUTS);
+          return [{
+            key: 'output',
+            name: 'output type',
+            values: Object.keys(consts.OUTPUTS)
+          }]
         default:
           return [];
       }

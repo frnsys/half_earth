@@ -17,6 +17,12 @@ pub enum Difficulty {
     Hard
 }
 
+#[derive(Clone, Serialize)]
+pub enum Request {
+    Project,
+    Process
+}
+
 #[wasm_bindgen]
 pub struct GameInterface {
     rng: SmallRng,
@@ -41,6 +47,10 @@ impl GameInterface {
 
     pub fn state(&self) -> Result<JsValue, JsValue> {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
+    }
+
+    pub fn change_political_capital(&mut self, amount: isize) {
+        self.game.state.political_capital += amount;
     }
 
     pub fn set_event_choice(&mut self, event_id: usize, region_id: Option<usize>, choice_id: usize) {
@@ -83,19 +93,31 @@ impl GameInterface {
     }
 
     pub fn roll_icon_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Icon, &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Icon, None, &mut self.rng))?)
+    }
+
+    pub fn roll_world_events(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::World, Some(1), &mut self.rng))?)
     }
 
     pub fn roll_planning_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, Some(2), &mut self.rng))?)
     }
 
     pub fn roll_breaks_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Breaks, &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Breaks, Some(2), &mut self.rng))?)
     }
 
     pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
         self.game.apply_event(event_id, region_id);
+    }
+
+    pub fn check_requests(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.state.check_requests())?)
+    }
+
+    pub fn collect_recently_completed(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.collect_recently_completed(&mut self.rng))?)
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {
@@ -119,8 +141,11 @@ impl Game {
             projects: content::projects(),
             processes: content::processes(),
             industries: content::industries(),
-            flags: Vec::new(),
+            recently_completed: Vec::new(),
+
             runs: 0,
+            flags: Vec::new(),
+            requests: Vec::new(),
 
             output: outputs!(),
             output_modifier: outputs!(
@@ -158,18 +183,13 @@ impl Game {
         }
     }
 
-    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
-        let effects = self.state.step(rng);
-        for (effect, region_id) in effects {
-            effect.apply(self, region_id);
-        }
-
-        self.roll_events_of_kind(EventType::World, rng)
+    pub fn step(&mut self, rng: &mut SmallRng) {
+        self.state.step(rng);
     }
 
-    pub fn roll_events_of_kind(&mut self, kind: EventType, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
+    pub fn roll_events_of_kind(&mut self, kind: EventType, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
         // Roll for events and collect effects
-        let events = self.event_pool.roll_for_kind(kind, &self.state, rng);
+        let events = self.event_pool.roll_for_kind(kind, &self.state, limit, rng);
         events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect()
     }
 
@@ -211,6 +231,33 @@ impl Game {
         // }
         effects.clone()
     }
+
+    pub fn collect_recently_completed(&mut self, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
+        let results = self.state.collect_recently_completed(rng);
+
+        // New effects to apply are gathered here.
+        // (Mostly to avoid borrowing conflicts)
+        // (Effect, Option<RegionId>)
+        let mut effects: Vec<(Effect, Option<usize>)> = Vec::new();
+        for (id, outcome_id) in &results {
+            let project = &self.state.projects[*id];
+            for effect in &project.effects {
+                effects.push((effect.clone(), None));
+            }
+            if let Some(i) = outcome_id {
+                let outcome = &project.outcomes[*i];
+                for effect in &outcome.effects {
+                    effects.push((effect.clone(), None));
+                }
+            }
+        }
+
+        for (effect, region_id) in effects {
+            effect.apply(self, region_id);
+        }
+
+        results
+    }
 }
 
 #[derive(Default, Serialize)]
@@ -221,7 +268,18 @@ pub struct State {
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
-    pub political_capital: usize,
+    pub political_capital: isize,
+
+    // Recently completed projects
+    pub recently_completed: Vec<usize>,
+
+    // Requests: (
+    //  request type,
+    //  entity id,
+    //  state (active: true/false),
+    //  political capital bounty
+    // )
+    pub requests: Vec<(Request, usize, bool, usize)>,
 
     // Modifiers should start as all 1.
     pub output: OutputMap<f32>,
@@ -262,7 +320,7 @@ impl State {
         (output_demand * self.output_demand_modifier, resources_demand)
     }
 
-    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<(Effect, Option<usize>)> {
+    pub fn step(&mut self, rng: &mut SmallRng) {
         let (output_demand, resources_demand) = self.calculate_demand();
         self.output_demand = output_demand;
         self.resources_demand = resources_demand;
@@ -291,7 +349,7 @@ impl State {
         self.world.co2_emissions = byproducts.co2;
         self.world.ch4_emissions = byproducts.ch4;
         self.world.n2o_emissions = byproducts.n2o;
-        // TODO biodiversity pressure/extinction rate...how to do that?
+        self.world.extinction_rate = self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.;
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't
@@ -312,11 +370,6 @@ impl State {
         // Update mixes according to resource scarcity
         update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights);
 
-        // New effects to apply are gathered here.
-        // (Mostly to avoid borrowing conflicts)
-        // (Effect, Option<RegionId>)
-        let mut effects: Vec<(Effect, Option<usize>)> = Vec::new();
-
         // Advance projects
         for project in self.projects.iter_mut().filter(|p| match p.status {
             Status::Building => true,
@@ -324,25 +377,53 @@ impl State {
         }) {
             let completed = project.build();
             if completed {
-                for effect in &project.effects {
-                    effects.push((effect.clone(), None));
-                }
-            }
-        }
-
-        for project in &self.projects {
-            match project.roll_outcome(self, rng) {
-                Some((outcome, _i)) => {
-                    for effect in &outcome.effects {
-                        effects.push((effect.clone(), None));
-                    }
-                },
-                None => ()
+                self.recently_completed.push(project.id);
             }
         }
 
         self.world.year += 1;
+    }
 
-        effects
+    pub fn check_requests(&mut self) -> Vec<(Request, usize, bool, usize)> {
+        let mut i = 0;
+        let mut completed = Vec::new();
+        while i < self.requests.len() {
+            let (kind, id, active, bounty) = self.requests[i].clone();
+            let complete = match kind {
+                Request::Project => {
+                    let project = &self.projects[id];
+                    (active && (project.status == Status::Active || project.status == Status::Finished))
+                    || (!active && (project.status == Status::Inactive || project.status == Status::Halted))
+                },
+                Request::Process => {
+                    let process = &self.processes[id];
+                    (active && !process.banned)
+                    || (!active && process.banned)
+                }
+            };
+            if complete {
+                self.requests.remove(i);
+                completed.push((kind, id, active, bounty));
+            } else {
+                i += 1;
+            }
+        }
+        completed
+    }
+
+    /// Drain recently completed projects and roll for their outcomes.
+    /// Returns a vec of (project id, outcome id)
+    pub fn collect_recently_completed(&mut self, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
+        let ids: Vec<usize> = self.recently_completed.drain(..).collect();
+
+        ids.into_iter().map(|id| {
+            let project: &Project = &self.projects[id];
+            match project.roll_outcome(self, rng) {
+                Some((_outcome, i)) => {
+                    (id, Some(i))
+                },
+                None => (id, None)
+            }
+        }).collect()
     }
 }

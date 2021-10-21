@@ -2065,8 +2065,6 @@ pub fn events() -> Vec<Event> {
             name: "Heatwaves",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -2105,8 +2103,6 @@ pub fn events() -> Vec<Event> {
             name: "Crop Failures",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
 
             ],
@@ -2122,8 +2118,6 @@ pub fn events() -> Vec<Event> {
             name: "Great Barrier Reef Dead",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
@@ -2157,8 +2151,6 @@ pub fn events() -> Vec<Event> {
             name: "Novel Disease",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -5.0)
             ],
@@ -2197,8 +2189,6 @@ pub fn events() -> Vec<Event> {
             name: "Species Flourishing",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
@@ -2225,8 +2215,6 @@ pub fn events() -> Vec<Event> {
             name: "Species Collapse",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
@@ -2254,8 +2242,6 @@ pub fn events() -> Vec<Event> {
             name: "Land restoration programs backtrack",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 1.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
@@ -2277,8 +2263,6 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Protest",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: false,
             effects: vec![
                 Effect::AddEvent(8)
             ],
@@ -2334,8 +2318,6 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Riots",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::AddEvent(10)
             ],
@@ -2362,8 +2344,6 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - Intro",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::AddEvent(13),
                 Effect::WorldVariable(WorldVariable::Emissions, 1.0),
@@ -2401,8 +2381,6 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Revolts",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: false,
             effects: vec![
                 Effect::TriggerEvent(12, 4)
             ],
@@ -2429,8 +2407,6 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - Smoke",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: false,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.05),
                 Effect::Output(Output::PlantCalories, -0.02),
@@ -2453,8 +2429,6 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Secession",
             kind: EventType::Planning,
             locked: true,
-            local: true,
-            repeats: false,
             effects: vec![
                 Effect::PlayerVariable(PlayerVariable::PoliticalCapital, -100.0),
                 Effect::RegionLeave
@@ -2476,8 +2450,6 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - Ancient Loss",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
@@ -2498,8 +2470,6 @@ pub fn events() -> Vec<Event> {
             name: "Wet-Bulb Event",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -15.0)
             ],
@@ -2526,8 +2496,6 @@ pub fn events() -> Vec<Event> {
             name: "Permafrost Melting",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 100.0),
                 Effect::AddEvent(16)
@@ -2555,8 +2523,6 @@ pub fn events() -> Vec<Event> {
             name: "Permafrost Contagion",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
@@ -2577,8 +2543,6 @@ pub fn events() -> Vec<Event> {
             name: "Fish Depletion",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Demand(Output::PlantCalories, 0.1)
             ],
@@ -2599,8 +2563,6 @@ pub fn events() -> Vec<Event> {
             name: "Massive Thunderstorms",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::Output(Output::Electricity, -0.05),
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
@@ -2622,8 +2584,6 @@ pub fn events() -> Vec<Event> {
             name: "Blue Ocean Event",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
                 Effect::WorldVariable(WorldVariable::Outlook, 0.),
@@ -2646,8 +2606,6 @@ pub fn events() -> Vec<Event> {
             name: "Mosquito Disease",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
@@ -2674,8 +2632,6 @@ pub fn events() -> Vec<Event> {
             name: "Brownouts",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -2711,8 +2667,6 @@ pub fn events() -> Vec<Event> {
             name: "Nuclear Meltdown",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -3.0),
                 Effect::OutputForFeature(ProcessFeature::IsNuclear, -0.05)
@@ -2746,8 +2700,6 @@ pub fn events() -> Vec<Event> {
             name: "Nuclear Waste",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -2780,8 +2732,6 @@ pub fn events() -> Vec<Event> {
             name: "Species Death",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
@@ -2802,8 +2752,6 @@ pub fn events() -> Vec<Event> {
             name: "Flooding",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0),
                 Effect::TriggerEvent(61, 1)
@@ -2837,8 +2785,6 @@ pub fn events() -> Vec<Event> {
             name: "Ozone Depletion",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::AddEvent(39),
                 Effect::AddEvent(38)
@@ -2860,8 +2806,6 @@ pub fn events() -> Vec<Event> {
             name: "Migrations - No Borders",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::Migration
             ],
@@ -2890,8 +2834,6 @@ pub fn events() -> Vec<Event> {
             name: "Island Abandoned",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::Migration
@@ -2925,8 +2867,6 @@ pub fn events() -> Vec<Event> {
             name: "SRM - SAD",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
@@ -2947,8 +2887,6 @@ pub fn events() -> Vec<Event> {
             name: "Urban Gardening",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Demand(Output::PlantCalories, -0.1),
                 Effect::AddEvent(31)
@@ -2976,8 +2914,6 @@ pub fn events() -> Vec<Event> {
             name: "Urban Farming",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Demand(Output::PlantCalories, -0.1),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0)
@@ -3000,8 +2936,6 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Crop Yields",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1)
             ],
@@ -3022,8 +2956,6 @@ pub fn events() -> Vec<Event> {
             name: "UFO Visit",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::TriggerEvent(34, 6),
                 Effect::TriggerEvent(35, 6)
@@ -3045,8 +2977,6 @@ pub fn events() -> Vec<Event> {
             name: "UFO Gift",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -50.0)
             ],
@@ -3067,8 +2997,6 @@ pub fn events() -> Vec<Event> {
             name: "UFO War",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -50.0)
             ],
@@ -3089,8 +3017,6 @@ pub fn events() -> Vec<Event> {
             name: "New Cuisine",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
@@ -3111,8 +3037,6 @@ pub fn events() -> Vec<Event> {
             name: "Meat Militia",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
@@ -3133,8 +3057,6 @@ pub fn events() -> Vec<Event> {
             name: "Plant UV Exposure",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1)
             ],
@@ -3155,8 +3077,6 @@ pub fn events() -> Vec<Event> {
             name: "Ozone Health",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::AddEvent(73)
@@ -3178,8 +3098,6 @@ pub fn events() -> Vec<Event> {
             name: "Migrations - Borders",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0),
                 Effect::TriggerEvent(41, 6)
@@ -3209,8 +3127,6 @@ pub fn events() -> Vec<Event> {
             name: "Migrations - Border Attack",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -2.0)
             ],
@@ -3239,8 +3155,6 @@ pub fn events() -> Vec<Event> {
             name: "Doom Cult - Formation",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::AddEvent(43)
             ],
@@ -3261,8 +3175,6 @@ pub fn events() -> Vec<Event> {
             name: "Doom Cult - Spreading",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::AddEvent(44)
@@ -3284,8 +3196,6 @@ pub fn events() -> Vec<Event> {
             name: "Doom Cult - Acceleration",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::AddEvent(45)
@@ -3307,8 +3217,6 @@ pub fn events() -> Vec<Event> {
             name: "Doom Cult - Attacks",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0)
             ],
@@ -3329,8 +3237,6 @@ pub fn events() -> Vec<Event> {
             name: "Rivals - Formation",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -3349,8 +3255,6 @@ pub fn events() -> Vec<Event> {
             name: "Rerualization",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 10.0)
             ],
@@ -3371,8 +3275,6 @@ pub fn events() -> Vec<Event> {
             name: "Green Meanies - Formation",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -3393,8 +3295,6 @@ pub fn events() -> Vec<Event> {
             name: "Success - Leisure",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 50.0)
             ],
@@ -3415,8 +3315,6 @@ pub fn events() -> Vec<Event> {
             name: "Invasive Wines",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
@@ -3437,8 +3335,6 @@ pub fn events() -> Vec<Event> {
             name: "Pollinator - Decline",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
                 Effect::TriggerEvent(52, 18)
@@ -3478,8 +3374,6 @@ pub fn events() -> Vec<Event> {
             name: "Pollinator - Collapse",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1)
             ],
@@ -3506,8 +3400,6 @@ pub fn events() -> Vec<Event> {
             name: "Ocean Acidification",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::AddEvent(17)
             ],
@@ -3523,8 +3415,6 @@ pub fn events() -> Vec<Event> {
             name: "Ocean Microorganisms",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -3538,8 +3428,6 @@ pub fn events() -> Vec<Event> {
             name: "Waste Leakage",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -3560,8 +3448,6 @@ pub fn events() -> Vec<Event> {
             name: "Flooded Farms",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1)
             ],
@@ -3582,8 +3468,6 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Solar Impacts",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1)
             ],
@@ -3604,8 +3488,6 @@ pub fn events() -> Vec<Event> {
             name: "Black Market - Gasoline",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 1.0)
             ],
@@ -3626,8 +3508,6 @@ pub fn events() -> Vec<Event> {
             name: "Black Market - Meat",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 1.0)
             ],
@@ -3649,8 +3529,6 @@ pub fn events() -> Vec<Event> {
             name: "Coffee and Chocolate Decline",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
@@ -3671,8 +3549,6 @@ pub fn events() -> Vec<Event> {
             name: "Sewage Overflow",
             kind: EventType::World,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -3693,8 +3569,6 @@ pub fn events() -> Vec<Event> {
             name: "Amazon Savannah",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 10.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 3.0),
@@ -3723,8 +3597,6 @@ pub fn events() -> Vec<Event> {
             name: "Locust Infestation",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05)
             ],
@@ -3751,8 +3623,6 @@ pub fn events() -> Vec<Event> {
             name: "Forest Infestation",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -3779,8 +3649,6 @@ pub fn events() -> Vec<Event> {
             name: "CO2 Leak",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 5.0),
                 Effect::LocalVariable(LocalVariable::Outlook, -5.0)
@@ -3802,8 +3670,6 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Monsoon",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1)
             ],
@@ -3824,8 +3690,6 @@ pub fn events() -> Vec<Event> {
             name: "Iron Fillings Dead Ocean",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0),
                 Effect::AddEvent(17)
@@ -3847,8 +3711,6 @@ pub fn events() -> Vec<Event> {
             name: "West Antarctic Collapse",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
                 Effect::TriggerEvent(72, 1)
@@ -3882,8 +3744,6 @@ pub fn events() -> Vec<Event> {
             name: "Polar Vortex",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
                 Effect::Output(Output::Electricity, -0.05)
@@ -3911,8 +3771,6 @@ pub fn events() -> Vec<Event> {
             name: "Mega Dust Storms",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -3943,8 +3801,6 @@ pub fn events() -> Vec<Event> {
             name: "Large Derecho Storm",
             kind: EventType::World,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -5.0),
                 Effect::Output(Output::PlantCalories, -0.05)
@@ -3972,8 +3828,6 @@ pub fn events() -> Vec<Event> {
             name: "Ice Sheet Tsunami",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
@@ -3994,8 +3848,6 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Assassination",
             kind: EventType::World,
             locked: true,
-            local: false,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0)
             ],
@@ -4016,8 +3868,6 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Respiratory Problems",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0),
                 Effect::AddEvent(73)
@@ -4039,8 +3889,6 @@ pub fn events() -> Vec<Event> {
             name: "Greenland Collapse",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
                 Effect::TriggerEvent(72, 1)
@@ -4057,8 +3905,6 @@ pub fn events() -> Vec<Event> {
             name: "Hot Soil Emissions",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 5.0)
             ],
@@ -4079,8 +3925,6 @@ pub fn events() -> Vec<Event> {
             name: "First 100m-Inhabitant City",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -4096,8 +3940,6 @@ pub fn events() -> Vec<Event> {
             name: "Ex-Urban Explosion",
             kind: EventType::World,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
             ],
@@ -4118,8 +3960,6 @@ pub fn events() -> Vec<Event> {
             name: "The Ark Proposal",
             kind: EventType::Planning,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
                 Effect::UnlocksProject(42)
             ],
@@ -4148,8 +3988,6 @@ pub fn events() -> Vec<Event> {
             name: "Gosplant Sentience",
             kind: EventType::Planning,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -4168,8 +4006,6 @@ pub fn events() -> Vec<Event> {
             name: "Planning Intro",
             kind: EventType::Planning,
             locked: false,
-            local: false,
-            repeats: false,
             effects: vec![
 
             ],
@@ -4190,8 +4026,6 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - 1",
             kind: EventType::Icon,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
@@ -4234,8 +4068,6 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - 2",
             kind: EventType::Icon,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -2.0)
             ],
@@ -4286,8 +4118,6 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - 3",
             kind: EventType::Icon,
             locked: true,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::LocalVariable(LocalVariable::Outlook, -3.0)
             ],
@@ -4324,8 +4154,6 @@ pub fn events() -> Vec<Event> {
             name: "Icon Test - 1",
             kind: EventType::Icon,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -3.0)
             ],
@@ -4344,8 +4172,6 @@ pub fn events() -> Vec<Event> {
             name: "Icon Test - 2",
             kind: EventType::Icon,
             locked: false,
-            local: true,
-            repeats: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
@@ -4358,6 +4184,28 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![]
+        },
+        Event {
+            id: 87,
+            name: "Request Test",
+            kind: EventType::World,
+            locked: false,
+            effects: vec![
+                Effect::ProjectRequest(52, true, 5),
+                Effect::ProjectRequest(50, false, 5),
+                Effect::AddEvent(82)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
         }
     ]
 }

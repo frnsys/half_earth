@@ -101,8 +101,6 @@ specs = {
         'name': None,
         'type': None,
         'locked': 'false',
-        'local': 'false',
-        'repeats': 'false',
         'effects': [],
         'probabilities': [],
         'dialogue': [],
@@ -171,6 +169,8 @@ effects = {
     'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'SetFlag':          lambda e: ('Flag::{}'.format(flags[e['entity']]),),
     'SetProjectStatus': lambda e: (ids[e['entity']], 'ProjectStatus::{}'.format(e['subtype']),),
+    'ProjectRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Implement' else 'false', int(param(e, 'Bounty'))),
+    'ProcessRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Unban' else 'false', int(param(e, 'Bounty'))),
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
 }
@@ -506,7 +506,6 @@ if __name__ == '__main__':
     with open('engine/src/consts.rs', 'w') as f:
         f.write('\n\n'.join(rust_output))
 
-
     # Define content functions
     rust_output = [content_template]
     world_adjustments = []
@@ -530,13 +529,41 @@ if __name__ == '__main__':
         f.write('\n\n'.join(rust_output))
 
     # Javascript exports
+    icons = set()
     icon_events = {}
+
+    def get_param(e):
+        if e.get('params'):
+            ef = effects[e['type']](e)
+            if ef:
+                return ef[-1]
+        return None
+
     for ev in items_by_type['Event']:
         id = ev['id']
+        image = ev.get('image', {})
+        fname = image.get('image', None)
+        attribution = image.get('attribution', None)
         event = {
             'arc': ev.get('arc', ''),
             'dialogue': extract_choices_and_dialogue(ev.get('dialogue', {})),
+            'image': {
+                'fname': fname,
+                'attribution': attribution,
+            },
+            'effects': [{
+                'type': e['type'],
+                'subtype': e.get('subtype'),
+                'entity': ids.get(e.get('entity')),
+                'param': get_param(e)
+            } for e in ev.get('effects', [])]
         }
+
+        if fname:
+            frm = 'editor/uploads/{}'.format(fname)
+            to = 'assets/content/images/{}'.format(fname)
+            shutil.copy(frm, to)
+
         with open('assets/content/events/{}.json'.format(id), 'w') as f:
             json.dump(event, f)
 
@@ -545,11 +572,17 @@ if __name__ == '__main__':
             # kinda hacky
             outlook_effect = sum(int(e['params']['Change']) for e in ev['effects'] if e['subtype'] == 'Outlook')
             icon_events[id] = {
+                'name': ev['name'],
                 'icon': ev['icon'],
                 'outlookChange': outlook_effect,
             }
+            icons.add(ev['icon'])
+
     with open('assets/content/icon_events.json', 'w') as f:
         json.dump(icon_events, f)
+
+    with open('assets/content/icons.json', 'w') as f:
+        json.dump(list(icons), f)
 
     projects = []
     for p in items_by_type['Project']:
