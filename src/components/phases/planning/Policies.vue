@@ -5,7 +5,7 @@
       <div class="pips">
         <div class="pips--label">Political Capital</div>
         <template v-for="i in state.points['Policy'].available">
-          <img class="pip" src="/assets/placeholders/pip3.png">
+          <img class="pip" src="/assets/icons/pips/political_capital.png">
         </template>
       </div>
     </header>
@@ -19,7 +19,7 @@
           <template v-slot:header>
             <div>Policy</div>
             <div>
-              <img v-for="i in p.cost" class="pip" src="/assets/placeholders/pip3.png">
+              <img v-for="i in p.cost" class="pip" src="/assets/icons/pips/political_capital.png">
             </div>
           </template>
           <template v-slot:back>

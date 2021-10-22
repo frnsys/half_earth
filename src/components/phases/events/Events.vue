@@ -9,7 +9,7 @@
   <Event v-if="event" :event="event" @done="nextEvent" @select="selectChoice" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
-      <img :src="`/assets/icons/${toast.icon}.png`"> {{toast.desc}}
+      <img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}
     </div>
   </div>
 </div>

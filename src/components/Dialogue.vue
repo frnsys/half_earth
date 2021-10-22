@@ -176,6 +176,7 @@ export default {
   display: flex;
   flex-direction: column;
   user-select: none;
+  z-index: 10;
 }
 
 .dialogue--speech {

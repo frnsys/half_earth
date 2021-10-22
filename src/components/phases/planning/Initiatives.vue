@@ -5,7 +5,7 @@
       <div class="pips">
         <div class="pips--label">Initiative Points</div>
         <template v-for="i in state.points['Initiative'].total">
-          <img class="pip" :style="{opacity: i <= state.points['Initiative'].available ? 1 : 0.5}" src="/assets/placeholders/pip2.png">
+          <img class="pip" :style="{opacity: i <= state.points['Initiative'].available ? 1 : 0.5}" src="/assets/icons/pips/initiative.png">
         </template>
       </div>
     </header>
@@ -19,7 +19,7 @@
           <template v-slot:header>
             <div>Initiative</div>
             <div>
-              <img class="pip" v-for="i in p.points" src="/assets/placeholders/pip2.png">
+              <img class="pip" v-for="i in p.points" src="/assets/icons/pips/initiative.png">
             </div>
             <div v-if="p.points > 0" @click="(ev) => {unassignPoint(p); ev.stopImmediatePropagation();}">-Point</div>
             <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>

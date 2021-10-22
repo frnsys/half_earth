@@ -20,7 +20,7 @@ const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: 
 // Load icons
 const texLoader = new THREE.TextureLoader();
 const icons = iconNames.reduce((acc, name) => {
-  const map = texLoader.load(`./assets/icons/${name}.png`);
+  const map = texLoader.load(`./assets/icons/pips/${name}.png`);
   const iconMat = new THREE.SpriteMaterial({map});
   acc[name] = iconMat;
   return acc;

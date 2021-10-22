@@ -8,7 +8,7 @@
           <th></th>
           <th>{{state.cycleStartState.year}}</th>
           <th>{{state.gameState.world.year}}</th>
-          <th><img src="/assets/placeholders/pip3.png"></th>
+          <th><img src="/assets/icons/pips/political_capital.png"></th>
         </tr>
         <tr>
           <td>Temperature</td>
@@ -89,10 +89,13 @@ export default {
     },
     projectsCompleted() {
       let completed = game.completedProjects();
-      completed.map(([id, outcomeId]) => {
+      console.log('COMPLETED PROJECTS:')
+      return completed.map(([id, outcomeId]) => {
+        console.log(`Project id: ${id}`);
         let project = state.gameState.projects[id];
         let outcome = outcomeId ? project.outcomes[outcomeId] : null;
         if (outcome) {
+          console.log('Outcomes:');
           console.log(outcome.effects);
         }
         return {

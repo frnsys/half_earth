@@ -5202,6 +5202,26 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![]
+        },
+        Event {
+            id: 116,
+            name: "RESEARCH:Research Intro",
+            kind: EventType::Planning,
+            locked: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
         }
     ]
 }

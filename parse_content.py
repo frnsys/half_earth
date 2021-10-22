@@ -538,6 +538,7 @@ if __name__ == '__main__':
                 return ef[-1]
         return None
 
+    all_events = {}
     for ev in items_by_type['Event']:
         id = ev['id']
         image = ev.get('image', {})
@@ -564,8 +565,7 @@ if __name__ == '__main__':
             to = 'assets/content/images/{}'.format(fname)
             shutil.copy(frm, to)
 
-        with open('assets/content/events/{}.json'.format(id), 'w') as f:
-            json.dump(event, f)
+        all_events[id] = event
 
         if ev['type'] == 'Icon':
             id = ev['id']
@@ -597,8 +597,11 @@ if __name__ == '__main__':
     with open('assets/content/icons.json', 'w') as f:
         json.dump(list(icons), f)
     for icon in icons:
-        if not os.path.exists('assets/icons/{}.png'.format(icon)):
+        if not os.path.exists('assets/icons/pips/{}.png'.format(icon)):
             print('Missing icon:', icon)
+
+    with open('assets/content/events.json', 'w') as f:
+        json.dump(all_events, f)
 
     projects = []
     for p in items_by_type['Project']:

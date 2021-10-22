@@ -27,6 +27,7 @@ import Initiatives from './Initiatives.vue';
 import Dashboard from './Dashboard.vue';
 import EventsMixin from 'components/EventsMixin';
 import Hud from 'components/Hud.vue';
+import EVENTS from '/assets/content/events.json';
 
 const PAGES = {
   RESEARCH: 0,
@@ -58,8 +59,26 @@ export default {
   },
   data() {
     let events = game.rollPlanningEvents();
+
+    // Group events by pages
+    let eventsByPage = Object.keys(PAGES).reduce((acc, k) => {
+      acc[k] = [];
+      return acc;
+    }, {});
+    eventsByPage[null] = [];
+    events.forEach(([ev_id, region_id]) => {
+      let ev = EVENTS[ev_id];
+      let page = null;
+      let parts = ev.name.split(':');
+      if (parts.length > 1) {
+        page = parts.shift();
+      }
+      eventsByPage[page].push([ev_id, region_id]);
+    });
+
     return {
-      events,
+      events: eventsByPage[null],
+      eventsByPage,
       page: null,
     }
   },
@@ -69,6 +88,8 @@ export default {
         state.phase = 'EVENTS';
       } else {
         this.page = PAGES[p];
+        this.events = this.eventsByPage[p];
+        this.showEvent();
       }
     },
     icon(p) {

@@ -54,7 +54,7 @@
 
     <fieldset class="big-group">
       <div>
-        <Image :image="localData.image" :dimensions="'320x210'" @update="saveData('image', $event)" />
+        <Image :image="localData.image" :dimensions="'640x420'" @update="saveData('image', $event)" />
       </div>
       <div>
         <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>

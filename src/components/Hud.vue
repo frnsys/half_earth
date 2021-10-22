@@ -1,7 +1,7 @@
 <template>
   <div class="hud">
     <div>{{state.gameState.world.year}}</div>
-    <div>{{state.gameState.political_capital}}PC</div>
+    <div><img src="/assets/icons/pips/political_capital.png">{{state.gameState.political_capital}}</div>
     <div>
       <img src="/assets/icons/extinction.png">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
@@ -42,7 +42,8 @@ export default {
   z-index: 1;
 }
 .hud img {
-  width: 13px;
+  height: 12px;
+  width: auto;
   vertical-align: middle;
   margin-right: 2px;
 }

@@ -35,7 +35,7 @@ function describeEffect(e) {
       let id = e.entity.toString()
       if (id in iconEvents) {
         let event = iconEvents[id];
-        return `${event.name} will appear as <img src="/assets/icons/${event.icon}.png"> on the globe.`
+        return `${event.name} will appear as <img src="/assets/icons/pips/${event.icon}.png"> on the globe.`
       } else {
         // Other event triggers are hidden...surprises!
         return

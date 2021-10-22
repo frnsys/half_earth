@@ -1,0 +1,43 @@
+Icon sources (all CC-BY):
+
+- Electricity by Yoyon Pujiyono from the Noun Project
+    - <https://thenounproject.com/search/?q=electricity&i=3190850>
+- Hurricane by Izwar Muis from the Noun Project
+    - <https://thenounproject.com/search/?q=hurricane&i=3999062>
+- Flood by Ayub Irawan from the Noun Project
+    - <https://thenounproject.com/search/?q=flooding&i=1633291>
+- Fire by Kevin from the Noun Project
+    - <https://thenounproject.com/search/?q=fire&i=3890703>
+- Heat by iconpixel from the Noun Project
+    - <https://thenounproject.com/search/?q=heat&i=4307492>
+- virus by Solomakhina Maria from the Noun Project
+    - <https://thenounproject.com/search/?q=virus&i=3831061>
+- Fist by Airen99 from the Noun Project
+    - <https://thenounproject.com/search/?q=fist&i=4222814>
+- explosion by Nociconist from the Noun Project
+    - <https://thenounproject.com/search/?q=explosion&i=2039794>
+- no food by Peter Lakenbrink from the Noun Project
+    - <https://thenounproject.com/term/no-food/4312733/>
+- clouds by sarah from the Noun Project
+    - <https://thenounproject.com/term/clouds/1385941/>
+- Water by Ayub Irawan from the Noun Project
+    - <https://thenounproject.com/search/?q=water&i=3393630>
+- Research by Adrien Coquet from the Noun Project
+    - <https://thenounproject.com/term/research/3734366/>
+- Research by romli ahmad from the Noun Project
+    - <https://thenounproject.com/term/research/2641436/>
+- Eye by Simon Sim from the Noun Project
+    - <https://thenounproject.com/search/?q=eye&i=1801153>
+- witness by tulpahn from the Noun Project
+    - <https://thenounproject.com/search/?q=eye&i=2078169>
+- shape by vecco from the Noun Project
+    - <https://thenounproject.com/term/shape/2901861/>
+- Star by Made by Made from the Noun Project
+    - <https://thenounproject.com/search/?q=star+shape&i=4266711>
+- Star by Anjully Lozano from the Noun Project
+    - <https://thenounproject.com/term/star/220668/>
+- Construction by ibrandify from the Noun Project
+    - <https://thenounproject.com/term/construction/2530225/>
+
+- Public Domain:
+    - <https://thenounproject.com/term/famine/2917973/>

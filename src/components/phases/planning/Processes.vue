@@ -5,7 +5,7 @@
       <div class="pips">
         <div class="pips--label">Political Capital</div>
         <template v-for="i in state.points['Policy'].available">
-          <img class="pip" src="/assets/placeholders/pip3.png">
+          <img class="pip" src="/assets/icons/pips/political_capital.png">
         </template>
       </div>
     </header>
@@ -26,15 +26,15 @@
             <button v-if="!p.banned" @click="banProcess(p)">
               Ban
               <div class="card--action--cost">
-                <img class="pip" src="/assets/placeholders/pip3.png">
-                <img class="pip" src="/assets/placeholders/pip3.png">
+                <img class="pip" src="/assets/icons/pips/political_capital.png">
+                <img class="pip" src="/assets/icons/pips/political_capital.png">
               </div>
             </button>
             <button v-if="p.banned" @click="unbanProcess(p)">
               Unban
               <div class="card--action--cost">
-                <img class="pip" src="/assets/placeholders/pip3.png">
-                <img class="pip" src="/assets/placeholders/pip3.png">
+                <img class="pip" src="/assets/icons/pips/political_capital.png">
+                <img class="pip" src="/assets/icons/pips/political_capital.png">
               </div>
             </button>
           </template>
