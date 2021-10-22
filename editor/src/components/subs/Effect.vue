@@ -23,15 +23,15 @@
       <div v-if="spec.params" v-for="name in Object.keys(spec.params)">
         <template v-if="spec.params[name] == Number">
           <label>{{name}}</label>
-          <input type="number" :value="localData.params[name]" @change="(ev) => updateParam(name, ev.target.value)" :class="paramFlags(name)"/>
+          <input type="number" :value="localData.params[name]" @blur="(ev) => updateParam(name, ev.target.value)" :class="paramFlags(name)"/>
         </template>
         <template v-if="spec.params[name] == String">
           <label>{{name}}</label>
-          <input type="text" :value="localData.params[name]" @change="(ev) => updateParam(name, ev.target.value)" :class="paramFlags(name)"/>
+          <input type="text" :value="localData.params[name]" @blur="(ev) => updateParam(name, ev.target.value)" :class="paramFlags(name)"/>
         </template>
         <template v-if="spec.params[name] == Boolean">
           <label>{{name}}</label>
-          <input type="checkbox" :value="localData.params[name]" @change="(ev) => updateParam(name, ev.target.checked)" :class="paramFlags(name)"/>
+          <input type="checkbox" :value="localData.params[name]" @blur="(ev) => updateParam(name, ev.target.checked)" :class="paramFlags(name)"/>
         </template>
       </div>
     </div>

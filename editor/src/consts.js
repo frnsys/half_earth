@@ -65,11 +65,16 @@ const CONDITIONS = {
       'Outlook',
       'WaterStress',]
   },
-  Demand: {
+  PlayerVariable: {
     compare: true,
-    choices: Object.keys(OUTPUTS),
+    choices: [
+      'PoliticalCapital',
+      'MalthusianPoints',
+      'FALCPoints',
+      'HESPoints',
+    ],
   },
-  Output: {
+  Demand: {
     compare: true,
     choices: Object.keys(OUTPUTS),
   },
@@ -77,7 +82,7 @@ const CONDITIONS = {
     compare: true,
     choices: Object.keys(OUTPUTS),
   },
-  Resource: {
+  ResourcePressure: {
     compare: true,
     choices: Object.keys(RESOURCES),
   },
@@ -112,12 +117,12 @@ const CONDITIONS = {
   ProjectHalted: {
     entity: 'Project',
   },
-  Flag: {
-    entity: 'Flag',
-  },
   RunsPlayed: {
     compare: true,
   },
+  RegionFlag: {
+    flag: true
+  }
 }
 
 const EFFECTS = {
@@ -142,6 +147,9 @@ const EFFECTS = {
   PlayerVariable: {
     choices: [
       'PoliticalCapital',
+      'MalthusianPoints',
+      'FALCPoints',
+      'HESPoints',
     ],
     params: {
       'Change': Number
@@ -202,10 +210,6 @@ const EFFECTS = {
     entity: 'Process'
   },
 
-  SetFlag: {
-    entity: 'Flag'
-  },
-
   SetProjectStatus: {
     entity: 'Project',
     choices: ['Active', 'Stalled', 'Halted'],
@@ -229,6 +233,12 @@ const EFFECTS = {
     entity: 'Process',
     params: {
       'Bounty': Number
+    }
+  },
+
+  AddRegionFlag: {
+    params: {
+      'Flag': String
     }
   },
 };
@@ -255,6 +265,8 @@ const SPEAKERS = [
   'Agronomist',
   'Doom Cultist',
   'Meat Militia',
+  'Green Meanies',
+  'The Wretched',
   'Envoy',
   'Space Enthusiast',
   'Health Czar',

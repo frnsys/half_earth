@@ -13,25 +13,6 @@
         </label>
         <input type="text" placeholder="Choice text" v-model="choice.text" @blur="update" :class="choiceFlag(i, 'text')" />
       </div>
-      <div class="radio">
-        <label>Type:</label>
-        <div>
-          <label :for="`${id}-${i}-none`">None</label>
-          <input :id="`${id}-${i}-none`" type="radio" v-model="choice.type" value="none" @change="update">
-        </div>
-        <div>
-          <label :for="`${id}-${i}-malthusian`">Malthusian</label>
-          <input :id="`${id}-${i}-malthusian`" type="radio" v-model="choice.type" value="malthusian" @change="update">
-        </div>
-        <div>
-          <label :for="`${id}-${i}-falc`">FALC</label>
-          <input :id="`${id}-${i}-falc`" type="radio" v-model="choice.type" value="falc" @change="update">
-        </div>
-        <div>
-          <label :for="`${id}-${i}-hes`">HES</label>
-          <input :id="`${id}-${i}-hes`" type="radio" v-model="choice.type" value="hes" @change="update">
-        </div>
-      </div>
       <fieldset>
         <Effects :effects="choice.effects" @update="saveChoiceEffects(i, $event)" />
         <Conditions :conditions="choice.conditions" @update="saveChoiceConditions(i, $event)" />
@@ -69,7 +50,6 @@ export default {
     addResponse() {
       this.localData.push({
         text: '',
-        type: 'none',
         effects: [],
         conditions: [],
         dialogue: null

@@ -284,15 +284,6 @@ const SPECS = {
     }
   },
 
-  Flag: {
-    key: 'name',
-    validate: ['name', 'desc'],
-    questions: ['desc'],
-    validateKey: (item, key) => {
-      return validateBasic(item, key, SPECS.Flag.validate);
-    }
-  },
-
   Variable: {
     key: 'name',
     validate: ['name', 'values'],

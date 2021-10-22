@@ -28,7 +28,13 @@
       </div>
       <div>
         <label>Value</label>
-        <input type="number" v-model="localData.value" @change="update" :class="flags('value')"/>
+        <input type="number" v-model.lazy="localData.value" @blur="update" :class="flags('value')"/>
+      </div>
+    </template>
+    <template v-if="spec.flag">
+      <div>
+        <label>Flag</label>
+        <input type="text" v-model.lazy="localData.value" @blur="update" :class="flags('value')"/>
       </div>
     </template>
   </fieldset>

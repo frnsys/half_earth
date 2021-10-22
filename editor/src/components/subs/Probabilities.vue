@@ -2,6 +2,7 @@
 <div class="probabilities">
   <label>
     Probabilities
+    <button @click="addDefaults">+ Defaults</button>
     <button @click="addProbability">+ Probability</button>
   </label>
   <ul>
@@ -56,6 +57,49 @@ export default {
       });
       this.update();
     },
+    addDefaults() {
+      this.localData.push({
+        id: uuid(),
+        type: 'Likely',
+        conditions: [{
+          type: 'WorldVariable',
+          subtype: 'Temperature',
+          comparator: '>=',
+          value: 2.5
+        }],
+      });
+      this.localData.push({
+        id: uuid(),
+        type: 'Random',
+        conditions: [{
+          type: 'WorldVariable',
+          subtype: 'Temperature',
+          comparator: '>=',
+          value: 2.0
+        }],
+      });
+      this.localData.push({
+        id: uuid(),
+        type: 'Unlikely',
+        conditions: [{
+          type: 'WorldVariable',
+          subtype: 'Temperature',
+          comparator: '>=',
+          value: 1.5
+        }],
+      });
+      this.localData.push({
+        id: uuid(),
+        type: 'Rare',
+        conditions: [{
+          type: 'WorldVariable',
+          subtype: 'Temperature',
+          comparator: '>=',
+          value: 1
+        }],
+      });
+      this.update();
+    }
   }
 }
 </script>

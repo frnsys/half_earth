@@ -6,7 +6,7 @@ use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, ChoiceType, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Choice, Effect, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
 
@@ -46,7 +46,8 @@ pub fn regions() -> Vec<Region> {
             population: 373318358.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 1,
@@ -56,7 +57,8 @@ pub fn regions() -> Vec<Region> {
             population: 183739076.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 2,
@@ -66,7 +68,8 @@ pub fn regions() -> Vec<Region> {
             population: 437694436.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 3,
@@ -76,7 +79,8 @@ pub fn regions() -> Vec<Region> {
             population: 43977555.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 4,
@@ -86,7 +90,8 @@ pub fn regions() -> Vec<Region> {
             population: 254985181.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 5,
@@ -96,7 +101,8 @@ pub fn regions() -> Vec<Region> {
             population: 190463603.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 6,
@@ -106,7 +112,8 @@ pub fn regions() -> Vec<Region> {
             population: 423239061.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 7,
@@ -116,7 +123,8 @@ pub fn regions() -> Vec<Region> {
             population: 468849237.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 8,
@@ -126,7 +134,8 @@ pub fn regions() -> Vec<Region> {
             population: 69191678.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 9,
@@ -136,7 +145,8 @@ pub fn regions() -> Vec<Region> {
             population: 288359967.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 10,
@@ -146,7 +156,8 @@ pub fn regions() -> Vec<Region> {
             population: 76474800.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 11,
@@ -156,7 +167,8 @@ pub fn regions() -> Vec<Region> {
             population: 1983914039.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 12,
@@ -166,7 +178,8 @@ pub fn regions() -> Vec<Region> {
             population: 681491532.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 13,
@@ -176,7 +189,8 @@ pub fn regions() -> Vec<Region> {
             population: 1686247807.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 14,
@@ -186,7 +200,8 @@ pub fn regions() -> Vec<Region> {
             population: 12788202.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 15,
@@ -196,7 +211,8 @@ pub fn regions() -> Vec<Region> {
             population: 196908712.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 16,
@@ -206,7 +222,8 @@ pub fn regions() -> Vec<Region> {
             population: 151644503.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 17,
@@ -216,7 +233,8 @@ pub fn regions() -> Vec<Region> {
             population: 291862973.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 18,
@@ -226,7 +244,8 @@ pub fn regions() -> Vec<Region> {
             population: 106951178.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         },
         Region {
             id: 19,
@@ -236,7 +255,8 @@ pub fn regions() -> Vec<Region> {
             population: 30966994.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
-            seceded: false
+            seceded: false,
+            flags: vec![]
         }
     ]
 }
@@ -2054,6 +2074,24 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0
+        },
+        Project {
+            id: 54,
+            name: "Reruralization",
+            cost: 10,
+            progress: 0.0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0
         }
     ]
 }
@@ -2062,11 +2100,12 @@ pub fn events() -> Vec<Event> {
     vec![
         Event {
             id: 0,
-            name: "Heatwaves",
+            name: "Heatwaves - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+                Effect::AddEvent(91),
+                Effect::AddEvent(92)
             ],
             probabilities: vec![
                 Probability {
@@ -2100,14 +2139,37 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 1,
-            name: "Crop Failures",
+            name: "Crop Failures - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-
+                Effect::AddEvent(83)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
             ],
             choices: vec![
 
@@ -2170,13 +2232,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::Resource(Resource::Land, Comparator::GreaterEqual, 0.65)
+                        Condition::ResourcePressure(Resource::Land, Comparator::GreaterEqual, 0.65)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::Resource(Resource::Land, Comparator::GreaterEqual, 0.5)
+                        Condition::ResourcePressure(Resource::Land, Comparator::GreaterEqual, 0.5)
                     ]
                 }
             ],
@@ -2196,13 +2258,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 20.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 30.0)
                     ]
                 }
             ],
@@ -2223,13 +2285,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 7.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 6.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 }
             ],
@@ -2264,31 +2326,27 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::AddEvent(8)
+                Effect::AddEvent(8),
+                Effect::AddRegionFlag("protests".to_string()),
+                Effect::AddEvent(113)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.25)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.4)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 40.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.6)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.8)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 60.0)
                     ]
                 }
             ],
@@ -2299,8 +2357,7 @@ pub fn events() -> Vec<Event> {
                     ],
                     conditions: vec![
 
-                    ],
-                    kind: ChoiceType::None
+                    ]
                 },
                 Choice {
                     effects: vec![
@@ -2308,8 +2365,7 @@ pub fn events() -> Vec<Event> {
                     ],
                     conditions: vec![
 
-                    ],
-                    kind: ChoiceType::None
+                    ]
                 }
             ]
         },
@@ -2319,19 +2375,23 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: true,
             effects: vec![
-                Effect::AddEvent(10)
+                Effect::AddEvent(10),
+                Effect::AddRegionFlag("riots".to_string()),
+                Effect::AddEvent(114)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::RegionFlag("protests".to_string())
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0),
+                        Condition::RegionFlag("protests".to_string())
                     ]
                 }
             ],
@@ -2345,28 +2405,18 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::AddEvent(13),
-                Effect::WorldVariable(WorldVariable::Emissions, 1.0),
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0),
-                Effect::AddEvent(82),
-                Effect::AddEvent(83),
-                Effect::AddEvent(84)
+                Effect::AddEvent(80),
+                Effect::AddEvent(89)
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Impossible,
-                    conditions: vec![
-                        Condition::ProjectStatus(7, ProjectStatus::Active)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 1.5)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 1.0)
                     ]
@@ -2382,19 +2432,23 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: true,
             effects: vec![
-                Effect::TriggerEvent(12, 4)
+                Effect::TriggerEvent(12, 4),
+                Effect::AddRegionFlag("revolts".to_string()),
+                Effect::AddEvent(115)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::RegionFlag("riots".to_string())
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 15.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 15.0),
+                        Condition::RegionFlag("riots".to_string())
                     ]
                 }
             ],
@@ -2437,7 +2491,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 20.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 20.0),
+                        Condition::RegionFlag("revolts".to_string())
                     ]
                 }
             ],
@@ -2467,15 +2522,15 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 14,
-            name: "Wet-Bulb Event",
+            name: "Wet-Bulb Event - Intro",
             kind: EventType::World,
-            locked: false,
+            locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -15.0)
+                Effect::AddEvent(93)
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
                     ]
@@ -2483,7 +2538,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
                     ]
                 }
             ],
@@ -2560,16 +2615,33 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 18,
-            name: "Massive Thunderstorms",
+            name: "Severe Hurricane - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::Output(Output::Electricity, -0.05),
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+                Effect::AddEvent(100)
             ],
             probabilities: vec![
                 Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
                     likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
@@ -2603,17 +2675,17 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 20,
-            name: "Mosquito Disease",
+            name: "Mosquito Disease - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -5.0)
+                Effect::AddEvent(102)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 6.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 },
                 Probability {
@@ -2629,11 +2701,12 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 21,
-            name: "Brownouts",
+            name: "Brownouts - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+                Effect::AddEvent(97),
+                Effect::AddEvent(98)
             ],
             probabilities: vec![
                 Probability {
@@ -2655,6 +2728,18 @@ pub fn events() -> Vec<Event> {
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.25),
                         Condition::ProjectStatus(8, ProjectStatus::Inactive)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.2)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.1)
                     ]
                 }
             ],
@@ -2739,7 +2824,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 6.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 }
             ],
@@ -2749,12 +2834,12 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 25,
-            name: "Flooding",
+            name: "Flooding - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0),
-                Effect::TriggerEvent(61, 1)
+                Effect::AddEvent(84),
+                Effect::AddEvent(87)
             ],
             probabilities: vec![
                 Probability {
@@ -2767,12 +2852,6 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Rare,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
             ],
@@ -2984,7 +3063,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 5.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 50.0)
                     ]
                 }
             ],
@@ -3004,7 +3083,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::Greater, 5.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::Greater, 50.0)
                     ]
                 }
             ],
@@ -3034,11 +3113,11 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 37,
-            name: "Meat Militia",
+            name: "Meat Militia - Formation",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+                Effect::AddEvent(106)
             ],
             probabilities: vec![
                 Probability {
@@ -3079,7 +3158,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::AddEvent(73)
+                Effect::AddEvent(72)
             ],
             probabilities: vec![
                 Probability {
@@ -3097,10 +3176,9 @@ pub fn events() -> Vec<Event> {
             id: 40,
             name: "Migrations - Borders",
             kind: EventType::World,
-            locked: true,
+            locked: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0),
-                Effect::TriggerEvent(41, 6)
+                Effect::AddEvent(41)
             ],
             probabilities: vec![
                 Probability {
@@ -3128,7 +3206,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+                Effect::AddEvent(104)
             ],
             probabilities: vec![
                 Probability {
@@ -3218,7 +3296,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::World,
             locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -10.0)
+                Effect::AddEvent(105)
             ],
             probabilities: vec![
                 Probability {
@@ -3234,24 +3312,6 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 46,
-            name: "Rivals - Formation",
-            kind: EventType::World,
-            locked: false,
-            effects: vec![
-
-            ],
-            probabilities: vec![
-                Probability {
-                    likelihood: Likelihood::Impossible,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Emissions, Comparator::Greater, 0.)
-                    ]
-                }
-            ],
-            choices: vec![]
-        },
-        Event {
-            id: 47,
             name: "Rerualization",
             kind: EventType::World,
             locked: false,
@@ -3260,9 +3320,29 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Unlikely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
+                        Condition::ProjectStatus(54, ProjectStatus::Active)
+                    ]
+                }
+            ],
+            choices: vec![
 
+            ]
+        },
+        Event {
+            id: 47,
+            name: "Green Meanies - Formation",
+            kind: EventType::World,
+            locked: false,
+            effects: vec![
+                Effect::AddEvent(108)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0)
                     ]
                 }
             ],
@@ -3272,17 +3352,18 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 48,
-            name: "Green Meanies - Formation",
+            name: "A Life of Leisure",
             kind: EventType::World,
             locked: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, 50.0)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::Flag(Flag::IsFALC)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::GreaterEqual, 80.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2080.0)
                     ]
                 }
             ],
@@ -3292,26 +3373,6 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 49,
-            name: "Success - Leisure",
-            kind: EventType::World,
-            locked: false,
-            effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 50.0)
-            ],
-            probabilities: vec![
-                Probability {
-                    likelihood: Likelihood::Likely,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Emissions, Comparator::Greater, 0.)
-                    ]
-                }
-            ],
-            choices: vec![
-
-            ]
-        },
-        Event {
-            id: 50,
             name: "Invasive Wines",
             kind: EventType::World,
             locked: false,
@@ -3331,13 +3392,13 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 51,
+            id: 50,
             name: "Pollinator - Decline",
             kind: EventType::World,
             locked: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
-                Effect::TriggerEvent(52, 18)
+                Effect::TriggerEvent(51, 18)
             ],
             probabilities: vec![
                 Probability {
@@ -3349,19 +3410,19 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 7.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 6.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 5.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 50.0)
                     ]
                 }
             ],
@@ -3370,7 +3431,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 52,
+            id: 51,
             name: "Pollinator - Collapse",
             kind: EventType::World,
             locked: true,
@@ -3387,7 +3448,46 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 7.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 52,
+            name: "Ocean Acidification",
+            kind: EventType::World,
+            locked: false,
+            effects: vec![
+                Effect::AddEvent(17),
+                Effect::AddEvent(53)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 }
             ],
@@ -3397,14 +3497,25 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 53,
-            name: "Ocean Acidification",
+            name: "Ocean Microorganisms",
             kind: EventType::World,
-            locked: false,
+            locked: true,
             effects: vec![
-                Effect::AddEvent(17)
+                Effect::Demand(Output::PlantCalories, 0.1)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
             ],
             choices: vec![
 
@@ -3412,19 +3523,6 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 54,
-            name: "Ocean Microorganisms",
-            kind: EventType::World,
-            locked: false,
-            effects: vec![
-
-            ],
-            probabilities: vec![
-
-            ],
-            choices: vec![]
-        },
-        Event {
-            id: 55,
             name: "Waste Leakage",
             kind: EventType::World,
             locked: false,
@@ -3444,7 +3542,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 56,
+            id: 55,
             name: "Flooded Farms",
             kind: EventType::World,
             locked: false,
@@ -3464,7 +3562,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 57,
+            id: 56,
             name: "SRM - Solar Impacts",
             kind: EventType::World,
             locked: false,
@@ -3484,7 +3582,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 58,
+            id: 57,
             name: "Black Market - Gasoline",
             kind: EventType::World,
             locked: false,
@@ -3504,7 +3602,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 59,
+            id: 58,
             name: "Black Market - Meat",
             kind: EventType::World,
             locked: false,
@@ -3525,12 +3623,12 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 60,
+            id: 59,
             name: "Coffee and Chocolate Decline",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -3545,7 +3643,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 61,
+            id: 60,
             name: "Sewage Overflow",
             kind: EventType::World,
             locked: true,
@@ -3565,18 +3663,18 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 62,
+            id: 61,
             name: "Amazon Savannah",
             kind: EventType::World,
             locked: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 10.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 3.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.5)
                     ]
@@ -3593,7 +3691,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 63,
+            id: 62,
             name: "Locust Infestation",
             kind: EventType::World,
             locked: false,
@@ -3610,7 +3708,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 5.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 }
             ],
@@ -3619,7 +3717,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 64,
+            id: 63,
             name: "Forest Infestation",
             kind: EventType::World,
             locked: false,
@@ -3636,7 +3734,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 5.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 }
             ],
@@ -3645,13 +3743,12 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 65,
-            name: "CO2 Leak",
+            id: 64,
+            name: "CO2 Leak - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 5.0),
-                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
+                Effect::AddEvent(99)
             ],
             probabilities: vec![
                 Probability {
@@ -3666,7 +3763,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 66,
+            id: 65,
             name: "SRM - Monsoon",
             kind: EventType::World,
             locked: false,
@@ -3686,7 +3783,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 67,
+            id: 66,
             name: "Iron Fillings Dead Ocean",
             kind: EventType::World,
             locked: false,
@@ -3707,13 +3804,13 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 68,
+            id: 67,
             name: "West Antarctic Collapse",
             kind: EventType::World,
             locked: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
-                Effect::TriggerEvent(72, 1)
+                Effect::TriggerEvent(71, 1)
             ],
             probabilities: vec![
                 Probability {
@@ -3740,7 +3837,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 69,
+            id: 68,
             name: "Polar Vortex",
             kind: EventType::World,
             locked: false,
@@ -3767,7 +3864,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 70,
+            id: 69,
             name: "Mega Dust Storms",
             kind: EventType::World,
             locked: false,
@@ -3794,26 +3891,39 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            choices: vec![]
+            choices: vec![
+
+            ]
         },
         Event {
-            id: 71,
-            name: "Large Derecho Storm",
+            id: 70,
+            name: "Large Derecho Storm - Intro",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -5.0),
-                Effect::Output(Output::PlantCalories, -0.05)
+                Effect::AddEvent(101)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
@@ -3824,7 +3934,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 72,
+            id: 71,
             name: "Ice Sheet Tsunami",
             kind: EventType::World,
             locked: true,
@@ -3844,7 +3954,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 73,
+            id: 72,
             name: "SRM - Assassination",
             kind: EventType::World,
             locked: true,
@@ -3864,13 +3974,13 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 74,
+            id: 73,
             name: "SRM - Respiratory Problems",
             kind: EventType::World,
             locked: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0),
-                Effect::AddEvent(73)
+                Effect::AddEvent(72)
             ],
             probabilities: vec![
                 Probability {
@@ -3885,23 +3995,45 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 75,
+            id: 74,
             name: "Greenland Collapse",
             kind: EventType::World,
             locked: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
-                Effect::TriggerEvent(72, 1)
+                Effect::TriggerEvent(71, 1)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
             ],
             choices: vec![
 
             ]
         },
         Event {
-            id: 76,
+            id: 75,
             name: "Hot Soil Emissions",
             kind: EventType::World,
             locked: false,
@@ -3921,7 +4053,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 77,
+            id: 76,
             name: "First 100m-Inhabitant City",
             kind: EventType::World,
             locked: false,
@@ -3936,7 +4068,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 78,
+            id: 77,
             name: "Ex-Urban Explosion",
             kind: EventType::World,
             locked: false,
@@ -3956,7 +4088,7 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 79,
+            id: 78,
             name: "The Ark Proposal",
             kind: EventType::Planning,
             locked: false,
@@ -3967,7 +4099,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 9.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 90.0)
                     ]
                 }
             ],
@@ -3978,31 +4110,12 @@ pub fn events() -> Vec<Event> {
                     ],
                     conditions: vec![
 
-                    ],
-                    kind: ChoiceType::None
+                    ]
                 }
             ]
         },
         Event {
-            id: 80,
-            name: "Gosplant Sentience",
-            kind: EventType::Planning,
-            locked: false,
-            effects: vec![
-
-            ],
-            probabilities: vec![
-                Probability {
-                    likelihood: Likelihood::Improbable,
-                    conditions: vec![
-
-                    ]
-                }
-            ],
-            choices: vec![]
-        },
-        Event {
-            id: 81,
+            id: 79,
             name: "Planning Intro",
             kind: EventType::Planning,
             locked: false,
@@ -4022,8 +4135,8 @@ pub fn events() -> Vec<Event> {
             ]
         },
         Event {
-            id: 82,
-            name: "Wildfires - 1",
+            id: 80,
+            name: "Wildfires",
             kind: EventType::Icon,
             locked: true,
             effects: vec![
@@ -4051,12 +4164,6 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
@@ -4064,8 +4171,8 @@ pub fn events() -> Vec<Event> {
             choices: vec![]
         },
         Event {
-            id: 83,
-            name: "Wildfires - 2",
+            id: 81,
+            name: "Severe Wildfires",
             kind: EventType::Icon,
             locked: true,
             effects: vec![
@@ -4114,8 +4221,8 @@ pub fn events() -> Vec<Event> {
             choices: vec![]
         },
         Event {
-            id: 84,
-            name: "Wildfires - 3",
+            id: 82,
+            name: "Extreme Wildfires",
             kind: EventType::Icon,
             locked: true,
             effects: vec![
@@ -4150,28 +4257,82 @@ pub fn events() -> Vec<Event> {
             choices: vec![]
         },
         Event {
-            id: 85,
-            name: "Icon Test - 1",
+            id: 83,
+            name: "Crop Failures",
             kind: EventType::Icon,
-            locked: false,
+            locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -3.0)
+                Effect::Output(Output::PlantCalories, -0.01)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 }
             ],
             choices: vec![]
         },
         Event {
-            id: 86,
-            name: "Icon Test - 2",
+            id: 84,
+            name: "Flooding",
             kind: EventType::Icon,
-            locked: false,
+            locked: true,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 85,
+            name: "Severe Flooding",
+            kind: EventType::Icon,
+            locked: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
@@ -4179,7 +4340,61 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 86,
+            name: "Extreme Flooding",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, -3.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 }
             ],
@@ -4187,25 +4402,806 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 87,
-            name: "Request Test",
+            name: "Severe Flooding - Intro",
             kind: EventType::World,
-            locked: false,
+            locked: true,
             effects: vec![
-                Effect::ProjectRequest(52, true, 5),
-                Effect::ProjectRequest(50, false, 5),
-                Effect::AddEvent(82)
+                Effect::AddEvent(85),
+                Effect::AddEvent(88)
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Guaranteed,
+                    likelihood: Likelihood::Likely,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
                 }
             ],
             choices: vec![
 
             ]
+        },
+        Event {
+            id: 88,
+            name: "Extreme Flooding - Intro",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(86)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 89,
+            name: "Severe Wildfires - Intro",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(81),
+                Effect::AddEvent(90)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 90,
+            name: "Extreme Wildfires - Intro",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(82)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 91,
+            name: "Heatwaves",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 92,
+            name: "Severe Heatwaves - Intro",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(14),
+                Effect::AddEvent(94)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 93,
+            name: "Wet Bulb Event",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 4.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 4.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 94,
+            name: "Severe Heatwaves",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 95,
+            name: "Famine - Intro",
+            kind: EventType::World,
+            locked: false,
+            effects: vec![
+                Effect::AddEvent(96)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.15)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 96,
+            name: "Famine",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -10.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.15)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 97,
+            name: "Brownouts",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.2)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.1)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 98,
+            name: "Blackouts",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.6)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.4)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 99,
+            name: "CO2 Leak",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Emissions, 1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsCCS, Comparator::GreaterEqual, 0.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 100,
+            name: "Severe Hurricane",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 101,
+            name: "Large Derecho Storm",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Rare,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 102,
+            name: "Disease Outbreak",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 103,
+            name: "Zoonotic Disease Outbreak - Intro",
+            kind: EventType::World,
+            locked: false,
+            effects: vec![
+                Effect::AddEvent(102)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.5)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 104,
+            name: "Border Attacks",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
+                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.3),
+                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 105,
+            name: "Doom Cult Attacks",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 20.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 106,
+            name: "Meat Militia - Attacks",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(107)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProjectStatus(1, ProjectStatus::Active),
+                        Condition::OutputDemandGap(Output::AnimalCalories, Comparator::GreaterEqual, 0.5)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 107,
+            name: "Meat Militia Attacks",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::Output(Output::PlantCalories, -0.01)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProjectStatus(1, ProjectStatus::Active),
+                        Condition::OutputDemandGap(Output::AnimalCalories, Comparator::GreaterEqual, 0.5)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 108,
+            name: "Green Meanies - Attacks",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(109)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 15.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 109,
+            name: "Green Meanies Attacks",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::Output(Output::Electricity, -0.01)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 15.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 110,
+            name: "The Wretched - Formation",
+            kind: EventType::World,
+            locked: false,
+            effects: vec![
+                Effect::AddEvent(111)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 111,
+            name: "The Wretched - Attacks",
+            kind: EventType::World,
+            locked: true,
+            effects: vec![
+                Effect::AddEvent(112)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 15.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 112,
+            name: "The Wretched Attacks",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 15.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 113,
+            name: "Protests",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::RegionFlag("protests".to_string()),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 40.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::RegionFlag("protests".to_string()),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 60.0)
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 114,
+            name: "Riots",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::RegionFlag("riots".to_string())
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0),
+                        Condition::RegionFlag("riots".to_string())
+                    ]
+                }
+            ],
+            choices: vec![]
+        },
+        Event {
+            id: 115,
+            name: "Revolts",
+            kind: EventType::Icon,
+            locked: true,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -3.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::RegionFlag("revolts".to_string()),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::RegionFlag("revolts".to_string()),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 15.0)
+                    ]
+                }
+            ],
+            choices: vec![]
         }
     ]
 }

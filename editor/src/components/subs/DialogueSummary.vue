@@ -1,6 +1,7 @@
 <template>
 <div class="dialogue-summary">
-  <div v-for="line in localData.lines">[{{line.speaker || "MISSING SPEAKER"}}]: "{{line.text || "MISSING TEXT"}}"</div>
+  <div v-if="!localData.lines || localData.lines.length === 0">MISSING DIALOGUE</div>
+  <div v-else v-for="line in localData.lines">[{{line.speaker || "MISSING SPEAKER"}}]: "{{line.text || "MISSING TEXT"}}"</div>
   <ChoicesSummary :choices="localData.choices" />
 </div>
 </template>

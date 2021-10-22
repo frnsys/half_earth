@@ -3,7 +3,7 @@ use crate::industries::Industry;
 use crate::projects::{Project, Status, Type as ProjectType};
 use crate::production::{ProductionOrder, Process, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
-use crate::events::{Flag, EventPool, Effect, Type as EventType};
+use crate::events::{EventPool, Effect, Type as EventType};
 use crate::{content, consts};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
@@ -42,7 +42,7 @@ impl GameInterface {
     }
 
     pub fn step(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.step(&mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.step())?)
     }
 
     pub fn state(&self) -> Result<JsValue, JsValue> {
@@ -137,6 +137,10 @@ impl Game {
     pub fn new(difficulty: Difficulty) -> Game {
         let mut state = State {
             political_capital: 100,
+            malthusian_points: 0,
+            hes_points: 0,
+            falc_points: 0,
+
             world: content::world(difficulty),
             projects: content::projects(),
             processes: content::processes(),
@@ -144,7 +148,6 @@ impl Game {
             recently_completed: Vec::new(),
 
             runs: 0,
-            flags: Vec::new(),
             requests: Vec::new(),
 
             output: outputs!(),
@@ -177,14 +180,16 @@ impl Game {
         state.resources.electricity = required_resources.electricity;
         state.resources.fuel = required_resources.fuel;
 
+        state.init();
+
         Game {
             state,
             event_pool: EventPool::new(content::events()),
         }
     }
 
-    pub fn step(&mut self, rng: &mut SmallRng) {
-        self.state.step(rng);
+    pub fn step(&mut self) {
+        self.state.step();
     }
 
     pub fn roll_events_of_kind(&mut self, kind: EventType, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
@@ -206,29 +211,7 @@ impl Game {
     }
 
     pub fn set_event_choice(&mut self, event_id: usize, choice_id: usize) -> Vec<Effect> {
-        let (effects, kind) = self.event_pool.events[event_id].set_choice(choice_id);
-
-        // TODO
-        // If 20 decisions have been made,
-        // set player flag
-        // self.choice_history.push(*kind);
-        // if self.choice_history.len() >= 10 {
-        //     let flag_set = self.state.flags.iter().any(|f| match flag {
-        //         Flag::IsHES | Flag::IsFALC | Flag::IsMalthusian => true,
-        //         _ => false
-        //     });
-        //     if !flag_set {
-        //         let mut counts = [0; 3];
-        //         for kind in self.choice_history {
-        //             match kind {
-        //                 ChoiceType::HES => counts[0] += 1,
-        //                 ChoiceType::FALC => counts[1] += 1,
-        //                 ChoiceType::Malthusian => counts[2] += 1,
-        //             }
-        //         }
-        //         let idx = array.iter().enumerate().max_by(|&(_, item)| item);
-        //     }
-        // }
+        let effects = self.event_pool.events[event_id].set_choice(choice_id);
         effects.clone()
     }
 
@@ -264,11 +247,14 @@ impl Game {
 pub struct State {
     pub world: World,
     pub runs: usize,
-    pub flags: Vec<Flag>,
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
+
     pub political_capital: isize,
+    pub malthusian_points: usize,
+    pub hes_points: usize,
+    pub falc_points: usize,
 
     // Recently completed projects
     pub recently_completed: Vec<usize>,
@@ -296,6 +282,12 @@ pub struct State {
 }
 
 impl State {
+    pub fn init(&mut self) {
+        // Bit of a hack to generate initial state values
+        self.step();
+        self.world.year -= 1;
+    }
+
     pub fn calculate_demand(&self) -> (OutputMap<f32>, ResourceMap<f32>) {
         // Aggregate demand across regions
         let mut output_demand = outputs!();
@@ -320,7 +312,7 @@ impl State {
         (output_demand * self.output_demand_modifier, resources_demand)
     }
 
-    pub fn step(&mut self, rng: &mut SmallRng) {
+    pub fn step(&mut self) {
         let (output_demand, resources_demand) = self.calculate_demand();
         self.output_demand = output_demand;
         self.resources_demand = resources_demand;
@@ -349,7 +341,7 @@ impl State {
         self.world.co2_emissions = byproducts.co2;
         self.world.ch4_emissions = byproducts.ch4;
         self.world.n2o_emissions = byproducts.n2o;
-        self.world.extinction_rate = self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.;
+        self.world.extinction_rate = self.world.base_extinction_rate + self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.;
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't

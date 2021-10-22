@@ -16,11 +16,11 @@ impl Likelihood {
     pub fn p(&self) -> f32 {
         match self {
             Likelihood::Impossible => 0.,
-            Likelihood::Improbable => 0.00005,
-            Likelihood::Rare       => 0.0005,
-            Likelihood::Unlikely   => 0.005,
-            Likelihood::Random     => 0.05,
-            Likelihood::Likely     => 0.15,
+            Likelihood::Improbable => 0.0005,
+            Likelihood::Rare       => 0.005,
+            Likelihood::Unlikely   => 0.05,
+            Likelihood::Random     => 0.25,
+            Likelihood::Likely     => 0.5,
             Likelihood::Guaranteed => 1.,
         }
     }

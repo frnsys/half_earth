@@ -13,6 +13,12 @@ import EventsMixin from 'components/EventsMixin';
 
 export default {
   mixins: [EventsMixin],
+  mounted() {
+    this.showEvent();
+  },
+  activated() {
+    this.showEvent();
+  },
   data() {
     return {
       events: game.rollBreaksEvents()

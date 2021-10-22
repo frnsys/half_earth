@@ -100,6 +100,8 @@ export default {
           if (!defined) return '[MISSING]';
           if (spec.params[k] == Number) {
             return formatParam(k, effect.params[k]);
+          } else if (spec.params[k] == String) {
+            return effect.params[k];
           }
         }).join(',')}`;
       }

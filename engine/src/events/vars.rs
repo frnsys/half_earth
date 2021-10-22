@@ -23,4 +23,7 @@ pub enum LocalVariable {
 #[derive(Debug, Copy, Clone, Serialize)]
 pub enum PlayerVariable {
     PoliticalCapital,
+    MalthusianPoints,
+    HESPoints,
+    FALCPoints,
 }

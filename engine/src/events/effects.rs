@@ -29,6 +29,7 @@ pub enum Effect {
 
     Migration,
     RegionLeave,
+    AddRegionFlag(String),
 }
 
 impl Effect {
@@ -49,7 +50,7 @@ impl Effect {
                     WorldVariable::Year => game.state.world.year += *change as usize,
                     WorldVariable::Population => game.state.world.change_population(*change/100.),
                     WorldVariable::Emissions => game.state.world.change_emissions(*change/100.),
-                    WorldVariable::ExtinctionRate => game.state.world.extinction_rate += *change,
+                    WorldVariable::ExtinctionRate => game.state.world.base_extinction_rate += *change,
                     WorldVariable::Outlook => game.state.world.change_outlook(*change),
                     WorldVariable::Temperature => game.state.world.temperature += *change,
                     WorldVariable::WaterStress => game.state.world.water_stress += *change,
@@ -60,20 +61,23 @@ impl Effect {
             Effect::PlayerVariable(var, change) => {
                 match var {
                     PlayerVariable::PoliticalCapital => game.state.political_capital += *change as isize,
+                    PlayerVariable::MalthusianPoints => game.state.malthusian_points += *change as usize,
+                    PlayerVariable::HESPoints => game.state.hes_points += *change as usize,
+                    PlayerVariable::FALCPoints => game.state.falc_points += *change as usize,
                 }
             },
             Effect::Resource(resource, pct_change) => {
                 game.state.resources[*resource] *= 1. + pct_change;
             }
             Effect::Demand(output, pct_change) => {
-                game.state.output_demand_modifier[*output] *= 1. + pct_change;
+                game.state.output_demand_modifier[*output] += pct_change;
             },
             Effect::Output(output, pct_change) => {
-                game.state.output_modifier[*output] *= 1. + pct_change;
+                game.state.output_modifier[*output] += pct_change;
             },
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in game.state.processes.iter_mut().filter(|p| p.features.contains(feat)) {
-                    process.output_modifier *= 1. + pct_change;
+                    process.output_modifier += pct_change;
                 }
             },
             Effect::Feedstock(feedstock, pct_change) => {
@@ -116,6 +120,11 @@ impl Effect {
             Effect::RegionLeave => {
                 if let Some(id) = region_id {
                     game.state.world.regions[id].seceded = true;
+                }
+            },
+            Effect::AddRegionFlag(flag) => {
+                if let Some(id) = region_id {
+                    game.state.world.regions[id].flags.push(flag.to_string());
                 }
             }
         }

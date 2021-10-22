@@ -6,6 +6,7 @@ use crate::kinds::OutputMap;
 pub struct World {
     pub year: usize,
     pub extinction_rate: f32,
+    pub base_extinction_rate: f32,
     pub temperature: f32,     // global temp anomaly, C
     pub precipitation: f32,   // global precip avg
     pub sea_level_rise: f32,  // meters

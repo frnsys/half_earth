@@ -1,4 +1,5 @@
 # This is a mess! :(
+import os
 import re
 import json
 import shutil
@@ -24,7 +25,7 @@ use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, ChoiceType, Effect, Probability, Likelihood, Condition, Comparator, Flag, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Choice, Effect, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
 '''
@@ -63,6 +64,7 @@ specs = {
         'base_habitability': 100,
         'base_contentedness': 0,
         'seceded': 'false',
+        'flags': 'vec![]',
     },
     'Industry': {
         'name': None,
@@ -112,7 +114,6 @@ specs = {
     'Choice': {
         'effects': [],
         'conditions': [],
-        'kind': 'ChoiceType::None'
     },
     'Outcome': {
         'effects': [],
@@ -167,10 +168,10 @@ effects = {
     'OutputForFeature': lambda e: ('ProcessFeature::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'Resource':         lambda e: ('Resource::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
-    'SetFlag':          lambda e: ('Flag::{}'.format(flags[e['entity']]),),
     'SetProjectStatus': lambda e: (ids[e['entity']], 'ProjectStatus::{}'.format(e['subtype']),),
     'ProjectRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Implement' else 'false', int(param(e, 'Bounty'))),
     'ProcessRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Unban' else 'false', int(param(e, 'Bounty'))),
+    'AddRegionFlag':    lambda e: ('"{}".to_string()'.format(e['params'].get('Flag')),),
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
 }
@@ -185,10 +186,10 @@ comps = {
 conds = {
     'LocalVariable':    lambda e: ('LocalVariable::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'WorldVariable':    lambda e: ('WorldVariable::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
+    'PlayerVariable':    lambda e: ('PlayerVariable::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'Demand':           lambda e: ('Output::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
-    'Output':           lambda e: ('Output::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'OutputDemandGap':  lambda e: ('Output::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
-    'Resource':         lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
+    'ResourcePressure': lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ResourceDemandGap':lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ProcessMixShare':  lambda e: (ids[e['entity']], comps[e['comparator']], value(e)),
@@ -199,7 +200,7 @@ conds = {
     'ProjectStalled':    lambda e: (ids[e['entity']], 'ProjectStatus::Stalled'),
     'ProjectHalted':    lambda e: (ids[e['entity']], 'ProjectStatus::Halted'),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
-    'Flag':          lambda e: ('Flag::{}'.format(flags[e['entity']]),),
+    'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
 }
 
 def define_effect(effect):
@@ -419,8 +420,6 @@ if __name__ == '__main__':
         id_ = len(items_by_type[typ])
         ids[id] = id_
         items_by_type[typ].append(item)
-        if typ == 'Flag':
-            flags[id] = item['name']
 
     # Define constants
     rust_output = [consts_template]
@@ -545,6 +544,7 @@ if __name__ == '__main__':
         fname = image.get('image', None)
         attribution = image.get('attribution', None)
         event = {
+            'name': ev.get('name', ''),
             'arc': ev.get('arc', ''),
             'dialogue': extract_choices_and_dialogue(ev.get('dialogue', {})),
             'image': {
@@ -570,11 +570,24 @@ if __name__ == '__main__':
         if ev['type'] == 'Icon':
             id = ev['id']
             # kinda hacky
-            outlook_effect = sum(int(e['params']['Change']) for e in ev['effects'] if e['subtype'] == 'Outlook')
+            valid_subtypes = ['Outlook', 'Emissions', 'Electricity', 'PlantCalories']
+            param_keys = {'Outlook': 'Change', 'Emissions': 'Change', 'Electricity': 'PercentChange', 'PlantCalories': 'PercentChange'}
+            if len(ev['effects']) > 1:
+                raise Exception('Icon events should have only one effect')
+
+            effs = []
+            for e in ev['effects']:
+                st = e['subtype']
+                if st not in valid_subtypes: continue
+                val =int(e['params'][param_keys[e['subtype']]])
+                effs.append((st, val))
             icon_events[id] = {
                 'name': ev['name'],
                 'icon': ev['icon'],
-                'outlookChange': outlook_effect,
+                'effect': {
+                    'type': effs[0][0],
+                    'value': effs[0][1],
+                }
             }
             icons.add(ev['icon'])
 
@@ -583,6 +596,9 @@ if __name__ == '__main__':
 
     with open('assets/content/icons.json', 'w') as f:
         json.dump(list(icons), f)
+    for icon in icons:
+        if not os.path.exists('assets/icons/{}.png'.format(icon)):
+            print('Missing icon:', icon)
 
     projects = []
     for p in items_by_type['Project']:

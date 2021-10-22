@@ -67,6 +67,10 @@
     <Dialogue v-if="localData.type !== 'Icon'" :id="item.id" :dialogue="localData.dialogue" @update="saveDialogue($event)"/>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
+
+    <div class="additional-actions">
+      <button @click="delete">Delete</button>
+    </div>
   </template>
 
   <div v-else class="event-summary item-summary">

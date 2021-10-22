@@ -11,6 +11,7 @@ const getGlobe = () => import('../earth/globe');
 export default {
   mounted() {
     getGlobe().then(({default: Globe}) => {
+      console.log('CREATING GLOBE');
       this.globe = new Globe(this.$el);
       this.globe.render();
       this.globe.init();

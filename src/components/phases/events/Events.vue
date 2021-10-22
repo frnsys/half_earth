@@ -5,7 +5,7 @@
     {{year}}
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
-  <Globe id="stream-globe" ref="globe" />
+  <Globe id="events-globe" ref="globe" />
   <Event v-if="event" :event="event" @done="nextEvent" @select="selectChoice" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
@@ -81,6 +81,8 @@ export default {
       this.time = 0;
       let last = performance.now();
       let iconEvents = game.rollIconEvents();
+      console.log('ICON EVENTS:');
+      console.log(iconEvents);
       const tick = (timestamp) => {
         let elapsed = timestamp - last;
         this.time += elapsed;
@@ -113,6 +115,8 @@ export default {
       }
 
       this.events = game.rollWorldEvents();
+      console.log('Rolled world events:');
+      console.log(this.events);
       this.applyEmissions();
 
       if (this.hasEvent) {
@@ -145,7 +149,7 @@ export default {
         let region = state.gameState.world.regions[regionId];
         let tiles = regionsToTiles[region.name];
         let tileIdx = randChoice(tiles.inland.concat(tiles.coasts));
-        let label = sign(ev.outlookChange);
+        let label = sign(ev.effect.value);
         this.globe.showIconText(ev.icon, label, tileIdx);
         this.toasts.push({
           icon: ev.icon,
@@ -161,12 +165,15 @@ export default {
 </script>
 
 <style>
-#stream-globe {
+#events-globe {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+}
+#events-globe canvas {
+  width: 100% !important;
 }
 
 #event-stream-timer-fill {

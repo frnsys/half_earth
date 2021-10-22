@@ -3,6 +3,7 @@
   <div class="event--body">
     <div class="arc">{{event.arc}}</div>
     <div class="arc flipped">{{event.arc}}</div>
+    <div class="event--name">{{event.name}}</div>
     <ul class="effects">
       <template v-for="desc in effectDescs">
         <li v-html="desc"></li>
@@ -91,6 +92,15 @@ export default {
 }
 .event .effects li:last-child {
   margin-bottom: 0;
+}
+
+.event--name {
+  text-align: center;
+  background: #222222;
+  margin: 0 1em;
+  border-radius: 0.3em;
+  padding: 0.2em 0;
+  font-family: 'Andada Pro';
 }
 
 .event .dialogue {

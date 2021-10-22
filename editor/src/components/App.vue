@@ -9,7 +9,6 @@
   <div class="tab" :class="{selected: type == 'Project'}" @click="() => type = 'Project'">Projects</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
   <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
-  <div class="tab" :class="{selected: type == 'Flag'}" @click="() => type = 'Flag'">Flags</div>
   <div class="tab" :class="{selected: type == 'Const'}" @click="() => type = 'Const'">Consts</div>
 </nav>
 <div class="items" :class="type">
@@ -27,9 +26,6 @@
   </template>
   <template v-if="type == 'World'">
     <World v-for="e in itemsOfCurrentType" :item="e" />
-  </template>
-  <template v-if="type == 'Flag'">
-    <Flag v-for="f in itemsOfCurrentType" :item="f" />
   </template>
   <template v-if="type == 'Const'">
     <Const v-for="f in itemsOfCurrentType" :item="f" />
@@ -84,7 +80,6 @@ import Process from './items/Process.vue';
 import World from './items/World.vue';
 import Variable from './items/Variable.vue';
 import Industry from './items/Industry.vue';
-import Flag from './items/Flag.vue';
 import Const from './items/Const.vue';
 import validate from '../validate';
 import Graph from './Graph.vue';
@@ -122,7 +117,6 @@ export default {
     Region,
     Project,
     Process,
-    Flag,
     Variable,
     Const,
     Industry,
@@ -156,15 +150,17 @@ export default {
             let val = this.filter[i];
             return val == null
             || item[f.key] == val
-            || val == '(none)' && (i[f.key] === undefined || i[f.key] === '');
+            || val == '(none)' && (item[f.key] === undefined || item[f.key] === '');
           });
         })
         .sort((a, b) => a._created < b._created ? 1 : -1);
     },
     storyArcs() {
-      let arcs = Object.values(this.state.items)
+      let allArcs = Object.values(this.state.items)
         .filter((i) => i._type == 'Event' && i.arc).map((e) => e.arc);
-      return [...new Set(arcs)];
+      let arcs = [...new Set(allArcs)];
+      arcs.sort((a, b) => a.localeCompare(b));
+      return arcs;
     },
     filters() {
       switch (this.type) {
@@ -406,6 +402,10 @@ nav {
   right: 1em;
   top: 1em;
   width: 160px;
+}
+.filters {
+  max-height: 200px;
+  overflow-y: scroll;
 }
 .filters--header {
   display: flex;

@@ -7,6 +7,7 @@
   <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
   <Processes v-else-if="page == PAGES.PROCESSES" @close="page = null" />
+  <Dashboard v-else-if="page == PAGES.DASHBOARD" @close="page = null" />
   <div v-else class="planning--menu">
     <button v-for="p in Object.keys(PAGES)" @click="select(p)">
       <img :src="icon(p)" />
@@ -23,6 +24,7 @@ import Research from './Research.vue';
 import Policies from './Policies.vue';
 import Processes from './Processes.vue';
 import Initiatives from './Initiatives.vue';
+import Dashboard from './Dashboard.vue';
 import EventsMixin from 'components/EventsMixin';
 import Hud from 'components/Hud.vue';
 
@@ -42,15 +44,23 @@ export default {
     Research,
     Policies,
     Initiatives,
-    Processes
+    Processes,
+    Dashboard
   },
   created() {
     this.PAGES = PAGES;
   },
+  mounted() {
+    this.showEvent();
+  },
+  activated() {
+    this.showEvent();
+  },
   data() {
+    let events = game.rollPlanningEvents();
     return {
+      events,
       page: null,
-      events: game.rollPlanningEvents()
     }
   },
   methods: {

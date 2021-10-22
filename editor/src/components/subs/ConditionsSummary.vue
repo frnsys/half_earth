@@ -62,6 +62,9 @@ export default {
       if (spec.compare) {
         value += ` ${condition.comparator} ${(condition.value !== undefined && condition.value !== '') ? condition.value : '[MISSING]'}`;
       }
+      if (spec.flag) {
+        value += condition.value;
+      }
       return value;
     }
   }

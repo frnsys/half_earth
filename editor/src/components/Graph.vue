@@ -146,7 +146,6 @@ const icons = {
   Habitability: 'tent_2.png',
   Health: 'heart.png',
   Population: 'people.png',
-  Flag: 'flag.png',
   RunsPlayed: 'replays.png',
   PoliticalCapital: 'ballot_box.png',
   Year: 'calendar.png',
@@ -175,7 +174,7 @@ function childrenForEffect(effect) {
 function subtypeForItem(item) {
   switch (item._type) {
     case 'Event':
-      return item.arc || '(no arc)';
+      return item.type !== 'Icon' ? (item.arc || '(no arc)') : 'Icon';
     case 'Project':
       return item.type;
     case 'Process':
@@ -192,7 +191,6 @@ const displayFactors = [
   'OutputDemandGap',
   'Resource',
   'ResourceDemandGap',
-  'Flag',
   'RunsPlayed'
 ];
 const displayEffects = [
@@ -204,7 +202,6 @@ const displayEffects = [
   'Output',
   'OutputForFeature',
   'Resource',
-  'SetFlag',
 ];
 
 export default {
@@ -268,9 +265,7 @@ export default {
       (event.probabilities || []).forEach((prob) => {
         prob.conditions.forEach((cond) => {
           if (displayFactors.includes(cond.type)) {
-            if (cond.type == 'Flag') {
-              factors.add('Flag');
-            } else if (cond.type == 'RunsPlayed') {
+            if (cond.type == 'RunsPlayed') {
               factors.add('RunsPlayed');
             } else if (cond.type == 'Output') {
               factors.add('Output');
@@ -286,9 +281,7 @@ export default {
       let effects = new Set();
       (item.effects || []).forEach((effect) => {
         if (displayEffects.includes(effect.type)) {
-          if (effect.type == 'SetFlag') {
-            effects.add('Flag');
-          } else if (effect.type == 'Output') {
+          if (effect.type == 'Output') {
             effects.add('Output');
           } else {
             effects.add(effect.subtype);

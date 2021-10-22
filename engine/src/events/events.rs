@@ -179,23 +179,14 @@ impl Event {
         }
     }
 
-    pub fn set_choice(&self, choice_id: usize) -> (&Vec<Effect>, &ChoiceType) {
+    pub fn set_choice(&self, choice_id: usize) -> &Vec<Effect> {
         let choice = &self.choices[choice_id];
-        (&choice.effects, &choice.kind)
+        &choice.effects
     }
-}
-
-#[derive(Debug, Copy, Clone)]
-pub enum ChoiceType {
-    HES,
-    FALC,
-    Malthusian,
-    None
 }
 
 #[derive(Debug, Clone)]
 pub struct Choice {
-    pub kind: ChoiceType,
     pub effects: Vec<Effect>,
 
     /// A function that takes the current
@@ -311,6 +302,7 @@ mod test {
             outlook: 0.,
             base_habitability: 0.,
             base_contentedness: 0.,
+            flags: vec![],
         }, Region {
             id: 1,
             name: "Test Region B",
@@ -320,6 +312,7 @@ mod test {
             outlook: 0.,
             base_habitability: 0.,
             base_contentedness: 0.,
+            flags: vec![],
         }];
         let events = pool.roll_for_kind(Type::Icon, &state, None, &mut rng);
 

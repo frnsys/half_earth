@@ -11,6 +11,7 @@ pub struct Region {
     pub seceded: bool,
 
     pub income: Income,
+    pub flags: Vec<String>,
 
     /// How hopeful are people in the region about the future?
     pub outlook: f32,
