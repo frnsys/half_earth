@@ -57,7 +57,7 @@
         </fieldset>
       </div>
       <div>
-        <Image v-if="localData.type != 'Icon'" :image="localData.image" :dimensions="'640x840'" @update="saveData('image', $event)" />
+        <Image v-if="localData.type != 'Icon'" :image="localData.image" :dimensions="'480x630'" @update="saveData('image', $event)" />
       </div>
     </fieldset>
 
@@ -92,15 +92,18 @@
         </div>
     </div>
     <div class="item-summary-details">
-      <ProbabilitiesSummary v-if="definedWithValues('probabilities')" :probabilities="localData.probabilities" />
-      <div class="item-missing invalid" v-else>[MISSING PROBABILITIES]</div>
+      <div>
+        <ProbabilitiesSummary v-if="definedWithValues('probabilities')" :probabilities="localData.probabilities" />
+        <div class="item-missing invalid" v-else>[MISSING PROBABILITIES]</div>
 
-      <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
-      <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
-    </div>
-    <div class="item-summary-image" v-if="localData.type != 'Icon' && localData.image">
-      <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
-      <div class="image-attribution">{{localData.image.attribution}}</div>
+        <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
+        <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
+      </div>
+      <div class="item-summary-image" v-if="localData.type != 'Icon' && localData.image">
+        <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
+        <div class="image-attribution">{{localData.image.attribution}}</div>
+      </div>
+      <div class="item-missing invalid" v-else>[MISSING IMAGE]</div>
     </div>
     <DialogueSummary v-if="localData.type !== 'Icon'" :dialogue="localData.dialogue" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
@@ -178,8 +181,21 @@ export default {
   background: #eee;
 }
 
-.event-summary .item-summary-details > * {
-  width: 50%;
+.image-form .image-preview {
+  max-width: 250px;
+}
+
+.event-summary .item-summary-details > div:first-child {
+  flex: 1;
+  margin-right: 1em;
+}
+.event-summary .item-summary-details .effects-summary {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid #aaa;
+}
+.event-summary .image-preview {
+  max-height: 250px;
 }
 .event-summary .meta-pill:first-child {
 	background: #82ff9b;

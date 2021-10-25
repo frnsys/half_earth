@@ -4,9 +4,7 @@
       <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
       <div class="pips">
         <div class="pips--label">Political Capital</div>
-        <template v-for="i in state.points['Policy'].available">
-          <img class="pip" src="/assets/icons/pips/political_capital.png">
-        </template>
+        {{availablePoints}} x <img class="pip" src="/assets/icons/pips/political_capital.png">
       </div>
     </header>
     <Cards>
@@ -23,7 +21,12 @@
             </div>
           </template>
           <template v-slot:back>
-            {{state.projects[p.id].description}}
+            <div class="card--back--body">
+              {{state.projects[p.id].description}}
+            </div>
+            <div class="image-attribution">
+              Source image: {{state.projects[p.id].image.attribution}}
+            </div>
           </template>
 
           <template v-slot:extras>

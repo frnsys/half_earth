@@ -65,6 +65,11 @@ function describeEffect(e) {
         return `Request: Unban ${process.name} (+${e.param}PC)`
       }
     }
+    case 'AutoClick': {
+      let id = e.entity.toString()
+      let event = iconEvents[id];
+      return `${e.param}% chance to auto-respond to <img src="/assets/icons/pips/${event.icon}.png">${event.name}.`
+    }
     default:
       console.log(`Unhandled event type: ${e.type}`);
       console.log(e);

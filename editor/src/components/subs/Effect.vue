@@ -84,9 +84,15 @@ export default {
       this.update();
     },
     itemsOfType(type) {
-      return Object.values(state.items)
-        .filter((i) => i._type == type)
-        .sort((a, b) => a._created < b._created ? 1 : -1);
+      if (type == 'IconEvent') {
+        return Object.values(state.items)
+          .filter((i) => i._type == 'Event' && i.type == 'Icon')
+          .sort((a, b) => a._created < b._created ? 1 : -1);
+      } else {
+        return Object.values(state.items)
+          .filter((i) => i._type == type)
+          .sort((a, b) => a._created < b._created ? 1 : -1);
+      }
     },
     flags(key) {
       let invalid = false;

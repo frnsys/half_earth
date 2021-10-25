@@ -109,4 +109,15 @@ export default {
 	box-shadow: 0 2px 5px rgba(0,0,0,0.8);
   text-transform: uppercase;
 }
+.card--back--body {
+  flex: 1;
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+}
+
+.card .image-attribution {
+  font-size: 0.8em;
+  font-style: italic;
+}
 </style>

@@ -241,6 +241,13 @@ const EFFECTS = {
       'Flag': String
     }
   },
+
+  AutoClick: {
+    entity: 'IconEvent',
+    params: {
+      'Chance': Number,
+    }
+  }
 };
 
 const PROBABILITIES = [

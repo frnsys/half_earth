@@ -6,7 +6,8 @@ import globeFrag from './shaders/globe/fragment.glsl';
 import cloudsVert from './shaders/clouds/vertex.glsl';
 import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
-import state from '../state';
+import state from '/src/state';
+import game from '/src/game';
 
 import debug from '../debug';
 import Stats from 'stats.js';
@@ -38,6 +39,9 @@ class Globe {
     el.appendChild(this.scene.renderer.domElement);
     this._onReady = [];
     this.pings = [];
+
+    this.pauseRotation = false;
+    this.pauseTimeout = null;
   }
 
   onReady(fn) {
@@ -87,6 +91,22 @@ class Globe {
 
     // Set up hexsphere for locating icons
     this.hexsphere = new HexSphere(this.scene, this.sphere, 5.2, 8, 0.98);
+    this.hexsphere.onClick((intersects) => {
+      // Pause rotation on click
+      if (intersects.length === 0) {
+        if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+        this.pauseRotation = true;
+        this.pauseTimeout = setTimeout(() => {
+          this.pauseRotation = false;
+        }, 2000);
+      } else {
+        intersects.forEach((intersect) => {
+          let mesh = intersect.object;
+          let hexIdx = mesh.userData.hexIdx;
+          this.respondToEvent(mesh, hexIdx);
+        });
+      }
+    });
 
     // Create the clouds layer
     this.cloudsMaterial = new THREE.ShaderMaterial({
@@ -111,6 +131,12 @@ class Globe {
     this._onReady.forEach((fn) => fn(this));
 
     await this.updateSurface();
+  }
+
+  respondToEvent(mesh, hexIdx) {
+    this.pingIcon('political_capital', hexIdx);
+    game.changePoliticalCapital(1);
+    mesh.visible = false;
   }
 
   async updateSurface() {
@@ -141,30 +167,38 @@ class Globe {
 
   // Show an icon and ping text
   // at the specified hex
-  showIconText(icon, text, hexIdx) {
-    let iconMesh = this.hexsphere.showIcon(icon, hexIdx);
+  showIconText(iconName, text, hexIdx) {
+    let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.75, true);
     let textMesh = this.hexsphere.showTextAt(text, hexIdx, 0.5);
-    this.pings.push({text: textMesh, icon: iconMesh});
+    this.pings.push({mesh: textMesh, icon: iconMesh});
+    return iconMesh;
+  }
+
+  pingIcon(iconName, hexIdx) {
+    let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.5);
+    this.pings.push({mesh: iconMesh, icon: null});
   }
 
   tickPings() {
     // Update pings
-    this.pings = this.pings.filter(({text, icon}) => {
+    this.pings = this.pings.filter(({mesh, icon}) => {
       // Keep text facing the camera
-      text.lookAt(this.scene.camera.position);
+      mesh.lookAt(this.scene.camera.position);
 
       // Move text pings up and fade out
-      text.position.y += 0.02;
-      text.material.opacity -= 0.005;
+      mesh.position.y += 0.02;
+      mesh.material.opacity -= 0.005;
 
-      let done = text.material.opacity <= 0;
+      let done = mesh.material.opacity <= 0;
       if (done) {
-        text.geometry.dispose();
-        text.material.dispose();
-        icon.geometry.dispose();
-        icon.material.dispose();
-        this.scene.remove(text);
-        this.scene.remove(icon);
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        mesh.parent.remove(mesh);
+        if (icon) {
+          icon.geometry.dispose();
+          icon.material.dispose();
+          icon.parent.remove(icon);
+        }
       }
       return !done;
     });
@@ -181,7 +215,7 @@ class Globe {
     }
 
     // Rotate world
-    if (this.sphere) {
+    if (this.sphere && !this.pauseRotation) {
       this.sphere.rotation.y += 0.003;
     }
     this.tickPings();

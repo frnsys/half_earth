@@ -20,7 +20,12 @@
             <div>{{(p.mix_share*100).toFixed(1)}}%</div>
           </template>
           <template v-slot:back>
-            {{state.processes[p.id].description}}
+            <div class="card--back--body">
+              {{state.processes[p.id].description}}
+            </div>
+            <div class="image-attribution">
+              Source image: {{state.processes[p.id].image.attribution}}
+            </div>
           </template>
           <template v-slot:extras>
             <button v-if="!p.banned" @click="banProcess(p)">

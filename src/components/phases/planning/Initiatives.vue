@@ -4,9 +4,11 @@
       <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
       <div class="pips">
         <div class="pips--label">Initiative Points</div>
-        <template v-for="i in state.points['Initiative'].total">
-          <img class="pip" :style="{opacity: i <= state.points['Initiative'].available ? 1 : 0.5}" src="/assets/icons/pips/initiative.png">
-        </template>
+        {{availablePoints}} x <img class="pip" src="/assets/icons/pips/initiative.png">
+      </div>
+      <div class="pips pips--buy" @click="buyPoint">
+        <div class="pips--label">Buy Initiative Point</div>
+        {{nextPointCost}} x <img class="pip" src="/assets/icons/pips/political_capital.png"> ⮕ <img class="pip" src="/assets/icons/pips/initiative.png">
       </div>
     </header>
     <Cards>
@@ -25,7 +27,17 @@
             <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>
           </template>
           <template v-slot:back>
-            {{state.projects[p.id].description}}
+            <div class="card--back--body">
+              {{state.projects[p.id].description}}
+              <ul class="effects">
+                <template v-for="desc in effectDescs(state.projects[p.id])">
+                  <li v-html="desc"></li>
+                </template>
+              </ul>
+            </div>
+            <div class="image-attribution">
+              Source image: {{state.projects[p.id].image.attribution}}
+            </div>
           </template>
           <template v-slot:extras>
             <div class="card--tag" v-if="status(p) !== 'inactive'">

@@ -1,8 +1,8 @@
 <template>
-<div class="event" :style="{backgroundImage: 'url(/assets/content/images/1633964440.996614.png)'}">
+<div class="event" :style="{backgroundImage: `url(/assets/content/images/${event.image ? event.image.fname : 'missing_image.png'})`}">
   <div class="event--body">
     <div class="arc">{{event.arc}}</div>
-    <div class="arc flipped">{{event.arc}}</div>
+    <div class="image-attribution">Image source: {{event.image ? event.image.attribution : ''}}</div>
     <div class="event--name">{{event.name}}</div>
     <ul class="effects">
       <template v-for="desc in effectDescs">
@@ -69,11 +69,17 @@ export default {
   width: 180px;
   font-family: 'Andada Pro';
 }
-.event .arc.flipped {
+.event .image-attribution {
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translate(-50%, 0) rotate(-180deg);
+  transform: translate(-50%, 0);
+  font-size: 0.6em;
+  font-style: italic;
+  width: 100%;
+  text-align: center;
+  text-shadow: 1px 1px 2px black;
+  margin: 0.5em 0;
 }
 .event .effects {
   margin: 2em;

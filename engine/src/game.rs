@@ -123,6 +123,15 @@ impl GameInterface {
     pub fn set_tgav(&mut self, tgav: f32) {
         self.game.state.world.temperature = tgav;
     }
+
+    pub fn active_autoclickers(&self) -> Result<JsValue, JsValue> {
+        let projects = self.game.state.projects.iter().filter(|p| p.status == Status::Active || p.status == Status::Finished);
+        let autoclicks: Vec<&Effect> = projects.flat_map(|p| p.effects.iter().filter(|e| match e {
+            Effect::AutoClick(_, _) => true,
+            _ => false
+        })).collect();
+        Ok(serde_wasm_bindgen::to_value(&autoclicks)?)
+    }
 }
 
 pub struct Game {
@@ -188,8 +197,8 @@ impl Game {
         }
     }
 
-    pub fn step(&mut self) {
-        self.state.step();
+    pub fn step(&mut self) -> Vec<usize> {
+        self.state.step()
     }
 
     pub fn roll_events_of_kind(&mut self, kind: EventType, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
@@ -312,7 +321,7 @@ impl State {
         (output_demand * self.output_demand_modifier, resources_demand)
     }
 
-    pub fn step(&mut self) {
+    pub fn step(&mut self) -> Vec<usize> {
         let (output_demand, resources_demand) = self.calculate_demand();
         self.output_demand = output_demand;
         self.resources_demand = resources_demand;
@@ -363,6 +372,7 @@ impl State {
         update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights);
 
         // Advance projects
+        let mut completed_projects = Vec::new();
         for project in self.projects.iter_mut().filter(|p| match p.status {
             Status::Building => true,
             _ => false
@@ -370,10 +380,12 @@ impl State {
             let completed = project.build();
             if completed {
                 self.recently_completed.push(project.id);
+                completed_projects.push(project.id);
             }
         }
 
         self.world.year += 1;
+        completed_projects
     }
 
     pub fn check_requests(&mut self) -> Vec<(Request, usize, bool, usize)> {

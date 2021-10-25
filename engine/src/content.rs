@@ -2092,6 +2092,25 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0
+        },
+        Project {
+            id: 55,
+            name: "Autoclick Test",
+            cost: 1,
+            progress: 0.0,
+            effects: vec![
+                Effect::AutoClick(117, 50.0),
+                Effect::AutoClick(80, 100.0)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0
         }
     ]
 }
@@ -2409,6 +2428,12 @@ pub fn events() -> Vec<Event> {
                 Effect::AddEvent(89)
             ],
             probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+
+                    ]
+                },
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
@@ -3312,7 +3337,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 46,
-            name: "Rerualization",
+            name: "Reruralization",
             kind: EventType::World,
             locked: false,
             effects: vec![
@@ -4162,7 +4187,7 @@ pub fn events() -> Vec<Event> {
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
@@ -5222,6 +5247,24 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ]
+        },
+        Event {
+            id: 117,
+            name: "TEST ICON",
+            kind: EventType::Icon,
+            locked: false,
+            effects: vec![
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+
+                    ]
+                }
+            ],
+            choices: vec![]
         }
     ]
 }

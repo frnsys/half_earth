@@ -143,7 +143,7 @@ export default {
         // Scale back up with nearest neighbor interpolation
         '-interpolate', 'Nearest',
         '-filter', 'point',
-        '-resize', '200%',
+        '-resize', '150%',
         'output.jpg'];
 
       const processedFiles = await Magick.Call(inputFiles, command);

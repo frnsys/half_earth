@@ -142,14 +142,21 @@ export default {
 }
 
 .pip {
-  width: 32px;
+  width: 22px;
+  vertical-align: middle;
 }
 .pips {
   padding: 1em 0.5em 0.5em;
   margin: 1em;
   border: 1px solid #454340;
-  width: calc(320px + 1em + 2px);
   position: relative;
+  text-align: center;
+}
+.pips--buy {
+  cursor: pointer;
+}
+.pips--buy:hover {
+  background: #eae7e7;
 }
 .pips--label {
   position: absolute;
@@ -183,9 +190,15 @@ export default {
 .planning--page > header {
   padding: 0.5em;
   display: flex;
+  justify-content: space-between;
 }
 .planning--page .back {
   width: 32px;
   cursor: pointer;
+}
+
+.planning .effects img {
+  width: 24px;
+  height: 24px;
 }
 </style>

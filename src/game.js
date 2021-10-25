@@ -18,6 +18,24 @@ function updateState() {
   state.gameState.population = world.regions.reduce((acc, r) => {
       return acc + r.population
     }, 0);
+
+  // Aggregate autoclicker effects into single probabilities
+  let autoclicker_effects = game.active_autoclickers();
+  let autoclickers = {};
+  autoclicker_effects.forEach(({AutoClick}) => {
+    let id = AutoClick[0];
+    let chance = AutoClick[1]/100;
+    if (!(id in autoclickers)) {
+      autoclickers[id] = [];
+    }
+    autoclickers[id].push(chance);
+  });
+  Object.keys(autoclickers).forEach((id) => {
+    autoclickers[id] = 1 - autoclickers[id].reduce((acc, p) => {
+      return acc * (1 - p);
+    }, 1);
+  });
+  state.gameState.autoclickers = autoclickers;
 }
 
 
@@ -29,9 +47,9 @@ function newRun() {
 
 // Step the game by one year
 function step() {
-  let events = game.step();
+  let completedProjects = game.step();
   updateState();
-  return events;
+  return completedProjects;
 }
 
 function changePoliticalCapital(amount) {

@@ -13,16 +13,10 @@ const init = {
 
   points: {
     Research: {
-      total: 10,
-      available: 10,
+      available: 0,
     },
     Initiative: {
-      total: 10,
-      available: 10,
-    },
-    Policy: {
-      total: 10,
-      available: 10,
+      available: 0,
     },
   },
 

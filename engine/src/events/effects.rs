@@ -30,6 +30,8 @@ pub enum Effect {
     Migration,
     RegionLeave,
     AddRegionFlag(String),
+
+    AutoClick(usize, f32),
 }
 
 impl Effect {
@@ -126,7 +128,10 @@ impl Effect {
                 if let Some(id) = region_id {
                     game.state.world.regions[id].flags.push(flag.to_string());
                 }
-            }
+            },
+
+            // Effects like AutoClick have no impact in the engine side
+            _ => ()
         }
     }
 }

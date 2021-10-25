@@ -174,6 +174,7 @@ effects = {
     'AddRegionFlag':    lambda e: ('"{}".to_string()'.format(e['params'].get('Flag')),),
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
+    'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
 }
 comps = {
     '<': 'Comparator::Less',
@@ -610,11 +611,18 @@ if __name__ == '__main__':
         fname = image.get('image', None)
         attribution = image.get('attribution', None)
         project = {
+            'name': p['name'],
             'image': {
                 'fname': fname,
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
+            'effects': [{
+                'type': e['type'],
+                'subtype': e.get('subtype'),
+                'entity': ids.get(e.get('entity')),
+                'param': get_param(e)
+            } for e in p.get('effects', [])]
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)

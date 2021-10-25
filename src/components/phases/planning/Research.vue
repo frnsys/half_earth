@@ -4,9 +4,11 @@
       <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
       <div class="pips">
         <div class="pips--label">Research Points</div>
-        <template v-for="i in state.points['Research'].total">
-          <img class="pip" :style="{opacity: i <= state.points['Research'].available ? 1 : 0.5}" src="/assets/icons/pips/research.png">
-        </template>
+        {{availablePoints}} x <img class="pip" src="/assets/icons/pips/research.png">
+      </div>
+      <div class="pips pips--buy" @click="buyPoint">
+        <div class="pips--label">Buy Research Point</div>
+        {{nextPointCost}} x <img class="pip" src="/assets/icons/pips/political_capital.png"> ⮕ <img class="pip" src="/assets/icons/pips/research.png">
       </div>
     </header>
     <Cards>
@@ -25,7 +27,12 @@
             <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>
           </template>
           <template v-slot:back>
-            {{state.projects[p.id].description}}
+            <div class="card--back--body">
+              {{state.projects[p.id].description}}
+            </div>
+            <div class="image-attribution">
+              Source image: {{state.projects[p.id].image.attribution}}
+            </div>
           </template>
 
           <template v-slot:extras>

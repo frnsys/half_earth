@@ -9,6 +9,8 @@ const raycaster = new THREE.Raycaster();
 const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true});
 hexMaterial.opacity = 0.5;
 
+const hexFocusMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
+
 // For displaying text
 const loader = new THREE.FontLoader();
 let threeFont;
@@ -19,7 +21,7 @@ const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: 
 
 // Load icons
 const texLoader = new THREE.TextureLoader();
-const icons = iconNames.reduce((acc, name) => {
+const icons = iconNames.concat(['political_capital']).reduce((acc, name) => {
   const map = texLoader.load(`./assets/icons/pips/${name}.png`);
   const iconMat = new THREE.SpriteMaterial({map});
   acc[name] = iconMat;
@@ -92,6 +94,7 @@ class HexSphere {
 
       if (debug.showTiles) {
         this.showTextAt(`${idx}`, idx);
+        this.selectables.push(tile.mesh);
       }
     });
 
@@ -99,6 +102,7 @@ class HexSphere {
     this.mouse = new THREE.Vector2();
     scene.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     scene.renderer.domElement.addEventListener('touchstart', this.onTouchStart.bind(this), false);
+    // scene.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this), false);
     this._onClick = [];
   }
 
@@ -110,16 +114,21 @@ class HexSphere {
     this._onClick.push(fn);
   }
 
-  showIcon(iconName, hexIdx) {
+  showIcon(iconName, hexIdx, size, selectable) {
+    size = size || 0.75;
     let tile = this.hexasphere.tiles[hexIdx];
     let iconMat = icons[iconName];
-    const sprite = new THREE.Sprite(iconMat);
-    sprite.scale.set(0.75, 0.75, 0.75);
+    const sprite = new THREE.Sprite(iconMat.clone());
+    sprite.scale.set(size, size, size);
     sprite.position.copy(
       tile.centerPointVec.add(tile.normal.multiplyScalar(2.)));
 
     this.parent.add(sprite);
-    this.selectables.push(sprite);
+
+    if (selectable) {
+      sprite.userData.hexIdx = hexIdx;
+      this.selectables.push(sprite);
+    }
     return sprite;
   }
 
@@ -151,8 +160,8 @@ class HexSphere {
 
   setMouse(ev) {
     // adjust browser mouse position for three.js scene
-    this.mouse.x = ( ( ev.clientX - this.scene.renderer.domElement.offsetLeft ) / this.scene.renderer.domElement.clientWidth ) * 2 - 1;
-    this.mouse.y = - ( ( ev.clientY - this.scene.renderer.domElement.offsetTop ) / this.scene.renderer.domElement.clientHeight ) * 2 + 1;
+    this.mouse.x = (ev.offsetX / this.scene.renderer.domElement.clientWidth) * 2 - 1;
+    this.mouse.y = -(ev.offsetY / this.scene.renderer.domElement.clientHeight) * 2 + 1;
   }
 
   onMouseDown(ev) {
@@ -161,12 +170,12 @@ class HexSphere {
     raycaster.setFromCamera(this.mouse, this.scene.camera);
 
     let intersects = raycaster.intersectObjects(this.selectables.filter(s => s.visible));
-    if (intersects.length > 0) {
+    // if (intersects.length > 0) {
       // Rotate orbital controls camera to center on this point
-      const mesh = intersects[0].object;
-      const pos = mesh.position;
-      this.centerOnPosition(pos);
-    }
+      // const pos = mesh.position;
+      // this.centerOnPosition(pos);
+    // }
+    this._onClick.forEach((fn) => fn(intersects));
   }
 
   centerOnIndex(idx) {
@@ -189,6 +198,21 @@ class HexSphere {
     ev.clientX = ev.touches[0].clientX;
     ev.clientY = ev.touches[0].clientY;
     this.onMouseDown(ev);
+  }
+
+  onMouseMove(ev) {
+    ev.preventDefault();
+    this.setMouse(ev);
+    raycaster.setFromCamera(this.mouse, this.scene.camera);
+
+    let intersects = raycaster.intersectObjects(this.selectables);
+    if (intersects.length > 0) {
+      intersects.forEach((obj) => {
+        if (obj.object) {
+          obj.object.material = hexFocusMaterial;
+        }
+      });
+    }
   }
 }
 

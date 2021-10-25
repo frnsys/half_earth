@@ -6,6 +6,7 @@
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
   <Globe id="events-globe" ref="globe" />
+  <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
   <Event v-if="event" :event="event" @done="nextEvent" @select="selectChoice" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
@@ -20,6 +21,7 @@ import game from '/src/game';
 import state from '/src/state';
 import {sign} from 'lib/util';
 import Event from './Event.vue';
+import Project from './Project.vue';
 import Hud from 'components/Hud.vue';
 import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
@@ -39,12 +41,14 @@ export default {
       time: 0,
       toasts: [],
       year: state.gameState.world.year,
+      completedProjects: [],
     };
   },
   components: {
     Hud,
     Globe,
     Event,
+    Project,
   },
   mounted() {
     this.start();
@@ -88,8 +92,9 @@ export default {
         this.time += elapsed;
 
         if (this.time >= MS_PER_YEAR) {
-          game.step();
+          this.completedProjects = game.step();
           this.year = state.gameState.world.year;
+
           this.rollEvent();
           return;
 
@@ -98,7 +103,17 @@ export default {
           if (iconEvents.length > 0 && Math.random() < 0.05) {
             let [eventId, regionId] = iconEvents.shift();
             game.applyEvent(eventId, regionId);
-            this.showEventOnGlobe(eventId, regionId);
+            let icon = this.showEventOnGlobe(eventId, regionId);
+
+            // If autoclickers for this event, roll for autoclick
+            if (icon && eventId in state.gameState.autoclickers) {
+              let chance = state.gameState.autoclickers[eventId];
+              setTimeout(() => {
+                if (Math.random() <= chance) {
+                  this.globe.respondToEvent(icon.mesh, icon.hexIdx);
+                }
+              }, 500);
+            }
           }
           last = timestamp;
         }
@@ -148,9 +163,9 @@ export default {
         // TODO distinguish inland vs coastal events
         let region = state.gameState.world.regions[regionId];
         let tiles = regionsToTiles[region.name];
-        let tileIdx = randChoice(tiles.inland.concat(tiles.coasts));
+        let hexIdx = randChoice(tiles.inland.concat(tiles.coasts));
         let label = sign(ev.effect.value);
-        this.globe.showIconText(ev.icon, label, tileIdx);
+        let mesh = this.globe.showIconText(ev.icon, label, hexIdx);
         this.toasts.push({
           icon: ev.icon,
           desc: `${ev.name} in ${region.name}`
@@ -158,6 +173,7 @@ export default {
         if (this.toasts.length > 3) {
           this.toasts.shift();
         }
+        return {hexIdx, mesh};
       }
     },
   },
@@ -171,9 +187,6 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-}
-#events-globe canvas {
-  width: 100% !important;
 }
 
 #event-stream-timer-fill {
