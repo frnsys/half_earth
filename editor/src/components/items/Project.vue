@@ -63,7 +63,7 @@
           </label>
           <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
         </div>
-        <Effects :toggle="true" :effects="localData.effects" @update="saveData('effects', $event)" />
+        <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
       </div>
     </fieldset>
 

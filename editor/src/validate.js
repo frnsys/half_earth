@@ -316,6 +316,23 @@ const SPECS = {
           return true;
       }
     }
-  }
+  },
+
+  NPC: {
+    key: 'name',
+    validate: ['name', 'description'],
+    questions: ['name', 'description', 'notes'],
+    validateKey: (item, key) => {
+      switch (key) {
+        case 'name':
+          return requireAtLeastOne(item.name);
+        case 'description':
+          return requireAtLeastOne(item.description);
+        default:
+          return true;
+      }
+    }
+  },
+
 }
 export default SPECS;

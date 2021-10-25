@@ -28,6 +28,7 @@ use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Effect, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
+use crate::npcs::NPC;
 '''
 
 world_fn_template = \
@@ -107,6 +108,11 @@ specs = {
         'probabilities': [],
         'dialogue': [],
     },
+    'NPC': {
+        'id': None,
+        'name': None,
+        'relationship': 0
+    },
     'Probability': {
         'likelihood': None,
         'conditions': [],
@@ -175,6 +181,7 @@ effects = {
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
     'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
+    'NPCRelationship':  lambda e: (ids[e['entity']], param(e, 'Change')),
 }
 comps = {
     '<': 'Comparator::Less',
@@ -525,6 +532,7 @@ if __name__ == '__main__':
     rust_output.append(define_content_fn('processes', 'Process'))
     rust_output.append(define_content_fn('projects', 'Project'))
     rust_output.append(define_content_fn('events', 'Event'))
+    rust_output.append(define_content_fn('npcs', 'NPC'))
     with open('engine/src/content.rs', 'w') as f:
         f.write('\n\n'.join(rust_output))
 
@@ -652,6 +660,18 @@ if __name__ == '__main__':
         processes.append(process)
     with open('assets/content/processes.json', 'w') as f:
         json.dump(processes, f)
+
+    npcs = []
+    for p in items_by_type['NPC']:
+        id = p['id']
+        npc = {
+            'name': p['name'],
+            'description': p.get('description', ''),
+        }
+        npcs.append(npc)
+    with open('assets/content/npcs.json', 'w') as f:
+        json.dump(npcs, f)
+
 
     regions = []
     for region in items_by_type['Region']:

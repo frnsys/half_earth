@@ -1,3 +1,4 @@
+use crate::npcs::NPC;
 use crate::world::World;
 use crate::industries::Industry;
 use crate::projects::{Project, Status, Type as ProjectType};
@@ -154,6 +155,7 @@ impl Game {
             projects: content::projects(),
             processes: content::processes(),
             industries: content::industries(),
+            npcs: content::npcs(),
             recently_completed: Vec::new(),
 
             runs: 0,
@@ -245,6 +247,8 @@ impl Game {
         }
 
         for (effect, region_id) in effects {
+            // TODO should be applied immediately instead, when we show
+            // the project completion notification
             effect.apply(self, region_id);
         }
 
@@ -264,6 +268,7 @@ pub struct State {
     pub malthusian_points: usize,
     pub hes_points: usize,
     pub falc_points: usize,
+    pub npcs: Vec<NPC>,
 
     // Recently completed projects
     pub recently_completed: Vec<usize>,

@@ -32,6 +32,7 @@ pub enum Effect {
     AddRegionFlag(String),
 
     AutoClick(usize, f32),
+    NPCRelationship(usize, f32),
 }
 
 impl Effect {
@@ -128,6 +129,9 @@ impl Effect {
                 if let Some(id) = region_id {
                     game.state.world.regions[id].flags.push(flag.to_string());
                 }
+            },
+            Effect::NPCRelationship(id, change) => {
+                game.state.npcs[*id].relationship += change;
             },
 
             // Effects like AutoClick have no impact in the engine side

@@ -7,6 +7,7 @@
   <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
   <Processes v-else-if="page == PAGES.PROCESSES" @close="page = null" />
+  <Coalition v-else-if="page == PAGES.COALITION" @close="page = null" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" @close="page = null" />
   <div v-else class="planning--menu">
     <button v-for="p in Object.keys(PAGES)" @click="select(p)">
@@ -24,6 +25,7 @@ import Research from './Research.vue';
 import Policies from './Policies.vue';
 import Processes from './Processes.vue';
 import Initiatives from './Initiatives.vue';
+import Coalition from './Coalition.vue';
 import Dashboard from './Dashboard.vue';
 import EventsMixin from 'components/EventsMixin';
 import Hud from 'components/Hud.vue';
@@ -34,8 +36,9 @@ const PAGES = {
   INITIATIVES: 1,
   POLICIES: 2,
   PROCESSES: 3,
-  DASHBOARD: 4,
-  CONTINUE: 5
+  COALITION: 4,
+  DASHBOARD: 5,
+  CONTINUE: 6
 }
 
 export default {
@@ -46,6 +49,7 @@ export default {
     Policies,
     Initiatives,
     Processes,
+    Coalition,
     Dashboard
   },
   created() {
@@ -104,6 +108,8 @@ export default {
           return "/assets/placeholders/initiatives_win98.png";
         case 'PROCESSES':
           return "/assets/placeholders/processes_win98.png";
+        case 'COALITION':
+          return "/assets/placeholders/coalition_win98.png";
         default:
           return "/assets/placeholders/chart.png";
       }
@@ -126,16 +132,17 @@ export default {
 }
 .planning--menu {
   padding: 1em;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .planning--menu button {
   width: 96px;
   height: 96px;
+  margin: 0 14% 1em;
   padding: 0.25em 0.5em;
   border-width: 4px;
   justify-self: center;
-  margin-bottom: 1em;
 }
 .planning--menu img {
   max-width: 100%;

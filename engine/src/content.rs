@@ -9,6 +9,7 @@ use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Effect, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
+use crate::npcs::NPC;
 
 
 
@@ -2100,7 +2101,8 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             effects: vec![
                 Effect::AutoClick(117, 50.0),
-                Effect::AutoClick(80, 100.0)
+                Effect::AutoClick(80, 100.0),
+                Effect::NPCRelationship(0, 1.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -5265,6 +5267,26 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![]
+        }
+    ]
+}
+
+pub fn npcs() -> Vec<NPC> {
+    vec![
+        NPC {
+            id: 0,
+            name: "The Ecologist",
+            relationship: 0.0
+        },
+        NPC {
+            id: 1,
+            name: "The Agronomist",
+            relationship: 0.0
+        },
+        NPC {
+            id: 2,
+            name: "The Malthusian",
+            relationship: 0.0
         }
     ]
 }

@@ -1,5 +1,6 @@
 #[macro_use]
 pub mod kinds;
+mod npcs;
 mod utils;
 mod projects;
 mod world;

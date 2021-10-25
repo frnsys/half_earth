@@ -8,6 +8,7 @@
   <div class="tab" :class="{selected: type == 'Process'}" @click="() => type = 'Process'">Processes</div>
   <div class="tab" :class="{selected: type == 'Project'}" @click="() => type = 'Project'">Projects</div>
   <div class="tab" :class="{selected: type == 'Event'}" @click="() => type = 'Event'">Events</div>
+  <div class="tab" :class="{selected: type == 'NPC'}" @click="() => type = 'NPC'">NPCs</div>
   <div class="tab" :class="{selected: type == 'Variable'}" @click="() => type = 'Variable'">Vars</div>
   <div class="tab" :class="{selected: type == 'Const'}" @click="() => type = 'Const'">Consts</div>
 </nav>
@@ -23,6 +24,9 @@
   </template>
   <template v-else-if="type == 'Event'">
     <Event v-for="e in itemsOfCurrentType" :item="e" />
+  </template>
+  <template v-else-if="type == 'NPC'">
+    <NPC v-for="e in itemsOfCurrentType" :item="e" />
   </template>
   <template v-if="type == 'World'">
     <World v-for="e in itemsOfCurrentType" :item="e" />
@@ -81,6 +85,7 @@ import World from './items/World.vue';
 import Variable from './items/Variable.vue';
 import Industry from './items/Industry.vue';
 import Const from './items/Const.vue';
+import NPC from './items/NPC.vue';
 import validate from '../validate';
 import Graph from './Graph.vue';
 
@@ -112,6 +117,7 @@ export default {
     }
   },
   components: {
+    NPC,
     Event,
     World,
     Region,

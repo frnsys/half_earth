@@ -247,6 +247,13 @@ const EFFECTS = {
     params: {
       'Chance': Number,
     }
+  },
+
+  NPCRelationship: {
+    entity: 'NPC',
+    params: {
+      'Change': Number,
+    }
   }
 };
 

@@ -1,0 +1,47 @@
+<template>
+<li class="item" :key="item.id" :id="item.id" ref="root">
+  <Flags :invalid="invalid" :questions="questions" />
+  <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <template v-if="editing">
+    <div>
+      <label>
+        Name
+        <Tip>Name of the NPC.</Tip>
+      </label>
+      <input class="title" type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
+    </div>
+    <div>
+      <label>
+        Description
+        <Tip>Describe the effects of having this NPC in your coalition.</Tip>
+      </label>
+      <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
+    </div>
+    <Notes :notes="localData.notes" @blur="saveNotes" />
+
+    <div class="additional-actions">
+      <button @click="delete">Delete</button>
+    </div>
+  </template>
+
+  <div v-else class="npc-summary item-summary">
+      <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
+      <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
+      <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
+      <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+  </div>
+</li>
+</template>
+
+<script>
+import uuid from '../../uuid';
+import ItemMixin from './ItemMixin';
+export default {
+  computed: {
+    descriptionHtml() {
+      return this.localData.description.replaceAll('\n', '<br />');
+    },
+  },
+  mixins: [ItemMixin]
+};
+</script>
