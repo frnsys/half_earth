@@ -57,7 +57,7 @@
         </fieldset>
       </div>
       <div>
-        <Image v-if="localData.type != 'Icon'" :image="localData.image" :dimensions="'480x630'" @update="saveData('image', $event)" />
+        <Image v-if="localData.type == 'World'" :image="localData.image" :dimensions="'480x630'" @update="saveData('image', $event)" />
       </div>
     </fieldset>
 
@@ -97,13 +97,13 @@
         <div class="item-missing invalid" v-else>[MISSING PROBABILITIES]</div>
 
         <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
-        <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
+        <div class="item-missing invalid" v-else-if="localData.type != 'Planning' && localData.type != 'Breaks'">[MISSING EFFECTS]</div>
       </div>
-      <div class="item-summary-image" v-if="localData.type != 'Icon' && localData.image">
+      <div class="item-summary-image" v-if="localData.type == 'World' && localData.image">
         <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
         <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
-      <div class="item-missing invalid" v-else>[MISSING IMAGE]</div>
+      <div class="item-missing invalid" v-else-if="localData.type == 'World'">[MISSING IMAGE]</div>
     </div>
     <DialogueSummary v-if="localData.type !== 'Icon'" :dialogue="localData.dialogue" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>

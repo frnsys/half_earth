@@ -2,12 +2,6 @@
   <div class="planning--page">
     <header>
       <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
-      <div class="pips">
-        <div class="pips--label">Political Capital</div>
-        <template v-for="i in state.points['Policy'].available">
-          <img class="pip" src="/assets/icons/pips/political_capital.png">
-        </template>
-      </div>
     </header>
     <Cards>
       <template v-for="p in processes">

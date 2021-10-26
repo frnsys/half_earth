@@ -20,12 +20,12 @@ pub const STARTING_RESOURCES: ResourceMap<f32> = ResourceMap {
     water: 45500000000000000.0
 };
 
-pub fn income_pop_change(pop: f32, income: &Income) -> f32 {
+pub fn income_pop_change(year: f32, income: &Income) -> f32 {
     match income {
-        Income::Low => 0.02510843736506849 + -0.00027392308142168935*pop + -1.2013335809592668e-06*pop.powf(2.0) + 1.6107860430271117e-08*pop.powf(3.0),
-        Income::LowerMiddle => 0.015956334414138754 + -0.00029336051833737166*pop + 7.154489844717687e-07*pop.powf(2.0) + 4.267315072469537e-09*pop.powf(3.0),
-        Income::UpperMiddle => 0.007324313878541907 + -0.00021522025711188524*pop + 2.7208734051441963e-09*pop.powf(2.0) + 9.029389058532674e-09*pop.powf(3.0),
-        Income::High => 0.005554574166810743 + -0.00032696397778050114*pop + 4.6328142827097576e-06*pop.powf(2.0) + -2.1135532274204256e-08*pop.powf(3.0)
+        Income::Low => -137.09104615549052 + 0.20175900568502633*year + -9.881496778856683e-05*year.powf(2.0) + 1.6107860430297862e-08*year.powf(3.0),
+        Income::LowerMiddle => -31.645089275035065 + 0.049053282850800455*year + -2.5144480355319464e-05*year.powf(2.0) + 4.267315072570761e-09*year.powf(3.0),
+        Income::UpperMiddle => -73.97073712590549 + 0.110304344757395*year + -5.471537682118361e-05*year.powf(2.0) + 9.02938905851344e-09*year.powf(3.0),
+        Income::High => 193.7774375120351 + -0.27776781135845113*year + 0.00013271413986610546*year.powf(2.0) + -2.113553227448261e-08*year.powf(3.0)
     }
 }
 

@@ -2,22 +2,29 @@
 <div class="image-form">
   <img class="image-preview" v-if="localData.image" :src="`/image/${localData.image}`"/>
   <div class="image-attribution-preview">{{localData.attribution}}</div>
-  <button @click="editing = true">✎</button>
+  <button class="image-edit" @click="editing = true">✎</button>
+  <button class="image-select" @click="selecting = true">Select Existing</button>
   <ImageEditor v-if="editing" :image="localData" :dimensions="dimensions" @update="update($event)" @close="editing = false" />
+  <ImageSelector v-if="selecting"
+    @close="selecting = false"
+    @selected="update" />
 </div>
 </template>
 
 <script>
 import ImageEditor from './ImageEditor.vue';
+import ImageSelector from './ImageSelector.vue';
 
 export default {
   props: ['image', 'dimensions'],
   components: {
-    ImageEditor
+    ImageEditor,
+    ImageSelector
   },
   data() {
     return {
       editing: false,
+      selecting: false,
       localData: Object.assign({}, this.image)
     }
   },
@@ -38,10 +45,15 @@ export default {
   position: relative;
   background: #eee;
 }
-.image-form > button {
+button.image-edit {
   position: absolute;
   bottom: 0.5em;
   right: 0.5em;
+}
+button.image-select {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
 }
 .image-preview {
   max-width: 100%;

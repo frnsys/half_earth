@@ -2,6 +2,8 @@ use crate::consts;
 use crate::kinds::OutputMap;
 use serde::Serialize;
 
+const DEVELOP_SPEED: f32 = 0.03;
+
 #[derive(Serialize)]
 pub struct Region {
     pub id: usize,
@@ -11,6 +13,7 @@ pub struct Region {
     pub seceded: bool,
 
     pub income: Income,
+    pub development: f32,
     pub flags: Vec<String>,
 
     /// How hopeful are people in the region about the future?
@@ -41,8 +44,24 @@ impl Region {
         self.base_habitability
     }
 
-    pub fn pop_change(&mut self) {
-        self.population = consts::income_pop_change(self.population, &self.income);
+    pub fn update_pop(&mut self, year: f32) {
+        self.population *= 1. + consts::income_pop_change(year, &self.income);
+    }
+
+    pub fn develop(&mut self) {
+        if self.income != Income::High {
+            self.development += DEVELOP_SPEED;
+            if self.development >= 1.0 {
+                let next_income = match self.income {
+                    Income::Low => Income::LowerMiddle,
+                    Income::LowerMiddle => Income::UpperMiddle,
+                    Income::UpperMiddle => Income::High,
+                    Income::High => Income::High,
+                };
+                self.development = 0.;
+                self.income = next_income;
+            }
+        }
     }
 
     pub fn demand(&self) -> OutputMap<f32> {
@@ -53,8 +72,17 @@ impl Region {
             Income::UpperMiddle => 2,
             Income::High => 3,
         };
-        for (k, v) in consts::OUTPUT_DEMAND[idx].items() {
-            demand[k] += v * self.population;
+        if idx < 3 {
+            let upper_demand = consts::OUTPUT_DEMAND[idx+1];
+            for (k, v_a) in consts::OUTPUT_DEMAND[idx].items() {
+                let v_b = upper_demand[k];
+                let v = (v_b - v_a) * self.development + v_a;
+                demand[k] = v * self.population;
+            }
+        } else {
+            for (k, v) in consts::OUTPUT_DEMAND[idx].items() {
+                demand[k] = v * self.population;
+            }
         }
         demand
     }
@@ -70,11 +98,18 @@ impl Region {
             Income::UpperMiddle => 2,
             Income::High => 3,
         };
-        self.population * consts::MATERIALS_BY_INCOME[idx]/consts::MATERIALS_BY_INCOME[0]
+        let per_capita_demand = if idx < 3 {
+            let upper_demand = consts::MATERIALS_BY_INCOME[idx+1];
+            let demand = consts::MATERIALS_BY_INCOME[idx];
+            (upper_demand - demand) * self.development + demand
+        } else {
+            consts::MATERIALS_BY_INCOME[idx]
+        };
+        self.population * per_capita_demand/consts::MATERIALS_BY_INCOME[0]
     }
 }
 
-#[derive(Serialize)]
+#[derive(PartialEq, Serialize)]
 pub enum Income {
     Low,
     LowerMiddle,

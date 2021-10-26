@@ -2,7 +2,7 @@ use serde::Serialize;
 use super::{ProductionOrder, planner};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Output, Feedstock};
 
-const MIX_CHANGE_SPEED: f32 = 0.1;
+const MIX_CHANGE_SPEED: f32 = 0.01;
 
 #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum ProcessFeature {
@@ -143,22 +143,6 @@ mod test {
 
         // Unrelated process should be unaffected
         assert_eq!(processes[2].mix_share, 1.0);
-    }
-
-    #[test]
-    fn test_update_mix_share_feedstocks() {
-        let mut processes = gen_processes();
-        processes[1].feedstock = (Feedstock::Coal, 1.);
-        let demand = outputs!(fuel: 100.);
-        let resource_weights = resources!(water: 100.);
-        let feedstock_weights = feedstocks!(oil: 100.);
-        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights);
-
-        // Process that doesn't use oil should be favored
-        assert!(processes[0].mix_share < processes[1].mix_share);
-
-        // Should be normalized
-        assert_eq!(processes[0].mix_share + processes[1].mix_share, 1.0);
     }
 
     #[test]

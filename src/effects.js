@@ -35,7 +35,13 @@ function describeEffect(e) {
       let id = e.entity.toString()
       if (id in iconEvents) {
         let event = iconEvents[id];
-        return `${event.name} will appear as <img src="/assets/icons/pips/${event.icon}.png"> on the globe.`
+        let desc = `${event.name} will appear as <img src="/assets/icons/pips/${event.icon}.png"> on the globe.`;
+        if (!state.clickExplained) {
+          state.clickExplained = true;
+          return `${desc}<br />Tap on these to send aid and gain <img src="/assets/icons/pips/political_capital.png">political capital.`;
+        } else {
+          return desc;
+        }
       } else {
         // Other event triggers are hidden...surprises!
         return

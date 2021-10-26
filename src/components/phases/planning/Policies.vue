@@ -17,7 +17,7 @@
           <template v-slot:header>
             <div>Policy</div>
             <div>
-              <img v-for="i in p.cost" class="pip" src="/assets/icons/pips/political_capital.png">
+              {{p.cost}}<img class="pip" src="/assets/icons/pips/political_capital.png">
             </div>
           </template>
           <template v-slot:back>

@@ -35,6 +35,12 @@ Run Cargo and WASM tests with:
 npm run test
 ```
 
+## Calibration
+
+Run `engine/calibrate.sh` to run a simulation of the game over 100 years and plot trajectories of emissions, population, consumption, etc.
+
+This will also print out events that occur, but it's not as informative--because there's no player interaction many events remain locked.
+
 ## Benchmarking
 
 For Rust code benchmarking, run:

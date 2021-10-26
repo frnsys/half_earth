@@ -102,7 +102,7 @@ impl GameInterface {
     }
 
     pub fn roll_planning_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, Some(2), &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, None, &mut self.rng))?)
     }
 
     pub fn roll_breaks_events(&mut self) -> Result<JsValue, JsValue> {
@@ -146,7 +146,7 @@ impl Game {
     /// all the content loaded in
     pub fn new(difficulty: Difficulty) -> Game {
         let mut state = State {
-            political_capital: 100,
+            political_capital: 10,
             malthusian_points: 0,
             hes_points: 0,
             falc_points: 0,
@@ -161,7 +161,6 @@ impl Game {
             runs: 0,
             requests: Vec::new(),
 
-            output: outputs!(),
             output_modifier: outputs!(
                 fuel: 1.,
                 electricity: 1.,
@@ -282,7 +281,6 @@ pub struct State {
     pub requests: Vec<(Request, usize, bool, usize)>,
 
     // Modifiers should start as all 1.
-    pub output: OutputMap<f32>,
     pub output_modifier: OutputMap<f32>,
     pub output_demand: OutputMap<f32>,
     pub output_demand_modifier: OutputMap<f32>,
@@ -390,6 +388,9 @@ impl State {
         }
 
         self.world.year += 1;
+        self.world.update_pop();
+        self.world.develop_regions();
+
         completed_projects
     }
 

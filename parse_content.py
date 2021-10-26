@@ -60,6 +60,7 @@ specs = {
         'id': None,
         'name': None,
         'income_level': None,
+        'development': 0,
         'outlook': 100,
         'population': None,
         'base_habitability': 100,
@@ -472,11 +473,11 @@ if __name__ == '__main__':
     }
     for k in incomes:
         coefs = income_levels[k].split('\n')
-        income_arms.append('Income::{} => {} + {}*pop + {}*pop.powf(2.0) + {}*pop.powf(3.0)'.format(
+        income_arms.append('Income::{} => {} + {}*year + {}*year.powf(2.0) + {}*year.powf(3.0)'.format(
             variants[k],
             *coefs
         ))
-    fn_def = ('pub fn income_pop_change(pop: f32, income: &Income) -> f32 {{\n    match income {{\n{}\n    }}\n}}'.format(
+    fn_def = ('pub fn income_pop_change(year: f32, income: &Income) -> f32 {{\n    match income {{\n{}\n    }}\n}}'.format(
         indent(',\n'.join(income_arms), levels=2)))
     rust_output.append(fn_def)
 

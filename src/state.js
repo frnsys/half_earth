@@ -4,6 +4,8 @@ const init = {
   gameState: null,
   phase: 'PLANNING',
 
+  clickExplained: false,
+
   // Compare beginning and end
   cycleStartState: {
     emissions: 0,

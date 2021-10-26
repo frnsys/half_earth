@@ -126,9 +126,9 @@ if __name__ == '__main__':
 
     for group, vals in income_group_pop_changes.items():
         y = np.array(vals)
-        X = np.array(list(range(0, len(y))))
+        X = np.array([2020 + i for i in range(0, len(y))])
         coefs = np.polyfit(X, y, 3)
-        # p = np.poly1d(coefs)
+        p = np.poly1d(coefs)
         # plt.title(group)
         # plt.plot(X, y, '.', X, p(X), '-')
         # plt.show()

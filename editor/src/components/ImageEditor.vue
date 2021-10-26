@@ -1,5 +1,5 @@
 <template>
-<div class="image-editor-overlay" @click="tryClose" ref="overlay">
+<div class="overlay" @click="tryClose" ref="overlay">
   <div class="image-editor">
     <div class="image-previews">
       <div>
@@ -182,7 +182,7 @@ export default {
 </script>
 
 <style>
-.image-editor-overlay {
+.overlay {
   position: fixed;
   left: 0;
   right: 0;

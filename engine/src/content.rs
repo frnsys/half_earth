@@ -43,6 +43,7 @@ pub fn regions() -> Vec<Region> {
             id: 0,
             name: "Northern America",
             income: Income::High,
+            development: 0.0,
             outlook: 100.0,
             population: 373318358.0,
             base_habitability: 100.0,
@@ -54,6 +55,7 @@ pub fn regions() -> Vec<Region> {
             id: 1,
             name: "Central America",
             income: Income::LowerMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 183739076.0,
             base_habitability: 100.0,
@@ -65,6 +67,7 @@ pub fn regions() -> Vec<Region> {
             id: 2,
             name: "Southern America",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 437694436.0,
             base_habitability: 100.0,
@@ -76,6 +79,7 @@ pub fn regions() -> Vec<Region> {
             id: 3,
             name: "Caribbean",
             income: Income::High,
+            development: 0.0,
             outlook: 100.0,
             population: 43977555.0,
             base_habitability: 100.0,
@@ -87,6 +91,7 @@ pub fn regions() -> Vec<Region> {
             id: 4,
             name: "Northern Africa",
             income: Income::LowerMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 254985181.0,
             base_habitability: 100.0,
@@ -98,6 +103,7 @@ pub fn regions() -> Vec<Region> {
             id: 5,
             name: "Middle Africa",
             income: Income::LowerMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 190463603.0,
             base_habitability: 100.0,
@@ -109,6 +115,7 @@ pub fn regions() -> Vec<Region> {
             id: 6,
             name: "Western Africa",
             income: Income::Low,
+            development: 0.0,
             outlook: 100.0,
             population: 423239061.0,
             base_habitability: 100.0,
@@ -120,6 +127,7 @@ pub fn regions() -> Vec<Region> {
             id: 7,
             name: "Eastern Africa",
             income: Income::Low,
+            development: 0.0,
             outlook: 100.0,
             population: 468849237.0,
             base_habitability: 100.0,
@@ -131,6 +139,7 @@ pub fn regions() -> Vec<Region> {
             id: 8,
             name: "Southern Africa",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 69191678.0,
             base_habitability: 100.0,
@@ -142,6 +151,7 @@ pub fn regions() -> Vec<Region> {
             id: 9,
             name: "Western Asia",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 288359967.0,
             base_habitability: 100.0,
@@ -153,6 +163,7 @@ pub fn regions() -> Vec<Region> {
             id: 10,
             name: "Central Asia",
             income: Income::LowerMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 76474800.0,
             base_habitability: 100.0,
@@ -164,6 +175,7 @@ pub fn regions() -> Vec<Region> {
             id: 11,
             name: "Southern Asia",
             income: Income::LowerMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 1983914039.0,
             base_habitability: 100.0,
@@ -175,6 +187,7 @@ pub fn regions() -> Vec<Region> {
             id: 12,
             name: "South-eastern Asia",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 681491532.0,
             base_habitability: 100.0,
@@ -186,6 +199,7 @@ pub fn regions() -> Vec<Region> {
             id: 13,
             name: "Eastern Asia",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 1686247807.0,
             base_habitability: 100.0,
@@ -197,6 +211,7 @@ pub fn regions() -> Vec<Region> {
             id: 14,
             name: "Oceania",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 12788202.0,
             base_habitability: 100.0,
@@ -208,6 +223,7 @@ pub fn regions() -> Vec<Region> {
             id: 15,
             name: "Western Europe",
             income: Income::High,
+            development: 0.0,
             outlook: 100.0,
             population: 196908712.0,
             base_habitability: 100.0,
@@ -219,6 +235,7 @@ pub fn regions() -> Vec<Region> {
             id: 16,
             name: "Southern Europe",
             income: Income::High,
+            development: 0.0,
             outlook: 100.0,
             population: 151644503.0,
             base_habitability: 100.0,
@@ -230,6 +247,7 @@ pub fn regions() -> Vec<Region> {
             id: 17,
             name: "Eastern Europe",
             income: Income::UpperMiddle,
+            development: 0.0,
             outlook: 100.0,
             population: 291862973.0,
             base_habitability: 100.0,
@@ -241,6 +259,7 @@ pub fn regions() -> Vec<Region> {
             id: 18,
             name: "Northern Europe",
             income: Income::High,
+            development: 0.0,
             outlook: 100.0,
             population: 106951178.0,
             base_habitability: 100.0,
@@ -252,6 +271,7 @@ pub fn regions() -> Vec<Region> {
             id: 19,
             name: "Australasia",
             income: Income::High,
+            development: 0.0,
             outlook: 100.0,
             population: 30966994.0,
             base_habitability: 100.0,
@@ -1226,7 +1246,7 @@ pub fn projects() -> Vec<Project> {
             cost: 1,
             progress: 0.0,
             effects: vec![
-
+                Effect::AutoClick(80, 50.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2085,26 +2105,6 @@ pub fn projects() -> Vec<Project> {
 
             ],
             kind: ProjectType::Policy,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0
-        },
-        Project {
-            id: 55,
-            name: "Autoclick Test",
-            cost: 1,
-            progress: 0.0,
-            effects: vec![
-                Effect::AutoClick(117, 50.0),
-                Effect::AutoClick(80, 100.0),
-                Effect::NPCRelationship(0, 1.0)
-            ],
-            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
@@ -2999,7 +2999,7 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
 
                     ]
@@ -3701,15 +3701,17 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.75),
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ProcessMixShare(0, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShare(0, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
                 }
             ],
@@ -5267,6 +5269,86 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![]
+        },
+        Event {
+            id: 118,
+            name: "POLICIES:Policies Intro",
+            kind: EventType::Planning,
+            locked: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 119,
+            name: "INITIATIVES:Initiatives Intro",
+            kind: EventType::Planning,
+            locked: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 120,
+            name: "PROCESSES:Processes Intro",
+            kind: EventType::Planning,
+            locked: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
+        },
+        Event {
+            id: 121,
+            name: "COALITION:Coalition Intro",
+            kind: EventType::Planning,
+            locked: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            choices: vec![
+
+            ]
         }
     ]
 }

@@ -192,6 +192,8 @@ export default {
 }
 .planning--page .card header img {
   width: 12px;
+  vertical-align: middle;
+  margin-top: -2px;
 }
 
 .planning--page > header {

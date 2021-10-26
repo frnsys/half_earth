@@ -129,8 +129,11 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
         for (k, v) in process.resources.items() {
             total_intensity += amount_to_produce * *v * resource_weights[k];
         }
-        let (feedstock, amount) = process.feedstock;
-        total_intensity += amount_to_produce * amount * feedstock_weights[feedstock];
+        let emissions = process.byproducts.co2 + (process.byproducts.n2o * 298.) + (process.byproducts.ch4 * 36.);
+        total_intensity += amount_to_produce * emissions;
+
+        // let (feedstock, amount) = process.feedstock;
+        // total_intensity += amount_to_produce * amount * feedstock_weights[feedstock];
         amount_to_produce
     }).collect();
 
