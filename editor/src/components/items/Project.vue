@@ -25,16 +25,25 @@
       <div>
         <label>
           Cost/Years to Completion
-          <Tip>Political capital cost for policies, otherwise years to completion. For uncertain projects, this is the minimum years required to start rolling for success.</Tip>
+          <Tip>Political capital cost for policies, otherwise years to completion. If the cost is dynamic, this is the multiplier for the output demand.</Tip>
         </label>
         <input type="number" v-model="localData.cost" :class="flags('cost')"/>
       </div>
       <div class="checkbox">
-        <label :for="`${item.id}_uncertain`">
-          Uncertain
-          <Tip>Is this project guaranteed to finish or not?</Tip>
+        <label :for="`${item.id}_dynamic_cost`">
+          Dynamic Cost
+          <Tip>Is the cost of this policy dynamic based on demand?</Tip>
         </label>
-        <input type="checkbox" :id="`${item.id}_uncertain`" v-model="localData.uncertain">
+        <input type="checkbox" :id="`${item.id}_dynamic_cost`" v-model="localData.dynamic_cost">
+      </div>
+      <div class="checkbox" v-if="localData.dynamic_cost">
+        <label :for="`${item.id}_dynamic_cost_demand`">
+          Dynamic Cost Demand
+          <Tip>The demand used to calculate the dynamic cost.</Tip>
+        </label>
+        <select v-model="localData.dynamic_cost_demand">
+          <option v-for="k in Object.keys(OUTPUTS)" :value="k">{{k}}</option>
+        </select>
       </div>
       <div class="checkbox">
         <label :for="`${item.id}_ongoing`">
@@ -91,7 +100,10 @@
         <div>{{localData.type == 'Policy' ? 'Cost' : 'Years'}}</div>
         <div>{{localData.cost || 'MISSING'}}</div>
       </div>
-      <div class="meta-pill" v-if="localData.uncertain">Uncertain</div>
+      <div class="meta-pill split-pill" v-if="localData.dynamic_cost">
+        <div>Dynamic Cost</div>
+        <div>{{localData.dynamic_cost_demand}}</div>
+      </div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
@@ -102,15 +114,17 @@
         <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
         <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
         <EffectsSummary v-if="defined('effects')" :effects="localData.effects" />
-        <div class="item-missing invalid" v-else>[MISSING EFFECTS]</div>
+        <div class="item-missing invalid" v-else-if="localData.outcomes && localData.outcomes.length == 1">[MISSING EFFECTS]</div>
       </div>
       <div class="item-summary-image" v-if="localData.image">
         <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
         <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
     </fieldset>
-    <h5>Outcomes</h5>
-    <OutcomesSummary :outcomes="localData.outcomes" />
+    <template v-if="localData.outcomes.length > 1">
+      <h5>Outcomes</h5>
+      <OutcomesSummary :outcomes="localData.outcomes" />
+    </template>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>

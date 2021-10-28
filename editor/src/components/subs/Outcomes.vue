@@ -5,7 +5,7 @@
     <button @click="addOutcome">+ Outcome</button>
   </label>
   <div class="outcomes">
-    <div class="field-group" v-for="(outcome, i) in localData">
+    <div class="field-group" v-for="(outcome, i) in localData" :key="i">
       <div>
         <label>
           Outcome Text

@@ -1,4 +1,5 @@
 use crate::game::State;
+use crate::kinds::{Output, OutputMap};
 use crate::events::{Effect, Probability};
 use rand::{Rng, rngs::SmallRng};
 use serde::Serialize;
@@ -34,11 +35,31 @@ impl Default for Type {
 }
 
 #[derive(Serialize)]
+pub enum Cost {
+    Fixed(usize),
+    Dynamic(f32, Output),
+}
+
+impl Default for Cost {
+    fn default() -> Self {
+        Cost::Fixed(0)
+    }
+}
+
+#[derive(Serialize)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
 
     #[serde(skip_serializing)]
     pub probability: Probability,
+}
+
+#[derive(Serialize)]
+#[derive(Default)]
+pub struct Upgrade {
+    pub cost: usize,
+    pub effects: Vec<Effect>,
+    pub active: bool,
 }
 
 #[derive(Serialize)]
@@ -53,6 +74,8 @@ pub struct Project {
     // For policies, the cost is the political capital cost;
     // for research and initiatives, it's the base years to completion
     pub cost: usize,
+    pub base_cost: Cost,
+    pub cost_modifier: f32,
     pub progress: f32,
     pub points: usize,
     pub estimate: usize,
@@ -61,8 +84,8 @@ pub struct Project {
     #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
 
-    // #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
+    // pub upgrades: Vec<Upgrade>,
 }
 
 /// Nearest multiple of 5
@@ -120,6 +143,16 @@ impl Project {
         }
         outcome
     }
+
+    pub fn update_cost(&mut self, demand: &OutputMap<f32>) {
+        let cost = match self.base_cost {
+            Cost::Fixed(c) => c,
+            Cost::Dynamic(m, output) => {
+                (m * demand[output]).round() as usize
+            }
+        };
+        self.cost = (cost as f32 * self.cost_modifier).round() as usize;
+    }
 }
 
 
@@ -135,6 +168,8 @@ mod test {
             id: 0,
             name: "Test Project",
             cost: 1,
+            base_cost: Cost::Fixed(1),
+            cost_modifier: 1.,
             ongoing: false,
             locked: false,
             kind: Type::Policy,
@@ -172,6 +207,8 @@ mod test {
             id: 0,
             name: "Test Project",
             cost: 10,
+            base_cost: Cost::Fixed(10),
+            cost_modifier: 1.,
             ongoing: false,
             locked: false,
             kind: Type::Policy,
@@ -204,6 +241,8 @@ mod test {
             id: 0,
             name: "Test Project",
             cost: 1,
+            base_cost: Cost::Fixed(1),
+            cost_modifier: 1.,
             ongoing: false,
             locked: false,
             kind: Type::Policy,

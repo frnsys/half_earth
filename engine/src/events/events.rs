@@ -127,8 +127,10 @@ impl EventPool {
 pub enum Type {
     World,
     Planning,
+    Report,
     Breaks,
-    Icon
+    Icon,
+    WorldStart,
 }
 
 #[derive(Debug, Clone)]
@@ -155,7 +157,9 @@ pub struct Event {
     pub choices: Vec<Choice>,
 
     /// Effects applied when this event occurs.
-    pub effects: Vec<Effect>
+    pub effects: Vec<Effect>,
+
+    pub prob_modifier: f32,
 }
 
 impl Event {
@@ -173,7 +177,7 @@ impl Event {
         match self.eval(state, region_id) {
             Some(likelihood) => {
                 let prob = likelihood.p();
-                rng.gen::<f32>() <= prob
+                rng.gen::<f32>() <= (prob * self.prob_modifier)
             },
             None => false
         }
@@ -209,6 +213,7 @@ mod test {
             name: "Test Event A",
             kind: Type::World,
             locked: false,
+            prob_modifier: 1.,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -228,6 +233,7 @@ mod test {
             name: "Test Event B",
             kind: Type::World,
             locked: false,
+            prob_modifier: 1.,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -270,6 +276,7 @@ mod test {
             name: "Test Event A",
             kind: Type::Icon,
             locked: false,
+            prob_modifier: 1.,
 
             choices: vec![],
             effects: vec![],
@@ -336,6 +343,7 @@ mod test {
             id: 0,
             name: "Test Event A",
             kind: Type::World,
+            prob_modifier: 1.,
 
             // Note: locked so it doesn't trigger on its own
             locked: true,

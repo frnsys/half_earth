@@ -1,4 +1,4 @@
-use super::processes::Process;
+use super::processes::{Process, ProcessStatus};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Feedstock};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
 
@@ -120,7 +120,7 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
     let mut total_produced: OutputMap<Expression> = OutputMap::default();
 
     let amounts: Vec<Variable> = processes.iter().map(|process| {
-        let amount_to_produce = if !process.locked && !process.banned {
+        let amount_to_produce = if !process.locked && !process.is_banned() {
             vars.add(variable().min(0))
         } else {
             vars.add(variable().min(0).max(0))
@@ -129,8 +129,9 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
         for (k, v) in process.resources.items() {
             total_intensity += amount_to_produce * *v * resource_weights[k];
         }
-        let emissions = process.byproducts.co2 + (process.byproducts.n2o * 298.) + (process.byproducts.ch4 * 36.);
-        total_intensity += amount_to_produce * emissions;
+        // TODO for some reason introducing this causes production to go to infinity?
+        // let emissions = process.byproducts.co2 + (process.byproducts.n2o * 298.) + (process.byproducts.ch4 * 36.);
+        // total_intensity += amount_to_produce * emissions;
 
         // let (feedstock, amount) = process.feedstock;
         // total_intensity += amount_to_produce * amount * feedstock_weights[feedstock];
@@ -189,7 +190,7 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            banned: false,
+            status: ProcessStatus::Neutral,
         }, Process {
             id: 1,
             name: "Test Process B",
@@ -201,7 +202,7 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            banned: false,
+            status: ProcessStatus::Neutral,
         }, Process {
             id: 2,
             name: "Test Process C",
@@ -213,7 +214,7 @@ mod test {
             feedstock: (Feedstock::Coal, 1.),
             features: vec![],
             locked: false,
-            banned: false,
+            status: ProcessStatus::Neutral,
         }]
     }
 

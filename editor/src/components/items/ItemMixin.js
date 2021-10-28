@@ -71,7 +71,7 @@ export default {
     questions() {
       return this.validator.questions.filter((k) => {
         let val = this.localData[k];
-        return val && val.includes('?');
+        return val && val.includes('? ');
       });
     }
   },

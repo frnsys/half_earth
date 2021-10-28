@@ -1,5 +1,5 @@
 use rand::{SeedableRng, rngs::SmallRng};
-use half_earth_engine::{resources, byproducts, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, calculate_required}, events::Type as EventType};
+use half_earth_engine::{resources, byproducts, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, ProcessStatus, calculate_required}, events::Type as EventType};
 
 fn main() {
     let difficulty = Difficulty::Normal;
@@ -80,9 +80,27 @@ fn main() {
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}", p.output, p.name)));
     wtr.write_record(&cols).unwrap();
 
-    for _ in 0..100 {
+    for i in 0..100 {
         let starting_resources = game.state.resources.clone();
         // let starting_feedstocks = game.state.feedstocks.clone();
+
+        if i == 20 {
+            // Ind Ag (Livestock)
+            game.state.processes[10].status = ProcessStatus::Banned;
+            // Reg Ag (Livestock)
+            game.state.processes[5].status = ProcessStatus::Promoted;
+            // Cellular meat
+            game.state.processes[2].status = ProcessStatus::Promoted;
+            game.state.processes[2].locked = false;
+
+            // Coal power generation
+            game.state.processes[13].status = ProcessStatus::Banned;
+
+            // Natural gas power generation
+            game.state.processes[14].status = ProcessStatus::Banned;
+
+            game.state.processes[17].status = ProcessStatus::Promoted;
+        }
 
         game.step();
         let pop_demand = game.state.world.demand();

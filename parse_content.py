@@ -22,10 +22,10 @@ use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
-use crate::projects::{Project, Outcome};
-use crate::production::{Process, ProcessFeature};
+use crate::projects::{Project, Outcome, Cost};
+use crate::production::{Process, ProcessFeature, ProcessStatus};
 use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, Effect, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Choice, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
 use crate::npcs::NPC;
@@ -72,6 +72,7 @@ specs = {
         'name': None,
         'resources': {},
         'byproducts': {},
+        'demand_modifier': 1.0
     },
     'Process': {
         'id': None,
@@ -82,14 +83,15 @@ specs = {
         'resources': {},
         'byproducts': {},
         'locked': 'false',
-        'banned': 'false',
+        'status': 'ProcessStatus::Neutral',
         'features': {},
         'output_modifier': 1.0,
     },
     'Project': {
         'id': None,
         'name': None,
-        'cost': 15,
+        'cost': 0,
+        'base_cost': 0,
         'progress': 0.,
         'effects': [],
         'type': '',
@@ -99,6 +101,7 @@ specs = {
         'outcomes': [],
         'estimate': 0,
         'points': 0,
+        'cost_modifier': 1.0,
     },
     'Event': {
         'id': None,
@@ -108,6 +111,7 @@ specs = {
         'effects': [],
         'probabilities': [],
         'dialogue': [],
+        'prob_modifier': 1.0,
     },
     'NPC': {
         'id': None,
@@ -179,10 +183,18 @@ effects = {
     'ProjectRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Implement' else 'false', int(param(e, 'Bounty'))),
     'ProcessRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Unban' else 'false', int(param(e, 'Bounty'))),
     'AddRegionFlag':    lambda e: ('"{}".to_string()'.format(e['params'].get('Flag')),),
+    'AddFlag':          lambda e: ('Flag::{}'.format(e['params'].get('Flag')),),
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
     'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
     'NPCRelationship':  lambda e: (ids[e['entity']], param(e, 'Change')),
+    'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(e['subtype']), param(e, 'Multiplier')),
+    'ModifyIndustryResources':   lambda e: (ids[e['entity']], 'Resource::{}'.format(e['subtype']), param(e, 'Multiplier')),
+    'ModifyEventProbability':    lambda e: (ids[e['entity']], param(e, 'Change')),
+    'ModifyIndustryDemand':      lambda e: (ids[e['entity']], param(e, 'Change')),
+    'DemandOutlookChange':       lambda e: ('Output::{}'.format(e['subtype']), param(e, 'Multiplier')),
+    'IncomeOutlookChange':       lambda e: (param(e, 'Multiplier'),),
+    'ProjectCostModifier':       lambda e: (ids[e['entity']], param(e, 'Change')),
 }
 comps = {
     '<': 'Comparator::Less',
@@ -282,6 +294,16 @@ def define_field(k, v, item):
         fields = filter(lambda x: x[0] in valid_resources, v.items())
         return 'resources: resources!(\n{}\n)'.format(
                     indent(define_fields(fields, item)))
+    if k == 'cost':
+        return 'cost: 0'
+    elif k == 'base_cost':
+        v = item.get('cost', 0)
+        if item.get('dynamic_cost', False):
+            output = item.get('dynamic_cost_demand')
+            v = '{}.'.format(v) if isinstance(v, int) else v
+            return 'base_cost: Cost::Dynamic({}, Output::{})'.format(v, output)
+        else:
+            return 'base_cost: Cost::Fixed({})'.format(v)
     elif k == 'effects':
         return 'effects: vec![\n{}\n]'.format(
                     indent(',\n'.join(define_effect(e) for e in v)))
@@ -681,6 +703,27 @@ if __name__ == '__main__':
         })
     with open('assets/content/regions.json', 'w') as f:
         json.dump(regions, f)
+
+    all_effects = []
+    def find_effects(item):
+        effects = item.get('effects', [])
+        for v in item.values():
+            if isinstance(v, dict):
+                effects += find_effects(v)
+            elif isinstance(v, list):
+                for x in v:
+                    if isinstance(x, dict):
+                        effects += find_effects(x)
+        return effects
+    for item in items.values():
+        all_effects += find_effects(item)
+
+    flag_descs = {}
+    for effect in all_effects:
+        if effect['type'] == 'AddFlag':
+            flag_descs[effect['params']['Flag']] = effect['params']['Description']
+    with open('assets/content/flags.json', 'w') as f:
+        json.dump(flag_descs, f)
 
     # Create default emissions for everything else
     # Just use the last value

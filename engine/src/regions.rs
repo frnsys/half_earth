@@ -44,6 +44,16 @@ impl Region {
         self.base_habitability
     }
 
+    pub fn adjusted_income(&self) -> f32 {
+        let income = match self.income {
+            Income::Low => 0.,
+            Income::LowerMiddle => 1.,
+            Income::UpperMiddle => 2.,
+            Income::High => 3.,
+        };
+        income + self.development
+    }
+
     pub fn update_pop(&mut self, year: f32) {
         self.population *= 1. + consts::income_pop_change(year, &self.income);
     }

@@ -16,7 +16,7 @@ export default {
   props: ['notes'],
   computed: {
     hasQuestion() {
-      return this.notes && this.notes.includes('?');
+      return this.notes && this.notes.includes('? ');
     }
   }
 };

@@ -1,11 +1,16 @@
 use crate::game::{Game, Request};
 use crate::regions::Region;
 use crate::production::ProcessFeature;
-use crate::kinds::{Resource, Output, Feedstock};
+use crate::kinds::{Resource, Output, Feedstock, Byproduct};
 use super::{WorldVariable, LocalVariable, PlayerVariable};
 use serde::Serialize;
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
+
+#[derive(Serialize, PartialEq, Debug, Clone, Copy)]
+pub enum Flag {
+    Electrified,
+}
 
 #[derive(Serialize, Debug, Clone)]
 pub enum Effect {
@@ -31,8 +36,17 @@ pub enum Effect {
     RegionLeave,
     AddRegionFlag(String),
 
+    AddFlag(Flag),
     AutoClick(usize, f32),
     NPCRelationship(usize, f32),
+
+    ModifyIndustryByproducts(usize, Byproduct, f32),
+    ModifyIndustryResources(usize, Resource, f32),
+    ModifyEventProbability(usize, f32),
+    ModifyIndustryDemand(usize, f32),
+    DemandOutlookChange(Output, f32),
+    IncomeOutlookChange(f32),
+    ProjectCostModifier(usize, f32),
 }
 
 impl Effect {
@@ -130,8 +144,37 @@ impl Effect {
                     game.state.world.regions[id].flags.push(flag.to_string());
                 }
             },
+            Effect::AddFlag(flag) => {
+                game.state.flags.push(*flag);
+            },
             Effect::NPCRelationship(id, change) => {
                 game.state.npcs[*id].relationship += change;
+            },
+
+            Effect::ModifyIndustryByproducts(id, byproduct, mult) => {
+                game.state.industries[*id].byproducts[*byproduct] *= mult;
+            },
+            Effect::ModifyIndustryResources(id, resource, mult) => {
+                game.state.industries[*id].resources[*resource] *= mult;
+            },
+            Effect::ModifyEventProbability(id, change) => {
+                game.event_pool.events[*id].prob_modifier += change;
+            },
+            Effect::ModifyIndustryDemand(id, change) => {
+                game.state.industries[*id].demand_modifier += change;
+            },
+            Effect::DemandOutlookChange(output, mult) => {
+                for region in &mut game.state.world.regions {
+                    region.outlook += (mult * region.demand()[*output]).round();
+                }
+            },
+            Effect::IncomeOutlookChange(mult) => {
+                for region in &mut game.state.world.regions {
+                    region.outlook += (mult * region.adjusted_income()).round();
+                }
+            },
+            Effect::ProjectCostModifier(id, change) => {
+                game.state.projects[*id].cost_modifier += change;
             },
 
             // Effects like AutoClick have no impact in the engine side

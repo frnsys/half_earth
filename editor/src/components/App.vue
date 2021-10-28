@@ -206,7 +206,7 @@ export default {
         }),
         questions: spec.questions.some((k) => {
           let val = i[k];
-          return val && val.includes('?');
+          return val && val.includes('? ');
         })
       }));
       toc.sort((a, b) => (a.label || '').localeCompare((b.label || '')));

@@ -261,6 +261,55 @@ const EFFECTS = {
     params: {
       'Change': Number,
     }
+  },
+
+  ModifyIndustryByproducts: {
+    entity: 'Industry',
+    choices:  Object.keys(BYPRODUCTS),
+    params: {
+      'Multiplier': Number
+    }
+  },
+  ModifyIndustryResources: {
+    entity: 'Industry',
+    choices:  Object.keys(RESOURCES),
+    params: {
+      'Multiplier': Number
+    }
+  },
+  ModifyEventProbability: {
+    entity: 'Event',
+    params: {
+      'Change': Number
+    }
+  },
+  ModifyIndustryDemand: {
+    entity: 'Industry',
+    params: {
+      'Change': Number
+    }
+  },
+
+  // Scale by region based on region demand for the specified output
+  DemandOutlookChange: {
+    choices: Object.keys(OUTPUTS),
+    params: {
+      'Multiplier': Number
+    }
+  },
+
+  // Scale by region based on region income level
+  IncomeOutlookChange: {
+    params: {
+      'Multiplier': Number
+    }
+  },
+
+  ProjectCostModifier: {
+    entity: 'Project',
+    params: {
+      'Change': Number
+    }
   }
 };
 

@@ -3,6 +3,7 @@ use super::{ProductionOrder, planner};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Output, Feedstock};
 
 const MIX_CHANGE_SPEED: f32 = 0.01;
+const PROMOTED_TARGET: f32 = 0.5;
 
 #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum ProcessFeature {
@@ -15,6 +16,13 @@ pub enum ProcessFeature {
     IsNuclear,
     IsSolar,
     IsCCS,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+pub enum ProcessStatus {
+    Neutral,
+    Banned,
+    Promoted
 }
 
 #[derive(Debug, Serialize)]
@@ -34,10 +42,10 @@ pub struct Process {
     #[serde(skip_serializing)]
     pub features: Vec<ProcessFeature>,
 
-    // If the player has unlocked and/or banned
+    // If the player has unlocked and/or banned/promoted
     // this process.
     pub locked: bool,
-    pub banned: bool,
+    pub status: ProcessStatus,
 }
 
 impl Process {
@@ -48,6 +56,14 @@ impl Process {
             process: &self,
             amount: demand[self.output] * self.mix_share,
         }
+    }
+
+    pub fn is_banned(&self) -> bool {
+        self.status == ProcessStatus::Banned
+    }
+
+    pub fn is_promoted(&self) -> bool {
+        self.status == ProcessStatus::Promoted
     }
 }
 
@@ -62,10 +78,11 @@ pub fn update_mixes(
     let target_mix = planner::calculate_mix(&processes, &demand, &resource_weights, &feedstock_weights);
     for (process, target) in processes.iter_mut().zip(target_mix) {
         if !process.locked {
+            let target = if process.is_promoted() { f32::max(PROMOTED_TARGET, target) } else { target };
             if process.mix_share < target {
-                process.mix_share += MIX_CHANGE_SPEED;
+                process.mix_share += if process.is_promoted() { f32::max(process.mix_share * 0.1, 0.05) } else { MIX_CHANGE_SPEED };
             } else if process.mix_share > target {
-                process.mix_share -= MIX_CHANGE_SPEED;
+                process.mix_share -= if process.is_banned() { process.mix_share * 0.1 } else { MIX_CHANGE_SPEED };
             }
             process.mix_share = f32::max(process.mix_share, 0.);
         }
@@ -98,7 +115,7 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            banned: false,
+            status: ProcessStatus::Neutral,
         }, Process {
             id: 1,
             name: "Test Process B",
@@ -110,7 +127,7 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            banned: false,
+            status: ProcessStatus::Neutral,
         }, Process {
             id: 2,
             name: "Test Process C",
@@ -122,7 +139,7 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            banned: false,
+            status: ProcessStatus::Neutral,
         }]
     }
 
@@ -148,7 +165,7 @@ mod test {
     #[test]
     fn test_update_mix_share_banned() {
         let mut processes = gen_processes();
-        processes[0].banned = true;
+        processes[0].status = ProcessStatus::Banned;
         let demand = outputs!(fuel: 100.);
         let resource_weights = resources!();
         let feedstock_weights = feedstocks!();

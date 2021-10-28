@@ -2,9 +2,9 @@ use crate::npcs::NPC;
 use crate::world::World;
 use crate::industries::Industry;
 use crate::projects::{Project, Status, Type as ProjectType};
-use crate::production::{ProductionOrder, Process, produce, calculate_required, update_mixes};
+use crate::production::{ProductionOrder, Process, ProcessStatus, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
-use crate::events::{EventPool, Effect, Type as EventType};
+use crate::events::{EventPool, Effect, Flag, Type as EventType};
 use crate::{content, consts};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
@@ -85,12 +85,22 @@ impl GameInterface {
 
     pub fn ban_process(&mut self, process_id: usize) {
         let process = &mut self.game.state.processes[process_id];
-        process.banned = true;
+        process.status = ProcessStatus::Banned;
     }
 
     pub fn unban_process(&mut self, process_id: usize) {
         let process = &mut self.game.state.processes[process_id];
-        process.banned = false;
+        process.status = ProcessStatus::Neutral;
+    }
+
+    pub fn promote_process(&mut self, process_id: usize) {
+        let process = &mut self.game.state.processes[process_id];
+        process.status = ProcessStatus::Promoted;
+    }
+
+    pub fn unpromote_process(&mut self, process_id: usize) {
+        let process = &mut self.game.state.processes[process_id];
+        process.status = ProcessStatus::Neutral;
     }
 
     pub fn roll_icon_events(&mut self) -> Result<JsValue, JsValue> {
@@ -105,8 +115,16 @@ impl GameInterface {
         Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, None, &mut self.rng))?)
     }
 
+    pub fn roll_report_events(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Report, None, &mut self.rng))?)
+    }
+
+    pub fn roll_world_start_events(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::WorldStart, None, &mut self.rng))?)
+    }
+
     pub fn roll_breaks_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Breaks, Some(2), &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Breaks, None, &mut self.rng))?)
     }
 
     pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
@@ -150,6 +168,7 @@ impl Game {
             malthusian_points: 0,
             hes_points: 0,
             falc_points: 0,
+            flags: Vec::new(),
 
             world: content::world(difficulty),
             projects: content::projects(),
@@ -258,6 +277,7 @@ impl Game {
 #[derive(Default, Serialize)]
 pub struct State {
     pub world: World,
+    pub flags: Vec<Flag>,
     pub runs: usize,
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
@@ -311,7 +331,7 @@ impl State {
 
         // Demand and impacts from non-modeled industries
         let lic_pop = self.world.lic_population();
-        let industry_demand = self.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources) * lic_pop;
+        let industry_demand = self.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources * ind.demand_modifier) * lic_pop;
         output_demand.fuel += industry_demand.fuel;
         output_demand.electricity += industry_demand.electricity;
 
@@ -331,7 +351,13 @@ impl State {
         self.byproducts = byproducts!();
 
         let lic_pop = self.world.lic_population();
-        self.byproducts += self.industries.iter().fold(byproducts!(), |acc, ind| acc + ind.byproducts) * lic_pop;
+        self.byproducts += self.industries.iter().fold(byproducts!(), |acc, ind| acc + ind.byproducts * ind.demand_modifier) * lic_pop;
+
+        if self.flags.contains(&Flag::Electrified) {
+            let electrified = self.output_demand.fuel * 0.8;
+            self.output_demand.electricity += electrified;
+            self.output_demand.fuel -= electrified;
+        }
 
         // Generate production orders based on current process mixes and demand
         let orders: Vec<ProductionOrder> = self.processes.iter()
@@ -387,6 +413,10 @@ impl State {
             }
         }
 
+        for project in &mut self.projects {
+            project.update_cost(&self.output_demand);
+        }
+
         self.world.year += 1;
         self.world.update_pop();
         self.world.develop_regions();
@@ -407,8 +437,8 @@ impl State {
                 },
                 Request::Process => {
                     let process = &self.processes[id];
-                    (active && !process.banned)
-                    || (!active && process.banned)
+                    (active && process.is_promoted())
+                    || (!active && process.is_banned())
                 }
             };
             if complete {

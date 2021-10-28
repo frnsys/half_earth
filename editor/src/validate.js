@@ -147,8 +147,9 @@ function validateEffects(effects) {
 }
 
 function validateOutcomes(outcomes) {
-  return outcomes.every((outcome) => {
-    return requireAtLeastOne(outcome.text) && validateEffects(outcome.effects) && validateProbabilities([outcome.probability]);
+  return outcomes.every((outcome, i) => {
+    // First outcome doesn't need text
+    return i == 0 || (requireAtLeastOne(outcome.text) && validateEffects(outcome.effects) && validateProbabilities([outcome.probability]));
   });
 }
 
@@ -218,7 +219,7 @@ const SPECS = {
         case 'type':
           return requireOneOfChoice(item.type, ['Initiative', 'Policy', 'Research']);
         case 'effects':
-          return requireAtLeastOne(item.effects) && validateEffects(item.effects);
+          return (item.outcomes && item.outcomes.length == 1) ? requireAtLeastOne(item.effects) && validateEffects(item.effects) : true;
         case 'cost':
           return requirePositive(item.cost);
         case 'outcomes':
