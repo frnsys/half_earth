@@ -23,7 +23,7 @@ function formatParam(k, val) {
     case 'PercentChange':
       return `${val > 0 ? '+' : ''}${val}%`;
     case 'Chance':
-      return `${val > 0 ? '+' : ''}${val}%`;
+      return `${val}% chance`;
     case 'Delay (years)':
       return `${val} years`;
     default:

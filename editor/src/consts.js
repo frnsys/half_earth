@@ -236,6 +236,13 @@ const EFFECTS = {
     }
   },
 
+  AddFlag: {
+    params: {
+      'Flag': String,
+      'Description': String,
+    }
+  },
+
   AddRegionFlag: {
     params: {
       'Flag': String
@@ -289,10 +296,12 @@ const SPEAKERS = [
 ];
 
 const EVENT_TYPES = [
-  'World',    // Occur in the world/event stream
-  'Planning', // Occur during planning sessions
-  'Breaks',   // Occur between runs
-  'Icon',     // Occur in the world/event stream, but only as icons
+  'World',      // Occur in the world/event stream
+  'Planning',   // Occur during planning sessions
+  'Report',     // Occurs during the reports
+  'WorldStart', // Occurs at the start of the world/event stream
+  'Breaks',     // Occur between runs
+  'Icon',       // Occur in the world/event stream, but only as icons
 ];
 
 export default {

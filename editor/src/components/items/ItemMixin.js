@@ -23,6 +23,10 @@ import OutputsSummary from '../subs/OutputsSummary.vue';
 import validate from '../../validate';
 import Autolinker from 'autolinker';
 
+function resizeTextArea(ev) {
+  util.resizeTextArea(ev.target);
+}
+
 export default {
   props: ['item'],
   data() {
@@ -44,12 +48,8 @@ export default {
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {
       util.resizeTextArea(el);
-      el.addEventListener('input', () => {
-        util.resizeTextArea(el);
-      });
-      el.addEventListener('focus', () => {
-        util.resizeTextArea(el);
-      });
+      el.addEventListener('input', resizeTextArea);
+      el.addEventListener('focus', resizeTextArea);
     });
   },
   computed: {
@@ -76,6 +76,22 @@ export default {
     }
   },
   watch: {
+    editing(val) {
+      if (val) {
+        this.$nextTick(() => {
+          this.$refs.root.querySelectorAll('textarea').forEach((el) => {
+            util.resizeTextArea(el);
+            el.addEventListener('input', resizeTextArea);
+            el.addEventListener('focus', resizeTextArea);
+          });
+        });
+      } else {
+        this.$refs.root.querySelectorAll('textarea').forEach((el) => {
+          el.removeEventListener('input', resizeTextArea);
+          el.removeEventListener('focus', resizeTextArea);
+        });
+      }
+    },
     item(newItem) {
       this.localData = Object.assign({}, newItem);
       this.$el.querySelectorAll('textarea').forEach((el) => {

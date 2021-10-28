@@ -97,7 +97,7 @@
         <div class="item-missing invalid" v-else>[MISSING PROBABILITIES]</div>
 
         <EffectsSummary v-if="definedWithValues('effects')" :effects="localData.effects" />
-        <div class="item-missing invalid" v-else-if="localData.type != 'Planning' && localData.type != 'Breaks'">[MISSING EFFECTS]</div>
+        <div class="item-missing invalid" v-else-if="localData.type == 'Icon' || localData.type == 'World'">[MISSING EFFECTS]</div>
       </div>
       <div class="item-summary-image" v-if="localData.type == 'World' && localData.image">
         <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
