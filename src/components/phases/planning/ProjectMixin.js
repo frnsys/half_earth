@@ -32,14 +32,22 @@ export default (type) => ({
     },
     nextPointCost() {
       let i = this.pointsInUse;
-      return Math.round((i+2)**1.5);
+      return Math.round((i+1)**1.5);
     },
   },
   methods: {
-    effectDescs(p) {
-      return p.effects
-        .map((ev) => describeEffect(ev))
+    effectDescs(effects) {
+      let descs = effects
+        .map((ev) => {
+          let desc = describeEffect(ev);
+          if (desc) {
+            return `${ev.random ? '🎲 ' : ''}${desc}`;
+          }
+        })
         .filter((desc) => desc !== undefined);
+      return descs.filter((item, i) => {
+        return descs.indexOf(item) == i;
+      });
     },
     imageForProject(p) {
       let image = state.projects[p.id].image;
@@ -48,6 +56,47 @@ export default (type) => ({
       } else {
         return '/assets/placeholders/project.png';
       }
+    },
+    nextUpgrade(p) {
+      if (p.upgrades.length === 0) {
+        return null;
+      }
+      let idx = p.level;
+      if (idx >= p.upgrades.length) {
+        return null;
+      }
+      let upgrade = p.upgrades[idx];
+      return {
+        cost: upgrade.cost,
+        effects: state.projects[p.id].upgrades[idx].effects,
+      }
+    },
+    activeEffects(p) {
+      let project = state.projects[p.id];
+      if (p.status == 'Inactive') {
+        return project.effects.concat(this.outcomeEffects(p));
+      } else if (p.level === 0) {
+        return project.effects;
+      } else {
+        return project.upgrades[p.level - 1].effects;
+      }
+    },
+    outcomeEffects(p) {
+      let project = state.projects[p.id];
+      let allEffects = [];
+      project.outcomes.forEach(({effects}) => {
+        allEffects = allEffects.concat(effects)
+      });
+
+      // Remove duplicates
+      allEffects = allEffects.filter((item, i) => {
+        return allEffects.indexOf(item) == i;
+      });
+
+      return allEffects.map((e) => {
+        e.random = true;
+        return e;
+      });
     },
     status(p) {
       return p.status.toLowerCase();
@@ -84,6 +133,14 @@ export default (type) => ({
       if (p.status == 'Inactive' && available >= p.cost) {
         game.changePoliticalCapital(-p.cost);
         game.startProject(p.id);
+      }
+    },
+    upgrade(p) {
+      let nextUpgrade = this.nextUpgrade(p);
+      let available = state.gameState.political_capital;
+      if (nextUpgrade && available >= nextUpgrade.cost) {
+        game.changePoliticalCapital(-p.cost);
+        game.upgradeProject(p.id);
       }
     }
   }

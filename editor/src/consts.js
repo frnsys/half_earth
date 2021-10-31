@@ -39,6 +39,7 @@ const PROCESS_FEATURES = {
   'IsNuclear': 'For electricity sources, if the supply is nuclear',
   'IsSolar': 'If the process depends on sunlight',
   'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
+  'IsCombustion': 'If this process depends on combustion',
 }
 
 const INCOME_LEVELS = [
@@ -63,7 +64,7 @@ const CONDITIONS = {
       'ExtinctionRate', 'Temperature',
       'Precipitation', 'SeaLevelRise',
       'Outlook',
-      'WaterStress',]
+      'WaterStress', 'PopulationGrowth']
   },
   PlayerVariable: {
     compare: true,
@@ -138,7 +139,7 @@ const EFFECTS = {
       'Emissions',
       'ExtinctionRate', 'Temperature',
       'Precipitation', 'SeaLevelRise',
-      'Outlook'],
+      'Outlook', 'PopulationGrowth'],
     params: {
       'Change': Number
     }
@@ -163,6 +164,13 @@ const EFFECTS = {
     }
   },
 
+  DemandAmount: {
+    choices: Object.keys(OUTPUTS),
+    params: {
+      'Change': Number
+    }
+  },
+
   Output: {
     choices: Object.keys(OUTPUTS),
     params: {
@@ -172,6 +180,13 @@ const EFFECTS = {
 
   OutputForFeature: {
     choices: Object.keys(PROCESS_FEATURES),
+    params: {
+      'PercentChange': Number
+    }
+  },
+
+  OutputForProcess: {
+    entity: 'Process',
     params: {
       'PercentChange': Number
     }

@@ -10,6 +10,7 @@ export default {
     return {
       events: [],
       event: null,
+      showingEvent: false,
     };
   },
   components: {
@@ -27,6 +28,7 @@ export default {
       if (this.hasEvent) {
         this.showEvent();
       } else {
+        this.showingEvent = false;
         if (this.afterEvents) this.afterEvents();
       }
     },
@@ -48,6 +50,7 @@ export default {
 
         // Apply event effects
         game.applyEvent(eventId, regionId);
+        this.showingEvent = true;
       } else {
         console.log('NO EVENTS');
       }

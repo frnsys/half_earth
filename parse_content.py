@@ -22,9 +22,9 @@ use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
-use crate::projects::{Project, Outcome, Cost};
+use crate::projects::{Project, Outcome, Upgrade, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus};
-use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
+use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
@@ -47,6 +47,13 @@ pub fn world(difficulty: Difficulty) -> World {{
     world
 }}
 '''
+
+byproduct_map = {
+    'CO2': 'Co2',
+    'CH4': 'Ch4',
+    'N2O': 'N2o',
+    'Biodiversity': 'Biodiversity',
+}
 
 # Required keys and defaults
 # `None` means there is no default
@@ -93,6 +100,7 @@ specs = {
         'cost': 0,
         'base_cost': 0,
         'progress': 0.,
+        'level': 0,
         'effects': [],
         'type': '',
         'locked': 'false',
@@ -102,6 +110,7 @@ specs = {
         'estimate': 0,
         'points': 0,
         'cost_modifier': 1.0,
+        'upgrades': 'vec![]',
     },
     'Event': {
         'id': None,
@@ -129,6 +138,11 @@ specs = {
     'Outcome': {
         'effects': [],
         'probability': [],
+    },
+    'Upgrade': {
+        'active': 'false',
+        'cost': 0,
+        'effects': [],
     },
     'FeedstockMap': {
         'oil': 0.,
@@ -175,8 +189,10 @@ effects = {
     'WorldVariable':    lambda e: ('WorldVariable::{}'.format(e['subtype']), param(e, 'Change')),
     'PlayerVariable':   lambda e: ('PlayerVariable::{}'.format(e['subtype']), param(e, 'Change')),
     'Demand':           lambda e: ('Output::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
+    'DemandAmount':     lambda e: ('Output::{}'.format(e['subtype']), param(e, 'Change')),
     'Output':           lambda e: ('Output::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'OutputForFeature': lambda e: ('ProcessFeature::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
+    'OutputForProcess': lambda e: (ids[e['entity']], param(e, 'PercentChange')/100),
     'Resource':         lambda e: ('Resource::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'SetProjectStatus': lambda e: (ids[e['entity']], 'ProjectStatus::{}'.format(e['subtype']),),
@@ -188,7 +204,7 @@ effects = {
     'Migration':        lambda _: (),
     'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
     'NPCRelationship':  lambda e: (ids[e['entity']], param(e, 'Change')),
-    'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(e['subtype']), param(e, 'Multiplier')),
+    'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(byproduct_map[e['subtype']]), param(e, 'Multiplier')),
     'ModifyIndustryResources':   lambda e: (ids[e['entity']], 'Resource::{}'.format(e['subtype']), param(e, 'Multiplier')),
     'ModifyEventProbability':    lambda e: (ids[e['entity']], param(e, 'Change')),
     'ModifyIndustryDemand':      lambda e: (ids[e['entity']], param(e, 'Change')),
@@ -239,6 +255,13 @@ def define_probability(prob):
     return define_struct('Probability', {
         'likelihood': typ,
         'conditions': prob['conditions'],
+    })
+
+def define_upgrade(u):
+    return define_struct('Upgrade', {
+        'active': 'false',
+        'cost': u['cost'],
+        'effects': u['effects'],
     })
 
 def define_choice(choice):
@@ -295,7 +318,12 @@ def define_field(k, v, item):
         return 'resources: resources!(\n{}\n)'.format(
                     indent(define_fields(fields, item)))
     if k == 'cost':
-        return 'cost: 0'
+        if item.get('_type') == 'Project':
+            return 'cost: 0'
+        else:
+            return 'cost: {}'.format(v)
+    if k == 'level':
+        return 'level: 0'
     elif k == 'base_cost':
         v = item.get('cost', 0)
         if item.get('dynamic_cost', False):
@@ -315,6 +343,10 @@ def define_field(k, v, item):
     elif k == 'conditions':
         return 'conditions: vec![\n{}\n]'.format(
                     indent(',\n'.join(define_condition(e) for e in v)))
+    elif k == 'upgrades':
+        if isinstance(v, list):
+            return 'upgrades: vec![\n{}\n]'.format(
+                        indent(',\n'.join(define_upgrade(e) for e in v)))
     elif k == 'choices':
         return 'choices: vec![\n{}\n]'.format(
                     indent(',\n'.join(define_choice(c) for c in v)))
@@ -653,7 +685,23 @@ if __name__ == '__main__':
                 'subtype': e.get('subtype'),
                 'entity': ids.get(e.get('entity')),
                 'param': get_param(e)
-            } for e in p.get('effects', [])]
+            } for e in p.get('effects', [])],
+            'upgrades': [{
+                'effects': [{
+                    'type': e['type'],
+                    'subtype': e.get('subtype'),
+                    'entity': ids.get(e.get('entity')),
+                    'param': get_param(e)
+                } for e in u['effects']]
+            } for u in p.get('upgrades', [])],
+            'outcomes': [{
+                'effects': [{
+                    'type': e['type'],
+                    'subtype': e.get('subtype'),
+                    'entity': ids.get(e.get('entity')),
+                    'param': get_param(e)
+                } for e in u['effects']]
+            } for u in p.get('outcomes', [])]
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)

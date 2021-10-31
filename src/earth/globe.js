@@ -174,26 +174,41 @@ class Globe {
     return iconMesh;
   }
 
+  showIcon(iconName, hexIdx) {
+    let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.75, true);
+    this.pings.push({mesh: null, icon: iconMesh});
+    return iconMesh;
+  }
+
   pingIcon(iconName, hexIdx) {
     let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.5);
     this.pings.push({mesh: iconMesh, icon: null});
+    return iconMesh;
   }
 
   tickPings() {
     // Update pings
     this.pings = this.pings.filter(({mesh, icon}) => {
       // Keep text facing the camera
-      mesh.lookAt(this.scene.camera.position);
+      if (mesh) {
+        mesh.lookAt(this.scene.camera.position);
 
-      // Move text pings up and fade out
-      mesh.position.y += 0.02;
-      mesh.material.opacity -= 0.005;
+        // Move text pings up and fade out
+        mesh.position.y += 0.02;
+        mesh.material.opacity -= 0.005;
+      }
 
-      let done = mesh.material.opacity <= 0;
+      if (icon) {
+        icon.material.opacity -= 0.005;
+      }
+
+      let done = icon ? icon.material.opacity <= 0 : mesh.material.opacity <= 0;
       if (done) {
-        mesh.geometry.dispose();
-        mesh.material.dispose();
-        mesh.parent.remove(mesh);
+        if (mesh) {
+          mesh.geometry.dispose();
+          mesh.material.dispose();
+          mesh.parent.remove(mesh);
+        }
         if (icon) {
           icon.geometry.dispose();
           icon.material.dispose();

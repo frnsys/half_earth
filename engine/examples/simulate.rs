@@ -10,6 +10,7 @@ fn main() {
     let co2_ref = 43.16;     // Gt, 2022, from SSP2-Baseline
     let ch4_ref = 570.;      // Mt, https://www.iea.org/reports/methane-tracker-2020
     let n2o_ref = 9.99;      // Mt, 2022, from SSP2-Baseline
+    let co2eq_ref = 49.36;   // Gt, 2016, from https://ourworldindata.org/grapher/total-ghg-emissions?tab=chart&country=~OWID_WRL
     let elec_ref = 22777.8;  // TWh, https://www.iea.org/data-and-statistics/charts/electricity-generation-by-fuel-and-scenario-2018-2040
     let fuel_ref = 93333.2;  // TWh, https://www.eia.gov/todayinenergy/detail.php?id=46596
     let cals_ref = 2870.0;   // kcals per day per person, 2011, from https://www.nationalgeographic.com/what-the-world-eats/
@@ -70,6 +71,7 @@ fn main() {
         "CO2 Ref (Gt)",
         "CH4 Ref (Mt)",
         "N2O Ref (Mt)",
+        "CO2eq Ref (Gt)",
         "Elec Ref (TWh)",
         "Fuel Ref (TWh)",
         "Cals Ref (kcal/person/day)",
@@ -77,7 +79,10 @@ fn main() {
         "Water Ref (km3)",
     ];
     let mut cols: Vec<String> = base_cols.iter().map(|c| c.to_string()).collect();
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Mix Share", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CO2 Emissions (Gt)", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
     wtr.write_record(&cols).unwrap();
 
     for i in 0..100 {
@@ -102,7 +107,7 @@ fn main() {
             game.state.processes[17].status = ProcessStatus::Promoted;
         }
 
-        game.step();
+        game.step(&mut rng);
         let pop_demand = game.state.world.demand();
         let agg_demand = game.state.output_demand;
         let produced = game.state.produced;
@@ -179,6 +184,7 @@ fn main() {
             co2_ref,
             ch4_ref,
             n2o_ref,
+            co2eq_ref,
             elec_ref,
             fuel_ref,
             cals_ref,
@@ -186,6 +192,18 @@ fn main() {
             water_ref,
         ].iter().map(|v| v.to_string()).collect();
         vals.extend(game.state.processes.iter().map(|p| p.mix_share.to_string()));
+        vals.extend(game.state.processes.iter().map(|p| {
+            let order = p.production_order(&agg_demand);
+            (p.byproducts.co2 * order.amount * 1e-15).to_string()
+        }));
+        vals.extend(game.state.processes.iter().map(|p| {
+            let order = p.production_order(&agg_demand);
+            (p.byproducts.ch4 * order.amount * 1e-12).to_string()
+        }));
+        vals.extend(game.state.processes.iter().map(|p| {
+            let order = p.production_order(&agg_demand);
+            (p.byproducts.n2o * order.amount * 1e-12).to_string()
+        }));
         wtr.write_record(&vals).unwrap();
 
         println!("  Events:");

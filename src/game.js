@@ -83,24 +83,38 @@ function unbanProcess(processId) {
   updateState();
 }
 
+function promoteProcess(processId) {
+  game.promote_process(processId);
+  updateState();
+}
+
+function unpromoteProcess(processId) {
+  game.unpromote_process(processId);
+  updateState();
+}
+
 function rollPlanningEvents() {
-  let events = game.roll_planning_events();
-  return events;
+  return game.roll_planning_events();
+}
+
+function rollReportEvents() {
+  return game.roll_report_events();
 }
 
 function rollBreaksEvents() {
-  let events = game.roll_breaks_events();
-  return events;
+  return game.roll_breaks_events();
 }
 
 function rollIconEvents() {
-  let events = game.roll_icon_events();
-  return events;
+  return game.roll_icon_events();
 }
 
 function rollWorldEvents() {
-  let events = game.roll_world_events();
-  return events;
+  return game.roll_world_events();
+}
+
+function rollWorldStartEvents() {
+  return game.roll_world_start_events();
 }
 
 // Select a response to an event
@@ -120,10 +134,9 @@ function checkRequests() {
   return game.check_requests();
 }
 
-function completedProjects() {
-  let completed = game.collect_recently_completed();
+function upgradeProject(id) {
+  game.upgrade_project(id);
   updateState();
-  return completed;
 }
 
 function setTgav(tgav) {
@@ -131,13 +144,20 @@ function setTgav(tgav) {
   updateState();
 }
 
+function totalIncomeLevel() {
+  return game.total_income_level();
+}
+
 updateState();
 
 export default {
   newRun, step,
   setTgav,
+  totalIncomeLevel,
   changePoliticalCapital,
   banProcess, unbanProcess,
-  setProjectPoints, startProject, stopProject,
-  rollPlanningEvents, rollBreaksEvents, rollIconEvents, rollWorldEvents,
-  selectChoice, applyEvent, checkRequests, completedProjects};
+  promoteProcess, unpromoteProcess,
+  setProjectPoints, startProject, stopProject, upgradeProject,
+  rollPlanningEvents, rollBreaksEvents, rollIconEvents,
+  rollWorldEvents, rollReportEvents, rollWorldStartEvents,
+  selectChoice, applyEvent, checkRequests};

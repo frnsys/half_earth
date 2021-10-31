@@ -11,6 +11,7 @@ pub enum WorldVariable {
     WaterStress,
     SeaLevelRise,
     Precipitation,
+    PopulationGrowth,
 }
 
 #[derive(Debug, Copy, Clone, Serialize)]

@@ -15,25 +15,40 @@
       <template v-for="p in projects">
         <Card
           :class="status(p)"
-          @click="assignPoint(p)"
           :title="p.name"
+          :flag="status(p) == 'active' && p.upgrades.length > 0 ? `Level ${p.level+1}` : null"
+          :effects="effectDescs(activeEffects(p))"
           :image="imageForProject(p)">
           <template v-slot:header>
             <div>Initiative</div>
             <div>
               <img class="pip" v-for="i in p.points" src="/assets/icons/pips/initiative.png">
             </div>
-            <div v-if="p.points > 0" @click="(ev) => {unassignPoint(p); ev.stopImmediatePropagation();}">-Point</div>
             <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>
           </template>
-          <template v-slot:back>
-            <div class="card--back--body">
-              {{state.projects[p.id].description}}
+          <template v-slot:front>
+            <div class="card--body project--upgrade" v-if="status(p) == 'active' && nextUpgrade(p) !== null">
+              <div class="project--upgrade--title">
+                <div>Upgrade</div>
+                <div>{{nextUpgrade(p).cost}}<img class="pip" src="/assets/icons/pips/political_capital.png"></div>
+                <button @click="upgrade(p)">Upgrade</button>
+              </div>
               <ul class="effects">
-                <template v-for="desc in effectDescs(state.projects[p.id])">
+                <template v-for="desc in effectDescs(nextUpgrade(p).effects)">
                   <li v-html="desc"></li>
                 </template>
               </ul>
+            </div>
+            <div class="card--actions" v-if="status(p) == 'inactive' || status(p) == 'building'">
+              <button @click="assignPoint(p)">+<img class="pip" src="/assets/icons/pips/initiative.png"></button>
+              <button v-if="p.points > 0" @click="unassignPoint(p)">-<img class="pip" src="/assets/icons/pips/initiative.png"></button>
+            </div>
+          </template>
+          <template v-slot:back>
+            <div class="card--back--body">
+              <div class="card--body">
+                {{state.projects[p.id].description}}
+              </div>
             </div>
             <div class="image-attribution">
               Source image: {{state.projects[p.id].image.attribution}}
@@ -60,10 +75,10 @@ export default {
 
 <style scoped>
 .card {
-  background: #FCE8A9;
+  border: 6px solid #FCE8A9;
 }
 .card.building {
-  background: #FBC011;
+  border: 6px solid #FBC011;
 }
 .card--tag {
   background: #945E21;

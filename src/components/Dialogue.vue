@@ -69,9 +69,13 @@ export default {
     lineText() {
       let text = this.line.text;
       if (this.dialogue.context) {
-        let vars = [...text.matchAll('{([a-z]+)}')];
+        let vars = [...text.matchAll('{([a-z_]+)}')];
         for (const match of vars) {
           text = text.replaceAll(match[0], this.dialogue.context[match[1]]);
+        }
+        let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
+        for (const match of icons) {
+          text = text.replaceAll(match[0], `<img src="/assets/icons/pips/${match[1]}.png">`);
         }
       }
       return text;
@@ -116,7 +120,7 @@ export default {
     },
     revealText(text, speed) {
         let revealed = '';
-        speed = speed || 3;
+        speed = speed || 3.5;
         const chars = text.split('');
         return new Promise((resolve, reject) => {
           this.revealAnim = setInterval(() => {
@@ -218,6 +222,11 @@ export default {
 	color: #fff;
 	padding: 0 0 0.1em 0;
 	border-radius: 0.2em;
+}
+
+.dialogue--text img {
+  width: 16px;
+  vertical-align: middle;
 }
 
 .dialogue--effect {

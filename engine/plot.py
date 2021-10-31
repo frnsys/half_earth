@@ -10,7 +10,10 @@ if not os.path.exists('/tmp/plots'):
 
 plots = {
     'Population (b)': ['Population (b)'],
-    'CO2eq Emissions': ['CO2eq Emissions'],
+    'CO2eq Emissions': [
+        'CO2eq Emissions',
+        'CO2eq Ref (Gt)',
+    ],
     'CO2 Emissions (Gt)': [
         'CO2 Emissions (Gt)',
         'Energy CO2 Emissions (Gt)',
@@ -82,22 +85,22 @@ plots = {
     ],
 }
 
-
 outputs = ['Electricity', 'Fuel', 'PlantCalories', 'AnimalCalories']
-process_cols_by_output = defaultdict(list)
+process_cols_by_output = defaultdict(lambda: defaultdict(list))
 for col in df.columns:
     for o in outputs:
         if col.startswith('{}:'.format(o)):
-            process_cols_by_output[o].append(col)
-for output, cols in process_cols_by_output.items():
-    plots[output] = cols
-
+            _, process, category = col.split(':')
+            process_cols_by_output[o][category].append(col)
+for output, categories in process_cols_by_output.items():
+    for category, cols in categories.items():
+        plots['Process:{}:{}'.format(output, category)] = cols
 
 for title, cols in plots.items():
     plt.title(title)
     for col in cols:
         vals = df[col]
         plt.plot(df['Year'], vals, label=col)
-    plt.legend()
+    plt.legend(fontsize=6)
     plt.savefig('/tmp/plots/{}.png'.format(title))
     plt.close()

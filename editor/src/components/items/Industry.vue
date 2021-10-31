@@ -16,6 +16,10 @@
     </div>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
+
+    <div class="additional-actions">
+      <button @click="delete">Delete</button>
+    </div>
   </template>
 
   <div v-else class="process-summary item-summary">

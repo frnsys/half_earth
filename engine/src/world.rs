@@ -1,12 +1,11 @@
 use serde::Serialize;
-use crate::kinds::OutputMap;
+use crate::kinds::{OutputMap, ByproductMap};
 use crate::regions::{Region, Income};
 
 #[derive(Default, Serialize)]
 pub struct World {
     pub year: usize,
     pub extinction_rate: f32,
-    pub base_extinction_rate: f32,
     pub temperature: f32,     // global temp anomaly, C
     pub precipitation: f32,   // global precip avg
     pub sea_level_rise: f32,  // meters
@@ -14,7 +13,10 @@ pub struct World {
     pub co2_emissions: f32,
     pub ch4_emissions: f32,
     pub n2o_emissions: f32,
+    pub temperature_modifier: f32,
     pub regions: Vec<Region>,
+    pub byproduct_mods: ByproductMap<f32>,
+    pub population_growth_modifier: f32,
 }
 
 impl World {
@@ -63,7 +65,7 @@ impl World {
 
     pub fn change_population(&mut self, percent: f32) {
         for region in &mut self.regions {
-            region.population *= 1. + percent;
+            region.population *= (1. + percent) * (1. + self.population_growth_modifier);
         }
     }
 
@@ -77,10 +79,6 @@ impl World {
         for region in &mut self.regions {
             region.outlook += amount;
         }
-    }
-
-    pub fn change_emissions(&mut self, percent: f32) {
-        self.co2_emissions *= 1. + percent;
     }
 
     pub fn income_level(&self) -> f32 {

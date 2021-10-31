@@ -40,6 +40,7 @@ impl Condition {
                 let val = match var {
                     WorldVariable::Year => state.world.year as f32,
                     WorldVariable::Population => state.world.population(),
+                    WorldVariable::PopulationGrowth => state.world.population_growth_modifier,
                     WorldVariable::Emissions => state.world.emissions(),
                     WorldVariable::ExtinctionRate => state.world.extinction_rate,
                     WorldVariable::Outlook => state.world.outlook(),

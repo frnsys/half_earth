@@ -80,12 +80,13 @@ pub struct Project {
     pub points: usize,
     pub estimate: usize,
     pub status: Status,
+    pub level: usize,
 
     #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
 
     pub outcomes: Vec<Outcome>,
-    // pub upgrades: Vec<Upgrade>,
+    pub upgrades: Vec<Upgrade>,
 }
 
 /// Nearest multiple of 5
@@ -153,6 +154,23 @@ impl Project {
         };
         self.cost = (cost as f32 * self.cost_modifier).round() as usize;
     }
+
+    pub fn upgrade(&mut self) -> bool {
+        if self.level < self.upgrades.len() {
+            self.level += 1;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn active_effects(&self) -> &Vec<Effect> {
+        if self.level == 0 {
+            &self.effects
+        } else {
+            &self.upgrades[self.level - 1].effects
+        }
+    }
 }
 
 
@@ -170,6 +188,7 @@ mod test {
             cost: 1,
             base_cost: Cost::Fixed(1),
             cost_modifier: 1.,
+            level: 0,
             ongoing: false,
             locked: false,
             kind: Type::Policy,
@@ -178,6 +197,7 @@ mod test {
             estimate: 0,
             points: 1,
             effects: vec![],
+            upgrades: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],
                 probability: Probability {
@@ -209,6 +229,7 @@ mod test {
             cost: 10,
             base_cost: Cost::Fixed(10),
             cost_modifier: 1.,
+            level: 0,
             ongoing: false,
             locked: false,
             kind: Type::Policy,
@@ -217,6 +238,7 @@ mod test {
             estimate: 0,
             points: 0,
             effects: vec![],
+            upgrades: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],
                 probability: Probability {
@@ -243,6 +265,7 @@ mod test {
             cost: 1,
             base_cost: Cost::Fixed(1),
             cost_modifier: 1.,
+            level: 0,
             ongoing: false,
             locked: false,
             kind: Type::Policy,
@@ -251,6 +274,7 @@ mod test {
             estimate: 0,
             points: 0,
             effects: vec![],
+            upgrades: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],
                 probability: Probability {

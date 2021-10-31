@@ -15,20 +15,27 @@
       <template v-for="p in projects">
         <Card
           :class="status(p)"
-          @click="assignPoint(p)"
           :title="p.name"
+          :effects="effectDescs(activeEffects(p))"
           :image="imageForProject(p)">
           <template v-slot:header>
             <div>Research</div>
             <div>
               <img class="pip" v-for="i in p.points" src="/assets/icons/pips/research.png">
             </div>
-            <div v-if="p.points > 0" @click="(ev) => {unassignPoint(p); ev.stopImmediatePropagation();}">-Point</div>
             <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>
+          </template>
+          <template v-slot:front>
+            <div class="card--actions" v-if="status(p) == 'inactive' || status(p) == 'building'">
+              <button @click="assignPoint(p)">+<img class="pip" src="/assets/icons/pips/research.png"></button>
+              <button v-if="p.points > 0" @click="unassignPoint(p)">-<img class="pip" src="/assets/icons/pips/research.png"></button>
+            </div>
           </template>
           <template v-slot:back>
             <div class="card--back--body">
-              {{state.projects[p.id].description}}
+              <div class="card--body">
+                {{state.projects[p.id].description}}
+              </div>
             </div>
             <div class="image-attribution">
               Source image: {{state.projects[p.id].image.attribution}}
@@ -56,10 +63,10 @@ export default {
 
 <style scoped>
 .card {
-  background: #DDCFE2;
+  border: 6px solid #DDCFE2;
 }
 .card.building {
-  background: #c66fc6;
+  border: 6px solid #c66fc6;
 }
 .card--tag {
 	background: #4A3169;

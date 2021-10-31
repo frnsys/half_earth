@@ -1,5 +1,6 @@
 <template>
   <Hud />
+  <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" @select="selectChoice" />
   <div class="report">
     <h2>Report</h2>
     <div class="report--body">
@@ -37,13 +38,6 @@
           <td>{{sign(politicalCapitalChange)}}</td>
         </tr>
       </table>
-      <ul class="report--projects" v-if="projectsCompleted">
-        <li>Completed Projects</li>
-        <li v-for="project in projectsCompleted">
-          {{project.name}}
-          {{project.effects}}
-        </li>
-      </ul>
     </div>
     <h2 v-if="lost">you lost</h2>
     <button @click="nextPhase">Next</button>
@@ -54,20 +48,26 @@
 import game from '/src/game';
 import state from '/src/state';
 import Hud from 'components/Hud.vue';
+import EventsMixin from 'components/EventsMixin';
 
 export default {
+  mixins: [EventsMixin],
   components: {
     Hud
   },
   mounted() {
+    this.showEvent();
     this.calculateChanges();
   },
   activated() {
+    this.showEvent();
     this.calculateChanges();
   },
   data() {
+    let events = game.rollReportEvents();
     return {
       state,
+      events,
       politicalCapital: {}
     }
   },
@@ -85,23 +85,6 @@ export default {
         }
         this.politicalCapitalChange += bounty;
         return {text, bounty};
-      });
-    },
-    projectsCompleted() {
-      let completed = game.completedProjects();
-      console.log('COMPLETED PROJECTS:')
-      return completed.map(([id, outcomeId]) => {
-        console.log(`Project id: ${id}`);
-        let project = state.gameState.projects[id];
-        let outcome = outcomeId ? project.outcomes[outcomeId] : null;
-        if (outcome) {
-          console.log('Outcomes:');
-          console.log(outcome.effects);
-        }
-        return {
-          name: project.name,
-          outcome: outcome ? outcome.effects : []
-        }
       });
     }
   },
@@ -176,9 +159,5 @@ export default {
 }
 .report--body {
   flex: 1;
-}
-.report--projects li:first-child {
-  text-align: center;
-  border-bottom: 1px solid;
 }
 </style>

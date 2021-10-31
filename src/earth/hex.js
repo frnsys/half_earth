@@ -21,7 +21,7 @@ const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: 
 
 // Load icons
 const texLoader = new THREE.TextureLoader();
-const icons = iconNames.concat(['political_capital']).reduce((acc, name) => {
+const icons = iconNames.concat(['political_capital', 'discontent']).reduce((acc, name) => {
   const map = texLoader.load(`./assets/icons/pips/${name}.png`);
   const iconMat = new THREE.SpriteMaterial({map});
   acc[name] = iconMat;
@@ -121,7 +121,7 @@ class HexSphere {
     const sprite = new THREE.Sprite(iconMat.clone());
     sprite.scale.set(size, size, size);
     sprite.position.copy(
-      tile.centerPointVec.add(tile.normal.multiplyScalar(2.)));
+      tile.centerPointVec.add(tile.normal));
 
     this.parent.add(sprite);
 

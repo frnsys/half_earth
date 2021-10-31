@@ -20,6 +20,10 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
     let mut consumed_feedstocks: FeedstockMap<Expression> = feedstocks!();
     let mut created_byproducts: ByproductMap<Expression> = byproducts!();
 
+    // println!("PLANNER:");
+    // println!("Resources: {:?}", resources);
+    // println!("Orders: {:?}", orders);
+
     let mut filled_demand: Expression = 0.into();
     let amounts: Vec<Variable> = orders.iter().map(|order| {
         // Ran into issues where solutions couldn't be found if the min was set to

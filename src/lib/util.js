@@ -15,4 +15,8 @@ function sign(v) {
   return `${v > 0 ? '+' : ''}${v}`;
 }
 
-export {updateTransform, sign};
+function nearestMultiple(v, base) {
+  return base * Math.round(v/base);
+}
+
+export {updateTransform, sign, nearestMultiple};

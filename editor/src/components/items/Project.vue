@@ -77,6 +77,7 @@
     </fieldset>
 
     <Outcomes :outcomes="localData.outcomes" @update="saveData('outcomes', $event)" />
+    <Upgrades :upgrades="localData.upgrades" @update="saveData('upgrades', $event)" />
 
     <div>
       <label>
@@ -125,6 +126,10 @@
       <h5>Outcomes</h5>
       <OutcomesSummary :outcomes="localData.outcomes" />
     </template>
+    <template v-if="localData.upgrades.length >= 1">
+      <h5>Upgrades</h5>
+      <UpgradesSummary :upgrades="localData.upgrades" />
+    </template>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -134,7 +139,7 @@
 import uuid from '../../uuid';
 import ItemMixin from './ItemMixin';
 export default {
-  mounted() {
+  created() {
     if (!this.localData.outcomes) {
       // Default outcome
       this.localData.outcomes = [{
@@ -147,6 +152,9 @@ export default {
         }
       }];
       /* this.save(); */
+    }
+    if (!this.localData.upgrades) {
+      this.localData.upgrades = [];
     }
   },
   computed: {

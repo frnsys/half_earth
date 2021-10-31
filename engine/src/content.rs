@@ -3,9 +3,9 @@ use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
-use crate::projects::{Project, Outcome, Cost};
+use crate::projects::{Project, Outcome, Upgrade, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus};
-use crate::kinds::{Resource, Output, Feedstock, ByproductMap, ResourceMap};
+use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
@@ -736,7 +736,7 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.57829,
-                co2: 1000.0,
+                co2: 970.0,
                 n2o: 0.0
             ),
             locked: false,
@@ -760,7 +760,7 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 2.7,
-                co2: 410.9589,
+                co2: 412.7691,
                 n2o: 0.0
             ),
             locked: false,
@@ -881,7 +881,7 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.6191,
-                co2: 266.0,
+                co2: 247.03,
                 n2o: 0.0
             ),
             locked: false,
@@ -905,7 +905,7 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 2.7,
-                co2: 410.9589,
+                co2: 180.54,
                 n2o: 0.0
             ),
             locked: false,
@@ -955,7 +955,7 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.57829,
-                co2: 1000.0,
+                co2: 353.81,
                 n2o: 0.0
             ),
             locked: false,
@@ -1057,12 +1057,17 @@ pub fn processes() -> Vec<Process> {
             name: "Green Hydrogen",
             output: Output::Fuel,
             mix_share: 0.0,
-            feedstock: (Feedstock::Other, 0.0),
+            feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
-
+                land: 26.305,
+                electricity: 46.4,
+                water: 0.27,
+                fuel: 0.0
             ),
             byproducts: byproducts!(
-
+                co2: 0.0,
+                ch4: 0.0,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1131,6 +1136,7 @@ pub fn projects() -> Vec<Project> {
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Temperature, -0.25)
             ],
@@ -1143,17 +1149,19 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
             id: 1,
             name: "Veganism Mandate",
             cost: 0,
-            base_cost: Cost::Dynamic(2., Output::AnimalCalories),
+            base_cost: Cost::Dynamic(4e-14, Output::AnimalCalories),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::DemandOutlookChange(Output::AnimalCalories, -2.0),
-                Effect::Demand(Output::AnimalCalories, -0.9)
+                Effect::DemandOutlookChange(Output::AnimalCalories, -4e-14),
+                Effect::AddFlag(Flag::Vegan)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -1164,16 +1172,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 2,
             name: "Remediation and Restoration",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::UnlocksProject(38)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1184,7 +1196,23 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 20,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 20,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
+                    ]
+                }
+            ]
         },
         Project {
             id: 3,
@@ -1192,6 +1220,7 @@ pub fn projects() -> Vec<Project> {
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1213,7 +1242,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::UnlocksProcess(1)
+
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -1225,7 +1254,10 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 4,
@@ -1233,6 +1265,7 @@ pub fn projects() -> Vec<Project> {
             cost: 0,
             base_cost: Cost::Fixed(15),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.1)
             ],
@@ -1245,16 +1278,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
             id: 5,
             name: "Universal Abortions & Contraceptives",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::PopulationGrowth, -35.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -1265,16 +1300,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 6,
             name: "One-Child Policy",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(50),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::PopulationGrowth, -50.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -1285,16 +1324,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 7,
             name: "Indigenous Land Management",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::AutoClick(80, 50.0)
+                Effect::ModifyEventProbability(80, -0.25)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1305,36 +1348,58 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 8,
             name: "Battery Storage Network",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::AddFlag(Flag::EnergyStorage1)
             ],
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            ongoing: true,
+            ongoing: false,
             outcomes: vec![
 
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::AddFlag(Flag::EnergyStorage2)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::AddFlag(Flag::EnergyStorage3)
+                    ]
+                }
+            ]
         },
         Project {
             id: 9,
             name: "Solar Radiation Management",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(15),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1)
+                Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1),
+                Effect::WorldVariable(WorldVariable::Temperature, -0.5)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1345,7 +1410,10 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 10,
@@ -1353,10 +1421,11 @@ pub fn projects() -> Vec<Project> {
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 20.0),
                 Effect::ModifyIndustryResources(1, Resource::Fuel, 0.6),
-                Effect::ProjectCostModifier(22, -0.5)
+                Effect::ProjectCostModifier(21, -0.5)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1367,16 +1436,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
             id: 11,
             name: "Long-Range Electric Aviation",
             cost: 0,
-            base_cost: Cost::Fixed(10),
+            base_cost: Cost::Fixed(40),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::ModifyIndustryByproducts(2, Byproduct::Co2, 0.1)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1387,14 +1458,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 12,
             name: "Closed Borders",
             cost: 0,
-            base_cost: Cost::Fixed(1),
+            base_cost: Cost::Fixed(50),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1407,16 +1482,21 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 13,
-            name: "Iron Fillings",
+            name: "Ocean Iron Fertilization",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Emissions, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1427,16 +1507,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 14,
             name: "Green Hydrogen",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(15),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::UnlocksProject(15)
+                Effect::UnlocksProcess(27)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1447,36 +1531,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 15,
-            name: "Hydrogen Transport Network",
-            cost: 0,
-            base_cost: Cost::Fixed(0),
-            progress: 0.0,
-            effects: vec![
-
-            ],
-            kind: ProjectType::Initiative,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0
-        },
-        Project {
-            id: 16,
             name: "Next-Gen Solar PV",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::OutputForProcess(18, 4.0)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1487,14 +1555,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 17,
+            id: 16,
             name: "Floating Wind Turbines",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::UnlocksProcess(3)
             ],
@@ -1507,16 +1579,46 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
+        },
+        Project {
+            id: 17,
+            name: "High-Density Batteries",
+            cost: 0,
+            base_cost: Cost::Fixed(15),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::ProjectCostModifier(45, -0.2),
+                Effect::ProjectCostModifier(11, -0.2),
+                Effect::ProjectCostModifier(8, -0.2)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 18,
-            name: "Battery Technology?",
+            name: "De-extinction",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::UnlocksProject(19)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1527,34 +1629,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 19,
-            name: "De-extinction",
-            cost: 0,
-            base_cost: Cost::Fixed(0),
-            progress: 0.0,
-            effects: vec![
-                Effect::UnlocksProject(20)
-            ],
-            kind: ProjectType::Research,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0
-        },
-        Project {
-            id: 20,
             name: "De-extinction Initiative",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1563,18 +1649,43 @@ pub fn projects() -> Vec<Project> {
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
 
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 21,
+            id: 20,
             name: "Passive House Program",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(6, Resource::Electricity, 0.3)
             ],
@@ -1587,18 +1698,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 22,
+            id: 21,
             name: "Car Ban",
             cost: 0,
             base_cost: Cost::Fixed(50),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(1, Resource::Fuel, 0.6),
                 Effect::ModifyIndustryDemand(0, -0.12),
-                Effect::IncomeOutlookChange(1.0)
+                Effect::IncomeOutlookChange(-1.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -1609,16 +1722,21 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 23,
+            id: 22,
             name: "Direct Air Capture",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Emissions, -1.5),
+                Effect::DemandAmount(Output::Electricity, 3500000000000.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1629,16 +1747,179 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -3.0),
+                        Effect::DemandAmount(Output::Electricity, 7000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -4.5),
+                        Effect::DemandAmount(Output::Electricity, 10500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -6.0),
+                        Effect::DemandAmount(Output::Electricity, 14000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -7.5),
+                        Effect::DemandAmount(Output::Electricity, 17500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -9.0),
+                        Effect::DemandAmount(Output::Electricity, 21000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -11.5),
+                        Effect::DemandAmount(Output::Electricity, 24500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -13.0),
+                        Effect::DemandAmount(Output::Electricity, 28000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -14.5),
+                        Effect::DemandAmount(Output::Electricity, 31500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -16.0),
+                        Effect::DemandAmount(Output::Electricity, 35000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -17.5),
+                        Effect::DemandAmount(Output::Electricity, 38500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -19.0),
+                        Effect::DemandAmount(Output::Electricity, 42000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -20.5),
+                        Effect::DemandAmount(Output::Electricity, 45500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -22.0),
+                        Effect::DemandAmount(Output::Electricity, 49000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -23.5),
+                        Effect::DemandAmount(Output::Electricity, 52500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -25.0),
+                        Effect::DemandAmount(Output::Electricity, 56000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -26.5),
+                        Effect::DemandAmount(Output::Electricity, 59500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -28.0),
+                        Effect::DemandAmount(Output::Electricity, 63000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -29.5),
+                        Effect::DemandAmount(Output::Electricity, 66500000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -31.0),
+                        Effect::DemandAmount(Output::Electricity, 70000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -32.5),
+                        Effect::DemandAmount(Output::Electricity, 73500000000000.0)
+                    ]
+                }
+            ]
         },
         Project {
-            id: 24,
+            id: 23,
             name: "Co-Generation",
             cost: 0,
-            base_cost: Cost::Fixed(10),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::OutputForFeature(ProcessFeature::IsCombustion, 0.6)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1649,16 +1930,21 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 25,
+            id: 24,
             name: "Restrictions on Air Travel",
             cost: 0,
-            base_cost: Cost::Fixed(2),
+            base_cost: Cost::Fixed(25),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::ModifyIndustryByproducts(2, Byproduct::Co2, 0.5),
+                Effect::IncomeOutlookChange(-1.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -1669,14 +1955,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 26,
+            id: 25,
             name: "Wood Skyscrapers",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1689,35 +1979,43 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
+        },
+        Project {
+            id: 26,
+            name: "Vegetarian Mandate",
+            cost: 0,
+            base_cost: Cost::Dynamic(2e-14, Output::AnimalCalories),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::DemandOutlookChange(Output::AnimalCalories, -2e-14),
+                Effect::AddFlag(Flag::Vegetarian)
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 27,
-            name: "Vegetarian Mandate",
-            cost: 0,
-            base_cost: Cost::Dynamic(1.5, Output::AnimalCalories),
-            progress: 0.0,
-            effects: vec![
-                Effect::DemandOutlookChange(Output::AnimalCalories, -1.0),
-                Effect::Demand(Output::AnimalCalories, -0.4)
-            ],
-            kind: ProjectType::Policy,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0
-        },
-        Project {
-            id: 28,
             name: "Back to the Land",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1730,14 +2028,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 29,
+            id: 28,
             name: "3rd Generation Biofuels",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::UnlocksProcess(29)
             ],
@@ -1750,14 +2050,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 30,
+            id: 29,
             name: "Thorium Reactor",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::UnlocksProcess(6)
             ],
@@ -1770,14 +2072,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 31,
+            id: 30,
             name: "Breeder Reactor",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::UnlocksProcess(7)
             ],
@@ -1790,14 +2096,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 32,
+            id: 31,
             name: "Mini Nuclear Reactor",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(25),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1810,19 +2120,23 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 33,
+            id: 32,
             name: "Asteroid Mining",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(50),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
             kind: ProjectType::Initiative,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
@@ -1830,14 +2144,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 34,
+            id: 33,
             name: "Biosphere III",
             cost: 0,
             base_cost: Cost::Fixed(40),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1871,16 +2189,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 35,
+            id: 34,
             name: "Space Cans",
             cost: 0,
             base_cost: Cost::Fixed(40),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::ProjectCostModifier(33, -0.25)
+                Effect::ProjectCostModifier(32, -0.25)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1891,14 +2213,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 36,
+            id: 35,
             name: "Traditional animal husbandry mandate",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1911,14 +2235,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 37,
+            id: 36,
             name: "Land Expansion",
             cost: 0,
             base_cost: Cost::Fixed(0),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1931,19 +2257,21 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 38,
+            id: 37,
             name: "Phytomining",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::ProjectCostModifier(2, -0.25)
             ],
             kind: ProjectType::Research,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             outcomes: vec![
@@ -1951,14 +2279,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 39,
+            id: 38,
             name: "Cloud Seeding",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -1992,14 +2324,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 40,
+            id: 39,
             name: "Ban on deep sea mining",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2012,14 +2346,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 41,
+            id: 40,
             name: "Agricultural robotics",
             cost: 0,
             base_cost: Cost::Fixed(0),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2032,14 +2368,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 42,
+            id: 41,
             name: "The Ark",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2073,14 +2411,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 43,
+            id: 42,
             name: "Expand recycling infrastructure",
             cost: 0,
             base_cost: Cost::Fixed(0),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2093,14 +2433,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 44,
+            id: 43,
             name: "Alternative Refrigerants",
             cost: 0,
             base_cost: Cost::Fixed(15),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(6, Resource::Electricity, 0.96)
             ],
@@ -2113,14 +2457,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 45,
+            id: 44,
             name: "Drought-Resistant Crops",
             cost: 0,
             base_cost: Cost::Fixed(15),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::ModifyEventProbability(83, -0.2)
             ],
@@ -2133,14 +2479,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 46,
+            id: 45,
             name: "Mass Electrification",
             cost: 0,
-            base_cost: Cost::Dynamic(2., Output::Fuel),
+            base_cost: Cost::Dynamic(5e-13, Output::Fuel),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AddFlag(Flag::Electrified)
             ],
@@ -2153,14 +2501,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 47,
+            id: 46,
             name: "Hempcrete",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2183,14 +2535,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 48,
+            id: 47,
             name: "Orbital Mirror Array",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2203,18 +2557,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 49,
+            id: 48,
             name: "Carbon-Negative Concrete",
             cost: 0,
-            base_cost: Cost::Fixed(10),
+            base_cost: Cost::Fixed(15),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::ModifyIndustryByproducts(5, Byproduct::Co2, 0.5)
             ],
-            kind: ProjectType::Research,
+            kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
@@ -2223,14 +2579,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 50,
+            id: 49,
             name: "Hydrogen Steel",
             cost: 0,
             base_cost: Cost::Fixed(0),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2243,14 +2603,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 51,
+            id: 50,
             name: "Electric-Arc Furnaces",
             cost: 0,
             base_cost: Cost::Fixed(0),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2263,14 +2625,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 52,
+            id: 51,
             name: "Cellular Meat",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::UnlocksProcess(2)
             ],
@@ -2283,14 +2647,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 53,
+            id: 52,
             name: "Mass CCS",
             cost: 0,
             base_cost: Cost::Fixed(0),
             progress: 0.0,
+            level: 0,
             effects: vec![
 
             ],
@@ -2303,14 +2669,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 54,
+            id: 53,
             name: "Reruralization",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.1),
                 Effect::Output(Output::AnimalCalories, 0.1)
@@ -2324,14 +2692,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 55,
+            id: 54,
             name: "Peace Officers",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(113, 75.0)
             ],
@@ -2344,14 +2714,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 56,
+            id: 55,
             name: "Riot Control",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(114, 75.0)
             ],
@@ -2364,14 +2736,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 57,
+            id: 56,
             name: "Militarized Anti-Reaction Forces",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(115, 75.0)
             ],
@@ -2384,14 +2758,16 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 58,
+            id: 57,
             name: "Counterterrorism Forces",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(112, 75.0),
                 Effect::AutoClick(109, 75.0),
@@ -2407,16 +2783,18 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![]
         },
         Project {
-            id: 59,
+            id: 58,
             name: "Esperanto",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, 50.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2427,16 +2805,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 60,
+            id: 59,
             name: "Energy Quotas",
             cost: 0,
-            base_cost: Cost::Dynamic(2., Output::Electricity),
+            base_cost: Cost::Dynamic(3e-12, Output::Electricity),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::DemandOutlookChange(Output::Electricity, -2.0),
+                Effect::DemandOutlookChange(Output::Electricity, -3e-12),
                 Effect::Demand(Output::Electricity, -0.6)
             ],
             kind: ProjectType::Policy,
@@ -2448,16 +2830,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 61,
+            id: 60,
             name: "Vegan Campaign",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::Demand(Output::AnimalCalories, -0.75)
+                Effect::AddFlag(Flag::Vegan)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2468,16 +2854,20 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         },
         Project {
-            id: 62,
+            id: 61,
             name: "Human Health Corps",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
-                Effect::AutoClick(102, 50.0)
+                Effect::AutoClick(102, 25.0)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -2488,14 +2878,31 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(102, 50.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(102, 75.0)
+                    ]
+                }
+            ]
         },
         Project {
-            id: 63,
+            id: 62,
             name: "Disaster Rapid Relief",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(100, 50.0),
                 Effect::AutoClick(84, 50.0)
@@ -2509,14 +2916,44 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(100, 75.0),
+                        Effect::AutoClick(84, 75.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(100, 75.0),
+                        Effect::AutoClick(84, 75.0),
+                        Effect::AutoClick(85, 50.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(100, 75.0),
+                        Effect::AutoClick(84, 75.0),
+                        Effect::AutoClick(85, 75.0),
+                        Effect::AutoClick(86, 25.0)
+                    ]
+                }
+            ]
         },
         Project {
-            id: 64,
+            id: 63,
             name: "Fire Control Brigade",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(80, 50.0)
             ],
@@ -2529,14 +2966,49 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(80, 75.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(80, 75.0),
+                        Effect::AutoClick(81, 25.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(80, 75.0),
+                        Effect::AutoClick(81, 50.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(80, 75.0),
+                        Effect::AutoClick(81, 75.0),
+                        Effect::AutoClick(82, 10.0)
+                    ]
+                }
+            ]
         },
         Project {
-            id: 65,
+            id: 64,
             name: "Community Cooling Division",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
+            level: 0,
             effects: vec![
                 Effect::AutoClick(91, 50.0)
             ],
@@ -2549,7 +3021,56 @@ pub fn projects() -> Vec<Project> {
             ],
             estimate: 0,
             points: 0,
-            cost_modifier: 1.0
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(91, 75.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(91, 75.0),
+                        Effect::AutoClick(94, 25.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::AutoClick(91, 75.0),
+                        Effect::AutoClick(94, 50.0)
+                    ]
+                }
+            ]
+        },
+        Project {
+            id: 65,
+            name: "Energy Conservation Campaign",
+            cost: 0,
+            base_cost: Cost::Fixed(30),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::Demand(Output::Electricity, -0.25)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         }
     ]
 }
@@ -2564,7 +3085,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(91),
                 Effect::AddEvent(92),
-                Effect::UnlocksProject(65)
+                Effect::UnlocksProject(64)
             ],
             probabilities: vec![
                 Probability {
@@ -2795,7 +3316,7 @@ pub fn events() -> Vec<Event> {
                 Effect::AddEvent(8),
                 Effect::AddRegionFlag("protests".to_string()),
                 Effect::AddEvent(113),
-                Effect::UnlocksProject(55)
+                Effect::UnlocksProject(54)
             ],
             probabilities: vec![
                 Probability {
@@ -2846,7 +3367,7 @@ pub fn events() -> Vec<Event> {
                 Effect::AddEvent(10),
                 Effect::AddRegionFlag("riots".to_string()),
                 Effect::AddEvent(114),
-                Effect::UnlocksProject(56)
+                Effect::UnlocksProject(55)
             ],
             probabilities: vec![
                 Probability {
@@ -2877,7 +3398,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(80),
                 Effect::AddEvent(89),
-                Effect::UnlocksProject(64)
+                Effect::UnlocksProject(63)
             ],
             probabilities: vec![
                 Probability {
@@ -2913,7 +3434,7 @@ pub fn events() -> Vec<Event> {
                 Effect::TriggerEvent(12, 4),
                 Effect::AddRegionFlag("revolts".to_string()),
                 Effect::AddEvent(115),
-                Effect::UnlocksProject(57)
+                Effect::UnlocksProject(56)
             ],
             probabilities: vec![
                 Probability {
@@ -3107,7 +3628,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             effects: vec![
                 Effect::AddEvent(100),
-                Effect::UnlocksProject(63)
+                Effect::UnlocksProject(62)
             ],
             probabilities: vec![
                 Probability {
@@ -3170,7 +3691,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             effects: vec![
                 Effect::AddEvent(102),
-                Effect::UnlocksProject(62)
+                Effect::UnlocksProject(61)
             ],
             probabilities: vec![
                 Probability {
@@ -3336,7 +3857,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(84),
                 Effect::AddEvent(87),
-                Effect::UnlocksProject(63)
+                Effect::UnlocksProject(62)
             ],
             probabilities: vec![
                 Probability {
@@ -3505,7 +4026,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::ProjectStatus(10, ProjectStatus::Finished),
-                        Condition::ProjectStatus(22, ProjectStatus::Finished)
+                        Condition::ProjectStatus(21, ProjectStatus::Finished)
                     ]
                 }
             ],
@@ -3814,7 +4335,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             effects: vec![
                 Effect::AddEvent(105),
-                Effect::UnlocksProject(58)
+                Effect::UnlocksProject(57)
             ],
             probabilities: vec![
                 Probability {
@@ -3841,7 +4362,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(54, ProjectStatus::Active)
+                        Condition::ProjectStatus(53, ProjectStatus::Active)
                     ]
                 }
             ],
@@ -4646,7 +5167,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Planning,
             locked: false,
             effects: vec![
-                Effect::UnlocksProject(42)
+                Effect::UnlocksProject(41)
             ],
             probabilities: vec![
                 Probability {
@@ -5486,7 +6007,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             effects: vec![
                 Effect::AddEvent(102),
-                Effect::UnlocksProject(62)
+                Effect::UnlocksProject(61)
             ],
             probabilities: vec![
                 Probability {
@@ -5554,7 +6075,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             effects: vec![
                 Effect::AddEvent(107),
-                Effect::UnlocksProject(58)
+                Effect::UnlocksProject(57)
             ],
             probabilities: vec![
                 Probability {
@@ -5597,7 +6118,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             effects: vec![
                 Effect::AddEvent(109),
-                Effect::UnlocksProject(58)
+                Effect::UnlocksProject(57)
             ],
             probabilities: vec![
                 Probability {
@@ -5671,7 +6192,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             effects: vec![
                 Effect::AddEvent(112),
-                Effect::UnlocksProject(58)
+                Effect::UnlocksProject(57)
             ],
             probabilities: vec![
                 Probability {
@@ -6030,8 +6551,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::ProjectStatus(34, ProjectStatus::Finished),
-                        Condition::ProjectStatus(35, ProjectStatus::Finished)
+                        Condition::ProjectStatus(33, ProjectStatus::Finished),
+                        Condition::ProjectStatus(34, ProjectStatus::Finished)
                     ]
                 }
             ],

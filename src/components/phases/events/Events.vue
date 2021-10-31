@@ -7,10 +7,11 @@
   </div>
   <Globe id="events-globe" ref="globe" />
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
-  <Event v-if="event" :event="event" @done="nextEvent" @select="selectChoice" />
+  <Dialogue v-if="event && predialogue" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
+  <Event v-else-if="event && !predialogue" :event="event" @done="nextEvent" @select="selectChoice" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
-      <img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}
+      <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
     </div>
   </div>
 </div>
@@ -37,9 +38,12 @@ function randChoice(arr) {
 export default {
   mixins: [EventsMixin],
   data() {
+    let events = game.rollWorldStartEvents();
     return {
+      events,
       time: 0,
       toasts: [],
+      predialogue: true,
       year: state.gameState.world.year,
       completedProjects: [],
     };
@@ -63,6 +67,15 @@ export default {
   },
   methods: {
     start() {
+      // Show any world start events
+      if (this.hasEvent) {
+        this.predialogue = true;
+        console.log(this.events);
+        this.showEvent();
+      } else {
+        this.predialogue = false;
+      }
+
       // Cache starting values for report
       this._startYear = state.gameState.world.year;
       state.cycleStartState = {
@@ -89,33 +102,36 @@ export default {
       console.log(iconEvents);
       const tick = (timestamp) => {
         let elapsed = timestamp - last;
-        this.time += elapsed;
+        last = timestamp;
 
-        if (this.time >= MS_PER_YEAR) {
-          this.completedProjects = game.step();
-          this.year = state.gameState.world.year;
+        if (!this.showingEvent) {
+          this.time += elapsed;
 
-          this.rollEvent();
-          return;
+          if (this.time >= MS_PER_YEAR) {
+            this.completedProjects = game.step();
+            this.year = state.gameState.world.year;
 
-        } else {
-          // TODO need to ensure all events play out before end of year
-          if (iconEvents.length > 0 && Math.random() < 0.05) {
-            let [eventId, regionId] = iconEvents.shift();
-            game.applyEvent(eventId, regionId);
-            let icon = this.showEventOnGlobe(eventId, regionId);
+            this.rollEvent();
+            return;
 
-            // If autoclickers for this event, roll for autoclick
-            if (icon && eventId in state.gameState.autoclickers) {
-              let chance = state.gameState.autoclickers[eventId];
-              setTimeout(() => {
-                if (Math.random() <= chance) {
-                  this.globe.respondToEvent(icon.mesh, icon.hexIdx);
-                }
-              }, 500);
+          } else {
+            // TODO need to ensure all events play out before end of year
+            if (iconEvents.length > 0 && Math.random() < 0.05) {
+              let [eventId, regionId] = iconEvents.shift();
+              game.applyEvent(eventId, regionId);
+              let icon = this.showEventOnGlobe(eventId, regionId);
+
+              // If autoclickers for this event, roll for autoclick
+              if (icon && eventId in state.gameState.autoclickers) {
+                let chance = state.gameState.autoclickers[eventId];
+                setTimeout(() => {
+                  if (Math.random() <= chance) {
+                    this.globe.respondToEvent(icon.mesh, icon.hexIdx);
+                  }
+                }, 500);
+              }
             }
           }
-          last = timestamp;
         }
         requestAnimationFrame(tick);
       };
@@ -141,6 +157,7 @@ export default {
       }
     },
     afterEvents() {
+      this.predialogue = false;
       this.startYear();
     },
     applyEmissions() {
@@ -153,7 +170,9 @@ export default {
         'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
         'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
       };
-      this.globe.addEmissionsThenUpdate({}).then((tgav) => {
+      console.log('Applying emissions:');
+      console.log(emissions);
+      this.globe.addEmissionsThenUpdate(emissions).then((tgav) => {
         game.setTgav(tgav);
       });
     },
@@ -164,8 +183,11 @@ export default {
         let region = state.gameState.world.regions[regionId];
         let tiles = regionsToTiles[region.name];
         let hexIdx = randChoice(tiles.inland.concat(tiles.coasts));
-        let label = sign(ev.effect.value);
-        let mesh = this.globe.showIconText(ev.icon, label, hexIdx);
+        // let label = sign(ev.effect.value);
+        let mesh = this.globe.showIcon(ev.icon, hexIdx);
+        [...Array(Math.abs(ev.effect.value)).keys()].forEach((_) => {
+          this.globe.pingIcon('discontent', hexIdx)
+        });
         this.toasts.push({
           icon: ev.icon,
           desc: `${ev.name} in ${region.name}`
@@ -213,7 +235,8 @@ export default {
   text-align: center;
   font-size: 0.8em;
 }
-.toast {
+.toast--body {
+  display: inline-block;
   padding: 0.1em 0.25em;
   border-radius: 0.2em;
   background: rgba(20,20,20,0.9);
@@ -221,11 +244,14 @@ export default {
   border: 1px solid black;
   text-align: center;
   margin: 0.15em 0;
-  display: inline-block;
   line-height: 1.7;
 }
 .toast img {
   height: 20px;
   vertical-align: middle;
+}
+
+#event-stream .dialogue {
+  background: rgba(255,255,255,0.25);
 }
 </style>

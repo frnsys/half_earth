@@ -15,6 +15,8 @@ import Probabilities from '../subs/Probabilities.vue';
 import ProbabilitiesSummary from '../subs/ProbabilitiesSummary.vue';
 import Dialogue from '../subs/Dialogue.vue';
 import DialogueSummary from '../subs/DialogueSummary.vue';
+import Upgrades from '../subs/Upgrades.vue';
+import UpgradesSummary from '../subs/UpgradesSummary.vue';
 import EffectsSummary from '../subs/EffectsSummary.vue';
 import ChoicesSummary from '../subs/ChoicesSummary.vue';
 import ResourcesSummary from '../subs/ResourcesSummary.vue';
@@ -44,6 +46,7 @@ export default {
     Dialogue, DialogueSummary,
     ByproductsSummary, OutputsSummary,
     Outcomes, OutcomesSummary,
+    Upgrades, UpgradesSummary,
   },
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {

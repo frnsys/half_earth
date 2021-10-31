@@ -11,8 +11,9 @@
       <template v-for="p in projects">
         <Card
           :class="status(p)"
-          @click="payPoints(p)"
           :title="p.name"
+          :flag="status(p) == 'active' && p.upgrades.length > 0 ? `Level ${p.level+1}` : null"
+          :effects="effectDescs(activeEffects(p))"
           :image="imageForProject(p)">
           <template v-slot:header>
             <div>Policy</div>
@@ -20,9 +21,28 @@
               {{p.cost}}<img class="pip" src="/assets/icons/pips/political_capital.png">
             </div>
           </template>
+          <template v-slot:front>
+            <div class="card--body project--upgrade" v-if="status(p) == 'active' && nextUpgrade(p) !== null">
+              <div class="project--upgrade--title">
+                <div>Next Level</div>
+                <div>{{nextUpgrade(p).cost}}<img class="pip" src="/assets/icons/pips/political_capital.png"></div>
+                <button @click="upgrade(p)">Upgrade</button>
+              </div>
+              <ul class="effects">
+                <template v-for="desc in effectDescs(nextUpgrade(p).effects)">
+                  <li v-html="desc"></li>
+                </template>
+              </ul>
+            </div>
+            <div class="card--actions" v-if="status(p) == 'inactive'">
+              <button @click="payPoints(p)">Implement</button>
+            </div>
+          </template>
           <template v-slot:back>
             <div class="card--back--body">
-              {{state.projects[p.id].description}}
+              <div class="card--body">
+                {{state.projects[p.id].description}}
+              </div>
             </div>
             <div class="image-attribution">
               Source image: {{state.projects[p.id].image.attribution}}
@@ -50,10 +70,10 @@ export default {
 
 <style scoped>
 .card {
-  background: #CFB99A;
+  border: 6px solid #CFB99A;
 }
 .card.active {
-  background: #BEAC97;
+  border: 6px solid #BEAC97;
 }
 .card--tag {
 	background: #5B534D;

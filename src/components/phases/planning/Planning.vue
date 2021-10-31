@@ -2,7 +2,6 @@
 <Hud />
 <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" @select="selectChoice" />
 <div class="planning">
-  <h2>Gosplant</h2>
   <Research v-if="page == PAGES.RESEARCH" @close="page = null" />
   <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
@@ -125,11 +124,6 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.planning h2 {
-  text-align: center;
-  font-family: 'Andada Pro';
-  font-weight: normal;
-}
 .planning--menu {
   padding: 1em;
   display: flex;
@@ -207,7 +201,32 @@ export default {
 }
 
 .planning .effects img {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+.project--upgrade--title {
+  display: flex;
+  font-size: 0.75em;
+  justify-content: space-between;
+  border-bottom: 1px dashed;
+  padding: 0 0 0.25em 0;
+  margin-bottom: 0.5em;
+}
+.project--upgrade--title button {
+  padding: 0 0.5em;
+}
+.project--upgrade .effects {
+    font-size: 0.8em;
+    padding: 0.1em 0.3em;
+    border: none;
+    background: rgba(0,0,0,0.1);
+}
+.project--upgrade img,
+.project--upgrade .effects img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
 }
 </style>

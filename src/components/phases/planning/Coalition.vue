@@ -35,7 +35,7 @@ export default {
       return state.gameState.npcs.map((npc) => {
         let data = NPCS[npc.id];
         let text = data.description;
-        let icons = [...text.matchAll('{([a-z_]+)}')];
+        let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
         for (const match of icons) {
           text = text.replaceAll(match[0], `<img src="/assets/icons/pips/${match[1]}.png">`);
         }
