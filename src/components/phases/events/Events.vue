@@ -29,7 +29,7 @@ import EventsMixin from 'components/EventsMixin';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import iconEvents from '/assets/content/icon_events.json';
 
-const MS_PER_YEAR = 6000;
+const MS_PER_YEAR = 10000;
 
 function randChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -46,6 +46,7 @@ export default {
       predialogue: true,
       year: state.gameState.world.year,
       completedProjects: [],
+      stopped: false
     };
   },
   components: {
@@ -68,6 +69,7 @@ export default {
   methods: {
     start() {
       // Show any world start events
+      this.stopped = false;
       if (this.hasEvent) {
         this.predialogue = true;
         console.log(this.events);
@@ -101,6 +103,7 @@ export default {
       console.log('ICON EVENTS:');
       console.log(iconEvents);
       const tick = (timestamp) => {
+        if (this.stopped) return;
         let elapsed = timestamp - last;
         last = timestamp;
 
@@ -116,7 +119,8 @@ export default {
 
           } else {
             // TODO need to ensure all events play out before end of year
-            if (iconEvents.length > 0 && Math.random() < 0.05) {
+            /* if (iconEvents.length > 0 && Math.random() < 0.05) { */
+            if (iconEvents.length > 0 && Math.random() < 1) {
               let [eventId, regionId] = iconEvents.shift();
               game.applyEvent(eventId, regionId);
               let icon = this.showEventOnGlobe(eventId, regionId);
@@ -126,9 +130,9 @@ export default {
                 let chance = state.gameState.autoclickers[eventId];
                 setTimeout(() => {
                   if (Math.random() <= chance) {
-                    this.globe.respondToEvent(icon.mesh, icon.hexIdx);
+                    this.globe.respondToEvent(icon.mesh, icon.hexIdx, icon.mesh.userData);
                   }
-                }, 500);
+                }, 100);
               }
             }
           }
@@ -141,6 +145,8 @@ export default {
       // Go to report phase
       if (state.gameState.world.year > this._startYear
         && state.gameState.world.year % 5 == 0) {
+        console.log(`Stopping on year: ${state.gameState.world.year}`);
+        this.stopped = true;
         state.phase = 'REPORT';
         return;
       }
@@ -178,16 +184,29 @@ export default {
     },
     showEventOnGlobe(eventId, regionId) {
       let ev = iconEvents[eventId];
-      if (this.globe && regionId) {
+      if (this.globe && regionId !== undefined && regionId !== null) {
         // TODO distinguish inland vs coastal events
         let region = state.gameState.world.regions[regionId];
         let tiles = regionsToTiles[region.name];
         let hexIdx = randChoice(tiles.inland.concat(tiles.coasts));
         // let label = sign(ev.effect.value);
-        let mesh = this.globe.showIcon(ev.icon, hexIdx);
-        [...Array(Math.abs(ev.effect.value)).keys()].forEach((_) => {
-          this.globe.pingIcon('discontent', hexIdx)
+        let mesh = this.globe.showIcon(ev.icon, hexIdx, {
+          event: ev,
+          region,
         });
+
+        let outlook = ev.intensity + 1;
+        game.changeLocalOutlook(-outlook, regionId);
+        this.globe.pingIcon('discontent', hexIdx);
+        let outlookInterval = setInterval(() => {
+          if (outlook <= 0) {
+            clearInterval(outlookInterval);
+          } else {
+            outlook--;
+            this.globe.pingIcon('discontent', hexIdx);
+          }
+        }, 250);
+
         this.toasts.push({
           icon: ev.icon,
           desc: `${ev.name} in ${region.name}`

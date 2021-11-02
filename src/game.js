@@ -12,8 +12,8 @@ function updateState() {
 
   let world = state.gameState.world;
   state.gameState.contentedness = world.regions.reduce((acc, r) => {
-      return acc + r.base_contentedness + r.outlook;
-    }, 0)/world.regions.length;
+    return acc + r.base_contentedness + r.outlook;
+  }, 0);
   state.gameState.emissions = (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
   state.gameState.population = world.regions.reduce((acc, r) => {
       return acc + r.population
@@ -54,6 +54,11 @@ function step() {
 
 function changePoliticalCapital(amount) {
   game.change_political_capital(amount);
+  updateState();
+}
+
+function changeLocalOutlook(amount, regionId) {
+  game.change_local_outlook(amount, regionId);
   updateState();
 }
 
@@ -155,6 +160,7 @@ export default {
   setTgav,
   totalIncomeLevel,
   changePoliticalCapital,
+  changeLocalOutlook,
   banProcess, unbanProcess,
   promoteProcess, unpromoteProcess,
   setProjectPoints, startProject, stopProject, upgradeProject,

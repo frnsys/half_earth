@@ -54,6 +54,8 @@ pub enum Effect {
     DemandOutlookChange(Output, f32),
     IncomeOutlookChange(f32),
     ProjectCostModifier(usize, f32),
+
+    ProtectLand(f32),
 }
 
 impl Effect {
@@ -191,6 +193,9 @@ impl Effect {
             Effect::ProjectCostModifier(id, change) => {
                 game.state.projects[*id].cost_modifier += change;
             },
+            Effect::ProtectLand(percent) => {
+                game.state.protected_land += percent/100.;
+            }
 
             // Effects like AutoClick have no impact in the engine side
             _ => ()
@@ -283,9 +288,13 @@ impl Effect {
             Effect::ProjectCostModifier(id, change) => {
                 game.state.projects[*id].cost_modifier -= change;
             },
+            Effect::ProtectLand(percent) => {
+                game.state.protected_land -= percent/100.;
+            }
 
             // Other effects aren't reversible
             _ => ()
         }
     }
 }
+

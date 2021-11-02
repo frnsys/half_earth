@@ -41,6 +41,14 @@ function describeEffect(e) {
       }
       return;
     }
+    case 'LocalVariable': {
+      switch (e.subtype) {
+        case 'Outlook': {
+          return `${sign(e.param)} <img src="/assets/icons/contentedness.png"> locally`;
+        }
+      }
+      return;
+    }
     case 'Output': {
       return `${sign(e.param*100)}% ${outputNames[e.subtype]} production`;
     }
@@ -145,10 +153,11 @@ function describeEffect(e) {
       return `${e.param < 1 ? 'Reduces' : 'Increases'} chance of ${event} by ${p.toFixed(0)}%.`
     }
     default:
-      console.log(`Unhandled event type: ${e.type}`);
+      console.log(`Unhandled effect type: ${e.type}`);
       console.log(e);
       break;
   }
 }
 
 export {describeEffect};
+

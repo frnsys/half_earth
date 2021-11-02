@@ -25,7 +25,7 @@ use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
 use crate::npcs::NPC;
@@ -68,7 +68,7 @@ specs = {
         'name': None,
         'income_level': None,
         'development': 0,
-        'outlook': 100,
+        'outlook': 20,
         'population': None,
         'base_habitability': 100,
         'base_contentedness': 0,
@@ -121,6 +121,8 @@ specs = {
         'probabilities': [],
         'dialogue': [],
         'prob_modifier': 1.0,
+        'intensity': 0,
+        'aspect': None
     },
     'NPC': {
         'id': None,
@@ -211,6 +213,7 @@ effects = {
     'DemandOutlookChange':       lambda e: ('Output::{}'.format(e['subtype']), param(e, 'Multiplier')),
     'IncomeOutlookChange':       lambda e: (param(e, 'Multiplier'),),
     'ProjectCostModifier':       lambda e: (ids[e['entity']], param(e, 'Change')),
+    'ProtectLand':               lambda e: (param(e, 'Percent'),),
 }
 comps = {
     '<': 'Comparator::Less',
@@ -317,11 +320,24 @@ def define_field(k, v, item):
         fields = filter(lambda x: x[0] in valid_resources, v.items())
         return 'resources: resources!(\n{}\n)'.format(
                     indent(define_fields(fields, item)))
+    elif k == 'aspects':
+        aspects = ['Aspect::{}'.format(a) for a in v]
+        return 'aspects: vec![\n{}\n]'.format(
+                    indent(',\n'.join(aspects)))
+    elif k == 'aspect':
+        if v is not None:
+            return 'aspect: Some(Aspect::{})'.format(v)
+        else:
+            return 'aspect: None'
     if k == 'cost':
         if item.get('_type') == 'Project':
             return 'cost: 0'
         else:
             return 'cost: {}'.format(v)
+    if k == 'train_cost' or k == 'establish_cost':
+        return '{}: {}'.format(k, v)
+    if k == 'intensity':
+        return '{}: {}'.format(k, v)
     if k == 'level':
         return 'level: 0'
     elif k == 'base_cost':
@@ -483,6 +499,19 @@ if __name__ == '__main__':
         id_ = len(items_by_type[typ])
         ids[id] = id_
         items_by_type[typ].append(item)
+
+        # Convert non-starter world events
+        # by adding an additional condition
+        # that the year must be > 2025
+        if typ == 'Event':
+            if item['type'] == 'World' and not item.get('starter', False):
+                for probability in item.get('probabilities', []):
+                    probability['conditions'].append({
+                        'comparator': '>',
+                        'type': 'WorldVariable',
+                        'subtype': 'Year',
+                        'value': '2025'
+                    })
 
     # Define constants
     rust_output = [consts_template]
@@ -648,10 +677,14 @@ if __name__ == '__main__':
             icon_events[id] = {
                 'name': ev['name'],
                 'icon': ev['icon'],
-                'effect': {
-                    'type': effs[0][0],
-                    'value': effs[0][1],
-                }
+                'aspect': ev['aspect'],
+                'intensity': ev['intensity'],
+                'effects': [{
+                    'type': e['type'],
+                    'subtype': e.get('subtype'),
+                    'entity': ids.get(e.get('entity')),
+                    'param': get_param(e)
+                } for e in ev.get('effects', [])]
             }
             icons.add(ev['icon'])
 

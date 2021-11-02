@@ -54,6 +54,10 @@ impl GameInterface {
         self.game.state.political_capital += amount;
     }
 
+    pub fn change_local_outlook(&mut self, amount: isize, region_id: usize) {
+        self.game.state.world.regions[region_id].outlook += amount as f32;
+    }
+
     pub fn set_event_choice(&mut self, event_id: usize, region_id: Option<usize>, choice_id: usize) {
         let effects = self.game.set_event_choice(event_id, choice_id);
         for effect in effects {
@@ -67,10 +71,18 @@ impl GameInterface {
 
     pub fn start_project(&mut self, project_id: usize) {
         let project = &mut self.game.state.projects[project_id];
+        let mut effects: Vec<Effect> = Vec::new();
         if project.kind == ProjectType::Policy {
             project.status = Status::Active;
+            for effect in &project.effects {
+                effects.push(effect.clone());
+            }
         } else {
             project.status = Status::Building;
+        }
+
+        for effect in effects {
+            effect.apply(&mut self.game, None);
         }
     }
 
@@ -205,6 +217,7 @@ impl Game {
             produced: outputs!(),
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
+            protected_land: 0.,
         };
 
         let (output_demand, _) = state.calculate_demand();
@@ -316,6 +329,7 @@ pub struct State {
     pub produced: OutputMap<f32>,
     pub consumed_resources: ResourceMap<f32>,
     pub consumed_feedstocks: FeedstockMap<f32>,
+    pub protected_land: f32,
 }
 
 impl State {
@@ -420,6 +434,9 @@ impl State {
         // Generate production orders based on current process mixes and demand
         let orders: Vec<ProductionOrder> = self.processes.iter()
             .map(|p| p.production_order(&self.output_demand)).collect();
+
+        // Apply land protection
+        self.resources.land = consts::STARTING_RESOURCES.land * (1. - self.protected_land);
 
         // Run production function
         let (produced_by_type,

@@ -6,7 +6,7 @@ use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
 use crate::npcs::NPC;
@@ -44,7 +44,7 @@ pub fn regions() -> Vec<Region> {
             name: "Northern America",
             income: Income::High,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 373318358.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -56,7 +56,7 @@ pub fn regions() -> Vec<Region> {
             name: "Central America",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 183739076.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -68,7 +68,7 @@ pub fn regions() -> Vec<Region> {
             name: "Southern America",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 437694436.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -80,7 +80,7 @@ pub fn regions() -> Vec<Region> {
             name: "Caribbean",
             income: Income::High,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 43977555.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -92,7 +92,7 @@ pub fn regions() -> Vec<Region> {
             name: "Northern Africa",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 254985181.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -104,7 +104,7 @@ pub fn regions() -> Vec<Region> {
             name: "Middle Africa",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 190463603.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -116,7 +116,7 @@ pub fn regions() -> Vec<Region> {
             name: "Western Africa",
             income: Income::Low,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 423239061.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -128,7 +128,7 @@ pub fn regions() -> Vec<Region> {
             name: "Eastern Africa",
             income: Income::Low,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 468849237.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -140,7 +140,7 @@ pub fn regions() -> Vec<Region> {
             name: "Southern Africa",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 69191678.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -152,7 +152,7 @@ pub fn regions() -> Vec<Region> {
             name: "Western Asia",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 288359967.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -164,7 +164,7 @@ pub fn regions() -> Vec<Region> {
             name: "Central Asia",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 76474800.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -176,7 +176,7 @@ pub fn regions() -> Vec<Region> {
             name: "Southern Asia",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 1983914039.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -188,7 +188,7 @@ pub fn regions() -> Vec<Region> {
             name: "South-eastern Asia",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 681491532.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -200,7 +200,7 @@ pub fn regions() -> Vec<Region> {
             name: "Eastern Asia",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 1686247807.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -212,7 +212,7 @@ pub fn regions() -> Vec<Region> {
             name: "Oceania",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 12788202.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -224,7 +224,7 @@ pub fn regions() -> Vec<Region> {
             name: "Western Europe",
             income: Income::High,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 196908712.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -236,7 +236,7 @@ pub fn regions() -> Vec<Region> {
             name: "Southern Europe",
             income: Income::High,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 151644503.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -248,7 +248,7 @@ pub fn regions() -> Vec<Region> {
             name: "Eastern Europe",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 291862973.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -260,7 +260,7 @@ pub fn regions() -> Vec<Region> {
             name: "Northern Europe",
             income: Income::High,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 106951178.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -272,7 +272,7 @@ pub fn regions() -> Vec<Region> {
             name: "Australasia",
             income: Income::High,
             development: 0.0,
-            outlook: 100.0,
+            outlook: 20.0,
             population: 30966994.0,
             base_habitability: 100.0,
             base_contentedness: 0.0,
@@ -1019,12 +1019,17 @@ pub fn processes() -> Vec<Process> {
             name: "Grey Hydrogen",
             output: Output::Fuel,
             mix_share: 0.0,
-            feedstock: (Feedstock::Coal, 0.0),
+            feedstock: (Feedstock::NaturalGas, 0.1018),
             resources: resources!(
-
+                electricity: 0.009,
+                land: 0.005289,
+                fuel: 46.4,
+                water: 0.27
             ),
             byproducts: byproducts!(
-
+                n2o: 0.0,
+                ch4: 0.912,
+                co2: 75.6
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1038,17 +1043,22 @@ pub fn processes() -> Vec<Process> {
             name: "Blue Hydrogen",
             output: Output::Fuel,
             mix_share: 0.0,
-            feedstock: (Feedstock::NaturalGas, 0.0),
+            feedstock: (Feedstock::NaturalGas, 0.1139),
             resources: resources!(
-
+                water: 0.27,
+                electricity: 0.034,
+                fuel: 46.4,
+                land: 0.0011786
             ),
             byproducts: byproducts!(
-
+                co2: 45.85,
+                n2o: 0.0,
+                ch4: 1.07
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             features: vec![
-
+                ProcessFeature::IsCCS
             ],
             output_modifier: 1.0
         },
@@ -1059,7 +1069,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
-                land: 26.305,
+                land: 0.529,
                 electricity: 46.4,
                 water: 0.27,
                 fuel: 0.0
@@ -1699,7 +1709,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 21,
@@ -2536,7 +2548,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 47,
@@ -2670,7 +2684,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![
+
+            ]
         },
         Project {
             id: 53,
@@ -3071,6 +3087,109 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ]
+        },
+        Project {
+            id: 66,
+            name: "Land Protection",
+            cost: 0,
+            base_cost: Cost::Fixed(30),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::ProtectLand(10.0)
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(20.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(30.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(40.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(50.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(60.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(70.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(80.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 30,
+                    effects: vec![
+                        Effect::ProtectLand(90.0)
+                    ]
+                }
+            ]
+        },
+        Project {
+            id: 67,
+            name: "Food Waste Campaign",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::Output(Output::PlantCalories, 0.2)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ]
         }
     ]
 }
@@ -3091,24 +3210,6 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Random,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Rare,
-                    conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
@@ -3116,7 +3217,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 1,
@@ -3130,32 +3233,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 2,
@@ -3170,26 +3279,31 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 3,
@@ -3203,32 +3317,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::Greater, 0.2)
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::Greater, 0.2),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::Greater, 0.4)
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::Greater, 0.4),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ResourcePressure(Resource::Land, Comparator::GreaterEqual, 0.65)
+                        Condition::ResourcePressure(Resource::Land, Comparator::GreaterEqual, 0.65),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ResourcePressure(Resource::Land, Comparator::GreaterEqual, 0.5)
+                        Condition::ResourcePressure(Resource::Land, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 4,
@@ -3242,20 +3362,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 20.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 20.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 30.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 30.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 5,
@@ -3270,20 +3394,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 6,
@@ -3298,14 +3426,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ProjectStatus(2, ProjectStatus::Halted)
+                        Condition::ProjectStatus(2, ProjectStatus::Halted),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 7,
@@ -3322,19 +3453,22 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 40.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 40.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 60.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
@@ -3356,7 +3490,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 8,
@@ -3374,21 +3510,25 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
-                        Condition::RegionFlag("protests".to_string())
+                        Condition::RegionFlag("protests".to_string()),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0),
-                        Condition::RegionFlag("protests".to_string())
+                        Condition::RegionFlag("protests".to_string()),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 9,
@@ -3423,7 +3563,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 10,
@@ -3441,21 +3583,25 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
-                        Condition::RegionFlag("riots".to_string())
+                        Condition::RegionFlag("riots".to_string()),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 15.0),
-                        Condition::RegionFlag("riots".to_string())
+                        Condition::RegionFlag("riots".to_string()),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 11,
@@ -3471,14 +3617,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 1.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 1.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 12,
@@ -3501,7 +3650,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 13,
@@ -3515,14 +3666,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 14,
@@ -3536,20 +3690,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 15,
@@ -3564,20 +3722,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 16,
@@ -3591,14 +3753,16 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Improbable,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 17,
@@ -3612,14 +3776,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 18,
@@ -3644,22 +3811,30 @@ pub fn events() -> Vec<Event> {
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Unlikely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Rare,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Unlikely,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 19,
@@ -3675,14 +3850,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 20,
@@ -3697,20 +3875,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 21,
@@ -3726,40 +3908,47 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.6),
-                        Condition::ProjectStatus(8, ProjectStatus::Inactive)
+                        Condition::ProjectStatus(8, ProjectStatus::Inactive),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.4),
-                        Condition::ProjectStatus(8, ProjectStatus::Inactive)
+                        Condition::ProjectStatus(8, ProjectStatus::Inactive),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.25),
-                        Condition::ProjectStatus(8, ProjectStatus::Inactive)
+                        Condition::ProjectStatus(8, ProjectStatus::Inactive),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.2)
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.2),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.1)
+                        Condition::OutputDemandGap(Output::Electricity, Comparator::GreaterEqual, 0.1),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 22,
@@ -3774,26 +3963,31 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.2)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.2),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::Greater, 0.)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::Greater, 0.),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 23,
@@ -3807,26 +4001,31 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.2)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::GreaterEqual, 0.2),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::Greater, 0.)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsNuclear, Comparator::Greater, 0.),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 24,
@@ -3840,14 +4039,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 25,
@@ -3861,22 +4063,18 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 26,
@@ -3891,14 +4089,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 27,
@@ -3913,21 +4114,25 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Inactive)
+                        Condition::ProjectStatus(12, ProjectStatus::Inactive),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.5),
-                        Condition::ProjectStatus(12, ProjectStatus::Inactive)
+                        Condition::ProjectStatus(12, ProjectStatus::Inactive),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 28,
@@ -3942,26 +4147,31 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::SeaLevelRise, Comparator::GreaterEqual, 5.0)
+                        Condition::WorldVariable(WorldVariable::SeaLevelRise, Comparator::GreaterEqual, 5.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::SeaLevelRise, Comparator::GreaterEqual, 4.0)
+                        Condition::WorldVariable(WorldVariable::SeaLevelRise, Comparator::GreaterEqual, 4.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::SeaLevelRise, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::SeaLevelRise, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 29,
@@ -3975,14 +4185,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 30,
@@ -3997,20 +4210,23 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.25)
+                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.25),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 31,
@@ -4026,14 +4242,17 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::ProjectStatus(10, ProjectStatus::Finished),
-                        Condition::ProjectStatus(21, ProjectStatus::Finished)
+                        Condition::ProjectStatus(21, ProjectStatus::Finished),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 32,
@@ -4047,14 +4266,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 33,
@@ -4069,14 +4291,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Improbable,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::GreaterEqual, 1)
+                        Condition::RunsPlayed(Comparator::GreaterEqual, 1),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 34,
@@ -4090,14 +4315,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 50.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::LessEqual, 50.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 35,
@@ -4111,14 +4339,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::Greater, 50.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::Greater, 50.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 36,
@@ -4132,14 +4363,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 37,
@@ -4153,14 +4387,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(1, ProjectStatus::Active)
+                        Condition::ProjectStatus(1, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 38,
@@ -4174,14 +4411,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 39,
@@ -4196,14 +4436,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 40,
@@ -4218,21 +4461,25 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.5),
-                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 41,
@@ -4247,21 +4494,25 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.3),
-                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 42,
@@ -4275,14 +4526,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 40.0)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 40.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 43,
@@ -4297,14 +4551,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 30.0)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 30.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 44,
@@ -4319,14 +4576,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 20.0)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 20.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 45,
@@ -4341,14 +4601,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 10.0)
+                        Condition::WorldVariable(WorldVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 46,
@@ -4362,14 +4625,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(53, ProjectStatus::Active)
+                        Condition::ProjectStatus(53, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 47,
@@ -4383,14 +4649,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0)
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 48,
@@ -4405,14 +4674,17 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Outlook, Comparator::GreaterEqual, 80.0),
-                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2080.0)
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2080.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 49,
@@ -4426,14 +4698,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(2, ProjectStatus::Active)
+                        Condition::ProjectStatus(2, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 50,
@@ -4448,32 +4723,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::UsesPesticides, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesPesticides, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 50.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 50.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 51,
@@ -4487,20 +4768,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::UsesPesticides, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesPesticides, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 70.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 52,
@@ -4515,32 +4800,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 53,
@@ -4554,20 +4845,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 54,
@@ -4581,14 +4876,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(2, ProjectStatus::Inactive)
+                        Condition::ProjectStatus(2, ProjectStatus::Inactive),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 55,
@@ -4602,14 +4900,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 56,
@@ -4623,14 +4924,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 57,
@@ -4644,14 +4948,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::OutputDemandGap(Output::Fuel, Comparator::Greater, 0.2)
+                        Condition::OutputDemandGap(Output::Fuel, Comparator::Greater, 0.2),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 58,
@@ -4666,14 +4973,17 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::OutputDemandGap(Output::AnimalCalories, Comparator::Greater, 0.25),
-                        Condition::ProjectStatus(1, ProjectStatus::Active)
+                        Condition::ProjectStatus(1, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 59,
@@ -4687,14 +4997,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 60,
@@ -4708,14 +5021,16 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 61,
@@ -4732,21 +5047,25 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.75),
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::ProcessMixShare(0, Comparator::GreaterEqual, 0.5),
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 62,
@@ -4760,20 +5079,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 63,
@@ -4787,20 +5110,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 64,
@@ -4814,14 +5141,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::IsCCS, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsCCS, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 65,
@@ -4835,14 +5165,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 66,
@@ -4857,14 +5190,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(13, ProjectStatus::Active)
+                        Condition::ProjectStatus(13, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 67,
@@ -4879,26 +5215,31 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 68,
@@ -4913,20 +5254,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 69,
@@ -4940,26 +5285,31 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::DegradesSoil, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::DegradesSoil, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 70,
@@ -4973,32 +5323,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 71,
@@ -5012,14 +5368,16 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 72,
@@ -5033,14 +5391,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 73,
@@ -5055,14 +5416,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(9, ProjectStatus::Active)
+                        Condition::ProjectStatus(9, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 74,
@@ -5076,32 +5440,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 75,
@@ -5115,14 +5485,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 76,
@@ -5138,7 +5511,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 77,
@@ -5152,14 +5527,16 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 78,
@@ -5187,7 +5564,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 }
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 79,
@@ -5208,7 +5587,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 80,
@@ -5216,19 +5597,13 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Impossible,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::Less, 1.0)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
-                        Condition::ProjectStatus(7, ProjectStatus::Active)
                     ]
                 },
                 Probability {
@@ -5245,7 +5620,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Fire)
         },
         Event {
             id: 81,
@@ -5253,7 +5630,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5296,7 +5673,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 2,
+            aspect: Some(Aspect::Fire)
         },
         Event {
             id: 82,
@@ -5304,7 +5683,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -3.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5333,7 +5712,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 3,
+            aspect: Some(Aspect::Fire)
         },
         Event {
             id: 83,
@@ -5341,7 +5722,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.01)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5370,7 +5751,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Food)
         },
         Event {
             id: 84,
@@ -5378,36 +5761,26 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Random,
-                    conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Rare,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Flood)
         },
         Event {
             id: 85,
@@ -5415,7 +5788,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5444,7 +5817,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 2,
+            aspect: Some(Aspect::Flood)
         },
         Event {
             id: 86,
@@ -5452,7 +5827,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -3.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5481,7 +5856,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 3,
+            aspect: Some(Aspect::Flood)
         },
         Event {
             id: 87,
@@ -5496,32 +5873,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 88,
@@ -5535,32 +5918,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 89,
@@ -5575,32 +5964,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 90,
@@ -5614,32 +6009,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 91,
@@ -5647,36 +6048,26 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Random,
-                    conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Unlikely,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
-                    ]
-                },
-                Probability {
-                    likelihood: Likelihood::Rare,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Heat)
         },
         Event {
             id: 92,
@@ -5691,32 +6082,38 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 93,
@@ -5724,7 +6121,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5753,7 +6150,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 3,
+            aspect: Some(Aspect::Heat)
         },
         Event {
             id: 94,
@@ -5761,7 +6160,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5790,7 +6189,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 2,
+            aspect: Some(Aspect::Heat)
         },
         Event {
             id: 95,
@@ -5804,14 +6205,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.15)
+                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::GreaterEqual, 0.15),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 96,
@@ -5819,7 +6223,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -10.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5830,7 +6234,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 5,
+            aspect: Some(Aspect::Food)
         },
         Event {
             id: 97,
@@ -5838,7 +6244,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5855,7 +6261,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Energy)
         },
         Event {
             id: 98,
@@ -5863,7 +6271,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5880,7 +6288,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 2,
+            aspect: Some(Aspect::Energy)
         },
         Event {
             id: 99,
@@ -5888,7 +6298,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 1.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5899,7 +6309,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Health)
         },
         Event {
             id: 100,
@@ -5907,7 +6319,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5936,7 +6348,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 3,
+            aspect: Some(Aspect::Flood)
         },
         Event {
             id: 101,
@@ -5944,7 +6358,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5973,7 +6387,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Heat)
         },
         Event {
             id: 102,
@@ -5981,7 +6397,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -5998,7 +6414,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Health)
         },
         Event {
             id: 103,
@@ -6013,14 +6431,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.5)
+                        Condition::ProcessMixShareFeature(ProcessFeature::UsesLivestock, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 104,
@@ -6028,7 +6449,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6047,7 +6468,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Force)
         },
         Event {
             id: 105,
@@ -6055,7 +6478,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6066,7 +6489,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Force)
         },
         Event {
             id: 106,
@@ -6082,14 +6507,17 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::ProjectStatus(1, ProjectStatus::Active),
-                        Condition::OutputDemandGap(Output::AnimalCalories, Comparator::GreaterEqual, 0.5)
+                        Condition::OutputDemandGap(Output::AnimalCalories, Comparator::GreaterEqual, 0.5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 107,
@@ -6097,7 +6525,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.01)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6109,7 +6537,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Force)
         },
         Event {
             id: 108,
@@ -6124,20 +6554,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 15.0)
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 15.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0)
+                        Condition::PlayerVariable(PlayerVariable::FALCPoints, Comparator::GreaterEqual, 10.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 109,
@@ -6145,7 +6579,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::Output(Output::Electricity, -0.01)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6162,7 +6596,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Force)
         },
         Event {
             id: 110,
@@ -6176,14 +6612,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0)
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 111,
@@ -6198,20 +6637,24 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 15.0)
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 15.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0)
+                        Condition::PlayerVariable(PlayerVariable::MalthusianPoints, Comparator::GreaterEqual, 10.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 112,
@@ -6219,7 +6662,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6236,7 +6679,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Force)
         },
         Event {
             id: 113,
@@ -6244,7 +6689,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6263,7 +6708,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Control)
         },
         Event {
             id: 114,
@@ -6271,7 +6718,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -2.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6290,7 +6737,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 2,
+            aspect: Some(Aspect::Control)
         },
         Event {
             id: 115,
@@ -6298,7 +6747,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -3.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6317,7 +6766,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 3,
+            aspect: Some(Aspect::Force)
         },
         Event {
             id: 116,
@@ -6338,7 +6789,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 117,
@@ -6346,7 +6799,7 @@ pub fn events() -> Vec<Event> {
             kind: EventType::Icon,
             locked: true,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+
             ],
             probabilities: vec![
                 Probability {
@@ -6357,7 +6810,9 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 1,
+            aspect: Some(Aspect::Control)
         },
         Event {
             id: 118,
@@ -6378,7 +6833,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 119,
@@ -6399,7 +6856,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 120,
@@ -6420,7 +6879,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 121,
@@ -6441,7 +6902,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 122,
@@ -6462,7 +6925,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 123,
@@ -6483,7 +6948,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 124,
@@ -6504,7 +6971,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 125,
@@ -6518,12 +6987,14 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Impossible,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 126,
@@ -6537,7 +7008,9 @@ pub fn events() -> Vec<Event> {
 
             ],
             choices: vec![],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 127,
@@ -6559,7 +7032,9 @@ pub fn events() -> Vec<Event> {
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         },
         Event {
             id: 128,
@@ -6573,14 +7048,17 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
 
             ],
-            prob_modifier: 1.0
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         }
     ]
 }
@@ -6610,6 +7088,11 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 4,
             name: "The Half-Earth Socialists",
+            relationship: 0.0
+        },
+        NPC {
+            id: 5,
+            name: "The Authoritarian",
             relationship: 0.0
         }
     ]

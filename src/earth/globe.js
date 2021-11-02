@@ -103,7 +103,7 @@ class Globe {
         intersects.forEach((intersect) => {
           let mesh = intersect.object;
           let hexIdx = mesh.userData.hexIdx;
-          this.respondToEvent(mesh, hexIdx);
+          this.respondToEvent(mesh, hexIdx, mesh.userData);
         });
       }
     });
@@ -133,9 +133,34 @@ class Globe {
     await this.updateSurface();
   }
 
-  respondToEvent(mesh, hexIdx) {
-    this.pingIcon('political_capital', hexIdx);
-    game.changePoliticalCapital(1);
+  respondToEvent(mesh, hexIdx, userData) {
+    let pc = userData.event.intensity * 2;
+    let outlook = userData.event.intensity;
+    game.changePoliticalCapital(pc);
+    game.changeLocalOutlook(outlook, userData.region.id);
+
+    this.pingIcon('content', hexIdx);
+    let outlookInterval = setInterval(() => {
+      if (outlook <= 0) {
+        clearInterval(outlookInterval);
+      } else {
+        outlook--;
+        this.pingIcon('content', hexIdx);
+      }
+    }, 250);
+
+    setTimeout(() => {
+      this.pingIcon('political_capital', hexIdx);
+      let pcInterval = setInterval(() => {
+        if (pc <= 0) {
+          clearInterval(pcInterval);
+        } else {
+          pc--;
+          this.pingIcon('political_capital', hexIdx);
+        }
+      }, 250);
+    }, 500);
+
     mesh.visible = false;
   }
 
@@ -174,8 +199,9 @@ class Globe {
     return iconMesh;
   }
 
-  showIcon(iconName, hexIdx) {
+  showIcon(iconName, hexIdx, data) {
     let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.75, true);
+    iconMesh.userData = {...data, ...iconMesh.userData};
     this.pings.push({mesh: null, icon: iconMesh});
     return iconMesh;
   }
@@ -195,11 +221,11 @@ class Globe {
 
         // Move text pings up and fade out
         mesh.position.y += 0.02;
-        mesh.material.opacity -= 0.005;
+        mesh.material.opacity -= 0.0005;
       }
 
       if (icon) {
-        icon.material.opacity -= 0.005;
+        icon.material.opacity -= 0.0005;
       }
 
       let done = icon ? icon.material.opacity <= 0 : mesh.material.opacity <= 0;

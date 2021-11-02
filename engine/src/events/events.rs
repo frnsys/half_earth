@@ -2,6 +2,20 @@ use crate::game::State;
 use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
+use serde::Serialize;
+
+#[derive(Debug, Clone, Serialize)]
+pub enum Aspect {
+    Flood,
+    Fire,
+    Energy,
+    Heat,
+    Food,
+    Force,
+    Control,
+    Health,
+    Construction
+}
 
 #[derive(Debug, Default)]
 pub struct EventPool {
@@ -160,6 +174,10 @@ pub struct Event {
     pub effects: Vec<Effect>,
 
     pub prob_modifier: f32,
+
+    /// Icon event intensity and aspect
+    pub intensity: usize,
+    pub aspect: Option<Aspect>,
 }
 
 impl Event {
@@ -214,6 +232,8 @@ mod test {
             kind: Type::World,
             locked: false,
             prob_modifier: 1.,
+            intensity: 0,
+            aspect: None,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -234,6 +254,8 @@ mod test {
             kind: Type::World,
             locked: false,
             prob_modifier: 1.,
+            intensity: 0,
+            aspect: None,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
@@ -277,6 +299,8 @@ mod test {
             kind: Type::Icon,
             locked: false,
             prob_modifier: 1.,
+            intensity: 0,
+            aspect: None,
 
             choices: vec![],
             effects: vec![],
@@ -344,6 +368,8 @@ mod test {
             name: "Test Event A",
             kind: Type::World,
             prob_modifier: 1.,
+            intensity: 0,
+            aspect: None,
 
             // Note: locked so it doesn't trigger on its own
             locked: true,
@@ -372,3 +398,4 @@ mod test {
         assert_eq!(events.len(), 1);
     }
 }
+
