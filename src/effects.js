@@ -140,11 +140,11 @@ function describeEffect(e) {
     }
     case 'DemandOutlookChange': {
       let k = outputKeys[e.subtype];
-      let outlookChange = Math.round(state.gameState.output_demand[k] * e.param);
+      let outlookChange = Math.floor(state.gameState.output_demand[k] * e.param);
       return `${sign(outlookChange)} <img src="/assets/icons/contentedness.png"> globally`;
     }
     case 'IncomeOutlookChange': {
-      let outlookChange = Math.round(game.totalIncomeLevel() * e.param);
+      let outlookChange = Math.floor(game.totalIncomeLevel() * e.param);
       return `${sign(outlookChange)} <img src="/assets/icons/contentedness.png"> globally`;
     }
     case 'ModifyEventProbability': {
@@ -152,6 +152,10 @@ function describeEffect(e) {
       let p = Math.abs(e.param) * 100;
       return `${e.param < 1 ? 'Reduces' : 'Increases'} chance of ${event} by ${p.toFixed(0)}%.`
     }
+    case 'ProtectLand': {
+      return `Place ${e.param}% of land under protection.`;
+    }
+
     default:
       console.log(`Unhandled effect type: ${e.type}`);
       console.log(e);

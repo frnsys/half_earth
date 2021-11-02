@@ -8,7 +8,7 @@
   <Globe id="events-globe" ref="globe" />
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
   <Dialogue v-if="event && predialogue" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
-  <Event v-else-if="event && !predialogue" :event="event" @done="nextEvent" @select="selectChoice" />
+  <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" @select="selectChoice" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
       <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>

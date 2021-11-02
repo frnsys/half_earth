@@ -182,12 +182,12 @@ impl Effect {
             },
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut game.state.world.regions {
-                    region.outlook += (mult * region.demand()[*output]).round();
+                    region.outlook += (mult * region.demand()[*output]).floor();
                 }
             },
             Effect::IncomeOutlookChange(mult) => {
                 for region in &mut game.state.world.regions {
-                    region.outlook += (mult * region.adjusted_income()).round();
+                    region.outlook += (mult * region.adjusted_income()).floor();
                 }
             },
             Effect::ProjectCostModifier(id, change) => {

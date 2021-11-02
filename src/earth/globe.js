@@ -221,11 +221,11 @@ class Globe {
 
         // Move text pings up and fade out
         mesh.position.y += 0.02;
-        mesh.material.opacity -= 0.0005;
+        mesh.material.opacity -= 0.001;
       }
 
       if (icon) {
-        icon.material.opacity -= 0.0005;
+        icon.material.opacity -= 0.001;
       }
 
       let done = icon ? icon.material.opacity <= 0 : mesh.material.opacity <= 0;
