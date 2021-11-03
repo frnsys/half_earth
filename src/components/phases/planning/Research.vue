@@ -20,10 +20,10 @@
           :image="imageForProject(p)">
           <template v-slot:header>
             <div>Research</div>
-            <div>
+            <div v-if="p.status == 'Building'">
               <img class="pip" v-for="i in p.points" src="/assets/icons/pips/research.png">
             </div>
-            <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>
+            <div>{{p.status !== 'Finished' ? remainingCost(p) : 'Finished'}}</div>
           </template>
           <template v-slot:front>
             <div class="card--actions" v-if="status(p) == 'inactive' || status(p) == 'building'">

@@ -3,6 +3,12 @@ import state from '/src/state';
 import Card from './Card.vue';
 import Cards from './Cards.vue';
 import {describeEffect} from '/src/effects';
+import {nearestMultiple} from '/src/lib/util';
+
+function years_for_points(points, cost) {
+  return Math.max(nearestMultiple(cost/(points**(1/3)), 5), 1);
+}
+
 
 export default (type) => ({
   components: {
@@ -48,6 +54,23 @@ export default (type) => ({
       return descs.filter((item, i) => {
         return descs.indexOf(item) == i;
       });
+    },
+    remainingCost(p) {
+      if (p.status == 'Active' || p.status == 'Finished') {
+        return null;
+      } else if (p.status == 'Building') {
+        let remaining = 1 - p.progress;
+        let progressPerYear = 1/years_for_points(p.points, p.cost);
+        let years = Math.round(remaining/progressPerYear);
+        return `${years} years left`;
+      } else {
+        let cost = p.points > 0 ? p.estimate : p.cost;
+        if (p.type == 'Policy') {
+          return cost;
+        } else {
+          return `${cost} years`;
+        }
+      }
     },
     imageForProject(p) {
       let image = state.projects[p.id].image;

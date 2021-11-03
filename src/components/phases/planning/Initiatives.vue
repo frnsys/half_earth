@@ -21,10 +21,10 @@
           :image="imageForProject(p)">
           <template v-slot:header>
             <div>Initiative</div>
-            <div>
+            <div v-if="p.status == 'Building'">
               <img class="pip" v-for="i in p.points" src="/assets/icons/pips/initiative.png">
             </div>
-            <div>{{p.points > 0 ? p.estimate : p.cost}} years</div>
+            <div>{{p.status !== 'Finished' ? remainingCost(p) : 'Finished'}}</div>
           </template>
           <template v-slot:front>
             <div class="card--body project--upgrade" v-if="status(p) == 'active' && nextUpgrade(p) !== null">

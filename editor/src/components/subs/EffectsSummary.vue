@@ -61,13 +61,13 @@ export default {
     flags(effect) {
       let invalid = false;
       let spec = consts.EFFECTS[effect.type];
-      if (spec.entity && effect.entity === undefined) {
+      if (spec === undefined) {
         invalid = true;
-      }
-      if (spec.choices && !spec.choices.includes(effect.subtype)) {
+      } else if (spec.entity && effect.entity === undefined) {
         invalid = true;
-      }
-      if (spec.params) {
+      } else if (spec.choices && !spec.choices.includes(effect.subtype)) {
+        invalid = true;
+      } else if (spec.params) {
         if (Object.keys(spec.params).some((k) => effect.params[k] === undefined || effect.params[k] === '')) {
           invalid = true;
         }
@@ -76,6 +76,7 @@ export default {
     },
     label(effect) {
       let spec = consts.EFFECTS[effect.type];
+      if (spec === undefined) return `${effect.type}: MISSING SPEC`;
       let label = `${effect.type}`
       if (spec.choices) {
         label += `.${effect.subtype}`
@@ -84,6 +85,7 @@ export default {
     },
     entity(effect) {
       let spec = consts.EFFECTS[effect.type];
+      if (spec === undefined) return `${effect.type}: MISSING SPEC`;
       if (spec.entity) {
         if (effect.entity) {
           let items = this.itemsOfType(spec.entity);
@@ -103,6 +105,7 @@ export default {
     },
     params(effect) {
       let spec = consts.EFFECTS[effect.type];
+      if (spec === undefined) return `${effect.type}: MISSING SPEC`;
       let value = '';
       if (spec.params) {
         value += `${Object.keys(spec.params).map((k) => {

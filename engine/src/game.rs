@@ -120,7 +120,7 @@ impl GameInterface {
     }
 
     pub fn roll_world_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::World, Some(1), &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::World, Some(5), &mut self.rng))?)
     }
 
     pub fn roll_planning_events(&mut self) -> Result<JsValue, JsValue> {
@@ -215,6 +215,7 @@ impl Game {
             feedstocks: consts::FEEDSTOCK_RESERVES,
             byproducts: byproducts!(),
             produced: outputs!(),
+            produced_by_process: Vec::new(),
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
             protected_land: 0.,
@@ -327,6 +328,7 @@ pub struct State {
     pub resources: ResourceMap<f32>,
     pub feedstocks: FeedstockMap<f32>,
     pub produced: OutputMap<f32>,
+    pub produced_by_process: Vec<f32>,
     pub consumed_resources: ResourceMap<f32>,
     pub consumed_feedstocks: FeedstockMap<f32>,
     pub protected_land: f32,
@@ -439,10 +441,12 @@ impl State {
         self.resources.land = consts::STARTING_RESOURCES.land * (1. - self.protected_land);
 
         // Run production function
-        let (produced_by_type,
+        let (produced_by_process,
+             produced_by_type,
              consumed_resources,
              consumed_feedstocks,
              byproducts) = produce(&orders, &self.resources, &self.feedstocks);
+        self.produced_by_process = produced_by_process; // TODO apply modifiers
         self.produced = produced_by_type * self.output_modifier;
         self.byproducts += byproducts;
 

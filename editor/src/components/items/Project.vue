@@ -122,11 +122,11 @@
         <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
     </fieldset>
-    <template v-if="localData.outcomes.length > 1">
+    <template v-if="localData.outcomes && localData.outcomes.length > 1">
       <h5>Outcomes</h5>
       <OutcomesSummary :outcomes="localData.outcomes" />
     </template>
-    <template v-if="localData.upgrades.length >= 1">
+    <template v-if="localData.upgrades && localData.upgrades.length > 0">
       <h5>Upgrades</h5>
       <UpgradesSummary :upgrades="localData.upgrades" />
     </template>

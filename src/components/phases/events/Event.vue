@@ -23,6 +23,14 @@ export default {
   components: {
     Dialogue
   },
+  activated() {
+    console.log('Activated');
+    console.log(this.event);
+  },
+  mounted() {
+    console.log('Mounted');
+    console.log(this.event);
+  },
   computed: {
     effectDescs() {
       return this.event.effects
@@ -32,6 +40,7 @@ export default {
   },
   methods: {
     done() {
+      console.log('DIALOGUE-EVENT FINISHED');
       this.$emit('done');
     },
     selectChoice() {

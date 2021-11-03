@@ -68,7 +68,7 @@ specs = {
         'name': None,
         'income_level': None,
         'development': 0,
-        'outlook': 20,
+        'outlook': 50,
         'population': None,
         'base_habitability': 100,
         'base_contentedness': 0,
@@ -117,6 +117,7 @@ specs = {
         'name': None,
         'type': None,
         'locked': 'false',
+        'regional': 'false',
         'effects': [],
         'probabilities': [],
         'dialogue': [],
@@ -359,6 +360,13 @@ def define_field(k, v, item):
     elif k == 'conditions':
         return 'conditions: vec![\n{}\n]'.format(
                     indent(',\n'.join(define_condition(e) for e in v)))
+    elif k == 'regional':
+        regional = False
+        for prob in item.get('probabilities', []):
+            for cond in prob.get('conditions', []):
+                if cond['type'] in ['LocalVariable', 'RegionFlag']:
+                    regional = True
+        return 'regional: {}'.format('true' if regional else 'false')
     elif k == 'upgrades':
         if isinstance(v, list):
             return 'upgrades: vec![\n{}\n]'.format(

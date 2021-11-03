@@ -14,6 +14,12 @@
       {{p}}
     </button>
   </div>
+  <div class="production--demand planning--demand">
+    <div v-for="v, k in demand">
+      {{demand[k]}}{{icons[k]}}
+    </div>
+    <div>{{emissions}}{{icons['emissions']}}</div>
+  </div>
 </div>
 </template>
 
@@ -29,6 +35,13 @@ import Dashboard from './Dashboard.vue';
 import EventsMixin from 'components/EventsMixin';
 import Hud from 'components/Hud.vue';
 import EVENTS from '/assets/content/events.json';
+
+const outputDemandUnits = {
+  fuel: 1e-9/1e3,            // per 1000 TWh
+  electricity: 1e-9/1e3,     // per 1000 TWh
+  plant_calories: 1e-9/2e4,  // per 20000 Tcals
+  animal_calories: 1e-9/2e4, // per 20000 Tcals
+};
 
 const PAGES = {
   RESEARCH: 0,
@@ -53,6 +66,13 @@ export default {
   },
   created() {
     this.PAGES = PAGES;
+    this.icons = {
+      'fuel': '⛽',
+      'electricity': '⚡',
+      'plant_calories': '🌾',
+      'animal_calories': '🥩',
+      'emissions': '☁️',
+    };
   },
   mounted() {
     this.showEvent();
@@ -80,9 +100,22 @@ export default {
     });
 
     return {
+      state,
       events: eventsByPage[null],
       eventsByPage,
       page: null,
+    }
+  },
+  computed: {
+    demand() {
+      return Object.keys(state.gameState.output_demand).reduce((acc, k) => {
+          acc[k] = Math.round(state.gameState.output_demand[k] * outputDemandUnits[k]);
+          return acc;
+        }, {});
+    },
+    emissions() {
+      let byp = state.gameState.byproducts;
+      return Math.round((byp.co2 + byp.ch4 * 36 + byp.n2o * 298) * 1e-15); // Gt CO2eq;
     }
   },
   methods: {
@@ -155,6 +188,7 @@ export default {
 }
 .pips--buy {
   cursor: pointer;
+  user-select: none;
 }
 .pips--buy:hover {
   background: #eae7e7;
@@ -228,5 +262,12 @@ export default {
   width: 16px;
   height: 16px;
   vertical-align: middle;
+}
+
+.planning--demand {
+  position: absolute;
+  bottom: 2em;
+  left: 0;
+  right: 0;
 }
 </style>

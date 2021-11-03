@@ -47,7 +47,7 @@
             </label>
             <input type="text" v-model="localData.icon" />
           </div>
-          <div class="checkbox">
+          <div>
             <label :for="`${item.id}_locked`">
               Locked
               <Tip>Does this event start locked?</Tip>

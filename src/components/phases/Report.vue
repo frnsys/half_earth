@@ -96,8 +96,8 @@ export default {
       let extinctionRateChange = state.gameState.world.extinction_rate - state.cycleStartState.extinctionRate;
       this.politicalCapital = {
         temperature: Math.round(temperatureChange * -10),
-        contentedness: Math.round(contentednessChange/2),
-        extinctionRate: Math.round(-extinctionRateChange/2),
+        contentedness: Math.round(contentednessChange/3),
+        extinctionRate: Math.round(-extinctionRateChange),
       };
       console.log('PC changes:');
       console.log(this.politicalCapital);

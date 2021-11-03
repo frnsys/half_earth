@@ -129,20 +129,22 @@ function validateConditions(conds) {
 
 function validateEffects(effects) {
   return effects.every((effect) => {
-      let valid = true;
-      let spec = consts.EFFECTS[effect.type];
-      if (spec.entity && effect.entity === undefined) {
+    if (effect === undefined) return false;
+    let valid = true;
+    let spec = consts.EFFECTS[effect.type];
+    if (spec === undefined) return false;
+    if (spec.entity && effect.entity === undefined) {
+      valid = false;
+    }
+    if (spec.choices && !spec.choices.includes(effect.subtype)) {
+      valid = false;
+    }
+    if (spec.params) {
+      if (Object.keys(spec.params).some((k) => effect.params[k] === undefined || effect.params[k] === '')) {
         valid = false;
       }
-      if (spec.choices && !spec.choices.includes(effect.subtype)) {
-        valid = false;
-      }
-      if (spec.params) {
-        if (Object.keys(spec.params).some((k) => effect.params[k] === undefined || effect.params[k] === '')) {
-          valid = false;
-        }
-      }
-      return valid;
+    }
+    return valid;
   });
 }
 

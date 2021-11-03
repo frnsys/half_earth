@@ -15,6 +15,7 @@ pub enum Flag {
     EnergyStorage3,
     Vegetarian,
     Vegan,
+    ClosedBorders,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -76,7 +77,10 @@ impl Effect {
                     WorldVariable::Year => game.state.world.year += *change as usize,
                     WorldVariable::Population => game.state.world.change_population(*change/100.),
                     WorldVariable::PopulationGrowth => game.state.world.population_growth_modifier += *change/100.,
-                    WorldVariable::Emissions => game.state.world.byproduct_mods.co2 += *change,
+                    WorldVariable::Emissions => {
+                        game.state.world.byproduct_mods.co2 += *change * 1e15; // effect in Gt
+                        game.state.world.co2_emissions += *change * 1e15; // Apply immediately
+                    },
                     WorldVariable::ExtinctionRate => game.state.world.byproduct_mods.biodiversity -= *change,
                     WorldVariable::Outlook => game.state.world.change_outlook(*change),
                     WorldVariable::Temperature => game.state.world.temperature_modifier += *change,
@@ -219,7 +223,10 @@ impl Effect {
                     WorldVariable::Year => game.state.world.year -= *change as usize,
                     WorldVariable::Population => game.state.world.change_population(1./(*change/100.)),
                     WorldVariable::PopulationGrowth => game.state.world.population_growth_modifier -= *change/100.,
-                    WorldVariable::Emissions => game.state.world.byproduct_mods.co2 -= *change,
+                    WorldVariable::Emissions => {
+                        game.state.world.byproduct_mods.co2 -= *change * 1e15;
+                        game.state.world.co2_emissions -= *change * 1e15; // Apply immediately
+                    },
                     WorldVariable::ExtinctionRate => game.state.world.byproduct_mods.biodiversity += *change,
                     WorldVariable::Outlook => game.state.world.change_outlook(-*change),
                     WorldVariable::Temperature => game.state.world.temperature_modifier -= *change,

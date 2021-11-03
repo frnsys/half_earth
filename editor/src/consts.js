@@ -325,6 +325,12 @@ const EFFECTS = {
     params: {
       'Change': Number
     }
+  },
+
+  ProtectLand: {
+    params: {
+      'Percent': Number
+    }
   }
 };
 

@@ -24,6 +24,8 @@ export default {
   },
   methods: {
     nextEvent() {
+      console.log('NEXT EVENT CALLED');
+      console.log(this.events);
       this.event = null;
       if (this.hasEvent) {
         this.showEvent();
@@ -35,7 +37,8 @@ export default {
     showEvent() {
       if (this.hasEvent) {
         let [eventId, regionId] = this.events.shift();
-        this.event = EVENTS[eventId];
+        // this.event = EVENTS[eventId];
+        this.event = JSON.parse(JSON.stringify(EVENTS[eventId]));
 
         // Set context variables
         if (this.event.dialogue) {

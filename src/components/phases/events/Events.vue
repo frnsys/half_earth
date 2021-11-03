@@ -1,10 +1,12 @@
 <template>
 <Hud />
 <div id="event-stream">
+  <Production v-if="showProduction" @done="showProduction = false"/>
   <div id="event-stream--year">
     {{year}}
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
+  <button class="production-button" @click="showProduction = true">🏭</button>
   <Globe id="events-globe" ref="globe" />
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
   <Dialogue v-if="event && predialogue" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
@@ -28,6 +30,7 @@ import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import iconEvents from '/assets/content/icon_events.json';
+import Production from './Production.vue';
 
 const MS_PER_YEAR = 10000;
 
@@ -44,6 +47,7 @@ export default {
       time: 0,
       toasts: [],
       predialogue: true,
+      showProduction: false,
       year: state.gameState.world.year,
       completedProjects: [],
       stopped: false
@@ -54,6 +58,7 @@ export default {
     Globe,
     Event,
     Project,
+    Production,
   },
   mounted() {
     this.start();
@@ -195,17 +200,19 @@ export default {
           region,
         });
 
-        let outlook = ev.intensity + 1;
+        let outlook = ev.intensity;
         game.changeLocalOutlook(-outlook, regionId);
         this.globe.pingIcon('discontent', hexIdx);
-        let outlookInterval = setInterval(() => {
-          if (outlook <= 0) {
-            clearInterval(outlookInterval);
-          } else {
-            outlook--;
-            this.globe.pingIcon('discontent', hexIdx);
-          }
-        }, 250);
+        if (outlook > 1) {
+          let outlookInterval = setInterval(() => {
+            if (outlook <= 0) {
+              clearInterval(outlookInterval);
+            } else {
+              outlook--;
+              this.globe.pingIcon('discontent', hexIdx);
+            }
+          }, 250);
+        }
 
         this.toasts.push({
           icon: ev.icon,
@@ -272,5 +279,12 @@ export default {
 
 #event-stream .dialogue {
   background: rgba(255,255,255,0.25);
+}
+
+.production-button {
+  position: absolute;
+  right: 0.5em;
+  bottom: 0.5em;
+  z-index: 10;
 }
 </style>

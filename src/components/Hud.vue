@@ -5,7 +5,7 @@
     <div>
       <img src="/assets/icons/extinction.png">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
-    <div>
+    <div :class="{'negative-outlook': state.gameState.contentedness < 0}">
       <img src="/assets/icons/contentedness.png">{{state.gameState.contentedness.toFixed(0)}}
     </div>
     <div>
@@ -46,5 +46,9 @@ export default {
   width: auto;
   vertical-align: middle;
   margin-right: 2px;
+}
+
+.negative-outlook {
+  color: #FF4040;
 }
 </style>

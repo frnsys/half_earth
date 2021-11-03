@@ -88,7 +88,7 @@ impl EventPool {
         // i.e. we immediately trigger them if possible.
         for ev_id in valid_ids {
             let ev = &mut self.events[ev_id];
-            // Only Icon-type events are local
+            // Icon-type events are always local
             if ev.kind == Type::Icon {
                 for region in &state.world.regions {
                     if ev.roll(state, Some(region.id), rng) {
@@ -101,7 +101,18 @@ impl EventPool {
                     }
                 }
             } else {
-                if ev.roll(state, None, rng) {
+                if ev.regional {
+                    for region in &state.world.regions {
+                        if ev.roll(state, Some(region.id), rng) {
+                            // All events except
+                            // for Icon events don't repeat
+                            if ev.kind != Type::Icon {
+                                ev.locked = true;
+                            }
+                            self.triggered.push((ev.kind, ev_id, Some(region.id)));
+                        }
+                    }
+                } else if ev.roll(state, None, rng) {
                     // All events except
                     // for Icon events don't repeat
                     if ev.kind != Type::Icon {
@@ -162,6 +173,9 @@ pub struct Event {
 
     /// This event's type
     pub kind: Type,
+
+    /// If this event has any regional conditions
+    pub regional: bool,
 
     /// The probabilities that
     /// can trigger this event.
@@ -231,6 +245,7 @@ mod test {
             name: "Test Event A",
             kind: Type::World,
             locked: false,
+            regional: false,
             prob_modifier: 1.,
             intensity: 0,
             aspect: None,
@@ -253,6 +268,7 @@ mod test {
             name: "Test Event B",
             kind: Type::World,
             locked: false,
+            regional: false,
             prob_modifier: 1.,
             intensity: 0,
             aspect: None,
@@ -298,6 +314,7 @@ mod test {
             name: "Test Event A",
             kind: Type::Icon,
             locked: false,
+            regional: false,
             prob_modifier: 1.,
             intensity: 0,
             aspect: None,
@@ -374,6 +391,7 @@ mod test {
             // Note: locked so it doesn't trigger on its own
             locked: true,
 
+            regional: false,
             choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {

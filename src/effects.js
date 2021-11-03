@@ -24,7 +24,7 @@ function describeEffect(e) {
     case 'WorldVariable': {
       switch (e.subtype) {
         case 'Outlook': {
-          return `${sign(e.param)} <img src="/assets/icons/contentedness.png"> globally`;
+          return `${sign(e.param * state.gameState.world.regions.length)} <img src="/assets/icons/contentedness.png"> globally`;
         }
         case 'Emissions': {
           return `${sign(e.param)} <img src="/assets/icons/emissions.png"> emissions`;
