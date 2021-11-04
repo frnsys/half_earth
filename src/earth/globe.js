@@ -192,10 +192,15 @@ class Globe {
 
   // Show an icon and ping text
   // at the specified hex
-  showIconText(iconName, text, hexIdx) {
+  showIconText(iconName, text, hexIdx, ping) {
+    ping = ping === undefined ? true : ping;
     let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.75, true);
     let textMesh = this.hexsphere.showTextAt(text, hexIdx, 0.5);
-    this.pings.push({mesh: textMesh, icon: iconMesh});
+    if (ping) {
+      this.pings.push({mesh: textMesh, icon: iconMesh});
+    } else {
+      this.pings.push({mesh: null, icon: iconMesh});
+    }
     return iconMesh;
   }
 

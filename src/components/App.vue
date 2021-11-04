@@ -1,8 +1,11 @@
 <template>
-  <Planning v-if="state.phase == 'PLANNING'" />
-  <Stream v-else-if="state.phase == 'EVENTS'" />
-  <Report v-else-if="state.phase == 'REPORT'" />
-  <Break v-else-if="state.phase == 'BREAK'" />
+  <Sketch v-if="sketch" />
+  <template v-else>
+    <Planning v-if="state.phase == 'PLANNING'" />
+    <Stream v-else-if="state.phase == 'EVENTS'" />
+    <Report v-else-if="state.phase == 'REPORT'" />
+    <Break v-else-if="state.phase == 'BREAK'" />
+  </template>
 </template>
 
 <script>
@@ -12,9 +15,12 @@ import Report from './phases/Report.vue';
 import Stream from './phases/events/Events.vue';
 import Planning from './phases/planning/Planning.vue';
 
+import Sketch from './Sketch.vue';
+
 export default {
   data() {
     return {
+      sketch: false,
       state,
     };
   },
@@ -23,6 +29,8 @@ export default {
     Report,
     Stream,
     Planning,
+
+    Sketch,
   },
 }
 </script>

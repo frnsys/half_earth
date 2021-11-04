@@ -38,6 +38,8 @@ function randChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+let showedExample = false;
+
 export default {
   mixins: [EventsMixin],
   data() {
@@ -107,6 +109,13 @@ export default {
       let iconEvents = game.rollIconEvents();
       console.log('ICON EVENTS:');
       console.log(iconEvents);
+
+      // TODO testing
+      if (!showedExample) {
+        this.globe.showIconText('drought', '2-3', 20, false);
+        showedExample = true;
+      }
+
       const tick = (timestamp) => {
         if (this.stopped) return;
         let elapsed = timestamp - last;
