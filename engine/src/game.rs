@@ -458,7 +458,9 @@ impl State {
         self.world.co2_emissions = byproducts.co2 + self.world.byproduct_mods.co2;
         self.world.ch4_emissions = byproducts.ch4 + self.world.byproduct_mods.ch4;
         self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
-        self.world.extinction_rate = (self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.) - self.world.byproduct_mods.biodiversity;
+        self.world.extinction_rate = (self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.)
+            + self.world.temperature.powf(2.)
+            - self.world.byproduct_mods.biodiversity;
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't
