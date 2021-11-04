@@ -350,7 +350,6 @@ mod test {
             income: Income::Low,
             outlook: 0.,
             base_habitability: 0.,
-            base_contentedness: 0.,
             flags: vec![],
         }, Region {
             id: 1,
@@ -361,7 +360,6 @@ mod test {
             income: Income::Low,
             outlook: 0.,
             base_habitability: 0.,
-            base_contentedness: 0.,
             flags: vec![],
         }];
         let events = pool.roll_for_kind(Type::Icon, &state, None, &mut rng);

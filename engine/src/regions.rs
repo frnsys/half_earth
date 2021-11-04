@@ -24,19 +24,9 @@ pub struct Region {
     /// E.g. negative events such as hurricanes should subtract
     /// from this value
     pub base_habitability: f32,
-
-    /// Base contentedness encapsulates
-    /// other factors that influence contentedness,
-    /// e.g. permanent penalties or bonuses to it.
-    pub base_contentedness: f32,
 }
 
 impl Region {
-    // Simple mean
-    pub fn contentedness(&self) -> f32 {
-        self.base_contentedness + self.outlook
-    }
-
     pub fn habitability(&self) -> f32 {
         // TODO Factors:
         // - regional temp, precip, sea_level_rise

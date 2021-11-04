@@ -12,7 +12,7 @@ function updateState() {
 
   let world = state.gameState.world;
   state.gameState.contentedness = world.regions.reduce((acc, r) => {
-    return acc + r.base_contentedness + r.outlook;
+    return acc + r.outlook;
   }, 0);
   state.gameState.emissions = (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
   state.gameState.population = world.regions.reduce((acc, r) => {

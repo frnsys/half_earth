@@ -40,10 +40,6 @@ impl World {
         }
     }
 
-    pub fn contentedness(&self) -> f32 {
-        self.regions.iter().map(|r| r.contentedness()).sum::<f32>()
-    }
-
     pub fn outlook(&self) -> f32 {
         self.regions.iter().map(|r| r.outlook).sum::<f32>()
     }
@@ -70,12 +66,6 @@ impl World {
     }
 
     pub fn change_outlook(&mut self, amount: f32) {
-        for region in &mut self.regions {
-            region.outlook += amount;
-        }
-    }
-
-    pub fn change_contentedness(&mut self, amount: f32) {
         for region in &mut self.regions {
             region.outlook += amount;
         }

@@ -47,7 +47,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 373318358.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -59,7 +58,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 183739076.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -71,7 +69,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 437694436.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -83,7 +80,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 43977555.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -95,7 +91,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 254985181.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -107,7 +102,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 190463603.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -119,7 +113,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 423239061.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -131,7 +124,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 468849237.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -143,7 +135,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 69191678.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -155,7 +146,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 288359967.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -167,7 +157,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 76474800.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -179,7 +168,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 1983914039.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -191,7 +179,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 681491532.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -203,7 +190,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 1686247807.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -215,7 +201,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 12788202.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -227,7 +212,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 196908712.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -239,7 +223,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 151644503.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -251,7 +234,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 291862973.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -263,7 +245,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 106951178.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         },
@@ -275,7 +256,6 @@ pub fn regions() -> Vec<Region> {
             outlook: 50.0,
             population: 30966994.0,
             base_habitability: 100.0,
-            base_contentedness: 0.0,
             seceded: false,
             flags: vec![]
         }
