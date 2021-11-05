@@ -4,6 +4,7 @@ import Dialogue from './Dialogue.vue'
 import Scene from './scene/Scene.vue';
 import regions from '/assets/content/regions.json';
 import EVENTS from '/assets/content/events.json';
+import {clone} from 'lib/util';
 
 export default {
   data() {
@@ -24,8 +25,6 @@ export default {
   },
   methods: {
     nextEvent() {
-      console.log('NEXT EVENT CALLED');
-      console.log(this.events);
       this.event = null;
       if (this.hasEvent) {
         this.showEvent();
@@ -37,8 +36,9 @@ export default {
     showEvent() {
       if (this.hasEvent) {
         let [eventId, regionId] = this.events.shift();
-        // this.event = EVENTS[eventId];
-        this.event = JSON.parse(JSON.stringify(EVENTS[eventId]));
+
+        // Clone the event so we don't modify the original
+        this.event = clone(EVENTS[eventId]);
 
         // Set context variables
         if (this.event.dialogue) {
@@ -54,8 +54,6 @@ export default {
         // Apply event effects
         game.applyEvent(eventId, regionId);
         this.showingEvent = true;
-      } else {
-        console.log('NO EVENTS');
       }
     },
     selectChoice(idx) {

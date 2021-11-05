@@ -15,7 +15,7 @@
 
 <script>
 import state from '/src/state';
-import {describeEffect} from '/src/effects';
+import display from 'lib/display';
 
 export default {
   props: ['id'],
@@ -25,7 +25,7 @@ export default {
     },
     effectDescs() {
       return this.project.effects
-        .map((ev) => describeEffect(ev))
+        .map((ev) => display.effect(ev))
         .filter((desc) => desc !== undefined);
     }
   },

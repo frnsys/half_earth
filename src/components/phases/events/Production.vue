@@ -3,10 +3,10 @@
   <div class="production--demand">
     <div v-for="v, k in produced">
       <template v-if="demand[k] !== undefined">
-        {{v}}/{{demand[k]}}{{icons[k]}}
+        {{v}}/{{demand[k]}}{{consts.icons[k]}}
       </template>
       <template v-else>
-        {{v}}{{icons[k]}}
+        {{v}}{{consts.icons[k]}}
       </template>
     </div>
   </div>
@@ -14,8 +14,8 @@
     <div class="production--process" v-for="process in processes">
       <div class="production--process-name">{{process.name}}</div>
       <div class="production--process-amounts">
-        <div>{{process.amount}} {{icons[process.output]}}</div>
-        <div>{{process.emissions}} {{icons['emissions']}}</div>
+        <div>{{process.amount}} {{consts.icons[process.output]}}</div>
+        <div>{{process.emissions}} {{consts.icons['emissions']}}</div>
       </div>
     </div>
   </div>
@@ -27,7 +27,6 @@
 import state from '/src/state';
 
 // TODO iterate through industries and their emissions
-
 const outputDemandUnits = {
   fuel: 1e-9/1e3,            // per 1000 TWh
   electricity: 1e-9/1e3,     // per 1000 TWh
@@ -43,15 +42,6 @@ const convertOutput = {
 }
 
 export default {
-  created() {
-    this.icons = {
-      'fuel': '⛽',
-      'electricity': '⚡',
-      'plant_calories': '🌾',
-      'animal_calories': '🥩',
-      'emissions': '☁️',
-    };
-  },
   data() {
     let processes = state.gameState.processes.map((p, i) => {
       let baseAmount = state.gameState.produced_by_process[i];

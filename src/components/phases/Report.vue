@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     requestsFulfilled() {
-      return game.checkRequests().map(([kind, id, active, bounty]) => {
+      return game.check_requests().map(([kind, id, active, bounty]) => {
         // TODO should show who gave it to you?
         let text;
         if (kind == 'Project') {

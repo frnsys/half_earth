@@ -11,43 +11,32 @@
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
   <Dialogue v-if="event && predialogue" :dialogue="event.dialogue" @done="nextEvent" @select="selectChoice" />
   <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" @select="selectChoice" />
-  <div id="event-stream--toasts">
-    <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
-      <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
-    </div>
-  </div>
 </div>
 </template>
 
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import {sign} from 'lib/util';
 import Event from './Event.vue';
 import Project from './Project.vue';
 import Hud from 'components/Hud.vue';
 import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
-import iconEvents from '/assets/content/icon_events.json';
+import ICON_EVENTS from '/assets/content/icon_events.json';
 import Production from './Production.vue';
+import {sign, randChoice} from 'lib/util';
 
 const MS_PER_YEAR = 10000;
 
-function randChoice(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-let showedExample = false;
 
 export default {
   mixins: [EventsMixin],
   data() {
-    let events = game.rollWorldStartEvents();
+    let events = game.roll.worldStartEvents();
     return {
       events,
       time: 0,
-      toasts: [],
       predialogue: true,
       showProduction: false,
       year: state.gameState.world.year,
@@ -109,12 +98,6 @@ export default {
       let iconEvents = game.rollIconEvents();
       console.log('ICON EVENTS:');
       console.log(iconEvents);
-
-      // TODO testing
-      if (!showedExample) {
-        this.globe.showIconText('drought', '2-3', 20, false);
-        showedExample = true;
-      }
 
       const tick = (timestamp) => {
         if (this.stopped) return;
@@ -197,7 +180,7 @@ export default {
       });
     },
     showEventOnGlobe(eventId, regionId) {
-      let ev = iconEvents[eventId];
+      let ev = ICON_EVENTS[eventId];
       if (this.globe && regionId !== undefined && regionId !== null) {
         // TODO distinguish inland vs coastal events
         let region = state.gameState.world.regions[regionId];
@@ -221,14 +204,6 @@ export default {
               this.globe.pingIcon('discontent', hexIdx);
             }
           }, 250);
-        }
-
-        this.toasts.push({
-          icon: ev.icon,
-          desc: `${ev.name} in ${region.name}`
-        });
-        if (this.toasts.length > 3) {
-          this.toasts.shift();
         }
         return {hexIdx, mesh};
       }
@@ -259,31 +234,6 @@ export default {
   font-size: 1.5em;
   padding: 0.4em;
   font-family: "Andada Pro";
-}
-
-#event-stream--toasts {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1em;
-  text-align: center;
-  font-size: 0.8em;
-}
-.toast--body {
-  display: inline-block;
-  padding: 0.1em 0.25em;
-  border-radius: 0.2em;
-  background: rgba(20,20,20,0.9);
-  color: #fff;
-  border: 1px solid black;
-  text-align: center;
-  margin: 0.15em 0;
-  line-height: 1.7;
-}
-.toast img {
-  height: 20px;
-  vertical-align: middle;
 }
 
 #event-stream .dialogue {

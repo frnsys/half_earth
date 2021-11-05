@@ -18,24 +18,6 @@ function updateState() {
   state.gameState.population = world.regions.reduce((acc, r) => {
       return acc + r.population
     }, 0);
-
-  // Aggregate autoclicker effects into single probabilities
-  let autoclicker_effects = game.active_autoclickers();
-  let autoclickers = {};
-  autoclicker_effects.forEach(({AutoClick}) => {
-    let id = AutoClick[0];
-    let chance = AutoClick[1]/100;
-    if (!(id in autoclickers)) {
-      autoclickers[id] = [];
-    }
-    autoclickers[id].push(chance);
-  });
-  Object.keys(autoclickers).forEach((id) => {
-    autoclickers[id] = 1 - autoclickers[id].reduce((acc, p) => {
-      return acc * (1 - p);
-    }, 1);
-  });
-  state.gameState.autoclickers = autoclickers;
 }
 
 
@@ -46,7 +28,7 @@ function newRun() {
 }
 
 // Step the game by one year
-function step() {
+function stepUpdate() {
   let completedProjects = game.step();
   updateState();
   return completedProjects;
@@ -98,30 +80,6 @@ function unpromoteProcess(processId) {
   updateState();
 }
 
-function rollPlanningEvents() {
-  return game.roll_planning_events();
-}
-
-function rollReportEvents() {
-  return game.roll_report_events();
-}
-
-function rollBreaksEvents() {
-  return game.roll_breaks_events();
-}
-
-function rollIconEvents() {
-  return game.roll_icon_events();
-}
-
-function rollWorldEvents() {
-  return game.roll_world_events();
-}
-
-function rollWorldStartEvents() {
-  return game.roll_world_start_events();
-}
-
 // Select a response to an event
 function selectChoice(eventId, regionId, choiceId) {
   game.set_event_choice(eventId, regionId, choiceId);
@@ -134,11 +92,6 @@ function applyEvent(eventId, regionId) {
   updateState();
 }
 
-// Check what requests were filled
-function checkRequests() {
-  return game.check_requests();
-}
-
 function upgradeProject(id) {
   game.upgrade_project(id);
   updateState();
@@ -149,21 +102,19 @@ function setTgav(tgav) {
   updateState();
 }
 
-function totalIncomeLevel() {
-  return game.total_income_level();
+const roll = {
+  planningEvents: () => game.roll_planning_events(),
+  worldStartEvents: () => game.roll_world_start_events(),
 }
 
 updateState();
 
 export default {
-  newRun, step,
-  setTgav,
-  totalIncomeLevel,
+  newRun, stepUpdate,
+  updateState, setTgav,
   changePoliticalCapital,
   changeLocalOutlook,
   banProcess, unbanProcess,
   promoteProcess, unpromoteProcess,
   setProjectPoints, startProject, stopProject, upgradeProject,
-  rollPlanningEvents, rollBreaksEvents, rollIconEvents,
-  rollWorldEvents, rollReportEvents, rollWorldStartEvents,
-  selectChoice, applyEvent, checkRequests};
+  selectChoice, applyEvent, roll};

@@ -6,7 +6,13 @@
     "module": "es6",
     "target": "es5",
     "allowJs": true,
-     "jsx": "preserve",
-    "moduleResolution": "node"
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+        "@assets/*": ["../assets/*"]
+    }
   }
 }

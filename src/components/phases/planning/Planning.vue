@@ -10,15 +10,15 @@
   <Dashboard v-else-if="page == PAGES.DASHBOARD" @close="page = null" />
   <div v-else class="planning--menu">
     <button v-for="p in Object.keys(PAGES)" @click="select(p)">
-      <img :src="icon(p)" />
+      <img :src="ICONS[p]" />
       {{p}}
     </button>
   </div>
   <div class="production--demand planning--demand">
     <div v-for="v, k in demand">
-      {{demand[k]}}{{icons[k]}}
+      {{demand[k]}}{{consts.icons[k]}}
     </div>
-    <div>{{emissions}}{{icons['emissions']}}</div>
+    <div>{{emissions}}{{consts.icons['emissions']}}</div>
   </div>
 </div>
 </template>
@@ -26,6 +26,7 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import display from 'lib/display';
 import Research from './Research.vue';
 import Policies from './Policies.vue';
 import Processes from './Processes.vue';
@@ -36,13 +37,6 @@ import EventsMixin from 'components/EventsMixin';
 import Hud from 'components/Hud.vue';
 import EVENTS from '/assets/content/events.json';
 
-const outputDemandUnits = {
-  fuel: 1e-9/1e3,            // per 1000 TWh
-  electricity: 1e-9/1e3,     // per 1000 TWh
-  plant_calories: 1e-9/2e4,  // per 20000 Tcals
-  animal_calories: 1e-9/2e4, // per 20000 Tcals
-};
-
 const PAGES = {
   RESEARCH: 0,
   INITIATIVES: 1,
@@ -51,7 +45,17 @@ const PAGES = {
   COALITION: 4,
   DASHBOARD: 5,
   CONTINUE: 6
-}
+};
+
+const ICONS = {
+  'CONTINUE': '/assets/placeholders/earth_win98.png',
+  'POLICIES': '/assets/placeholders/policy_win98.png',
+  'RESEARCH': '/assets/placeholders/research_win98.png',
+  'INITIATIVES': '/assets/placeholders/initiatives_win98.png',
+  'PROCESSES': '/assets/placeholders/processes_win98.png',
+  'COALITION': '/assets/placeholders/coalition_win98.png',
+  'DASHBOARD': '/assets/placeholders/chart.png',
+};
 
 export default {
   mixins: [EventsMixin],
@@ -66,13 +70,7 @@ export default {
   },
   created() {
     this.PAGES = PAGES;
-    this.icons = {
-      'fuel': '⛽',
-      'electricity': '⚡',
-      'plant_calories': '🌾',
-      'animal_calories': '🥩',
-      'emissions': '☁️',
-    };
+    this.ICONS = ICONS;
   },
   mounted() {
     this.showEvent();
@@ -81,7 +79,7 @@ export default {
     this.showEvent();
   },
   data() {
-    let events = game.rollPlanningEvents();
+    let events = game.roll.planningEvents();
 
     // Group events by pages
     let eventsByPage = Object.keys(PAGES).reduce((acc, k) => {
@@ -108,14 +106,10 @@ export default {
   },
   computed: {
     demand() {
-      return Object.keys(state.gameState.output_demand).reduce((acc, k) => {
-          acc[k] = Math.round(state.gameState.output_demand[k] * outputDemandUnits[k]);
-          return acc;
-        }, {});
+      return display.outputs(state.gameState.output_demand);
     },
     emissions() {
-      let byp = state.gameState.byproducts;
-      return Math.round((byp.co2 + byp.ch4 * 36 + byp.n2o * 298) * 1e-15); // Gt CO2eq;
+      return display.gtco2eq(state.gameState.byproducts);
     }
   },
   methods: {
@@ -128,24 +122,6 @@ export default {
         this.showEvent();
       }
     },
-    icon(p) {
-      switch (p) {
-        case 'CONTINUE':
-          return "/assets/placeholders/earth_win98.png";
-        case 'POLICIES':
-          return "/assets/placeholders/policy_win98.png";
-        case 'RESEARCH':
-          return "/assets/placeholders/research_win98.png";
-        case 'INITIATIVES':
-          return "/assets/placeholders/initiatives_win98.png";
-        case 'PROCESSES':
-          return "/assets/placeholders/processes_win98.png";
-        case 'COALITION':
-          return "/assets/placeholders/coalition_win98.png";
-        default:
-          return "/assets/placeholders/chart.png";
-      }
-    }
   }
 }
 </script>
@@ -180,7 +156,7 @@ export default {
   vertical-align: middle;
 }
 .pips {
-  padding: 1em 0.5em 0.5em;
+  padding: 0.5em;
   margin: 1em;
   border: 1px solid #454340;
   position: relative;
@@ -192,19 +168,6 @@ export default {
 }
 .pips--buy:hover {
   background: #eae7e7;
-}
-.pips--label {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #FFECC7;
-  border: 1px solid #454340;
-  padding: 0 0.5em;
-  font-size: 0.7em;
-  text-transform: uppercase;
-  text-align: center;
-  width: 120px;
 }
 .pip-in-use {
   opacity: 0.5;

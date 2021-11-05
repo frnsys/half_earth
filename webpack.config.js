@@ -43,6 +43,9 @@ module.exports = {
         'sass-loader',
       ]
     }, {
+      test: /\.(png|svg|jpg|jpeg|gif)$/i,
+      type: 'asset/resource',
+    }, {
       // This needs to be loaded as a regular file (asset)
       // to work correctly
       test: /hector\.wasm/,

@@ -7,27 +7,11 @@ import cloudsVert from './shaders/clouds/vertex.glsl';
 import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
 import state from '/src/state';
-import game from '/src/game';
-
-import debug from '../debug';
-import Stats from 'stats.js';
-
-if (process.env.NODE_ENV === 'development') {
-  console.log('this only shows up in dev builds');
-}
-
-let stats;
-if (debug.fps) {
-  stats = new Stats();
-  stats.showPanel(0);
-  document.body.appendChild(stats.dom);
-}
-
-const texLoader = new THREE.TextureLoader();
 
 const Surface = RPC.initialize(
   new Worker(new URL('./worker.js', import.meta.url))
 );
+const texLoader = new THREE.TextureLoader();
 
 class Globe {
   constructor(el) {
@@ -40,7 +24,7 @@ class Globe {
     this._onReady = [];
     this.pings = [];
 
-    this.pauseRotation = false;
+    this.rotationPaused = false;
     this.pauseTimeout = null;
   }
 
@@ -94,17 +78,7 @@ class Globe {
     this.hexsphere.onClick((intersects) => {
       // Pause rotation on click
       if (intersects.length === 0) {
-        if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
-        this.pauseRotation = true;
-        this.pauseTimeout = setTimeout(() => {
-          this.pauseRotation = false;
-        }, 2000);
-      } else {
-        intersects.forEach((intersect) => {
-          let mesh = intersect.object;
-          let hexIdx = mesh.userData.hexIdx;
-          this.respondToEvent(mesh, hexIdx, mesh.userData);
-        });
+        this.pauseRotation();
       }
     });
 
@@ -133,37 +107,6 @@ class Globe {
     await this.updateSurface();
   }
 
-  respondToEvent(mesh, hexIdx, userData) {
-    let pc = userData.event.intensity * 2;
-    let outlook = userData.event.intensity;
-    game.changePoliticalCapital(pc);
-    game.changeLocalOutlook(outlook, userData.region.id);
-
-    this.pingIcon('content', hexIdx);
-    let outlookInterval = setInterval(() => {
-      if (outlook <= 0) {
-        clearInterval(outlookInterval);
-      } else {
-        outlook--;
-        this.pingIcon('content', hexIdx);
-      }
-    }, 250);
-
-    setTimeout(() => {
-      this.pingIcon('political_capital', hexIdx);
-      let pcInterval = setInterval(() => {
-        if (pc <= 0) {
-          clearInterval(pcInterval);
-        } else {
-          pc--;
-          this.pingIcon('political_capital', hexIdx);
-        }
-      }, 250);
-    }, 500);
-
-    mesh.visible = false;
-  }
-
   async updateSurface() {
     // Since SharedArrayBuffer support is lacking
     // in some mobile browsers, do this instead.
@@ -190,69 +133,52 @@ class Globe {
     return tgav;
   }
 
-  // Show an icon and ping text
+  // Show/ping an icon and/or text
   // at the specified hex
-  showIconText(iconName, text, hexIdx, ping) {
-    ping = ping === undefined ? true : ping;
-    let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.75, true);
-    let textMesh = this.hexsphere.showTextAt(text, hexIdx, 0.5);
+  show({icon, text, hexIdx, ping}) {
+    let textMesh = text ? this.hexsphere.showText(text, hexIdx, {
+      size: 0.5
+    }) : null;
+    let iconMesh = icon ? this.hexsphere.showIcon(icon, hexIdx, {
+      size: 0.75,
+      selectable: true
+    }) : null;
     if (ping) {
-      this.pings.push({mesh: textMesh, icon: iconMesh});
-    } else {
-      this.pings.push({mesh: null, icon: iconMesh});
+      if (textMesh) this.pings.push(textMesh);
+      if (iconMesh) this.pings.push(iconMesh);
     }
-    return iconMesh;
-  }
-
-  showIcon(iconName, hexIdx, data) {
-    let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.75, true);
-    iconMesh.userData = {...data, ...iconMesh.userData};
-    this.pings.push({mesh: null, icon: iconMesh});
-    return iconMesh;
-  }
-
-  pingIcon(iconName, hexIdx) {
-    let iconMesh = this.hexsphere.showIcon(iconName, hexIdx, 0.5);
-    this.pings.push({mesh: iconMesh, icon: null});
-    return iconMesh;
+    return {textMesh, iconMesh};
   }
 
   tickPings() {
     // Update pings
-    this.pings = this.pings.filter(({mesh, icon}) => {
+    this.pings = this.pings.filter((mesh) => {
       // Keep text facing the camera
-      if (mesh) {
-        mesh.lookAt(this.scene.camera.position);
+      mesh.lookAt(this.scene.camera.position);
 
-        // Move text pings up and fade out
-        mesh.position.y += 0.02;
-        mesh.material.opacity -= 0.001;
-      }
+      // Move text pings up and fade out
+      mesh.position.y += 0.02;
+      mesh.material.opacity -= 0.001;
 
-      if (icon) {
-        icon.material.opacity -= 0.001;
-      }
-
-      let done = icon ? icon.material.opacity <= 0 : mesh.material.opacity <= 0;
+      let done = mesh.material.opacity <= 0;
       if (done) {
-        if (mesh) {
-          mesh.geometry.dispose();
-          mesh.material.dispose();
-          mesh.parent.remove(mesh);
-        }
-        if (icon) {
-          icon.geometry.dispose();
-          icon.material.dispose();
-          icon.parent.remove(icon);
-        }
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        mesh.parent.remove(mesh);
       }
       return !done;
     });
   }
 
-  render(timestamp) {
-    if (debug.fps) stats.begin();
+  pauseRotation() {
+    if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+    this.rotationPaused = true;
+    this.pauseTimeout = setTimeout(() => {
+      this.rotationPaused = false;
+    }, 2000);
+  }
 
+  render(timestamp) {
     this.scene.render();
 
     // Animate clouds
@@ -261,12 +187,10 @@ class Globe {
     }
 
     // Rotate world
-    if (this.sphere && !this.pauseRotation) {
+    if (this.sphere && !this.rotationPaused) {
       this.sphere.rotation.y += 0.003;
     }
     this.tickPings();
-
-    if (debug.fps) stats.end();
 
     requestAnimationFrame(this.render.bind(this));
   }

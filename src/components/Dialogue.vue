@@ -18,10 +18,10 @@
   </div>
   <div class="dialogue--choices">
     <template v-if="revealed && isLastLine">
-      <div v-if="current.choices.length === 0" class="dialogue--choice" @click="endDialogue">
+      <div v-if="current.choices.length === 0" class="dialogue--choice" @click="end">
         (Continue)
       </div>
-      <template v-else v-for="choice, i in current.choices">
+      <template v-else v-for="choice, i in current.choices" :key="i">
         <div class="dialogue--choice" @click="(ev) => selectChoice(ev, i)">
           {{choice.text}}
         </div>
@@ -33,72 +33,134 @@
 
 <script>
 import state from '/src/state';
-import {describeEffect} from '/src/effects';
+import display from 'lib/display';
+import {clone} from 'lib/util';
+
+// Extract "chars" which might be
+// actual chars or be HTML elements
+function extractChars(el) {
+	let chars = [];
+  el.childNodes.forEach((n) => {
+    switch (n.nodeType) {
+      case Node.TEXT_NODE:
+        chars = chars.concat(n.textContent.split(''));
+        return;
+      case Node.ELEMENT_NODE:
+        if (n.childNodes.length === 0) {
+          chars.push(n);
+        } else {
+          let node = n.cloneNode();
+          node.innerHTML = '';
+          chars.push({
+            node,
+            chars: extractChars(n)
+          });
+        }
+        return;
+    }
+  });
+  return chars;
+}
+
+// Reveal "chars"
+function revealChars(parentEl, chars, {speed, onReveal, onStart}) {
+  speed = speed || 3.5;
+  let currentNode = null;
+  return new Promise((resolve, reject) => {
+    let revealAnim = setInterval(() => {
+   		let char = chars.shift();
+      if (char == '<END>') {
+        currentNode = null;
+      } else if (typeof char == 'string') {
+      	if (!currentNode || currentNode.nodeType == Node.TEXT_NODE) {
+        	currentNode = document.createTextNode('');
+          parentEl.appendChild(currentNode);
+        }
+        currentNode.textContent += char;
+      } else if (char instanceof HTMLElement){
+      	parentEl.appendChild(char);
+      } else {
+      	currentNode = char.node;
+        parentEl.appendChild(currentNode);
+        chars = char.chars.concat(['<END>']).concat(chars);
+      }
+      if (onReveal) onReveal(char);
+      if (chars.length == 0) {
+        clearInterval(revealAnim);
+        resolve();
+      }
+    }, 100/speed);
+    if (onStart) onStart(revealAnim);
+  });
+}
+
+// Parse special entities out of text
+function parseText(text, context) {
+  let vars = [...text.matchAll('{([a-z_]+)}')];
+  for (const match of vars) {
+    text = text.replaceAll(match[0], context[match[1]]);
+  }
+  let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
+  for (const match of icons) {
+    text = text.replaceAll(match[0], `<img src="/assets/icons/pips/${match[1]}.png">`);
+  }
+  return text;
+}
+
 
 export default {
   props: ['dialogue', 'effects'],
   data() {
     return {
-      lineIdx: 0,
-      current: this.dialogue,
+      current: clone(this.dialogue),
       revealed: false,
     }
   },
   mounted() {
     if (this.current) {
-      this.playDialogue();
+      this.play();
     }
   },
   watch: {
-    dialogue(newDialogue) {
-      if (newDialogue !== null) {
+    dialogue(dialogue) {
+      if (dialogue !== null) {
         this.revealed = false;
-        this.current = newDialogue;
-        this.lineIdx = 0;
-        this.playDialogue();
+        this.current = dialogue;
+        this.play();
       }
     }
   },
   computed: {
     line() {
-      return this.current.lines[this.lineIdx];
+      let line = this.current.lines[0];
+      console.log(line);
+      return {
+        text: this.dialogue.context ? parseText(line.text) : line.text,
+        speaker: line.speaker,
+      };
     },
     isLastLine() {
-      return this.lineIdx == this.current.lines.length - 1;
-    },
-    lineText() {
-      let text = this.line.text;
-      if (this.dialogue.context) {
-        let vars = [...text.matchAll('{([a-z_]+)}')];
-        for (const match of vars) {
-          text = text.replaceAll(match[0], this.dialogue.context[match[1]]);
-        }
-        let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
-        for (const match of icons) {
-          text = text.replaceAll(match[0], `<img src="/assets/icons/pips/${match[1]}.png">`);
-        }
-      }
-      return text;
+      return this.current.lines.length <= 1;
     },
     effectTexts(effect) {
-      let texts = [];
-      if (this.effects) {
-        this.effects.forEach((e) => {
-          let text = describeEffect(e);
-          if (text) texts.push(text);
-        });
-      }
-      return texts;
+      return (this.effects || [])
+        .map((e) => display.effect(e))
+        .filter((e) => e !== null);
     }
   },
   methods: {
-    playDialogue() {
+    play() {
       this.revealed = false;
-      this.revealText(this.lineText).then(() => {
+      this.$refs.text.innerHTML = '';
+      let el = document.createElement('div');
+      el.innerHTML = this.line.text;
+      revealChars(this.$refs.text, extractChars(el), {
+        onStart: (revealAnim) => this.revealAnim = revealAnim
+      }).then(() => {
         this.revealed = true;
       });
     },
-    endDialogue() {
+    end() {
       if (this.revealAnim) clearInterval(this.revealAnim);
       this.current = null;
       this.revealed = false;
@@ -110,32 +172,12 @@ export default {
       let choice = this.current.choices[i];
       this.$emit('select', choice.id);
 
-      this.lineIdx = 0;
       this.current = choice.dialogue;
       if (this.current) {
-        this.playDialogue();
+        this.play();
       } else {
-        this.endDialogue();
+        this.end();
       }
-    },
-    revealText(text, speed) {
-        let revealed = '';
-        speed = speed || 3.5;
-        const chars = text.split('');
-        return new Promise((resolve, reject) => {
-          this.revealAnim = setInterval(() => {
-            // Have to keep the revealed text
-            // separate from innerText
-            // b/c innerText will strip trailing spaces
-            revealed += chars.shift();
-            this.$refs.text.innerText = revealed;
-            if (chars.length == 0) {
-              clearInterval(this.revealAnim);
-              this.revealAnim = null;
-              resolve();
-            }
-          }, 100/speed);
-        });
     },
     advance() {
       if (this.current === null) return;
@@ -150,16 +192,16 @@ export default {
       // and there are no choices to advance
       // the dialogue further, just end it
       if (this.isLastLine && this.current.choices.length === 0) {
-        this.endDialogue();
+        this.end();
       } else {
-        this.lineIdx++;
-        this.playDialogue();
+        this.current.lines.shift();
+        this.play();
       }
     },
     skipReveal() {
       if (this.revealAnim) clearInterval(this.revealAnim);
       if (this.current !== null) {
-        this.$refs.text.innerText = this.lineText;
+        this.$refs.text.innerHTML = this.line.text;
         this.revealed = true;
       }
     }

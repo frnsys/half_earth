@@ -1,18 +1,18 @@
 <template>
   <div class="hud">
     <div>{{state.gameState.world.year}}</div>
-    <div><img src="/assets/icons/pips/political_capital.png">{{state.gameState.political_capital}}</div>
+    <div><img :src="assets.icons.political_capital">{{state.gameState.political_capital}}</div>
     <div>
-      <img src="/assets/icons/extinction.png">{{state.gameState.world.extinction_rate.toFixed(0)}}
+      <img :src="assets.icons.extinction_rate">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
-    <div :class="{'negative-outlook': state.gameState.contentedness < 0}">
-      <img src="/assets/icons/contentedness.png">{{state.gameState.contentedness.toFixed(0)}}
-    </div>
-    <div>
-      <img src="/assets/icons/emissions.png">{{state.gameState.emissions.toFixed(1)}}
+    <div :class="{'bad': state.gameState.contentedness < 0}">
+      <img :src="assets.icons.contentedness">{{state.gameState.contentedness.toFixed(0)}}
     </div>
     <div>
-      <img src="/assets/icons/warming.png">+{{state.gameState.world.temperature.toFixed(1)}}°C
+      <img :src="assets.icons.emissions">{{state.gameState.emissions.toFixed(1)}}
+    </div>
+    <div>
+      <img :src="assets.icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
     </div>
   </div>
 </template>
@@ -46,9 +46,5 @@ export default {
   width: auto;
   vertical-align: middle;
   margin-right: 2px;
-}
-
-.negative-outlook {
-  color: #FF4040;
 }
 </style>

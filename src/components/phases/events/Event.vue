@@ -15,32 +15,23 @@
 </template>
 
 <script>
+import display from 'lib/display';
 import Dialogue from 'components/Dialogue.vue';
-import {describeEffect} from '/src/effects';
 
 export default {
   props: ['event'],
   components: {
     Dialogue
   },
-  activated() {
-    console.log('Activated');
-    console.log(this.event);
-  },
-  mounted() {
-    console.log('Mounted');
-    console.log(this.event);
-  },
   computed: {
     effectDescs() {
       return this.event.effects
-        .map((ev) => describeEffect(ev))
+        .map((ev) => display.effect(ev))
         .filter((desc) => desc !== undefined);
     }
   },
   methods: {
     done() {
-      console.log('DIALOGUE-EVENT FINISHED');
       this.$emit('done');
     },
     selectChoice() {

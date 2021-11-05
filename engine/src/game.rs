@@ -193,7 +193,7 @@ impl Game {
             industries: content::industries(),
             npcs: content::npcs(),
 
-            runs: 0,
+            runs: 1, // TODO TEMP TESTING
             requests: Vec::new(),
 
             output_modifier: outputs!(

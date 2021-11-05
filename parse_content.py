@@ -71,7 +71,6 @@ specs = {
         'outlook': 50,
         'population': None,
         'base_habitability': 100,
-        'base_contentedness': 0,
         'seceded': 'false',
         'flags': 'vec![]',
     },

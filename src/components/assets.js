@@ -1,0 +1,26 @@
+export default {
+  icons: {
+    political_capital: require('/assets/icons/pips/political_capital.png'),
+    extinction_rate: require('/assets/icons/extinction.png'),
+    contentedness: require('/assets/icons/contentedness.png'),
+    emissions: require('/assets/icons/emissions.png'),
+    warming: require('/assets/icons/warming.png'),
+    political_capital: require('/assets/icons/pips/political_capital.png'),
+    biodiversity: require('/assets/icons/biodiversity.png'),
+    land: require('/assets/icons/land.png'),
+    energy: require('/assets/icons/energy.png'),
+    labor: require('/assets/icons/labor.png'),
+    water: require('/assets/icons/water.png'),
+    feedstock: require('/assets/icons/feedstock.png'),
+    improve: require('/assets/placeholders/improve.svg'),
+    worsen: require('/assets/placeholders/worsen.svg'),
+    research: require('/assets/icons/pips/research.png'),
+    initiative: require('/assets/icons/pips/initiative.png'),
+    population: require('/assets/icons/labor.png'),
+    fuel: require('/assets/placeholders/fuel.png'),
+    electricity: require('/assets/icons/electricity.png'),
+    plantcalories: require('/assets/placeholders/plantcalories.png'),
+    animalcalories: require('/assets/placeholders/animalcalories.png'),
+    unlocks: require('/assets/placeholders/unlocks.png'),
+  }
+};

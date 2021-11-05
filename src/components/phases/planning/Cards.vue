@@ -148,7 +148,7 @@ export default {
   children click events */
   pointer-events: none;
 }
-.cards > li {
+.cards .card {
   display: inline-flex;
   margin: 0 0.5em;
   vertical-align: top;
@@ -159,10 +159,10 @@ export default {
 /* Margin on either side so
 the first and last cards have room
 to be centered */
-.cards > li:first-child {
+.cards .card:first-child {
   margin-left: 12em;
 }
-.cards > li:last-child {
+.cards .card:last-child {
   margin-right: 12em;
 }
 </style>

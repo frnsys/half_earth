@@ -12,12 +12,8 @@ const init = {
   },
 
   points: {
-    Research: {
-      available: 0,
-    },
-    Initiative: {
-      available: 0,
-    },
+    research: 10,
+    initiative: 10,
   },
 
   projects: [],
