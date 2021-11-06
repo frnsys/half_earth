@@ -7,7 +7,9 @@
   <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
   <Processes v-else-if="page == PAGES.PROCESSES" @close="page = null" />
   <Coalition v-else-if="page == PAGES.COALITION" @close="page = null" />
+  <Priorities v-else-if="page == PAGES.PRIORITIES" @close="page = null" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" @close="page = null" />
+  <Plan v-else-if="page == PAGES.PLAN" @close="page = null" />
   <div v-else class="planning--menu">
     <button v-for="p in Object.keys(PAGES)" @click="select(p)">
       <img :src="ICONS[p]" />
@@ -15,10 +17,10 @@
     </button>
   </div>
   <div class="production--demand planning--demand">
-    <div v-for="v, k in demand">
+    <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
       {{demand[k]}}{{consts.icons[k]}}
     </div>
-    <div>{{emissions}}{{consts.icons['emissions']}}</div>
+    <div v-tip="{text: 'Global CO2eq emissions.', icon: 'emissions'}">{{emissions}}{{consts.icons['emissions']}}</div>
   </div>
 </div>
 </template>
@@ -33,6 +35,8 @@ import Processes from './Processes.vue';
 import Initiatives from './Initiatives.vue';
 import Coalition from './Coalition.vue';
 import Dashboard from './Dashboard.vue';
+import Priorities from './Priorities.vue';
+import Plan from './Plan.vue';
 import EventsMixin from 'components/EventsMixin';
 import Hud from 'components/Hud.vue';
 import EVENTS from '/assets/content/events.json';
@@ -44,7 +48,9 @@ const PAGES = {
   PROCESSES: 3,
   COALITION: 4,
   DASHBOARD: 5,
-  CONTINUE: 6
+  PRIORITIES: 6,
+  PLAN: 7,
+  CONTINUE: 8
 };
 
 const ICONS = {
@@ -66,7 +72,9 @@ export default {
     Initiatives,
     Processes,
     Coalition,
-    Dashboard
+    Dashboard,
+    Priorities,
+    Plan,
   },
   created() {
     this.PAGES = PAGES;
@@ -142,13 +150,13 @@ export default {
 .planning--menu button {
   width: 96px;
   height: 96px;
-  margin: 0 14% 1em;
+  margin: 0 10% 1em;
   padding: 0.25em 0.5em;
   border-width: 4px;
   justify-self: center;
 }
 .planning--menu img {
-  max-width: 100%;
+  max-width: 36px;
 }
 
 .pip {
@@ -157,8 +165,9 @@ export default {
 }
 .pips {
   padding: 0.5em;
-  margin: 1em;
+  margin: 0.25em;
   border: 1px solid #454340;
+  border-radius: 0.2em;
   position: relative;
   text-align: center;
 }
@@ -197,12 +206,6 @@ export default {
   cursor: pointer;
 }
 
-.planning .effects img {
-  width: 16px;
-  height: 16px;
-  vertical-align: middle;
-}
-
 .project--upgrade--title {
   display: flex;
   font-size: 0.75em;
@@ -229,7 +232,7 @@ export default {
 
 .planning--demand {
   position: absolute;
-  bottom: 2em;
+  bottom: 0;
   left: 0;
   right: 0;
 }

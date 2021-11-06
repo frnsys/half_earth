@@ -2,6 +2,15 @@ use super::processes::{Process, ProcessStatus};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Feedstock};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
 
+pub enum Priority {
+    Output,
+    Land,
+    Emissions,
+    Energy,
+    Labor,
+    Water,
+}
+
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
     pub process: &'a Process,

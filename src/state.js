@@ -10,10 +10,14 @@ const init = {
     extinctionRate: 0,
     contentedness: 0
   },
+  history: {
+    emissions: [],
+    land_use: [],
+  },
 
   points: {
-    research: 10,
-    initiative: 10,
+    research: 0,
+    initiative: 0,
   },
 
   projects: [],

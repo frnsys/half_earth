@@ -2,52 +2,57 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div v-tip="{text: 'This process produces electricity.', icon: 'energy'}">{{consts.icons[output]}}</div>
+    <div v-tip="{text: `This process currently produces ${produced.amount}${consts.icons[output]} and ${produced.emissions}${consts.icons['emissions']} per year.`, icon: output}">{{produced.amount}}{{consts.icons[output]}} {{produced.emissions}}{{consts.icons['emissions']}}</div>
   </template>
-  <template v-slot:front>
-    <figure>
-      <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-      <img
-        v-tip="{text: 'This process is expected to expand.', icon: 'improve'}"
-        class="process-trend" src="/assets/placeholders/improve.svg">
-      <img
-        v-tip="{text: 'This process uses coal.', icon: 'feedstock'}"
-        class="process-feedstock" :src="assets.icons.feedstock">
-    </figure>
-    <div class="card-actions">
+  <template v-slot:figure>
+    <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
+    <img
+      v-tip="{text: `This process is expected to ${expectedChange}.`, icon: changeIcons[expectedChange]}"
+      class="process-trend" :src="assets.icons[changeIcons[expectedChange]]">
+    <img
+      v-tip="{text: 'This process uses coal.', icon: 'feedstock'}"
+      class="process-feedstock" :src="assets.icons.feedstock">
+
+    <div class="opposers">
+      <div>Nay</div>
+      <div>
+        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
+        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
+        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
+      </div>
+    </div>
+    <div class="supporters">
+      <div>Yea</div>
+      <div>
+        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
+        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
+        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
+      </div>
+    </div>
+  </template>
+  <template v-slot:body>
+    <div class="card-actions" v-if="!!this.$slots.actions">
       <slot name="actions"></slot>
     </div>
     <div class="process-intensity">
       <IntensityIcon
         v-tip="{text: 'Energy: It flows through everything.', icon: 'energy'}"
-        resource="energy" :intensity="2" />
+        resource="energy" :intensity="intensities.energy" />
       <IntensityIcon
         v-tip="{text: 'Labor: Together with nature, the source of all things.', icon: 'labor'}"
         resource="labor" :intensity="2" />
       <IntensityIcon
         v-tip="{text: 'Water: The giver of life.', icon: 'water'}"
-        resource="water" :intensity="2" />
+        resource="water" :intensity="intensities.water" />
       <IntensityIcon
         v-tip="{text: 'Biodiversity: The co-inhabitants of the planet.', icon: 'biodiversity'}"
-        resource="biodiversity" :intensity="2" />
+        resource="biodiversity" :intensity="intensities.biodiversity" />
       <IntensityIcon
         v-tip="{text: 'Land: The foo bar.', icon: 'land'}"
-        resource="land" :intensity="1" />
+        resource="land" :intensity="intensities.land" />
       <IntensityIcon
         v-tip="{text: 'Emissions: The foo bar', icon: 'emissions'}"
-        resource="emissions" :intensity="3" />
-    </div>
-    <div class="process-opposers">
-      <div>Nay</div>
-      <img src="/assets/characters/The Authoritarian.png">
-      <img src="/assets/characters/The Economist.png">
-      <img src="/assets/characters/The Technocrat.png">
-    </div>
-    <div class="process-supporters">
-      <div>Yea</div>
-      <img src="/assets/characters/The Scientist.png">
-      <img src="/assets/characters/The Populist.png">
-      <img src="/assets/characters/The Ecologist.png">
+        resource="emissions" :intensity="intensities.emissions" />
     </div>
   </template>
   <template v-slot:back>
@@ -68,7 +73,51 @@ import Card from './Card.vue';
 import state from '/src/state';
 import consts from '/src/consts';
 import display from 'lib/display';
+import assets from 'components/assets';
 import IntensityIcon from './IntensityIcon.vue';
+
+const changeIcons = {
+  'remain steady': 'steady',
+  'expand': 'improve',
+  'contract': 'worsen',
+};
+
+const intensities = {
+  'land': {
+    'energy': [0, 0.001, 0.01, 0.1],
+    'calories': [0, 0.001, 0.002, 0.01],
+  },
+  'labor': {
+    'energy': [0, 0.001, 0.01, 0.1], // TODO
+    'calories': [0, 0.001, 0.002, 0.01], // TODO
+  },
+  'energy': {
+    'energy': [0, 0.001, 0.01, 0.1], // TODO EROI
+    'calories': [0, 0.00015, 0.0005, 0.001],
+  },
+  'water': {
+    'energy': [0, 1, 2, 5],
+    'calories': [0, 1, 2, 3],
+  },
+  'emissions': {
+    'energy': [-2000, 0, 200, 800],
+    'calories': [-1, 0, 0.5, 1],
+  },
+  'biodiversity': {
+    'energy': [0, 1, 2, 3],
+    'calories': [0, 1, 2, 3],
+  }
+};
+
+function intensity(val, key, type) {
+  let stops = intensities[key][type];
+  for (let i = 0; i < stops.length - 1; i++) {
+    if (val >= stops[i] && val < stops[i+1]) {
+      return i+1;
+    }
+  }
+  return stops.length;
+}
 
 export default {
   props: ['process'],
@@ -76,8 +125,12 @@ export default {
     Card,
     IntensityIcon,
   },
+  created() {
+    this.changeIcons = changeIcons;
+  },
   data() {
     return {
+      state,
       ...this.process,
       ...state.processes[this.process.id],
       output: consts.outputs.keys[this.process.output],
@@ -95,7 +148,41 @@ export default {
         emissions,
         amount
       };
-    }
+    },
+    intensities() {
+      let type =
+        (this.output == 'electricity' || this.output == 'fuel')
+        ? 'energy' : 'calories';
+      let values = {
+        emissions: display.co2eq(this.byproducts),
+        biodiversity: this.byproducts.biodiversity,
+        energy: this.resources.electricity + this.resources.fuel,
+        land: this.resources.land,
+        water: this.resources.water,
+        // TODO labor
+      };
+      let intensities = Object.keys(values).reduce((acc, k) => {
+        acc[k] = intensity(values[k], k, type);
+        return acc;
+      }, {});
+      return intensities;
+    },
+    expectedChange() {
+      // Kind of annoying, but grab this way
+      // for reactivity
+      let process = this.state.gameState.processes[this.id];
+      if (process.status == 'Banned' && process.mix_share > 0) {
+        return 'contract';
+      } else if (process.status == 'Promoted') {
+        return 'expand';
+      } else {
+        switch (process.change) {
+          case 'Neutral': return 'remain steady';
+          case 'Expanding': return 'expand';
+          case 'Contracting': return 'contract';
+        }
+      }
+    },
   }
 }
 </script>
@@ -105,29 +192,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   margin: 0.5em 0;
-}
-.process-supporters,
-.process-opposers {
-  position: absolute;
-  top: 50%;
-  display: flex;
-  flex-direction: column;
-  text-decoration: underline;
-}
-.process-opposers {
-  left: 0;
-  transform: translate(-50%, -50%);
-  color: #EF3838;
-}
-.process-supporters {
-  right: 0;
-  transform: translate(50%, -50%);
-  color: #43CC70;
-}
-.process-supporters img,
-.process-opposers img {
-  width: 32px;
-  margin: 0.25em 0;
 }
 
 .process-trend,

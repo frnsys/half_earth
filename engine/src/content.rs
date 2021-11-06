@@ -4,7 +4,7 @@ use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Cost};
-use crate::production::{Process, ProcessFeature, ProcessStatus};
+use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
@@ -407,6 +407,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::DegradesSoil,
                 ProcessFeature::IsCCS,
@@ -434,6 +435,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -458,6 +460,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -482,6 +485,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -489,7 +493,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 4,
-            name: "Regenerative Agriculture (Crops)",
+            name: "Regenerative Crop Ag",
             output: Output::PlantCalories,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
@@ -506,6 +510,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
@@ -514,7 +519,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 5,
-            name: "Regenerative Agriculture (Livestock)",
+            name: "Regenerative Livestock Ag",
             output: Output::AnimalCalories,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
@@ -531,6 +536,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesLivestock
             ],
@@ -550,6 +556,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -569,6 +576,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsNuclear
             ],
@@ -576,7 +584,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 8,
-            name: "Industrial Agriculture (Crops)",
+            name: "Industrial Crop Ag",
             output: Output::PlantCalories,
             mix_share: 0.6775,
             feedstock: (Feedstock::Soil, 1.0),
@@ -593,6 +601,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::DegradesSoil,
                 ProcessFeature::IsSolar,
@@ -603,7 +612,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 9,
-            name: "Organic Agriculture (Crops)",
+            name: "Organic Crop Ag",
             output: Output::PlantCalories,
             mix_share: 0.0025,
             feedstock: (Feedstock::Soil, 1.0),
@@ -620,6 +629,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
@@ -628,7 +638,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 10,
-            name: "Industrial Agriculture (Livestock)",
+            name: "Industrial Livestock Ag",
             output: Output::AnimalCalories,
             mix_share: 0.9975,
             feedstock: (Feedstock::Soil, 1.0),
@@ -645,6 +655,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::DegradesSoil,
                 ProcessFeature::UsesLivestock,
@@ -655,7 +666,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 11,
-            name: "Organic Agriculture (Livestock)",
+            name: "Organic Livestock Ag",
             output: Output::AnimalCalories,
             mix_share: 0.0025,
             feedstock: (Feedstock::Soil, 1.0),
@@ -672,6 +683,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::UsesLivestock
@@ -680,7 +692,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 12,
-            name: "Petroleum Power Generation",
+            name: "Petroleum Power Gen",
             output: Output::Electricity,
             mix_share: 0.031,
             feedstock: (Feedstock::Oil, 0.3636872),
@@ -697,6 +709,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -721,6 +734,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -728,7 +742,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 14,
-            name: "Natural Gas Power Generation",
+            name: "Natural Gas Power Gen",
             output: Output::Electricity,
             mix_share: 0.235,
             feedstock: (Feedstock::NaturalGas, 210.3942),
@@ -745,6 +759,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -769,6 +784,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsNuclear
             ],
@@ -793,6 +809,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -817,6 +834,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsIntermittent
             ],
@@ -841,6 +859,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsIntermittent,
                 ProcessFeature::IsSolar
@@ -866,6 +885,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -890,6 +910,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -914,6 +935,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::DegradesSoil,
                 ProcessFeature::UsesPesticides,
@@ -940,6 +962,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -964,6 +987,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
@@ -988,6 +1012,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
@@ -1013,6 +1038,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -1037,6 +1063,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsCCS
             ],
@@ -1061,6 +1088,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -1085,6 +1113,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsIntermittent,
                 ProcessFeature::IsSolar
@@ -1110,6 +1139,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
@@ -3187,6 +3217,50 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ]
+        },
+        Project {
+            id: 68,
+            name: "Desalination Plants",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![]
+        },
+        Project {
+            id: 69,
+            name: "Development Limits",
+            cost: 0,
+            base_cost: Cost::Fixed(100),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![]
         }
     ]
 }
@@ -7179,6 +7253,57 @@ pub fn events() -> Vec<Event> {
             prob_modifier: 1.0,
             intensity: 0,
             aspect: None
+        },
+        Event {
+            id: 129,
+            name: "Lawns to Native Grasses",
+            kind: EventType::World,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            choices: vec![],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 130,
+            name: "AMOC Collapse",
+            kind: EventType::World,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            choices: vec![],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 131,
+            name: "Heat Dome",
+            kind: EventType::World,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            choices: vec![],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         }
     ]
 }
@@ -7188,32 +7313,32 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 0,
             name: "The Ecologist",
-            relationship: 0.0
+            relationship: 5.0
         },
         NPC {
             id: 1,
             name: "The Agronomist",
-            relationship: 0.0
+            relationship: 5.0
         },
         NPC {
             id: 2,
             name: "The Malthusians",
-            relationship: 0.0
+            relationship: 5.0
         },
         NPC {
             id: 3,
             name: "The Fully-Automated Luxury Communists",
-            relationship: 0.0
+            relationship: 5.0
         },
         NPC {
             id: 4,
             name: "The Half-Earth Socialists",
-            relationship: 0.0
+            relationship: 5.0
         },
         NPC {
             id: 5,
             name: "The Authoritarian",
-            relationship: 0.0
+            relationship: 5.0
         }
     ]
 }

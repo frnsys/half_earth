@@ -111,6 +111,10 @@ export default {
             this.completedProjects = game.step();
             this.year = state.gameState.world.year;
 
+            // Add to historical data
+            state.history.emissions.push(game.gameState.emissions);
+            state.history.land_use.push(game.gameState.resources_demand.land);
+
             this.rollEvent();
             return;
 

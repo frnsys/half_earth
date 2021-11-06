@@ -172,7 +172,6 @@ impl GameInterface {
 pub struct Game {
     pub state: State,
     pub event_pool: EventPool,
-    // choice_history: [usize; 3],
 }
 
 impl Game {
@@ -247,6 +246,21 @@ impl Game {
         completed_projects
     }
 
+    pub fn project(&self, rng: &mut SmallRng, years: usize) -> State {
+        let state = self.state.clone();
+
+        for _ in 0..years {
+            let (completed_projects, effects) = state.step_projects(rng);
+            for (effect, region_id) in effects {
+                effect.apply(self, region_id);
+            }
+            state.step_production();
+            state.step_world();
+        }
+
+        state
+    }
+
     pub fn roll_events_of_kind(&mut self, kind: EventType, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
         // Roll for events and collect effects
         let events = self.event_pool.roll_for_kind(kind, &self.state, limit, rng);
@@ -295,7 +309,7 @@ impl Game {
     }
 }
 
-#[derive(Default, Serialize)]
+#[derive(Default, Serialize, Clone)]
 pub struct State {
     pub world: World,
     pub flags: Vec<Flag>,
@@ -460,6 +474,7 @@ impl State {
         self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
         self.world.extinction_rate = (self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.)
             + self.world.temperature.powf(2.)
+            + self.world.sea_level_rise.powf(2.)
             - self.world.byproduct_mods.biodiversity;
 
         // Float imprecision sometimes causes these values

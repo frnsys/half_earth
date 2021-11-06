@@ -1,3 +1,5 @@
+import assets from 'components/assets';
+
 const OUTPUT_UNITS = {
   fuel: 1e-9/1e3,            // per 1000 TWh
   electricity: 1e-9/1e3,     // per 1000 TWh
@@ -5,8 +7,12 @@ const OUTPUT_UNITS = {
   animal_calories: 1e-9/2e4, // per 20000 Tcals
 };
 
+function co2eq(byproducts) {
+  return byproducts.co2 + byproducts.ch4 * 36 + byproducts.n2o * 298;
+}
+
 function gtco2eq(byproducts, multiplier=1) {
-  return Math.round(multiplier * (byproducts.co2 + byproducts.ch4 * 36 + byproducts.n2o * 298) * 1e-15); // Gt CO2eq;
+  return Math.round(multiplier * co2eq(byproducts) * 1e-15); // Gt CO2eq;
 }
 
 function output(amount, output) {
@@ -20,4 +26,12 @@ function outputs(outputs) {
   }, {});
 }
 
-export default {gtco2eq, output, outputs};
+function fillIcons(text) {
+  let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
+  for (const match of icons) {
+    text = text.replaceAll(match[0], `<img src="${assets.icons[match[1]]}">`);
+  }
+  return text;
+}
+
+export default {co2eq, gtco2eq, output, outputs, fillIcons};

@@ -3,94 +3,29 @@
   <header>
     <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
   </header>
-  <div class="planning--coalition">
-    <div class="npc" v-for="npc in npcs">
-      <div class="npc--portrait">
-        <img
-          :src="`/assets/characters/${npc.name}.png`"
-          onerror="this.src='/assets/placeholders/character.png';" />
-        <div class="npc--relationship">{{relationshipName(npc.relationship)}}</div>
-      </div>
-      <div>
-        <h3>{{npc.name}}</h3>
-        <p v-html="npc.html"></p>
-      </div>
-    </div>
-  </div>
+  <Cards>
+    <NPCCard v-for="npc in npcs" :npc="npc" />
+  </Cards>
 </div>
 </template>
 
 <script>
 import state from '/src/state';
-import NPCS from '/assets/content/npcs.json';
+import Cards from './Cards.vue';
+import NPCCard from 'components/cards/NPCCard.vue';
 
 export default {
+  components: {
+    Cards,
+    NPCCard
+  },
   data() {
     return {
-      state
+      npcs: state.gameState.npcs,
     }
   },
-  computed: {
-    npcs() {
-      return state.gameState.npcs.map((npc) => {
-        let data = NPCS[npc.id];
-        let text = data.description;
-        let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
-        for (const match of icons) {
-          text = text.replaceAll(match[0], `<img src="/assets/icons/pips/${match[1]}.png">`);
-        }
-        return {
-          name: data.name,
-          html: text,
-          relationship: npc.relationship,
-        }
-      });
-    }
-  },
-  methods: {
-    relationshipName(val) {
-      if (val >= 80) {
-        return 'Ally';
-      } else if (val <= -80) {
-        return 'Nemesis';
-      } else {
-        return 'Neutral';
-      }
-    }
-  }
 }
 </script>
 
 <style>
-.npc {
-  display: flex;
-  padding: 1em;
-}
-
-.npc--portrait {
-  margin-right: 1em;
-  display: flex;
-  justify-content: space-around;
-  width: 112px;
-  text-align: center;
-  flex-direction: column;
-}
-.npc--portrait img {
-  width: 72px;
-}
-
-.npc p img {
-  width: 22px;
-  height: 22px;
-  vertical-align: middle;
-}
-
-.npc h3 {
-  font-weight: normal;
-  font-family: 'Andada Pro';
-}
-
-.npc--relationship {
-  font-size: 0.8em;
-}
 </style>

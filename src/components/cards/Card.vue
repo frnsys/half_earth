@@ -3,8 +3,11 @@
   <header>
     <slot name="header"></slot>
   </header>
+  <figure v-if="!flipped">
+    <slot name="figure"></slot>
+  </figure>
   <div class="card--body">
-    <slot v-if="!flipped" name="front"></slot>
+    <slot v-if="!flipped" name="body"></slot>
     <slot v-else name="back"></slot>
   </div>
   <footer>
@@ -40,7 +43,7 @@ export default {
 .card {
   border-radius: 0.6em;
   box-shadow: 0 2px 2px rgba(0,0,0,0.8);
-  padding: 0.5em 0.5em 0.25em;
+  padding: 0.25em 0.5em;
   background: #222222;
   position: relative;
   width: 320px;
@@ -65,6 +68,9 @@ export default {
   color: #fff;
   padding: 0 0.3em;
   border-radius: 0.3em;
+}
+.card header {
+  margin-bottom: 0.25em;
 }
 .card footer img {
   width: 28px;
@@ -99,5 +105,36 @@ export default {
 }
 .card-actions button {
   font-size: 1.1em;
+}
+
+.supporters,
+.opposers {
+  bottom: 0;
+  position: absolute;
+  text-align: center;
+  font-size: 0.9em;
+  padding: 0 0.25em;
+  background: rgba(0,0,0,0.2);
+  margin: 0.25em;
+  line-height: 1;
+  border-radius: 0.2em;
+  color: #fff;
+}
+.opposers {
+  left: 0;
+}
+.opposers > div:first-child {
+  background: #EF3838;
+}
+.supporters {
+  right: 0;
+}
+.supporters > div:first-child {
+  background: #43CC70;
+}
+.supporters img,
+.opposers img {
+  width: 24px;
+  margin: 0.25em 0;
 }
 </style>

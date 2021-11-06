@@ -3,7 +3,7 @@ mod planner;
 mod processes;
 
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
-pub use self::processes::{Process, ProcessFeature, ProcessStatus, update_mixes};
+pub use self::processes::{Process, ProcessFeature, ProcessStatus, ProcessChange, update_mixes};
 pub use self::planner::{ProductionOrder, calculate_required};
 
 

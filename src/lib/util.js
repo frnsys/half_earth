@@ -14,4 +14,8 @@ function randChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export {sign, nearestMultiple, clone, randChoice};
+function slugify(text) {
+  return text.toLowerCase().replaceAll(' ', '_');
+}
+
+export {sign, nearestMultiple, clone, randChoice, slugify};

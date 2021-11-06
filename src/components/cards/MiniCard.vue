@@ -39,6 +39,8 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 .minicard--expanded {
   position: fixed;

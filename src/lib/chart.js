@@ -1,10 +1,8 @@
 const dpr = window.devicePixelRatio || 1;
-const tickSize = 10;
 
 class Chart {
-  constructor(stageEl, conf) {
+  constructor(stageEl, ranges) {
     this.stage = stageEl;
-    this.config = conf || {};
     this.width = this.stage.clientWidth;
     this.height = this.stage.clientHeight;
 
@@ -13,7 +11,7 @@ class Chart {
     this.setSize();
     this.stage.appendChild(this.canvas);
 
-    this.ranges = conf.ranges;
+    this.ranges = ranges;
     this._reset();
   }
 
@@ -43,12 +41,10 @@ class Chart {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
-  drawLine(points, color) {
+  _drawLine(pixels, color) {
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;
     this.ctx.strokeStyle = color;
-
-    let pixels = points.map((pt) => this.pointToPixel(pt));
     let start = pixels[0];
     this.ctx.moveTo(start.x, start.y);
     pixels.slice(1).forEach((px) => {
@@ -58,44 +54,57 @@ class Chart {
     this.ctx.closePath();
   }
 
-  drawHLine(y, color, label) {
+  drawLine(points, color) {
+    let pixels = points.map((pt) => this.pointToPixel(pt));
+    this._drawLine(pixels, color);
+  }
+
+  drawHLine(y, color) {
     y = this.yToPixel(y);
-    this.ctx.beginPath();
-    this.ctx.lineWidth = 1;
-    this.ctx.strokeStyle = color;
-    this.ctx.moveTo(0, y);
-    this.ctx.lineTo(this.width, y);
-    this.ctx.stroke();
-    this.ctx.closePath();
-    if (label) {
-      // this.ctx.fillStyle = label.background;
-      let textWidth = this.ctx.measureText(label.text).width;
-      // this.ctx.rect(label.offset, y-12, textWidth, 12);
-      // this.ctx.fill();
-      this.ctx.fillStyle = label.color;
-      this.ctx.fillText(label.text, this.xToPixel(this.ranges.x[1]) - textWidth, y);
-    }
+    this._drawLine([{
+      x: 0, y
+    }, {
+      x: this.width, y
+    }], color);
   }
 
-  drawVLine(x, color, label) {
+  drawVLine(x, color) {
     x = this.xToPixel(x);
-    this.ctx.beginPath();
-    this.ctx.lineWidth = 1;
-    this.ctx.strokeStyle = color;
-    this.ctx.moveTo(x, 0);
-    this.ctx.lineTo(x, this.height);
-    this.ctx.stroke();
-    this.ctx.closePath();
-    if (label) {
-      this.ctx.fillStyle = label.color;
-      this.ctx.fillText(label.text, x, this.yToPixel(this.ranges.y[0]));
-    }
+    this._drawLine([{
+      x, y: 0
+    }, {
+      x, y: this.height
+    }], color);
   }
 
-  drawPoint(pt, color, radius) {
+  drawLabel(text, point, {background, color, anchor}={}) {
+    let px = this.pointToPixel(point);
+    let {width} = this.ctx.measureText(text);
+    let height = 8;
+    let padding = 2;
+
+    if (anchor === 'RIGHT') {
+      px.x -= width;
+    } else if (anchor === 'CENTER') {
+      px.x -= width/2;
+    }
+
+    if (background) {
+      this.ctx.fillStyle = background;
+      this.ctx.fillRect(
+        px.x - padding,
+        px.y - height - padding,
+        width + 2*padding,
+        height + 2*padding);
+    }
+    this.ctx.fillStyle = color || '#000000';
+    console.log(this.ctx.fillStyle);
+    this.ctx.fillText(text, px.x, px.y);
+  }
+
+  drawPoint(pt, {color, radius}) {
     color = color || '#f7120e';
-    let rangeSize = this.ranges.x[1] - this.ranges.x[0];
-    radius = radius || (rangeSize < 100 ? 3 : 2) * this.width/800;
+    radius = radius || 2;
 
     let px = this.pointToPixel(pt);
     this.ctx.fillStyle = color;
@@ -106,63 +115,27 @@ class Chart {
   }
 
   xToPixel(x) {
-    let pt = this.pointToPixel({x: x, y: 0});
-    return pt.x;
+    return this.pointToPixel({x, y: 0}).x;
   }
 
   yToPixel(y) {
-    let pt = this.pointToPixel({x: 0, y: y});
-    return pt.y;
+    return this.pointToPixel({x: 0, y}).y;
   }
 
   drawAxes() {
     let origin = this.origin;
-    this.ctx.beginPath();
-    this.ctx.lineWidth = 1;
-    this.ctx.strokeStyle = this.config.axesColor || '#222222';
-    this.ctx.moveTo(0, origin.y);
-    this.ctx.lineTo(this.width, origin.y);
-    this.ctx.moveTo(origin.x, 0);
-    this.ctx.lineTo(origin.x, this.height);
-    this.ctx.stroke();
-    this.ctx.closePath();
-  }
-
-  drawTick(from, to, labelPos, label) {
-    let fontSize = 6;
-    this.ctx.font = `${fontSize}px sans-serif`;
-
-    this.ctx.strokeStyle = '#888888';
-    this.ctx.beginPath();
-    this.ctx.moveTo(from[0], from[1]);
-    this.ctx.lineTo(to[0], to[1]);
-    this.ctx.stroke();
-    this.ctx.closePath();
-
-    if (label) {
-      this.ctx.fillStyle = '#000000';
-      this.ctx.fillText(label, labelPos[0], labelPos[1] - fontSize/2);
-    }
-  }
-
-  drawYTick(y, size, label) {
-    this.drawTick(
-        [this.origin.x - size/2, y],
-        [this.origin.x + size/2, y],
-        [this.origin.x + size,   y + size],
-        label
-      );
-  }
-
-  drawXTick(x, size, label) {
-    let px_x = this.xToPixel(x);
-    let textSize = this.ctx.measureText(label);
-    this.drawTick(
-        [px_x, this.height-size/2],
-        [px_x, this.height+size/2],
-        [px_x-textSize.width/2, this.height-size/2],
-        label
-      );
+    this._drawLine([{
+      x: 0, y: origin.y
+    }, {
+      x: this.width,
+      y: origin.y
+    }], '#222222');
+    this._drawLine([{
+      x: origin.x, y: 0
+    }, {
+      x: origin.x,
+      y: this.height
+    }], '#222222');
   }
 
   pointToPixel(pt) {

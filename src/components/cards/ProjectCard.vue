@@ -2,23 +2,43 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div>{{status !== 'Finished' ? remainingCost : 'Finished'}}</div>
+    <div v-if="kind == 'Policy'">
+      <template v-if="status !== 'Active'">{{remainingCost}}<img :src="assets.icons.political_capital"></template>
+      <template v-else>Implemented</template>
+    </div>
+    <div v-else>{{status !== 'Finished' ? remainingCost : 'Finished'}}</div>
   </template>
-  <template v-slot:front>
-    <figure>
-      <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-      <div v-if="status == 'Building'" class="project-points">
-        <img
-          v-for="_ in points"
-          class="pip"
-          v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
-          :src="assets.resources[type]">
-      </div>
-      <div v-if="hasLevels" class="project-level">
-        Level {{level+1}}
-      </div>
-    </figure>
+  <template v-slot:figure>
+    <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
+    <div v-if="status == 'Building'" class="project-points">
+      <img
+        v-for="_ in points"
+        class="pip"
+        v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
+        :src="assets.resources[type]">
+    </div>
+    <div v-if="hasLevels" class="project-level">
+      Level {{level+1}}
+    </div>
 
+    <div class="opposers">
+      <div>Nay</div>
+      <div>
+        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
+        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
+        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
+      </div>
+    </div>
+    <div class="supporters">
+      <div>Yea</div>
+      <div>
+        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
+        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
+        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
+      </div>
+    </div>
+  </template>
+  <template v-slot:body>
     <Effects :effects="activeEffects" />
 
     <div class="card-actions" v-if="status == 'Inactive' || status == 'Building'">

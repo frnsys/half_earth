@@ -16,6 +16,8 @@ export default {
         return '#43CC70';
       } else if (this.intensity === 2) {
         return '#FBC011';
+      } else if (this.intensity === 3) {
+        return '#f28435';
       } else {
         return '#EF3838';
       }
@@ -39,6 +41,6 @@ export default {
   width: 5px;
   height: 6px;
   display: inline-block;
-  margin: 0 2px;
+  margin: 0 1px;
 }
 </style>

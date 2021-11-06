@@ -3,11 +3,15 @@
   <div class="tip">
     <div class="tip--icon" v-if="icon">
       <img :src="assets.icons[icon]">
+      <img :src="assets.icons[subicon]" v-if="subicon" class="tip--subicon">
+      <img :src="assets.icons[supicon]" v-if="supicon" class="tip--supicon">
     </div>
     <div class="tip--body" v-if="text" v-html="text"></div>
   </div>
-  <ProcessCard v-if="card && card.type == 'Process'" :process="card.data" />
-  <ProjectCard v-if="card && card.type == 'Project'" :project="card.data" />
+  <div class="tip--card">
+    <ProcessCard v-if="card && card.type == 'Process'" :process="card.data" />
+    <ProjectCard v-if="card && card.type == 'Project'" :project="card.data" />
+  </div>
 </div>
 </template>
 
@@ -25,18 +29,19 @@ export default {
       show: false,
       icon: null,
       text: null,
-      card: null
+      card: null,
+      subicon: null,
+      supicon: null,
     }
   },
   created() {
-    console.log('Created');
-    document.body.addEventListener('click', () => {
+    document.body.addEventListener('click', (ev) => {
       this.show = false;
     });
 
     // Probably very hacky
     window.tip = this;
-  }
+  },
 }
 </script>
 
@@ -67,6 +72,19 @@ export default {
 .tip--icon {
   min-width: 36px;
   max-width: 36px;
+  position: relative;
+}
+.tip--subicon {
+  position: absolute;
+  width: 16px;
+  right: -4px;
+  bottom: -4px;
+}
+.tip--supicon {
+  position: absolute;
+  width: 16px;
+  right: -4px;
+  top: -4px;
 }
 .tip--body {
   padding: 0 0.5em;
@@ -74,5 +92,8 @@ export default {
 .tip--body img {
   width: 16px;
   vertical-align: middle;
+}
+.tip--card {
+  pointer-events: auto;
 }
 </style>

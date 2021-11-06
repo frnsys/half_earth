@@ -19,6 +19,7 @@ export default {
     'plant_calories': '🌾',
     'animal_calories': '🥩',
     'emissions': '☁️',
-  }
+  },
+  maxRelationship: 6
 };
 

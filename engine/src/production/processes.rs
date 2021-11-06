@@ -26,6 +26,13 @@ pub enum ProcessStatus {
     Promoted
 }
 
+#[derive(Debug, PartialEq, Serialize)]
+pub enum ProcessChange {
+    Neutral,
+    Expanding,
+    Contracting
+}
+
 #[derive(Debug, Serialize)]
 pub struct Process {
     pub id: usize,
@@ -47,6 +54,8 @@ pub struct Process {
     // this process.
     pub locked: bool,
     pub status: ProcessStatus,
+
+    pub change: ProcessChange,
 }
 
 impl Process {
@@ -82,8 +91,12 @@ pub fn update_mixes(
             let target = if process.is_promoted() { f32::max(PROMOTED_TARGET, target) } else { target };
             if process.mix_share < target {
                 process.mix_share += if process.is_promoted() { f32::max(process.mix_share * 0.1, 0.05) } else { MIX_CHANGE_SPEED };
+                process.change = ProcessChange::Expanding;
             } else if process.mix_share > target {
                 process.mix_share -= if process.is_banned() { process.mix_share * 0.1 } else { MIX_CHANGE_SPEED };
+                process.change = ProcessChange::Contracting;
+            } else {
+                process.change = ProcessChange::Neutral;
             }
             process.mix_share = f32::max(process.mix_share, 0.);
         }

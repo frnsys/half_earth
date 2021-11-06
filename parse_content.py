@@ -23,7 +23,7 @@ use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Cost};
-use crate::production::{Process, ProcessFeature, ProcessStatus};
+use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
@@ -90,6 +90,7 @@ specs = {
         'byproducts': {},
         'locked': 'false',
         'status': 'ProcessStatus::Neutral',
+        'change': 'ProcessChange::Neutral',
         'features': {},
         'output_modifier': 1.0,
     },
@@ -127,7 +128,7 @@ specs = {
     'NPC': {
         'id': None,
         'name': None,
-        'relationship': 0
+        'relationship': 3
     },
     'Probability': {
         'likelihood': None,
@@ -511,7 +512,7 @@ if __name__ == '__main__':
         # by adding an additional condition
         # that the year must be > 2025
         if typ == 'Event':
-            if item['type'] == 'World' and not item.get('starter', False):
+            if item.get('type') == 'World' and not item.get('starter', False):
                 for probability in item.get('probabilities', []):
                     probability['conditions'].append({
                         'comparator': '>',
@@ -667,7 +668,7 @@ if __name__ == '__main__':
 
         all_events[id] = event
 
-        if ev['type'] == 'Icon':
+        if ev.get('type') == 'Icon':
             id = ev['id']
             # kinda hacky
             valid_subtypes = ['Outlook', 'Emissions', 'Electricity', 'PlantCalories']
