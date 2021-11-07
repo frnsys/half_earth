@@ -54,4 +54,14 @@ export default {
   align-items: center;
   z-index: 100;
 }
+.minicard-background {
+  background-size: cover;
+  background-position: center center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}
 </style>

@@ -8,7 +8,7 @@
     </div>
   </template>
   <template v-slot:expanded>
-    <ProcessCard :process="process" />
+    <ProjectCard :project="project" />
   </template>
 </MiniCard>
 </template>
@@ -16,18 +16,18 @@
 <script>
 import state from '/src/state';
 import MiniCard from './MiniCard.vue';
-import ProcessCard from './ProcessCard.vue';
+import ProjectCard from './ProjectCard.vue';
 
 export default {
-  props: ['process'],
+  props: ['project'],
   data() {
     return {
-      ...state.processes[this.process.id],
+      ...state.projects[this.project.id],
     }
   },
   components: {
     MiniCard,
-    ProcessCard,
+    ProjectCard,
   }
 }
 </script>

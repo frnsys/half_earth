@@ -3,6 +3,7 @@ import {reactive} from 'vue';
 const init = {
   gameState: null,
   phase: 'PLANNING',
+  planChanges: [],
 
   // Compare beginning and end
   cycleStartState: {

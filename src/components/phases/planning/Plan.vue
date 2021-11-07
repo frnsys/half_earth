@@ -1,18 +1,21 @@
 <template>
-<div class="planning--page">
-  <header>
-    <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
-  </header>
+<div class="plan">
+  <PlanChangeSelect v-if="showSelect" @close="showSelect = false" />
   <div class="plan--changes">
-    <div class="plan--change" v-for="change in changes">
-      <div class="plan--action">{{change.action}}</div>
-      <MiniProcess :process="change.process" />
-      <div class="plan--cost"><img :src="assets.icons.political_capital">28</div>
-    </div>
     <div class="plan--change">
-      <div class="plan--add-change minicard" @click="addChange">
+      <div class="plan--action">Add</div>
+      <div class="plan--add-change minicard" @click="showSelect = true">
         <img :src="assets.icons.add">
       </div>
+    </div>
+    <div class="plan--change" v-for="change in state.planChanges">
+      <div class="plan--action">{{change.action}}</div>
+      <div v-if="change.type === 'priority'" class="minicard">
+        <img :src="assets.icons[consts.priorities[consts.Priority[change.priority]].icon]" />
+      </div>
+      <MiniProcess v-else-if="change.type === 'process'" :process="change.process" />
+      <MiniProject v-else-if="change.type === 'project'" :project="change.project" />
+      <div class="plan--cost"><img :src="assets.icons.political_capital">28</div>
     </div>
   </div>
   <div class="plan--charts">
@@ -30,7 +33,9 @@
 import game from '/src/game';
 import state from '/src/state';
 import Chart from './Chart.vue';
+import PlanChangeSelect from './PlanChangeSelect.vue';
 import MiniProcess from 'components/cards/MiniProcess.vue';
+import MiniProject from 'components/cards/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
 
@@ -49,6 +54,7 @@ export default {
   components: {
     Chart,
     MiniProcess,
+    PlanChangeSelect,
   },
   created() {
     this.charts = charts;
@@ -56,31 +62,7 @@ export default {
   data() {
     return {
       state,
-      changes: [{
-        action: 'Ban',
-        process: state.gameState.processes[0],
-      }, {
-        action: 'Promote',
-        process: state.gameState.processes[1],
-      }, {
-        action: 'Promote',
-        process: state.gameState.processes[2],
-      }, {
-        action: 'Ban',
-        process: state.gameState.processes[3],
-      }, {
-        action: 'Ban',
-        process: state.gameState.processes[4],
-      }, {
-        action: 'Promote',
-        process: state.gameState.processes[5],
-      }, {
-        action: 'Promote',
-        process: state.gameState.processes[6],
-      }, {
-        action: 'Ban',
-        process: state.gameState.processes[8],
-      }],
+      showSelect: false,
       chart: 'land',
       ranges: {
         x: [0, years],
@@ -161,7 +143,47 @@ export default {
     setChart(key) {
       this.chart = key;
     },
-    addChange() {
+    applyChanges() {
+      let cost = 0;
+      state.changes.forEach((change) => {
+        switch (change.type) {
+          case 'priority': {
+            game.setPriority(change.value);
+            break;
+          }
+          case 'process': {
+            let p = change.process.id;
+            switch (change.action) {
+              case 'ban': {
+                game.banProcess(p.id);
+              }
+              case 'unban': {
+                game.unbanProcess(p.id);
+              }
+              case 'promote': {
+                game.promoteProcess(p.id);
+              }
+              case 'unpromote': {
+                game.unpromoteProcess(p.id);
+              }
+            }
+            break;
+          }
+          case 'project': {
+            let p = change.project.id;
+            switch (change.action) {
+              case 'start': {
+                game.setProjectPoints(this.id, this.points - 1);
+              }
+              case 'stop': {
+              }
+              case 'implement': {
+              }
+            }
+          }
+        }
+      });
+      game.changePoliticalCapital(-cost);
     }
   }
 }
@@ -170,14 +192,48 @@ export default {
 <style>
 .plan--changes {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  height: 350px;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  flex-direction: column;
 }
 .plan--change {
   width: 80px;
   text-align: center;
-  margin: 0.5em 0;
+  margin: 0.5em 0.25em;
+}
+.plan--action {
+  text-transform: uppercase;
+  font-size: 0.85em;
+}
+        game.unpromoteProcess(p.id);
+            }
+            break;
+          }
+        }
+      });
+      game.changePoliticalCapital(-cost);
+    }
+  }
+}
+</script>
+
+<style>
+.plan--changes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 350px;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  flex-direction: column;
+}
+.plan--change {
+  width: 80px;
+  text-align: center;
+  margin: 0.5em 0.25em;
 }
 .plan--action {
   text-transform: uppercase;
@@ -215,5 +271,19 @@ export default {
 .plan--add-change {
   border: 1px solid #b39d72;
   background: #e6d3af;
+}
+
+.plan > header {
+  display: flex;
+  border-bottom: 1px solid #000;
+}
+.plan > header div {
+  flex: 1;
+  text-align: center;
+  padding: 0.25em;
+  border-right: 1px solid #000;
+}
+.plan > header div:last-child {
+  border-right: none;
 }
 </style>

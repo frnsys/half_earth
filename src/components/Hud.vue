@@ -39,7 +39,7 @@ export default {
   justify-content: space-between;
   padding: 0 0.5em;
   font-size: 0.75em;
-  z-index: 1;
+  z-index: 5;
 }
 .hud img {
   height: 12px;

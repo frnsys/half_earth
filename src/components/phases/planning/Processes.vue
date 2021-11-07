@@ -1,8 +1,5 @@
 <template>
 <div class="planning--page">
-  <header>
-    <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
-  </header>
   <Cards>
     <ProcessCard v-for="p in processes" :process="p">
       <template v-slot:actions>
@@ -33,12 +30,19 @@
       </template>
     </ProcessCard>
   </Cards>
+  <div class="production--demand planning--demand">
+    <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
+      {{demand[k]}}{{consts.icons[k]}}
+    </div>
+    <div v-tip="{text: 'Global CO2eq emissions.', icon: 'emissions'}">{{emissions}}{{consts.icons['emissions']}}</div>
+  </div>
 </div>
 </template>
 
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import display from 'lib/display';
 import Cards from './Cards.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import {nearestMultiple} from '/src/lib/util';
@@ -57,6 +61,12 @@ export default {
     processes() {
       return state.gameState.processes.filter((p) => !p.locked);
     },
+    demand() {
+      return display.outputs(state.gameState.output_demand);
+    },
+    emissions() {
+      return display.gtco2eq(state.gameState.byproducts);
+    }
   },
   methods: {
     banProcessCost(p) {

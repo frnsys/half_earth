@@ -1,8 +1,5 @@
 <template>
 <div class="planning--page">
-  <header>
-    <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
-  </header>
   <Cards>
     <NPCCard v-for="npc in npcs" :npc="npc" />
   </Cards>

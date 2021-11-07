@@ -49,9 +49,9 @@ export default {
   },
   computed: {
     relationshipName() {
-      if (this.relationship >= 7) {
+      if (this.relationship >= 5) {
         return 'Ally';
-      } else if (this.relationship <= 3) {
+      } else if (this.relationship <= 1) {
         return 'Nemesis';
       } else {
         return 'Neutral';

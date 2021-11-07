@@ -2,20 +2,16 @@
 <Hud />
 <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" @select="selectChoice" />
 <div class="planning">
-  <Research v-if="page == PAGES.RESEARCH" @close="page = null" />
-  <Policies v-else-if="page == PAGES.POLICIES" @close="page = null" />
-  <Initiatives v-else-if="page == PAGES.INITIATIVES" @close="page = null" />
-  <Processes v-else-if="page == PAGES.PROCESSES" @close="page = null" />
-  <Coalition v-else-if="page == PAGES.COALITION" @close="page = null" />
-  <Priorities v-else-if="page == PAGES.PRIORITIES" @close="page = null" />
-  <Dashboard v-else-if="page == PAGES.DASHBOARD" @close="page = null" />
-  <Plan v-else-if="page == PAGES.PLAN" @close="page = null" />
-  <div v-else class="planning--menu">
-    <button v-for="p in Object.keys(PAGES)" @click="select(p)">
-      <img :src="ICONS[p]" />
-      {{p}}
-    </button>
-  </div>
+  <header>
+    <div :class="{active: page == PAGES.PLAN}" @click="page = PAGES.PLAN">Plan</div>
+    <div :class="{active: page == PAGES.COALITION}" @click="page = PAGES.COALITION">Coalition</div>
+    <div :class="{active: page == PAGES.DASHBOARD}" @click="page = PAGES.DASHBOARD">Dashboard</div>
+  </header>
+
+  <Plan v-if="page == PAGES.PLAN" />
+  <Coalition v-else-if="page == PAGES.COALITION" />
+  <Dashboard v-else-if="page == PAGES.DASHBOARD" />
+
   <div class="production--demand planning--demand">
     <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
       {{demand[k]}}{{consts.icons[k]}}
@@ -29,56 +25,29 @@
 import game from '/src/game';
 import state from '/src/state';
 import display from 'lib/display';
-import Research from './Research.vue';
-import Policies from './Policies.vue';
-import Processes from './Processes.vue';
-import Initiatives from './Initiatives.vue';
+import Hud from 'components/Hud.vue';
 import Coalition from './Coalition.vue';
 import Dashboard from './Dashboard.vue';
-import Priorities from './Priorities.vue';
 import Plan from './Plan.vue';
 import EventsMixin from 'components/EventsMixin';
-import Hud from 'components/Hud.vue';
 import EVENTS from '/assets/content/events.json';
 
 const PAGES = {
-  RESEARCH: 0,
-  INITIATIVES: 1,
-  POLICIES: 2,
-  PROCESSES: 3,
-  COALITION: 4,
-  DASHBOARD: 5,
-  PRIORITIES: 6,
-  PLAN: 7,
-  CONTINUE: 8
-};
-
-const ICONS = {
-  'CONTINUE': '/assets/placeholders/earth_win98.png',
-  'POLICIES': '/assets/placeholders/policy_win98.png',
-  'RESEARCH': '/assets/placeholders/research_win98.png',
-  'INITIATIVES': '/assets/placeholders/initiatives_win98.png',
-  'PROCESSES': '/assets/placeholders/processes_win98.png',
-  'COALITION': '/assets/placeholders/coalition_win98.png',
-  'DASHBOARD': '/assets/placeholders/chart.png',
+  PLAN: 0,
+  COALITION: 1,
+  DASHBOARD: 2,
 };
 
 export default {
   mixins: [EventsMixin],
   components: {
     Hud,
-    Research,
-    Policies,
-    Initiatives,
-    Processes,
     Coalition,
     Dashboard,
-    Priorities,
     Plan,
   },
   created() {
     this.PAGES = PAGES;
-    this.ICONS = ICONS;
   },
   mounted() {
     this.showEvent();
@@ -109,7 +78,7 @@ export default {
       state,
       events: eventsByPage[null],
       eventsByPage,
-      page: null,
+      page: PAGES.PLAN,
     }
   },
   computed: {
@@ -166,17 +135,19 @@ export default {
 .pips {
   padding: 0.5em;
   margin: 0.25em;
-  border: 1px solid #454340;
-  border-radius: 0.2em;
   position: relative;
   text-align: center;
+  font-size: 1.2em;
+  color: #fff;
 }
 .pips--buy {
   cursor: pointer;
   user-select: none;
+  border-radius: 0.2em;
+  background: rgba(0,0,0,0.1);
 }
 .pips--buy:hover {
-  background: #eae7e7;
+  background: rgba(255,255,255,0.3);
 }
 .pip-in-use {
   opacity: 0.5;
@@ -189,21 +160,12 @@ export default {
 }
 .planning--page .cards {
   flex: 1;
+  margin-top: 1em;
 }
 .planning--page .card header img {
   width: 12px;
   vertical-align: middle;
   margin-top: -2px;
-}
-
-.planning--page > header {
-  padding: 0.5em;
-  display: flex;
-  justify-content: space-between;
-}
-.planning--page .back {
-  width: 32px;
-  cursor: pointer;
 }
 
 .project--upgrade--title {
@@ -235,5 +197,28 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.planning > header {
+  display: flex;
+  border-bottom: 1px solid #000;
+}
+.planning > header div {
+  flex: 1;
+  text-align: center;
+  padding: 0.25em;
+  border-right: 1px solid #000;
+}
+.planning > header div.active {
+  background: #e47d4a;
+  color: #fff;
+}
+.planning > header div:last-child {
+  border-right: none;
+}
+
+.planning--page > footer {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

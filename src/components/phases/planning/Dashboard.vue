@@ -1,8 +1,5 @@
 <template>
 <div class="planning--page">
-  <header>
-    <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
-  </header>
   <div class="planning--dashboard">
     <div>Population: {{state.gameState.population.toLocaleString()}}</div>
     <div>Land Use: {{parseInt((state.gameState.resources_demand.land * 1e-6).toFixed(0)).toLocaleString()}}km2</div>
