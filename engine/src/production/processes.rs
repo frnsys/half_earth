@@ -1,5 +1,5 @@
 use serde::Serialize;
-use super::{ProductionOrder, planner};
+use super::{ProductionOrder, Priority, planner};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Output, Feedstock};
 
 const MIX_CHANGE_SPEED: f32 = 0.01;
@@ -19,21 +19,21 @@ pub enum ProcessFeature {
     IsCombustion,
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum ProcessStatus {
     Neutral,
     Banned,
     Promoted
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum ProcessChange {
     Neutral,
     Expanding,
     Contracting
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct Process {
     pub id: usize,
     pub name: &'static str,
@@ -84,8 +84,9 @@ pub fn update_mixes(
     processes: &mut [Process],
     demand: &OutputMap<f32>,
     resource_weights: &ResourceMap<f32>,
-    feedstock_weights: &FeedstockMap<f32>) {
-    let target_mix = planner::calculate_mix(&processes, &demand, &resource_weights, &feedstock_weights);
+    feedstock_weights: &FeedstockMap<f32>,
+    priority: &Priority) {
+    let target_mix = planner::calculate_mix(&processes, &demand, &resource_weights, &feedstock_weights, &priority);
     for (process, target) in processes.iter_mut().zip(target_mix) {
         if !process.locked {
             let target = if process.is_promoted() { f32::max(PROMOTED_TARGET, target) } else { target };

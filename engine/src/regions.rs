@@ -4,7 +4,7 @@ use serde::Serialize;
 
 const DEVELOP_SPEED: f32 = 0.03;
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 pub struct Region {
     pub id: usize,
 
@@ -109,7 +109,7 @@ impl Region {
     }
 }
 
-#[derive(PartialEq, Serialize)]
+#[derive(PartialEq, Serialize, Clone)]
 pub enum Income {
     Low,
     LowerMiddle,

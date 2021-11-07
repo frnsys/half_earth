@@ -52,6 +52,13 @@
         </label>
         <input type="checkbox" :id="`${item.id}_ongoing`" v-model="localData.ongoing">
       </div>
+      <div class="checkbox" v-if="localData.type == 'Initiative'">
+        <label :for="`${item.id}_gradual`">
+          Gradual
+          <Tip>Does this project have to be 100% finished before the effects occur, or do they develop as the project is developed?</Tip>
+        </label>
+        <input type="checkbox" :id="`${item.id}_gradual`" v-model="localData.gradual">
+      </div>
       <div class="checkbox">
         <label :for="`${item.id}_locked`">
           Locked

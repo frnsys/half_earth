@@ -34,6 +34,7 @@ export default {
     wealth: require('/assets/icons/wealth.png'),
     relationship: require('/assets/icons/relationship.png'),
     relationship_empty: require('/assets/icons/relationship_empty.png'),
+    add: require('/assets/icons/add.svg'),
 
     // Industries
     aviation: require('/assets/icons/industries/aviation.png'),

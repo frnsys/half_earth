@@ -4,38 +4,59 @@
     <img class="back" @click="$emit('close')" src="/assets/icons/back.svg">
   </header>
   <div class="planning--menu priority--menu">
-    <button v-for="name, p in priorities" @click="select(p)" :class="{selected: p == priority}">
-      <div>{{p == 'output' ? 'Maximize' : 'Minimize'}}</div>
-      <img :src="assets.icons[p]" />
-      <div>{{name}}</div>
+    <button v-for="d, p in priorities" @click="select(p)" :class="{selected: Priority[p] == state.gameState.priority}">
+      <img :src="assets.icons[d.icon]" />
+      <div>{{d.name}}</div>
     </button>
   </div>
 </div>
 </template>
 
 <script>
+import game from '/src/game';
+import state from '/src/state';
+import {Priority} from 'half-earth-engine';
+
 const priorities = {
-  'output': 'output',
-  'land': 'land use',
-  'emissions': 'emissions',
-  'energy': 'energy use',
-  'labor': 'labor',
-  'water': 'water use',
+  [Priority.Scarcity]: {
+    icon: 'output',
+    name: 'Scarcity',
+  },
+  [Priority.Land]: {
+    icon: 'land',
+    name: 'Land Use',
+  },
+  [Priority.Emissions]: {
+    icon: 'emissions',
+    name: 'Emissions',
+  },
+  [Priority.Energy]: {
+    icon: 'energy',
+    name: 'Energy Use',
+  },
+  [Priority.Labor]: {
+    icon: 'labor',
+    name: 'Labor',
+  },
+  [Priority.Water]: {
+    icon: 'water',
+    name: 'Water Use',
+  },
 };
 
 export default {
   data() {
     return {
-      priority: 'output',
+      state,
     }
   },
   created() {
+    this.Priority = Priority;
     this.priorities = priorities;
   },
   methods: {
     select(priority) {
-      // TODO set in game
-      this.priority = priority;
+      game.setPriority(priority);
     }
   }
 }

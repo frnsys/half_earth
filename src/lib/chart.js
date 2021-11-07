@@ -98,7 +98,6 @@ class Chart {
         height + 2*padding);
     }
     this.ctx.fillStyle = color || '#000000';
-    console.log(this.ctx.fillStyle);
     this.ctx.fillText(text, px.x, px.y);
   }
 

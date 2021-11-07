@@ -1,14 +1,24 @@
+use serde::Serialize;
 use super::processes::{Process, ProcessStatus};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Feedstock};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
+#[derive(Serialize, Clone)]
 pub enum Priority {
-    Output,
+    Scarcity,
     Land,
     Emissions,
     Energy,
     Labor,
     Water,
+}
+
+impl Default for Priority {
+    fn default() -> Self {
+        Priority::Scarcity
+    }
 }
 
 #[derive(Debug)]
@@ -125,7 +135,7 @@ pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap<f32>, Feed
 /// Here "ideal" means one that minimizes resource usages, weighted by the provided resource
 /// weights, while meeting demand.
 /// This is intended to be used on a per-sector basis.
-pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>) -> Vec<f32> {
+pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>, priority: &Priority) -> Vec<f32> {
     let mut vars = variables!();
     let mut total_intensity: Expression = 0.into();
 
@@ -139,12 +149,30 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
             vars.add(variable().min(0).max(0))
         };
         total_produced[process.output] += amount_to_produce;
-        for (k, v) in process.resources.items() {
-            total_intensity += amount_to_produce * *v * resource_weights[k];
+        // TODO test
+        match priority {
+            Priority::Scarcity => {
+                for (k, v) in process.resources.items() {
+                    total_intensity += amount_to_produce * *v * resource_weights[k];
+                }
+            },
+            Priority::Land => {
+                total_intensity += amount_to_produce * process.resources.land;
+            },
+            Priority::Labor => {
+                // TODO
+            },
+            Priority::Water => {
+                total_intensity += amount_to_produce * process.resources.water;
+            },
+            Priority::Energy => {
+                total_intensity += amount_to_produce * (process.resources.electricity + process.resources.fuel);
+            },
+            Priority::Emissions => {
+                let emissions = process.byproducts.co2 + (process.byproducts.n2o * 298.) + (process.byproducts.ch4 * 36.);
+                total_intensity += amount_to_produce * emissions;
+            },
         }
-        // TODO for some reason introducing this causes production to go to infinity?
-        // let emissions = process.byproducts.co2 + (process.byproducts.n2o * 298.) + (process.byproducts.ch4 * 36.);
-        // total_intensity += amount_to_produce * emissions;
 
         // let (feedstock, amount) = process.feedstock;
         // total_intensity += amount_to_produce * amount * feedstock_weights[feedstock];

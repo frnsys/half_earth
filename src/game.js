@@ -102,6 +102,16 @@ function setTgav(tgav) {
   updateState();
 }
 
+function setPriority(priority) {
+  game.set_priority(priority);
+  updateState();
+}
+
+
+function simulate(years) {
+  return game.simulate(years);
+}
+
 const roll = {
   planningEvents: () => game.roll_planning_events(),
   worldStartEvents: () => game.roll_world_start_events(),
@@ -112,9 +122,10 @@ updateState();
 export default {
   newRun, stepUpdate,
   updateState, setTgav,
+  setPriority,
   changePoliticalCapital,
   changeLocalOutlook,
   banProcess, unbanProcess,
   promoteProcess, unpromoteProcess,
   setProjectPoints, startProject, stopProject, upgradeProject,
-  selectChoice, applyEvent, roll};
+  selectChoice, applyEvent, roll, simulate};

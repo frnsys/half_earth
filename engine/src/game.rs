@@ -2,7 +2,7 @@ use crate::npcs::NPC;
 use crate::world::World;
 use crate::industries::Industry;
 use crate::projects::{Project, Status, Type as ProjectType};
-use crate::production::{ProductionOrder, Process, ProcessStatus, produce, calculate_required, update_mixes};
+use crate::production::{ProductionOrder, Priority, Process, ProcessStatus, produce, calculate_required, update_mixes};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::events::{EventPool, Effect, Flag, Type as EventType};
 use crate::{content, consts};
@@ -61,7 +61,7 @@ impl GameInterface {
     pub fn set_event_choice(&mut self, event_id: usize, region_id: Option<usize>, choice_id: usize) {
         let effects = self.game.set_event_choice(event_id, choice_id);
         for effect in effects {
-            effect.apply(&mut self.game, region_id);
+            effect.apply(&mut self.game.state, &mut self.game.event_pool, region_id);
         }
     }
 
@@ -82,7 +82,7 @@ impl GameInterface {
         }
 
         for effect in effects {
-            effect.apply(&mut self.game, None);
+            effect.apply(&mut self.game.state, &mut self.game.event_pool, None);
         }
     }
 
@@ -151,6 +151,10 @@ impl GameInterface {
         self.game.state.world.temperature = tgav + self.game.state.world.temperature_modifier;
     }
 
+    pub fn set_priority(&mut self, priority: Priority) {
+        self.game.state.priority = priority;
+    }
+
     pub fn active_autoclickers(&self) -> Result<JsValue, JsValue> {
         let projects = self.game.state.projects.iter().filter(|p| p.status == Status::Active || p.status == Status::Finished);
         let autoclicks: Vec<&Effect> = projects.flat_map(|p| p.active_effects().iter().filter(|e| match e {
@@ -166,6 +170,10 @@ impl GameInterface {
 
     pub fn total_income_level(&self) -> f32 {
         self.game.state.world.regions.iter().map(|r| r.adjusted_income()).sum()
+    }
+
+    pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue>  {
+        Ok(serde_wasm_bindgen::to_value(&self.game.simulate(&mut self.rng, years))?)
     }
 }
 
@@ -185,6 +193,7 @@ impl Game {
             hes_points: 0,
             falc_points: 0,
             flags: Vec::new(),
+            priority: Priority::Scarcity,
 
             world: content::world(difficulty),
             projects: content::projects(),
@@ -238,7 +247,7 @@ impl Game {
     pub fn step(&mut self, rng: &mut SmallRng) -> Vec<usize> {
         let (completed_projects, effects) = self.state.step_projects(rng);
         for (effect, region_id) in effects {
-            effect.apply(self, region_id);
+            effect.apply(&mut self.state, &mut self.event_pool, region_id);
         }
         self.state.step_production();
         self.state.step_world();
@@ -246,19 +255,31 @@ impl Game {
         completed_projects
     }
 
-    pub fn project(&self, rng: &mut SmallRng, years: usize) -> State {
-        let state = self.state.clone();
+    /// Generate a projection
+    pub fn simulate(&self, rng: &mut SmallRng, years: usize) -> Vec<Snapshot> {
+        let mut snapshots: Vec<Snapshot> = Vec::new();
 
+        // TODO can probably re structure all of this so
+        // that there is only a struct that deals with all things production
+        // rather than having to clone the entire state
+        let mut state = self.state.clone();
+
+        // Dummy event pool
+        let mut event_pool = EventPool::new(content::events());
         for _ in 0..years {
-            let (completed_projects, effects) = state.step_projects(rng);
+            let (_completed_projects, effects) = state.step_projects(rng);
             for (effect, region_id) in effects {
-                effect.apply(self, region_id);
+                effect.apply(&mut state, &mut event_pool, region_id);
             }
             state.step_production();
             state.step_world();
+            snapshots.push(Snapshot {
+                land_use: state.resources_demand.land,
+                emissions: state.world.emissions(),
+            });
         }
 
-        state
+        snapshots
     }
 
     pub fn roll_events_of_kind(&mut self, kind: EventType, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
@@ -275,7 +296,7 @@ impl Game {
         }
 
         for (effect, region_id) in effects {
-            effect.apply(self, region_id);
+            effect.apply(&mut self.state, &mut self.event_pool, region_id);
         }
     }
 
@@ -301,10 +322,10 @@ impl Game {
         }
 
         for effect in remove_effects {
-            effect.unapply(self, None);
+            effect.unapply(&mut self.state, &mut self.event_pool, None);
         }
         for effect in add_effects {
-            effect.apply(self, None);
+            effect.apply(&mut self.state, &mut self.event_pool, None);
         }
     }
 }
@@ -317,6 +338,7 @@ pub struct State {
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
+    pub priority: Priority,
 
     pub political_capital: isize,
     pub malthusian_points: usize,
@@ -394,8 +416,16 @@ impl State {
             Status::Building => true,
             _ => false
         }) {
+            let prev_progress = project.progress;
             let completed = project.build();
-            if completed {
+            if project.gradual {
+                // TODO need to run tests for all effects to ensure that
+                // applying effects piecemeal like this the same as applying the
+                // effect all at once.
+                for effect in &project.effects {
+                    effects.push((effect.clone() * (project.progress - prev_progress), None));
+                }
+            } else if completed {
                 for effect in &project.effects {
                     effects.push((effect.clone(), None));
                 }
@@ -506,7 +536,7 @@ impl State {
         let feedstock_weights = required_feedstocks / self.feedstocks;
 
         // Update mixes according to resource scarcity
-        update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights);
+        update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights, &self.priority);
     }
 
     pub fn step_world(&mut self) {
@@ -541,4 +571,10 @@ impl State {
         }
         completed
     }
+}
+
+#[derive(Serialize)]
+pub struct Snapshot {
+    land_use: f32,
+    emissions: f32,
 }

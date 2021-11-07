@@ -106,6 +106,7 @@ specs = {
         'locked': 'false',
         'status': 'ProjectStatus::Inactive',
         'ongoing': 'false',
+        'gradual': 'false',
         'outcomes': [],
         'estimate': 0,
         'points': 0,

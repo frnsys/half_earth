@@ -4,8 +4,7 @@ use crate::events::{Effect, Probability};
 use rand::{Rng, rngs::SmallRng};
 use serde::Serialize;
 
-#[derive(Serialize)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Debug, Copy, Clone, PartialEq)]
 pub enum Status {
     Inactive,
     Building,
@@ -20,8 +19,7 @@ impl Default for Status {
     }
 }
 
-#[derive(Serialize)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Debug, Copy, Clone, PartialEq)]
 pub enum Type {
     Policy,
     Research,
@@ -34,7 +32,7 @@ impl Default for Type {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 pub enum Cost {
     Fixed(usize),
     Dynamic(f32, Output),
@@ -46,7 +44,7 @@ impl Default for Cost {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
 
@@ -54,21 +52,20 @@ pub struct Outcome {
     pub probability: Probability,
 }
 
-#[derive(Serialize)]
-#[derive(Default)]
+#[derive(Serialize, Default, Clone)]
 pub struct Upgrade {
     pub cost: usize,
     pub effects: Vec<Effect>,
     pub active: bool,
 }
 
-#[derive(Serialize)]
-#[derive(Default)]
+#[derive(Serialize, Default, Clone)]
 pub struct Project {
     pub id: usize,
     pub name: &'static str,
     pub kind: Type,
     pub ongoing: bool,
+    pub gradual: bool,
     pub locked: bool,
 
     // For policies, the cost is the political capital cost;

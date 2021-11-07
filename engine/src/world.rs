@@ -2,7 +2,7 @@ use serde::Serialize;
 use crate::kinds::{OutputMap, ByproductMap};
 use crate::regions::{Region, Income};
 
-#[derive(Default, Serialize)]
+#[derive(Default, Serialize, Clone)]
 pub struct World {
     pub year: usize,
     pub extinction_rate: f32,

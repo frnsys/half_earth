@@ -1164,6 +1164,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1187,6 +1188,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1211,6 +1213,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1248,6 +1251,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -1293,6 +1297,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1315,6 +1320,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1340,6 +1346,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1364,6 +1371,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1388,6 +1396,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1426,6 +1435,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1452,6 +1462,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1476,6 +1487,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1500,6 +1512,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1525,6 +1538,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1549,6 +1563,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1573,6 +1588,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1597,6 +1613,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1623,6 +1640,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1647,6 +1665,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1671,6 +1690,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -1716,6 +1736,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1742,6 +1763,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1767,6 +1789,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1950,6 +1973,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1975,6 +1999,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -1999,6 +2024,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2024,6 +2050,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2048,6 +2075,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2072,6 +2100,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2094,6 +2123,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2118,6 +2148,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2142,6 +2173,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2166,6 +2198,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2190,6 +2223,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -2235,6 +2269,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2257,6 +2292,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2281,6 +2317,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2303,6 +2340,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2327,6 +2365,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -2370,6 +2409,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2392,6 +2432,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2416,6 +2457,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -2459,6 +2501,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2483,6 +2526,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2505,6 +2549,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2527,6 +2572,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2551,6 +2597,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -2585,6 +2632,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2607,6 +2655,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2631,6 +2680,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2653,6 +2703,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2675,6 +2726,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2697,6 +2749,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2722,6 +2775,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2744,6 +2798,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2768,6 +2823,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2792,6 +2848,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: true,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2819,6 +2876,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2843,6 +2901,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2868,6 +2927,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2892,6 +2952,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2916,6 +2977,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -2954,6 +3016,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3004,6 +3067,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3059,6 +3123,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3105,6 +3170,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3129,6 +3195,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3208,6 +3275,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3232,6 +3300,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -3254,6 +3323,7 @@ pub fn projects() -> Vec<Project> {
             locked: true,
             status: ProjectStatus::Inactive,
             ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -7313,32 +7383,32 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 0,
             name: "The Ecologist",
-            relationship: 5.0
+            relationship: 3.0
         },
         NPC {
             id: 1,
             name: "The Agronomist",
-            relationship: 5.0
+            relationship: 3.0
         },
         NPC {
             id: 2,
             name: "The Malthusians",
-            relationship: 5.0
+            relationship: 3.0
         },
         NPC {
             id: 3,
             name: "The Fully-Automated Luxury Communists",
-            relationship: 5.0
+            relationship: 3.0
         },
         NPC {
             id: 4,
             name: "The Half-Earth Socialists",
-            relationship: 5.0
+            relationship: 3.0
         },
         NPC {
             id: 5,
             name: "The Authoritarian",
-            relationship: 5.0
+            relationship: 3.0
         }
     ]
 }

@@ -9,6 +9,11 @@
       <MiniProcess :process="change.process" />
       <div class="plan--cost"><img :src="assets.icons.political_capital">28</div>
     </div>
+    <div class="plan--change">
+      <div class="plan--add-change minicard" @click="addChange">
+        <img :src="assets.icons.add">
+      </div>
+    </div>
   </div>
   <div class="plan--charts">
     <div class="plan--charts--tabs">
@@ -22,6 +27,7 @@
 </template>
 
 <script>
+import game from '/src/game';
 import state from '/src/state';
 import Chart from './Chart.vue';
 import MiniProcess from 'components/cards/MiniProcess.vue';
@@ -79,10 +85,14 @@ export default {
       ranges: {
         x: [0, years],
         y: [0, 1],
-      },
+      }
     }
   },
   computed: {
+    simulated() {
+      let n = years - (this.historical.data.length - 1);
+      return game.simulate(n);
+    },
     datasets() {
       return [
         this.historical,
@@ -125,11 +135,24 @@ export default {
       }
     },
     projection() {
+      let key;
+      let multiplier = 1;
+      switch (this.chart) {
+        case 'land':
+          key = 'land_use';
+          multiplier = 1/totalLand;
+          break;
+        case 'emissions':
+          key = 'emissions';
+          multiplier = 1/100 * 1e-15; // g to Gt
+          break;
+      }
+      let data = this.simulated.map((d, i) => ({
+        x: i + this.historical.data.length - 1,
+        y: d[key] * multiplier
+      }));
       return {
-        data: [...Array(80).keys()].map((i) => ({
-          x: i + this.historical.data.length,
-          y: Math.random()
-        })),
+        data,
         color: '#CDB6AD'
       }
     }
@@ -137,6 +160,8 @@ export default {
   methods: {
     setChart(key) {
       this.chart = key;
+    },
+    addChange() {
     }
   }
 }
@@ -147,6 +172,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  align-items: center;
 }
 .plan--change {
   width: 80px;
@@ -184,5 +210,10 @@ export default {
 .plan--charts--tabs > div.active {
   background: #222;
   color: #fff;
+}
+
+.plan--add-change {
+  border: 1px solid #b39d72;
+  background: #e6d3af;
 }
 </style>
