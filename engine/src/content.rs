@@ -414,7 +414,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 1,
@@ -439,7 +441,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 2,
@@ -464,7 +468,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 3,
@@ -489,7 +495,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 4,
@@ -515,7 +523,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 5,
@@ -540,7 +550,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesLivestock
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 6,
@@ -560,7 +572,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 7,
@@ -580,7 +594,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsNuclear
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 8,
@@ -608,7 +624,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 9,
@@ -634,7 +652,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 10,
@@ -662,7 +682,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 11,
@@ -688,7 +710,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::UsesLivestock
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 12,
@@ -713,7 +737,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 13,
@@ -738,7 +764,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 14,
@@ -763,7 +791,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 15,
@@ -788,7 +818,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsNuclear
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 16,
@@ -813,7 +845,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 17,
@@ -838,7 +872,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsIntermittent
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 18,
@@ -864,7 +900,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsIntermittent,
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 19,
@@ -889,7 +927,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 20,
@@ -914,7 +954,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 21,
@@ -941,7 +983,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 22,
@@ -966,7 +1010,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 23,
@@ -991,7 +1037,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 24,
@@ -1017,7 +1065,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 25,
@@ -1042,7 +1092,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 26,
@@ -1067,7 +1119,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsCCS
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 27,
@@ -1092,7 +1146,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 28,
@@ -1118,7 +1174,9 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsIntermittent,
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![],
+            opposers: vec![]
         },
         Process {
             id: 29,
@@ -1129,12 +1187,12 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 7.5583333,
                 fuel: 0.0,
-                water: 2.03,
-                land: 0.072
+                land: 0.072,
+                water: 2.03
             ),
             byproducts: byproducts!(
-                co2: 655.7,
                 ch4: 0.0,
+                co2: 655.7,
                 n2o: 0.0
             ),
             locked: true,
@@ -1143,7 +1201,9 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0
+            output_modifier: 1.0,
+            supporters: vec![4],
+            opposers: vec![5, 3]
         }
     ]
 }
@@ -1171,7 +1231,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 1,
@@ -1197,7 +1259,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 2,
@@ -1235,7 +1299,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 3,
@@ -1281,7 +1347,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 4,
@@ -1304,7 +1372,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 5,
@@ -1329,7 +1399,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 6,
@@ -1355,7 +1427,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 7,
@@ -1380,7 +1454,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 8,
@@ -1418,7 +1494,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::AddFlag(Flag::EnergyStorage3)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 9,
@@ -1444,11 +1522,13 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 10,
-            name: "Expand & Upgrade Public Transit",
+            name: "Expand Public Transit",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
@@ -1471,7 +1551,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 11,
@@ -1496,7 +1578,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 12,
@@ -1521,7 +1605,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 13,
@@ -1547,7 +1633,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 14,
@@ -1572,7 +1660,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 15,
@@ -1597,7 +1687,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 16,
@@ -1622,7 +1714,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 17,
@@ -1649,7 +1743,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 18,
@@ -1674,7 +1770,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 19,
@@ -1720,7 +1818,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 20,
@@ -1745,7 +1845,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 21,
@@ -1772,7 +1874,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 22,
@@ -1957,7 +2061,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::DemandAmount(Output::Electricity, 73500000000000.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 23,
@@ -1982,7 +2088,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 24,
@@ -2008,7 +2116,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 25,
@@ -2033,7 +2143,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 26,
@@ -2059,7 +2171,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 27,
@@ -2084,7 +2198,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 28,
@@ -2107,7 +2223,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 29,
@@ -2132,7 +2250,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 30,
@@ -2157,7 +2277,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 31,
@@ -2182,7 +2304,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 32,
@@ -2207,7 +2331,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 33,
@@ -2253,7 +2379,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 34,
@@ -2276,7 +2404,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 35,
@@ -2301,7 +2431,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 36,
@@ -2324,7 +2456,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 37,
@@ -2349,7 +2483,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 38,
@@ -2393,7 +2529,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 39,
@@ -2416,7 +2554,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 40,
@@ -2441,7 +2581,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 41,
@@ -2485,7 +2627,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 42,
@@ -2510,7 +2654,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 43,
@@ -2533,7 +2679,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 44,
@@ -2556,7 +2704,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 45,
@@ -2581,7 +2731,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 46,
@@ -2616,7 +2768,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 47,
@@ -2639,7 +2793,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 48,
@@ -2664,7 +2820,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 49,
@@ -2687,7 +2845,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 50,
@@ -2710,7 +2870,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 51,
@@ -2733,7 +2895,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 52,
@@ -2758,7 +2922,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 53,
@@ -2782,7 +2948,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 54,
@@ -2807,7 +2975,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 55,
@@ -2832,7 +3002,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 56,
@@ -2857,7 +3029,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 57,
@@ -2885,7 +3059,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 58,
@@ -2910,7 +3086,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 59,
@@ -2936,7 +3114,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 60,
@@ -2961,7 +3141,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 61,
@@ -2999,7 +3181,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::AutoClick(102, 75.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 62,
@@ -3051,7 +3235,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::AutoClick(86, 25.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 63,
@@ -3107,7 +3293,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::AutoClick(82, 10.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 64,
@@ -3154,7 +3342,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::AutoClick(94, 50.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 65,
@@ -3179,7 +3369,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 66,
@@ -3259,7 +3451,9 @@ pub fn projects() -> Vec<Project> {
                         Effect::ProtectLand(90.0)
                     ]
                 }
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 67,
@@ -3284,7 +3478,9 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![
 
-            ]
+            ],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 68,
@@ -3307,7 +3503,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         },
         Project {
             id: 69,
@@ -3330,7 +3528,36 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![]
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
+        },
+        Project {
+            id: 70,
+            name: "Mass Demilitarization",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![2],
+            opposers: vec![5, 1]
         }
     ]
 }

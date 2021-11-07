@@ -4,5 +4,5 @@ use serde::Serialize;
 pub struct NPC {
     pub id: usize,
     pub name: &'static str,
-    pub relationship: f32,
+    pub relationship: isize,
 }

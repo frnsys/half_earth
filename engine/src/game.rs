@@ -84,6 +84,13 @@ impl GameInterface {
         for effect in effects {
             effect.apply(&mut self.game.state, &mut self.game.event_pool, None);
         }
+
+        for npc_id in project.supporters {
+            self.game.state.npcs[npc_id].relationship += 1;
+        }
+        for npc_id in project.opposers {
+            self.game.state.npcs[npc_id].relationship -= 1;
+        }
     }
 
     pub fn stop_project(&mut self, project_id: usize) {
@@ -93,11 +100,25 @@ impl GameInterface {
         } else {
             project.status = Status::Inactive;
         }
+
+        for npc_id in project.supporters {
+            self.game.state.npcs[npc_id].relationship -= 1;
+        }
+        for npc_id in project.opposers {
+            self.game.state.npcs[npc_id].relationship += 1;
+        }
     }
 
     pub fn ban_process(&mut self, process_id: usize) {
         let process = &mut self.game.state.processes[process_id];
         process.status = ProcessStatus::Banned;
+
+        for npc_id in process.supporters {
+            self.game.state.npcs[npc_id].relationship -= 1;
+        }
+        for npc_id in process.opposers {
+            self.game.state.npcs[npc_id].relationship += 1;
+        }
     }
 
     pub fn unban_process(&mut self, process_id: usize) {
@@ -108,6 +129,13 @@ impl GameInterface {
     pub fn promote_process(&mut self, process_id: usize) {
         let process = &mut self.game.state.processes[process_id];
         process.status = ProcessStatus::Promoted;
+
+        for npc_id in process.supporters {
+            self.game.state.npcs[npc_id].relationship += 1;
+        }
+        for npc_id in process.opposers {
+            self.game.state.npcs[npc_id].relationship -= 1;
+        }
     }
 
     pub fn unpromote_process(&mut self, process_id: usize) {

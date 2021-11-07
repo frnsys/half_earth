@@ -86,6 +86,27 @@
     <Outcomes :outcomes="localData.outcomes" @update="saveData('outcomes', $event)" />
     <Upgrades :upgrades="localData.upgrades" @update="saveData('upgrades', $event)" />
 
+    <fieldset>
+      <div>
+        <label>
+          Supporters
+          <Tip>Which NPCs support this project.</Tip>
+        </label>
+        <select multiple v-model="localData.supporters" :id="`${item.id}_supporters`">
+          <option v-for="npc in npcs" :value="npc.id">{{npc.name}}</option>
+        </select>
+      </div>
+      <div>
+        <label>
+          Opposers
+          <Tip>Which NPCs oppose this project.</Tip>
+        </label>
+        <select multiple v-model="localData.opposers" :id="`${item.id}_opposers`">
+          <option v-for="npc in npcs" :value="npc.id">{{npc.name}}</option>
+        </select>
+      </div>
+    </fieldset>
+
     <div>
       <label>
         Flavor Text/Dialogue
@@ -137,6 +158,18 @@
       <h5>Upgrades</h5>
       <UpgradesSummary :upgrades="localData.upgrades" />
     </template>
+
+    <fieldset>
+      <div v-if="localData.supporters && localData.supporters.length > 0">
+        <h5>Supporters</h5>
+        <span v-for="id in localData.supporters">{{npc(id).name}}</span>
+      </div>
+      <div v-if="localData.opposers && localData.opposers.length > 0">
+        <h5>Opposers</h5>
+        <span v-for="id in localData.opposers">{{npc(id).name}}</span>
+      </div>
+    </fieldset>
+
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -144,8 +177,17 @@
 
 <script>
 import uuid from '../../uuid';
+import state from '../../state';
 import ItemMixin from './ItemMixin';
+import SlimSelect from 'slim-select';
+
 export default {
+  mounted() {
+    this.setupSelect();
+  },
+  updated() {
+    this.setupSelect();
+  },
   created() {
     if (!this.localData.outcomes) {
       // Default outcome
@@ -167,6 +209,33 @@ export default {
   computed: {
     descriptionHtml() {
       return this.localData.description.replaceAll('\n', '<br />');
+    },
+    npcs() {
+      return Object.values(state.items)
+        .filter((i) => i._type == 'NPC')
+    }
+  },
+  methods: {
+    npc(id) {
+      return state.items[id];
+    },
+    setupSelect() {
+      if (this.selects) {
+        this.selects.forEach((select) => select.destroy());
+      }
+      this.selects = [];
+      let sels = [
+        `${this.localData.id}_supporters`,
+        `${this.localData.id}_opposers`,
+      ];
+      sels.forEach((sel) => {
+        let el = document.getElementById(sel);
+        if (el) {
+          this.selects.push(new SlimSelect({
+            select: el
+          }));
+        }
+      });
     },
   },
   mixins: [ItemMixin]

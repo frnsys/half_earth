@@ -73,6 +73,27 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <div>
+        <label>
+          Supporters
+          <Tip>Which NPCs support this project.</Tip>
+        </label>
+        <select multiple v-model="localData.supporters" :id="`${item.id}_supporters`">
+          <option v-for="npc in npcs" :value="npc.id">{{npc.name}}</option>
+        </select>
+      </div>
+      <div>
+        <label>
+          Opposers
+          <Tip>Which NPCs oppose this project.</Tip>
+        </label>
+        <select multiple v-model="localData.opposers" :id="`${item.id}_opposers`">
+          <option v-for="npc in npcs" :value="npc.id">{{npc.name}}</option>
+        </select>
+      </div>
+    </fieldset>
+
     <Notes :notes="localData.notes" @blur="saveNotes" />
 
     <div class="additional-actions">
@@ -112,21 +133,67 @@
         <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
     </fieldset>
+
+    <fieldset>
+      <div v-if="localData.supporters && localData.supporters.length > 0">
+        <h5>Supporters</h5>
+        <span v-for="id in localData.supporters">{{npc(id).name}}</span>
+      </div>
+      <div v-if="localData.opposers && localData.opposers.length > 0">
+        <h5>Opposers</h5>
+        <span v-for="id in localData.opposers">{{npc(id).name}}</span>
+      </div>
+    </fieldset>
+
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
 </template>
 
 <script>
+import state from '../../state';
 import ItemMixin from './ItemMixin';
+import SlimSelect from 'slim-select';
+
 export default {
+  computed: {
+    npcs() {
+      return Object.values(state.items)
+        .filter((i) => i._type == 'NPC')
+    }
+  },
   mounted() {
     if (!this.localData.features) {
       this.localData.features = {};
       /* this.save(); */
     }
+    this.setupSelect();
+  },
+  updated() {
+    this.setupSelect();
   },
   methods: {
+    npc(id) {
+      return state.items[id];
+    },
+    setupSelect() {
+      if (this.selects) {
+        this.selects.forEach((select) => select.destroy());
+      }
+      this.selects = [];
+      let sels = [
+        `${this.localData.id}_supporters`,
+        `${this.localData.id}_opposers`,
+      ];
+      sels.forEach((sel) => {
+        let el = document.getElementById(sel);
+        if (el) {
+          this.selects.push(new SlimSelect({
+            select: el
+          }));
+        }
+      });
+    },
     updateFeature(key, val) {
       this.localData.features[key] = val;
       /* this.save(); */

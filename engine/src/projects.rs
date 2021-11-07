@@ -84,6 +84,9 @@ pub struct Project {
 
     pub outcomes: Vec<Outcome>,
     pub upgrades: Vec<Upgrade>,
+
+    pub supporters: Vec<usize>,
+    pub opposers: Vec<usize>,
 }
 
 /// Nearest multiple of 5

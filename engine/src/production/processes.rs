@@ -56,6 +56,9 @@ pub struct Process {
     pub status: ProcessStatus,
 
     pub change: ProcessChange,
+
+    pub supporters: Vec<usize>,
+    pub opposers: Vec<usize>,
 }
 
 impl Process {

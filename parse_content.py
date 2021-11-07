@@ -93,6 +93,8 @@ specs = {
         'change': 'ProcessChange::Neutral',
         'features': {},
         'output_modifier': 1.0,
+        'supporters': [],
+        'opposers': [],
     },
     'Project': {
         'id': None,
@@ -112,6 +114,8 @@ specs = {
         'points': 0,
         'cost_modifier': 1.0,
         'upgrades': 'vec![]',
+        'supporters': [],
+        'opposers': [],
     },
     'Event': {
         'id': None,
@@ -336,6 +340,12 @@ def define_field(k, v, item):
             return 'cost: 0'
         else:
             return 'cost: {}'.format(v)
+    if k == 'supporters':
+        return 'supporters: vec![{}]'.format(
+                ', '.join(str(ids[id]) for id in v))
+    if k == 'opposers':
+        return 'opposers: vec![{}]'.format(
+                ', '.join(str(ids[id]) for id in v))
     if k == 'train_cost' or k == 'establish_cost':
         return '{}: {}'.format(k, v)
     if k == 'intensity':
