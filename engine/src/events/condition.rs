@@ -15,6 +15,7 @@ pub enum Condition {
     ResourcePressure(Resource, Comparator, f32),
     ResourceDemandGap(Resource, Comparator, f32),
     OutputDemandGap(Output, Comparator, f32),
+    Demand(Output, Comparator, f32),
     ProjectStatus(usize, ProjectStatus),
     RunsPlayed(Comparator, usize),
     RegionFlag(String),
@@ -85,6 +86,17 @@ impl Condition {
                 let demand = state.output_demand[*output];
                 let val = (available - demand)/demand;
                 comp.eval(val, *other_val)
+            },
+            Condition::Demand(output, comp, other_val) => {
+                // Apply conversion to OUTPUT_UNITS
+                let factor = match output {
+                    Output::Fuel => 1e-9/1e3, // per 1000 TWh
+                    Output::Electricity => 1e-9/1e3, // per 1000 TWh
+                    Output::PlantCalories => 1e-9/2e4, // per 20000 Tcals
+                    Output::AnimalCalories => 1e-9/2e4, // per 20000 Tcals
+                };
+                let demand = state.output_demand[*output] * factor;
+                comp.eval(demand, *other_val)
             },
             Condition::RunsPlayed(comp, runs) => {
                 comp.eval(state.runs as f32, *runs as f32)

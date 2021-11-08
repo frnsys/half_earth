@@ -64,7 +64,7 @@ impl State {
         self.step_production();
 
         for project in &mut self.projects {
-            project.update_cost(&self.output_demand);
+            project.update_cost(self.world.year, &self.output_demand);
         }
     }
 
@@ -138,7 +138,7 @@ impl State {
         }
 
         for project in &mut self.projects {
-            project.update_cost(&self.output_demand);
+            project.update_cost(self.world.year, &self.output_demand);
         }
 
         (completed_projects, remove_effects, add_effects)

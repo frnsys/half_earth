@@ -22,13 +22,13 @@ use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
-use crate::projects::{Project, Outcome, Upgrade, Cost};
+use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
-use crate::npcs::NPC;
+use crate::npcs::{NPC, NPCRelation};
 '''
 
 world_fn_template = \
@@ -249,7 +249,7 @@ conds = {
     'ProjectHalted':    lambda e: (ids[e['entity']], 'ProjectStatus::Halted'),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
-    'NPCRelationship': lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['value'])),
+    'NPCRelationship':  lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['subtype'])),
 }
 
 def define_effect(effect):
@@ -358,9 +358,15 @@ def define_field(k, v, item):
     elif k == 'base_cost':
         v = item.get('cost', 0)
         if item.get('dynamic_cost', False):
-            output = item.get('dynamic_cost_demand')
+            factor = item.get('dynamic_cost_factor')
+            if factor in valid_outputs:
+                variant = 'Factor::Output(Output::{})'.format(factor)
+            elif factor == 'Time':
+                variant = 'Factor::Time'
+            else:
+                raise Exception('Unrecognized dynamic cost factor: {}'.format(factor))
             v = '{}.'.format(v) if isinstance(v, int) else v
-            return 'base_cost: Cost::Dynamic({}, Output::{})'.format(v, output)
+            return 'base_cost: Cost::Dynamic({}, {})'.format(v, variant)
         else:
             return 'base_cost: Cost::Fixed({})'.format(v)
     elif k == 'effects':

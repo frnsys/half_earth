@@ -37,12 +37,12 @@
         <input type="checkbox" :id="`${item.id}_dynamic_cost`" v-model="localData.dynamic_cost">
       </div>
       <div class="checkbox" v-if="localData.dynamic_cost">
-        <label :for="`${item.id}_dynamic_cost_demand`">
-          Dynamic Cost Demand
-          <Tip>The demand used to calculate the dynamic cost.</Tip>
+        <label :for="`${item.id}_dynamic_cost_factor`">
+          Dynamic Cost Factor
+          <Tip>The demand or other factor used to calculate the dynamic cost.</Tip>
         </label>
-        <select v-model="localData.dynamic_cost_demand">
-          <option v-for="k in Object.keys(OUTPUTS)" :value="k">{{k}}</option>
+        <select v-model="localData.dynamic_cost_factor">
+          <option v-for="k in DYNAMIC_COST_FACTORS" :value="k">{{k}}</option>
         </select>
       </div>
       <div class="checkbox">
@@ -131,7 +131,7 @@
       </div>
       <div class="meta-pill split-pill" v-if="localData.dynamic_cost">
         <div>Dynamic Cost</div>
-        <div>{{localData.dynamic_cost_demand}}</div>
+        <div>{{localData.dynamic_cost_factor}}</div>
       </div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>

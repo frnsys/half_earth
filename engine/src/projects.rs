@@ -35,7 +35,13 @@ impl Default for Type {
 #[derive(Serialize, Clone)]
 pub enum Cost {
     Fixed(usize),
-    Dynamic(f32, Output),
+    Dynamic(f32, Factor),
+}
+
+#[derive(Serialize, Copy, Clone)]
+pub enum Factor {
+    Time,
+    Output(Output),
 }
 
 impl Default for Cost {
@@ -145,11 +151,15 @@ impl Project {
         outcome
     }
 
-    pub fn update_cost(&mut self, demand: &OutputMap<f32>) {
+    pub fn update_cost(&mut self, year: usize ,demand: &OutputMap<f32>) {
         let cost = match self.base_cost {
             Cost::Fixed(c) => c,
-            Cost::Dynamic(m, output) => {
-                (m * demand[output]).round() as usize
+            Cost::Dynamic(m, factor) => {
+                let c = match factor {
+                    Factor::Time => m * year as f32,
+                    Factor::Output(output) => m * demand[output]
+                };
+                c.round() as usize
             }
         };
         self.cost = (cost as f32 * self.cost_modifier).round() as usize;

@@ -3,13 +3,13 @@ use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
-use crate::projects::{Project, Outcome, Upgrade, Cost};
+use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::events::{Type as EventType};
-use crate::npcs::NPC;
+use crate::npcs::{NPC, NPCRelation};
 
 
 
@@ -501,7 +501,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 4,
-            name: "Regenerative Crop Ag",
+            name: "Regenerative Agriculture (Crops)",
             output: Output::PlantCalories,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
@@ -529,7 +529,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 5,
-            name: "Regenerative Livestock Ag",
+            name: "Regenerative Agriculture (Livestock)",
             output: Output::AnimalCalories,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
@@ -1140,7 +1140,7 @@ pub fn processes() -> Vec<Process> {
                 ch4: 0.0,
                 n2o: 0.0
             ),
-            locked: false,
+            locked: true,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
@@ -1202,8 +1202,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesSynFertilizer
             ],
             output_modifier: 1.0,
-            supporters: vec![4],
-            opposers: vec![5, 3]
+            supporters: vec![],
+            opposers: vec![]
         }
     ]
 }
@@ -1239,7 +1239,7 @@ pub fn projects() -> Vec<Project> {
             id: 1,
             name: "Veganism Mandate",
             cost: 0,
-            base_cost: Cost::Dynamic(4e-14, Output::AnimalCalories),
+            base_cost: Cost::Dynamic(4e-14, Factor::Output(Output::AnimalCalories)),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -1412,7 +1412,7 @@ pub fn projects() -> Vec<Project> {
             level: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -50.0),
-                Effect::WorldVariable(WorldVariable::Outlook, -3.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -20.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -1439,7 +1439,8 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyEventProbability(80, -0.25)
+                Effect::ModifyEventProbability(80, -0.25),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1617,8 +1618,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -5.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
+
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1626,13 +1626,54 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -20.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+                            Condition::Demand(Output::AnimalCalories, Comparator::Less, 10.0)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -40.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+                            Condition::Demand(Output::AnimalCalories, Comparator::GreaterEqual, 10.0)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -10.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 0,
+                    effects: vec![
 
+                    ]
+                }
             ],
             supporters: vec![],
             opposers: vec![]
@@ -1641,11 +1682,12 @@ pub fn projects() -> Vec<Project> {
             id: 14,
             name: "Green Hydrogen",
             cost: 0,
-            base_cost: Cost::Fixed(15),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::UnlocksProcess(27)
+                Effect::UnlocksProcess(27),
+                Effect::WorldVariable(WorldVariable::Emissions, 0.5)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1653,7 +1695,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
 
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2124,19 +2176,42 @@ pub fn projects() -> Vec<Project> {
             id: 25,
             name: "Wood Skyscrapers",
             cost: 0,
-            base_cost: Cost::Fixed(5),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
 
             ],
             kind: ProjectType::Policy,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -9.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+                            Condition::Demand(Output::AnimalCalories, Comparator::Less, 9.0)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, -9.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 7.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2151,7 +2226,7 @@ pub fn projects() -> Vec<Project> {
             id: 26,
             name: "Vegetarian Mandate",
             cost: 0,
-            base_cost: Cost::Dynamic(2e-14, Output::AnimalCalories),
+            base_cost: Cost::Dynamic(2e-14, Factor::Output(Output::AnimalCalories)),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -2316,7 +2391,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Emissions, 1.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2324,7 +2399,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::Feedstock(Feedstock::Lithium, -0.99)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2635,11 +2720,11 @@ pub fn projects() -> Vec<Project> {
             id: 42,
             name: "Expand recycling infrastructure",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Emissions, 0.25)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2647,7 +2732,18 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Outlook, 10.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2712,7 +2808,7 @@ pub fn projects() -> Vec<Project> {
             id: 45,
             name: "Mass Electrification",
             cost: 0,
-            base_cost: Cost::Dynamic(5e-13, Output::Fuel),
+            base_cost: Cost::Dynamic(5e-13, Factor::Output(Output::Fuel)),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -2832,7 +2928,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Emissions, 0.)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2845,7 +2941,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![]
         },
@@ -3094,7 +3192,7 @@ pub fn projects() -> Vec<Project> {
             id: 59,
             name: "Energy Quotas",
             cost: 0,
-            base_cost: Cost::Dynamic(3e-12, Output::Electricity),
+            base_cost: Cost::Dynamic(3e-12, Factor::Output(Output::Electricity)),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -3149,7 +3247,7 @@ pub fn projects() -> Vec<Project> {
             id: 61,
             name: "Human Health Corps",
             cost: 0,
-            base_cost: Cost::Fixed(10),
+            base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -3169,14 +3267,14 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
                 Upgrade {
                     active: false,
-                    cost: 10,
+                    cost: 30,
                     effects: vec![
                         Effect::AutoClick(102, 50.0)
                     ]
                 },
                 Upgrade {
                     active: false,
-                    cost: 10,
+                    cost: 30,
                     effects: vec![
                         Effect::AutoClick(102, 75.0)
                     ]
@@ -3528,9 +3626,7 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
+            upgrades: vec![],
             supporters: vec![],
             opposers: vec![]
         },
@@ -3558,8 +3654,8 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![2],
-            opposers: vec![5, 1]
+            supporters: vec![],
+            opposers: vec![]
         }
     ]
 }
@@ -4689,7 +4785,8 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::TriggerEvent(34, 6),
-                Effect::TriggerEvent(35, 6)
+                Effect::TriggerEvent(35, 6),
+                Effect::UnlocksNPC(8)
             ],
             probabilities: vec![
                 Probability {
@@ -7081,7 +7178,8 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(111)
+                Effect::AddEvent(111),
+                Effect::UnlocksNPC(7)
             ],
             probabilities: vec![
                 Probability {
@@ -7110,6 +7208,13 @@ pub fn events() -> Vec<Event> {
                 Effect::UnlocksProject(57)
             ],
             probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+                        Condition::NPCRelationship(7, NPCRelation::Ally),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                },
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
@@ -7603,6 +7708,48 @@ pub fn events() -> Vec<Event> {
             prob_modifier: 1.0,
             intensity: 0,
             aspect: None
+        },
+        Event {
+            id: 132,
+            name: "Plant Breeding",
+            kind: EventType::World,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            choices: vec![
+
+            ],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 133,
+            name: "The Malthusians -- Formation",
+            kind: EventType::Planning,
+            locked: false,
+            regional: false,
+            effects: vec![
+                Effect::UnlocksNPC(2)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::NPCRelationship(6, NPCRelation::Nemesis),
+                        Condition::NPCRelationship(0, NPCRelation::Nemesis)
+                    ]
+                }
+            ],
+            choices: vec![],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
         }
     ]
 }
@@ -7644,6 +7791,24 @@ pub fn npcs() -> Vec<NPC> {
             name: "The Authoritarian",
             relationship: 3,
             locked: false
+        },
+        NPC {
+            id: 6,
+            name: "The Consumerist",
+            relationship: 3,
+            locked: false
+        },
+        NPC {
+            id: 7,
+            name: "The Wretched",
+            relationship: 3,
+            locked: true
+        },
+        NPC {
+            id: 8,
+            name: "The Posadists",
+            relationship: 3,
+            locked: true
         }
     ]
 }
