@@ -5,7 +5,7 @@
     <button @click="addOutcome">+ Outcome</button>
   </label>
   <div class="outcomes">
-    <div class="field-group" v-for="(outcome, i) in localData" :key="i">
+    <div class="field-group" v-for="(outcome, i) in localData" :key="outcome.id">
       <div>
         <label>
           Outcome Text
@@ -75,7 +75,10 @@ export default {
       this.update();
     },
     saveOutcomeProbability(i, probability) {
+      console.log(`setting probability for ${i}`);
+      console.log(probability);
       this.localData[i].probability = probability;
+      console.log(this.localData);
       this.update();
     },
     outcomeFlag(i, key) {
