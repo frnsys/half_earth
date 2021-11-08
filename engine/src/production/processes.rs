@@ -33,6 +33,14 @@ pub enum ProcessChange {
     Contracting
 }
 
+// TODO use this for labor?
+#[derive(Debug, PartialEq, Serialize, Clone)]
+pub enum ProcessIntensity {
+    Low,
+    Medium,
+    High
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct Process {
     pub id: usize,
@@ -119,6 +127,7 @@ pub fn update_mixes(
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::planner::Priority;
     use float_cmp::approx_eq;
 
     fn gen_processes() -> Vec<Process> {
@@ -126,6 +135,7 @@ mod test {
             id: 0,
             name: "Test Process A",
             mix_share: 0.5,
+            change: ProcessChange::Neutral,
             output: Output::Fuel,
             output_modifier: 1.,
             resources: resources!(water: 10.),
@@ -134,10 +144,13 @@ mod test {
             features: vec![],
             locked: false,
             status: ProcessStatus::Neutral,
+            opposers: vec![],
+            supporters: vec![],
         }, Process {
             id: 1,
             name: "Test Process B",
             mix_share: 0.5,
+            change: ProcessChange::Neutral,
             output: Output::Fuel,
             output_modifier: 1.,
             resources: resources!(water: 10.),
@@ -146,10 +159,13 @@ mod test {
             features: vec![],
             locked: false,
             status: ProcessStatus::Neutral,
+            opposers: vec![],
+            supporters: vec![],
         }, Process {
             id: 2,
             name: "Test Process C",
             mix_share: 1.0,
+            change: ProcessChange::Neutral,
             output: Output::Electricity,
             output_modifier: 1.,
             resources: resources!(water: 2.),
@@ -158,20 +174,26 @@ mod test {
             features: vec![],
             locked: false,
             status: ProcessStatus::Neutral,
+            opposers: vec![],
+            supporters: vec![],
         }]
     }
 
     #[test]
     fn test_update_mix_share_resources() {
+        let priority = Priority::Scarcity;
         let mut processes = gen_processes();
         processes[1].resources = resources!(water: 2.);
         let demand = outputs!(fuel: 100.);
         let resource_weights = resources!(water: 100.);
         let feedstock_weights = feedstocks!();
-        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights);
+        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights, &priority);
 
         // Less water intensive process should be favored
         assert!(processes[0].mix_share < processes[1].mix_share);
+
+        assert_eq!(processes[0].change, ProcessChange::Contracting);
+        assert_eq!(processes[1].change, ProcessChange::Expanding);
 
         // Should be normalized
         assert_eq!(processes[0].mix_share + processes[1].mix_share, 1.0);
@@ -182,18 +204,70 @@ mod test {
 
     #[test]
     fn test_update_mix_share_banned() {
+        let priority = Priority::Scarcity;
         let mut processes = gen_processes();
         processes[0].status = ProcessStatus::Banned;
         let demand = outputs!(fuel: 100.);
         let resource_weights = resources!();
         let feedstock_weights = feedstocks!();
-        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights);
+        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights, &priority);
 
         // Unbanned process should be favored
         assert!(processes[0].mix_share < processes[1].mix_share);
+
+        assert_eq!(processes[0].change, ProcessChange::Contracting);
+        assert_eq!(processes[1].change, ProcessChange::Expanding);
 
         // Should be normalized
         approx_eq!(f32, processes[0].mix_share + processes[1].mix_share, 1.0);
     }
 
+    #[test]
+    fn test_update_mix_share_priority() {
+        let mut processes = gen_processes();
+        processes[0].resources.water = 10.;
+        processes[1].resources.water = 1.;
+        processes[0].resources.land = 1.;
+        processes[1].resources.land = 10.;
+        processes[0].resources.electricity = 10.;
+        processes[1].resources.fuel = 1.;
+        processes[0].byproducts.co2 = 1.;
+        processes[1].byproducts.co2 = 10.;
+
+        let demand = outputs!(fuel: 100.);
+        let resource_weights = resources!();
+        let feedstock_weights = feedstocks!();
+
+        let priority = Priority::Land;
+        processes[0].mix_share = 0.5;
+        processes[1].mix_share = 0.5;
+        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights, &priority);
+
+        // Less land intensive process should be favored
+        assert!(processes[0].mix_share > processes[1].mix_share);
+
+        let priority = Priority::Water;
+        processes[0].mix_share = 0.5;
+        processes[1].mix_share = 0.5;
+        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights, &priority);
+
+        // Less water intensive process should be favored
+        assert!(processes[1].mix_share > processes[0].mix_share);
+
+        let priority = Priority::Energy;
+        processes[0].mix_share = 0.5;
+        processes[1].mix_share = 0.5;
+        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights, &priority);
+
+        // Less water intensive process should be favored
+        assert!(processes[1].mix_share > processes[0].mix_share);
+
+        let priority = Priority::Emissions;
+        processes[0].mix_share = 0.5;
+        processes[1].mix_share = 0.5;
+        update_mixes(&mut processes, &demand, &resource_weights, &feedstock_weights, &priority);
+
+        // Less water intensive process should be favored
+        assert!(processes[0].mix_share > processes[1].mix_share);
+    }
 }

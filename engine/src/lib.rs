@@ -8,6 +8,7 @@ mod industries;
 mod consts;
 mod regions;
 mod content;
+mod state;
 pub mod game;
 pub mod events;
 pub mod surface;

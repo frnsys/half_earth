@@ -1,5 +1,5 @@
 use super::Condition;
-use crate::game::State;
+use crate::state::State;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Likelihood {

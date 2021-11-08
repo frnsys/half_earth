@@ -1,4 +1,4 @@
-use crate::game::State;
+use crate::state::State;
 use crate::kinds::{Output, OutputMap};
 use crate::events::{Effect, Probability};
 use rand::{Rng, rngs::SmallRng};
@@ -190,6 +190,7 @@ mod test {
             cost_modifier: 1.,
             level: 0,
             ongoing: false,
+            gradual: false,
             locked: false,
             kind: Type::Policy,
             status: Status::Building,
@@ -205,6 +206,8 @@ mod test {
                     conditions: vec![]
                 }
             }],
+            opposers: vec![],
+            supporters: vec![],
         };
 
         for _ in 0..12 {
@@ -231,6 +234,7 @@ mod test {
             cost_modifier: 1.,
             level: 0,
             ongoing: false,
+            gradual: false,
             locked: false,
             kind: Type::Policy,
             status: Status::Building,
@@ -246,6 +250,8 @@ mod test {
                     conditions: vec![]
                 }
             }],
+            opposers: vec![],
+            supporters: vec![],
         };
 
         p.set_points(1);
@@ -267,6 +273,7 @@ mod test {
             cost_modifier: 1.,
             level: 0,
             ongoing: false,
+            gradual: false,
             locked: false,
             kind: Type::Policy,
             status: Status::Building,
@@ -291,6 +298,8 @@ mod test {
                     conditions: vec![]
                 }
             }],
+            opposers: vec![],
+            supporters: vec![],
         };
 
         let mut state = State::default();

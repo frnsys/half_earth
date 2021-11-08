@@ -217,6 +217,7 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
 mod test {
     use super::*;
     use float_cmp::approx_eq;
+    use crate::production::ProcessChange;
     use crate::kinds::{Feedstock, Output};
 
     fn gen_processes() -> Vec<Process> {
@@ -232,6 +233,9 @@ mod test {
             features: vec![],
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
+            opposers: vec![],
+            supporters: vec![],
         }, Process {
             id: 1,
             name: "Test Process B",
@@ -244,6 +248,9 @@ mod test {
             features: vec![],
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
+            opposers: vec![],
+            supporters: vec![],
         }, Process {
             id: 2,
             name: "Test Process C",
@@ -256,6 +263,9 @@ mod test {
             features: vec![],
             locked: false,
             status: ProcessStatus::Neutral,
+            change: ProcessChange::Neutral,
+            opposers: vec![],
+            supporters: vec![],
         }]
     }
 

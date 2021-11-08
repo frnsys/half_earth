@@ -1,4 +1,4 @@
-use crate::game::State;
+use crate::state::State;
 use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};

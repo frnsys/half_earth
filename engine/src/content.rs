@@ -3528,7 +3528,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![]
         },
@@ -7610,32 +7612,38 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 0,
             name: "The Ecologist",
-            relationship: 3.0
+            relationship: 3,
+            locked: false
         },
         NPC {
             id: 1,
             name: "The Agronomist",
-            relationship: 3.0
+            relationship: 3,
+            locked: false
         },
         NPC {
             id: 2,
             name: "The Malthusians",
-            relationship: 3.0
+            relationship: 3,
+            locked: false
         },
         NPC {
             id: 3,
             name: "The Fully-Automated Luxury Communists",
-            relationship: 3.0
+            relationship: 3,
+            locked: false
         },
         NPC {
             id: 4,
             name: "The Half-Earth Socialists",
-            relationship: 3.0
+            relationship: 3,
+            locked: false
         },
         NPC {
             id: 5,
             name: "The Authoritarian",
-            relationship: 3.0
+            relationship: 3,
+            locked: false
         }
     ]
 }
