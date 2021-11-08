@@ -1,21 +1,30 @@
 <template>
 <div class="plan">
-  <PlanChangeSelect v-if="showSelect" @close="showSelect = false" />
-  <div class="plan--changes">
+  <PlanChangeSelect v-if="page == 'add'" @close="page = null" />
+  <Priorities v-else-if="page == 'priorities'" @close="page = null" />
+  <div class="plan--changes" v-if="page == null">
     <div class="plan--change">
       <div class="plan--action">Add</div>
-      <div class="plan--add-change minicard" @click="showSelect = true">
+      <div class="plan--add-change minicard" @click="page = 'add'">
         <img :src="assets.icons.add">
       </div>
     </div>
-    <div class="plan--change" v-for="change in state.planChanges">
-      <div class="plan--action">{{change.action}}</div>
-      <div v-if="change.type === 'priority'" class="minicard">
-        <img :src="assets.icons[consts.priorities[consts.Priority[change.priority]].icon]" />
+    <div class="plan--change">
+      <div class="plan--action">Priority</div>
+      <div class="minicard" @click="page = 'priorities'">
+        <img :src="assets.icons[consts.priorities[consts.Priority[state.gameState.priority]].icon]" />
       </div>
-      <MiniProcess v-else-if="change.type === 'process'" :process="change.process" />
-      <MiniProject v-else-if="change.type === 'project'" :project="change.project" />
-      <div class="plan--cost"><img :src="assets.icons.political_capital">28</div>
+      <div class="plan--note">{{consts.priorities[consts.Priority[state.gameState.priority]].name}}</div>
+    </div>
+    <div class="plan--change" v-for="project in activeProjects">
+      <div class="plan--action">{{projectStatus(project)}}</div>
+      <MiniProject :project="project" />
+      <div class="plan--note">{{project.name}}</div>
+    </div>
+    <div class="plan--change" v-for="process in activeProcesses">
+      <div class="plan--action">{{process.status}}</div>
+      <MiniProcess :process="process" />
+      <div class="plan--note">{{process.name}}</div>
     </div>
   </div>
   <div class="plan--charts">
@@ -33,6 +42,7 @@
 import game from '/src/game';
 import state from '/src/state';
 import Chart from './Chart.vue';
+import Priorities from './Priorities.vue';
 import PlanChangeSelect from './PlanChangeSelect.vue';
 import MiniProcess from 'components/cards/MiniProcess.vue';
 import MiniProject from 'components/cards/MiniProject.vue';
@@ -54,7 +64,9 @@ export default {
   components: {
     Chart,
     MiniProcess,
+    MiniProject,
     PlanChangeSelect,
+    Priorities,
   },
   created() {
     this.charts = charts;
@@ -62,7 +74,7 @@ export default {
   data() {
     return {
       state,
-      showSelect: false,
+      page: null,
       chart: 'land',
       ranges: {
         x: [0, years],
@@ -71,6 +83,12 @@ export default {
     }
   },
   computed: {
+    activeProjects() {
+      return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
+    },
+    activeProcesses() {
+      return state.gameState.processes.filter((p) => p.status !== 'Neutral');
+    },
     simulated() {
       let n = years - (this.historical.data.length - 1);
       return game.simulate(n);
@@ -140,51 +158,16 @@ export default {
     }
   },
   methods: {
+    projectStatus(p) {
+      if (p.kind == 'Research' && p.status == 'Building') {
+        return 'Researching';
+      } else {
+        return p.status;
+      }
+    },
     setChart(key) {
       this.chart = key;
     },
-    applyChanges() {
-      let cost = 0;
-      state.changes.forEach((change) => {
-        switch (change.type) {
-          case 'priority': {
-            game.setPriority(change.value);
-            break;
-          }
-          case 'process': {
-            let p = change.process.id;
-            switch (change.action) {
-              case 'ban': {
-                game.banProcess(p.id);
-              }
-              case 'unban': {
-                game.unbanProcess(p.id);
-              }
-              case 'promote': {
-                game.promoteProcess(p.id);
-              }
-              case 'unpromote': {
-                game.unpromoteProcess(p.id);
-              }
-            }
-            break;
-          }
-          case 'project': {
-            let p = change.project.id;
-            switch (change.action) {
-              case 'start': {
-                game.setProjectPoints(this.id, this.points - 1);
-              }
-              case 'stop': {
-              }
-              case 'implement': {
-              }
-            }
-          }
-        }
-      });
-      game.changePoliticalCapital(-cost);
-    }
   }
 }
 </script>
@@ -194,6 +177,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  align-content: start;
   height: 350px;
   flex-wrap: wrap;
   overflow-y: scroll;
@@ -207,39 +191,19 @@ export default {
 .plan--action {
   text-transform: uppercase;
   font-size: 0.85em;
+  /* center overflowed text */
+  margin-left: -100%;
+  margin-right: -100%;
 }
-        game.unpromoteProcess(p.id);
-            }
-            break;
-          }
-        }
-      });
-      game.changePoliticalCapital(-cost);
-    }
-  }
-}
-</script>
 
-<style>
-.plan--changes {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 350px;
-  flex-wrap: wrap;
-  overflow-y: scroll;
-  flex-direction: column;
+.plan--note {
+  font-size: 0.8em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
 }
-.plan--change {
-  width: 80px;
-  text-align: center;
-  margin: 0.5em 0.25em;
-}
-.plan--action {
-  text-transform: uppercase;
-  font-size: 0.85em;
-}
-.plan--cost img {
+.plan--note img {
   width: 16px;
   vertical-align: middle;
 }

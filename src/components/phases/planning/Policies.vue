@@ -15,6 +15,9 @@
 import ProjectMixin from './ProjectMixin';
 
 export default {
-  mixins: [ProjectMixin('Policy')],
+  created() {
+    this.type = 'Policy';
+  },
+  mixins: [ProjectMixin],
 }
 </script>

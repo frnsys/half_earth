@@ -3,7 +3,7 @@ import state from '/src/state';
 import Cards from './Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
 
-export default (type) => ({
+export default {
   components: {
     Cards,
     ProjectCard,
@@ -15,7 +15,7 @@ export default (type) => ({
   },
   computed: {
     projects() {
-      return state.gameState.projects.filter((p) => p.kind == type && !p.locked);
+      return state.gameState.projects.filter((p) => p.kind == this.type && !p.locked);
     },
     pointsInUse() {
       let active = this.projects.filter((p) => p.status == 'Building' || p.ongoing && p.status == 'Active');
@@ -23,10 +23,10 @@ export default (type) => ({
       return points + this.availablePoints;
     },
     availablePoints() {
-      if (type == 'Policy') {
+      if (this.type == 'Policy') {
         return state.gameState.political_capital;
       } else {
-        return state.points[type.toLowerCase()];
+        return state.points[this.type.toLowerCase()];
       }
     },
     nextPointCost() {
@@ -39,8 +39,8 @@ export default (type) => ({
       let cost = this.nextPointCost;
       if (cost <= state.gameState.political_capital) {
         game.changePoliticalCapital(-cost);
-        state.points[type.toLowerCase()]++;
+        state.points[this.type.toLowerCase()]++;
       }
     }
   }
-});
+};

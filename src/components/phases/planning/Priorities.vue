@@ -1,10 +1,16 @@
 <template>
-<div class="planning--page">
-  <div class="planning--menu priority--menu">
-    <button v-for="d, p in consts.priorities" @click="select(Priority[p])" :class="{selected: Priority[p] == priority}">
-      <img :src="assets.icons[d.icon]" />
-      <div>{{d.name}}</div>
-    </button>
+<div class="plan-change-select">
+  <header>
+    <div>Production Priority</div>
+    <div @click="$emit('close')">Close</div>
+  </header>
+  <div class="planning--page">
+    <div class="planning--menu priority--menu">
+      <button v-for="d, p in priorities" @click="select(p)" :class="{selected: Priority[p] == state.gameState.priority}">
+        <img :src="assets.icons[d.icon]" />
+        <div>{{d.name}}</div>
+      </button>
+    </div>
   </div>
 </div>
 </template>
@@ -14,6 +20,33 @@ import game from '/src/game';
 import state from '/src/state';
 import {Priority} from 'half-earth-engine';
 
+const priorities = {
+  [Priority.Scarcity]: {
+    icon: 'output',
+    name: 'Scarcity',
+  },
+  [Priority.Land]: {
+    icon: 'land',
+    name: 'Land Use',
+  },
+  [Priority.Emissions]: {
+    icon: 'emissions',
+    name: 'Emissions',
+  },
+  [Priority.Energy]: {
+    icon: 'energy',
+    name: 'Energy Use',
+  },
+  [Priority.Labor]: {
+    icon: 'labor',
+    name: 'Labor',
+  },
+  [Priority.Water]: {
+    icon: 'water',
+    name: 'Water Use',
+  },
+};
+
 export default {
   data() {
     return {
@@ -22,39 +55,11 @@ export default {
   },
   created() {
     this.Priority = Priority;
-  },
-  computed: {
-    priority() {
-      let existing = state.planChanges.find((change) => change.type == 'priority');
-      if (existing === undefined) {
-        return state.gameState.priority;
-      } else {
-        return existing.priority;
-      }
-    }
+    this.priorities = priorities;
   },
   methods: {
     select(priority) {
-      // See if the priority is changed from the currently set one
-      let unchanged = priority == state.gameState.priority;
-
-      // Find existing priority change
-      let existing = state.planChanges.findIndex((change) => change.type == 'priority');
-      let exists = existing >= 0;
-      if (exists) {
-        if (unchanged) {
-          state.planChanges.splice(existing, 1);
-        } else {
-          state.planChanges[existing].priority = priority;
-        }
-      } else if (!exists && !unchanged) {
-        state.planChanges.push({
-          action: 'Prioritize',
-          type: 'priority',
-          priority,
-        });
-      }
-
+      game.setPriority(priority);
     }
   }
 }

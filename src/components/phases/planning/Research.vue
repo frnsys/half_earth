@@ -3,7 +3,7 @@
   <Cards>
     <ProjectCard v-for="p in projects" :project="p" />
   </Cards>
-  <footer>
+  <footer v-if="p !== 'Policy'">
     <div class="pips">
       {{availablePoints}}<img class="pip" src="/assets/icons/pips/research.png">
     </div>
@@ -18,6 +18,9 @@
 import ProjectMixin from './ProjectMixin';
 
 export default {
-  mixins: [ProjectMixin('Research')],
+  created() {
+    this.type = 'Research';
+  },
+  mixins: [ProjectMixin],
 }
 </script>

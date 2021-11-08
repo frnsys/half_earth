@@ -15,7 +15,7 @@
         v-for="_ in points"
         class="pip"
         v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
-        :src="assets.resources[type]">
+        :src="assets.icons[type]">
     </div>
     <div v-if="hasLevels" class="project-level">
       Level {{level+1}}

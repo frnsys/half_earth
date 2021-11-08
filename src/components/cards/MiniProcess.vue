@@ -3,8 +3,8 @@
   <template v-slot:body>
     <div class="minicard-background" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" />
     <div :style="{zIndex: 1}">
-      <div>🏭</div>
-      <img src="/assets/icons/pips/power.png" />
+      <img v-if="process.output == 'Electricity' || process.output == 'Fuel'" src="/assets/icons/pips/power.png" />
+      <img v-else src="/assets/icons/pips/food.png" />
     </div>
   </template>
   <template v-slot:expanded>

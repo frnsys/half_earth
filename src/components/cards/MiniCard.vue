@@ -50,9 +50,22 @@ export default {
   left: 0;
   background: rgba(0,0,0,0.8);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
+  flex-direction: column;
   z-index: 100;
+}
+.minicard--expanded header {
+  color: #fff;
+}
+.minicard--expanded footer {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+.minicard--expanded .pips--buy {
+  background: rgb(42 42 42);
+  border: 1px solid #fff;
 }
 .minicard-background {
   background-size: cover;

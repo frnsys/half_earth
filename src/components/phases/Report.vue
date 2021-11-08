@@ -109,7 +109,7 @@ export default {
       console.log(`Total change: ${this.politicalCapitalChange}`);
       game.changePoliticalCapital(this.politicalCapitalChange);
 
-      let lost = state.gameState.political_capital <= 0;
+      let lost = state.gameState.political_capital <= 0 || state.gameState.contentedness < 0; // TODO authoritarian provides a buffer against this
       if (lost) {
         state.phase = 'BREAK';
       } else {

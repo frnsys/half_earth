@@ -9,13 +9,11 @@
   <Policies v-else-if="page == PAGES.POLICIES" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" />
   <Processes v-else-if="page == PAGES.PROCESSES" />
-  <Priorities v-else-if="page == PAGES.PRIORITIES" />
   <div class="plan-change-select--menu" v-else>
     <button @click="page = PAGES.RESEARCH">Research</button>
     <button @click="page = PAGES.POLICIES">Policies</button>
     <button @click="page = PAGES.INITIATIVES">Initiatives</button>
     <button @click="page = PAGES.PROCESSES">Processes</button>
-    <button @click="page = PAGES.PRIORITIES">Priorities</button>
   </div>
 </div>
 </template>
@@ -25,14 +23,12 @@ import Research from './Research.vue';
 import Policies from './Policies.vue';
 import Processes from './Processes.vue';
 import Initiatives from './Initiatives.vue';
-import Priorities from './Priorities.vue';
 
 const PAGES = {
   RESEARCH: 'Research',
   POLICIES: 'Policies',
   INITIATIVES: 'Initiatives',
   PROCESSES: 'Processes',
-  PRIORITIES: 'Production Priority',
 };
 
 // TODO events
@@ -43,7 +39,6 @@ export default {
     Policies,
     Initiatives,
     Processes,
-    Priorities,
   },
   created() {
     this.PAGES = PAGES;
