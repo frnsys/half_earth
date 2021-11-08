@@ -190,6 +190,21 @@ function render(e) {
         text: process.name
       }
     }
+    case 'UnlocksNPC': {
+      let npc = state.gameState.npcs[e.entity];
+      return {
+        tip: {
+          icon: 'unlocks',
+          text: e.random ? `Might unlock ${npc.name}.` : `Unlocks ${npc.name}.`,
+          card: {
+            type: 'NPC',
+            data: npc,
+          }
+        },
+        icon: 'unlocks',
+        text: npc.name
+      }
+    }
     case 'ProjectCostModifier': {
       let project = state.gameState.projects[e.entity];
       let p = e.param * 100;

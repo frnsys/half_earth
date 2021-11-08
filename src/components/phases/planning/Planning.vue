@@ -11,13 +11,6 @@
   <Plan v-if="page == PAGES.PLAN" />
   <Coalition v-else-if="page == PAGES.COALITION" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" />
-
-  <div class="production--demand planning--demand">
-    <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
-      {{demand[k]}}{{consts.icons[k]}}
-    </div>
-    <div v-tip="{text: 'Global CO2eq emissions.', icon: 'emissions'}">{{emissions}}{{consts.icons['emissions']}}</div>
-  </div>
 </div>
 </template>
 
