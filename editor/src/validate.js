@@ -78,6 +78,12 @@ function hasUnlocker(item) {
         return validType && effect.entity === item.id;
       });
     }
+    case 'NPC': {
+      return _itemEffects().some((effect) => {
+        let validType = effect.type == 'UnlocksNPC';
+        return validType && effect.entity === item.id;
+      });
+    }
     default: {
       return true
     }
@@ -323,7 +329,7 @@ const SPECS = {
 
   NPC: {
     key: 'name',
-    validate: ['name', 'description'],
+    validate: ['name', 'description', 'locked'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -331,6 +337,9 @@ const SPECS = {
           return requireAtLeastOne(item.name);
         case 'description':
           return requireAtLeastOne(item.description);
+        case 'locked':
+          if (item.locked === undefined) item.locked = false;
+          return item.locked == hasUnlocker(item);
         default:
           return true;
       }

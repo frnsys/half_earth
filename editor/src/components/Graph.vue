@@ -166,6 +166,8 @@ function childrenForEffect(effect) {
       return [effect.entity];
     case 'UnlocksProcess':
       return [effect.entity];
+    case 'UnlocksNPC':
+      return [effect.entity];
     default:
       return [];
   }

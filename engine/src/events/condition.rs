@@ -1,4 +1,5 @@
-use crate::game::State;
+use crate::state::State;
+use crate::npcs::NPCRelation;
 use crate::kinds::{Resource, Output};
 use crate::production::ProcessFeature;
 use crate::projects::Status as ProjectStatus;
@@ -17,6 +18,7 @@ pub enum Condition {
     ProjectStatus(usize, ProjectStatus),
     RunsPlayed(Comparator, usize),
     RegionFlag(String),
+    NPCRelationship(usize, NPCRelation),
 }
 
 
@@ -89,6 +91,9 @@ impl Condition {
             },
             Condition::ProjectStatus(id, status) => {
                 state.projects[*id].status == *status
+            },
+            Condition::NPCRelationship(id, relation) => {
+                state.npcs[*id].relation() == *relation
             },
             Condition::RegionFlag(flag) => {
                 if let Some(id) = region_id {

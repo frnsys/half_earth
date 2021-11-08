@@ -123,6 +123,10 @@ const CONDITIONS = {
   },
   RegionFlag: {
     flag: true
+  },
+  NPCRelationship: {
+    choices: ['Neutral', 'Nemesis', 'Ally'],
+    entity: 'NPC',
   }
 }
 
@@ -223,6 +227,10 @@ const EFFECTS = {
 
   UnlocksProcess: {
     entity: 'Process'
+  },
+
+  UnlocksNPC: {
+    entity: 'NPC'
   },
 
   SetProjectStatus: {

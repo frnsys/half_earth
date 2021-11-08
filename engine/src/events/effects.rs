@@ -1,4 +1,4 @@
-use crate::game::{State, Request};
+use crate::state::State;
 use crate::regions::Region;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock, Byproduct};
@@ -7,6 +7,12 @@ use serde::Serialize;
 use std::ops::Mul;
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
+
+#[derive(Clone, Serialize)]
+pub enum Request {
+    Project,
+    Process
+}
 
 #[derive(Serialize, PartialEq, Debug, Clone, Copy)]
 pub enum Flag {
@@ -37,6 +43,7 @@ pub enum Effect {
     TriggerEvent(usize, usize),
     UnlocksProject(usize),
     UnlocksProcess(usize),
+    UnlocksNPC(usize),
 
     ProjectRequest(usize, bool, usize),
     ProcessRequest(usize, bool, usize),
@@ -47,7 +54,7 @@ pub enum Effect {
 
     AddFlag(Flag),
     AutoClick(usize, f32),
-    NPCRelationship(usize, f32),
+    NPCRelationship(usize, isize),
 
     ModifyIndustryByproducts(usize, Byproduct, f32),
     ModifyIndustryResources(usize, Resource, f32),
@@ -133,6 +140,9 @@ impl Effect {
             },
             Effect::UnlocksProcess(id) => {
                 state.processes[*id].locked = false;
+            },
+            Effect::UnlocksNPC(id) => {
+                state.npcs[*id].locked = false;
             },
             Effect::ProjectRequest(id, active, bounty) => {
                 state.requests.push((Request::Project, *id, *active, *bounty));
@@ -322,7 +332,6 @@ impl Mul<f32> for Effect {
             Effect::OutputForFeature(feat, val) => Effect::OutputForFeature(feat, val * rhs),
             Effect::OutputForProcess(id, val) => Effect::OutputForProcess(id, val * rhs),
             Effect::Feedstock(feedstock, val) => Effect::Feedstock(feedstock, val * rhs),
-            Effect::NPCRelationship(id, val) => Effect::NPCRelationship(id, val * rhs),
             Effect::ModifyIndustryByproducts(id, byproduct, val) => Effect::ModifyIndustryByproducts(id, byproduct, val * rhs),
             Effect::ModifyIndustryResources(id, resource, val) => Effect::ModifyIndustryResources(id, resource, val * rhs),
             Effect::ModifyIndustryDemand(id, val) => Effect::ModifyIndustryDemand(id, val * rhs),

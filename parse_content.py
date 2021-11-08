@@ -133,7 +133,8 @@ specs = {
     'NPC': {
         'id': None,
         'name': None,
-        'relationship': 3
+        'relationship': 3,
+        'locked': 'false',
     },
     'Probability': {
         'likelihood': None,
@@ -191,6 +192,7 @@ def camel_to_snake(v):
 effects = {
     'UnlocksProject':   lambda e: (ids[e['entity']],),
     'UnlocksProcess':   lambda e: (ids[e['entity']],),
+    'UnlocksNPC':       lambda e: (ids[e['entity']],),
     'AddEvent':         lambda e: (ids[e['entity']],),
     'TriggerEvent':     lambda e: (ids[e['entity']], e['params']['Delay (months)']),
     'LocalVariable':    lambda e: ('LocalVariable::{}'.format(e['subtype']), param(e, 'Change')),
@@ -247,6 +249,7 @@ conds = {
     'ProjectHalted':    lambda e: (ids[e['entity']], 'ProjectStatus::Halted'),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
+    'NPCRelationship': lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['value'])),
 }
 
 def define_effect(effect):
@@ -402,6 +405,8 @@ def define_field(k, v, item):
         pass
     elif k == 'points':
         return 'points: {}'.format(v)
+    elif k == 'relationship':
+        return 'relationship: {}'.format(v)
     elif k == 'mix_share':
         return 'mix_share: {}'.format(v/100)
     elif k == 'features':
