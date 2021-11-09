@@ -652,3 +652,15 @@ With that lower figure, I get:
 ```
 
 which is closer to the reference values.
+
+# 10/19 Firefox crashes
+
+Firefox crashes after the game is running for a bit. This is the crash reason:
+
+```
+MozCrashReason: MOZ_RELEASE_ASSERT(ClientMatchPrincipalInfo(mClientInfo.PrincipalInfo(), aServiceWorker.PrincipalInfo()))
+```
+
+So it seems to be related to the service worker.
+
+This thread might have some info: <https://bugzilla.mozilla.org/show_bug.cgi?id=1610772>
