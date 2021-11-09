@@ -161,11 +161,6 @@ export default {
   flex: 1;
   margin-top: 1em;
 }
-.planning--page .card header img {
-  width: 12px;
-  vertical-align: middle;
-  margin-top: -2px;
-}
 
 .project--upgrade--title {
   display: flex;

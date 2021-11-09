@@ -19,7 +19,7 @@
         v-tip="{icon: 'contentedness', text: `This region's contentedness.`}"
         resource="contentedness" :intensity="contentedness" :invert="true" />
 
-      <div v-for="v, k in demand" v-tip="{text: `This regions\'s demand for ${k}. This makes up X% of total demand for ${k}.`, icon: k}">
+      <div v-for="v, k in demand" v-tip="{text: `This regions\'s demand for ${k}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}">
         <div class="card-icon">
           <img :src="icons[k]"/>
           {{demand[k]}}
@@ -41,6 +41,7 @@
 
 <script>
 import game from '/src/game';
+import state from '/src/state';
 import Card from './Card.vue';
 import display from 'lib/display';
 import IntensityIcon from './IntensityIcon.vue';
@@ -58,6 +59,16 @@ export default {
       ...data,
       ...this.region,
     };
+  },
+  methods: {
+    demandPercent(k) {
+      let percent = this.demand[k]/state.gameState.output_demand[k] * 100;
+      if (percent < 1) {
+        return '<1%';
+      } else {
+        return `${percent.toFixed(1)}%`;
+      }
+    }
   },
   computed: {
     contentedness() {

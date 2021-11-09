@@ -151,4 +151,10 @@ export default {
   right: 0.5em;
   top: 0.5em;
 }
+
+.card header img {
+  width: 12px;
+  vertical-align: middle;
+  margin-top: -2px;
+}
 </style>

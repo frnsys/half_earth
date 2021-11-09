@@ -8,7 +8,7 @@
   </template>
   <template v-slot:body>
     <div class="space-even">
-      <div v-for="v, k in totalResources" v-tip="{text: `This industry\'s demand for ${k}. This makes up X% of total demand for ${k}.`, icon: k}">
+      <div v-for="v, k in totalResources" v-tip="{text: `This industry\'s demand for ${k}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}">
         <div class="card-icon">
           <img :src="icons[k]"/>
           {{totalResources[k]}}
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import state from '/src/state';
 import game from '/src/game';
 import Card from './Card.vue';
 import display from 'lib/display';
@@ -48,6 +49,16 @@ export default {
       ...this.industry,
       ...INDUSTRIES[this.industry.id],
     };
+  },
+  methods: {
+    demandPercent(k) {
+      let percent = this.totalResources[k]/state.gameState.output_demand[k] * 100;
+      if (percent < 1) {
+        return '<1%';
+      } else {
+        return `${percent.toFixed(1)}%`;
+      }
+    }
   },
   computed: {
     demand() {
@@ -69,7 +80,7 @@ export default {
         byproducts['emissions'] = emissions * this.demand;
       }
       return byproducts;
-    }
+    },
   }
 }
 </script>

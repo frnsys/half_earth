@@ -79,8 +79,8 @@ const intensities = {
     'calories': [0, 0.001, 0.002, 0.01],
   },
   'labor': {
-    'energy': [0, 0.001, 0.01, 0.1], // TODO
-    'calories': [0, 0.001, 0.002, 0.01], // TODO
+    'energy': [0, 0.001, 0.01, 0.1], // TODO labor
+    'calories': [0, 0.001, 0.002, 0.01], // TODO labor
   },
   'energy': {
     'energy': [0, 0.001, 0.01, 0.1], // TODO EROI

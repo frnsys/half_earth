@@ -53,18 +53,21 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
         // Add 1. to avoid zero division issues
         filled_demand += amount_to_produce/(order.amount + 1.);
 
+        // Calculate consumed resources and produced byproducts.
+        // Apply output modifiers as a reduction in resource costs
+        // and byproducts emitted.
         for (k, v) in order.process.resources.items() {
-            consumed_resources[k] += amount_to_produce * *v;
+            consumed_resources[k] += (amount_to_produce * *v)/order.process.output_modifier;
         }
         for (k, v) in order.process.byproducts.items() {
-            created_byproducts[k] += amount_to_produce * *v;
+            created_byproducts[k] += (amount_to_produce * *v)/order.process.output_modifier;
         }
 
         // Ignore "Other" feedstock
         match order.process.feedstock.0 {
             Feedstock::Other | Feedstock::Soil => (),
             _ => {
-                consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * order.process.feedstock.1;
+                consumed_feedstocks[order.process.feedstock.0] += (amount_to_produce * order.process.feedstock.1)/(order.process.output_modifier);
             }
         }
         amount_to_produce
@@ -149,33 +152,32 @@ pub fn calculate_mix(processes: &[Process], demand: &OutputMap<f32>, resource_we
             vars.add(variable().min(0).max(0))
         };
         total_produced[process.output] += amount_to_produce;
-        // TODO test
         match priority {
             Priority::Scarcity => {
                 for (k, v) in process.resources.items() {
-                    total_intensity += amount_to_produce * *v * resource_weights[k];
+                    total_intensity += (amount_to_produce * *v * resource_weights[k])/process.output_modifier;
                 }
             },
             Priority::Land => {
-                total_intensity += amount_to_produce * process.resources.land;
+                total_intensity += (amount_to_produce * process.resources.land)/process.output_modifier;
             },
             Priority::Labor => {
-                // TODO
+                // TODO labor
             },
             Priority::Water => {
-                total_intensity += amount_to_produce * process.resources.water;
+                total_intensity += (amount_to_produce * process.resources.water)/process.output_modifier;
             },
             Priority::Energy => {
-                total_intensity += amount_to_produce * (process.resources.electricity + process.resources.fuel);
+                total_intensity += (amount_to_produce * (process.resources.electricity + process.resources.fuel))/process.output_modifier;
             },
             Priority::Emissions => {
                 let emissions = process.byproducts.co2 + (process.byproducts.n2o * 298.) + (process.byproducts.ch4 * 36.);
-                total_intensity += amount_to_produce * emissions;
+                total_intensity += (amount_to_produce * emissions)/process.output_modifier;
             },
         }
 
         // let (feedstock, amount) = process.feedstock;
-        // total_intensity += amount_to_produce * amount * feedstock_weights[feedstock];
+        // total_intensity += (amount_to_produce * amount * feedstock_weights[feedstock])/process.output_modifier;
         amount_to_produce
     }).collect();
 

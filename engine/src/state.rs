@@ -228,7 +228,7 @@ impl State {
              consumed_resources,
              consumed_feedstocks,
              byproducts) = produce(&orders, &self.resources, &self.feedstocks);
-        self.produced_by_process = produced_by_process; // TODO apply modifiers
+        self.produced_by_process = produced_by_process;
         self.produced = produced_by_type * self.output_modifier;
         self.byproducts += byproducts;
 
@@ -240,31 +240,19 @@ impl State {
         self.world.co2_emissions = byproducts.co2 + self.world.byproduct_mods.co2;
         self.world.ch4_emissions = byproducts.ch4 + self.world.byproduct_mods.ch4;
         self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
-        self.world.extinction_rate = (self.resources_demand.land/consts::STARTING_RESOURCES.land * 100.)
-            + self.world.temperature.powf(2.)
-            + self.world.sea_level_rise.powf(2.)
-            - self.world.byproduct_mods.biodiversity;
+        self.world.extinction_rate = self.processes.iter().zip(&self.produced_by_process).fold(0., |acc, (p, amount)| {
+            acc + self.process_extinction_rate(p, *amount)
+        }) + self.world.temperature.powf(2.)
+           + self.world.sea_level_rise.powf(2.)
+           - self.world.byproduct_mods.biodiversity;
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't
         self.feedstocks -= consumed_feedstocks;
         self.resources.fuel -= consumed_resources.fuel - self.produced.fuel;
         self.resources.fuel = self.resources.fuel.max(0.);
-
-        // Electricity from past turn disappears unless storage network is built
-        // TODO this kind of breaks everything because then it means we have 0
-        // electricity for the next production step
         self.resources.electricity -= consumed_resources.electricity - self.produced.electricity;
         self.resources.electricity = self.resources.electricity.max(0.);
-        // if self.flags.contains(&Flag::EnergyStorage3) {
-        //     self.resources.electricity *= 0.95;
-        // } else if self.flags.contains(&Flag::EnergyStorage2) {
-        //     self.resources.electricity *= 0.65;
-        // } else if self.flags.contains(&Flag::EnergyStorage1) {
-        //     self.resources.electricity *= 0.35;
-        // } else {
-        //     self.resources.electricity = 0.;
-        // }
 
         // Get resource deficit/surplus
         let (required_resources, required_feedstocks) = calculate_required(&orders);
@@ -275,6 +263,12 @@ impl State {
 
         // Update mixes according to resource scarcity
         update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights, &self.priority);
+    }
+
+    /// Contribution to extinction rate from a single process
+    pub fn process_extinction_rate(&self, process: &Process, produced: f32) -> f32 {
+        // TODO what should the biodiversity pressure factor be?
+        (process.byproducts.biodiversity/1e8 + process.resources.land/consts::STARTING_RESOURCES.land) * produced
     }
 
     pub fn step_world(&mut self) {
