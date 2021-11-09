@@ -23,6 +23,7 @@ pub enum Flag {
     Vegetarian,
     Vegan,
     ClosedBorders,
+    EVs
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]

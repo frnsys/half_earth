@@ -12,8 +12,6 @@
     <img
       v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
       class="process-feedstock" :src="assets.icons[feedstockIcon]">
-    {{feedstock}}
-
     <div class="opposers">
       <div>Nay</div>
       <div>

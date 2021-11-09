@@ -138,6 +138,21 @@ impl GameInterface {
         self.game.state.world.regions.iter().map(|r| r.adjusted_income()).sum()
     }
 
+    pub fn industry_demand(&self, industry_id: usize) -> f32 {
+        let ind = &self.game.state.industries[industry_id];
+        ind.demand_modifier * self.game.state.world.lic_population()
+    }
+
+    pub fn region_demand(&self, region_id: usize) -> Result<JsValue, JsValue> {
+        let reg = &self.game.state.world.regions[region_id];
+        Ok(serde_wasm_bindgen::to_value(&reg.demand())?)
+    }
+
+    pub fn region_habitability(&self, region_id: usize) -> Result<JsValue, JsValue> {
+        let reg = &self.game.state.world.regions[region_id];
+        Ok(serde_wasm_bindgen::to_value(&reg.habitability())?)
+    }
+
     pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue>  {
         Ok(serde_wasm_bindgen::to_value(&self.game.simulate(&mut self.rng, years))?)
     }

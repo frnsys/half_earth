@@ -297,48 +297,57 @@ function render(e) {
       }
     }
     case 'ModifyIndustryDemand': {
-      let industry = state.gameState.industries[e.entity].name;
+      let industry = state.gameState.industries[e.entity];
       let p = e.param * 100;
-      // TODO attach industry card
       return {
         tip: {
           icon: 'demand',
-          subicon: slugify(industry),
-          text: `${e.param < 0 ? 'Reduces' : 'Increases'} demand for ${industry} by ${Math.abs(p).toFixed(0)}%.`,
+          subicon: slugify(industry.name),
+          text: `${e.param < 0 ? 'Reduces' : 'Increases'} demand for ${industry.name} by ${Math.abs(p).toFixed(0)}%.`,
+          card: {
+            type: 'Industry',
+            data: industry,
+          }
         },
         icon: 'demand',
-        subicon: slugify(industry),
+        subicon: slugify(industry.name),
         text: `${sign(p.toFixed(0))}%`,
       }
     }
     case 'ModifyIndustryResources': {
-      let industry = state.gameState.industries[e.entity].name;
+      let industry = state.gameState.industries[e.entity];
       let p = Math.abs(1 - e.param) * 100;
-      // TODO attach industry card
       return {
         tip: {
-          icon: slugify(industry),
+          icon: slugify(industry.name),
           subicon: e.subtype.toLowerCase(),
-          text: `${e.param < 1 ? 'Reduces' : 'Increases'} ${e.subtype.toLowerCase()} demand for ${industry} by ${p.toFixed(0)}%.`,
+          text: `${e.param < 1 ? 'Reduces' : 'Increases'} ${e.subtype.toLowerCase()} demand for ${industry.name} by ${p.toFixed(0)}%.`,
+          card: {
+            type: 'Industry',
+            data: industry,
+          }
         },
-        icon: slugify(industry),
+        icon: slugify(industry.name),
         subicon: e.subtype.toLowerCase(),
         text: `${sign(p.toFixed(0))}%`,
       }
     }
     case 'ModifyIndustryByproducts': {
-      let industry = state.gameState.industries[e.entity].name;
+      let industry = state.gameState.industries[e.entity];
       let p = (1 - e.param) * 100;
-      // TODO attach industry card
       return {
         tip: {
           subicon: 'emissions',
-          icon: slugify(industry),
-          text: `${e.param < 1 ? 'Reduces' : 'Increases'} ${e.subtype} emissions for ${industry} by ${Math.abs(p).toFixed(0)}%.`,
+          icon: slugify(industry.name),
+          text: `${e.param < 1 ? 'Reduces' : 'Increases'} ${e.subtype} emissions for ${industry.name} by ${Math.abs(p).toFixed(0)}%.`,
+          card: {
+            type: 'Industry',
+            data: industry,
+          }
         },
         icon: 'demand',
         subicon: 'emissions',
-        icon: slugify(industry),
+        icon: slugify(industry.name),
         text: `${sign(p.toFixed(0))}%`,
       }
     }

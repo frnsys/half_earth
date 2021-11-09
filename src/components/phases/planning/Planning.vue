@@ -6,11 +6,13 @@
     <div :class="{active: page == PAGES.PLAN}" @click="page = PAGES.PLAN">Plan</div>
     <div :class="{active: page == PAGES.COALITION}" @click="page = PAGES.COALITION">Coalition</div>
     <div :class="{active: page == PAGES.DASHBOARD}" @click="page = PAGES.DASHBOARD">Dashboard</div>
+    <div :class="{active: page == PAGES.REGIONS}" @click="page = PAGES.REGIONS">Regions</div>
   </header>
 
   <Plan v-if="page == PAGES.PLAN" />
   <Coalition v-else-if="page == PAGES.COALITION" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" />
+  <Regions v-else-if="page == PAGES.REGIONS" />
 </div>
 </template>
 
@@ -22,6 +24,7 @@ import Hud from 'components/Hud.vue';
 import Coalition from './Coalition.vue';
 import Dashboard from './Dashboard.vue';
 import Plan from './Plan.vue';
+import Regions from './Regions.vue';
 import EventsMixin from 'components/EventsMixin';
 import EVENTS from '/assets/content/events.json';
 
@@ -29,6 +32,7 @@ const PAGES = {
   PLAN: 0,
   COALITION: 1,
   DASHBOARD: 2,
+  REGIONS: 3,
 };
 
 export default {
@@ -37,6 +41,7 @@ export default {
     Hud,
     Coalition,
     Dashboard,
+    Regions,
     Plan,
   },
   created() {
@@ -150,6 +155,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-y: scroll;
 }
 .planning--page .cards {
   flex: 1;

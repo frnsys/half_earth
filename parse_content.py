@@ -75,6 +75,7 @@ specs = {
         'flags': 'vec![]',
     },
     'Industry': {
+        'id': None,
         'name': None,
         'resources': {},
         'byproducts': {},
@@ -816,6 +817,27 @@ if __name__ == '__main__':
     with open('assets/content/industries.json', 'w') as f:
         json.dump(industries, f)
 
+    regions = []
+    for p in items_by_type['Region']:
+        id = p['id']
+        image = p.get('image', {})
+        fname = image.get('image', None)
+        attribution = image.get('attribution', None)
+        region = {
+            'image': {
+                'fname': fname,
+                'attribution': attribution,
+            },
+        }
+        if fname:
+            frm = 'editor/uploads/{}'.format(fname)
+            to = 'assets/content/images/{}'.format(fname)
+            shutil.copy(frm, to)
+        regions.append(region)
+    with open('assets/content/regions.json', 'w') as f:
+        json.dump(regions, f)
+
+
     npcs = []
     for p in items_by_type['NPC']:
         id = p['id']
@@ -827,14 +849,6 @@ if __name__ == '__main__':
     with open('assets/content/npcs.json', 'w') as f:
         json.dump(npcs, f)
 
-
-    regions = []
-    for region in items_by_type['Region']:
-        regions.append({
-            'name': region['name'],
-        })
-    with open('assets/content/regions.json', 'w') as f:
-        json.dump(regions, f)
 
     all_effects = []
     def find_effects(item):

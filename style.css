@@ -74,3 +74,8 @@ img {
 .bad {
   color: #FF4040;
 }
+
+.icon-stats {
+  display: flex;
+  justify-content: space-evenly;
+}

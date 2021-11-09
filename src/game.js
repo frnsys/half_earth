@@ -189,6 +189,18 @@ function simulate(years) {
   return game.simulate(years);
 }
 
+function industryDemand(industry) {
+  return game.industry_demand(industry.id);
+}
+
+function regionDemand(region) {
+  return game.region_demand(region.id);
+}
+
+function regionHabitability(region) {
+  return game.region_habitability(region.id);
+}
+
 const roll = {
   planningEvents: () => game.roll_planning_events(),
   worldStartEvents: () => game.roll_world_start_events(),
@@ -205,4 +217,5 @@ export default {
   banProcess, unbanProcess,
   promoteProcess, unpromoteProcess,
   setProjectPoints, startProject, stopProject, upgradeProject,
-  selectChoice, applyEvent, roll, simulate};
+  selectChoice, applyEvent, roll, simulate,
+  industryDemand, regionDemand, regionHabitability};

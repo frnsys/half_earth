@@ -96,7 +96,7 @@ pub fn regions() -> Vec<Region> {
         },
         Region {
             id: 5,
-            name: "Middle Africa",
+            name: "Central Africa",
             income: Income::LowerMiddle,
             development: 0.0,
             outlook: 50.0,
@@ -265,6 +265,7 @@ pub fn regions() -> Vec<Region> {
 pub fn industries() -> Vec<Industry> {
     vec![
         Industry {
+            id: 0,
             name: "Iron and Steel",
             resources: resources!(
                 electricity: 0.0,
@@ -280,6 +281,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 1,
             name: "Road Transport",
             resources: resources!(
                 electricity: 0.0,
@@ -295,6 +297,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 2,
             name: "Aviation",
             resources: resources!(
                 electricity: 0.0,
@@ -310,6 +313,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 3,
             name: "Shipping",
             resources: resources!(
                 electricity: 0.0,
@@ -325,6 +329,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 4,
             name: "Chemical",
             resources: resources!(
                 electricity: 0.0,
@@ -340,6 +345,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 5,
             name: "Concrete",
             resources: resources!(
                 electricity: 0.0,
@@ -354,6 +360,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 6,
             name: "Buildings",
             resources: resources!(
                 electricity: 291.83,
@@ -369,6 +376,7 @@ pub fn industries() -> Vec<Industry> {
             demand_modifier: 1.0
         },
         Industry {
+            id: 7,
             name: "Other Industry",
             resources: resources!(
                 electricity: 266.8,

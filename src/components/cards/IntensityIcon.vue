@@ -9,14 +9,15 @@
 
 <script>
 export default {
-  props: ['resource', 'intensity'],
+  props: ['resource', 'intensity', 'invert'],
   computed: {
     color() {
-      if (this.intensity === 1) {
+      let intensity = this.invert ? 5 - this.intensity : this.intensity;
+      if (intensity === 1) {
         return '#43CC70';
-      } else if (this.intensity === 2) {
+      } else if (intensity === 2) {
         return '#FBC011';
-      } else if (this.intensity === 3) {
+      } else if (intensity === 3) {
         return '#f28435';
       } else {
         return '#EF3838';
