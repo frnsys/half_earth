@@ -1,6 +1,7 @@
+use crate::consts;
 use crate::state::State;
 use crate::npcs::NPCRelation;
-use crate::kinds::{Resource, Output};
+use crate::kinds::{Resource, Output, Feedstock};
 use crate::production::ProcessFeature;
 use crate::projects::Status as ProjectStatus;
 use super::{WorldVariable, LocalVariable, PlayerVariable};
@@ -20,6 +21,7 @@ pub enum Condition {
     RunsPlayed(Comparator, usize),
     RegionFlag(String),
     NPCRelationship(usize, NPCRelation),
+    Feedstock(Feedstock, Comparator, f32),
 }
 
 
@@ -97,6 +99,9 @@ impl Condition {
                 };
                 let demand = state.output_demand[*output] * factor;
                 comp.eval(demand, *other_val)
+            },
+            Condition::Feedstock(feedstock, comp, other_val) => {
+                comp.eval(state.feedstocks[*feedstock]/consts::FEEDSTOCK_RESERVES[*feedstock], *other_val)
             },
             Condition::RunsPlayed(comp, runs) => {
                 comp.eval(state.runs as f32, *runs as f32)

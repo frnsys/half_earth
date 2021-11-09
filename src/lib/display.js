@@ -40,4 +40,12 @@ function fillIcons(text) {
   return text;
 }
 
-export default {co2eq, gtco2eq, output, outputs, landUsePercent, fillIcons};
+function enumToSlug(v) {
+  return v.split(/(?=[A-Z])/).join('_').toLowerCase();
+}
+
+function enumToDisplay(v) {
+  return enumToSlug(v).replace('_', ' ');
+}
+
+export default {co2eq, gtco2eq, output, outputs, landUsePercent, fillIcons, enumToSlug, enumToDisplay};

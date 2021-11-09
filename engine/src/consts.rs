@@ -10,7 +10,8 @@ pub const FEEDSTOCK_RESERVES: FeedstockMap<f32> = FeedstockMap {
     lithium: 80000000.0,
     natural_gas: 205495355718144000.0,
     soil: 0.0,
-    other: 0.0
+    other: 0.0,
+    thorium: 5805982300000.0
 };
 
 pub const STARTING_RESOURCES: ResourceMap<f32> = ResourceMap {

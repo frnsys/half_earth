@@ -11,7 +11,6 @@ export default {
     energy: require('/assets/icons/energy.png'),
     labor: require('/assets/icons/labor.png'),
     water: require('/assets/icons/water.png'),
-    feedstock: require('/assets/icons/feedstock.png'),
     improve: require('/assets/placeholders/improve.svg'),
     worsen: require('/assets/placeholders/worsen.svg'),
     steady: require('/assets/icons/steady.svg'),
@@ -53,5 +52,25 @@ export default {
     scientist: require('/assets/characters/The Scientist.png'),
     populist: require('/assets/characters/The Populist.png'),
     ecologist: require('/assets/characters/The Ecologist.png'),
+
+    // Feedstocks
+    coal: require('/assets/icons/feedstocks/coal.png'),
+    lithium: require('/assets/icons/feedstocks/lithium.png'),
+    natural_gas: require('/assets/icons/feedstocks/natural_gas.png'),
+    oil: require('/assets/icons/feedstocks/oil.png'),
+    uranium: require('/assets/icons/feedstocks/uranium.png'),
+    thorium: require('/assets/icons/feedstocks/thorium.png'),
+    soil: require('/assets/icons/feedstocks/soil.png'),
+    other: require('/assets/icons/feedstocks/other.png'),
+
+    // Process features
+    is_ccs: require('/assets/icons/features/is_ccs.png'),
+    is_combustion: require('/assets/icons/features/is_combustion.png'),
+    is_intermitten: require('/assets/icons/features/is_intermittent.png'),
+    is_nuclear: require('/assets/icons/features/is_nuclear.png'),
+    is_solar: require('/assets/icons/features/is_solar.png'),
+    uses_livestock: require('/assets/icons/features/uses_livestock.png'),
+    uses_pesticides: require('/assets/icons/features/uses_pesticides.png'),
+    uses_syn_fertilizer: require('/assets/icons/features/uses_syn_fertilizer.png'),
   }
 };

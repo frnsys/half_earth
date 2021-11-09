@@ -161,6 +161,7 @@ specs = {
         'natural_gas': 0.,
         'soil': 0.,
         'other': 0.,
+        'thorium': 0.,
     },
     'OutputMap': {
         'fuel': 0.,
@@ -213,7 +214,7 @@ effects = {
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
     'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
-    'NPCRelationship':  lambda e: (ids[e['entity']], param(e, 'Change')),
+    'NPCRelationship':  lambda e: (ids[e['entity']], int(param(e, 'Change'))),
     'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(byproduct_map[e['subtype']]), param(e, 'Multiplier')),
     'ModifyIndustryResources':   lambda e: (ids[e['entity']], 'Resource::{}'.format(e['subtype']), param(e, 'Multiplier')),
     'ModifyEventProbability':    lambda e: (ids[e['entity']], param(e, 'Change')),
@@ -794,6 +795,26 @@ if __name__ == '__main__':
         processes.append(process)
     with open('assets/content/processes.json', 'w') as f:
         json.dump(processes, f)
+
+    industries = []
+    for p in items_by_type['Industry']:
+        id = p['id']
+        image = p.get('image', {})
+        fname = image.get('image', None)
+        attribution = image.get('attribution', None)
+        industry = {
+            'image': {
+                'fname': fname,
+                'attribution': attribution,
+            },
+        }
+        if fname:
+            frm = 'editor/uploads/{}'.format(fname)
+            to = 'assets/content/images/{}'.format(fname)
+            shutil.copy(frm, to)
+        industries.append(industry)
+    with open('assets/content/industries.json', 'w') as f:
+        json.dump(industries, f)
 
     npcs = []
     for p in items_by_type['NPC']:

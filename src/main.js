@@ -1,6 +1,7 @@
 import {createApp} from 'vue';
 import {sign} from '/src/lib/util';
 import consts from '/src/consts';
+import display from 'lib/display';
 import assets from 'components/assets';
 import tip from 'components/tip/directive';
 import App from 'components/App.vue';

@@ -230,6 +230,7 @@ define_enum_map!(Feedstock {
     Coal,
     Uranium,
     Lithium,
+    Thorium,
     NaturalGas,
     Other
 });

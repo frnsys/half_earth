@@ -10,8 +10,9 @@
       v-tip="{text: `This process is expected to ${expectedChange}.`, icon: changeIcons[expectedChange]}"
       class="process-trend" :src="assets.icons[changeIcons[expectedChange]]">
     <img
-      v-tip="{text: 'This process uses coal.', icon: 'feedstock'}"
-      class="process-feedstock" :src="assets.icons.feedstock">
+      v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
+      class="process-feedstock" :src="assets.icons[feedstockIcon]">
+    {{feedstock}}
 
     <div class="opposers">
       <div>Nay</div>
@@ -150,6 +151,12 @@ export default {
         emissions,
         amount
       };
+    },
+    feedstockIcon() {
+      return display.enumToSlug(this.feedstock[0]);
+    },
+    feedstockName() {
+      return display.enumToDisplay(this.feedstock[0]);
     },
     intensities() {
       let type =

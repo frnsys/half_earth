@@ -409,7 +409,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::DegradesSoil,
                 ProcessFeature::IsCCS,
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
@@ -520,7 +519,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
             ],
             output_modifier: 1.0,
@@ -559,7 +557,7 @@ pub fn processes() -> Vec<Process> {
             name: "Thorium Nuclear Power",
             output: Output::Electricity,
             mix_share: 0.0,
-            feedstock: (Feedstock::Other, 0.0),
+            feedstock: (Feedstock::Thorium, 0.0),
             resources: resources!(
 
             ),
@@ -619,7 +617,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::DegradesSoil,
                 ProcessFeature::IsSolar,
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
@@ -649,7 +646,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
             ],
             output_modifier: 1.0,
@@ -677,7 +673,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::DegradesSoil,
                 ProcessFeature::UsesLivestock,
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
@@ -707,7 +702,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::BuildsSoil,
                 ProcessFeature::UsesLivestock
             ],
             output_modifier: 1.0,
@@ -979,7 +973,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::DegradesSoil,
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
@@ -1062,7 +1055,6 @@ pub fn processes() -> Vec<Process> {
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::BuildsSoil,
                 ProcessFeature::IsSolar
             ],
             output_modifier: 1.0,
@@ -3656,6 +3648,56 @@ pub fn projects() -> Vec<Project> {
             ],
             supporters: vec![],
             opposers: vec![]
+        },
+        Project {
+            id: 71,
+            name: "Rewilding",
+            cost: 0,
+            base_cost: Cost::Dynamic(0.75, Factor::Time),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
+        },
+        Project {
+            id: 72,
+            name: "Electrify Road Vehicles",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::AddFlag(Flag::EVs)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![]
         }
     ]
 }
@@ -5492,20 +5534,35 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 1.0)
+
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::OutputDemandGap(Output::AnimalCalories, Comparator::Greater, 0.25),
                         Condition::ProjectStatus(1, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             choices: vec![
+                Choice {
+                    effects: vec![
+                        Effect::NPCRelationship(5, 1),
+                        Effect::PlayerVariable(PlayerVariable::PoliticalCapital, 10.0)
+                    ],
+                    conditions: vec![
 
+                    ]
+                },
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ]
+                }
             ],
             prob_modifier: 1.0,
             intensity: 0,
@@ -5836,7 +5893,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProcessMixShareFeature(ProcessFeature::DegradesSoil, Comparator::GreaterEqual, 0.5),
+                        Condition::Feedstock(Feedstock::Soil, Comparator::LessEqual, 0.5),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -7665,12 +7722,14 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, 1.0)
             ],
             probabilities: vec![
 
             ],
-            choices: vec![],
+            choices: vec![
+
+            ],
             prob_modifier: 1.0,
             intensity: 0,
             aspect: None
@@ -7747,6 +7806,72 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             choices: vec![],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 134,
+            name: "Extra Animals",
+            kind: EventType::World,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProjectStatus(1, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::Demand(Output::AnimalCalories, Comparator::Less, 10.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            choices: vec![
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ]
+                },
+                Choice {
+                    effects: vec![
+
+                    ],
+                    conditions: vec![
+
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 135,
+            name: "Infrastructure Rejection",
+            kind: EventType::World,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            choices: vec![
+
+            ],
             prob_modifier: 1.0,
             intensity: 0,
             aspect: None

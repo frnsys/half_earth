@@ -119,15 +119,13 @@ function render(e) {
       }
     }
     case 'OutputForFeature': {
-      // TODO process feature icons
       return {
         tip: {
-          icon: 'TODO PROCESS ICON',
-          text: 'TODO PROCESS ICON',
+          icon: display.enumToSlug(e.subtype),
+          text: `${sign(e.param*100)}% to ${e.subtype} output.`
         },
-        icon: 'TODO PROCESS ICON',
-        subicon: 'TODO PROCESS ICON',
-        text: `${sign(e.param*100)}% to ${e.subtype} output.`
+        icon: display.enumToSlug(e.subtype),
+        text: `${sign(e.param*100)}%`
       }
     }
     case 'Demand': {
