@@ -25,7 +25,7 @@ pub enum Flag {
     ClosedBorders,
 }
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, PartialEq, Debug, Clone)]
 pub enum Effect {
     LocalVariable(LocalVariable, f32),
     WorldVariable(WorldVariable, f32),

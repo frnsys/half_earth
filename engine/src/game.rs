@@ -1,9 +1,8 @@
+use crate::content;
 use crate::state::State;
 use crate::projects::Status;
 use crate::production::Priority;
-use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::events::{EventPool, Effect, Type as EventType};
-use crate::{content, consts};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
 use crate::utils;
@@ -153,53 +152,8 @@ impl Game {
     /// Create a new instance of game with
     /// all the content loaded in
     pub fn new(difficulty: Difficulty) -> Game {
-        let mut state = State {
-            // political_capital: 10,
-            political_capital: 100,
-            malthusian_points: 0,
-            hes_points: 0,
-            falc_points: 0,
-            flags: Vec::new(),
-            priority: Priority::Scarcity,
-
-            world: content::world(difficulty),
-            projects: content::projects(),
-            processes: content::processes(),
-            industries: content::industries(),
-            npcs: content::npcs(),
-
-            runs: 1, // TODO TEMP TESTING
-            requests: Vec::new(),
-
-            output_modifier: outputs!(
-                fuel: 1.,
-                electricity: 1.,
-                animal_calories: 1.,
-                plant_calories: 1.
-            ),
-            output_demand: outputs!(),
-            output_demand_modifier: outputs!(
-                fuel: 1.,
-                electricity: 1.,
-                animal_calories: 1.,
-                plant_calories: 1.
-            ),
-            output_demand_extras: outputs!(),
-            resources_demand: resources!(),
-            resources: consts::STARTING_RESOURCES,
-            feedstocks: consts::FEEDSTOCK_RESERVES,
-            byproducts: byproducts!(),
-            produced: outputs!(),
-            produced_by_process: Vec::new(),
-            consumed_resources: resources!(),
-            consumed_feedstocks: feedstocks!(),
-            protected_land: 0.,
-        };
-
-        state.init();
-
         Game {
-            state,
+            state: State::new(difficulty),
             event_pool: EventPool::new(content::events()),
         }
     }

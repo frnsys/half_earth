@@ -2,7 +2,7 @@ use crate::consts;
 use crate::kinds::OutputMap;
 use serde::Serialize;
 
-const DEVELOP_SPEED: f32 = 0.03;
+const DEVELOP_SPEED: f32 = 0.015;
 
 #[derive(Serialize, Clone)]
 pub struct Region {

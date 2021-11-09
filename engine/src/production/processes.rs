@@ -7,8 +7,6 @@ const PROMOTED_TARGET: f32 = 0.5;
 
 #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum ProcessFeature {
-    BuildsSoil,
-    DegradesSoil,
     UsesPesticides,
     UsesSynFertilizer,
     UsesLivestock,
