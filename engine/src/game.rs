@@ -43,6 +43,10 @@ impl GameInterface {
 
     pub fn change_political_capital(&mut self, amount: isize) {
         self.game.state.political_capital += amount;
+
+        if self.game.state.political_capital <= 0 {
+            self.game.state.game_over = true;
+        }
     }
 
     pub fn change_local_outlook(&mut self, amount: isize, region_id: usize) {

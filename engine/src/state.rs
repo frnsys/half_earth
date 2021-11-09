@@ -1,4 +1,4 @@
-use crate::npcs::NPC;
+use crate::npcs::{NPC, NPCRelation};
 use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
@@ -21,6 +21,8 @@ pub struct State {
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
     pub priority: Priority,
+
+    pub game_over: bool,
 
     pub political_capital: isize,
     pub malthusian_points: usize,
@@ -62,6 +64,7 @@ impl State {
             falc_points: 0,
             flags: Vec::new(),
             priority: Priority::Scarcity,
+            game_over: false,
 
             world: content::world(difficulty),
             projects: content::projects(),
@@ -419,6 +422,15 @@ impl State {
         }
         for npc_id in &process.opposers {
             self.npcs[*npc_id].relationship -= 1;
+        }
+    }
+
+    pub fn is_ally(&mut self, name: &'static str) -> bool {
+        let npc = self.npcs.iter().find(|n| n.name == name);
+        if let Some(npc) = npc {
+            npc.relation() == NPCRelation::Ally
+        } else {
+            false
         }
     }
 }

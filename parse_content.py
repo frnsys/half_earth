@@ -214,6 +214,7 @@ effects = {
     'AddFlag':          lambda e: ('Flag::{}'.format(e['params'].get('Flag')),),
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
+    'GameOver':         lambda _: (),
     'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
     'NPCRelationship':  lambda e: (ids[e['entity']], int(param(e, 'Change'))),
     'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(byproduct_map[e['subtype']]), param(e, 'Multiplier')),

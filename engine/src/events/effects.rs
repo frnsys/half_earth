@@ -66,17 +66,31 @@ pub enum Effect {
     ProjectCostModifier(usize, f32),
 
     ProtectLand(f32),
+
+    GameOver
+}
+
+fn check_game_over(state: &mut State) {
+    if !state.is_ally("The Authoritarian") && state.world.outlook() < 0. {
+        state.game_over = true;
+    }
 }
 
 impl Effect {
     pub fn apply(&self, state: &mut State, event_pool: &mut EventPool, region_id: Option<usize>) {
         match self {
+            Effect::GameOver => {
+                state.game_over = true;
+            },
             Effect::LocalVariable(var, change) => {
                 if let Some(id) = region_id {
                     let region = &mut state.world.regions[id];
                     match var {
                         LocalVariable::Population => region.population *= 1. + *change/100.,
-                        LocalVariable::Outlook => region.outlook += *change,
+                        LocalVariable::Outlook => {
+                            region.outlook += *change;
+                            check_game_over(state);
+                        },
                         LocalVariable::Habitability => region.base_habitability += *change,
                     }
                 }
@@ -91,7 +105,10 @@ impl Effect {
                         state.world.co2_emissions += *change * 1e15; // Apply immediately
                     },
                     WorldVariable::ExtinctionRate => state.world.byproduct_mods.biodiversity -= *change,
-                    WorldVariable::Outlook => state.world.change_outlook(*change),
+                    WorldVariable::Outlook => {
+                        state.world.change_outlook(*change);
+                        check_game_over(state);
+                    }
                     WorldVariable::Temperature => state.world.temperature_modifier += *change,
                     WorldVariable::WaterStress => state.world.water_stress += *change,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise += *change,
@@ -200,11 +217,13 @@ impl Effect {
                 for region in &mut state.world.regions {
                     region.outlook += (mult * region.demand()[*output]).floor();
                 }
+                check_game_over(state);
             },
             Effect::IncomeOutlookChange(mult) => {
                 for region in &mut state.world.regions {
                     region.outlook += (mult * region.adjusted_income()).floor();
                 }
+                check_game_over(state);
             },
             Effect::ProjectCostModifier(id, change) => {
                 state.projects[*id].cost_modifier += change;

@@ -243,6 +243,9 @@ const EFFECTS = {
   Migration: {
   },
 
+  GameOver: {
+  },
+
   ProjectRequest: {
     choices:  ['Implement', 'Stop'],
     entity: 'Project',
