@@ -3,8 +3,7 @@
   <template v-slot:body>
     <div class="minicard-background" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" />
     <div :style="{zIndex: 1}">
-      <img v-if="process.output == 'Electricity' || process.output == 'Fuel'" src="/assets/icons/pips/power.png" />
-      <img v-else src="/assets/icons/pips/food.png" />
+      <img :src="icons[icon]" />
     </div>
   </template>
   <template v-slot:expanded>
@@ -14,20 +13,29 @@
 </template>
 
 <script>
-import state from '/src/state';
 import MiniCard from './MiniCard.vue';
 import ProcessCard from './ProcessCard.vue';
+import PROCESSES from '/assets/content/processes.json';
 
 export default {
   props: ['process'],
   data() {
     return {
-      ...state.processes[this.process.id],
+      ...PROCESSES[this.process.id],
     }
   },
   components: {
     MiniCard,
     ProcessCard,
+  },
+  computed: {
+    icon() {
+      if (this.process.output == 'Electricity' || this.process.output == 'Fuel') {
+        return 'energy';
+      } else {
+        return 'food';
+      }
+    }
   }
 }
 </script>

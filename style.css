@@ -75,7 +75,7 @@ img {
   color: #FF4040;
 }
 
-.icon-stats {
+.space-even {
   display: flex;
   justify-content: space-evenly;
 }

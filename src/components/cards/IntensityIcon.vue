@@ -1,6 +1,6 @@
 <template>
-<div class="intensity-icon">
-  <img :src="assets.icons[resource]"/>
+<div class="card-icon">
+  <img :src="icons[resource]"/>
   <div class="intensity-pips">
     <div class="intensity-pip" :style="{background:color}" v-for="i in intensity"></div>
   </div>
@@ -28,9 +28,6 @@ export default {
 </script>
 
 <style>
-.intensity-icon {
-  width: 30px;
-}
 .intensity-pips {
   text-align: center;
   line-height: 1;

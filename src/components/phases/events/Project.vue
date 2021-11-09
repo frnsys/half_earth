@@ -13,6 +13,7 @@
 import state from '/src/state';
 import display from 'lib/display';
 import Effects from 'components/Effects.vue';
+import PROJECTS from '/assets/content/projects.json';
 
 export default {
   props: ['id'],
@@ -21,7 +22,7 @@ export default {
   },
   computed: {
     project() {
-      return state.projects[this.id];
+      return PROJECTS[this.id];
     },
   },
 }

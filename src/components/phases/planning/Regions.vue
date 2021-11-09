@@ -1,7 +1,7 @@
 <template>
 <div class="planning--page">
-  <div class="planning--regions">
-    <div class="region--item" v-for="region in state.gameState.world.regions">
+  <div class="space-even planning--regions">
+    <div class="region--item" v-for="region in regions">
       <MiniRegion :region="region" />
       <div class="region--item-name">{{region.name}}</div>
     </div>
@@ -19,21 +19,15 @@ export default {
   },
   data() {
     return {
-      state
+      regions: state.gameState.world.regions
     }
   },
-  methods: {
-  },
-  computed: {
-  }
 }
 </script>
 
 <style>
 .planning--regions {
-  display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
 }
 .region--item {
   width: 80px;

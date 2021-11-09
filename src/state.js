@@ -20,17 +20,8 @@ const init = {
     research: 0,
     initiative: 0,
   },
-
-  projects: [],
-  processes: [],
 }
 
 const state = reactive(init);
-fetch('/assets/content/projects.json')
-  .then((resp) => resp.json())
-  .then((json) => state.projects = json);
-fetch('/assets/content/processes.json')
-  .then((resp) => resp.json())
-  .then((json) => state.processes = json);
 
 export default state;

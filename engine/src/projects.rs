@@ -103,8 +103,14 @@ fn nearest_multiple(v: f32) -> f32 {
 /// How many years a project takes to complete
 /// for the given amount of points.
 /// Has to be at least 1
-fn years_for_points(points: usize, cost: usize) -> f32 {
+pub fn years_for_points(points: usize, cost: usize) -> f32 {
     nearest_multiple(cost as f32/(points as f32).powf(1./3.)).max(1.)
+}
+
+pub fn years_remaining(progress: f32, points: usize, cost: usize) -> usize {
+    let remaining = 1. - progress;
+    let progress_per_year = 1./years_for_points(points, cost);
+    (remaining/progress_per_year).round() as usize
 }
 
 impl Project {

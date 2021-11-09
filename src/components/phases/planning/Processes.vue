@@ -6,25 +6,25 @@
         <button v-if="p.status == 'Neutral'" @click="banProcess(p)">
           &lt; Ban
           <div class="card--action--cost">
-            {{banProcessCost(p)}}<img class="pip" src="/assets/icons/pips/political_capital.png">
+            {{banProcessCost(p)}}<img class="pip" :src="icons.political_capital">
           </div>
         </button>
         <button v-if="p.status == 'Banned'" @click="unbanProcess(p)">
           Unban &gt;
           <div class="card--action--cost">
-            {{promoteProcessCost(p)}}<img class="pip" src="/assets/icons/pips/political_capital.png">
+            {{promoteProcessCost(p)}}<img class="pip" :src="icons.political_capital">
           </div>
         </button>
         <button v-if="p.status == 'Neutral'" @click="promoteProcess(p)">
           Promote &gt;
           <div class="card--action--cost">
-            {{promoteProcessCost(p)}}<img class="pip" src="/assets/icons/pips/political_capital.png">
+            {{promoteProcessCost(p)}}<img class="pip" :src="icons.political_capital">
           </div>
         </button>
         <button v-if="p.status == 'Promoted'" @click="unpromoteProcess(p)">
           &lt; Unpromote
           <div class="card--action--cost">
-            {{banProcessCost(p)}}<img class="pip" src="/assets/icons/pips/political_capital.png">
+            {{banProcessCost(p)}}<img class="pip" :src="icons.political_capital">
           </div>
         </button>
       </template>
@@ -32,9 +32,9 @@
   </Cards>
   <div class="production--demand planning--demand">
     <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
-      {{demand[k]}}{{consts.icons[k]}}
+      {{demand[k]}}<img :src="icons[k]">
     </div>
-    <div v-tip="{text: 'Global CO2eq emissions.', icon: 'emissions'}">{{emissions}}{{consts.icons['emissions']}}</div>
+    <div v-tip="{text: 'Global CO2eq emissions.', icon: 'emissions'}">{{emissions}}<img :src="icons.emissions"></div>
   </div>
 </div>
 </template>
@@ -42,10 +42,10 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import costs from 'lib/costs';
 import display from 'lib/display';
 import Cards from './Cards.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
-import {nearestMultiple} from '/src/lib/util';
 
 export default {
   components: {
@@ -70,10 +70,10 @@ export default {
   },
   methods: {
     banProcessCost(p) {
-      return Math.max(nearestMultiple(Math.round((100*p.mix_share)**(3/4)), 5), 5);
+      return costs.banProcessCost(p);
     },
     promoteProcessCost(p) {
-      return Math.max(nearestMultiple(Math.round((100*(1-p.mix_share))**(3/4)), 5), 5);
+      return costs.promoteProcessCost(p);
     },
     banProcess(p) {
       let cost = this.banProcessCost(p);

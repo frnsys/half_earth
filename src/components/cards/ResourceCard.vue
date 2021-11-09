@@ -8,12 +8,12 @@
       <div class="resource--user" v-for="user in top" :class="{highlight: user.name == current.name}">
         <div>
           <div>{{user.name}}</div>
-          <div>{{format(user.amount)}}</div>
+          <div>{{user.displayAmount}}</div>
         </div>
         <div>
           <IntensityIcon
             :resource="icon" :intensity="user.intensity" />
-          <div>{{display.output(user.produced, consts.outputs.keys[user.output])}}{{consts.icons[consts.outputs.keys[user.output]]}}</div>
+          <div>{{user.displayProduced}}<img :src="icons[user.output]"></div>
         </div>
       </div>
       <template v-if="!inTop">
@@ -21,12 +21,12 @@
         <div class="resource--user highlight">
           <div>
             <div>{{current.name}}</div>
-            <div>{{format(currentAmount)}}</div>
+            <div>{{currentData.displayAmount}}</div>
           </div>
           <div>
             <IntensityIcon
-              :resource="icon" :intensity="currentIntensity" />
-            <div>{{display.output(currentProduced, consts.outputs.keys[current.output])}}{{consts.icons[consts.outputs.keys[current.output]]}}</div>
+              :resource="icon" :intensity="currentData.intensity" />
+            <div>{{currentData.displayProduced}}<img :src="icons[currentData.output]"></div>
           </div>
         </div>
       </template>
@@ -42,7 +42,6 @@
 
 <script>
 import Card from './Card.vue';
-import display from 'lib/display';
 import IntensityIcon from './IntensityIcon.vue';
 
 export default {
@@ -51,11 +50,7 @@ export default {
     Card,
     IntensityIcon,
   },
-  created() {
-    this.display = display;
-  },
   data() {
-    console.log(this.resource)
     return {
       ...this.resource,
     };
@@ -67,15 +62,9 @@ export default {
     inTop() {
       return this.top.some((s) => s.name == this.current.name);
     },
-    currentAmount() {
-      return this.rankings.find((s) => s.name == this.current.name).amount;
+    currentData() {
+      return this.rankings.find((s) => s.name == this.current.name);
     },
-    currentIntensity() {
-      return this.rankings.find((s) => s.name == this.current.name).intensity;
-    },
-    currentProduced() {
-      return this.rankings.find((s) => s.name == this.current.name).produced;
-    }
   }
 }
 </script>
@@ -94,10 +83,10 @@ export default {
   color: #111;
   border-radius: 0.2em;
 }
-.resource--user .intensity-icon {
+.resource--user .card-icon {
   display: flex;
 }
-.resource--user .intensity-icon img {
+.resource--user img {
   height: 18px;
   width: 18px;
 }

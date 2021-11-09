@@ -12,7 +12,7 @@
   </div>
   <footer>
     <slot name="footer"></slot>
-    <img :src="`/assets/placeholders/${flipped ? 'flip.svg' : 'info.svg'}`" @click="flipped = !flipped">
+    <img :src="flipped ? icons.flip : icons.info" @click="flipped = !flipped">
   </footer>
 </div>
 </template>
@@ -50,8 +50,6 @@ export default {
   height: 400px;
   display: flex;
   flex-direction: column;
-
-  /* TEMPORARY */
   margin: 0 auto;
 }
 
@@ -136,5 +134,21 @@ export default {
 .opposers img {
   width: 24px;
   margin: 0.25em 0;
+}
+
+.card-icon {
+  width: 30px;
+  text-align: center;
+}
+
+.card-tack-ul {
+  position: absolute;
+  left: 0.5em;
+  top: 0.5em;
+}
+.card-tack-ur {
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
 }
 </style>

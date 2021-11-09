@@ -4,8 +4,8 @@
     <div>{{name}}</div>
     <div v-tip="{text: `Your relationship with ${name}.`, icon: 'relationship'}">
       <template v-for="i in consts.maxRelationship" >
-        <img :src="assets.icons.relationship" v-if="i <= relationship" />
-        <img :src="assets.icons.relationship_empty" v-else />
+        <img :src="icons.relationship" v-if="i <= relationship" />
+        <img :src="icons.relationship_empty" v-else />
       </template>
     </div>
   </template>
@@ -30,7 +30,6 @@
 
 <script>
 import Card from './Card.vue';
-import {slugify} from 'lib/util';
 import display from 'lib/display';
 import NPCS from '/assets/content/npcs.json';
 
@@ -40,22 +39,16 @@ export default {
     Card,
   },
   data() {
-    let data = NPCS[this.npc.id];
     return {
-      ...data,
-      ...this.npc,
-      html: display.fillIcons(data.description)
+      ...NPCS[this.npc.id],
     };
   },
   computed: {
+    html() {
+      return display.fillIcons(this.description);
+    },
     relationshipName() {
-      if (this.relationship >= 5) {
-        return 'Ally';
-      } else if (this.relationship <= 1) {
-        return 'Nemesis';
-      } else {
-        return 'Neutral';
-      }
+      return display.relationshipName(this.relationship);
     }
   }
 }

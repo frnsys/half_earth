@@ -3,9 +3,7 @@
   <template v-slot:body>
     <div class="minicard-background" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" />
     <div :style="{zIndex: 1}">
-      <img v-if="project.kind == 'Research'" src="/assets/icons/pips/research.png" />
-      <img v-if="project.kind == 'Initiative'" src="/assets/icons/pips/initiative.png" />
-      <img v-if="project.kind == 'Policy'" src="/assets/icons/pips/political_capital.png" />
+      <img :src="icons[icon]" />
       <div v-if="project.status == 'Building'" class="project-progress">
         <div class="project-progress-fill" :style="{width: `${project.progress*100}%`}" />
       </div>
@@ -16,10 +14,10 @@
     <ProjectCard :project="project" />
     <footer>
       <div class="pips">
-        {{availablePoints}}<img class="pip" src="/assets/icons/pips/research.png">
+        {{availablePoints}}<img class="pip" :src="icons.research">
       </div>
       <div class="pips pips--buy" @click="buyPoint">
-        {{nextPointCost}}<img class="pip" src="/assets/icons/pips/political_capital.png"> ⮕ <img class="pip" src="/assets/icons/pips/research.png">
+        {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons.research">
       </div>
     </footer>
   </template>
@@ -27,10 +25,10 @@
 </template>
 
 <script>
-import state from '/src/state';
 import MiniCard from './MiniCard.vue';
 import ProjectCard from './ProjectCard.vue';
 import ProjectMixin from 'components/phases/planning/ProjectMixin';
+import PROJECTS from '/assets/content/projects.json';
 
 export default {
   props: ['project'],
@@ -38,12 +36,17 @@ export default {
   data() {
     return {
       type: this.project.kind,
-      ...state.projects[this.project.id],
+      ...PROJECTS[this.project.id],
     }
   },
   components: {
     MiniCard,
     ProjectCard,
+  },
+  computed: {
+    icon() {
+      return this.project.kind.toLowerCase();
+    }
   }
 }
 </script>

@@ -5,7 +5,7 @@
   </Cards>
   <footer>
     <div class="pips">
-      {{availablePoints}}<img class="pip" src="/assets/icons/pips/political_capital.png">
+      {{availablePoints}}<img class="pip" :src="icons.political_capital">
     </div>
   </footer>
 </div>

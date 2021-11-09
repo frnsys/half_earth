@@ -2,13 +2,13 @@
 <Card class="region">
   <template v-slot:header>
     <div>{{name}}</div>
-    <div>{{population.toLocaleString()}}<img :src="assets.icons.population"></div>
+    <div>{{population.toLocaleString()}}<img :src="icons.population"></div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
   </template>
   <template v-slot:body>
-    <div class="icon-stats">
+    <div class="space-even">
       <IntensityIcon
         v-tip="{icon: 'wealth', text: `This region is ${incomeName} income. Higher incomes mean higher material footprints.`}"
         resource="wealth" :intensity="incomeLevel" />
@@ -20,8 +20,8 @@
         resource="contentedness" :intensity="contentedness" :invert="true" />
 
       <div v-for="v, k in demand" v-tip="{text: `This regions\'s demand for ${k}. This makes up X% of total demand for ${k}.`, icon: k}">
-        <div class="resource-icon">
-          <img :src="assets.icons[k]"/>
+        <div class="card-icon">
+          <img :src="icons[k]"/>
           {{demand[k]}}
         </div>
       </div>
@@ -42,7 +42,6 @@
 <script>
 import game from '/src/game';
 import Card from './Card.vue';
-import {slugify} from 'lib/util';
 import display from 'lib/display';
 import IntensityIcon from './IntensityIcon.vue';
 import REGIONS from '/assets/content/regions.json';
@@ -62,16 +61,16 @@ export default {
   },
   computed: {
     contentedness() {
-      return Math.round(this.region.outlook/50 * 4); // TODO dont hardcode this
+      return display.scaleIntensity(this.region.outlook, 'outlook');
     },
     demand() {
       return display.outputs(game.regionDemand(this.region));
     },
     habitability() {
-      return Math.round(game.regionHabitability(this.region)/100 * 4);
+      return display.scaleIntensity(game.regionHabitability(this.region), 'habitability');
     },
     incomeName() {
-      return display.enumToDisplay(this.income);
+      return display.enumDisplay(this.income);
     },
     incomeLevel() {
       switch (this.income) {
@@ -85,10 +84,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.resource-icon {
-  width: 30px;
-  text-align: center;
-}
-</style>

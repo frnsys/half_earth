@@ -3,19 +3,19 @@
   <template v-slot:header>
     <div>{{name}}</div>
     <div v-if="kind == 'Policy'">
-      <template v-if="status !== 'Active'">{{remainingCost}}<img :src="assets.icons.political_capital"></template>
+      <template v-if="status !== 'Active'">{{remainingCost}}<img :src="icons.political_capital"></template>
       <template v-else>Implemented</template>
     </div>
     <div v-else>{{status !== 'Finished' ? remainingCost : 'Finished'}}</div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <div v-if="status == 'Building'" class="project-points">
+    <div v-if="status == 'Building'" class="card-tack-ul">
       <img
         v-for="_ in points"
         class="pip"
         v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
-        :src="assets.icons[type]">
+        :src="icons[type]">
     </div>
     <div v-if="hasLevels" class="project-level">
       Level {{level+1}}
@@ -24,17 +24,17 @@
     <div class="opposers">
       <div>Nay</div>
       <div>
-        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
-        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
-        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
+        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
+        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
+        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
       </div>
     </div>
     <div class="supporters">
       <div>Yea</div>
       <div>
-        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
-        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
-        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
+        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
+        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
+        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
       </div>
     </div>
   </template>
@@ -46,15 +46,15 @@
         <button @click="payPoints">Implement</button>
       </template>
       <template v-else>
-        <button @click="assignPoint">+<img class="pip" :src="`/assets/icons/pips/${type}.png`"></button>
-        <button v-if="points > 0" @click="unassignPoint">-<img class="pip" :src="`/assets/icons/pips/${type}.png`"></button>
+        <button @click="assignPoint">+<img class="pip" :src="icons[type]"></button>
+        <button v-if="points > 0" @click="unassignPoint">-<img class="pip" :src="icons[type]"></button>
       </template>
     </div>
 
     <div class="project-upgrade" v-if="status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">
         <div>Next Level</div>
-        <div>{{nextUpgrade.cost}}<img class="pip" src="/assets/icons/pips/political_capital.png"></div>
+        <div>{{nextUpgrade.cost}}<img class="pip" :src="icons.political_capital"></div>
         <button @click="upgrade(p)">Upgrade</button>
       </div>
       <Effects :effects="nextUpgrade.effects" />
@@ -77,13 +77,8 @@
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
-import {nearestMultiple} from 'lib/util';
 import Effects from 'components/Effects.vue';
-
-function yearsForPoints(points, cost) {
-  return Math.max(nearestMultiple(cost/(points**(1/3)), 5), 1);
-}
+import PROJECTS from '/assets/content/projects.json';
 
 export default {
   props: ['project'],
@@ -92,10 +87,9 @@ export default {
     Effects,
   },
   data() {
-    let project = state.projects[this.project.id];
     return {
       ...this.project,
-      ...project,
+      ...PROJECTS[this.project.id],
     };
   },
   watch: {
@@ -114,9 +108,7 @@ export default {
       if (this.status == 'Active' || this.status == 'Finished') {
         return null;
       } else if (this.status == 'Building') {
-        let remaining = 1 - this.progress;
-        let progressPerYear = 1/yearsForPoints(this.points, this.cost);
-        let years = Math.round(remaining/progressPerYear);
+        let years = game.yearsRemaining(this.project);
         return `${years} years left`;
       } else {
         let cost = this.points > 0 ? this.estimate : this.cost;
@@ -128,7 +120,9 @@ export default {
       }
     },
     hasLevels() {
-      return this.status == 'Active' && this.kind == 'Policy' && this.upgrades.length > 0;
+      return this.status == 'Active'
+        && this.kind == 'Policy'
+        && this.upgrades.length > 0;
     },
     nextUpgrade() {
       if (this.upgrades.length === 0) {
@@ -141,7 +135,7 @@ export default {
       let upgrade = this.upgrades[idx];
       return {
         cost: upgrade.cost,
-        effects: state.projects[this.id].upgrades[idx].effects,
+        effects: this.upgrades[idx].effects,
       }
     },
     activeEffects() {
@@ -176,6 +170,8 @@ export default {
         game.setProjectPoints(this.id, this.points + 1);
         if (this.status !== 'Building') {
           game.startProject(this.id);
+
+          // Manually update status
           this.status = state.gameState.projects[this.id].status;
         }
         state.points[this.type]--;
@@ -186,6 +182,9 @@ export default {
         game.setProjectPoints(this.id, this.points - 1);
         if (this.status == 'Building' && this.points <= 1) {
           game.stopProject(this.id);
+
+          // Manually update status
+          this.status = state.gameState.projects[this.id].status;
         }
         state.points[this.type]++;
       }
@@ -207,15 +206,6 @@ export default {
         game.upgradeProject(this.id);
       }
     }
-
   }
 }
 </script>
-
-<style>
-.project-points {
-  position: absolute;
-  left: 0.5em;
-  top: 0.5em;
-}
-</style>

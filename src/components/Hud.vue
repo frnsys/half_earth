@@ -1,18 +1,18 @@
 <template>
   <div class="hud">
     <div>{{state.gameState.world.year}}</div>
-    <div><img :src="assets.icons.political_capital">{{state.gameState.political_capital}}</div>
+    <div><img :src="icons.political_capital">{{state.gameState.political_capital}}</div>
     <div>
-      <img :src="assets.icons.extinction_rate">{{state.gameState.world.extinction_rate.toFixed(0)}}
+      <img :src="icons.extinction_rate">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
     <div :class="{'bad': state.gameState.contentedness < 0}">
-      <img :src="assets.icons.contentedness">{{state.gameState.contentedness.toFixed(0)}}
+      <img :src="icons.contentedness">{{state.gameState.contentedness.toFixed(0)}}
     </div>
     <div>
-      <img :src="assets.icons.emissions">{{state.gameState.emissions.toFixed(1)}}
+      <img :src="icons.emissions">{{state.gameState.emissions.toFixed(1)}}
     </div>
     <div>
-      <img :src="assets.icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
+      <img :src="icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
     </div>
   </div>
 </template>

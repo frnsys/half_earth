@@ -2,9 +2,9 @@
   <div class="effects">
     <div v-for="{tip, icon, subicon, supicon, text} in renders" class="effect" v-tip="tip ? tip : 'missing tip'">
       <div class="effect--icon">
-        <img :src="assets.icons[icon]" />
-        <img :src="assets.icons[subicon]" v-if="subicon" class="effect--subicon" />
-        <img :src="assets.icons[supicon]" v-if="subicon" class="effect--supicon" />
+        <img :src="icons[icon]" />
+        <img :src="icons[subicon]" v-if="subicon" class="effect--subicon" />
+        <img :src="icons[supicon]" v-if="subicon" class="effect--supicon" />
       </div>
       <div class="effect--text">{{text}}</div>
     </div>
@@ -15,9 +15,7 @@
 import {sign, slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
-import consts from '/src/consts';
 import display from 'lib/display';
-import assets from 'components/assets';
 import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
 import ICONEVENTS from '/assets/content/icon_events.json';
@@ -99,7 +97,7 @@ function render(e) {
       return {
         tip: {
           icon: e.subtype.toLowerCase(),
-          text: `Changes ${consts.outputs.names[e.subtype]} production by ${sign(e.param*100)}%.`,
+          text: `Changes ${display.displayName(e.subtype)} production by ${sign(e.param*100)}%.`,
         },
         icon: e.subtype.toLowerCase(),
         text: `${sign(e.param*100)}%`,
@@ -121,10 +119,10 @@ function render(e) {
     case 'OutputForFeature': {
       return {
         tip: {
-          icon: display.enumToSlug(e.subtype),
+          icon: display.enumKey(e.subtype),
           text: `${sign(e.param*100)}% to ${e.subtype} output.`
         },
-        icon: display.enumToSlug(e.subtype),
+        icon: display.enumKey(e.subtype),
         text: `${sign(e.param*100)}%`
       }
     }
@@ -132,7 +130,7 @@ function render(e) {
       return {
         tip: {
           icon: e.subtype.toLowerCase(),
-          text: `Changes demand for ${consts.outputs.names[e.subtype]} by ${sign(e.param*100)}%. Current demand is TODO`,
+          text: `Changes demand for ${display.displayName(e.subtype)} by ${sign(e.param*100)}%. Current demand is TODO`,
         },
         icon: 'demand',
         subicon: e.subtype.toLowerCase(),
@@ -149,7 +147,7 @@ function render(e) {
       return {
         tip: {
           icon: e.subtype.toLowerCase(),
-          text: `Changes demand for ${consts.outputs.names[e.subtype]} by ${sign(val)}<img src="/assets/icons/electricity.png">. Current demand is ${demand[consts.outputs.keys[e.subtype]]}<img src="/assets/icons/electricity.png">.`
+          text: `Changes demand for ${display.displayName(e.subtype)} by ${sign(val)}<img src="/assets/icons/electricity.png">. Current demand is ${demand[display.enumKey(e.subtype)]}<img src="/assets/icons/electricity.png">.`
         },
         icon: 'demand',
         subicon: e.subtype.toLowerCase(),
@@ -352,14 +350,14 @@ function render(e) {
       }
     }
     case 'DemandOutlookChange': {
-      let k = consts.outputs.keys[e.subtype];
+      let k = display.displayName(e.subtype);
       console
       let outlookChange = Math.floor(state.gameState.output_demand[k] * e.param);
       return {
         tip: {
           icon: 'contentedness',
           subicon: e.subtype.toLowerCase(),
-          text: `Changes contentedness based on demand for ${consts.outputs.names[e.subtype]}.`,
+          text: `Changes contentedness based on demand for ${display.displayName(e.subtype)}.`,
         },
         icon: 'contentedness',
         subicon: e.subtype.toLowerCase(),

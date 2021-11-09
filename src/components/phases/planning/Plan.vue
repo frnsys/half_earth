@@ -6,13 +6,13 @@
     <div class="plan--change">
       <div class="plan--action">Add</div>
       <div class="plan--add-change minicard" @click="page = 'add'">
-        <img :src="assets.icons.add">
+        <img :src="icons.add">
       </div>
     </div>
     <div class="plan--change">
       <div class="plan--action">Priority</div>
       <div class="minicard" @click="page = 'priorities'">
-        <img :src="assets.icons[consts.priorities[consts.Priority[state.gameState.priority]].icon]" />
+        <img :src="icons[consts.priorities[consts.Priority[state.gameState.priority]].icon]" />
       </div>
       <div class="plan--note">{{consts.priorities[consts.Priority[state.gameState.priority]].name}}</div>
     </div>
@@ -30,7 +30,7 @@
   <div class="plan--charts">
     <div class="plan--charts--tabs">
       <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
-        <img :src="assets.icons[key]">{{name}}
+        <img :src="icons[key]">{{name}}
       </div>
     </div>
     <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
@@ -48,8 +48,7 @@ import MiniProcess from 'components/cards/MiniProcess.vue';
 import MiniProject from 'components/cards/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
-
-const totalLand = 104e12;
+import display from 'lib/display';
 
 const charts = {
   'land': 'Land Use',
@@ -59,6 +58,11 @@ const charts = {
 const startYear = 1990;
 const endYear = 2122;
 const years = 2122-1990;
+
+const formats = {
+  'land': (v) => display.landUsePercent(v),
+  'emissions': (v) => v * 1e-15,
+}
 
 export default {
   components: {
@@ -119,37 +123,24 @@ export default {
       switch (this.chart) {
         case 'land':
           data = historicalLandUse.concat(state.history.land_use)
-            .map((v) => v/totalLand);
+            .map((v) => display.landUsePercent(v));
           break;
         case 'emissions':
-          data = historicalEmissions.concat(state.history.emissions)
-            .map((v) => v/100);
+          data = historicalEmissions.concat(state.history.emissions);
           break;
       }
       return {
         data: data.map((y, i) => ({
           x: i,
-          y: y
+          y: y/100
         })),
         color: '#BC6A58',
       }
     },
     projection() {
-      let key;
-      let multiplier = 1;
-      switch (this.chart) {
-        case 'land':
-          key = 'land_use';
-          multiplier = 1/totalLand;
-          break;
-        case 'emissions':
-          key = 'emissions';
-          multiplier = 1/100 * 1e-15; // g to Gt
-          break;
-      }
       let data = this.simulated.map((d, i) => ({
         x: i + this.historical.data.length - 1,
-        y: d[key] * multiplier
+        y: formats[this.chart](d[this.chart])/100
       }));
       return {
         data,

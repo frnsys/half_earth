@@ -2,9 +2,9 @@
 <div class="tip-wrapper" v-if="show" :class="{overlay: card}">
   <div class="tip">
     <div class="tip--icon" v-if="icon">
-      <img :src="assets.icons[icon]">
-      <img :src="assets.icons[subicon]" v-if="subicon" class="tip--subicon">
-      <img :src="assets.icons[supicon]" v-if="supicon" class="tip--supicon">
+      <img :src="icons[icon]">
+      <img :src="icons[subicon]" v-if="subicon" class="tip--subicon">
+      <img :src="icons[supicon]" v-if="supicon" class="tip--supicon">
     </div>
     <div class="tip--body" v-if="text" v-html="text"></div>
   </div>

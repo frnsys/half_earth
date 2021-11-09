@@ -201,6 +201,10 @@ export default {
   padding: 1em;
   font-size: 1.1em;
 }
+.planning--demand img {
+  width: 22px;
+  vertical-align: middle;
+}
 
 .planning > header {
   display: flex;

@@ -1,6 +1,6 @@
 use crate::content;
 use crate::state::State;
-use crate::projects::Status;
+use crate::projects::{Status, years_remaining};
 use crate::production::Priority;
 use crate::events::{EventPool, Effect, Type as EventType};
 use rand::{SeedableRng, rngs::SmallRng};
@@ -153,6 +153,10 @@ impl GameInterface {
         Ok(serde_wasm_bindgen::to_value(&reg.habitability())?)
     }
 
+    pub fn years_remaining(&self, progress: f32, points: usize, cost: usize) -> usize {
+        years_remaining(progress, points, cost)
+    }
+
     pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue>  {
         Ok(serde_wasm_bindgen::to_value(&self.game.simulate(&mut self.rng, years))?)
     }
@@ -209,9 +213,9 @@ impl Game {
             state.step_production();
             state.step_world();
             snapshots.push(Snapshot {
-                land_use: state.resources_demand.land,
+                land: state.resources_demand.land,
                 emissions: state.world.emissions(),
-                energy_use: state.output_demand.electricity + state.output_demand.fuel,
+                energy: state.output_demand.electricity + state.output_demand.fuel,
                 population: state.world.population()
             });
         }
@@ -271,8 +275,8 @@ impl Game {
 
 #[derive(Serialize)]
 pub struct Snapshot {
-    land_use: f32,
+    land: f32,
     emissions: f32,
-    energy_use: f32,
+    energy: f32,
     population: f32,
 }

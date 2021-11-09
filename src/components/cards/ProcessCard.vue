@@ -2,30 +2,30 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div v-tip="{text: `This process currently produces ${produced.amount}${consts.icons[output]} and ${produced.emissions}${consts.icons['emissions']} per year.`, icon: output}">{{produced.amount}}{{consts.icons[output]}} {{produced.emissions}}{{consts.icons['emissions']}}</div>
+    <div v-tip="{text: `This process currently produces ${produced.amount}${icons[output]} and ${produced.emissions}${icons.emissions} per year.`, icon: output}">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <img
       v-tip="{text: `This process is expected to ${expectedChange}.`, icon: changeIcons[expectedChange]}"
-      class="process-trend" :src="assets.icons[changeIcons[expectedChange]]">
+      class="process-trend card-tack-ur" :src="icons[changeIcons[expectedChange]]">
     <img
       v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
-      class="process-feedstock" :src="assets.icons[feedstockIcon]">
+      class="process-feedstock card-tack-ul" :src="icons[feedstockIcon]">
     <div class="opposers">
       <div>Nay</div>
       <div>
-        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
-        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
-        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
+        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
+        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
+        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
       </div>
     </div>
     <div class="supporters">
       <div>Yea</div>
       <div>
-        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
-        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
-        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${assets.icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
+        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
+        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
+        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
       </div>
     </div>
   </template>
@@ -33,7 +33,7 @@
     <div class="card-actions" v-if="!!this.$slots.actions">
       <slot name="actions"></slot>
     </div>
-    <div class="process-intensity">
+    <div class="process-intensity space-even">
       <IntensityIcon
         v-tip="intensityTip('energy')"
         resource="energy" :intensity="intensities.energy" />
@@ -56,7 +56,7 @@
   </template>
   <template v-slot:back>
     <p>{{description}}</p>
-    <p>This process currently produces {{produced.amount}}{{consts.icons[output]}} and {{produced.emissions}}{{consts.icons['emissions']}} per year.</p>
+    <p>This process currently produces {{produced.amount}}{{icons[output]}} and {{produced.emissions}}{{icons.emissions}} per year.</p>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>
@@ -69,56 +69,17 @@
 
 <script>
 import Card from './Card.vue';
+import game from '/src/game';
 import state from '/src/state';
-import consts from '/src/consts';
 import display from 'lib/display';
-import assets from 'components/assets';
 import IntensityIcon from './IntensityIcon.vue';
+import PROCESSES from '/assets/content/processes.json';
 
 const changeIcons = {
   'remain steady': 'steady',
   'expand': 'improve',
   'contract': 'worsen',
 };
-
-const intensities = {
-  'land': {
-    'energy': [0, 0.001, 0.01, 0.1],
-    'calories': [0, 0.001, 0.002, 0.01],
-  },
-  'labor': {
-    'energy': [0, 0.001, 0.01, 0.1], // TODO
-    'calories': [0, 0.001, 0.002, 0.01], // TODO
-  },
-  'energy': {
-    'energy': [0, 0.001, 0.01, 0.1], // TODO EROI
-    'calories': [0, 0.00015, 0.0005, 0.001],
-  },
-  'water': {
-    'energy': [0, 1, 2, 5],
-    'calories': [0, 1, 2, 3],
-  },
-  'emissions': {
-    'energy': [-2000, 0, 200, 800],
-    'calories': [-1, 0, 0.5, 1],
-  },
-  'biodiversity': {
-    'energy': [0, 1, 2, 3],
-    'calories': [0, 1, 2, 3],
-  }
-};
-
-function intensity(val, key, type) {
-  let stops = intensities[key][type];
-  for (let i = 0; i < stops.length - 1; i++) {
-    if (val >= stops[i] && val < stops[i+1]) {
-      return i+1;
-    }
-  }
-  return stops.length;
-}
-
-const totalLand = 104e12;
 
 export default {
   props: ['process'],
@@ -133,8 +94,8 @@ export default {
     return {
       state,
       ...this.process,
-      ...state.processes[this.process.id],
-      output: consts.outputs.keys[this.process.output],
+      ...PROCESSES[this.process.id],
+      output: display.enumKey(this.process.output),
     };
   },
   computed: {
@@ -151,10 +112,10 @@ export default {
       };
     },
     feedstockIcon() {
-      return display.enumToSlug(this.feedstock[0]);
+      return display.enumKey(this.feedstock[0]);
     },
     feedstockName() {
-      return display.enumToDisplay(this.feedstock[0]);
+      return display.enumDisplay(this.feedstock[0]);
     },
     intensities() {
       let type =
@@ -169,7 +130,7 @@ export default {
         // TODO labor
       };
       let intensities = Object.keys(values).reduce((acc, k) => {
-        acc[k] = intensity(values[k], k, type);
+        acc[k] = display.intensity(values[k], k, type);
         return acc;
       }, {});
       return intensities;
@@ -206,7 +167,6 @@ export default {
                 icon: 'land',
                 name: 'Top Users',
                 rankings,
-                format: (v) => `${(v/totalLand*100).toFixed(0)}%`,
                 current: this.process,
               }
             }
@@ -224,15 +184,13 @@ export default {
                 icon: 'emissions',
                 name: 'Top Emitters',
                 rankings,
-                format: (v) => `${(v * 1e-15).toFixed(1)}Gt`,
                 current: this.process,
               }
             }
           }
         }
         case 'water': {
-          const totalWater = 45500000000000000.0;
-          let amount = state.gameState.resources_demand.water/totalWater * 100;
+          let amount = display.waterUsePercent(state.gameState.resources_demand.water);
           let rankings = state.gameState.resourceRankings['water'];
           return {
             icon: 'water',
@@ -243,7 +201,6 @@ export default {
                 icon: 'water',
                 name: 'Top Users',
                 rankings,
-                format: (v) => `${(v/totalWater*100).toFixed(0)}%`,
                 current: this.process,
               }
             }
@@ -261,7 +218,6 @@ export default {
                 icon: 'energy',
                 name: 'Top Users',
                 rankings,
-                format: (v) => `${(v*1e-9).toFixed(1)}TWh`,
                 current: this.process,
               }
             }
@@ -279,7 +235,6 @@ export default {
                 icon: 'biodiversity',
                 name: 'Top Threats',
                 rankings,
-                format: (v) => `${v.toFixed(0)}`,
                 current: this.process,
               }
             }
@@ -293,8 +248,6 @@ export default {
 
 <style>
 .process-intensity {
-  display: flex;
-  justify-content: space-evenly;
   margin: 0.5em 0;
 }
 
@@ -303,16 +256,10 @@ export default {
   width: 24px;
   background: #222;
   border-radius: 10em;
-  position: absolute;
-  top: 0.5em;
   padding: 0.35em 0.2em;
   border: 1px solid #888;
 }
-.process-trend {
-  right: 0.5em;
-}
 .process-feedstock {
-  left: 0.5em;
   padding: 0.2em 0.2em;
 }
 </style>

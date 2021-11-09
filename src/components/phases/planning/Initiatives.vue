@@ -5,10 +5,10 @@
   </Cards>
   <footer>
     <div class="pips">
-      {{availablePoints}}<img class="pip" src="/assets/icons/pips/initiative.png">
+      {{availablePoints}}<img class="pip" :src="icons.initiative">
     </div>
     <div class="pips pips--buy" @click="buyPoint">
-      {{nextPointCost}}<img class="pip" src="/assets/icons/pips/political_capital.png"> ⮕ <img class="pip" src="/assets/icons/pips/initiative.png">
+      {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons.political_capital">
     </div>
   </footer>
 </div>

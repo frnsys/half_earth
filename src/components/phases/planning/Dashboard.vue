@@ -5,27 +5,22 @@
       <div class="minicard">
         {{`${(state.gameState.population * 1e-9).toFixed(1)}b`}}
       </div>
-      <img :src="assets.icons.population" />
+      <img :src="icons.population" />
       <div class="dashboard--item-name">Population</div>
     </div>
     <div class="dashboard--item">
       <div class="minicard">
       {{`${((state.gameState.resources_demand.land/104e12)*100).toFixed(0)}%`}}
       </div>
-      <img :src="assets.icons.land" />
+      <img :src="icons.land" />
       <div class="dashboard--item-name">Land Use</div>
     </div>
     <div class="dashboard--item">
       <div class="minicard">
       {{`${state.gameState.emissions.toFixed(1)}Gt`}}
       </div>
-      <img :src="assets.icons.emissions" />
+      <img :src="icons.emissions" />
       <div class="dashboard--item-name">Emissions</div>
-    </div>
-
-    <div v-for="p in resourcesByProcess">
-      {{p.name}}
-      {{p.land}}
     </div>
   </div>
 </div>
@@ -44,21 +39,6 @@ export default {
       state
     }
   },
-  methods: {
-    resourcesByProcess(resource) {
-      return state.gameState.processes.map((p, i) => {
-        let amount = state.gameState.produced_by_process[i];
-        return {
-          amount,
-          name: p.name,
-          output: p.output,
-          land: p.resources[resource] * amount
-        }
-      });
-    }
-  },
-  computed: {
-  }
 }
 </script>
 

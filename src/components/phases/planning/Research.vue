@@ -3,12 +3,12 @@
   <Cards>
     <ProjectCard v-for="p in projects" :project="p" />
   </Cards>
-  <footer v-if="p !== 'Policy'">
+  <footer>
     <div class="pips">
-      {{availablePoints}}<img class="pip" src="/assets/icons/pips/research.png">
+      {{availablePoints}}<img class="pip" :src="icons.research">
     </div>
     <div class="pips pips--buy" @click="buyPoint">
-      {{nextPointCost}}<img class="pip" src="/assets/icons/pips/political_capital.png"> ⮕ <img class="pip" src="/assets/icons/pips/research.png">
+      {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons.research">
     </div>
   </footer>
 </div>

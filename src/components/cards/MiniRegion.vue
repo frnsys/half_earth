@@ -17,10 +17,8 @@ import REGIONS from '/assets/content/regions.json';
 export default {
   props: ['region'],
   data() {
-    let data = REGIONS[this.region.id];
     return {
-      ...data,
-      ...this.region,
+      ...REGIONS[this.region.id],
     }
   },
   components: {

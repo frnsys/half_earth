@@ -1,5 +1,6 @@
 import game from '/src/game';
 import state from '/src/state';
+import costs from 'lib/costs';
 import Cards from './Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
 
@@ -30,8 +31,7 @@ export default {
       }
     },
     nextPointCost() {
-      let i = this.pointsInUse;
-      return Math.round((i+1)**1.5);
+      return costs.nextPointCost(this.pointsInUse);
     },
   },
   methods: {
