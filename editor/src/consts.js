@@ -368,9 +368,10 @@ const SPEAKERS = [
   'The Wretched',
   'The Envoy',
   'The Space Enthusiast',
-  'The Health Czar',
+  'The Doctor',
   'The Energy Czar',
   'The Safety Czar',
+  'The Authoritarian',
 ];
 
 const EVENT_TYPES = [

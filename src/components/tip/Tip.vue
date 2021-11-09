@@ -11,7 +11,8 @@
   <div class="tip--card">
     <ProcessCard v-if="card && card.type == 'Process'" :process="card.data" />
     <ProjectCard v-if="card && card.type == 'Project'" :project="card.data" />
-    <NPCCard     v-if="card && card.type == 'NPC'" :project="card.data" />
+    <NPCCard     v-if="card && card.type == 'NPC'" :npc="card.data" />
+    <ResourceCard v-if="card && card.type == 'Resource'" :resource="card.data" />
   </div>
 </div>
 </template>
@@ -20,12 +21,14 @@
 import NPCCard from 'components/cards/NPCCard.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
+import ResourceCard from 'components/cards/ResourceCard.vue';
 
 export default {
   components: {
     NPCCard,
     ProcessCard,
-    ProjectCard
+    ProjectCard,
+    ResourceCard
   },
   data() {
     return {

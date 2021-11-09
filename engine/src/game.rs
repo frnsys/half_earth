@@ -242,6 +242,8 @@ impl Game {
             snapshots.push(Snapshot {
                 land_use: state.resources_demand.land,
                 emissions: state.world.emissions(),
+                energy_use: state.output_demand.electricity + state.output_demand.fuel,
+                population: state.world.population()
             });
         }
 
@@ -302,4 +304,6 @@ impl Game {
 pub struct Snapshot {
     land_use: f32,
     emissions: f32,
+    energy_use: f32,
+    population: f32,
 }

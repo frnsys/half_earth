@@ -190,6 +190,10 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 1em;
+  font-size: 1.1em;
 }
 
 .planning > header {

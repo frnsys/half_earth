@@ -36,22 +36,22 @@
     </div>
     <div class="process-intensity">
       <IntensityIcon
-        v-tip="{text: 'Energy: It flows through everything.', icon: 'energy'}"
+        v-tip="intensityTip('energy')"
         resource="energy" :intensity="intensities.energy" />
       <IntensityIcon
         v-tip="{text: 'Labor: Together with nature, the source of all things.', icon: 'labor'}"
         resource="labor" :intensity="2" />
       <IntensityIcon
-        v-tip="{text: 'Water: The giver of life.', icon: 'water'}"
+        v-tip="intensityTip('water')"
         resource="water" :intensity="intensities.water" />
       <IntensityIcon
-        v-tip="{text: 'Biodiversity: The co-inhabitants of the planet.', icon: 'biodiversity'}"
+        v-tip="intensityTip('biodiversity')"
         resource="biodiversity" :intensity="intensities.biodiversity" />
       <IntensityIcon
-        v-tip="{text: 'Land: The foo bar.', icon: 'land'}"
+        v-tip="intensityTip('land')"
         resource="land" :intensity="intensities.land" />
       <IntensityIcon
-        v-tip="{text: 'Emissions: The foo bar', icon: 'emissions'}"
+        v-tip="intensityTip('emissions')"
         resource="emissions" :intensity="intensities.emissions" />
     </div>
   </template>
@@ -119,6 +119,8 @@ function intensity(val, key, type) {
   return stops.length;
 }
 
+const totalLand = 104e12;
+
 export default {
   props: ['process'],
   components: {
@@ -183,6 +185,103 @@ export default {
         }
       }
     },
+  },
+  methods: {
+    intensityTip(type) {
+      switch (type) {
+        case 'land': {
+          let amount = display.landUsePercent(state.gameState.resources_demand.land);
+          let rankings = state.gameState.resourceRankings['land'];
+          return {
+            icon: 'land',
+            text: `Land: They're not making anymore of it. You're using ${amount.toFixed(0)}% of land.`,
+            card: {
+              type: 'Resource',
+              data: {
+                icon: 'land',
+                name: 'Top Users',
+                rankings,
+                format: (v) => `${(v/totalLand*100).toFixed(0)}%`,
+                current: this.process,
+              }
+            }
+          }
+        }
+        case 'emissions': {
+          let amount = state.gameState.emissions;
+          let rankings = state.gameState.resourceRankings['emissions'];
+          return {
+            icon: 'emissions',
+            text: `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`,
+            card: {
+              type: 'Resource',
+              data: {
+                icon: 'emissions',
+                name: 'Top Emitters',
+                rankings,
+                format: (v) => `${(v * 1e-15).toFixed(1)}Gt`,
+                current: this.process,
+              }
+            }
+          }
+        }
+        case 'water': {
+          const totalWater = 45500000000000000.0;
+          let amount = state.gameState.resources_demand.water/totalWater * 100;
+          let rankings = state.gameState.resourceRankings['water'];
+          return {
+            icon: 'water',
+            text: `Water: The giver of life. You're using ${amount.toFixed(0)}% of water resources.`,
+            card: {
+              type: 'Resource',
+              data: {
+                icon: 'water',
+                name: 'Top Users',
+                rankings,
+                format: (v) => `${(v/totalWater*100).toFixed(0)}%`,
+                current: this.process,
+              }
+            }
+          }
+        }
+        case 'energy': {
+          let amount = (state.gameState.output_demand.fuel + state.gameState.output_demand.electricity) * 1e-9;
+          let rankings = state.gameState.resourceRankings['energy'];
+          return {
+            icon: 'energy',
+            text: `Energy: Something something. You're using ${amount.toFixed(0)}TWh of energy.`,
+            card: {
+              type: 'Resource',
+              data: {
+                icon: 'energy',
+                name: 'Top Users',
+                rankings,
+                format: (v) => `${(v*1e-9).toFixed(1)}TWh`,
+                current: this.process,
+              }
+            }
+          }
+        }
+        case 'biodiversity': {
+          let amount = state.gameState.world.extinction_rate;
+          let rankings = state.gameState.resourceRankings['biodiversity'];
+          return {
+            icon: 'biodiversity',
+            text: `Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is ${amount.toFixed(0)}.`,
+            card: {
+              type: 'Resource',
+              data: {
+                icon: 'biodiversity',
+                name: 'Top Threats',
+                rankings,
+                format: (v) => `${v.toFixed(0)}`,
+                current: this.process,
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </script>

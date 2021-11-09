@@ -156,7 +156,8 @@ impl Project {
             Cost::Fixed(c) => c,
             Cost::Dynamic(m, factor) => {
                 let c = match factor {
-                    Factor::Time => m * year as f32,
+                    // Kind of arbitrarily choose 1980 as the starting point
+                    Factor::Time => m * (year - 1980) as f32,
                     Factor::Output(output) => m * demand[output]
                 };
                 c.round() as usize

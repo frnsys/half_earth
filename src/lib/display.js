@@ -1,5 +1,7 @@
 import assets from 'components/assets';
 
+const totalLand = 104e12;
+
 const OUTPUT_UNITS = {
   fuel: 1e-9/1e3,            // per 1000 TWh
   electricity: 1e-9/1e3,     // per 1000 TWh
@@ -26,6 +28,10 @@ function outputs(outputs) {
   }, {});
 }
 
+function landUsePercent(m2) {
+  return m2/totalLand * 100;
+}
+
 function fillIcons(text) {
   let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
   for (const match of icons) {
@@ -34,4 +40,4 @@ function fillIcons(text) {
   return text;
 }
 
-export default {co2eq, gtco2eq, output, outputs, fillIcons};
+export default {co2eq, gtco2eq, output, outputs, landUsePercent, fillIcons};
