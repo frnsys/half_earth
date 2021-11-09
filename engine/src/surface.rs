@@ -1,4 +1,4 @@
-use super::utils;
+use crate::utils;
 use wasm_bindgen::prelude::*;
 
 // The scale patterns take up a fair amount of space; any way to reduce this?
@@ -36,6 +36,20 @@ const COLORS: [Color; 11] = [
   (55,172,81),   // Temperate rain forest
   (26,176,59),   // Tropical rain forest
 ];
+
+
+#[wasm_bindgen]
+extern "C" {
+    // Use `js_namespace` here to bind `console.log(..)` instead of just
+    // `log(..)`
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
+macro_rules! console_log {
+    // Note that this is using the `log` function imported above during
+    // `bare_bones`
+    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
+}
 
 #[wasm_bindgen]
 pub struct EarthSurface {
@@ -310,7 +324,7 @@ mod test {
             3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5,
         ];
         let scaled = nearest_neighbor_scale(&img, width, height, scale);
-        println!("{:?}", scaled);
+        // println!("{:?}", scaled);
 
         assert!(scaled.len() == expected.len());
         assert!(scaled.iter().zip(expected)

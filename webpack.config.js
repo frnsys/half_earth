@@ -1,4 +1,5 @@
-let path = require('path');
+const path = require('path');
+const webpack = require('webpack');
 const { VueLoaderPlugin } = require('vue-loader')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const dev = process.env.NODE_ENV !== 'production';
@@ -14,6 +15,13 @@ module.exports = {
   devtool: dev ? 'inline-source-map' : 'source-map',
   module: {
     rules: [{
+      test: /\.ts$/,
+      loader: 'ts-loader',
+      options: {
+        appendTsSuffixTo: [/\.vue$/],
+      },
+      exclude: /node_modules/,
+    }, {
       test: /\.glsl$/,
       use: {
         loader: 'webpack-glsl-loader'
@@ -35,6 +43,9 @@ module.exports = {
         'sass-loader',
       ]
     }, {
+      test: /\.(png|svg|jpg|jpeg|gif)$/i,
+      type: 'asset/resource',
+    }, {
       // This needs to be loaded as a regular file (asset)
       // to work correctly
       test: /hector\.wasm/,
@@ -43,12 +54,18 @@ module.exports = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin(),
+
+    // To get rid of a warning message:
+    // "Critical dependency: the request of a dependency is an expression"
+    // which might be from the rand crate (crypto)
+    new webpack.ContextReplacementPlugin(/engine/),
   ],
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.ts', '.js'],
     alias: {
       'lib': path.resolve('./src/lib'),
+      'components': path.resolve('./src/components'),
 
       // Proxy three.js exports to reduce bundle size
       'three$': path.resolve('./src/3d/three.js')

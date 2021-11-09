@@ -6,28 +6,12 @@ import globeFrag from './shaders/globe/fragment.glsl';
 import cloudsVert from './shaders/clouds/vertex.glsl';
 import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
-
-import debug from '../debug';
-import Stats from 'stats.js';
-
-if (process.env.NODE_ENV === 'development') {
-  console.log('this only shows up in dev builds');
-}
-
-let stats;
-if (debug.fps) {
-  stats = new Stats();
-  stats.showPanel(0);
-  document.body.appendChild(stats.dom);
-}
-
-const texLoader = new THREE.TextureLoader();
+import state from '/src/state';
 
 const Surface = RPC.initialize(
   new Worker(new URL('./worker.js', import.meta.url))
 );
-
-const startYear = 2020;
+const texLoader = new THREE.TextureLoader();
 
 class Globe {
   constructor(el) {
@@ -38,6 +22,10 @@ class Globe {
     });
     el.appendChild(this.scene.renderer.domElement);
     this._onReady = [];
+    this.pings = [];
+
+    this.rotationPaused = false;
+    this.pauseTimeout = null;
   }
 
   onReady(fn) {
@@ -45,6 +33,7 @@ class Globe {
   }
 
   async init() {
+    let startYear = state.gameState.world.year;
     this.surface = await new Surface(startYear);
     await this.surface.init();
 
@@ -77,18 +66,23 @@ class Globe {
       fragmentShader: globeFrag
     });
 
-    const sphere = new THREE.Mesh(
+    // Create the earth
+    this.sphere = new THREE.Mesh(
       new THREE.SphereGeometry(5, 32, 32),
       this.material
     );
-    this.scene.add(sphere);
+    this.scene.add(this.sphere);
 
-    this.hexsphere = new HexSphere(this.scene, 5.2, 12, 0.98);
+    // Set up hexsphere for locating icons
+    this.hexsphere = new HexSphere(this.scene, this.sphere, 5.2, 8, 0.98);
+    this.hexsphere.onClick((intersects) => {
+      // Pause rotation on click
+      if (intersects.length === 0) {
+        this.pauseRotation();
+      }
+    });
 
-    // TODO add test icons to sphere
-    [52, 32, 191].forEach((idx) => this.hexsphere.showIcon('alert', idx));
-    [238, 351].forEach((idx) => this.hexsphere.showIcon('advisor', idx));
-
+    // Create the clouds layer
     this.cloudsMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: {
@@ -103,7 +97,7 @@ class Globe {
       new THREE.SphereGeometry(5.3, 32, 32),
       this.cloudsMaterial
     );
-    this.scene.add(clouds);
+    this.sphere.add(clouds);
 
     const canvas = this.scene.renderer.domElement;
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
@@ -127,22 +121,77 @@ class Globe {
     // this.surfaceTexture.needsUpdate = true;
   }
 
-  // Calculate world update.
+  // Calculate new temperature anomaly
+  // and update surface biomes/coloring accordingly.
   // See comments for Surface.addEmissions
   // for what `emissions` should look like.
   async addEmissionsThenUpdate(emissions) {
     await this.surface.addEmissions(emissions);
-    await this.surface.updateBiomes();
+    let tgav = await this.surface.updateTemperature();
+    await this.surface.updateBiomes(tgav);
     await this.updateSurface();
+    return tgav;
+  }
+
+  // Show/ping an icon and/or text
+  // at the specified hex
+  show({icon, text, hexIdx, ping}) {
+    let textMesh = text ? this.hexsphere.showText(text, hexIdx, {
+      size: 0.5
+    }) : null;
+    let iconMesh = icon ? this.hexsphere.showIcon(icon, hexIdx, {
+      size: 0.75,
+      selectable: true
+    }) : null;
+    if (ping) {
+      if (textMesh) this.pings.push(textMesh);
+      if (iconMesh) this.pings.push(iconMesh);
+    }
+    return {textMesh, iconMesh};
+  }
+
+  tickPings() {
+    // Update pings
+    this.pings = this.pings.filter((mesh) => {
+      // Keep text facing the camera
+      mesh.lookAt(this.scene.camera.position);
+
+      // Move text pings up and fade out
+      mesh.position.y += 0.02;
+      mesh.material.opacity -= 0.001;
+
+      let done = mesh.material.opacity <= 0;
+      if (done) {
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        mesh.parent.remove(mesh);
+      }
+      return !done;
+    });
+  }
+
+  pauseRotation() {
+    if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
+    this.rotationPaused = true;
+    this.pauseTimeout = setTimeout(() => {
+      this.rotationPaused = false;
+    }, 2000);
   }
 
   render(timestamp) {
-    if (debug.fps) stats.begin();
     this.scene.render();
+
+    // Animate clouds
     if (this.cloudsMaterial) {
       this.cloudsMaterial.uniforms.time.value = timestamp;
     }
-    if (debug.fps) stats.end();
+
+    // Rotate world
+    if (this.sphere && !this.rotationPaused) {
+      this.sphere.rotation.y += 0.003;
+    }
+    this.tickPings();
+
     requestAnimationFrame(this.render.bind(this));
   }
 }
