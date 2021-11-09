@@ -1,6 +1,6 @@
 import os
-from werkzeug import secure_filename
 from datetime import datetime, timezone
+from werkzeug.utils import secure_filename
 
 UPLOAD_PATH = 'uploads'
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'JPG', 'jpeg']

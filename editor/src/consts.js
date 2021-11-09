@@ -17,6 +17,7 @@ const FEEDSTOCKS = {
   'Soil': 'fert',
   'Coal': 'g',
   'Oil': 'L',
+  'Thorium': 'g',
   'NaturalGas': 'L',
   'Uranium': 'g',
   'Lithium': 'g',
@@ -30,8 +31,6 @@ const BYPRODUCTS = {
 }
 
 const PROCESS_FEATURES = {
-  'BuildsSoil': 'For agriculture; does the process improve soil health',
-  'DegradesSoil': 'For agriculture; does the process harm soil health',
   'UsesPesticides': 'For agriculture; does the process use a significant amount of pesticides',
   'UsesSynFertilizer': 'For agriculture; does the process use a significant amount of synthetic fertilizer',
   'UsesLivestock': 'For agriculture; does the process use a significant amount of livestock',

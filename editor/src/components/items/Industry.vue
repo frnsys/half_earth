@@ -10,10 +10,15 @@
       </label>
       <input class="title" type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
     </div>
-    <div class="field-group">
-      <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
-      <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
-    </div>
+    <fieldset class="big-group">
+      <div>
+        <Image :image="localData.image" :dimensions="'640x420'" @update="saveData('image', $event)" />
+      </div>
+      <div>
+        <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
+        <Byproducts :byproducts="localData.byproducts" @update="saveData('byproducts', $event)"/>
+      </div>
+    </fieldset>
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
 
@@ -25,11 +30,17 @@
   <div v-else class="process-summary item-summary">
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
-    <div>
-      <h5 class="kinds-summary-label">Per low-income-capita (LIC) per year:</h5>
-      <ResourcesSummary :resources="localData.resources" />
-      <ByproductsSummary :byproducts="localData.byproducts" :required="false" />
-    </div>
+    <fieldset class="big-group">
+      <div class="item-summary-image" v-if="localData.image">
+        <img class="image-preview" v-if="localData.image.image" :src="`/image/${localData.image.image}`"/>
+        <div class="image-attribution">{{localData.image.attribution}}</div>
+      </div>
+      <div>
+        <h5 class="kinds-summary-label">Per low-income-capita (LIC) per year:</h5>
+        <ResourcesSummary :resources="localData.resources" />
+        <ByproductsSummary :byproducts="localData.byproducts" :required="false" />
+      </div>
+    </fieldset>
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
