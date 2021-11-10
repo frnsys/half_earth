@@ -4,7 +4,7 @@
     <div>{{name}}</div>
     <div v-tip="{text: `Your relationship with ${name}.`, icon: 'relationship'}">
       <template v-for="i in consts.maxRelationship" >
-        <img :src="icons.relationship" v-if="i <= relationship" />
+        <img :src="icons.relationship" v-if="i <= npc.relationship" />
         <img :src="icons.relationship_empty" v-else />
       </template>
     </div>
@@ -48,7 +48,7 @@ export default {
       return display.fillIcons(this.description);
     },
     relationshipName() {
-      return display.relationshipName(this.relationship);
+      return display.relationshipName(this.npc.relationship);
     }
   }
 }

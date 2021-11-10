@@ -133,6 +133,8 @@
         <div>Dynamic Cost</div>
         <div>{{localData.dynamic_cost_factor}}</div>
       </div>
+      <div class="meta-pill" v-if="localData.ongoing">Ongoing</div>
+      <div class="meta-pill" v-if="localData.gradual">Gradual</div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>

@@ -40,6 +40,7 @@ export default {
   padding: 0 0.5em;
   font-size: 0.75em;
   z-index: 5;
+  height: 16px;
 }
 .hud img {
   height: 12px;

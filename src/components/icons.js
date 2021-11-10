@@ -38,6 +38,7 @@ export default {
   relationship: require('/assets/icons/relationship.png'),
   relationship_empty: require('/assets/icons/relationship_empty.png'),
   add: require('/assets/icons/add.svg'),
+  ally: require('/assets/icons/ally.png'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

@@ -77,4 +77,9 @@ export default {
   left: 0;
   z-index: 0;
 }
+
+.minicard > header img,
+.minicard > footer img {
+  width: 14px;
+}
 </style>

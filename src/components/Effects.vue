@@ -1,5 +1,5 @@
 <template>
-  <div class="effects">
+  <div class="space-even">
     <div v-for="{tip, icon, subicon, supicon, text} in renders" class="effect" v-tip="tip ? tip : 'missing tip'">
       <div class="effect--icon">
         <img :src="icons[icon]" />
@@ -168,7 +168,7 @@ function render(e) {
         },
         icon: 'unlocks',
         subicon: project.kind.toLowerCase(),
-        text: project.name
+        text: ''
       };
     }
     case 'UnlocksProcess': {
@@ -176,6 +176,7 @@ function render(e) {
       return {
         tip: {
           icon: 'unlocks',
+          subicon: display.enumKey(process.output),
           text: e.random ? `Might unlock the ${process.name} process.` : `Unlocks the ${process.name} process.`,
           card: {
             type: 'Process',
@@ -183,7 +184,8 @@ function render(e) {
           }
         },
         icon: 'unlocks',
-        text: process.name
+        subicon: display.enumKey(process.output),
+        text: ''
       }
     }
     case 'UnlocksNPC': {
@@ -207,6 +209,7 @@ function render(e) {
       return {
         tip: {
           icon: 'cost',
+          subicon: project.kind.toLowerCase(),
           text: `${e.param < 0 ? 'Reduces' : 'Increases'} cost of ${project.name} by ${Math.abs(p)}%.`,
           card: {
             type: 'Project',
@@ -214,7 +217,8 @@ function render(e) {
           }
         },
         icon: 'cost',
-        text: `${sign(p)}% ${project.name}`,
+        subicon: project.kind.toLowerCase(),
+        text: `${sign(p)}%`,
       }
     }
     case 'ProjectRequest': {
@@ -388,7 +392,7 @@ function render(e) {
           text: `${e.param < 1 ? 'Reduces' : 'Increases'} chance of ${event} by ${Math.abs(p).toFixed(0)}%.`,
         },
         icon: 'chance',
-        text: `${sign(p)}% ${event}`, // TODO
+        text: `${sign(p)}%`,
       }
     }
     case 'ProtectLand': {
@@ -420,8 +424,8 @@ export default {
           let desc = render(ev);
           if (desc) {
             if (ev.random) {
-              desc.tip.subicon = 'chance';
-              desc.subicon = 'chance';
+              desc.tip.supicon = 'chance';
+              desc.supicon = 'chance';
             }
             return desc;
           }
@@ -439,13 +443,6 @@ export default {
 </script>
 
 <style>
-.effects {
-  text-align: center;
-}
-.effect {
-  display: inline-block;
-  margin: 0 0.1em;
-}
 .effect--icon {
   width: 32px;
   position: relative;
@@ -461,5 +458,8 @@ export default {
   width: 16px;
   right: -4px;
   top: -4px;
+}
+.effect--text {
+  text-align: center;
 }
 </style>

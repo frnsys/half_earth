@@ -62,7 +62,8 @@ export default {
   },
   methods: {
     demandPercent(k) {
-      let percent = this.demand[k]/state.gameState.output_demand[k] * 100;
+      let scaledOutputDemand = display.outputs(state.gameState.output_demand);
+      let percent = this.demand[k]/scaledOutputDemand[k] * 100;
       if (percent < 1) {
         return '<1%';
       } else {

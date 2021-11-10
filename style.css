@@ -10,6 +10,7 @@ html, body {
   padding: 0;
   overscroll-behavior-y: contain;
   font-family: "DM Mono", monospace;
+  user-select: none;
 }
 
 /* TODO temporary mobile constraint */

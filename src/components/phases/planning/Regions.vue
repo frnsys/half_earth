@@ -1,9 +1,9 @@
 <template>
 <div class="planning--page">
-  <div class="space-even planning--regions">
-    <div class="region--item" v-for="region in regions">
+  <div class="minicard-grid">
+    <div class="minicard-grid-item" v-for="region in regions">
       <MiniRegion :region="region" />
-      <div class="region--item-name">{{region.name}}</div>
+      <div class="minicard-grid-item-label">{{region.name}}</div>
     </div>
   </div>
 </div>
@@ -24,17 +24,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.planning--regions {
-  flex-wrap: wrap;
-}
-.region--item {
-  width: 80px;
-  margin: 1em 0;
-}
-.region--item-name {
-  text-align: center;
-  font-size: 0.8em;
-}
-</style>

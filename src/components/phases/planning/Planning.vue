@@ -104,7 +104,7 @@ export default {
 <style>
 .planning {
   background: #ffecc7;
-  min-height: 100vh;
+  height: calc(100vh - 16px);
   display: flex;
   flex-direction: column;
 }
@@ -156,6 +156,13 @@ export default {
   flex-direction: column;
   flex: 1;
   overflow-y: scroll;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.planning--page::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
 }
 .planning--page .cards {
   flex: 1;
@@ -222,5 +229,19 @@ export default {
 .planning--page > footer {
   display: flex;
   justify-content: space-between;
+}
+
+.minicard-grid {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+}
+.minicard-grid-item {
+  width: 80px;
+  margin: 1em 0.5em;
+}
+.minicard-grid-item-label {
+  text-align: center;
+  font-size: 0.8em;
 }
 </style>
