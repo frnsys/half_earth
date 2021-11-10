@@ -10,6 +10,10 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 default = ["console_error_panic_hook"]
+# For calibration
+static_development = []
+static_population = []
+static_production = []
 
 [dependencies]
 paste = "1.0"

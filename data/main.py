@@ -363,11 +363,14 @@ if __name__ == '__main__':
 
     # Not sure what year this land use data is for
     # https://ourworldindata.org/land-use#breakdown-of-global-land-use-today
+    # Per https://ourworldindata.org/agricultural-land-by-global-diets,
+    # it sounds like this data is based on 2011 numbers
     print('  Land (m2/kcal):')
+    adjustment_factor = 0.8 # This adjustment factor is necessary to bring figures in line with historical land use data...not ideal
     livestock_land_use = 4e13 # m2, this includes crop and grazing land
     total_animal_calories = sum(animal_calorie_totals.values())
-    print('    Animal Conventional:', livestock_land_use/total_animal_calories)
-    print('    Animal Organic:', livestock_land_use/total_animal_calories/organic_yield)
+    print('    Animal Conventional:', livestock_land_use/total_animal_calories * adjustment_factor)
+    print('    Animal Organic:', livestock_land_use/total_animal_calories/organic_yield * adjustment_factor)
 
     crop_land_use = 1.1e13 # m2, this does not include crop and grazing land
     total_plant_calories = sum(plant_calorie_totals.values())

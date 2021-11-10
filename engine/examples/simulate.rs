@@ -1,5 +1,27 @@
 use rand::{SeedableRng, rngs::SmallRng};
-use half_earth_engine::{resources, byproducts, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, ProcessStatus, calculate_required}, events::Phase};
+use half_earth_engine::{resources, byproducts, state::State, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, ProcessStatus, calculate_required}, events::Phase, consts};
+
+enum Scenario {
+    BanFossilFuels,
+    Veganism,
+    Vegetarianism
+}
+
+impl Scenario {
+    fn apply(&self, state: &mut State) {
+        match self {
+            Scenario::BanFossilFuels => {
+                // TODO
+            },
+            Scenario::Veganism => {
+                // TODO
+            },
+            Scenario::Vegetarianism => {
+                // TODO
+            }
+        }
+    }
+}
 
 fn main() {
     let difficulty = Difficulty::Normal;
@@ -16,6 +38,7 @@ fn main() {
     let cals_ref = 2870.0;   // kcals per day per person, 2011, from https://www.nationalgeographic.com/what-the-world-eats/
     let water_ref = 4600.;   // km3, global water demand for 2016?, https://www.nature.com/articles/s41545-019-0039-9
     let cals_land_ref = 51000000.; // km2, https://ourworldindata.org/land-use#breakdown-of-global-land-use-today
+    let pop_ref = 10.87; // people in 2100 in bn, from the UN World Population Prospects (2019, medium fertility)
 
     /*
      * Other calibration values:
@@ -89,9 +112,11 @@ fn main() {
         "Cals Ref (kcal/person/day)",
         "Cals Land Ref (km2)",
         "Water Ref (km3)",
+        "Pop Ref (2100, bn people)",
     ];
     let mut cols: Vec<String> = base_cols.iter().map(|c| c.to_string()).collect();
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Mix Share", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Land Use", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CO2 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
@@ -101,23 +126,23 @@ fn main() {
         let starting_resources = game.state.resources.clone();
         // let starting_feedstocks = game.state.feedstocks.clone();
 
-        if i == 20 {
-            // Ind Ag (Livestock)
-            game.state.processes[10].status = ProcessStatus::Banned;
-            // Reg Ag (Livestock)
-            game.state.processes[5].status = ProcessStatus::Promoted;
-            // Cellular meat
-            game.state.processes[2].status = ProcessStatus::Promoted;
-            game.state.processes[2].locked = false;
+        // if i == 20 {
+        //     // Ind Ag (Livestock)
+        //     game.state.processes[10].status = ProcessStatus::Banned;
+        //     // Reg Ag (Livestock)
+        //     game.state.processes[5].status = ProcessStatus::Promoted;
+        //     // Cellular meat
+        //     game.state.processes[2].status = ProcessStatus::Promoted;
+        //     game.state.processes[2].locked = false;
 
-            // Coal power generation
-            game.state.processes[13].status = ProcessStatus::Banned;
+        //     // Coal power generation
+        //     game.state.processes[13].status = ProcessStatus::Banned;
 
-            // Natural gas power generation
-            game.state.processes[14].status = ProcessStatus::Banned;
+        //     // Natural gas power generation
+        //     game.state.processes[14].status = ProcessStatus::Banned;
 
-            game.state.processes[17].status = ProcessStatus::Promoted;
-        }
+        //     game.state.processes[17].status = ProcessStatus::Promoted;
+        // }
 
         game.step(&mut rng);
         let pop_demand = game.state.world.demand();
@@ -201,8 +226,13 @@ fn main() {
             cals_ref,
             cals_land_ref,
             water_ref,
+            pop_ref,
         ].iter().map(|v| v.to_string()).collect();
         vals.extend(game.state.processes.iter().map(|p| p.mix_share.to_string()));
+        vals.extend(game.state.processes.iter().map(|p| {
+            let order = p.production_order(&agg_demand);
+            ((p.resources.land * order.amount)/consts::STARTING_RESOURCES.land).to_string()
+        }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
             (p.byproducts.co2 * order.amount * 1e-15).to_string()

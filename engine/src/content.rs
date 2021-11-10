@@ -18,19 +18,19 @@ pub fn world(difficulty: Difficulty) -> World {
     world.regions = regions();
     match difficulty {
         Difficulty::Easy => {
+            world.year = 1990;
+            world.extinction_rate = 0.0;
+            world.temperature = 0.39;
+        },
+        Difficulty::Normal => {
             world.year = 2022;
             world.extinction_rate = 0.0;
             world.temperature = 1.289;
         },
-        Difficulty::Normal => {
+        Difficulty::Hard => {
             world.year = 2035;
             world.extinction_rate = 0.0;
             world.temperature = 1.623;
-        },
-        Difficulty::Hard => {
-            world.year = 2050;
-            world.extinction_rate = 0.0;
-            world.temperature = 2.053;
         }
     }
     world
@@ -757,7 +757,7 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0002914269583144888,
                 fuel: 0.0008189958076940122,
-                land: 0.030876634329616993,
+                land: 0.024701307463693596,
                 water: 3.489
             ),
             byproducts: byproducts!(

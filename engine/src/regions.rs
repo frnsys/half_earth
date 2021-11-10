@@ -2,7 +2,11 @@ use crate::consts;
 use crate::kinds::OutputMap;
 use serde::Serialize;
 
-const DEVELOP_SPEED: f32 = 0.015;
+#[cfg(not(feature = "static_development"))]
+const DEVELOP_SPEED: f32 = 0.003;
+
+#[cfg(feature = "static_development")]
+const DEVELOP_SPEED: f32 = 0.0;
 
 #[derive(Serialize, Clone)]
 pub struct Region {
@@ -45,7 +49,9 @@ impl Region {
     }
 
     pub fn update_pop(&mut self, year: f32) {
-        self.population *= 1. + consts::income_pop_change(year, &self.income);
+        if !cfg!(feature = "static_population") {
+            self.population *= 1. + consts::income_pop_change(year, &self.income);
+        }
     }
 
     pub fn develop(&mut self) {

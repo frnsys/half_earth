@@ -637,7 +637,7 @@ if __name__ == '__main__':
     # Define content functions
     rust_output = [content_template]
     world_adjustments = []
-    for world in items_by_type['World']:
+    for world in sorted(items_by_type['World'], key=lambda w: w['year']):
         world_adjustments.append(
             indent('\n'.join('world.{} = {};'.format(k, world.get(k, default))
                 for k, default in specs['World'].items()), levels=3))

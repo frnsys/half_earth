@@ -9,7 +9,7 @@ if not os.path.exists('/tmp/plots'):
     os.makedirs('/tmp/plots')
 
 plots = {
-    'Population (b)': ['Population (b)'],
+    'Population (b)': ['Population (b)', 'Pop Ref (2100, bn people)'],
     'CO2eq Emissions': [
         'CO2eq Emissions',
         'CO2eq Ref (Gt)',

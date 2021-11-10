@@ -73,6 +73,7 @@ impl State {
             npcs: content::npcs(),
 
             runs: 1, // TODO TEMP TESTING
+            // runs: 0,
             requests: Vec::new(),
 
             output_modifier: outputs!(
@@ -265,7 +266,9 @@ impl State {
         let feedstock_weights = required_feedstocks / self.feedstocks;
 
         // Update mixes according to resource scarcity
-        update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights, &self.priority);
+        if !cfg!(feature = "static_production") {
+            update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights, &self.priority);
+        }
     }
 
     /// Contribution to extinction rate from a single process
