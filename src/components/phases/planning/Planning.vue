@@ -3,13 +3,13 @@
 <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" @select="selectChoice" />
 <div class="planning">
   <header>
-    <div :class="{active: page == PAGES.PLAN}" @click="page = PAGES.PLAN">Plan</div>
-    <div :class="{active: page == PAGES.COALITION}" @click="page = PAGES.COALITION">Coalition</div>
-    <div :class="{active: page == PAGES.DASHBOARD}" @click="page = PAGES.DASHBOARD">Dashboard</div>
-    <div :class="{active: page == PAGES.REGIONS}" @click="page = PAGES.REGIONS">Regions</div>
+    <div :class="{active: page == PAGES.PLAN}" @click="selectPage(PAGES.PLAN)">Plan</div>
+    <div :class="{active: page == PAGES.COALITION}" @click="selectPage(PAGES.COALITION)">Coalition</div>
+    <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)">Dashboard</div>
+    <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">Regions</div>
   </header>
 
-  <Plan v-if="page == PAGES.PLAN" />
+  <Plan v-if="page == PAGES.PLAN" @page="pageEvents" />
   <Coalition v-else-if="page == PAGES.COALITION" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" />
   <Regions v-else-if="page == PAGES.REGIONS" />
@@ -29,10 +29,10 @@ import EventsMixin from 'components/EventsMixin';
 import EVENTS from '/assets/content/events.json';
 
 const PAGES = {
-  PLAN: 0,
-  COALITION: 1,
-  DASHBOARD: 2,
-  REGIONS: 3,
+  PLAN: 'Plan',
+  COALITION: 'Coalition',
+  DASHBOARD: 'Dashboard',
+  REGIONS: 'Regions',
 };
 
 export default {
@@ -54,28 +54,10 @@ export default {
     this.showEvent();
   },
   data() {
-    let events = game.roll.planningEvents();
-
-    // Group events by pages
-    let eventsByPage = Object.keys(PAGES).reduce((acc, k) => {
-      acc[k] = [];
-      return acc;
-    }, {});
-    eventsByPage[null] = [];
-    events.forEach(([ev_id, region_id]) => {
-      let ev = EVENTS[ev_id];
-      let page = null;
-      let parts = ev.name.split(':');
-      if (parts.length > 1) {
-        page = parts.shift();
-      }
-      eventsByPage[page].push([ev_id, region_id]);
-    });
-
+    let events = game.roll.planning('Start');
     return {
       state,
-      events: eventsByPage[null],
-      eventsByPage,
+      events,
       page: PAGES.PLAN,
     }
   },
@@ -88,15 +70,15 @@ export default {
     }
   },
   methods: {
-    select(p) {
-      if (PAGES[p] == PAGES.CONTINUE) {
-        state.phase = 'EVENTS';
-      } else {
-        this.page = PAGES[p];
-        this.events = this.eventsByPage[p];
-        this.showEvent();
-      }
+    selectPage(p) {
+      this.page = p;
+      this.events = game.roll.planning(this.page);
+      this.showEvent();
     },
+    pageEvents(p) {
+      this.events = game.roll.planning(p);
+      this.showEvent();
+    }
   }
 }
 </script>
@@ -217,6 +199,9 @@ export default {
   text-align: center;
   padding: 0.25em;
   border-right: 1px solid #000;
+}
+.planning > header div:hover {
+  background: #e3b6a0;
 }
 .planning > header div.active {
   background: #e47d4a;

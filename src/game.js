@@ -1,6 +1,6 @@
 import state from './state';
 import display from 'lib/display';
-import {GameInterface, Difficulty} from 'half-earth-engine';
+import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
@@ -33,7 +33,7 @@ function newRun() {
 }
 
 // Step the game by one year
-function stepUpdate() {
+function step() {
   let completedProjects = game.step();
   updateState();
   updateResourceRankings();
@@ -137,16 +137,36 @@ function yearsRemaining(project) {
   return game.years_remaining(project.progress, project.points, project.cost);
 }
 
+function _roll(phase, subphase, limit) {
+  let p = Phase[`${phase}${subphase}`];
+  if (p === undefined) {
+    console.error(`Event phase "${phase}${subphase}" is not defined as an enum variant!`);
+    return [];
+  } else {
+    return game.roll_events(p, limit);
+  }
+}
+
 const roll = {
-  planningEvents: () => game.roll_planning_events(),
-  worldStartEvents: () => game.roll_world_start_events(),
+  planning: (subphase) => {
+    return _roll('Planning', subphase, null);
+  },
+  world: (subphase) => {
+    return _roll('World', subphase, 5);
+  },
+  report: (subphase) => {
+    return _roll('Report', subphase, null);
+  },
+  break: (subphase) => {
+    return _roll('Break', subphase, null);
+  },
 }
 
 updateState();
 updateResourceRankings();
 
 export default {
-  newRun, stepUpdate,
+  newRun, step,
   updateState, setTgav,
   setPriority,
   changePoliticalCapital,

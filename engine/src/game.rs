@@ -2,7 +2,7 @@ use crate::content;
 use crate::state::State;
 use crate::projects::{Status, years_remaining};
 use crate::production::Priority;
-use crate::events::{EventPool, Effect, Type as EventType};
+use crate::events::{EventPool, Effect, Phase};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
 use crate::utils;
@@ -89,28 +89,8 @@ impl GameInterface {
         self.game.state.unpromote_process(process_id);
     }
 
-    pub fn roll_icon_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Icon, None, &mut self.rng))?)
-    }
-
-    pub fn roll_world_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::World, Some(5), &mut self.rng))?)
-    }
-
-    pub fn roll_planning_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Planning, None, &mut self.rng))?)
-    }
-
-    pub fn roll_report_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Report, None, &mut self.rng))?)
-    }
-
-    pub fn roll_world_start_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::WorldStart, None, &mut self.rng))?)
-    }
-
-    pub fn roll_breaks_events(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_of_kind(EventType::Breaks, None, &mut self.rng))?)
+    pub fn roll_events(&mut self, phase: Phase, limit: Option<usize>) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_for_phase(phase, limit, &mut self.rng))?)
     }
 
     pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
@@ -227,9 +207,9 @@ impl Game {
         snapshots
     }
 
-    pub fn roll_events_of_kind(&mut self, kind: EventType, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
+    pub fn roll_events_for_phase(&mut self, phase: Phase, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
         // Roll for events and collect effects
-        let events = self.event_pool.roll_for_kind(kind, &self.state, limit, rng);
+        let events = self.event_pool.roll_for_phase(phase, &self.state, limit, rng);
         events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect()
     }
 

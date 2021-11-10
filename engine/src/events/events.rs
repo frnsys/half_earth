@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
 use serde::Serialize;
+use wasm_bindgen::prelude::*;
 
 #[derive(Debug, Clone, Serialize)]
 pub enum Aspect {
@@ -21,9 +22,9 @@ pub enum Aspect {
 pub struct EventPool {
     pub events: Vec<Event>,
 
-    // (event id, region id, countdown)
-    pub queue: Vec<(Type, usize, Option<usize>, usize)>,
-    pub triggered: Vec<(Type, usize, Option<usize>)>,
+    // (phase, event id, region id, countdown)
+    pub queue: Vec<(Phase, usize, Option<usize>, usize)>,
+    pub triggered: Vec<(Phase, usize, Option<usize>)>,
 }
 
 impl EventPool {
@@ -36,11 +37,11 @@ impl EventPool {
     }
 
     pub fn queue_event(&mut self, id: usize, region_id: Option<usize>, years: usize) {
-        let kind = self.events[id].kind;
-        self.queue.push((kind, id, region_id, years));
+        let phase = self.events[id].phase;
+        self.queue.push((phase, id, region_id, years));
     }
 
-    pub fn roll_for_kind<'a>(&'a mut self, kind: Type, state: &State, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
+    pub fn roll_for_phase<'a>(&'a mut self, phase: Phase, state: &State, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
         // Prevent duplicate events
         let mut existing: HashSet<usize> = HashSet::new();
         for (_, ev_id, _, _) in &self.queue {
@@ -51,7 +52,7 @@ impl EventPool {
         }
 
         // Candidate event pool
-        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| ev.kind == kind && !ev.locked && !existing.contains(&ev.id)).map(|ev| ev.id).collect();
+        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| ev.phase == phase && !ev.locked && !existing.contains(&ev.id)).map(|ev| ev.id).collect();
         valid_ids.shuffle(rng);
 
         // Tick queued countdowns
@@ -59,7 +60,7 @@ impl EventPool {
         while i < self.queue.len() {
             let try_trigger = {
                 let (_, ev_id, _, countdown) = &mut self.queue[i];
-                if self.events[*ev_id].kind == kind {
+                if self.events[*ev_id].phase == phase {
                     *countdown -= 1;
                     *countdown <= 0
                 } else {
@@ -72,10 +73,10 @@ impl EventPool {
                 if ev.roll(state, region_id, rng) {
                     // All events except
                     // for Icon events don't repeat
-                    if ev.kind != Type::Icon {
+                    if ev.phase != Phase::Icon {
                         ev.locked = true;
                     }
-                    self.triggered.push((ev.kind, ev_id, region_id));
+                    self.triggered.push((ev.phase, ev_id, region_id));
                 }
                 self.queue.remove(i);
             } else {
@@ -89,15 +90,15 @@ impl EventPool {
         for ev_id in valid_ids {
             let ev = &mut self.events[ev_id];
             // Icon-type events are always local
-            if ev.kind == Type::Icon {
+            if ev.phase == Phase::Icon {
                 for region in &state.world.regions {
                     if ev.roll(state, Some(region.id), rng) {
                         // All events except
                         // for Icon events don't repeat
-                        if ev.kind != Type::Icon {
+                        if ev.phase != Phase::Icon {
                             ev.locked = true;
                         }
-                        self.triggered.push((ev.kind, ev_id, Some(region.id)));
+                        self.triggered.push((ev.phase, ev_id, Some(region.id)));
                     }
                 }
             } else {
@@ -106,19 +107,19 @@ impl EventPool {
                         if ev.roll(state, Some(region.id), rng) {
                             // All events except
                             // for Icon events don't repeat
-                            if ev.kind != Type::Icon {
+                            if ev.phase != Phase::Icon {
                                 ev.locked = true;
                             }
-                            self.triggered.push((ev.kind, ev_id, Some(region.id)));
+                            self.triggered.push((ev.phase, ev_id, Some(region.id)));
                         }
                     }
                 } else if ev.roll(state, None, rng) {
                     // All events except
                     // for Icon events don't repeat
-                    if ev.kind != Type::Icon {
+                    if ev.phase != Phase::Icon {
                         ev.locked = true;
                     }
-                    self.triggered.push((ev.kind, ev_id, None));
+                    self.triggered.push((ev.phase, ev_id, None));
                 }
             }
         }
@@ -130,8 +131,8 @@ impl EventPool {
 
         let mut i = 0;
         while i < self.triggered.len() {
-            let (k, ev_id, region_id) = self.triggered[i];
-            if k == kind {
+            let (p, ev_id, region_id) = self.triggered[i];
+            if p == phase {
                 happening.push((&self.events[ev_id], region_id));
                 self.triggered.remove(i);
                 if let Some(n) = limit {
@@ -148,14 +149,22 @@ impl EventPool {
     }
 }
 
+#[wasm_bindgen]
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub enum Type {
-    World,
-    Planning,
-    Report,
-    Breaks,
-    Icon,
+pub enum Phase {
+    WorldMain,
     WorldStart,
+    WorldEnd,
+    ReportStart,
+    BreakStart,
+    Icon,
+    PlanningStart,
+    PlanningEnd,
+    PlanningResearch,
+    PlanningInitiatives,
+    PlanningPolicies,
+    PlanningProcesses,
+    PlanningCoalition,
 }
 
 #[derive(Debug, Clone)]
@@ -171,8 +180,8 @@ pub struct Event {
     /// (e.g. event text, etc).
     pub id: usize,
 
-    /// This event's type
-    pub kind: Type,
+    /// This phase this event can occur in
+    pub phase: Phase,
 
     /// If this event has any regional conditions
     pub regional: bool,
@@ -243,7 +252,7 @@ mod test {
         vec![Event {
             id: 0,
             name: "Test Event A",
-            kind: Type::World,
+            phase: Phase::WorldMain,
             locked: false,
             regional: false,
             prob_modifier: 1.,
@@ -266,7 +275,7 @@ mod test {
         }, Event {
             id: 1,
             name: "Test Event B",
-            kind: Type::World,
+            phase: Phase::WorldMain,
             locked: false,
             regional: false,
             prob_modifier: 1.,
@@ -292,7 +301,7 @@ mod test {
         };
 
         let mut state = State::default();
-        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
+        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
 
         // Only event B should happen
         assert_eq!(events.len(), 1);
@@ -301,7 +310,7 @@ mod test {
         // But if we set it so that event A's first condition
         // is met, it should happen
         state.world.year = 10;
-        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
+        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
     }
@@ -312,7 +321,7 @@ mod test {
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
-            kind: Type::Icon,
+            phase: Phase::Icon,
             locked: false,
             regional: false,
             prob_modifier: 1.,
@@ -362,14 +371,14 @@ mod test {
             base_habitability: 0.,
             flags: vec![],
         }];
-        let events = pool.roll_for_kind(Type::Icon, &state, None, &mut rng);
+        let events = pool.roll_for_phase(Phase::Icon, &state, None, &mut rng);
 
         // No events should happen
         assert_eq!(events.len(), 0);
 
         // Set one region to satisfy conditions
         state.world.regions[1].population = 10.;
-        let events = pool.roll_for_kind(Type::Icon, &state, None, &mut rng);
+        let events = pool.roll_for_phase(Phase::Icon, &state, None, &mut rng);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[0].1, Some(1));
@@ -381,7 +390,7 @@ mod test {
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
-            kind: Type::World,
+            phase: Phase::WorldMain,
             prob_modifier: 1.,
             intensity: 0,
             aspect: None,
@@ -399,18 +408,18 @@ mod test {
         }];
         let mut pool = EventPool {
             events,
-            queue: vec![(Type::World, 0, None, 2)],
+            queue: vec![(Phase::WorldMain, 0, None, 2)],
             triggered: vec![],
         };
 
         let state = State::default();
 
         // No events should happen
-        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
+        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
         assert_eq!(events.len(), 0);
 
         // Countdown finished
-        let events = pool.roll_for_kind(Type::World, &state, None, &mut rng);
+        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
         assert_eq!(events.len(), 1);
     }
 }

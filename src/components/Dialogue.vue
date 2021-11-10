@@ -9,11 +9,7 @@
     </div>
     <div class="dialogue--body">
       <div class="dialogue--text" ref="text"></div>
-      <div class="dialogue--effects" v-if="effects && revealed">
-        <div class="dialogue--effect" v-for="effect in effectTexts">
-          {{effect}}
-        </div>
-      </div>
+      <Effects :effects="effects" v-if="effects && revealed" />
     </div>
   </div>
   <div class="dialogue--choices">
@@ -35,6 +31,7 @@
 import state from '/src/state';
 import display from 'lib/display';
 import {clone} from 'lib/util';
+import Effects from 'components/Effects.vue';
 
 // Extract "chars" which might be
 // actual chars or be HTML elements
@@ -96,20 +93,14 @@ function revealChars(parentEl, chars, {speed, onReveal, onStart}) {
 
 // Parse special entities out of text
 function parseText(text, context) {
-  let vars = [...text.matchAll('{([a-z_]+)}')];
-  for (const match of vars) {
-    text = text.replaceAll(match[0], context[match[1]]);
-  }
-  let icons = [...text.matchAll(/\[([a-z_]+)\]/g)];
-  for (const match of icons) {
-    text = text.replaceAll(match[0], `<img src="/assets/icons/pips/${match[1]}.png">`);
-  }
-  return text;
+  return display.fillIcons(display.fillVars(text, context));
 }
-
 
 export default {
   props: ['dialogue', 'effects'],
+  components: {
+    Effects,
+  },
   data() {
     return {
       current: clone(this.dialogue),
@@ -142,11 +133,6 @@ export default {
     isLastLine() {
       return this.current.lines.length <= 1;
     },
-    effectTexts(effect) {
-      return (this.effects || [])
-        .map((e) => display.effect(e))
-        .filter((e) => e !== null);
-    }
   },
   methods: {
     play() {
@@ -269,11 +255,6 @@ export default {
 .dialogue--text img {
   width: 16px;
   vertical-align: middle;
-}
-
-.dialogue--effect {
-  font-size: 0.8em;
-  text-align: right;
 }
 
 .dialogue--choices {

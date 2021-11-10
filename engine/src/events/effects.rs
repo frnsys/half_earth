@@ -23,7 +23,8 @@ pub enum Flag {
     Vegetarian,
     Vegan,
     ClosedBorders,
-    EVs
+    EVs,
+    HyperResearch
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]

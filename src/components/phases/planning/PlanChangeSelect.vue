@@ -10,10 +10,10 @@
   <Initiatives v-else-if="page == PAGES.INITIATIVES" />
   <Processes v-else-if="page == PAGES.PROCESSES" />
   <div class="plan-change-select--menu" v-else>
-    <button @click="page = PAGES.RESEARCH">Research</button>
-    <button @click="page = PAGES.POLICIES">Policies</button>
-    <button @click="page = PAGES.INITIATIVES">Initiatives</button>
-    <button @click="page = PAGES.PROCESSES">Processes</button>
+    <button @click="selectPage(PAGES.RESEARCH)">Research</button>
+    <button @click="selectPage(PAGES.POLICIES)">Policies</button>
+    <button @click="selectPage(PAGES.INITIATIVES)">Initiatives</button>
+    <button @click="selectPage(PAGES.PROCESSES)">Processes</button>
   </div>
 </div>
 </template>
@@ -46,6 +46,12 @@ export default {
   data() {
     return {
       page: null
+    }
+  },
+  methods: {
+    selectPage(p) {
+      this.page = p;
+      this.$emit('page', p);
     }
   }
 }

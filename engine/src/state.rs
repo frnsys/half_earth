@@ -492,7 +492,7 @@ mod test {
     fn test_project_policy() {
         let mut state = State::new(Difficulty::Normal);
 
-        let p = state.projects.iter().find(|p| p.kind == ProjectType::Policy).unwrap();
+        let p = state.projects.iter().find(|p| p.kind == ProjectType::Policy && p.effects.len() > 0).unwrap();
         let id = p.id;
 
         assert_eq!(state.projects[id].status, Status::Inactive);

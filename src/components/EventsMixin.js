@@ -48,6 +48,7 @@ export default {
           };
           this.event.dialogue.context = ctx;
         } else {
+          console.log(this.event);
           throw(`Event "${eventId}" missing dialogue!`);
         }
 

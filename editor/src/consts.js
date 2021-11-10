@@ -132,6 +132,18 @@ const CONDITIONS = {
   }
 }
 
+const SUBPHASES = {
+  World: ['Main', 'Start', 'End'],
+  Planning: [
+    'Start', 'End', 'Plan',
+    'Regions', 'Coalition',
+    'Dashboard', 'Research', 'Initiatives',
+    'Policies', 'Processes', 'Priority'],
+  Report: ['Start'],
+  Break: ['Start'],
+  Icon: [],
+}
+
 const EFFECTS = {
   LocalVariable: {
     choices: ['Outlook', 'Habitability'],
@@ -383,8 +395,7 @@ const EVENT_TYPES = [
   'World',      // Occur in the world/event stream
   'Planning',   // Occur during planning sessions
   'Report',     // Occurs during the reports
-  'WorldStart', // Occurs at the start of the world/event stream
-  'Breaks',     // Occur between runs
+  'Break',     // Occur between runs
   'Icon',       // Occur in the world/event stream, but only as icons
 ];
 
@@ -403,5 +414,6 @@ export default {
   INCOME_LEVELS,
   SPEAKERS,
   EVENT_TYPES,
-  DYNAMIC_COST_FACTORS
+  SUBPHASES,
+  DYNAMIC_COST_FACTORS,
 };

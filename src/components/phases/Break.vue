@@ -21,7 +21,7 @@ export default {
   },
   data() {
     return {
-      events: game.rollBreaksEvents()
+      events: game.roll.break('Start')
     }
   },
   methods: {

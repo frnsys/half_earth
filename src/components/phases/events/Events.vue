@@ -30,7 +30,7 @@ const MS_PER_YEAR = 10000;
 export default {
   mixins: [EventsMixin],
   data() {
-    let events = game.roll.worldStartEvents();
+    let events = game.roll.world('Start');
     return {
       events,
       time: 0,
@@ -90,7 +90,8 @@ export default {
     startYear() {
       this.time = 0;
       let last = performance.now();
-      let iconEvents = game.rollIconEvents();
+      /* let iconEvents = game.rollIconEvents(); */
+      let iconEvents = [];
       console.log('ICON EVENTS:');
       console.log(iconEvents);
 
@@ -107,8 +108,8 @@ export default {
             this.year = state.gameState.world.year;
 
             // Add to historical data
-            state.history.emissions.push(game.gameState.emissions);
-            state.history.land_use.push(game.gameState.resources_demand.land);
+            state.history.emissions.push(state.gameState.emissions);
+            state.history.land_use.push(state.gameState.resources_demand.land);
 
             this.rollEvent();
             return;
@@ -147,9 +148,11 @@ export default {
         return;
       }
 
-      this.events = game.rollWorldEvents();
+      this.events = game.roll.world('Main');
       console.log('Rolled world events:');
-      console.log(this.events);
+      this.events.forEach((ev) => {
+        console.log(ev);
+      });
       this.applyEmissions();
 
       if (this.hasEvent) {

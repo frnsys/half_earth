@@ -178,7 +178,7 @@ function validateDialogue(dialogue) {
 const SPECS = {
   Event: {
     key: 'name',
-    validate: ['name', 'probabilities', 'variables', 'locked', 'type', 'dialogue'],
+    validate: ['name', 'probabilities', 'variables', 'locked', 'type', 'subphase', 'dialogue'],
     questions: ['notes'],
     validateKey: (item, key) => {
       switch (key) {

@@ -28,16 +28,16 @@
   <template v-else-if="type == 'NPC'">
     <NPC v-for="e in itemsOfCurrentType" :item="e" :key="e.id" />
   </template>
-  <template v-if="type == 'World'">
+  <template v-else-if="type == 'World'">
     <World v-for="e in itemsOfCurrentType" :item="e" :key="e.id" />
   </template>
-  <template v-if="type == 'Const'">
+  <template v-else-if="type == 'Const'">
     <Const v-for="f in itemsOfCurrentType" :item="f" :key="f.id" />
   </template>
-  <template v-if="type == 'Variable'">
+  <template v-else-if="type == 'Variable'">
     <Variable v-for="v in itemsOfCurrentType" :item="v" :key="v.id" />
   </template>
-  <template v-if="type == 'Industry'">
+  <template v-else-if="type == 'Industry'">
     <Industry v-for="v in itemsOfCurrentType" :item="v" :key="v.id" />
   </template>
 </div>

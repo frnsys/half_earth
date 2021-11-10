@@ -23,15 +23,26 @@
           </label>
           <input type="text" placeholder="Name" v-model="localData.name" :class="flags('name')" />
         </div>
-        <div>
-          <label>
-            Event Type
-            <Tip>"World" = shows up in the world/event stream; "Planning" = shows up during planning sessions; "Breaks" = shows up between runs; "Icon" = shows up in the world/event stream, but only as an icon.</Tip>
-          </label>
-          <select v-model="localData.type" :class="flags('type')">
-            <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
-          </select>
-        </div>
+        <fieldset>
+          <div>
+            <label>
+              Event Phase
+              <Tip>"World" = shows up in the world/event stream; "Planning" = shows up during planning sessions; "Breaks" = shows up between runs; "Icon" = shows up in the world/event stream, but only as an icon.</Tip>
+            </label>
+            <select v-model="localData.type" :class="flags('type')">
+              <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
+            </select>
+          </div>
+          <div v-if="localData.type !== 'Icon'">
+            <label>
+              Event SubPhase
+              <Tip>Choose e.g. 'Start' for the event to occur at the start of the phase.</Tip>
+            </label>
+            <select v-model="localData.subphase" :class="flags('subphase')">
+              <option v-for="subphase in SUBPHASES[localData.type]" :value="subphase">{{subphase}}</option>
+            </select>
+          </div>
+        </fieldset>
         <fieldset>
           <div v-if="localData.type != 'Icon'">
             <label>
@@ -76,7 +87,14 @@
   <div v-else class="event-summary item-summary">
     <div class="item-meta">
       <div class="meta-pill">{{localData.name}}</div>
-      <div class="meta-pill type-pill" :class="flags('type')">{{localData.type || 'MISSING TYPE'}}</div>
+      <div class="meta-pill type-pill" :class="flags('type')">
+        <template v-if="localData.type">
+          {{localData.type}}{{localData.subphase ? `:${localData.subphase}` : ''}}
+        </template>
+        <template v-else>
+          MISSING TYPE
+        </template>
+      </div>
       <div class="meta-pill arc-pill" v-if="localData.arc">{{localData.arc}}</div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>

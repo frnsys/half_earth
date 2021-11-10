@@ -1,17 +1,17 @@
 <template>
 <div class="plan">
-  <PlanChangeSelect v-if="page == 'add'" @close="page = null" />
-  <Priorities v-else-if="page == 'priorities'" @close="page = null" />
+  <PlanChangeSelect v-if="page == 'Add'" @close="page = null" @page="(p) => $emit('page', p)"/>
+  <Priorities v-else-if="page == 'Priorities'" @close="page = null" />
   <div class="plan--changes" v-if="page == null">
     <div class="plan--change">
       <div class="plan--action">Add</div>
-      <div class="plan--add-change minicard" @click="page = 'add'">
+      <div class="plan--add-change minicard" @click="selectPage('Add')">
         <img :src="icons.add">
       </div>
     </div>
     <div class="plan--change">
       <div class="plan--action">Priority</div>
-      <div class="minicard" @click="page = 'priorities'">
+      <div class="minicard" @click="selectPage('Priorities')">
         <img :src="icons[consts.priorities[consts.Priority[state.gameState.priority]].icon]" />
       </div>
       <div class="plan--note">{{consts.priorities[consts.Priority[state.gameState.priority]].name}}</div>
@@ -35,6 +35,7 @@
     </div>
     <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
   </div>
+  <button class="plan--ready" @click="enterWorld">Ready</button>
 </div>
 </template>
 
@@ -76,8 +77,10 @@ export default {
     this.charts = charts;
   },
   data() {
+    let events = game.roll.planning('Plan');
     return {
       state,
+      events,
       page: null,
       chart: 'land',
       ranges: {
@@ -146,6 +149,9 @@ export default {
         data,
         color: '#CDB6AD'
       }
+    },
+    enterWorld() {
+      state.phase = 'EVENTS';
     }
   },
   methods: {
@@ -159,6 +165,10 @@ export default {
     setChart(key) {
       this.chart = key;
     },
+    selectPage(p) {
+      this.page = p;
+      this.$emit('page', p);
+    }
   }
 }
 </script>
@@ -240,5 +250,14 @@ export default {
 }
 .plan > header div:last-child {
   border-right: none;
+}
+
+.plan--ready {
+  font-size: 1.3em;
+  padding: 0.1em 0.25em;
+  position: absolute;
+  left: 50%;
+  bottom: 2em;
+  transform: translate(-50%, 0);
 }
 </style>

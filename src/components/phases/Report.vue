@@ -64,7 +64,7 @@ export default {
     this.calculateChanges();
   },
   data() {
-    let events = game.rollReportEvents();
+    let events = game.roll.report('Start');
     return {
       state,
       events,

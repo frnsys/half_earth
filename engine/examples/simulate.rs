@@ -1,5 +1,5 @@
 use rand::{SeedableRng, rngs::SmallRng};
-use half_earth_engine::{resources, byproducts, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, ProcessStatus, calculate_required}, events::Type as EventType};
+use half_earth_engine::{resources, byproducts, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, ProcessStatus, calculate_required}, events::Phase};
 
 fn main() {
     let difficulty = Difficulty::Normal;
@@ -16,6 +16,19 @@ fn main() {
     let cals_ref = 2870.0;   // kcals per day per person, 2011, from https://www.nationalgeographic.com/what-the-world-eats/
     let water_ref = 4600.;   // km3, global water demand for 2016?, https://www.nature.com/articles/s41545-019-0039-9
     let cals_land_ref = 51000000.; // km2, https://ourworldindata.org/land-use#breakdown-of-global-land-use-today
+
+    /*
+     * Other calibration values:
+     * - Projected 2030 emissions gap against poorest 50%:
+     *  - Richest 1%: 67.7t CO2/capita (for reference, 1% of 8bn is 80,000,000)
+     *  - Richest 10%: 18.7t CO2/capita
+     *  - Middle 40%: 2.5t CO2/capita
+     *  - Global average: 2.2t CO2/capita
+     *  - Source: https://policy-practice.oxfam.org/resources/carbon-inequality-in-2030-per-capita-consumption-emissions-and-the-15c-goal-621305/
+     * - Sea level rise
+     *  - 2.5m in 2100
+     *  - Source: http://www.globalchange.umd.edu/data/annual-meetings/2019/Vega-Westhoff_HectorBRICKSLR_20191105.pdf
+     */
 
     println!("Starting resources: {:?}", game.state.resources);
     println!("Starting feedstocks: {:?}", game.state.feedstocks);
@@ -205,7 +218,7 @@ fn main() {
         wtr.write_record(&vals).unwrap();
 
         println!("  Events:");
-        let events = game.roll_events_of_kind(EventType::World, Some(5), &mut rng);
+        let events = game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng);
         for (ev_id, region_id) in events {
             let ev = &game.event_pool.events[ev_id];
             match region_id {

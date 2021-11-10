@@ -55,6 +55,14 @@ function fillIcons(text) {
   return text;
 }
 
+function fillVars(text, context) {
+  let vars = [...text.matchAll('{([a-z_]+)}')];
+  for (const match of vars) {
+    text = text.replaceAll(match[0], context[match[1]]);
+  }
+  return text;
+}
+
 function enumKey(v) {
   return v.split(/(?=[A-Z])/).join('_').toLowerCase();
 }
@@ -175,7 +183,7 @@ function resourceRankings() {
 
 export default {co2eq, gtco2eq, output, outputs,
   landUsePercent, waterUsePercent,
-  fillIcons,
+  fillIcons, fillVars,
   displayName, enumKey, enumDisplay,
   relationshipName,
   intensity, scaleIntensity,
