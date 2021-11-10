@@ -250,6 +250,7 @@ conds = {
     'ProjectFinished':    lambda e: (ids[e['entity']], 'ProjectStatus::Finished'),
     'ProjectStalled':    lambda e: (ids[e['entity']], 'ProjectStatus::Stalled'),
     'ProjectHalted':    lambda e: (ids[e['entity']], 'ProjectStatus::Halted'),
+    'ProjectBuilding':    lambda e: (ids[e['entity']], 'ProjectStatus::Building'),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
     'NPCRelationship':  lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['subtype'])),
