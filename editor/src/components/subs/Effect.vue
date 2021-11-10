@@ -85,13 +85,9 @@ export default {
     },
     itemsOfType(type) {
       if (type == 'IconEvent') {
-        return Object.values(state.items)
-          .filter((i) => i._type == 'Event' && i.type == 'Icon')
-          .sort((a, b) => a._created < b._created ? 1 : -1);
+        return Object.values(state.itemsByType['Event']).filter((i) => i.type == 'Icon');
       } else {
-        return Object.values(state.items)
-          .filter((i) => i._type == type)
-          .sort((a, b) => a._created < b._created ? 1 : -1);
+        return Object.values(state.itemsByType[type]);
       }
     },
     flags(key) {

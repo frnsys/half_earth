@@ -55,7 +55,7 @@
 </div>
 
 <ul id="toc" v-if="tocOpen">
-  <li v-for="i in tableOfContents">
+  <li v-for="i, item in tableOfContents" :key="i">
     <a :href="`#${i.id}`" :class="{invalid: i.invalid}"><span class="question-icon" v-if="i.questions">?</span>{{i.label || '(empty)'}}</a>
   </li>
 </ul>
@@ -148,10 +148,6 @@ export default {
       api.update(data);
       scroll(0,0);
     },
-    itemsOfType(type) {
-      return Object.values(this.state.items)
-        .filter((i) => i._type == type && !i.deleted);
-    },
   },
   watch: {
     type(_) {
@@ -160,7 +156,7 @@ export default {
   },
   computed: {
     itemsOfCurrentType() {
-      return this.itemsOfType(this.type)
+      return Object.values(this.state.itemsByType[this.type] || {})
       .filter((item) => {
           return this.filters.every((f, i) => {
             let val = this.filter[i];

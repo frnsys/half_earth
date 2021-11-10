@@ -81,16 +81,6 @@
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>
     </div>
-    <div class="event-variables" v-if="varMetas.length > 0">
-        <span>Variables:</span>
-        <div class="summary-pill event-variable" v-for="v in varMetas" :class="{invalid:v.invalid}">
-          <div>{{v.name}}</div>
-          <div v-if="v.values && v.values.length > 0" :style="{padding: '0.2em 0'}">
-            <Tip :width="100"><div v-for="val in v.values">{{val}}</div></Tip>
-          </div>
-          <div v-else>NO VALUES DEFINED</div>
-        </div>
-    </div>
     <div class="item-summary-details">
       <div>
         <ProbabilitiesSummary v-if="definedWithValues('probabilities')" :probabilities="localData.probabilities" />

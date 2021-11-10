@@ -17,11 +17,6 @@ import consts from '../../consts';
 export default {
   props: ['conditions'],
   methods: {
-    itemsOfType(type) {
-      return Object.values(state.items)
-        .filter((i) => i._type == type)
-        .sort((a, b) => a._created < b._created ? 1 : -1);
-    },
     flags(condition) {
       let invalid = false;
       let spec = consts.CONDITIONS[condition.type];
@@ -50,8 +45,7 @@ export default {
       let spec = consts.CONDITIONS[condition.type];
       let value = '';
       if (spec.entity) {
-        let items = this.itemsOfType(spec.entity);
-        let match = items.find(el => el.id == condition.entity);
+        let match = state.itemsByType[spec.entity][condition.entity];
         value += `${match.name}`;
       }
       if (spec.compare) {

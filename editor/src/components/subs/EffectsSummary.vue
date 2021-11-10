@@ -39,17 +39,6 @@ export default {
     Tip
   },
   methods: {
-    itemsOfType(type) {
-      if (type == 'IconEvent') {
-        return Object.values(state.items)
-          .filter((i) => i._type == 'Event' && i.type == 'Icon')
-          .sort((a, b) => a._created < b._created ? 1 : -1);
-      } else {
-        return Object.values(state.items)
-          .filter((i) => i._type == type)
-          .sort((a, b) => a._created < b._created ? 1 : -1);
-      }
-    },
     hasEvent(effect) {
       return effect.type == 'AddEvent' || effect.type == 'TriggerEvent';
     },
@@ -83,8 +72,8 @@ export default {
       if (spec === undefined) return `${effect.type}: MISSING SPEC`;
       if (spec.entity) {
         if (effect.entity) {
-          let items = this.itemsOfType(spec.entity);
-          let match = items.find(el => el.id == effect.entity);
+          let type = spec.entity == 'IconEvent' ? 'Event' : spec.entity;
+          let match = state.itemsByType[type][effect.entity];
           return {
             url: `/?type=${match._type}#${match.id}`,
             name: match.name,

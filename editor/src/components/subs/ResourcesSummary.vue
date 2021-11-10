@@ -19,8 +19,9 @@ export default {
   props: ['resources'],
   computed: {
     validResources() {
+      let resources = this.resources || {};
       return Object.keys(consts.RESOURCES).filter((k) => {
-        return this.resources[k] !== undefined && this.resources[k] !== '';
+        return resources[k] !== undefined && resources[k] !== '';
       });
     }
   }

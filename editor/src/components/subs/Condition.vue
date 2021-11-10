@@ -79,9 +79,7 @@ export default {
       this.$emit('update', this.localData);
     },
     itemsOfType(type) {
-      return Object.values(state.items)
-        .filter((i) => i._type == type)
-        .sort((a, b) => a._created < b._created ? 1 : -1);
+      return Object.values(state.itemsByType[type]);
     },
     flags(key) {
       let invalid = false;

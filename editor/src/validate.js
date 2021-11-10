@@ -1,13 +1,6 @@
 import state from './state';
 import consts from './consts';
 
-function itemsOfType(type) {
-  return Object.values(state.items)
-    .filter((i) => i._type == type)
-    .filter((i) => !i.deleted)
-    .sort((a, b) => a._created < b._created ? 1 : -1);
-}
-
 function requireAtLeastOne(val) {
   return val !== undefined && val !== null && val.length > 0;
 }
@@ -120,7 +113,7 @@ function validateConditions(conds) {
     }
 
     if (spec.entity) {
-      let items = itemsOfType(spec.entity);
+      let items = Object.values(state.itemsByType[spec.entity]);
       let validItem = items.some((item) => item.id == cond.entity);
       if (!validItem) valid = false;
     }
