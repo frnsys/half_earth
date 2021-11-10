@@ -1,6 +1,6 @@
 <template>
 <ul class="probabilities-summary">
-  <li v-for="probability in localData" :key="probability.id">
+  <li v-for="probability in probabilities" :key="probability.id">
     <div class="probability-type">{{ probability.type }}</div>
     <template v-if="probability.conditions.length > 0 ">
       <span> if </span>
@@ -17,11 +17,6 @@ export default {
   props: ['probabilities'],
   components: {
     ConditionsSummary
-  },
-  data() {
-    return {
-      localData: this.probabilities || []
-    };
   },
 }
 </script>

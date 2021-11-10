@@ -1,6 +1,6 @@
 <template>
-<div class="choices-summary">
-  <div :class="flags(choice)" class="choice-summary" v-for="(choice, i) in localData">
+<div class="choices-summary" v-if="choices">
+  <div :class="flags(choice)" class="choice-summary" v-for="(choice, i) in choices">
     <template v-if="choice.text">
       <div class="choice-type" v-if="choice.type && choice.type !== 'none'">{{ choice.type }}</div>
       <span class="choice-text">[Player]: "{{ choice.text }}"</span>
@@ -29,11 +29,6 @@ export default {
   beforeCreate: function () {
     // Hack around circular references
     this.$options.components.DialogueSummary = require('./DialogueSummary.vue').default
-  },
-  data() {
-    return {
-      localData: this.choices || []
-    };
   },
   methods: {
     flags(choice) {

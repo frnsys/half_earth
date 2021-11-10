@@ -1,8 +1,8 @@
 <template>
-<div class="dialogue-summary">
-  <div v-if="!localData.lines || localData.lines.length === 0">MISSING DIALOGUE</div>
-  <div v-else v-for="line in localData.lines">[{{line.speaker || "MISSING SPEAKER"}}]: "{{line.text || "MISSING TEXT"}}"</div>
-  <ChoicesSummary :choices="localData.choices" />
+<div class="dialogue-summary" v-if="dialogue">
+  <div v-if="!dialogue.lines || dialogue.lines.length === 0">MISSING DIALOGUE</div>
+  <div v-else v-for="line in dialogue.lines">[{{line.speaker || "MISSING SPEAKER"}}]: "{{line.text || "MISSING TEXT"}}"</div>
+  <ChoicesSummary :choices="dialogue.choices" />
 </div>
 </template>
 
@@ -13,11 +13,6 @@ export default {
   props: ['dialogue'],
   components: {
     ChoicesSummary
-  },
-  data() {
-    return {
-      localData: this.dialogue || {}
-    };
   },
   methods: {
     flags(dialogue) {

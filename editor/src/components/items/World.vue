@@ -1,7 +1,7 @@
 <template>
-<li class="item" :key="item.id" :id="item.id" ref="root">
+<li class="item" :id="item.id" ref="root">
+  <Flags :invalid="localData._validation.invalid" :questions="localData._validation.questions" />
   <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
-  <Flags :invalid="invalid" :questions="questions" />
   <template v-if="editing">
     <div>
       <label>

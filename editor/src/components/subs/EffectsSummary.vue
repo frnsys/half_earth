@@ -1,6 +1,6 @@
 <template>
 <ul class="effects-summary">
-  <li v-for="effect in localData" :key="effect.id" class="summary-pill" :class="flags(effect)">
+  <li v-for="effect in effects" :key="effect.id" class="summary-pill" :class="flags(effect)">
     <div>{{label(effect)}}</div>
     <div v-if="entity(effect)" class="has-url"><a :href="entity(effect).url">{{entity(effect).name}}</a></div>
     <div v-if="params(effect)">{{params(effect)}}</div>
@@ -37,11 +37,6 @@ export default {
   props: ['effects'],
   components: {
     Tip
-  },
-  data() {
-    return {
-      localData: this.effects || []
-    };
   },
   methods: {
     itemsOfType(type) {

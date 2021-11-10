@@ -1,9 +1,9 @@
 <template>
-<ul class="outcomes-summary">
-  <li v-for="(outcome, i) in localData" :key="outcome.id">
+<ul class="outcomes-summary" v-if="outcomes">
+  <li v-for="(outcome, i) in outcomes" :key="outcome.id">
     <div class="outcome-text" :class="{invalid: outcome.text === undefined || outcome.text === ''}">{{ outcome.text || '[MISSING TEXT]' }}</div>
     <EffectsSummary v-if="outcome.effects" :effects="outcome.effects" />
-    <div class="probability-type" v-if="i < localData.length - 1">{{ outcome.probability.type }}</div>
+    <div class="probability-type" v-if="i < outcomes.length - 1">{{ outcome.probability.type }}</div>
     <div class="probability-type" v-else>Default</div>
     <template v-if="outcome.probability.conditions.length > 0 ">
       <span> if </span>
@@ -22,11 +22,6 @@ export default {
   components: {
     EffectsSummary,
     ConditionsSummary
-  },
-  data() {
-    return {
-      localData: this.outcomes || []
-    };
   },
 }
 </script>

@@ -105,6 +105,9 @@ const CONDITIONS = {
   ProjectActive: {
     entity: 'Project',
   },
+  ProjectBuilding: {
+    entity: 'Project',
+  },
   ProjectInactive: {
     entity: 'Project',
   },

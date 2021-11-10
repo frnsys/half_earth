@@ -1,6 +1,6 @@
 <template>
-<li class="item" :key="item.id" :id="item.id" ref="root">
-  <Flags :invalid="invalid" :questions="questions" />
+<li class="item" :id="item.id" ref="root">
+  <Flags :invalid="localData._validation.invalid" :questions="localData._validation.questions" />
   <fieldset>
     <div class="const-name">
       <label>

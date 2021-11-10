@@ -1,6 +1,6 @@
 <template>
-<ul class="upgrades-summary">
-  <li v-for="(upgrade, i) in localData" :key="upgrade.id">
+<ul class="upgrades-summary" v-if="upgrades">
+  <li v-for="(upgrade, i) in upgrades" :key="upgrade.id">
     <div class="upgrade-level">{{i}}</div>
     <EffectsSummary :effects="upgrade.effects" />
   </li>
@@ -14,11 +14,6 @@ export default {
   props: ['upgrades'],
   components: {
     EffectsSummary,
-  },
-  data() {
-    return {
-      localData: this.upgrades || []
-    };
   },
 }
 </script>

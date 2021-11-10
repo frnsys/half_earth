@@ -48,6 +48,12 @@ export default {
     Outcomes, OutcomesSummary,
     Upgrades, UpgradesSummary,
   },
+  created() {
+    if (this.localData._validation === undefined) {
+      this.validate();
+      this.save();
+    }
+  },
   mounted() {
     this.$refs.root.querySelectorAll('textarea').forEach((el) => {
       util.resizeTextArea(el);
@@ -66,17 +72,6 @@ export default {
       let type = this.localData._type;
       return validate[type];
     },
-    invalid() {
-      return this.validator.validate.filter((k) => {
-        return !this.validateKey(k);
-      });
-    },
-    questions() {
-      return this.validator.questions.filter((k) => {
-        let val = this.localData[k];
-        return val && val.includes('? ');
-      });
-    }
   },
   watch: {
     editing(val) {
@@ -120,10 +115,27 @@ export default {
         this.save();
       }
     },
+    validate() {
+      this.localData._validation = {
+        invalid: this.invalid(),
+        questions: this.questions(),
+      }
+    },
+    invalid() {
+      return this.validator.validate.filter((k) => {
+        return !this.validateKey(k);
+      });
+    },
+    questions() {
+      return this.validator.questions.filter((k) => {
+        let val = this.localData[k];
+        return val && val.includes('? ');
+      });
+    },
     flags(key) {
       return {
-        invalid: this.invalid.includes(key),
-        question: this.questions.includes(key)
+        invalid: this.localData._validation.invalid.includes(key),
+        question: this.localData._validation.questions.includes(key)
       }
     },
     validateKey(key) {
@@ -140,6 +152,7 @@ export default {
 
       // Save when you leave editing
       if (!this.editing) {
+        this.validate();
         this.save();
       }
     }

@@ -1,11 +1,11 @@
 <template>
 <ul class="conditions-summary">
-  <template v-for="(condition, i) in localData" :key="condition.id">
+  <template v-for="(condition, i) in conditions" :key="condition.id">
     <li class="summary-pill" :class="flags(condition)">
       <div>{{label(condition)}}</div>
       <div>{{value(condition)}}</div>
     </li>
-    <span class="condition-and" v-if="i < localData.length - 1"> AND </span>
+    <span class="condition-and" v-if="i < conditions.length - 1"> AND </span>
   </template>
 </ul>
 </template>
@@ -16,11 +16,6 @@ import consts from '../../consts';
 
 export default {
   props: ['conditions'],
-  data() {
-    return {
-      localData: this.conditions || []
-    };
-  },
   methods: {
     itemsOfType(type) {
       return Object.values(state.items)

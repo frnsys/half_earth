@@ -14,31 +14,31 @@
 </nav>
 <div class="items" :class="type">
   <template v-if="type == 'Process'">
-    <Process v-for="p in itemsOfCurrentType" :item="p" />
+    <Process v-for="p in itemsOfCurrentType" :item="p" :key="p.id" />
   </template>
   <template v-if="type == 'Project'">
-    <Project v-for="p in itemsOfCurrentType" :item="p" />
+    <Project v-for="p in itemsOfCurrentType" :item="p" :key="p.id" />
   </template>
   <template v-if="type == 'Region'">
-    <Region v-for="r in itemsOfCurrentType" :item="r" />
+    <Region v-for="r in itemsOfCurrentType" :item="r" :key="r.id" />
   </template>
   <template v-else-if="type == 'Event'">
-    <Event v-for="e in itemsOfCurrentType" :item="e" />
+    <Event v-for="e in itemsOfCurrentType" :item="e" :key="e.id" />
   </template>
   <template v-else-if="type == 'NPC'">
-    <NPC v-for="e in itemsOfCurrentType" :item="e" />
+    <NPC v-for="e in itemsOfCurrentType" :item="e" :key="e.id" />
   </template>
   <template v-if="type == 'World'">
-    <World v-for="e in itemsOfCurrentType" :item="e" />
+    <World v-for="e in itemsOfCurrentType" :item="e" :key="e.id" />
   </template>
   <template v-if="type == 'Const'">
-    <Const v-for="f in itemsOfCurrentType" :item="f" />
+    <Const v-for="f in itemsOfCurrentType" :item="f" :key="f.id" />
   </template>
   <template v-if="type == 'Variable'">
-    <Variable v-for="v in itemsOfCurrentType" :item="v" />
+    <Variable v-for="v in itemsOfCurrentType" :item="v" :key="v.id" />
   </template>
   <template v-if="type == 'Industry'">
-    <Industry v-for="v in itemsOfCurrentType" :item="v" />
+    <Industry v-for="v in itemsOfCurrentType" :item="v" :key="v.id" />
   </template>
 </div>
 <div class="sidebar">
@@ -131,11 +131,21 @@ export default {
   },
   methods: {
     addNew(type) {
-      api.update({
+      let spec = validate[type];
+      let data = {
         id: uuid(),
         _created: Date.now(),
         _type: type,
-      });
+      };
+      let validation = {
+        invalid: spec.validate.filter((k) => {
+          return !spec.validateKey(data, k);
+        }),
+        questions: []
+      };
+      data._validation = validation;
+
+      api.update(data);
       scroll(0,0);
     },
     itemsOfType(type) {
@@ -198,17 +208,14 @@ export default {
     },
     tableOfContents() {
       let spec = validate[this.type];
-      let toc = this.itemsOfCurrentType.map((i) => ({
-        id: i.id,
-        label: i[spec.key],
-        invalid: !spec.validate.every((k) => {
-          return spec.validateKey(i, k);
-        }),
-        questions: spec.questions.some((k) => {
-          let val = i[k];
-          return val && val.includes('? ');
-        })
-      }));
+      let toc = this.itemsOfCurrentType.map((i) => {
+        return {
+          id: i.id,
+          label: i[spec.key],
+          invalid: i._validation.invalid.length > 0,
+          questions: i._validation.questions.length > 0,
+        }
+      });
       toc.sort((a, b) => (a.label || '').localeCompare((b.label || '')));
       return toc;
     }
