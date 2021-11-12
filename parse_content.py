@@ -878,9 +878,9 @@ if __name__ == '__main__':
 
     # Create default emissions for everything else
     # Just use the last value
-    rcp = json.load(open('assets/hector/rcp45.to_2050.json', 'r'))
+    rcp = json.load(open('assets/hector/rcp26.to_2050.json', 'r'))
     defaults = {}
     for k, vals in rcp['data'].items():
         defaults[k] = vals[-1]
-    with open('assets/hector/rcp45.default_emissions.json', 'w') as f:
+    with open('assets/hector/rcp26.default_emissions.json', 'w') as f:
         json.dump(defaults, f)

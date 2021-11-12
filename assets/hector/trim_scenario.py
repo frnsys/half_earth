@@ -1,7 +1,7 @@
 import json
 
 # Latest starting year for the game is 2050
-name = 'rcp45'
+name = 'rcp26'
 end_year = 2050
 scenario = json.load(open('{}.json'.format(name)))
 

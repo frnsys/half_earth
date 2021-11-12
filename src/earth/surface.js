@@ -2,7 +2,7 @@ import png from './png';
 import {EarthSurface} from 'half-earth-engine';
 import { memory } from 'half-earth-engine/half_earth_engine_bg.wasm';
 import loadHector from 'hector-wasm';
-import defaultEmissions from '../../assets/hector/rcp45.default_emissions.json';
+import defaultEmissions from '../../assets/hector/rcp26.default_emissions.json';
 
 // A grayscale image where each value
 // indicates the label of that pixel
@@ -14,7 +14,7 @@ const biomeLabelsSrc = '/assets/surface/landuse.png';
 const biomeLookupSrc = '/assets/surface/biomes.png';
 
 // Base emissions scenario for Hector
-const baseEmissionsScenario = '/assets/hector/rcp45.to_2050.json';
+const baseEmissionsScenario = '/assets/hector/rcp26.to_2050.json';
 
 // Earth surface scaling
 const scale = 4;
