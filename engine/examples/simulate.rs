@@ -1,33 +1,116 @@
+use std::env;
+use std::fs::File;
+use serde::Serialize;
 use rand::{SeedableRng, rngs::SmallRng};
-use half_earth_engine::{resources, byproducts, state::State, game::{Game, Difficulty}, kinds::{Output, Resource, ResourceMap, ByproductMap}, production::{ProductionOrder, ProcessStatus, calculate_required}, events::Phase, consts};
+use hector_rs::{run_hector, emissions::get_emissions};
+use half_earth_engine::{
+    resources, byproducts,
+    game::{Game, Difficulty},
+    kinds::{Output, Resource, ResourceMap, ByproductMap},
+    production::{ProductionOrder, Process, Priority, ProcessStatus, ProcessFeature, calculate_required},
+    events::{Event, Phase}, consts};
 
+#[derive(Serialize)]
+#[derive(Debug)]
 enum Scenario {
     BanFossilFuels,
+    Nuclear,
     Veganism,
-    Vegetarianism
+    Vegetarianism,
+    ProtectHalf,
+    Electrification,
+}
+
+#[derive(Serialize)]
+struct Report {
+    roll_events: bool,
+    start_year: usize,
+    scenario_start: usize,
+    priority: Priority,
+    scenarios: Vec<Scenario>,
+    events: Vec<Vec<(String, Option<String>)>>,
 }
 
 impl Scenario {
-    fn apply(&self, state: &mut State) {
+    fn apply(&self, game: &mut Game) {
         match self {
             Scenario::BanFossilFuels => {
-                // TODO
+                for process in &mut game.state.processes {
+                    if process.features.contains(&ProcessFeature::IsFossil) {
+                        process.status = ProcessStatus::Banned;
+                    }
+                }
+            },
+            Scenario::Nuclear => {
+                for process in &mut game.state.processes {
+                    if process.features.contains(&ProcessFeature::IsNuclear) {
+                        process.status = ProcessStatus::Promoted;
+                    }
+                }
             },
             Scenario::Veganism => {
-                // TODO
+                let p_id = find_project_id(game, "Veganism Mandate");
+                game.start_project(p_id);
             },
             Scenario::Vegetarianism => {
-                // TODO
+                let p_id = find_project_id(game, "Vegetarian Mandate");
+                game.start_project(p_id);
+            },
+            Scenario::ProtectHalf => {
+                let p_id = find_project_id(game, "Land Protection");
+                game.start_project(p_id);
+                for _ in 0..4 {
+                    game.upgrade_project(p_id);
+                }
+            },
+            Scenario::Electrification => {
+                let p_id = find_project_id(game, "Mass Electrification");
+                game.start_project(p_id);
+                game.state.projects[p_id].set_points(10);
             }
         }
     }
 }
 
+fn find_project_id(game: &Game, name: &'static str) -> usize {
+    let p = game.state.projects.iter().find(|p| p.name == name).unwrap();
+    p.id
+}
+
+
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let mut scenarios = vec![];
+    if args.len() > 1 {
+        for arg in args[1].split(',') {
+            let scenario = match arg {
+                "BanFossilFuels" => Scenario::BanFossilFuels,
+                "Nuclear" => Scenario::Nuclear,
+                "Veganism" => Scenario::Veganism,
+                "Vegetarianism" => Scenario::Vegetarianism,
+                "ProtectHalf" => Scenario::ProtectHalf,
+                "Electrification" => Scenario::Electrification,
+                _ => panic!("Unknown scenario: {:?}", arg)
+            };
+            scenarios.push(scenario);
+        }
+    }
+
     let difficulty = Difficulty::Normal;
     let mut game = Game::new(difficulty);
     // let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
     let mut rng: SmallRng = SeedableRng::from_entropy();
+
+    let mut emissions = get_emissions(game.state.world.year);
+    let mut report = Report {
+        roll_events: true,
+        start_year: game.state.world.year,
+        priority: Priority::Scarcity,
+        scenario_start: 10,
+        scenarios,
+        events: vec![]
+    };
 
     let co2_ref = 43.16;     // Gt, 2022, from SSP2-Baseline
     let ch4_ref = 570.;      // Mt, https://www.iea.org/reports/methane-tracker-2020
@@ -69,6 +152,7 @@ fn main() {
         "Population (b)",
         "Outlook",
         "Habitability",
+        "Extinction Rate",
         "Base Animal Cal Demand (Tcals)",
         "Base Plant Cal Demand (Tcals)",
         "Cal/Capita/Day",
@@ -126,25 +210,14 @@ fn main() {
         let starting_resources = game.state.resources.clone();
         // let starting_feedstocks = game.state.feedstocks.clone();
 
-        // if i == 20 {
-        //     // Ind Ag (Livestock)
-        //     game.state.processes[10].status = ProcessStatus::Banned;
-        //     // Reg Ag (Livestock)
-        //     game.state.processes[5].status = ProcessStatus::Promoted;
-        //     // Cellular meat
-        //     game.state.processes[2].status = ProcessStatus::Promoted;
-        //     game.state.processes[2].locked = false;
+        if i == report.scenario_start {
+            for scenario in &report.scenarios {
+                println!("Applying Scenario: {:?}", scenario);
+                scenario.apply(&mut game);
+            }
+        }
 
-        //     // Coal power generation
-        //     game.state.processes[13].status = ProcessStatus::Banned;
-
-        //     // Natural gas power generation
-        //     game.state.processes[14].status = ProcessStatus::Banned;
-
-        //     game.state.processes[17].status = ProcessStatus::Promoted;
-        // }
-
-        game.step(&mut rng);
+        let completed_projects = game.step(&mut rng);
         let pop_demand = game.state.world.demand();
         let agg_demand = game.state.output_demand;
         let produced = game.state.produced;
@@ -171,11 +244,25 @@ fn main() {
             calorie_byproducts += order.process.byproducts * order.amount;
         }
 
-        println!("Year {:?}", game.state.world.year);
+
+        // Hector separates out FFI and LUC emissions
+        // but we lump them together
+        // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
+        // 'ffi_emissions': world.co2_emissions * 12/44 * 1e-15, // Pg C/y
+        // 'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
+        // 'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
+        emissions.get_mut("simpleNbox").unwrap().get_mut("ffi_emissions").unwrap().push((game.state.world.co2_emissions * 12./44. * 1e-15) as f64);
+        emissions.get_mut("CH4").unwrap().get_mut("CH4_emissions").unwrap().push((game.state.world.ch4_emissions * 1e-12) as f64);
+        emissions.get_mut("N2O").unwrap().get_mut("N2O_emissions").unwrap().push((game.state.world.n2o_emissions * 1e-12) as f64);
+        let tgav = unsafe {
+            run_hector(game.state.world.year, &emissions) as f32
+        };
+
+        game.state.world.temperature = tgav;
 
         let mut vals: Vec<String> = vec![
             game.state.world.year as f32,
-            game.state.world.temperature,
+            tgav,
             game.state.world.co2_emissions * 1e-15,
             game.state.world.ch4_emissions * 1e-12,
             game.state.world.n2o_emissions * 1e-12,
@@ -183,6 +270,7 @@ fn main() {
             game.state.world.population() * 1e-9,
             game.state.world.outlook(),
             game.state.world.habitability(),
+            game.state.world.extinction_rate,
             pop_demand.animal_calories * 1e-9,
             pop_demand.plant_calories * 1e-9,
             (pop_demand.animal_calories + pop_demand.plant_calories)/game.state.world.population()/365.,
@@ -247,19 +335,32 @@ fn main() {
         }));
         wtr.write_record(&vals).unwrap();
 
-        println!("  Events:");
-        let events = game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng);
+        let mut year_events = vec![];
+        let events = if report.roll_events {
+            game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
+        } else {
+            vec![]
+        };
         for (ev_id, region_id) in events {
             let ev = &game.event_pool.events[ev_id];
             match region_id {
                 Some(id) => {
                     let region = &game.state.world.regions[id];
-                    println!("    {:?} in {:?}", ev.name, region.name);
+                    year_events.push((ev.name.to_string(), Some(region.name.to_string())));
                 },
-                None => println!("    {:?}", ev.name),
+                None => {
+                    year_events.push((ev.name.to_string(), None));
+                }
             }
+            game.apply_event(ev_id, region_id);
         }
-
-        println!("------------------------------");
+        for p_id in completed_projects {
+            let project = &game.state.projects[p_id];
+            year_events.push(
+                (format!("Finished {}", project.name), None));
+        }
+        report.events.push(year_events);
     }
+
+    serde_json::to_writer(&File::create("/tmp/calibration.json").unwrap(), &report).unwrap();
 }

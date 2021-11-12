@@ -490,15 +490,15 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00392
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.57829,
-                co2: 353.81
+                co2: 353.81,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -545,15 +545,15 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.6191,
-                co2: 247.03
+                co2: 247.03,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -626,15 +626,16 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 1.07,
-                co2: 45.85
+                co2: 45.85,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::IsCCS
+                ProcessFeature::IsCCS,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -707,15 +708,16 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.6191,
-                co2: 1005.0
+                co2: 1005.0,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsCombustion,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -761,9 +763,9 @@ pub fn processes() -> Vec<Process> {
                 water: 3.489
             ),
             byproducts: byproducts!(
-                n2o: 0.0033631944802367066,
                 ch4: 0.026329682345600774,
-                co2: 1.7600170919014337
+                co2: 1.7600170919014337,
+                n2o: 0.0033631944802367066
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -790,15 +792,15 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.912,
-                co2: 75.6
+                co2: 75.6,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -844,15 +846,16 @@ pub fn processes() -> Vec<Process> {
                 water: 2.3688
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 2.7,
-                co2: 412.7691
+                co2: 412.7691,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsCombustion,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -973,13 +976,13 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.00044155599744619513,
                 fuel: 0.0012409027389303216,
-                land: 0.04678277928729847,
+                land: 0.03742622342983878,
                 water: 5.29
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.03989345809939511,
-                co2: -0.9896632320633342
+                co2: -0.9896632320633342,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1032,15 +1035,16 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00392
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.57829,
-                co2: 970.0
+                co2: 970.0,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsCombustion,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -1055,13 +1059,13 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.00044155599744619513,
                 fuel: 0.0012409027389303216,
-                land: 0.04678277928729847,
+                land: 0.03742622342983878,
                 water: 5.29
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.03989345809939511,
-                co2: 2.666692563487021
+                co2: 2.666692563487021,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1113,15 +1117,15 @@ pub fn processes() -> Vec<Process> {
                 water: 2.3688
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 2.7,
-                co2: 180.54
+                co2: 180.54,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -4704,7 +4708,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 100.0),
+                Effect::WorldVariable(WorldVariable::Emissions, 2.0),
                 Effect::AddEvent(43)
             ],
             probabilities: vec![

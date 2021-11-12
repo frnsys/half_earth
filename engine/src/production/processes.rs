@@ -15,6 +15,7 @@ pub enum ProcessFeature {
     IsSolar,
     IsCCS,
     IsCombustion,
+    IsFossil,
 }
 
 #[derive(Debug, PartialEq, Serialize, Clone)]

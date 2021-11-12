@@ -2,11 +2,11 @@
 pub mod kinds;
 mod npcs;
 mod utils;
-mod projects;
 mod world;
 mod industries;
 mod regions;
 mod content;
+pub mod projects;
 pub mod consts;
 pub mod state;
 pub mod game;

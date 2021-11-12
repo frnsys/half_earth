@@ -37,9 +37,11 @@ npm run test
 
 ## Calibration
 
-Run `engine/calibrate.sh` to run a simulation of the game over 100 years and plot trajectories of emissions, population, consumption, etc.
+Go into the `engine/` folder, then run `./calibrate.sh build` to compile the calibration code, and then `./calibrate.sh` to generate the calibration data and show plots.
 
-This will also print out events that occur, but it's not as informative--because there's no player interaction many events remain locked.
+You can specify different scenarios to include (see `engine/examples/simulate.rs`), e.g. `./calibrate.sh BanFossilFuels,Electrification,Nuclear` to apply those scenarios.
+
+Note that whenever you update content (e.g. with `update_content.sh`) you need to re-run `./calibrate.sh build` to compile in the updated content.
 
 ## Benchmarking
 
