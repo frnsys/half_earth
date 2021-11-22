@@ -2,7 +2,7 @@
 <div class="effect">
   <fieldset>
     <div>
-      <label>Effect Type</label>
+      <label>Type</label>
       <select v-model="localData.type" @change="update" :class="flags('type')">
         <option v-for="type in Object.keys(EFFECTS)" :value="type">{{type}}</option>
       </select>

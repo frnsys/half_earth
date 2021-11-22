@@ -1,11 +1,12 @@
 <template>
 <div class="conditions">
-  <label>
-    Conditions
-    <div>
+  <div class="header">
+    <slot name="title">Conditions</slot>
+    <div class="conditions--actions">
       <button @click="addCondition">+ Condition</button>
+      <slot name="actions"></slot>
     </div>
-  </label>
+  </div>
   <ul>
     <li v-for="condition in localData" :key="condition.id">
       <Condition :condition="condition" @update="update" /> <button @click="() => deleteCondition(condition)">X</button>
@@ -51,10 +52,13 @@ export default {
 </script>
 
 <style>
-.conditions label {
+.conditions .header {
+  display: flex;
   align-items: center;
+  font-size: 0.7em;
+  justify-content: space-between;
 }
-.conditions label button {
+.conditions .header button {
   font-size: 0.95em;
   margin-left: 0.5em;
   line-height: 1.2;
@@ -69,5 +73,9 @@ export default {
 }
 .condition {
   flex: 1;
+}
+
+.conditions--actions {
+  display: flex;
 }
 </style>

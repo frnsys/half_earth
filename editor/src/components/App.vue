@@ -88,7 +88,6 @@ import Const from './items/Const.vue';
 import NPC from './items/NPC.vue';
 import validate from '../validate';
 import Graph from './Graph.vue';
-
 import Calibration from './Calibration.vue';
 
 export default {
@@ -113,7 +112,7 @@ export default {
       tocOpen: true,
       filter: [],
       state,
-      calibrationOpen: false
+      calibrationOpen: false,
     }
   },
   components: {

@@ -1,11 +1,11 @@
 <template>
 <div class="effects">
-  <label>
+  <div class="header">
     Effects
     <button @click="addEffect">+ Effect</button>
-  </label>
+  </div>
   <ul>
-    <li v-for="effect in localData" :key="effect.id">
+    <li v-for="effect in effects" :key="effect.id">
       <Effect :effect="effect" @update="update" /> <button @click="() => deleteEffect(effect)">X</button>
     </li>
   </ul>
@@ -21,21 +21,17 @@ export default {
   components: {
     Effect,
   },
-  data() {
-    return {
-      localData: this.effects || []
-    };
-  },
   methods: {
     update() {
-      this.$emit('update', this.localData);
+      this.$emit('update', this.effects);
     },
     deleteEffect(effect) {
-      this.localData = this.localData.filter((e) => e != effect);
+      let idx = this.effects.findIndex((e) => e == effect);
+      this.effects.splice(idx, 1);
       this.update();
     },
     addEffect() {
-      this.localData.push({
+      this.effects.push({
         id: uuid(),
         type: 'WorldVariable',
         subtype: 'Emissions',
@@ -54,10 +50,13 @@ export default {
 	border: 1px solid #aaa;
 	margin-top: 0.5em;
 }
-.effects label {
+.effects .header {
+  display: flex;
   align-items: center;
+  font-size: 0.7em;
+  justify-content: space-between;
 }
-.effects label button {
+.effects .header button {
   font-size: 0.95em;
   line-height: 1.2;
   margin-left: 0.5em;

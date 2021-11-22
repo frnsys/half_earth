@@ -2,7 +2,7 @@
 <div class="condition">
   <fieldset>
     <div>
-      <label>Condition Type</label>
+      <label>Type</label>
       <select v-model="localData.type" @change="update" :class="flags('type')">
         <option v-for="type in Object.keys(CONDITIONS)" :value="type">{{type}}</option>
       </select>

@@ -39,6 +39,7 @@ const PROCESS_FEATURES = {
   'IsSolar': 'If the process depends on sunlight',
   'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
   'IsCombustion': 'If this process depends on combustion',
+  'IsFossil': 'If this process uses fossil fuels',
 }
 
 const INCOME_LEVELS = [
@@ -250,6 +251,9 @@ const EFFECTS = {
   SetProjectStatus: {
     entity: 'Project',
     choices: ['Active', 'Stalled', 'Halted'],
+    params: {
+      'Duration': Number
+    }
   },
 
   RegionLeave: {
@@ -384,11 +388,12 @@ const SPEAKERS = [
   'The Green Meanies',
   'The Wretched',
   'The Envoy',
-  'The Space Enthusiast',
+  'The Spacer',
   'The Doctor',
-  'The Energy Czar',
-  'The Safety Czar',
+  'The Engineer',
+  'The Soldier',
   'The Authoritarian',
+  'The Analyst',
 ];
 
 const EVENT_TYPES = [

@@ -75,7 +75,8 @@
     <Probabilities :probabilities="localData.probabilities" @update="saveData('probabilities', $event)" />
     <Effects :effects="localData.effects" @update="saveData('effects', $event)" />
 
-    <Dialogue v-if="localData.type !== 'Icon'" :id="item.id" :dialogue="localData.dialogue" @update="saveDialogue($event)"/>
+    <label>Dialogue</label>
+    <Dialogue v-if="localData.type !== 'Icon'" :id="item.id" :root="localData.dialogue.root" :lines="localData.dialogue.lines" />
 
     <Notes :notes="localData.notes" @blur="saveNotes" />
 
@@ -113,7 +114,7 @@
       </div>
       <div class="item-missing invalid" v-else-if="localData.type == 'World'">[MISSING IMAGE]</div>
     </div>
-    <DialogueSummary v-if="localData.type !== 'Icon'" :dialogue="localData.dialogue" />
+    <DialogueSummary v-if="localData.type !== 'Icon'" :root="localData.dialogue.root" :lines="localData.dialogue.lines" />
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -124,6 +125,24 @@ import state from '../../state';
 import ItemMixin from './ItemMixin';
 
 export default {
+  created() {
+    if (!this.localData.dialogue) {
+      this.localData.dialogue = {
+        root: 0,
+        lines: {
+          0: {
+            id: 0,
+            speaker: 'Gossy',
+            text: '',
+            next: null,
+          }
+        }
+      };
+    }
+    if (!this.localData.effects) {
+      this.localData.effects = [];
+    }
+  },
   mounted() {
     if (!this.localData.variables) {
       this.parseVariables();
@@ -140,8 +159,9 @@ export default {
       }
     },
     saveDialogue(dialogue) {
-      this.saveData('dialogue', dialogue);
-      this.parseVariables();
+      // TODO is this necessary anymore?
+      /* this.saveData('dialogue', dialogue); */
+      /* this.parseVariables(); */
       /* this.save(); */
     },
   },
