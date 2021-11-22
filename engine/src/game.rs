@@ -53,10 +53,6 @@ impl GameInterface {
         self.game.state.world.regions[region_id].outlook += amount as f32;
     }
 
-    pub fn set_event_choice(&mut self, event_id: usize, region_id: Option<usize>, choice_id: usize) {
-        self.game.set_event_choice(event_id, region_id, choice_id);
-    }
-
     pub fn set_project_points(&mut self, project_id: usize, points: usize) {
         self.game.state.projects[project_id].set_points(points);
     }
@@ -95,6 +91,22 @@ impl GameInterface {
 
     pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
         self.game.apply_event(event_id, region_id);
+    }
+
+    pub fn eval_branch_conditions(&mut self, event_id: usize, region_id: Option<usize>, branch_id: usize) -> bool {
+        let (_effects, conds) = &self.game.event_pool.events[event_id].branches[branch_id];
+        conds.iter().all(|c| c.eval(&self.game.state, region_id))
+    }
+
+    pub fn apply_branch_effects(&mut self, event_id: usize, region_id: Option<usize>, branch_id: usize)  {
+        let mut effects = vec![];
+        let (efs, _conds) = &self.game.event_pool.events[event_id].branches[branch_id];
+        for ef in efs {
+            effects.push(ef.clone());
+        }
+        for effect in effects {
+            effect.apply(&mut self.game.state, &mut self.game.event_pool, region_id);
+        }
     }
 
     pub fn check_requests(&mut self) -> Result<JsValue, JsValue> {
@@ -221,13 +233,6 @@ impl Game {
         }
 
         for (effect, region_id) in effects {
-            effect.apply(&mut self.state, &mut self.event_pool, region_id);
-        }
-    }
-
-    pub fn set_event_choice(&mut self, event_id: usize, region_id: Option<usize>, choice_id: usize) {
-        let effects = self.event_pool.events[event_id].set_choice(choice_id);
-        for effect in effects.clone() {
             effect.apply(&mut self.state, &mut self.event_pool, region_id);
         }
     }

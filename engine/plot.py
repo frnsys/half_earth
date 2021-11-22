@@ -1,8 +1,12 @@
 import os
+import math
 import json
 import pandas as pd
 import matplotlib.pyplot as plt
 from collections import defaultdict
+
+N_COLORS = 10
+LINE_STYLES = ['solid', 'dashed', 'dashdot', 'dotted']
 
 df = pd.read_csv('/tmp/calibration.csv')
 
@@ -13,6 +17,7 @@ if not os.path.exists('/tmp/plots'):
 
 plots = {
     'Population (b)': ['Population (b)', 'Pop Ref (2100, bn people)'],
+    'Events': ['Events'],
     'Temperature': ['Temperature'],
     'Outlook': ['Outlook'],
     'Habitability': ['Habitability'],
@@ -106,9 +111,13 @@ for output, categories in process_cols_by_output.items():
 files = []
 for title, cols in plots.items():
     plt.title(title)
-    for col in cols:
+    for i, col in enumerate(cols):
         vals = df[col]
-        plt.plot(df['Year'], vals, label=col)
+        linestyle = math.floor(i/N_COLORS)
+        if title == 'Events':
+            plt.scatter(df['Year'], vals, label=col, s=2)
+        else:
+            plt.plot(df['Year'], vals, label=col, linestyle=LINE_STYLES[linestyle])
     plt.legend(fontsize=6)
     fname = '{}.png'.format(title)
     plt.savefig(os.path.join('/tmp/plots', fname))
@@ -116,10 +125,17 @@ for title, cols in plots.items():
     files.append(fname)
 
 events = []
+events_by_year = {}
 for i, evs in enumerate(report.pop('events')):
+    year = report['start_year'] + i
+    subevs = []
+    for ev, region in evs:
+        ev_name = ev if region is None else '{} in {}'.format(ev, region)
+        subevs.append(ev_name)
+    events_by_year[year] = subevs
     events.append((
-        report['start_year'] + i,
-        '<br />'.join(ev if region is None else '{} in {}'.format(ev, region) for ev, region in evs)
+        year,
+        '<br />'.join(subevs)
     ))
 
 report['scenarios'] = ','.join(report['scenarios'])
@@ -179,6 +195,17 @@ img {
 .no-events .year {
     color: #bbb;
 }
+
+#tooltip {
+    font-size: 0.8em;
+    position: fixed;
+    background: #111;
+    color: #fff;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 320px;
+}
 '''
 
 tag = '''
@@ -195,6 +222,54 @@ event = '''
 </div>
 '''
 
+scripts = '''
+<script>
+const chartWidth = 640;
+const leftOffset = 100/chartWidth;
+const years = 100;
+const startYear = 2023
+const endYear = startYear + years;
+
+const tooltip = document.getElementById('tooltip');
+[...document.querySelectorAll('.charts img')].forEach((el) => {
+    el.addEventListener('mousemove', (ev) => {
+        let width = el.width;
+        let offset = width * leftOffset;
+        const yearWidth = width * 0.0070;
+        let rect = ev.target.getBoundingClientRect();
+        let x = ev.clientX - rect.left;
+        let y = ev.clientY - rect.top;
+        let year = Math.floor(startYear + (x - offset)/yearWidth);
+        let year_a = Math.max(year - 2, startYear);
+        let year_b = Math.min(year + 2, endYear);
+        if (year_b > year_a) {
+            let events = [];
+            [...Array(year_b - year_a)].forEach((_,i)=> {
+                let evs = EVENTS_BY_YEAR[year_a + i];
+                if (evs !== undefined) {
+                    events = events.concat(evs);
+                }
+            });
+            if (events.length > 0) {
+                tooltip.innerHTML = `
+                    <div><b>${year_a}-${year_b}</b></div>
+                    ${events.join('<br />')}
+                `;
+                tooltip.style.display = 'block';
+            } else {
+                tooltip.style.display = 'none';
+            }
+        } else {
+            tooltip.style.display = 'none';
+        }
+    });
+    el.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+    });
+});
+</script>
+'''
+
 html = '''
 <html>
 <head>
@@ -203,16 +278,23 @@ html = '''
 </head>
 <body>
 <main>
+    <div id="tooltip"></div>
     <div class="group">
         <div class="meta">{meta}</div>
         <div class="charts">{charts}</div>
     </div>
     <div class="events">{events}</div>
 </main>
+<script>
+const EVENTS_BY_YEAR = {events_by_year};
+</script>
+{scripts}
 </body>
 </html>
 '''.format(
         style=style,
+        scripts=scripts,
+        events_by_year=json.dumps(events_by_year),
         meta='\n'.join(tag.format(k=k, v=v) for k, v in report.items()),
         charts='\n'.join('<img src="{}">'.format(fname) for fname in files),
         events='\n'.join(

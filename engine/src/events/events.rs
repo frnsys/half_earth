@@ -190,11 +190,14 @@ pub struct Event {
     /// can trigger this event.
     pub probabilities: Vec<Probability>,
 
-    /// Choices the player chooses from.
-    pub choices: Vec<Choice>,
-
     /// Effects applied when this event occurs.
     pub effects: Vec<Effect>,
+
+    /// Associated effects/conditions
+    /// for dialogue responses/branches;
+    /// position in vec should correspond to
+    /// the branch id.
+    pub branches: Vec<(Vec<Effect>, Vec<Condition>)>,
 
     pub prob_modifier: f32,
 
@@ -223,23 +226,7 @@ impl Event {
             None => false
         }
     }
-
-    pub fn set_choice(&self, choice_id: usize) -> &Vec<Effect> {
-        let choice = &self.choices[choice_id];
-        &choice.effects
-    }
 }
-
-#[derive(Debug, Clone)]
-pub struct Choice {
-    pub effects: Vec<Effect>,
-
-    /// A function that takes the current
-    /// game state and returns whether or not
-    /// this choice is available.
-    pub conditions: Vec<Condition>
-}
-
 
 #[cfg(test)]
 mod test {
@@ -258,7 +245,6 @@ mod test {
             prob_modifier: 1.,
             intensity: 0,
             aspect: None,
-            choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
@@ -281,7 +267,6 @@ mod test {
             prob_modifier: 1.,
             intensity: 0,
             aspect: None,
-            choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood:: Guaranteed,
@@ -328,7 +313,6 @@ mod test {
             intensity: 0,
             aspect: None,
 
-            choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
@@ -399,7 +383,6 @@ mod test {
             locked: true,
 
             regional: false,
-            choices: vec![],
             effects: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,

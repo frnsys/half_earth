@@ -57,10 +57,5 @@ export default {
         this.showingEvent = true;
       }
     },
-    selectChoice(idx) {
-      // TODO skipping this until we figure out dialogue or swipe events
-      /* let [eventId, regionId] = this.events[this.eventIdx]; */
-      /* game.selectChoice(eventId, regionId, idx); */
-    }
   }
 };

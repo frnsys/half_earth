@@ -26,7 +26,7 @@ use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
-use crate::events::{Event, Choice, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
 use crate::npcs::{NPC, NPCRelation};
 '''
@@ -126,8 +126,8 @@ specs = {
         'regional': 'false',
         'effects': [],
         'probabilities': [],
-        'dialogue': [],
         'prob_modifier': 1.0,
+        'dialogue': None,
         'intensity': 0,
         'aspect': None
     },
@@ -139,10 +139,6 @@ specs = {
     },
     'Probability': {
         'likelihood': None,
-        'conditions': [],
-    },
-    'Choice': {
-        'effects': [],
         'conditions': [],
     },
     'Outcome': {
@@ -207,7 +203,7 @@ effects = {
     'OutputForProcess': lambda e: (ids[e['entity']], param(e, 'PercentChange')/100),
     'Resource':         lambda e: ('Resource::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
-    'SetProjectStatus': lambda e: (ids[e['entity']], 'ProjectStatus::{}'.format(e['subtype']),),
+    'SetProjectStatus': lambda e: (ids[e['entity']], 'ProjectStatus::{}'.format(e['subtype']), int(param(e, 'Duration'))),
     'ProjectRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Implement' else 'false', int(param(e, 'Bounty'))),
     'ProcessRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Unban' else 'false', int(param(e, 'Bounty'))),
     'AddRegionFlag':    lambda e: ('"{}".to_string()'.format(e['params'].get('Flag')),),
@@ -278,15 +274,6 @@ def define_upgrade(u):
         'active': 'false',
         'cost': u['cost'],
         'effects': u['effects'],
-    })
-
-def define_choice(choice):
-    return define_struct('Choice', {
-        # Don't include text, it will be fetched
-        # when the event occurs
-        # 'text': choice['text'],
-        'effects': choice['effects'],
-        'conditions': choice.get('conditions', []),
     })
 
 def define_outcome(outcome):
@@ -398,18 +385,6 @@ def define_field(k, v, item):
         if isinstance(v, list):
             return 'upgrades: vec![\n{}\n]'.format(
                         indent(',\n'.join(define_upgrade(e) for e in v)))
-    elif k == 'choices':
-        return 'choices: vec![\n{}\n]'.format(
-                    indent(',\n'.join(define_choice(c) for c in v)))
-    elif k == 'dialogue':
-        # The Rust code only needs the choices (their conditions/effects)
-        # so extract those from the dialogue
-        if v:
-            choices = extract_choices(v)
-            return 'choices: vec![\n{}\n]'.format(
-                            indent(',\n'.join(define_choice(c) for c in choices)))
-        else:
-            return 'choices: vec![]'
     elif k == 'outcomes':
         outcomes = [c for c in v if c.get('text')]
         return 'outcomes: vec![\n{}\n]'.format(
@@ -426,6 +401,11 @@ def define_field(k, v, item):
         feats = ['ProcessFeature::{}'.format(feat) for feat, on in v.items() if on]
         return 'features: vec![\n{}\n]'.format(
                     indent(',\n'.join(feats)))
+    elif k == 'dialogue':
+        if not v:
+            return 'branches: vec![]'
+        branches = extract_branches(v)
+        return 'branches: vec![{}]'.format(', '.join(branches))
     elif is_float(v) and k != 'id':
         v = format_float(v)
     elif isinstance(v, bool):
@@ -458,36 +438,44 @@ def define_array(name, typ):
     return 'pub const {}: [{}; {}] = [\n{}\n];'.format(name, typ,
         len(items), indent(define_structs(typ, items)))
 
-def extract_choices(dialogue):
-    choices = []
-    for c in dialogue.get('choices', []):
-        choices.append(c)
-        if c['dialogue']:
-            choices += extract_choices(c['dialogue'])
-    return choices
-
-def extract_choices_and_dialogue(dialogue):
-    if dialogue:
-        # Add ids onto each choice
-        # so the JS can tell Rust which
-        # choice index was selected
-        choices = extract_choices(dialogue)
-        for i, c in enumerate(choices):
-            c['id'] = i
-        return extract_dialogue(dialogue)
+def extract_branches(dialogue):
+    branches = []
+    branch_id = 0
+    for l in dialogue['lines'].values():
+        if isinstance(l['next'], list):
+            for j, b in enumerate(l['next']):
+                b['id'] = branch_id
+                branch_id += 1
+                effects = 'vec![{}]'.format(', '.join(define_effect(e) for e in b['effects']))
+                conditions = 'vec![{}]'.format(', '.join(define_condition(e) for e in b['conditions']))
+                branches.append('({}, {})'.format(effects, conditions))
+    return branches
 
 def extract_dialogue(dialogue):
-    return {
-        'lines': [{
-            'text': line.get('text', ''),
-            'speaker': line.get('speaker', ''),
-        } for line in dialogue.get('lines', [])],
-        'choices': [{
-            'id': c['id'],
-            'text': c.get('text') or '...',
-            'dialogue': extract_dialogue(c['dialogue']) if c.get('dialogue') else None
-        } for c in dialogue.get('choices', [])]
-    }
+    if not dialogue: return {'root': None, 'lines': {}}
+    keys_to_ids = {k: i for i, k in enumerate(dialogue['lines'].keys())}
+
+    branch_id = 0
+    dialogue['root'] = keys_to_ids[str(dialogue['root'])]
+    dialogue['lines'] = {keys_to_ids[k]: l for k, l in dialogue['lines'].items()}
+    for l in dialogue['lines'].values():
+        l['id'] = keys_to_ids[str(l['id'])]
+        if isinstance(l['next'], list):
+            for j, b in enumerate(l['next']):
+                b['id'] = branch_id
+                branch_id += 1
+                del b['conditions']
+                del b['effects']
+                if l['decision']:
+                    b['line_id'] = keys_to_ids[b['line_id']]
+                    if dialogue['lines'][b['line_id']]['text'] == '':
+                        b['line_id'] = None
+                else:
+                    b['line_id'] = keys_to_ids[b['line_id']]
+        elif l['next'] != None:
+            l['next'] = keys_to_ids[l['next']]
+
+    return dialogue
 
 def format_float(num):
     num = float(num)
@@ -677,7 +665,7 @@ if __name__ == '__main__':
         event = {
             'name': ev.get('name', ''),
             'arc': ev.get('arc', ''),
-            'dialogue': extract_choices_and_dialogue(ev.get('dialogue', {})),
+            'dialogue': extract_dialogue(ev.get('dialogue', {})),
             'image': {
                 'fname': fname,
                 'attribution': attribution,

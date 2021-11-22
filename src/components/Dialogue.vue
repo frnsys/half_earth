@@ -1,5 +1,5 @@
 <template>
-<div class="dialogue" @click="advance" v-if="current">
+<div class="dialogue" @click="advance" v-if="current !== null">
   <div class="dialogue--speech">
     <div class="dialogue--speaker">
       <img
@@ -13,13 +13,13 @@
     </div>
   </div>
   <div class="dialogue--choices">
-    <template v-if="revealed && isLastLine">
-      <div v-if="current.choices.length === 0" class="dialogue--choice" @click="end">
+    <template v-if="revealed">
+      <div v-if="isLastLine" class="dialogue--choice" @click="end">
         (Continue)
       </div>
-      <template v-else v-for="choice, i in current.choices" :key="i">
-        <div class="dialogue--choice" @click="(ev) => selectChoice(ev, i)">
-          {{choice.text}}
+      <template v-else-if="line.decision" v-for="branch in line.next" :key="branch.id">
+        <div class="dialogue--choice" @click="(ev) => selectChoice(ev, branch)">
+          {{branch.text}}
         </div>
       </template>
     </template>
@@ -28,9 +28,9 @@
 </template>
 
 <script>
+import game from '/src/game';
 import state from '/src/state';
 import display from 'lib/display';
-import {clone} from 'lib/util';
 import Effects from 'components/Effects.vue';
 
 // Extract "chars" which might be
@@ -97,18 +97,18 @@ function parseText(text, context) {
 }
 
 export default {
-  props: ['dialogue', 'effects'],
+  props: ['dialogue', 'effects', 'eventId', 'regionId'],
   components: {
     Effects,
   },
   data() {
     return {
-      current: clone(this.dialogue),
+      current: this.dialogue.root,
       revealed: false,
     }
   },
   mounted() {
-    if (this.current) {
+    if (this.current !== null) {
       this.play();
     }
   },
@@ -116,22 +116,21 @@ export default {
     dialogue(dialogue) {
       if (dialogue !== null) {
         this.revealed = false;
-        this.current = dialogue;
+        this.current = dialogue.root;
         this.play();
       }
     }
   },
   computed: {
     line() {
-      let line = this.current.lines[0];
-      console.log(line);
+      let line = this.dialogue.lines[this.current];
       return {
-        text: this.dialogue.context ? parseText(line.text) : line.text,
-        speaker: line.speaker,
+        ...line,
+        text: this.dialogue.context ? parseText(line.text, this.dialogue.context) : line.text,
       };
     },
     isLastLine() {
-      return this.current.lines.length <= 1;
+      return this.line.next == null;
     },
   },
   methods: {
@@ -152,14 +151,12 @@ export default {
       this.revealed = false;
       this.$emit('done');
     },
-    selectChoice(ev, i) {
+    selectChoice(ev, branch) {
       ev.stopImmediatePropagation();
+      game.applyBranchEffects(this.eventId, this.regionId, branch);
 
-      let choice = this.current.choices[i];
-      this.$emit('select', choice.id);
-
-      this.current = choice.dialogue;
-      if (this.current) {
+      this.current = branch.line_id;
+      if (this.current !== null) {
         this.play();
       } else {
         this.end();
@@ -174,13 +171,17 @@ export default {
       }
     },
     nextLine() {
-      // If this is the last line
-      // and there are no choices to advance
-      // the dialogue further, just end it
-      if (this.isLastLine && this.current.choices.length === 0) {
+      if (Array.isArray(this.line.next)) {
+        let branch = this.line.next.find((b) => {
+          return game.evalBranchConditions(this.eventId, this.regionId, b.id);
+        });
+        this.current = branch.line_id;
+      } else {
+        this.current = this.line.next;
+      }
+      if (this.current === null) {
         this.end();
       } else {
-        this.current.lines.shift();
         this.play();
       }
     },

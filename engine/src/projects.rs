@@ -10,6 +10,7 @@ pub enum Status {
     Building,
     Active,
     Halted,
+    Stalled,
     Finished,
 }
 

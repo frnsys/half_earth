@@ -1,6 +1,6 @@
 <template>
   <Hud />
-  <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" @select="selectChoice" />
+  <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" />
   <div class="report">
     <h2>Report</h2>
     <div class="report--body">
@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     requestsFulfilled() {
-      return game.check_requests().map(([kind, id, active, bounty]) => {
+      return game.checkRequests().map(([kind, id, active, bounty]) => {
         // TODO should show who gave it to you?
         let text;
         if (kind == 'Project') {

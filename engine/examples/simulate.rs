@@ -83,7 +83,7 @@ fn main() {
 
     let mut scenarios = vec![];
     if args.len() > 1 {
-        for arg in args[1].split(',') {
+        for arg in args[1].split(',').filter(|s| s.len() > 0) {
             let scenario = match arg {
                 "BanFossilFuels" => Scenario::BanFossilFuels,
                 "Nuclear" => Scenario::Nuclear,
@@ -144,6 +144,7 @@ fn main() {
     let mut wtr = csv::Writer::from_path(file_path).unwrap();
     let base_cols = vec![
         "Year",
+        "Events",
         "Temperature",
         "CO2 Emissions (Gt)",
         "CH4 Emissions (Mt)",
@@ -244,7 +245,6 @@ fn main() {
             calorie_byproducts += order.process.byproducts * order.amount;
         }
 
-
         // Hector separates out FFI and LUC emissions
         // but we lump them together
         // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
@@ -260,8 +260,36 @@ fn main() {
 
         game.state.world.temperature = tgav;
 
+        let mut year_events = vec![];
+        let events = if report.roll_events {
+            game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
+        } else {
+            vec![]
+        };
+        for (ev_id, region_id) in events {
+            let ev = &game.event_pool.events[ev_id];
+            match region_id {
+                Some(id) => {
+                    let region = &game.state.world.regions[id];
+                    year_events.push((ev.name.to_string(), Some(region.name.to_string())));
+                },
+                None => {
+                    year_events.push((ev.name.to_string(), None));
+                }
+            }
+            game.apply_event(ev_id, region_id);
+        }
+        for p_id in completed_projects {
+            let project = &game.state.projects[p_id];
+            year_events.push(
+                (format!("Finished {}", project.name), None));
+        }
+        let n_events = year_events.len();
+        report.events.push(year_events);
+
         let mut vals: Vec<String> = vec![
             game.state.world.year as f32,
+            n_events as f32,
             tgav,
             game.state.world.co2_emissions * 1e-15,
             game.state.world.ch4_emissions * 1e-12,
@@ -334,32 +362,6 @@ fn main() {
             (p.byproducts.n2o * order.amount * 1e-12).to_string()
         }));
         wtr.write_record(&vals).unwrap();
-
-        let mut year_events = vec![];
-        let events = if report.roll_events {
-            game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
-        } else {
-            vec![]
-        };
-        for (ev_id, region_id) in events {
-            let ev = &game.event_pool.events[ev_id];
-            match region_id {
-                Some(id) => {
-                    let region = &game.state.world.regions[id];
-                    year_events.push((ev.name.to_string(), Some(region.name.to_string())));
-                },
-                None => {
-                    year_events.push((ev.name.to_string(), None));
-                }
-            }
-            game.apply_event(ev_id, region_id);
-        }
-        for p_id in completed_projects {
-            let project = &game.state.projects[p_id];
-            year_events.push(
-                (format!("Finished {}", project.name), None));
-        }
-        report.events.push(year_events);
     }
 
     serde_json::to_writer(&File::create("/tmp/calibration.json").unwrap(), &report).unwrap();

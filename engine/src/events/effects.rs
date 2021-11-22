@@ -1,5 +1,6 @@
 use crate::state::State;
 use crate::regions::Region;
+use crate::projects::Status;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock, Byproduct};
 use super::{WorldVariable, LocalVariable, PlayerVariable, EventPool};
@@ -49,6 +50,8 @@ pub enum Effect {
 
     ProjectRequest(usize, bool, usize),
     ProcessRequest(usize, bool, usize),
+
+    SetProjectStatus(usize, Status, usize),
 
     Migration,
     RegionLeave,
@@ -326,6 +329,10 @@ impl Effect {
             },
             Effect::ProjectCostModifier(id, change) => {
                 state.projects[*id].cost_modifier -= change;
+            },
+            Effect::SetProjectStatus(id, status, duration) => {
+                state.projects[*id].status = *status;
+                // TODO apply duration?
             },
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent/100.;
