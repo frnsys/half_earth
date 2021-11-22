@@ -108,6 +108,30 @@ for output, categories in process_cols_by_output.items():
     for category, cols in categories.items():
         plots['Process-{}-{}'.format(output, category)] = cols
 
+all_icon_events = set()
+icon_event_history = report.pop('icon_events')
+for evs in icon_event_history:
+    for name, _ in evs:
+        all_icon_events.add(name)
+
+icon_events_by_year = {}
+icon_events_by_year_output = {}
+for i, icon_events in enumerate(icon_event_history):
+    year = report['start_year'] + i
+    counts = defaultdict(int)
+    for ev, region in icon_events:
+        counts[ev] += 1
+        all_icon_events.add(ev)
+
+    evs = []
+    for name, count in counts.items():
+        evs.append('{}x {}'.format(count, name))
+    icon_events_by_year_output[year] = '<br />'.join(evs)
+    icon_events_by_year[year] = {k: counts[k] for k in all_icon_events}
+icon_events_df = pd.DataFrame.from_dict(icon_events_by_year, orient='index')
+df = df.set_index('Year').join(icon_events_df)
+plots['Icon Events'] = list(all_icon_events)
+
 files = []
 for title, cols in plots.items():
     plt.title(title)
@@ -115,14 +139,15 @@ for title, cols in plots.items():
         vals = df[col]
         linestyle = math.floor(i/N_COLORS)
         if title == 'Events':
-            plt.scatter(df['Year'], vals, label=col, s=2)
+            plt.scatter(df.index, vals, label=col, s=2)
         else:
-            plt.plot(df['Year'], vals, label=col, linestyle=LINE_STYLES[linestyle])
+            plt.plot(df.index, vals, label=col, linestyle=LINE_STYLES[linestyle])
     plt.legend(fontsize=6)
     fname = '{}.png'.format(title)
     plt.savefig(os.path.join('/tmp/plots', fname))
     plt.close()
     files.append(fname)
+
 
 events = []
 events_by_year = {}
@@ -195,6 +220,10 @@ img {
 .no-events .year {
     color: #bbb;
 }
+.icon-events {
+    font-size: 0.7em;
+    color: #777;
+}
 
 #tooltip {
     font-size: 0.8em;
@@ -218,7 +247,10 @@ tag = '''
 event = '''
 <div class="event {cls}">
     <div class="year">{year}</div>
-    <div>{events}</div>
+    <div>
+        <div>{events}</div>
+        <div class="icon-events">{icon_events}</div>
+    </div>
 </div>
 '''
 
@@ -300,6 +332,7 @@ const EVENTS_BY_YEAR = {events_by_year};
         events='\n'.join(
             event.format(
                 year=year, events=evs,
+                icon_events=icon_events_by_year_output[year],
                 cls='no-events' if not evs else '')
             for year, evs in events))
 

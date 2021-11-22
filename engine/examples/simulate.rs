@@ -29,6 +29,7 @@ struct Report {
     priority: Priority,
     scenarios: Vec<Scenario>,
     events: Vec<Vec<(String, Option<String>)>>,
+    icon_events: Vec<Vec<(String, Option<String>)>>,
 }
 
 impl Scenario {
@@ -109,7 +110,8 @@ fn main() {
         priority: Priority::Scarcity,
         scenario_start: 10,
         scenarios,
-        events: vec![]
+        events: vec![],
+        icon_events: vec![],
     };
 
     let co2_ref = 43.16;     // Gt, 2022, from SSP2-Baseline
@@ -279,6 +281,7 @@ fn main() {
             }
             game.apply_event(ev_id, region_id);
         }
+
         for p_id in completed_projects {
             let project = &game.state.projects[p_id];
             year_events.push(
@@ -286,6 +289,31 @@ fn main() {
         }
         let n_events = year_events.len();
         report.events.push(year_events);
+
+        // Icon events
+        let mut year_icon_events = vec![];
+        let icon_events = if report.roll_events {
+            game.roll_events_for_phase(Phase::Icon, None, &mut rng)
+        } else {
+            vec![]
+        };
+        for (ev_id, region_id) in icon_events {
+            let ev = &game.event_pool.events[ev_id];
+            match region_id {
+                Some(id) => {
+                    let mut region = &mut game.state.world.regions[id];
+                    year_icon_events.push((ev.name.to_string(), Some(region.name.to_string())));
+
+                    // Apply outlook effect
+                    region.outlook -= ev.intensity as f32;
+                },
+                None => {
+                    year_icon_events.push((ev.name.to_string(), None));
+                }
+            }
+            game.apply_event(ev_id, region_id);
+        }
+        report.icon_events.push(year_icon_events);
 
         let mut vals: Vec<String> = vec![
             game.state.world.year as f32,
