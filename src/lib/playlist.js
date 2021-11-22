@@ -27,8 +27,8 @@ class Playlist {
 
   playNext() {
     this.current.pause();
-    this.current.load();
-    this.index = this.index < urls.length - 1 ? this.index + 1 : 0;
+    this.current.reset();
+    this.index = this.index < this.urls.length - 1 ? this.index + 1 : 0;
     this.current.play();
   }
 }

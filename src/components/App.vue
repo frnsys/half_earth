@@ -7,13 +7,14 @@
 </template>
 
 <script>
+import debug from '/src/debug';
 import state from '/src/state';
 import Tip from './tip/Tip.vue';
 import Break from './phases/Break.vue';
 import Report from './phases/Report.vue';
 import Stream from './phases/events/Events.vue';
 import Planning from './phases/planning/Planning.vue';
-import Playlist from 'lib/music';
+import Playlist from 'lib/playlist';
 
 const playlist = [
   '/assets/music/airtone_-_disOrder.mp3',
@@ -28,7 +29,9 @@ export default {
     };
   },
   mounted() {
-    this.playlist.play();
+    if (!debug.noSound) {
+      this.playlist.play();
+    }
   },
   components: {
     Tip,

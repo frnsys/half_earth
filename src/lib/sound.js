@@ -25,6 +25,10 @@ class Sound {
     this.audio.pause();
   }
 
+  reset() {
+    this.audio.load();
+  }
+
   // Duration in ms
   fade(start, end, duration) {
     this.audio.volume = start;
