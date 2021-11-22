@@ -2,6 +2,8 @@
 <li class="item" :id="item.id" ref="root">
   <Flags :invalid="localData._validation.invalid" :questions="localData._validation.questions" />
   <button class="edit-toggle" @click="toggleEditing">{{ this.editing ? '⮪' : '✎'}}</button>
+  <button class="preview-toggle" @click="preview = true">💬</button>
+  <DialoguePreview v-if="preview" :dialogue="localData.dialogue" @close="preview = false"/>
   <template v-if="editing">
     <div class="event-variables" v-if="varMetas.length > 0">
         <span>Variables:</span>
@@ -123,8 +125,17 @@
 <script>
 import state from '../../state';
 import ItemMixin from './ItemMixin';
+import DialoguePreview from '../DialoguePreview.vue';
 
 export default {
+  components: {
+    DialoguePreview,
+  },
+  data() {
+    return {
+      preview: false
+    };
+  },
   created() {
     if (!this.localData.dialogue) {
       this.localData.dialogue = {
@@ -234,4 +245,14 @@ export default {
 .event-summary .type-pill {
   background: #e7cb5d;
 }
+
+.preview-toggle {
+  position: absolute;
+  top: 0;
+  right: 2em;
+  z-index: 1;
+  transform: translate(0, -50%);
+  font-size: 1.2em;
+}
+
 </style>

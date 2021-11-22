@@ -2,25 +2,33 @@
 <div class="dialogue" @click="advance" v-if="current !== null">
   <div class="dialogue--speech">
     <div class="dialogue--speaker">
-      <img
-        :src="`/assets/characters/${line.speaker}.png`"
-        onerror="this.src='/assets/placeholders/character.png';" />
       <div class="dialogue--speaker-name">{{line.speaker}}</div>
     </div>
     <div class="dialogue--body">
       <div class="dialogue--text" ref="text"></div>
-      <Effects :effects="effects" v-if="effects && revealed" />
     </div>
   </div>
   <div class="dialogue--choices">
     <template v-if="revealed">
       <div v-if="isLastLine" class="dialogue--choice" @click="end">
-        (Continue)
+        (End)
       </div>
-      <template v-else-if="line.decision" v-for="branch in line.next" :key="branch.id">
-        <div class="dialogue--choice" @click="(ev) => selectChoice(ev, branch)">
-          {{branch.text}}
-        </div>
+      <template v-else-if="line.decision">
+        <h2>Choice</h2>
+        <template v-for="branch in line.next" :key="`choice-${branch.id}`">
+          <div class="dialogue--choice" @click="(ev) => selectChoice(ev, branch)">
+            {{branch.text}}
+          </div>
+        </template>
+      </template>
+      <!-- choose from branches -->
+      <template v-else-if="Array.isArray(line.next)">
+        <h2>Branch</h2>
+        <template v-for="branch in line.next" :key="`branch-${branch.id}`">
+          <div class="dialogue--choice" @click="(ev) => selectChoice(ev, branch)">
+            BRANCH: "{{dialogue.lines[branch.line_id].text}}"
+          </div>
+        </template>
       </template>
     </template>
   </div>
@@ -28,10 +36,7 @@
 </template>
 
 <script>
-import game from '/src/game';
-import state from '/src/state';
-import display from 'lib/display';
-import Effects from 'components/Effects.vue';
+// import display from 'lib/display';
 
 // Extract "chars" which might be
 // actual chars or be HTML elements
@@ -93,14 +98,13 @@ function revealChars(parentEl, chars, {speed, onReveal, onStart}) {
 
 // Parse special entities out of text
 function parseText(text, context) {
-  return display.fillIcons(display.fillVars(text, context));
+  // return display.fillIcons(display.fillVars(text, context));
+  // Don't want to port over all the icons and what not
+  return text;
 }
 
 export default {
-  props: ['dialogue', 'effects', 'eventId', 'regionId'],
-  components: {
-    Effects,
-  },
+  props: ['dialogue'],
   data() {
     return {
       current: this.dialogue.root,
@@ -124,9 +128,11 @@ export default {
   computed: {
     line() {
       let line = this.dialogue.lines[this.current];
+      let text = this.dialogue.context ? parseText(line.text, this.dialogue.context) : line.text;
+      if (!text) text = '[MISSING TEXT]';
       return {
         ...line,
-        text: this.dialogue.context ? parseText(line.text, this.dialogue.context) : line.text,
+        text
       };
     },
     isLastLine() {
@@ -153,7 +159,6 @@ export default {
     },
     selectChoice(ev, branch) {
       ev.stopImmediatePropagation();
-      game.applyBranchEffects(this.eventId, this.regionId, branch);
 
       this.current = branch.line_id;
       if (this.current !== null) {
@@ -162,6 +167,7 @@ export default {
         this.end();
       }
     },
+
     advance() {
       if (this.current === null) return;
       if (this.revealed && !this.isLastLine && !this.line.decision) {
@@ -173,6 +179,7 @@ export default {
     nextLine() {
       if (Array.isArray(this.line.next)) {
         let branch = this.line.next.find((b) => {
+          // TODO choose branches somewhere else
           return game.evalBranchConditions(this.eventId, this.regionId, b.id);
         });
         this.current = branch.line_id;
@@ -276,5 +283,10 @@ export default {
 }
 .dialogue--choice:hover {
   background: #FF6B56;
+}
+
+.dialogue--choices h2 {
+  margin: 0 0 0.25em 0;
+  border-bottom: 1px solid #000;
 }
 </style>
