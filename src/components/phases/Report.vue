@@ -1,6 +1,6 @@
 <template>
   <Hud />
-  <Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" />
+  <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
   <div class="report">
     <h2>Report</h2>
     <div class="report--body">

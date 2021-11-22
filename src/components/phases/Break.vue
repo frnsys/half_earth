@@ -1,5 +1,5 @@
 <template>
-<Dialogue v-if="event" :dialogue="event.dialogue" @done="nextEvent" />
+<Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
 <div class="break">
   <h1>this takes place between runs</h1>
   <button @click="nextPhase">New Run</button>

@@ -164,7 +164,7 @@ export default {
     },
     advance() {
       if (this.current === null) return;
-      if (this.revealed && !this.isLastLine) {
+      if (this.revealed && !this.isLastLine && !this.line.decision) {
         this.nextLine();
       } else {
         this.skipReveal();

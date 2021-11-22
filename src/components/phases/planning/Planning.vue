@@ -1,6 +1,6 @@
 <template>
 <Hud />
-<Dialogue v-if="event && event.dialogue" :dialogue="event.dialogue" :effects="event.effects" @done="nextEvent" />
+<Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
 <div class="planning">
   <header>
     <div :class="{active: page == PAGES.PLAN}" @click="selectPage(PAGES.PLAN)">Plan</div>

@@ -21,6 +21,9 @@ export default {
   computed: {
     hasEvent() {
       return this.events.length > 0;
+    },
+    hasDialogue() {
+      return this.event && this.event.dialogue;
     }
   },
   methods: {
@@ -47,6 +50,8 @@ export default {
             ctx['region'] = regions[regionId].name;
           };
           this.event.dialogue.context = ctx;
+          this.event.eventId = eventId;
+          this.event.regionId = regionId;
         } else {
           console.log(this.event);
           throw(`Event "${eventId}" missing dialogue!`);

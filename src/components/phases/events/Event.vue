@@ -6,7 +6,7 @@
     <div class="event--name">{{event.name}}</div>
     <Effects :effects="event.effects" />
   </div>
-  <Dialogue v-if="event.dialogue" :dialogue="event.dialogue" :effects="[]" @done="done" />
+  <Dialogue v-if="hasDialogue" v-bind="event" @done="done" />
 </div>
 </template>
 

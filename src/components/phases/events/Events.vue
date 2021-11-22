@@ -7,7 +7,7 @@
   </div>
   <Globe id="events-globe" ref="globe" />
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
-  <Dialogue v-if="event && predialogue" :dialogue="event.dialogue" @done="nextEvent" />
+  <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" />
 </div>
 </template>

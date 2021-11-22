@@ -88,17 +88,21 @@ function unpromoteProcess(processId) {
   updateState();
 }
 
-// Select a response to an event
-function selectChoice(eventId, regionId, choiceId) {
-  game.set_event_choice(eventId, regionId, choiceId);
-  updateState();
-}
-
 // Apply event effects
 function applyEvent(eventId, regionId) {
   game.apply_event(eventId, regionId);
   updateState();
   updateResourceRankings();
+}
+
+function applyBranchEffects(eventId, regionId, branchId) {
+  game.apply_branch_effects(eventId, regionId, branchId);
+  updateState();
+  updateResourceRankings();
+}
+
+function evalBranchConditions(eventId, regionId, branchId) {
+  return game.eval_branch_conditions(eventId, regionId, branchId);
 }
 
 function upgradeProject(id) {
@@ -137,6 +141,10 @@ function yearsRemaining(project) {
   return game.years_remaining(project.progress, project.points, project.cost);
 }
 
+function checkRequests() {
+  return game.check_requests();
+}
+
 function _roll(phase, subphase, limit) {
   let p = Phase[`${phase}${subphase}`];
   if (p === undefined) {
@@ -160,6 +168,9 @@ const roll = {
   break: (subphase) => {
     return _roll('Break', subphase, null);
   },
+  icon: () => {
+    return _roll('Icon', '', null);
+  },
 }
 
 updateState();
@@ -171,9 +182,11 @@ export default {
   setPriority,
   changePoliticalCapital,
   changeLocalOutlook,
+  checkRequests,
   banProcess, unbanProcess,
   promoteProcess, unpromoteProcess,
   setProjectPoints, startProject, stopProject, upgradeProject,
-  selectChoice, applyEvent, roll, simulate,
+  applyEvent, roll, simulate,
+  applyBranchEffects, evalBranchConditions,
   industryDemand, regionDemand, regionHabitability,
   yearsRemaining, updateResourceRankings};
