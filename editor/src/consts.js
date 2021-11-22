@@ -374,6 +374,7 @@ const PROBABILITIES = [
 ];
 
 const SPEAKERS = [
+  '[GAME]',       // For scene description, etc
   'Gossy',
   'The Economist',
   'The Ecologist',

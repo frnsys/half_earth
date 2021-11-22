@@ -6,25 +6,25 @@
     <div class="event--name">{{event.name}}</div>
     <Effects :effects="event.effects" />
   </div>
-  <Dialogue v-if="hasDialogue" v-bind="event" @done="done" />
+  <Dialogue v-bind="event" :effects="[]" @done="done" />
 </div>
 </template>
 
 <script>
 import display from 'lib/display';
+import Effects from 'components/Effects.vue';
 import Dialogue from 'components/Dialogue.vue';
 
 export default {
   props: ['event'],
   components: {
+    Effects,
     Dialogue
   },
   methods: {
     done() {
       this.$emit('done');
     },
-    selectChoice() {
-    }
   }
 }
 </script>

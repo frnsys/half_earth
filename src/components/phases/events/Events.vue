@@ -9,6 +9,11 @@
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" />
+  <div id="event-stream--toasts">
+    <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
+      <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -26,6 +31,15 @@ import {sign, randChoice} from 'lib/util';
 
 const MS_PER_YEAR = 10000;
 
+function popIconEvents(arr, time) {
+  let results = [];
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (arr[i].when <= time) {
+      results.push(arr.splice(i, 1)[0]);
+    }
+  }
+  return results;
+}
 
 export default {
   mixins: [EventsMixin],
@@ -33,6 +47,7 @@ export default {
     let events = game.roll.world('Start');
     return {
       events,
+      toasts: [],
       time: 0,
       predialogue: true,
       year: state.gameState.world.year,
@@ -90,10 +105,17 @@ export default {
     startYear() {
       this.time = 0;
       let last = performance.now();
-      /* let iconEvents = game.rollIconEvents(); */
-      let iconEvents = [];
+      let iconEvents = game.roll.icon().map(([eventId, regionId]) => {
+        return {
+          eventId,
+          regionId,
+
+          // When in the year the event occurs
+          when: Math.random() * MS_PER_YEAR
+        }
+      });
       console.log('ICON EVENTS:');
-      console.log(iconEvents);
+      iconEvents.forEach((ev) => console.log(ev));
 
       const tick = (timestamp) => {
         if (this.stopped) return;
@@ -115,22 +137,21 @@ export default {
             return;
 
           } else {
-            // TODO need to ensure all events play out before end of year
-            /* if (iconEvents.length > 0 && Math.random() < 0.05) { */
-            if (iconEvents.length > 0 && Math.random() < 1) {
-              let [eventId, regionId] = iconEvents.shift();
-              game.applyEvent(eventId, regionId);
-              let icon = this.showEventOnGlobe(eventId, regionId);
+            if (iconEvents.length > 0) {
+              popIconEvents(iconEvents, this.time).forEach(({eventId, regionId}) => {
+                game.applyEvent(eventId, regionId);
+                let icon = this.showEventOnGlobe(eventId, regionId);
 
-              // If autoclickers for this event, roll for autoclick
-              if (icon && eventId in state.gameState.autoclickers) {
-                let chance = state.gameState.autoclickers[eventId];
-                setTimeout(() => {
-                  if (Math.random() <= chance) {
-                    this.globe.respondToEvent(icon.mesh, icon.hexIdx, icon.mesh.userData);
-                  }
-                }, 100);
-              }
+                // If autoclickers for this event, roll for autoclick
+                // if (icon && eventId in state.gameState.autoclickers) {
+                //   let chance = state.gameState.autoclickers[eventId];
+                //   setTimeout(() => {
+                //     if (Math.random() <= chance) {
+                //       this.globe.respondToEvent(icon.mesh, icon.hexIdx, icon.mesh.userData);
+                //     }
+                //   }, 100);
+                // }
+              });
             }
           }
         }
@@ -142,17 +163,12 @@ export default {
       // Go to report phase
       if (state.gameState.world.year > this._startYear
         && state.gameState.world.year % 5 == 0) {
-        console.log(`Stopping on year: ${state.gameState.world.year}`);
         this.stopped = true;
         state.phase = 'REPORT';
         return;
       }
 
       this.events = game.roll.world('Main');
-      console.log('Rolled world events:');
-      this.events.forEach((ev) => {
-        console.log(ev);
-      });
       this.applyEmissions();
 
       if (this.hasEvent) {
@@ -189,23 +205,34 @@ export default {
         let tiles = regionsToTiles[region.name];
         let hexIdx = randChoice(tiles.inland.concat(tiles.coasts));
         // let label = sign(ev.effect.value);
-        let mesh = this.globe.showIcon(ev.icon, hexIdx, {
-          event: ev,
-          region,
+        let mesh = this.globe.show({
+          icon: ev.icon,
+          hexIdx
         });
+          /* event: ev, */
+          /* region, */
+        /* }); */
 
         let outlook = ev.intensity;
         game.changeLocalOutlook(-outlook, regionId);
-        this.globe.pingIcon('discontent', hexIdx);
+        this.globe.show({icon: 'discontent', hexIdx, ping: true});
         if (outlook > 1) {
           let outlookInterval = setInterval(() => {
             if (outlook <= 0) {
               clearInterval(outlookInterval);
             } else {
               outlook--;
-              this.globe.pingIcon('discontent', hexIdx);
+              this.globe.show({icon: 'discontent', hexIdx, ping: true});
             }
           }, 250);
+        }
+
+        this.toasts.push({
+          icon: ev.icon,
+          desc: `${ev.name} in ${region.name}`
+        });
+        if (this.toasts.length > 3) {
+          this.toasts.shift();
         }
         return {hexIdx, mesh};
       }
@@ -240,5 +267,31 @@ export default {
 
 #event-stream .dialogue {
   background: rgba(255,255,255,0.25);
+}
+
+
+#event-stream--toasts {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1em;
+  text-align: center;
+  font-size: 0.8em;
+}
+.toast--body {
+  display: inline-block;
+  padding: 0.1em 0.25em;
+  border-radius: 0.2em;
+  background: rgba(20,20,20,0.9);
+  color: #fff;
+  border: 1px solid black;
+  text-align: center;
+  margin: 0.15em 0;
+  line-height: 1.7;
+}
+.toast img {
+  height: 20px;
+  vertical-align: middle;
 }
 </style>

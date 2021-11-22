@@ -246,6 +246,7 @@ mod test {
             intensity: 0,
             aspect: None,
             effects: vec![],
+            branches: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
                 conditions: vec![
@@ -268,6 +269,7 @@ mod test {
             intensity: 0,
             aspect: None,
             effects: vec![],
+            branches: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood:: Guaranteed,
                 conditions: vec![]
@@ -314,6 +316,7 @@ mod test {
             aspect: None,
 
             effects: vec![],
+            branches: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
                 conditions: vec![
@@ -384,6 +387,7 @@ mod test {
 
             regional: false,
             effects: vec![],
+            branches: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
                 conditions: vec![]
