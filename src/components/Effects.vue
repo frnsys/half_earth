@@ -161,21 +161,22 @@ function render(e) {
       }
     }
     case 'OutputForFeature': {
+      let tip = {...tips[e.subtype]};
+      tip.card = {
+        type: 'Processes',
+        data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+      };
       return {
-        tip: tips[e.subtype], // TODO maybe this can list out the processes with that flag
+        tip: tip,
         text: `${changeDir(e.param)} output for ${display.describeFeature(e.subtype)} by ${e.param*100}%`
       }
     }
     case 'Demand': {
-      // TODO
+      // TODO maybe these should all be expressed as per-capita?
+      // TODO show current demand?
       return {
-        tip: {
-          icon: e.subtype.toLowerCase(),
-          text: `Changes demand for ${display.displayName(e.subtype)} by ${sign(e.param*100)}%. Current demand is TODO`,
-        },
-        icon: 'demand',
-        subicon: e.subtype.toLowerCase(),
-        text: `${sign(e.param*100)}%`,
+        tip: tips[e.subtype.toLowerCase()],
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param)} demand for ${display.displayName(e.subtype)} by ${e.param*100}%`,
       }
     }
     case 'DemandAmount': {
@@ -186,13 +187,8 @@ function render(e) {
         val = display.output(val, 'plant_calories'); // same as animal cals
       }
       return {
-        tip: {
-          icon: e.subtype.toLowerCase(),
-          text: `Changes demand for ${display.displayName(e.subtype)} by ${sign(val)}<img src="/assets/icons/electricity.png">. Current demand is ${demand[display.enumKey(e.subtype)]}<img src="/assets/icons/electricity.png">.`
-        },
-        icon: 'demand',
-        subicon: e.subtype.toLowerCase(),
-        text: sign(val)
+        tip: tips[e.subtype.toLowerCase()],
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param)} demand for ${display.displayName(e.subtype)} by ${Math.abs(val)}%`,
       }
     }
     case 'UnlocksProject': {
@@ -306,10 +302,7 @@ function render(e) {
     case 'AddFlag': {
       let flag = e.param.split('::')[1];
       return {
-        tip: {
-          icon: 'warming', // TODO TEMP
-          text: FLAGS[flag],
-        },
+        tip: tips['TODO'],
         text: FLAGS[flag],
       }
     }

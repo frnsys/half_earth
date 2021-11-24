@@ -54,7 +54,6 @@ pub struct Process {
     pub byproducts: ByproductMap<f32>,
     pub feedstock: (Feedstock, f32),
 
-    #[serde(skip_serializing)]
     pub features: Vec<ProcessFeature>,
 
     // If the player has unlocked and/or banned/promoted

@@ -1,5 +1,5 @@
 <template>
-<div class="tip-wrapper" v-if="show" :class="{overlay: card}">
+<div class="tip-wrapper" v-if="show" :class="{overlay: card}" ref="overlay" @click="toggle">
   <div class="tip">
     <div class="tip--icon" v-if="icon">
       <img :src="icons[icon]">
@@ -15,11 +15,15 @@
     <ResourceCard v-if="card && card.type == 'Resource'" :resource="card.data" />
     <RegionCard v-if="card && card.type == 'Region'" :region="card.data" />
     <NPCCard v-if="card && card.type == 'NPC'" :npc="card.data" />
+    <Cards v-if="card && card.type == 'Processes'">
+      <ProcessCard v-for="p in card.data" :process="p" />
+    </Cards>
   </div>
 </div>
 </template>
 
 <script>
+import Cards from 'components/phases/planning/Cards.vue';
 import NPCCard from 'components/cards/NPCCard.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
@@ -29,6 +33,7 @@ import RegionCard from 'components/cards/RegionCard.vue';
 
 export default {
   components: {
+    Cards,
     NPCCard,
     ProcessCard,
     ProjectCard,
@@ -48,12 +53,21 @@ export default {
   },
   created() {
     document.body.addEventListener('click', (ev) => {
-      this.show = false;
+      if (this.card === undefined) {
+        this.show = false;
+      }
     });
 
     // Probably very hacky
     window.tip = this;
   },
+  methods: {
+    toggle(ev) {
+      if (ev.target == this.$refs.overlay) {
+        this.show = false;
+      }
+    }
+  }
 }
 </script>
 
@@ -69,6 +83,7 @@ export default {
 }
 .tip-wrapper.overlay {
   background: rgba(0,0,0,0.8);
+  pointer-events: auto;
 }
 .tip {
   background: #222;
@@ -106,6 +121,9 @@ export default {
   vertical-align: middle;
 }
 .tip--card {
+  pointer-events: none;
+}
+.tip--card .card {
   pointer-events: auto;
 }
 </style>
