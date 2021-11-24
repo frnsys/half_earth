@@ -20,6 +20,18 @@ const DISPLAY_NAMES = {
     'AnimalCalories': 'animal-based food',
 };
 
+const FEATURE_DESCS = {
+  'IsSolar': 'solar processes',
+  'IsIntermittent': 'intermittent processes',
+  'IsNuclear': 'nuclear processes',
+  'IsCombustion': 'combustion processes',
+  'IsFossil': 'fossil fuel processes',
+  'IsCCS': 'carbon capture processes',
+  'UsesLivestock': 'processes that use livestock',
+  'UsesPesticides': 'processes that use pesticides',
+  'UsesSynFertilizer': 'processes that use synthetic fertilizers',
+};
+
 function co2eq(byproducts) {
   return byproducts.co2 + byproducts.ch4 * 36 + byproducts.n2o * 298;
 }
@@ -61,6 +73,10 @@ function fillVars(text, context) {
     text = text.replaceAll(match[0], context[match[1]]);
   }
   return text;
+}
+
+function cardTag(name, icon) {
+  return `<div class="card-tag"><img src="${icons[icon]}">${name}</div>`
 }
 
 function enumKey(v) {
@@ -129,6 +145,10 @@ function displayName(key) {
   return DISPLAY_NAMES[key];
 }
 
+function describeFeature(feature) {
+  return FEATURE_DESCS[feature];
+}
+
 const resourceFormats = {
   'land': (v) => `${landUsePercent(v).toFixed(1)}%`,
   'emissions': (v) => `${(v * 1e-15).toFixed(1)}Gt`,
@@ -182,6 +202,7 @@ function resourceRankings() {
 }
 
 export default {co2eq, gtco2eq, output, outputs,
+  cardTag, describeFeature,
   landUsePercent, waterUsePercent,
   fillIcons, fillVars,
   displayName, enumKey, enumDisplay,
