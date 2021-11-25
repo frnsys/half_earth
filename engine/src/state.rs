@@ -276,7 +276,7 @@ impl State {
     /// Contribution to extinction rate from a single process
     pub fn process_extinction_rate(&self, process: &Process, produced: f32) -> f32 {
         // TODO what should the biodiversity pressure factor be?
-        (process.byproducts.biodiversity/1e8 + process.resources.land/consts::STARTING_RESOURCES.land) * produced
+        (process.byproducts.biodiversity/1e4 + process.resources.land/consts::STARTING_RESOURCES.land) * produced * 100.
     }
 
     pub fn step_world(&mut self) {

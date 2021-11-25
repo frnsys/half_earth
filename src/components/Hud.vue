@@ -4,7 +4,7 @@
     <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
       <img :src="icons.political_capital">{{state.gameState.political_capital}}
     </div>
-    <div v-tip="{icon: 'biodiversity', text: 'The current extinction rate. High land use and other factors increase this, and with it, the risk of ecological collapse.'}">
+    <div v-tip="{icon: 'extinction_rate', text: 'The current extinction rate. High land use and other factors increase this, and with it, the risk of ecological collapse.'}">
       <img :src="icons.extinction_rate">{{state.gameState.world.extinction_rate.toFixed(0)}}
     </div>
     <div :class="{'bad': state.gameState.contentedness < 0}" v-tip="{icon: 'contentedness', text: 'How people around the world feel about the state of things.'}">

@@ -1,6 +1,6 @@
 export default {
   political_capital: require('/assets/icons/pips/political_capital.png'),
-  extinction_rate: require('/assets/icons/extinction.png'),
+  extinction_rate: require('/assets/icons/extinction.alt.png'),
   contentedness: require('/assets/icons/contentedness.png'),
   emissions: require('/assets/icons/emissions.png'),
   warming: require('/assets/icons/warming.png'),
