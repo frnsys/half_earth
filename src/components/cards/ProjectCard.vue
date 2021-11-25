@@ -21,20 +21,16 @@
       Level {{level+1}}
     </div>
 
-    <div class="opposers">
+    <div class="opposers" v-if="opposers.length > 0">
       <div>Nay</div>
       <div>
-        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
-        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
-        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
+        <img v-for="npc in opposers" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
-    <div class="supporters">
+    <div class="supporters" v-if="supporters.length > 0">
       <div>Yea</div>
       <div>
-        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
-        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
-        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
+        <img v-for="npc in supporters" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
   </template>
@@ -79,6 +75,7 @@ import game from '/src/game';
 import state from '/src/state';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
+import NPCS from '/assets/content/npcs.json';
 
 export default {
   props: ['project'],
@@ -162,6 +159,16 @@ export default {
         e.random = true;
         return e;
       });
+    },
+    supporters() {
+      return this.supporters
+        .filter((id) => !state.gameState.npcs[id].locked)
+        .map((id) => NPCS[id]);
+    },
+    opposers() {
+      return this.opposers
+        .filter((id) => !state.gameState.npcs[id].locked)
+        .map((id) => NPCS[id]);
     },
   },
   methods: {
