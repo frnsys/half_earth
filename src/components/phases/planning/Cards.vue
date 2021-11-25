@@ -53,7 +53,10 @@ export default {
       if (!this.down) return;
       this.dragging = true;
       const dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
-      const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
+
+      // Don't allow vertical dragging
+      // const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
+      const dy = 0;
 
       // Scroll the element
       let prev = this.$el.scrollLeft;
