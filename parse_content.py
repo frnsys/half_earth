@@ -2,8 +2,8 @@
 import os
 import re
 import json
-import shutil
 import textwrap
+from PIL import Image
 from collections import defaultdict
 
 ids = {}
@@ -541,6 +541,10 @@ def condition_to_factor(cond):
     subtypes = cond_to_factor.get(cond['type'], {})
     return subtypes.get(cond['subtype'])
 
+def to_jpg(path, outpath):
+    im = Image.open(path)
+    im.convert('RGB').save(outpath, quality=20)
+
 def indent(text, levels=1):
     return textwrap.indent(text, 4 * levels * ' ')
 
@@ -704,7 +708,7 @@ if __name__ == '__main__':
             'arc': ev.get('arc', ''),
             'dialogue': extract_dialogue(ev.get('dialogue', {})),
             'image': {
-                'fname': fname,
+                'fname': fname.replace('.png', '.jpg') if fname is not None else None,
                 'attribution': attribution,
             },
             'factors': list(factors),
@@ -718,8 +722,8 @@ if __name__ == '__main__':
 
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
-            to = 'assets/content/images/{}'.format(fname)
-            shutil.copy(frm, to)
+            to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+            to_jpg(frm, to)
 
         all_events[id] = event
 
@@ -772,7 +776,7 @@ if __name__ == '__main__':
         project = {
             'name': p['name'],
             'image': {
-                'fname': fname,
+                'fname': fname.replace('.png', '.jpg') if fname is not None else None,
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
@@ -801,8 +805,8 @@ if __name__ == '__main__':
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
-            to = 'assets/content/images/{}'.format(fname)
-            shutil.copy(frm, to)
+            to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+            to_jpg(frm, to)
         projects.append(project)
     with open('assets/content/projects.json', 'w') as f:
         json.dump(projects, f)
@@ -815,15 +819,15 @@ if __name__ == '__main__':
         attribution = image.get('attribution', None)
         process = {
             'image': {
-                'fname': fname,
+                'fname': fname.replace('.png', '.jpg') if fname is not None else None,
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
-            to = 'assets/content/images/{}'.format(fname)
-            shutil.copy(frm, to)
+            to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+            to_jpg(frm, to)
         processes.append(process)
     with open('assets/content/processes.json', 'w') as f:
         json.dump(processes, f)
@@ -836,14 +840,14 @@ if __name__ == '__main__':
         attribution = image.get('attribution', None)
         industry = {
             'image': {
-                'fname': fname,
+                'fname': fname.replace('.png', '.jpg') if fname is not None else None,
                 'attribution': attribution,
             },
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
-            to = 'assets/content/images/{}'.format(fname)
-            shutil.copy(frm, to)
+            to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+            to_jpg(frm, to)
         industries.append(industry)
     with open('assets/content/industries.json', 'w') as f:
         json.dump(industries, f)
@@ -856,14 +860,14 @@ if __name__ == '__main__':
         attribution = image.get('attribution', None)
         region = {
             'image': {
-                'fname': fname,
+                'fname': fname.replace('.png', '.jpg') if fname is not None else None,
                 'attribution': attribution,
             },
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
-            to = 'assets/content/images/{}'.format(fname)
-            shutil.copy(frm, to)
+            to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+            to_jpg(frm, to)
         regions.append(region)
     with open('assets/content/regions.json', 'w') as f:
         json.dump(regions, f)
