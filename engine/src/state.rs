@@ -508,10 +508,10 @@ mod test {
         assert!(effects.len() > 0);
 
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 4);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
         // Stop
@@ -541,10 +541,10 @@ mod test {
         assert_eq!(effects.len(), 0); // No immediate effects
 
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 4);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
         // Stop
