@@ -35,7 +35,7 @@
               <option v-for="type in EVENT_TYPES" :value="type">{{type}}</option>
             </select>
           </div>
-          <div v-if="localData.type !== 'Icon'">
+          <div v-if="localData.type !== 'Icon' && localData.type !== 'Crisis'">
             <label>
               Event SubPhase
               <Tip>Choose e.g. 'Start' for the event to occur at the start of the phase.</Tip>

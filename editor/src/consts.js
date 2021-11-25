@@ -401,8 +401,9 @@ const EVENT_TYPES = [
   'World',      // Occur in the world/event stream
   'Planning',   // Occur during planning sessions
   'Report',     // Occurs during the reports
-  'Break',     // Occur between runs
+  'Break',      // Occur between runs
   'Icon',       // Occur in the world/event stream, but only as icons
+  'Crisis',     // Occurs when the crisis meter fills
 ];
 
 const DYNAMIC_COST_FACTORS = Object.keys(OUTPUTS).concat(['Time']);

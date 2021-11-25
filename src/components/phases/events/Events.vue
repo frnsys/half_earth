@@ -14,6 +14,7 @@
       <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
     </div>
   </div>
+  <CrisisMeter />
 </div>
 </template>
 
@@ -22,6 +23,7 @@ import game from '/src/game';
 import state from '/src/state';
 import Event from './Event.vue';
 import Project from './Project.vue';
+import CrisisMeter from './CrisisMeter.vue';
 import Hud from 'components/Hud.vue';
 import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
@@ -60,6 +62,7 @@ export default {
     Globe,
     Event,
     Project,
+    CrisisMeter,
   },
   mounted() {
     this.start();
@@ -78,7 +81,6 @@ export default {
       this.stopped = false;
       if (this.hasEvent) {
         this.predialogue = true;
-        console.log(this.events);
         this.showEvent();
       } else {
         this.predialogue = false;
@@ -104,6 +106,7 @@ export default {
     },
     startYear() {
       this.time = 0;
+      this.globe.resumeRotation();
       let last = performance.now();
       let iconEvents = game.roll.icon().map(([eventId, regionId]) => {
         return {
@@ -114,19 +117,23 @@ export default {
           when: Math.random() * MS_PER_YEAR
         }
       });
-      console.log('ICON EVENTS:');
-      iconEvents.forEach((ev) => console.log(ev));
 
       const tick = (timestamp) => {
         if (this.stopped) return;
         let elapsed = timestamp - last;
         last = timestamp;
 
+        if (state.crisis.points >= state.crisis.max) {
+          state.crisis.points = 0;
+          alert('CRISIS!');
+        }
+
         if (!this.showingEvent) {
           this.time += elapsed;
 
           if (this.time >= MS_PER_YEAR) {
             this.completedProjects = game.step();
+            state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(this.completedProjects);
             this.year = state.gameState.world.year;
 
             // Add to historical data
@@ -141,6 +148,8 @@ export default {
               popIconEvents(iconEvents, this.time).forEach(({eventId, regionId}) => {
                 game.applyEvent(eventId, regionId);
                 let icon = this.showEventOnGlobe(eventId, regionId);
+                let ev = ICON_EVENTS[eventId];
+                state.crisis.points += ev.intensity;
 
                 // If autoclickers for this event, roll for autoclick
                 // if (icon && eventId in state.gameState.autoclickers) {
@@ -173,6 +182,7 @@ export default {
 
       if (this.hasEvent) {
         this.showEvent();
+        this.globe.pauseRotation();
       } else {
         this.startYear();
       }

@@ -4,6 +4,10 @@ const init = {
   gameState: null,
   phase: 'PLANNING',
   planChanges: [],
+  crisis: {
+    points: 0,
+    max: 100
+  },
 
   // Compare beginning and end
   cycleStartState: {
