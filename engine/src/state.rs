@@ -25,6 +25,7 @@ pub struct State {
     pub game_over: bool,
 
     pub political_capital: isize,
+    pub research_points: isize,
     pub malthusian_points: usize,
     pub hes_points: usize,
     pub falc_points: usize,
@@ -59,6 +60,7 @@ impl State {
         let mut state = State {
             // political_capital: 10,
             political_capital: 100,
+            research_points: 0,
             malthusian_points: 0,
             hes_points: 0,
             falc_points: 0,

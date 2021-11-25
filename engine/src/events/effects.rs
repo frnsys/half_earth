@@ -122,6 +122,7 @@ impl Effect {
             Effect::PlayerVariable(var, change) => {
                 match var {
                     PlayerVariable::PoliticalCapital => state.political_capital += *change as isize,
+                    PlayerVariable::ResearchPoints => state.research_points += *change as isize, // TODO need to use the rust state for points then
                     PlayerVariable::MalthusianPoints => state.malthusian_points += *change as usize,
                     PlayerVariable::HESPoints => state.hes_points += *change as usize,
                     PlayerVariable::FALCPoints => state.falc_points += *change as usize,
@@ -205,11 +206,11 @@ impl Effect {
                 state.npcs[*id].relationship += change;
             },
 
-            Effect::ModifyIndustryByproducts(id, byproduct, mult) => {
-                state.industries[*id].byproducts[*byproduct] *= mult;
+            Effect::ModifyIndustryByproducts(id, byproduct, change) => {
+                state.industries[*id].byproducts[*byproduct] *= 1. + change;
             },
-            Effect::ModifyIndustryResources(id, resource, mult) => {
-                state.industries[*id].resources[*resource] *= mult;
+            Effect::ModifyIndustryResources(id, resource, change) => {
+                state.industries[*id].resources[*resource] *= 1. + change;
             },
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier += change;
@@ -273,6 +274,7 @@ impl Effect {
             Effect::PlayerVariable(var, change) => {
                 match var {
                     PlayerVariable::PoliticalCapital => state.political_capital -= *change as isize,
+                    PlayerVariable::ResearchPoints => state.research_points -= *change as isize,
                     PlayerVariable::MalthusianPoints => state.malthusian_points -= *change as usize,
                     PlayerVariable::HESPoints => state.hes_points -= *change as usize,
                     PlayerVariable::FALCPoints => state.falc_points -= *change as usize,

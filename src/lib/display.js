@@ -76,7 +76,11 @@ function fillVars(text, context) {
 }
 
 function cardTag(name, icon) {
-  return `<div class="card-tag"><img src="${icons[icon]}">${name}</div>`
+  if (icon) {
+    return `<div class="card-tag"><img src="${icons[icon]}">${name}</div>`
+  } else {
+    return `<div class="card-tag">${name}</div>`
+  }
 }
 
 function enumKey(v) {

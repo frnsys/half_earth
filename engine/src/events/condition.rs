@@ -59,6 +59,7 @@ impl Condition {
             Condition::PlayerVariable(var, comp, other_val) => {
                 let val = match var {
                     PlayerVariable::PoliticalCapital => state.political_capital as f32,
+                    PlayerVariable::ResearchPoints => state.research_points as f32,
                     PlayerVariable::MalthusianPoints => state.malthusian_points as f32,
                     PlayerVariable::FALCPoints => state.falc_points as f32,
                     PlayerVariable::HESPoints => state.hes_points as f32,
