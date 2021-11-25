@@ -532,9 +532,11 @@ cond_to_factor = {
         'Habitability': 'habitability',
     },
     'ProcessMixShareFeature': {
-        'IsCCS': 'IsCCS',
-        'UsesPesticides': 'UsesPesticides',
-        'UsesLivestock': 'UsesLivestock',
+        'IsCCS': 'is_ccs',
+        'IsNuclear': 'is_nuclear',
+        'IsFossil': 'is_fossil',
+        'UsesPesticides': 'uses_pesticides',
+        'UsesLivestock': 'uses_livestock',
     }
 }
 def condition_to_factor(cond):

@@ -42,6 +42,16 @@ export default {
           return 'This event is influenced by the amount of sea level rise.';
         case 'habitability':
           return 'This event is influenced by the habitability of regions.';
+        case 'is_ccs':
+          return 'This event is influenced by how much production involves carbon capture and storage.';
+        case 'is_nuclear':
+          return 'This event is influenced by how much energy production is nuclear.';
+        case 'is_fossil':
+          return 'This event is influenced by how much energy production uses fossil fuels.';
+        case 'uses_pesticides':
+          return 'This event is influenced by how much food production uses pesticides.';
+        case 'uses_livestock':
+          return 'This event is influenced by how much food production uses livestock.';
         default:
           return factor;
       }
@@ -120,6 +130,7 @@ export default {
   background: #222;
   border-radius: 1.2em;
   padding: 0.2em;
+  margin-left: 1px;
 }
 
 .event--effects {

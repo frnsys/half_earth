@@ -84,9 +84,11 @@ export default {
   // Process features
   is_ccs: require('/assets/icons/features/is_ccs.png'),
   is_combustion: require('/assets/icons/features/is_combustion.png'),
-  is_intermitten: require('/assets/icons/features/is_intermittent.png'),
+  is_intermittent: require('/assets/icons/features/is_intermittent.png'),
+  is_intermittent: require('/assets/icons/features/is_intermittent.png'),
   is_nuclear: require('/assets/icons/features/is_nuclear.png'),
   is_solar: require('/assets/icons/features/is_solar.png'),
+  is_fossil: require('/assets/icons/features/is_fossil.png'),
   uses_livestock: require('/assets/icons/features/uses_livestock.png'),
   uses_pesticides: require('/assets/icons/features/uses_pesticides.png'),
   uses_syn_fertilizer: require('/assets/icons/features/uses_syn_fertilizer.png'),
