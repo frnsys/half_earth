@@ -11,6 +11,7 @@ html, body {
   overscroll-behavior-y: contain;
   font-family: "DM Mono", monospace;
   user-select: none;
+  font-size: 16px;
 }
 
 /* TODO temporary mobile constraint */

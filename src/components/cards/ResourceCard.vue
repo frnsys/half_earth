@@ -8,12 +8,11 @@
       <div class="resource--user" v-for="user in top" :class="{highlight: user.name == current.name}">
         <div>
           <div>{{user.name}}</div>
-          <div>{{user.displayAmount}}</div>
         </div>
         <div>
           <IntensityIcon
             :resource="icon" :intensity="user.intensity" />
-          <div>{{user.displayProduced}}<img :src="icons[user.output]"></div>
+          <div class="resource--usage">{{user.displayAmount}}<img :src="icons[icon]"><span class="arrow">⟶</span>{{user.displayProduced}}<img :src="icons[user.output]"></div>
         </div>
       </div>
       <template v-if="!inTop">
@@ -87,18 +86,27 @@ export default {
   display: flex;
 }
 .resource--user img {
-  height: 18px;
-  width: 18px;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
 }
 .resource--user .intensity-pips {
   display: flex;
   align-items: center;
   margin-top: 0;
   margin-left: 2px;
+  height: 14px;
+}
+.resource--usage {
+  font-size: 14px;
 }
 .resource--spacer {
   text-align: center;
   margin-bottom: 1em;
   color: #aaa;
+}
+
+.arrow {
+  color: #727987;
 }
 </style>

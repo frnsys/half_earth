@@ -17,7 +17,10 @@
       <div class="plan--note">{{consts.priorities[consts.Priority[state.gameState.priority]].name}}</div>
     </div>
     <div class="plan--change" v-for="project in activeProjects">
-      <div class="plan--action">{{projectStatus(project)}}</div>
+      <div class="plan--action">
+        <img v-if="project.status == 'Finished' || project.status == 'Active'" :src="icons.check">
+        <template v-else>{{projectStatus(project)}}</template>
+      </div>
       <MiniProject :project="project" />
       <div class="plan--note">{{project.name}}</div>
     </div>
@@ -195,6 +198,9 @@ export default {
   /* center overflowed text */
   margin-left: -100%;
   margin-right: -100%;
+}
+.plan--action img {
+  height: 12px;
 }
 
 .plan--note {

@@ -176,8 +176,7 @@ function resourceRankings() {
       } else if (k == 'emissions') {
         base = co2eq(p.byproducts);
       } else if (k == 'biodiversity') {
-        // TODO tweak this
-        base = p.byproducts[k] + (p.resources['land'] * 10);
+        base = (p.byproducts[k]/1e4 + p.resources['land']/totalLand) * 100;
       }
 
       let type =

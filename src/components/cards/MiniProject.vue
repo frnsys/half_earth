@@ -14,10 +14,10 @@
     <ProjectCard :project="project" />
     <footer>
       <div class="pips">
-        {{availablePoints}}<img class="pip" :src="icons.research">
+        {{availablePoints}}<img class="pip" :src="icons[icon]">
       </div>
-      <div class="pips pips--buy" @click="buyPoint">
-        {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons.research">
+      <div class="pips pips--buy" @click="buyPoint" v-if="type !== 'Policy'">
+        {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons[icon]">
       </div>
     </footer>
   </template>

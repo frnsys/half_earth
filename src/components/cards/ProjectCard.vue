@@ -2,14 +2,15 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div v-if="kind == 'Policy'">
-      <template v-if="status !== 'Active'">{{remainingCost}}<img :src="icons.political_capital"></template>
-      <template v-else>Implemented</template>
+    <div v-if="status == 'Finished' || status == 'Active'">
+      <img :src="icons.check">
     </div>
-    <div v-else>{{status !== 'Finished' ? remainingCost : 'Finished'}}</div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
+    <div v-if="status !== 'Finished' && status !== 'Active'" class="card-tack-ur project-cost" v-tip="costTip">
+      {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
+    </div>
     <div v-if="status == 'Building'" class="card-tack-ul">
       <img
         v-for="_ in points"
@@ -21,16 +22,16 @@
       Level {{level+1}}
     </div>
 
-    <div class="opposers" v-if="opposers.length > 0">
+    <div class="opposers" v-if="opposersDetailed.length > 0">
       <div>Nay</div>
       <div>
-        <img v-for="npc in opposers" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
-    <div class="supporters" v-if="supporters.length > 0">
+    <div class="supporters" v-if="supportersDetailed.length > 0">
       <div>Yea</div>
       <div>
-        <img v-for="npc in supporters" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
   </template>
@@ -160,16 +161,29 @@ export default {
         return e;
       });
     },
-    supporters() {
+    supportersDetailed() {
       return this.supporters
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
     },
-    opposers() {
+    opposersDetailed() {
       return this.opposers
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
     },
+    costTip() {
+      if (this.kind == 'Policy') {
+        return {
+          icon: 'political_capital',
+          text: `This policy costs ${this.remainingCost} political capital to implement.`
+        }
+      } else {
+        return {
+          icon: this.type,
+          text: `This will take about ${this.remainingCost} to finish. Allocate more ${this.kind} points to accelerate its progress.`
+        }
+      }
+    }
   },
   methods: {
     assignPoint() {
@@ -216,3 +230,17 @@ export default {
   }
 }
 </script>
+
+<style>
+.project-cost {
+  color: #fff;
+  background: rgba(25,25,25,0.9);
+  padding: 0 0.2em;
+  border-radius: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+.project-cost img {
+  height: 12px;
+}
+</style>

@@ -12,16 +12,16 @@
     <img
       v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
       class="process-feedstock card-tack-ul" :src="icons[feedstockIcon]">
-    <div class="opposers" v-if="opposers.length > 0">
+    <div class="opposers" v-if="opposersDetailed.length > 0">
       <div>Nay</div>
       <div>
-        <img v-for="npc in opposers" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
-    <div class="supporters" v-if="supporters.length > 0">
+    <div class="supporters" v-if="supportersDetailed.length > 0">
       <div>Yea</div>
       <div>
-        <img v-for="npc in supporters" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
   </template>
@@ -148,12 +148,12 @@ export default {
         }
       }
     },
-    supporters() {
+    supportersDetailed() {
       return this.supporters
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
     },
-    opposers() {
+    opposersDetailed() {
       return this.opposers
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);

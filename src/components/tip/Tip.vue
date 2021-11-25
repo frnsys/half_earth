@@ -1,6 +1,6 @@
 <template>
-<div class="tip-wrapper" v-if="show" :class="{overlay: card}" ref="overlay" @click="toggle">
-  <div class="tip">
+<div class="tip-wrapper" v-if="show" :class="{overlay: card}" ref="overlay" @click="dismiss">
+  <div class="tip" ref="tip">
     <div class="tip--icon" v-if="icon">
       <img :src="icons[icon]">
       <img :src="icons[subicon]" v-if="subicon" class="tip--subicon">
@@ -62,8 +62,8 @@ export default {
     window.tip = this;
   },
   methods: {
-    toggle(ev) {
-      if (ev.target == this.$refs.overlay) {
+    dismiss(ev) {
+      if (ev.target == this.$refs.overlay || this.$refs.tip.contains(ev.target)) {
         this.show = false;
       }
     }
