@@ -18,9 +18,6 @@ pub enum Request {
 #[derive(Serialize, PartialEq, Debug, Clone, Copy)]
 pub enum Flag {
     Electrified,
-    EnergyStorage1,
-    EnergyStorage2,
-    EnergyStorage3,
     Vegetarian,
     Vegan,
     ClosedBorders,

@@ -2,7 +2,7 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div v-tip="{text: `This process currently produces ${produced.amount}${icons[output]} and ${produced.emissions}${icons.emissions} per year.`, icon: output}">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
+    <div v-tip="{text: `This process currently produces ${produced.amount}<img src='${icons[output]}'> and ${produced.emissions}<img src='${icons.emissions}'> per year.`, icon: output}">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
@@ -52,7 +52,7 @@
   </template>
   <template v-slot:back>
     <p>{{description}}</p>
-    <p>This process currently produces {{produced.amount}}{{icons[output]}} and {{produced.emissions}}{{icons.emissions}} per year.</p>
+    <p>This process currently produces {{produced.amount}}<img :src="icons[output]" /> and {{produced.emissions}}<img :src="icons.emissions" /> per year.</p>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>

@@ -14,9 +14,13 @@
           {{totalResources[k]}}
         </div>
       </div>
-      <div v-if="byproducts.emissions"
+      <div v-if="totalByproducts.emissions"
         v-tip="{text: 'This industry\'s non-energy CO2eq emissions.', icon: 'emissions'}">
-        {{totalByproducts.emissions}}{{icons.emissions}}</div>
+        <div class="card-icon">
+          <img :src="icons.emissions" />
+          {{totalByproducts.emissions < 1 ? '<1' : totalByproducts.emissions.toFixed(0)}}
+        </div>
+      </div>
     </div>
   </template>
   <template v-slot:back>
@@ -76,9 +80,9 @@ export default {
     },
     totalByproducts() {
       let byproducts = {};
-      let emissions = display.gtco2eq(this.industry.byproducts);
+      let emissions = display.co2eq(this.industry.byproducts) * this.demand * 1e-15;
       if (emissions !== 0) {
-        byproducts['emissions'] = emissions * this.demand;
+        byproducts['emissions'] = emissions;
       }
       return byproducts;
     },

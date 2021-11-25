@@ -96,6 +96,7 @@ export default {
 }
 .card-image-attribution {
   font-size: 0.8em;
+  color: #787087;
 }
 
 .card-actions {

@@ -40,6 +40,8 @@ export default {
   add: require('/assets/icons/add.svg'),
   ally: require('/assets/icons/ally.png'),
   check: require('/assets/icons/check.png'),
+  closed_borders: require('/assets/icons/ban.png'),
+  car: require('/assets/icons/car.png'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

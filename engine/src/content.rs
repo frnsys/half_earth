@@ -998,7 +998,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 22,
-            name: "Regenerative Agriculture (Livestock)",
+            name: "Regenerative Ag (Livestock)",
             output: Output::AnimalCalories,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
@@ -1009,9 +1009,9 @@ pub fn processes() -> Vec<Process> {
                 water: 5.29
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.03989345809939511,
-                co2: -0.9896632320633342
+                co2: -0.9896632320633342,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1184,7 +1184,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 29,
-            name: "Regenerative Agriculture (Crops)",
+            name: "Regenerative Ag (Crops)",
             output: Output::PlantCalories,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
@@ -1196,8 +1196,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: -0.1187595878476001
+                co2: -0.1187595878476001,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1397,7 +1397,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.9)
+                Effect::ModifyIndustryResources(7, Resource::Fuel, -0.9)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1771,7 +1771,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.5),
+                Effect::ModifyIndustryResources(7, Resource::Fuel, -0.5),
                 Effect::IncomeOutlookChange(-1.0)
             ],
             kind: ProjectType::Policy,
@@ -2327,7 +2327,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::AddFlag(Flag::EnergyStorage1)
+                Effect::ProjectCostModifier(63, -0.3)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2341,20 +2341,7 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AddFlag(Flag::EnergyStorage2)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AddFlag(Flag::EnergyStorage3)
-                    ]
-                }
+
             ],
             supporters: vec![],
             opposers: vec![]
@@ -7868,6 +7855,29 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
 
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 144,
+            name: "Clean Air",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, 5.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::ProcessMixShareFeature(ProcessFeature::IsFossil, Comparator::Less, 0.2),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],

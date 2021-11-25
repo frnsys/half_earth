@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import icons from 'components/icons';
 import {sign, slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
@@ -13,83 +14,47 @@ import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
 import ICONEVENTS from '/assets/content/icon_events.json';
 
-const tips = {
-  contentedness: {
-    icon: 'contentedness',
-    text: `Contentedness is X`,
+const FLAG_TIPS = {
+  'Electrified': (demand) => {
+    let changedDemand = parseInt((demand.fuel * 0.8).toFixed(0));
+    return {
+      icon: 'electricity',
+      text: `Fuel demand will change from <img src="${icons.fuel}">${demand.fuel} to <img src="${icons.fuel}">${demand.fuel - changedDemand} and electricity demand will change from <img src="${icons.electricity}">${demand.electricity} to <img src="${icons.electricity}">${demand.electricity + changedDemand}.`
+    };
   },
-  emissions: {
-    icon: 'emissions',
-    text: `Emissions is X`,
+  'EVs': (demand) => {
+    // TODO
+    return {
+      icon: 'car',
+      text: 'TODO flag is not implemented in the engine yet'
+    }
   },
-  extinction: {
-    icon: 'extinction_rate',
-    text: `Extinction rate is X`,
+  'Vegan': (demand) => {
+    let changedDemand = parseInt((demand.animal_calories * 0.9).toFixed(0));
+    return {
+      icon: 'plant_calories',
+      text: `Animal calorie demand will change from <img src="${icons.animal_calories}">${demand.animal_calories} to <img src="${icons.animal_calories}">${demand.animal_calories - changedDemand} and plant calorie demand will change from <img src="${icons.plant_calories}">${demand.plant_calories} to <img src="${icons.plant_calories}">${demand.plant_calories + changedDemand}.`
+    }
   },
-  temperature: {
-    icon: 'warming',
-    text: `Temperature is X`,
+  'Vegetarian': (demand) => {
+    let changedDemand = parseInt((demand.animal_calories * 0.75).toFixed(0));
+    return {
+      icon: 'plant_calories',
+      text: `Animal calorie demand will change from <img src="${icons.animal_calories}">${demand.animal_calories} to <img src="${icons.animal_calories}">${demand.animal_calories - changedDemand} and plant calorie demand will change from <img src="${icons.plant_calories}">${demand.plant_calories} to <img src="${icons.plant_calories}">${demand.plant_calories + changedDemand}.`
+    }
   },
-  population: {
-    icon: 'population',
-    text: `Population is X`,
+  'ClosedBorders': (demand) => {
+    return {
+      icon: 'closed_borders',
+      text: 'Migrations will have less of an impact when they occur. But there might be other consequences.'
+    }
   },
-  fuel: {
-    icon: 'fuel',
-    text: 'Fuel: portable energy...'
+  'HyperResearch': (demand) => {
+    return {
+      icon: 'research',
+      text: 'TODO'
+    }
   },
-  electricity: {
-    icon: 'electricity',
-    text: 'Electricity: ...'
-  },
-  plantcalories: {
-    icon: 'plantcalories',
-    text: 'Plant calories: ...'
-  },
-  animalcalories: {
-    icon: 'animalcalories',
-    text: 'Animal calories: ...'
-  },
-  land: {
-    icon: 'land',
-    text: 'Land: ...'
-  },
-  events: {
-    icon: 'events',
-    text: 'Events: ...'
-  },
-  demand: {
-    icon: 'demand',
-    text: 'Demand: ...'
-  },
-  request_ban: {
-    icon: 'ban',
-    text: 'Ban Request: ...'
-  },
-  request_implement: {
-    icon: 'implement',
-    text: 'Implement Request: ...'
-  },
-  cost: {
-    icon: 'cost',
-    text: 'Cost: ...'
-  },
-  unlocks_npc: {
-    icon: 'unlocks',
-    text: 'Unlocks NPC: ...'
-  },
-  unlocks_process: {
-    icon: 'unlocks',
-    text: 'Unlocks Process: ...'
-  },
-  unlocks_project: {
-    icon: 'unlocks',
-    text: 'Unlocks Project: ...'
-  },
-  research_points: {
-    icon: 'research',
-    text: 'Research Points: ...'
-  }
 };
 
 function changeDir(change, random) {
@@ -102,11 +67,9 @@ function changeDir(change, random) {
   }
 }
 
-function formatParam(param, sign) {
+function formatParam(param) {
   if (param == '?') {
     return '<span class="unknown-param">?</span>';
-  } else if (sign) {
-    return sign(param);
   } else {
     return Math.abs(param);
   }
@@ -119,31 +82,46 @@ function render(e) {
       switch (e.subtype) {
         case 'Outlook': {
           return {
-            tip: tips['contentedness'],
+            tip: {
+              icon: 'contentedness',
+              text: 'TODO'
+            },
             text: `[contentedness] ${changeDir(e.param, e.random)} contentedness by ${formatParam(e.param)} in every region.`,
           }
         }
         case 'Emissions': {
           return {
-            tip: tips['emissions'],
-            text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${formatParam(e.param)}GtCO2eq.`
+            tip: {
+              icon: 'emissions',
+              text: `This will directly change annual emissions by ${e.param == '?' ? 'an unknown amount' : sign(e.param)}.${e.param !== '?' ? ` That's a ${(e.param/state.gameState.emissions * 100).toFixed(1)}% change.` : ''}`,
+            },
+            text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${formatParam(e.param)}.`
           }
         }
         case 'ExtinctionRate': {
           return {
-            tip: tips['extinction'],
-            text: `[extinction_rate] ${changeDir(e.param, e.random)} the extinction rate by ${formatParam(e.param)}.`,
+            tip: {
+              icon: 'extinction_rate',
+              text: `Current biodiversity pressure is ${state.gameState.world.extinction_rate.toFixed(0)}.`,
+            },
+            text: `[extinction_rate] ${changeDir(e.param, e.random)} biodiversity pressure by ${formatParam(e.param)}.`,
           }
         }
         case 'Temperature': {
           return {
-            tip: tips['temperature'],
+            tip: {
+              icon: 'warming',
+              text: `This will directly change the global temperature anomaly by ${sign(e.param)}C.`,
+            },
             text: `[warming] ${changeDir(e.param, e.random)} the global temperature by ${formatParam(e.param)}C.`
           };
         }
         case 'PopulationGrowth': {
           return {
-            tip: tips['population'],
+            tip: {
+              icon: 'population',
+              text: 'TODO',
+            },
             text: `[population] ${changeDir(e.param, e.random)} global population growth by ${formatParam(e.param)}%.`,
           };
         }
@@ -154,7 +132,10 @@ function render(e) {
       switch (e.subtype) {
         case 'Outlook': {
           return {
-            tip: tips['contentedness'],
+            tip: {
+              icon: 'contentedness',
+              text: 'TODO',
+            },
             text: `[contentedness] ${changeDir(e.param, e.random)} contentedness in TODO by ${e.param}.`,
           }
         }
@@ -165,25 +146,37 @@ function render(e) {
       switch (e.subtype) {
         case 'ResearchPoints': {
           return {
-            tip: tips['research_points'],
-            text: `[research] ${e.random ? 'Possible ' : ''}${formatParam(e.param, true)} research points.`,
+            tip: {
+              icon: 'research',
+              text: 'Research points: Allocate them to research projects!'
+            },
+            text: `[research] ${e.random ? 'Possible ' : ''}+${formatParam(e.param)} research points.`,
           }
         }
       }
       return;
     }
     case 'Output': {
+      let k = display.enumKey(e.subtype);
+      let base = display.output(state.gameState.produced[k], k);
+      let changed = (base * (1+e.param)).toFixed(0);
       return {
-        tip: tips[e.subtype.toLowerCase()],
+        tip: {
+          icon: k,
+          text: `Global ${display.displayName(e.subtype)} output will change from <img src="${icons[k]}">${base} to <img src="${icons[k]}">${changed} with no change in impacts.`
+        },
         text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} all ${display.displayName(e.subtype)} production by ${e.param*100}%.`,
       }
     }
     case 'OutputForProcess': {
       let process = state.gameState.processes[e.entity];
-      let tip = {...tips[process.output.toLowerCase()]};
-      tip.card = {
-        type: 'Process',
-        data: process,
+      let tip = {
+        icon: display.enumKey(process.output),
+        text: `Changes the output for this process by ${e.param*100}% with no change in impacts.`,
+        card: {
+          type: 'Process',
+          data: process,
+        }
       };
       let tag = display.cardTag(process.name, process.output.toLowerCase());
       return {
@@ -192,42 +185,60 @@ function render(e) {
       }
     }
     case 'OutputForFeature': {
-      let tip = {...tips[e.subtype]};
-      tip.card = {
-        type: 'Processes',
-        data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+      let tip = {
+        icon: display.enumKey(e.subtype),
+        text: `Changes the output for these processes by ${e.param*100}% without changing their impacts.`,
+        card: {
+          type: 'Processes',
+          data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+        }
       };
       return {
-        tip: tip,
-        text: `${changeDir(e.param, e.random)} output for ${display.describeFeature(e.subtype)} by ${e.param*100}%`
+        tip,
+        text: `${changeDir(e.param, e.random)} output for ${display.describeFeature(e.subtype)} by ${e.param*100}%.`
       }
     }
     case 'Demand': {
-      // TODO maybe these should all be expressed as per-capita?
-      // TODO show current demand?
+      let k = display.enumKey(e.subtype);
+      let name = display.displayName(e.subtype);
+      let currentDemand = demand[k];
+      let afterDemand = demand[k] * (1+e.param);
       return {
-        tip: tips[e.subtype.toLowerCase()],
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by ${e.param*100}%`,
+        tip: {
+          icon: k,
+          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${afterDemand}.`
+        },
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by ${e.param*100}%.`,
       }
     }
     case 'DemandAmount': {
+      let k = display.enumKey(e.subtype);
+      let name = display.displayName(e.subtype);
       let val = e.param;
       if (e.subtype == 'Electricity' || e.subtype == 'Fuel') {
         val = display.output(val, 'electricity'); // same as fuel
       } else {
         val = display.output(val, 'plant_calories'); // same as animal cals
       }
+      let currentDemand = demand[k];
+      let afterDemand = demand[k] + val;
       return {
-        tip: tips[e.subtype.toLowerCase()],
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by ${Math.abs(val)}%`,
+        tip: {
+          icon: k,
+          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${afterDemand}.`
+        },
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by <img src="${icons[k]}">${Math.abs(val)}.`,
       }
     }
     case 'UnlocksProject': {
       let project = state.gameState.projects[e.entity];
-      let tip = {...tips['unlocks_project']};
-      tip.card = {
-        type: 'Project',
-        data: project
+      let tip = {
+        icon: 'unlocks',
+        text: `This new project ${e.random ? 'might' : 'will'} be unlocked:`,
+        card: {
+          type: 'Project',
+          data: project
+        }
       };
       let tag = display.cardTag(project.name, project.kind.toLowerCase());
       return {
@@ -237,10 +248,13 @@ function render(e) {
     }
     case 'UnlocksProcess': {
       let process = state.gameState.processes[e.entity];
-      let tip = {...tips['unlocks_process']};
-      tip.card = {
-        type: 'Process',
-        data: process
+      let tip = {
+        icon: 'unlocks',
+        text: `This new process ${e.random ? 'might' : 'will'} be unlocked:`,
+        card: {
+          type: 'Process',
+          data: process
+        }
       };
       let tag = display.cardTag(process.name, display.enumKey(process.output));
       return {
@@ -250,10 +264,13 @@ function render(e) {
     }
     case 'UnlocksNPC': {
       let npc = state.gameState.npcs[e.entity];
-      let tip = {...tips['unlocks_npc']};
-      tip.card = {
-        type: 'NPC',
-        data: npc
+      let tip = {
+        icon: 'unlocks',
+        text: 'This new character will be unlocked:',
+        card: {
+          type: 'NPC',
+          data: npc
+        }
       };
       return {
         tip: tip,
@@ -264,11 +281,9 @@ function render(e) {
       let project = state.gameState.projects[e.entity];
       let p = e.param * 100;
       let amount = e.param * project.cost;
-      let tip = {...tips['cost']};
-      tip.card = {
-        type: 'Project',
-        data: project,
-      };
+      let icon = project.kind == 'Policy' ? '[political_capital]' : '';
+      let tipIcon = project.kind == 'Policy' ? `<img src="${icons.political_capital}">` : '';
+      let unit = project.kind == 'Policy' ? '' : ' years';
       let tag = display.cardTag(project.name, project.kind.toLowerCase());
       let kind = 'cost';
       if (project.kind == 'Research') {
@@ -276,29 +291,43 @@ function render(e) {
       } else if (project.kind == 'Initiative') {
         kind = 'development time';
       }
+      let tip = {
+        icon: 'cost',
+        text: `This effect reduces the ${kind} of this project from ${tipIcon}${project.cost}${unit} to ${tipIcon}${project.cost + amount}${unit}.`,
+        card: {
+          type: 'Project',
+          data: project,
+        }
+      };
       return {
         tip: tip,
-        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${project.kind == 'Policy' ? '[political_capital]' : ''}${Math.abs(amount)}${project.kind == 'Policy' ? '' : ' years'}.`,
+        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${icon}${Math.abs(amount)}${unit}.`,
       }
     }
     case 'ProjectRequest': {
-      // TODO display requester
       let project = state.gameState.projects[e.entity];
+      let npc = state.gameState.npcs[e.entity];
       if (e.subtype == 'Ban') {
-        let tip = {...tips['request_ban']};
-        tip.card = {
-          type: 'Project',
-          data: project
+        let tip = {
+          icon: npc.name,
+          text: `${npc.name} requests you stop this project:`,
+          card: {
+            type: 'Project',
+            data: project
+          }
         };
         return {
           tip: tip,
           text: `[ban] I request that you stop ${project.name}. (+${e.param}PC)`,
         }
       } else {
-        let tip = {...tips['request_implement']};
-        tip.card = {
-          type: 'Project',
-          data: project
+        let tip = {
+          icon: npc.name,
+          text: `${npc.name} requests you implement this project:`,
+          card: {
+            type: 'Project',
+            data: project
+          }
         };
         return {
           tip: tip,
@@ -309,20 +338,26 @@ function render(e) {
     case 'ProcessRequest': {
       let process = state.gameState.processes[e.entity];
       if (e.subtype == 'Ban') {
-        let tip = {...tips['request_ban']};
-        tip.card = {
-          type: 'Process',
-          data: process
+        let tip = {
+          icon: npc.name,
+          text: `${npc.name} requests you ban this process:`,
+          card: {
+            type: 'Process',
+            data: process
+          }
         };
         return {
           tip: tip,
           text: `[ban] I request that you stop ${process.name}. (+${e.param}PC)`,
         }
       } else {
-        let tip = {...tips['request_implement']};
-        tip.card = {
-          type: 'Process',
-          data: process
+        let tip = {
+          icon: npc.name,
+          text: `${npc.name} requests you promote this process:`,
+          card: {
+            type: 'Process',
+            data: process
+          }
         };
         return {
           tip: tip,
@@ -333,17 +368,20 @@ function render(e) {
     case 'AddFlag': {
       let flag = e.param.split('::')[1];
       return {
-        tip: tips['TODO'],
+        tip: FLAG_TIPS[flag](demand),
         text: FLAGS[flag],
       }
     }
     case 'ModifyIndustryDemand': {
       let industry = state.gameState.industries[e.entity];
       let p = Math.abs(e.param * 100);
-      let tip = {...tips['demand']};
-      tip.card = {
-        type: 'Industry',
-        data: industry,
+      let tip = {
+        icon: 'demand',
+        text: `Changes demand for ${industry.name} by ${p.toFixed(0)}%.`,
+        card: {
+          type: 'Industry',
+          data: industry,
+        }
       };
       let tag = display.cardTag(industry.name);
       return {
@@ -354,59 +392,85 @@ function render(e) {
     case 'ModifyIndustryResources': {
       let industry = state.gameState.industries[e.entity];
       let p = Math.abs(e.param * 100);
-      let tip = {...tips[e.subtype.toLowerCase()]};
-      tip.card = {
-        type: 'Industry',
-        data: industry,
+      let k = display.enumKey(e.subtype);
+      let resource = display.displayName(e.subtype);
+      let demandBefore = display.output(industry.resources[k] * game.industryDemand(industry), k);
+      let demandAfter = demandBefore * (1 + e.param);
+      let demandChange = (demandAfter - demandBefore)/demand[k] * 100;
+      let tip = {
+        icon: k,
+        text: `This will change ${resource} demand for ${industry.name} from <img src="${icons[k]}">${demandBefore} to <img src="${icons[k]}">${demandAfter < 1 ? '<1' : demandAfter.toFixed(0)}. This is a ${demandChange.toFixed(0)}% change of all ${resource} demand.`,
+        card: {
+          type: 'Industry',
+          data: industry,
+        }
       };
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${e.subtype.toLowerCase()} demand for ${tag} by ${p.toFixed(0)}%.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${resource.toLowerCase()} demand for ${tag} by ${p.toFixed(0)}%.`,
       }
     }
     case 'ModifyIndustryByproducts': {
       let industry = state.gameState.industries[e.entity];
       let p = Math.abs(e.param * 100);
-      let tip = {...tips['emissions']};
-      tip.card = {
-        type: 'Industry',
-        data: industry,
+      let emissionsBefore = display.co2eq(industry.byproducts) * game.industryDemand(industry) * 1e-15;
+      let emissionsAfter = emissionsBefore * (1 + e.param);
+      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.emissions * 100;
+      let tip = {
+        icon: 'emissions',
+        text: `This will change emissions for ${industry.name} from <img src="${icons.emissions}">${emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1)} to <img src="${icons.emissions}">${emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1)}. This is a ${emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1)}% change of all emissions.`,
+        card: {
+          type: 'Industry',
+          data: industry,
+        }
       };
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[emissions] ${changeDir(e.param, e.random)} ${e.subtype} emissions for ${tag} by ${p.toFixed(0)}%.`, // TODO should show the amount. e.g. this is X emissions/X% of total emissions
+        text: `[emissions] ${changeDir(e.param, e.random)} ${e.subtype} emissions for ${tag} by ${p.toFixed(0)}%.`,
       }
     }
     case 'DemandOutlookChange': {
-      let k = display.displayName(e.subtype);
+      let k = display.enumKey(e.subtype);
       let outlookChange = Math.floor(state.gameState.output_demand[k] * e.param);
       return {
-        tip: tips['contentedness'],
-        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(outlookChange, e.random)} contentedness by ${outlookChange}`
+        tip: {
+          icon: 'contentedness',
+          subicon: k,
+          text: `This effect changes contentedness based on demand for ${display.displayName(e.subtype)}.`
+        },
+        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(outlookChange, e.random)} contentedness by ${outlookChange}.`
       }
     }
     case 'IncomeOutlookChange': {
-      // TODO
-      /* let outlookChange = Math.floor(game.total_income_level() * e.param); */
-      let outlookChange = 0;
+      let outlookChange = Math.floor(game.totalIncomeLevel() * e.param);
       return {
-        tip: tips['contentedness'],
-        text: sign(outlookChange),
+        tip: {
+          icon: 'contentedness',
+          subicon: 'wealth',
+          text: 'This effect changes contentedness based on region income levels (wealthier regions will feel it more).'
+        },
+        text: `[contentedness] ${changeDir(outlookChange, e.random)} contentedness by ${outlookChange}.`
       }
     }
     case 'ModifyEventProbability': {
       let event = EVENTS[e.entity].name;
       let p = e.param * 100;
       return {
-        tip: tips['events'],
+        tip: {
+          icon: 'chance',
+          text: 'TODO'
+        },
         text: `${changeDir(p, e.random)} the chance of ${event} by ${Math.abs(p)}%`,
       }
     }
     case 'ProtectLand': {
       return {
-        tip: tips['land'],
+        tip: {
+          icon: 'land',
+          text: 'This will limit the amount of land that processes can use.'
+        },
         text: `[land] Place ${e.param}% of land under protection.`,
       }
     }
@@ -428,7 +492,6 @@ export default {
           if (desc) {
             if (ev.random) {
               desc.tip.supicon = 'chance';
-              desc.supicon = 'chance';
             }
             desc.text = display.fillIcons(desc.text);
             return desc;

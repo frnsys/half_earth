@@ -11,6 +11,7 @@ const OUTPUT_UNITS = {
   electricity: 1e-9/1e3,     // per 1000 TWh
   plant_calories: 1e-9/2e4,  // per 20000 Tcals
   animal_calories: 1e-9/2e4, // per 20000 Tcals
+  water: 1e-12/50,           // per 50 km3
 };
 
 const DISPLAY_NAMES = {

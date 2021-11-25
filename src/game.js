@@ -142,6 +142,10 @@ function simulate(years) {
   return game.simulate(years);
 }
 
+function totalIncomeLevel() {
+  return game.total_income_level();
+}
+
 function industryDemand(industry) {
   return game.industry_demand(industry.id);
 }
@@ -208,5 +212,6 @@ export default {
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, roll, simulate,
   applyBranchEffects, evalBranchConditions,
+  totalIncomeLevel,
   industryDemand, regionDemand, regionHabitability,
   yearsRemaining, updateResourceRankings};
