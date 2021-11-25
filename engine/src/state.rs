@@ -74,7 +74,7 @@ impl State {
             industries: content::industries(),
             npcs: content::npcs(),
 
-            runs: 0, // TODO TEMP TESTING
+            runs: 1, // TODO TEMP TESTING
             // runs: 0,
             requests: Vec::new(),
 
