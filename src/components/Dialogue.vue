@@ -4,10 +4,13 @@
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
         :src="`/assets/characters/${line.speaker}.png`"
-        onerror="this.src='/assets/placeholders/character.png';" />
-      <div class="dialogue--speaker-name">{{line.speaker}}</div>
+        onerror="this.src='/assets/placeholders/character.png';"
+        v-tip="{icon: line.speaker, text: `${line.speaker}.`}" />
     </div>
     <div class="dialogue--body">
+      <div class="dialogue--speaker-name" v-if="line.speaker !== '[GAME]'">
+        {{line.speaker}}
+      </div>
       <div class="dialogue--text" ref="text"></div>
       <Effects :effects="effects" v-if="effects && revealed" />
     </div>
@@ -244,13 +247,9 @@ export default {
   box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
 }
 .dialogue--speaker-name {
-	font-size: 0.8em;
-	line-height: 1;
-	text-align: center;
-	background: #222;
-	color: #fff;
-	padding: 0 0 0.1em 0;
-	border-radius: 0.2em;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  color: #333;
 }
 
 .dialogue--text img {
