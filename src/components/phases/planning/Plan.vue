@@ -191,7 +191,7 @@ export default {
 }
 .plan--action {
   text-transform: uppercase;
-  font-size: 0.85em;
+  font-size: 0.7em;
   /* center overflowed text */
   margin-left: -100%;
   margin-right: -100%;

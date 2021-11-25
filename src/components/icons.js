@@ -55,12 +55,20 @@ export default {
   shipping: require('/assets/icons/industries/shipping.png'),
 
   // Characters
-  authoritarian: require('/assets/characters/The Authoritarian.png'),
-  economist: require('/assets/characters/The Economist.png'),
-  technocrat: require('/assets/characters/The Technocrat.png'),
-  scientist: require('/assets/characters/The Scientist.png'),
-  populist: require('/assets/characters/The Populist.png'),
-  ecologist: require('/assets/characters/The Ecologist.png'),
+  'The Authoritarian': require('/assets/characters/The Authoritarian.png'),
+  'The Economist': require('/assets/characters/The Economist.png'),
+  'The Technocrat': require('/assets/characters/The Technocrat.png'),
+  'The Scientist': require('/assets/characters/The Scientist.png'),
+  'The Populist': require('/assets/characters/The Populist.png'),
+  'The Ecologist': require('/assets/characters/The Ecologist.png'),
+  'The Malthusian': require('/assets/placeholders/character_placeholder.png'),
+  'The Geoengineer': require('/assets/placeholders/character_placeholder.png'),
+  'The Posadist': require('/assets/placeholders/character_placeholder.png'),
+  'The Wretched': require('/assets/placeholders/character_placeholder.png'),
+  'The Consumerist': require('/assets/placeholders/character_placeholder.png'),
+  'The Half-Earth Socialist': require('/assets/placeholders/character_placeholder.png'),
+  'The Fully-Automated Luxury Communist': require('/assets/placeholders/character_placeholder.png'),
+  'The Agronomist': require('/assets/placeholders/character_placeholder.png'),
 
   // Feedstocks
   coal: require('/assets/icons/feedstocks/coal.png'),

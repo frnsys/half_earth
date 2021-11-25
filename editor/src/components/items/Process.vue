@@ -134,7 +134,7 @@
       </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="stances">
       <div v-if="localData.supporters && localData.supporters.length > 0">
         <h5>Supporters</h5>
         <span v-for="id in localData.supporters">{{npc(id).name}}</span>

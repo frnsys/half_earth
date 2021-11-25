@@ -452,7 +452,17 @@ def extract_branches(dialogue):
     return branches
 
 def extract_dialogue(dialogue):
-    if not dialogue: return {'root': None, 'lines': {}}
+    if not dialogue: return {
+        'root': 0,
+        'lines': {
+            '0': {
+                'id': 0,
+                'speaker': 'Gossy',
+                'text': 'This is placeholder for missing dialogue text',
+                'next': None
+            }
+        }
+    }
     keys_to_ids = {k: i for i, k in enumerate(dialogue['lines'].keys())}
 
     branch_id = 0
@@ -510,8 +520,30 @@ def define_content_fn(name, typ):
         name, typ, indent('vec![\n{}\n]'.format(
             indent(define_structs(typ, items_by_type[typ])))))
 
+cond_to_factor = {
+    'WorldVariable': {
+        'Temperature': 'warming',
+        'Outlook': 'contentedness',
+        'ExtinctionRate': 'extinction_rate',
+        'SeaLevelRise': 'sea_level_rise',
+    },
+    'LocalVariable': {
+        'Outlook': 'contentedness',
+        'Habitability': 'habitability',
+    },
+    'ProcessMixShareFeature': {
+        'IsCCS': 'IsCCS',
+        'UsesPesticides': 'UsesPesticides',
+        'UsesLivestock': 'UsesLivestock',
+    }
+}
+def condition_to_factor(cond):
+    subtypes = cond_to_factor.get(cond['type'], {})
+    return subtypes.get(cond['subtype'])
+
 def indent(text, levels=1):
     return textwrap.indent(text, 4 * levels * ' ')
+
 
 
 if __name__ == '__main__':
@@ -662,6 +694,11 @@ if __name__ == '__main__':
         image = ev.get('image', {})
         fname = image.get('image', None)
         attribution = image.get('attribution', None)
+        factors = set()
+        for p in ev.get('probabilities', []):
+            for cond in p['conditions']:
+                factor = condition_to_factor(cond)
+                if factor is not None: factors.add(factor)
         event = {
             'name': ev.get('name', ''),
             'arc': ev.get('arc', ''),
@@ -670,6 +707,7 @@ if __name__ == '__main__':
                 'fname': fname,
                 'attribution': attribution,
             },
+            'factors': list(factors),
             'effects': [{
                 'type': e['type'],
                 'subtype': e.get('subtype'),

@@ -78,7 +78,7 @@ class Globe {
     this.hexsphere.onClick((intersects) => {
       // Pause rotation on click
       if (intersects.length === 0) {
-        this.pauseRotation();
+        this.pauseRotation(2000);
       }
     });
 
@@ -170,12 +170,18 @@ class Globe {
     });
   }
 
-  pauseRotation() {
+  pauseRotation(countdown) {
     if (this.pauseTimeout) clearTimeout(this.pauseTimeout);
     this.rotationPaused = true;
-    this.pauseTimeout = setTimeout(() => {
-      this.rotationPaused = false;
-    }, 2000);
+    if (countdown) {
+      this.pauseTimeout = setTimeout(() => {
+        this.rotationPaused = false;
+      }, countdown);
+    }
+  }
+
+  resumeRotation() {
+    this.rotationPaused = false;
   }
 
   render(timestamp) {

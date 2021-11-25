@@ -25,6 +25,7 @@ pub struct State {
     pub game_over: bool,
 
     pub political_capital: isize,
+    pub research_points: isize,
     pub malthusian_points: usize,
     pub hes_points: usize,
     pub falc_points: usize,
@@ -59,6 +60,7 @@ impl State {
         let mut state = State {
             // political_capital: 10,
             political_capital: 100,
+            research_points: 0,
             malthusian_points: 0,
             hes_points: 0,
             falc_points: 0,
@@ -72,7 +74,7 @@ impl State {
             industries: content::industries(),
             npcs: content::npcs(),
 
-            runs: 0, // TODO TEMP TESTING
+            runs: 1, // TODO TEMP TESTING
             // runs: 0,
             requests: Vec::new(),
 
@@ -506,10 +508,10 @@ mod test {
         assert!(effects.len() > 0);
 
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 4);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
         // Stop
@@ -539,10 +541,10 @@ mod test {
         assert_eq!(effects.len(), 0); // No immediate effects
 
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 4);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
         // Stop

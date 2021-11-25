@@ -1,10 +1,15 @@
 <template>
-<div class="event" :style="{backgroundImage: `url(/assets/content/images/${event.image ? event.image.fname : 'missing_image.png'})`}">
-  <div class="event--body">
+<div class="event">
+  <div class="event--body" :style="{backgroundImage: `url(/assets/content/images/${event.image ? event.image.fname : 'missing_image.png'})`}">
     <div class="arc">{{event.arc}}</div>
+    <div class="factors">
+      <img class="factor" v-for="factor in event.factors" :src="icons[factor]" v-tip="{icon: factor, text: describeFactor(factor)}"/>
+    </div>
     <div class="image-attribution">Image source: {{event.image ? event.image.attribution : ''}}</div>
     <div class="event--name">{{event.name}}</div>
-    <Effects :effects="event.effects" />
+    <div class="event--effects">
+      <Effects :effects="event.effects" />
+    </div>
   </div>
   <Dialogue v-bind="event" :effects="[]" @done="done" />
 </div>
@@ -25,26 +30,42 @@ export default {
     done() {
       this.$emit('done');
     },
-  }
+    describeFactor(factor) {
+      switch (factor) {
+        case 'warming':
+          return 'This event is influenced by the global temperature anomaly.';
+        case 'contentedness':
+          return 'This event is influenced by how happy people are.';
+        case 'extinction_rate':
+          return 'This event is influenced by biodiversity pressures.';
+        case 'sea_level_rise':
+          return 'This event is influenced by the amount of sea level rise.';
+        case 'habitability':
+          return 'This event is influenced by the habitability of regions.';
+        default:
+          return factor;
+      }
+    }
+  },
 }
 </script>
 
 <style>
 .event {
   position: relative;
-  overflow: hidden;
-  margin: 8vh 2em;
-  background: #222;
-  height: 80vh;
+  margin: 8vh 1em;
+  z-index: 10;
+}
+.event--body {
+  color: #fff;
+  height: 40vh;
   border-radius: 0.75em;
   border: 1px solid #222;
   background-size: cover;
   background-position: center center;
-  z-index: 10;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
-}
-.event--body {
-  color: #fff;
+  position: relative;
+  background: #222;
 }
 .event .arc {
   text-transform: uppercase;
@@ -83,5 +104,23 @@ export default {
 .event .dialogue {
   position: relative;
   background: none;
+}
+
+.factors {
+  position: absolute;
+  right: 0.5em;
+  top: 0.85em;
+}
+.factors img {
+  height: 22px;
+  background: #222;
+  border-radius: 1.2em;
+  padding: 0.2em;
+}
+
+.event--effects {
+  padding: 1em;
+  background: #222;
+  margin: 1em;
 }
 </style>

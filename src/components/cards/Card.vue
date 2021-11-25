@@ -47,7 +47,8 @@ export default {
   background: #222222;
   position: relative;
   width: 320px;
-  height: 400px;
+  height: 420px;
+  max-height: 70vh;
   display: flex;
   flex-direction: column;
   margin: 0 auto;

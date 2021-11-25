@@ -12,20 +12,16 @@
     <img
       v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
       class="process-feedstock card-tack-ul" :src="icons[feedstockIcon]">
-    <div class="opposers">
+    <div class="opposers" v-if="opposers.length > 0">
       <div>Nay</div>
       <div>
-        <img v-tip="{text: `The Authoritarian is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'authoritarian'}" src="/assets/characters/The Authoritarian.png">
-        <img v-tip="{text: `The Economist is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'economist'}" src="/assets/characters/The Economist.png">
-        <img v-tip="{text: `The Technocrat is opposed to this process. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'technocrat'}" src="/assets/characters/The Technocrat.png">
+        <img v-for="npc in opposers" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
-    <div class="supporters">
+    <div class="supporters" v-if="supporters.length > 0">
       <div>Yea</div>
       <div>
-        <img v-tip="{text: `The Scientist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'scientist'}" src="/assets/characters/The Scientist.png">
-        <img v-tip="{text: `The Populist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'populist'}" src="/assets/characters/The Populist.png">
-        <img v-tip="{text: `The Ecologist supports this. If you promote it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: 'ecologist'}" src="/assets/characters/The Ecologist.png">
+        <img v-for="npc in supporters" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
       </div>
     </div>
   </template>
@@ -74,6 +70,7 @@ import state from '/src/state';
 import display from 'lib/display';
 import IntensityIcon from './IntensityIcon.vue';
 import PROCESSES from '/assets/content/processes.json';
+import NPCS from '/assets/content/npcs.json';
 
 const changeIcons = {
   'remain steady': 'steady',
@@ -150,6 +147,16 @@ export default {
           case 'Contracting': return 'contract';
         }
       }
+    },
+    supporters() {
+      return this.supporters
+        .filter((id) => !state.gameState.npcs[id].locked)
+        .map((id) => NPCS[id]);
+    },
+    opposers() {
+      return this.opposers
+        .filter((id) => !state.gameState.npcs[id].locked)
+        .map((id) => NPCS[id]);
     },
   },
   methods: {

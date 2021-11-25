@@ -161,7 +161,7 @@
       <UpgradesSummary :upgrades="localData.upgrades" />
     </template>
 
-    <fieldset>
+    <fieldset class="stances">
       <div v-if="localData.supporters && localData.supporters.length > 0">
         <h5>Supporters</h5>
         <span v-for="id in localData.supporters">{{npc(id).name}}</span>
@@ -253,5 +253,25 @@ export default {
 }
 .project-summary .meta-pill:nth-child(2) {
   background: #9eb4c7;
+}
+
+.stances {
+  margin: 0.5em 0 0 0;
+}
+.stances > div {
+  display: block;
+}
+.stances h5 {
+  border-bottom: 1px solid #000;
+}
+.stances span {
+  color: #fff;
+  margin: 0.1em;
+  font-size: 0.8em;
+  background: #4b5a85;
+  padding: 0 0.1em;
+  border-radius: 0.2em;
+  display: inline-block;
+  border: 1px solid #000;
 }
 </style>

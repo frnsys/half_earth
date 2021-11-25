@@ -437,8 +437,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 47.0
+                co2: 47.0,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -448,7 +448,7 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 1.0,
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![4]
         },
         Process {
             id: 2,
@@ -600,9 +600,9 @@ pub fn processes() -> Vec<Process> {
                 water: 0.018
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 0.463,
-                ch4: 0.0
+                n2o: 0.0
             ),
             locked: true,
             status: ProcessStatus::Neutral,
@@ -611,7 +611,7 @@ pub fn processes() -> Vec<Process> {
 
             ],
             output_modifier: 1.0,
-            supporters: vec![],
+            supporters: vec![2],
             opposers: vec![]
         },
         Process {
@@ -821,8 +821,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 655.7
+                co2: 655.7,
+                n2o: 0.0
             ),
             locked: true,
             status: ProcessStatus::Neutral,
@@ -848,8 +848,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 0.17454714961005954
+                co2: 0.17454714961005954,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -858,8 +858,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsSolar
             ],
             output_modifier: 1.0,
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![8],
+            opposers: vec![0]
         },
         Process {
             id: 17,
@@ -930,20 +930,20 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.06337,
-                co2: -1166.67
+                co2: -1166.67,
+                n2o: 0.06337
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsCCS,
-                ProcessFeature::UsesSynFertilizer,
-                ProcessFeature::UsesPesticides
+                ProcessFeature::UsesPesticides,
+                ProcessFeature::UsesSynFertilizer
             ],
             output_modifier: 1.0,
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![4]
         },
         Process {
             id: 20,
@@ -1037,19 +1037,19 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.06337,
-                co2: 699.488
+                co2: 699.488,
+                n2o: 0.06337
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::UsesSynFertilizer,
-                ProcessFeature::UsesPesticides
+                ProcessFeature::UsesPesticides,
+                ProcessFeature::UsesSynFertilizer
             ],
             output_modifier: 1.0,
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![4]
         },
         Process {
             id: 24,
@@ -1120,8 +1120,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 0.0502
+                co2: 0.0502,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -1130,7 +1130,7 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesSynFertilizer
             ],
             output_modifier: 1.0,
-            supporters: vec![],
+            supporters: vec![2],
             opposers: vec![]
         },
         Process {
@@ -1236,8 +1236,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![3],
             opposers: vec![]
         },
         Project {
@@ -1346,18 +1348,18 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![9],
+            opposers: vec![4]
         },
         Project {
             id: 5,
-            name: "Expand recycling infrastructure",
+            name: "Expand Recycling",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 0.25)
+
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1395,7 +1397,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, 0.1)
+                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.9)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1490,7 +1492,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(2, Resource::Electricity, 0.96)
+                Effect::ModifyIndustryResources(2, Resource::Electricity, -0.04)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1503,7 +1505,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![]
         },
@@ -1511,7 +1515,7 @@ pub fn projects() -> Vec<Project> {
             id: 9,
             name: "Mass CCS",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(40),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -1543,7 +1547,7 @@ pub fn projects() -> Vec<Project> {
             level: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
-                Effect::ModifyIndustryResources(0, Resource::Fuel, 0.6),
+                Effect::ModifyIndustryResources(0, Resource::Fuel, -0.4),
                 Effect::ProjectCostModifier(16, -0.5)
             ],
             kind: ProjectType::Initiative,
@@ -1560,7 +1564,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![4],
             opposers: vec![]
         },
         Project {
@@ -1605,8 +1609,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![6],
             opposers: vec![]
         },
         Project {
@@ -1634,8 +1640,8 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![4],
+            opposers: vec![7, 8]
         },
         Project {
             id: 13,
@@ -1671,7 +1677,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![2],
             opposers: vec![]
         },
         Project {
@@ -1699,7 +1705,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![1]
         },
         Project {
             id: 15,
@@ -1736,7 +1742,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(0, Resource::Fuel, 0.6),
+                Effect::ModifyIndustryResources(0, Resource::Fuel, -0.4),
                 Effect::ModifyIndustryDemand(5, -0.12),
                 Effect::IncomeOutlookChange(-1.0)
             ],
@@ -1755,7 +1761,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![7]
         },
         Project {
             id: 17,
@@ -1765,7 +1771,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, 0.5),
+                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.5),
                 Effect::IncomeOutlookChange(-1.0)
             ],
             kind: ProjectType::Policy,
@@ -1783,7 +1789,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![7]
         },
         Project {
             id: 18,
@@ -1912,7 +1918,7 @@ pub fn projects() -> Vec<Project> {
                     ]
                 }
             ],
-            supporters: vec![],
+            supporters: vec![4, 6],
             opposers: vec![]
         },
         Project {
@@ -1936,8 +1942,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![9],
             opposers: vec![]
         },
         Project {
@@ -1977,7 +1985,7 @@ pub fn projects() -> Vec<Project> {
                     ]
                 }
             ],
-            supporters: vec![],
+            supporters: vec![6],
             opposers: vec![]
         },
         Project {
@@ -2001,8 +2009,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![4, 6],
             opposers: vec![]
         },
         Project {
@@ -2066,7 +2076,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![0],
             opposers: vec![]
         },
         Project {
@@ -2090,9 +2100,11 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![]
+            upgrades: vec![
+
+            ],
+            supporters: vec![6],
+            opposers: vec![2]
         },
         Project {
             id: 26,
@@ -2173,8 +2185,8 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![4],
+            opposers: vec![0, 7, 8]
         },
         Project {
             id: 29,
@@ -2209,7 +2221,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(2, Resource::Electricity, 0.3)
+                Effect::ModifyIndustryResources(2, Resource::Electricity, -0.7)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2249,8 +2261,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![9],
             opposers: vec![]
         },
         Project {
@@ -2274,9 +2288,11 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![]
+            upgrades: vec![
+
+            ],
+            supporters: vec![0, 7],
+            opposers: vec![4]
         },
         Project {
             id: 33,
@@ -2417,7 +2433,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![0, 1],
             opposers: vec![]
         },
         Project {
@@ -2451,7 +2467,7 @@ pub fn projects() -> Vec<Project> {
             id: 38,
             name: "Electric-Arc Furnaces",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -2468,7 +2484,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![]
         },
@@ -2533,7 +2551,7 @@ pub fn projects() -> Vec<Project> {
             id: 41,
             name: "Hydrogen Steel",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -2604,8 +2622,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![2],
             opposers: vec![]
         },
         Project {
@@ -2629,8 +2649,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![2],
             opposers: vec![]
         },
         Project {
@@ -2716,8 +2738,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::UnlocksProcess(12),
-                Effect::WorldVariable(WorldVariable::Emissions, 0.5)
+                Effect::UnlocksProcess(12)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2806,9 +2827,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ProjectCostModifier(63, -0.2),
-                Effect::ProjectCostModifier(6, -0.2),
-                Effect::ProjectCostModifier(34, -0.2)
+                Effect::ProjectCostModifier(34, -0.5)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2848,8 +2867,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![9],
             opposers: vec![]
         },
         Project {
@@ -2873,7 +2894,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![]
         },
@@ -3211,7 +3234,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(1, Byproduct::Co2, 0.5)
+                Effect::ModifyIndustryByproducts(1, Byproduct::Co2, -0.5)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -3275,7 +3298,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-
+                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 5.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Random,
@@ -3286,7 +3309,8 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-
+                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 5.0),
+                        Effect::ProjectCostModifier(74, -0.25)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -3451,7 +3475,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![4],
             opposers: vec![]
         },
         Project {
@@ -3523,8 +3547,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![9, 3],
             opposers: vec![]
         },
         Project {
@@ -3551,7 +3577,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![0],
             opposers: vec![]
         },
         Project {
@@ -3629,7 +3655,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![]
         },
@@ -3732,8 +3760,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![3],
             opposers: vec![]
         },
         Project {
@@ -3816,8 +3846,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::AddEvent(50),
-                Effect::AddEvent(116),
-                Effect::UnlocksProject(57)
+                Effect::AddEvent(116)
             ],
             probabilities: vec![
                 Probability {
@@ -3963,8 +3992,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(45),
                 Effect::AddRegionFlag("riots".to_string()),
-                Effect::AddEvent(5),
-                Effect::UnlocksProject(42)
+                Effect::AddEvent(5)
             ],
             probabilities: vec![
                 Probability {
@@ -3996,8 +4024,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(18),
-                Effect::UnlocksProject(40)
+                Effect::AddEvent(18)
             ],
             probabilities: vec![
                 Probability {
@@ -4076,7 +4103,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(85),
                 Effect::AddEvent(73),
-                Effect::UnlocksProject(35)
+                Effect::AddEvent(141)
             ],
             probabilities: vec![
                 Probability {
@@ -4382,8 +4409,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(4),
-                Effect::UnlocksProject(61)
+                Effect::AddEvent(4)
             ],
             probabilities: vec![
                 Probability {
@@ -4501,8 +4527,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(113),
-                Effect::UnlocksProject(69)
+                Effect::AddEvent(113)
             ],
             probabilities: vec![
                 Probability {
@@ -4836,8 +4861,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::AddEvent(24),
-                Effect::AddEvent(19),
-                Effect::UnlocksProject(69)
+                Effect::AddEvent(19)
             ],
             probabilities: vec![
                 Probability {
@@ -5066,8 +5090,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::TriggerEvent(79, 4),
                 Effect::AddRegionFlag("revolts".to_string()),
-                Effect::AddEvent(8),
-                Effect::UnlocksProject(15)
+                Effect::AddEvent(8)
             ],
             probabilities: vec![
                 Probability {
@@ -5331,8 +5354,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(127),
-                Effect::UnlocksProject(40)
+                Effect::AddEvent(127)
             ],
             probabilities: vec![
                 Probability {
@@ -5995,8 +6017,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(6),
                 Effect::AddRegionFlag("protests".to_string()),
-                Effect::AddEvent(131),
-                Effect::UnlocksProject(37)
+                Effect::AddEvent(131)
             ],
             probabilities: vec![
                 Probability {
@@ -6602,8 +6623,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(137),
-                Effect::UnlocksProject(40)
+                Effect::AddEvent(137)
             ],
             probabilities: vec![
                 Probability {
@@ -6890,8 +6910,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(140),
-                Effect::UnlocksProject(40)
+                Effect::AddEvent(140)
             ],
             probabilities: vec![
                 Probability {
@@ -7789,6 +7808,29 @@ pub fn events() -> Vec<Event> {
             branches: vec![],
             intensity: 1,
             aspect: Some(Aspect::Force)
+        },
+        Event {
+            id: 141,
+            name: "Heatwave Elder Deaths",
+            phase: Phase::WorldMain,
+            locked: true,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Emissions, Comparator::Greater, 0.),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
         }
     ]
 }
@@ -7797,7 +7839,7 @@ pub fn npcs() -> Vec<NPC> {
     vec![
         NPC {
             id: 0,
-            name: "The Malthusians",
+            name: "The Malthusian",
             relationship: 3,
             locked: false
         },
@@ -7809,7 +7851,7 @@ pub fn npcs() -> Vec<NPC> {
         },
         NPC {
             id: 2,
-            name: "The Fully-Automated Luxury Communists",
+            name: "The Fully-Automated Luxury Communist",
             relationship: 3,
             locked: false
         },
@@ -7821,13 +7863,13 @@ pub fn npcs() -> Vec<NPC> {
         },
         NPC {
             id: 4,
-            name: "The Half-Earth Socialists",
+            name: "The Half-Earth Socialist",
             relationship: 3,
             locked: false
         },
         NPC {
             id: 5,
-            name: "The Posadists",
+            name: "The Posadist",
             relationship: 3,
             locked: true
         },
@@ -7848,6 +7890,12 @@ pub fn npcs() -> Vec<NPC> {
             name: "The Wretched",
             relationship: 3,
             locked: true
+        },
+        NPC {
+            id: 9,
+            name: "The Geoengineer",
+            relationship: 3,
+            locked: false
         }
     ]
 }

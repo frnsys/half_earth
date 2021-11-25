@@ -88,8 +88,12 @@ const tips = {
   }
 };
 
-function changeDir(change) {
-  return `${change < 0 ? 'Reduces' : 'Increases'}`
+function changeDir(change, random) {
+  if (random) {
+    return `${change < 0 ? 'Might reduce' : 'Might increase'}`
+  } else {
+    return `${change < 0 ? 'Reduces' : 'Increases'}`
+  }
 }
 
 function render(e) {
@@ -100,31 +104,31 @@ function render(e) {
         case 'Outlook': {
           return {
             tip: tips['contentedness'],
-            text: `[contentedness] ${changeDir(e.param)} contentedness by ${Math.abs(e.param)} in every region.`,
+            text: `[contentedness] ${changeDir(e.param, e.random)} contentedness by ${Math.abs(e.param)} in every region.`,
           }
         }
         case 'Emissions': {
           return {
             tip: tips['emissions'],
-            text: `[emissions] ${changeDir(e.param)} emissions by ${Math.abs(e.param)}GtCO2eq.`
+            text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${Math.abs(e.param)}GtCO2eq.`
           }
         }
         case 'ExtinctionRate': {
           return {
             tip: tips['extinction'],
-            text: `[extinction_rate] ${changeDir(e.param)} the extinction rate by ${Math.abs(e.param)}.`,
+            text: `[extinction_rate] ${changeDir(e.param, e.random)} the extinction rate by ${Math.abs(e.param)}.`,
           }
         }
         case 'Temperature': {
           return {
             tip: tips['temperature'],
-            text: `[warming] ${changeDir(e.param)} the global temperature by ${Math.abs(e.param)}C.`
+            text: `[warming] ${changeDir(e.param, e.random)} the global temperature by ${Math.abs(e.param)}C.`
           };
         }
         case 'PopulationGrowth': {
           return {
             tip: tips['population'],
-            text: `[population] ${changeDir(e.param)} global population growth by ${Math.abs(e.param)}%.`,
+            text: `[population] ${changeDir(e.param, e.random)} global population growth by ${Math.abs(e.param)}%.`,
           };
         }
       }
@@ -135,7 +139,7 @@ function render(e) {
         case 'Outlook': {
           return {
             tip: tips['contentedness'],
-            text: `[contentedness] ${changeDir(e.param)} contentedness in TODO by ${e.param}.`,
+            text: `[contentedness] ${changeDir(e.param, e.random)} contentedness in TODO by ${e.param}.`,
           }
         }
       }
@@ -144,7 +148,7 @@ function render(e) {
     case 'Output': {
       return {
         tip: tips[e.subtype.toLowerCase()],
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param)} all ${display.displayName(e.subtype)} production by ${e.param*100}%.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} all ${display.displayName(e.subtype)} production by ${e.param*100}%.`,
       }
     }
     case 'OutputForProcess': {
@@ -157,7 +161,7 @@ function render(e) {
       let tag = display.cardTag(process.name, process.output.toLowerCase());
       return {
         tip: tip,
-        text: `[${process.output.toLowerCase()}] ${changeDir(e.param)} ${tag} output by ${e.param*100}%.`
+        text: `[${process.output.toLowerCase()}] ${changeDir(e.param, e.random)} ${tag} output by ${e.param*100}%.`
       }
     }
     case 'OutputForFeature': {
@@ -168,7 +172,7 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `${changeDir(e.param)} output for ${display.describeFeature(e.subtype)} by ${e.param*100}%`
+        text: `${changeDir(e.param, e.random)} output for ${display.describeFeature(e.subtype)} by ${e.param*100}%`
       }
     }
     case 'Demand': {
@@ -176,7 +180,7 @@ function render(e) {
       // TODO show current demand?
       return {
         tip: tips[e.subtype.toLowerCase()],
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param)} demand for ${display.displayName(e.subtype)} by ${e.param*100}%`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by ${e.param*100}%`,
       }
     }
     case 'DemandAmount': {
@@ -188,7 +192,7 @@ function render(e) {
       }
       return {
         tip: tips[e.subtype.toLowerCase()],
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param)} demand for ${display.displayName(e.subtype)} by ${Math.abs(val)}%`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by ${Math.abs(val)}%`,
       }
     }
     case 'UnlocksProject': {
@@ -247,7 +251,7 @@ function render(e) {
       }
       return {
         tip: tip,
-        text: `[cost] ${changeDir(e.param)} ${kind} of ${tag} by ${project.kind == 'Policy' ? '[political_capital]' : ''}${Math.abs(amount)}${project.kind == 'Policy' ? '' : ' years'}.`,
+        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${project.kind == 'Policy' ? '[political_capital]' : ''}${Math.abs(amount)}${project.kind == 'Policy' ? '' : ' years'}.`,
       }
     }
     case 'ProjectRequest': {
@@ -314,35 +318,38 @@ function render(e) {
         type: 'Industry',
         data: industry,
       };
+      let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `${changeDir(e.param)} demand for ${industry.name} by ${p.toFixed(0)}%.`,
+        text: `${changeDir(e.param, e.random)} demand for ${tag} by ${p.toFixed(0)}%.`,
       }
     }
     case 'ModifyIndustryResources': {
       let industry = state.gameState.industries[e.entity];
-      let p = Math.abs(1 - e.param) * 100;
+      let p = Math.abs(e.param * 100);
       let tip = {...tips[e.subtype.toLowerCase()]};
       tip.card = {
         type: 'Industry',
         data: industry,
       };
+      let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param)} ${e.subtype.toLowerCase()} demand for ${industry.name} by ${p.toFixed(0)}%.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${e.subtype.toLowerCase()} demand for ${tag} by ${p.toFixed(0)}%.`,
       }
     }
     case 'ModifyIndustryByproducts': {
       let industry = state.gameState.industries[e.entity];
-      let p = Math.abs(1 - e.param) * 100;
+      let p = Math.abs(e.param * 100);
       let tip = {...tips['emissions']};
       tip.card = {
         type: 'Industry',
         data: industry,
       };
+      let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[emissions] ${changeDir(e.param)} ${e.subtype} emissions for ${industry.name} by ${p.toFixed(0)}%.`, // TODO should show the amount. e.g. this is X emissions/X% of total emissions
+        text: `[emissions] ${changeDir(e.param, e.random)} ${e.subtype} emissions for ${tag} by ${p.toFixed(0)}%.`, // TODO should show the amount. e.g. this is X emissions/X% of total emissions
       }
     }
     case 'DemandOutlookChange': {
@@ -350,7 +357,7 @@ function render(e) {
       let outlookChange = Math.floor(state.gameState.output_demand[k] * e.param);
       return {
         tip: tips['contentedness'],
-        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(outlookChange)} contentedness by ${outlookChange}`
+        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(outlookChange, e.random)} contentedness by ${outlookChange}`
       }
     }
     case 'IncomeOutlookChange': {
@@ -367,7 +374,7 @@ function render(e) {
       let p = e.param * 100;
       return {
         tip: tips['events'],
-        text: `${changeDir(p)} the chance of ${event} by ${Math.abs(p)}%`,
+        text: `${changeDir(p, e.random)} the chance of ${event} by ${Math.abs(p)}%`,
       }
     }
     case 'ProtectLand': {
@@ -415,6 +422,7 @@ export default {
 <style>
 .effect--text {
   font-size: 0.9em;
+  text-align: center;
 }
 .effect--text img {
   height: 16px;
