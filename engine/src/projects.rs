@@ -89,6 +89,7 @@ pub struct Project {
     #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
 
+    #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
     pub upgrades: Vec<Upgrade>,
 
