@@ -135,12 +135,12 @@ class Globe {
 
   // Show/ping an icon and/or text
   // at the specified hex
-  show({icon, text, hexIdx, ping}) {
+  show({icon, text, hexIdx, ping, iconSize}) {
     let textMesh = text ? this.hexsphere.showText(text, hexIdx, {
       size: 0.5
     }) : null;
     let iconMesh = icon ? this.hexsphere.showIcon(icon, hexIdx, {
-      size: 0.75,
+      size: iconSize || 0.6,
       selectable: true
     }) : null;
     if (ping) {

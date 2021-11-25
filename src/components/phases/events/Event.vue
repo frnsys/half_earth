@@ -52,9 +52,13 @@ export default {
 
 <style>
 .event {
-  position: relative;
-  margin: 8vh 1em;
+  position: absolute;
   z-index: 10;
+  bottom: 0;
+  top: 0;
+  background: rgba(0,0,0,0.75);
+  padding: 8vh 1em;
+  width: 100%;
 }
 .event--body {
   color: #fff;

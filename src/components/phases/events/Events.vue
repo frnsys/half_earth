@@ -6,7 +6,7 @@
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
   <Globe id="events-globe" ref="globe" />
-  <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="() => completedProjects.shift()"/>
+  <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="dismissProject"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" />
   <div id="event-stream--toasts">
@@ -135,7 +135,10 @@ export default {
 
           if (this.time >= MS_PER_YEAR) {
             this.completedProjects = game.step();
-            state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(this.completedProjects);
+            if (this.completedProjects.length > 0) {
+              this.stopped = true;
+              state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(this.completedProjects);
+            }
             this.year = state.gameState.world.year;
 
             // Add to historical data
@@ -209,6 +212,10 @@ export default {
         game.setTgav(tgav);
       });
     },
+    dismissProject() {
+      this.completedProjects.shift();
+      this.stopped = this.completedProjects.length > 0;
+    },
     showEventOnGlobe(eventId, regionId) {
       let ev = ICON_EVENTS[eventId];
       if (this.globe && regionId !== undefined && regionId !== null) {
@@ -227,14 +234,15 @@ export default {
 
         let outlook = ev.intensity;
         game.changeLocalOutlook(-outlook, regionId);
-        this.globe.show({icon: 'discontent', hexIdx, ping: true});
+        let args = {icon: 'discontent', hexIdx, ping: true, iconSize: 0.35};
+        this.globe.show(args);
         if (outlook > 1) {
           let outlookInterval = setInterval(() => {
             if (outlook <= 0) {
               clearInterval(outlookInterval);
             } else {
               outlook--;
-              this.globe.show({icon: 'discontent', hexIdx, ping: true});
+              this.globe.show(args);
             }
           }, 250);
         }
