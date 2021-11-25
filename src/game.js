@@ -36,7 +36,7 @@ function newRun() {
 function step() {
   let completedProjects = game.step();
   updateState();
-  updateResourceRankings();
+  // updateResourceRankings();
   return completedProjects;
 }
 

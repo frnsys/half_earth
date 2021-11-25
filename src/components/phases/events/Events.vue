@@ -31,7 +31,7 @@ import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import ICON_EVENTS from '/assets/content/icon_events.json';
 import {sign, randChoice} from 'lib/util';
 
-const MS_PER_YEAR = 10000;
+const MS_PER_YEAR = 5000;
 
 function popIconEvents(arr, time) {
   let results = [];
@@ -93,6 +93,8 @@ export default {
         extinctionRate: state.gameState.world.extinction_rate,
         contentedness: state.gameState.contentedness,
         temperature: state.gameState.world.temperature,
+        emissions: state.gameState.emissions,
+        completedProjects: [],
       };
 
       if (!this.globe) {

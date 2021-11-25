@@ -48,6 +48,7 @@ export default {
     this.PAGES = PAGES;
   },
   mounted() {
+    game.updateResourceRankings();
     this.showEvent();
   },
   activated() {
@@ -143,12 +144,11 @@ export default {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
 .planning--page::-webkit-scrollbar { /* WebKit */
-    width: 0;
-    height: 0;
+  width: 0;
+  height: 0;
 }
 .planning--page .cards {
   flex: 1;
-  margin-top: 1em;
 }
 
 .project--upgrade--title {

@@ -138,6 +138,8 @@ export default {
   overflow: hidden;
   width: 100%;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 .cards.dragging {
   cursor: grabbing;
@@ -150,6 +152,7 @@ export default {
 }
 .cards .card {
   display: inline-flex;
+  min-width: 320px;
   margin: 0 0.5em;
   vertical-align: top;
   white-space: normal;
