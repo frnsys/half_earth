@@ -1,7 +1,7 @@
 <template>
 <div class="dialogue" @click="advance" v-if="current !== null">
   <div class="dialogue--speech">
-    <div class="dialogue--speaker">
+    <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
         :src="`/assets/characters/${line.speaker}.png`"
         onerror="this.src='/assets/placeholders/character.png';" />

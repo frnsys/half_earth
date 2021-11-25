@@ -142,7 +142,9 @@ const SUBPHASES = {
     'Policies', 'Processes', 'Priority'],
   Report: ['Start'],
   Break: ['Start'],
+  End: ['Start'],
   Icon: [],
+  Crisis: [],
 }
 
 const EFFECTS = {
@@ -403,6 +405,7 @@ const EVENT_TYPES = [
   'Planning',   // Occur during planning sessions
   'Report',     // Occurs during the reports
   'Break',      // Occur between runs
+  'End',        // Occur at the end of the game (victory)
   'Icon',       // Occur in the world/event stream, but only as icons
   'Crisis',     // Occurs when the crisis meter fills
 ];

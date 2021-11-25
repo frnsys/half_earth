@@ -1,6 +1,7 @@
 import {reactive} from 'vue';
 
 const init = {
+  endYear: 0,
   gameState: null,
   phase: 'PLANNING',
   planChanges: [],

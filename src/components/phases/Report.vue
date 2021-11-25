@@ -141,6 +141,8 @@ export default {
 
       if (state.gameState.game_over) {
         state.phase = 'BREAK';
+      } else if (state.gameState.world.year >= state.endYear) {
+        state.phase = 'END';
       } else {
         state.phase = 'PLANNING';
       }

@@ -7831,6 +7831,50 @@ pub fn events() -> Vec<Event> {
             branches: vec![],
             intensity: 0,
             aspect: None
+        },
+        Event {
+            id: 142,
+            name: "Game Over",
+            phase: Phase::BreakStart,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 143,
+            name: "Success",
+            phase: Phase::EndStart,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
         }
     ]
 }

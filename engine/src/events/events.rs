@@ -157,6 +157,7 @@ pub enum Phase {
     WorldEnd,
     ReportStart,
     BreakStart,
+    EndStart,
     Icon,
     PlanningStart,
     PlanningEnd,

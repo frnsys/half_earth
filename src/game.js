@@ -5,6 +5,7 @@ import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
 let game = GameInterface.new(Difficulty.Normal);
+state.endYear = game.state().world.year + 100;
 
 // Get the updated game state,
 // and compute some additional variables
@@ -31,6 +32,7 @@ function updateResourceRankings() {
 // Start a new run
 function newRun() {
   game = GameInterface.new(Difficulty.Normal);
+  state.endYear = game.state().world.year + 100;
   updateState();
   updateResourceRankings();
 }
@@ -170,6 +172,9 @@ const roll = {
   },
   break: (subphase) => {
     return _roll('Break', subphase, null);
+  },
+  end: (subphase) => {
+    return _roll('End', subphase, null);
   },
   icon: () => {
     return _roll('Icon', '', null);
