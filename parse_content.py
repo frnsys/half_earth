@@ -252,6 +252,44 @@ conds = {
     'NPCRelationship':  lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['subtype'])),
 }
 
+effect_keys = {
+  'LocalVariable': ['subtype', 'params'],
+  'WorldVariable': ['subtype', 'params'],
+  'PlayerVariable': ['subtype', 'params'],
+  'Demand': ['subtype', 'params'],
+  'DemandAmount': ['subtype', 'params'],
+  'Output': ['subtype', 'params'],
+  'OutputForFeature': ['subtype', 'params'],
+  'OutputForProcess': ['entity', 'params'],
+  'Resource': ['subtype', 'params'],
+  'Feedstock': ['subtype', 'params'],
+  'TriggerEvent': ['entity', 'params'],
+  'AddEvent': ['entity'],
+  'UnlocksProject': ['entity'],
+  'UnlocksProcess': ['entity'],
+  'UnlocksNPC': ['entity'],
+  'SetProjectStatus': ['entity', 'subtype', 'params'],
+  'RegionLeave': [],
+  'Migration': [],
+  'GameOver': [],
+  'ProjectRequest': ['entity', 'subtype', 'params'],
+  'ProcessRequest': ['entity', 'subtype', 'params'],
+  'AddFlag': ['params'],
+  'AddRegionFlag': ['params'],
+  'AutoClick': ['entity', 'params'],
+  'NPCRelationship': ['entity', 'params'],
+  'ModifyIndustryByproducts': ['entity', 'subtype', 'params'],
+  'ModifyIndustryResources': ['entity', 'subtype', 'params'],
+  'ModifyIndustryDemand': ['entity', 'params'],
+  'ModifyEventProbability': ['entity', 'params'],
+  'DemandOutlookChange': ['subtype', 'params'],
+  'IncomeOutlookChange': ['params'],
+  'ProjectCostModifier': ['entity', 'params'],
+  'ProtectLand': ['params'],
+};
+
+
+
 def define_effect(effect):
     effect_params = [
             '0.' if isinstance(v, float) and v == 0 else str(v)
@@ -543,9 +581,23 @@ def condition_to_factor(cond):
     subtypes = cond_to_factor.get(cond['type'], {})
     return subtypes.get(cond['subtype'])
 
+def parse_effect(e):
+    effect = {
+        'type': e['type'],
+    }
+    for k in effect_keys[e['type']]:
+        if k == 'entity':
+            effect[k] = ids.get(e.get('entity')),
+        elif k == 'params':
+            effect['param'] = get_param(e)
+        else:
+            effect[k] = e[k]
+    return effect
+
 def to_jpg(path, outpath):
     im = Image.open(path)
     im.convert('RGB').save(outpath, quality=20)
+
 
 def indent(text, levels=1):
     return textwrap.indent(text, 4 * levels * ' ')
@@ -714,12 +766,7 @@ if __name__ == '__main__':
                 'attribution': attribution,
             },
             'factors': list(factors),
-            'effects': [{
-                'type': e['type'],
-                'subtype': e.get('subtype'),
-                'entity': ids.get(e.get('entity')),
-                'param': get_param(e)
-            } for e in ev.get('effects', [])]
+            'effects': [parse_effect(e) for e in ev.get('effects', [])]
         }
 
         if fname:
@@ -748,12 +795,7 @@ if __name__ == '__main__':
                 'icon': ev['icon'],
                 'aspect': ev['aspect'],
                 'intensity': ev['intensity'],
-                'effects': [{
-                    'type': e['type'],
-                    'subtype': e.get('subtype'),
-                    'entity': ids.get(e.get('entity')),
-                    'param': get_param(e)
-                } for e in ev.get('effects', [])]
+                'effects': [parse_effect(e) for e in ev.get('effects', [])]
             }
             icons.add(ev['icon'])
 
@@ -782,12 +824,7 @@ if __name__ == '__main__':
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
-            'effects': [{
-                'type': e['type'],
-                'subtype': e.get('subtype'),
-                'entity': ids.get(e.get('entity')),
-                'param': get_param(e)
-            } for e in p.get('effects', [])],
+            'effects': [parse_effect(e) for e in p.get('effects', [])],
             'upgrades': [{
                 'effects': [{
                     'type': e['type'],
@@ -797,12 +834,7 @@ if __name__ == '__main__':
                 } for e in u['effects']]
             } for u in p.get('upgrades', [])],
             'outcomes': [{
-                'effects': [{
-                    'type': e['type'],
-                    'subtype': e.get('subtype'),
-                    'entity': ids.get(e.get('entity')),
-                    'param': get_param(e)
-                } for e in u['effects']]
+                'effects': [parse_effect(e) for e in u['effects']]
             } for u in p.get('outcomes', [])]
         }
         if fname:

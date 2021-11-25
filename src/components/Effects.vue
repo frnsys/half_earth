@@ -85,14 +85,30 @@ const tips = {
   unlocks_project: {
     icon: 'unlocks',
     text: 'Unlocks Project: ...'
+  },
+  research_points: {
+    icon: 'research',
+    text: 'Research Points: ...'
   }
 };
 
 function changeDir(change, random) {
-  if (random) {
+  if (change == '?') {
+    return 'Changes';
+  } else if (random) {
     return `${change < 0 ? 'Might reduce' : 'Might increase'}`
   } else {
     return `${change < 0 ? 'Reduces' : 'Increases'}`
+  }
+}
+
+function formatParam(param, sign) {
+  if (param == '?') {
+    return '<span class="unknown-param">?</span>';
+  } else if (sign) {
+    return sign(param);
+  } else {
+    return Math.abs(param);
   }
 }
 
@@ -104,31 +120,31 @@ function render(e) {
         case 'Outlook': {
           return {
             tip: tips['contentedness'],
-            text: `[contentedness] ${changeDir(e.param, e.random)} contentedness by ${Math.abs(e.param)} in every region.`,
+            text: `[contentedness] ${changeDir(e.param, e.random)} contentedness by ${formatParam(e.param)} in every region.`,
           }
         }
         case 'Emissions': {
           return {
             tip: tips['emissions'],
-            text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${Math.abs(e.param)}GtCO2eq.`
+            text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${formatParam(e.param)}GtCO2eq.`
           }
         }
         case 'ExtinctionRate': {
           return {
             tip: tips['extinction'],
-            text: `[extinction_rate] ${changeDir(e.param, e.random)} the extinction rate by ${Math.abs(e.param)}.`,
+            text: `[extinction_rate] ${changeDir(e.param, e.random)} the extinction rate by ${formatParam(e.param)}.`,
           }
         }
         case 'Temperature': {
           return {
             tip: tips['temperature'],
-            text: `[warming] ${changeDir(e.param, e.random)} the global temperature by ${Math.abs(e.param)}C.`
+            text: `[warming] ${changeDir(e.param, e.random)} the global temperature by ${formatParam(e.param)}C.`
           };
         }
         case 'PopulationGrowth': {
           return {
             tip: tips['population'],
-            text: `[population] ${changeDir(e.param, e.random)} global population growth by ${Math.abs(e.param)}%.`,
+            text: `[population] ${changeDir(e.param, e.random)} global population growth by ${formatParam(e.param)}%.`,
           };
         }
       }
@@ -140,6 +156,17 @@ function render(e) {
           return {
             tip: tips['contentedness'],
             text: `[contentedness] ${changeDir(e.param, e.random)} contentedness in TODO by ${e.param}.`,
+          }
+        }
+      }
+      return;
+    }
+    case 'PlayerVariable': {
+      switch (e.subtype) {
+        case 'ResearchPoints': {
+          return {
+            tip: tips['research_points'],
+            text: `[research] ${e.random ? 'Possible ' : ''}${formatParam(e.param, true)} research points.`,
           }
         }
       }
@@ -440,5 +467,9 @@ export default {
 .card-tag img {
   height: 13px;
   margin-right: 3px;
+}
+
+.unknown-param {
+  color: #9dbbd8;
 }
 </style>

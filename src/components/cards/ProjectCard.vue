@@ -146,19 +146,28 @@ export default {
       }
     },
     outcomeEffects() {
-      let allEffects = [];
+      let allEffects = {};
       this.outcomes.forEach(({effects}) => {
-        allEffects = allEffects.concat(effects)
+        for (const effect of effects) {
+          let key = `${effect.type}${effect.subtype ? effect.subtype : ''}`;
+          let hash = JSON.stringify(effect);
+          if (!(key in allEffects)) {
+            allEffects[key] = {
+              effect,
+              count: 1,
+              hashes: new Set([hash]),
+            };
+          } else {
+            allEffects[key].count += 1;
+            allEffects[key].hashes.add(hash);
+          }
+        }
       });
 
-      // Remove duplicates
-      allEffects = allEffects.filter((item, i) => {
-        return allEffects.indexOf(item) == i;
-      });
-
-      return allEffects.map((e) => {
-        e.random = true;
-        return e;
+      return Object.values(allEffects).map(({effect, count, hashes}) => {
+        effect.random = count !== this.outcomes.length || hashes.size > 1;
+        if (hashes.size > 1) effect.param = '?';
+        return effect;
       });
     },
     supportersDetailed() {
