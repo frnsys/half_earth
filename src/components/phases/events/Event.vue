@@ -7,7 +7,9 @@
     </div>
     <div class="image-attribution">Image source: {{event.image ? event.image.attribution : ''}}</div>
     <div class="event--name">{{event.name}}</div>
-    <Effects :effects="event.effects" />
+    <div class="event--effects">
+      <Effects :effects="event.effects" />
+    </div>
   </div>
   <Dialogue v-bind="event" :effects="[]" @done="done" />
 </div>
@@ -40,6 +42,8 @@ export default {
           return 'This event is influenced by the amount of sea level rise.';
         case 'habitability':
           return 'This event is influenced by the habitability of regions.';
+        default:
+          return factor;
       }
     }
   },
@@ -108,6 +112,15 @@ export default {
   top: 0.85em;
 }
 .factors img {
-  height: 16px;
+  height: 22px;
+  background: #222;
+  border-radius: 1.2em;
+  padding: 0.2em;
+}
+
+.event--effects {
+  padding: 1em;
+  background: #222;
+  margin: 1em;
 }
 </style>

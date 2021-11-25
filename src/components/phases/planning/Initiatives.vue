@@ -8,7 +8,7 @@
       {{availablePoints}}<img class="pip" :src="icons.initiative">
     </div>
     <div class="pips pips--buy" @click="buyPoint">
-      {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons.political_capital">
+      {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons.initiative">
     </div>
   </footer>
 </div>

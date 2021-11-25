@@ -31,7 +31,7 @@ import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import ICON_EVENTS from '/assets/content/icon_events.json';
 import {sign, randChoice} from 'lib/util';
 
-const MS_PER_YEAR = 5000;
+const MS_PER_YEAR = 2000;
 
 function popIconEvents(arr, time) {
   let results = [];

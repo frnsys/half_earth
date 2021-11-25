@@ -452,7 +452,17 @@ def extract_branches(dialogue):
     return branches
 
 def extract_dialogue(dialogue):
-    if not dialogue: return {'root': None, 'lines': {}}
+    if not dialogue: return {
+        'root': 0,
+        'lines': {
+            '0': {
+                'id': 0,
+                'speaker': 'Gossy',
+                'text': 'This is placeholder for missing dialogue text',
+                'next': None
+            }
+        }
+    }
     keys_to_ids = {k: i for i, k in enumerate(dialogue['lines'].keys())}
 
     branch_id = 0
