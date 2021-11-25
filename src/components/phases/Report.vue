@@ -43,7 +43,7 @@
           <td class="report-empty">None</td>
         </tr>
         <tr v-for="project in state.cycleStartState.completedProjects">
-          <td colspan="3">{{project.name}}</td>
+          <td colspan="3">{{state.gameState.projects[project].name}}</td>
           <td>{{sign(PC_PER_COMPLETED_PROJECT)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
@@ -75,7 +75,7 @@ import state from '/src/state';
 import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
 
-const PC_PER_COMPLETED_PROJECT = 10;
+const PC_PER_COMPLETED_PROJECT = 20;
 
 export default {
   mixins: [EventsMixin],
