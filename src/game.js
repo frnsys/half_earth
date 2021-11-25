@@ -33,6 +33,18 @@ function updateResourceRankings() {
 function newRun() {
   game = GameInterface.new(Difficulty.Normal);
   state.endYear = game.state().world.year + 100;
+  state.history = {
+    emissions: [],
+    land_use: [],
+  };
+  state.points = {
+    research: 0,
+    initiative: 0,
+  };
+  state.crisis = {
+    points: 0,
+    max: 100,
+  };
   updateState();
   updateResourceRankings();
 }

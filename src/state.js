@@ -4,7 +4,6 @@ const init = {
   endYear: 0,
   gameState: null,
   phase: 'PLANNING',
-  planChanges: [],
   crisis: {
     points: 0,
     max: 100
