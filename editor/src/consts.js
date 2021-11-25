@@ -167,6 +167,7 @@ const EFFECTS = {
   PlayerVariable: {
     choices: [
       'PoliticalCapital',
+      'ResearchPoints',
       'MalthusianPoints',
       'FALCPoints',
       'HESPoints',
