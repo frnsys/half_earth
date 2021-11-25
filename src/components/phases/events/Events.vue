@@ -276,7 +276,7 @@ export default {
 }
 
 #event-stream .dialogue {
-  background: rgba(255,255,255,0.25);
+  padding: 0;
 }
 
 
@@ -284,7 +284,7 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 1.25em;
   padding: 1em;
   text-align: center;
   font-size: 0.8em;
