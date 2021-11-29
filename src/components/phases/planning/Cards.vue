@@ -40,6 +40,7 @@ export default {
     document.addEventListener('mouseup', this.endDrag);
     document.addEventListener('touchmove', this.drag);
     document.addEventListener('touchend', this.endDrag);
+    this.snapToCenter(false);
   },
   unmounted() {
     document.removeEventListener('mousemove', this.drag);
@@ -85,7 +86,7 @@ export default {
         top: this.$el.scrollTop,
       };
     },
-    snapToCenter() {
+    snapToCenter(animate) {
       // Horizontal snap-to-center
       let rect = this.$el.getBoundingClientRect();
       let scrollLeft = this.$el.scrollLeft;
@@ -104,12 +105,16 @@ export default {
       }, null);
 
       if (target) {
-        // Animate snap-to-center
-        let start = this.$el.scrollLeft;
         let end = target.child.offsetLeft - rect.width/2 + target.width/2;
-        this.animation = animate(start, end, duration, (val) => {
-          this.$el.scrollLeft = val;
-        });
+        if (animate) {
+          // Animate snap-to-center
+          let start = this.$el.scrollLeft;
+          this.animation = animate(start, end, duration, (val) => {
+            this.$el.scrollLeft = val;
+          });
+        } else {
+          this.$el.scrollLeft = end;
+        }
       }
     },
     endDrag(ev) {
@@ -127,7 +132,7 @@ export default {
       if (Math.abs(this.vel) > 0.5){
         this.momentum = requestAnimationFrame(this.applyMomentum);
       } else {
-        this.snapToCenter();
+        this.snapToCenter(true);
       }
     }
   }
