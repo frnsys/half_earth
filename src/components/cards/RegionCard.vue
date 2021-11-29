@@ -18,13 +18,10 @@
       <IntensityIcon
         v-tip="{icon: 'contentedness', text: `This region's contentedness.`}"
         resource="contentedness" :intensity="contentedness" :invert="true" />
-
-      <div v-for="v, k in demand" v-tip="{text: `This regions\'s demand for ${k}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}">
-        <div class="card-icon">
-          <img :src="icons[k]"/>
-          {{demand[k] < 1 ? '<1' : demand[k]}}
-        </div>
-      </div>
+      <IntensityIcon
+        v-for="v, k in demand"
+        v-tip="{text: `This region's per-capita demand level for ${k}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}"
+        :resource="k" :intensity="demandIntensity(k)" />
     </div>
   </template>
   <template v-slot:back>
@@ -61,6 +58,12 @@ export default {
     };
   },
   methods: {
+    perCapitaDemand(k) {
+      return this.rawDemand[k]/this.population;
+    },
+    demandIntensity(k) {
+      return display.intensity(this.perCapitaDemand(k), k);
+    },
     demandPercent(k) {
       let scaledOutputDemand = display.outputs(state.gameState.output_demand);
       let percent = this.demand[k]/scaledOutputDemand[k] * 100;
@@ -78,8 +81,11 @@ export default {
     contentedness() {
       return display.scaleIntensity(this.region.outlook, 'outlook');
     },
+    rawDemand() {
+      return game.regionDemand(this.region);
+    },
     demand() {
-      return display.outputs(game.regionDemand(this.region));
+      return display.outputs(this.rawDemand);
     },
     habitability() {
       return display.scaleIntensity(game.regionHabitability(this.region), 'habitability');

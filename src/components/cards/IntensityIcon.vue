@@ -8,20 +8,13 @@
 </template>
 
 <script>
+import display from 'lib/display';
+
 export default {
   props: ['resource', 'intensity', 'invert'],
   computed: {
     color() {
-      let intensity = this.invert ? 5 - this.intensity : this.intensity;
-      if (intensity === 1) {
-        return '#43CC70';
-      } else if (intensity === 2) {
-        return '#FBC011';
-      } else if (intensity === 3) {
-        return '#f28435';
-      } else {
-        return '#EF3838';
-      }
+      return display.intensityColor(this.intensity, this.invert);
     }
   }
 }

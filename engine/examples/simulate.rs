@@ -153,7 +153,7 @@ fn main() {
         "N2O Emissions (Mt)",
         "CO2eq Emissions",
         "Population (b)",
-        "Outlook",
+        "World Outlook",
         "Habitability",
         "Extinction Rate",
         "Base Animal Cal Demand (Tcals)",
@@ -207,6 +207,7 @@ fn main() {
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CO2 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
+    cols.extend(game.state.world.regions.iter().map(|r| format!("Outlook:{}", r.name)));
     wtr.write_record(&cols).unwrap();
 
     for i in 0..100 {
@@ -305,7 +306,7 @@ fn main() {
                     year_icon_events.push((ev.name.to_string(), Some(region.name.to_string())));
 
                     // Apply outlook effect
-                    region.outlook -= ev.intensity as f32;
+                    region.outlook -= ev.intensity as f32 * 0.05;
                 },
                 None => {
                     year_icon_events.push((ev.name.to_string(), None));
@@ -388,6 +389,9 @@ fn main() {
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
             (p.byproducts.n2o * order.amount * 1e-12).to_string()
+        }));
+        vals.extend(game.state.world.regions.iter().map(|r| {
+            r.outlook.to_string()
         }));
         wtr.write_record(&vals).unwrap();
     }

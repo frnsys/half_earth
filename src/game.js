@@ -13,9 +13,7 @@ function updateState() {
   state.gameState = game.state();
 
   let world = state.gameState.world;
-  state.gameState.contentedness = world.regions.reduce((acc, r) => {
-    return acc + r.outlook;
-  }, 0);
+  state.gameState.contentedness = game.world_outlook();
   state.gameState.emissions = (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
   console.log('Updating emissions:');
   console.log(world);
@@ -142,10 +140,6 @@ function simulate(years) {
   return game.simulate(years);
 }
 
-function totalIncomeLevel() {
-  return game.total_income_level();
-}
-
 function industryDemand(industry) {
   return game.industry_demand(industry.id);
 }
@@ -212,6 +206,5 @@ export default {
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, roll, simulate,
   applyBranchEffects, evalBranchConditions,
-  totalIncomeLevel,
   industryDemand, regionDemand, regionHabitability,
   yearsRemaining, updateResourceRankings};

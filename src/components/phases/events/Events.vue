@@ -110,15 +110,16 @@ export default {
       this.time = 0;
       this.globe.resumeRotation();
       let last = performance.now();
-      let iconEvents = game.roll.icon().map(([eventId, regionId]) => {
-        return {
-          eventId,
-          regionId,
+      let iconEvents = game.roll.icon()
+        .map(([eventId, regionId]) => {
+          return {
+            eventId,
+            regionId,
 
-          // When in the year the event occurs
-          when: Math.random() * MS_PER_YEAR
-        }
-      });
+            // When in the year the event occurs
+            when: Math.random() * MS_PER_YEAR
+          }
+        });
 
       const tick = (timestamp) => {
         if (this.stopped) return;
@@ -232,16 +233,17 @@ export default {
           /* region, */
         /* }); */
 
-        let outlook = ev.intensity;
+        let outlook = ev.intensity * 0.05;
+        let pings = ev.intensity;
         game.changeLocalOutlook(-outlook, regionId);
         let args = {icon: 'discontent', hexIdx, ping: true, iconSize: 0.35};
         this.globe.show(args);
-        if (outlook > 1) {
+        if (pings > 1) {
           let outlookInterval = setInterval(() => {
-            if (outlook <= 0) {
+            if (pings <= 0) {
               clearInterval(outlookInterval);
             } else {
-              outlook--;
+              pings--;
               this.globe.show(args);
             }
           }, 250);

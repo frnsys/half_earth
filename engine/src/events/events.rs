@@ -127,7 +127,6 @@ impl EventPool {
         // Get the first MAX_EVENTS_PER_TURN triggered events
         let mut happening = Vec::new();
         self.triggered.shuffle(rng);
-        let n = self.triggered.len();
 
         let mut i = 0;
         while i < self.triggered.len() {

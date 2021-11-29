@@ -86,7 +86,7 @@ function render(e) {
               icon: 'contentedness',
               text: 'TODO'
             },
-            text: `[contentedness] ${changeDir(e.param, e.random)} contentedness by ${formatParam(e.param)} in every region.`,
+            text: `[contentedness] ${changeDir(e.param, e.random)} world contentedness by ${formatParam(e.param)}.`,
           }
         }
         case 'Emissions': {
@@ -433,25 +433,23 @@ function render(e) {
     }
     case 'DemandOutlookChange': {
       let k = display.enumKey(e.subtype);
-      let outlookChange = Math.floor(state.gameState.output_demand[k] * e.param);
       return {
         tip: {
           icon: 'contentedness',
           subicon: k,
-          text: `This effect changes contentedness based on demand for ${display.displayName(e.subtype)}.`
+          text: `This effect changes regional contentedness based on demand for ${display.displayName(e.subtype)}.`
         },
-        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(outlookChange, e.random)} contentedness by ${outlookChange}.`
+        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} regional contentedness by ${Math.abs(e.param)} per demand level.`
       }
     }
     case 'IncomeOutlookChange': {
-      let outlookChange = Math.floor(game.totalIncomeLevel() * e.param);
       return {
         tip: {
           icon: 'contentedness',
           subicon: 'wealth',
-          text: 'This effect changes contentedness based on region income levels (wealthier regions will feel it more).'
+          text: 'This effect changes regional contentedness based on income levels (wealthier regions will feel it more).'
         },
-        text: `[contentedness] ${changeDir(outlookChange, e.random)} contentedness by ${outlookChange}.`
+        text: `[contentedness] ${changeDir(e.param, e.random)} contentedness by ${Math.abs(e.param)} per income level.`
       }
     }
     case 'ModifyEventProbability': {

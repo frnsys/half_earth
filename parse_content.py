@@ -6,6 +6,10 @@ import textwrap
 from PIL import Image
 from collections import defaultdict
 
+BASE_WORLD_OUTLOOK = 20.
+BASE_REGIONAL_OUTLOOK = 10.
+BASE_REGIONAL_HABITABILITY = 10.
+
 ids = {}
 flags = {}
 rust_output = []
@@ -62,15 +66,16 @@ specs = {
         'year': 0,
         'extinction_rate': 0.,
         'temperature': 0.,
+        'base_outlook': BASE_WORLD_OUTLOOK,
     },
     'Region': {
         'id': None,
         'name': None,
         'income_level': None,
         'development': 0,
-        'outlook': 50,
+        'outlook': BASE_REGIONAL_OUTLOOK,
         'population': None,
-        'base_habitability': 100,
+        'base_habitability': BASE_REGIONAL_HABITABILITY,
         'seceded': 'false',
         'flags': 'vec![]',
     },
@@ -680,11 +685,14 @@ if __name__ == '__main__':
     rust_output.append(fn_def)
 
     groups = []
+    demand_levels = {}
     for income in incomes:
         outputs = {}
         for k in valid_outputs:
             outputs[camel_to_snake(k)] = income_level_consts[camel_to_snake(k)][income]
+        demand_levels[income] = {k: float(v) for k, v in outputs.items()}
         groups.append(define_struct('OutputMap', outputs))
+    demand_levels = [demand_levels[income] for income in incomes]
 
     for k in valid_outputs:
         income_level_consts.pop(camel_to_snake(k))
@@ -948,3 +956,12 @@ if __name__ == '__main__':
         defaults[k] = vals[-1]
     with open('assets/hector/rcp26.default_emissions.json', 'w') as f:
         json.dump(defaults, f)
+
+    with open('src/consts.json', 'w') as f:
+        json.dump({
+            'demand_levels': demand_levels,
+            'base_outlook': BASE_REGIONAL_OUTLOOK,
+            'base_world_outlook': BASE_WORLD_OUTLOOK,
+            'base_habitability': BASE_REGIONAL_HABITABILITY,
+            'starting_resources': {k: float(v) for k, v in starting_resources.items()},
+        }, f)

@@ -5,10 +5,12 @@
       <img :src="icons.political_capital">{{state.gameState.political_capital}}
     </div>
     <div v-tip="{icon: 'extinction_rate', text: 'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.'}">
-      <img :src="icons.extinction_rate">{{state.gameState.world.extinction_rate.toFixed(0)}}
+      <img :src="icons.extinction_rate">
+      <div class="intensity-pip stat-pip" :style="{background:extinction.color}" v-for="i in extinction.intensity"></div>
     </div>
-    <div :class="{'bad': state.gameState.contentedness < 0}" v-tip="{icon: 'contentedness', text: 'How people around the world feel about the state of things.'}">
-      <img :src="icons.contentedness">{{state.gameState.contentedness.toFixed(0)}}
+    <div :class="{'bad': state.gameState.contentedness < 0}" v-tip="{icon: 'contentedness', text: 'How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.'}">
+      <img :src="icons.contentedness">
+      <div class="intensity-pip stat-pip" :style="{background:contentedness.color}" v-for="i in contentedness.intensity"></div>
     </div>
     <div v-tip="{icon: 'emissions', text: 'Current annual emissions, in gigatonnes of CO2 equivalent.'}">
       <img :src="icons.emissions">{{state.gameState.emissions.toFixed(1)}}
@@ -21,6 +23,7 @@
 
 <script>
 import state from '../state';
+import display from 'lib/display';
 
 export default {
   data() {
@@ -28,6 +31,22 @@ export default {
       state,
     };
   },
+  computed: {
+    contentedness() {
+      let intensity = display.scaleIntensity(state.gameState.contentedness, 'world_outlook');
+      return {
+        intensity,
+        color: display.intensityColor(intensity, true)
+      }
+    },
+    extinction() {
+      let intensity = display.scaleIntensity(state.gameState.world.extinction_rate, 'extinction');
+      return {
+        intensity,
+        color: display.intensityColor(intensity, false)
+      }
+    }
+  }
 };
 </script>
 
@@ -47,5 +66,9 @@ export default {
   vertical-align: middle;
   margin-right: 2px;
   margin-top: -2px;
+}
+
+.stat-pip {
+  height: 8px;
 }
 </style>

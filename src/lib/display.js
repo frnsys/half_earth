@@ -1,10 +1,6 @@
 import state from '/src/state';
 import icons from 'components/icons';
-
-const baseOutlook = 50;
-const baseHabitability = 100;
-const totalLand = 104e12;
-const totalWater = 4.55e16;
+import consts from '/src/consts.json';
 
 const OUTPUT_UNITS = {
   fuel: 1e-9/1e3,            // per 1000 TWh
@@ -53,11 +49,11 @@ function outputs(outputs) {
 }
 
 function landUsePercent(m2) {
-  return m2/totalLand * 100;
+  return m2/consts.starting_resources.land * 100;
 }
 
 function waterUsePercent(l) {
-  return l/totalWater * 100;
+  return l/consts.starting_resources.water * 100;
 }
 
 function fillIcons(text) {
@@ -126,11 +122,16 @@ const intensities = {
   'biodiversity': {
     'energy': [0, 1, 2, 3],
     'calories': [0, 1, 2, 3],
-  }
+  },
 };
 
 function intensity(val, key, type) {
-  let stops = intensities[key][type];
+  let stops;
+  if (key in intensities) {
+    stops = intensities[key][type];
+  } else {
+    stops = consts.demand_levels.map((o) => Math.floor(o[key]));
+  }
   for (let i = 0; i < stops.length - 1; i++) {
     if (val >= stops[i] && val < stops[i+1]) {
       return i+1;
@@ -141,8 +142,23 @@ function intensity(val, key, type) {
 
 function scaleIntensity(val, key) {
   switch (key) {
-    case 'outlook': return Math.round(val/baseOutlook * 4);
-    case 'habitability': return Math.round(val/baseHabitability * 4);
+    case 'outlook': return Math.round(val/consts.base_outlook * 4);
+    case 'extinction': return Math.round(val/60 * 4);
+    case 'habitability': return Math.round(val/consts.base_habitability * 4);
+    case 'world_outlook': return Math.round(val/(consts.base_outlook+consts.base_world_outlook) * 4);
+  }
+}
+
+function intensityColor(intensity, invert) {
+  intensity = invert ? 5 - intensity : intensity;
+  if (intensity === 1) {
+    return '#43CC70';
+  } else if (intensity === 2) {
+    return '#FBC011';
+  } else if (intensity === 3) {
+    return '#f28435';
+  } else {
+    return '#EF3838';
   }
 }
 
@@ -177,7 +193,7 @@ function resourceRankings() {
       } else if (k == 'emissions') {
         base = co2eq(p.byproducts);
       } else if (k == 'biodiversity') {
-        base = (p.byproducts[k]/1e4 + p.resources['land']/totalLand) * 100;
+        base = (p.byproducts[k]/1e4 + p.resources['land']/consts.starting_resources.land) * 100;
       }
 
       let type =
@@ -218,7 +234,7 @@ function formatNumber(val) {
 }
 
 export default {co2eq, gtco2eq, output, outputs,
-  formatNumber,
+  formatNumber, intensityColor,
   cardTag, describeFeature,
   landUsePercent, waterUsePercent,
   fillIcons, fillVars,

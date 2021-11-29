@@ -1,5 +1,5 @@
 use crate::consts;
-use crate::kinds::OutputMap;
+use crate::kinds::{Output, OutputMap};
 use serde::Serialize;
 
 #[cfg(not(feature = "static_development"))]
@@ -38,14 +38,27 @@ impl Region {
         self.base_habitability
     }
 
+    pub fn income_level(&self) -> usize {
+        match self.income {
+            Income::Low => 0,
+            Income::LowerMiddle => 1,
+            Income::UpperMiddle => 2,
+            Income::High => 3,
+        }
+    }
+
     pub fn adjusted_income(&self) -> f32 {
-        let income = match self.income {
-            Income::Low => 0.,
-            Income::LowerMiddle => 1.,
-            Income::UpperMiddle => 2.,
-            Income::High => 3.,
-        };
+        let income = self.income_level() as f32;
         income + self.development
+    }
+
+    pub fn demand_level(&self, output: &Output) -> usize {
+        let demand = self.demand();
+        if let Some(idx) = consts::OUTPUT_DEMAND.iter().position(|m| m[*output] >= demand[*output]) {
+            idx + 1
+        } else {
+            consts::OUTPUT_DEMAND.len() + 1
+        }
     }
 
     pub fn update_pop(&mut self, year: f32) {
@@ -72,12 +85,7 @@ impl Region {
 
     pub fn demand(&self) -> OutputMap<f32> {
         let mut demand = outputs!();
-        let idx = match self.income {
-            Income::Low => 0,
-            Income::LowerMiddle => 1,
-            Income::UpperMiddle => 2,
-            Income::High => 3,
-        };
+        let idx = self.income_level();
         if idx < 3 {
             let upper_demand = consts::OUTPUT_DEMAND[idx+1];
             for (k, v_a) in consts::OUTPUT_DEMAND[idx].items() {

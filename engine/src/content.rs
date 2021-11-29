@@ -21,16 +21,19 @@ pub fn world(difficulty: Difficulty) -> World {
             world.year = 1990;
             world.extinction_rate = 0.0;
             world.temperature = 0.39;
+            world.base_outlook = 20.0;
         },
         Difficulty::Normal => {
             world.year = 2022;
             world.extinction_rate = 0.0;
             world.temperature = 1.289;
+            world.base_outlook = 20.0;
         },
         Difficulty::Hard => {
             world.year = 2035;
             world.extinction_rate = 0.0;
             world.temperature = 1.623;
+            world.base_outlook = 20.0;
         }
     }
     world
@@ -44,9 +47,9 @@ pub fn regions() -> Vec<Region> {
             name: "Eastern Africa",
             income: Income::Low,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 468849237.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -55,9 +58,9 @@ pub fn regions() -> Vec<Region> {
             name: "Caribbean",
             income: Income::High,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 43977555.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -66,9 +69,9 @@ pub fn regions() -> Vec<Region> {
             name: "South-eastern Asia",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 681491532.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -77,9 +80,9 @@ pub fn regions() -> Vec<Region> {
             name: "Central Africa",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 190463603.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -88,9 +91,9 @@ pub fn regions() -> Vec<Region> {
             name: "Northern America",
             income: Income::High,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 373318358.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -99,9 +102,9 @@ pub fn regions() -> Vec<Region> {
             name: "Northern Europe",
             income: Income::High,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 106951178.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -110,9 +113,9 @@ pub fn regions() -> Vec<Region> {
             name: "Southern Asia",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 1983914039.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -121,9 +124,9 @@ pub fn regions() -> Vec<Region> {
             name: "Central America",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 183739076.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -132,9 +135,9 @@ pub fn regions() -> Vec<Region> {
             name: "Oceania",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 12788202.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -143,9 +146,9 @@ pub fn regions() -> Vec<Region> {
             name: "Southern Africa",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 69191678.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -154,9 +157,9 @@ pub fn regions() -> Vec<Region> {
             name: "Northern Africa",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 254985181.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -165,9 +168,9 @@ pub fn regions() -> Vec<Region> {
             name: "Australasia",
             income: Income::High,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 30966994.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -176,9 +179,9 @@ pub fn regions() -> Vec<Region> {
             name: "Eastern Europe",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 291862973.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -187,9 +190,9 @@ pub fn regions() -> Vec<Region> {
             name: "Southern America",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 437694436.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -198,9 +201,9 @@ pub fn regions() -> Vec<Region> {
             name: "Western Europe",
             income: Income::High,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 196908712.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -209,9 +212,9 @@ pub fn regions() -> Vec<Region> {
             name: "Western Africa",
             income: Income::Low,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 423239061.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -220,9 +223,9 @@ pub fn regions() -> Vec<Region> {
             name: "Southern Europe",
             income: Income::High,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 151644503.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -231,9 +234,9 @@ pub fn regions() -> Vec<Region> {
             name: "Central Asia",
             income: Income::LowerMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 76474800.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -242,9 +245,9 @@ pub fn regions() -> Vec<Region> {
             name: "Western Asia",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 288359967.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         },
@@ -253,9 +256,9 @@ pub fn regions() -> Vec<Region> {
             name: "Eastern Asia",
             income: Income::UpperMiddle,
             development: 0.0,
-            outlook: 50.0,
+            outlook: 10.0,
             population: 1686247807.0,
-            base_habitability: 100.0,
+            base_habitability: 10.0,
             seceded: false,
             flags: vec![]
         }
@@ -2512,9 +2515,9 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::AutoClick(137, 75.0),
+                Effect::AutoClick(136, 75.0),
                 Effect::AutoClick(127, 75.0),
-                Effect::AutoClick(140, 75.0),
+                Effect::AutoClick(139, 75.0),
                 Effect::AutoClick(18, 75.0)
             ],
             kind: ProjectType::Policy,
@@ -3923,13 +3926,13 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::GreaterEqual, 60.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
@@ -3951,16 +3954,9 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Likely,
-                    conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
-                        Condition::RegionFlag("riots".to_string())
-                    ]
-                },
-                Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 25.0),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 1.0),
                         Condition::RegionFlag("riots".to_string())
                     ]
                 }
@@ -3993,7 +3989,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 1.0),
                         Condition::RegionFlag("protests".to_string()),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
@@ -4038,17 +4034,10 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Likely,
-                    conditions: vec![
-                        Condition::RegionFlag("revolts".to_string()),
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0)
-                    ]
-                },
-                Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::RegionFlag("revolts".to_string()),
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 15.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 1.0)
                     ]
                 }
             ],
@@ -4090,7 +4079,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(85),
                 Effect::AddEvent(73),
-                Effect::AddEvent(141)
+                Effect::AddEvent(140)
             ],
             probabilities: vec![
                 Probability {
@@ -4136,8 +4125,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.05),
-                Effect::Output(Output::PlantCalories, -0.02),
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
+                Effect::Output(Output::PlantCalories, -0.02)
             ],
             probabilities: vec![
                 Probability {
@@ -4490,13 +4478,13 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
@@ -5089,9 +5077,9 @@ pub fn events() -> Vec<Event> {
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 1.0),
                         Condition::RegionFlag("riots".to_string()),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
@@ -5217,13 +5205,13 @@ pub fn events() -> Vec<Event> {
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
@@ -5429,7 +5417,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::AddEvent(52),
-                Effect::AddEvent(135)
+                Effect::AddEvent(134)
             ],
             probabilities: vec![
                 Probability {
@@ -5883,7 +5871,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -5.0)
+                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -6017,14 +6005,14 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 10.0),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 1.0),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 30.0),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 2.0),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -6048,7 +6036,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 20.0),
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 0.),
                         Condition::RegionFlag("revolts".to_string())
                     ]
                 }
@@ -6224,13 +6212,13 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0)
                     ]
@@ -6404,7 +6392,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -3.0),
+                Effect::LocalVariable(LocalVariable::Outlook, -2.0),
                 Effect::OutputForFeature(ProcessFeature::IsNuclear, -0.05)
             ],
             probabilities: vec![
@@ -6580,19 +6568,19 @@ pub fn events() -> Vec<Event> {
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 4.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.5)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Unlikely,
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 3.0)
                     ]
@@ -6610,7 +6598,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(137)
+                Effect::AddEvent(136)
             ],
             probabilities: vec![
                 Probability {
@@ -6860,26 +6848,26 @@ pub fn events() -> Vec<Event> {
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Unlikely,
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
                         Condition::ProjectStatus(72, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Likely,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Unlikely,
+                    likelihood: Likelihood::Rare,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.5)
                     ]
@@ -6897,7 +6885,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(140)
+                Effect::AddEvent(139)
             ],
             probabilities: vec![
                 Probability {
@@ -7546,17 +7534,10 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Likely,
-                    conditions: vec![
-                        Condition::RegionFlag("protests".to_string()),
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 40.0)
-                    ]
-                },
-                Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::RegionFlag("protests".to_string()),
-                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 60.0)
+                        Condition::LocalVariable(LocalVariable::Outlook, Comparator::LessEqual, 1.0)
                     ]
                 }
             ],
@@ -7613,7 +7594,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
-                Effect::AddEvent(139)
+                Effect::AddEvent(138)
             ],
             probabilities: vec![
                 Probability {
@@ -7631,28 +7612,6 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 134,
-            name: "Sewage Overflow",
-            phase: Phase::WorldMain,
-            locked: true,
-            regional: false,
-            effects: vec![
-                Effect::LocalVariable(LocalVariable::Outlook, -1.0)
-            ],
-            probabilities: vec![
-                Probability {
-                    likelihood: Likelihood::Random,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
-                    ]
-                }
-            ],
-            prob_modifier: 1.0,
-            branches: vec![],
-            intensity: 0,
-            aspect: None
-        },
-        Event {
-            id: 135,
             name: "Ocean Microorganisms",
             phase: Phase::WorldMain,
             locked: true,
@@ -7682,7 +7641,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 136,
+            id: 135,
             name: "SRM - Monsoon",
             phase: Phase::WorldMain,
             locked: false,
@@ -7705,7 +7664,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 137,
+            id: 136,
             name: "The Wretched Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -7733,7 +7692,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 138,
+            id: 137,
             name: "Lawns to Native Grasses",
             phase: Phase::WorldMain,
             locked: false,
@@ -7750,7 +7709,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 139,
+            id: 138,
             name: "Doom Cult - Acceleration",
             phase: Phase::WorldMain,
             locked: true,
@@ -7774,7 +7733,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 140,
+            id: 139,
             name: "Meat Militia Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -7797,7 +7756,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 141,
+            id: 140,
             name: "Heatwave Elder Deaths",
             phase: Phase::WorldMain,
             locked: true,
@@ -7820,7 +7779,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 142,
+            id: 141,
             name: "Game Over",
             phase: Phase::BreakStart,
             locked: false,
@@ -7842,7 +7801,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 143,
+            id: 142,
             name: "Success",
             phase: Phase::EndStart,
             locked: false,
@@ -7864,7 +7823,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 144,
+            id: 143,
             name: "Clean Air",
             phase: Phase::WorldMain,
             locked: false,

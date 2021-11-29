@@ -107,7 +107,7 @@ impl Effect {
                     },
                     WorldVariable::ExtinctionRate => state.world.byproduct_mods.biodiversity -= *change,
                     WorldVariable::Outlook => {
-                        state.world.change_outlook(*change);
+                        state.world.base_outlook += *change;
                         check_game_over(state);
                     }
                     WorldVariable::Temperature => state.world.temperature_modifier += *change,
@@ -217,13 +217,13 @@ impl Effect {
             },
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut state.world.regions {
-                    region.outlook += (mult * region.demand()[*output]).floor();
+                    region.outlook += (mult * region.demand_level(output) as f32).floor();
                 }
                 check_game_over(state);
             },
             Effect::IncomeOutlookChange(mult) => {
                 for region in &mut state.world.regions {
-                    region.outlook += (mult * region.adjusted_income()).floor();
+                    region.outlook += (mult * region.income_level() as f32).floor();
                 }
                 check_game_over(state);
             },
@@ -261,7 +261,7 @@ impl Effect {
                         state.world.co2_emissions -= *change * 1e15; // Apply immediately
                     },
                     WorldVariable::ExtinctionRate => state.world.byproduct_mods.biodiversity += *change,
-                    WorldVariable::Outlook => state.world.change_outlook(-*change),
+                    WorldVariable::Outlook => state.world.base_outlook -= *change,
                     WorldVariable::Temperature => state.world.temperature_modifier -= *change,
                     WorldVariable::WaterStress => state.world.water_stress -= *change,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise -= *change,
@@ -318,12 +318,12 @@ impl Effect {
             },
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut state.world.regions {
-                    region.outlook -= (mult * region.demand()[*output]).round();
+                    region.outlook -= (mult * region.demand_level(output) as f32).floor();
                 }
             },
             Effect::IncomeOutlookChange(mult) => {
                 for region in &mut state.world.regions {
-                    region.outlook -= (mult * region.adjusted_income()).round();
+                    region.outlook -= (mult * region.income_level() as f32).floor();
                 }
             },
             Effect::ProjectCostModifier(id, change) => {

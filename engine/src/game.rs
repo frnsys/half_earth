@@ -41,6 +41,10 @@ impl GameInterface {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
     }
 
+    pub fn world_outlook(&self) -> f32 {
+        self.game.state.world.outlook()
+    }
+
     pub fn change_political_capital(&mut self, amount: isize) {
         self.game.state.political_capital += amount;
 
@@ -128,10 +132,6 @@ impl GameInterface {
             _ => false
         })).collect();
         Ok(serde_wasm_bindgen::to_value(&autoclicks)?)
-    }
-
-    pub fn total_income_level(&self) -> f32 {
-        self.game.state.world.regions.iter().map(|r| r.adjusted_income()).sum()
     }
 
     pub fn industry_demand(&self, industry_id: usize) -> f32 {

@@ -12,25 +12,33 @@
           <th><img src="/assets/icons/pips/political_capital.png"></th>
         </tr>
         <tr>
-          <td>Temperature</td>
+          <td><img :src="icons.warming"> Temperature</td>
           <td>{{state.cycleStartState.temperature.toFixed(1)}}</td>
           <td>{{state.gameState.world.temperature.toFixed(1)}}</td>
           <td>{{sign(politicalCapital.temperature)}}</td>
         </tr>
         <tr>
-          <td>Contentedness</td>
-          <td>{{state.cycleStartState.contentedness.toFixed(0)}}</td>
-          <td>{{state.gameState.contentedness.toFixed(0)}}</td>
+          <td><img :src="icons.contentedness"> Contentedness</td>
+          <td>
+            <div class="intensity-pip stat-pip" :style="{background:contentedness.start.color}" v-for="i in contentedness.start.intensity"></div>
+          </td>
+          <td>
+            <div class="intensity-pip stat-pip" :style="{background:contentedness.end.color}" v-for="i in contentedness.end.intensity"></div>
+          </td>
           <td>{{sign(politicalCapital.contentedness)}}</td>
         </tr>
         <tr>
-          <td>Extinction Rate</td>
-          <td>{{state.cycleStartState.extinctionRate.toFixed(0)}}</td>
-          <td>{{state.gameState.world.extinction_rate.toFixed(0)}}</td>
+          <td><img :src="icons.extinction_rate"> Extinction Rate</td>
+          <td>
+            <div class="intensity-pip stat-pip" :style="{background:extinction.start.color}" v-for="i in extinction.start.intensity"></div>
+          </td>
+          <td>
+            <div class="intensity-pip stat-pip" :style="{background:extinction.end.color}" v-for="i in extinction.end.intensity"></div>
+          </td>
           <td>{{sign(politicalCapital.extinctionRate)}}</td>
         </tr>
         <tr>
-          <td>Emissions</td>
+          <td><img :src="icons.emissions"> Emissions</td>
           <td>{{state.cycleStartState.emissions.toFixed(0)}}</td>
           <td>{{state.gameState.emissions.toFixed(0)}}</td>
           <td>{{sign(politicalCapital.emissions)}}</td>
@@ -72,10 +80,13 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import display from 'lib/display';
 import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
 
 const PC_PER_COMPLETED_PROJECT = 20;
+const CONTENTEDNESS_PC = [0, 0, 5, 20, 40];
+const EXTINCTION_PC = [40, 20, 0, -5, -5];
 
 export default {
   mixins: [EventsMixin],
@@ -114,19 +125,47 @@ export default {
         this.politicalCapitalChange += bounty;
         return {text, bounty};
       });
+    },
+    contentedness() {
+      let start = display.scaleIntensity(state.cycleStartState.contentedness, 'world_outlook');
+      let end = display.scaleIntensity(state.gameState.contentedness, 'world_outlook');
+      return {
+        start: {
+          intensity: start,
+          color: display.intensityColor(start, true)
+        },
+        end: {
+          intensity: end,
+          color: display.intensityColor(end, true)
+        }
+      }
+    },
+    extinction() {
+      let start = display.scaleIntensity(state.cycleStartState.extinctionRate, 'extinction');
+      let end = display.scaleIntensity(state.gameState.world.extinction_rate, 'extinction');
+      return {
+        start: {
+          intensity: start,
+          color: display.intensityColor(start, false)
+        },
+        end: {
+          intensity: end,
+          color: display.intensityColor(end, false)
+        }
+      }
     }
   },
   methods: {
     calculateChanges() {
       this.politicalCapitalChange = 0;
       let temperatureChange = parseFloat(state.gameState.world.temperature.toFixed(1)) - parseFloat(state.cycleStartState.temperature.toFixed(1));
-      let contentednessChange = parseFloat(state.gameState.contentedness.toFixed(0)) - parseFloat(state.cycleStartState.contentedness.toFixed(0));
-      let extinctionRateChange = state.gameState.world.extinction_rate - state.cycleStartState.extinctionRate;
+      let contentednessChange = CONTENTEDNESS_PC[this.contentedness.end.intensity];
+      let extinctionRateChange = EXTINCTION_PC[this.extinction.end.intensity];
       let emissionsChange = state.gameState.emissions - state.cycleStartState.emissions;
       this.politicalCapital = {
         temperature: Math.round(temperatureChange * -10),
-        contentedness: Math.round(contentednessChange/3),
-        extinctionRate: Math.round(-extinctionRateChange),
+        contentedness: Math.round(contentednessChange),
+        extinctionRate: Math.round(extinctionRateChange),
         emissions: Math.round(-emissionsChange),
       };
       this.politicalCapitalChange += this.politicalCapital.temperature;
@@ -180,9 +219,6 @@ export default {
 }
 .report td,
 .report th {
-  text-align: right;
-}
-.report td:first-child {
   text-align: left;
 }
 .report button {

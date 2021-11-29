@@ -5,6 +5,7 @@ use crate::regions::{Region, Income};
 #[derive(Default, Serialize, Clone)]
 pub struct World {
     pub year: usize,
+    pub base_outlook: f32,
     pub extinction_rate: f32,
     pub temperature: f32,     // global temp anomaly, C
     pub precipitation: f32,   // global precip avg
@@ -34,14 +35,15 @@ impl World {
         }
     }
 
+    pub fn outlook(&self) -> f32 {
+        let region_outlook = self.regions.iter().map(|r| r.outlook).sum::<f32>()/self.regions.len() as f32;
+        self.base_outlook + region_outlook
+    }
+
     pub fn develop_regions(&mut self) {
         for region in &mut self.regions {
             region.develop();
         }
-    }
-
-    pub fn outlook(&self) -> f32 {
-        self.regions.iter().map(|r| r.outlook).sum::<f32>()
     }
 
     pub fn habitability(&self) -> f32 {
@@ -62,12 +64,6 @@ impl World {
     pub fn change_population(&mut self, percent: f32) {
         for region in &mut self.regions {
             region.population *= (1. + percent) * (1. + self.population_growth_modifier);
-        }
-    }
-
-    pub fn change_outlook(&mut self, amount: f32) {
-        for region in &mut self.regions {
-            region.outlook += amount;
         }
     }
 

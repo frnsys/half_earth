@@ -19,7 +19,7 @@ plots = {
     'Population (b)': ['Population (b)', 'Pop Ref (2100, bn people)'],
     'Events': ['Events'],
     'Temperature': ['Temperature'],
-    'Outlook': ['Outlook'],
+    'World Outlook': ['World Outlook'],
     'Habitability': ['Habitability'],
     'Extinction Rate': ['Extinction Rate'],
     'CO2eq Emissions': [
@@ -99,14 +99,24 @@ plots = {
 
 outputs = ['Electricity', 'Fuel', 'PlantCalories', 'AnimalCalories']
 process_cols_by_output = defaultdict(lambda: defaultdict(list))
+region_outlook_cols = []
 for col in df.columns:
-    for o in outputs:
-        if col.startswith('{}:'.format(o)):
-            _, process, category = col.split(':')
-            process_cols_by_output[o][category].append(col)
+    if col.startswith('Outlook:'):
+        region_outlook_cols.append(col)
+    else:
+        for o in outputs:
+            if col.startswith('{}:'.format(o)):
+                _, process, category = col.split(':')
+                process_cols_by_output[o][category].append(col)
 for output, categories in process_cols_by_output.items():
     for category, cols in categories.items():
         plots['Process-{}-{}'.format(output, category)] = cols
+
+chunk_size = 5
+for i, idx in enumerate(range(0, len(region_outlook_cols), chunk_size)):
+    slice_ = region_outlook_cols[idx:idx+chunk_size]
+    if slice_:
+        plots['Regional Outlooks {}'.format(i)] =  slice_
 
 all_icon_events = set()
 icon_event_history = report.pop('icon_events')
@@ -130,7 +140,13 @@ for i, icon_events in enumerate(icon_event_history):
     icon_events_by_year[year] = {k: counts[k] for k in all_icon_events}
 icon_events_df = pd.DataFrame.from_dict(icon_events_by_year, orient='index')
 df = df.set_index('Year').join(icon_events_df)
-plots['Icon Events'] = list(all_icon_events)
+
+chunk_size = 5
+all_icon_events = list(all_icon_events)
+for i, idx in enumerate(range(0, len(all_icon_events), chunk_size)):
+    slice_ = all_icon_events[idx:idx+chunk_size]
+    if slice_:
+        plots['Icon Events {}'.format(i)] =  slice_
 
 files = []
 for title, cols in plots.items():
@@ -193,11 +209,14 @@ img {
 }
 .meta {
     text-align: center;
+    position: sticky;
+    top: 0;
 }
 .tag {
     border: 1px solid;
     border-radius: 0.2em;
     display: inline-flex;
+    background: #fff;
 }
 .tag > div:first-child {
     background: #333;
