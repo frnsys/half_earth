@@ -205,7 +205,20 @@ function resourceRankings() {
   return resourceRankings;
 }
 
+function formatNumber(val) {
+  if (val >= 1e9) {
+    return `${(val/1e9).toFixed(1)}b`;
+  } else if (val >= 1e6) {
+    return `${(val/1e6).toFixed(1)}m`;
+  } else if (val >= 1e3) {
+    return `${(val/1e3).toFixed(1)}k`;
+  } else {
+    return val;
+  }
+}
+
 export default {co2eq, gtco2eq, output, outputs,
+  formatNumber,
   cardTag, describeFeature,
   landUsePercent, waterUsePercent,
   fillIcons, fillVars,

@@ -2,7 +2,7 @@
 <Card class="region">
   <template v-slot:header>
     <div>{{name}}</div>
-    <div>{{population.toLocaleString()}}<img :src="icons.population"></div>
+    <div>{{abbrevPopulation}}<img :src="icons.population"></div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
@@ -22,7 +22,7 @@
       <div v-for="v, k in demand" v-tip="{text: `This regions\'s demand for ${k}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}">
         <div class="card-icon">
           <img :src="icons[k]"/>
-          {{demand[k]}}
+          {{demand[k] < 1 ? '<1' : demand[k]}}
         </div>
       </div>
     </div>
@@ -72,6 +72,9 @@ export default {
     }
   },
   computed: {
+    abbrevPopulation() {
+      return display.formatNumber(this.population);
+    },
     contentedness() {
       return display.scaleIntensity(this.region.outlook, 'outlook');
     },
