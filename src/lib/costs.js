@@ -3,7 +3,8 @@ function nearestMultiple(v, base) {
 }
 
 function nextPointCost(pointsInUse) {
-  return Math.round((pointsInUse+1)**1.5);
+  // return Math.round((pointsInUse+1)**1.5);
+  return 3;
 }
 
 function banProcessCost(p) {
