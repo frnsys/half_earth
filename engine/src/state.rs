@@ -159,7 +159,7 @@ impl State {
             _ => false
         }) {
             let prev_progress = project.progress;
-            if prev_progress > 0. {
+            if prev_progress > 0. && project.gradual {
                 for effect in &project.effects {
                     remove_effects.push((effect.clone() * project.progress, None));
                 }
