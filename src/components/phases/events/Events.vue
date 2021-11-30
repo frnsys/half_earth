@@ -233,9 +233,11 @@ export default {
           /* region, */
         /* }); */
 
-        let outlook = ev.intensity * 0.05;
+        // let outlook = ev.intensity * 0.05;
+        let outlook = ev.intensity * 0.5;
         let pings = ev.intensity;
-        game.changeLocalOutlook(-outlook, regionId);
+        // game.changeLocalOutlook(-outlook, regionId);
+        game.changeHabitability(-outlook, regionId);
         let args = {icon: 'discontent', hexIdx, ping: true, iconSize: 0.35};
         this.globe.show(args);
         if (pings > 1) {

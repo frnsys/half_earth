@@ -65,6 +65,11 @@ function changeLocalOutlook(amount, regionId) {
   updateState();
 }
 
+function changeHabitability(amount, regionId) {
+  game.change_habitability(amount, regionId);
+  updateState();
+}
+
 // Set point allocation for a project
 function setProjectPoints(projectId, points) {
   game.set_project_points(projectId, points);
@@ -200,6 +205,7 @@ export default {
   setPriority,
   changePoliticalCapital,
   changeLocalOutlook,
+  changeHabitability,
   checkRequests,
   banProcess, unbanProcess,
   promoteProcess, unpromoteProcess,

@@ -57,6 +57,10 @@ impl GameInterface {
         self.game.state.world.regions[region_id].outlook += amount as f32;
     }
 
+    pub fn change_habitability(&mut self, amount: isize, region_id: usize) {
+        self.game.state.world.regions[region_id].base_habitability += amount as f32;
+    }
+
     pub fn set_project_points(&mut self, project_id: usize, points: usize) {
         self.game.state.projects[project_id].set_points(points);
     }

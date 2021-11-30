@@ -306,7 +306,8 @@ fn main() {
                     year_icon_events.push((ev.name.to_string(), Some(region.name.to_string())));
 
                     // Apply outlook effect
-                    region.outlook -= ev.intensity as f32 * 0.05;
+                    // region.outlook -= ev.intensity as f32 * 0.05;
+                    region.base_habitability -= ev.intensity as f32 * 0.5;
                 },
                 None => {
                     year_icon_events.push((ev.name.to_string(), None));
