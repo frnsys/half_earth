@@ -179,8 +179,10 @@ export default {
       game.changePoliticalCapital(this.politicalCapitalChange);
 
       if (state.gameState.game_over) {
+        game.saveMeta();
         state.phase = 'BREAK';
       } else if (state.gameState.world.year >= state.endYear) {
+        game.saveMeta();
         state.phase = 'END';
       } else {
         state.phase = 'PLANNING';

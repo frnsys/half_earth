@@ -6,6 +6,7 @@ import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 // also; this needs to be re-created for each run.
 let game = GameInterface.new(Difficulty.Normal);
 state.endYear = game.state().world.year + 100;
+loadMeta();
 
 // Get the updated game state,
 // and compute some additional variables
@@ -196,11 +197,27 @@ const roll = {
   },
 }
 
+
+function saveMeta() {
+  let data = {
+    runsPlayed: state.gameState.runs,
+  };
+  localStorage.setItem('gameData', JSON.stringify(data));
+}
+
+function loadMeta() {
+  let data = localStorage.getItem('gameData');
+  if (data !== null) {
+    let parsed = JSON.parse(data);
+    game.set_runs_played(parsed.runsPlayed || 0);
+  }
+}
+
 updateState();
 updateResourceRankings();
 
 export default {
-  newRun, step,
+  newRun, saveMeta, step,
   updateState, setTgav,
   setPriority,
   changePoliticalCapital,

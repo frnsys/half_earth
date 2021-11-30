@@ -41,6 +41,10 @@ impl GameInterface {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
     }
 
+    pub fn set_runs_played(&mut self, n: usize) {
+        self.game.state.runs = n;
+    }
+
     pub fn world_outlook(&self) -> f32 {
         self.game.state.world.outlook()
     }
