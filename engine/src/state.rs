@@ -1,3 +1,4 @@
+use crate::surface;
 use crate::npcs::{NPC, NPCRelation};
 use crate::world::World;
 use crate::game::Difficulty;
@@ -116,6 +117,8 @@ impl State {
         for project in &mut state.projects {
             project.update_cost(state.world.year, &state.output_demand);
         }
+
+        state.update_region_temps();
 
         state
     }
@@ -436,6 +439,32 @@ impl State {
             npc.relation() == NPCRelation::Ally
         } else {
             false
+        }
+    }
+
+    pub fn set_tgav(&mut self, tgav: f32) {
+        self.world.temperature = tgav + self.world.temperature_modifier;
+        self.update_region_temps();
+    }
+
+    pub fn update_region_temps(&mut self) {
+        let temps: Vec<f32> = surface::apply_pscl(&surface::TEMP_PATTERN_W, &surface::TEMP_PATTERN_B, surface::BASE_TEMP + self.world.temperature).collect();
+        let precips: Vec<f32> = surface::apply_pscl(&surface::PRECIP_PATTERN_W, &surface::PRECIP_PATTERN_B, surface::BASE_TEMP + self.world.temperature).collect();
+        for region in &mut self.world.regions {
+            // We assert when generating the pattern idxs that they are not empty
+            let local_temps: Vec<f32> = region.pattern_idxs.iter().map(|idx| &temps[*idx]).cloned().collect();
+            let local_precips: Vec<f32> = region.pattern_idxs.iter().map(|idx| &precips[*idx]).cloned().collect();
+            region.temp_lo = local_temps.iter().fold(f32::INFINITY, |a, &b| a.min(b));
+            region.temp_hi = local_temps.iter().fold(-f32::INFINITY, |a, &b| a.max(b));
+
+            // In kg/m2/s, convert to cm/year
+            // 1 kg/m2/s = 1 mm/s
+            // 31536000 seconds per year, which yields mm/year
+            region.precip_lo = local_precips.iter().fold(f32::INFINITY, |a, &b| a.min(b));
+            region.precip_hi = local_precips.iter().fold(-f32::INFINITY, |a, &b| a.max(b));
+            region.precip_lo *= 31536000. / 10.;
+            region.precip_hi *= 31536000. / 10.;
+            // region.temp = region.pattern_idxs.iter().map(|idx| &temps[*idx]).sum::<f32>()/region.pattern_idxs.len() as f32;
         }
     }
 }

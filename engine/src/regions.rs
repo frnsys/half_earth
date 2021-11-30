@@ -28,14 +28,25 @@ pub struct Region {
     /// E.g. negative events such as hurricanes should subtract
     /// from this value
     pub base_habitability: f32,
+
+    /// Local temperature and precipitation
+    pub temp_lo: f32,
+    pub temp_hi: f32,
+    pub precip_lo: f32,
+    pub precip_hi: f32,
+
+    #[serde(skip_serializing)]
+    pub pattern_idxs: Vec<usize>,
 }
 
 impl Region {
     pub fn habitability(&self) -> f32 {
-        // TODO Factors:
-        // - regional temp, precip, sea_level_rise
-        // - number of negative events
-        self.base_habitability
+        // Factors:
+        // - [X] regional temp
+        // - [ ] precip TODO
+        // - [ ] sea_level_rise TODO
+        // - [X] number of negative events
+        self.base_habitability - f32::max(0., self.temp_hi - 38.)
     }
 
     pub fn income_level(&self) -> usize {

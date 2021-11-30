@@ -6,6 +6,15 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
+      <div class="card-tack-ur">
+        <div class="region-stat" v-tip="{icon: 'warming', text: 'This region\'s current temperature range.'}">
+          <img :src="icons.warming">{{Math.round(temp_lo)}}-{{Math.round(temp_hi)}}°C
+        </div>
+        <br />
+        <div class="region-stat" v-tip="{icon: 'precipitation', text: 'This region\'s current precipitation range.'}">
+          <img :src="icons.precipitation">{{Math.round(precip_lo)}}-{{Math.round(precip_hi)}}cm/yr
+        </div>
+      </div>
   </template>
   <template v-slot:body>
     <div class="space-even">
@@ -51,6 +60,7 @@ export default {
     IntensityIcon,
   },
   data() {
+    console.log(this.region);
     let data = REGIONS[this.region.id];
     return {
       ...data,
@@ -105,3 +115,22 @@ export default {
   }
 }
 </script>
+
+<style>
+.region .card-tack-ur {
+  text-align: right;
+}
+.region-stat {
+  color: #fff;
+  background: rgba(25,25,25,0.9);
+  padding: 0 0.2em 0 0;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  margin-bottom: 0.1em;
+  display: inline-block;
+}
+.region-stat img {
+  height: 16px;
+  vertical-align: middle;
+}
+</style>

@@ -60,16 +60,16 @@ patterns = {
 
 # Create an include file for Rust
 with open('out/scale_patterns.in', 'w') as f:
-    rs_temp_w = 'const TEMP_PATTERN_W: [f32; {size}] = [{vals}];'.format(
+    rs_temp_w = 'pub const TEMP_PATTERN_W: [f32; {size}] = [{vals}];'.format(
             size=patterns['temp']['w'].size,
             vals='{}'.format(list(patterns['temp']['w'].flatten()))[1:-1])
-    rs_temp_b = 'const TEMP_PATTERN_B: [f32; {size}] = [{vals}];'.format(
+    rs_temp_b = 'pub const TEMP_PATTERN_B: [f32; {size}] = [{vals}];'.format(
             size=patterns['temp']['b'].size,
             vals='{}'.format(list(patterns['temp']['b'].flatten()))[1:-1])
-    rs_precip_w = 'const PRECIP_PATTERN_W: [f32; {size}] = [{vals}];'.format(
+    rs_precip_w = 'pub const PRECIP_PATTERN_W: [f32; {size}] = [{vals}];'.format(
             size=patterns['precip']['w'].size,
             vals='{}'.format(list(patterns['precip']['w'].flatten()))[1:-1])
-    rs_precip_b = 'const PRECIP_PATTERN_B: [f32; {size}] = [{vals}];'.format(
+    rs_precip_b = 'pub const PRECIP_PATTERN_B: [f32; {size}] = [{vals}];'.format(
             size=patterns['precip']['b'].size,
             vals='{}'.format(list(patterns['precip']['b'].flatten()))[1:-1])
     f.write('\n'.join([rs_temp_w, rs_temp_b, rs_precip_w, rs_precip_b]))

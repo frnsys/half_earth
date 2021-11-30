@@ -5,6 +5,7 @@ export default {
   emissions: require('/assets/icons/emissions.png'),
   warming: require('/assets/icons/warming.png'),
   biodiversity: require('/assets/icons/biodiversity.png'),
+  precipitation: require('/assets/icons/precipitation.png'),
   land: require('/assets/icons/land.png'),
   energy: require('/assets/icons/energy.png'),
   labor: require('/assets/icons/labor.png'),

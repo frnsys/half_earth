@@ -122,7 +122,7 @@ impl GameInterface {
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {
-        self.game.state.world.temperature = tgav + self.game.state.world.temperature_modifier;
+        self.game.state.set_tgav(tgav);
     }
 
     pub fn set_priority(&mut self, priority: Priority) {

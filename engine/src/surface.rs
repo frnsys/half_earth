@@ -14,7 +14,7 @@ const STRIDE: usize = 3; // For r,g,b
 const RADIUS: usize = 3;
 const INTENSITY: f32 = 25.;
 
-const BASE_TEMP: f32 = 15.;
+pub const BASE_TEMP: f32 = 15.;
 
 // Technically should be u8
 // but we need larger numbers,
@@ -113,8 +113,8 @@ impl EarthSurface {
         // so no scaling necessary.
         // Add 15 to tgav to get actual temperature (this is what `hectorui` does).
         let global_temp = BASE_TEMP + tgav;
-        for (idx, ((temp, precip), biome)) in pscl_apply(&TEMP_PATTERN_W, &TEMP_PATTERN_B, global_temp)
-            .zip(pscl_apply(&PRECIP_PATTERN_W, &PRECIP_PATTERN_B, global_temp))
+        for (idx, ((temp, precip), biome)) in apply_pscl(&TEMP_PATTERN_W, &TEMP_PATTERN_B, global_temp)
+            .zip(apply_pscl(&PRECIP_PATTERN_W, &PRECIP_PATTERN_B, global_temp))
             .zip(self.biomes.iter_mut()).enumerate() {
                 // In kg/m2/s, convert to cm/year
                 // 1 kg/m2/s = 1 mm/s
@@ -269,10 +269,10 @@ This approach is what `hectorui` uses.
 Jason Evanoff, Chris Vernon, Stephanie Pennington, & Robert Link. (2021, May 13). JGCRI/hectorui: v1.2.0 PNNL web feature (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.4758524
 
 Ported from:
-- <https://rdrr.io/github/JGCRI/fldgen/man/pscl_apply.html>
+- <https://rdrr.io/github/JGCRI/fldgen/man/apply_pscl.html>
 - <https://rdrr.io/github/JGCRI/fldgen/src/R/meanfield.R>
 
-The original `pscl_apply` takes a vector for `tgav`, where each
+The original `apply_pscl` takes a vector for `tgav`, where each
 value is the temperature anomaly for one year. We only need to
 calculate one year at a time, so for simplicity this takes a single
 value for `tgav`.
@@ -281,7 +281,7 @@ Important note: If using `temperature.Tgav` from Hector,
 add 15 to it (the base temperature) before passing it here.
 This is what they do in `hectorui`.
 */
-fn pscl_apply<'a>(pscl_w: &'a [f32], pscl_b: &'a [f32], tgav: f32) -> impl Iterator<Item=f32> + 'a {
+pub fn apply_pscl<'a>(pscl_w: &'a [f32], pscl_b: &'a [f32], tgav: f32) -> impl Iterator<Item=f32> + 'a {
     pscl_w.iter().zip(pscl_b).map(move |(w_i, b_i)| w_i * tgav + b_i)
 }
 
@@ -292,12 +292,12 @@ mod test {
     use float_cmp::approx_eq;
 
     #[test]
-    fn test_pscl_apply() {
+    fn test_apply_pscl() {
         let pscl_w: [f32; 6] = [ 0., 1., 0., 0.5, 1.0, 0.];
         let pscl_b: [f32; 6] = [-1., 1., 0., 0., 0.5, 0.5];
         let tgav = 8.;
         let expected = vec![-1., 9., 0., 4., 8.5, 0.5];
-        let map: Vec<f32> = pscl_apply(&pscl_w, &pscl_b, tgav).collect();
+        let map: Vec<f32> = apply_pscl(&pscl_w, &pscl_b, tgav).collect();
 
         assert!(map.len() == expected.len());
         assert!(map.iter().zip(expected)
