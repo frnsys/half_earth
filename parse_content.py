@@ -129,6 +129,7 @@ specs = {
         'upgrades': 'vec![]',
         'supporters': [],
         'opposers': [],
+        'active_outcome': None,
     },
     'Event': {
         'id': None,
@@ -347,6 +348,8 @@ def define_condition(cond):
             cond_type, ', '.join(cond_params))
 
 def define_field(k, v, item):
+    if k == 'active_outcome':
+        return 'active_outcome: None'
     if k == 'income_level':
         return 'income: Income::{}'.format(v.replace('-', ''))
     if k == 'year':

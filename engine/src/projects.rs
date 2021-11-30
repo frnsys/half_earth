@@ -92,6 +92,7 @@ pub struct Project {
     #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
     pub upgrades: Vec<Upgrade>,
+    pub active_outcome: Option<usize>,
 
     pub supporters: Vec<usize>,
     pub opposers: Vec<usize>,
@@ -226,6 +227,7 @@ mod test {
                     conditions: vec![]
                 }
             }],
+            active_outcome: None,
             opposers: vec![],
             supporters: vec![],
         };
@@ -270,6 +272,7 @@ mod test {
                     conditions: vec![]
                 }
             }],
+            active_outcome: None,
             opposers: vec![],
             supporters: vec![],
         };
@@ -318,6 +321,7 @@ mod test {
                     conditions: vec![]
                 }
             }],
+            active_outcome: None,
             opposers: vec![],
             supporters: vec![],
         };

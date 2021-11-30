@@ -34,7 +34,7 @@ struct Report {
 }
 
 impl Scenario {
-    fn apply(&self, game: &mut Game) {
+    fn apply(&self, game: &mut Game, rng: &mut SmallRng) {
         match self {
             Scenario::BanFossilFuels => {
                 for process in &mut game.state.processes {
@@ -52,22 +52,22 @@ impl Scenario {
             },
             Scenario::Veganism => {
                 let p_id = find_project_id(game, "Veganism Mandate");
-                game.start_project(p_id);
+                game.start_project(p_id, rng);
             },
             Scenario::Vegetarianism => {
                 let p_id = find_project_id(game, "Vegetarian Mandate");
-                game.start_project(p_id);
+                game.start_project(p_id, rng);
             },
             Scenario::ProtectHalf => {
                 let p_id = find_project_id(game, "Land Protection");
-                game.start_project(p_id);
+                game.start_project(p_id, rng);
                 for _ in 0..4 {
                     game.upgrade_project(p_id);
                 }
             },
             Scenario::Electrification => {
                 let p_id = find_project_id(game, "Mass Electrification");
-                game.start_project(p_id);
+                game.start_project(p_id, rng);
                 game.state.projects[p_id].set_points(10);
             }
         }
@@ -82,6 +82,8 @@ fn find_project_id(game: &Game, name: &'static str) -> usize {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+    // let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+    let mut rng: SmallRng = SeedableRng::from_entropy();
 
     let mut scenarios = vec![];
     if args.len() > 1 {
@@ -101,8 +103,6 @@ fn main() {
 
     let difficulty = Difficulty::Normal;
     let mut game = Game::new(difficulty);
-    // let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
-    let mut rng: SmallRng = SeedableRng::from_entropy();
 
     let mut emissions = get_emissions(game.state.world.year);
     let mut report = Report {
@@ -218,7 +218,7 @@ fn main() {
         if i == report.scenario_start {
             for scenario in &report.scenarios {
                 println!("Applying Scenario: {:?}", scenario);
-                scenario.apply(&mut game);
+                scenario.apply(&mut game, &mut rng);
             }
         }
 

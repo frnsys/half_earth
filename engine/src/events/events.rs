@@ -347,6 +347,11 @@ mod test {
             outlook: 0.,
             base_habitability: 0.,
             flags: vec![],
+            temp_lo: 0.,
+            temp_hi: 0.,
+            precip_lo: 0.,
+            precip_hi: 0.,
+            pattern_idxs: vec![],
         }, Region {
             id: 1,
             name: "Test Region B",
@@ -357,6 +362,11 @@ mod test {
             outlook: 0.,
             base_habitability: 0.,
             flags: vec![],
+            temp_lo: 0.,
+            temp_hi: 0.,
+            precip_lo: 0.,
+            precip_hi: 0.,
+            pattern_idxs: vec![],
         }];
         let events = pool.roll_for_phase(Phase::Icon, &state, None, &mut rng);
 

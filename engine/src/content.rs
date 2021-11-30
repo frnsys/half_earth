@@ -1343,7 +1343,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![3],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 1,
@@ -1370,7 +1371,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 2,
@@ -1397,7 +1399,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 3,
@@ -1424,7 +1427,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 4,
@@ -1452,7 +1456,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![9],
-            opposers: vec![4]
+            opposers: vec![4],
+            active_outcome: None
         },
         Project {
             id: 5,
@@ -1490,7 +1495,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 6,
@@ -1517,7 +1523,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 7,
@@ -1585,7 +1592,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 8,
@@ -1612,7 +1620,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 9,
@@ -1639,7 +1648,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 10,
@@ -1668,7 +1678,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![4],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 11,
@@ -1716,7 +1727,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![6],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 12,
@@ -1744,7 +1756,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![4],
-            opposers: vec![7, 8]
+            opposers: vec![7, 8],
+            active_outcome: None
         },
         Project {
             id: 13,
@@ -1781,7 +1794,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![2],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 14,
@@ -1808,7 +1822,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![1]
+            opposers: vec![1],
+            active_outcome: None
         },
         Project {
             id: 15,
@@ -1835,7 +1850,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 16,
@@ -1864,7 +1880,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![7]
+            opposers: vec![7],
+            active_outcome: None
         },
         Project {
             id: 17,
@@ -1892,7 +1909,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![7]
+            opposers: vec![7],
+            active_outcome: None
         },
         Project {
             id: 18,
@@ -1940,7 +1958,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 19,
@@ -2022,7 +2041,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![4, 6],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 20,
@@ -2049,7 +2069,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![9],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 21,
@@ -2089,7 +2110,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![6],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 22,
@@ -2116,7 +2138,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![4, 6],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 23,
@@ -2153,7 +2176,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 24,
@@ -2180,7 +2204,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![0],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 25,
@@ -2207,7 +2232,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![6],
-            opposers: vec![2]
+            opposers: vec![2],
+            active_outcome: None
         },
         Project {
             id: 26,
@@ -2234,7 +2260,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 27,
@@ -2261,7 +2288,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 28,
@@ -2289,7 +2317,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![4],
-            opposers: vec![0, 7, 8]
+            opposers: vec![0, 7, 8],
+            active_outcome: None
         },
         Project {
             id: 29,
@@ -2314,7 +2343,8 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 30,
@@ -2341,7 +2371,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 31,
@@ -2368,7 +2399,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![9],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 32,
@@ -2395,7 +2427,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![0, 7],
-            opposers: vec![4]
+            opposers: vec![4],
+            active_outcome: None
         },
         Project {
             id: 33,
@@ -2420,7 +2453,8 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 34,
@@ -2447,7 +2481,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 35,
@@ -2496,7 +2531,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 36,
@@ -2524,7 +2560,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![0, 1],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 37,
@@ -2551,7 +2588,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 38,
@@ -2578,7 +2616,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 39,
@@ -2605,7 +2644,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 40,
@@ -2635,7 +2675,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 41,
@@ -2662,7 +2703,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 42,
@@ -2689,7 +2731,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 43,
@@ -2716,7 +2759,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![2],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 44,
@@ -2743,7 +2787,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![2],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 45,
@@ -2770,7 +2815,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 46,
@@ -2818,7 +2864,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 47,
@@ -2855,7 +2902,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 48,
@@ -2882,7 +2930,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 49,
@@ -2907,7 +2956,8 @@ pub fn projects() -> Vec<Project> {
             cost_modifier: 1.0,
             upgrades: vec![],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 50,
@@ -2934,7 +2984,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 51,
@@ -2961,7 +3012,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![9],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 52,
@@ -2988,7 +3040,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 53,
@@ -3175,7 +3228,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 54,
@@ -3202,7 +3256,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 55,
@@ -3229,7 +3284,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 56,
@@ -3256,7 +3312,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 57,
@@ -3314,7 +3371,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 58,
@@ -3341,7 +3399,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 59,
@@ -3368,7 +3427,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 60,
@@ -3417,7 +3477,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 61,
@@ -3457,7 +3518,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 62,
@@ -3484,7 +3546,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 63,
@@ -3511,7 +3574,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 64,
@@ -3538,7 +3602,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 65,
@@ -3566,7 +3631,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![4],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 66,
@@ -3593,7 +3659,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 67,
@@ -3641,7 +3708,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![9, 3],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 68,
@@ -3668,7 +3736,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![0],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 69,
@@ -3722,7 +3791,8 @@ pub fn projects() -> Vec<Project> {
                 }
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 70,
@@ -3749,7 +3819,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 71,
@@ -3799,7 +3870,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 72,
@@ -3827,7 +3899,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 73,
@@ -3854,7 +3927,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![3],
-            opposers: vec![]
+            opposers: vec![],
+            active_outcome: None
         },
         Project {
             id: 74,
@@ -3881,7 +3955,8 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![0, 5, 2],
-            opposers: vec![4, 8, 6]
+            opposers: vec![4, 8, 6],
+            active_outcome: None
         }
     ]
 }

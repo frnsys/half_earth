@@ -70,7 +70,7 @@ impl GameInterface {
     }
 
     pub fn start_project(&mut self, project_id: usize) {
-        self.game.start_project(project_id);
+        self.game.start_project(project_id, &mut self.rng);
     }
 
     pub fn stop_project(&mut self, project_id: usize) {
@@ -245,8 +245,8 @@ impl Game {
         }
     }
 
-    pub fn start_project(&mut self, project_id: usize) {
-        let effects = self.state.start_project(project_id);
+    pub fn start_project(&mut self, project_id: usize, rng: &mut SmallRng) {
+        let effects = self.state.start_project(project_id, rng);
         for effect in effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }

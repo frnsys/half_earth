@@ -180,16 +180,23 @@ impl State {
             }
         }
 
+        // Ugh hacky
+        let mut outcomes: Vec<(usize, usize)> = Vec::new();
         for id in &completed_projects {
             let project = &self.projects[*id];
             match project.roll_outcome(self, rng) {
-                Some((outcome, _i)) => {
+                Some((outcome, i)) => {
                     for effect in &outcome.effects {
                         add_effects.push((effect.clone(), None));
                     }
+                    outcomes.push((*id, i));
                 },
                 None => ()
             }
+        }
+
+        for (id, i) in outcomes {
+            self.projects[id].active_outcome = Some(i);
         }
 
         for project in &mut self.projects {
@@ -315,8 +322,24 @@ impl State {
         completed
     }
 
-    pub fn start_project(&mut self, project_id: usize) -> Vec<Effect> {
+    pub fn start_project(&mut self, project_id: usize, rng: &mut SmallRng) -> Vec<Effect> {
         let mut effects: Vec<Effect> = Vec::new();
+
+        // Ugh hacky
+        let project = &self.projects[project_id];
+        let mut active_outcome = None;
+        if project.kind == ProjectType::Policy {
+            match project.roll_outcome(self, rng) {
+                Some((outcome, i)) => {
+                    for effect in &outcome.effects {
+                        effects.push(effect.clone());
+                    }
+                    active_outcome = Some(i);
+                },
+                None => ()
+            }
+        }
+
         let project = &mut self.projects[project_id];
 
         if project.kind == ProjectType::Policy {
@@ -324,6 +347,7 @@ impl State {
             for effect in &project.effects {
                 effects.push(effect.clone());
             }
+            project.active_outcome = active_outcome;
         } else {
             project.status = Status::Building;
         }
@@ -473,6 +497,7 @@ impl State {
 #[cfg(test)]
 mod test {
     use super::*;
+    use rand::SeedableRng;
 
     #[test]
     fn test_promote_process() {
@@ -524,6 +549,7 @@ mod test {
 
     #[test]
     fn test_project_policy() {
+        let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
         let p = state.projects.iter().find(|p| p.kind == ProjectType::Policy && p.effects.len() > 0).unwrap();
@@ -532,7 +558,7 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Inactive);
 
         // Start
-        let effects = state.start_project(id);
+        let effects = state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Active);
         assert!(effects.len() > 0);
 
@@ -557,6 +583,7 @@ mod test {
 
     #[test]
     fn test_project_other() {
+        let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
         let p = state.projects.iter().find(|p| p.kind == ProjectType::Initiative).unwrap();
@@ -565,7 +592,7 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Inactive);
 
         // Start
-        let effects = state.start_project(id);
+        let effects = state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Building);
         assert_eq!(effects.len(), 0); // No immediate effects
 
@@ -588,7 +615,7 @@ mod test {
         }
 
         // Start again
-        let effects = state.start_project(id);
+        let effects = state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Building);
         assert_eq!(effects.len(), 0); // No immediate effects
 
@@ -603,12 +630,13 @@ mod test {
 
     #[test]
     fn test_project_upgrades() {
+        let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
         let p = state.projects.iter().find(|p| p.upgrades.len() > 0 && p.kind == ProjectType::Policy).unwrap();
         let id = p.id;
 
-        let effects = state.start_project(id);
+        let effects = state.start_project(id, &mut rng);
         let (uneffects, new_effects) = state.upgrade_project(id);
 
         assert_eq!(state.projects[id].level, 1);
@@ -618,12 +646,13 @@ mod test {
 
     #[test]
     fn test_project_no_upgrades() {
+        let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
         let p = state.projects.iter().find(|p| p.upgrades.len() == 0 && p.kind == ProjectType::Policy).unwrap();
         let id = p.id;
 
-        let _effects = state.start_project(id);
+        let _effects = state.start_project(id, &mut rng);
         let (uneffects, new_effects) = state.upgrade_project(id);
 
         assert_eq!(state.projects[id].level, 0);
@@ -633,6 +662,7 @@ mod test {
 
     #[test]
     fn test_requests() {
+        let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
         state.requests.push((Request::Project, 0, true, 10));
         state.requests.push((Request::Process, 0, true, 10));
@@ -640,7 +670,7 @@ mod test {
         let completed = state.check_requests();
         assert_eq!(completed.len(), 0);
 
-        state.start_project(0);
+        state.start_project(0, &mut rng);
         let completed = state.check_requests();
         assert_eq!(completed.len(), 0); // Project not yet finished
 

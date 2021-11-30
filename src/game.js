@@ -16,9 +16,6 @@ function updateState() {
   let world = state.gameState.world;
   state.gameState.contentedness = game.world_outlook();
   state.gameState.emissions = (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
-  console.log('Updating emissions:');
-  console.log(world);
-  console.log(state.gameState.emissions);
   state.gameState.population = world.regions.reduce((acc, r) => {
       return acc + r.population
     }, 0);

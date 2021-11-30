@@ -136,13 +136,20 @@ export default {
         effects: this.upgrades[idx].effects,
       }
     },
+    activeOutcomeEffects() {
+      if (this.active_outcome == null) {
+        return [];
+      } else {
+        return this.outcomes[this.active_outcome].effects;
+      }
+    },
     activeEffects() {
       if (this.status == 'Inactive') {
         return this.effects.concat(this.outcomeEffects);
       } else if (this.level === 0) {
-        return this.effects;
+        return this.effects.concat(this.activeOutcomeEffects);
       } else {
-        return this.upgrades[this.level - 1].effects;
+        return this.upgrades[this.level - 1].effects.concat(this.activeOutcomeEffects);
       }
     },
     outcomeEffects() {
