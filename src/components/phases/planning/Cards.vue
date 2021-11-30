@@ -86,7 +86,7 @@ export default {
         top: this.$el.scrollTop,
       };
     },
-    snapToCenter(animate) {
+    snapToCenter(anim) {
       // Horizontal snap-to-center
       let rect = this.$el.getBoundingClientRect();
       let scrollLeft = this.$el.scrollLeft;
@@ -106,7 +106,7 @@ export default {
 
       if (target) {
         let end = target.child.offsetLeft - rect.width/2 + target.width/2;
-        if (animate) {
+        if (anim) {
           // Animate snap-to-center
           let start = this.$el.scrollLeft;
           this.animation = animate(start, end, duration, (val) => {
