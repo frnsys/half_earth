@@ -43,6 +43,8 @@ export default {
   check: require('/assets/icons/check.png'),
   closed_borders: require('/assets/icons/ban.png'),
   car: require('/assets/icons/car.png'),
+  sound: require('/assets/icons/sound.png'),
+  no_sound: require('/assets/icons/no_sound.png'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

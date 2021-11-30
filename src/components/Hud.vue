@@ -18,6 +18,7 @@
     <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
       <img :src="icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
     </div>
+    <img class="sound-toggle" :src="state.sound ? icons.sound : icons.no_sound" @click="toggleSound" />
   </div>
 </template>
 
@@ -46,6 +47,16 @@ export default {
         color: display.intensityColor(intensity, false)
       }
     }
+  },
+  methods: {
+    toggleSound() {
+      state.sound = !state.sound;
+      if (state.sound && window.music.paused) {
+        window.music.play();
+      } else if (!state.sound && !window.music.paused) {
+        window.music.pause();
+      }
+    }
   }
 };
 </script>
@@ -70,5 +81,10 @@ export default {
 
 .stat-pip {
   height: 8px;
+}
+
+.hud .sound-toggle {
+  margin-top: 0.15em;
+  margin-right: 0;
 }
 </style>

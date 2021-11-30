@@ -17,6 +17,10 @@ class Playlist {
     return this.sounds[this.index];
   }
 
+  get paused() {
+    return this.current.audio.paused;
+  }
+
   play() {
     this.current.play();
   }

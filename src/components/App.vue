@@ -23,16 +23,18 @@ const playlist = [
   '/assets/music/airtone_-_spacetime(whitecube).mp3',
 ];
 
+// Hacky
+window.music = new Playlist(playlist);
+
 export default {
   data() {
     return {
       state,
-      playlist: new Playlist(playlist)
     };
   },
   mounted() {
     if (!debug.noSound) {
-      this.playlist.play();
+      window.music.play();
     }
   },
   components: {
