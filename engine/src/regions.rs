@@ -72,9 +72,9 @@ impl Region {
         }
     }
 
-    pub fn update_pop(&mut self, year: f32) {
+    pub fn update_pop(&mut self, year: f32, modifier: f32) {
         if !cfg!(feature = "static_population") {
-            self.population *= 1. + consts::income_pop_change(year, &self.income);
+            self.population *= 1. + (consts::income_pop_change(year, &self.income) * modifier);
         }
     }
 

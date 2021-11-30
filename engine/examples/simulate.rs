@@ -7,11 +7,12 @@ use half_earth_engine::{
     resources, byproducts,
     game::{Game, Difficulty},
     kinds::{Output, Resource, ResourceMap, ByproductMap},
+    projects::Status,
     production::{ProductionOrder, Process, Priority, ProcessStatus, ProcessFeature, calculate_required},
     events::{Event, Phase}, consts};
 
 #[derive(Serialize)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum Scenario {
     BanFossilFuels,
     Nuclear,
@@ -19,7 +20,9 @@ enum Scenario {
     Vegetarianism,
     ProtectHalf,
     Electrification,
-    // DAC, // TODO
+    DAC,
+    EnergyQuotas,
+    OneChildPolicy,
 }
 
 #[derive(Serialize)]
@@ -34,14 +37,20 @@ struct Report {
 }
 
 impl Scenario {
-    fn apply(&self, game: &mut Game, rng: &mut SmallRng) {
+    fn apply(&self, game: &mut Game, rng: &mut SmallRng) -> String {
         match self {
+            Scenario::EnergyQuotas => {
+                let p_id = find_project_id(game, "Energy Quotas");
+                game.start_project(p_id, rng);
+                "🔷 Implemented Energy Quotas".to_string()
+            },
             Scenario::BanFossilFuels => {
                 for process in &mut game.state.processes {
                     if process.features.contains(&ProcessFeature::IsFossil) {
                         process.status = ProcessStatus::Banned;
                     }
                 }
+                "🔷 Banned Fossil Fuels".to_string()
             },
             Scenario::Nuclear => {
                 for process in &mut game.state.processes {
@@ -49,14 +58,17 @@ impl Scenario {
                         process.status = ProcessStatus::Promoted;
                     }
                 }
+                "🔷 Promoted Nuclear Power".to_string()
             },
             Scenario::Veganism => {
                 let p_id = find_project_id(game, "Veganism Mandate");
                 game.start_project(p_id, rng);
+                "🔷 Implemented Veganism Mandate".to_string()
             },
             Scenario::Vegetarianism => {
                 let p_id = find_project_id(game, "Vegetarian Mandate");
                 game.start_project(p_id, rng);
+                "🔷 Implemented Vegetarian Mandate".to_string()
             },
             Scenario::ProtectHalf => {
                 let p_id = find_project_id(game, "Land Protection");
@@ -64,12 +76,25 @@ impl Scenario {
                 for _ in 0..4 {
                     game.upgrade_project(p_id);
                 }
+                "🔷 Implemented Land Protection".to_string()
             },
             Scenario::Electrification => {
                 let p_id = find_project_id(game, "Mass Electrification");
                 game.start_project(p_id, rng);
                 game.state.projects[p_id].set_points(10);
-            }
+                "🔷 Started Mass Electrification".to_string()
+            },
+            Scenario::DAC => {
+                let p_id = find_project_id(game, "Direct Air Capture");
+                game.start_project(p_id, rng);
+                game.state.projects[p_id].set_points(10);
+                "🔷 Started Direct Air Capture".to_string()
+            },
+            Scenario::OneChildPolicy => {
+                let p_id = find_project_id(game, "One-Child Policy");
+                game.start_project(p_id, rng);
+                "🔷 Implemented One-Child Policy".to_string()
+            },
         }
     }
 }
@@ -95,6 +120,9 @@ fn main() {
                 "Vegetarianism" => Scenario::Vegetarianism,
                 "ProtectHalf" => Scenario::ProtectHalf,
                 "Electrification" => Scenario::Electrification,
+                "OneChildPolicy" => Scenario::OneChildPolicy,
+                "EnergyQuotas" => Scenario::EnergyQuotas,
+                "DAC" => Scenario::DAC,
                 _ => panic!("Unknown scenario: {:?}", arg)
             };
             scenarios.push(scenario);
@@ -212,13 +240,15 @@ fn main() {
     wtr.write_record(&cols).unwrap();
 
     for i in 0..100 {
+        let mut year_events = vec![];
         let starting_resources = game.state.resources.clone();
         // let starting_feedstocks = game.state.feedstocks.clone();
 
         if i == report.scenario_start {
             for scenario in &report.scenarios {
                 println!("Applying Scenario: {:?}", scenario);
-                scenario.apply(&mut game, &mut rng);
+                let desc = scenario.apply(&mut game, &mut rng);
+                year_events.push((desc, None));
             }
         }
 
@@ -226,6 +256,15 @@ fn main() {
         let pop_demand = game.state.world.demand();
         let agg_demand = game.state.output_demand;
         let produced = game.state.produced;
+
+        if report.scenarios.contains(&Scenario::DAC) {
+            let p_id = find_project_id(&game, "Direct Air Capture");
+            if game.state.projects[p_id].status == Status::Finished {
+                for _ in 0..game.state.projects[p_id].upgrades.len() {
+                    game.upgrade_project(p_id);
+                }
+            }
+        }
 
         let lic_pop = game.state.world.lic_population();
         let ind_demand = game.state.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources) * lic_pop;
@@ -264,7 +303,6 @@ fn main() {
 
         game.state.world.temperature = tgav;
 
-        let mut year_events = vec![];
         let events = if report.roll_events {
             game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
         } else {
@@ -287,7 +325,7 @@ fn main() {
         for p_id in completed_projects {
             let project = &game.state.projects[p_id];
             year_events.push(
-                (format!("Finished {}", project.name), None));
+                (format!("🔶 Finished {}", project.name), None));
         }
         let n_events = year_events.len();
         report.events.push(year_events);

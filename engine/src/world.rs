@@ -31,7 +31,7 @@ impl World {
 
     pub fn update_pop(&mut self) {
         for region in &mut self.regions {
-            region.update_pop(self.year as f32);
+            region.update_pop(self.year as f32, 1. + self.population_growth_modifier);
         }
     }
 
@@ -63,7 +63,7 @@ impl World {
 
     pub fn change_population(&mut self, percent: f32) {
         for region in &mut self.regions {
-            region.population *= (1. + percent) * (1. + self.population_growth_modifier);
+            region.population *= 1. + percent;
         }
     }
 

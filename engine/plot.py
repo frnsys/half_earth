@@ -15,6 +15,49 @@ report = json.load(open('/tmp/calibration.json'))
 if not os.path.exists('/tmp/plots'):
     os.makedirs('/tmp/plots')
 
+ranges = {
+    'Temperature': {
+        'min': 0,
+        'max': 5
+    },
+    'CO2 Emissions (Gt)': {
+        'min': 0,
+    },
+    'CO2eq Emissions': {
+        'min': 0,
+    },
+    'Fuel (TWh)': {
+        'min': 0,
+    },
+    'Electricity (TWh)': {
+        'min': 0,
+    },
+    'Land': {
+        'min': 0,
+    }
+}
+
+groups = {
+    'General': [
+        'Population (b)', 'Temperature', 'Habitability',
+        'Extinction Rate', 'Mean Income Level'],
+    'Emissions': [
+        'CO2eq Emissions', 'CO2 Emissions (Gt)',
+        'CH4 Emissions (Mt)', 'N2O Emissions (Mt)'],
+    'Production': [
+        'Demand & Consumed', 'Cal per Capita per Day',
+        'Fuel (TWh)', 'Electricity (TWh)',
+        'Animal Calories (Tcals)', 'Plant Calories (Tcals)',
+        'Water', 'Land',
+    ],
+    'Electricity': ['Electricity (TWh)'],
+    'Fuel': ['Fuel (TWh)'],
+    'PlantCalories': ['Plant Calories (Tcals)'],
+    'AnimalCalories': ['Animal Calories (Tcals)'],
+    'Outlook': ['World Outlook'],
+    'Events': ['Events', ],
+}
+
 plots = {
     'Population (b)': ['Population (b)', 'Pop Ref (2100, bn people)'],
     'Events': ['Events'],
@@ -97,6 +140,25 @@ plots = {
     ],
 }
 
+icon_event_groups = {
+    'Flooding': [
+        'Flooding', 'Severe Flooding', 'Extreme Flooding',
+    ],
+    'Storms': [
+        'Severe Hurricane',
+        'Large Derecho Storm'
+    ],
+    'Wildfires': [
+        'Wildfires', 'Severe Wildfires',
+    ],
+    'Social Unrest': ['Protests', 'Riots', 'Revolts'],
+    'Heatwaves': ['Heatwaves'],
+    'Crop Failures': ['Crop Failures'],
+    'Disease Outbreak': ['Disease Outbreak'],
+    'Attacks': ['Doom Cult Attacks'],
+}
+
+
 outputs = ['Electricity', 'Fuel', 'PlantCalories', 'AnimalCalories']
 process_cols_by_output = defaultdict(lambda: defaultdict(list))
 region_outlook_cols = []
@@ -110,13 +172,17 @@ for col in df.columns:
                 process_cols_by_output[o][category].append(col)
 for output, categories in process_cols_by_output.items():
     for category, cols in categories.items():
-        plots['Process-{}-{}'.format(output, category)] = cols
+        name = 'Process-{}-{}'.format(output, category)
+        plots[name] = cols
+        groups[output].append(name)
 
 chunk_size = 5
 for i, idx in enumerate(range(0, len(region_outlook_cols), chunk_size)):
     slice_ = region_outlook_cols[idx:idx+chunk_size]
     if slice_:
-        plots['Regional Outlooks {}'.format(i)] =  slice_
+        name = 'Regional Outlooks {}'.format(i)
+        plots[name] =  slice_
+        groups['Outlook'].append(name)
 
 all_icon_events = set()
 icon_event_history = report.pop('icon_events')
@@ -141,28 +207,50 @@ for i, icon_events in enumerate(icon_event_history):
 icon_events_df = pd.DataFrame.from_dict(icon_events_by_year, orient='index')
 df = df.set_index('Year').join(icon_events_df)
 
-chunk_size = 5
-all_icon_events = list(all_icon_events)
-for i, idx in enumerate(range(0, len(all_icon_events), chunk_size)):
-    slice_ = all_icon_events[idx:idx+chunk_size]
-    if slice_:
-        plots['Icon Events {}'.format(i)] =  slice_
+for title, cols in icon_event_groups.items():
+    plots[title] = cols
+    groups['Events'].append(title)
 
-files = []
-for title, cols in plots.items():
-    plt.title(title)
-    for i, col in enumerate(cols):
-        vals = df[col]
-        linestyle = math.floor(i/N_COLORS)
-        if title == 'Events':
-            plt.scatter(df.index, vals, label=col, s=2)
-        else:
-            plt.plot(df.index, vals, label=col, linestyle=LINE_STYLES[linestyle])
-    plt.legend(fontsize=6)
-    fname = '{}.png'.format(title)
-    plt.savefig(os.path.join('/tmp/plots', fname))
-    plt.close()
-    files.append(fname)
+files = {}
+for group, titles in groups.items():
+    files[group] = []
+    for title in titles:
+        cols = plots[title]
+        plt.title(title)
+        plt.margins(0)
+        plt.xlim(report['start_year'], report['start_year']+100)
+
+        for i, col in enumerate(cols):
+            try:
+                vals = df[col]
+            except KeyError:
+                print('Missing column:', col)
+                continue
+            linestyle = math.floor(i/N_COLORS)
+            if title == 'Events':
+                plt.scatter(df.index, vals, label=col, s=2)
+            else:
+                plt.plot(df.index, vals, label=col, linestyle=LINE_STYLES[linestyle])
+        plt.legend(fontsize=6)
+
+        rng = ranges.get(title, {})
+        plt.ylim(bottom=rng.get('min'), top=rng.get('max'))
+
+        ax = plt.gca()
+        n_years = 100
+        ax_width = ax.get_window_extent().width
+        year_width = ax_width/n_years
+        fig = plt.gcf()
+        fig_width, fig_height = fig.get_size_inches() * fig.dpi
+        ax_fig_width_ratio = ax_width/fig_width
+        # print(ax_fig_width_ratio)
+        # import ipdb; ipdb.set_trace()
+
+        fname = '{}.png'.format(title)
+        plt.savefig(os.path.join('/tmp/plots', fname))
+
+        plt.close()
+        files[group].append(fname)
 
 
 events = []
@@ -199,10 +287,11 @@ main > div {
     height: 100vh;
     overflow-y:scroll;
 }
-.charts {
+.chart-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    display: none;
 }
 img {
     width: 480px;
@@ -211,6 +300,7 @@ img {
     text-align: center;
     position: sticky;
     top: 0;
+    z-index: 10;
 }
 .tag {
     border: 1px solid;
@@ -244,15 +334,35 @@ img {
     color: #777;
 }
 
-#tooltip {
-    font-size: 0.8em;
-    position: fixed;
-    background: #111;
+.line {
+    top: 0;
+    height: 100%;
+    display: flex;
+    font-size: 0.9em;
+    border-left: 1px solid #000;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-around;
+    pointer-events: none;
+    padding-left: 0.25em;
+    display: none;
+}
+
+.chart-group-tabs {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0.5em 0;
+}
+.chart-group-tabs > div {
+    border: 1px solid;
+    border-radius: 0.2em;
+    padding: 0 0.2em;
+    cursor: pointer;
+    bcakground: #fff;
+}
+.chart-group-tabs > div.selected {
+    background: #333;
     color: #fff;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 320px;
 }
 '''
 
@@ -275,47 +385,50 @@ event = '''
 
 scripts = '''
 <script>
-const chartWidth = 640;
-const leftOffset = 100/chartWidth;
-const years = 100;
-const startYear = 2023
-const endYear = startYear + years;
+const chartGroups = [...document.querySelectorAll('.chart-group')];
+const chartTabs = [...document.querySelectorAll('.chart-group-tabs > div')];
+chartTabs.forEach((el, i) => {
+    el.addEventListener('click', () => {
+        let sel = document.querySelector('.chart-group-tabs .selected');
+        if (sel) sel.classList.remove('selected');
+        el.classList.add('selected');
+        chartGroups.forEach((g, j) => {
+            if (i == j) {
+                g.style.display = 'flex';
+            } else {
+                g.style.display = 'none';
+            }
+        });
+    });
+});
+chartTabs[0].click();
 
-const tooltip = document.getElementById('tooltip');
 [...document.querySelectorAll('.charts img')].forEach((el) => {
+    el.parentElement.style.position = 'relative';
+
+    let lineEl = document.createElement('div');
+    lineEl.classList.add('line');
+    el.parentElement.appendChild(lineEl);
+
     el.addEventListener('mousemove', (ev) => {
         let width = el.width;
-        let offset = width * leftOffset;
-        const yearWidth = width * 0.0070;
+        let axes_width = el.width * 0.775;
+        lineEl.style.display = 'flex';
         let rect = ev.target.getBoundingClientRect();
-        let x = ev.clientX - rect.left;
+        let x = ev.clientX - rect.left - (el.width * 0.125);
         let y = ev.clientY - rect.top;
-        let year = Math.floor(startYear + (x - offset)/yearWidth);
-        let year_a = Math.max(year - 2, startYear);
-        let year_b = Math.min(year + 2, endYear);
-        if (year_b > year_a) {
-            let events = [];
-            [...Array(year_b - year_a)].forEach((_,i)=> {
-                let evs = EVENTS_BY_YEAR[year_a + i];
-                if (evs !== undefined) {
-                    events = events.concat(evs);
-                }
-            });
-            if (events.length > 0) {
-                tooltip.innerHTML = `
-                    <div><b>${year_a}-${year_b}</b></div>
-                    ${events.join('<br />')}
-                `;
-                tooltip.style.display = 'block';
-            } else {
-                tooltip.style.display = 'none';
-            }
-        } else {
-            tooltip.style.display = 'none';
-        }
+        let i = x/axes_width;
+        let year = 2022 + Math.floor(i*100);
+        let events = EVENTS_BY_YEAR[year] || [];
+
+        lineEl.style.left = `${x + (el.width * 0.125)}px`;
+        lineEl.innerHTML = `<div>
+            <u>${year}</u><br />
+            ${events.join('<br />')}
+        </div>`;
     });
     el.addEventListener('mouseleave', () => {
-        tooltip.style.display = 'none';
+        lineEl.style.display = 'none';
     });
 });
 </script>
@@ -329,10 +442,12 @@ html = '''
 </head>
 <body>
 <main>
-    <div id="tooltip"></div>
     <div class="group">
-        <div class="meta">{meta}</div>
-        <div class="charts">{charts}</div>
+        <div class="meta">
+            <div>{meta}</div>
+            <div class="chart-group-tabs">{group_tabs}</div>
+        </div>
+        <div class="charts">{chart_groups}</div>
     </div>
     <div class="events">{events}</div>
 </main>
@@ -347,7 +462,10 @@ const EVENTS_BY_YEAR = {events_by_year};
         scripts=scripts,
         events_by_year=json.dumps(events_by_year),
         meta='\n'.join(tag.format(k=k, v=v) for k, v in report.items()),
-        charts='\n'.join('<img src="{}">'.format(fname) for fname in files),
+        group_tabs='\n'.join('<div>{}</div>'.format(g) for g in groups.keys()),
+        chart_groups='\n'.join(
+            '<div class="chart-group">{}</div>'.format('\n'.join('<div><img src="{}"></div>'.format(fname) for fname in fnames))
+            for fnames in files.values()),
         events='\n'.join(
             event.format(
                 year=year, events=evs,
