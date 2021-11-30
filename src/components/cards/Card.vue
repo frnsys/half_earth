@@ -153,6 +153,12 @@ export default {
   right: 0.5em;
   top: 0.5em;
 }
+.card-tack-cb {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
 
 .card header img {
   width: 12px;

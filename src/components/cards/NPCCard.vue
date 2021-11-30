@@ -13,7 +13,7 @@
     <img
       :src="`/assets/characters/${npc.name}.png`"
       onerror="this.src='/assets/placeholders/character.png';" />
-    <div class="npc-relationship">{{relationshipName}}</div>
+    <div class="card-tack-cb npc-relationship">{{relationshipName}}</div>
   </template>
   <template v-slot:body>
     <p v-if="relationshipName == 'Ally'" class="active" v-html="html"></p>
@@ -78,10 +78,7 @@ export default {
   font-family: 'Andada Pro';
   text-transform: uppercase;
   font-size: 0.8em;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 50%);
   padding: 0.1em 0.2em;
+  border-radius: 0.2em;
 }
 </style>

@@ -30,7 +30,6 @@ export default {
 <style>
 .minicard {
   border-radius: 0.3em;
-  background: #222;
   padding: 0.5em;
   width: 80px;
   height: 120px;

@@ -6,15 +6,16 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-      <div class="card-tack-ur">
-        <div class="region-stat" v-tip="{icon: 'warming', text: 'This region\'s current temperature range.'}">
-          <img :src="icons.warming">{{Math.round(temp_lo)}}-{{Math.round(temp_hi)}}°C
-        </div>
-        <br />
-        <div class="region-stat" v-tip="{icon: 'precipitation', text: 'This region\'s current precipitation range.'}">
-          <img :src="icons.precipitation">{{Math.round(precip_lo)}}-{{Math.round(precip_hi)}}cm/yr
-        </div>
+    <div class="card-tack-ur">
+      <div class="region-stat" v-tip="{icon: 'warming', text: 'This region\'s current temperature range.'}">
+        <img :src="icons.warming">{{Math.round(temp_lo)}}-{{Math.round(temp_hi)}}°C
       </div>
+      <br />
+      <div class="region-stat" v-tip="{icon: 'precipitation', text: 'This region\'s current precipitation range.'}">
+        <img :src="icons.precipitation">{{Math.round(precip_lo)}}-{{Math.round(precip_hi)}}cm/yr
+      </div>
+    </div>
+    <div v-if="seceded" class="card-tack-cb">Seceded</div>
   </template>
   <template v-slot:body>
     <div class="space-even">
@@ -119,6 +120,16 @@ export default {
 <style>
 .region .card-tack-ur {
   text-align: right;
+}
+.region .card-tack-cb {
+  color: #fff;
+  background: #222;
+  border: 1px solid #fff;
+  font-family: 'Andada Pro';
+  text-transform: uppercase;
+  font-size: 0.8em;
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
 }
 .region-stat {
   color: #fff;
