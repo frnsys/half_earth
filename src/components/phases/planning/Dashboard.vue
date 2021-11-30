@@ -62,4 +62,8 @@ export default {
   transform: translate(-50%, -50%);
   width: 32px;
 }
+
+.planning--dashboard .minicard {
+  background: #222;
+}
 </style>

@@ -85,8 +85,8 @@ import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
 
 const PC_PER_COMPLETED_PROJECT = 20;
-const CONTENTEDNESS_PC = [0, 0, 5, 20, 40];
-const EXTINCTION_PC = [40, 20, 0, -5, -5];
+const CONTENTEDNESS_PC = [0, 0, 5, 10, 20];
+const EXTINCTION_PC = [20, 10, 0, -5, -5, -10];
 
 export default {
   mixins: [EventsMixin],

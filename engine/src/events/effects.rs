@@ -184,7 +184,6 @@ impl Effect {
                         region.population += per_region;
                     }
                 }
-                todo!()
             },
             Effect::RegionLeave => {
                 if let Some(id) = region_id {

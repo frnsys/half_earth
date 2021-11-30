@@ -19,6 +19,7 @@ enum Scenario {
     Vegetarianism,
     ProtectHalf,
     Electrification,
+    // DAC, // TODO
 }
 
 #[derive(Serialize)]

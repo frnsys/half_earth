@@ -182,7 +182,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   align-content: start;
-  height: 350px;
+  height: 360px;
   flex-wrap: wrap;
   overflow-y: scroll;
   flex-direction: column;
@@ -191,6 +191,9 @@ export default {
   width: 80px;
   text-align: center;
   margin: 0.5em 0.25em;
+}
+.plan--change .minicard {
+  background: #222;
 }
 .plan--action {
   text-transform: uppercase;
@@ -239,7 +242,7 @@ export default {
   color: #fff;
 }
 
-.plan--add-change {
+.plan--change .plan--add-change {
   border: 1px solid #b39d72;
   background: #e6d3af;
 }

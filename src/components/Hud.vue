@@ -2,7 +2,7 @@
   <div class="hud">
     <div>{{state.gameState.world.year}}</div>
     <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
-      <img :src="icons.political_capital">{{state.gameState.political_capital}}
+      <img :src="icons.political_capital">{{Math.max(state.gameState.political_capital, 0)}}
     </div>
     <div v-tip="{icon: 'extinction_rate', text: 'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.'}">
       <img :src="icons.extinction_rate">
