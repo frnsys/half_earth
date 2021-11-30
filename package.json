@@ -8,6 +8,8 @@
     "test": "cd engine; cargo test; wasm-pack test --headless --firefox"
   },
   "dependencies": {
+    "@sentry/browser": "^6.15.0",
+    "@sentry/tracing": "^6.15.0",
     "half-earth-engine": "file:engine/pkg",
     "hector-wasm": "file:hector/wasm",
     "hexasphere.js": "^0.2.2",
