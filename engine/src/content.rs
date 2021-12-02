@@ -677,8 +677,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 9.0
+                co2: 9.0,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -8014,6 +8014,23 @@ pub fn events() -> Vec<Event> {
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 144,
+            name: "Soil Degradation",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
             ],
             prob_modifier: 1.0,
             branches: vec![],

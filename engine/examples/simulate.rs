@@ -1,6 +1,7 @@
 use std::env;
 use std::fs::File;
 use serde::Serialize;
+use indicatif::ProgressBar;
 use rand::{SeedableRng, rngs::SmallRng};
 use hector_rs::{run_hector, emissions::get_emissions};
 use half_earth_engine::{
@@ -239,6 +240,7 @@ fn main() {
     cols.extend(game.state.world.regions.iter().map(|r| format!("Outlook:{}", r.name)));
     wtr.write_record(&cols).unwrap();
 
+    let pb = ProgressBar::new(100);
     for i in 0..100 {
         let mut year_events = vec![];
         let starting_resources = game.state.resources.clone();
@@ -259,7 +261,7 @@ fn main() {
 
         if report.scenarios.contains(&Scenario::DAC) {
             let p_id = find_project_id(&game, "Direct Air Capture");
-            if game.state.projects[p_id].status == Status::Finished {
+            if game.state.projects[p_id].status == Status::Active {
                 for _ in 0..game.state.projects[p_id].upgrades.len() {
                     game.upgrade_project(p_id);
                 }
@@ -301,7 +303,7 @@ fn main() {
             run_hector(game.state.world.year, &emissions) as f32
         };
 
-        game.state.world.temperature = tgav;
+        game.state.set_tgav(tgav);
 
         let events = if report.roll_events {
             game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
@@ -346,7 +348,7 @@ fn main() {
 
                     // Apply outlook effect
                     // region.outlook -= ev.intensity as f32 * 0.05;
-                    region.base_habitability -= ev.intensity as f32 * 0.5;
+                    region.base_habitability -= ev.intensity as f32 * 0.1;
                 },
                 None => {
                     year_icon_events.push((ev.name.to_string(), None));
@@ -434,6 +436,7 @@ fn main() {
             r.outlook.to_string()
         }));
         wtr.write_record(&vals).unwrap();
+        pb.inc(1);
     }
 
     serde_json::to_writer(&File::create("/tmp/calibration.json").unwrap(), &report).unwrap();

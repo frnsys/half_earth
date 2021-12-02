@@ -5,6 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
+print('Plotting...')
+
 N_COLORS = 10
 LINE_STYLES = ['solid', 'dashed', 'dashdot', 'dotted']
 
@@ -20,6 +22,14 @@ ranges = {
         'min': 0,
         'max': 5
     },
+    'Habitability': {
+        'min': 0,
+        'max': 15
+    },
+    'World Outlook': {
+        'min': 0,
+        'max': 50
+    },
     'CO2 Emissions (Gt)': {
         'min': 0,
     },
@@ -33,6 +43,13 @@ ranges = {
         'min': 0,
     },
     'Land': {
+        'min': 0,
+    },
+    'Extinction Rate': {
+        'min': 0,
+        'max': 100
+    },
+    'Cal per Capita per Day': {
         'min': 0,
     }
 }
@@ -158,31 +175,52 @@ icon_event_groups = {
     'Attacks': ['Doom Cult Attacks'],
 }
 
+region_groups = {
+    'Asia': [
+        'Central Asia',
+        'Eastern Asia',
+        'South-eastern Asia',
+        'Southern Asia',
+        'Western Asia',
+    ],
+    'Africa': [
+        'Eastern Africa',
+        'Central Africa',
+        'Northern Africa',
+        'Southern Africa',
+        'Southern Asia',
+    ],
+    'Europe & Neo-Europe': [
+        'Eastern Europe',
+        'Northern Europe',
+        'Southern Europe',
+        'Western Europe',
+        'Northern America',
+        'Australasia',
+    ],
+    'Americas & Islands': [
+        'Central America',
+        'Southern America',
+        'Caribbean',
+        'Oceania',
+    ],
+}
+
 
 outputs = ['Electricity', 'Fuel', 'PlantCalories', 'AnimalCalories']
 process_cols_by_output = defaultdict(lambda: defaultdict(list))
-region_outlook_cols = []
 for col in df.columns:
-    if col.startswith('Outlook:'):
-        region_outlook_cols.append(col)
-    else:
-        for o in outputs:
-            if col.startswith('{}:'.format(o)):
-                _, process, category = col.split(':')
-                process_cols_by_output[o][category].append(col)
+    for o in outputs:
+        if col.startswith('{}:'.format(o)):
+            _, process, category = col.split(':')
+            process_cols_by_output[o][category].append(col)
 for output, categories in process_cols_by_output.items():
     for category, cols in categories.items():
         name = 'Process-{}-{}'.format(output, category)
         plots[name] = cols
         groups[output].append(name)
-
-chunk_size = 5
-for i, idx in enumerate(range(0, len(region_outlook_cols), chunk_size)):
-    slice_ = region_outlook_cols[idx:idx+chunk_size]
-    if slice_:
-        name = 'Regional Outlooks {}'.format(i)
-        plots[name] =  slice_
-        groups['Outlook'].append(name)
+        if category == 'Mix Share':
+            ranges[name] = {'min': 0, 'max': 1}
 
 all_icon_events = set()
 icon_event_history = report.pop('icon_events')
@@ -210,6 +248,14 @@ df = df.set_index('Year').join(icon_events_df)
 for title, cols in icon_event_groups.items():
     plots[title] = cols
     groups['Events'].append(title)
+
+for title, cols in region_groups.items():
+    plots[title] = ['Outlook:{}'.format(col) for col in cols]
+    groups['Outlook'].append(title)
+    ranges[title] = {
+        'min': 0,
+        'max': 20
+    }
 
 files = {}
 for group, titles in groups.items():
@@ -358,7 +404,7 @@ img {
     border-radius: 0.2em;
     padding: 0 0.2em;
     cursor: pointer;
-    bcakground: #fff;
+    background: #fff;
 }
 .chart-group-tabs > div.selected {
     background: #333;

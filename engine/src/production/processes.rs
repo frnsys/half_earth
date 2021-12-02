@@ -2,9 +2,6 @@ use serde::Serialize;
 use super::{ProductionOrder, Priority, planner};
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Output, Feedstock};
 
-const MIX_CHANGE_SPEED: f32 = 0.01;
-const PROMOTED_TARGET: f32 = 0.5;
-
 #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
 pub enum ProcessFeature {
     UsesPesticides,
@@ -95,30 +92,27 @@ pub fn update_mixes(
     resource_weights: &ResourceMap<f32>,
     feedstock_weights: &FeedstockMap<f32>,
     priority: &Priority) {
-    let target_mix = planner::calculate_mix(&processes, &demand, &resource_weights, &feedstock_weights, &priority);
-    for (process, target) in processes.iter_mut().zip(target_mix) {
-        if !process.locked {
-            let target = if process.is_promoted() { f32::max(PROMOTED_TARGET, target) } else { target };
-            if process.mix_share < target {
-                process.mix_share += if process.is_promoted() { f32::max(process.mix_share * 0.1, 0.05) } else { MIX_CHANGE_SPEED };
-                process.change = ProcessChange::Expanding;
-            } else if process.mix_share > target {
-                process.mix_share -= if process.is_banned() { process.mix_share * 0.1 } else { MIX_CHANGE_SPEED };
-                process.change = ProcessChange::Contracting;
-            } else {
-                process.change = ProcessChange::Neutral;
-            }
-            process.mix_share = f32::max(process.mix_share, 0.);
-        }
+    let mut processes_by_output: OutputMap<Vec<&mut Process>> = OutputMap::default();
+    for process in processes {
+        processes_by_output[process.output].push(process);
     }
 
-    // Renormalize
-    let mut mix_totals: OutputMap<f32> = outputs!();
-    for p in processes.iter() {
-        mix_totals[p.output] += p.mix_share;
-    }
-    for p in processes {
-        p.mix_share /= mix_totals[p.output];
+    for (output, _d) in demand.items() {
+        let mut mix: Vec<f32> = processes_by_output[output].iter().map(|p| p.mix_share).collect();
+
+        mix = planner::calculate_mix(mix, &processes_by_output[output], &resource_weights, &feedstock_weights, &priority);
+        for (p, share) in processes_by_output[output].iter_mut().zip(&mix) {
+            if p.mix_share != *share {
+                if p.mix_share < *share {
+                    p.change = ProcessChange::Expanding;
+                } else {
+                    p.change = ProcessChange::Contracting;
+                }
+                p.mix_share = *share;
+            } else {
+                p.change = ProcessChange::Neutral;
+            }
+        }
     }
 }
 

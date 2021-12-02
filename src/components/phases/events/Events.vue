@@ -234,7 +234,7 @@ export default {
         /* }); */
 
         // let outlook = ev.intensity * 0.05;
-        let outlook = ev.intensity * 0.5;
+        let outlook = ev.intensity * 0.1;
         let pings = ev.intensity;
         // game.changeLocalOutlook(-outlook, regionId);
         game.changeHabitability(-outlook, regionId);

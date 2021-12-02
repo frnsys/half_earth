@@ -273,7 +273,8 @@ impl State {
         // Get resource deficit/surplus
         let (required_resources, required_feedstocks) = calculate_required(&orders);
 
-        // Weigh resources by scarcity
+        // Weigh resources by scarcity;
+        // higher weight = higher scarcity
         let resource_weights = required_resources / self.resources;
         let feedstock_weights = required_feedstocks / self.feedstocks;
 
