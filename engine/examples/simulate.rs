@@ -304,12 +304,12 @@ fn main() {
         let (energy_required_resources, _) = calculate_required(&energy_orders);
         let mut energy_byproducts = byproducts!();
         for order in energy_orders {
-            energy_byproducts += order.process.byproducts * order.amount;
+            energy_byproducts += order.process.byproducts * order.amount/order.process.output_modifier;
         }
         let (calorie_required_resources, _) = calculate_required(&calorie_orders);
         let mut calorie_byproducts = byproducts!();
         for order in calorie_orders {
-            calorie_byproducts += order.process.byproducts * order.amount;
+            calorie_byproducts += order.process.byproducts * order.amount/order.process.output_modifier;
         }
 
         // Hector separates out FFI and LUC emissions
@@ -440,19 +440,19 @@ fn main() {
         vals.extend(game.state.processes.iter().map(|p| p.mix_share.to_string()));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            ((p.resources.land * order.amount)/consts::STARTING_RESOURCES.land).to_string()
+            ((p.resources.land * order.amount/p.output_modifier)/consts::STARTING_RESOURCES.land).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.byproducts.co2 * order.amount * 1e-15).to_string()
+            (p.byproducts.co2 * order.amount/p.output_modifier * 1e-15).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.byproducts.ch4 * order.amount * 1e-12).to_string()
+            (p.byproducts.ch4 * order.amount/p.output_modifier * 1e-12).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.byproducts.n2o * order.amount * 1e-12).to_string()
+            (p.byproducts.n2o * order.amount/p.output_modifier * 1e-12).to_string()
         }));
         vals.extend(game.state.world.regions.iter().map(|r| {
             r.outlook.to_string()

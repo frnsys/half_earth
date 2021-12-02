@@ -31,10 +31,10 @@ ranges = {
         'max': 50
     },
     'CO2 Emissions (Gt)': {
-        'min': 0,
+        'min': -10,
     },
     'CO2eq Emissions': {
-        'min': 0,
+        'min': -10,
     },
     'Fuel (TWh)': {
         'min': 0,
@@ -51,6 +51,7 @@ ranges = {
     },
     'Cal per Capita per Day': {
         'min': 0,
+        'max': 4000,
     }
 }
 

@@ -14,7 +14,7 @@ pub fn produce(orders: &[ProductionOrder], resources: &ResourceMap<f32>, feedsto
     // Calculate production per output type
     let mut produced_by_type: OutputMap<f32> = OutputMap::default();
     for (amount, order) in produced.iter().zip(orders) {
-        produced_by_type[order.process.output] += amount * order.process.output_modifier;
+        produced_by_type[order.process.output] += amount;
     }
 
     (produced, produced_by_type, consumed_r, consumed_f, byproducts)

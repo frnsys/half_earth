@@ -57,17 +57,17 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
         // Apply output modifiers as a reduction in resource costs
         // and byproducts emitted.
         for (k, v) in order.process.resources.items() {
-            consumed_resources[k] += (amount_to_produce * *v)/order.process.output_modifier;
+            consumed_resources[k] += amount_to_produce * (*v/order.process.output_modifier);
         }
         for (k, v) in order.process.byproducts.items() {
-            created_byproducts[k] += (amount_to_produce * *v)/order.process.output_modifier;
+            created_byproducts[k] += amount_to_produce * (*v/order.process.output_modifier);
         }
 
         // Ignore "Other" feedstock
         match order.process.feedstock.0 {
             Feedstock::Other | Feedstock::Soil => (),
             _ => {
-                consumed_feedstocks[order.process.feedstock.0] += (amount_to_produce * order.process.feedstock.1)/(order.process.output_modifier);
+                consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * (order.process.feedstock.1/order.process.output_modifier);
             }
         }
         amount_to_produce
