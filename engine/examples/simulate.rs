@@ -17,11 +17,13 @@ use half_earth_engine::{
 enum Scenario {
     BanFossilFuels,
     Nuclear,
+    Solar,
     Veganism,
     Vegetarianism,
     ProtectHalf,
     Electrification,
     DAC,
+    GreenHydrogen,
     EnergyQuotas,
     OneChildPolicy,
 }
@@ -61,6 +63,14 @@ impl Scenario {
                 }
                 "🔷 Promoted Nuclear Power".to_string()
             },
+            Scenario::Solar => {
+                let p_id = find_process_id(game, "Solar PV");
+                game.state.processes[p_id].status = ProcessStatus::Promoted;
+                let p_id = find_project_id(game, "Next-Gen Solar PV");
+                game.start_project(p_id, rng);
+                game.state.projects[p_id].set_points(10);
+                "🔷 Researching Next-Gen Solar PV/Promoted Solar PV".to_string()
+            },
             Scenario::Veganism => {
                 let p_id = find_project_id(game, "Veganism Mandate");
                 game.start_project(p_id, rng);
@@ -96,6 +106,12 @@ impl Scenario {
                 game.start_project(p_id, rng);
                 "🔷 Implemented One-Child Policy".to_string()
             },
+            Scenario::GreenHydrogen => {
+                let p_id = find_project_id(game, "Green Hydrogen");
+                game.start_project(p_id, rng);
+                game.state.projects[p_id].set_points(10);
+                "🔷 Researching Green Hydrogen".to_string()
+            },
         }
     }
 }
@@ -105,6 +121,10 @@ fn find_project_id(game: &Game, name: &'static str) -> usize {
     p.id
 }
 
+fn find_process_id(game: &Game, name: &'static str) -> usize {
+    let p = game.state.processes.iter().find(|p| p.name == name).unwrap();
+    p.id
+}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -124,6 +144,8 @@ fn main() {
                 "OneChildPolicy" => Scenario::OneChildPolicy,
                 "EnergyQuotas" => Scenario::EnergyQuotas,
                 "DAC" => Scenario::DAC,
+                "Solar" => Scenario::Solar,
+                "GreenHydrogen" => Scenario::GreenHydrogen,
                 _ => panic!("Unknown scenario: {:?}", arg)
             };
             scenarios.push(scenario);
