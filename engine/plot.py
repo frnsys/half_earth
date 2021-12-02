@@ -31,10 +31,10 @@ ranges = {
         'max': 50
     },
     'CO2 Emissions (Gt)': {
-        'min': -10,
+        'min': -25,
     },
     'CO2eq Emissions': {
-        'min': -10,
+        'min': -25,
     },
     'Fuel (TWh)': {
         'min': 0,

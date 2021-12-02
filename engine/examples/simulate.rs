@@ -107,10 +107,12 @@ impl Scenario {
                 "🔷 Implemented One-Child Policy".to_string()
             },
             Scenario::GreenHydrogen => {
+                let p_id = find_process_id(game, "Green Hydrogen");
+                game.state.processes[p_id].status = ProcessStatus::Promoted;
                 let p_id = find_project_id(game, "Green Hydrogen");
                 game.start_project(p_id, rng);
                 game.state.projects[p_id].set_points(10);
-                "🔷 Researching Green Hydrogen".to_string()
+                "🔷 Promoted Green Hydrogen/Researching Green Hydrogen".to_string()
             },
         }
     }
