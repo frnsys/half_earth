@@ -142,11 +142,15 @@ export default {
       this.$refs.text.innerHTML = '';
       let el = document.createElement('div');
       el.innerHTML = this.line.text;
-      revealChars(this.$refs.text, extractChars(el), {
-        onStart: (revealAnim) => this.revealAnim = revealAnim
-      }).then(() => {
-        this.revealed = true;
-      });
+      if (this.$refs.text.length > 0) {
+        revealChars(this.$refs.text, extractChars(el), {
+          onStart: (revealAnim) => this.revealAnim = revealAnim
+        }).then(() => {
+          this.revealed = true;
+        });
+      } else {
+          this.revealed = true;
+      }
     },
     end() {
       if (this.revealAnim) clearInterval(this.revealAnim);
