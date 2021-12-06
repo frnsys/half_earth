@@ -7,7 +7,7 @@ export default {
   priorities: {
     [Priority.Scarcity]: {
       icon: 'output',
-      name: 'Scarcity',
+      name: 'Efficiency',
     },
     [Priority.Land]: {
       icon: 'land',
