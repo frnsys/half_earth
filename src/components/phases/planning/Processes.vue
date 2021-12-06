@@ -59,7 +59,9 @@ export default {
   },
   computed: {
     processes() {
-      return state.gameState.processes.filter((p) => !p.locked);
+      let processes = state.gameState.processes.filter((p) => !p.locked);
+      processes.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+      return processes;
     },
     demand() {
       return display.outputs(state.gameState.output_demand);

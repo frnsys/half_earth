@@ -1,7 +1,7 @@
 <template>
 <div class="planning--page">
   <Cards>
-    <ProjectCard v-for="p in projects" :project="p" />
+    <ProjectCard v-for="i in projectOrder" :project="projects[i]" />
   </Cards>
   <footer>
     <div class="pips">

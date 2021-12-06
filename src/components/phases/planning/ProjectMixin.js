@@ -9,9 +9,27 @@ export default {
     Cards,
     ProjectCard,
   },
+  mounted() {
+    let active = [];
+    let inactive = [];
+
+    let projects = state.gameState.projects.filter((p) => p.kind == this.type && !p.locked);
+    projects.forEach((p, i) => {
+      if (p.status == 'Building' || p.ongoing && p.status == 'Active') {
+        active.push(i);
+      } else {
+        inactive.push(i);
+      }
+    });
+
+    active.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
+    inactive.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
+    this.projectOrder = active.concat(inactive);
+  },
   data() {
     return {
-      state
+      state,
+      projectOrder: [],
     };
   },
   computed: {

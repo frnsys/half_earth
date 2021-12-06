@@ -15,6 +15,7 @@ const DISPLAY_NAMES = {
     'Electricity': 'electricity',
     'PlantCalories': 'plant-based food',
     'AnimalCalories': 'animal-based food',
+    'Land': 'land',
 };
 
 const FEATURE_DESCS = {
