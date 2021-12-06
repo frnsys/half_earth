@@ -10,6 +10,7 @@
         <img :src="icons[d.icon]" />
         <div>{{d.name}}</div>
       </button>
+      <div class="priority--desc">{{description}}</div>
     </div>
   </div>
 </div>
@@ -30,6 +31,11 @@ export default {
     select(priority) {
       game.setPriority(priority);
     }
+  },
+  computed: {
+    description() {
+      return consts.priorities[consts.Priority[state.gameState.priority]].desc;
+    }
   }
 }
 </script>
@@ -41,5 +47,14 @@ export default {
   border-left: 2px solid #5D5D5D;
   border-right: 2px solid #F1F1F1;
   border-bottom: 2px solid #F1F1F1;
+}
+.priority--desc {
+  background: #222;
+  color: #fff;
+  padding: 1em;
+  max-width: 320px;
+  text-align: center;
+  margin: 2em 0 0 0;
+  border-radius: 0.2em;
 }
 </style>
