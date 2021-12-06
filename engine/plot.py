@@ -210,11 +210,20 @@ region_groups = {
 
 outputs = ['Electricity', 'Fuel', 'PlantCalories', 'AnimalCalories']
 process_cols_by_output = defaultdict(lambda: defaultdict(list))
+feedstock_plots = []
 for col in df.columns:
-    for o in outputs:
-        if col.startswith('{}:'.format(o)):
-            _, process, category = col.split(':')
-            process_cols_by_output[o][category].append(col)
+    if col.startswith('Feedstock:'):
+        title = col.replace(':', '-')
+        feedstock_plots.append(title)
+        plots[title] = [col]
+        ranges[title] = {'min': 0}
+    else:
+        for o in outputs:
+            if col.startswith('{}:'.format(o)):
+                _, process, category = col.split(':')
+                process_cols_by_output[o][category].append(col)
+groups['Feedstocks'] = feedstock_plots
+
 for output, categories in process_cols_by_output.items():
     for category, cols in categories.items():
         name = 'Process-{}-{}'.format(output, category)

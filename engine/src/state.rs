@@ -265,6 +265,9 @@ impl State {
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't
         self.feedstocks -= consumed_feedstocks;
+        for k in self.feedstocks.keys() {
+            self.feedstocks[k] = f32::max(self.feedstocks[k], 0.);
+        }
         self.resources.fuel -= consumed_resources.fuel - self.produced.fuel;
         self.resources.fuel = self.resources.fuel.max(0.);
         self.resources.electricity -= consumed_resources.electricity - self.produced.electricity;
@@ -275,8 +278,16 @@ impl State {
 
         // Weigh resources by scarcity;
         // higher weight = higher scarcity
-        let resource_weights = required_resources / self.resources;
-        let feedstock_weights = required_feedstocks / self.feedstocks;
+        let mut resource_weights = resources!();
+        for (k, v) in required_resources.items() {
+            resource_weights[k] = f32::min(f32::max(v / self.resources[k], 0.), 1.);
+        }
+        let mut feedstock_weights = feedstocks!();
+        for (k, v) in required_feedstocks.items() {
+            feedstock_weights[k] = f32::min(f32::max(v / self.feedstocks[k], 0.), 1.);
+        }
+        feedstock_weights.soil = 0.; // TODO add this back in?
+        feedstock_weights.other = 0.;
 
         // Update mixes according to resource scarcity
         if !cfg!(feature = "static_production") {
@@ -286,7 +297,6 @@ impl State {
 
     /// Contribution to extinction rate from a single process
     pub fn process_extinction_rate(&self, process: &Process, produced: f32) -> f32 {
-        // TODO what should the biodiversity pressure factor be?
         (process.byproducts.biodiversity/1e4 + process.resources.land/consts::STARTING_RESOURCES.land) * produced * 100.
     }
 

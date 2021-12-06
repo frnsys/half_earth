@@ -48,7 +48,8 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
         // Ran into issues where solutions couldn't be found if the min was set to
         // 0. I can't figure out why because it seems under the constraints provided
         // a valid solution will always be for all `amount_to_produce` to equal 0.
-        let amount_to_produce = vars.add(variable().min(0.).max(order.amount));
+        // let amount_to_produce = vars.add(variable().min(0.).max(order.amount));
+        let amount_to_produce = vars.add(variable().max(order.amount));
 
         // Add 1. to avoid zero division issues
         filled_demand += amount_to_produce/(order.amount + 1.);
@@ -80,15 +81,15 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
     for k in consumed_resources.keys() {
         problem = problem.with(consumed_resources[k].clone().leq(resources[k]));
     }
-    // for k in consumed_feedstocks.keys() {
-    //     // Ignore "Other" feedstock
-    //     match k {
-    //         Feedstock::Other | Feedstock::Soil => (),
-    //         _ => {
-    //             problem = problem.with(consumed_feedstocks[k].clone().leq(feedstocks[k]));
-    //         }
-    //     }
-    // }
+    for k in consumed_feedstocks.keys() {
+        // Ignore "Other" feedstock
+        match k {
+            Feedstock::Other | Feedstock::Soil => (),
+            _ => {
+                problem = problem.with(consumed_feedstocks[k].clone().leq(feedstocks[k]));
+            }
+        }
+    }
 
     let mut consumed_r = resources!();
     let mut consumed_f = feedstocks!();
@@ -134,10 +135,12 @@ pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap<f32>, Feed
     (resources, feedstocks)
 }
 
-fn score_process(p: &Process, priority: &Priority, resource_weights: &ResourceMap<f32>) -> f32 {
+fn score_process(p: &Process, priority: &Priority, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>) -> f32 {
     let score = match priority {
         Priority::Scarcity => {
-            p.resources.items().map(|(k, v)| v * resource_weights[k]).iter().sum::<f32>()
+            let resource_score = p.resources.items().map(|(k, v)| v * resource_weights[k]).iter().sum::<f32>();
+            let feedstock_score = p.feedstock.1 * feedstock_weights[p.feedstock.0];
+            resource_score + feedstock_score
         },
         Priority::Land => {
             p.resources.land
@@ -182,9 +185,9 @@ const TRANSITION_SPEED: f32 = 0.01;
 /// Here "ideal" means one that minimizes resource usages, weighted by the provided resource
 /// weights, while meeting demand.
 /// This is intended to be used on a per-output basis.
-pub fn calculate_mix(mut mix: Vec<f32>, processes: &Vec<&mut Process>, weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>, priority: &Priority) -> Vec<f32> {
+pub fn calculate_mix(mut mix: Vec<f32>, processes: &Vec<&mut Process>, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>, priority: &Priority) -> Vec<f32> {
     let mut changes: Vec<(usize, f32)> = vec![];
-    let scores: Vec<f32> = processes.iter().map(|p| score_process(p, priority, weights)).collect();
+    let scores: Vec<f32> = processes.iter().map(|p| score_process(p, priority, resource_weights, feedstock_weights)).collect();
 
     let base_score = score_mix(&mix, &scores);
     let change_amounts = [TRANSITION_SPEED, -TRANSITION_SPEED];
@@ -195,6 +198,8 @@ pub fn calculate_mix(mut mix: Vec<f32>, processes: &Vec<&mut Process>, weights: 
             changes.push((i, -TRANSITION_SPEED*2.));
         } else if processes[i].is_promoted() {
             changes.push((i, TRANSITION_SPEED*2.));
+        } else if feedstock_weights[processes[i].feedstock.0] == 1.0 { // Depleted, must be 0.
+            changes.push((i, -mix[i]));
         } else {
             for change in &change_amounts {
                 let changed = f32::max(mix[i] + change, 0.);

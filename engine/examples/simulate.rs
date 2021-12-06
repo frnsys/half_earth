@@ -262,6 +262,7 @@ fn main() {
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.world.regions.iter().map(|r| format!("Outlook:{}", r.name)));
+    cols.extend(game.state.feedstocks.keys().iter().map(|k| format!("Feedstock:{}", format!("{:?}", k))));
     wtr.write_record(&cols).unwrap();
 
     let pb = ProgressBar::new(100);
@@ -458,6 +459,9 @@ fn main() {
         }));
         vals.extend(game.state.world.regions.iter().map(|r| {
             r.outlook.to_string()
+        }));
+        vals.extend(game.state.feedstocks.values().iter().map(|v| {
+            v.to_string()
         }));
         wtr.write_record(&vals).unwrap();
         pb.inc(1);

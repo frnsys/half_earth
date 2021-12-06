@@ -4,13 +4,13 @@ use crate::kinds::{FeedstockMap, ResourceMap, OutputMap};
 
 
 pub const FEEDSTOCK_RESERVES: FeedstockMap<f32> = FeedstockMap {
-    oil: 275370680000000.0,
-    coal: 1074000000000000.0,
+    oil: 624182962000000.0,
+    coal: 1074000000000000000.0,
     uranium: 7988600000000.0,
     lithium: 80000000.0,
     natural_gas: 205495355718144000.0,
-    soil: 0.0,
-    other: 0.0,
+    soil: 1e20,
+    other: 1.0,
     thorium: 5805982300000.0
 };
 

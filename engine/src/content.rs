@@ -641,7 +641,7 @@ pub fn processes() -> Vec<Process> {
             name: "Petroleum",
             output: Output::Fuel,
             mix_share: 0.5267000000000001,
-            feedstock: (Feedstock::Oil, 0.3636872),
+            feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
@@ -777,7 +777,7 @@ pub fn processes() -> Vec<Process> {
             name: "Petroleum Power Gen",
             output: Output::Electricity,
             mix_share: 0.031,
-            feedstock: (Feedstock::Oil, 0.3636872),
+            feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
