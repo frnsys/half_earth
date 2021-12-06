@@ -22,7 +22,7 @@ function updateState() {
 }
 
 function updateResourceRankings() {
-  state.gameState.resourceRankings = display.resourceRankings();
+  state.resourceRankings = display.resourceRankings();
 }
 
 // Start a new run

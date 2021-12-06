@@ -164,7 +164,7 @@ export default {
       switch (type) {
         case 'land': {
           let amount = display.landUsePercent(state.gameState.resources_demand.land);
-          let rankings = state.gameState.resourceRankings['land'];
+          let rankings = state.resourceRankings['land'];
           return {
             icon: 'land',
             text: `Land: They're not making anymore of it. You're using ${amount.toFixed(0)}% of land.`,
@@ -181,7 +181,7 @@ export default {
         }
         case 'emissions': {
           let amount = state.gameState.emissions;
-          let rankings = state.gameState.resourceRankings['emissions'];
+          let rankings = state.resourceRankings['emissions'];
           return {
             icon: 'emissions',
             text: `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`,
@@ -198,7 +198,7 @@ export default {
         }
         case 'water': {
           let amount = display.waterUsePercent(state.gameState.resources_demand.water);
-          let rankings = state.gameState.resourceRankings['water'];
+          let rankings = state.resourceRankings['water'];
           return {
             icon: 'water',
             text: `Water: The giver of life. You're using ${amount.toFixed(0)}% of water resources.`,
@@ -215,7 +215,7 @@ export default {
         }
         case 'energy': {
           let amount = (state.gameState.output_demand.fuel + state.gameState.output_demand.electricity) * 1e-9;
-          let rankings = state.gameState.resourceRankings['energy'];
+          let rankings = state.resourceRankings['energy'];
           return {
             icon: 'energy',
             text: `Energy: Something something. You're using ${amount.toFixed(0)}TWh of energy.`,
@@ -232,7 +232,7 @@ export default {
         }
         case 'biodiversity': {
           let amount = state.gameState.world.extinction_rate;
-          let rankings = state.gameState.resourceRankings['biodiversity'];
+          let rankings = state.resourceRankings['biodiversity'];
           return {
             icon: 'biodiversity',
             text: `Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is ${amount.toFixed(0)}.`,
