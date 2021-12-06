@@ -25,7 +25,7 @@ const init = {
     initiative: 0,
   },
 
-  sound: true,
+  sound: false,
 }
 
 const state = reactive(init);

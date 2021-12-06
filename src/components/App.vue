@@ -33,7 +33,7 @@ export default {
     };
   },
   mounted() {
-    if (!debug.noSound) {
+    if (!debug.noSound && state.sound) {
       window.music.play();
     }
   },
