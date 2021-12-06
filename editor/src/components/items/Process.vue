@@ -43,6 +43,13 @@
         </label>
         <input type="number" min="0" v-model="localData.mix_share" :class="flags('mix_share')" />
       </div>
+      <div>
+        <label>
+          Output Limit
+          <Tip>Optional maximum output this process can produce.</Tip>
+        </label>
+        <input type="number" min="0" v-model="localData.limit" />
+      </div>
       <div class="checkbox">
         <label :for="`${item.id}_locked`">
           Locked
@@ -107,6 +114,10 @@
       <div class="meta-pill split-pill" :class="flags('mix_share')">
         <div>Mix Share</div>
         <div>{{flags('mix_share').invalid ? 'MISSING' : localData.mix_share }}%</div>
+      </div>
+      <div class="meta-pill split-pill" v-if="localData.limit">
+        <div>Output Limit</div>
+        <div>{{localData.limit}}{{OUTPUTS[localData.output]}}</div>
       </div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
       <div class="meta-pill" v-else-if="!localData.locked && flags('locked').invalid" :class="flags('locked')">UNLOCKABLE BUT NOT LOCKED</div>

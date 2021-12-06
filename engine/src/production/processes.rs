@@ -42,6 +42,7 @@ pub struct Process {
     pub id: usize,
     pub name: &'static str,
     pub mix_share: f32,
+    pub limit: Option<f32>,
     pub output: Output,
 
     // Should start at 1.
@@ -97,10 +98,10 @@ pub fn update_mixes(
         processes_by_output[process.output].push(process);
     }
 
-    for (output, _d) in demand.items() {
+    for (output, d) in demand.items() {
         let mut mix: Vec<f32> = processes_by_output[output].iter().map(|p| p.mix_share).collect();
 
-        mix = planner::calculate_mix(mix, &processes_by_output[output], &resource_weights, &feedstock_weights, &priority);
+        mix = planner::calculate_mix(mix, *d, &processes_by_output[output], &resource_weights, &feedstock_weights, &priority);
         for (p, share) in processes_by_output[output].iter_mut().zip(&mix) {
             if p.mix_share != *share {
                 if p.mix_share < *share {
@@ -127,6 +128,7 @@ mod test {
             id: 0,
             name: "Test Process A",
             mix_share: 0.5,
+            limit: None,
             change: ProcessChange::Neutral,
             output: Output::Fuel,
             output_modifier: 1.,
@@ -142,6 +144,7 @@ mod test {
             id: 1,
             name: "Test Process B",
             mix_share: 0.5,
+            limit: None,
             change: ProcessChange::Neutral,
             output: Output::Fuel,
             output_modifier: 1.,
@@ -157,6 +160,7 @@ mod test {
             id: 2,
             name: "Test Process C",
             mix_share: 1.0,
+            limit: None,
             change: ProcessChange::Neutral,
             output: Output::Electricity,
             output_modifier: 1.,

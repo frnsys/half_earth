@@ -185,21 +185,28 @@ const TRANSITION_SPEED: f32 = 0.01;
 /// Here "ideal" means one that minimizes resource usages, weighted by the provided resource
 /// weights, while meeting demand.
 /// This is intended to be used on a per-output basis.
-pub fn calculate_mix(mut mix: Vec<f32>, processes: &Vec<&mut Process>, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>, priority: &Priority) -> Vec<f32> {
+pub fn calculate_mix(mut mix: Vec<f32>, demand: f32, processes: &Vec<&mut Process>, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>, priority: &Priority) -> Vec<f32> {
     let mut changes: Vec<(usize, f32)> = vec![];
     let scores: Vec<f32> = processes.iter().map(|p| score_process(p, priority, resource_weights, feedstock_weights)).collect();
 
     let base_score = score_mix(&mix, &scores);
     let change_amounts = [TRANSITION_SPEED, -TRANSITION_SPEED];
     for i in 0..mix.len() {
+        let output_amount = mix[i] * demand;
         if processes[i].locked {
             continue;
+        } else if processes[i].limit.is_some() && output_amount > processes[i].limit.unwrap() {
+            changes.push((i, -TRANSITION_SPEED*2.));
         } else if processes[i].is_banned() {
             changes.push((i, -TRANSITION_SPEED*2.));
         } else if processes[i].is_promoted() {
             changes.push((i, TRANSITION_SPEED*2.));
         } else if feedstock_weights[processes[i].feedstock.0] == 1.0 { // Depleted, must be 0.
             changes.push((i, -mix[i]));
+        } else if processes[i].is_banned() {
+            changes.push((i, -TRANSITION_SPEED*2.));
+        } else if processes[i].is_promoted() {
+            changes.push((i, TRANSITION_SPEED*2.));
         } else {
             for change in &change_amounts {
                 let changed = f32::max(mix[i] + change, 0.);
@@ -236,6 +243,7 @@ mod test {
         vec![Process {
             id: 0,
             name: "Test Process A",
+            limit: None,
             mix_share: 0.5,
             output: Output::Fuel,
             output_modifier: 1.,
@@ -251,6 +259,7 @@ mod test {
         }, Process {
             id: 1,
             name: "Test Process B",
+            limit: None,
             mix_share: 0.5,
             output: Output::Fuel,
             output_modifier: 1.,
@@ -266,6 +275,7 @@ mod test {
         }, Process {
             id: 2,
             name: "Test Process C",
+            limit: None,
             mix_share: 1.0,
             output: Output::Electricity,
             output_modifier: 1.,
@@ -292,7 +302,7 @@ mod test {
         let feedstocks = feedstocks!(oil: 100., coal: 100.);
         let (produced, consumed_r, consumed_f, _byproducts) = calculate_production(&orders, &resources, &feedstocks);
 
-        let expected = [30., 50., 0.];
+        let expected = [50., 50., 0.];
         assert!(produced.len() == expected.len());
         assert!(produced.iter().zip(expected)
                 .all(|(x1,x2)| approx_eq!(f32, *x1, x2, epsilon=1e-2)));
@@ -303,7 +313,7 @@ mod test {
         assert_eq!(consumed_r, expected);
 
         let expected = feedstocks!(
-            oil: 80.
+            oil: 100.
         );
         assert_eq!(consumed_f, expected);
 

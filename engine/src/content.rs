@@ -503,6 +503,7 @@ pub fn processes() -> Vec<Process> {
             id: 0,
             name: "Floating Wind Turbines",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -530,6 +531,7 @@ pub fn processes() -> Vec<Process> {
             id: 1,
             name: "Nuclear Power",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.10400000000000001,
             feedstock: (Feedstock::Uranium, 0.0009),
             resources: resources!(
@@ -557,6 +559,7 @@ pub fn processes() -> Vec<Process> {
             id: 2,
             name: "Coal",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.12390000000000001,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
@@ -584,6 +587,7 @@ pub fn processes() -> Vec<Process> {
             id: 3,
             name: "Solar PV",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.0265,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -612,6 +616,7 @@ pub fn processes() -> Vec<Process> {
             id: 4,
             name: "Concentrated Solar Power",
             output: Output::Electricity,
+            limit: Some(1000000000000.0),
             mix_share: 0.0005,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -622,15 +627,15 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 31.2
+                co2: 31.2,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::IsSolar,
-                ProcessFeature::IsIntermittent
+                ProcessFeature::IsIntermittent,
+                ProcessFeature::IsSolar
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -640,6 +645,7 @@ pub fn processes() -> Vec<Process> {
             id: 5,
             name: "Petroleum",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.5267000000000001,
             feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
@@ -649,9 +655,9 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.6191,
-                co2: 247.03
+                co2: 247.03,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
@@ -667,6 +673,7 @@ pub fn processes() -> Vec<Process> {
             id: 6,
             name: "Hydropower",
             output: Output::Electricity,
+            limit: Some(28470000000000.0),
             mix_share: 0.158,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -694,6 +701,7 @@ pub fn processes() -> Vec<Process> {
             id: 7,
             name: "Cellular Meat",
             output: Output::AnimalCalories,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -721,6 +729,7 @@ pub fn processes() -> Vec<Process> {
             id: 8,
             name: "Blue Hydrogen",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::NaturalGas, 0.1139),
             resources: resources!(
@@ -749,6 +758,7 @@ pub fn processes() -> Vec<Process> {
             id: 9,
             name: "Terrestrial Wind Power",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.053,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -776,6 +786,7 @@ pub fn processes() -> Vec<Process> {
             id: 10,
             name: "Petroleum Power Gen",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.031,
             feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
@@ -785,16 +796,16 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.6191,
-                co2: 1005.0
+                co2: 1005.0,
+                n2o: 0.0
             ),
             locked: false,
             status: ProcessStatus::Neutral,
             change: ProcessChange::Neutral,
             features: vec![
-                ProcessFeature::IsFossil,
-                ProcessFeature::IsCombustion
+                ProcessFeature::IsCombustion,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 1.0,
             supporters: vec![],
@@ -804,6 +815,7 @@ pub fn processes() -> Vec<Process> {
             id: 11,
             name: "Organic Crop Ag",
             output: Output::PlantCalories,
+            limit: None,
             mix_share: 0.0025,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -831,6 +843,7 @@ pub fn processes() -> Vec<Process> {
             id: 12,
             name: "Green Hydrogen",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
@@ -841,8 +854,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 0.0
+                co2: 0.0,
+                n2o: 0.0
             ),
             locked: true,
             status: ProcessStatus::Neutral,
@@ -858,6 +871,7 @@ pub fn processes() -> Vec<Process> {
             id: 13,
             name: "Industrial Livestock Ag",
             output: Output::AnimalCalories,
+            limit: None,
             mix_share: 0.9975,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -887,6 +901,7 @@ pub fn processes() -> Vec<Process> {
             id: 14,
             name: "Grey Hydrogen",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::NaturalGas, 0.1018),
             resources: resources!(
@@ -914,6 +929,7 @@ pub fn processes() -> Vec<Process> {
             id: 15,
             name: "Algae Biofuels",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -941,6 +957,7 @@ pub fn processes() -> Vec<Process> {
             id: 16,
             name: "Smallholder Farms",
             output: Output::PlantCalories,
+            limit: None,
             mix_share: 0.32,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -968,6 +985,7 @@ pub fn processes() -> Vec<Process> {
             id: 17,
             name: "Natural Gas Power Gen",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.235,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
@@ -996,6 +1014,7 @@ pub fn processes() -> Vec<Process> {
             id: 18,
             name: "Nuclear Fusion",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Lithium, 0.00012),
             resources: resources!(
@@ -1023,6 +1042,7 @@ pub fn processes() -> Vec<Process> {
             id: 19,
             name: "BECCS",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.025,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1052,6 +1072,7 @@ pub fn processes() -> Vec<Process> {
             id: 20,
             name: "Industrial Crop Ag",
             output: Output::PlantCalories,
+            limit: None,
             mix_share: 0.6775,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1081,6 +1102,7 @@ pub fn processes() -> Vec<Process> {
             id: 21,
             name: "Thorium Nuclear Power",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Thorium, 0.0),
             resources: resources!(
@@ -1103,6 +1125,7 @@ pub fn processes() -> Vec<Process> {
             id: 22,
             name: "Regenerative Ag (Livestock)",
             output: Output::AnimalCalories,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1130,6 +1153,7 @@ pub fn processes() -> Vec<Process> {
             id: 23,
             name: "Biofuels",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.1356,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1158,6 +1182,7 @@ pub fn processes() -> Vec<Process> {
             id: 24,
             name: "Coal Power Generation",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.36700000000000005,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
@@ -1186,6 +1211,7 @@ pub fn processes() -> Vec<Process> {
             id: 25,
             name: "Organic Livestock Ag",
             output: Output::AnimalCalories,
+            limit: None,
             mix_share: 0.0025,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1213,6 +1239,7 @@ pub fn processes() -> Vec<Process> {
             id: 26,
             name: "Vertical Farming",
             output: Output::PlantCalories,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -1240,6 +1267,7 @@ pub fn processes() -> Vec<Process> {
             id: 27,
             name: "Natural Gas",
             output: Output::Fuel,
+            limit: None,
             mix_share: 0.2138,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
@@ -1267,6 +1295,7 @@ pub fn processes() -> Vec<Process> {
             id: 28,
             name: "Breeder Nuclear Power",
             output: Output::Electricity,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Uranium, 0.0),
             resources: resources!(
@@ -1289,6 +1318,7 @@ pub fn processes() -> Vec<Process> {
             id: 29,
             name: "Regenerative Ag (Crops)",
             output: Output::PlantCalories,
+            limit: None,
             mix_share: 0.0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1502,11 +1532,11 @@ pub fn projects() -> Vec<Project> {
             id: 6,
             name: "Long-Range Electric Aviation",
             cost: 0,
-            base_cost: Cost::Fixed(40),
+            base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(7, Resource::Fuel, -0.9)
+
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1514,7 +1544,28 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::ModifyIndustryResources(7, Resource::Fuel, 0.1)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+                            Condition::ProjectStatus(47, ProjectStatus::Active)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::ModifyIndustryResources(7, Resource::Fuel, 0.8)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2145,7 +2196,7 @@ pub fn projects() -> Vec<Project> {
             id: 23,
             name: "Hempcrete",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
@@ -2159,7 +2210,8 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-
+                        Effect::ModifyIndustryResources(1, Resource::Land, 1.5),
+                        Effect::ModifyIndustryByproducts(1, Byproduct::Co2, 0.5)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2694,7 +2746,30 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::ModifyIndustryResources(5, Resource::Fuel, 0.),
+                        Effect::ModifyIndustryResources(5, Resource::Electricity, 2.75)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+                            Condition::ProjectStatus(47, ProjectStatus::Active)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::ModifyIndustryResources(5, Resource::Electricity, 2.75),
+                        Effect::WorldVariable(WorldVariable::Emissions, 0.36)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -3910,7 +3985,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::Resource(Resource::Water, 0.)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -3956,6 +4031,34 @@ pub fn projects() -> Vec<Project> {
             ],
             supporters: vec![0, 5, 2],
             opposers: vec![4, 8, 6],
+            active_outcome: None
+        },
+        Project {
+            id: 75,
+            name: "Afforestation",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
             active_outcome: None
         }
     ]

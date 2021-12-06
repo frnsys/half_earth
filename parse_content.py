@@ -97,6 +97,7 @@ specs = {
         'id': None,
         'name': None,
         'output': None,
+        'limit': None,
         'mix_share': 0,
         'feedstock': None,
         'resources': {},
@@ -365,6 +366,11 @@ def define_field(k, v, item):
             return 'phase: Phase::{}'.format(v)
     elif k == 'output':
         return 'output: Output::{}'.format(v)
+    elif k == 'limit':
+        if not v:
+            return 'limit: None'
+        else:
+            return 'limit: Some({})'.format(format_float(v))
     elif k == 'feedstock':
         amount = item.get('feedstock_amount', 0)
         return 'feedstock: (Feedstock::{}, {})'.format(v, format_float(amount))
