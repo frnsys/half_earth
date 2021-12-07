@@ -48,6 +48,7 @@ import Cards from './Cards.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 
 export default {
+  props: ['output'],
   components: {
     Cards,
     ProcessCard,
@@ -59,7 +60,7 @@ export default {
   },
   computed: {
     processes() {
-      let processes = state.gameState.processes.filter((p) => !p.locked);
+      let processes = state.gameState.processes.filter((p) => !p.locked && p.output === this.output);
       processes.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
       return processes;
     },

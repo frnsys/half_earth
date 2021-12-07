@@ -8,12 +8,10 @@
   <Research v-if="page == PAGES.RESEARCH" />
   <Policies v-else-if="page == PAGES.POLICIES" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" />
-  <Processes v-else-if="page == PAGES.PROCESSES" />
   <div class="plan-change-select--menu" v-else>
     <button @click="selectPage(PAGES.RESEARCH)">Research</button>
     <button @click="selectPage(PAGES.POLICIES)">Policies</button>
     <button @click="selectPage(PAGES.INITIATIVES)">Initiatives</button>
-    <button @click="selectPage(PAGES.PROCESSES)">Processes</button>
   </div>
 </div>
 </template>
@@ -21,24 +19,19 @@
 <script>
 import Research from './Research.vue';
 import Policies from './Policies.vue';
-import Processes from './Processes.vue';
 import Initiatives from './Initiatives.vue';
 
 const PAGES = {
   RESEARCH: 'Research',
   POLICIES: 'Policies',
   INITIATIVES: 'Initiatives',
-  PROCESSES: 'Processes',
 };
-
-// TODO events
 
 export default {
   components: {
     Research,
     Policies,
     Initiatives,
-    Processes,
   },
   created() {
     this.PAGES = PAGES;

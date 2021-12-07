@@ -1,7 +1,7 @@
 <template>
 <div class="plan">
-  <PlanChangeSelect v-if="page == 'Add'" @close="page = null" @page="(p) => $emit('page', p)"/>
-  <Priorities v-else-if="page == 'Priorities'" @close="page = null" />
+  <PlanChangeSelect v-if="page == 'Add'" @close="page = null" @page="(p) => $emit('page', p)" />
+  <ProcessesSelect v-if="page == 'Processes'" @close="page = null" />
   <div class="plan--changes" v-if="page == null">
     <div class="plan--change">
       <div class="plan--action">Add</div>
@@ -10,11 +10,15 @@
       </div>
     </div>
     <div class="plan--change">
-      <div class="plan--action">Priority</div>
-      <div class="minicard" @click="selectPage('Priorities')">
-        <img :src="icons[consts.priorities[consts.Priority[state.gameState.priority]].icon]" />
+      <div class="plan--action">Processes</div>
+      <div class="minicard processes-minicard" @click="selectPage('Processes')">
+        <div>
+          <img :src="icons.electricity" />
+          <img :src="icons.fuel" />
+          <img :src="icons.plant_calories" />
+          <img :src="icons.animal_calories" />
+        </div>
       </div>
-      <div class="plan--note">{{consts.priorities[consts.Priority[state.gameState.priority]].name}}</div>
     </div>
     <div class="plan--change" v-for="project in activeProjects">
       <div class="plan--action">
@@ -46,7 +50,7 @@
 import game from '/src/game';
 import state from '/src/state';
 import Chart from './Chart.vue';
-import Priorities from './Priorities.vue';
+import ProcessesSelect from './ProcessesSelect.vue';
 import PlanChangeSelect from './PlanChangeSelect.vue';
 import MiniProcess from 'components/cards/MiniProcess.vue';
 import MiniProject from 'components/cards/MiniProject.vue';
@@ -73,8 +77,8 @@ export default {
     Chart,
     MiniProcess,
     MiniProject,
+    ProcessesSelect,
     PlanChangeSelect,
-    Priorities,
   },
   created() {
     this.charts = charts;
@@ -268,5 +272,9 @@ export default {
   left: 50%;
   bottom: 2em;
   transform: translate(-50%, 0);
+}
+
+.processes-minicard img {
+  width: 28px;
 }
 </style>

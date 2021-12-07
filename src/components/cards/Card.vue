@@ -93,6 +93,7 @@ export default {
 }
 .card-image {
   border-radius: 0.3em;
+  pointer-events: none; /* prevent dragging */
 }
 .card-image-attribution {
   font-size: 0.8em;

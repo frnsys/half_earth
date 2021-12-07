@@ -134,11 +134,6 @@ function setTgav(tgav) {
   updateState();
 }
 
-function setPriority(priority) {
-  game.set_priority(priority);
-  updateState();
-}
-
 function simulate(years) {
   return game.simulate(years);
 }
@@ -216,7 +211,6 @@ updateResourceRankings();
 export default {
   newRun, saveMeta, step,
   updateState, setTgav,
-  setPriority,
   changePoliticalCapital,
   changeLocalOutlook,
   changeHabitability,

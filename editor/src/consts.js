@@ -139,7 +139,7 @@ const SUBPHASES = {
     'Start', 'End', 'Plan',
     'Regions', 'Coalition',
     'Dashboard', 'Research', 'Initiatives',
-    'Policies', 'Processes', 'Priority'],
+    'Policies', 'Processes'],
   Report: ['Start'],
   Break: ['Start'],
   End: ['Start'],
