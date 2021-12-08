@@ -42,24 +42,12 @@ fn promote_process(processes: &mut Vec<Process>, process_id: usize) {
     let mut points = 0;
     let output = processes[process_id].output.clone();
     for process in processes.iter_mut() {
-        if process.output == output && process.mix_share > 0 {
+        if process.id != process_id && process.output == output && process.mix_share > 0 {
             points += 1;
             process.mix_share -= 1;
         }
     }
     processes[process_id].mix_share += points;
-}
-
-fn ban_process(processes: &mut Vec<Process>, process_id: usize) {
-    let mut points = processes[process_id].mix_share;
-    processes[process_id].mix_share = 0;
-    let output = processes[process_id].output.clone();
-    for process in processes {
-        if process.output == output && !process.locked {
-            points -= 1;
-            process.mix_share += 1;
-        }
-    }
 }
 
 impl Scenario {
@@ -77,9 +65,28 @@ impl Scenario {
                         to_ban.push(process.id);
                     }
                 }
-                for p_id in to_ban {
-                    ban_process(&mut game.state.processes, p_id);
+
+                let mut points: OutputMap<usize> = OutputMap::default();
+                for process_id in &to_ban {
+                    let process = &mut game.state.processes[*process_id];
+                    let output = process.output.clone();
+                    points[output] += process.mix_share;
+                    process.mix_share = 0;
                 }
+                for (output, pts) in points.items_mut() {
+                    while *pts > 0 {
+                        for process in &mut game.state.processes {
+                            if !to_ban.contains(&process.id) && process.output == output && !process.locked {
+                                *pts -= 1;
+                                process.mix_share += 1;
+                                if *pts <= 0 {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 "🔷 Banned Fossil Fuels".to_string()
             },
             Scenario::Nuclear => {
@@ -184,6 +191,11 @@ fn main() {
             scenarios.push(scenario);
         }
     }
+    let no_hector = if args.len() > 2 {
+        args[2] == "NoHector"
+    } else {
+        false
+    };
 
     let difficulty = Difficulty::Normal;
     let mut game = Game::new(difficulty);
@@ -288,6 +300,8 @@ fn main() {
     let mut cols: Vec<String> = base_cols.iter().map(|c| c.to_string()).collect();
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Mix Share", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Land Use", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Fuel Use", p.output, p.name)));
+    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Electricity Use", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CO2 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
     cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
@@ -354,11 +368,16 @@ fn main() {
         emissions.get_mut("simpleNbox").unwrap().get_mut("ffi_emissions").unwrap().push((game.state.world.co2_emissions * 12./44. * 1e-15) as f64);
         emissions.get_mut("CH4").unwrap().get_mut("CH4_emissions").unwrap().push((game.state.world.ch4_emissions * 1e-12) as f64);
         emissions.get_mut("N2O").unwrap().get_mut("N2O_emissions").unwrap().push((game.state.world.n2o_emissions * 1e-12) as f64);
-        let tgav = unsafe {
-            run_hector(game.state.world.year, &emissions) as f32
+        let tgav = if !no_hector {
+            unsafe {
+                run_hector(game.state.world.year, &emissions) as f32
+            }
+        } else {
+            0.
         };
-
-        game.state.set_tgav(tgav);
+        if tgav > 0. {
+            game.state.set_tgav(tgav);
+        }
 
         let events = if report.roll_events {
             game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
@@ -474,6 +493,14 @@ fn main() {
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
             ((p.resources.land * order.amount/p.output_modifier)/consts::STARTING_RESOURCES.land).to_string()
+        }));
+        vals.extend(game.state.processes.iter().map(|p| {
+            let order = p.production_order(&agg_demand);
+            (p.resources.fuel * order.amount/p.output_modifier).to_string()
+        }));
+        vals.extend(game.state.processes.iter().map(|p| {
+            let order = p.production_order(&agg_demand);
+            (p.resources.electricity * order.amount/p.output_modifier).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);

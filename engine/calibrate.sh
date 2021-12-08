@@ -12,8 +12,7 @@ if [ "$1" == "build" ]; then
     FLAGS="$2" # e.g. "static_development,static_population,static_production"
     cargo build --release --example simulate --features "$FLAGS"
 else
-    SCENARIOS="$1" # Comma separated scenario names
-    ./target/release/examples/simulate "$SCENARIOS"
+    ./target/release/examples/simulate "$@"
     python plot.py
     firefox /tmp/plots/index.html
 fi

@@ -1118,7 +1118,7 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: 699.488,
+                co2: 174.86,
                 n2o: 0.06337
             ),
             locked: false,
