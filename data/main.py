@@ -455,15 +455,17 @@ if __name__ == '__main__':
     print('    Animal:', co2_seq_per_animal_calorie)
 
     # Vertical/hydroponic farming
-    # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7516583/
+    # From Table 3 of https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7516583/
     # Compares values for lettuce...biiig assumption but assume these values
     # hold across other crop types. In practice, vertical farming/hydroponics
     # grows a much smaller variety of crops (mostly leafy greens)
     # These are all (indoor hydroponic value)/(outdoor farming value)
-    water_use = 20/250 # L/kg
-    energy_use = 120/0.3 # kWh/kg, provided range for hydroponic is 60-180kWh/kg
-    co2_emissions = 352/540 # kg/tons
-    crop_yield = 41/3.9 # kg/m2
+    # According to the USDA, 1kg lettuce = 136 kcals
+    kg_to_kcal = 136
+    water_use = 1 # L/kg/year
+    energy_use = 250 # kWh/kg/year
+    co2_emissions = 158 # kg/ton
+    land_use = 100 # kg/m2, 80-120kg/m2
     # Note that https://www.rsis.edu.sg/rsis-publication/nts/vertical-farms-are-they-sustainable/
     # describes 3000% higher energy use for strawberries, so this energy use ratio
     # may be a very conservative estimate
@@ -471,7 +473,7 @@ if __name__ == '__main__':
     # Assuming that all energy use in vertical farming is electric,
     # and that its relative compactness means no fuel is needed
     print('\nVertical Farming:')
-    print('  Electricity per calorie (kWh/kcal):', kwh_per_plant_calorie * energy_use)
-    print('  Water per calorie (L/kcal):', mean_plant_water * water_use)
-    print('  Land use per calorie (m2/kcal):', land_use_per_plant_calorie * (1/crop_yield))
-    print('  CO2 emissions per calorie (gCO2/kcal):', co2_per_plant_calorie * co2_emissions)
+    print('  Electricity per calorie (kWh/kcal):', energy_use * 1/kg_to_kcal)
+    print('  Water per calorie (L/kcal):', water_use * 1/kg_to_kcal)
+    print('  Land use per calorie (m2/kcal):', 1/land_use * 1/kg_to_kcal)
+    print('  CO2 emissions per calorie (gCO2/kcal):', 1/co2_emissions * 1/kg_to_kcal * 1e6)
