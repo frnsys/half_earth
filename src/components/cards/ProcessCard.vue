@@ -7,10 +7,21 @@
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div class="card-tack-ur process-mix"
-      v-tip="{text: `This process is makes up ${process.mix_share*5}% of ${output} production.`, icon: 'mix_token'}">
-      <span :class="{depleted: feedstockEstimate == 0}">{{process.mix_share*5}}%</span>
+      v-tip="{text: `This process is makes up ${process.mix_share*5}% of ${output} production.${hasChange ? ` At the next planning cycle it will change to ${changedMixShare*5}%.` : '' }`, icon: 'mix_token'}">
+      <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}">
+        <div class="process-mix-percent">{{process.mix_share*5}}%</div>
+        <template v-if="hasChange">
+          <div><img :src="icons.down_arrow"></div>
+          <div class="process-mix-percent">{{changedMixShare*5}}%</div>
+        </template>
+      </div>
       <div class="process-mix-cells">
-        <div class="process-mix-cell" v-for="i in 20" :class="{active: i <= process.mix_share, depleted: feedstockEstimate == 0}"/>
+        <div class="process-mix-cell" v-for="i in 20" :class="{
+          active: i <= process.mix_share,
+          depleted: feedstockEstimate == 0,
+          shrink: i <= process.mix_share && i > changedMixShare,
+          grow: i > process.mix_share && i <= changedMixShare
+        }"/>
       </div>
     </div>
     <div class="card-tack-ul">
@@ -120,6 +131,14 @@ export default {
       }
       let estimate = state.gameState.feedstocks[feedstock]/state.gameState.consumed_feedstocks[feedstock];
       return Math.round(estimate);
+    },
+    hasChange() {
+      let change = state.processMixChanges[this.process.output][this.process.id] || 0;
+      return change !== 0;
+    },
+    changedMixShare() {
+      let change = state.processMixChanges[this.process.output][this.process.id] || 0;
+      return this.process.mix_share + change;
     },
     intensities() {
       let type =
@@ -261,19 +280,25 @@ export default {
   padding: 0.2em 0.2em;
 }
 
+.process-mix {
+  display: flex;
+}
 .process-mix img {
   width: 18px;
   vertical-align: top;
 }
 
-.process-mix span {
+.process-mix-percent {
   background: #222;
   color: #fff;
   padding: 0.1em 0.15em;
   border-radius: 0.2em;
   font-size: 0.8em;
 }
-.process-mix span.depleted {
+.process-mix-percents {
+  text-align: center;
+}
+.process-mix-percents.depleted {
   color: #aaa;
 }
 .process-mix-cell {
@@ -289,9 +314,11 @@ export default {
 .process-mix-cell.active.depleted {
   background: #6190B3;
 }
-.process-mix-cells {
-  display: inline-block;
-  vertical-align: top;
+.process-mix-cell.active.shrink {
+  background: #F28435;
+}
+.process-mix-cell.grow {
+  background: #43CC70;
 }
 
 .alert-icon {
