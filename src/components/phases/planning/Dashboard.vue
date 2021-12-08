@@ -31,7 +31,7 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        TODO
+        {{state.gameState.world.sea_level_rise.toFixed(1)}}m
       </div>
       <img :src="icons.sea_level_rise" />
       <div class="dashboard--item-name">Sea Level Rise</div>
