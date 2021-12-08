@@ -1,7 +1,6 @@
 use crate::content;
 use crate::state::State;
 use crate::projects::{Status, years_remaining};
-use crate::production::Priority;
 use crate::events::{EventPool, Effect, Phase};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
@@ -81,20 +80,8 @@ impl GameInterface {
         self.game.upgrade_project(project_id);
     }
 
-    pub fn ban_process(&mut self, process_id: usize) {
-        self.game.state.ban_process(process_id);
-    }
-
-    pub fn unban_process(&mut self, process_id: usize) {
-        self.game.state.unban_process(process_id);
-    }
-
-    pub fn promote_process(&mut self, process_id: usize) {
-        self.game.state.promote_process(process_id);
-    }
-
-    pub fn unpromote_process(&mut self, process_id: usize) {
-        self.game.state.unpromote_process(process_id);
+    pub fn change_process_mix_share(&mut self, process_id: usize, change: isize) {
+        self.game.state.change_mix_share(process_id, change);
     }
 
     pub fn roll_events(&mut self, phase: Phase, limit: Option<usize>) -> Result<JsValue, JsValue> {
@@ -127,10 +114,6 @@ impl GameInterface {
 
     pub fn set_tgav(&mut self, tgav: f32) {
         self.game.state.set_tgav(tgav);
-    }
-
-    pub fn set_priority(&mut self, priority: Priority) {
-        self.game.state.priority = priority;
     }
 
     pub fn active_autoclickers(&self) -> Result<JsValue, JsValue> {

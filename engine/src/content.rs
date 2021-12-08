@@ -5,7 +5,7 @@ use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
-use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
+use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
@@ -504,7 +504,7 @@ pub fn processes() -> Vec<Process> {
             name: "Floating Wind Turbines",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -518,8 +518,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 10.0
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -532,7 +530,7 @@ pub fn processes() -> Vec<Process> {
             name: "Nuclear Power",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.10400000000000001,
+            mix_share: 2,
             feedstock: (Feedstock::Uranium, 0.0009),
             resources: resources!(
                 electricity: 0.0,
@@ -546,8 +544,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsNuclear
             ],
@@ -560,7 +556,7 @@ pub fn processes() -> Vec<Process> {
             name: "Coal",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.12390000000000001,
+            mix_share: 2,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
                 electricity: 0.0,
@@ -574,8 +570,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 353.81
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsFossil
             ],
@@ -588,7 +582,7 @@ pub fn processes() -> Vec<Process> {
             name: "Solar PV",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.0265,
+            mix_share: 1,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -602,8 +596,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 40.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsSolar,
                 ProcessFeature::IsIntermittent
@@ -617,7 +609,7 @@ pub fn processes() -> Vec<Process> {
             name: "Concentrated Solar Power",
             output: Output::Electricity,
             limit: Some(1000000000000.0),
-            mix_share: 0.0005,
+            mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -631,8 +623,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsIntermittent,
                 ProcessFeature::IsSolar
@@ -646,7 +636,7 @@ pub fn processes() -> Vec<Process> {
             name: "Petroleum",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.5267000000000001,
+            mix_share: 11,
             feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
                 electricity: 0.0,
@@ -660,8 +650,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsFossil
             ],
@@ -674,7 +662,7 @@ pub fn processes() -> Vec<Process> {
             name: "Hydropower",
             output: Output::Electricity,
             limit: Some(28470000000000.0),
-            mix_share: 0.158,
+            mix_share: 3,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -688,8 +676,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -702,7 +688,7 @@ pub fn processes() -> Vec<Process> {
             name: "Cellular Meat",
             output: Output::AnimalCalories,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.2,
@@ -716,8 +702,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -730,7 +714,7 @@ pub fn processes() -> Vec<Process> {
             name: "Blue Hydrogen",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::NaturalGas, 0.1139),
             resources: resources!(
                 electricity: 0.034,
@@ -744,8 +728,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 45.85
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsCCS,
                 ProcessFeature::IsFossil
@@ -759,7 +741,7 @@ pub fn processes() -> Vec<Process> {
             name: "Terrestrial Wind Power",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.053,
+            mix_share: 1,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -773,8 +755,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 10.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsIntermittent
             ],
@@ -787,7 +767,7 @@ pub fn processes() -> Vec<Process> {
             name: "Petroleum Power Gen",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.031,
+            mix_share: 1,
             feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
                 electricity: 0.0,
@@ -801,8 +781,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsCombustion,
                 ProcessFeature::IsFossil
@@ -816,7 +794,7 @@ pub fn processes() -> Vec<Process> {
             name: "Organic Crop Ag",
             output: Output::PlantCalories,
             limit: None,
-            mix_share: 0.0025,
+            mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 5.298671969354342e-05,
@@ -830,8 +808,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 0.3200031076184425
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsSolar
             ],
@@ -844,7 +820,7 @@ pub fn processes() -> Vec<Process> {
             name: "Green Hydrogen",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
                 electricity: 46.4,
@@ -858,8 +834,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -872,7 +846,7 @@ pub fn processes() -> Vec<Process> {
             name: "Industrial Livestock Ag",
             output: Output::AnimalCalories,
             limit: None,
-            mix_share: 0.9975,
+            mix_share: 20,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 0.0002914269583144888,
@@ -886,8 +860,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 1.7600170919014337
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesLivestock,
                 ProcessFeature::UsesPesticides,
@@ -902,7 +874,7 @@ pub fn processes() -> Vec<Process> {
             name: "Grey Hydrogen",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::NaturalGas, 0.1018),
             resources: resources!(
                 electricity: 0.009,
@@ -916,8 +888,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 75.6
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsFossil
             ],
@@ -930,7 +900,7 @@ pub fn processes() -> Vec<Process> {
             name: "Algae Biofuels",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 7.5583333,
@@ -944,8 +914,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
@@ -958,7 +926,7 @@ pub fn processes() -> Vec<Process> {
             name: "Smallholder Farms",
             output: Output::PlantCalories,
             limit: None,
-            mix_share: 0.32,
+            mix_share: 6,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 2.890184710556914e-05,
@@ -972,8 +940,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsSolar
             ],
@@ -986,7 +952,7 @@ pub fn processes() -> Vec<Process> {
             name: "Natural Gas Power Gen",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.235,
+            mix_share: 5,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
                 electricity: 0.0,
@@ -1000,8 +966,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 412.7691
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsFossil,
                 ProcessFeature::IsCombustion
@@ -1015,7 +979,7 @@ pub fn processes() -> Vec<Process> {
             name: "Nuclear Fusion",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Lithium, 0.00012),
             resources: resources!(
                 electricity: 0.0,
@@ -1029,8 +993,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 3.95e-05
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -1043,7 +1005,7 @@ pub fn processes() -> Vec<Process> {
             name: "BECCS",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.025,
+            mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -1057,8 +1019,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.06337
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsCCS,
                 ProcessFeature::UsesPesticides,
@@ -1073,7 +1033,7 @@ pub fn processes() -> Vec<Process> {
             name: "Industrial Crop Ag",
             output: Output::PlantCalories,
             limit: None,
-            mix_share: 0.6775,
+            mix_share: 14,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 3.4971234997738656e-05,
@@ -1087,8 +1047,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 0.21120205102817205
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesSynFertilizer,
                 ProcessFeature::IsSolar,
@@ -1103,7 +1061,7 @@ pub fn processes() -> Vec<Process> {
             name: "Thorium Nuclear Power",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Thorium, 0.0),
             resources: resources!(
 
@@ -1112,8 +1070,6 @@ pub fn processes() -> Vec<Process> {
 
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
 
             ],
@@ -1126,7 +1082,7 @@ pub fn processes() -> Vec<Process> {
             name: "Regenerative Ag (Livestock)",
             output: Output::AnimalCalories,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 0.00044155599744619513,
@@ -1140,8 +1096,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesLivestock
             ],
@@ -1154,7 +1108,7 @@ pub fn processes() -> Vec<Process> {
             name: "Biofuels",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.1356,
+            mix_share: 3,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 0.0,
@@ -1168,8 +1122,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.06337
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
@@ -1183,7 +1135,7 @@ pub fn processes() -> Vec<Process> {
             name: "Coal Power Generation",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.36700000000000005,
+            mix_share: 7,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
                 electricity: 0.0,
@@ -1197,8 +1149,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 970.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsFossil,
                 ProcessFeature::IsCombustion
@@ -1212,7 +1162,7 @@ pub fn processes() -> Vec<Process> {
             name: "Organic Livestock Ag",
             output: Output::AnimalCalories,
             limit: None,
-            mix_share: 0.0025,
+            mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 0.00044155599744619513,
@@ -1226,8 +1176,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 2.666692563487021
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesLivestock
             ],
@@ -1240,7 +1188,7 @@ pub fn processes() -> Vec<Process> {
             name: "Vertical Farming",
             output: Output::PlantCalories,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 16.785,
@@ -1254,8 +1202,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
@@ -1268,7 +1214,7 @@ pub fn processes() -> Vec<Process> {
             name: "Natural Gas",
             output: Output::Fuel,
             limit: None,
-            mix_share: 0.2138,
+            mix_share: 4,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
                 electricity: 0.0,
@@ -1282,8 +1228,6 @@ pub fn processes() -> Vec<Process> {
                 co2: 180.54
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsFossil
             ],
@@ -1296,7 +1240,7 @@ pub fn processes() -> Vec<Process> {
             name: "Breeder Nuclear Power",
             output: Output::Electricity,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Uranium, 0.0),
             resources: resources!(
 
@@ -1305,8 +1249,6 @@ pub fn processes() -> Vec<Process> {
 
             ),
             locked: true,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsNuclear
             ],
@@ -1319,7 +1261,7 @@ pub fn processes() -> Vec<Process> {
             name: "Regenerative Ag (Crops)",
             output: Output::PlantCalories,
             limit: None,
-            mix_share: 0.0,
+            mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
                 electricity: 5.298671969354342e-05,
@@ -1333,8 +1275,6 @@ pub fn processes() -> Vec<Process> {
                 n2o: 0.0
             ),
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             features: vec![
                 ProcessFeature::IsSolar
             ],

@@ -7,9 +7,9 @@ use hector_rs::{run_hector, emissions::get_emissions};
 use half_earth_engine::{
     resources, byproducts,
     game::{Game, Difficulty},
-    kinds::{Output, Resource, ResourceMap, ByproductMap},
+    kinds::{Output, OutputMap, Resource, ResourceMap, ByproductMap},
     projects::Status,
-    production::{ProductionOrder, Process, Priority, ProcessStatus, ProcessFeature, calculate_required},
+    production::{ProductionOrder, Process, ProcessFeature, calculate_required},
     events::{Event, Phase}, consts};
 
 #[derive(Serialize)]
@@ -33,10 +33,33 @@ struct Report {
     roll_events: bool,
     start_year: usize,
     scenario_start: usize,
-    priority: Priority,
     scenarios: Vec<Scenario>,
     events: Vec<Vec<(String, Option<String>)>>,
     icon_events: Vec<Vec<(String, Option<String>)>>,
+}
+
+fn promote_process(processes: &mut Vec<Process>, process_id: usize) {
+    let mut points = 0;
+    let output = processes[process_id].output.clone();
+    for process in processes.iter_mut() {
+        if process.output == output && process.mix_share > 0 {
+            points += 1;
+            process.mix_share -= 1;
+        }
+    }
+    processes[process_id].mix_share += points;
+}
+
+fn ban_process(processes: &mut Vec<Process>, process_id: usize) {
+    let mut points = processes[process_id].mix_share;
+    processes[process_id].mix_share = 0;
+    let output = processes[process_id].output.clone();
+    for process in processes {
+        if process.output == output && !process.locked {
+            points -= 1;
+            process.mix_share += 1;
+        }
+    }
 }
 
 impl Scenario {
@@ -48,24 +71,32 @@ impl Scenario {
                 "🔷 Implemented Energy Quotas".to_string()
             },
             Scenario::BanFossilFuels => {
+                let mut to_ban = vec![];
                 for process in &mut game.state.processes {
                     if process.features.contains(&ProcessFeature::IsFossil) {
-                        process.status = ProcessStatus::Banned;
+                        to_ban.push(process.id);
                     }
+                }
+                for p_id in to_ban {
+                    ban_process(&mut game.state.processes, p_id);
                 }
                 "🔷 Banned Fossil Fuels".to_string()
             },
             Scenario::Nuclear => {
+                let mut to_promote = vec![];
                 for process in &mut game.state.processes {
                     if process.features.contains(&ProcessFeature::IsNuclear) {
-                        process.status = ProcessStatus::Promoted;
+                        to_promote.push(process.id);
                     }
+                }
+                for p_id in to_promote {
+                    promote_process(&mut game.state.processes, p_id);
                 }
                 "🔷 Promoted Nuclear Power".to_string()
             },
             Scenario::Solar => {
                 let p_id = find_process_id(game, "Solar PV");
-                game.state.processes[p_id].status = ProcessStatus::Promoted;
+                promote_process(&mut game.state.processes, p_id);
                 let p_id = find_project_id(game, "Next-Gen Solar PV");
                 game.start_project(p_id, rng);
                 game.state.projects[p_id].set_points(10);
@@ -108,7 +139,7 @@ impl Scenario {
             },
             Scenario::GreenHydrogen => {
                 let p_id = find_process_id(game, "Green Hydrogen");
-                game.state.processes[p_id].status = ProcessStatus::Promoted;
+                promote_process(&mut game.state.processes, p_id);
                 let p_id = find_project_id(game, "Green Hydrogen");
                 game.start_project(p_id, rng);
                 game.state.projects[p_id].set_points(10);
@@ -161,7 +192,6 @@ fn main() {
     let mut report = Report {
         roll_events: true,
         start_year: game.state.world.year,
-        priority: Priority::Scarcity,
         scenario_start: 10,
         scenarios,
         events: vec![],
@@ -440,7 +470,7 @@ fn main() {
             water_ref,
             pop_ref,
         ].iter().map(|v| v.to_string()).collect();
-        vals.extend(game.state.processes.iter().map(|p| p.mix_share.to_string()));
+        vals.extend(game.state.processes.iter().map(|p| p.mix_percent().to_string()));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
             ((p.resources.land * order.amount/p.output_modifier)/consts::STARTING_RESOURCES.land).to_string()

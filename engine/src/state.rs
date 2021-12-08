@@ -6,8 +6,8 @@ use crate::industries::Industry;
 use crate::events::{Effect, Request, Flag};
 use crate::projects::{Project, Status, Type as ProjectType};
 use crate::production::{
-    ProductionOrder, Priority, Process, ProcessStatus,
-    produce, calculate_required, update_mixes};
+    ProductionOrder, Process,
+    produce, calculate_required};
 use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::{content, consts};
 use rand::rngs::SmallRng;
@@ -21,7 +21,6 @@ pub struct State {
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
-    pub priority: Priority,
 
     pub game_over: bool,
 
@@ -66,7 +65,6 @@ impl State {
             hes_points: 0,
             falc_points: 0,
             flags: Vec::new(),
-            priority: Priority::Scarcity,
             game_over: false,
 
             world: content::world(difficulty),
@@ -235,6 +233,15 @@ impl State {
         let orders: Vec<ProductionOrder> = self.processes.iter()
             .map(|p| p.production_order(&self.output_demand)).collect();
 
+        // Calculate required resources so we can add in food energy requirements
+        let (required_resources, required_feedstocks) = calculate_required(&orders);
+        self.output_demand.electricity += required_resources.electricity;
+        self.output_demand.fuel += required_resources.fuel;
+
+        // Now re-calculate orders
+        let orders: Vec<ProductionOrder> = self.processes.iter()
+            .map(|p| p.production_order(&self.output_demand)).collect();
+
         // Apply land protection
         self.resources.land = consts::STARTING_RESOURCES.land * (1. - self.protected_land);
 
@@ -282,17 +289,13 @@ impl State {
         for (k, v) in required_resources.items() {
             resource_weights[k] = f32::min(f32::max(v / self.resources[k], 0.), 1.);
         }
+        resource_weights.electricity = 2.;
         let mut feedstock_weights = feedstocks!();
         for (k, v) in required_feedstocks.items() {
             feedstock_weights[k] = f32::min(f32::max(v / self.feedstocks[k], 0.), 1.);
         }
         feedstock_weights.soil = 0.; // TODO add this back in?
         feedstock_weights.other = 0.;
-
-        // Update mixes according to resource scarcity
-        if !cfg!(feature = "static_production") {
-            update_mixes(&mut self.processes, &self.output_demand, &resource_weights, &feedstock_weights, &self.priority);
-        }
     }
 
     /// Contribution to extinction rate from a single process
@@ -420,51 +423,36 @@ impl State {
         (remove_effects, add_effects)
     }
 
-    pub fn promote_process(&mut self, process_id: usize) {
+    pub fn change_mix_share(&mut self, process_id: usize, change: isize) {
         let process = &mut self.processes[process_id];
-        process.status = ProcessStatus::Promoted;
+        let was_banned = process.is_banned();
+        let was_promoted = process.is_promoted();
+        if change < 0 {
+            process.mix_share = process.mix_share.saturating_sub(change.abs() as usize);
+        } else {
+            process.mix_share += change as usize;
+        }
 
+        let (support_change, oppose_change) = if !was_banned && process.is_banned() {
+            // Ban
+            (-1, 1)
+        } else if was_banned && !process.is_banned() {
+            // Unban
+            (1, -1)
+        } else if was_promoted && !process.is_promoted() {
+            // Unpromote
+            (-1, 1)
+        } else if !was_promoted && process.is_promoted() {
+            // Promote
+            (1, -1)
+        } else {
+            (0, 0)
+        };
         for npc_id in &process.supporters {
-            self.npcs[*npc_id].relationship += 1;
+            self.npcs[*npc_id].relationship += support_change;
         }
         for npc_id in &process.opposers {
-            self.npcs[*npc_id].relationship -= 1;
-        }
-    }
-
-    pub fn unpromote_process(&mut self, process_id: usize) {
-        let process = &mut self.processes[process_id];
-        process.status = ProcessStatus::Neutral;
-
-        for npc_id in &process.supporters {
-            self.npcs[*npc_id].relationship -= 1;
-        }
-        for npc_id in &process.opposers {
-            self.npcs[*npc_id].relationship += 1;
-        }
-    }
-
-    pub fn ban_process(&mut self, process_id: usize) {
-        let process = &mut self.processes[process_id];
-        process.status = ProcessStatus::Banned;
-
-        for npc_id in &process.supporters {
-            self.npcs[*npc_id].relationship -= 1;
-        }
-        for npc_id in &process.opposers {
-            self.npcs[*npc_id].relationship += 1;
-        }
-    }
-
-    pub fn unban_process(&mut self, process_id: usize) {
-        let process = &mut self.processes[process_id];
-        process.status = ProcessStatus::Neutral;
-
-        for npc_id in &process.supporters {
-            self.npcs[*npc_id].relationship += 1;
-        }
-        for npc_id in &process.opposers {
-            self.npcs[*npc_id].relationship -= 1;
+            self.npcs[*npc_id].relationship += oppose_change;
         }
     }
 
@@ -513,10 +501,11 @@ mod test {
     #[test]
     fn test_promote_process() {
         let mut state = State::new(Difficulty::Normal);
-        assert_eq!(state.processes[0].status, ProcessStatus::Neutral);
+        state.processes[0].mix_share = 0;
+        assert_eq!(state.processes[0].is_promoted(), false);
 
-        state.promote_process(0);
-        assert_eq!(state.processes[0].status, ProcessStatus::Promoted);
+        state.change_mix_share(0, 10);
+        assert_eq!(state.processes[0].is_promoted(), true);
         for npc_id in &state.processes[0].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 4);
         }
@@ -524,8 +513,8 @@ mod test {
             assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
-        state.unpromote_process(0);
-        assert_eq!(state.processes[0].status, ProcessStatus::Neutral);
+        state.change_mix_share(0, -8);
+        assert_eq!(state.processes[0].is_promoted(), false);
         for npc_id in &state.processes[0].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 3);
         }
@@ -537,10 +526,11 @@ mod test {
     #[test]
     fn test_ban_process() {
         let mut state = State::new(Difficulty::Normal);
-        assert_eq!(state.processes[0].status, ProcessStatus::Neutral);
+        state.processes[0].mix_share = 5;
+        assert_eq!(state.processes[0].is_banned(), false);
 
-        state.ban_process(0);
-        assert_eq!(state.processes[0].status, ProcessStatus::Banned);
+        state.change_mix_share(0, -5);
+        assert_eq!(state.processes[0].is_banned(), true);
         for npc_id in &state.processes[0].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
@@ -548,8 +538,8 @@ mod test {
             assert_eq!(state.npcs[*npc_id].relationship, 4);
         }
 
-        state.unban_process(0);
-        assert_eq!(state.processes[0].status, ProcessStatus::Neutral);
+        state.change_mix_share(0, 2);
+        assert_eq!(state.processes[0].is_banned(), false);
         for npc_id in &state.processes[0].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 3);
         }
@@ -694,7 +684,7 @@ mod test {
         assert_eq!(completed.len(), 1);
         assert_eq!(state.requests.len(), 1);
 
-        state.promote_process(0);
+        state.change_mix_share(0, 5);
         let completed = state.check_requests();
         assert_eq!(completed.len(), 1);
         assert_eq!(state.requests.len(), 0);
@@ -703,7 +693,7 @@ mod test {
         state.requests.push((Request::Process, 0, false, 10));
 
         state.stop_project(0);
-        state.ban_process(0);
+        state.change_mix_share(0, -(state.processes[0].mix_share as isize));
         let completed = state.check_requests();
         assert_eq!(completed.len(), 2);
         assert_eq!(state.requests.len(), 0);
