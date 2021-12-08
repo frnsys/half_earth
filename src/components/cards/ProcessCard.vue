@@ -8,14 +8,18 @@
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div class="card-tack-ur process-mix"
       v-tip="{text: `This process is makes up ${process.mix_share*5}% of ${output} production.`, icon: 'mix_token'}">
-      <span>{{process.mix_share*5}}%</span>
+      <span :class="{depleted: feedstockEstimate == 0}">{{process.mix_share*5}}%</span>
       <div class="process-mix-cells">
-        <div class="process-mix-cell" v-for="i in 20" :class="{active: i <= process.mix_share}"/>
+        <div class="process-mix-cell" v-for="i in 20" :class="{active: i <= process.mix_share, depleted: feedstockEstimate == 0}"/>
       </div>
     </div>
-    <img v-if="feedstockName != 'other'"
-      v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
-      class="process-feedstock card-tack-ul" :src="icons[feedstockIcon]">
+    <div class="card-tack-ul">
+      <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
+      <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
+      <img v-if="feedstockName != 'other'"
+        v-tip="{text: `This process uses ${feedstockName}.${feedstockEstimate ? (feedstockEstimate == 0 ? ` This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.` : ` At current usage rates the estimate supply is expected to last ${feedstockEstimate} years.`) : ''}`, icon: feedstockIcon}"
+        class="process-feedstock" :src="icons[feedstockIcon]">
+      </div>
     <div class="opposers" v-if="opposersDetailed.length > 0">
       <div>Nay</div>
       <div>
@@ -108,6 +112,14 @@ export default {
     },
     feedstockName() {
       return display.enumDisplay(this.feedstock[0]);
+    },
+    feedstockEstimate() {
+      let feedstock = display.enumKey(this.feedstock[0]);
+      if (feedstock == 'other' || feedstock == 'soil') {
+        return null;
+      }
+      let estimate = state.gameState.feedstocks[feedstock]/state.gameState.consumed_feedstocks[feedstock];
+      return Math.round(estimate);
     },
     intensities() {
       let type =
@@ -261,6 +273,9 @@ export default {
   border-radius: 0.2em;
   font-size: 0.8em;
 }
+.process-mix span.depleted {
+  color: #aaa;
+}
 .process-mix-cell {
   height: 6px;
   width: 6px;
@@ -271,8 +286,19 @@ export default {
 .process-mix-cell.active {
   background: #1B97F3;
 }
+.process-mix-cell.active.depleted {
+  background: #6190B3;
+}
 .process-mix-cells {
   display: inline-block;
   vertical-align: top;
+}
+
+.alert-icon {
+	position: absolute;
+	width: 16px;
+	right: 0;
+	bottom: 0;
+	transform: translate(50%, 0);
 }
 </style>
