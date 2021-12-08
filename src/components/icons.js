@@ -49,6 +49,7 @@ export default {
   alert: require('/assets/icons/alert.png'),
   halted: require('/assets/icons/halted.png'),
   down_arrow: require('/assets/icons/down_arrow.png'),
+  sea_level_rise: require('/assets/icons/sea_level_rise.png'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

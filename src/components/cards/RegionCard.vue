@@ -20,8 +20,8 @@
   <template v-slot:body>
     <div class="space-even">
       <IntensityIcon
-        v-tip="{icon: 'wealth', text: `This region is ${incomeName} income. Higher incomes mean higher material footprints.`}"
-        resource="wealth" :intensity="incomeLevel" />
+        v-tip="{icon: 'wealth', text: `This region has ${incomeName} living standards. Higher living standards mean higher material footprints.`}"
+        resource="wealth" :intensity="incomeLevel" :invert="true" />
       <IntensityIcon
         v-tip="{icon: 'habitability', text: `This region's habitability.`}"
         resource="habitability" :intensity="habitability" :invert="true" />
