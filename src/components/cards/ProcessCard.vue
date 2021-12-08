@@ -6,10 +6,14 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <img
-      v-tip="{text: `This process is expected to ${expectedChange}.`, icon: changeIcons[expectedChange]}"
-      class="process-trend card-tack-ur" :src="icons[changeIcons[expectedChange]]">
-    <img
+    <div class="card-tack-ur process-mix"
+      v-tip="{text: `This process is makes up ${process.mix_share*5}% of ${output} production.`, icon: 'mix_token'}">
+      <span>{{process.mix_share*5}}%</span>
+      <div class="process-mix-cells">
+        <div class="process-mix-cell" v-for="i in 20" :class="{active: i <= process.mix_share}"/>
+      </div>
+    </div>
+    <img v-if="feedstockName != 'other'"
       v-tip="{text: `This process uses ${feedstockName}.`, icon: feedstockIcon}"
       class="process-feedstock card-tack-ul" :src="icons[feedstockIcon]">
     <div class="opposers" v-if="opposersDetailed.length > 0">
@@ -72,20 +76,11 @@ import IntensityIcon from './IntensityIcon.vue';
 import PROCESSES from '/assets/content/processes.json';
 import NPCS from '/assets/content/npcs.json';
 
-const changeIcons = {
-  'remain steady': 'steady',
-  'expand': 'improve',
-  'contract': 'worsen',
-};
-
 export default {
   props: ['process'],
   components: {
     Card,
     IntensityIcon,
-  },
-  created() {
-    this.changeIcons = changeIcons;
   },
   data() {
     return {
@@ -131,22 +126,6 @@ export default {
         return acc;
       }, {});
       return intensities;
-    },
-    expectedChange() {
-      // Kind of annoying, but grab this way
-      // for reactivity
-      let process = this.state.gameState.processes[this.id];
-      if (process.status == 'Banned' && process.mix_share > 0) {
-        return 'contract';
-      } else if (process.status == 'Promoted') {
-        return 'expand';
-      } else {
-        switch (process.change) {
-          case 'Neutral': return 'remain steady';
-          case 'Expanding': return 'expand';
-          case 'Contracting': return 'contract';
-        }
-      }
     },
     supportersDetailed() {
       return this.supporters
@@ -268,5 +247,32 @@ export default {
 }
 .process-feedstock {
   padding: 0.2em 0.2em;
+}
+
+.process-mix img {
+  width: 18px;
+  vertical-align: top;
+}
+
+.process-mix span {
+  background: #222;
+  color: #fff;
+  padding: 0.1em 0.15em;
+  border-radius: 0.2em;
+  font-size: 0.8em;
+}
+.process-mix-cell {
+  height: 6px;
+  width: 6px;
+  background: #222;
+  margin: 1px;
+  border: 1px solid #222;
+}
+.process-mix-cell.active {
+  background: #1B97F3;
+}
+.process-mix-cells {
+  display: inline-block;
+  vertical-align: top;
 }
 </style>

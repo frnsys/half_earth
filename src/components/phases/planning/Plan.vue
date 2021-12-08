@@ -28,11 +28,6 @@
       <MiniProject :project="project" />
       <div class="plan--note">{{project.name}}</div>
     </div>
-    <div class="plan--change" v-for="process in activeProcesses">
-      <div class="plan--action">{{process.status}}</div>
-      <MiniProcess :process="process" />
-      <div class="plan--note">{{process.name}}</div>
-    </div>
   </div>
   <div class="plan--charts">
     <div class="plan--charts--tabs">
@@ -99,9 +94,6 @@ export default {
   computed: {
     activeProjects() {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
-    },
-    activeProcesses() {
-      return state.gameState.processes.filter((p) => p.status !== 'Neutral');
     },
     simulated() {
       let n = years - (this.historical.data.length - 1);

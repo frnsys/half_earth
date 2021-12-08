@@ -86,23 +86,8 @@ function stopProject(projectId) {
   updateResourceRankings();
 }
 
-function banProcess(processId) {
-  game.ban_process(processId);
-  updateState();
-}
-
-function unbanProcess(processId) {
-  game.unban_process(processId);
-  updateState();
-}
-
-function promoteProcess(processId) {
-  game.promote_process(processId);
-  updateState();
-}
-
-function unpromoteProcess(processId) {
-  game.unpromote_process(processId);
+function changeProcessMixShare(processId, amount) {
+  game.change_process_mix_share(processId, amount);
   updateState();
 }
 
@@ -215,8 +200,7 @@ export default {
   changeLocalOutlook,
   changeHabitability,
   checkRequests,
-  banProcess, unbanProcess,
-  promoteProcess, unpromoteProcess,
+  changeProcessMixShare,
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, roll, simulate,
   applyBranchEffects, evalBranchConditions,

@@ -8,10 +8,21 @@
   <Research v-if="page == PAGES.RESEARCH" />
   <Policies v-else-if="page == PAGES.POLICIES" />
   <Initiatives v-else-if="page == PAGES.INITIATIVES" />
-  <div class="plan-change-select--menu" v-else>
-    <button @click="selectPage(PAGES.RESEARCH)">Research</button>
-    <button @click="selectPage(PAGES.POLICIES)">Policies</button>
-    <button @click="selectPage(PAGES.INITIATIVES)">Initiatives</button>
+  <div class="planning--page" v-else>
+    <div class="planning--menu">
+      <button @click="selectPage(PAGES.RESEARCH)">
+        <img :src="icons.research" />
+        <div>Research</div>
+      </button>
+      <button @click="selectPage(PAGES.POLICIES)">
+        <img :src="icons.policy" />
+        <div>Policies</div>
+      </button>
+      <button @click="selectPage(PAGES.INITIATIVES)">
+        <img :src="icons.initiative" />
+        <div>Initiatives</div>
+      </button>
+    </div>
   </div>
 </div>
 </template>
@@ -73,12 +84,5 @@ export default {
 }
 .plan-change-select > header > div:first-child {
   text-decoration: underline;
-}
-.plan-change-select--menu {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 1em;
-  flex: 1;
 }
 </style>
