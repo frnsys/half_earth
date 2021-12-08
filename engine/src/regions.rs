@@ -64,7 +64,7 @@ impl Region {
     }
 
     pub fn demand_level(&self, output: &Output) -> usize {
-        let demand = self.demand();
+        let demand = self.demand()/self.population;
         if let Some(idx) = consts::OUTPUT_DEMAND.iter().position(|m| m[*output] >= demand[*output]) {
             idx + 1
         } else {
@@ -76,6 +76,12 @@ impl Region {
         if !cfg!(feature = "static_population") {
             self.population *= 1. + (consts::income_pop_change(year, &self.income) * modifier);
         }
+    }
+
+    // Outlook slowly rebounds over time
+    pub fn update_outlook(&mut self) {
+        self.outlook += 0.1;
+        self.outlook = f32::min(10., self.outlook);
     }
 
     pub fn develop(&mut self) {

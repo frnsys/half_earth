@@ -751,8 +751,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 10.0
+                co2: 10.0,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
@@ -1191,10 +1191,10 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 16.785,
+                electricity: 1.838,
                 fuel: 0.0,
-                land: 6.3178e-05,
-                water: 0.1073
+                land: 7.35e-05,
+                water: 0.0073529
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
@@ -1690,7 +1690,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, -20.0)
+                        Effect::WorldVariable(WorldVariable::Outlook, -8.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -1701,7 +1701,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 20.0)
+                        Effect::WorldVariable(WorldVariable::Outlook, 10.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -1729,7 +1729,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::DemandOutlookChange(Output::AnimalCalories, -2.0),
+                Effect::DemandOutlookChange(Output::AnimalCalories, -1.0),
                 Effect::AddFlag(Flag::Vegan)
             ],
             kind: ProjectType::Policy,
@@ -2291,7 +2291,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::DemandOutlookChange(Output::AnimalCalories, -1.0),
+                Effect::DemandOutlookChange(Output::AnimalCalories, -0.5),
                 Effect::AddFlag(Flag::Vegetarian)
             ],
             kind: ProjectType::Policy,
@@ -2535,7 +2535,7 @@ pub fn projects() -> Vec<Project> {
             level: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -50.0),
-                Effect::WorldVariable(WorldVariable::Outlook, -20.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -10.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -4110,7 +4110,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.05)
+                Effect::Output(Output::PlantCalories, -0.01)
             ],
             probabilities: vec![
                 Probability {
@@ -4366,7 +4366,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.1)
+                Effect::Output(Output::PlantCalories, -0.02)
             ],
             probabilities: vec![
                 Probability {
@@ -7510,8 +7510,8 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::Output(Output::PlantCalories, -0.05),
-                Effect::Output(Output::Electricity, -0.05)
+                Effect::Output(Output::PlantCalories, -0.01),
+                Effect::Output(Output::Electricity, -0.01)
             ],
             probabilities: vec![
                 Probability {

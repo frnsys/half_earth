@@ -46,6 +46,20 @@ impl World {
         }
     }
 
+    pub fn update_outlook(&mut self) {
+        for region in &mut self.regions {
+            region.update_outlook();
+        }
+    }
+
+    pub fn update_temp_outlook(&mut self, temp_change: f32) {
+        let outlook_change = temp_change * 5. * self.temperature.powf(2.);
+        self.base_outlook += outlook_change;
+        for region in &mut self.regions {
+            region.outlook += outlook_change * 0.4;
+        }
+    }
+
     pub fn habitability(&self) -> f32 {
         self.regions.iter().map(|r| r.habitability()).sum::<f32>()/self.regions.len() as f32
     }

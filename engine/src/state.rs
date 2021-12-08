@@ -307,6 +307,7 @@ impl State {
         self.world.year += 1;
         self.world.update_pop();
         self.world.develop_regions();
+        self.world.update_outlook();
     }
 
     pub fn check_requests(&mut self) -> Vec<(Request, usize, bool, usize)> {
@@ -466,9 +467,12 @@ impl State {
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {
+        let prev_temp = self.world.temperature;
         self.world.temperature = tgav + self.world.temperature_modifier;
+        let temp_diff = prev_temp - self.world.temperature;
         self.update_region_temps();
         self.update_sea_level_rise();
+        self.world.update_temp_outlook(temp_diff);
     }
 
     pub fn update_region_temps(&mut self) {
