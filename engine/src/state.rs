@@ -468,6 +468,7 @@ impl State {
     pub fn set_tgav(&mut self, tgav: f32) {
         self.world.temperature = tgav + self.world.temperature_modifier;
         self.update_region_temps();
+        self.update_sea_level_rise();
     }
 
     pub fn update_region_temps(&mut self) {
@@ -489,6 +490,13 @@ impl State {
             region.precip_hi *= 31536000. / 10.;
             // region.temp = region.pattern_idxs.iter().map(|idx| &temps[*idx]).sum::<f32>()/region.pattern_idxs.len() as f32;
         }
+    }
+
+    pub fn update_sea_level_rise(&mut self) {
+        // Meters
+        // 0.0005mm per year per deg warming
+        // Chosen to roughly hit 1.5m-1.6m rise by 2100 in the BAU scenario
+        self.world.sea_level_rise += 0.0065 * self.world.temperature;
     }
 }
 

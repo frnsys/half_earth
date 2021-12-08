@@ -22,6 +22,9 @@ ranges = {
         'min': 0,
         'max': 5
     },
+    'Sea Level Rise': {
+        'min': 0,
+    },
     'Habitability': {
         'min': 0,
         'max': 15
@@ -64,7 +67,7 @@ ranges = {
 groups = {
     'General': [
         'Population (b)', 'Temperature', 'Habitability',
-        'Extinction Rate', 'Mean Income Level'],
+        'Extinction Rate', 'Sea Level Rise', 'Mean Income Level'],
     'Emissions': [
         'CO2eq Emissions', 'CO2 Emissions (Gt)',
         'CH4 Emissions (Mt)', 'N2O Emissions (Mt)'],
@@ -89,6 +92,7 @@ plots = {
     'World Outlook': ['World Outlook'],
     'Habitability': ['Habitability'],
     'Extinction Rate': ['Extinction Rate'],
+    'Sea Level Rise': ['Sea Level Rise'],
     'CO2eq Emissions': [
         'CO2eq Emissions',
         'CO2eq Ref (Gt)',
