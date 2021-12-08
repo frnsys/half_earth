@@ -9,6 +9,13 @@ const init = {
     max: 100
   },
 
+  processMixChanges: {
+    Electricity: {},
+    Fuel: {},
+    PlantCalories: {},
+    AnimalCalories: {},
+  },
+
   // Compare beginning and end
   cycleStartState: {
     emissions: 0,

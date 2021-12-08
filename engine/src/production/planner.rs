@@ -1,25 +1,8 @@
 use serde::Serialize;
-use super::processes::{Process, ProcessStatus};
+use super::processes::Process;
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, Output, OutputMap, Feedstock};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
 use wasm_bindgen::prelude::*;
-
-#[wasm_bindgen]
-#[derive(Serialize, Clone)]
-pub enum Priority {
-    Scarcity,
-    Land,
-    Emissions,
-    Energy,
-    Labor,
-    Water,
-}
-
-impl Default for Priority {
-    fn default() -> Self {
-        Priority::Scarcity
-    }
-}
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -131,112 +114,17 @@ pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap<f32>, Feed
         let (feedstock, amount) = order.process.feedstock;
         feedstocks[feedstock] += amount * order.amount;
         resources += order.process.resources * order.amount;
+        // println!("{:?}", order.process.name);
+        // println!("  Electricity: {:?}TWh", order.process.resources.electricity * order.amount * 1e-9);
+        // println!("  Fuel: {:?}TWh", order.process.resources.fuel * order.amount * 1e-9);
     }
     (resources, feedstocks)
 }
-
-fn score_process(p: &Process, priority: &Priority, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>) -> f32 {
-    let score = match priority {
-        Priority::Scarcity => {
-            let resource_score = p.resources.items().map(|(k, v)| v * resource_weights[k]).iter().sum::<f32>();
-            let feedstock_score = p.feedstock.1 * feedstock_weights[p.feedstock.0];
-            resource_score + feedstock_score
-        },
-        Priority::Land => {
-            p.resources.land
-        },
-        Priority::Labor => {
-            // TODO labor
-            0.
-        },
-        Priority::Water => {
-            p.resources.water
-        },
-        Priority::Energy => {
-            p.resources.electricity + p.resources.fuel
-        },
-        Priority::Emissions => {
-            let emissions = p.byproducts.co2 + (p.byproducts.n2o * 298.) + (p.byproducts.ch4 * 36.);
-            emissions
-        },
-    };
-    -score/p.output_modifier
-}
-
-fn score_shares(mix: &[f32], scores: &[f32]) -> Vec<f32> {
-    let total: f32 = mix.iter().sum();
-    mix.iter().zip(scores).map(|(share, score)| {
-        // Probably a more elegant way of doing this
-        // x^e * score
-        // This is to guard against any one process
-        // from becoming 100% of production
-        let norm_share = share/total;
-        norm_share.powf(2.71828) * score
-    }).collect()
-}
-
-fn score_mix(mix: &[f32], scores: &[f32]) -> f32 {
-    score_shares(mix, scores).iter().sum()
-}
-
-const TRANSITION_SPEED: f32 = 0.01;
-
-/// Calculate the ideal mix of production processes based on demand and resource weights.
-/// Here "ideal" means one that minimizes resource usages, weighted by the provided resource
-/// weights, while meeting demand.
-/// This is intended to be used on a per-output basis.
-pub fn calculate_mix(mut mix: Vec<f32>, demand: f32, processes: &Vec<&mut Process>, resource_weights: &ResourceMap<f32>, feedstock_weights: &FeedstockMap<f32>, priority: &Priority) -> Vec<f32> {
-    let mut changes: Vec<(usize, f32)> = vec![];
-    let scores: Vec<f32> = processes.iter().map(|p| score_process(p, priority, resource_weights, feedstock_weights)).collect();
-
-    let base_score = score_mix(&mix, &scores);
-    let change_amounts = [TRANSITION_SPEED, -TRANSITION_SPEED];
-    for i in 0..mix.len() {
-        let output_amount = mix[i] * demand;
-        if processes[i].locked {
-            continue;
-        } else if processes[i].limit.is_some() && output_amount > processes[i].limit.unwrap() {
-            changes.push((i, -TRANSITION_SPEED*2.));
-        } else if processes[i].is_banned() {
-            changes.push((i, -TRANSITION_SPEED*2.));
-        } else if processes[i].is_promoted() {
-            changes.push((i, TRANSITION_SPEED*2.));
-        } else if feedstock_weights[processes[i].feedstock.0] == 1.0 { // Depleted, must be 0.
-            changes.push((i, -mix[i]));
-        } else if processes[i].is_banned() {
-            changes.push((i, -TRANSITION_SPEED*2.));
-        } else if processes[i].is_promoted() {
-            changes.push((i, TRANSITION_SPEED*2.));
-        } else {
-            for change in &change_amounts {
-                let changed = f32::max(mix[i] + change, 0.);
-                let orig = std::mem::replace(&mut mix[i], changed);
-                let score = score_mix(&mix, &scores);
-                let _ = std::mem::replace(&mut mix[i], orig);
-                if score > base_score {
-                    changes.push((i, *change));
-                    break;
-                }
-            }
-        }
-    }
-
-    for (idx, change) in changes {
-        mix[idx] = f32::max(mix[idx] + change, 0.);
-    }
-    let total: f32 = mix.iter().sum();
-    for share in &mut mix {
-        *share /= total;
-    }
-    mix
-}
-
 
 #[cfg(test)]
 mod test {
     use super::*;
     use float_cmp::approx_eq;
-    use crate::production::ProcessChange;
     use crate::kinds::{Feedstock, Output};
 
     fn gen_processes() -> Vec<Process> {
@@ -244,7 +132,7 @@ mod test {
             id: 0,
             name: "Test Process A",
             limit: None,
-            mix_share: 0.5,
+            mix_share: 10,
             output: Output::Fuel,
             output_modifier: 1.,
             resources: resources!(water: 1.),
@@ -252,15 +140,13 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             opposers: vec![],
             supporters: vec![],
         }, Process {
             id: 1,
             name: "Test Process B",
             limit: None,
-            mix_share: 0.5,
+            mix_share: 10,
             output: Output::Fuel,
             output_modifier: 1.,
             resources: resources!(water: 1.),
@@ -268,15 +154,13 @@ mod test {
             feedstock: (Feedstock::Oil, 1.),
             features: vec![],
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             opposers: vec![],
             supporters: vec![],
         }, Process {
             id: 2,
             name: "Test Process C",
             limit: None,
-            mix_share: 1.0,
+            mix_share: 20,
             output: Output::Electricity,
             output_modifier: 1.,
             resources: resources!(water: 1.),
@@ -284,8 +168,6 @@ mod test {
             feedstock: (Feedstock::Coal, 1.),
             features: vec![],
             locked: false,
-            status: ProcessStatus::Neutral,
-            change: ProcessChange::Neutral,
             opposers: vec![],
             supporters: vec![],
         }]

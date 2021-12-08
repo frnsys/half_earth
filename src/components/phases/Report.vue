@@ -185,6 +185,17 @@ export default {
         game.saveMeta();
         state.phase = 'END';
       } else {
+        // Apply process mix changes
+        Object.keys(state.processMixChanges).forEach((output) => {
+          let changes = state.processMixChanges[output];
+          Object.keys(changes).forEach((processId) => {
+            let change = changes[processId]
+            if (change !== 0) {
+              game.changeProcessMixShare(processId, change);
+            }
+          });
+          state.processMixChanges[output] = {};
+        });
         state.phase = 'PLANNING';
       }
     }

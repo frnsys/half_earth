@@ -67,11 +67,11 @@ impl Condition {
                 comp.eval(val, *other_val)
             },
             Condition::ProcessMixShare(id, comp, other_val) => {
-                let val = state.processes[*id].mix_share;
+                let val = state.processes[*id].mix_percent();
                 comp.eval(val, *other_val)
             },
             Condition::ProcessMixShareFeature(feat, comp, other_val) => {
-                let val = state.processes.iter().filter(|p| p.features.contains(feat)).map(|p| p.mix_share).sum();
+                let val = state.processes.iter().filter(|p| p.features.contains(feat)).map(|p| p.mix_percent()).sum();
                 comp.eval(val, *other_val)
             },
             Condition::ResourcePressure(resource, comp, other_val) => {

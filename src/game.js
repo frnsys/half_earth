@@ -86,23 +86,8 @@ function stopProject(projectId) {
   updateResourceRankings();
 }
 
-function banProcess(processId) {
-  game.ban_process(processId);
-  updateState();
-}
-
-function unbanProcess(processId) {
-  game.unban_process(processId);
-  updateState();
-}
-
-function promoteProcess(processId) {
-  game.promote_process(processId);
-  updateState();
-}
-
-function unpromoteProcess(processId) {
-  game.unpromote_process(processId);
+function changeProcessMixShare(processId, amount) {
+  game.change_process_mix_share(processId, amount);
   updateState();
 }
 
@@ -131,11 +116,6 @@ function upgradeProject(id) {
 
 function setTgav(tgav) {
   game.set_tgav(tgav);
-  updateState();
-}
-
-function setPriority(priority) {
-  game.set_priority(priority);
   updateState();
 }
 
@@ -216,13 +196,11 @@ updateResourceRankings();
 export default {
   newRun, saveMeta, step,
   updateState, setTgav,
-  setPriority,
   changePoliticalCapital,
   changeLocalOutlook,
   changeHabitability,
   checkRequests,
-  banProcess, unbanProcess,
-  promoteProcess, unpromoteProcess,
+  changeProcessMixShare,
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, roll, simulate,
   applyBranchEffects, evalBranchConditions,

@@ -45,6 +45,10 @@ export default {
   car: require('/assets/icons/car.png'),
   sound: require('/assets/icons/sound.png'),
   no_sound: require('/assets/icons/no_sound.png'),
+  mix_token: require('/assets/icons/mix_allocation.png'),
+  alert: require('/assets/icons/alert.png'),
+  halted: require('/assets/icons/halted.png'),
+  down_arrow: require('/assets/icons/down_arrow.png'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

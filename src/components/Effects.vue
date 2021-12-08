@@ -306,11 +306,10 @@ function render(e) {
     }
     case 'ProjectRequest': {
       let project = state.gameState.projects[e.entity];
-      let npc = state.gameState.npcs[e.entity];
       if (e.subtype == 'Ban') {
         let tip = {
-          icon: npc.name,
-          text: `${npc.name} requests you stop this project:`,
+          icon: 'request',
+          text: `You received a request to stop this project:`,
           card: {
             type: 'Project',
             data: project
@@ -322,8 +321,8 @@ function render(e) {
         }
       } else {
         let tip = {
-          icon: npc.name,
-          text: `${npc.name} requests you implement this project:`,
+          icon: 'request',
+          text: `You received a request to implement this project:`,
           card: {
             type: 'Project',
             data: project
@@ -339,8 +338,8 @@ function render(e) {
       let process = state.gameState.processes[e.entity];
       if (e.subtype == 'Ban') {
         let tip = {
-          icon: npc.name,
-          text: `${npc.name} requests you ban this process:`,
+          icon: 'request',
+          text: `You received a request to ban this process:`,
           card: {
             type: 'Process',
             data: process
@@ -352,8 +351,8 @@ function render(e) {
         }
       } else {
         let tip = {
-          icon: npc.name,
-          text: `${npc.name} requests you promote this process:`,
+          icon: 'request',
+          text: `You received a request to promote this process:`,
           card: {
             type: 'Process',
             data: process

@@ -42,6 +42,12 @@ ranges = {
     'Electricity (TWh)': {
         'min': 0,
     },
+    'Plant Calories (Tcals)': {
+        'min': 0,
+    },
+    'Animal Calories (Tcals)': {
+        'min': 0,
+    },
     'Land': {
         'min': 0,
     },

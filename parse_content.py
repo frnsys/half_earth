@@ -30,7 +30,7 @@ use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::regions::{Region, Income};
 use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
-use crate::production::{Process, ProcessFeature, ProcessStatus, ProcessChange};
+use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType};
@@ -103,8 +103,6 @@ specs = {
         'resources': {},
         'byproducts': {},
         'locked': 'false',
-        'status': 'ProcessStatus::Neutral',
-        'change': 'ProcessChange::Neutral',
         'features': {},
         'output_modifier': 1.0,
         'supporters': [],
@@ -200,6 +198,11 @@ def value(e):
 
 def camel_to_snake(v):
     return re.sub(r'(?<!^)(?=[A-Z])', '_', v).lower()
+
+# Nearest multiple of 5
+def nearest_multiple(v):
+    return 5. * round(v/5.)
+
 
 effects = {
     'UnlocksProject':   lambda e: (ids[e['entity']],),
@@ -457,7 +460,7 @@ def define_field(k, v, item):
     elif k == 'relationship':
         return 'relationship: {}'.format(v)
     elif k == 'mix_share':
-        return 'mix_share: {}'.format(v/100)
+        return 'mix_share: {}'.format(int(nearest_multiple(v)/5))
     elif k == 'features':
         feats = ['ProcessFeature::{}'.format(feat) for feat, on in v.items() if on]
         return 'features: vec![\n{}\n]'.format(
@@ -872,6 +875,8 @@ if __name__ == '__main__':
         json.dump(projects, f)
 
     processes = []
+    # Check process allocations are correct
+    processes_by_output = defaultdict(list)
     for p in items_by_type['Process']:
         id = p['id']
         image = p.get('image', {})
@@ -889,8 +894,13 @@ if __name__ == '__main__':
             to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
             to_jpg(frm, to)
         processes.append(process)
+        processes_by_output[p['output']].append(p)
     with open('assets/content/processes.json', 'w') as f:
         json.dump(processes, f)
+
+    for ps in processes_by_output.values():
+        allocation = [nearest_multiple(p['mix_share'])/5 for p in ps]
+        assert sum(allocation) == 100/5
 
     industries = []
     for p in items_by_type['Industry']:
