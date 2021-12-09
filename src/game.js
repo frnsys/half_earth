@@ -37,10 +37,6 @@ function newRun() {
     research: 0,
     initiative: 0,
   };
-  state.crisis = {
-    points: 0,
-    max: 100,
-  };
   updateState();
   updateResourceRankings();
 }

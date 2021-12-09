@@ -14,7 +14,6 @@
       <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
     </div>
   </div>
-  <CrisisMeter />
 </div>
 </template>
 
@@ -23,7 +22,6 @@ import game from '/src/game';
 import state from '/src/state';
 import Event from './Event.vue';
 import Project from './Project.vue';
-import CrisisMeter from './CrisisMeter.vue';
 import Hud from 'components/Hud.vue';
 import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
@@ -62,7 +60,6 @@ export default {
     Globe,
     Event,
     Project,
-    CrisisMeter,
   },
   mounted() {
     this.start();
@@ -126,11 +123,6 @@ export default {
         let elapsed = timestamp - last;
         last = timestamp;
 
-        if (state.crisis.points >= state.crisis.max) {
-          state.crisis.points = 0;
-          alert('CRISIS!');
-        }
-
         if (!this.showingEvent) {
           this.time += elapsed;
 
@@ -155,7 +147,6 @@ export default {
                 game.applyEvent(eventId, regionId);
                 let icon = this.showEventOnGlobe(eventId, regionId);
                 let ev = ICON_EVENTS[eventId];
-                state.crisis.points += ev.intensity;
 
                 // If autoclickers for this event, roll for autoclick
                 // if (icon && eventId in state.gameState.autoclickers) {

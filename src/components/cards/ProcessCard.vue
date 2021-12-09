@@ -7,7 +7,7 @@
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div class="card-tack-ur process-mix"
-      v-tip="{text: `This process is makes up ${process.mix_share*5}% of ${output} production.${hasChange ? ` At the next planning cycle it will change to ${changedMixShare*5}%.` : '' }`, icon: 'mix_token'}">
+      v-tip="{text: `This process makes up ${process.mix_share*5}% of ${output} production.${hasChange ? ` At the next planning cycle it will change to ${changedMixShare*5}%.` : '' }`, icon: 'mix_token'}">
       <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}">
         <div class="process-mix-percent">{{process.mix_share*5}}%</div>
         <template v-if="hasChange">
