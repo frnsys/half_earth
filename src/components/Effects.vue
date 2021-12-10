@@ -301,7 +301,7 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${icon}${Math.abs(amount)}${unit}.`,
+        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${icon}${Math.ceil(Math.abs(amount))}${unit}.`,
       }
     }
     case 'ProjectRequest': {
@@ -376,7 +376,9 @@ function render(e) {
       let p = Math.abs(e.param * 100);
       let tip = {
         icon: 'demand',
-        text: `Changes demand for ${industry.name} by ${p.toFixed(0)}%.`,
+        text: e.param == '?' ?
+          `Changes demand for ${industry.name} by an unknown amount.`
+          : `Changes demand for ${industry.name} by ${p.toFixed(0)}%.`,
         card: {
           type: 'Industry',
           data: industry,
@@ -385,7 +387,7 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `${changeDir(e.param, e.random)} demand for ${tag} by ${p.toFixed(0)}%.`,
+        text: `${changeDir(e.param, e.random)} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}.`,
       }
     }
     case 'ModifyIndustryResources': {
@@ -398,7 +400,9 @@ function render(e) {
       let demandChange = (demandAfter - demandBefore)/demand[k] * 100;
       let tip = {
         icon: k,
-        text: `This will change ${resource} demand for ${industry.name} from <img src="${icons[k]}">${demandBefore} to <img src="${icons[k]}">${demandAfter < 1 ? '<1' : demandAfter.toFixed(0)}. This is a ${demandChange.toFixed(0)}% change of all ${resource} demand.`,
+        text: e.param == '?' ?
+          `This will change ${resource} demand for ${industry.name} by some unknown amount.`
+          : `This will change ${resource} demand for ${industry.name} from <img src="${icons[k]}">${demandBefore} to <img src="${icons[k]}">${demandAfter < 1 ? '<1' : demandAfter.toFixed(0)}. This is a ${demandChange.toFixed(0)}% change of all ${resource} demand.`,
         card: {
           type: 'Industry',
           data: industry,
@@ -407,7 +411,7 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${resource.toLowerCase()} demand for ${tag} by ${p.toFixed(0)}%.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${resource.toLowerCase()} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}.`,
       }
     }
     case 'ModifyIndustryByproducts': {
@@ -418,7 +422,9 @@ function render(e) {
       let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.emissions * 100;
       let tip = {
         icon: 'emissions',
-        text: `This will change emissions for ${industry.name} from <img src="${icons.emissions}">${emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1)} to <img src="${icons.emissions}">${emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1)}. This is a ${emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1)}% change of all emissions.`,
+        text: e.param == '?' ?
+          `Changes emissions for ${industry.name} by an unknown amount.`
+          : `This will change emissions for ${industry.name} from <img src="${icons.emissions}">${emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1)} to <img src="${icons.emissions}">${emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1)}. This is a ${emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1)}% change of all emissions.`,
         card: {
           type: 'Industry',
           data: industry,
@@ -427,7 +433,7 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[emissions] ${changeDir(e.param, e.random)} ${e.subtype} emissions for ${tag} by ${p.toFixed(0)}%.`,
+        text: `[emissions] ${changeDir(e.param, e.random)} ${e.subtype} emissions for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}.`,
       }
     }
     case 'DemandOutlookChange': {

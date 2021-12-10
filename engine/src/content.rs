@@ -2071,7 +2071,9 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::Emissions, -10.0),
+                Effect::ProtectLand(10.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2089,14 +2091,18 @@ pub fn projects() -> Vec<Project> {
                     active: false,
                     cost: 20,
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0),
+                        Effect::WorldVariable(WorldVariable::Emissions, -15.0),
+                        Effect::ProtectLand(15.0)
                     ]
                 },
                 Upgrade {
                     active: false,
                     cost: 20,
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0),
+                        Effect::WorldVariable(WorldVariable::Emissions, -20.0),
+                        Effect::ProtectLand(20.0)
                     ]
                 }
             ],
@@ -2151,7 +2157,7 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::ModifyIndustryResources(1, Resource::Land, 1.5),
-                        Effect::ModifyIndustryByproducts(1, Byproduct::Co2, 0.5)
+                        Effect::ModifyIndustryByproducts(1, Byproduct::Co2, -0.5)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2678,7 +2684,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 0.)
+
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2688,7 +2694,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::ModifyIndustryResources(5, Resource::Fuel, 0.),
+                        Effect::ModifyIndustryResources(5, Resource::Fuel, -1.0),
                         Effect::ModifyIndustryResources(5, Resource::Electricity, 2.75)
                     ],
                     probability: Probability {
@@ -3971,34 +3977,6 @@ pub fn projects() -> Vec<Project> {
             ],
             supporters: vec![0, 5, 2],
             opposers: vec![4, 8, 6],
-            active_outcome: None
-        },
-        Project {
-            id: 75,
-            name: "Afforestation",
-            cost: 0,
-            base_cost: Cost::Fixed(20),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-
-            ],
-            kind: ProjectType::Initiative,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
             active_outcome: None
         }
     ]
