@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'production') {
   });
   Sentry.setContext("session", {
     id: sessionId,
+    version: VERSION,
   });
 }
 

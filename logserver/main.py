@@ -12,7 +12,7 @@ def session():
     if request.method == 'POST':
         data = request.get_json()
         ua = request.headers.get('User-Agent')
-        db.add_session(data['session_id'], ua)
+        db.add_session(data['session_id'], data['version'], ua)
         return jsonify(success=True)
     return jsonify(success=False)
 

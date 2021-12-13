@@ -4,7 +4,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const dev = process.env.NODE_ENV !== 'production';
 
-module.exports = {
+module.exports = (env) => ({
   entry: {
     'main': ['./src/main'],
   },
@@ -56,6 +56,10 @@ module.exports = {
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin(),
 
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(env.version),
+    }),
+
     // To get rid of a warning message:
     // "Critical dependency: the request of a dependency is an expression"
     // which might be from the rand crate (crypto)
@@ -84,4 +88,4 @@ module.exports = {
       'Cross-Origin-Embedder-Policy': 'require-corp'
     }
   }
-};
+});

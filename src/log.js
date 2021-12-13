@@ -35,7 +35,10 @@ function post(endpoint, data) {
 }
 
 function startSession() {
-  post('/session', {session_id: sessionId});
+  post('/session', {
+    session_id: sessionId,
+    version: VERSION
+  });
 }
 
 function sendSnapshot(snapshot) {
