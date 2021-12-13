@@ -15,7 +15,7 @@
           <td><img :src="icons.warming"> Temperature</td>
           <td>{{state.cycleStartState.temperature.toFixed(1)}}</td>
           <td>{{state.gameState.world.temperature.toFixed(1)}}</td>
-          <td>{{sign(pc.temperature)}}</td>
+          <td>{{format.sign(pc.temperature)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.contentedness"> Contentedness</td>
@@ -25,7 +25,7 @@
           <td>
             <div class="intensity-pip stat-pip" :style="{background:contentedness.end.color}" v-for="i in contentedness.end.intensity"></div>
           </td>
-          <td>{{sign(pc.contentedness)}}</td>
+          <td>{{format.sign(pc.contentedness)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.extinction_rate"> Extinction Rate</td>
@@ -35,13 +35,13 @@
           <td>
             <div class="intensity-pip stat-pip" :style="{background:extinction.end.color}" v-for="i in extinction.end.intensity"></div>
           </td>
-          <td>{{sign(pc.extinctionRate)}}</td>
+          <td>{{format.sign(pc.extinctionRate)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.emissions"> Emissions</td>
           <td>{{state.cycleStartState.emissions.toFixed(0)}}</td>
           <td>{{state.gameState.emissions.toFixed(0)}}</td>
-          <td>{{sign(pc.emissions)}}</td>
+          <td>{{format.sign(pc.emissions)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">
@@ -52,7 +52,7 @@
         </tr>
         <tr v-for="project in state.cycleStartState.completedProjects">
           <td colspan="3">{{state.gameState.projects[project].name}}</td>
-          <td>{{sign(consts.pcPerCompletedProject)}}</td>
+          <td>{{format.sign(consts.pcPerCompletedProject)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">
@@ -63,12 +63,12 @@
         </tr>
         <tr v-for="request in requestsFulfilled">
           <td colspan="3">{{request.name}}</td>
-          <td>{{sign(request.bounty)}}</td>
+          <td>{{format.sign(request.bounty)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr>
           <td colspan="3">Total Change</td>
-          <td>{{sign(pcChange)}}</td>
+          <td>{{format.sign(pcChange)}}</td>
         </tr>
       </table>
     </div>

@@ -57,6 +57,9 @@ function demandPercent(demand, totalDemand, k) {
   }
 }
 
+function sign(v) {
+  return `${v > 0 ? '+' : ''}${v}`;
+}
 
 const formatResource = {
   'land': (v) => `${landUsePercent(v).toFixed(1)}%`,
@@ -67,6 +70,7 @@ const formatResource = {
 };
 
 export default {
+  sign,
   co2eq, gtco2eq,
   output, outputs,
   landUsePercent, waterUsePercent,

@@ -6,7 +6,7 @@
 
 <script>
 import icons from 'components/icons';
-import {sign, slugify} from 'lib/util';
+import {slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
 import format from '/src/display/format';
@@ -94,7 +94,7 @@ function render(e) {
           return {
             tip: {
               icon: 'emissions',
-              text: `This will directly change annual emissions by ${e.param == '?' ? 'an unknown amount' : sign(e.param)}.${e.param !== '?' ? ` That's a ${(e.param/state.gameState.emissions * 100).toFixed(1)}% change.` : ''}`,
+              text: `This will directly change annual emissions by ${e.param == '?' ? 'an unknown amount' : format.sign(e.param)}.${e.param !== '?' ? ` That's a ${(e.param/state.gameState.emissions * 100).toFixed(1)}% change.` : ''}`,
             },
             text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${formatParam(e.param)}.`
           }
@@ -112,7 +112,7 @@ function render(e) {
           return {
             tip: {
               icon: 'warming',
-              text: `This will directly change the global temperature anomaly by ${sign(e.param)}C.`,
+              text: `This will directly change the global temperature anomaly by ${format.sign(e.param)}C.`,
             },
             text: `[warming] ${changeDir(e.param, e.random)} the global temperature by ${formatParam(e.param)}C.`
           };
