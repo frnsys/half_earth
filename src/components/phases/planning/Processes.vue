@@ -16,7 +16,10 @@
     <div class="available-mix-tokens">
         <img v-for="_ in points" class="pip" :src="icons.mix_token">
     </div>
-    <div class="process-mix-change-notice" v-if="hasChanges">These changes will take {{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}} to take effect.</div>
+    <div class="process-mix-change-notice" v-if="hasChanges">
+      <div>These changes will take {{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}} to take effect.</div>
+      <div>{{ estimatedChanges }}</div>
+    </div>
     <div class="production--demand planning--demand">
       <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
         {{demand[k]}}<img :src="icons[k]">
@@ -34,6 +37,8 @@ import Cards from './Cards.vue';
 import consts from '/src/consts.js';
 import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
+
+const lf = new Intl.ListFormat('en');
 
 export default {
   props: ['output'],
@@ -69,6 +74,86 @@ export default {
       return Math.ceil(Object.values(state.processMixChanges[this.output]).reduce((acc, change) => {
         return acc + Math.abs(change);
       }, 0)/2);
+    },
+    estimatedChanges() {
+      if (this.points !== 0) return '';
+
+      let current = {
+        'emissions': 0,
+        'energy use': 0,
+        'land use': 0,
+        'water use': 0,
+        'the extinction rate': 0,
+      };
+      this.processes.forEach((p) => {
+        let mix_share = p.mix_share;
+        current['land use'] += p.resources.land * mix_share;
+        current['water use'] += p.resources.water * mix_share;
+        current['energy use'] += (p.resources.electricity + p.resources.fuel) * mix_share;
+        current['emissions'] += format.co2eq(p.byproducts) * mix_share;
+        current['the extinction rate'] += p.byproducts.biodiversity * mix_share;
+      });
+
+      let changed = {
+        'emissions': 0,
+        'energy use': 0,
+        'land use': 0,
+        'water use': 0,
+        'the extinction rate': 0,
+      };
+      this.processes.forEach((p) => {
+        let mix_share = p.mix_share + (state.processMixChanges[this.output][p.id] || 0);
+        changed['land use'] += p.resources.land * mix_share;
+        changed['water use'] += p.resources.water * mix_share;
+        changed['energy use'] += (p.resources.electricity + p.resources.fuel) * mix_share;
+        changed['emissions'] += format.co2eq(p.byproducts) * mix_share;
+        changed['the extinction rate'] += p.byproducts.biodiversity * mix_share;
+      });
+
+      let intensities = {
+        'somewhat increase': [],
+        'significantly increase': [],
+        'increase': [],
+        'somewhat decrease': [],
+        'significantly decrease': [],
+        'decrease': []
+      }
+      Object.keys(current).forEach((k) => {
+        let change = 0;
+        if (current[k] == 0) {
+          if (changed[k] > 0) {
+            change = 1;
+          } else if (changed[k] < 0) {
+            change = -1;
+          } else {
+            change = 0;
+          }
+        } else {
+          change = (changed[k] - current[k])/current[k];
+        }
+        if (change > 0.5) {
+          intensities['significantly increase'].push(k);
+        } else if (change > 0.25) {
+          intensities['increase'].push(k);
+        } else if (change > 0.05) {
+          intensities['somewhat increase'].push(k);
+        } else if (change < -0.5) {
+          intensities['significantly decrease'].push(k);
+        } else if (change < -0.25) {
+          intensities['decrease'].push(k);
+        } else if (change < -0.05) {
+          intensities['somewhat decrease'].push(k);
+        }
+      });
+
+      let descs = Object.keys(intensities)
+        .filter((k) => intensities[k].length > 0)
+        .map((k) => `${k} ${lf.format(intensities[k])}`);
+      if (descs.length == 0) {
+        return `These changes won't have much effect.`;
+      } else {
+        return `These changes will ${lf.format(descs)}.`;
+      }
     }
   },
   methods: {
