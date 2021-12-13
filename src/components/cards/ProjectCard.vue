@@ -74,7 +74,7 @@
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
+import {activeEffects} from '/src/display/project';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 import NPCS from '/assets/content/npcs.json';
@@ -140,7 +140,7 @@ export default {
       }
     },
     activeEffects() {
-      return display.activeEffects(this);
+      return activeEffects(this);
     },
     supportersDetailed() {
       return this.supporters

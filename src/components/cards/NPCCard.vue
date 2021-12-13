@@ -30,7 +30,7 @@
 
 <script>
 import Card from './Card.vue';
-import display from 'lib/display';
+import display from '/src/display/display';
 import NPCS from '/assets/content/npcs.json';
 
 export default {

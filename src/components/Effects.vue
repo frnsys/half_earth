@@ -9,7 +9,8 @@ import icons from 'components/icons';
 import {sign, slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
+import format from '/src/display/format';
+import display from '/src/display/display';
 import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
 import ICONEVENTS from '/assets/content/icon_events.json';
@@ -76,7 +77,7 @@ function formatParam(param) {
 }
 
 function render(e) {
-  let demand = display.outputs(state.gameState.output_demand);
+  let demand = format.outputs(state.gameState.output_demand);
   switch (e.type) {
     case 'WorldVariable': {
       switch (e.subtype) {
@@ -158,7 +159,7 @@ function render(e) {
     }
     case 'Output': {
       let k = display.enumKey(e.subtype);
-      let base = display.output(state.gameState.produced[k], k);
+      let base = format.output(state.gameState.produced[k], k);
       let changed = (base * (1+e.param)).toFixed(0);
       return {
         tip: {
@@ -216,9 +217,9 @@ function render(e) {
       let name = display.displayName(e.subtype);
       let val = e.param;
       if (e.subtype == 'Electricity' || e.subtype == 'Fuel') {
-        val = display.output(val, 'electricity'); // same as fuel
+        val = format.output(val, 'electricity'); // same as fuel
       } else {
-        val = display.output(val, 'plant_calories'); // same as animal cals
+        val = format.output(val, 'plant_calories'); // same as animal cals
       }
       let currentDemand = demand[k];
       let afterDemand = demand[k] + val;
@@ -395,7 +396,7 @@ function render(e) {
       let p = Math.abs(e.param * 100);
       let k = display.enumKey(e.subtype);
       let resource = display.displayName(e.subtype);
-      let demandBefore = display.output(industry.resources[k] * game.industryDemand(industry), k);
+      let demandBefore = format.output(industry.resources[k] * industry.demand, k);
       let demandAfter = demandBefore * (1 + e.param);
       let demandChange = (demandAfter - demandBefore)/demand[k] * 100;
       let tip = {
@@ -417,7 +418,7 @@ function render(e) {
     case 'ModifyIndustryByproducts': {
       let industry = state.gameState.industries[e.entity];
       let p = Math.abs(e.param * 100);
-      let emissionsBefore = display.co2eq(industry.byproducts) * game.industryDemand(industry) * 1e-15;
+      let emissionsBefore = format.co2eq(industry.byproducts) * industry.demand * 1e-15;
       let emissionsAfter = emissionsBefore * (1 + e.param);
       let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.emissions * 100;
       let tip = {

@@ -1,12 +1,11 @@
 import state from './state';
-import display from 'lib/display';
+import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
-let game = GameInterface.new(Difficulty.Normal);
-state.endYear = game.state().world.year + 100;
-loadMeta();
+let game;
+newRun();
 
 // Get the updated game state,
 // and compute some additional variables
@@ -20,12 +19,12 @@ function updateState() {
       return acc + r.population
     }, 0);
   state.gameState.industries.forEach((ind) => {
-    ind.demand = industryDemand(ind);
+    ind.demand = game.industry_demand(ind.id);
   });
 }
 
-function updateResourceRankings() {
-  state.resourceRankings = display.resourceRankings();
+function updateFactors() {
+  state.factors = factors.rank();
 }
 
 // Start a new run
@@ -41,14 +40,16 @@ function newRun() {
     initiative: 0,
   };
   updateState();
-  updateResourceRankings();
+  updateFactors();
+  loadMeta();
+  return game
 }
 
 // Step the game by one year
 function step() {
   let completedProjects = game.step();
   updateState();
-  // updateResourceRankings();
+  // updateFactors();
   return completedProjects;
 }
 
@@ -76,13 +77,13 @@ function setProjectPoints(projectId, points) {
 function startProject(projectId) {
   game.start_project(projectId);
   updateState();
-  updateResourceRankings();
+  updateFactors();
 }
 
 function stopProject(projectId) {
   game.stop_project(projectId);
   updateState();
-  updateResourceRankings();
+  updateFactors();
 }
 
 function changeProcessMixShare(processId, amount) {
@@ -94,13 +95,13 @@ function changeProcessMixShare(processId, amount) {
 function applyEvent(eventId, regionId) {
   game.apply_event(eventId, regionId);
   updateState();
-  updateResourceRankings();
+  updateFactors();
 }
 
 function applyBranchEffects(eventId, regionId, branchId) {
   game.apply_branch_effects(eventId, regionId, branchId);
   updateState();
-  updateResourceRankings();
+  updateFactors();
 }
 
 function evalBranchConditions(eventId, regionId, branchId) {
@@ -110,7 +111,7 @@ function evalBranchConditions(eventId, regionId, branchId) {
 function upgradeProject(id) {
   game.upgrade_project(id);
   updateState();
-  updateResourceRankings();
+  updateFactors();
 }
 
 function setTgav(tgav) {
@@ -120,10 +121,6 @@ function setTgav(tgav) {
 
 function simulate(years) {
   return game.simulate(years);
-}
-
-function industryDemand(industry) {
-  return game.industry_demand(industry.id);
 }
 
 function regionDemand(region) {
@@ -173,7 +170,7 @@ const roll = {
   },
 }
 
-
+// Save/load game metadata
 function saveMeta() {
   let data = {
     runsPlayed: state.gameState.runs,
@@ -190,7 +187,7 @@ function loadMeta() {
 }
 
 updateState();
-updateResourceRankings();
+updateFactors();
 
 export default {
   newRun, saveMeta, step,
@@ -203,5 +200,5 @@ export default {
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, roll, simulate,
   applyBranchEffects, evalBranchConditions,
-  industryDemand, regionDemand, regionHabitability,
-  yearsRemaining, updateResourceRankings};
+  regionDemand, regionHabitability,
+  yearsRemaining, updateFactors};

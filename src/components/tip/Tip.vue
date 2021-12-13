@@ -12,7 +12,7 @@
     <ProcessCard v-if="card && card.type == 'Process'" :process="card.data" />
     <ProjectCard v-if="card && card.type == 'Project'" :project="card.data" />
     <IndustryCard v-if="card && card.type == 'Industry'" :industry="card.data" />
-    <ResourceCard v-if="card && card.type == 'Resource'" :resource="card.data" />
+    <FactorsCard v-if="card && card.type == 'Factors'" :factors="card.data" />
     <RegionCard v-if="card && card.type == 'Region'" :region="card.data" />
     <NPCCard v-if="card && card.type == 'NPC'" :npc="card.data" />
     <Cards v-if="card && card.type == 'Processes'">
@@ -28,7 +28,7 @@ import NPCCard from 'components/cards/NPCCard.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
 import IndustryCard from 'components/cards/IndustryCard.vue';
-import ResourceCard from 'components/cards/ResourceCard.vue';
+import FactorsCard from 'components/cards/FactorsCard.vue';
 import RegionCard from 'components/cards/RegionCard.vue';
 
 export default {
@@ -38,7 +38,7 @@ export default {
     ProcessCard,
     ProjectCard,
     IndustryCard,
-    ResourceCard,
+    FactorsCard,
     RegionCard,
   },
   data() {

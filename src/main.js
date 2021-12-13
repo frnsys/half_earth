@@ -1,8 +1,8 @@
 import {createApp} from 'vue';
-import {sign} from '/src/lib/util';
 import consts from '/src/consts';
-// import display from 'lib/display';
 import icons from 'components/icons';
+import format from '/src/display/format';
+import factors from '/src/display/factors';
 import tip from 'components/tip/directive';
 import App from 'components/App.vue';
 import debug from './debug';
@@ -29,11 +29,11 @@ if (process.env.NODE_ENV === 'production') {
 
 const app = createApp(App);
 app.directive('tip', tip);
-app.config.globalProperties['consts'] = consts;
 app.config.globalProperties['icons'] = icons;
-// app.config.globalProperties['display'] = display;
+app.config.globalProperties['consts'] = consts;
+app.config.globalProperties['format'] = format;
+app.config.globalProperties['factors'] = factors;
 app.config.globalProperties['debug'] = debug;
-app.config.globalProperties['sign'] = sign;
 app.mount('#main');
 startSession();
 

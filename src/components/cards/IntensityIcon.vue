@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import display from 'lib/display';
+import intensity from '/src/display/intensity';
 
 export default {
   props: ['resource', 'intensity', 'invert'],
   computed: {
     color() {
-      return display.intensityColor(this.intensity, this.invert);
+      return intensity.color(this.intensity, this.invert);
     }
   }
 }

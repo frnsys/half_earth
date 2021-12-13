@@ -33,7 +33,7 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
+import display from '/src/display/display';
 import Effects from 'components/Effects.vue';
 
 // Extract "chars" which might be

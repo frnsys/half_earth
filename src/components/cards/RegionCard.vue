@@ -2,7 +2,7 @@
 <Card class="region">
   <template v-slot:header>
     <div>{{name}}</div>
-    <div>{{abbrevPopulation}}<img :src="icons.population"></div>
+    <div>{{format.formatNumber(population)}}<img :src="icons.population"></div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
@@ -50,7 +50,9 @@
 import game from '/src/game';
 import state from '/src/state';
 import Card from './Card.vue';
-import display from 'lib/display';
+import format from '/src/display/format';
+import display from '/src/display/display';
+import intensity from '/src/display/intensity';
 import IntensityIcon from './IntensityIcon.vue';
 import REGIONS from '/assets/content/regions.json';
 
@@ -61,7 +63,6 @@ export default {
     IntensityIcon,
   },
   data() {
-    console.log(this.region);
     let data = REGIONS[this.region.id];
     return {
       ...data,
@@ -73,33 +74,24 @@ export default {
       return this.rawDemand[k]/this.population;
     },
     demandIntensity(k) {
-      return display.intensity(this.perCapitaDemand(k), k);
+      return intensity.intensity(this.perCapitaDemand(k), k);
     },
     demandPercent(k) {
-      let scaledOutputDemand = display.outputs(state.gameState.output_demand);
-      let percent = this.demand[k]/scaledOutputDemand[k] * 100;
-      if (percent < 1) {
-        return '<1%';
-      } else {
-        return `${percent.toFixed(1)}%`;
-      }
+      return format.demandPercent(this.demand, state.gameState.output_demand, k);
     }
   },
   computed: {
-    abbrevPopulation() {
-      return display.formatNumber(this.population);
-    },
     contentedness() {
-      return display.scaleIntensity(this.region.outlook, 'outlook');
+      return intensity.scale(this.region.outlook, 'outlook');
     },
     rawDemand() {
       return game.regionDemand(this.region);
     },
     demand() {
-      return display.outputs(this.rawDemand);
+      return format.outputs(this.rawDemand);
     },
     habitability() {
-      return display.scaleIntensity(game.regionHabitability(this.region), 'habitability');
+      return intensity.scale(game.regionHabitability(this.region), 'habitability');
     },
     incomeName() {
       return display.enumDisplay(this.income);

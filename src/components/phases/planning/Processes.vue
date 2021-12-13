@@ -30,9 +30,9 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
 import Cards from './Cards.vue';
 import consts from '/src/consts.js';
+import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 
 export default {
@@ -54,10 +54,10 @@ export default {
       return processes;
     },
     demand() {
-      return display.outputs(state.gameState.output_demand);
+      return format.outputs(state.gameState.output_demand);
     },
     emissions() {
-      return display.gtco2eq(state.gameState.byproducts);
+      return format.gtco2eq(state.gameState.byproducts);
     },
     hasChanges() {
       return Object.values(state.processMixChanges[this.output]).filter((change) => change != 0).length > 0;
@@ -79,7 +79,6 @@ export default {
     removePoint(p) {
       let change = state.processMixChanges[this.output][p.id] || 0;
       if (p.mix_share + change > 0) {
-        /* game.changeProcessMixShare(p.id, -1); */
         this.points += 1;
         state.processMixChanges[this.output][p.id] = change - 1;
         this.$emit('allowBack', false);
@@ -87,7 +86,6 @@ export default {
     },
     addPoint(p) {
       if (this.points > 0) {
-        /* game.changeProcessMixShare(p.id, 1); */
         let change = state.processMixChanges[this.output][p.id] || 0;
         this.points -= 1;
         state.processMixChanges[this.output][p.id] = change + 1;

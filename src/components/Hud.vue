@@ -4,15 +4,16 @@
     <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
       <img :src="icons.political_capital">{{Math.max(state.gameState.political_capital, 0)}}
     </div>
-    <div v-tip="biodiversityTip">
+    <div v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
       <img :src="icons.extinction_rate">
       <div class="intensity-pip stat-pip" :style="{background:extinction.color}" v-for="i in extinction.intensity"></div>
     </div>
-    <div :class="{'bad': state.gameState.contentedness < 0}" v-tip="contentednessTip">
+    <div :class="{'bad': state.gameState.contentedness < 0}"
+      v-tip="factors.tips.contentedness('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.')">
       <img :src="icons.contentedness">
       <div class="intensity-pip stat-pip" :style="{background:contentedness.color}" v-for="i in contentedness.intensity"></div>
     </div>
-    <div v-tip="emissionsTip">
+    <div v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <img :src="icons.emissions">{{state.gameState.emissions.toFixed(1)}}
     </div>
     <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
@@ -24,7 +25,7 @@
 
 <script>
 import state from '../state';
-import display from 'lib/display';
+import intensity from '/src/display/intensity';
 
 export default {
   data() {
@@ -34,28 +35,19 @@ export default {
   },
   computed: {
     contentedness() {
-      let intensity = display.scaleIntensity(state.gameState.contentedness, 'world_outlook');
+      let val = intensity.scale(state.gameState.contentedness, 'world_outlook');
       return {
-        intensity,
-        color: display.intensityColor(intensity, true)
+        intensity: val,
+        color: intensity.color(val, true)
       }
     },
     extinction() {
-      let intensity = display.scaleIntensity(state.gameState.world.extinction_rate, 'extinction');
+      let val = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
       return {
-        intensity,
-        color: display.intensityColor(intensity, false)
+        intensity: val,
+        color: intensity.color(intensity, false)
       }
     },
-    emissionsTip() {
-      return display.rankingTips['emissions'](`Current annual emissions, in gigatonnes of CO2 equivalent.`, null);
-    },
-    contentednessTip() {
-      return display.rankingTips['contentedness']('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.', null);
-    },
-    biodiversityTip() {
-      return display.rankingTips['biodiversity'](`The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.`, null);
-    }
   },
   methods: {
     toggleSound() {

@@ -26,7 +26,7 @@
 <script>
 import NPCCard from './NPCCard.vue';
 import MiniCard from './MiniCard.vue';
-import display from 'lib/display';
+import display from '/src/display/display';
 
 export default {
   props: ['npc'],

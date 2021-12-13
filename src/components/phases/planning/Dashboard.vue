@@ -8,16 +8,16 @@
       <img :src="icons.warming" />
       <div class="dashboard--item-name">Temperature Anomaly</div>
     </div>
-    <div class="dashboard--item" v-tip="emissionsTip">
+    <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <div class="minicard">
       {{`${state.gameState.emissions.toFixed(1)}Gt`}}
       </div>
       <img :src="icons.emissions" />
       <div class="dashboard--item-name">Emissions</div>
     </div>
-    <div class="dashboard--item" v-tip="landTip">
+    <div class="dashboard--item" v-tip="factors.tips.land('Current land use.')">
       <div class="minicard">
-      {{`${((state.gameState.resources_demand.land/104e12)*100).toFixed(0)}%`}}
+      {{format.landUsePercent(state.gameState.resources_demand.land)}}%
       </div>
       <img :src="icons.land" />
       <div class="dashboard--item-name">Land Use</div>
@@ -36,7 +36,7 @@
       <img :src="icons.sea_level_rise" />
       <div class="dashboard--item-name">Sea Level Rise</div>
     </div>
-    <div class="dashboard--item" v-tip="biodiversityTip">
+    <div class="dashboard--item" v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
       <div class="minicard">
         <span :style="{color: extinction.color}">{{extinction.label}}</span>
       </div>
@@ -45,7 +45,7 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        {{`${(state.gameState.population * 1e-9).toFixed(1)}b`}}
+        {{formatNumber(state.gameState.population)}}
       </div>
       <img :src="icons.population" />
       <div class="dashboard--item-name">Population</div>
@@ -71,7 +71,8 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
+import format from '/src/display/format';
+import intensity from '/src/display/intensity';
 import MiniCard from 'components/cards/MiniCard.vue';
 
 export default {
@@ -84,60 +85,26 @@ export default {
     }
   },
   computed: {
-    emissionsTip() {
-      return display.rankingTips['emissions'](`Current annual emissions, in gigatonnes of CO2 equivalent.`, null);
-    },
-    landTip() {
-      return display.rankingTips['land'](`Current land use.`, null);
-    },
-    biodiversityTip() {
-      return display.rankingTips['biodiversity'](`The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.`, null);
-    },
     extinction() {
-      let intensity = display.scaleIntensity(state.gameState.world.extinction_rate, 'extinction');
-      let label;
-      if (intensity === 0) {
-        label = 'Very Low';
-      } else if (intensity === 1) {
-        label = 'Low';
-      } else if (intensity === 2) {
-        label = 'Moderate';
-      } else if (intensity === 3) {
-        label = 'High';
-      } else {
-        label = 'Very High';
-      }
+      let int = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
       return {
-        label,
-        color: display.intensityColor(intensity, false)
+        label: intensity.describe(int),
+        color: intensity.color(int, false)
       }
     },
     avgHabitability() {
-      let totalHabitability = 0;
-      state.gameState.world.regions.forEach((r) => {
-        totalHabitability += game.regionHabitability(r);
-      });
-      let avgHabitability = Math.round(totalHabitability/state.gameState.world.regions.length);
-      let intensity = display.scaleIntensity(avgHabitability, 'habitability');
-      let label;
-      if (intensity === 0) {
-        label = 'Very Low';
-      } else if (intensity === 1) {
-        label = 'Low';
-      } else if (intensity === 2) {
-        label = 'Decent';
-      } else if (intensity === 3) {
-        label = 'High';
-      } else {
-        label = 'Very High';
-      }
+      let total = state.gameState.world.regions.reduce((acc, r) => {
+        return acc + game.regionHabitability(r);
+      }, 0);
+      let avg = Math.round(total/state.gameState.world.regions.length);
+      let int = intensity.scale(avg, 'habitability');
       return {
-        label,
-        color: display.intensityColor(intensity, true)
+        label: intensity.describe(int),
+        color: intensity.color(int, true)
       }
     },
     avgIncomeLevel() {
-      let totalIncome = 0;
+      let total = 0;
       state.gameState.world.regions.forEach((r) => {
         let income = 0;
         switch (r.income) {
@@ -147,31 +114,18 @@ export default {
           case 'High': income = 4; break;
         }
         income += r.development;
-        totalIncome += income;
+        total += income;
       });
-      let avgIncomeLevel = Math.round(totalIncome/state.gameState.world.regions.length);
-
-      let label;
-      if (avgIncomeLevel === 1) {
-        label = 'Very Low';
-      } else if (avgIncomeLevel === 2) {
-        label = 'Low';
-      } else if (avgIncomeLevel === 3) {
-        label = 'Decent';
-      } else if (avgIncomeLevel === 4) {
-        label = 'High';
-      } else {
-        label = 'Very High';
-      }
+      let avg = Math.round(total/state.gameState.world.regions.length);
 
       return {
-        label,
-        color: display.intensityColor(avgIncomeLevel, true)
+        label: intensity.describe(avg - 1),
+        color: intensity.color(avg, true)
       }
     },
     waterStress() {
       let label;
-      let percentUse = state.gameState.resources_demand.water/45500000000000000.0;
+      let percentUse = format.waterUsePercent(state.gameState.resources_demand.water);
       if (percentUse <= 0.2) {
         label = 'Very Low';
       } else if (percentUse <= 0.4) {
@@ -183,7 +137,7 @@ export default {
       }
       return {
         label,
-        color: display.intensityColor(percentUse * 4, false)
+        color: intensity.color(percentUse * 4, false)
       }
     }
   },

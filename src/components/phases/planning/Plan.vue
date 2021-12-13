@@ -45,25 +45,21 @@
 import game from '/src/game';
 import state from '/src/state';
 import Chart from './Chart.vue';
+import format from '/src/display/format';
 import ProcessesSelect from './ProcessesSelect.vue';
 import PlanChangeSelect from './PlanChangeSelect.vue';
 import MiniProcess from 'components/cards/MiniProcess.vue';
 import MiniProject from 'components/cards/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
-import display from 'lib/display';
 
 const charts = {
   'land': 'Land Use',
   'emissions': 'Emissions',
 };
 
-const startYear = 1990;
-const endYear = 2122;
-const years = 2122-1990;
-
 const formats = {
-  'land': (v) => display.landUsePercent(v),
+  'land': (v) => format.landUsePercent(v),
   'emissions': (v) => v * 1e-15,
 }
 
@@ -80,9 +76,11 @@ export default {
   },
   data() {
     let events = game.roll.planning('Plan');
+    let years = state.endYear - 1990;
     return {
       state,
       events,
+      years,
       page: null,
       chart: 'land',
       ranges: {
@@ -96,7 +94,7 @@ export default {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
     },
     simulated() {
-      let n = years - (this.historical.data.length - 1);
+      let n = this.years - (this.historical.data.length - 1);
       return game.simulate(n);
     },
     datasets() {
@@ -125,7 +123,7 @@ export default {
       switch (this.chart) {
         case 'land':
           data = historicalLandUse.concat(state.history.land_use)
-            .map((v) => display.landUsePercent(v));
+            .map((v) => format.landUsePercent(v));
           break;
         case 'emissions':
           data = historicalEmissions.concat(state.history.emissions);

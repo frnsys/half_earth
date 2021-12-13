@@ -11,8 +11,8 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import EventsMixin from 'components/EventsMixin';
 import {randChoice} from 'lib/util';
+import EventsMixin from 'components/EventsMixin';
 
 export default {
   mixins: [EventsMixin],

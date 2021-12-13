@@ -15,7 +15,7 @@
           <td><img :src="icons.warming"> Temperature</td>
           <td>{{state.cycleStartState.temperature.toFixed(1)}}</td>
           <td>{{state.gameState.world.temperature.toFixed(1)}}</td>
-          <td>{{sign(politicalCapital.temperature)}}</td>
+          <td>{{sign(pc.temperature)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.contentedness"> Contentedness</td>
@@ -25,7 +25,7 @@
           <td>
             <div class="intensity-pip stat-pip" :style="{background:contentedness.end.color}" v-for="i in contentedness.end.intensity"></div>
           </td>
-          <td>{{sign(politicalCapital.contentedness)}}</td>
+          <td>{{sign(pc.contentedness)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.extinction_rate"> Extinction Rate</td>
@@ -35,13 +35,13 @@
           <td>
             <div class="intensity-pip stat-pip" :style="{background:extinction.end.color}" v-for="i in extinction.end.intensity"></div>
           </td>
-          <td>{{sign(politicalCapital.extinctionRate)}}</td>
+          <td>{{sign(pc.extinctionRate)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.emissions"> Emissions</td>
           <td>{{state.cycleStartState.emissions.toFixed(0)}}</td>
           <td>{{state.gameState.emissions.toFixed(0)}}</td>
-          <td>{{sign(politicalCapital.emissions)}}</td>
+          <td>{{sign(pc.emissions)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">
@@ -52,7 +52,7 @@
         </tr>
         <tr v-for="project in state.cycleStartState.completedProjects">
           <td colspan="3">{{state.gameState.projects[project].name}}</td>
-          <td>{{sign(PC_PER_COMPLETED_PROJECT)}}</td>
+          <td>{{sign(consts.pcPerCompletedProject)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">
@@ -68,7 +68,7 @@
         <tr class="report-spacer"></tr>
         <tr>
           <td colspan="3">Total Change</td>
-          <td>{{sign(politicalCapitalChange)}}</td>
+          <td>{{sign(pcChange)}}</td>
         </tr>
       </table>
     </div>
@@ -80,14 +80,11 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
+import intensity from '/src/display/intensity';
 import consts from '/src/consts.js';
 import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
 
-const PC_PER_COMPLETED_PROJECT = 20;
-const CONTENTEDNESS_PC = [0, 0, 5, 10, 20];
-const EXTINCTION_PC = [20, 10, 0, -5, -5, -10];
 
 export default {
   mixins: [EventsMixin],
@@ -107,14 +104,12 @@ export default {
     return {
       state,
       events,
-      politicalCapital: {},
-      PC_PER_COMPLETED_PROJECT,
+      pc: {},
     }
   },
   computed: {
     requestsFulfilled() {
       return game.checkRequests().map(([kind, id, active, bounty]) => {
-        // TODO should show who gave it to you?
         let text;
         if (kind == 'Project') {
           let project = state.gameState.projects[id];
@@ -123,61 +118,81 @@ export default {
           let process = state.gameState.processes[id];
           text = `Completed Request: ${active ? 'Unban' : 'Ban'} ${process.name}`;
         }
-        this.politicalCapitalChange += bounty;
+        this.pcChange += bounty;
         return {text, bounty};
       });
     },
     contentedness() {
-      let start = display.scaleIntensity(state.cycleStartState.contentedness, 'world_outlook');
-      let end = display.scaleIntensity(state.gameState.contentedness, 'world_outlook');
+      let start = intensity.scale(state.cycleStartState.contentedness, 'world_outlook');
+      let end = intensity.scale(state.gameState.contentedness, 'world_outlook');
       return {
         start: {
           intensity: start,
-          color: display.intensityColor(start, true)
+          color: intensity.color(start, true)
         },
         end: {
           intensity: end,
-          color: display.intensityColor(end, true)
+          color: intensity.color(end, true)
         }
       }
     },
     extinction() {
-      let start = display.scaleIntensity(state.cycleStartState.extinctionRate, 'extinction');
-      let end = display.scaleIntensity(state.gameState.world.extinction_rate, 'extinction');
+      let start = intensity.scale(state.cycleStartState.extinctionRate, 'extinction');
+      let end = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
       return {
         start: {
           intensity: start,
-          color: display.intensityColor(start, false)
+          color: intensity.color(start, false)
         },
         end: {
           intensity: end,
-          color: display.intensityColor(end, false)
+          color: intensity.color(end, false)
         }
       }
     }
   },
   methods: {
     calculateChanges() {
-      this.politicalCapitalChange = 0;
+      this.pcChange = 0;
       let temperatureChange = parseFloat(state.gameState.world.temperature.toFixed(1)) - parseFloat(state.cycleStartState.temperature.toFixed(1));
-      let contentednessChange = CONTENTEDNESS_PC[this.contentedness.end.intensity];
-      let extinctionRateChange = EXTINCTION_PC[this.extinction.end.intensity];
+      let contentednessChange = consts.contentednessPc[this.contentedness.end.intensity];
+      let extinctionRateChange = consts.extinctionPc[this.extinction.end.intensity];
       let emissionsChange = state.gameState.emissions - state.cycleStartState.emissions;
-      this.politicalCapital = {
+      this.pc = {
         temperature: Math.round(temperatureChange * -10),
         contentedness: Math.round(contentednessChange),
         extinctionRate: Math.round(extinctionRateChange),
         emissions: Math.round(-emissionsChange),
       };
-      this.politicalCapitalChange += this.politicalCapital.temperature;
-      this.politicalCapitalChange += this.politicalCapital.contentedness;
-      this.politicalCapitalChange += this.politicalCapital.extinctionRate;
-      this.politicalCapitalChange += this.politicalCapital.emissions;
-      this.politicalCapitalChange += state.cycleStartState.completedProjects.length * PC_PER_COMPLETED_PROJECT;
+      this.pcChange += Object.values(this.pc).reduce((a,b) => a + b, 0);
+      this.pcChange += state.cycleStartState.completedProjects.length * consts.pcPerCompletedProject;
+    },
+    updateProcessMix(output) {
+      let removePoints = consts.processPointsPerCycle;
+      let addPoints = consts.processPointsPerCycle;
+      let changes = state.processMixChanges[output];
+      let totalChanges = Object.values(state.processMixChanges[output]).reduce((acc, change) => {
+        return acc + Math.abs(change);
+      }, 0);
+      while (removePoints > 0 && addPoints > 0 && totalChanges > 0) {
+        Object.keys(changes).forEach((processId) => {
+          let change = changes[processId]
+          if (change < 0 && removePoints > 0) {
+            changes[processId] += 1;
+            removePoints -= 1;
+            game.changeProcessMixShare(processId, -1);
+            totalChanges--;
+          } else if (change > 0 && addPoints > 0) {
+            addPoints -= 1;
+            changes[processId] -= 1;
+            game.changeProcessMixShare(processId, 1);
+            totalChanges--;
+          }
+        });
+      }
     },
     nextPhase() {
-      console.log(`Total change: ${this.politicalCapitalChange}`);
-      game.changePoliticalCapital(this.politicalCapitalChange);
+      game.changePoliticalCapital(this.pcChange);
 
       if (state.gameState.game_over) {
         game.saveMeta();
@@ -188,30 +203,7 @@ export default {
       } else {
         // Apply process mix changes
         Object.keys(state.processMixChanges).forEach((output) => {
-          // TODO This can probably be cleaned up
-          let removePoints = consts.processPointsPerCycle;
-          let addPoints = consts.processPointsPerCycle;
-          let changes = state.processMixChanges[output];
-          let totalChanges = Object.values(state.processMixChanges[output]).reduce((acc, change) => {
-            return acc + Math.abs(change);
-          }, 0);
-          while (removePoints > 0 && addPoints > 0 && totalChanges > 0) {
-            Object.keys(changes).forEach((processId) => {
-              let change = changes[processId]
-              if (change < 0 && removePoints > 0) {
-                changes[processId] += 1;
-                removePoints -= 1;
-                game.changeProcessMixShare(processId, -1);
-              } else if (change > 0 && addPoints > 0) {
-                addPoints -= 1;
-                changes[processId] -= 1;
-                game.changeProcessMixShare(processId, 1);
-              }
-            });
-            totalChanges = Object.values(state.processMixChanges[output]).reduce((acc, change) => {
-              return acc + Math.abs(change);
-            }, 0);
-          }
+          this.updateProcessMix(output);
         });
         state.phase = 'PLANNING';
       }

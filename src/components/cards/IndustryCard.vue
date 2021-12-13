@@ -40,7 +40,7 @@
 import state from '/src/state';
 import game from '/src/game';
 import Card from './Card.vue';
-import display from 'lib/display';
+import format from '/src/display/format';
 import INDUSTRIES from '/assets/content/industries.json';
 
 export default {
@@ -56,13 +56,7 @@ export default {
   },
   methods: {
     demandPercent(k) {
-      let scaledOutputDemand = display.outputs(state.gameState.output_demand);
-      let percent = this.totalResources[k]/scaledOutputDemand[k] * 100;
-      if (percent < 1) {
-        return '<1%';
-      } else {
-        return `${percent.toFixed(1)}%`;
-      }
+      return format.demandPercent(this.totalResources, state.gameState.output_demand, k);
     }
   },
   computed: {
@@ -76,11 +70,11 @@ export default {
         }
         return acc;
       }, {});
-      return display.outputs(resources);
+      return format.outputs(resources);
     },
     totalByproducts() {
       let byproducts = {};
-      let emissions = display.co2eq(this.industry.byproducts) * this.demand * 1e-15;
+      let emissions = format.co2eq(this.industry.byproducts) * this.demand * 1e-15;
       if (emissions !== 0) {
         byproducts['emissions'] = emissions;
       }

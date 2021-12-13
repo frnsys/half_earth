@@ -4,8 +4,11 @@ const init = {
   endYear: 0,
   gameState: null,
   phase: 'PLANNING',
+
+  // Track which events have occurred
   events: [],
 
+  // Track planned process mix changes
   processMixChanges: {
     Electricity: {},
     Fuel: {},

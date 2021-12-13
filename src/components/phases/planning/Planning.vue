@@ -19,7 +19,6 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
 import Hud from 'components/Hud.vue';
 import Coalition from './Coalition.vue';
 import Dashboard from './Dashboard.vue';
@@ -47,7 +46,7 @@ export default {
     this.PAGES = PAGES;
   },
   mounted() {
-    game.updateResourceRankings();
+    game.updateFactors();
     this.showEvent();
   },
   activated() {
@@ -59,14 +58,6 @@ export default {
       state,
       events,
       page: PAGES.PLAN,
-    }
-  },
-  computed: {
-    demand() {
-      return display.outputs(state.gameState.output_demand);
-    },
-    emissions() {
-      return display.gtco2eq(state.gameState.byproducts);
     }
   },
   methods: {

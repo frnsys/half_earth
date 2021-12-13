@@ -2,12 +2,12 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div v-tip="{text: `This process currently produces ${produced.amount}<img src='${icons[output]}'> and ${produced.emissions}<img src='${icons.emissions}'> per year.`, icon: output}">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
+    <div v-tip="outputTip">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div class="card-tack-ur process-mix"
-      v-tip="{text: `This process makes up ${process.mix_share*5}% of ${output} production.${hasChange ? ` At the next planning cycle it will change to ${changedMixShare*5}%.` : '' }`, icon: 'mix_token'}">
+      v-tip="changeTip">
       <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}">
         <div class="process-mix-percent">{{process.mix_share*5}}%</div>
         <template v-if="hasChange">
@@ -89,10 +89,14 @@
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
-import display from 'lib/display';
+import format from '/src/display/format';
+import factors from '/src/display/factors';
+import display from '/src/display/display';
+import intensity from '/src/display/intensity';
 import IntensityIcon from './IntensityIcon.vue';
 import PROCESSES from '/assets/content/processes.json';
 import NPCS from '/assets/content/npcs.json';
+import icons from '/src/components/icons';
 
 export default {
   props: ['process'],
@@ -109,12 +113,24 @@ export default {
     };
   },
   computed: {
+    outputTip() {
+      return {
+        icon: this.output,
+        text: `This process currently produces ${this.produced.amount}<img src='${icons[this.output]}'> and ${this.produced.emissions}<img src='${icons.emissions}'> per year.`
+      }
+    },
+    changeTip() {
+      return {
+        icon: 'mix_token',
+        text: `This process currently makes up ${this.process.mix_share*5}% of ${this.output} production.`
+      };
+    },
     produced() {
       let baseAmount = state.gameState.produced_by_process[this.id];
-      let amount = display.output(baseAmount, this.output);
+      let amount = format.output(baseAmount, this.output);
       amount = amount > 0 ? Math.max(amount, 1) : amount;
 
-      let emissions = display.gtco2eq(this.byproducts, baseAmount);
+      let emissions = format.gtco2eq(this.byproducts, baseAmount);
       emissions = emissions > 0 ? Math.max(emissions, 1) : emissions;
       return {
         emissions,
@@ -160,7 +176,7 @@ export default {
         (this.output == 'electricity' || this.output == 'fuel')
         ? 'energy' : 'calories';
       let values = {
-        emissions: display.co2eq(this.byproducts),
+        emissions: format.co2eq(this.byproducts),
         biodiversity: this.byproducts.biodiversity,
         energy: this.resources.electricity + this.resources.fuel,
         land: this.resources.land,
@@ -168,7 +184,7 @@ export default {
         // TODO labor
       };
       let intensities = Object.keys(values).reduce((acc, k) => {
-        acc[k] = display.intensity(values[k], k, type);
+        acc[k] = intensity.intensity(values[k], k, type);
         return acc;
       }, {});
       return intensities;
@@ -188,76 +204,34 @@ export default {
     intensityTip(type) {
       switch (type) {
         case 'land': {
-          let amount = display.landUsePercent(state.gameState.resources_demand.land);
-          let rankings = state.resourceRankings['land'];
-          return {
-            icon: 'land',
-            text: `Land: They're not making anymore of it. You're using ${amount.toFixed(0)}% of land.`,
-            card: {
-              type: 'Resource',
-              data: {
-                icon: 'land',
-                name: 'Top Users',
-                rankings,
-                current: this.process,
-              }
-            }
-          }
+          let amount = format.landUsePercent(state.gameState.resources_demand.land);
+          return factors.tips.land(
+            `Land: They're not making anymore of it. You're using ${amount.toFixed(0)}% of land.`,
+            this.process);
         }
         case 'emissions': {
           let amount = state.gameState.emissions;
-          return display.rankingTips['emissions'](`Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`, this.process);
+          return factors.tips.emissions(
+            `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`,
+            this.process);
         }
         case 'water': {
-          let amount = display.waterUsePercent(state.gameState.resources_demand.water);
-          let rankings = state.resourceRankings['water'];
-          return {
-            icon: 'water',
-            text: `Water: The giver of life. You're using ${amount.toFixed(0)}% of water resources.`,
-            card: {
-              type: 'Resource',
-              data: {
-                icon: 'water',
-                name: 'Top Users',
-                rankings,
-                current: this.process,
-              }
-            }
-          }
+          let amount = format.waterUsePercent(state.gameState.resources_demand.water);
+          return factors.tips.water(
+            `Water: The giver of life. You're using ${amount.toFixed(0)}% of water resources.`,
+            this.process);
         }
         case 'energy': {
           let amount = (state.gameState.output_demand.fuel + state.gameState.output_demand.electricity) * 1e-9;
-          let rankings = state.resourceRankings['energy'];
-          return {
-            icon: 'energy',
-            text: `Energy: Something something. You're using ${amount.toFixed(0)}TWh of energy.`,
-            card: {
-              type: 'Resource',
-              data: {
-                icon: 'energy',
-                name: 'Top Users',
-                rankings,
-                current: this.process,
-              }
-            }
-          }
+          return factors.tips.energy(
+            `Energy: Something something. You're using ${amount.toFixed(0)}TWh of energy.`,
+            this.process);
         }
         case 'biodiversity': {
           let amount = state.gameState.world.extinction_rate;
-          let rankings = state.resourceRankings['biodiversity'];
-          return {
-            icon: 'biodiversity',
-            text: `Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is ${amount.toFixed(0)}.`,
-            card: {
-              type: 'Resource',
-              data: {
-                icon: 'biodiversity',
-                name: 'Top Threats',
-                rankings,
-                current: this.process,
-              }
-            }
-          }
+          return factors.tips.biodiversity(
+            `Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is ${amount.toFixed(0)}.`,
+            this.process);
         }
       }
     }

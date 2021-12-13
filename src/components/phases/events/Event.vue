@@ -2,8 +2,8 @@
 <div class="event">
   <div class="event--body" :style="{backgroundImage: `url(/assets/content/images/${event.image ? event.image.fname : 'missing_image.png'})`}">
     <div class="arc">{{event.arc}}</div>
-    <div class="factors">
-      <img class="factor" v-for="factor in event.factors" :src="icons[factor]" v-tip="{icon: factor, text: describeFactor(factor)}"/>
+    <div class="event--factors">
+      <img class="event--factor" v-for="factor in event.factors" :src="icons[factor]" v-tip="{icon: factor, text: describeFactor(factor)}"/>
     </div>
     <div class="image-attribution">Image source: {{event.image ? event.image.attribution : ''}}</div>
     <div class="event--name">{{event.name}}</div>
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import display from 'lib/display';
 import Effects from 'components/Effects.vue';
 import Dialogue from 'components/Dialogue.vue';
 
@@ -120,12 +119,12 @@ export default {
   background: none;
 }
 
-.factors {
+.event--factors {
   position: absolute;
   right: 0.5em;
   top: 0.85em;
 }
-.factors img {
+.event--factors img {
   height: 22px;
   background: #222;
   border-radius: 1.2em;

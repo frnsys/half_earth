@@ -13,7 +13,6 @@
 
 <script>
 import state from '/src/state';
-import display from 'lib/display';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 
