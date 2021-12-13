@@ -142,14 +142,14 @@ export default {
       this.$refs.text.innerHTML = '';
       let el = document.createElement('div');
       el.innerHTML = this.line.text;
-      if (this.$refs.text.length > 0) {
+      if (this.line.text.length > 0) {
         revealChars(this.$refs.text, extractChars(el), {
           onStart: (revealAnim) => this.revealAnim = revealAnim
         }).then(() => {
           this.revealed = true;
         });
       } else {
-          this.revealed = true;
+        this.revealed = true;
       }
     },
     end() {
