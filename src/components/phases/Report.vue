@@ -81,6 +81,7 @@
 import game from '/src/game';
 import state from '/src/state';
 import display from 'lib/display';
+import consts from '/src/consts.js';
 import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
 
@@ -187,14 +188,30 @@ export default {
       } else {
         // Apply process mix changes
         Object.keys(state.processMixChanges).forEach((output) => {
+          // TODO This can probably be cleaned up
+          let removePoints = consts.processPointsPerCycle;
+          let addPoints = consts.processPointsPerCycle;
           let changes = state.processMixChanges[output];
-          Object.keys(changes).forEach((processId) => {
-            let change = changes[processId]
-            if (change !== 0) {
-              game.changeProcessMixShare(processId, change);
-            }
-          });
-          state.processMixChanges[output] = {};
+          let totalChanges = Object.values(state.processMixChanges[output]).reduce((acc, change) => {
+            return acc + Math.abs(change);
+          }, 0);
+          while (removePoints > 0 && addPoints > 0 && totalChanges > 0) {
+            Object.keys(changes).forEach((processId) => {
+              let change = changes[processId]
+              if (change < 0 && removePoints > 0) {
+                changes[processId] += 1;
+                removePoints -= 1;
+                game.changeProcessMixShare(processId, -1);
+              } else if (change > 0 && addPoints > 0) {
+                addPoints -= 1;
+                changes[processId] -= 1;
+                game.changeProcessMixShare(processId, 1);
+              }
+            });
+            totalChanges = Object.values(state.processMixChanges[output]).reduce((acc, change) => {
+              return acc + Math.abs(change);
+            }, 0);
+          }
         });
         state.phase = 'PLANNING';
       }

@@ -16,7 +16,7 @@
     <div class="available-mix-tokens">
         <img v-for="_ in points" class="pip" :src="icons.mix_token">
     </div>
-    <div class="process-mix-change-notice" v-if="hasChanges">These changes will take one planning cycle to take effect.</div>
+    <div class="process-mix-change-notice" v-if="hasChanges">These changes will take {{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}} to take effect.</div>
     <div class="production--demand planning--demand">
       <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
         {{demand[k]}}<img :src="icons[k]">
@@ -32,6 +32,7 @@ import game from '/src/game';
 import state from '/src/state';
 import display from 'lib/display';
 import Cards from './Cards.vue';
+import consts from '/src/consts.js';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 
 export default {
@@ -60,6 +61,14 @@ export default {
     },
     hasChanges() {
       return Object.values(state.processMixChanges[this.output]).filter((change) => change != 0).length > 0;
+    },
+    changesTime() {
+      return Math.ceil(this.changingPoints/consts.processPointsPerCycle);
+    },
+    changingPoints() {
+      return Math.ceil(Object.values(state.processMixChanges[this.output]).reduce((acc, change) => {
+        return acc + Math.abs(change);
+      }, 0)/2);
     }
   },
   methods: {
