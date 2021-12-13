@@ -17,7 +17,7 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.land('Current land use.')">
       <div class="minicard">
-      {{format.landUsePercent(state.gameState.resources_demand.land)}}%
+      {{format.landUsePercent(state.gameState.resources_demand.land).toFixed(0)}}%
       </div>
       <img :src="icons.land" />
       <div class="dashboard--item-name">Land Use</div>
@@ -45,7 +45,7 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        {{formatNumber(state.gameState.population)}}
+        {{format.formatNumber(state.gameState.population)}}
       </div>
       <img :src="icons.population" />
       <div class="dashboard--item-name">Population</div>
