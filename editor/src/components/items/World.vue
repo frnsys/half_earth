@@ -46,6 +46,13 @@
         </label>
         <input v-model="localData.temperature" type="number" min="0" :class="flags('temperature')">
       </div>
+      <div>
+        <label>
+          Sea Level Rise (m)
+          <Tip>Starting sea level rise.</Tip>
+        </label>
+        <input v-model="localData.sea_level_rise" type="number" min="0" :class="flags('sea_level_rise')">
+      </div>
     </fieldset>
 
     <div>
@@ -75,6 +82,9 @@
       </div>
       <div class="meta-pill split-pill" :class="{invalid: !localData.n2o_emissions}">
         <div>N2O</div><div>{{localData.n2o_emissions || 'MISSING'}} Mt/y</div>
+      </div>
+      <div class="meta-pill split-pill" :class="{invalid: !localData.sea_level_rise}">
+        <div>SLR</div><div>+{{localData.sea_level_rise || 'MISSING'}} m</div>
       </div>
       <div class="meta-pill split-pill">
         <div>All Emissions</div><div>{{emissions.toFixed(2)}} GtCO2eq/y</div>

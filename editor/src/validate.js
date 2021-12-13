@@ -279,7 +279,7 @@ const SPECS = {
 
   World: {
     key: 'year',
-    validate: ['year', 'co2_emissions', 'ch4_emissions', 'n2o_emissions', 'extinction_rate', 'temperature'],
+    validate: ['year', 'co2_emissions', 'ch4_emissions', 'n2o_emissions', 'extinction_rate', 'temperature', 'sea_level_rise'],
     questions: ['notes'],
     validateKey: (item, key) => {
       return validateBasic(item, key, SPECS.World.validate);
