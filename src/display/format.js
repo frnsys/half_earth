@@ -48,7 +48,7 @@ function waterUsePercent(l) {
 }
 
 function demandPercent(demand, totalDemand, k) {
-  let scaledOutputDemand = format.output(totalDemand[k], k);
+  let scaledOutputDemand = output(totalDemand[k], k);
   let percent = demand[k]/scaledOutputDemand[k] * 100;
   if (percent < 1) {
     return '<1%';
