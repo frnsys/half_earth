@@ -20,7 +20,7 @@
       </button>
       <button @click="selectPage(PAGES.INITIATIVES)">
         <img :src="icons.initiative" />
-        <div>Initiatives</div>
+        <div>Infrastructure</div>
       </button>
     </div>
   </div>
@@ -35,7 +35,7 @@ import Initiatives from './Initiatives.vue';
 const PAGES = {
   RESEARCH: 'Research',
   POLICIES: 'Policies',
-  INITIATIVES: 'Initiatives',
+  INITIATIVES: 'Infrastructure',
 };
 
 export default {
