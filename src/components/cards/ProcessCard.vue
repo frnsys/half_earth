@@ -30,7 +30,10 @@
       <img v-if="feedstockName != 'other'"
         v-tip="{text: `This process uses ${feedstockName}.${feedstockEstimate ? (feedstockEstimate == 0 ? ` This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.` : ` At current usage rates the estimate supply is expected to last ${feedstockEstimate} years.`) : ''}`, icon: feedstockIcon}"
         class="process-feedstock" :src="icons[feedstockIcon]">
+      <div class="feedstock-remaining" v-if="feedstockName != 'other'">
+        <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
       </div>
+    </div>
     <div class="opposers" v-if="opposersDetailed.length > 0">
       <div>Nay</div>
       <div>
@@ -131,6 +134,18 @@ export default {
       }
       let estimate = state.gameState.feedstocks[feedstock]/state.gameState.consumed_feedstocks[feedstock];
       return Math.round(estimate);
+    },
+    feedstockLevel() {
+      let feedstock = display.enumKey(this.feedstock[0]);
+      if (feedstock == 'other' || feedstock == 'soil') {
+        return 'high';
+      } else if (this.feedstockEstimate < 20) {
+        return 'low';
+      } else if (this.feedstockEstimate < 50) {
+        return 'mid';
+      } else {
+        return 'high';
+      }
     },
     hasChange() {
       let change = state.processMixChanges[this.process.output][this.process.id] || 0;
@@ -327,5 +342,30 @@ export default {
 	right: 0;
 	bottom: 0;
 	transform: translate(50%, 0);
+}
+
+.feedstock-remaining {
+  height: 5px;
+  background: #aaa;
+  width: 24px;
+  border-radius: 1em;
+  outline: 1px solid #555;
+  margin-top: -2px;
+  overflow: hidden;
+}
+.feedstock-remaining-fill {
+  height: 100%;
+}
+.feedstock-remaining-fill--low {
+  background: #EF3838;
+  width: 20%;
+}
+.feedstock-remaining-fill--mid {
+  background: #FBC011;
+  width: 50%;
+}
+.feedstock-remaining-fill--high {
+  background: #43CC70;
+  width: 80%;
 }
 </style>
