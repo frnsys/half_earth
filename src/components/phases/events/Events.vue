@@ -122,45 +122,46 @@ export default {
         });
 
       const tick = (timestamp) => {
-        if (this.stopped) return;
         let elapsed = timestamp - last;
         last = timestamp;
 
-        if (!this.showingEvent) {
-          this.time += elapsed;
+        if (!this.stopped) {;
+          if (!this.showingEvent) {
+            this.time += elapsed;
 
-          if (this.time >= MS_PER_YEAR) {
-            this.completedProjects = game.step();
-            if (this.completedProjects.length > 0) {
-              this.stopped = true;
-              state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(this.completedProjects);
-            }
-            this.year = state.gameState.world.year;
+            if (this.time >= MS_PER_YEAR) {
+              this.completedProjects = game.step();
+              if (this.completedProjects.length > 0) {
+                this.stopped = true;
+                state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(this.completedProjects);
+              }
+              this.year = state.gameState.world.year;
 
-            // Add to historical data
-            state.history.emissions.push(state.gameState.emissions);
-            state.history.land_use.push(state.gameState.resources_demand.land);
+              // Add to historical data
+              state.history.emissions.push(state.gameState.emissions);
+              state.history.land_use.push(state.gameState.resources_demand.land);
 
-            this.rollEvent();
-            return;
+              this.rollEvent();
+              return;
 
-          } else {
-            if (iconEvents.length > 0) {
-              popIconEvents(iconEvents, this.time).forEach(({eventId, regionId}) => {
-                game.applyEvent(eventId, regionId);
-                let icon = this.showEventOnGlobe(eventId, regionId);
-                let ev = ICON_EVENTS[eventId];
+            } else {
+              if (iconEvents.length > 0) {
+                popIconEvents(iconEvents, this.time).forEach(({eventId, regionId}) => {
+                  game.applyEvent(eventId, regionId);
+                  let icon = this.showEventOnGlobe(eventId, regionId);
+                  let ev = ICON_EVENTS[eventId];
 
-                // If autoclickers for this event, roll for autoclick
-                // if (icon && eventId in state.gameState.autoclickers) {
-                //   let chance = state.gameState.autoclickers[eventId];
-                //   setTimeout(() => {
-                //     if (Math.random() <= chance) {
-                //       this.globe.respondToEvent(icon.mesh, icon.hexIdx, icon.mesh.userData);
-                //     }
-                //   }, 100);
-                // }
-              });
+                  // If autoclickers for this event, roll for autoclick
+                  // if (icon && eventId in state.gameState.autoclickers) {
+                  //   let chance = state.gameState.autoclickers[eventId];
+                  //   setTimeout(() => {
+                  //     if (Math.random() <= chance) {
+                  //       this.globe.respondToEvent(icon.mesh, icon.hexIdx, icon.mesh.userData);
+                  //     }
+                  //   }, 100);
+                  // }
+                });
+              }
             }
           }
         }
