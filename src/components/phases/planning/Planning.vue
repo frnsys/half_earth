@@ -26,7 +26,6 @@ import Dashboard from './Dashboard.vue';
 import Plan from './Plan.vue';
 import Regions from './Regions.vue';
 import EventsMixin from 'components/EventsMixin';
-import EVENTS from '/assets/content/events.json';
 
 const PAGES = {
   PLAN: 'Plan',

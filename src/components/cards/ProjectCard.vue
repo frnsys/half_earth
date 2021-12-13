@@ -74,6 +74,7 @@
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
+import display from 'lib/display';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 import NPCS from '/assets/content/npcs.json';
@@ -138,46 +139,8 @@ export default {
         effects: this.upgrades[idx].effects,
       }
     },
-    activeOutcomeEffects() {
-      if (this.active_outcome == null) {
-        return [];
-      } else {
-        return this.outcomes[this.active_outcome].effects;
-      }
-    },
     activeEffects() {
-      if (this.status == 'Inactive') {
-        return this.effects.concat(this.outcomeEffects);
-      } else if (this.level === 0) {
-        return this.effects.concat(this.activeOutcomeEffects);
-      } else {
-        return this.upgrades[this.level - 1].effects.concat(this.activeOutcomeEffects);
-      }
-    },
-    outcomeEffects() {
-      let allEffects = {};
-      this.outcomes.forEach(({effects}) => {
-        for (const effect of effects) {
-          let key = `${effect.type}${effect.subtype ? effect.subtype : ''}`;
-          let hash = JSON.stringify(effect);
-          if (!(key in allEffects)) {
-            allEffects[key] = {
-              effect,
-              count: 1,
-              hashes: new Set([hash]),
-            };
-          } else {
-            allEffects[key].count += 1;
-            allEffects[key].hashes.add(hash);
-          }
-        }
-      });
-
-      return Object.values(allEffects).map(({effect, count, hashes}) => {
-        effect.random = count !== this.outcomes.length || hashes.size > 1;
-        if (hashes.size > 1) effect.param = '?';
-        return effect;
-      });
+      return display.activeEffects(this);
     },
     supportersDetailed() {
       return this.supporters

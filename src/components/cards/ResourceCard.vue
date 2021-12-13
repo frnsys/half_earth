@@ -1,34 +1,24 @@
 <template>
 <Card class="resource">
   <template v-slot:header>
-    <div>{{name}}</div>
   </template>
   <template v-slot:body>
     <div class="resource--users">
-      <div class="resource--user" v-for="user in top" :class="{highlight: user.name == current.name}">
+      <div class="resource--user" v-for="user in relevantRankings" :class="{highlight: current && user.name == current.name}">
         <div>
           <div>{{user.name}}</div>
         </div>
         <div>
-          <IntensityIcon
-            :resource="icon" :intensity="user.intensity" />
-          <div class="resource--usage">{{user.displayAmount}}<img :src="icons[icon]"><span class="arrow">⟶</span>{{user.displayProduced}}<img :src="icons[user.output]"></div>
+          <template v-if="user.type !== 'Project' && user.type !== 'Event'">
+            <IntensityIcon
+              :resource="icon" :intensity="user.intensity" />
+            <div class="resource--usage">{{user.displayAmount}}<img :src="icons[icon]"><template v-if="user.displayProduced !== null"><span class="arrow">⟶</span>{{user.displayProduced}}<img :src="icons[user.output]"></template></div>
+          </template>
+          <template v-else>
+            <div class="resource--usage resource--usage-solo">{{user.amount}}<img :src="icons[icon]"></div>
+          </template>
         </div>
       </div>
-      <template v-if="!inTop">
-        <div class="resource--spacer">...</div>
-        <div class="resource--user highlight">
-          <div>
-            <div>{{current.name}}</div>
-            <div>{{currentData.displayAmount}}</div>
-          </div>
-          <div>
-            <IntensityIcon
-              :resource="icon" :intensity="currentData.intensity" />
-            <div>{{currentData.displayProduced}}<img :src="icons[currentData.output]"></div>
-          </div>
-        </div>
-      </template>
     </div>
   </template>
   <template v-slot:back>
@@ -37,9 +27,14 @@
   </template>
 </Card>
 
+<div class="resource-note">
+*Excluding impacts from energy use
+</div>
 </template>
 
 <script>
+import state from '/src/state';
+import display from 'lib/display';
 import Card from './Card.vue';
 import IntensityIcon from './IntensityIcon.vue';
 
@@ -55,14 +50,8 @@ export default {
     };
   },
   computed: {
-    top() {
-      return this.rankings.slice(0, 5);
-    },
-    inTop() {
-      return this.top.some((s) => s.name == this.current.name);
-    },
-    currentData() {
-      return this.rankings.find((s) => s.name == this.current.name);
+    relevantRankings() {
+      return state.resourceRankings[this.type].filter((user) => user.displayProduced !== 0);
     },
   }
 }
@@ -100,13 +89,56 @@ export default {
 .resource--usage {
   font-size: 14px;
 }
-.resource--spacer {
-  text-align: center;
-  margin-bottom: 1em;
-  color: #aaa;
-}
 
 .arrow {
   color: #727987;
+}
+
+.card-tabs {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.card-tabs .selected {
+  text-decoration: underline;
+}
+.card-tabs > div:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.card.resource {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+.card.resource footer img {
+  display: none;
+}
+.card.resource header {
+  position: sticky;
+  top: 0;
+  background: #333;
+}
+.card.resource .card--body {
+  justify-content: space-between;
+}
+
+.resource-note {
+  position: absolute;
+  bottom: 2em;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: #222;
+  color: #fff;
+  padding: 0.5em 1em;
+  text-align: center;
+  border-radius: 0.2em;
+  font-size: 0.8em;
+}
+
+/* hacky, but so exhausted at this point */
+.resource--usage-solo {
+  width: 100%;
+  text-align: right;
 }
 </style>

@@ -1,6 +1,8 @@
 import state from '/src/state';
 import icons from 'components/icons';
 import consts from '/src/consts.json';
+import EVENTS from '/assets/content/events.json';
+import PROJECTS from '/assets/content/projects.json';
 
 const OUTPUT_UNITS = {
   fuel: 1e-9/1e3,            // per 1000 TWh
@@ -179,47 +181,241 @@ const resourceFormats = {
   'biodiversity': (v) => `${v.toFixed(0)}`,
 };
 
+function activeEffects(project) {
+  let details = PROJECTS[project.id];
+  let activeOutcomeEffects = project.active_outcome == null ? [] : details.outcomes[project.active_outcome].effects;
+  if (project.status == 'Inactive') {
+    return details.effects.concat(outcomeEffects(details));
+  } else if (project.level === 0) {
+    return details.effects.concat(activeOutcomeEffects);
+  } else {
+    return details.upgrades[project.level - 1].effects.concat(activeOutcomeEffects);
+  }
+}
+
+function outcomeEffects(projectDetails) {
+  let allEffects = {};
+  projectDetails.outcomes.forEach(({effects}) => {
+    for (const effect of effects) {
+      let key = `${effect.type}${effect.subtype ? effect.subtype : ''}`;
+      let hash = JSON.stringify(effect);
+      if (!(key in allEffects)) {
+        allEffects[key] = {
+          effect,
+          count: 1,
+          hashes: new Set([hash]),
+        };
+      } else {
+        allEffects[key].count += 1;
+        allEffects[key].hashes.add(hash);
+      }
+    }
+  });
+
+  return Object.values(allEffects).map(({effect, count, hashes}) => {
+    effect.random = count !== projectDetails.outcomes.length || hashes.size > 1;
+    if (hashes.size > 1) effect.param = '?';
+    return effect;
+  });
+}
+
+function projectRankings(k) {
+  let active = state.gameState.projects.filter((p) => {
+    return p.status == 'Active' || p.status == 'Finished';
+  }).map((p) => {
+    let effects = activeEffects(p);
+    let relevantEffect = 0;
+    if (k == 'emissions') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.subtype == 'Emissions' ? eff.param : 0);
+      }, 0);
+    } else if (k == 'water') {
+      // TODO no effects that influence this directly
+    } else if (k == 'land') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.type == 'ProtectLand' ? eff.param : 0);
+      }, 0);
+    } else if (k == 'energy') {
+      // TODO no effects that influence this directly
+    } else if (k == 'contentendness') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.subtype == 'Outlook' ? eff.param : 0);
+      }, 0);
+    } else if (k == 'biodiversity') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.subtype == 'ExtinctionRate' ? eff.param : 0);
+      }, 0);
+    }
+    return {name: p.name, type: 'Project', amount: relevantEffect};
+  }).filter((p) => p.amount !== 0);
+  return active;
+}
+
+function eventRankings(k) {
+  let active = state.events.map(([eventId, regionId]) => {
+    let event = EVENTS[eventId];
+    let effects = event.effects;
+    let relevantEffect = 0;
+    if (k == 'emissions') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.subtype == 'Emissions' ? eff.param : 0);
+      }, 0);
+    } else if (k == 'water') {
+      // TODO no effects that influence this directly
+    } else if (k == 'land') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.type == 'ProtectLand' ? eff.param : 0);
+      }, 0);
+    } else if (k == 'energy') {
+      // TODO no effects that influence this directly
+    } else if (k == 'contentendness') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.subtype == 'Outlook' ? eff.param : 0);
+      }, 0);
+    } else if (k == 'biodiversity') {
+      relevantEffect = effects.reduce((acc, eff) => {
+        return acc + (eff.subtype == 'ExtinctionRate' ? eff.param : 0);
+      }, 0);
+    }
+    return {name: event.name, type: 'Event', amount: relevantEffect};
+  }).filter((p) => p.amount !== 0);
+  return active;
+}
+
 function resourceRankings() {
   // TODO is this the best place for this?
-  // TODO add in industries as well
   let resourceRankings = {};
-  ['land', 'water', 'energy', 'emissions', 'biodiversity'].forEach((k) => {
-    let rankings = state.gameState.processes.map((p, i) => {
-      let produced = state.gameState.produced_by_process[i];
-      let base = 0;
-      if (k == 'land' || k == 'water') {
-        base = p.resources[k];
-      } else if (k == 'energy') {
-        base = (p.resources['electricity'] + p.resources['fuel']);
-      } else if (k == 'emissions') {
-        base = co2eq(p.byproducts);
-      } else if (k == 'biodiversity') {
-        base = (p.byproducts[k]/1e4 + p.resources['land']/consts.starting_resources.land) * 100;
+  let contributors = state.gameState.processes.map((p, i) => {
+    return {
+      demand: state.gameState.produced_by_process[i],
+      ...p
+    };
+  }).concat(state.gameState.industries);
+  ['land', 'water', 'energy', 'emissions', 'biodiversity', 'contentedness'].forEach((k) => {
+    let rankings = [];
+    if (k !== 'contentedness') {
+      rankings = contributors.map((p) => {
+        let base = 0;
+        if (k == 'land' || k == 'water') {
+          base = p.resources[k];
+        } else if (k == 'energy') {
+          base = (p.resources['electricity'] + p.resources['fuel']);
+        } else if (k == 'emissions') {
+          base = co2eq(p.byproducts);
+        } else if (k == 'biodiversity') {
+          base = (p.byproducts[k]/1e4 + p.resources['land']/consts.starting_resources.land) * 100;
+        }
+
+        let type =
+          (p.output == 'Electricity' || p.output == 'Fuel')
+          ? 'energy' : 'calories';
+
+        let total = base * p.demand;
+        let inten = intensity(base, k, type);
+
+        let out = p.output ? enumKey(p.output) : null;
+        return {
+          name: out == null ? `${p.name}*` : p.name,
+          produced: p.demand,
+          output: out,
+          intensity: inten,
+          amount: total,
+          displayAmount: resourceFormats[k](total),
+          displayProduced: out != null ? output(p.demand, out) : null,
+        }
+      });
+      rankings = rankings.filter((p) => p.output != null || p.output == null && p.amount !== 0);
+    }
+
+    rankings = rankings.concat(projectRankings(k));
+    rankings = rankings.concat(eventRankings(k));
+
+    if (k == 'contentedness') {
+      if (state.gameState.world.temp_outlook !== 0) {
+        rankings.push({
+          type: 'Event',
+          name: 'Temperature Change',
+          amount: state.gameState.world.temp_outlook
+        });
       }
+    } else if (k == 'biodiversity') {
+        rankings.push({
+          type: 'Event',
+          name: 'Sea Level Rise',
+          amount: Math.round(state.gameState.world.sea_level_rise**2)
+        });
+        rankings.push({
+          type: 'Event',
+          name: 'Temperature Change',
+          amount: Math.round(state.gameState.world.temperature**2)
+        });
+    }
 
-      let type =
-        (p.output == 'Electricity' || p.output == 'Fuel')
-        ? 'energy' : 'calories';
-
-      let total = base * produced;
-      let inten = intensity(base, k, type);
-
-      let out = enumKey(p.output);
-      return {
-        name: p.name,
-        produced,
-        output: out,
-        intensity: inten,
-        amount: total,
-        displayAmount: resourceFormats[k](total),
-        displayProduced: output(produced, out),
-      }
-    });
-    rankings.sort((a, b) => a.amount > b.amount ? -1 : 1)
+    rankings.sort((a, b) => Math.abs(a.amount) > Math.abs(b.amount) ? -1 : 1)
     resourceRankings[k] = rankings;
   });
 
   return resourceRankings;
+}
+
+const rankingTips = {
+  emissions: (text, current) => {
+    return {
+      text,
+      icon: 'emissions',
+      card: {
+        type: 'Resource',
+        data: {
+          icon: 'emissions',
+          type: 'emissions',
+          current,
+        }
+      }
+    }
+  },
+  biodiversity: (text, current) => {
+    return {
+      text,
+      icon: 'extinction_rate',
+      card: {
+        type: 'Resource',
+        data: {
+          icon: 'extinction_rate',
+          type: 'biodiversity',
+          current,
+        }
+      }
+    }
+  },
+  land: (text, current) => {
+    return {
+      text,
+      icon: 'land',
+      card: {
+        type: 'Resource',
+        data: {
+          icon: 'land',
+          type: 'land',
+          current,
+        }
+      }
+    }
+  },
+  contentedness: (text, current) => {
+    return {
+      text,
+      icon: 'contentedness',
+      card: {
+        type: 'Resource',
+        data: {
+          icon: 'contentedness',
+          type: 'contentedness',
+          current,
+        }
+      }
+    }
+  }
+
 }
 
 function formatNumber(val) {
@@ -242,4 +438,6 @@ export default {co2eq, gtco2eq, output, outputs,
   displayName, enumKey, enumDisplay,
   relationshipName,
   intensity, scaleIntensity,
-  resourceRankings, resourceFormats};
+  resourceRankings, resourceFormats,
+  projectRankings, eventRankings,
+  rankingTips, activeEffects};

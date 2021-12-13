@@ -68,6 +68,7 @@ specs = {
         'year': 0,
         'extinction_rate': 0.,
         'temperature': 0.,
+        'sea_level_rise': 0.,
         'base_outlook': BASE_WORLD_OUTLOOK,
     },
     'Region': {

@@ -178,6 +178,9 @@ export default {
       }
 
       this.events = game.roll.world('Main');
+      this.events.forEach((ev) => {
+        state.events.push(ev);
+      });
       this.applyEmissions();
 
       if (this.hasEvent) {

@@ -19,6 +19,9 @@ function updateState() {
   state.gameState.population = world.regions.reduce((acc, r) => {
       return acc + r.population
     }, 0);
+  state.gameState.industries.forEach((ind) => {
+    ind.demand = industryDemand(ind);
+  });
 }
 
 function updateResourceRankings() {

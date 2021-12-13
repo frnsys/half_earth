@@ -6,6 +6,7 @@ use crate::regions::{Region, Income};
 pub struct World {
     pub year: usize,
     pub base_outlook: f32,
+    pub temp_outlook: f32,
     pub extinction_rate: f32,
     pub temperature: f32,     // global temp anomaly, C
     pub precipitation: f32,   // global precip avg
@@ -54,6 +55,7 @@ impl World {
 
     pub fn update_temp_outlook(&mut self, temp_change: f32) {
         let outlook_change = temp_change * 5. * self.temperature.powf(2.);
+        self.temp_outlook += outlook_change;
         self.base_outlook += outlook_change;
         for region in &mut self.regions {
             region.outlook += outlook_change * 0.4;

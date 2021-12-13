@@ -206,20 +206,7 @@ export default {
         }
         case 'emissions': {
           let amount = state.gameState.emissions;
-          let rankings = state.resourceRankings['emissions'];
-          return {
-            icon: 'emissions',
-            text: `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`,
-            card: {
-              type: 'Resource',
-              data: {
-                icon: 'emissions',
-                name: 'Top Emitters',
-                rankings,
-                current: this.process,
-              }
-            }
-          }
+          return display.rankingTips['emissions'](`Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`, this.process);
         }
         case 'water': {
           let amount = display.waterUsePercent(state.gameState.resources_demand.water);

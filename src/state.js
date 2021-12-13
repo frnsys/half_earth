@@ -4,6 +4,7 @@ const init = {
   endYear: 0,
   gameState: null,
   phase: 'PLANNING',
+  events: [],
 
   processMixChanges: {
     Electricity: {},

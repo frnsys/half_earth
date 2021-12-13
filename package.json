@@ -2,7 +2,7 @@
   "name": "half-earth",
   "version": "0.0.0",
   "scripts": {
-    "start": "webpack serve --progress --compress --mode=development",
+    "start": "webpack serve --progress --compress --mode=development --env version=dev",
     "build": "rm -rf dist; NODE_ENV=production webpack --mode production --env production --env version=$(git describe --always) --progress",
     "build-wasm": "cd engine; wasm-pack build --release",
     "test": "cd engine; cargo test; wasm-pack test --headless --firefox"

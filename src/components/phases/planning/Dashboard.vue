@@ -8,14 +8,14 @@
       <img :src="icons.warming" />
       <div class="dashboard--item-name">Temperature Anomaly</div>
     </div>
-    <div class="dashboard--item">
+    <div class="dashboard--item" v-tip="emissionsTip">
       <div class="minicard">
       {{`${state.gameState.emissions.toFixed(1)}Gt`}}
       </div>
       <img :src="icons.emissions" />
       <div class="dashboard--item-name">Emissions</div>
     </div>
-    <div class="dashboard--item">
+    <div class="dashboard--item" v-tip="landTip">
       <div class="minicard">
       {{`${((state.gameState.resources_demand.land/104e12)*100).toFixed(0)}%`}}
       </div>
@@ -31,12 +31,12 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        {{state.gameState.world.sea_level_rise.toFixed(1)}}m
+        {{state.gameState.world.sea_level_rise.toFixed(2)}}m
       </div>
       <img :src="icons.sea_level_rise" />
       <div class="dashboard--item-name">Sea Level Rise</div>
     </div>
-    <div class="dashboard--item">
+    <div class="dashboard--item" v-tip="biodiversityTip">
       <div class="minicard">
         <span :style="{color: extinction.color}">{{extinction.label}}</span>
       </div>
@@ -84,6 +84,15 @@ export default {
     }
   },
   computed: {
+    emissionsTip() {
+      return display.rankingTips['emissions'](`Current annual emissions, in gigatonnes of CO2 equivalent.`, null);
+    },
+    landTip() {
+      return display.rankingTips['land'](`Current land use.`, null);
+    },
+    biodiversityTip() {
+      return display.rankingTips['biodiversity'](`The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.`, null);
+    },
     extinction() {
       let intensity = display.scaleIntensity(state.gameState.world.extinction_rate, 'extinction');
       let label;
