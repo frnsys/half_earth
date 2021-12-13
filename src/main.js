@@ -9,6 +9,7 @@ import debug from './debug';
 
 import * as Sentry from "@sentry/browser";
 import { Integrations } from "@sentry/tracing";
+import {sessionId, startSession} from '/src/log';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -20,6 +21,9 @@ if (process.env.NODE_ENV === 'production') {
     // We recommend adjusting this value in production
     tracesSampleRate: 1.0,
   });
+  Sentry.setContext("session", {
+    id: sessionId,
+  });
 }
 
 const app = createApp(App);
@@ -30,6 +34,7 @@ app.config.globalProperties['icons'] = icons;
 app.config.globalProperties['debug'] = debug;
 app.config.globalProperties['sign'] = sign;
 app.mount('#main');
+startSession();
 
 // window.onbeforeunload = () => {
 //   return 'Are you sure you want to quit?';

@@ -28,6 +28,7 @@ import EventsMixin from 'components/EventsMixin';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import ICON_EVENTS from '/assets/content/icon_events.json';
 import {sign, randChoice} from 'lib/util';
+import {sendSnapshot} from '/src/log';
 
 const MS_PER_YEAR = 2000;
 
@@ -104,6 +105,8 @@ export default {
       }
     },
     startYear() {
+      sendSnapshot(state);
+
       this.time = 0;
       this.globe.resumeRotation();
       let last = performance.now();
