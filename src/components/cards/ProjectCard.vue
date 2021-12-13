@@ -11,7 +11,7 @@
     <div v-if="status !== 'Finished' && status !== 'Active'" class="card-tack-ur project-cost" v-tip="costTip">
       {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
     </div>
-    <div v-if="status == 'Building'" class="card-tack-ul">
+    <div v-if="status == 'Building'" class="card-tack-ul project-points">
       <img
         v-for="_ in points"
         class="pip"
@@ -77,6 +77,8 @@ import state from '/src/state';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 import NPCS from '/assets/content/npcs.json';
+
+const MAX_POINTS = 15;
 
 export default {
   props: ['project'],
@@ -203,7 +205,7 @@ export default {
   },
   methods: {
     assignPoint() {
-      if (state.points[this.type] > 0) {
+      if (state.points[this.type] > 0 && this.points < MAX_POINTS) {
         game.setProjectPoints(this.id, this.points + 1);
         if (this.status !== 'Building') {
           game.startProject(this.id);
@@ -258,5 +260,8 @@ export default {
 }
 .project-cost img {
   height: 12px;
+}
+.project-points {
+  max-width: 110px;
 }
 </style>
