@@ -380,9 +380,9 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 0.0,
-                ch4: 0.0
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -396,8 +396,8 @@ pub fn industries() -> Vec<Industry> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 39.72
+                co2: 39.72,
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -411,9 +411,9 @@ pub fn industries() -> Vec<Industry> {
                 water: 24484.91379101743
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 0.0,
-                ch4: 0.0
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -427,9 +427,9 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 29.13,
-                ch4: 0.0
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -444,8 +444,8 @@ pub fn industries() -> Vec<Industry> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 0.0
+                co2: 0.0,
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -459,9 +459,9 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 0.0,
-                ch4: 0.0
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -475,9 +475,9 @@ pub fn industries() -> Vec<Industry> {
                 water: 10975.989104986089
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 0.0,
-                ch4: 0.0
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         },
@@ -491,9 +491,9 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
+                ch4: 0.0,
                 co2: 0.0,
-                ch4: 0.0
+                n2o: 0.0
             ),
             demand_modifier: 1.0
         }
@@ -726,9 +726,9 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 1.07,
-                co2: 45.85
+                co2: 45.85,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
@@ -886,9 +886,9 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.912,
-                co2: 75.6
+                co2: 75.6,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
@@ -1639,13 +1639,7 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
-                Upgrade {
-                    active: false,
-                    cost: 0,
-                    effects: vec![
 
-                    ]
-                }
             ],
             supporters: vec![],
             opposers: vec![],
@@ -1816,7 +1810,7 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -2.5),
-                        Effect::ModifyIndustryResources(5, Resource::Electricity, 0.9)
+                        Effect::ModifyIndustryResources(5, Resource::Electricity, -0.1)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -1968,7 +1962,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![2],
             opposers: vec![],
             active_outcome: None
         },
@@ -2379,8 +2373,10 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![3],
             opposers: vec![],
             active_outcome: None
         },
@@ -3971,7 +3967,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![4, 6],
             opposers: vec![],
             active_outcome: None
         },
@@ -4039,7 +4035,9 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::Emissions, -1.21),
+                Effect::Demand(Output::AnimalCalories, -0.05)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -4067,7 +4065,9 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -13.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -13.0),
+                Effect::WorldVariable(WorldVariable::Emissions, -3.629),
+                Effect::Demand(Output::AnimalCalories, -0.15)
             ],
             kind: ProjectType::Initiative,
             locked: false,
