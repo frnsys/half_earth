@@ -40,7 +40,9 @@ export default {
     document.addEventListener('mouseup', this.endDrag);
     document.addEventListener('touchmove', this.drag);
     document.addEventListener('touchend', this.endDrag);
-    this.snapToCenter(false);
+    this.$nextTick(() => {
+      this.snapToCenter(false);
+    });
   },
   unmounted() {
     document.removeEventListener('mousemove', this.drag);
