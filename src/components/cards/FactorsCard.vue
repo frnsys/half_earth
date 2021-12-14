@@ -4,6 +4,10 @@
   </template>
   <template v-slot:body>
     <div class="factors--users">
+      <div class="factors--total">
+        <div>Total:</div>
+        <div>{{total}}<img :src="icons[icon]" /></div>
+      </div>
       <div class="factors--user" v-for="user in relevantFactors" :class="{highlight: current && user.name == current.name}">
         <div>
           <div>{{user.name}}</div>
@@ -12,7 +16,7 @@
           <template v-if="user.type !== 'Project' && user.type !== 'Event'">
             <IntensityIcon
               :resource="icon" :intensity="user.intensity" />
-            <div class="factors--usage">{{user.displayAmount}}<img :src="icons[icon]"><template v-if="user.displayProduced !== null"><span class="arrow">⟶</span>{{user.displayProduced}}<img :src="icons[user.output]"></template></div>
+            <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="arrow">⟶</span></template>{{user.displayAmount}}<img :src="icons[icon]"></div>
           </template>
           <template v-else>
             <div class="factors--usage factors--usage-solo">{{user.amount}}<img :src="icons[icon]"></div>
@@ -57,11 +61,16 @@ export default {
 </script>
 
 <style>
-.factors--user {
+.factors--users > div {
   margin: 0.5em 0;
   padding: 0 0.25em;
 }
-.factors--user > div {
+.factors--users img {
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+}
+.factors--user > div, .factors--total {
   display: flex;
   justify-content: space-between;
 }
@@ -72,11 +81,6 @@ export default {
 }
 .factors--user .card-icon {
   display: flex;
-}
-.factors--user img {
-  height: 14px;
-  width: 14px;
-  vertical-align: middle;
 }
 .factors--user .intensity-pips {
   display: flex;

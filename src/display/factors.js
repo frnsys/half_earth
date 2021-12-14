@@ -122,7 +122,7 @@ function rank() {
         rankings.push({
           type: 'Event',
           name: 'Temperature Change',
-          amount: state.gameState.world.temp_outlook
+          amount: Math.round(state.gameState.world.temp_outlook)
         });
       }
     } else if (k == 'biodiversity') {
@@ -155,6 +155,7 @@ const tips = {
         data: {
           icon: 'emissions',
           type: 'emissions',
+          total: `${state.gameState.emissions.toFixed(1)}Gt`,
           current,
         }
       }
@@ -169,6 +170,7 @@ const tips = {
         data: {
           icon: 'extinction_rate',
           type: 'biodiversity',
+          total: Math.round(state.gameState.world.extinction_rate),
           current,
         }
       }
@@ -183,12 +185,14 @@ const tips = {
         data: {
           icon: 'land',
           type: 'land',
+          total: `${Math.round(format.landUsePercent(state.gameState.resources_demand.land))}%`,
           current,
         }
       }
     }
   },
   energy: (text, current) => {
+    let demand = state.gameState.output_demand;
     return {
       text,
       icon: 'energy',
@@ -197,6 +201,7 @@ const tips = {
         data: {
           icon: 'energy',
           type: 'energy',
+          total: `${((demand.electricity + demand.fuel) * 1e-9).toFixed(0)}TWh`,
           current,
         }
       }
@@ -211,6 +216,7 @@ const tips = {
         data: {
           icon: 'water',
           type: 'water',
+          total: `${Math.round(format.waterUsePercent(state.gameState.resources_demand.water))}%`,
           current,
         }
       }
@@ -225,6 +231,7 @@ const tips = {
         data: {
           icon: 'contentedness',
           type: 'contentedness',
+          total: Math.round(state.gameState.contentedness),
           current,
         }
       }
