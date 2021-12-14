@@ -41,15 +41,15 @@ export default {
           return 'This event is influenced by the amount of sea level rise.';
         case 'habitability':
           return 'This event is influenced by the habitability of regions.';
-        case 'is_ccs':
+        case 'IsCCS':
           return 'This event is influenced by how much production involves carbon capture and storage.';
-        case 'is_nuclear':
+        case 'IsNuclear':
           return 'This event is influenced by how much energy production is nuclear.';
-        case 'is_fossil':
+        case 'IsFossil':
           return 'This event is influenced by how much energy production uses fossil fuels.';
-        case 'uses_pesticides':
+        case 'UsesPesticides':
           return 'This event is influenced by how much food production uses pesticides.';
-        case 'uses_livestock':
+        case 'UsesLivestock':
           return 'This event is influenced by how much food production uses livestock.';
         default:
           return factor;

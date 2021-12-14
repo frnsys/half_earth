@@ -207,7 +207,7 @@ function render(e) {
       return {
         tip: {
           icon: k,
-          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${afterDemand}.`
+          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${Math.round(afterDemand)}.`
         },
         text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by ${e.param*100}%.`,
       }

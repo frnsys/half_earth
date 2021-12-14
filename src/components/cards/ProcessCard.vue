@@ -24,14 +24,19 @@
         }"/>
       </div>
     </div>
-    <div class="card-tack-ul">
-      <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
-      <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
-      <img v-if="feedstockName != 'other'"
-        v-tip="{text: `This process uses ${feedstockName}.${feedstockEstimate ? (feedstockEstimate == 0 ? ` This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.` : ` At current usage rates the estimate supply is expected to last ${feedstockEstimate} years.`) : ''}`, icon: feedstockIcon}"
-        class="process-feedstock" :src="icons[feedstockIcon]">
-      <div class="feedstock-remaining" v-if="feedstockName != 'other'">
-        <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
+    <div class="card-tack-ul process-details">
+      <div>
+        <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
+        <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
+        <img v-if="feedstockName != 'other'"
+          v-tip="{text: `This process uses ${feedstockName}.${feedstockEstimate ? (feedstockEstimate == 0 ? ` This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.` : ` At current usage rates the estimate supply is expected to last ${feedstockEstimate} years.`) : ''}`, icon: feedstockIcon}"
+          class="process-feedstock" :src="icons[feedstockIcon]">
+        <div class="feedstock-remaining" v-if="feedstockName != 'other'">
+          <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
+        </div>
+      </div>
+      <div>
+        <img class="process--feature" v-for="feature in featureIcons" :src="icons[feature.icon]" v-tip="{icon: feature.icon, text: feature.text}"/>
       </div>
     </div>
     <div class="opposers" v-if="opposersDetailed.length > 0">
@@ -98,6 +103,18 @@ import PROCESSES from '/assets/content/processes.json';
 import NPCS from '/assets/content/npcs.json';
 import icons from '/src/components/icons';
 
+const FEATURE_DESCS = {
+  'IsSolar': 'This process relies on the sun.',
+  'IsIntermittent': 'This process is intermittent.',
+  'IsNuclear': 'This process is nuclear.',
+  'IsCombustion': 'This process involves combustion.',
+  'IsFossil': 'This process uses fossil fuels.',
+  'IsCCS': 'This process captures and stores carbon.',
+  'UsesLivestock': 'This process uses livestock.',
+  'UsesPesticides': 'This process use pesticides.',
+  'UsesSynFertilizer': 'This process uses synthetic fertilizers.',
+};
+
 export default {
   props: ['process'],
   components: {
@@ -124,6 +141,14 @@ export default {
         icon: 'mix_token',
         text: `This process currently makes up ${this.process.mix_share*5}% of ${this.output} production.`
       };
+    },
+    featureIcons() {
+      return this.features.map((feat) => {
+        return {
+          icon: feat,
+          text: FEATURE_DESCS[feat]
+        };
+      });
     },
     produced() {
       let baseAmount = state.gameState.produced_by_process[this.id];
@@ -305,6 +330,10 @@ export default {
 	transform: translate(50%, 0);
 }
 
+.process-details {
+  display: flex;
+}
+
 .feedstock-remaining {
   height: 5px;
   background: #aaa;
@@ -329,4 +358,14 @@ export default {
   background: #43CC70;
   width: 80%;
 }
+
+.process--feature {
+  height: 24px;
+  background: #222;
+  border-radius: 1.2em;
+  padding: 0.2em;
+  margin-left: 2px;
+  border: 1px solid #888;
+}
+
 </style>
