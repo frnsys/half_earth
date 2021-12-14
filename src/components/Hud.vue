@@ -45,7 +45,7 @@ export default {
       let val = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
       return {
         intensity: val,
-        color: intensity.color(intensity, false)
+        color: intensity.color(val, false)
       }
     },
   },
