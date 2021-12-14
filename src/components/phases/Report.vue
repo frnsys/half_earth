@@ -72,7 +72,6 @@
         </tr>
       </table>
     </div>
-    <h2 v-if="lost">you lost</h2>
     <button @click="nextPhase">Next</button>
   </div>
 </template>
