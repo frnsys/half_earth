@@ -21,6 +21,9 @@ function updateState() {
   state.gameState.industries.forEach((ind) => {
     ind.demand = game.industry_demand(ind.id);
   });
+  state.gameState.world.regions.forEach((region) => {
+    region.demand = game.region_demand(region.id);
+  });
 }
 
 function updateFactors() {

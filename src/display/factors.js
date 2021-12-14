@@ -7,6 +7,7 @@ import consts from '/src/consts.json';
 import EVENTS from '/assets/content/events.json';
 
 const VARS = ['land', 'water', 'energy', 'emissions', 'biodiversity', 'contentedness'];
+const DEMAND_VARS = ['electricity', 'fuel', 'plant_calories', 'animal_calories'];
 
 function effectsFactor(k, effects) {
   if (k == 'emissions') {
@@ -66,6 +67,24 @@ function eventFactors(k) {
   }).filter((p) => p.amount !== 0);
 }
 
+function regionalFactors(k) {
+  return state.gameState.world.regions.map((region) => {
+    let intensity = 1;
+    switch (region.income) {
+      case 'Low': intensity = 1;
+      case 'LowerMiddle': intensity = 2;
+      case 'UpperMiddle': intensity = 3;
+      case 'High': intensity = 4;
+    };
+    return {
+      name: region.name,
+      type: 'Region',
+      intensity,
+      amount: format.output(region.demand[k], k)
+    };
+  }).filter((p) => p.amount !== 0);
+}
+
 function productionFactors(k) {
   let contributors = state.gameState.processes.map((p, i) => {
     return {
@@ -84,6 +103,8 @@ function productionFactors(k) {
       base = format.co2eq(p.byproducts);
     } else if (k == 'biodiversity') {
       base = (p.byproducts[k]/1e4 + p.resources['land']/consts.starting_resources.land) * 100;
+    } else if (k == 'electricity' || k == 'fuel') {
+      base = p.resources[k];
     }
 
     let type =
@@ -94,13 +115,19 @@ function productionFactors(k) {
     let inten = intensity.intensity(base, k, type);
 
     let out = p.output ? display.enumKey(p.output) : null;
+    let displayAmount = total;
+    if (k == 'electricity' || k == 'fuel') {
+      displayAmount = format.output(total, k);
+    } else {
+      displayAmount = format.formatResource[k](total);
+    }
     return {
       name: p.name,
       produced: p.demand,
       output: out,
       intensity: inten,
       amount: total,
-      displayAmount: format.formatResource[k](total),
+      displayAmount: displayAmount,
       displayProduced: out != null ? format.output(p.demand, out) : null,
     }
   }).filter((p) => p.output != null || p.output == null && p.amount !== 0);
@@ -108,14 +135,19 @@ function productionFactors(k) {
 
 function rank() {
   let factors = {};
-  VARS.forEach((k) => {
+  VARS.concat(DEMAND_VARS).forEach((k) => {
     let rankings = [];
 
-    if (k !== 'contentedness') {
+    if (k !== 'contentedness' && k !== 'animal_calories' && k !== 'plant_calories') {
       rankings = rankings.concat(productionFactors(k));
     }
-    rankings = rankings.concat(projectFactors(k));
-    rankings = rankings.concat(eventFactors(k));
+
+    if (DEMAND_VARS.includes(k)) {
+      rankings = rankings.concat(regionalFactors(k));
+    } else {
+      rankings = rankings.concat(projectFactors(k));
+      rankings = rankings.concat(eventFactors(k));
+    }
 
     if (k == 'contentedness') {
       if (state.gameState.world.temp_outlook !== 0) {
@@ -236,7 +268,67 @@ const tips = {
         }
       }
     }
-  }
+  },
+  electricity: (text, current) => {
+    return {
+      text,
+      icon: 'electricity',
+      card: {
+        type: 'Factors',
+        data: {
+          icon: 'electricity',
+          type: 'electricity',
+          total: format.output(state.gameState.output_demand.electricity, 'electricity'),
+          current,
+        }
+      }
+    }
+  },
+  fuel: (text, current) => {
+    return {
+      text,
+      icon: 'fuel',
+      card: {
+        type: 'Factors',
+        data: {
+          icon: 'fuel',
+          type: 'fuel',
+          total: format.output(state.gameState.output_demand.fuel, 'fuel'),
+          current,
+        }
+      }
+    }
+  },
+  plant_calories: (text, current) => {
+    return {
+      text,
+      icon: 'plant_calories',
+      card: {
+        type: 'Factors',
+        data: {
+          icon: 'plant_calories',
+          type: 'plant_calories',
+          total: format.output(state.gameState.output_demand.plant_calories, 'plant_calories'),
+          current,
+        }
+      }
+    }
+  },
+  animal_calories: (text, current) => {
+    return {
+      text,
+      icon: 'animal_calories',
+      card: {
+        type: 'Factors',
+        data: {
+          icon: 'animal_calories',
+          type: 'animal_calories',
+          total: format.output(state.gameState.output_demand.animal_calories, 'animal_calories'),
+          current,
+        }
+      }
+    }
+  },
 }
 
 

@@ -21,10 +21,10 @@
       <div>{{ estimatedChanges }}</div>
     </div>
     <div class="production--demand planning--demand">
-      <div v-for="v, k in demand" v-tip="{text: `Global demand for ${k}.`, icon: k}">
+      <div v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${k}.`)">
         {{demand[k]}}<img :src="icons[k]">
       </div>
-      <div v-tip="{text: 'Global CO2eq emissions.', icon: 'emissions'}">{{emissions}}<img :src="icons.emissions"></div>
+      <div v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">{{emissions}}<img :src="icons.emissions"></div>
     </div>
   </div>
 </div>

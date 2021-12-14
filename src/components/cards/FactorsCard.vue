@@ -13,10 +13,15 @@
           <div>{{user.name}}</div>
         </div>
         <div>
-          <template v-if="user.type !== 'Project' && user.type !== 'Event'">
+          <template v-if="user.type == 'Region'">
+            <IntensityIcon
+              resource="wealth" :intensity="user.intensity" />
+            <div class="factors--usage">{{user.amount}}<img :src="icons[icon]"></div>
+          </template>
+          <template v-else-if="user.type !== 'Project' && user.type !== 'Event'">
             <IntensityIcon
               :resource="icon" :intensity="user.intensity" />
-            <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="arrow">⟶</span></template>{{user.displayAmount}}<img :src="icons[icon]"></div>
+            <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="arrow">⟵</span></template>{{user.displayAmount}}<img :src="icons[icon]"></div>
           </template>
           <template v-else>
             <div class="factors--usage factors--usage-solo">{{user.amount}}<img :src="icons[icon]"></div>
@@ -91,6 +96,15 @@ export default {
 }
 .factors--usage {
   font-size: 14px;
+}
+
+.factors--total {
+  border: 1px solid #fff;
+  position: sticky;
+  top: 0;
+  background: #222222;
+  border-radius: 0.2em;
+  padding: 0.1em 0.25em !important;
 }
 
 .arrow {
