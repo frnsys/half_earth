@@ -70,7 +70,7 @@
         </fieldset>
       </div>
       <div>
-        <Image v-if="localData.type == 'World'" :image="localData.image" :dimensions="'480x630'" @update="saveData('image', $event)" />
+        <Image v-if="localData.type == 'World'" :image="localData.image" :dimensions="'240x320'" @update="saveData('image', $event)" />
       </div>
     </fieldset>
 

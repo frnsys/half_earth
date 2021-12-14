@@ -621,9 +621,14 @@ def parse_effect(e):
             effect[k] = e[k]
     return effect
 
-def to_jpg(path, outpath):
+def to_jpg(path, outpath, width=None):
     im = Image.open(path)
-    im.convert('RGB').save(outpath, quality=20)
+    if width is not None:
+        w, h = im.size
+        ratio = h/w
+        new_h = int(ratio * width)
+        im = im.resize((width, new_h), Image.ANTIALIAS)
+    im.convert('RGB').save(outpath, quality=30)
 
 
 def indent(text, levels=1):
@@ -802,7 +807,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            to_jpg(frm, to)
+            to_jpg(frm, to, width=600)
 
         all_events[id] = event
 
@@ -870,7 +875,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            to_jpg(frm, to)
+            to_jpg(frm, to, width=600)
         projects.append(project)
     with open('assets/content/projects.json', 'w') as f:
         json.dump(projects, f)
@@ -893,7 +898,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            to_jpg(frm, to)
+            to_jpg(frm, to, width=600)
         processes.append(process)
         processes_by_output[p['output']].append(p)
     with open('assets/content/processes.json', 'w') as f:
@@ -918,7 +923,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            to_jpg(frm, to)
+            to_jpg(frm, to, width=600)
         industries.append(industry)
     with open('assets/content/industries.json', 'w') as f:
         json.dump(industries, f)
@@ -938,7 +943,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            to_jpg(frm, to)
+            to_jpg(frm, to, width=600)
         regions.append(region)
     with open('assets/content/regions.json', 'w') as f:
         json.dump(regions, f)

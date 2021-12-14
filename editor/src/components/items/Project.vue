@@ -69,7 +69,7 @@
     </fieldset>
     <fieldset class="big-group">
       <div>
-        <Image :image="localData.image" :dimensions="'640x420'" @update="saveData('image', $event)" />
+        <Image :image="localData.image" :dimensions="'360x240'" @update="saveData('image', $event)" />
       </div>
       <div>
         <div>
