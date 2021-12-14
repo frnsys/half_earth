@@ -23,9 +23,17 @@ function effectsFactor(k, effects) {
   } else if (k == 'energy') {
     // TODO no effects that influence this directly
     return 0;
-  } else if (k == 'contentendness') {
+  } else if (k == 'contentedness') {
     return effects.reduce((acc, eff) => {
-      return acc + (eff.subtype == 'Outlook' ? eff.param : 0);
+      let amount = 0;
+      if (eff.subtype == 'Outlook') {
+        amount = eff.param;
+      } else if (eff.type == 'IncomeOutlookChange') {
+        // TODO
+      } else if (eff.type == 'DemandOutlookChange') {
+        // TODO
+      }
+      return acc + amount
     }, 0);
   } else if (k == 'biodiversity') {
     return effects.reduce((acc, eff) => {
