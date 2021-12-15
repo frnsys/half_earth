@@ -147,6 +147,16 @@ impl GameInterface {
         Ok(serde_wasm_bindgen::to_value(&reg.demand())?)
     }
 
+    pub fn region_demand_levels(&self, region_id: usize) -> Result<JsValue, JsValue> {
+        let reg = &self.game.state.world.regions[region_id];
+        Ok(serde_wasm_bindgen::to_value(&reg.demand_levels())?)
+    }
+
+    pub fn region_income_level(&self, region_id: usize) -> usize {
+        let reg = &self.game.state.world.regions[region_id];
+        reg.income_level()
+    }
+
     pub fn region_habitability(&self, region_id: usize) -> Result<JsValue, JsValue> {
         let reg = &self.game.state.world.regions[region_id];
         Ok(serde_wasm_bindgen::to_value(&reg.habitability())?)

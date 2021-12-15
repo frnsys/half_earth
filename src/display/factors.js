@@ -30,9 +30,11 @@ function effectsFactor(k, effects) {
       if (eff.subtype == 'Outlook') {
         amount = eff.param;
       } else if (eff.type == 'IncomeOutlookChange') {
-        // TODO
+        amount = (state.gameState.world.regions.reduce((acc, r) => acc + r.income_level, 0) * eff.param)/state.gameState.world.regions.length;
+        amount = Math.round(amount);
       } else if (eff.type == 'DemandOutlookChange') {
-        // TODO
+        amount = (state.gameState.world.regions.reduce((acc, r) => acc + r.demand_levels[k], 0) * eff.param)/state.gameState.world.regions.length;
+        amount = Math.round(amount);
       }
       return acc + amount
     }, 0);

@@ -27,6 +27,8 @@ function updateState() {
   });
   state.gameState.world.regions.forEach((region) => {
     region.demand = game.region_demand(region.id);
+    region.income_level = game.region_income_level(region.id);
+    region.demand_levels = game.region_demand_levels(region.id);
   });
 }
 

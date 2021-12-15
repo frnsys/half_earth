@@ -72,6 +72,14 @@ impl Region {
         }
     }
 
+    pub fn demand_levels(&self) -> OutputMap<usize> {
+        let mut demand_levels: OutputMap<usize> = outputs!();
+        for k in demand_levels.keys() {
+            demand_levels[k] = self.demand_level(&k);
+        }
+        demand_levels
+    }
+
     pub fn update_pop(&mut self, year: f32, modifier: f32) {
         if !cfg!(feature = "static_population") {
             self.population *= 1. + (consts::income_pop_change(year, &self.income) * modifier);
