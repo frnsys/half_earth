@@ -123,6 +123,19 @@ macro_rules! define_enum_map {
                 }
             }
 
+            // Map<f32> + f32
+            impl Add<f32> for [<$name Map>]<f32> {
+                type Output = Self;
+
+                fn add(self, rhs: f32) -> Self {
+                    Self {
+                        $(
+                            [<$field:snake>]: self.[<$field:snake>] + rhs,
+                        )*
+                    }
+                }
+            }
+
             // Map * f32
             impl Mul<f32> for [<$name Map>]<f32> {
                 type Output = Self;

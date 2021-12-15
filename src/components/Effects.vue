@@ -121,10 +121,32 @@ function render(e) {
           return {
             tip: {
               icon: 'population',
-              text: 'TODO',
+              text: 'The number of people on the planet.',
             },
             text: `[population] ${changeDir(e.param, e.random)} global population growth by ${formatParam(e.param)}%.`,
           };
+        }
+        case 'Population': {
+          return {
+            tip: {
+              icon: 'population',
+              text: 'The number of people on the planet.',
+            },
+            text: `[population] ${changeDir(e.param, e.random)} global population by ${formatParam(e.param)}.`,
+          };
+        }
+        case 'SeaLevelRiseRate': {
+          return {
+            tip: {
+              icon: 'sea_level_rise',
+              text: `The amount of sea level rise is currently ${state.gameState.world.sea_level_rise.toFixed(2)}m.`,
+            },
+            text: `[sea_level_rise] ${changeDir(e.param, e.random)} the rate of sea level rise by ${formatParam(e.param * 1000)}mm/year.`,
+          };
+        }
+        default: {
+          console.log(`Unhandled WorldVariable effect type: ${e.subtype}`);
+          console.log(e);
         }
       }
       return;
@@ -415,6 +437,29 @@ function render(e) {
         text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${resource.toLowerCase()} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}.`,
       }
     }
+    case 'ModifyIndustryResourcesAmount': {
+      let industry = state.gameState.industries[e.entity];
+      let k = display.enumKey(e.subtype);
+      let resource = display.displayName(e.subtype);
+      let demandBefore = format.output(industry.resources[k] * industry.demand, k);
+      let demandAfter = demandBefore + format.output((industry.resources[k] + e.param) * industry.demand, k);
+      let demandChange = (demandAfter - demandBefore)/demand[k] * 100;
+      let tip = {
+        icon: k,
+        text: e.param == '?' ?
+          `This will change ${resource} demand for ${industry.name} by some unknown amount.`
+          : `This will change ${resource} demand for ${industry.name} from <img src="${icons[k]}">${demandBefore} to <img src="${icons[k]}">${demandAfter < 1 ? '<1' : demandAfter.toFixed(0)}. This is a ${demandChange.toFixed(0)}% change of all ${resource} demand.`,
+        card: {
+          type: 'Industry',
+          data: industry,
+        }
+      };
+      let tag = display.cardTag(industry.name);
+      return {
+        tip: tip,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} ${resource.toLowerCase()} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${Math.abs(demandAfter - demandBefore)}`}.`,
+      }
+    }
     case 'ModifyIndustryByproducts': {
       let industry = state.gameState.industries[e.entity];
       let p = Math.abs(e.param * 100);
@@ -476,6 +521,36 @@ function render(e) {
           text: 'This will limit the amount of land that processes can use.'
         },
         text: `[land] Place ${e.param}% of land under protection.`,
+      }
+    }
+    case 'Feedstock': {
+      let k = display.enumKey(e.subtype);
+      let name = display.enumDisplay(e.subtype);
+
+      let estimate;
+      if (k == 'other' || k == 'soil') {
+        estimate = null;
+      } else {
+        estimate = state.gameState.feedstocks[k]/state.gameState.consumed_feedstocks[k];
+        estimate = Math.round(estimate);
+      }
+
+      let text;
+      if (estimate == null) {
+        text = 'TODO';
+      } else if (estimate == 0) {
+        text = 'This feedstock has been depleted.';
+      } else if (isFinite(estimate)) {
+        text = `At current usage rates the estimated supply is expected to last ${estimate} years.`;
+      } else {
+        text = `At current usage rates the estimated supply is expected to last indefinitely.`;
+      }
+      return {
+        tip: {
+          icon: k,
+          text,
+        },
+        text: `[${k}] ${changeDir(e.param, e.random)} ${name} supply by ${e.param*100}%.`,
       }
     }
 

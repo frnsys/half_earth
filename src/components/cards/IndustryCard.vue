@@ -8,19 +8,24 @@
   </template>
   <template v-slot:body>
     <div class="space-even">
-      <div v-for="v, k in totalResources" v-tip="{text: `This industry\'s demand for ${k}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}">
-        <div class="card-icon">
-          <img :src="icons[k]"/>
-          {{totalResources[k]}}
+      <template v-if="empty">
+        This industry is not yet significant.
+      </template>
+      <template v-else>
+        <div v-for="v, k in totalResources" v-tip="{text: `This industry\'s demand for ${k}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}">
+          <div class="card-icon">
+            <img :src="icons[k]"/>
+            {{totalResources[k]}}
+          </div>
         </div>
-      </div>
-      <div v-if="totalByproducts.emissions"
-        v-tip="{text: 'This industry\'s non-energy CO2eq emissions.', icon: 'emissions'}">
-        <div class="card-icon">
-          <img :src="icons.emissions" />
-          {{totalByproducts.emissions < 1 ? '<1' : totalByproducts.emissions.toFixed(0)}}
+        <div v-if="totalByproducts.emissions"
+          v-tip="{text: 'This industry\'s non-energy CO2eq emissions.', icon: 'emissions'}">
+          <div class="card-icon">
+            <img :src="icons.emissions" />
+            {{totalByproducts.emissions < 1 ? '<1' : totalByproducts.emissions.toFixed(0)}}
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </template>
   <template v-slot:back>
@@ -60,6 +65,10 @@ export default {
     }
   },
   computed: {
+    empty() {
+      let total = Object.values(this.totalResources).reduce((acc, v) => acc + v, 0);
+      return total == 0;
+    },
     demand() {
       return game.industryDemand(this.industry);
     },

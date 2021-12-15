@@ -384,6 +384,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 0.0,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -399,6 +401,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 39.72,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -415,6 +419,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 0.0,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -431,6 +437,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 29.13,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -447,6 +455,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 0.0,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -463,6 +473,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 0.0,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -479,6 +491,8 @@ pub fn industries() -> Vec<Industry> {
                 co2: 0.0,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         },
         Industry {
@@ -495,6 +509,26 @@ pub fn industries() -> Vec<Industry> {
                 co2: 0.0,
                 n2o: 0.0
             ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
+            demand_modifier: 1.0
+        },
+        Industry {
+            id: 8,
+            name: "Space",
+            resources: resources!(
+                land: 0.0,
+                water: 0.0,
+                fuel: 0.0,
+                electricity: 0.0
+            ),
+            byproducts: byproducts!(
+                co2: 0.0,
+                ch4: 0.0,
+                n2o: 0.0
+            ),
+            resource_modifiers: resources!(),
+            byproduct_modifiers: byproducts!(),
             demand_modifier: 1.0
         }
     ]
@@ -721,7 +755,7 @@ pub fn processes() -> Vec<Process> {
             feedstock: (Feedstock::NaturalGas, 0.1139),
             resources: resources!(
                 electricity: 0.034,
-                fuel: 46.4,
+                fuel: 4.0,
                 land: 0.0011786,
                 water: 0.27
             ),
@@ -826,7 +860,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0,
             feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
-                electricity: 46.4,
+                electricity: 3.0,
                 fuel: 0.0,
                 land: 0.529,
                 water: 0.27
@@ -881,7 +915,7 @@ pub fn processes() -> Vec<Process> {
             feedstock: (Feedstock::NaturalGas, 0.1018),
             resources: resources!(
                 electricity: 0.009,
-                fuel: 46.4,
+                fuel: 4.0,
                 land: 0.005289,
                 water: 0.27
             ),
@@ -1761,7 +1795,8 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, 1.0)
+                Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 200.0),
+                Effect::ModifyEventProbability(146, -1.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -1771,7 +1806,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::Feedstock(Feedstock::Lithium, -0.99)
+                        Effect::Feedstock(Feedstock::Lithium, 5.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2066,7 +2101,8 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, -0.003),
+                Effect::DemandAmount(Output::Electricity, 11690000000000.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2799,7 +2835,9 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ProjectCostModifier(13, -0.25)
+                Effect::ProjectCostModifier(13, -0.25),
+                Effect::WorldVariable(WorldVariable::Population, -10000.0),
+                Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 10.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2813,7 +2851,30 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
-
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -20000.0),
+                        Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 15.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -50000.0),
+                        Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 25.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -100000.0),
+                        Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 35.0)
+                    ]
+                }
             ],
             supporters: vec![2],
             opposers: vec![],
@@ -3501,7 +3562,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 60,
-            name: "Biosphere III",
+            name: "Biosphere 3",
             cost: 0,
             base_cost: Cost::Fixed(40),
             progress: 0.0,
@@ -3517,7 +3578,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 5.0)
+                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 10.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Random,
@@ -3528,8 +3589,9 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 5.0),
-                        Effect::ProjectCostModifier(74, -0.25)
+                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 10.0),
+                        Effect::ProjectCostModifier(74, -0.25),
+                        Effect::ProjectCostModifier(43, -0.25)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -4007,7 +4069,7 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Population, -100000.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4021,7 +4083,34 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
-
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -200000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -400000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -1000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 5,
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Population, -2000000.0)
+                    ]
+                }
             ],
             supporters: vec![0, 5, 2],
             opposers: vec![4, 8, 6],
@@ -4068,6 +4157,104 @@ pub fn projects() -> Vec<Project> {
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -13.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -3.629),
                 Effect::Demand(Output::AnimalCalories, -0.15)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: true,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 77,
+            name: "Space Elevator",
+            cost: 0,
+            base_cost: Cost::Fixed(60),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::ModifyIndustryResources(8, Resource::Fuel, -0.25)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 15,
+                    effects: vec![
+                        Effect::ModifyIndustryResources(8, Resource::Fuel, -0.5)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::ModifyIndustryResources(8, Resource::Fuel, -0.75)
+                    ]
+                }
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 78,
+            name: "Mission to Titan",
+            cost: 0,
+            base_cost: Cost::Fixed(60),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::Feedstock(Feedstock::Oil, 10.0),
+                Effect::Feedstock(Feedstock::NaturalGas, 10.0)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 79,
+            name: "Relocate Industry to Space",
+            cost: 0,
+            base_cost: Cost::Fixed(100),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 400.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -7396,7 +7583,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
+                Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, 0.005),
                 Effect::TriggerEvent(87, 1)
             ],
             probabilities: vec![
@@ -8152,6 +8339,40 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 144,
             name: "Soil Degradation",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 145,
+            name: "warming temps slowing labor",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 146,
+            name: "Metals Shortage",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,

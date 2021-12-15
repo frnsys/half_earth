@@ -92,6 +92,8 @@ specs = {
         'name': None,
         'resources': {},
         'byproducts': {},
+        'resource_modifiers': {},
+        'byproduct_modifiers': {},
         'demand_modifier': 1.0
     },
     'Process': {
@@ -233,6 +235,7 @@ effects = {
     'NPCRelationship':  lambda e: (ids[e['entity']], int(param(e, 'Change'))),
     'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(byproduct_map[e['subtype']]), param(e, 'Multiplier')),
     'ModifyIndustryResources':   lambda e: (ids[e['entity']], 'Resource::{}'.format(e['subtype']), param(e, 'Multiplier')),
+    'ModifyIndustryResourcesAmount':   lambda e: (ids[e['entity']], 'Resource::{}'.format(e['subtype']), param(e, 'Amount')),
     'ModifyEventProbability':    lambda e: (ids[e['entity']], param(e, 'Change')),
     'ModifyIndustryDemand':      lambda e: (ids[e['entity']], param(e, 'Change')),
     'DemandOutlookChange':       lambda e: ('Output::{}'.format(e['subtype']), param(e, 'Multiplier')),
@@ -298,6 +301,7 @@ effect_keys = {
   'NPCRelationship': ['entity', 'params'],
   'ModifyIndustryByproducts': ['entity', 'subtype', 'params'],
   'ModifyIndustryResources': ['entity', 'subtype', 'params'],
+  'ModifyIndustryResourcesAmount': ['entity', 'subtype', 'params'],
   'ModifyIndustryDemand': ['entity', 'params'],
   'ModifyEventProbability': ['entity', 'params'],
   'DemandOutlookChange': ['subtype', 'params'],
@@ -386,6 +390,10 @@ def define_field(k, v, item):
         fields = filter(lambda x: x[0] in valid_resources, v.items())
         return 'resources: resources!(\n{}\n)'.format(
                     indent(define_fields(fields, item)))
+    elif k == 'resource_modifiers':
+        return 'resource_modifiers: resources!()'
+    elif k == 'byproduct_modifiers':
+        return 'byproduct_modifiers: byproducts!()'
     elif k == 'aspects':
         aspects = ['Aspect::{}'.format(a) for a in v]
         return 'aspects: vec![\n{}\n]'.format(

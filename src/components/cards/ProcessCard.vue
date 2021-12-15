@@ -29,9 +29,9 @@
         <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
         <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
         <img v-if="feedstockName != 'other'"
-          v-tip="{text: `This process uses ${feedstockName}.${feedstockEstimate ? (feedstockEstimate == 0 ? ` This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.` : ` At current usage rates the estimate supply is expected to last ${feedstockEstimate} years.`) : ''}`, icon: feedstockIcon}"
+          v-tip="{text: `This process uses ${feedstockName}. ${feedstockEstimateDesc}`, icon: feedstockIcon}"
           class="process-feedstock" :src="icons[feedstockIcon]">
-        <div class="feedstock-remaining" v-if="feedstockName != 'other'">
+        <div class="feedstock-remaining" v-if="feedstockName != 'other' && feedstockName != 'soil'">
           <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
         </div>
       </div>
@@ -176,6 +176,17 @@ export default {
       let estimate = state.gameState.feedstocks[feedstock]/state.gameState.consumed_feedstocks[feedstock];
       return Math.round(estimate);
     },
+    feedstockEstimateDesc() {
+      if (this.feedstockEstimate == null) {
+        return '';
+      } else if (this.feedstockEstimate == 0) {
+        return 'This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.';
+      } else if (isFinite(this.feedstockEstimate)) {
+        return `At current usage rates the estimated supply is expected to last ${this.feedstockEstimate} years.`;
+      } else {
+        return `At current usage rates the estimated supply is expected to last indefinitely.`;
+      }
+    },
     feedstockLevel() {
       let feedstock = display.enumKey(this.feedstock[0]);
       if (feedstock == 'other' || feedstock == 'soil') {
@@ -184,8 +195,10 @@ export default {
         return 'low';
       } else if (this.feedstockEstimate < 50) {
         return 'mid';
-      } else {
+      } else if (this.feedstockEstimate < 80) {
         return 'high';
+      } else {
+        return 'very-high';
       }
     },
     hasChange() {
@@ -357,6 +370,10 @@ export default {
 .feedstock-remaining-fill--high {
   background: #43CC70;
   width: 80%;
+}
+.feedstock-remaining-fill--very-high {
+  background: #43CC70;
+  width: 95%;
 }
 
 .process--feature {

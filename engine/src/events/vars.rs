@@ -10,6 +10,7 @@ pub enum WorldVariable {
     Temperature,
     WaterStress,
     SeaLevelRise,
+    SeaLevelRiseRate,
     Precipitation,
     PopulationGrowth,
 }

@@ -60,6 +60,7 @@ pub enum Effect {
 
     ModifyIndustryByproducts(usize, Byproduct, f32),
     ModifyIndustryResources(usize, Resource, f32),
+    ModifyIndustryResourcesAmount(usize, Resource, f32),
     ModifyEventProbability(usize, f32),
     ModifyIndustryDemand(usize, f32),
     DemandOutlookChange(Output, f32),
@@ -87,7 +88,7 @@ impl Effect {
                 if let Some(id) = region_id {
                     let region = &mut state.world.regions[id];
                     match var {
-                        LocalVariable::Population => region.population *= 1. + *change/100.,
+                        LocalVariable::Population => region.population *= 1. + *change,
                         LocalVariable::Outlook => {
                             region.outlook += *change;
                             check_game_over(state);
@@ -99,7 +100,7 @@ impl Effect {
             Effect::WorldVariable(var, change) => {
                 match var {
                     WorldVariable::Year => state.world.year += *change as usize,
-                    WorldVariable::Population => state.world.change_population(*change/100.),
+                    WorldVariable::Population => state.world.change_population(*change),
                     WorldVariable::PopulationGrowth => state.world.population_growth_modifier += *change/100.,
                     WorldVariable::Emissions => {
                         state.world.byproduct_mods.co2 += *change * 1e15; // effect in Gt
@@ -113,6 +114,7 @@ impl Effect {
                     WorldVariable::Temperature => state.world.temperature_modifier += *change,
                     WorldVariable::WaterStress => state.world.water_stress += *change,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise += *change,
+                    WorldVariable::SeaLevelRiseRate => state.world.sea_level_rise_modifier += *change,
                     WorldVariable::Precipitation => state.world.precipitation += *change,
                 }
             }
@@ -203,10 +205,13 @@ impl Effect {
             },
 
             Effect::ModifyIndustryByproducts(id, byproduct, change) => {
-                state.industries[*id].byproducts[*byproduct] *= 1. + change;
+                state.industries[*id].byproduct_modifiers[*byproduct] += change;
             },
             Effect::ModifyIndustryResources(id, resource, change) => {
-                state.industries[*id].resources[*resource] *= 1. + change;
+                state.industries[*id].resource_modifiers[*resource] += change;
+            },
+            Effect::ModifyIndustryResourcesAmount(id, resource, change) => {
+                state.industries[*id].resources[*resource] += change;
             },
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier += change;
@@ -244,7 +249,7 @@ impl Effect {
                 if let Some(id) = region_id {
                     let region = &mut state.world.regions[id];
                     match var {
-                        LocalVariable::Population => region.population /= 1. + *change/100.,
+                        LocalVariable::Population => region.population /= 1. + *change,
                         LocalVariable::Outlook => region.outlook -= *change,
                         LocalVariable::Habitability => region.base_habitability -= *change,
                     }
@@ -253,7 +258,7 @@ impl Effect {
             Effect::WorldVariable(var, change) => {
                 match var {
                     WorldVariable::Year => state.world.year -= *change as usize,
-                    WorldVariable::Population => state.world.change_population(1./(*change/100.)),
+                    WorldVariable::Population => state.world.change_population(-*change),
                     WorldVariable::PopulationGrowth => state.world.population_growth_modifier -= *change/100.,
                     WorldVariable::Emissions => {
                         state.world.byproduct_mods.co2 -= *change * 1e15;
@@ -264,6 +269,7 @@ impl Effect {
                     WorldVariable::Temperature => state.world.temperature_modifier -= *change,
                     WorldVariable::WaterStress => state.world.water_stress -= *change,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise -= *change,
+                    WorldVariable::SeaLevelRiseRate => state.world.sea_level_rise_modifier -= *change,
                     WorldVariable::Precipitation => state.world.precipitation -= *change,
                 }
             }
@@ -303,11 +309,14 @@ impl Effect {
             Effect::NPCRelationship(id, change) => {
                 state.npcs[*id].relationship -= change;
             },
-            Effect::ModifyIndustryByproducts(id, byproduct, mult) => {
-                state.industries[*id].byproducts[*byproduct] /= mult;
+            Effect::ModifyIndustryByproducts(id, byproduct, change) => {
+                state.industries[*id].byproduct_modifiers[*byproduct] -= change;
             },
-            Effect::ModifyIndustryResources(id, resource, mult) => {
-                state.industries[*id].resources[*resource] /= mult;
+            Effect::ModifyIndustryResources(id, resource, change) => {
+                state.industries[*id].resource_modifiers[*resource] -= change;
+            },
+            Effect::ModifyIndustryResourcesAmount(id, resource, change) => {
+                state.industries[*id].resources[*resource] -= change;
             },
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier -= change;
@@ -360,6 +369,7 @@ impl Mul<f32> for Effect {
             Effect::Feedstock(feedstock, val) => Effect::Feedstock(feedstock, val * rhs),
             Effect::ModifyIndustryByproducts(id, byproduct, val) => Effect::ModifyIndustryByproducts(id, byproduct, val * rhs),
             Effect::ModifyIndustryResources(id, resource, val) => Effect::ModifyIndustryResources(id, resource, val * rhs),
+            Effect::ModifyIndustryResourcesAmount(id, resource, val) => Effect::ModifyIndustryResources(id, resource, val * rhs),
             Effect::ModifyIndustryDemand(id, val) => Effect::ModifyIndustryDemand(id, val * rhs),
             Effect::ModifyEventProbability(id, val) => Effect::ModifyEventProbability(id, val * rhs),
             Effect::DemandOutlookChange(output, val) => Effect::DemandOutlookChange(output, val * rhs),

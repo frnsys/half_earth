@@ -62,7 +62,8 @@ const CONDITIONS = {
     choices: [
       'Year', 'Population', 'Emissions',
       'ExtinctionRate', 'Temperature',
-      'Precipitation', 'SeaLevelRise',
+      'Precipitation',
+      'SeaLevelRise', 'SeaLevelRiseRate',
       'Outlook',
       'WaterStress', 'PopulationGrowth']
   },
@@ -159,7 +160,8 @@ const EFFECTS = {
     choices: [
       'Emissions',
       'ExtinctionRate', 'Temperature',
-      'Precipitation', 'SeaLevelRise',
+      'Precipitation', 'Population',
+      'SeaLevelRise', 'SeaLevelRiseRate',
       'Outlook', 'PopulationGrowth'],
     params: {
       'Change': Number
@@ -322,6 +324,13 @@ const EFFECTS = {
     choices:  Object.keys(RESOURCES),
     params: {
       'Multiplier': Number
+    }
+  },
+  ModifyIndustryResourcesAmount: {
+    entity: 'Industry',
+    choices:  Object.keys(RESOURCES),
+    params: {
+      'Amount': Number
     }
   },
   ModifyEventProbability: {

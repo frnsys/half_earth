@@ -20,6 +20,10 @@ function updateState() {
     }, 0);
   state.gameState.industries.forEach((ind) => {
     ind.demand = game.industry_demand(ind.id);
+
+    // Apply modifiers
+    ind.resources = game.industry_resources(ind.id);
+    ind.byproducts = game.industry_byproducts(ind.id);
   });
   state.gameState.world.regions.forEach((region) => {
     region.demand = game.region_demand(region.id);

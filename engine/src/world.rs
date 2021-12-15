@@ -19,6 +19,7 @@ pub struct World {
     pub regions: Vec<Region>,
     pub byproduct_mods: ByproductMap<f32>,
     pub population_growth_modifier: f32,
+    pub sea_level_rise_modifier: f32,  // meters
 }
 
 impl World {
@@ -77,10 +78,22 @@ impl World {
         })
     }
 
-    pub fn change_population(&mut self, percent: f32) {
+    pub fn change_population(&mut self, amount: f32) {
+        let amount_per_region = amount/self.regions.len() as f32;
         for region in &mut self.regions {
-            region.population *= 1. + percent;
+            region.population += amount_per_region;
         }
+    }
+
+    pub fn sea_level_rise_rate(&self) -> f32{
+        // Meters
+        // 0.0005mm per year per deg warming
+        // Chosen to roughly hit 1.5m-1.6m rise by 2100 in the BAU scenario
+        (0.0065 * self.temperature) + self.sea_level_rise_modifier
+    }
+
+    pub fn update_sea_level_rise(&mut self) {
+        self.sea_level_rise += self.sea_level_rise_rate();
     }
 
     pub fn income_level(&self) -> f32 {

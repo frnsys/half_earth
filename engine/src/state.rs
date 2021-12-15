@@ -132,7 +132,8 @@ impl State {
 
         // Demand and impacts from non-modeled industries
         let lic_pop = self.world.lic_population();
-        let industry_demand = self.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources * ind.demand_modifier) * lic_pop;
+        let industry_demand = self.industries.iter()
+            .fold(resources!(), |acc, ind| acc + ind.adj_resources() * ind.demand_modifier) * lic_pop;
         output_demand.fuel += industry_demand.fuel;
         output_demand.electricity += industry_demand.electricity;
 
@@ -211,7 +212,8 @@ impl State {
         self.byproducts = byproducts!();
 
         let lic_pop = self.world.lic_population();
-        self.byproducts += self.industries.iter().fold(byproducts!(), |acc, ind| acc + ind.byproducts * ind.demand_modifier) * lic_pop;
+        self.byproducts += self.industries.iter()
+            .fold(byproducts!(), |acc, ind| acc + ind.adj_byproducts() * ind.demand_modifier) * lic_pop;
 
         if self.flags.contains(&Flag::Electrified) {
             let electrified = self.output_demand.fuel * 0.8;
@@ -471,7 +473,7 @@ impl State {
         self.world.temperature = tgav + self.world.temperature_modifier;
         let temp_diff = prev_temp - self.world.temperature;
         self.update_region_temps();
-        self.update_sea_level_rise();
+        self.world.update_sea_level_rise();
         self.world.update_temp_outlook(temp_diff);
     }
 
@@ -494,13 +496,6 @@ impl State {
             region.precip_hi *= 31536000. / 10.;
             // region.temp = region.pattern_idxs.iter().map(|idx| &temps[*idx]).sum::<f32>()/region.pattern_idxs.len() as f32;
         }
-    }
-
-    pub fn update_sea_level_rise(&mut self) {
-        // Meters
-        // 0.0005mm per year per deg warming
-        // Chosen to roughly hit 1.5m-1.6m rise by 2100 in the BAU scenario
-        self.world.sea_level_rise += 0.0065 * self.world.temperature;
     }
 }
 

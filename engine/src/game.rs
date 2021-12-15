@@ -132,6 +132,16 @@ impl GameInterface {
         ind.demand_modifier * self.game.state.world.lic_population()
     }
 
+    pub fn industry_resources(&self, industry_id: usize) -> Result<JsValue, JsValue> {
+        let ind = &self.game.state.industries[industry_id];
+        Ok(serde_wasm_bindgen::to_value(&ind.adj_resources())?)
+    }
+
+    pub fn industry_byproducts(&self, industry_id: usize) -> Result<JsValue, JsValue> {
+        let ind = &self.game.state.industries[industry_id];
+        Ok(serde_wasm_bindgen::to_value(&ind.adj_byproducts())?)
+    }
+
     pub fn region_demand(&self, region_id: usize) -> Result<JsValue, JsValue> {
         let reg = &self.game.state.world.regions[region_id];
         Ok(serde_wasm_bindgen::to_value(&reg.demand())?)
