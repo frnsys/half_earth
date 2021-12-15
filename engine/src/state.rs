@@ -308,7 +308,10 @@ impl State {
     pub fn step_world(&mut self) {
         self.world.year += 1;
         self.world.update_pop();
-        self.world.develop_regions();
+
+        if !self.flags.contains(&Flag::StopDevelopment) {
+            self.world.develop_regions();
+        }
         self.world.update_outlook();
     }
 

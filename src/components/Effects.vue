@@ -56,13 +56,19 @@ const FLAG_TIPS = {
       text: 'TODO'
     }
   },
+  'StopDevelopment': (demand) => {
+    return {
+      icon: 'ban',
+      text: 'Stops regional development throughout the world.'
+    }
+  },
 };
 
 function changeDir(change, random) {
   if (change == '?') {
     return 'Changes';
   } else if (random) {
-    return `${change < 0 ? 'Might reduce' : 'Might increase'}`
+    return `${change < 0 ? 'Could reduce' : 'Could increase'}`
   } else {
     return `${change < 0 ? 'Reduces' : 'Increases'}`
   }
@@ -266,7 +272,7 @@ function render(e) {
       let tag = display.cardTag(project.name, project.kind.toLowerCase());
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] Might unlock the ${tag} project.` : `Unlocks the ${tag} project.`}`,
+        text: `[unlocks] ${e.random ? `[chance] Could unlock the ${tag} project.` : `Unlocks the ${tag} project.`}`,
       }
     }
     case 'UnlocksProcess': {
@@ -282,7 +288,7 @@ function render(e) {
       let tag = display.cardTag(process.name, display.enumKey(process.output));
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] Might unlock the ${tag} process.` : `Unlocks the ${tag} process.`}`,
+        text: `[unlocks] ${e.random ? `[chance] Could unlock the ${tag} process.` : `Unlocks the ${tag} process.`}`,
       }
     }
     case 'UnlocksNPC': {
@@ -297,7 +303,7 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] Might unlock ${npc.name}.` : `Unlocks ${npc.name}.`}`,
+        text: `[unlocks] ${e.random ? `[chance] Could unlock ${npc.name}.` : `Unlocks ${npc.name}.`}`,
       }
     }
     case 'ProjectCostModifier': {
@@ -314,6 +320,7 @@ function render(e) {
       } else if (project.kind == 'Initiative') {
         kind = 'development time';
       }
+      let amountName = e.param == '?' ? e.param : Math.ceil(Math.abs(amount));
       let tip = {
         icon: 'cost',
         text: `This effect reduces the ${kind} of this project from ${tipIcon}${project.cost}${unit} to ${tipIcon}${project.cost + amount}${unit}.`,
@@ -324,7 +331,7 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${icon}${Math.ceil(Math.abs(amount))}${unit}.`,
+        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e.random)} ${kind} of ${tag} by ${icon}${formatParam(amountName)}${unit}.`,
       }
     }
     case 'ProjectRequest': {

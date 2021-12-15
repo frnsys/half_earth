@@ -2480,10 +2480,10 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::AddFlag(Flag::StopDevelopment)
             ],
             kind: ProjectType::Policy,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
             ongoing: false,
             gradual: false,
