@@ -190,6 +190,14 @@ export default {
         });
       }
     },
+    upgradeProjects() {
+      Object.keys(state.queuedUpgrades).forEach((id) => {
+        if (state.queuedUpgrades[id]) {
+          game.upgradeProject(id);
+          state.queuedUpgrades[id] = false;
+        }
+      });
+    },
     nextPhase() {
       game.changePoliticalCapital(this.pcChange);
 
@@ -204,6 +212,8 @@ export default {
         Object.keys(state.processMixChanges).forEach((output) => {
           this.updateProcessMix(output);
         });
+        // Apply project upgrades
+        this.upgradeProjects();
         state.phase = 'PLANNING';
       }
     }

@@ -16,6 +16,8 @@ const init = {
     AnimalCalories: {},
   },
 
+  queuedUpgrades: {},
+
   // Compare beginning and end
   cycleStartState: {
     emissions: 0,

@@ -48,11 +48,16 @@
       </template>
     </div>
 
-    <div class="project-upgrade" v-if="status == 'Active' && nextUpgrade !== null">
+    <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">
-        <div>Next Level</div>
-        <div>{{nextUpgrade.cost}}<img class="pip" :src="icons.political_capital"></div>
-        <button @click="upgrade(p)">Upgrade</button>
+        <template v-if="upgradeQueued">
+          <div>Upgrading in one planning cycle.</div>
+        </template>
+        <template v-else>
+          <div>Next Level</div>
+          <div>{{nextUpgrade.cost}}<img class="pip" :src="icons.political_capital"></div>
+          <button @click="upgrade(p)">Upgrade</button>
+        </template>
       </div>
       <Effects :effects="nextUpgrade.effects" />
     </div>
@@ -139,6 +144,9 @@ export default {
         effects: this.upgrades[idx].effects,
       }
     },
+    upgradeQueued() {
+        return state.queuedUpgrades[this.id] == true;
+    },
     activeEffects() {
       return activeEffects(this);
     },
@@ -205,7 +213,13 @@ export default {
       let available = state.gameState.political_capital;
       if (nextUpgrade && available >= nextUpgrade.cost) {
         game.changePoliticalCapital(-this.cost);
-        game.upgradeProject(this.id);
+
+        // Policies upgraded instantly
+        if (this.kind == 'Policy') {
+          game.upgradeProject(this.id);
+        } else {
+          state.queuedUpgrades[this.id] = true;
+        }
       }
     }
   }
@@ -226,5 +240,31 @@ export default {
 }
 .project-points {
   max-width: 110px;
+}
+
+.project-upgrade {
+  background: #333;
+  padding: 0.25em 0.5em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  border: 2px solid #444;
+}
+.project-upgrade.upgrading {
+  border: 2px solid #43CC70;
+}
+.project-upgrade--title {
+  display: flex;
+  font-size: 0.9em;
+  margin-bottom: 0.2em;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.1em;
+}
+.project-upgrade--title button {
+  font-size: 0.9em;
+  padding: 0 1em;
+}
+.project-upgrade--title img {
+  width: 12px;
 }
 </style>

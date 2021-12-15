@@ -869,6 +869,7 @@ if __name__ == '__main__':
             'description': p.get('description', ''),
             'effects': [parse_effect(e) for e in p.get('effects', [])],
             'upgrades': [{
+                'cost': u['cost'],
                 'effects': [{
                     'type': e['type'],
                     'subtype': e.get('subtype'),

@@ -91,6 +91,8 @@ pub struct Project {
 
     #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
+
+    #[serde(skip_serializing)]
     pub upgrades: Vec<Upgrade>,
     pub active_outcome: Option<usize>,
 
