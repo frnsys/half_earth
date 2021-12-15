@@ -53,7 +53,8 @@ export default {
       predialogue: true,
       year: state.gameState.world.year,
       completedProjects: [],
-      stopped: false
+      stopped: false,
+      done: false
     };
   },
   components: {
@@ -174,7 +175,10 @@ export default {
       if (state.gameState.world.year > this._startYear
         && state.gameState.world.year % 5 == 0) {
         this.stopped = true;
-        state.phase = 'REPORT';
+        this.done = true;
+        if (this.completedProjects.length == 0) {
+          state.phase = 'REPORT';
+        }
         return;
       }
 
@@ -213,7 +217,11 @@ export default {
     },
     dismissProject() {
       this.completedProjects.shift();
-      this.stopped = this.completedProjects.length > 0;
+      if (this.completedProjects.length == 0 && this.done) {
+        state.phase = 'REPORT';
+      } else {
+        this.stopped = this.completedProjects.length > 0;
+      }
     },
     showEventOnGlobe(eventId, regionId) {
       let ev = ICON_EVENTS[eventId];
