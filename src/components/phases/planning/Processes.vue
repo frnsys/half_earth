@@ -178,6 +178,12 @@ export default {
           this.$emit('allowBack', true);
         }
       }
+
+      // Consider the process mix 'changed'
+      // when all points have been assigned
+      if (this.points == 0) {
+        this.$emit('change');
+      }
     }
   }
 }

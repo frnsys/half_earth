@@ -25,7 +25,9 @@
       </button>
     </div>
   </div>
-  <Processes v-else :output="page" @allowBack="(val) => allowBack = val"/>
+  <Processes v-else :output="page"
+    @change="$emit('change')"
+    @allowBack="(val) => allowBack = val" />
 </div>
 </template>
 

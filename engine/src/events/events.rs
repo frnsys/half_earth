@@ -165,6 +165,7 @@ pub enum Phase {
     PlanningPolicies,
     PlanningProcesses,
     PlanningCoalition,
+    PlanningPlanChange,
 }
 
 #[derive(Debug, Clone)]

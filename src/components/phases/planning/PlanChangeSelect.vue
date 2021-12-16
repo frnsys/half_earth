@@ -5,9 +5,9 @@
     <div v-if="page !== null" @click="page = null">Back</div>
     <div v-else @click="$emit('close')">Close</div>
   </header>
-  <Research v-if="page == PAGES.RESEARCH" />
-  <Policies v-else-if="page == PAGES.POLICIES" />
-  <Initiatives v-else-if="page == PAGES.INITIATIVES" />
+  <Research v-if="page == PAGES.RESEARCH" @change="$emit('change')" />
+  <Policies v-else-if="page == PAGES.POLICIES" @change="$emit('change')" />
+  <Initiatives v-else-if="page == PAGES.INITIATIVES" @change="$emit('change')" />
   <div class="planning--page" v-else>
     <div class="planning--menu">
       <button @click="selectPage(PAGES.RESEARCH)">

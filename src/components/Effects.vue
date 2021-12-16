@@ -10,6 +10,7 @@ import {slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
 import format from '/src/display/format';
+import factors from '/src/display/factors';
 import effects from '/src/display/effects';
 import display from '/src/display/display';
 import FLAGS from '/assets/content/flags.json';

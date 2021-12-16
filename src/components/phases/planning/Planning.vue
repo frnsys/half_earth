@@ -9,7 +9,7 @@
     <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">Regions</div>
   </header>
 
-  <Plan v-if="page == PAGES.PLAN" @page="pageEvents" />
+  <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
   <Coalition v-else-if="page == PAGES.COALITION" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" />
   <Regions v-else-if="page == PAGES.REGIONS" />
@@ -68,6 +68,10 @@ export default {
     },
     pageEvents(p) {
       this.events = game.roll.planning(p);
+      this.showEvent();
+    },
+    planChangeEvents() {
+      this.events = game.roll.planning('PlanChange');
       this.showEvent();
     }
   }

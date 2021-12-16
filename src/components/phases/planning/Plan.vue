@@ -1,7 +1,10 @@
 <template>
 <div class="plan">
-  <PlanChangeSelect v-if="page == 'Add'" @close="page = null" @page="(p) => $emit('page', p)" />
-  <ProcessesSelect v-if="page == 'Processes'" @close="page = null" />
+  <PlanChangeSelect v-if="page == 'Add'"
+    @close="page = null" @page="(p) => $emit('page', p)"
+    @change="$emit('change')" />
+  <ProcessesSelect v-if="page == 'Processes'"
+    @close="page = null" @change="$emit('change')" />
   <div class="plan--changes" v-if="page == null">
     <div class="plan--change">
       <div class="plan--action">Add</div>

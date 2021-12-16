@@ -186,6 +186,7 @@ export default {
           this.status = state.gameState.projects[this.id].status;
         }
         state.points[this.type]--;
+        this.$emit('change');
       }
     },
     unassignPoint() {
@@ -198,6 +199,7 @@ export default {
           this.status = state.gameState.projects[this.id].status;
         }
         state.points[this.type]++;
+        this.$emit('change');
       }
     },
     payPoints() {
@@ -207,6 +209,7 @@ export default {
       if (this.status == 'Inactive' && available >= this.cost) {
         game.changePoliticalCapital(-this.cost);
         game.startProject(this.id);
+        this.$emit('change');
       }
     },
     upgrade() {
@@ -221,6 +224,7 @@ export default {
         } else {
           state.queuedUpgrades[this.id] = true;
         }
+        this.$emit('change');
       }
     }
   }
