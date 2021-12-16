@@ -2480,7 +2480,8 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::AddFlag(Flag::StopDevelopment)
+                Effect::AddFlag(Flag::StopDevelopment),
+                Effect::TriggerEvent(69, 5)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -4037,11 +4038,13 @@ pub fn projects() -> Vec<Project> {
             id: 73,
             name: "Desalination Plants",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::Resource(Resource::Water, 0.)
+                Effect::DemandAmount(Output::Electricity, 3750000000000.0),
+                Effect::ModifyEventProbability(132, -0.05),
+                Effect::Resource(Resource::Water, 250000000000000.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -4055,7 +4058,51 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
-
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::DemandAmount(Output::Electricity, 3750000000000.0),
+                        Effect::ModifyEventProbability(132, -0.1),
+                        Effect::Resource(Resource::Water, 500000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::DemandAmount(Output::Electricity, 11250000000000.0),
+                        Effect::ModifyEventProbability(132, -0.15),
+                        Effect::Resource(Resource::Water, 750000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::DemandAmount(Output::Electricity, 15000000000000.0),
+                        Effect::ModifyEventProbability(132, -0.2),
+                        Effect::Resource(Resource::Water, 1000000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::DemandAmount(Output::Electricity, 18750000000000.0),
+                        Effect::ModifyEventProbability(132, -0.25),
+                        Effect::Resource(Resource::Water, 1250000000000000.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::DemandAmount(Output::Electricity, 22500000000000.0),
+                        Effect::ModifyEventProbability(132, -0.3),
+                        Effect::Resource(Resource::Water, 1500000000000000.0)
+                    ]
+                }
             ],
             supporters: vec![3],
             opposers: vec![],
@@ -5349,8 +5396,8 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(99, 6),
-                Effect::TriggerEvent(22, 6),
+                Effect::TriggerEvent(99, 5),
+                Effect::TriggerEvent(22, 5),
                 Effect::UnlocksNPC(5)
             ],
             probabilities: vec![
@@ -5554,7 +5601,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: true,
             effects: vec![
-                Effect::TriggerEvent(79, 4),
+                Effect::TriggerEvent(79, 5),
                 Effect::AddRegionFlag("revolts".to_string()),
                 Effect::AddEvent(8)
             ],
@@ -6090,7 +6137,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
-                Effect::TriggerEvent(54, 18)
+                Effect::TriggerEvent(54, 5)
             ],
             probabilities: vec![
                 Probability {
@@ -6967,7 +7014,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(87, 1)
+                Effect::TriggerEvent(87, 0)
             ],
             probabilities: vec![
                 Probability {

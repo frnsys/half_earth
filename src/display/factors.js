@@ -36,8 +36,7 @@ function effectsFactor(k, effs) {
         amount = effects.incomeOutlookChange(state.gameState.world, eff.param);
         amount = Math.round(amount);
       } else if (eff.type == 'DemandOutlookChange') {
-        amount = effects.demandOutlookChange(state.gameState.world, eff.param);
-        amount = (state.gameState.world.regions.reduce((acc, r) => acc + r.demand_levels[k], 0) * eff.param)/state.gameState.world.regions.length;
+        amount = effects.demandOutlookChange(state.gameState.world, k, eff.param);
         amount = Math.round(amount);
       }
       return acc + amount

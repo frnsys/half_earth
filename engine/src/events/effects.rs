@@ -128,8 +128,8 @@ impl Effect {
                     PlayerVariable::FALCPoints => state.falc_points += *change as usize,
                 }
             },
-            Effect::Resource(resource, pct_change) => {
-                state.resources[*resource] *= 1. + pct_change;
+            Effect::Resource(resource, amount) => {
+                state.resources[*resource] += amount;
             }
             Effect::Demand(output, pct_change) => {
                 state.output_demand_modifier[*output] += pct_change;
@@ -283,8 +283,8 @@ impl Effect {
                     PlayerVariable::FALCPoints => state.falc_points -= *change as usize,
                 }
             },
-            Effect::Resource(resource, pct_change) => {
-                state.resources[*resource] /= 1. + pct_change;
+            Effect::Resource(resource, amount) => {
+                state.resources[*resource] -= amount;
             }
             Effect::Demand(output, pct_change) => {
                 state.output_demand_modifier[*output] -= pct_change;

@@ -219,7 +219,7 @@ const EFFECTS = {
   Resource: {
     choices: Object.keys(RESOURCES),
     params: {
-      'PercentChange': Number
+      'Amount': Number
     }
   },
 

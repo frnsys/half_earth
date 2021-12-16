@@ -187,6 +187,16 @@ function render(e) {
       }
       return;
     }
+    case 'Resource': {
+      let k = display.enumKey(e.subtype);
+      let amount = format.output(e.param, k);
+      let percent = (e.param/state.gameState.resources[k] * 100).toFixed(1);
+      let text = `${changeDir(e.param, e.random)} ${display.enumDisplay(k)} supply by <img src="${icons[k]}">${Math.abs(amount)} (${format.sign(percent)}% of current supply).`;
+      return {
+        tip: factors.tips[k](text),
+        text: `[${k}] ${changeDir(e.param, e.random)} ${display.enumDisplay(k)} supply by [${k}]${Math.abs(amount)}.`,
+      }
+    }
     case 'Output': {
       let k = display.enumKey(e.subtype);
       let base = format.output(state.gameState.produced[k], k);
@@ -196,7 +206,7 @@ function render(e) {
           icon: k,
           text: `Global ${display.displayName(e.subtype)} output will change from <img src="${icons[k]}">${base} to <img src="${icons[k]}">${changed} with no change in impacts.`
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} all ${display.displayName(e.subtype)} production by ${e.param*100}%.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} all ${display.displayName(e.subtype)} production by ${Math.abs(e.param)*100}%.`,
       }
     }
     case 'OutputForProcess': {
@@ -493,7 +503,7 @@ function render(e) {
     }
     case 'DemandOutlookChange': {
       let k = display.enumKey(e.subtype);
-      let change = effects.demandOutlookChange(state.gameState.world, e.param);
+      let change = effects.demandOutlookChange(state.gameState.world, k, e.param);
       change = Math.round(change);
       return {
         tip: {
