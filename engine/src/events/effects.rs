@@ -38,6 +38,7 @@ pub enum Effect {
     DemandAmount(Output, f32),
     OutputForFeature(ProcessFeature, f32),
     OutputForProcess(usize, f32),
+    ProcessLimit(usize, f32),
     Feedstock(Feedstock, f32),
 
     AddEvent(usize),
@@ -148,6 +149,12 @@ impl Effect {
             Effect::OutputForProcess(id, pct_change) => {
                 let process = &mut state.processes[*id];
                 process.output_modifier += pct_change;
+            },
+            Effect::ProcessLimit(id, change) => {
+                let process = &mut state.processes[*id];
+                if let Some(limit) = process.limit {
+                    process.limit = Some(limit + change);
+                }
             },
             Effect::Feedstock(feedstock, pct_change) => {
                 state.feedstocks[*feedstock] *= pct_change;
@@ -303,6 +310,12 @@ impl Effect {
             Effect::OutputForProcess(id, pct_change) => {
                 let process = &mut state.processes[*id];
                 process.output_modifier -= pct_change;
+            },
+            Effect::ProcessLimit(id, change) => {
+                let process = &mut state.processes[*id];
+                if let Some(limit) = process.limit {
+                    process.limit = Some(limit - change);
+                }
             },
             Effect::Feedstock(feedstock, pct_change) => {
                 state.feedstocks[*feedstock] /= pct_change;

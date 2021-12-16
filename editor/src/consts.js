@@ -216,6 +216,13 @@ const EFFECTS = {
     }
   },
 
+  ProcessLimit: {
+    entity: 'Process',
+    params: {
+      'Change': Number
+    }
+  },
+
   Resource: {
     choices: Object.keys(RESOURCES),
     params: {

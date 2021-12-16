@@ -174,7 +174,7 @@ mod test {
     }
 
     #[test]
-    fn test_calculate_production_with_limits() {
+    fn test_calculate_production_with_resource_limits() {
         let processes = gen_processes();
         let demand = outputs!(fuel: 100., electricity: 100.);
         let orders: Vec<ProductionOrder> = processes.iter()

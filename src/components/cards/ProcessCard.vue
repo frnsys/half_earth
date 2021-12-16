@@ -6,9 +6,11 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <div class="card-tack-ur process-mix"
-      v-tip="changeTip">
-      <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}">
+    <div class="card-tack-ur process-mix">
+      <div class="process-excess-alert"
+        v-if="process.mix_share > maxShare || changedMixShare > maxShare"
+        v-tip="{icon: 'alert', text: 'This process can\'t produce this much because of feedstock or other limits. You should reallocate its points to other processes.'}"><img :src="icons.alert" /></div>
+      <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}" v-tip="changeTip">
         <div class="process-mix-percent">{{process.mix_share*5}}%</div>
         <template v-if="hasChange">
           <div><img :src="icons.down_arrow"></div>
@@ -20,7 +22,8 @@
           active: i <= process.mix_share,
           depleted: feedstockEstimate == 0,
           shrink: i <= process.mix_share && i > changedMixShare,
-          grow: i > process.mix_share && i <= changedMixShare
+          grow: i > process.mix_share && i <= changedMixShare,
+          excess: (i <= process.mix_share || i <= changedMixShare) && i > maxShare,
         }"/>
       </div>
     </div>
@@ -161,6 +164,27 @@ export default {
         emissions,
         amount
       };
+    },
+    maxShare() {
+      let max_share = 1;
+      let demand = state.gameState.output_demand[display.enumKey(this.process.output)];
+
+      // Hard-coded limit
+      if (this.process.limit) {
+        max_share = Math.min(this.process.limit/demand, 1);
+      }
+
+      // Limit based on feedstock supply
+      if (this.process.feedstock) {
+        let feedstock = display.enumKey(this.feedstock[0]);
+        if (feedstock !== 'other' && feedstock !== 'soil') {
+          let per_output = this.feedstock[1];
+          let feedstockLimit = state.gameState.feedstocks[feedstock]/per_output;
+          let feedstockMaxShare = Math.min(feedstockLimit/demand, 1);
+          max_share = Math.min(max_share, feedstockMaxShare);
+        }
+      }
+      return Math.floor(max_share * 100/5);
     },
     feedstockIcon() {
       return display.enumKey(this.feedstock[0]);
@@ -334,6 +358,9 @@ export default {
 .process-mix-cell.grow {
   background: #43CC70;
 }
+.process-mix-cell.excess {
+  background: #DC322E !important;
+}
 
 .alert-icon {
 	position: absolute;
@@ -385,4 +412,7 @@ export default {
   border: 1px solid #888;
 }
 
+.process-excess-alert {
+  margin: 1px 2px 1px;
+}
 </style>

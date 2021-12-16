@@ -221,6 +221,7 @@ effects = {
     'Output':           lambda e: ('Output::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'OutputForFeature': lambda e: ('ProcessFeature::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'OutputForProcess': lambda e: (ids[e['entity']], param(e, 'PercentChange')/100),
+    'ProcessLimit':     lambda e: (ids[e['entity']], param(e, 'Change')),
     'Resource':         lambda e: ('Resource::{}'.format(e['subtype']), param(e, 'Amount')),
     'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), param(e, 'PercentChange')/100),
     'SetProjectStatus': lambda e: (ids[e['entity']], 'ProjectStatus::{}'.format(e['subtype']), int(param(e, 'Duration'))),

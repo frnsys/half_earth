@@ -51,9 +51,15 @@ impl Process {
     /// Generates production orders based on the provided demand
     /// and this sector's process mix.
     pub fn production_order(&self, demand: &OutputMap<f32>) -> ProductionOrder {
+        // Production order amount can't be more than the process's limit,
+        // if there is one.
+        let mut amount = demand[self.output] * self.mix_percent() as f32;
+        if let Some(limit) = self.limit {
+            amount = f32::min(amount, limit);
+        }
         ProductionOrder {
             process: &self,
-            amount: demand[self.output] * self.mix_percent() as f32,
+            amount,
         }
     }
 
