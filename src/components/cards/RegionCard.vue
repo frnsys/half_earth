@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import game from '/src/game';
 import state from '/src/state';
 import Card from './Card.vue';
 import format from '/src/display/format';
@@ -71,7 +70,7 @@ export default {
   },
   methods: {
     perCapitaDemand(k) {
-      return this.rawDemand[k]/this.population;
+      return this.region.demand[k]/this.population;
     },
     demandIntensity(k) {
       return intensity.intensity(this.perCapitaDemand(k), k);
@@ -84,14 +83,11 @@ export default {
     contentedness() {
       return intensity.scale(this.region.outlook, 'outlook');
     },
-    rawDemand() {
-      return game.regionDemand(this.region);
-    },
     demand() {
-      return format.outputs(this.rawDemand);
+      return format.outputs(this.region.demand);
     },
     habitability() {
-      return intensity.scale(game.regionHabitability(this.region), 'habitability');
+      return intensity.scale(this.region.habitability, 'habitability');
     },
     incomeName() {
       return display.enumDisplay(this.income);

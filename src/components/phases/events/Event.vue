@@ -19,6 +19,19 @@
 import Effects from 'components/Effects.vue';
 import Dialogue from 'components/Dialogue.vue';
 
+const FACTOR_DESCS = {
+  'warming': 'This event is influenced by the global temperature anomaly.',
+  'contentedness': 'This event is influenced by how happy people are.',
+  'extinction_rate': 'This event is influenced by biodiversity pressures.',
+  'sea_level_rise': 'This event is influenced by the amount of sea level rise.',
+  'habitability': 'This event is influenced by the habitability of regions.',
+  'IsCCS': 'This event is influenced by how much production involves carbon capture and storage.',
+  'IsNuclear': 'This event is influenced by how much energy production is nuclear.',
+  'IsFossil': 'This event is influenced by how much energy production uses fossil fuels.',
+  'UsesPesticides': 'This event is influenced by how much food production uses pesticides.',
+  'UsesLivestock': 'This event is influenced by how much food production uses livestock.',
+};
+
 export default {
   props: ['event'],
   components: {
@@ -30,30 +43,7 @@ export default {
       this.$emit('done');
     },
     describeFactor(factor) {
-      switch (factor) {
-        case 'warming':
-          return 'This event is influenced by the global temperature anomaly.';
-        case 'contentedness':
-          return 'This event is influenced by how happy people are.';
-        case 'extinction_rate':
-          return 'This event is influenced by biodiversity pressures.';
-        case 'sea_level_rise':
-          return 'This event is influenced by the amount of sea level rise.';
-        case 'habitability':
-          return 'This event is influenced by the habitability of regions.';
-        case 'IsCCS':
-          return 'This event is influenced by how much production involves carbon capture and storage.';
-        case 'IsNuclear':
-          return 'This event is influenced by how much energy production is nuclear.';
-        case 'IsFossil':
-          return 'This event is influenced by how much energy production uses fossil fuels.';
-        case 'UsesPesticides':
-          return 'This event is influenced by how much food production uses pesticides.';
-        case 'UsesLivestock':
-          return 'This event is influenced by how much food production uses livestock.';
-        default:
-          return factor;
-      }
+      return FACTOR_DESCS[factor] || factor;
     }
   },
 }

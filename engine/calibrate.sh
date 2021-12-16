@@ -9,8 +9,7 @@
 set -e
 
 if [ "$1" == "build" ]; then
-    FLAGS="$2" # e.g. "static_development,static_population,static_production"
-    cargo build --release --example simulate --features "$FLAGS"
+    cargo build --release --example simulate
 else
     ./target/release/examples/simulate "$@"
     python plot.py

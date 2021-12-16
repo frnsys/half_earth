@@ -1,14 +1,11 @@
 use crate::consts;
 use crate::kinds::{Output, OutputMap};
-use serde::Serialize;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
+use serde::Serialize as SerializeD;
 
-#[cfg(not(feature = "static_development"))]
 const DEVELOP_SPEED: f32 = 0.003;
 
-#[cfg(feature = "static_development")]
-const DEVELOP_SPEED: f32 = 0.0;
-
-#[derive(Serialize, Clone)]
+#[derive(Clone)]
 pub struct Region {
     pub id: usize,
 
@@ -35,7 +32,6 @@ pub struct Region {
     pub precip_lo: f32,
     pub precip_hi: f32,
 
-    #[serde(skip_serializing)]
     pub pattern_idxs: Vec<usize>,
 }
 
@@ -81,9 +77,7 @@ impl Region {
     }
 
     pub fn update_pop(&mut self, year: f32, modifier: f32) {
-        if !cfg!(feature = "static_population") {
-            self.population *= 1. + (consts::income_pop_change(year, &self.income) * modifier);
-        }
+        self.population *= 1. + (consts::income_pop_change(year, &self.income) * modifier);
     }
 
     // Outlook slowly rebounds over time
@@ -148,7 +142,30 @@ impl Region {
     }
 }
 
-#[derive(PartialEq, Serialize, Clone)]
+impl Serialize for Region {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut seq = serializer.serialize_struct("Region", 4)?;
+        seq.serialize_field("id", &self.id)?;
+        seq.serialize_field("name", &self.name)?;
+        seq.serialize_field("population", &self.population)?;
+        seq.serialize_field("seceded", &self.seceded)?;
+        seq.serialize_field("outlook", &self.outlook)?;
+        seq.serialize_field("income_level", &self.income_level())?;
+        seq.serialize_field("habitability", &self.habitability())?;
+        seq.serialize_field("demand", &self.demand())?;
+        seq.serialize_field("demand_levels", &self.demand_levels())?;
+        seq.serialize_field("temp_lo", &self.temp_lo)?;
+        seq.serialize_field("temp_hi", &self.temp_hi)?;
+        seq.serialize_field("precip_lo", &self.precip_lo)?;
+        seq.serialize_field("precip_hi", &self.precip_hi)?;
+        seq.end()
+    }
+}
+
+#[derive(PartialEq, SerializeD, Clone)]
 pub enum Income {
     Low,
     LowerMiddle,

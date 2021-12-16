@@ -83,6 +83,7 @@ import {activeEffects} from '/src/display/project';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 import NPCS from '/assets/content/npcs.json';
+import {years_remaining} from 'half-earth-engine';
 
 const MAX_POINTS = 15;
 
@@ -114,7 +115,7 @@ export default {
       if (this.status == 'Active' || this.status == 'Finished') {
         return null;
       } else if (this.status == 'Building') {
-        let years = game.yearsRemaining(this.project);
+        let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
         return `${years} years left`;
       } else {
         let cost = this.points > 0 ? this.estimate : this.cost;

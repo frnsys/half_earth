@@ -1,3 +1,4 @@
+use crate::core;
 use crate::consts;
 use crate::state::State;
 use crate::npcs::NPCRelation;
@@ -52,7 +53,7 @@ impl Condition {
                     WorldVariable::Temperature => state.world.temperature,
                     WorldVariable::WaterStress => state.world.water_stress,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise,
-                    WorldVariable::SeaLevelRiseRate => state.world.sea_level_rise_rate(),
+                    WorldVariable::SeaLevelRiseRate => core::sea_level_rise_rate(state.world.temperature, state.world.sea_level_rise_modifier),
                     WorldVariable::Precipitation => state.world.precipitation,
                 };
                 comp.eval(val, *other_val)

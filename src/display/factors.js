@@ -1,47 +1,51 @@
 import format from './format';
 import state from '/src/state';
 import display from './display';
+import effects from './effects';
 import intensity from './intensity';
 import {activeEffects} from './project';
-import consts from '/src/consts.json';
 import EVENTS from '/assets/content/events.json';
+import {process_extinction_rate,
+  slr_extinction_rate, tgav_extinction_rate} from 'half-earth-engine';
 
 const VARS = ['land', 'water', 'energy', 'emissions', 'biodiversity', 'contentedness'];
 const DEMAND_VARS = ['electricity', 'fuel', 'plant_calories', 'animal_calories'];
 
-function effectsFactor(k, effects) {
+function effectsFactor(k, effs) {
   if (k == 'emissions') {
-    return effects.reduce((acc, eff) => {
-      return acc + (eff.subtype == 'Emissions' ? eff.param : 0);
-    }, 0);
+    return effs
+      .filter((eff) => eff.subtype == 'Emissions')
+      .reduce((acc, eff) => acc + eff.param, 0);
   } else if (k == 'water') {
     // TODO no effects that influence this directly
+    // TODO update for desalination etc, resource effect
     return 0;
   } else if (k == 'land') {
-    return effects.reduce((acc, eff) => {
-      return acc + (eff.type == 'ProtectLand' ? eff.param : 0);
-    }, 0);
+    return effs
+      .filter((eff) => eff.type == 'ProtectLand')
+      .reduce((acc, eff) => acc + eff.param, 0);
   } else if (k == 'energy') {
     // TODO no effects that influence this directly
     return 0;
   } else if (k == 'contentedness') {
-    return effects.reduce((acc, eff) => {
+    return effs.reduce((acc, eff) => {
       let amount = 0;
       if (eff.subtype == 'Outlook') {
         amount = eff.param;
       } else if (eff.type == 'IncomeOutlookChange') {
-        amount = (state.gameState.world.regions.reduce((acc, r) => acc + r.income_level, 0) * eff.param)/state.gameState.world.regions.length;
+        amount = effects.incomeOutlookChange(state.gameState.world, eff.param);
         amount = Math.round(amount);
       } else if (eff.type == 'DemandOutlookChange') {
+        amount = effects.demandOutlookChange(state.gameState.world, eff.param);
         amount = (state.gameState.world.regions.reduce((acc, r) => acc + r.demand_levels[k], 0) * eff.param)/state.gameState.world.regions.length;
         amount = Math.round(amount);
       }
       return acc + amount
     }, 0);
   } else if (k == 'biodiversity') {
-    return effects.reduce((acc, eff) => {
-      return acc + (eff.subtype == 'ExtinctionRate' ? eff.param : 0);
-    }, 0);
+    return effs
+      .filter((eff) => eff.subtype == 'ExtinctionRate')
+      .reduce((acc, eff) => acc + eff.param, 0);
   }
 }
 
@@ -49,11 +53,11 @@ function projectFactors(k) {
   return state.gameState.projects.filter((p) => {
     return p.status == 'Active' || p.status == 'Finished';
   }).map((p) => {
-    let effects = activeEffects(p);
+    let effs = activeEffects(p);
     return {
       name: p.name,
       type: 'Project',
-      amount: effectsFactor(k, effects)
+      amount: effectsFactor(k, effs)
     };
   }).filter((p) => p.amount !== 0);
 }
@@ -104,7 +108,7 @@ function productionFactors(k) {
     } else if (k == 'emissions') {
       base = format.co2eq(p.byproducts);
     } else if (k == 'biodiversity') {
-      base = (p.byproducts[k]/1e4 + p.resources['land']/consts.starting_resources.land) * 100;
+      base = process_extinction_rate(p.byproducts[k], p.resources['land'], 1);
     } else if (k == 'electricity' || k == 'fuel') {
       base = p.resources[k];
     }
@@ -132,7 +136,7 @@ function productionFactors(k) {
       displayAmount: displayAmount,
       displayProduced: out != null ? format.output(p.demand, out) : null,
     }
-  }).filter((p) => p.output != null || p.output == null && p.amount !== 0);
+  }).filter((p) => p.output != null || (p.output == null && p.amount !== 0));
 }
 
 function rank() {
@@ -163,12 +167,12 @@ function rank() {
         rankings.push({
           type: 'Event',
           name: 'Sea Level Rise',
-          amount: Math.round(state.gameState.world.sea_level_rise**2)
+          amount: Math.round(slr_extinction_rate(state.gameState.world.sea_level_rise))
         });
         rankings.push({
           type: 'Event',
           name: 'Temperature Change',
-          amount: Math.round(state.gameState.world.temperature**2)
+          amount: Math.round(tgav_extinction_rate(state.gameState.world.temperature))
         });
     }
 
@@ -235,7 +239,7 @@ const tips = {
         data: {
           icon: 'energy',
           type: 'energy',
-          total: `${((demand.electricity + demand.fuel) * 1e-9).toFixed(0)}TWh`,
+          total: `${format.twh(demand.electricity + demand.fuel)}TWh`,
           current,
         }
       }

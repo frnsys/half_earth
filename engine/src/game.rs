@@ -1,6 +1,6 @@
 use crate::content;
 use crate::state::State;
-use crate::projects::{Status, years_remaining};
+use crate::projects::Status;
 use crate::events::{EventPool, Effect, Phase};
 use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
@@ -130,40 +130,6 @@ impl GameInterface {
     pub fn industry_demand(&self, industry_id: usize) -> f32 {
         let ind = &self.game.state.industries[industry_id];
         ind.demand_modifier * self.game.state.world.lic_population()
-    }
-
-    pub fn industry_resources(&self, industry_id: usize) -> Result<JsValue, JsValue> {
-        let ind = &self.game.state.industries[industry_id];
-        Ok(serde_wasm_bindgen::to_value(&ind.adj_resources())?)
-    }
-
-    pub fn industry_byproducts(&self, industry_id: usize) -> Result<JsValue, JsValue> {
-        let ind = &self.game.state.industries[industry_id];
-        Ok(serde_wasm_bindgen::to_value(&ind.adj_byproducts())?)
-    }
-
-    pub fn region_demand(&self, region_id: usize) -> Result<JsValue, JsValue> {
-        let reg = &self.game.state.world.regions[region_id];
-        Ok(serde_wasm_bindgen::to_value(&reg.demand())?)
-    }
-
-    pub fn region_demand_levels(&self, region_id: usize) -> Result<JsValue, JsValue> {
-        let reg = &self.game.state.world.regions[region_id];
-        Ok(serde_wasm_bindgen::to_value(&reg.demand_levels())?)
-    }
-
-    pub fn region_income_level(&self, region_id: usize) -> usize {
-        let reg = &self.game.state.world.regions[region_id];
-        reg.income_level()
-    }
-
-    pub fn region_habitability(&self, region_id: usize) -> Result<JsValue, JsValue> {
-        let reg = &self.game.state.world.regions[region_id];
-        Ok(serde_wasm_bindgen::to_value(&reg.habitability())?)
-    }
-
-    pub fn years_remaining(&self, progress: f32, points: usize, cost: usize) -> usize {
-        years_remaining(progress, points, cost)
     }
 
     pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue>  {

@@ -94,7 +94,7 @@ export default {
     },
     avgHabitability() {
       let total = state.gameState.world.regions.reduce((acc, r) => {
-        return acc + game.regionHabitability(r);
+        return acc + r.habitability;
       }, 0);
       let avg = Math.round(total/state.gameState.world.regions.length);
       let int = intensity.scale(avg, 'habitability');

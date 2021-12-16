@@ -1,3 +1,4 @@
+use crate::core;
 use crate::surface;
 use crate::npcs::{NPC, NPCRelation};
 use crate::world::World;
@@ -266,9 +267,10 @@ impl State {
         self.world.ch4_emissions = byproducts.ch4 + self.world.byproduct_mods.ch4;
         self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
         self.world.extinction_rate = self.processes.iter().zip(&self.produced_by_process).fold(0., |acc, (p, amount)| {
-            acc + self.process_extinction_rate(p, *amount)
-        }) + self.world.temperature.powf(2.)
-           + self.world.sea_level_rise.powf(2.)
+            acc + core::process_extinction_rate(
+                p.byproducts.biodiversity, p.resources.land, *amount)
+        }) + core::tgav_extinction_rate(self.world.temperature)
+           + core::slr_extinction_rate(self.world.sea_level_rise)
            - self.world.byproduct_mods.biodiversity;
 
         // Float imprecision sometimes causes these values
@@ -298,11 +300,6 @@ impl State {
         }
         feedstock_weights.soil = 0.; // TODO add this back in?
         feedstock_weights.other = 0.;
-    }
-
-    /// Contribution to extinction rate from a single process
-    pub fn process_extinction_rate(&self, process: &Process, produced: f32) -> f32 {
-        (process.byproducts.biodiversity/1e4 + process.resources.land/consts::STARTING_RESOURCES.land) * produced * 100.
     }
 
     pub fn step_world(&mut self) {

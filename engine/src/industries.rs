@@ -1,7 +1,7 @@
-use serde::Serialize;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
 use crate::kinds::{ResourceMap, ByproductMap};
 
-#[derive(Serialize, Clone)]
+#[derive(Clone)]
 pub struct Industry {
     pub id: usize,
     pub name: &'static str,
@@ -19,5 +19,19 @@ impl Industry {
 
     pub fn adj_byproducts(&self) -> ByproductMap<f32> {
         self.byproducts * (self.byproduct_modifiers + 1.)
+    }
+}
+
+impl Serialize for Industry {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut seq = serializer.serialize_struct("Industry", 4)?;
+        seq.serialize_field("id", &self.id)?;
+        seq.serialize_field("name", &self.name)?;
+        seq.serialize_field("resources", &self.adj_resources())?;
+        seq.serialize_field("byproducts", &self.adj_byproducts())?;
+        seq.end()
     }
 }

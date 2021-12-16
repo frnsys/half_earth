@@ -1,6 +1,7 @@
-use serde::Serialize;
+use crate::core;
 use crate::kinds::{OutputMap, ByproductMap};
 use crate::regions::{Region, Income};
+use serde::Serialize;
 
 #[derive(Default, Serialize, Clone)]
 pub struct World {
@@ -85,15 +86,8 @@ impl World {
         }
     }
 
-    pub fn sea_level_rise_rate(&self) -> f32{
-        // Meters
-        // 0.0005mm per year per deg warming
-        // Chosen to roughly hit 1.5m-1.6m rise by 2100 in the BAU scenario
-        (0.0065 * self.temperature) + self.sea_level_rise_modifier
-    }
-
     pub fn update_sea_level_rise(&mut self) {
-        self.sea_level_rise += self.sea_level_rise_rate();
+        self.sea_level_rise += core::sea_level_rise_rate(self.temperature, self.sea_level_rise_modifier);
     }
 
     pub fn income_level(&self) -> f32 {

@@ -15,13 +15,6 @@ module.exports = (env) => ({
   devtool: dev ? 'inline-source-map' : 'source-map',
   module: {
     rules: [{
-      test: /\.ts$/,
-      loader: 'ts-loader',
-      options: {
-        appendTsSuffixTo: [/\.vue$/],
-      },
-      exclude: /node_modules/,
-    }, {
       test: /\.glsl$/,
       use: {
         loader: 'webpack-glsl-loader'
@@ -60,13 +53,18 @@ module.exports = (env) => ({
       VERSION: JSON.stringify(env.version),
     }),
 
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false,
+    }),
+
     // To get rid of a warning message:
     // "Critical dependency: the request of a dependency is an expression"
     // which might be from the rand crate (crypto)
     new webpack.ContextReplacementPlugin(/engine/),
   ],
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.js'],
     alias: {
       'lib': path.resolve('./src/lib'),
       'components': path.resolve('./src/components'),

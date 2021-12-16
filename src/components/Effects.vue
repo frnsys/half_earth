@@ -10,6 +10,7 @@ import {slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
 import format from '/src/display/format';
+import effects from '/src/display/effects';
 import display from '/src/display/display';
 import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
@@ -491,7 +492,7 @@ function render(e) {
     }
     case 'DemandOutlookChange': {
       let k = display.enumKey(e.subtype);
-      let change = (state.gameState.world.regions.reduce((acc, r) => acc + r.demand_levels[k], 0) * e.param)/state.gameState.world.regions.length;
+      let change = effects.demandOutlookChange(state.gameState.world, e.param);
       change = Math.round(change);
       return {
         tip: {
@@ -503,7 +504,7 @@ function render(e) {
       }
     }
     case 'IncomeOutlookChange': {
-      let change = (state.gameState.world.regions.reduce((acc, r) => acc + r.income_level, 0) * e.param)/state.gameState.world.regions.length;
+      let change = effects.incomeOutlookChange(state.gameState.world, e.param);
       change = Math.round(change);
       return {
         tip: {

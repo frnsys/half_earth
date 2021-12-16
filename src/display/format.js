@@ -28,6 +28,10 @@ function gtco2eq(byproducts, multiplier=1) {
   return Math.round(multiplier * co2eq(byproducts) * 1e-15); // Gt CO2eq;
 }
 
+function twh(amount) {
+  return Math.round(amount * 1e-9);
+}
+
 function output(amount, output) {
   return Math.round(amount * OUTPUT_UNITS[output]);
 }
@@ -71,7 +75,7 @@ const formatResource = {
 
 export default {
   sign,
-  co2eq, gtco2eq,
+  co2eq, gtco2eq, twh,
   output, outputs,
   landUsePercent, waterUsePercent,
   demandPercent,

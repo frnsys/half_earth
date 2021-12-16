@@ -260,9 +260,9 @@ export default {
             this.process);
         }
         case 'energy': {
-          let amount = (state.gameState.output_demand.fuel + state.gameState.output_demand.electricity) * 1e-9;
+          let amount = format.twh(state.gameState.output_demand.fuel + state.gameState.output_demand.electricity);
           return factors.tips.energy(
-            `Energy: Something something. You're using ${amount.toFixed(0)}TWh of energy.`,
+            `Energy: Something something. You're using ${amount}TWh of energy.`,
             this.process);
         }
         case 'biodiversity': {
