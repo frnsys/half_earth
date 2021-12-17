@@ -152,10 +152,10 @@
         <div class="image-attribution">{{localData.image.attribution}}</div>
       </div>
     </fieldset>
-    <template v-if="localData.outcomes && localData.outcomes.length > 1">
+    <div class="project-outcomes" v-if="localData.outcomes && localData.outcomes.length > 0">
       <h5>Outcomes</h5>
       <OutcomesSummary :outcomes="localData.outcomes" />
-    </template>
+    </div>
     <template v-if="localData.upgrades && localData.upgrades.length > 0">
       <h5>Upgrades</h5>
       <UpgradesSummary :upgrades="localData.upgrades" />
@@ -253,6 +253,10 @@ export default {
 }
 .project-summary .meta-pill:nth-child(2) {
   background: #9eb4c7;
+}
+
+.project-outcomes {
+  margin-top: 1em;
 }
 
 .stances {

@@ -394,6 +394,10 @@ nav {
   justify-content: space-around;
   border-bottom: 2px solid #000;
   padding-bottom: 0.5em;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
 }
 .tab {
   cursor: pointer;
@@ -689,6 +693,7 @@ h5 {
 @media only screen and (max-width: 480px) {
   nav {
     flex-wrap: wrap;
+    position: static;
   }
   #toc, .toc-meta, .graph, .calibration-open,
   .filters, .filters--header {
