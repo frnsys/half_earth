@@ -1,7 +1,6 @@
 use crate::consts;
 use crate::kinds::{Output, OutputMap};
 use serde::ser::{Serialize, Serializer, SerializeStruct};
-use serde::Serialize as SerializeD;
 
 const DEVELOP_SPEED: f32 = 0.003;
 
@@ -165,7 +164,7 @@ impl Serialize for Region {
     }
 }
 
-#[derive(PartialEq, SerializeD, Clone)]
+#[derive(PartialEq, serde::Serialize, Clone)]
 pub enum Income {
     Low,
     LowerMiddle,

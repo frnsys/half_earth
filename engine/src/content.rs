@@ -558,7 +558,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -584,7 +585,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsNuclear
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![4]
         },
@@ -610,7 +612,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsFossil
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -637,7 +640,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsSolar,
                 ProcessFeature::IsIntermittent
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -664,7 +668,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsIntermittent,
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -690,7 +695,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsFossil
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -716,7 +722,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -742,7 +749,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![2],
             opposers: vec![]
         },
@@ -769,7 +777,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsCCS,
                 ProcessFeature::IsFossil
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -795,7 +804,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsIntermittent
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -822,7 +832,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsCombustion,
                 ProcessFeature::IsFossil
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -848,7 +859,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -874,7 +886,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -902,7 +915,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -928,7 +942,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsFossil
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -954,7 +969,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -980,7 +996,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![8],
             opposers: vec![0]
         },
@@ -1007,7 +1024,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsFossil,
                 ProcessFeature::IsCombustion
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1033,7 +1051,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1061,7 +1080,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![4]
         },
@@ -1089,7 +1109,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1110,7 +1131,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
 
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1136,7 +1158,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesLivestock
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1163,7 +1186,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::UsesPesticides,
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![4]
         },
@@ -1190,7 +1214,8 @@ pub fn processes() -> Vec<Process> {
                 ProcessFeature::IsFossil,
                 ProcessFeature::IsCombustion
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1216,7 +1241,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesLivestock
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1242,7 +1268,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::UsesSynFertilizer
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![2],
             opposers: vec![]
         },
@@ -1268,7 +1295,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsFossil
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1289,7 +1317,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsNuclear
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         },
@@ -1315,7 +1344,8 @@ pub fn processes() -> Vec<Process> {
             features: vec![
                 ProcessFeature::IsSolar
             ],
-            output_modifier: 1.0,
+            output_modifier: 0.0,
+            byproduct_modifiers: byproducts!(),
             supporters: vec![],
             opposers: vec![]
         }
@@ -1653,7 +1683,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 9,
-            name: "Mass CCS",
+            name: "Mass Carbon Capture",
             cost: 0,
             base_cost: Cost::Fixed(50),
             progress: 0.0,
@@ -1667,7 +1697,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: true,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::CO2ForFeature(ProcessFeature::IsCombustion, -0.25)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,

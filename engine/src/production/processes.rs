@@ -1,8 +1,8 @@
-use serde::Serialize;
 use super::ProductionOrder;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
 use crate::kinds::{ResourceMap, ByproductMap, OutputMap, Output, Feedstock};
 
-#[derive(Debug, Copy, Clone, PartialEq, Serialize)]
+#[derive(Debug, Copy, Clone, PartialEq, serde::Serialize)]
 pub enum ProcessFeature {
     UsesPesticides,
     UsesSynFertilizer,
@@ -16,14 +16,14 @@ pub enum ProcessFeature {
 }
 
 // TODO use this for labor?
-#[derive(Debug, PartialEq, Serialize, Clone)]
+#[derive(Debug, PartialEq, serde::Serialize, Clone)]
 pub enum ProcessIntensity {
     Low,
     Medium,
     High
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Clone)]
 pub struct Process {
     pub id: usize,
     pub name: &'static str,
@@ -31,8 +31,8 @@ pub struct Process {
     pub limit: Option<f32>,
     pub output: Output,
 
-    // Should start at 1.
     pub output_modifier: f32,
+    pub byproduct_modifiers: ByproductMap<f32>,
 
     pub resources: ResourceMap<f32>,
     pub byproducts: ByproductMap<f32>,
@@ -73,5 +73,39 @@ impl Process {
 
     pub fn is_banned(&self) -> bool {
         self.mix_share == 0
+    }
+
+    pub fn adj_resources(&self) -> ResourceMap<f32> {
+        self.resources/(1. + self.output_modifier)
+    }
+
+    pub fn adj_byproducts(&self) -> ByproductMap<f32> {
+        (self.byproducts * (self.byproduct_modifiers + 1.))/(1. + self.output_modifier)
+    }
+
+    pub fn adj_feedstock_amount(&self) -> f32 {
+        self.feedstock.1/(1. + self.output_modifier)
+    }
+}
+
+impl Serialize for Process {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut seq = serializer.serialize_struct("Process", 12)?;
+        seq.serialize_field("id", &self.id)?;
+        seq.serialize_field("name", &self.name)?;
+        seq.serialize_field("output", &self.output)?;
+        seq.serialize_field("limit", &self.limit)?;
+        seq.serialize_field("mix_share", &self.mix_share)?;
+        seq.serialize_field("resources", &self.adj_resources())?;
+        seq.serialize_field("byproducts", &self.adj_byproducts())?;
+        seq.serialize_field("feedstock", &(self.feedstock.0, self.adj_feedstock_amount()))?;
+        seq.serialize_field("features", &self.features)?;
+        seq.serialize_field("locked", &self.locked)?;
+        seq.serialize_field("supporters", &self.supporters)?;
+        seq.serialize_field("opposers", &self.opposers)?;
+        seq.end()
     }
 }

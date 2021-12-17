@@ -1,8 +1,6 @@
-use serde::Serialize;
 use super::processes::Process;
 use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, Output, OutputMap, Feedstock};
 use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
-use wasm_bindgen::prelude::*;
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -40,18 +38,18 @@ pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<
         // Calculate consumed resources and produced byproducts.
         // Apply output modifiers as a reduction in resource costs
         // and byproducts emitted.
-        for (k, v) in order.process.resources.items() {
-            consumed_resources[k] += amount_to_produce * (*v/order.process.output_modifier);
+        for (k, v) in order.process.adj_resources().items() {
+            consumed_resources[k] += amount_to_produce * *v;
         }
-        for (k, v) in order.process.byproducts.items() {
-            created_byproducts[k] += amount_to_produce * (*v/order.process.output_modifier);
+        for (k, v) in order.process.adj_byproducts().items() {
+            created_byproducts[k] += amount_to_produce * *v;
         }
 
         // Ignore "Other" feedstock
         match order.process.feedstock.0 {
             Feedstock::Other | Feedstock::Soil => (),
             _ => {
-                consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * (order.process.feedstock.1/order.process.output_modifier);
+                consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * order.process.adj_feedstock_amount();
             }
         }
         amount_to_produce
@@ -134,7 +132,8 @@ mod test {
             limit: None,
             mix_share: 10,
             output: Output::Fuel,
-            output_modifier: 1.,
+            output_modifier: 0.,
+            byproduct_modifiers: byproducts!(),
             resources: resources!(water: 1.),
             byproducts: byproducts!(),
             feedstock: (Feedstock::Oil, 1.),
@@ -148,7 +147,8 @@ mod test {
             limit: None,
             mix_share: 10,
             output: Output::Fuel,
-            output_modifier: 1.,
+            output_modifier: 0.,
+            byproduct_modifiers: byproducts!(),
             resources: resources!(water: 1.),
             byproducts: byproducts!(),
             feedstock: (Feedstock::Oil, 1.),
@@ -162,7 +162,8 @@ mod test {
             limit: None,
             mix_share: 20,
             output: Output::Electricity,
-            output_modifier: 1.,
+            output_modifier: 0.,
+            byproduct_modifiers: byproducts!(),
             resources: resources!(water: 1.),
             byproducts: byproducts!(),
             feedstock: (Feedstock::Coal, 1.),

@@ -216,6 +216,13 @@ const EFFECTS = {
     }
   },
 
+  CO2ForFeature: {
+    choices: Object.keys(PROCESS_FEATURES),
+    params: {
+      'PercentChange': Number
+    }
+  },
+
   ProcessLimit: {
     entity: 'Process',
     params: {

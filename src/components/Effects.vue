@@ -227,7 +227,7 @@ function render(e) {
     }
     case 'OutputForFeature': {
       let tip = {
-        icon: display.enumKey(e.subtype),
+        icon: e.subtype,
         text: `Changes the output for these processes by ${e.param*100}% without changing their impacts.`,
         card: {
           type: 'Processes',
@@ -236,7 +236,21 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e.random)} output for ${display.describeFeature(e.subtype)} by ${e.param*100}%.`
+        text: `${changeDir(e.param, e.random)} output for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by ${e.param*100}%.`
+      }
+    }
+    case 'CO2ForFeature': {
+      let tip = {
+        icon: e.subtype,
+        text: `Changes the CO2 emissions for these processes by ${e.param*100}%.`,
+        card: {
+          type: 'Processes',
+          data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+        }
+      };
+      return {
+        tip,
+        text: `${changeDir(e.param, e.random)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by ${e.param*100}%.`
       }
     }
     case 'Demand': {
@@ -621,6 +635,17 @@ export default {
   vertical-align: middle;
   margin-top: -2px;
 }
+.effect--text span {
+  white-space: nowrap;
+}
+.effect--text .effect-feature {
+  background: #222;
+  border-radius: 1.2em;
+  padding: 0.2em;
+  height: 20px;
+  margin: 0 2px;
+  border: 1px solid #888;
+}
 
 .card-tag {
   border-radius: 0.2em;
@@ -637,4 +662,5 @@ export default {
 .unknown-param {
   color: #9dbbd8;
 }
+
 </style>

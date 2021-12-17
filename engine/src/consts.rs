@@ -57,7 +57,6 @@ pub const OUTPUT_DEMAND: [OutputMap<f32>; 4] = [
     }
 ];
 
-pub const HYDROPOWER__LIMIT: f32 = 28470000000000.0;
 pub const MATERIALS_BY_INCOME: [f32; 4] = [
     2.253141687346895,
     4.3768,
