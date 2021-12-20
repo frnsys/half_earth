@@ -262,11 +262,14 @@ impl State {
         self.resources_demand.water += consumed_resources.water;
         self.resources_demand.land += consumed_resources.land;
 
+        let lic_pop = self.world.lic_population();
         self.world.co2_emissions = byproducts.co2 + self.world.byproduct_mods.co2;
         self.world.ch4_emissions = byproducts.ch4 + self.world.byproduct_mods.ch4;
         self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
         self.world.extinction_rate = self.processes.iter().zip(&self.produced_by_process).fold(0., |acc, (p, amount)| {
             acc + (p.extinction_rate() * *amount)
+        }) + self.industries.iter().fold(0., |acc, ind| {
+            acc + ind.extinction_rate() * lic_pop
         }) + self.world.base_extinction_rate();
 
         // Float imprecision sometimes causes these values

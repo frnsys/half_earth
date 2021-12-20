@@ -131,9 +131,10 @@ impl Serialize for World {
     {
         let total_emissions = (self.co2_emissions + (self.n2o_emissions * 298.) + (self.ch4_emissions * 36.)) * 1e-15;
 
-        let mut seq = serializer.serialize_struct("World", 12)?; // TODO
+        let mut seq = serializer.serialize_struct("World", 17)?;
         seq.serialize_field("year", &self.year)?;
         seq.serialize_field("contentedness", &self.outlook())?;
+        seq.serialize_field("temp_outlook", &self.temp_outlook)?;
         seq.serialize_field("extinction_rate", &self.extinction_rate)?;
         seq.serialize_field("tgav_extinction_rate", &self.tgav_extinction_rate())?;
         seq.serialize_field("slr_extinction_rate", &self.slr_extinction_rate())?;

@@ -1,3 +1,4 @@
+use crate::consts;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 use crate::kinds::{ResourceMap, ByproductMap};
 
@@ -20,6 +21,12 @@ impl Industry {
     pub fn adj_byproducts(&self) -> ByproductMap<f32> {
         self.byproducts * (self.byproduct_modifiers + 1.)
     }
+
+    pub fn extinction_rate(&self) -> f32 {
+        let pressure = self.adj_byproducts().biodiversity;
+        let land = self.adj_resources().land;
+        (pressure/1e4 + land/consts::STARTING_RESOURCES.land) * 100.
+    }
 }
 
 impl Serialize for Industry {
@@ -27,11 +34,12 @@ impl Serialize for Industry {
     where
         S: Serializer,
     {
-        let mut seq = serializer.serialize_struct("Industry", 4)?;
+        let mut seq = serializer.serialize_struct("Industry", 5)?;
         seq.serialize_field("id", &self.id)?;
         seq.serialize_field("name", &self.name)?;
         seq.serialize_field("resources", &self.adj_resources())?;
         seq.serialize_field("byproducts", &self.adj_byproducts())?;
+        seq.serialize_field("extinction_rate", &self.extinction_rate())?;
         seq.end()
     }
 }

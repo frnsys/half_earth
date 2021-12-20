@@ -29,7 +29,7 @@
       <img :src="icons.water" />
       <div class="dashboard--item-name">Water Stress</div>
     </div>
-    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year`}">
+    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Average sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year`}">
       <div class="minicard">
         {{state.gameState.world.sea_level_rise.toFixed(2)}}m
       </div>

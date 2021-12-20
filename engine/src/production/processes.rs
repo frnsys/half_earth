@@ -100,7 +100,7 @@ impl Serialize for Process {
     where
         S: Serializer,
     {
-        let mut seq = serializer.serialize_struct("Process", 12)?;
+        let mut seq = serializer.serialize_struct("Process", 13)?;
         seq.serialize_field("id", &self.id)?;
         seq.serialize_field("name", &self.name)?;
         seq.serialize_field("output", &self.output)?;
