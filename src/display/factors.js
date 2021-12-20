@@ -5,8 +5,6 @@ import effects from './effects';
 import intensity from './intensity';
 import {activeEffects} from './project';
 import EVENTS from '/assets/content/events.json';
-import {process_extinction_rate,
-  slr_extinction_rate, tgav_extinction_rate} from 'half-earth-engine';
 
 const VARS = ['land', 'water', 'energy', 'emissions', 'biodiversity', 'contentedness'];
 const DEMAND_VARS = ['electricity', 'fuel', 'plant_calories', 'animal_calories'];
@@ -107,7 +105,7 @@ function productionFactors(k) {
     } else if (k == 'emissions') {
       base = format.co2eq(p.byproducts);
     } else if (k == 'biodiversity') {
-      base = process_extinction_rate(p.byproducts[k], p.resources['land'], 1);
+      base = p.extinction_rate;
     } else if (k == 'electricity' || k == 'fuel') {
       base = p.resources[k];
     }
@@ -166,12 +164,12 @@ function rank() {
         rankings.push({
           type: 'Event',
           name: 'Sea Level Rise',
-          amount: Math.round(slr_extinction_rate(state.gameState.world.sea_level_rise))
+          amount: Math.round(state.gameState.world.slr_extinction_rate)
         });
         rankings.push({
           type: 'Event',
           name: 'Temperature Change',
-          amount: Math.round(tgav_extinction_rate(state.gameState.world.temperature))
+          amount: Math.round(state.gameState.world.tgav_extinction_rate)
         });
     }
 
@@ -192,7 +190,7 @@ const tips = {
         data: {
           icon: 'emissions',
           type: 'emissions',
-          total: `${state.gameState.emissions.toFixed(1)}Gt`,
+          total: `${state.gameState.world.emissions.toFixed(1)}Gt`,
           current,
         }
       }
@@ -268,7 +266,7 @@ const tips = {
         data: {
           icon: 'contentedness',
           type: 'contentedness',
-          total: Math.round(state.gameState.contentedness),
+          total: Math.round(state.gameState.world.contentedness),
           current,
         }
       }

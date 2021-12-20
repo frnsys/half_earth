@@ -40,7 +40,7 @@
         <tr>
           <td><img :src="icons.emissions"> Emissions</td>
           <td>{{state.cycleStartState.emissions.toFixed(0)}}</td>
-          <td>{{state.gameState.emissions.toFixed(0)}}</td>
+          <td>{{state.gameState.world.emissions.toFixed(0)}}</td>
           <td>{{format.sign(pc.emissions)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
@@ -123,7 +123,7 @@ export default {
     },
     contentedness() {
       let start = intensity.scale(state.cycleStartState.contentedness, 'world_outlook');
-      let end = intensity.scale(state.gameState.contentedness, 'world_outlook');
+      let end = intensity.scale(state.gameState.world.contentedness, 'world_outlook');
       return {
         start: {
           intensity: start,
@@ -156,7 +156,7 @@ export default {
       let temperatureChange = parseFloat(state.gameState.world.temperature.toFixed(1)) - parseFloat(state.cycleStartState.temperature.toFixed(1));
       let contentednessChange = consts.contentednessPc[this.contentedness.end.intensity] || consts.contentednessPc[consts.contentednessPc.length - 1];
       let extinctionRateChange = consts.extinctionPc[this.extinction.end.intensity] || consts.extinctionPc[consts.extinctionPc.length - 1];
-      let emissionsChange = state.gameState.emissions - state.cycleStartState.emissions;
+      let emissionsChange = state.gameState.world.emissions - state.cycleStartState.emissions;
       this.pc = {
         temperature: Math.round(temperatureChange * -10),
         contentedness: Math.round(contentednessChange),

@@ -102,7 +102,7 @@ function render(e) {
           return {
             tip: {
               icon: 'emissions',
-              text: `This will directly change annual emissions by ${e.param == '?' ? 'an unknown amount' : format.sign(e.param)}.${e.param !== '?' ? ` That's a ${(e.param/state.gameState.emissions * 100).toFixed(1)}% change.` : ''}`,
+              text: `This will directly change annual emissions by ${e.param == '?' ? 'an unknown amount' : format.sign(e.param)}.${e.param !== '?' ? ` That's a ${(e.param/state.gameState.world.emissions * 100).toFixed(1)}% change.` : ''}`,
             },
             text: `[emissions] ${changeDir(e.param, e.random)} emissions by ${formatParam(e.param)}.`
           }
@@ -498,7 +498,7 @@ function render(e) {
       let p = Math.abs(e.param * 100);
       let emissionsBefore = format.co2eq(industry.byproducts) * industry.demand * 1e-15;
       let emissionsAfter = emissionsBefore * (1 + e.param);
-      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.emissions * 100;
+      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions * 100;
       let tip = {
         icon: 'emissions',
         text: e.param == '?' ?

@@ -53,7 +53,7 @@ impl Condition {
                     WorldVariable::Temperature => state.world.temperature,
                     WorldVariable::WaterStress => state.world.water_stress,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise,
-                    WorldVariable::SeaLevelRiseRate => core::sea_level_rise_rate(state.world.temperature, state.world.sea_level_rise_modifier),
+                    WorldVariable::SeaLevelRiseRate => state.world.sea_level_rise_rate(),
                     WorldVariable::Precipitation => state.world.precipitation,
                 };
                 comp.eval(val, *other_val)

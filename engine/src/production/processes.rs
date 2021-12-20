@@ -1,3 +1,4 @@
+use crate::consts;
 use super::ProductionOrder;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 use crate::kinds::{ResourceMap, ByproductMap, OutputMap, Output, Feedstock};
@@ -86,6 +87,12 @@ impl Process {
     pub fn adj_feedstock_amount(&self) -> f32 {
         self.feedstock.1/(1. + self.output_modifier)
     }
+
+    pub fn extinction_rate(&self) -> f32 {
+        let pressure = self.adj_byproducts().biodiversity;
+        let land = self.adj_resources().land;
+        (pressure/1e4 + land/consts::STARTING_RESOURCES.land) * 100.
+    }
 }
 
 impl Serialize for Process {
@@ -106,6 +113,7 @@ impl Serialize for Process {
         seq.serialize_field("locked", &self.locked)?;
         seq.serialize_field("supporters", &self.supporters)?;
         seq.serialize_field("opposers", &self.opposers)?;
+        seq.serialize_field("extinction_rate", &self.extinction_rate())?;
         seq.end()
     }
 }

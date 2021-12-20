@@ -90,9 +90,9 @@ export default {
       state.cycleStartState = {
         year: this._startYear,
         extinctionRate: state.gameState.world.extinction_rate,
-        contentedness: state.gameState.contentedness,
+        contentedness: state.gameState.world.contentedness,
         temperature: state.gameState.world.temperature,
-        emissions: state.gameState.emissions,
+        emissions: state.gameState.world.emissions,
         completedProjects: [],
       };
 
@@ -139,7 +139,7 @@ export default {
               this.year = state.gameState.world.year;
 
               // Add to historical data
-              state.history.emissions.push(state.gameState.emissions);
+              state.history.emissions.push(state.gameState.world.emissions);
               state.history.land_use.push(state.gameState.resources_demand.land);
 
               this.rollEvent();

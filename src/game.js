@@ -11,13 +11,6 @@ newRun();
 // and compute some additional variables
 function updateState() {
   state.gameState = game.state();
-
-  let world = state.gameState.world;
-  state.gameState.contentedness = game.world_outlook();
-  state.gameState.emissions = (world.co2_emissions + (world.n2o_emissions * 298.) + (world.ch4_emissions * 36.)) * 1e-15;
-  state.gameState.population = world.regions.reduce((acc, r) => {
-      return acc + r.population
-    }, 0);
   state.gameState.industries.forEach((ind) => {
     ind.demand = game.industry_demand(ind.id);
   });

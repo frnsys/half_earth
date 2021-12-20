@@ -1,4 +1,3 @@
-use crate::core;
 use crate::surface;
 use crate::npcs::{NPC, NPCRelation};
 use crate::world::World;
@@ -267,11 +266,8 @@ impl State {
         self.world.ch4_emissions = byproducts.ch4 + self.world.byproduct_mods.ch4;
         self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
         self.world.extinction_rate = self.processes.iter().zip(&self.produced_by_process).fold(0., |acc, (p, amount)| {
-            acc + core::process_extinction_rate(
-                p.byproducts.biodiversity, p.resources.land, *amount)
-        }) + core::tgav_extinction_rate(self.world.temperature)
-           + core::slr_extinction_rate(self.world.sea_level_rise)
-           - self.world.byproduct_mods.biodiversity;
+            acc + (p.extinction_rate() * *amount)
+        }) + self.world.base_extinction_rate();
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't
@@ -470,7 +466,7 @@ impl State {
 
     pub fn set_tgav(&mut self, tgav: f32) {
         let prev_temp = self.world.temperature;
-        self.world.temperature = tgav + self.world.temperature_modifier;
+        self.world.update_tgav(tgav);
         let temp_diff = prev_temp - self.world.temperature;
         self.update_region_temps();
         self.world.update_sea_level_rise();

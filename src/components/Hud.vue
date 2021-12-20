@@ -8,13 +8,13 @@
       <img :src="icons.extinction_rate">
       <div class="intensity-pip stat-pip" :style="{background:extinction.color}" v-for="i in extinction.intensity"></div>
     </div>
-    <div :class="{'bad': state.gameState.contentedness < 0}"
+    <div :class="{'bad': state.gameState.world.contentedness < 0}"
       v-tip="factors.tips.contentedness('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.')">
       <img :src="icons.contentedness">
       <div class="intensity-pip stat-pip" :style="{background:contentedness.color}" v-for="i in contentedness.intensity"></div>
     </div>
     <div v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
-      <img :src="icons.emissions">{{state.gameState.emissions.toFixed(1)}}
+      <img :src="icons.emissions">{{state.gameState.world.emissions.toFixed(1)}}
     </div>
     <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
       <img :src="icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     contentedness() {
-      let val = intensity.scale(state.gameState.contentedness, 'world_outlook');
+      let val = intensity.scale(state.gameState.world.contentedness, 'world_outlook');
       return {
         intensity: val,
         color: intensity.color(val, true)

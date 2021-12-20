@@ -10,7 +10,7 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <div class="minicard">
-      {{`${state.gameState.emissions.toFixed(1)}Gt`}}
+      {{`${state.gameState.world.emissions.toFixed(1)}Gt`}}
       </div>
       <img :src="icons.emissions" />
       <div class="dashboard--item-name">Emissions</div>
@@ -29,7 +29,7 @@
       <img :src="icons.water" />
       <div class="dashboard--item-name">Water Stress</div>
     </div>
-    <div class="dashboard--item">
+    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year`}">
       <div class="minicard">
         {{state.gameState.world.sea_level_rise.toFixed(2)}}m
       </div>
@@ -45,7 +45,7 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        {{format.formatNumber(state.gameState.population)}}
+        {{format.formatNumber(state.gameState.world.population)}}
       </div>
       <img :src="icons.population" />
       <div class="dashboard--item-name">Population</div>

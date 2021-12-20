@@ -1,9 +1,8 @@
-use crate::core;
 use crate::kinds::{OutputMap, ByproductMap};
 use crate::regions::{Region, Income};
-use serde::Serialize;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
 
-#[derive(Default, Serialize, Clone)]
+#[derive(Default, Clone)]
 pub struct World {
     pub year: usize,
     pub base_outlook: f32,
@@ -64,6 +63,10 @@ impl World {
         }
     }
 
+    pub fn update_tgav(&mut self, tgav: f32) {
+        self.temperature = tgav + self.temperature_modifier;
+    }
+
     pub fn habitability(&self) -> f32 {
         self.regions.iter().map(|r| r.habitability()).sum::<f32>()/self.regions.len() as f32
     }
@@ -87,7 +90,28 @@ impl World {
     }
 
     pub fn update_sea_level_rise(&mut self) {
-        self.sea_level_rise += core::sea_level_rise_rate(self.temperature, self.sea_level_rise_modifier);
+        self.sea_level_rise += self.sea_level_rise_rate();
+    }
+
+    pub fn sea_level_rise_rate(&self) -> f32 {
+        // Meters
+        // Chosen to roughly hit 1.4m-1.6m rise by 2100 in the BAU scenario
+        (0.0025 * self.temperature.powf(1.5)) + self.sea_level_rise_modifier
+    }
+
+    /// Contribution to extinction rate from the tgav
+    pub fn tgav_extinction_rate(&self) -> f32 {
+        self.temperature.powf(2.)
+    }
+
+    /// Contribution to extinction rate from sea level rise
+    pub fn slr_extinction_rate(&self) -> f32 {
+        self.sea_level_rise.powf(2.)
+    }
+
+    pub fn base_extinction_rate(&self) -> f32 {
+        self.tgav_extinction_rate() + self.slr_extinction_rate()
+            - self.byproduct_mods.biodiversity
     }
 
     pub fn income_level(&self) -> f32 {
@@ -97,5 +121,33 @@ impl World {
             Income::UpperMiddle => 2.,
             Income::High => 3.,
         } + r.development).sum::<f32>()/self.regions.len() as f32
+    }
+}
+
+impl Serialize for World {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let total_emissions = (self.co2_emissions + (self.n2o_emissions * 298.) + (self.ch4_emissions * 36.)) * 1e-15;
+
+        let mut seq = serializer.serialize_struct("World", 12)?; // TODO
+        seq.serialize_field("year", &self.year)?;
+        seq.serialize_field("contentedness", &self.outlook())?;
+        seq.serialize_field("extinction_rate", &self.extinction_rate)?;
+        seq.serialize_field("tgav_extinction_rate", &self.tgav_extinction_rate())?;
+        seq.serialize_field("slr_extinction_rate", &self.slr_extinction_rate())?;
+        seq.serialize_field("temperature", &self.temperature)?;
+        seq.serialize_field("precipitation", &self.precipitation)?;
+        seq.serialize_field("sea_level_rise", &self.sea_level_rise)?;
+        seq.serialize_field("sea_level_rise_rate", &self.sea_level_rise_rate())?;
+        seq.serialize_field("water_stress", &self.water_stress)?;
+        seq.serialize_field("emissions", &total_emissions)?;
+        seq.serialize_field("co2_emissions", &self.co2_emissions)?;
+        seq.serialize_field("ch4_emissions", &self.ch4_emissions)?;
+        seq.serialize_field("n2o_emissions", &self.n2o_emissions)?;
+        seq.serialize_field("regions", &self.regions)?;
+        seq.serialize_field("population", &self.population())?;
+        seq.end()
     }
 }

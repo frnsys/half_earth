@@ -44,10 +44,6 @@ impl GameInterface {
         self.game.state.runs = n;
     }
 
-    pub fn world_outlook(&self) -> f32 {
-        self.game.state.world.outlook()
-    }
-
     pub fn change_political_capital(&mut self, amount: isize) {
         self.game.state.political_capital += amount;
 
