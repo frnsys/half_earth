@@ -236,7 +236,7 @@ const SPECS = {
 
   Process: {
     key: 'name',
-    validate: ['name', 'output', 'mix_share', 'locked', 'feedstock', 'feedstock_amount', 'resources', 'byproducts'],
+    validate: ['name', 'output', 'mix_share', 'locked', 'feedstock', 'feedstock_amount', 'resources', 'byproducts', 'description'],
     questions: ['name', 'notes'],
     validateKey: (item, key) => {
       switch (key) {

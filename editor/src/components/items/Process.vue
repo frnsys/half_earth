@@ -62,6 +62,11 @@
     <fieldset class="big-group">
       <div>
         <Image :image="localData.image" :dimensions="'360x240'" @update="saveData('image', $event)" />
+        <label>
+          Description
+          <Tip>A 1-2 sentence description of the project.</Tip>
+        </label>
+        <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
       </div>
       <div>
         <Resources :resources="localData.resources" @update="saveData('resources', $event)"/>
@@ -137,6 +142,8 @@
           </div>
           <ResourcesSummary :resources="localData.resources" />
           <ByproductsSummary :byproducts="localData.byproducts" />
+          <p v-if="localData.description">{{localData.description}}</p>
+          <p v-else class="invalid">[MISSING DESCRIPTION]</p>
         </div>
       </div>
       <div class="item-summary-image" v-if="localData.image">

@@ -653,6 +653,10 @@ nav {
   font-size: 1.2em;
 }
 
+p.invalid {
+  color: #F54242;
+}
+
 h5 {
   margin: 0;
   font-weight: normal;
