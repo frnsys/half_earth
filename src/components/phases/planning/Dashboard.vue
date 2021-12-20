@@ -106,13 +106,7 @@ export default {
     avgIncomeLevel() {
       let total = 0;
       state.gameState.world.regions.forEach((r) => {
-        let income = 0;
-        switch (r.income) {
-          case 'Low': income = 1; break;
-          case 'LowerMiddle': income = 2; break;
-          case 'UpperMiddle': income = 3; break;
-          case 'High': income = 4; break;
-        }
+        let income = r.income_level + 1;
         income += r.development;
         total += income;
       });

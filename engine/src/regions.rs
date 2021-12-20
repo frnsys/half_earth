@@ -152,6 +152,7 @@ impl Serialize for Region {
         seq.serialize_field("population", &self.population)?;
         seq.serialize_field("seceded", &self.seceded)?;
         seq.serialize_field("outlook", &self.outlook)?;
+        seq.serialize_field("income", &self.income)?;
         seq.serialize_field("income_level", &self.income_level())?;
         seq.serialize_field("habitability", &self.habitability())?;
         seq.serialize_field("demand", &self.demand())?;

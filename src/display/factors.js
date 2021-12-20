@@ -72,13 +72,7 @@ function eventFactors(k) {
 
 function regionalFactors(k) {
   return state.gameState.world.regions.map((region) => {
-    let intensity = 1;
-    switch (region.income) {
-      case 'Low': intensity = 1;
-      case 'LowerMiddle': intensity = 2;
-      case 'UpperMiddle': intensity = 3;
-      case 'High': intensity = 4;
-    };
+    let intensity = region.income_level + 1;
     return {
       name: region.name,
       type: 'Region',

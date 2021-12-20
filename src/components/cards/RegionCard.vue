@@ -93,13 +93,7 @@ export default {
       return display.enumDisplay(this.income);
     },
     incomeLevel() {
-      switch (this.income) {
-        case 'Low': return 1;
-        case 'LowerMiddle': return 2;
-        case 'UpperMiddle': return 3;
-        case 'High': return 4;
-      }
-      return 1;
+      return this.income_level + 1;
     }
   }
 }
