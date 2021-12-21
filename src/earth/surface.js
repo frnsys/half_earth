@@ -1,7 +1,7 @@
 import png from './png';
 import {EarthSurface} from 'half-earth-engine';
 import { memory } from 'half-earth-engine/half_earth_engine_bg.wasm';
-import loadHector from 'hector-wasm';
+import initHector from 'hector-wasm';
 import defaultEmissions from '../../assets/hector/rcp26.default_emissions.json';
 
 // A grayscale image where each value
@@ -32,6 +32,14 @@ const hectorOutputVars = {
 class Surface {
   constructor(startYear) {
     this.startYear = startYear;
+
+    fetch('/assets/hector/config.json')
+      .then((resp) => resp.json())
+      .then((config) => {
+        this.config = config;
+      });
+
+
   }
 
   async init() {
@@ -97,23 +105,18 @@ class Surface {
   }
 
   updateTemperature() {
-    let ready = this._hectorRun ? Promise.resolve(this._hectorRun) : Promise.all([
-        loadHector(),
-        fetch('/assets/hector/config.json')
-          .then((resp) => resp.json()),
-      ]).then(([{Hector, run}, config]) => {
-        this._hectorRun = () => {
-          // Only compute up to the current year,
-          // so the last returned tgav is the current tgav
-          config.core.endDate = this.emissions.startYear + this.emissions.data['ffi_emissions'].length;
-          return run(config, this.emissions, hectorOutputVars);
-        };
-        this._hectorRun;
+    let ready = this._hector ?
+      Promise.resolve(this._hector) :
+      initHector(this.config, hectorOutputVars).then((hector) => {
+        this._hector = hector;
       });
 
     return ready.then(() => {
       // Calculate new avg global temp
-      let results = this._hectorRun(this.emissions);
+      // Only compute up to the current year,
+      // so the last returned tgav is the current tgav
+      let endDate = this.emissions.startYear + this.emissions.data['ffi_emissions'].length;
+      let results = this._hector.run(endDate, this.emissions);
       let avgGlobalTemps = results['temperature.Tgav'];
       let avgGlobalTemp = avgGlobalTemps[avgGlobalTemps.length - 1];
       return avgGlobalTemp;
