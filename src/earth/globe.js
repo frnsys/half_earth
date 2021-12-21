@@ -23,9 +23,30 @@ class Globe {
     el.appendChild(this.scene.renderer.domElement);
     this._onReady = [];
     this.pings = [];
+    this.icons = [];
 
     this.rotationPaused = false;
     this.pauseTimeout = null;
+  }
+
+  setEl(el) {
+    el.appendChild(this.scene.renderer.domElement);
+  }
+
+  clear() {
+    this.pings.forEach((mesh) => {
+      mesh.geometry.dispose();
+      mesh.material.dispose();
+      mesh.parent.remove(mesh);
+    });
+    this.pings = [];
+
+    this.icons.forEach((mesh) => {
+      mesh.geometry.dispose();
+      mesh.material.dispose();
+      mesh.parent.remove(mesh);
+    });
+    this.icons = [];
   }
 
   onReady(fn) {
@@ -128,8 +149,9 @@ class Globe {
   async addEmissionsThenUpdate(emissions) {
     await this.surface.addEmissions(emissions);
     let tgav = await this.surface.updateTemperature();
-    await this.surface.updateBiomes(tgav);
-    await this.updateSurface();
+    // TODO re-enable these?
+    // await this.surface.updateBiomes(tgav);
+    // await this.updateSurface();
     return tgav;
   }
 
@@ -146,6 +168,9 @@ class Globe {
     if (ping) {
       if (textMesh) this.pings.push(textMesh);
       if (iconMesh) this.pings.push(iconMesh);
+    } else {
+      if (textMesh) this.icons.push(textMesh);
+      if (iconMesh) this.icons.push(iconMesh);
     }
     return {textMesh, iconMesh};
   }

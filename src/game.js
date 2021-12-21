@@ -91,6 +91,21 @@ function applyEvent(eventId, regionId) {
   updateFactors();
 }
 
+function applyEvents(events) {
+  events.forEach(({eventId, regionId}) => {
+    game.apply_event(eventId, regionId);
+  });
+  updateState();
+  updateFactors();
+}
+
+function applyIconEvents(events) {
+  events.forEach(({eventId, regionId}) => {
+    game.apply_event(eventId, regionId);
+  });
+  updateState();
+}
+
 function applyBranchEffects(eventId, regionId, branchId) {
   game.apply_branch_effects(eventId, regionId, branchId);
   updateState();
@@ -179,6 +194,6 @@ export default {
   checkRequests,
   changeProcessMixShare,
   setProjectPoints, startProject, stopProject, upgradeProject,
-  applyEvent, roll, simulate,
+  applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
   updateFactors};

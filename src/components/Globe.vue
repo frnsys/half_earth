@@ -8,17 +8,27 @@
 // to the bundle size.
 const getGlobe = () => import('../earth/globe');
 
+let globe = null;
+
 export default {
   mounted() {
     getGlobe().then(({default: Globe}) => {
-      this.globe = new Globe(this.$el);
-      this.globe.render();
-      this.globe.init();
-      this.globe.onReady(() => {
+      if (globe == null) {
+        globe = new Globe(this.$el);
+        globe.render();
+        globe.init();
+        globe.onReady(() => {
+          if (this.onReady) {
+            this.onReady(globe);
+          }
+        });
+      } else {
+        globe.setEl(this.$el);
         if (this.onReady) {
-          this.onReady(this.globe);
+          this.onReady(globe);
         }
-      })
+      }
+      this.globe = globe;
     });
   },
   methods: {

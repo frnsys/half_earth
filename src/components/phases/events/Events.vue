@@ -99,6 +99,7 @@ export default {
       if (!this.globe) {
         this.$refs.globe.onReady = (globe) => {
           this.globe = globe;
+          this.globe.clear();
           this.startYear();
         };
       } else {
@@ -147,8 +148,9 @@ export default {
 
             } else {
               if (iconEvents.length > 0) {
+                let events = [];
                 popIconEvents(iconEvents, this.time).forEach(({eventId, regionId}) => {
-                  game.applyEvent(eventId, regionId);
+                  events.push({eventId, regionId});
                   let icon = this.showEventOnGlobe(eventId, regionId);
                   let ev = ICON_EVENTS[eventId];
 
@@ -162,6 +164,7 @@ export default {
                   //   }, 100);
                   // }
                 });
+                game.applyIconEvents(events);
               }
             }
           }
