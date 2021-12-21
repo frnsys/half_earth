@@ -190,6 +190,10 @@ export default {
             key: 'type',
             name: 'project type',
             values: ['Initiative', 'Research', 'Policy']
+          }, {
+            key: 'group',
+            name: 'project group',
+            values: ['(none)'].concat(consts.PROJECT_GROUPS)
           }]
         case 'Process':
           return [{

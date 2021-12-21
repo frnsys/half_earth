@@ -21,6 +21,27 @@ impl Default for Status {
 }
 
 #[derive(Serialize, Debug, Copy, Clone, PartialEq)]
+pub enum Group {
+  Other,
+  Space,
+  Nuclear,
+  Restoration,
+  Agriculture,
+  Diet,
+  Geoengineering,
+  Population,
+  Control,
+  Protection,
+}
+
+impl Default for Group {
+    fn default() -> Self {
+        Group::Other
+    }
+}
+
+
+#[derive(Serialize, Debug, Copy, Clone, PartialEq)]
 pub enum Type {
     Policy,
     Research,
@@ -71,6 +92,7 @@ pub struct Project {
     pub id: usize,
     pub name: &'static str,
     pub kind: Type,
+    pub group: Group,
     pub ongoing: bool,
     pub gradual: bool,
     pub locked: bool,
@@ -204,6 +226,7 @@ mod test {
             gradual: false,
             locked: false,
             kind: Type::Policy,
+            group: Group::Other,
             status: Status::Building,
             progress: 0.,
             estimate: 0,
@@ -249,6 +272,7 @@ mod test {
             gradual: false,
             locked: false,
             kind: Type::Policy,
+            group: Group::Other,
             status: Status::Building,
             progress: 0.,
             estimate: 0,
@@ -289,6 +313,7 @@ mod test {
             gradual: false,
             locked: false,
             kind: Type::Policy,
+            group: Group::Other,
             status: Status::Building,
             progress: 0.,
             estimate: 0,

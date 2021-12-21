@@ -33,7 +33,7 @@ use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
-use crate::projects::{Status as ProjectStatus, Type as ProjectType};
+use crate::projects::{Status as ProjectStatus, Type as ProjectType, Group as ProjectGroup};
 use crate::npcs::{NPC, NPCRelation};
 '''
 
@@ -123,6 +123,7 @@ specs = {
         'type': '',
         'locked': 'false',
         'status': 'ProjectStatus::Inactive',
+        'group': 'Other',
         'ongoing': 'false',
         'gradual': 'false',
         'outcomes': [],
@@ -371,6 +372,8 @@ def define_field(k, v, item):
         v = '"{}"'.format(v)
     elif k == 'type' and item['_type'] == 'Project':
         return 'kind: ProjectType::{}'.format(v)
+    elif k == 'group':
+        return 'group: ProjectGroup::{}'.format(v)
     elif k == 'type' and item['_type'] == 'Event':
         if item['subphase']:
             return 'phase: Phase::{}{}'.format(v, item['subphase'])

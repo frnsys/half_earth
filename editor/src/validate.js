@@ -209,7 +209,7 @@ const SPECS = {
 
   Project: {
     key: 'name',
-    validate: ['name', 'description', 'type', 'effects', 'cost', 'locked', 'outcomes'],
+    validate: ['name', 'description', 'type', 'effects', 'cost', 'locked', 'outcomes', 'group'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -228,6 +228,8 @@ const SPECS = {
         case 'locked':
           if (item.locked === undefined) item.locked = false;
           return item.locked == hasUnlocker(item);
+        case 'group':
+          return requireOneOfChoice(item.group, consts.PROJECT_GROUPS);
         default:
           return true;
       }

@@ -42,6 +42,19 @@ const PROCESS_FEATURES = {
   'IsFossil': 'If this process uses fossil fuels',
 }
 
+const PROJECT_GROUPS = [
+  'Other',
+  'Space',
+  'Nuclear',
+  'Restoration',
+  'Agriculture',
+  'Diet',
+  'Geoengineering',
+  'Population',
+  'Control',
+  'Protection',
+];
+
 const INCOME_LEVELS = [
   'Low',
   'Lower-Middle',
@@ -450,4 +463,5 @@ export default {
   EVENT_TYPES,
   SUBPHASES,
   DYNAMIC_COST_FACTORS,
+  PROJECT_GROUPS
 };

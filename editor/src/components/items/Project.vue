@@ -24,6 +24,15 @@
       </div>
       <div>
         <label>
+          Group
+          <Tip>The grouping this project falls under.</Tip>
+        </label>
+        <select v-model="localData.group">
+          <option v-for="k in PROJECT_GROUPS" :value="k">{{k}}</option>
+        </select>
+      </div>
+      <div>
+        <label>
           Cost/Years to Completion
           <Tip>Political capital cost for policies, otherwise years to completion. If the cost is dynamic, this is the multiplier for the output demand.</Tip>
         </label>
@@ -133,6 +142,8 @@
         <div>Dynamic Cost</div>
         <div>{{localData.dynamic_cost_factor}}</div>
       </div>
+      <div class="meta-pill group-pill" v-if="localData.group">{{localData.group}}</div>
+      <div class="meta-pill invalid" v-else>MISSING GROUP</div>
       <div class="meta-pill" v-if="localData.ongoing">Ongoing</div>
       <div class="meta-pill" v-if="localData.gradual">Gradual</div>
       <div class="meta-pill" v-if="localData.locked" :class="flags('locked')">Locked{{flags('locked').invalid ? ' MISSING UNLOCKER' : ''}}</div>
@@ -277,5 +288,10 @@ export default {
   border-radius: 0.2em;
   display: inline-block;
   border: 1px solid #000;
+}
+
+.group-pill {
+  color: #fff !important;
+  background: #1A73E8 !important;
 }
 </style>

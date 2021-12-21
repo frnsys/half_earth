@@ -8,7 +8,7 @@ use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
 use crate::events::{Event, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
-use crate::projects::{Status as ProjectStatus, Type as ProjectType};
+use crate::projects::{Status as ProjectStatus, Type as ProjectType, Group as ProjectGroup};
 use crate::npcs::{NPC, NPCRelation};
 
 
@@ -967,7 +967,8 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             features: vec![
-                ProcessFeature::UsesSynFertilizer
+                ProcessFeature::UsesSynFertilizer,
+                ProcessFeature::IsSolar
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
@@ -1368,6 +1369,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Agriculture,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1396,6 +1398,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1419,11 +1422,12 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::UnlocksProject(46)
+                Effect::UnlocksProject(45)
             ],
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1452,6 +1456,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1481,6 +1486,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Geoengineering,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -1509,6 +1515,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1548,6 +1555,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1558,7 +1566,7 @@ pub fn projects() -> Vec<Project> {
                     probability: Probability {
                         likelihood: Likelihood::Likely,
                         conditions: vec![
-                            Condition::ProjectStatus(47, ProjectStatus::Active)
+                            Condition::ProjectStatus(46, ProjectStatus::Active)
                         ]
                     }
                 },
@@ -1597,6 +1605,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Geoengineering,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1666,6 +1675,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1694,6 +1704,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: true,
             outcomes: vec![
@@ -1734,6 +1745,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1762,6 +1774,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1812,6 +1825,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Diet,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1841,6 +1855,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1879,6 +1894,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: true,
             outcomes: vec![
@@ -1918,6 +1934,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Control,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -1948,6 +1965,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1977,6 +1995,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2005,6 +2024,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Nuclear,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2055,6 +2075,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Protection,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2147,6 +2168,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Geoengineering,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -2177,6 +2199,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Restoration,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -2223,6 +2246,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Restoration,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -2261,6 +2285,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2300,6 +2325,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Population,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2328,6 +2354,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2356,6 +2383,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Nuclear,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2384,6 +2412,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Restoration,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2413,6 +2442,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Diet,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2441,6 +2471,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Agriculture,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2469,6 +2500,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2497,6 +2529,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2526,6 +2559,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Population,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2554,6 +2588,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Agriculture,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2562,7 +2597,9 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
+            upgrades: vec![
+
+            ],
             supporters: vec![],
             opposers: vec![],
             active_outcome: None
@@ -2575,11 +2612,12 @@ pub fn projects() -> Vec<Project> {
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::ProjectCostModifier(63, -0.3)
+                Effect::ProjectCostModifier(60, -0.3)
             ],
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2597,56 +2635,6 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 35,
-            name: "Community Cooling Division",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::AutoClick(85, 50.0)
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(85, 75.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(85, 75.0),
-                        Effect::AutoClick(17, 25.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(85, 75.0),
-                        Effect::AutoClick(17, 50.0)
-                    ]
-                }
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 36,
             name: "One-Child Policy",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -2659,6 +2647,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Population,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2675,7 +2664,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 37,
+            id: 36,
             name: "Peace Officers",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2687,6 +2676,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Control,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -2703,7 +2693,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 38,
+            id: 37,
             name: "Electric-Arc Furnaces",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2715,6 +2705,36 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 38,
+            name: "Floating Wind Turbines",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::UnlocksProcess(0)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2732,17 +2752,21 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 39,
-            name: "Floating Wind Turbines",
+            name: "Counterterrorism Forces",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::UnlocksProcess(0)
+                Effect::AutoClick(136, 75.0),
+                Effect::AutoClick(127, 75.0),
+                Effect::AutoClick(139, 75.0),
+                Effect::AutoClick(18, 75.0)
             ],
-            kind: ProjectType::Research,
-            locked: false,
+            kind: ProjectType::Policy,
+            locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Control,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2760,37 +2784,6 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 40,
-            name: "Counterterrorism Forces",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::AutoClick(136, 75.0),
-                Effect::AutoClick(127, 75.0),
-                Effect::AutoClick(139, 75.0),
-                Effect::AutoClick(18, 75.0)
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 41,
             name: "Hydrogen Steel",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2802,6 +2795,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2813,7 +2807,7 @@ pub fn projects() -> Vec<Project> {
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
                         conditions: vec![
-                            Condition::ProjectStatus(47, ProjectStatus::Active)
+                            Condition::ProjectStatus(46, ProjectStatus::Active)
                         ]
                     }
                 },
@@ -2841,7 +2835,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 42,
+            id: 41,
             name: "Riot Control",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2853,6 +2847,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Control,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -2869,7 +2864,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 43,
+            id: 42,
             name: "Space Cans",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -2883,6 +2878,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2922,7 +2918,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 44,
+            id: 43,
             name: "Cellular Meat",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2934,10 +2930,21 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
 
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2950,7 +2957,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 45,
+            id: 44,
             name: "Thorium Reactor",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2962,6 +2969,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Nuclear,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2978,7 +2986,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 46,
+            id: 45,
             name: "De-extinction Initiative",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -2990,6 +2998,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3027,7 +3036,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 47,
+            id: 46,
             name: "Green Hydrogen",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3039,6 +3048,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3065,7 +3075,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 48,
+            id: 47,
             name: "Next-Gen Solar PV",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3077,6 +3087,36 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 48,
+            name: "3rd Generation Biofuels",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::UnlocksProcess(15)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3094,32 +3134,6 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 49,
-            name: "3rd Generation Biofuels",
-            cost: 0,
-            base_cost: Cost::Fixed(20),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::UnlocksProcess(15)
-            ],
-            kind: ProjectType::Research,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 50,
             name: "High-Density Batteries",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -3131,6 +3145,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3147,7 +3162,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 51,
+            id: 50,
             name: "Cloud Brightening",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3159,6 +3174,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Geoengineering,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -3175,7 +3191,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 52,
+            id: 51,
             name: "Electrify Road Vehicles",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3189,6 +3205,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: true,
             outcomes: vec![
@@ -3215,7 +3232,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 53,
+            id: 52,
             name: "Direct Air Capture",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -3228,6 +3245,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -3403,7 +3421,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 54,
+            id: 53,
             name: "Vegan Campaign",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3415,6 +3433,36 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Diet,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 54,
+            name: "Co-Generation",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::OutputForFeature(ProcessFeature::IsCombustion, 0.6)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3432,17 +3480,18 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 55,
-            name: "Co-Generation",
+            name: "Agricultural robotics",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(0),
             progress: 0.0,
             level: 0,
             effects: vec![
-                Effect::OutputForFeature(ProcessFeature::IsCombustion, 0.6)
+
             ],
             kind: ProjectType::Initiative,
-            locked: false,
+            locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3460,17 +3509,18 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 56,
-            name: "Agricultural robotics",
+            name: "Carbon-Negative Concrete",
             cost: 0,
-            base_cost: Cost::Fixed(0),
+            base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::ModifyIndustryByproducts(1, Byproduct::Co2, -0.5)
             ],
             kind: ProjectType::Initiative,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3488,93 +3538,6 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 57,
-            name: "Fire Control Brigade",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::AutoClick(50, 50.0)
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(50, 75.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(50, 75.0),
-                        Effect::AutoClick(106, 25.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(50, 75.0),
-                        Effect::AutoClick(106, 50.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(50, 75.0),
-                        Effect::AutoClick(106, 75.0),
-                        Effect::AutoClick(97, 10.0)
-                    ]
-                }
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 58,
-            name: "Carbon-Negative Concrete",
-            cost: 0,
-            base_cost: Cost::Fixed(15),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::ModifyIndustryByproducts(1, Byproduct::Co2, -0.5)
-            ],
-            kind: ProjectType::Initiative,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 59,
             name: "Traditional animal husbandry mandate",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -3586,6 +3549,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3602,7 +3566,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 60,
+            id: 58,
             name: "Biosphere 3",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -3614,6 +3578,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3631,8 +3596,8 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::PlayerVariable(PlayerVariable::ResearchPoints, 10.0),
-                        Effect::ProjectCostModifier(74, -0.25),
-                        Effect::ProjectCostModifier(43, -0.25)
+                        Effect::ProjectCostModifier(70, -0.25),
+                        Effect::ProjectCostModifier(42, -0.25)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -3653,48 +3618,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 61,
-            name: "Human Health Corps",
-            cost: 0,
-            base_cost: Cost::Fixed(30),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::AutoClick(4, 25.0)
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-                Upgrade {
-                    active: false,
-                    cost: 30,
-                    effects: vec![
-                        Effect::AutoClick(4, 50.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 30,
-                    effects: vec![
-                        Effect::AutoClick(4, 75.0)
-                    ]
-                }
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 62,
+            id: 59,
             name: "Food Waste Campaign",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3706,6 +3630,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Diet,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3722,7 +3647,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 63,
+            id: 60,
             name: "Mass Electrification",
             cost: 0,
             base_cost: Cost::Dynamic(5e-13, Factor::Output(Output::Fuel)),
@@ -3734,6 +3659,95 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 61,
+            name: "Energy Conservation Campaign",
+            cost: 0,
+            base_cost: Cost::Fixed(30),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::Demand(Output::Electricity, -0.25)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 62,
+            name: "Energy Quotas",
+            cost: 0,
+            base_cost: Cost::Dynamic(3e-12, Factor::Output(Output::Electricity)),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::DemandOutlookChange(Output::Electricity, -1.0),
+                Effect::Demand(Output::Electricity, -0.6)
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![4],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 63,
+            name: "Mini Nuclear Reactor",
+            cost: 0,
+            base_cost: Cost::Fixed(25),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Nuclear,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3751,91 +3765,6 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 64,
-            name: "Energy Conservation Campaign",
-            cost: 0,
-            base_cost: Cost::Fixed(30),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::Demand(Output::Electricity, -0.25)
-            ],
-            kind: ProjectType::Initiative,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 65,
-            name: "Energy Quotas",
-            cost: 0,
-            base_cost: Cost::Dynamic(3e-12, Factor::Output(Output::Electricity)),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::DemandOutlookChange(Output::Electricity, -1.0),
-                Effect::Demand(Output::Electricity, -0.6)
-            ],
-            kind: ProjectType::Policy,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![4],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 66,
-            name: "Mini Nuclear Reactor",
-            cost: 0,
-            base_cost: Cost::Fixed(25),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-
-            ],
-            kind: ProjectType::Research,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 67,
             name: "Cloud Seeding",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -3847,6 +3776,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Geoengineering,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3884,7 +3814,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 68,
+            id: 65,
             name: "Closed Borders",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -3896,6 +3826,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Control,
             ongoing: true,
             gradual: false,
             outcomes: vec![
@@ -3912,62 +3843,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 69,
-            name: "Disaster Rapid Relief",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::AutoClick(113, 50.0),
-                Effect::AutoClick(24, 50.0)
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(113, 75.0),
-                        Effect::AutoClick(24, 75.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(113, 75.0),
-                        Effect::AutoClick(24, 75.0),
-                        Effect::AutoClick(86, 50.0)
-                    ]
-                },
-                Upgrade {
-                    active: false,
-                    cost: 10,
-                    effects: vec![
-                        Effect::AutoClick(113, 75.0),
-                        Effect::AutoClick(24, 75.0),
-                        Effect::AutoClick(86, 75.0),
-                        Effect::AutoClick(0, 25.0)
-                    ]
-                }
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 70,
+            id: 66,
             name: "Land Expansion",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -3979,6 +3855,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3995,7 +3872,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 71,
+            id: 67,
             name: "Wood Skyscrapers",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4007,6 +3884,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4046,7 +3924,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 72,
+            id: 68,
             name: "Indigenous Land Management",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -4059,6 +3937,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Restoration,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4075,7 +3954,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 73,
+            id: 69,
             name: "Desalination Plants",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4089,6 +3968,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Agriculture,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4149,7 +4029,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 74,
+            id: 70,
             name: "Space Colony",
             cost: 0,
             base_cost: Cost::Fixed(80),
@@ -4161,6 +4041,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: true,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4204,7 +4085,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 75,
+            id: 71,
             name: "Marine Protected Areas",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4218,6 +4099,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Protection,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4234,7 +4116,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 76,
+            id: 72,
             name: "Phase Out Commercial Fishing",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -4248,6 +4130,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Protection,
             ongoing: false,
             gradual: true,
             outcomes: vec![
@@ -4264,7 +4147,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 77,
+            id: 73,
             name: "Space Elevator",
             cost: 0,
             base_cost: Cost::Fixed(60),
@@ -4276,6 +4159,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4305,7 +4189,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 78,
+            id: 74,
             name: "Mission to Titan",
             cost: 0,
             base_cost: Cost::Fixed(60),
@@ -4318,6 +4202,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4334,7 +4219,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 79,
+            id: 75,
             name: "Relocate Industry to Space",
             cost: 0,
             base_cost: Cost::Fixed(100),
@@ -4346,6 +4231,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
+            group: ProjectGroup::Space,
             ongoing: false,
             gradual: true,
             outcomes: vec![
@@ -4937,7 +4823,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(68, ProjectStatus::Active),
+                        Condition::ProjectStatus(65, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -4945,7 +4831,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.5),
-                        Condition::ProjectStatus(68, ProjectStatus::Active),
+                        Condition::ProjectStatus(65, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -5219,7 +5105,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(68, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(65, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -5227,7 +5113,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.5),
-                        Condition::ProjectStatus(68, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(65, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -5556,7 +5442,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(68, ProjectStatus::Active),
+                        Condition::ProjectStatus(65, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -5564,7 +5450,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.3),
-                        Condition::ProjectStatus(68, ProjectStatus::Active),
+                        Condition::ProjectStatus(65, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -5712,13 +5598,13 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(63, ProjectStatus::Building),
+                        Condition::ProjectStatus(60, ProjectStatus::Building),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![Effect::AddEvent(27)], vec![]), (vec![Effect::ProjectCostModifier(63, 0.25)], vec![])],
+            branches: vec![(vec![Effect::AddEvent(27)], vec![]), (vec![Effect::ProjectCostModifier(60, 0.25)], vec![])],
             intensity: 0,
             aspect: None
         },
@@ -6129,15 +6015,15 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::UnlocksProject(74),
-                Effect::ProjectRequest(74, true, 50)
+                Effect::UnlocksProject(70),
+                Effect::ProjectRequest(70, true, 50)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Finished),
-                        Condition::ProjectStatus(43, ProjectStatus::Finished)
+                        Condition::ProjectStatus(58, ProjectStatus::Finished),
+                        Condition::ProjectStatus(42, ProjectStatus::Finished)
                     ]
                 }
             ],
@@ -6545,14 +6431,14 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(68, ProjectStatus::Active)
+                        Condition::ProjectStatus(65, ProjectStatus::Active)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.3),
-                        Condition::ProjectStatus(68, ProjectStatus::Active)
+                        Condition::ProjectStatus(65, ProjectStatus::Active)
                     ]
                 }
             ],
@@ -7421,14 +7307,14 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(72, ProjectStatus::Active),
+                        Condition::ProjectStatus(68, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::ProjectStatus(72, ProjectStatus::Active),
+                        Condition::ProjectStatus(68, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },

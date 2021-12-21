@@ -70,7 +70,7 @@
     </div>
   </template>
   <template v-slot:footer>
-    <div>GOSPLANT</div>
+    <div :class="`project-group project-group-${group}`">{{group}}</div>
   </template>
 </Card>
 </template>
@@ -271,5 +271,41 @@ export default {
 }
 .project-upgrade--title img {
   width: 12px;
+}
+
+.project-group {
+  padding: 0 0.1em;
+  border-radius: 0.2em;
+  color: #000;
+  background: #888;
+}
+
+.project-group-Restoration {
+  background: #247f24;
+}
+.project-group-Protection {
+  background: #53a553;
+}
+.project-group-Nuclear {
+  background: orange;
+}
+.project-group-Agriculture {
+  background: wheat;
+}
+.project-group-Control {
+  background: #d83535;
+}
+.project-group-Population {
+  background: #6b6bec;
+}
+.project-group-Diet {
+  background: #f3ff56;
+}
+.project-group-Space {
+  background: #250441;
+  color: #d0c0e4;
+}
+.project-group-Geoengineering {
+  background: #61688b;
 }
 </style>
