@@ -502,15 +502,24 @@ def define_struct(typ, data):
     try:
         return '''{} {{\n{}\n}}'''.format(typ, indent(define_fields(fields, data)))
     except Exception as e:
-        print('Error defining struct of type "{}":'.format(typ), data)
-        print(e)
+        print('-'*50)
+        print('Error defining struct of type "{}":\n'.format(typ),
+                json.dumps(data, indent=2, sort_keys=True))
+        print('Exception:', repr(e))
+        print('-'*50)
         raise
 
-def define_structs(typ, items):
+def define_structs(typ, items, skip_error=False):
     structs = []
     for i, item in enumerate(items):
         item['id'] = i
-        structs.append(define_struct(typ, item))
+        try:
+            structs.append(define_struct(typ, item))
+        except:
+            if skip_error:
+                continue
+            else:
+                raise
     return ',\n'.join(structs)
 
 def define_array(name, typ):
@@ -598,7 +607,7 @@ def define_const(const):
 def define_content_fn(name, typ):
     return 'pub fn {}() -> Vec<{}> {{\n{}\n}}'.format(
         name, typ, indent('vec![\n{}\n]'.format(
-            indent(define_structs(typ, items_by_type[typ])))))
+            indent(define_structs(typ, items_by_type[typ], skip_error=True)))))
 
 cond_to_factor = {
     'WorldVariable': {
