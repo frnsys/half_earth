@@ -39,8 +39,8 @@
         </tr>
         <tr>
           <td><img :src="icons.emissions"> Emissions</td>
-          <td>{{state.cycleStartState.emissions.toFixed(0)}}</td>
-          <td>{{state.gameState.world.emissions.toFixed(0)}}</td>
+          <td>{{state.cycleStartState.emissions.toFixed(1)}}</td>
+          <td>{{state.gameState.world.emissions.toFixed(1)}}</td>
           <td>{{format.sign(pc.emissions)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
@@ -158,10 +158,11 @@ export default {
       let extinctionRateChange = consts.extinctionPc[this.extinction.end.intensity] || consts.extinctionPc[consts.extinctionPc.length - 1];
       let emissionsChange = state.gameState.world.emissions - state.cycleStartState.emissions;
       this.pc = {
-        temperature: Math.round(temperatureChange * -10),
+        // Temp scored for every 0.1C change
+        temperature: Math.round(temperatureChange * 10) * -consts.temperaturePc,
         contentedness: Math.round(contentednessChange),
         extinctionRate: Math.round(extinctionRateChange),
-        emissions: Math.round(-emissionsChange),
+        emissions: Math.round(emissionsChange * 2) * -consts.emissionsPc,
       };
       this.pcChange += Object.values(this.pc).reduce((a,b) => a + b, 0);
       this.pcChange += state.cycleStartState.completedProjects.length * consts.pcPerCompletedProject;

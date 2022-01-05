@@ -154,6 +154,11 @@ function rank() {
           amount: Math.round(state.gameState.world.temp_outlook)
         });
       }
+      rankings.push({
+        type: 'Event',
+        name: 'Post-Revolution Optimism',
+        amount: 30
+      });
     } else if (k == 'biodiversity') {
         rankings.push({
           type: 'Event',
