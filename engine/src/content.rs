@@ -551,8 +551,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 10.0
+                co2: 10.0,
+                n2o: 0.0
             ),
             locked: true,
             features: vec![
@@ -587,7 +587,7 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
+            supporters: vec![9],
             opposers: vec![4]
         },
         Process {
@@ -604,9 +604,9 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00392
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.57829,
-                co2: 353.81
+                co2: 353.81,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
@@ -632,13 +632,13 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                n2o: 0.0,
-                co2: 40.0
+                co2: 40.0,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
-                ProcessFeature::IsSolar,
-                ProcessFeature::IsIntermittent
+                ProcessFeature::IsIntermittent,
+                ProcessFeature::IsSolar
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
@@ -861,7 +861,7 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
+            supporters: vec![4, 3, 6],
             opposers: vec![]
         },
         Process {
@@ -917,8 +917,8 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![7, 1],
+            opposers: vec![4]
         },
         Process {
             id: 14,
@@ -967,13 +967,13 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             features: vec![
-                ProcessFeature::UsesSynFertilizer,
-                ProcessFeature::IsSolar
+                ProcessFeature::IsSolar,
+                ProcessFeature::UsesSynFertilizer
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![4],
+            opposers: vec![7]
         },
         Process {
             id: 16,
@@ -1016,14 +1016,14 @@ pub fn processes() -> Vec<Process> {
                 water: 2.3688
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 2.7,
-                co2: 412.7691
+                co2: 412.7691,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
-                ProcessFeature::IsFossil,
-                ProcessFeature::IsCombustion
+                ProcessFeature::IsCombustion,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
@@ -1112,8 +1112,8 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![7],
+            opposers: vec![4]
         },
         Process {
             id: 21,
@@ -1130,7 +1130,7 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             features: vec![
-
+                ProcessFeature::IsNuclear
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
@@ -1161,7 +1161,7 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
+            supporters: vec![7, 6],
             opposers: vec![]
         },
         Process {
@@ -1206,19 +1206,19 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00392
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 0.57829,
-                co2: 970.0
+                co2: 970.0,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
-                ProcessFeature::IsFossil,
-                ProcessFeature::IsCombustion
+                ProcessFeature::IsCombustion,
+                ProcessFeature::IsFossil
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
             supporters: vec![],
-            opposers: vec![]
+            opposers: vec![9, 2]
         },
         Process {
             id: 25,
@@ -1244,8 +1244,8 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![4, 3, 6],
+            opposers: vec![1]
         },
         Process {
             id: 26,
@@ -1271,8 +1271,8 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![2],
-            opposers: vec![]
+            supporters: vec![2, 3],
+            opposers: vec![0]
         },
         Process {
             id: 27,
@@ -1288,9 +1288,9 @@ pub fn processes() -> Vec<Process> {
                 water: 2.3688
             ),
             byproducts: byproducts!(
-                n2o: 0.0,
                 ch4: 2.7,
-                co2: 180.54
+                co2: 180.54,
+                n2o: 0.0
             ),
             locked: false,
             features: vec![
@@ -1303,7 +1303,7 @@ pub fn processes() -> Vec<Process> {
         },
         Process {
             id: 28,
-            name: "Breeder Nuclear Power",
+            name: "Fast Breeder Nuclear Power",
             output: Output::Electricity,
             limit: None,
             mix_share: 0,
@@ -1320,8 +1320,8 @@ pub fn processes() -> Vec<Process> {
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
-            opposers: vec![]
+            supporters: vec![9],
+            opposers: vec![4]
         },
         Process {
             id: 29,
@@ -1373,7 +1373,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::NPCRelationship(8, 2)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -1381,7 +1391,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![3],
+            supporters: vec![8, 3],
             opposers: vec![],
             active_outcome: None
         },
@@ -1519,6 +1529,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Outlook, 10.0),
@@ -2172,7 +2193,28 @@ pub fn projects() -> Vec<Project> {
             ongoing: true,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::TriggerEvent(86, 90)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+                            Condition::WorldVariable(WorldVariable::Emissions, Comparator::Greater, 0.)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -2255,6 +2297,28 @@ pub fn projects() -> Vec<Project> {
 
                     ],
                     probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+                            Condition::WorldVariable(WorldVariable::Temperature, Comparator::Greater, 0.)
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
                         likelihood: Likelihood::Guaranteed,
                         conditions: vec![
 
@@ -2266,10 +2330,16 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 0,
+                    effects: vec![
 
+                    ]
+                }
             ],
             supporters: vec![4, 6],
-            opposers: vec![],
+            opposers: vec![7],
             active_outcome: None
         },
         Project {
@@ -2859,7 +2929,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![1],
             opposers: vec![],
             active_outcome: None
         },
@@ -2930,13 +3000,35 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Diet,
             ongoing: false,
             gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
 
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::PopulationGrowth, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, 0.)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2950,7 +3042,13 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 0,
+                    effects: vec![
 
+                    ]
+                }
             ],
             supporters: vec![2],
             opposers: vec![],
@@ -3004,10 +3102,21 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
+
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Random,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Rare,
                         conditions: vec![
 
                         ]
@@ -3209,6 +3318,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: true,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
                 Outcome {
                     effects: vec![
 
@@ -3437,13 +3557,29 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
 
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 0,
+                    effects: vec![
 
+                    ]
+                }
             ],
             supporters: vec![],
             opposers: vec![],
@@ -3618,35 +3754,6 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 59,
-            name: "Food Waste Campaign",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            effects: vec![
-                Effect::Output(Output::PlantCalories, 0.2)
-            ],
-            kind: ProjectType::Initiative,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Diet,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
             id: 60,
             name: "Mass Electrification",
             cost: 0,
@@ -3780,6 +3887,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
                 Outcome {
                     effects: vec![
 
@@ -4045,7 +4163,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
 
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -4134,7 +4262,39 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: true,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Outlook, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
 
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::PlayerVariable(PlayerVariable::ResearchPoints, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::UnlocksProject(43)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -4143,7 +4303,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![],
+            opposers: vec![7],
             active_outcome: None
         },
         Project {
@@ -4163,7 +4323,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
 
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -4206,7 +4376,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
 
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
             ],
             estimate: 0,
             points: 0,
@@ -4234,6 +4414,62 @@ pub fn projects() -> Vec<Project> {
             group: ProjectGroup::Space,
             ongoing: false,
             gradual: true,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Emissions, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 0,
+                    effects: vec![
+
+                    ]
+                }
+            ],
+            supporters: vec![9],
+            opposers: vec![8],
+            active_outcome: None
+        },
+        Project {
+            id: 76,
+            name: "Biofabrication",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
             outcomes: vec![
 
             ],
@@ -5688,8 +5924,8 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 51,
-            name: "TEST ICON",
-            phase: Phase::Icon,
+            name: "Exo-planetary conservationists",
+            phase: Phase::PlanningCoalition,
             locked: true,
             regional: false,
             effects: vec![
@@ -5699,12 +5935,12 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-
+                        Condition::WorldVariable(WorldVariable::ExtinctionRate, Comparator::Greater, 0.)
                     ]
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![],
+            branches: vec![(vec![Effect::WorldVariable(WorldVariable::Outlook, 0.)], vec![]), (vec![], vec![])],
             intensity: 1,
             aspect: Some(Aspect::Control)
         },
