@@ -64,6 +64,24 @@ const FLAG_TIPS = {
       text: 'Stops regional development throughout the world.'
     }
   },
+  'FastDevelopment': (demand) => {
+    return {
+      icon: 'development',
+      text: 'Accelerates regional development throughout the world.'
+    }
+  },
+  'Degrowth': (demand) => {
+    return {
+      icon: 'degrowth',
+      text: 'Contract the economies of the wealthiest regions.'
+    }
+  },
+  'DeepSeaMining': (demand) => {
+    return {
+      icon: 'ocean',
+      text: 'Prevents or stops metal shortages.'
+    }
+  },
 };
 
 function changeDir(change, random) {

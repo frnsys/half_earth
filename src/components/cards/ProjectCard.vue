@@ -308,4 +308,10 @@ export default {
 .project-group-Geoengineering {
   background: #61688b;
 }
+.project-group-Electrification {
+  background: #fcba03;
+}
+.project-group-Behavior {
+  background: #b8ad91;
+}
 </style>

@@ -1,11 +1,16 @@
-use crate::core;
-use crate::consts;
 use crate::state::State;
 use crate::npcs::NPCRelation;
 use crate::kinds::{Resource, Output, Feedstock};
 use crate::production::ProcessFeature;
-use crate::projects::Status as ProjectStatus;
-use super::{WorldVariable, LocalVariable, PlayerVariable};
+use crate::projects::{Status as ProjectStatus, Group};
+use super::{WorldVariable, LocalVariable, PlayerVariable, Flag};
+
+const HEAVY_PROJECTS: [Group; 4] = [
+    Group::Space,
+    Group::Nuclear,
+    Group::Geoengineering,
+    Group::Electrification,
+];
 
 #[derive(Debug, Clone)]
 pub enum Condition {
@@ -22,7 +27,9 @@ pub enum Condition {
     RunsPlayed(Comparator, usize),
     RegionFlag(String),
     NPCRelationship(usize, NPCRelation),
-    Feedstock(Feedstock, Comparator, f32),
+    FeedstockYears(Feedstock, Comparator, f32),
+    HasFlag(Flag),
+    HeavyProjects(Comparator, usize),
 }
 
 
@@ -103,8 +110,8 @@ impl Condition {
                 let demand = state.output_demand[*output] * factor;
                 comp.eval(demand, *other_val)
             },
-            Condition::Feedstock(feedstock, comp, other_val) => {
-                comp.eval(state.feedstocks[*feedstock]/consts::FEEDSTOCK_RESERVES[*feedstock], *other_val)
+            Condition::FeedstockYears(feedstock, comp, other_val) => {
+                comp.eval(state.feedstocks[*feedstock]/state.consumed_feedstocks[*feedstock], *other_val)
             },
             Condition::RunsPlayed(comp, runs) => {
                 comp.eval(state.runs as f32, *runs as f32)
@@ -122,6 +129,14 @@ impl Condition {
                 } else {
                     false
                 }
+            },
+            Condition::HasFlag(flag) => {
+                state.flags.contains(flag)
+            },
+            Condition::HeavyProjects(comp, n) => {
+                let heavy_projects = state.projects.iter()
+                    .filter(|p| p.status == ProjectStatus::Finished && HEAVY_PROJECTS.contains(&p.group)).count();
+                comp.eval(heavy_projects as f32, *n as f32)
             }
         }
     }

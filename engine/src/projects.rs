@@ -32,6 +32,8 @@ pub enum Group {
   Population,
   Control,
   Protection,
+  Electrification,
+  Behavior
 }
 
 impl Default for Group {
@@ -63,6 +65,7 @@ pub enum Cost {
 #[derive(Serialize, Copy, Clone)]
 pub enum Factor {
     Time,
+    Income,
     Output(Output),
 }
 
@@ -173,19 +176,20 @@ impl Project {
         outcome
     }
 
-    pub fn update_cost(&mut self, year: usize ,demand: &OutputMap<f32>) {
+    pub fn update_cost(&mut self, year: usize, income_level: f32, demand: &OutputMap<f32>, modifier: f32) {
         let cost = match self.base_cost {
             Cost::Fixed(c) => c,
             Cost::Dynamic(m, factor) => {
                 let c = match factor {
                     // Kind of arbitrarily choose 1980 as the starting point
                     Factor::Time => m * (year - 1980) as f32,
+                    Factor::Income => m * (1. + income_level),
                     Factor::Output(output) => m * demand[output]
                 };
                 c.round() as usize
             }
         };
-        self.cost = (cost as f32 * self.cost_modifier).round() as usize;
+        self.cost = (cost as f32 * self.cost_modifier * modifier).round() as usize;
     }
 
     pub fn upgrade(&mut self) -> bool {

@@ -263,7 +263,7 @@ conds = {
     'OutputDemandGap':  lambda e: ('Output::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ResourcePressure': lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ResourceDemandGap':lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
-    'Feedstock':        lambda e: ('Feedstock::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
+    'FeedstockYears':        lambda e: ('Feedstock::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ProcessMixShare':  lambda e: (ids[e['entity']], comps[e['comparator']], value(e)),
     'ProcessMixShareFeature': lambda e: ('ProcessFeature::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ProjectActive':    lambda e: (ids[e['entity']], 'ProjectStatus::Active'),
@@ -273,7 +273,9 @@ conds = {
     'ProjectHalted':    lambda e: (ids[e['entity']], 'ProjectStatus::Halted'),
     'ProjectBuilding':    lambda e: (ids[e['entity']], 'ProjectStatus::Building'),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
+    'HeavyProjects':    lambda e: (comps[e['comparator']], e['value']),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
+    'HasFlag':          lambda e: ('Flag::{}'.format(e['value']),),
     'NPCRelationship':  lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['subtype'])),
 }
 
@@ -356,7 +358,7 @@ def define_condition(cond):
             for v in conds[cond['type']](cond)]
 
     cond_type = cond['type']
-    if 'Project' in cond_type:
+    if 'Project' in cond_type and cond_type != 'HeavyProjects':
         cond_type = 'ProjectStatus'
     return 'Condition::{}({})'.format(
             cond_type, ', '.join(cond_params))
@@ -435,6 +437,8 @@ def define_field(k, v, item):
                 variant = 'Factor::Output(Output::{})'.format(factor)
             elif factor == 'Time':
                 variant = 'Factor::Time'
+            elif factor == 'Income':
+                variant = 'Factor::Income'
             else:
                 raise Exception('Unrecognized dynamic cost factor: {}'.format(factor))
             v = '{}.'.format(v) if isinstance(v, int) else v

@@ -1576,7 +1576,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Electrification,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -1986,7 +1986,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Behavior,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2016,7 +2016,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Behavior,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2413,13 +2413,14 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 25,
-            name: "Ban on deep sea mining",
+            name: "Deep Sea Mining",
             cost: 0,
-            base_cost: Cost::Fixed(5),
+            base_cost: Cost::Fixed(25),
             progress: 0.0,
             level: 0,
             effects: vec![
-
+                Effect::AddFlag(Flag::DeepSeaMining),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -2687,7 +2688,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Electrification,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3254,7 +3255,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Electrification,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3314,7 +3315,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Electrification,
             ongoing: false,
             gradual: true,
             outcomes: vec![
@@ -3598,7 +3599,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Electrification,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3754,6 +3755,51 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
+            id: 59,
+            name: "Food Waste Campaign",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::Output(Output::PlantCalories, 0.2)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Diet,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 0,
+                    effects: vec![
+
+                    ]
+                }
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
             id: 60,
             name: "Mass Electrification",
             cost: 0,
@@ -3766,7 +3812,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Electrification,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3795,7 +3841,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Behavior,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3825,7 +3871,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Behavior,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4465,6 +4511,64 @@ pub fn projects() -> Vec<Project> {
 
             ],
             kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 77,
+            name: "Accelerate Development",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::AddFlag(Flag::FastDevelopment)
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 78,
+            name: "Developed Degrowth",
+            cost: 0,
+            base_cost: Cost::Dynamic(40., Factor::Income),
+            progress: 0.0,
+            level: 0,
+            effects: vec![
+                Effect::AddFlag(Flag::Degrowth)
+            ],
+            kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Other,
@@ -6408,7 +6512,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::Feedstock(Feedstock::Soil, Comparator::LessEqual, 0.5),
+                        Condition::ProcessMixShare(20, Comparator::GreaterEqual, 0.7),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -8586,10 +8690,122 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
+                Effect::AddFlag(Flag::MetalsShortage)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![
+                        Condition::HasFlag(Flag::DeepSeaMining),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::HeavyProjects(Comparator::Greater, 10),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::HeavyProjects(Comparator::Greater, 5),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 147,
+            name: "Oil Running Out",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
 
             ],
             probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::FeedstockYears(Feedstock::Oil, Comparator::LessEqual, 20.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 148,
+            name: "Coal Running Out",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
 
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::FeedstockYears(Feedstock::Coal, Comparator::LessEqual, 20.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 149,
+            name: "Natural Gas Running Out",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::FeedstockYears(Feedstock::NaturalGas, Comparator::LessEqual, 20.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 150,
+            name: "Uranium Running Out",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::FeedstockYears(Feedstock::Uranium, Comparator::LessEqual, 20.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
             ],
             prob_modifier: 1.0,
             branches: vec![],

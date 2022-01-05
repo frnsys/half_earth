@@ -42,9 +42,18 @@ impl World {
         self.base_outlook + region_outlook
     }
 
-    pub fn develop_regions(&mut self) {
+    pub fn develop_regions(&mut self, stop: bool, fast: bool, degrow: bool) {
+        let speed = if fast {
+            1.25
+        } else {
+            1.
+        };
         for region in &mut self.regions {
-            region.develop();
+            if degrow && region.income == Income::High {
+                region.develop(-1.);
+            } else if !stop && region.income != Income::High {
+                region.develop(speed);
+            }
         }
     }
 

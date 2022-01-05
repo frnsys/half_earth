@@ -112,8 +112,9 @@ impl State {
         // Bit of a hack to generate initial state values
         state.step_production();
 
+        let modifier = 1.;
         for project in &mut state.projects {
-            project.update_cost(state.world.year, &state.output_demand);
+            project.update_cost(state.world.year, state.world.income_level(), &state.output_demand, modifier);
         }
 
         state.update_region_temps();
@@ -198,8 +199,13 @@ impl State {
             self.projects[id].active_outcome = Some(i);
         }
 
+        let modifier = if self.flags.contains(&Flag::MetalsShortage) && !self.flags.contains(&Flag::DeepSeaMining) {
+            0.8
+        } else {
+            1.
+        };
         for project in &mut self.projects {
-            project.update_cost(self.world.year, &self.output_demand);
+            project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, modifier);
         }
 
         (completed_projects, remove_effects, add_effects)
@@ -305,9 +311,10 @@ impl State {
         self.world.year += 1;
         self.world.update_pop();
 
-        if !self.flags.contains(&Flag::StopDevelopment) {
-            self.world.develop_regions();
-        }
+        let stop = self.flags.contains(&Flag::StopDevelopment);
+        let fast = self.flags.contains(&Flag::FastDevelopment);
+        let degrow = self.flags.contains(&Flag::Degrowth);
+        self.world.develop_regions(stop, fast, degrow);
         self.world.update_outlook();
     }
 

@@ -85,19 +85,26 @@ impl Region {
         self.outlook = f32::min(10., self.outlook);
     }
 
-    pub fn develop(&mut self) {
-        if self.income != Income::High {
-            self.development += DEVELOP_SPEED;
-            if self.development >= 1.0 {
-                let next_income = match self.income {
-                    Income::Low => Income::LowerMiddle,
-                    Income::LowerMiddle => Income::UpperMiddle,
-                    Income::UpperMiddle => Income::High,
-                    Income::High => Income::High,
-                };
-                self.development = 0.;
-                self.income = next_income;
-            }
+    pub fn develop(&mut self, modifier: f32) {
+        self.development += DEVELOP_SPEED * modifier;
+        if self.development >= 1.0 {
+            let next_income = match self.income {
+                Income::Low => Income::LowerMiddle,
+                Income::LowerMiddle => Income::UpperMiddle,
+                Income::UpperMiddle => Income::High,
+                Income::High => Income::High,
+            };
+            self.development = 0.;
+            self.income = next_income;
+        } else if self.development < 0. {
+            let next_income = match self.income {
+                Income::Low => Income::Low,
+                Income::LowerMiddle => Income::Low,
+                Income::UpperMiddle => Income::LowerMiddle,
+                Income::High => Income::UpperMiddle,
+            };
+            self.development = 1. - self.development;
+            self.income = next_income;
         }
     }
 

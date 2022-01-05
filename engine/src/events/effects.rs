@@ -24,6 +24,10 @@ pub enum Flag {
     EVs,
     HyperResearch,
     StopDevelopment,
+    FastDevelopment,
+    Degrowth,
+    MetalsShortage,
+    DeepSeaMining,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]

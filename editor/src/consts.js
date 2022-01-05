@@ -53,6 +53,8 @@ const PROJECT_GROUPS = [
   'Population',
   'Control',
   'Protection',
+  'Electrification',
+  'Behavior',
 ];
 
 const INCOME_LEVELS = [
@@ -101,7 +103,7 @@ const CONDITIONS = {
     compare: true,
     choices: Object.keys(RESOURCES),
   },
-  Feedstock: {
+  FeedstockYears: {
     compare: true,
     choices: Object.keys(FEEDSTOCKS),
   },
@@ -140,6 +142,12 @@ const CONDITIONS = {
   },
   RegionFlag: {
     flag: true
+  },
+  HasFlag: {
+    flag: true,
+  },
+  HeavyProjects: {
+    compare: true,
   },
   NPCRelationship: {
     choices: ['Neutral', 'Nemesis', 'Ally'],
@@ -446,7 +454,7 @@ const EVENT_TYPES = [
   'Crisis',     // Occurs when the crisis meter fills
 ];
 
-const DYNAMIC_COST_FACTORS = Object.keys(OUTPUTS).concat(['Time']);
+const DYNAMIC_COST_FACTORS = Object.keys(OUTPUTS).concat(['Time', 'Income']);
 
 export default {
   OUTPUTS,
