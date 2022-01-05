@@ -153,7 +153,7 @@ impl Serialize for Region {
     where
         S: Serializer,
     {
-        let mut seq = serializer.serialize_struct("Region", 4)?;
+        let mut seq = serializer.serialize_struct("Region", 15)?;
         seq.serialize_field("id", &self.id)?;
         seq.serialize_field("name", &self.name)?;
         seq.serialize_field("population", &self.population)?;
@@ -161,6 +161,7 @@ impl Serialize for Region {
         seq.serialize_field("outlook", &self.outlook)?;
         seq.serialize_field("income", &self.income)?;
         seq.serialize_field("income_level", &self.income_level())?;
+        seq.serialize_field("development", &self.development)?;
         seq.serialize_field("habitability", &self.habitability())?;
         seq.serialize_field("demand", &self.demand())?;
         seq.serialize_field("demand_levels", &self.demand_levels())?;

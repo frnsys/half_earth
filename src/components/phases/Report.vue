@@ -70,6 +70,30 @@
           <td colspan="3">Total Change</td>
           <td>{{format.sign(pcChange)}}</td>
         </tr>
+        <tr class="report-spacer"></tr>
+        <tr class="report-header">
+          <td>Regions</td>
+        </tr>
+        <tr v-if="regionIncomeChanges.length === 0">
+          <td class="report-empty">No changes</td>
+        </tr>
+        <tr v-for="r in regionIncomeChanges">
+          <td colspan="4">{{r.name}} is now {{r.income}} income.</td>
+        </tr>
+        <tr class="report-spacer"></tr>
+        <tr class="report-header">
+          <td>Disasters</td>
+        </tr>
+        <tr v-if="regionDisasters.length === 0">
+          <td class="report-empty">None</td>
+        </tr>
+        <tr v-for="r in regionDisasters">
+          <td>{{r.name}}</td>
+          <td colspan="3" class="report-disasters">
+            <img :src="icons[ev.icon]" v-for="ev in r.events">
+          </td>
+        </tr>
+
       </table>
     </div>
     <button @click="nextPhase">Next</button>
@@ -148,7 +172,18 @@ export default {
           color: intensity.color(end, false)
         }
       }
-    }
+    },
+    regionIncomeChanges() {
+      return state.gameState.world.regions.filter((r, i) => r.income != state.cycleStartState.regionIncomes[i]);
+    },
+    regionDisasters() {
+      return Object.keys(state.annualRegionEvents).map((id) => {
+        return {
+          name: state.gameState.world.regions[id].name,
+          events: state.annualRegionEvents[id],
+        }
+      });
+    },
   },
   methods: {
     calculateChanges() {
@@ -269,5 +304,10 @@ export default {
 }
 .report-spacer {
   height: 12px;
+}
+
+.report-disasters img {
+  margin-right: 2px;
+  height: 18px;
 }
 </style>

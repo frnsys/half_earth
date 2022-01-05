@@ -267,7 +267,7 @@ const SPECS = {
 
   Region: {
     key: 'name',
-    validate: ['name', 'health', 'outlook', 'income_level', 'population'],
+    validate: ['name', 'health', 'outlook', 'income_level', 'population', 'development'],
     questions: ['name', 'notes'],
     validateKey: (item, key) => {
       switch (key) {

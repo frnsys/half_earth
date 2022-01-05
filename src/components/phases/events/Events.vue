@@ -87,6 +87,7 @@ export default {
 
       // Cache starting values for report
       this._startYear = state.gameState.world.year;
+      state.annualRegionEvents = {};
       state.cycleStartState = {
         year: this._startYear,
         extinctionRate: state.gameState.world.extinction_rate,
@@ -94,6 +95,7 @@ export default {
         temperature: state.gameState.world.temperature,
         emissions: state.gameState.world.emissions,
         completedProjects: [],
+        regionIncomes: state.gameState.world.regions.map((r) => r.income)
       };
 
       if (!this.globe) {
@@ -229,6 +231,10 @@ export default {
     showEventOnGlobe(eventId, regionId) {
       let ev = ICON_EVENTS[eventId];
       if (this.globe && regionId !== undefined && regionId !== null) {
+        let history = state.annualRegionEvents[regionId] || [];
+        history.push(ev);
+        state.annualRegionEvents[regionId] = history;
+
         // TODO distinguish inland vs coastal events
         let region = state.gameState.world.regions[regionId];
         let tiles = regionsToTiles[region.name];

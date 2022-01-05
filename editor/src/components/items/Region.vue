@@ -38,6 +38,13 @@
           </label>
           <input v-model="localData.population" type="number" min="0" :class="flags('population')">
         </div>
+        <div>
+          <label>
+            Starting Development Progress
+            <Tip>Starting progress to the next income level</Tip>
+          </label>
+          <input v-model="localData.development" type="number" min="0" :class="flags('development')">
+        </div>
       </div>
     </fieldset>
     <div>
@@ -64,6 +71,9 @@
       </div>
       <div class="meta-pill split-pill" :class="{invalid: !localData.population}">
         <div>Population</div><div>{{localData.population || 'MISSING'}}</div>
+      </div>
+      <div class="meta-pill split-pill" :class="{invalid: localData.development == undefined}">
+        <div>Development</div><div>{{localData.development !== undefined ? localData.development : 'MISSING'}}</div>
       </div>
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>

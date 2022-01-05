@@ -8,6 +8,7 @@
 3. Calculate majority income group for each region
 """
 import ref
+import math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -215,7 +216,7 @@ if __name__ == '__main__':
         groups = [ref.income_group_for_country_year(c, ref.last_income_group_year) for c in countries]
         levels = [income_levels[g] for g in groups if g is not None and g != 'Not categorized']
         level = np.mean(levels)
-        print('{: >20}'.format(region), '{:.2f}'.format(level), '=>', level_incomes[round(level)])
+        print('{: >20}'.format(region), '{:.2f}'.format(level), '=>', level_incomes[math.floor(level)])
 
     # https://ourworldindata.org/grapher/healthcare-access-and-quality-index
     title('Healthcare quality index')

@@ -8,6 +8,8 @@ const init = {
   // Track which events have occurred
   events: [],
 
+  annualRegionEvents: {},
+
   // Track planned process mix changes
   processMixChanges: {
     Electricity: {},
