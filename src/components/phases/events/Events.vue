@@ -182,6 +182,7 @@ export default {
         this.stopped = true;
         this.done = true;
         if (this.completedProjects.length == 0) {
+          game.stepCycle();
           state.phase = 'REPORT';
         }
         return;

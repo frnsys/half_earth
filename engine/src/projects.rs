@@ -110,6 +110,7 @@ pub struct Project {
     pub estimate: usize,
     pub status: Status,
     pub level: usize,
+    pub completed_at: usize,
 
     #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
@@ -235,6 +236,7 @@ mod test {
             progress: 0.,
             estimate: 0,
             points: 1,
+            completed_at: 0,
             effects: vec![],
             upgrades: vec![],
             outcomes: vec![Outcome {
@@ -281,6 +283,7 @@ mod test {
             progress: 0.,
             estimate: 0,
             points: 0,
+            completed_at: 0,
             effects: vec![],
             upgrades: vec![],
             outcomes: vec![Outcome {
@@ -322,6 +325,7 @@ mod test {
             progress: 0.,
             estimate: 0,
             points: 0,
+            completed_at: 0,
             effects: vec![],
             upgrades: vec![],
             outcomes: vec![Outcome {

@@ -162,6 +162,10 @@ impl Game {
         completed_projects
     }
 
+    pub fn step_cycle(&mut self) {
+        self.state.step_cycle();
+    }
+
     /// Generate a projection
     pub fn simulate(&self, rng: &mut SmallRng, years: usize) -> Vec<Snapshot> {
         let mut snapshots: Vec<Snapshot> = Vec::new();

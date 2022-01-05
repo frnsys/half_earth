@@ -46,6 +46,10 @@ function step() {
   return completedProjects;
 }
 
+function stepCycle() {
+  game.step_cycle();
+}
+
 function changePoliticalCapital(amount) {
   game.change_political_capital(amount);
   updateState();
@@ -186,7 +190,7 @@ updateState();
 updateFactors();
 
 export default {
-  newRun, saveMeta, step,
+  newRun, saveMeta, step, stepCycle,
   updateState, setTgav,
   changePoliticalCapital,
   changeLocalOutlook,
