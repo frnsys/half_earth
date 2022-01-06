@@ -72,6 +72,18 @@
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">
+          <td>Parliament</td>
+        </tr>
+        <tr v-if="seatChanges.length === 0">
+          <td class="report-empty">No changes</td>
+        </tr>
+        <tr v-for="npc in seatChanges">
+          <td colspan="2">{{npc.name}}</td>
+          <td>{{format.sign(npc.change)}}</td>
+          <td>{{npc.seats}}</td>
+        </tr>
+        <tr class="report-spacer"></tr>
+        <tr class="report-header">
           <td>Regions</td>
         </tr>
         <tr v-if="regionIncomeChanges.length === 0">
@@ -183,6 +195,16 @@ export default {
           events: state.annualRegionEvents[id],
         }
       });
+    },
+    seatChanges() {
+      return state.cycleStartState.parliament.map((startSeats, i) => {
+        let npc = state.gameState.npcs[i];
+        return {
+          name: npc.name,
+          seats: npc.seats,
+          change: npc.seats - startSeats,
+        };
+      }).filter((npc) => npc.change !== 0);
     },
   },
   methods: {

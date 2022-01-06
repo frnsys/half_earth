@@ -95,7 +95,8 @@ export default {
         temperature: state.gameState.world.temperature,
         emissions: state.gameState.world.emissions,
         completedProjects: [],
-        regionIncomes: state.gameState.world.regions.map((r) => r.income)
+        regionIncomes: state.gameState.world.regions.map((r) => r.income),
+        parliament: state.gameState.npcs.map((npc) => npc.seats),
       };
 
       if (!this.globe) {
