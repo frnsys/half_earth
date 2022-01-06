@@ -90,24 +90,53 @@ import {years_remaining} from 'half-earth-engine';
 
 const MAX_POINTS = 15;
 
-// http://jsfiddle.net/5QrhQ/5/
-function gcd(a, b) {
-  if (b < 0.0000001) return a;                // Since there is a limited precision we need to limit the value.
+/*
+Description: Convert a decimal number into a fraction
+Author: Michaël Niessen (© 2018)
+Website: http://AssemblySys.com
 
-  return gcd(b, Math.floor(a % b));           // Discard any fractions due to limitations in precision.
-};
-function decimalToFraction(val) {
-  let len = val.toString().length - 2;
+If you find this script useful, you can show your
+appreciation by getting Michaël a cup of coffee ;)
+PayPal: https://www.paypal.me/MichaelNiessen
 
-  let denominator = Math.pow(10, len);
-  let numerator = val * denominator;
+As long as this notice (including author name and details) is included and
+UNALTERED, this code can be used and distributed freely.
+*/
+function decimalToFraction(value, donly = true) {
+   var tolerance = 1.0E-6; // from how many decimals the number is rounded
+   var h1 = 1;
+   var h2 = 0;
+   var k1 = 0;
+   var k2 = 1;
+   var negative = false;
+   var i;
 
-  let divisor = gcd(numerator, denominator);
+   if (parseInt(value) == value) { // if value is an integer, stop the script
+      return value;
+   } else if (value < 0) {
+      negative = true;
+      value = -value;
+   }
 
-  numerator /= divisor;
-  denominator /= divisor;
+   if (donly) {
+      i = parseInt(value);
+      value -= i;
+   }
 
-  return `${Math.floor(numerator)}/${Math.floor(denominator)}`;
+   var b = value;
+
+   do {
+      var a = Math.floor(b);
+      var aux = h1;
+      h1 = a * h1 + h2;
+      h2 = aux;
+      aux = k1;
+      k1 = a * k1 + k2;
+      k2 = aux;
+      b = 1 / (b - a);
+   } while (Math.abs(value - h1 / k1) > value * tolerance);
+
+   return (negative ? "-" : '') + ((donly & (i != 0)) ? i + ' ' : '') + (h1 == 0 ? '' : h1 + "/" + k1);
 }
 
 
@@ -190,7 +219,7 @@ export default {
     },
     majoritySatisfied() {
       let playerSeats = game.playerSeats();
-      return playerSeats > this.required_majority;
+      return playerSeats >= this.required_majority;
     },
     costTip() {
       if (this.kind == 'Policy') {
