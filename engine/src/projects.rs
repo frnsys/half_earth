@@ -1,3 +1,4 @@
+use crate::npcs::{NPC, NPCRelation};
 use crate::state::State;
 use crate::kinds::{Output, OutputMap};
 use crate::events::{Effect, Probability};
@@ -111,6 +112,7 @@ pub struct Project {
     pub status: Status,
     pub level: usize,
     pub completed_at: usize,
+    pub required_majority: f32,
 
     #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
@@ -209,6 +211,12 @@ impl Project {
             &self.upgrades[self.level - 1].effects
         }
     }
+
+    pub fn update_required_majority(&mut self, npcs: &Vec<NPC>) {
+        let opposers = self.opposers.iter().filter(|id| npcs[**id].relation() != NPCRelation::Ally).count();
+        let m = opposers as f32;
+        self.required_majority = m/(1.+m);
+    }
 }
 
 
@@ -226,6 +234,7 @@ mod test {
             cost: 1,
             base_cost: Cost::Fixed(1),
             cost_modifier: 1.,
+            required_majority: 0.,
             level: 0,
             ongoing: false,
             gradual: false,
@@ -273,6 +282,7 @@ mod test {
             cost: 10,
             base_cost: Cost::Fixed(10),
             cost_modifier: 1.,
+            required_majority: 0.,
             level: 0,
             ongoing: false,
             gradual: false,
@@ -315,6 +325,7 @@ mod test {
             cost: 1,
             base_cost: Cost::Fixed(1),
             cost_modifier: 1.,
+            required_majority: 0.,
             level: 0,
             ongoing: false,
             gradual: false,

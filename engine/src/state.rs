@@ -126,6 +126,7 @@ impl State {
         let modifier = 1.;
         for project in &mut state.projects {
             project.update_cost(state.world.year, state.world.income_level(), &state.output_demand, modifier);
+            project.update_required_majority(&state.npcs);
         }
 
         state.update_region_temps();
@@ -218,6 +219,7 @@ impl State {
         };
         for project in &mut self.projects {
             project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, modifier);
+            project.update_required_majority(&self.npcs);
         }
 
         (completed_projects, remove_effects, add_effects)

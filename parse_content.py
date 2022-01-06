@@ -119,6 +119,7 @@ specs = {
         'base_cost': 0,
         'progress': 0.,
         'level': 0,
+        'required_majority': 0.,
         'completed_at': 0,
         'effects': [],
         'type': '',

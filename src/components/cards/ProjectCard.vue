@@ -7,6 +7,9 @@
     </div>
   </template>
   <template v-slot:figure>
+    <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
+      Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+    </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div v-if="status !== 'Finished' && status !== 'Active'" class="card-tack-ur project-cost" v-tip="costTip">
       {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
@@ -38,7 +41,7 @@
   <template v-slot:body>
     <Effects :effects="activeEffects" />
 
-    <div class="card-actions" v-if="status == 'Inactive' || status == 'Building'">
+    <div class="card-actions" v-if="(status == 'Inactive' || status == 'Building') && majoritySatisfied">
       <template v-if="kind == 'Policy'">
         <button @click="payPoints">Implement</button>
       </template>
@@ -86,6 +89,27 @@ import NPCS from '/assets/content/npcs.json';
 import {years_remaining} from 'half-earth-engine';
 
 const MAX_POINTS = 15;
+
+// http://jsfiddle.net/5QrhQ/5/
+function gcd(a, b) {
+  if (b < 0.0000001) return a;                // Since there is a limited precision we need to limit the value.
+
+  return gcd(b, Math.floor(a % b));           // Discard any fractions due to limitations in precision.
+};
+function decimalToFraction(val) {
+  let len = val.toString().length - 2;
+
+  let denominator = Math.pow(10, len);
+  let numerator = val * denominator;
+
+  let divisor = gcd(numerator, denominator);
+
+  numerator /= divisor;
+  denominator /= divisor;
+
+  return `${Math.floor(numerator)}/${Math.floor(denominator)}`;
+}
+
 
 export default {
   props: ['project'],
@@ -160,6 +184,13 @@ export default {
       return this.opposers
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
+    },
+    requiredMajorityFraction() {
+      return decimalToFraction(this.required_majority);
+    },
+    majoritySatisfied() {
+      let playerSeats = game.playerSeats();
+      return playerSeats > this.required_majority;
     },
     costTip() {
       if (this.kind == 'Policy') {
@@ -313,5 +344,21 @@ export default {
 }
 .project-group-Behavior {
   background: #b8ad91;
+}
+
+.project-required-majority {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-size: 0.85em;
+  padding: 1em;
 }
 </style>

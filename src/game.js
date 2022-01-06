@@ -170,6 +170,12 @@ const roll = {
   },
 }
 
+function playerSeats() {
+  return state.gameState.npcs.filter((npc) => npc.relationship >= 5).reduce((acc, npc) => {
+    return acc + npc.seats;
+  }, 0);
+}
+
 // Save/load game metadata
 function saveMeta() {
   let data = {
@@ -200,4 +206,5 @@ export default {
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
+  playerSeats,
   updateFactors};
