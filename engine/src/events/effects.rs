@@ -167,7 +167,7 @@ impl Effect {
                 }
             },
             Effect::Feedstock(feedstock, pct_change) => {
-                state.feedstocks[*feedstock] *= pct_change;
+                state.feedstocks[*feedstock] *= 1. + pct_change;
             },
             Effect::AddEvent(id) => {
                 event_pool.events[*id].locked = false;
@@ -333,7 +333,7 @@ impl Effect {
                 }
             },
             Effect::Feedstock(feedstock, pct_change) => {
-                state.feedstocks[*feedstock] /= pct_change;
+                state.feedstocks[*feedstock] /= 1. + pct_change;
             },
             Effect::NPCRelationship(id, change) => {
                 state.npcs[*id].relationship -= change;

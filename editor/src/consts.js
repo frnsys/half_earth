@@ -174,6 +174,10 @@ const EFFECTS = {
     choices: ['Outlook', 'Habitability'],
     params: {
       'Change': Number
+    },
+    desc: {
+      'Outlook': 'Change outlook for a region: regional outlook starts at 10 (best); 0 is the worst',
+      'Habitability': 'Change habitability of a region: habitability starts at 10 (best); 0 is uninhabitable',
     }
   },
 
@@ -186,6 +190,17 @@ const EFFECTS = {
       'Outlook', 'PopulationGrowth'],
     params: {
       'Change': Number
+    },
+    desc: {
+      'Emissions': 'Change emissions by a fixed amount, in gigatonnes',
+      'ExtinctionRate': 'Change extinction rate by a fixed amount. 60 is the worst extinction rate; 0 is baseline extinction rate',
+      'Temperature': 'Change temperature by a fixed amount, in C',
+      'Precipitation': 'Change average precipitation by a fixed amount, cm/yr',
+      'Population': 'Change global population by a fixed amount',
+      'SeaLevelRise': 'Change sea level rise by a fixed amount, in meters',
+      'SeaLevelRiseRate': 'Change sea level rise rate by a fixed amount, in m/yr',
+      'Outlook': 'Change global outlook; global outlook starts at 20; 0 is the worst',
+      'PopulationGrowth': 'Increase/decrease pop growth by this amount, e.g. 20 is 20% faster growth'
     }
   },
 
@@ -193,99 +208,111 @@ const EFFECTS = {
     choices: [
       'PoliticalCapital',
       'ResearchPoints',
-      'MalthusianPoints',
-      'FALCPoints',
-      'HESPoints',
     ],
     params: {
       'Change': Number
-    }
+    },
+    desc: 'Change the selected player variable by a fixed amount'
   },
 
   Demand: {
     choices: Object.keys(OUTPUTS),
     params: {
       'PercentChange': Number
-    }
+    },
+    desc: 'Increase/decrease demand for selected output, e.g. 20 is a 20% increase in demand.'
   },
 
   DemandAmount: {
     choices: Object.keys(OUTPUTS),
     params: {
       'Change': Number
-    }
+    },
+    desc: 'Increase/decrease demand for selected output by a fixed amount.'
   },
 
   Output: {
     choices: Object.keys(OUTPUTS),
     params: {
       'PercentChange': Number
-    }
+    },
+    desc: 'Increase/decrease production for selected output (without changing impacts), e.g. 20 is a 20% increase in output.'
   },
 
   OutputForFeature: {
     choices: Object.keys(PROCESS_FEATURES),
     params: {
       'PercentChange': Number
-    }
+    },
+    desc: 'Increase/decrease production for processes with the selected feature (without changing impacts), e.g. 20 is a 20% increase in output.'
   },
 
   OutputForProcess: {
     entity: 'Process',
     params: {
       'PercentChange': Number
-    }
+    },
+    desc: 'Increase/decrease production for the selected process (without changing impacts), e.g. 20 is a 20% increase in output.'
   },
 
   CO2ForFeature: {
     choices: Object.keys(PROCESS_FEATURES),
     params: {
       'PercentChange': Number
-    }
+    },
+    desc: 'Increase/decrease emissions for the selected process (without changing its output), e.g. 20 is a 20% increase in emissions.'
   },
 
   ProcessLimit: {
     entity: 'Process',
     params: {
       'Change': Number
-    }
+    },
+    desc: 'Change the maximum output the selected process can produce by a fixed amount.'
   },
 
   Resource: {
     choices: Object.keys(RESOURCES),
     params: {
       'Amount': Number
-    }
+    },
+    desc: 'Change the available amount of a resource by a fixed amount.'
   },
 
   Feedstock: {
     choices: Object.keys(FEEDSTOCKS),
     params: {
       'PercentChange': Number
-    }
+    },
+    desc: 'Increase/decrease the available amount of a feedstock, e.g. 20 is a 20% increase in that feedstock.'
   },
 
   TriggerEvent: {
     entity: 'Event',
     params: {
       'Delay (years)': Number,
-    }
+    },
+    desc: 'Trigger an event in the specified number of years.'
   },
 
   AddEvent: {
     entity: 'Event',
+    desc: 'Add an event to the event pool. It may or may not trigger, depending on if its conditions are satisfied.'
   },
 
   UnlocksProject: {
-    entity: 'Project'
+    entity: 'Project',
+    desc: 'Unlocks a project.'
   },
 
   UnlocksProcess: {
-    entity: 'Process'
+    entity: 'Process',
+    desc: 'Unlocks a process.'
   },
 
   UnlocksNPC: {
-    entity: 'NPC'
+    entity: 'NPC',
+    desc: 'Unlocks an NPC.'
   },
 
   SetProjectStatus: {
@@ -293,16 +320,20 @@ const EFFECTS = {
     choices: ['Active', 'Stalled', 'Halted'],
     params: {
       'Duration': Number
-    }
+    },
+    desc: 'Changes the specified project\'s status for the specified number of years.'
   },
 
   RegionLeave: {
+    desc: 'A region leaves Gosplant'
   },
 
   Migration: {
+    desc: 'Trigger a migration event (the game engine will figure out where)'
   },
 
   GameOver: {
+    desc: 'Trigger a game over'
   },
 
   ProjectRequest: {
@@ -310,41 +341,47 @@ const EFFECTS = {
     entity: 'Project',
     params: {
       'Bounty': Number
-    }
+    },
+    desc: 'A request for the player to implement or stop a project, rewarding them with the bounty in political capital'
   },
   ProcessRequest: {
     choices: ['Ban', 'Unban'],
     entity: 'Process',
     params: {
       'Bounty': Number
-    }
+    },
+    desc: 'A request for the player to ban or unban a process, rewarding them with the bounty in political capital'
   },
 
   AddFlag: {
     params: {
       'Flag': String,
       'Description': String,
-    }
+    },
+    desc: 'Set the specified flag on the player. These have to be manually implemented in the game engine.'
   },
 
   AddRegionFlag: {
     params: {
       'Flag': String
-    }
+    },
+    desc: 'Set the specified flag for a region. These have to be manually implemented in the game engine.'
   },
 
   AutoClick: {
     entity: 'IconEvent',
     params: {
       'Chance': Number,
-    }
+    },
+    desc: '[Not in use]'
   },
 
   NPCRelationship: {
     entity: 'NPC',
     params: {
       'Change': Number,
-    }
+    },
+    desc: 'Changes the player\'s relationship with this NPC by a fixed amount. Relationships are from 0-6, <=1 is a nemesis and >=5 is an ally/in the coalition.'
   },
 
   ModifyIndustryByproducts: {
@@ -352,33 +389,38 @@ const EFFECTS = {
     choices:  Object.keys(BYPRODUCTS),
     params: {
       'Multiplier': Number
-    }
+    },
+    desc: 'Changes byproducts for an industry, e.g. -0.2 is 20% fewer byproducts.'
   },
   ModifyIndustryResources: {
     entity: 'Industry',
     choices:  Object.keys(RESOURCES),
     params: {
       'Multiplier': Number
-    }
+    },
+    desc: 'Changes the resource required by a industry, e.g. -0.2 is 20% less of that resource required.'
   },
   ModifyIndustryResourcesAmount: {
     entity: 'Industry',
     choices:  Object.keys(RESOURCES),
     params: {
       'Amount': Number
-    }
+    },
+    desc: 'Changes the resource required by an industry by a fixed amount (in units for that resource, i.e. energy=KWh; food=calories).'
   },
   ModifyEventProbability: {
     entity: 'Event',
     params: {
       'Change': Number
-    }
+    },
+    desc: 'Changes probability for the specified event, e.g. -0.2 is 20% less likely.'
   },
   ModifyIndustryDemand: {
     entity: 'Industry',
     params: {
       'Change': Number
-    }
+    },
+    desc: 'Changes demand for the specified industry, e.g. -0.2 is 20% less demand.'
   },
 
   // Scale by region based on region demand for the specified output
@@ -386,27 +428,31 @@ const EFFECTS = {
     choices: Object.keys(OUTPUTS),
     params: {
       'Multiplier': Number
-    }
+    },
+    desc: 'Changes regional outlooks based on their demand for this output; i.e. demand level * this value; demand level correlates with income level'
   },
 
   // Scale by region based on region income level
   IncomeOutlookChange: {
     params: {
       'Multiplier': Number
-    }
+    },
+    desc: 'Changes regional outlooks based on their income level; i.e. income level * this value.'
   },
 
   ProjectCostModifier: {
     entity: 'Project',
     params: {
       'Change': Number
-    }
+    },
+    desc: 'Change the cost of the specified project, e.g. -0.5 is 50% cheaper.'
   },
 
   ProtectLand: {
     params: {
       'Percent': Number
-    }
+    },
+    desc: 'Place the specified amount of land under protection, e.g. 20 means 20% of land under protection.'
   }
 };
 

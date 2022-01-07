@@ -8,9 +8,9 @@ pub struct Industry {
     pub name: &'static str,
     pub resources: ResourceMap<f32>,
     pub byproducts: ByproductMap<f32>,
-    pub demand_modifier: f32,
     pub resource_modifiers: ResourceMap<f32>,
     pub byproduct_modifiers: ByproductMap<f32>,
+    pub demand_modifier: f32,
 }
 
 impl Industry {

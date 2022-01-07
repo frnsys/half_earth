@@ -36,6 +36,7 @@
       </div>
     </div>
   </fieldset>
+  <div class="effect-desc">{{desc}}</div>
 </div>
 </template>
 
@@ -60,6 +61,14 @@ export default {
   computed: {
     spec() {
       return this.localData.type ? consts.EFFECTS[this.localData.type] : {};
+    },
+    desc() {
+      let spec = this.spec;
+      if (typeof spec.desc === 'string' || spec.desc instanceof String) {
+        return spec.desc;
+      } else {
+        return spec.desc[this.localData.subtype];
+      }
     }
   },
   methods: {
@@ -136,5 +145,12 @@ export default {
 }
 .effect-params > div:last-child {
   margin-right: 0;
+}
+
+.effect-desc {
+  font-size: 0.75em;
+  margin: 0.25em 0 0.5em 0;
+  color: #555;
+  text-align: center;
 }
 </style>
