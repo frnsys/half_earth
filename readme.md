@@ -15,6 +15,9 @@ npm install -d
 
 # Compile Rust code
 npm run build-wasm
+
+# Generate content files
+python parse_content.py
 ```
 
 ## Usage
