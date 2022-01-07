@@ -990,6 +990,7 @@ if __name__ == '__main__':
         npc = {
             'name': p['name'],
             'description': p.get('description', ''),
+            'color': p.get('color', ''),
         }
         npcs.append(npc)
     with open('assets/content/npcs.json', 'w') as f:

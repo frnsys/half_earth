@@ -1,4 +1,5 @@
 export default {
+  parliamentSeats: [2,3,4,5,5,5,4,3,2],
   maxRelationship: 6,
   processPointsPerCycle: 5,
 

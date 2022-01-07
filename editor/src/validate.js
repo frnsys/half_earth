@@ -324,7 +324,7 @@ const SPECS = {
 
   NPC: {
     key: 'name',
-    validate: ['name', 'description', 'locked'],
+    validate: ['name', 'description', 'locked', 'color'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
@@ -335,6 +335,8 @@ const SPECS = {
         case 'locked':
           if (item.locked === undefined) item.locked = false;
           return item.locked == hasUnlocker(item);
+        case 'color':
+          return requireAtLeastOne(item.color);
         default:
           return true;
       }

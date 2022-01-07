@@ -6186,7 +6186,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 51,
-            name: "Exo-planetary conservationists",
+            name: "Exo-planetary conservation",
             phase: Phase::PlanningCoalition,
             locked: true,
             regional: false,
