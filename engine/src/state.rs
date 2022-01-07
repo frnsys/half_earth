@@ -1,5 +1,5 @@
 use crate::surface;
-use crate::npcs::{NPC, NPCRelation};
+use crate::npcs::{NPC, NPCRelation, update_seats};
 use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
@@ -53,10 +53,19 @@ pub struct State {
     pub consumed_resources: ResourceMap<f32>,
     pub consumed_feedstocks: FeedstockMap<f32>,
     pub protected_land: f32,
+
+    last_outlook: f32,
 }
 
 impl State {
     pub fn new(difficulty: Difficulty) -> State {
+        let world = content::world(difficulty);
+        let starting_outlook = world.outlook();
+        let mut npcs = content::npcs();
+        let n_npcs = npcs.len() as f32;
+        for npc in &mut npcs {
+            npc.seats = 1./n_npcs;
+        }
         let mut state = State {
             // political_capital: 10,
             political_capital: 100,
@@ -67,11 +76,11 @@ impl State {
             flags: Vec::new(),
             game_over: false,
 
-            world: content::world(difficulty),
+            world,
+            npcs,
             projects: content::projects(),
             processes: content::processes(),
             industries: content::industries(),
-            npcs: content::npcs(),
 
             runs: 1, // TODO TEMP TESTING
             // runs: 0,
@@ -100,6 +109,8 @@ impl State {
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
             protected_land: 0.,
+
+            last_outlook: starting_outlook,
         };
 
         let (output_demand, _) = state.calculate_demand();
@@ -115,6 +126,7 @@ impl State {
         let modifier = 1.;
         for project in &mut state.projects {
             project.update_cost(state.world.year, state.world.income_level(), &state.output_demand, modifier);
+            project.update_required_majority(&state.npcs);
         }
 
         state.update_region_temps();
@@ -173,6 +185,7 @@ impl State {
                     add_effects.push((effect.clone() * project.progress, None));
                 }
             } else if completed {
+                project.completed_at = self.world.year;
                 for effect in &project.effects {
                     add_effects.push((effect.clone(), None));
                 }
@@ -206,6 +219,7 @@ impl State {
         };
         for project in &mut self.projects {
             project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, modifier);
+            project.update_required_majority(&self.npcs);
         }
 
         (completed_projects, remove_effects, add_effects)
@@ -316,6 +330,21 @@ impl State {
         let degrow = self.flags.contains(&Flag::Degrowth);
         self.world.develop_regions(stop, fast, degrow);
         self.world.update_outlook();
+    }
+
+    // Every planning cycle
+    pub fn step_cycle(&mut self) {
+        let outlook_change = self.world.outlook() - self.last_outlook;
+        let recent_projects: Vec<&Project> = self.projects.iter().filter(|p| {
+            if p.status == Status::Finished {
+                // Completed within the past ten years
+                p.completed_at >= self.world.year - 10
+            } else {
+                p.status == Status::Active || (p.status == Status::Building && p.gradual)
+            }
+        }).collect();
+        update_seats(outlook_change, &recent_projects, &mut self.npcs);
+        self.last_outlook = self.world.outlook();
     }
 
     pub fn check_requests(&mut self) -> Vec<(Request, usize, bool, usize)> {

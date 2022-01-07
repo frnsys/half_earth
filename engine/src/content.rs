@@ -1362,6 +1362,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.1),
                 Effect::Output(Output::AnimalCalories, 0.1)
@@ -1402,6 +1404,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
@@ -1431,6 +1435,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProject(45)
             ],
@@ -1460,6 +1466,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -1489,6 +1497,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1),
                 Effect::WorldVariable(WorldVariable::Temperature, -0.5)
@@ -1519,6 +1529,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -1570,6 +1582,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -1620,6 +1634,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -1690,6 +1706,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(2, Resource::Electricity, -0.04)
             ],
@@ -1719,6 +1737,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(50),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -1758,6 +1778,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
                 Effect::ModifyIndustryResources(0, Resource::Fuel, -0.4),
@@ -1789,6 +1811,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -1839,6 +1863,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Dynamic(4e-14, Factor::Output(Output::AnimalCalories)),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::DemandOutlookChange(Output::AnimalCalories, -1.0),
                 Effect::AddFlag(Flag::Vegan)
@@ -1869,6 +1895,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(50),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 200.0),
                 Effect::ModifyEventProbability(146, -1.0)
@@ -1909,6 +1937,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 20.0)
             ],
@@ -1949,6 +1979,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AutoClick(8, 75.0)
             ],
@@ -1978,6 +2010,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(50),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(0, Resource::Fuel, -0.4),
                 Effect::ModifyIndustryDemand(5, -0.12),
@@ -2009,6 +2043,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(25),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(7, Resource::Fuel, -0.5),
                 Effect::IncomeOutlookChange(-1.0)
@@ -2039,6 +2075,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -2089,6 +2127,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ProtectLand(10.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
@@ -2182,6 +2222,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, -0.003),
                 Effect::DemandAmount(Output::Electricity, 11690000000000.0)
@@ -2233,6 +2275,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -10.0),
@@ -2281,6 +2325,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Dynamic(0.75, Factor::Time),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0)
@@ -2349,6 +2395,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -2389,6 +2437,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -35.0)
             ],
@@ -2418,6 +2468,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(25),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::DeepSeaMining),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0)
@@ -2448,6 +2500,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProcess(28)
             ],
@@ -2477,6 +2531,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ProjectCostModifier(21, -0.25)
             ],
@@ -2506,6 +2562,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Dynamic(2e-14, Factor::Output(Output::AnimalCalories)),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::DemandOutlookChange(Output::AnimalCalories, -0.5),
                 Effect::AddFlag(Flag::Vegetarian)
@@ -2536,6 +2594,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.1)
             ],
@@ -2565,6 +2625,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(2, Resource::Electricity, -0.7)
             ],
@@ -2594,6 +2656,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -2623,6 +2687,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(100),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::StopDevelopment),
                 Effect::TriggerEvent(69, 5)
@@ -2653,6 +2719,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyEventProbability(132, -0.2)
             ],
@@ -2682,6 +2750,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ProjectCostModifier(60, -0.3)
             ],
@@ -2711,6 +2781,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(50),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -50.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0)
@@ -2741,6 +2813,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AutoClick(131, 75.0)
             ],
@@ -2770,6 +2844,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -2799,6 +2875,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProcess(0)
             ],
@@ -2828,6 +2906,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AutoClick(136, 75.0),
                 Effect::AutoClick(127, 75.0),
@@ -2860,6 +2940,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -2912,6 +2994,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AutoClick(5, 75.0)
             ],
@@ -2941,6 +3025,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(40),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ProjectCostModifier(13, -0.25),
                 Effect::WorldVariable(WorldVariable::Population, -10000.0),
@@ -2995,6 +3081,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProcess(7)
             ],
@@ -3062,6 +3150,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProcess(21)
             ],
@@ -3091,6 +3181,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -3152,6 +3244,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProcess(12)
             ],
@@ -3191,6 +3285,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::OutputForProcess(3, 4.0)
             ],
@@ -3220,6 +3316,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::UnlocksProcess(15)
             ],
@@ -3249,6 +3347,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ProjectCostModifier(34, -0.5)
             ],
@@ -3278,6 +3378,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Temperature, -0.25)
             ],
@@ -3307,6 +3409,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::EVs),
                 Effect::ModifyIndustryByproducts(0, Byproduct::Co2, 0.),
@@ -3359,6 +3463,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(5),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -1.5),
                 Effect::DemandAmount(Output::Electricity, 3500000000000.0)
@@ -3548,6 +3654,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::Vegan)
             ],
@@ -3593,6 +3701,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsCombustion, 0.6)
             ],
@@ -3622,6 +3732,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(0),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -3651,6 +3763,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryByproducts(1, Byproduct::Co2, -0.5)
             ],
@@ -3680,6 +3794,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(5),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -3709,6 +3825,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(40),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -3761,6 +3879,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.2)
             ],
@@ -3806,6 +3926,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Dynamic(5e-13, Factor::Output(Output::Fuel)),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::Electrified)
             ],
@@ -3835,6 +3957,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::Demand(Output::Electricity, -0.25)
             ],
@@ -3864,6 +3988,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Dynamic(3e-12, Factor::Output(Output::Electricity)),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::DemandOutlookChange(Output::Electricity, -1.0),
                 Effect::Demand(Output::Electricity, -0.6)
@@ -3894,6 +4020,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(25),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -3923,6 +4051,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -3984,6 +4114,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(50),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::ClosedBorders)
             ],
@@ -4013,6 +4145,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(0),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -4042,6 +4176,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -4094,6 +4230,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(5),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyEventProbability(50, -0.25),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
@@ -4124,6 +4262,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::DemandAmount(Output::Electricity, 3750000000000.0),
                 Effect::ModifyEventProbability(132, -0.05),
@@ -4199,6 +4339,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(80),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -100000.0)
             ],
@@ -4265,6 +4407,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -1.21),
@@ -4296,6 +4440,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -13.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -3.629),
@@ -4359,6 +4505,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(60),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(8, Resource::Fuel, -0.25)
             ],
@@ -4411,6 +4559,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(60),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::Feedstock(Feedstock::Oil, 10.0),
                 Effect::Feedstock(Feedstock::NaturalGas, 10.0)
@@ -4451,6 +4601,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(100),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResourcesAmount(8, Resource::Fuel, 400.0)
             ],
@@ -4507,6 +4659,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
 
             ],
@@ -4536,6 +4690,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Fixed(20),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::FastDevelopment)
             ],
@@ -4565,6 +4721,8 @@ pub fn projects() -> Vec<Project> {
             base_cost: Cost::Dynamic(40., Factor::Income),
             progress: 0.0,
             level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::Degrowth)
             ],
@@ -6028,7 +6186,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 51,
-            name: "Exo-planetary conservationists",
+            name: "Exo-planetary conservation",
             phase: Phase::PlanningCoalition,
             locked: true,
             regional: false,
@@ -8821,61 +8979,81 @@ pub fn npcs() -> Vec<NPC> {
             id: 0,
             name: "The Malthusian",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 1,
             name: "The Authoritarian",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 2,
             name: "The Fully-Automated Luxury Communist",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 3,
             name: "The Agronomist",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 4,
             name: "The Half-Earth Socialist",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 5,
             name: "The Posadist",
             relationship: 3,
-            locked: true
+            locked: true,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 6,
             name: "The Ecologist",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 7,
             name: "The Consumerist",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 8,
             name: "The Wretched",
             relationship: 3,
-            locked: true
+            locked: true,
+            support: 100.0,
+            seats: 0.0
         },
         NPC {
             id: 9,
             name: "The Geoengineer",
             relationship: 3,
-            locked: false
+            locked: false,
+            support: 100.0,
+            seats: 0.0
         }
     ]
 }

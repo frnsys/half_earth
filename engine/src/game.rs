@@ -36,6 +36,10 @@ impl GameInterface {
         Ok(serde_wasm_bindgen::to_value(&self.game.step(&mut self.rng))?)
     }
 
+    pub fn step_cycle(&mut self) {
+        self.game.step_cycle();
+    }
+
     pub fn state(&self) -> Result<JsValue, JsValue> {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
     }
@@ -160,6 +164,10 @@ impl Game {
         self.state.step_world();
 
         completed_projects
+    }
+
+    pub fn step_cycle(&mut self) {
+        self.state.step_cycle();
     }
 
     /// Generate a projection

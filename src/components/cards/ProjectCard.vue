@@ -7,6 +7,9 @@
     </div>
   </template>
   <template v-slot:figure>
+    <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
+      Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+    </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div v-if="status !== 'Finished' && status !== 'Active'" class="card-tack-ur project-cost" v-tip="costTip">
       {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
@@ -38,7 +41,7 @@
   <template v-slot:body>
     <Effects :effects="activeEffects" />
 
-    <div class="card-actions" v-if="status == 'Inactive' || status == 'Building'">
+    <div class="card-actions" v-if="(status == 'Inactive' || status == 'Building') && majoritySatisfied">
       <template v-if="kind == 'Policy'">
         <button @click="payPoints">Implement</button>
       </template>
@@ -86,6 +89,56 @@ import NPCS from '/assets/content/npcs.json';
 import {years_remaining} from 'half-earth-engine';
 
 const MAX_POINTS = 15;
+
+/*
+Description: Convert a decimal number into a fraction
+Author: Michaël Niessen (© 2018)
+Website: http://AssemblySys.com
+
+If you find this script useful, you can show your
+appreciation by getting Michaël a cup of coffee ;)
+PayPal: https://www.paypal.me/MichaelNiessen
+
+As long as this notice (including author name and details) is included and
+UNALTERED, this code can be used and distributed freely.
+*/
+function decimalToFraction(value, donly = true) {
+   var tolerance = 1.0E-6; // from how many decimals the number is rounded
+   var h1 = 1;
+   var h2 = 0;
+   var k1 = 0;
+   var k2 = 1;
+   var negative = false;
+   var i;
+
+   if (parseInt(value) == value) { // if value is an integer, stop the script
+      return value;
+   } else if (value < 0) {
+      negative = true;
+      value = -value;
+   }
+
+   if (donly) {
+      i = parseInt(value);
+      value -= i;
+   }
+
+   var b = value;
+
+   do {
+      var a = Math.floor(b);
+      var aux = h1;
+      h1 = a * h1 + h2;
+      h2 = aux;
+      aux = k1;
+      k1 = a * k1 + k2;
+      k2 = aux;
+      b = 1 / (b - a);
+   } while (Math.abs(value - h1 / k1) > value * tolerance);
+
+   return (negative ? "-" : '') + ((donly & (i != 0)) ? i + ' ' : '') + (h1 == 0 ? '' : h1 + "/" + k1);
+}
+
 
 export default {
   props: ['project'],
@@ -160,6 +213,13 @@ export default {
       return this.opposers
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
+    },
+    requiredMajorityFraction() {
+      return decimalToFraction(this.required_majority);
+    },
+    majoritySatisfied() {
+      let playerSeats = game.playerSeats();
+      return playerSeats >= this.required_majority;
     },
     costTip() {
       if (this.kind == 'Policy') {
@@ -313,5 +373,21 @@ export default {
 }
 .project-group-Behavior {
   background: #b8ad91;
+}
+
+.project-required-majority {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-size: 0.85em;
+  padding: 1em;
 }
 </style>

@@ -46,6 +46,10 @@ function step() {
   return completedProjects;
 }
 
+function stepCycle() {
+  game.step_cycle();
+}
+
 function changePoliticalCapital(amount) {
   game.change_political_capital(amount);
   updateState();
@@ -166,6 +170,12 @@ const roll = {
   },
 }
 
+function playerSeats() {
+  return state.gameState.npcs.filter((npc) => npc.relationship >= 5).reduce((acc, npc) => {
+    return acc + npc.seats;
+  }, 0);
+}
+
 // Save/load game metadata
 function saveMeta() {
   let data = {
@@ -186,7 +196,7 @@ updateState();
 updateFactors();
 
 export default {
-  newRun, saveMeta, step,
+  newRun, saveMeta, step, stepCycle,
   updateState, setTgav,
   changePoliticalCapital,
   changeLocalOutlook,
@@ -196,4 +206,5 @@ export default {
   setProjectPoints, startProject, stopProject, upgradeProject,
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
+  playerSeats,
   updateFactors};

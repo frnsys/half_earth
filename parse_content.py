@@ -119,6 +119,8 @@ specs = {
         'base_cost': 0,
         'progress': 0.,
         'level': 0,
+        'required_majority': 0.,
+        'completed_at': 0,
         'effects': [],
         'type': '',
         'locked': 'false',
@@ -153,6 +155,8 @@ specs = {
         'name': None,
         'relationship': 3,
         'locked': 'false',
+        'support': 100,
+        'seats': 0.,
     },
     'Probability': {
         'likelihood': None,
@@ -429,6 +433,8 @@ def define_field(k, v, item):
         return '{}: {}'.format(k, v)
     if k == 'level':
         return 'level: 0'
+    if k == 'completed_at':
+        return 'completed_at: 0'
     elif k == 'base_cost':
         v = item.get('cost', 0)
         if item.get('dynamic_cost', False):
@@ -984,6 +990,7 @@ if __name__ == '__main__':
         npc = {
             'name': p['name'],
             'description': p.get('description', ''),
+            'color': p.get('color', ''),
         }
         npcs.append(npc)
     with open('assets/content/npcs.json', 'w') as f:

@@ -4,13 +4,13 @@
 <div class="planning">
   <header>
     <div :class="{active: page == PAGES.PLAN}" @click="selectPage(PAGES.PLAN)">Plan</div>
-    <div :class="{active: page == PAGES.COALITION}" @click="selectPage(PAGES.COALITION)">Coalition</div>
+    <div :class="{active: page == PAGES.PARLIAMENT}" @click="selectPage(PAGES.PARLIAMENT)">Parliament</div>
     <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)">Dashboard</div>
     <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">Regions</div>
   </header>
 
   <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
-  <Coalition v-else-if="page == PAGES.COALITION" />
+  <Parliament v-else-if="page == PAGES.PARLIAMENT" />
   <Dashboard v-else-if="page == PAGES.DASHBOARD" />
   <Regions v-else-if="page == PAGES.REGIONS" />
 </div>
@@ -20,7 +20,7 @@
 import game from '/src/game';
 import state from '/src/state';
 import Hud from 'components/Hud.vue';
-import Coalition from './Coalition.vue';
+import Parliament from './Parliament.vue';
 import Dashboard from './Dashboard.vue';
 import Plan from './Plan.vue';
 import Regions from './Regions.vue';
@@ -28,7 +28,7 @@ import EventsMixin from 'components/EventsMixin';
 
 const PAGES = {
   PLAN: 'Plan',
-  COALITION: 'Coalition',
+  PARLIAMENT: 'Parliament',
   DASHBOARD: 'Dashboard',
   REGIONS: 'Regions',
 };
@@ -37,7 +37,7 @@ export default {
   mixins: [EventsMixin],
   components: {
     Hud,
-    Coalition,
+    Parliament,
     Dashboard,
     Regions,
     Plan,
