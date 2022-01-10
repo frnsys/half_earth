@@ -2,7 +2,7 @@
 <Card>
   <template v-slot:header>
     <div>{{name}}</div>
-    <div v-if="status == 'Finished' || status == 'Active'">
+    <div v-if="implemented">
       <img :src="icons.check">
     </div>
   </template>
@@ -11,7 +11,7 @@
       Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
     </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <div v-if="status !== 'Finished' && status !== 'Active'" class="card-tack-ur project-cost" v-tip="costTip">
+    <div v-if="!implemented" class="card-tack-ur project-cost" v-tip="costTip">
       {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
     </div>
     <div v-if="status == 'Building'" class="card-tack-ul project-points">
@@ -41,14 +41,20 @@
   <template v-slot:body>
     <Effects :effects="activeEffects" />
 
-    <div class="card-actions" v-if="(status == 'Inactive' || status == 'Building') && majoritySatisfied">
+    <div class="card-actions" v-if="(status == 'Inactive' || status == 'Building')">
       <template v-if="kind == 'Policy'">
-        <button @click="payPoints">Implement</button>
+        <button @click="payPoints" :disabled="!majoritySatisfied">
+          Implement
+          <div class="project-majority-tip" v-if="!majoritySatisfied">Needs Majority</div>
+        </button>
       </template>
       <template v-else>
-        <button @click="assignPoint">+<img class="pip" :src="icons[type]"></button>
+        <button @click="assignPoint" :disabled="!majoritySatisfied">+<img class="pip" :src="icons[type]"></button>
         <button v-if="points > 0" @click="unassignPoint">-<img class="pip" :src="icons[type]"></button>
       </template>
+    </div>
+    <div class="card-actions" v-else-if="haltable">
+      <button @click="halt">Stop</button>
     </div>
 
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
@@ -165,7 +171,7 @@ export default {
       return this.kind.toLowerCase();
     },
     remainingCost() {
-      if (this.status == 'Active' || this.status == 'Finished') {
+      if (this.implemented) {
         return null;
       } else if (this.status == 'Building') {
         let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
@@ -233,7 +239,13 @@ export default {
           text: `This will take about ${this.remainingCost} to finish. Allocate more ${this.kind} points to accelerate its progress.`
         }
       }
-    }
+    },
+    implemented() {
+      return this.status == 'Finished' || this.status == 'Active';
+    },
+    haltable() {
+      return this.implemented && (this.kind == 'Policy' || this.ongoing);
+    },
   },
   methods: {
     assignPoint() {
@@ -286,6 +298,10 @@ export default {
         }
         this.$emit('change');
       }
+    },
+    halt() {
+      game.stopProject(this.id);
+      this.$emit('change');
     }
   }
 }
@@ -389,5 +405,10 @@ export default {
   color: #fff;
   font-size: 0.85em;
   padding: 1em;
+}
+
+.project-majority-tip {
+  font-size: 0.6em;
+  text-align: center;
 }
 </style>
