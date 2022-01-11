@@ -13,18 +13,15 @@
 # Install JS dependencies
 npm install -d
 
-# Fetch and parse latest content
-# Requires `pip3 install pillow`
-bash update_content.sh
-
 # Install hector-rs
 git clone https://github.com/frnsys/hector-rs.git hector/hector-rs
 cd hector/hector-rs
 bash setup.sh
 cd ../../
 
-# Compile Rust code to WASM
-npm run build-wasm
+# Fetch and parse latest content
+# Requires `pip3 install pillow`
+bash update_content.sh
 ```
 
 ## Usage
