@@ -1040,3 +1040,15 @@ if __name__ == '__main__':
             'base_habitability': BASE_REGIONAL_HABITABILITY,
             'starting_resources': {k: float(v) for k, v in starting_resources.items()},
         }, f)
+
+    d = json.load(open('assets/surface/regions_to_tiles.json'))
+
+    region_names = [r['name'] for r in items_by_type['Region']]
+    tiles_to_regions = {}
+    for region, tags in d.items():
+        for tag, tiles in tags.items():
+            for tile in tiles:
+                tiles_to_regions[tile] = region_names.index(region)
+
+    with open('assets/surface/tiles_to_regions.json', 'w') as f:
+        json.dump(tiles_to_regions, f)

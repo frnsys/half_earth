@@ -11,6 +11,10 @@ const getGlobe = () => import('../earth/globe');
 let globe = null;
 
 export default {
+  props: [
+    'onReady',
+    'onClick',
+  ],
   mounted() {
     getGlobe().then(({default: Globe}) => {
       if (globe == null) {
@@ -28,14 +32,18 @@ export default {
           this.onReady(globe);
         }
       }
+      globe._onClick = [];
+      globe.onClick((intersects) => {
+        if (this.onClick) {
+          this.onClick(intersects);
+        }
+      });
+
+      globe.scene.resize();
+      globe.scene.resetCamera();
       this.globe = globe;
     });
   },
-  methods: {
-    onReady(fn) {
-      this.onReady = fn;
-    }
-  }
 }
 </script>
 

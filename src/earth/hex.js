@@ -3,11 +3,14 @@ import Hexasphere from 'hexasphere.js';
 import iconNames from '/assets/content/icons.json';
 import debug from '../debug';
 
+import tileHeights from '/assets/surface/tile_heights.json';
+
 const raycaster = new THREE.Raycaster();
 const vertAxis = new THREE.Vector3(0,1,0);
 
 // For showing tile indices
-const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true, opacity: 0.5});
+const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true, opacity: debug.showTiles ? 0.5 : 0.0});
+const highlightedHexMaterial= new THREE.MeshBasicMaterial({color: 0xfc4903, transparent: true, opacity: 0.5});
 
 // For displaying text
 const loader = new THREE.FontLoader();
@@ -79,12 +82,9 @@ class HexSphere {
     this.parent = parent;
     this.hexasphere = new Hexasphere(radius, subdivisions, tileWidth);
     this.hexasphere.tiles.forEach((tile, idx) => {
-      // We don't really need to render the hexes,
-      // and not rendering them saves many FPS
-      if (debug.showTiles) {
-        tile.mesh = generateTileMesh(tile);
-        parent.add(tile.mesh);
-      }
+      tile.mesh = generateTileMesh(tile);
+      tile.mesh.userData.idx = idx;
+      parent.add(tile.mesh);
 
       let bnd = tile.boundary;
       let normal = calculateSurfaceNormal(bnd[1], bnd[2], bnd[3]);
@@ -93,10 +93,15 @@ class HexSphere {
       let center = tile.centerPoint;
       tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
 
-      if (debug.showTiles) {
-        this.showText(`${idx}`, idx);
-        this.selectables.push(tile.mesh);
+      let height = tileHeights[idx];
+      if (height !== undefined) {
+        tile.mesh.position.add(tile.normal.multiplyScalar(height));
       }
+
+      if (debug.showTiles) {
+        this.showText(`${idx}`, idx, {dist: 2.0});
+      }
+      this.selectables.push(tile.mesh);
     });
 
     // Interaction
@@ -134,8 +139,9 @@ class HexSphere {
     return sprite;
   }
 
-  showText(text, hexIdx, {size}) {
+  showText(text, hexIdx, {size, dist}) {
     size = size || 0.2;
+    dist = dist || 1.1;
 
     let tile = this.hexasphere.tiles[hexIdx];
 
@@ -153,7 +159,7 @@ class HexSphere {
     let label = new THREE.Mesh(textGeom, textMaterial.clone());
 
     label.position.copy(
-      tile.centerPointVec.add(tile.normal.multiplyScalar(1.1)));
+      tile.centerPointVec.add(tile.normal.multiplyScalar(dist)));
     label.lookAt(tile.normal);
     label.rotateOnAxis(vertAxis, Math.PI);
     this.parent.add(label);
@@ -193,6 +199,16 @@ class HexSphere {
     orbit.sphericalDelta.phi = targetSpherical.phi - orbit.spherical.phi;
     orbit.sphericalDelta.theta = targetSpherical.theta - orbit.spherical.theta;
     orbit.update();
+  }
+
+  highlightIdx(idx) {
+    let tile = this.hexasphere.tiles[idx];
+    tile.mesh.material = highlightedHexMaterial;
+  }
+
+  unhighlightIdx(idx) {
+    let tile = this.hexasphere.tiles[idx];
+    tile.mesh.material = hexMaterial;
   }
 
   onTouchStart(ev) {

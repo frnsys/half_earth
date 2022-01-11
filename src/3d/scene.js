@@ -43,24 +43,10 @@ class Scene {
 
     let aspect = width/height;
     this.camera = new THREE.OrthographicCamera(-D*aspect, D*aspect, D, -D, NEAR, FAR);
-    this.camera.zoom = 0.08;
-    this.camera.position.z = 200;
-    this.camera.position.y = 0;
-    this.camera.position.x = 0;
-    this.camera.lookAt(this.scene.position);
-    this.camera.updateProjectionMatrix();
+    this.resetCamera();
 
     window.addEventListener('resize', () => {
-      let parent = this.renderer.domElement.parentElement;
-      let width = parent.clientWidth;
-      let height = parent.clientHeight;
-      let aspect = width/height;
-      this.camera.left = -D * aspect;
-      this.camera.right = D * aspect;
-      this.camera.top = D;
-      this.camera.bottom = -D;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(width, height);
+      this.resize();
     }, false);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -81,6 +67,28 @@ class Scene {
 
   render() {
     this.renderer.render(this.scene, this.camera);
+  }
+
+  resetCamera() {
+    this.camera.zoom = 0.08;
+    this.camera.position.z = 200;
+    this.camera.position.y = 0;
+    this.camera.position.x = 0;
+    this.camera.lookAt(this.scene.position);
+    this.camera.updateProjectionMatrix();
+  }
+
+  resize() {
+    let parent = this.renderer.domElement.parentElement;
+    let width = parent.clientWidth;
+    let height = parent.clientHeight;
+    let aspect = width/height;
+    this.camera.left = -D * aspect;
+    this.camera.right = D * aspect;
+    this.camera.top = D;
+    this.camera.bottom = -D;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
   }
 }
 

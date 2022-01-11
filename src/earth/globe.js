@@ -22,9 +22,11 @@ class Globe {
     });
     el.appendChild(this.scene.renderer.domElement);
     this._onReady = [];
+    this._onClick = [];
     this.pings = [];
     this.icons = [];
 
+    this.rotate = true;
     this.rotationPaused = false;
     this.pauseTimeout = null;
   }
@@ -51,6 +53,10 @@ class Globe {
 
   onReady(fn) {
     this._onReady.push(fn);
+  }
+
+  onClick(fn) {
+    this._onClick.push(fn);
   }
 
   async init() {
@@ -98,9 +104,8 @@ class Globe {
     this.hexsphere = new HexSphere(this.scene, this.sphere, 5.2, 8, 0.98);
     this.hexsphere.onClick((intersects) => {
       // Pause rotation on click
-      if (intersects.length === 0) {
-        this.pauseRotation(2000);
-      }
+      if (this.rotate) this.pauseRotation(2000);
+      this._onClick.forEach((fn) => fn(intersects));
     });
 
     // Create the clouds layer
@@ -114,11 +119,11 @@ class Globe {
       fragmentShader: cloudsFrag
     });
     this.cloudsMaterial.transparent = true;
-    const clouds = new THREE.Mesh(
+    this.clouds = new THREE.Mesh(
       new THREE.SphereGeometry(5.3, 32, 32),
       this.cloudsMaterial
     );
-    this.sphere.add(clouds);
+    this.sphere.add(this.clouds);
 
     const canvas = this.scene.renderer.domElement;
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
@@ -220,7 +225,7 @@ class Globe {
     }
 
     // Rotate world
-    if (this.sphere && !this.rotationPaused) {
+    if (this.sphere && this.rotate && !this.rotationPaused) {
       this.sphere.rotation.y += 0.003;
     }
     this.tickPings();

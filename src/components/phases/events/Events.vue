@@ -5,7 +5,7 @@
     {{year}}
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
-  <Globe id="events-globe" ref="globe" />
+  <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" />
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="dismissProject"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" />
@@ -75,6 +75,13 @@ export default {
     }
   },
   methods: {
+    onGlobeReady(globe) {
+      this.globe = globe;
+      this.globe.clear();
+      this.globe.rotate = true;
+      this.globe.clouds.visible = true;
+      this.startYear();
+    },
     start() {
       // Show any world start events
       this.stopped = false;
@@ -98,16 +105,6 @@ export default {
         regionIncomes: state.gameState.world.regions.map((r) => r.income),
         parliament: state.gameState.npcs.map((npc) => npc.seats),
       };
-
-      if (!this.globe) {
-        this.$refs.globe.onReady = (globe) => {
-          this.globe = globe;
-          this.globe.clear();
-          this.startYear();
-        };
-      } else {
-        this.startYear();
-      }
     },
     startYear() {
       sendSnapshot(state);
