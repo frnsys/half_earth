@@ -13,11 +13,18 @@
 # Install JS dependencies
 npm install -d
 
-# Compile Rust code
-npm run build-wasm
-
 # Generate content files
-python parse_content.py
+# requires `pip3 install pillow`
+python3 parse_content.py
+
+# Install hector-rs
+git clone https://github.com/frnsys/hector-rs.git hector/hector-rs
+cd hector/hector-rs
+bash setup.sh
+cd ../../
+
+# Compile Rust code to WASM
+npm run build-wasm
 ```
 
 ## Usage

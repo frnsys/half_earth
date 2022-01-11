@@ -42,7 +42,7 @@ image = "0.23.14" # for reading pngs in tests/benchmarks
 # for game calibration simulation
 csv = "1.1"
 serde_json = "1.0"
-hector-rs = { path = "../../hector-rs" }
+hector-rs = { path = "../hector/hector-rs" }
 indicatif = "0.16.2"
 
 [profile.release]
