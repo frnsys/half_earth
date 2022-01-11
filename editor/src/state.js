@@ -8,7 +8,7 @@ const state = reactive({
 });
 
 // Load data from backend
-api.load().then(({items}) => {
+api.load().then((items) => {
   Object.keys(items).forEach((id) => {
     if (items[id].deleted) delete items[id];
   });
