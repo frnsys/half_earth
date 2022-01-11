@@ -213,8 +213,6 @@ export default {
         'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
         'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
       };
-      console.log('Applying emissions:');
-      console.log(emissions);
       this.globe.addEmissionsThenUpdate(emissions).then((tgav) => {
         game.setTgav(tgav);
       });

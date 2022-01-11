@@ -3,16 +3,16 @@
   <Planning v-if="state.phase == 'PLANNING'" />
   <Stream v-else-if="state.phase == 'EVENTS'" />
   <Report v-else-if="state.phase == 'REPORT'" />
-  <Break v-else-if="state.phase == 'BREAK'" />
-  <End v-else-if="state.phase == 'END'" />
+  <GameOver v-else-if="state.phase == 'BREAK'" />
+  <GameWin v-else-if="state.phase == 'END'" />
 </template>
 
 <script>
 import debug from '/src/debug';
 import state from '/src/state';
 import Tip from './tip/Tip.vue';
-import End from './phases/End.vue';
-import Break from './phases/Break.vue';
+import GameWin from './phases/GameWin.vue';
+import GameOver from './phases/GameOver.vue';
 import Report from './phases/Report.vue';
 import Stream from './phases/events/Events.vue';
 import Planning from './phases/planning/Planning.vue';
@@ -39,11 +39,11 @@ export default {
   },
   components: {
     Tip,
-    End,
-    Break,
     Report,
     Stream,
     Planning,
+    GameOver,
+    GameWin,
   },
 }
 </script>

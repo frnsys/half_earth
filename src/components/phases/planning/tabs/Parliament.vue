@@ -26,7 +26,7 @@
 import state from '/src/state';
 import consts from '/src/consts';
 import NPCS from '/assets/content/npcs.json';
-import MiniNPC from 'components/cards/MiniNPC.vue';
+import MiniNPC from 'components/cards/mini/MiniNPC.vue';
 
 let totalSeats = consts.parliamentSeats.reduce((acc,s) => acc + s, 0);
 

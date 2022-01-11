@@ -14,7 +14,7 @@
 
 <script>
 import MiniCard from './MiniCard.vue';
-import ProcessCard from './ProcessCard.vue';
+import ProcessCard from '../ProcessCard.vue';
 import PROCESSES from '/assets/content/processes.json';
 
 export default {

@@ -1,7 +1,27 @@
 <template>
-<div class="planning--page">
+<div class="plan-change-select planning--page">
+  <div class="planning--page-tabs">
+   <div @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
+      <img :src="icons.electricity" />
+      <div>Electricity</div>
+    </div>
+    <div @click="if (allowBack) { output = 'Fuel'; }" :class="{selected: output == 'Fuel', disabled: !allowBack}">
+      <img :src="icons.fuel" />
+      <div>Fuel</div>
+    </div>
+    <div @click="if (allowBack) { output = 'PlantCalories'; }" :class="{selected: output == 'PlantCalories', disabled: !allowBack}">
+      <img :src="icons.plant_calories" />
+      <div>Plant Cals</div>
+    </div>
+    <div @click="if (allowBack) { output = 'AnimalCalories'; }" :class="{selected: output == 'AnimalCalories', disabled: !allowBack}">
+      <img :src="icons.animal_calories" />
+      <div>Animal Cals</div>
+    </div>
+    <div :class="{disabled: !allowBack}" @click="if (allowBack) { $emit('close'); }">Back</div>
+  </div>
+
   <Cards>
-    <ProcessCard v-for="p in processes" :process="p">
+    <ProcessCard v-for="p in processes" :process="p" :key="p.id">
       <template v-slot:actions>
         <button :disabled="changedMixShare(p) === 0" @click="removePoint(p)">
           -<img class="pip" :src="icons.mix_token">
@@ -33,7 +53,7 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import Cards from './Cards.vue';
+import Cards from 'components/cards/Cards.vue';
 import consts from '/src/consts.js';
 import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
@@ -41,7 +61,6 @@ import ProcessCard from 'components/cards/ProcessCard.vue';
 const lf = new Intl.ListFormat('en');
 
 export default {
-  props: ['output'],
   components: {
     Cards,
     ProcessCard,
@@ -50,6 +69,9 @@ export default {
     return {
       state,
       points: 0,
+      output: 'Electricity',
+
+      allowBack: true
     };
   },
   computed: {
@@ -166,7 +188,7 @@ export default {
       if (p.mix_share + change > 0) {
         this.points += 1;
         state.processMixChanges[this.output][p.id] = change - 1;
-        this.$emit('allowBack', false);
+        this.allowBack = false;
       }
     },
     addPoint(p) {
@@ -175,7 +197,7 @@ export default {
         this.points -= 1;
         state.processMixChanges[this.output][p.id] = change + 1;
         if (this.points == 0) {
-          this.$emit('allowBack', true);
+          this.allowBack = true;
         }
       }
 
@@ -203,5 +225,9 @@ export default {
   border-radius: 0.2em;
   margin: 0.5em 1em 0 1em;
   text-align: center;
+}
+
+.plan-change-select header .disabled {
+  opacity: 0.5;
 }
 </style>

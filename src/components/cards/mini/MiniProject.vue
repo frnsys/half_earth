@@ -25,14 +25,15 @@
 </template>
 
 <script>
+import game from '/src/game';
+import state from '/src/state';
+import consts from '/src/consts';
 import MiniCard from './MiniCard.vue';
-import ProjectCard from './ProjectCard.vue';
-import ProjectMixin from 'components/phases/planning/ProjectMixin';
+import ProjectCard from '../ProjectCard.vue';
 import PROJECTS from '/assets/content/projects.json';
 
 export default {
   props: ['project'],
-  mixins: [ProjectMixin],
   data() {
     return {
       type: this.project.kind,
@@ -46,6 +47,25 @@ export default {
   computed: {
     icon() {
       return this.project.kind.toLowerCase();
+    },
+    availablePoints() {
+      if (this.type == 'Policy') {
+        return state.gameState.political_capital;
+      } else {
+        return state.points[this.type.toLowerCase()];
+      }
+    },
+    nextPointCost() {
+      return consts.pointCost;
+    },
+  },
+  methods: {
+    buyPoint() {
+      let cost = this.nextPointCost;
+      if (cost <= state.gameState.political_capital) {
+        game.changePoliticalCapital(-cost);
+        state.points[this.type.toLowerCase()]++;
+      }
     }
   }
 }

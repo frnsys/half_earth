@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import NPCCard from './NPCCard.vue';
+import NPCCard from '../NPCCard.vue';
 import MiniCard from './MiniCard.vue';
 import display from '/src/display/display';
 

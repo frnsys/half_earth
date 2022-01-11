@@ -1,9 +1,10 @@
 <template>
 <div class="plan">
-  <PlanChangeSelect v-if="page == 'Add'"
-    @close="page = null" @page="(p) => $emit('page', p)"
+  <Projects v-if="page == 'Add'"
+    @close="page = null"
+    @page="(p) => $emit('page', p)"
     @change="$emit('change')" />
-  <ProcessesSelect v-if="page == 'Processes'"
+  <Processes v-if="page == 'Processes'"
     @close="page = null" @change="$emit('change')" />
   <div class="plan--changes" v-if="page == null">
     <div class="plan--change">
@@ -47,12 +48,12 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import Chart from './Chart.vue';
+import Chart from '../Chart.vue';
 import format from '/src/display/format';
-import ProcessesSelect from './ProcessesSelect.vue';
-import PlanChangeSelect from './PlanChangeSelect.vue';
-import MiniProcess from 'components/cards/MiniProcess.vue';
-import MiniProject from 'components/cards/MiniProject.vue';
+import Processes from '../Processes.vue';
+import Projects from '../Projects.vue';
+import MiniProcess from 'components/cards/mini/MiniProcess.vue';
+import MiniProject from 'components/cards/mini/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
 
@@ -71,8 +72,8 @@ export default {
     Chart,
     MiniProcess,
     MiniProject,
-    ProcessesSelect,
-    PlanChangeSelect,
+    Projects,
+    Processes,
   },
   created() {
     this.charts = charts;
@@ -269,5 +270,54 @@ export default {
 
 .processes-minicard img {
   width: 28px;
+}
+
+.plan-change-select {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  background: #ff6b56;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 1em; /* Space for the hud */
+}
+.plan-change-select > header {
+  color: #fff;
+  text-align: right;
+  padding: 0.5em;
+  display: flex;
+  justify-content: space-between;
+}
+.plan-change-select > header > div:first-child {
+  text-decoration: underline;
+}
+.planning--page-tabs {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid;
+}
+.planning--page-tabs img {
+  width: 32px;
+}
+.planning--page-tabs > div {
+  flex: 1;
+  padding: 0.5em;
+  text-align: center;
+  line-height: 1;
+  border-right: 1px solid;
+  font-size: 0.7em;
+}
+.planning--page-tabs > div:last-child {
+  border-right: none;
+}
+.planning--page-tabs > div.selected {
+  background: #eed793;
+}
+.planning--page-tabs .disabled {
+  opacity: 0.5;
 }
 </style>

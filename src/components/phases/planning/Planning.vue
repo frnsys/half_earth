@@ -20,10 +20,10 @@
 import game from '/src/game';
 import state from '/src/state';
 import Hud from 'components/Hud.vue';
-import Parliament from './Parliament.vue';
-import Dashboard from './Dashboard.vue';
-import Plan from './Plan.vue';
-import Regions from './Regions.vue';
+import Parliament from './tabs/Parliament.vue';
+import Dashboard from './tabs/Dashboard.vue';
+import Plan from './tabs/Plan.vue';
+import Regions from './tabs/Regions.vue';
 import EventsMixin from 'components/EventsMixin';
 
 const PAGES = {

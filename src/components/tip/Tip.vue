@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Cards from 'components/phases/planning/Cards.vue';
+import Cards from 'components/cards/Cards.vue';
 import NPCCard from 'components/cards/NPCCard.vue';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';

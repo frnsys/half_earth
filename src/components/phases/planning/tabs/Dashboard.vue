@@ -73,7 +73,7 @@ import game from '/src/game';
 import state from '/src/state';
 import format from '/src/display/format';
 import intensity from '/src/display/intensity';
-import MiniCard from 'components/cards/MiniCard.vue';
+import MiniCard from 'components/cards/mini/MiniCard.vue';
 
 export default {
   components: {

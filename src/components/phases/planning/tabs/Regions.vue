@@ -14,7 +14,7 @@
 <script>
 import state from '/src/state';
 import Globe from 'components/Globe.vue'
-import RegionItem from './RegionItem.vue';
+import RegionItem from '../RegionItem.vue';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import tilesToRegions from '/assets/surface/tiles_to_regions.json';
 
