@@ -13,9 +13,9 @@
 # Install JS dependencies
 npm install -d
 
-# Generate content files
-# requires `pip3 install pillow`
-python3 parse_content.py
+# Fetch and parse latest content
+# Requires `pip3 install pillow`
+bash update_content.sh
 
 # Install hector-rs
 git clone https://github.com/frnsys/hector-rs.git hector/hector-rs
@@ -35,7 +35,9 @@ Run the development server with:
 npm start
 ```
 
-If you modify the Rust code, run `npm run build-wasm`
+If you modify the Rust code, run `npm run build-wasm`.
+
+If changes are made in the editor, run `bash update_content.sh`.
 
 ## Tests
 

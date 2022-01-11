@@ -20,7 +20,7 @@ def data():
         emit('update', {'item': data}, namespace='/', broadcast=True)
         return jsonify(success=True)
     else:
-        return jsonify(items=db.data)
+        return jsonify(**db.data)
 
 @bp.route('/image', methods=['POST'])
 def upload_image():

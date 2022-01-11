@@ -3,6 +3,7 @@ import os
 import re
 import json
 import textwrap
+import urllib.request
 from PIL import Image
 from collections import defaultdict
 
@@ -676,6 +677,10 @@ def indent(text, levels=1):
 
 
 if __name__ == '__main__':
+    # For downloading missing images
+    existing_images = os.listdir('editor/uploads')
+    missing_images = []
+
     # Parse items into groups and so on
     items = json.load(open('editor/data.json'))
     items_by_type = defaultdict(list)
@@ -698,6 +703,17 @@ if __name__ == '__main__':
                         'subtype': 'Year',
                         'value': '2025'
                     })
+        if 'image' in item:
+            fname = item['image']['image']
+            if fname not in existing_images:
+                missing_images.append(fname)
+
+    # Fetch images
+    if missing_images:
+        print('Downloading missing images...')
+        for fname in missing_images:
+            img_url = 'http://half-earth-editor.frnsys.com/image/{}'.format(fname)
+            urllib.request.urlretrieve(img_url, 'editor/uploads/{}'.format(fname))
 
     # Define constants
     rust_output = [consts_template]
