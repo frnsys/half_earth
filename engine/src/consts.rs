@@ -57,15 +57,15 @@ pub const OUTPUT_DEMAND: [OutputMap<f32>; 4] = [
     }
 ];
 
-pub const MATERIALS_BY_INCOME: [f32; 4] = [
-    2.253141687346895,
-    4.3768,
-    15.430,
-    25.9541
-];
 pub const WATER_BY_INCOME: [f32; 4] = [
     2040.4095,
     4552.624175,
     5839.79276,
     11648.18348
+];
+pub const MATERIALS_BY_INCOME: [f32; 4] = [
+    2.253141687346895,
+    4.3768,
+    15.430,
+    25.9541
 ];
