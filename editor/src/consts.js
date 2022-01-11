@@ -64,6 +64,13 @@ const INCOME_LEVELS = [
   'High'
 ];
 
+const LATITUDES = [
+  'Tropic',
+  'Subtropic',
+  'Temperate',
+  'Frigid'
+];
+
 const COMPARATORS = ['<', '<=', '==', '!=', '>=', '>'];
 const CONDITIONS = {
   LocalVariable: {
@@ -167,6 +174,7 @@ const SUBPHASES = {
   End: ['Start'],
   Icon: [],
   Crisis: [],
+  Manual: [],
 }
 
 const EFFECTS = {
@@ -202,6 +210,14 @@ const EFFECTS = {
       'Outlook': 'Change global outlook; global outlook starts at 20; 0 is the worst',
       'PopulationGrowth': 'Increase/decrease pop growth by this amount, e.g. 20 is 20% faster growth'
     }
+  },
+
+  RegionHabitability: {
+    choices: LATITUDES,
+    params: {
+      'Change': Number
+    },
+    desc: 'Change habitability of a region: habitability starts at 10 (best); 0 is uninhabitable'
   },
 
   PlayerVariable: {
@@ -498,6 +514,7 @@ const EVENT_TYPES = [
   'End',        // Occur at the end of the game (victory)
   'Icon',       // Occur in the world/event stream, but only as icons
   'Crisis',     // Occurs when the crisis meter fills
+  'Manual',     // Event that is manually triggered
 ];
 
 const DYNAMIC_COST_FACTORS = Object.keys(OUTPUTS).concat(['Time', 'Income']);
@@ -517,5 +534,6 @@ export default {
   EVENT_TYPES,
   SUBPHASES,
   DYNAMIC_COST_FACTORS,
-  PROJECT_GROUPS
+  PROJECT_GROUPS,
+  LATITUDES,
 };

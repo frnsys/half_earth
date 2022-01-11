@@ -1,5 +1,5 @@
 use crate::state::State;
-use crate::regions::Region;
+use crate::regions::{Region, Latitude};
 use crate::projects::Status;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock, Byproduct};
@@ -35,6 +35,7 @@ pub enum Effect {
     LocalVariable(LocalVariable, f32),
     WorldVariable(WorldVariable, f32),
     PlayerVariable(PlayerVariable, f32),
+    RegionHabitability(Latitude, f32),
 
     Resource(Resource, f32),
     Demand(Output, f32),
@@ -132,6 +133,11 @@ impl Effect {
                     PlayerVariable::MalthusianPoints => state.malthusian_points += *change as usize,
                     PlayerVariable::HESPoints => state.hes_points += *change as usize,
                     PlayerVariable::FALCPoints => state.falc_points += *change as usize,
+                }
+            },
+            Effect::RegionHabitability(latitude, change) => {
+                for region in state.world.regions.iter_mut().filter(|r| &r.latitude == latitude) {
+                    region.base_habitability += change;
                 }
             },
             Effect::Resource(resource, amount) => {
@@ -298,6 +304,11 @@ impl Effect {
                     PlayerVariable::MalthusianPoints => state.malthusian_points -= *change as usize,
                     PlayerVariable::HESPoints => state.hes_points -= *change as usize,
                     PlayerVariable::FALCPoints => state.falc_points -= *change as usize,
+                }
+            },
+            Effect::RegionHabitability(latitude, change) => {
+                for region in state.world.regions.iter_mut().filter(|r| &r.latitude == latitude) {
+                    region.base_habitability -= change;
                 }
             },
             Effect::Resource(resource, amount) => {

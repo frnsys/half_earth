@@ -17,6 +17,15 @@
       <div>
         <div>
           <label>
+            Latitude
+            <Tip>The latitude that best describes this region</Tip>
+          </label>
+          <select v-model="localData.latitude" :class="flags('latitude')">
+            <option v-for="k in LATITUDES" :value="k">{{k}}</option>
+          </select>
+        </div>
+        <div>
+          <label>
             Income Level
             <Tip>Starting income level for the region. This is used to scale per-capita impacts/demand.</Tip>
           </label>
@@ -63,6 +72,9 @@
   </template>
   <div v-else class="region-summary item-summary">
     <div class="item-meta">
+      <div class="meta-pill" :class="{invalid: !localData.latitude}">
+        <div>{{localData.latitude || 'MISSING'}}</div>
+      </div>
       <div class="meta-pill split-pill" :class="{invalid: !localData.income_level}">
         <div>Income Level</div><div>{{localData.income_level || 'MISSING'}}</div>
       </div>

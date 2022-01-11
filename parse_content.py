@@ -28,7 +28,7 @@ use crate::world::World;
 use crate::events::Phase;
 use crate::game::Difficulty;
 use crate::industries::Industry;
-use crate::regions::{Region, Income};
+use crate::regions::{Region, Income, Latitude};
 use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
@@ -79,6 +79,7 @@ specs = {
         'precip_lo': 0.,
         'precip_hi': 0.,
         'income_level': None,
+        'latitude': None,
         'development': 0,
         'outlook': BASE_REGIONAL_OUTLOOK,
         'population': None,
@@ -236,6 +237,7 @@ effects = {
     'ProcessRequest':   lambda e: (ids[e['entity']], 'true' if e['subtype'] == 'Unban' else 'false', int(param(e, 'Bounty'))),
     'AddRegionFlag':    lambda e: ('"{}".to_string()'.format(e['params'].get('Flag')),),
     'AddFlag':          lambda e: ('Flag::{}'.format(e['params'].get('Flag')),),
+    'RegionHabitability': lambda e:  ('Latitude::{}'.format(e['subtype']), param(e, 'Change')),
     'RegionLeave':      lambda _: (),
     'Migration':        lambda _: (),
     'GameOver':         lambda _: (),
@@ -319,6 +321,7 @@ effect_keys = {
   'IncomeOutlookChange': ['params'],
   'ProjectCostModifier': ['entity', 'params'],
   'ProtectLand': ['params'],
+  'ProcessLimit': ['entity', 'params'],
 };
 
 
@@ -372,6 +375,8 @@ def define_field(k, v, item):
         return 'active_outcome: None'
     if k == 'income_level':
         return 'income: Income::{}'.format(v.replace('-', ''))
+    if k == 'latitude':
+        return 'latitude: Latitude::{}'.format(v)
     if k == 'year':
         return 'year: {}'.format(v)
     elif k == 'name' or k == 'text':

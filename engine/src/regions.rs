@@ -30,6 +30,7 @@ pub struct Region {
     pub temp_hi: f32,
     pub precip_lo: f32,
     pub precip_hi: f32,
+    pub latitude: Latitude,
 
     pub pattern_idxs: Vec<usize>,
 }
@@ -179,4 +180,12 @@ pub enum Income {
     LowerMiddle,
     UpperMiddle,
     High
+}
+
+#[derive(PartialEq, serde::Serialize, Clone, Debug)]
+pub enum Latitude {
+    Tropic,
+    Subtropic,
+    Temperate,
+    Frigid
 }

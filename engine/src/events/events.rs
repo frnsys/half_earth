@@ -166,6 +166,7 @@ pub enum Phase {
     PlanningProcesses,
     PlanningCoalition,
     PlanningPlanChange,
+    Manual,
 }
 
 #[derive(Debug, Clone)]
@@ -233,7 +234,7 @@ impl Event {
 mod test {
     use super::*;
     use rand::SeedableRng;
-    use crate::regions::{Region, Income};
+    use crate::regions::{Region, Income, Latitude};
     use super::super::{WorldVariable, LocalVariable, Comparator};
 
     fn gen_events() -> Vec<Event> {
@@ -347,6 +348,7 @@ mod test {
             income: Income::Low,
             outlook: 0.,
             base_habitability: 0.,
+            latitude: Latitude::Tropic,
             flags: vec![],
             temp_lo: 0.,
             temp_hi: 0.,
@@ -362,6 +364,7 @@ mod test {
             income: Income::Low,
             outlook: 0.,
             base_habitability: 0.,
+            latitude: Latitude::Tropic,
             flags: vec![],
             temp_lo: 0.,
             temp_hi: 0.,

@@ -267,12 +267,14 @@ const SPECS = {
 
   Region: {
     key: 'name',
-    validate: ['name', 'health', 'outlook', 'income_level', 'population', 'development'],
+    validate: ['name', 'health', 'outlook', 'income_level', 'population', 'development', 'latitude'],
     questions: ['name', 'notes'],
     validateKey: (item, key) => {
       switch (key) {
         case 'income_level':
           return requireOneOfChoice(item.income_level, consts.INCOME_LEVELS);
+        case 'latitude':
+          return requireOneOfChoice(item.latitude, consts.LATITUDES);
         default:
           return validateBasic(item, key, SPECS.Region.validate);
       }
