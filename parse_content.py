@@ -387,7 +387,7 @@ def define_field(k, v, item):
     elif k == 'group':
         return 'group: ProjectGroup::{}'.format(v)
     elif k == 'type' and item['_type'] == 'Event':
-        if item['subphase']:
+        if item.get('subphase') is not None:
             return 'phase: Phase::{}{}'.format(v, item['subphase'])
         else:
             return 'phase: Phase::{}'.format(v)
@@ -517,25 +517,16 @@ def define_struct(typ, data):
             for k, default in specs[typ].items()]
     try:
         return '''{} {{\n{}\n}}'''.format(typ, indent(define_fields(fields, data)))
-    except Exception as e:
-        print('-'*50)
+    except Exception:
         print('Error defining struct of type "{}":\n'.format(typ),
                 json.dumps(data, indent=2, sort_keys=True))
-        print('Exception:', repr(e))
-        print('-'*50)
         raise
 
-def define_structs(typ, items, skip_error=False):
+def define_structs(typ, items):
     structs = []
     for i, item in enumerate(items):
         item['id'] = i
-        try:
-            structs.append(define_struct(typ, item))
-        except:
-            if skip_error:
-                continue
-            else:
-                raise
+        structs.append(define_struct(typ, item))
     return ',\n'.join(structs)
 
 def define_array(name, typ):
@@ -623,7 +614,7 @@ def define_const(const):
 def define_content_fn(name, typ):
     return 'pub fn {}() -> Vec<{}> {{\n{}\n}}'.format(
         name, typ, indent('vec![\n{}\n]'.format(
-            indent(define_structs(typ, items_by_type[typ], skip_error=True)))))
+            indent(define_structs(typ, items_by_type[typ])))))
 
 cond_to_factor = {
     'WorldVariable': {
