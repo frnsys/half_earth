@@ -12,8 +12,33 @@ use half_earth_engine::{
     production::{ProductionOrder, Process, ProcessFeature, calculate_required},
     events::{Event, Phase}, consts};
 
+const CO2_REF: f32 = 43.16;     // Gt, 2022, from SSP2-Baseline
+const CH4_REF: f32 = 570.;      // Mt, https://www.iea.org/reports/methane-tracker-2020
+const N2O_REF: f32 = 9.99;      // Mt, 2022, from SSP2-Baseline
+const CO2EQ_REF: f32 = 49.36;   // Gt, 2016, from https://ourworldindata.org/grapher/total-ghg-emissions?tab=chart&country=~OWID_WRL
+const ELEC_REF: f32 = 22777.8;  // TWh, https://www.iea.org/data-and-statistics/charts/electricity-generation-by-fuel-and-scenario-2018-2040
+const FUEL_REF: f32 = 93333.2;  // TWh, https://www.eia.gov/todayinenergy/detail.php?id=46596
+const CALS_REF: f32 = 2870.0;   // kcals per day per person, 2011, from https://www.nationalgeographic.com/what-the-world-eats/
+const WATER_REF: f32 = 4600.;   // km3, global water demand for 2016?, https://www.nature.com/articles/s41545-019-0039-9
+const CALS_LAND_REF: f32 = 51000000.; // km2, https://ourworldindata.org/land-use#breakdown-of-global-land-use-today
+const POP_REF: f32 = 10.87; // people in 2100 in bn, from the UN World Population Prospects (2019, medium fertility)
+
+/*
+ * Other calibration values:
+ * - Projected 2030 emissions gap against poorest 50%:
+ *  - Richest 1%: 67.7t CO2/capita (for reference, 1% of 8bn is 80,000,000)
+ *  - Richest 10%: 18.7t CO2/capita
+ *  - Middle 40%: 2.5t CO2/capita
+ *  - Global average: 2.2t CO2/capita
+ *  - Source: https://policy-practice.oxfam.org/resources/carbon-inequality-in-2030-per-capita-consumption-emissions-and-the-15c-goal-621305/
+ * - Sea level rise
+ *  - 2.5m in 2100
+ *  - Source: http://www.globalchange.umd.edu/data/annual-meetings/2019/Vega-Westhoff_HectorBRICKSLR_20191105.pdf
+ */
+
+
 #[derive(Serialize)]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 enum Scenario {
     BanFossilFuels,
     Nuclear,
@@ -166,11 +191,8 @@ fn find_process_id(game: &Game, name: &'static str) -> usize {
     p.id
 }
 
-fn main() {
+fn parse_scenarios() -> Vec<Scenario> {
     let args: Vec<String> = env::args().collect();
-    // let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
-    let mut rng: SmallRng = SeedableRng::from_entropy();
-
     let mut scenarios = vec![];
     if args.len() > 1 {
         for arg in args[1].split(',').filter(|s| s.len() > 0) {
@@ -191,152 +213,94 @@ fn main() {
             scenarios.push(scenario);
         }
     }
-    let no_hector = if args.len() > 2 {
-        args[2] == "NoHector"
-    } else {
-        false
-    };
+    scenarios
+}
 
-    let difficulty = Difficulty::Normal;
-    let mut game = Game::new(difficulty);
+struct CalibrationData {
+    wtr: csv::Writer<File>,
+}
 
-    let mut emissions = get_emissions(game.state.world.year);
-    let mut report = Report {
-        roll_events: true,
-        start_year: game.state.world.year,
-        scenario_start: 10,
-        scenarios,
-        events: vec![],
-        icon_events: vec![],
-    };
+impl CalibrationData {
+    pub fn new(game: &Game) -> CalibrationData {
+        let file_path = "/tmp/calibration.csv";
+        let mut wtr = csv::Writer::from_path(file_path).unwrap();
+        let base_cols = vec![
+            "Year",
+            "Events",
+            "Temperature",
+            "CO2 Emissions (Gt)",
+            "CH4 Emissions (Mt)",
+            "N2O Emissions (Mt)",
+            "CO2eq Emissions",
+            "Population (b)",
+            "World Outlook",
+            "Habitability",
+            "Extinction Rate",
+            "Sea Level Rise",
+            "Base Animal Cal Demand (Tcals)",
+            "Base Plant Cal Demand (Tcals)",
+            "Cal/Capita/Day",
+            "Industry Fuel Demand (TWh)",
+            "Industry Elec Demand (TWh)",
+            "Industry Water Demand (km3)",
+            "Agg Animal Cal Demand (Tcals)",
+            "Agg Plant Cal Demand (Tcals)",
+            "Agg Fuel Demand (TWh)",
+            "Agg Elec Demand (TWh)",
+            "Energy Land Req. (km2)",
+            "Energy Water Req. (km3)",
+            "Energy CO2 Emissions (Gt)",
+            "Energy CH4 Emissions (Mt)",
+            "Energy N2O Emissions (Mt)",
+            "Calorie Land Req. (km2)",
+            "Calorie Water Req. (km3)",
+            "Calorie CO2 Emissions (Gt)",
+            "Calorie CH4 Emissions (Mt)",
+            "Calorie N2O Emissions (Mt)",
+            "Industry CO2 Emissions (Gt)",
+            "Industry CH4 Emissions (Mt)",
+            "Industry N2O Emissions (Mt)",
+            "Produced Fuel (TWh)",
+            "Produced Elec (TWh)",
+            "Produced Animal Cals (Tcals)",
+            "Produced Plant Cals (Tcals)",
+            "Produced Fuel (% Demand)",
+            "Produced Elec (% Demand)",
+            "Produced Animal Cals (% Demand)",
+            "Produced Plant Cals (% Demand)",
+            "Consumed Land (%)",
+            "Consumed Water (%)",
+            "Mean Income Level",
+            "CO2 Ref (Gt)",
+            "CH4 Ref (Mt)",
+            "N2O Ref (Mt)",
+            "CO2eq Ref (Gt)",
+            "Elec Ref (TWh)",
+            "Fuel Ref (TWh)",
+            "Cals Ref (kcal/person/day)",
+            "Cals Land Ref (km2)",
+            "Water Ref (km3)",
+            "Pop Ref (2100, bn people)",
+        ];
+        let mut cols: Vec<String> = base_cols.iter().map(|c| c.to_string()).collect();
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Mix Share", p.output, p.name)));
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Land Use", p.output, p.name)));
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Fuel Use", p.output, p.name)));
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Electricity Use", p.output, p.name)));
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CO2 Emissions (Gt)", p.output, p.name)));
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
+        cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
+        cols.extend(game.state.world.regions.iter().map(|r| format!("Outlook:{}", r.name)));
+        cols.extend(game.state.feedstocks.keys().iter().map(|k| format!("Feedstock:{}", format!("{:?}", k))));
+        wtr.write_record(&cols).unwrap();
 
-    let co2_ref = 43.16;     // Gt, 2022, from SSP2-Baseline
-    let ch4_ref = 570.;      // Mt, https://www.iea.org/reports/methane-tracker-2020
-    let n2o_ref = 9.99;      // Mt, 2022, from SSP2-Baseline
-    let co2eq_ref = 49.36;   // Gt, 2016, from https://ourworldindata.org/grapher/total-ghg-emissions?tab=chart&country=~OWID_WRL
-    let elec_ref = 22777.8;  // TWh, https://www.iea.org/data-and-statistics/charts/electricity-generation-by-fuel-and-scenario-2018-2040
-    let fuel_ref = 93333.2;  // TWh, https://www.eia.gov/todayinenergy/detail.php?id=46596
-    let cals_ref = 2870.0;   // kcals per day per person, 2011, from https://www.nationalgeographic.com/what-the-world-eats/
-    let water_ref = 4600.;   // km3, global water demand for 2016?, https://www.nature.com/articles/s41545-019-0039-9
-    let cals_land_ref = 51000000.; // km2, https://ourworldindata.org/land-use#breakdown-of-global-land-use-today
-    let pop_ref = 10.87; // people in 2100 in bn, from the UN World Population Prospects (2019, medium fertility)
+        CalibrationData { wtr }
+    }
 
-    /*
-     * Other calibration values:
-     * - Projected 2030 emissions gap against poorest 50%:
-     *  - Richest 1%: 67.7t CO2/capita (for reference, 1% of 8bn is 80,000,000)
-     *  - Richest 10%: 18.7t CO2/capita
-     *  - Middle 40%: 2.5t CO2/capita
-     *  - Global average: 2.2t CO2/capita
-     *  - Source: https://policy-practice.oxfam.org/resources/carbon-inequality-in-2030-per-capita-consumption-emissions-and-the-15c-goal-621305/
-     * - Sea level rise
-     *  - 2.5m in 2100
-     *  - Source: http://www.globalchange.umd.edu/data/annual-meetings/2019/Vega-Westhoff_HectorBRICKSLR_20191105.pdf
-     */
-
-    println!("Starting resources: {:?}", game.state.resources);
-    println!("Starting feedstocks: {:?}", game.state.feedstocks);
-    println!("==============================");
-
-    let file_path = "/tmp/calibration.csv";
-    let mut wtr = csv::Writer::from_path(file_path).unwrap();
-    let base_cols = vec![
-        "Year",
-        "Events",
-        "Temperature",
-        "CO2 Emissions (Gt)",
-        "CH4 Emissions (Mt)",
-        "N2O Emissions (Mt)",
-        "CO2eq Emissions",
-        "Population (b)",
-        "World Outlook",
-        "Habitability",
-        "Extinction Rate",
-        "Sea Level Rise",
-        "Base Animal Cal Demand (Tcals)",
-        "Base Plant Cal Demand (Tcals)",
-        "Cal/Capita/Day",
-        "Industry Fuel Demand (TWh)",
-        "Industry Elec Demand (TWh)",
-        "Industry Water Demand (km3)",
-        "Agg Animal Cal Demand (Tcals)",
-        "Agg Plant Cal Demand (Tcals)",
-        "Agg Fuel Demand (TWh)",
-        "Agg Elec Demand (TWh)",
-        "Energy Land Req. (km2)",
-        "Energy Water Req. (km3)",
-        "Energy CO2 Emissions (Gt)",
-        "Energy CH4 Emissions (Mt)",
-        "Energy N2O Emissions (Mt)",
-        "Calorie Land Req. (km2)",
-        "Calorie Water Req. (km3)",
-        "Calorie CO2 Emissions (Gt)",
-        "Calorie CH4 Emissions (Mt)",
-        "Calorie N2O Emissions (Mt)",
-        "Industry CO2 Emissions (Gt)",
-        "Industry CH4 Emissions (Mt)",
-        "Industry N2O Emissions (Mt)",
-        "Produced Fuel (TWh)",
-        "Produced Elec (TWh)",
-        "Produced Animal Cals (Tcals)",
-        "Produced Plant Cals (Tcals)",
-        "Produced Fuel (% Demand)",
-        "Produced Elec (% Demand)",
-        "Produced Animal Cals (% Demand)",
-        "Produced Plant Cals (% Demand)",
-        "Consumed Land (%)",
-        "Consumed Water (%)",
-        "Mean Income Level",
-        "CO2 Ref (Gt)",
-        "CH4 Ref (Mt)",
-        "N2O Ref (Mt)",
-        "CO2eq Ref (Gt)",
-        "Elec Ref (TWh)",
-        "Fuel Ref (TWh)",
-        "Cals Ref (kcal/person/day)",
-        "Cals Land Ref (km2)",
-        "Water Ref (km3)",
-        "Pop Ref (2100, bn people)",
-    ];
-    let mut cols: Vec<String> = base_cols.iter().map(|c| c.to_string()).collect();
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Mix Share", p.output, p.name)));
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Land Use", p.output, p.name)));
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Fuel Use", p.output, p.name)));
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:Electricity Use", p.output, p.name)));
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CO2 Emissions (Gt)", p.output, p.name)));
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:CH4 Emissions (Gt)", p.output, p.name)));
-    cols.extend(game.state.processes.iter().map(|p| format!("{:?}:{}:N2O Emissions (Gt)", p.output, p.name)));
-    cols.extend(game.state.world.regions.iter().map(|r| format!("Outlook:{}", r.name)));
-    cols.extend(game.state.feedstocks.keys().iter().map(|k| format!("Feedstock:{}", format!("{:?}", k))));
-    wtr.write_record(&cols).unwrap();
-
-    let pb = ProgressBar::new(100);
-    for i in 0..100 {
-        let mut year_events = vec![];
-        let starting_resources = game.state.resources.clone();
-        // let starting_feedstocks = game.state.feedstocks.clone();
-
-        if i == report.scenario_start {
-            for scenario in &report.scenarios {
-                println!("Applying Scenario: {:?}", scenario);
-                let desc = scenario.apply(&mut game, &mut rng);
-                year_events.push((desc, None));
-            }
-        }
-
-        let completed_projects = game.step(&mut rng);
+    pub fn snapshot(&mut self, game: &Game, events: &Vec<(String, Option<String>)>) {
         let pop_demand = game.state.world.demand();
         let agg_demand = game.state.output_demand;
         let produced = game.state.produced;
-
-        if report.scenarios.contains(&Scenario::DAC) {
-            let p_id = find_project_id(&game, "Direct Air Capture");
-            if game.state.projects[p_id].status == Status::Active {
-                for _ in 0..game.state.projects[p_id].upgrades.len() {
-                    game.upgrade_project(p_id);
-                }
-            }
-        }
 
         let lic_pop = game.state.world.lic_population();
         let ind_demand = game.state.industries.iter().fold(resources!(), |acc, ind| acc + ind.resources) * lic_pop;
@@ -360,83 +324,10 @@ fn main() {
             calorie_byproducts += order.process.byproducts * order.amount/order.process.output_modifier;
         }
 
-        // Hector separates out FFI and LUC emissions
-        // but we lump them together
-        // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
-        // 'ffi_emissions': world.co2_emissions * 12/44 * 1e-15, // Pg C/y
-        // 'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
-        // 'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
-        emissions.get_mut("simpleNbox").unwrap().get_mut("ffi_emissions").unwrap().push((game.state.world.co2_emissions * 12./44. * 1e-15) as f64);
-        emissions.get_mut("CH4").unwrap().get_mut("CH4_emissions").unwrap().push((game.state.world.ch4_emissions * 1e-12) as f64);
-        emissions.get_mut("N2O").unwrap().get_mut("N2O_emissions").unwrap().push((game.state.world.n2o_emissions * 1e-12) as f64);
-        let tgav = if !no_hector {
-            unsafe {
-                run_hector(game.state.world.year, &emissions) as f32
-            }
-        } else {
-            0.
-        };
-        if tgav > 0. {
-            game.state.set_tgav(tgav);
-        }
-
-        let events = if report.roll_events {
-            game.roll_events_for_phase(Phase::WorldMain, Some(5), &mut rng)
-        } else {
-            vec![]
-        };
-        for (ev_id, region_id) in events {
-            let ev = &game.event_pool.events[ev_id];
-            match region_id {
-                Some(id) => {
-                    let region = &game.state.world.regions[id];
-                    year_events.push((ev.name.to_string(), Some(region.name.to_string())));
-                },
-                None => {
-                    year_events.push((ev.name.to_string(), None));
-                }
-            }
-            game.apply_event(ev_id, region_id);
-        }
-
-        for p_id in completed_projects {
-            let project = &game.state.projects[p_id];
-            year_events.push(
-                (format!("🔶 Finished {}", project.name), None));
-        }
-        let n_events = year_events.len();
-        report.events.push(year_events);
-
-        // Icon events
-        let mut year_icon_events = vec![];
-        let icon_events = if report.roll_events {
-            game.roll_events_for_phase(Phase::Icon, None, &mut rng)
-        } else {
-            vec![]
-        };
-        for (ev_id, region_id) in icon_events {
-            let ev = &game.event_pool.events[ev_id];
-            match region_id {
-                Some(id) => {
-                    let mut region = &mut game.state.world.regions[id];
-                    year_icon_events.push((ev.name.to_string(), Some(region.name.to_string())));
-
-                    // Apply outlook effect
-                    // region.outlook -= ev.intensity as f32 * 0.05;
-                    region.base_habitability -= ev.intensity as f32 * 0.1;
-                },
-                None => {
-                    year_icon_events.push((ev.name.to_string(), None));
-                }
-            }
-            game.apply_event(ev_id, region_id);
-        }
-        report.icon_events.push(year_icon_events);
-
         let mut vals: Vec<String> = vec![
             game.state.world.year as f32,
-            n_events as f32,
-            tgav,
+            events.len() as f32,
+            game.state.world.temperature,
             game.state.world.co2_emissions * 1e-15,
             game.state.world.ch4_emissions * 1e-12,
             game.state.world.n2o_emissions * 1e-12,
@@ -477,44 +368,44 @@ fn main() {
             produced.electricity/agg_demand.electricity * 100.,
             produced.animal_calories/agg_demand.animal_calories * 100.,
             produced.plant_calories/agg_demand.plant_calories * 100.,
-            game.state.consumed_resources[Resource::Land]/(starting_resources[Resource::Land]+1.) * 100.,
-            game.state.consumed_resources[Resource::Water]/(starting_resources[Resource::Water]+1.) * 100.,
+            game.state.consumed_resources[Resource::Land]/consts::STARTING_RESOURCES.land * 100.,
+            game.state.consumed_resources[Resource::Water]/consts::STARTING_RESOURCES.water * 100.,
             game.state.world.income_level(),
-            co2_ref,
-            ch4_ref,
-            n2o_ref,
-            co2eq_ref,
-            elec_ref,
-            fuel_ref,
-            cals_ref,
-            cals_land_ref,
-            water_ref,
-            pop_ref,
+            CO2_REF,
+            CH4_REF,
+            N2O_REF,
+            CO2EQ_REF,
+            ELEC_REF,
+            FUEL_REF,
+            CALS_REF,
+            CALS_LAND_REF,
+            WATER_REF,
+            POP_REF,
         ].iter().map(|v| v.to_string()).collect();
         vals.extend(game.state.processes.iter().map(|p| p.mix_percent().to_string()));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            ((p.resources.land * order.amount/p.output_modifier)/consts::STARTING_RESOURCES.land).to_string()
+            ((p.adj_resources().land * order.amount)/consts::STARTING_RESOURCES.land).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.resources.fuel * order.amount/p.output_modifier).to_string()
+            (p.adj_resources().fuel * order.amount).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.resources.electricity * order.amount/p.output_modifier).to_string()
+            (p.adj_resources().electricity * order.amount).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.byproducts.co2 * order.amount/p.output_modifier * 1e-15).to_string()
+            (p.adj_byproducts().co2 * order.amount * 1e-15).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.byproducts.ch4 * order.amount/p.output_modifier * 1e-12).to_string()
+            (p.adj_byproducts().ch4 * order.amount * 1e-12).to_string()
         }));
         vals.extend(game.state.processes.iter().map(|p| {
             let order = p.production_order(&agg_demand);
-            (p.byproducts.n2o * order.amount/p.output_modifier * 1e-12).to_string()
+            (p.adj_byproducts().n2o * order.amount * 1e-12).to_string()
         }));
         vals.extend(game.state.world.regions.iter().map(|r| {
             r.outlook.to_string()
@@ -522,9 +413,130 @@ fn main() {
         vals.extend(game.state.feedstocks.values().iter().map(|v| {
             v.to_string()
         }));
-        wtr.write_record(&vals).unwrap();
+        self.wtr.write_record(&vals).unwrap();
+    }
+}
+
+fn detailed_run(rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
+    let difficulty = Difficulty::Normal;
+    let mut game = Game::new(difficulty);
+    let mut emissions = get_emissions(game.state.world.year);
+
+    let mut data = CalibrationData::new(&game);
+    let mut report = Report {
+        roll_events: true,
+        start_year: game.state.world.year,
+        scenario_start: 10,
+        scenarios: scenarios.to_vec(),
+        events: vec![],
+        icon_events: vec![],
+    };
+
+    let pb = ProgressBar::new(100);
+    for i in 0..100 {
+        let mut year_events = vec![];
+
+        if i == report.scenario_start {
+            for scenario in &report.scenarios {
+                println!("Applying Scenario: {:?}", scenario);
+                let desc = scenario.apply(&mut game, rng);
+                year_events.push((desc, None));
+            }
+        }
+
+        let completed_projects = game.step(rng);
+
+        if report.scenarios.contains(&Scenario::DAC) {
+            let p_id = find_project_id(&game, "Direct Air Capture");
+            if game.state.projects[p_id].status == Status::Active {
+                for _ in 0..game.state.projects[p_id].upgrades.len() {
+                    game.upgrade_project(p_id);
+                }
+            }
+        }
+
+        // Hector separates out FFI and LUC emissions
+        // but we lump them together
+        // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
+        // 'ffi_emissions': world.co2_emissions * 12/44 * 1e-15, // Pg C/y
+        // 'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
+        // 'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
+        emissions.get_mut("simpleNbox").unwrap().get_mut("ffi_emissions").unwrap().push((game.state.world.co2_emissions * 12./44. * 1e-15) as f64);
+        emissions.get_mut("CH4").unwrap().get_mut("CH4_emissions").unwrap().push((game.state.world.ch4_emissions * 1e-12) as f64);
+        emissions.get_mut("N2O").unwrap().get_mut("N2O_emissions").unwrap().push((game.state.world.n2o_emissions * 1e-12) as f64);
+        let tgav = unsafe {
+            run_hector(game.state.world.year, &emissions) as f32
+        };
+        if tgav > 0. {
+            game.state.set_tgav(tgav);
+        }
+
+        let events = if report.roll_events {
+            game.roll_events_for_phase(Phase::WorldMain, Some(5), rng)
+        } else {
+            vec![]
+        };
+        for (ev_id, region_id) in events {
+            let ev = &game.event_pool.events[ev_id];
+            match region_id {
+                Some(id) => {
+                    let region = &game.state.world.regions[id];
+                    year_events.push((ev.name.to_string(), Some(region.name.to_string())));
+                },
+                None => {
+                    year_events.push((ev.name.to_string(), None));
+                }
+            }
+            game.apply_event(ev_id, region_id);
+        }
+
+        // Main events
+        for p_id in completed_projects {
+            let project = &game.state.projects[p_id];
+            year_events.push(
+                (format!("🔶 Finished {}", project.name), None));
+        }
+
+        // Icon events
+        let mut year_icon_events = vec![];
+        let icon_events = if report.roll_events {
+            game.roll_events_for_phase(Phase::Icon, None, rng)
+        } else {
+            vec![]
+        };
+        for (ev_id, region_id) in icon_events {
+            let ev = &game.event_pool.events[ev_id];
+            match region_id {
+                Some(id) => {
+                    let mut region = &mut game.state.world.regions[id];
+                    year_icon_events.push((ev.name.to_string(), Some(region.name.to_string())));
+
+                    // Apply outlook effect
+                    // region.outlook -= ev.intensity as f32 * 0.05;
+                    region.base_habitability -= ev.intensity as f32 * 0.1;
+                },
+                None => {
+                    year_icon_events.push((ev.name.to_string(), None));
+                }
+            }
+            game.apply_event(ev_id, region_id);
+        }
+
+        data.snapshot(&game, &year_events);
+
+        report.events.push(year_events);
+        report.icon_events.push(year_icon_events);
+
         pb.inc(1);
     }
 
     serde_json::to_writer(&File::create("/tmp/calibration.json").unwrap(), &report).unwrap();
+}
+
+fn main() {
+    // let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+    let mut rng: SmallRng = SeedableRng::from_entropy();
+    let scenarios = parse_scenarios();
+
+    detailed_run(&mut rng, &scenarios);
 }
