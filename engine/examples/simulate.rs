@@ -1,5 +1,4 @@
-use std::env;
-use std::fs::File;
+use std::{env, fs, fs::File, path::Path};
 use serde::Serialize;
 use indicatif::ProgressBar;
 use rand::{SeedableRng, rngs::SmallRng};
@@ -61,6 +60,17 @@ struct Report {
     scenarios: Vec<Scenario>,
     events: Vec<Vec<(String, Option<String>)>>,
     icon_events: Vec<Vec<(String, Option<String>)>>,
+    summary: Vec<Snapshot>,
+}
+
+#[derive(Serialize)]
+struct Snapshot {
+    temp: f32,
+    land_use: f32,
+    emissions: f32,
+    extinction_rate: f32,
+    habitability: f32,
+    outlook: f32,
 }
 
 fn promote_process(processes: &mut Vec<Process>, process_id: usize) {
@@ -221,9 +231,8 @@ struct CalibrationData {
 }
 
 impl CalibrationData {
-    pub fn new(game: &Game) -> CalibrationData {
-        let file_path = "/tmp/calibration.csv";
-        let mut wtr = csv::Writer::from_path(file_path).unwrap();
+    pub fn new(game: &Game, path: String) -> CalibrationData {
+        let mut wtr = csv::Writer::from_path(path).unwrap();
         let base_cols = vec![
             "Year",
             "Events",
@@ -417,12 +426,12 @@ impl CalibrationData {
     }
 }
 
-fn detailed_run(rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
+fn single_run(id: usize, rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
     let difficulty = Difficulty::Normal;
     let mut game = Game::new(difficulty);
     let mut emissions = get_emissions(game.state.world.year);
 
-    let mut data = CalibrationData::new(&game);
+    let mut data = CalibrationData::new(&game, format!("/tmp/calibration/{:?}.csv", id));
     let mut report = Report {
         roll_events: true,
         start_year: game.state.world.year,
@@ -430,6 +439,7 @@ fn detailed_run(rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
         scenarios: scenarios.to_vec(),
         events: vec![],
         icon_events: vec![],
+        summary: vec![]
     };
 
     let pb = ProgressBar::new(100);
@@ -524,13 +534,23 @@ fn detailed_run(rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
 
         data.snapshot(&game, &year_events);
 
+        report.summary.push(Snapshot {
+            temp: game.state.world.temperature,
+            emissions: game.state.world.emissions() * 1e-15,
+            outlook: game.state.world.outlook(),
+            extinction_rate: game.state.world.extinction_rate,
+            habitability: game.state.world.habitability(),
+            land_use: game.state.consumed_resources[Resource::Land]/consts::STARTING_RESOURCES.land * 100.,
+        });
         report.events.push(year_events);
         report.icon_events.push(year_icon_events);
 
         pb.inc(1);
     }
 
-    serde_json::to_writer(&File::create("/tmp/calibration.json").unwrap(), &report).unwrap();
+    serde_json::to_writer(
+        &File::create(format!("/tmp/calibration/{:?}.json", id)).unwrap(),
+        &report).unwrap();
 }
 
 fn main() {
@@ -538,5 +558,16 @@ fn main() {
     let mut rng: SmallRng = SeedableRng::from_entropy();
     let scenarios = parse_scenarios();
 
-    detailed_run(&mut rng, &scenarios);
+    let dir = "/tmp/calibration";
+    if Path::new(dir).is_dir() {
+        fs::remove_dir_all(dir).unwrap();
+    }
+    fs::create_dir(dir).unwrap();
+
+    let n: usize = 50;
+    let pb = ProgressBar::new(n as u64);
+    for i in 0..n {
+        single_run(i, &mut rng, &scenarios);
+        pb.inc(1);
+    }
 }

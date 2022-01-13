@@ -3,16 +3,17 @@ import math
 import json
 import pandas as pd
 import matplotlib.pyplot as plt
-from collections import defaultdict
+from collections import Counter, defaultdict
+from coloraide import Color
 
 print('Plotting...')
 
 N_COLORS = 10
 LINE_STYLES = ['solid', 'dashed', 'dashdot', 'dotted']
 
-df = pd.read_csv('/tmp/calibration.csv')
+df = pd.read_csv('/tmp/calibration/0.csv')
 
-report = json.load(open('/tmp/calibration.json'))
+report = json.load(open('/tmp/calibration/0.json'))
 
 if not os.path.exists('/tmp/plots'):
     os.makedirs('/tmp/plots')
@@ -430,6 +431,94 @@ img {
     background: #333;
     color: #fff;
 }
+
+.event-runs {
+    display: flex;
+}
+.event-runs li {
+	list-style-type: none;
+}
+.event-run-column > div {
+    height: 120px;
+    width: 220px;
+    padding: 0.5em;
+    border-bottom: 1px solid;
+    font-size: 0.8em;
+}
+.run {
+    border-right: 1px solid;
+}
+.run:nth-child(2n+1) {
+	background: #f0f0f0;
+}
+.run-summary {
+	font-size: 0.75em;
+    background: rgba(0,0,0,0.1);
+	border-radius: 0.2em;
+    display: flex;
+    padding: 0 0.25em;
+    justify-content: space-between;
+    margin-bottom: 0.25em;
+}
+.years {
+    position: sticky;
+    left: 0;
+}
+.years > div {
+	width: auto;
+	font-weight: bold;
+	font-size: 2em;
+	background: #eee;
+	border-right: 4px solid black;
+    display: flex;
+    align-items: center;
+}
+.event-counts {
+    padding: 1em;
+    border-bottom: 4px solid;
+}
+.event-counts > li {
+	font-size: 0.8em;
+	background: #222;
+	color: #fff;
+	list-style-type: none;
+	margin: 0;
+	line-height: 1;
+	border-radius: 0.2em;
+    border: 1px solid #060606;
+    display: inline-block;
+}
+.event-pill-top {
+	display: inline-flex;
+    align-items: center;
+}
+.event-pill-top > div {
+    padding: 0.25em;
+}
+.event-pill-top > div:last-child {
+	margin: 0.1em 0.1em 0.1em 0.25em;
+	border-radius: 0.2em;
+	font-size: 0.85em;
+	padding: 0.1em 0.1em 0;
+	height: 14px;
+}
+.event-year-range {
+    display: flex;
+    align-items: center;
+    font-size: 0.8em;
+    padding: 0.2em;
+}
+.dist {
+    display: flex;
+    flex: 1;
+    margin: 0 2px;
+    overflow: hidden;
+    border-radius: 0.1em;
+}
+.dist > div {
+    height: 10px;
+    flex: 1;
+}
 '''
 
 tag = '''
@@ -527,7 +616,7 @@ const EVENTS_BY_YEAR = {events_by_year};
         style=style,
         scripts=scripts,
         events_by_year=json.dumps(events_by_year),
-        meta='\n'.join(tag.format(k=k, v=v) for k, v in report.items()),
+        meta='\n'.join(tag.format(k=k, v=v) for k, v in report.items() if k != 'summary'),
         group_tabs='\n'.join('<div>{}</div>'.format(g) for g in groups.keys()),
         chart_groups='\n'.join(
             '<div class="chart-group">{}</div>'.format('\n'.join('<div><img src="{}"></div>'.format(fname) for fname in fnames))
@@ -540,4 +629,81 @@ const EVENTS_BY_YEAR = {events_by_year};
             for year, evs in events))
 
 with open('/tmp/plots/index.html', 'w') as f:
+    f.write(html)
+
+# Event calibration
+n_runs = 0
+all_events = []
+run_events_html = []
+event_dists = defaultdict(lambda: defaultdict(int))
+for runfile in os.listdir('/tmp/calibration'):
+    if not runfile.endswith('.json'): continue
+    n_runs += 1
+    run_data = json.load(open(os.path.join('/tmp/calibration', runfile)))
+    run_events_html.append([])
+    for i, year in enumerate(run_data['events']):
+        evs = [ev for ev, _ in year]
+        for ev in evs:
+            event_dists[ev][report['start_year'] + i] += 1
+        all_events += evs
+        evs_htmls = ['<li>{}</li>'.format(ev) for ev in evs]
+        snapshot = run_data['summary'][i]
+        snapshot = '<div>🌡️{temp:.1f}</div> <div>☁️{emissions:.1f}</div> <div>🙂{outlook:.1f}</div> <div>💀{extinction_rate:.1f}</div> <div>🏠{habitability:.1f}</div> <div>🏞️{land_use:.1f}</div>'.format(**snapshot)
+        run_events_html[-1].append(
+                '<div><div class="run-summary">{}</div>{}</div>'.format(snapshot, '\n'.join(evs_htmls)))
+
+all_events = Counter(all_events)
+
+colors = Color('red').interpolate('green', space='lch')
+dist_color = Color('white').interpolate('#1567eb', space='lch')
+
+event_dist_info = {}
+for ev, dist in event_dists.items():
+    min_year = min(dist.keys())
+    max_year = max(dist.keys())
+    total = sum(dist.values())
+    max_count = max(dist.values())
+    event_dist_info[ev] = {
+        'min_year': min_year,
+        'max_year': max_year,
+        'dist': ['<div style="background:{};"></div>'.format(
+            # dist_color(dist.get(min_year+i, 0)/total).to_string()) for i in range(max_year-min_year+1)]
+            dist_color(dist.get(min_year+i, 0)/max_count).to_string()) for i in range(max_year-min_year+1)]
+    }
+
+html = '''
+<html>
+<head>
+    <title>Half Earth Calibration</title>
+    <style>{style}</style>
+</head>
+<body>
+    <div class="event-counts">{counts}</div>
+    <div class="event-runs">{years}{runs}</div>
+</body>
+</html>
+'''.format(
+        style=style,
+        years='<div class="years event-run-column">{}</div>'.format('\n'.join('<div>{}</div>'.format(report['start_year'] + i) for i in range(100))),
+        runs='\n'.join(['<div class="run event-run-column">{}</div>'.format('\n'.join(run)) for run in run_events_html]),
+        counts='\n'.join([
+            '''<li>
+                <div class="event-pill-top">
+                    <div>{name}</div>
+                    <div style="background:{color};">{percent:.1f}%</div>
+                </div>
+                <div class="event-year-range">
+                    <div>{min_year}</div><div class="dist">{dist}</div><div>{max_year}</div>
+                </div>
+            </li>'''.format(
+                name=ev,
+                color=colors(count/n_runs).to_string(),
+                percent=count/n_runs * 100,
+                min_year=event_dist_info[ev]['min_year'],
+                max_year=event_dist_info[ev]['max_year'],
+                dist=''.join(event_dist_info[ev]['dist']))
+            for ev, count in all_events.most_common()])
+    )
+
+with open('/tmp/plots/events.html', 'w') as f:
     f.write(html)
