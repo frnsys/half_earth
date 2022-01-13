@@ -432,6 +432,9 @@ img {
     color: #fff;
 }
 
+.events-meta {
+    margin-top: 1em;
+}
 .event-runs {
     display: flex;
 }
@@ -678,12 +681,16 @@ html = '''
     <style>{style}</style>
 </head>
 <body>
+    <div class="events-meta meta">
+        <div>{meta}</div>
+    </div>
     <div class="event-counts">{counts}</div>
     <div class="event-runs">{years}{runs}</div>
 </body>
 </html>
 '''.format(
         style=style,
+        meta='\n'.join(tag.format(k=k, v=v) for k, v in report.items() if k != 'summary'),
         years='<div class="years event-run-column">{}</div>'.format('\n'.join('<div>{}</div>'.format(report['start_year'] + i) for i in range(100))),
         runs='\n'.join(['<div class="run event-run-column">{}</div>'.format('\n'.join(run)) for run in run_events_html]),
         counts='\n'.join([
