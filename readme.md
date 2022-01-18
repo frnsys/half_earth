@@ -72,6 +72,10 @@ cargo bench -- --save-baseline <name>
 cargo bench -- --baseline <name>
 ```
 
+## Debugging
+
+Using Sentry for monitoring. If something breaks, check the error there. A more detailed traceback of Rust errors will be in the "Breadcrumbs" section as JS console output. Also check the `version` session variable, which is the git commit hash of the version that was running.
+
 ## Deployment
 
 On older versions of `nginx` you may need to manually add the `wasm` MIME type:
