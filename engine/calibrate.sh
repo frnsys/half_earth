@@ -11,7 +11,8 @@ set -e
 if [ "$1" == "build" ]; then
     cargo build --release --example simulate
 else
-    ./target/release/examples/simulate "$@"
-    python plot.py
-    firefox /tmp/plots/index.html
+    OUTDIR=$(./target/release/examples/simulate "$@" | tail -n 1)
+    python plot.py "$OUTDIR"
+    # firefox /tmp/plots/index.html
+    echo "$OUTDIR"
 fi

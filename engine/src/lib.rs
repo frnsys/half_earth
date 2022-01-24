@@ -5,7 +5,7 @@ mod utils;
 mod world;
 mod industries;
 mod regions;
-mod content;
+pub mod content;
 pub mod core;
 pub mod projects;
 pub mod consts;

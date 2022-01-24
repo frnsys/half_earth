@@ -4,12 +4,12 @@ use indicatif::ProgressBar;
 use rand::{SeedableRng, rngs::SmallRng};
 use hector_rs::{run_hector, emissions::get_emissions};
 use half_earth_engine::{
-    resources, byproducts,
+    content, resources, byproducts,
     game::{Game, Difficulty},
     kinds::{Output, OutputMap, Resource, ResourceMap, ByproductMap},
     projects::Status,
     production::{ProductionOrder, Process, ProcessFeature, calculate_required},
-    events::{Event, Phase}, consts};
+    events::Phase, consts};
 
 const CO2_REF: f32 = 43.16;     // Gt, 2022, from SSP2-Baseline
 const CH4_REF: f32 = 570.;      // Mt, https://www.iea.org/reports/methane-tracker-2020
@@ -50,6 +50,8 @@ enum Scenario {
     GreenHydrogen,
     EnergyQuotas,
     OneChildPolicy,
+    SRM,
+    ClosedBorders,
 }
 
 #[derive(Serialize)]
@@ -187,6 +189,17 @@ impl Scenario {
                 game.state.projects[p_id].set_points(10);
                 "🔷 Promoted Green Hydrogen/Researching Green Hydrogen".to_string()
             },
+            Scenario::SRM => {
+                let p_id = find_project_id(game, "Solar Radiation Management");
+                game.start_project(p_id, rng);
+                game.state.projects[p_id].set_points(10);
+                "🔷 Started Solar Radiation Management".to_string()
+            },
+            Scenario::ClosedBorders => {
+                let p_id = find_project_id(game, "Closed Borders");
+                game.start_project(p_id, rng);
+                "🔷 Implemented Closed Borders".to_string()
+            },
         }
     }
 }
@@ -218,6 +231,8 @@ fn parse_scenarios() -> Vec<Scenario> {
                 "DAC" => Scenario::DAC,
                 "Solar" => Scenario::Solar,
                 "GreenHydrogen" => Scenario::GreenHydrogen,
+                "SRM" => Scenario::SRM,
+                "ClosedBorders" => Scenario::ClosedBorders,
                 _ => panic!("Unknown scenario: {:?}", arg)
             };
             scenarios.push(scenario);
@@ -426,12 +441,12 @@ impl CalibrationData {
     }
 }
 
-fn single_run(id: usize, rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
+fn single_run(id: usize, rng: &mut SmallRng, scenarios: &Vec<Scenario>, dir: &str) {
     let difficulty = Difficulty::Normal;
     let mut game = Game::new(difficulty);
     let mut emissions = get_emissions(game.state.world.year);
 
-    let mut data = CalibrationData::new(&game, format!("/tmp/calibration/{:?}.csv", id));
+    let mut data = CalibrationData::new(&game, format!("{}/{:?}.csv", dir, id));
     let mut report = Report {
         roll_events: true,
         start_year: game.state.world.year,
@@ -448,7 +463,6 @@ fn single_run(id: usize, rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
 
         if i == report.scenario_start {
             for scenario in &report.scenarios {
-                println!("Applying Scenario: {:?}", scenario);
                 let desc = scenario.apply(&mut game, rng);
                 year_events.push((desc, None));
             }
@@ -549,8 +563,18 @@ fn single_run(id: usize, rng: &mut SmallRng, scenarios: &Vec<Scenario>) {
     }
 
     serde_json::to_writer(
-        &File::create(format!("/tmp/calibration/{:?}.json", id)).unwrap(),
+        &File::create(format!("{}/{:?}.json", dir, id)).unwrap(),
         &report).unwrap();
+
+    let event_names: Vec<&str> = content::events().iter().filter(|ev| {
+        match ev.phase {
+            Phase::WorldMain | Phase::Icon => true,
+            _ => false
+        }
+    }).map(|ev| ev.name).collect();
+    serde_json::to_writer(
+        &File::create(format!("{}/all_events.json", dir)).unwrap(),
+        &event_names).unwrap();
 }
 
 fn main() {
@@ -558,16 +582,24 @@ fn main() {
     let mut rng: SmallRng = SeedableRng::from_entropy();
     let scenarios = parse_scenarios();
 
-    let dir = "/tmp/calibration";
-    if Path::new(dir).is_dir() {
-        fs::remove_dir_all(dir).unwrap();
+    let output_dir = if scenarios.len() == 0 {
+        "NoScenarios".to_string()
+    } else {
+        let scenario_names: Vec<String> = scenarios.iter().map(|s| format!("{:?}", s)).collect();
+        scenario_names.join("_")
+    };
+    let dir = format!("/tmp/hes/{}/calibration", output_dir);
+    if Path::new(&dir).is_dir() {
+        fs::remove_dir_all(&dir).unwrap();
     }
-    fs::create_dir(dir).unwrap();
+    fs::create_dir_all(&dir).unwrap();
 
-    let n: usize = 50;
+    let n: usize = 100;
     let pb = ProgressBar::new(n as u64);
     for i in 0..n {
-        single_run(i, &mut rng, &scenarios);
+        single_run(i, &mut rng, &scenarios, &dir);
         pb.inc(1);
     }
+
+    println!("{}", dir);
 }

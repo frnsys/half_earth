@@ -1,4 +1,5 @@
 import os
+import sys
 import math
 import json
 import pandas as pd
@@ -8,15 +9,19 @@ from coloraide import Color
 
 print('Plotting...')
 
+DIR = sys.argv[1].replace('/calibration', '')
+
 N_COLORS = 10
 LINE_STYLES = ['solid', 'dashed', 'dashdot', 'dotted']
 
-df = pd.read_csv('/tmp/calibration/0.csv')
+calib_dir = os.path.join(DIR, 'calibration')
+df = pd.read_csv(os.path.join(calib_dir, '0.csv'))
 
-report = json.load(open('/tmp/calibration/0.json'))
+report = json.load(open(os.path.join(calib_dir, '0.json')))
 
-if not os.path.exists('/tmp/plots'):
-    os.makedirs('/tmp/plots')
+plots_dir = os.path.join(DIR, 'plots')
+if not os.path.exists(plots_dir):
+    os.makedirs(plots_dir)
 
 ranges = {
     'Temperature': {
@@ -314,7 +319,7 @@ for group, titles in groups.items():
         # import ipdb; ipdb.set_trace()
 
         fname = '{}.png'.format(title)
-        plt.savefig(os.path.join('/tmp/plots', fname))
+        plt.savefig(os.path.join(plots_dir, fname))
 
         plt.close()
         files[group].append(fname)
@@ -435,8 +440,15 @@ img {
 .events-meta {
     margin-top: 1em;
 }
+.event-encounters {
+    margin: 2em 0 1em 0;
+    text-align: center;
+}
 .event-runs {
     display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
 }
 .event-runs li {
 	list-style-type: none;
@@ -448,6 +460,7 @@ img {
     border-bottom: 1px solid;
     font-size: 0.8em;
 }
+
 .run {
     border-right: 1px solid;
 }
@@ -479,6 +492,13 @@ img {
 .event-counts {
     padding: 1em;
     border-bottom: 4px solid;
+}
+.event-charts {
+    padding: 1em;
+    border-bottom: 4px solid;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 .event-counts > li {
 	font-size: 0.8em;
@@ -631,31 +651,52 @@ const EVENTS_BY_YEAR = {events_by_year};
                 cls='no-events' if not evs else '')
             for year, evs in events))
 
-with open('/tmp/plots/index.html', 'w') as f:
+with open(os.path.join(plots_dir, 'index.html'), 'w') as f:
     f.write(html)
 
 # Event calibration
 n_runs = 0
 all_events = []
 run_events_html = []
+comparison_charts = defaultdict(list)
 event_dists = defaultdict(lambda: defaultdict(int))
-for runfile in os.listdir('/tmp/calibration'):
+for runfile in os.listdir(calib_dir):
     if not runfile.endswith('.json'): continue
+    if runfile == 'all_events.json': continue
     n_runs += 1
-    run_data = json.load(open(os.path.join('/tmp/calibration', runfile)))
+    run_data = json.load(open(os.path.join(calib_dir, runfile)))
     run_events_html.append([])
+    var_trajectories = defaultdict(list)
     for i, year in enumerate(run_data['events']):
         evs = [ev for ev, _ in year]
         for ev in evs:
             event_dists[ev][report['start_year'] + i] += 1
         all_events += evs
         evs_htmls = ['<li>{}</li>'.format(ev) for ev in evs]
+        for key, val in run_data['summary'][i].items():
+            var_trajectories[key].append(val)
         snapshot = run_data['summary'][i]
         snapshot = '<div>🌡️{temp:.1f}</div> <div>☁️{emissions:.1f}</div> <div>🙂{outlook:.1f}</div> <div>💀{extinction_rate:.1f}</div> <div>🏠{habitability:.1f}</div> <div>🏞️{land_use:.1f}</div>'.format(**snapshot)
         run_events_html[-1].append(
                 '<div><div class="run-summary">{}</div>{}</div>'.format(snapshot, '\n'.join(evs_htmls)))
+    for key, val in var_trajectories.items():
+        comparison_charts[key].append(val)
+
+runs_charts = []
+for key, runs in comparison_charts.items():
+    plt.title(key)
+    plt.margins(0)
+    plt.xlim(report['start_year'], report['start_year']+100)
+    years = list(range(report['start_year'], report['start_year']+100))
+    for run in runs:
+        plt.plot(years, run)
+    fname = 'runs__{}.png'.format(key)
+    plt.savefig(os.path.join(plots_dir, fname))
+    plt.close()
+    runs_charts.append(fname)
 
 all_events = Counter(all_events)
+total_possible_events = len(json.load(open(os.path.join(calib_dir, 'all_events.json'))))
 
 colors = Color('red').interpolate('green', space='lch')
 dist_color = Color('white').interpolate('#1567eb', space='lch')
@@ -684,14 +725,21 @@ html = '''
     <div class="events-meta meta">
         <div>{meta}</div>
     </div>
-    <div class="event-counts">{counts}</div>
+    <div class="event-counts">
+        {counts}
+        <div class="event-encounters">{count} out of {total} events occurred at least once.</div>
+    </div>
+    <div class="event-charts">{charts}</div>
     <div class="event-runs">{years}{runs}</div>
 </body>
 </html>
 '''.format(
         style=style,
+        count=len(all_events),
+        total=total_possible_events,
         meta='\n'.join(tag.format(k=k, v=v) for k, v in report.items() if k != 'summary'),
         years='<div class="years event-run-column">{}</div>'.format('\n'.join('<div>{}</div>'.format(report['start_year'] + i) for i in range(100))),
+        charts='\n'.join('<div><img src="{}"></div>'.format(fname) for fname in runs_charts),
         runs='\n'.join(['<div class="run event-run-column">{}</div>'.format('\n'.join(run)) for run in run_events_html]),
         counts='\n'.join([
             '''<li>
@@ -712,5 +760,5 @@ html = '''
             for ev, count in all_events.most_common()])
     )
 
-with open('/tmp/plots/events.html', 'w') as f:
+with open(os.path.join(plots_dir, 'events.html'), 'w') as f:
     f.write(html)
