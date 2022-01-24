@@ -173,7 +173,6 @@ const SUBPHASES = {
   Break: ['Start'],
   End: ['Start'],
   Icon: [],
-  Crisis: [],
   Manual: [],
 }
 
@@ -513,7 +512,6 @@ const EVENT_TYPES = [
   'Break',      // Occur between runs
   'End',        // Occur at the end of the game (victory)
   'Icon',       // Occur in the world/event stream, but only as icons
-  'Crisis',     // Occurs when the crisis meter fills
   'Manual',     // Event that is manually triggered
 ];
 
