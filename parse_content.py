@@ -323,14 +323,20 @@ effect_keys = {
   'ProjectCostModifier': ['entity', 'params'],
   'ProtectLand': ['params'],
   'ProcessLimit': ['entity', 'params'],
+  'RegionHabitability': ['subtype', 'params'],
 };
 
 
 
 def define_effect(effect):
-    effect_params = [
-            '0.' if isinstance(v, float) and v == 0 else str(v)
-            for v in effects[effect['type']](effect)]
+    try:
+        # Sometimes we have effects that aren't fully-defined
+        # and this will break. So just skip them for now.
+        effect_params = [
+                '0.' if isinstance(v, float) and v == 0 else str(v)
+                for v in effects[effect['type']](effect)]
+    except:
+        return None
     if not effect_params:
         return 'Effect::{}'.format(effect['type'])
     else:
@@ -459,7 +465,7 @@ def define_field(k, v, item):
             return 'base_cost: Cost::Fixed({})'.format(v)
     elif k == 'effects':
         return 'effects: vec![\n{}\n]'.format(
-                    indent(',\n'.join(define_effect(e) for e in v)))
+                    indent(',\n'.join(filter(None, (define_effect(e) for e in v)))))
     elif k == 'probability':
         return 'probability: {}'.format(define_probability(v))
     elif k == 'probabilities':
@@ -542,8 +548,8 @@ def extract_branches(dialogue):
             for j, b in enumerate(l['next']):
                 b['id'] = branch_id
                 branch_id += 1
-                effects = 'vec![{}]'.format(', '.join(define_effect(e) for e in b['effects']))
-                conditions = 'vec![{}]'.format(', '.join(define_condition(e) for e in b['conditions']))
+                effects = 'vec![{}]'.format(', '.join(define_effect(e) for e in b.get('effects', [])))
+                conditions = 'vec![{}]'.format(', '.join(define_condition(e) for e in b.get('conditions', [])))
                 branches.append('({}, {})'.format(effects, conditions))
     return branches
 
@@ -570,9 +576,11 @@ def extract_dialogue(dialogue):
             for j, b in enumerate(l['next']):
                 b['id'] = branch_id
                 branch_id += 1
-                del b['conditions']
-                del b['effects']
-                if l['decision']:
+                if 'conditions' in b:
+                    del b['conditions']
+                if 'effects' in b:
+                    del b['effects']
+                if l.get('decision', False):
                     b['line_id'] = keys_to_ids[b['line_id']]
                     if dialogue['lines'][b['line_id']]['text'] == '':
                         b['line_id'] = None
@@ -916,6 +924,7 @@ if __name__ == '__main__':
                 } for e in u['effects']]
             } for u in p.get('upgrades', [])],
             'outcomes': [{
+                'text': u.get('text', ''),
                 'effects': [parse_effect(e) for e in u['effects']]
             } for u in p.get('outcomes', [])]
         }
