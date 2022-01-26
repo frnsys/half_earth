@@ -115,15 +115,18 @@ export default {
 }
 .region-stat {
   color: #fff;
-  background: rgba(25,25,25,0.9);
-  padding: 0 0.2em 0 0;
-  border-radius: 0.2em;
+  padding: 0.3em 0.4em 0.2em 0.4em;
+  border-radius: 0.5em;
   font-size: 0.9em;
   margin-bottom: 0.1em;
   display: inline-block;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.35);
 }
 .region-stat img {
-  height: 16px;
+  height: 10px;
   vertical-align: middle;
+  margin-right: 3px;
+  margin-top: -2px;
 }
 </style>

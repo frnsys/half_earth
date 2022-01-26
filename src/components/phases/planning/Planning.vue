@@ -133,6 +133,7 @@ export default {
   flex-direction: column;
   flex: 1;
   overflow-y: scroll;
+  padding: 1em;
 
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */

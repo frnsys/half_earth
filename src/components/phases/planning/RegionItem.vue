@@ -1,53 +1,44 @@
 <template>
 <div class="region-item">
-  <div v-if="region.seceded" class="seceded-label">Seceded</div>
-  <div class="region-item-header">
-    {{region.name}}
+  <div class="region-item--info cell">
+    <img :src="`/assets/content/images/${image.fname}`" />
+    <div v-if="region.seceded" class="seceded-label">Seceded</div>
     <div>
-      <div class="region-stat" v-tip="{icon: 'precipitation', text: 'This region\'s current precipitation range.'}">
-        <img :src="icons.precipitation">{{Math.round(region.precip_lo)}}-{{Math.round(region.precip_hi)}}cm/yr
-      </div>
-      <div class="region-stat" v-tip="{icon: 'warming', text: 'This region\'s current temperature range.'}">
-        <img :src="icons.warming">{{Math.round(region.temp_lo)}}-{{Math.round(region.temp_hi)}}°C
-      </div>
-    </div>
-  </div>
-  <div class="region-item-body">
-    <div class="region-item-image" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" :class="{seceded: region.seceded}" />
-    <div>
-      <div class="space-even">
-        <IntensityIcon
-          v-tip="{icon: 'habitability', text: `This region's habitability.`}"
-          resource="habitability" :intensity="habitability" :invert="true" />
-        <IntensityIcon
-          v-tip="{icon: 'contentedness', text: `This region's contentedness.`}"
-          resource="contentedness" :intensity="contentedness" :invert="true" />
-        <div class="region-item-development">
-          <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region has ${incomeName} living standards. Higher living standards mean higher material footprints.`}"
-            resource="wealth" :intensity="incomeLevel" :invert="true" />
-          <div v-tip="{icon: 'development', text: `This region's progress to the next income level.`}">
-            <div class="minibar-label">Development</div>
-            <div class="minibar">
-              <div class="minibar-fill"
-                :style="{width: `${region.income == 'High' ? 100 : region.development * 100}%`}"></div>
-            </div>
-          </div>
+        <div class="region-stat" v-tip="{icon: 'temperature', text: 'This region\'s current temperature range.'}">
+          <img :src="icons.temperature">{{Math.round(region.temp_lo)}}-{{Math.round(region.temp_hi)}}°C
         </div>
+        <div class="region-stat" v-tip="{icon: 'precipitation', text: 'This region\'s current precipitation range.'}">
+          <img :src="icons.precipitation">{{Math.round(region.precip_lo)}}-{{Math.round(region.precip_hi)}}cm/yr
+        </div>
+    </div>
+    <div v-tip="{icon: 'development', text: `This region's progress to the next income level.`}">
+      <span>Development</span>
+      <div class="minibar">
+        <div class="minibar-fill"
+          :style="{width: `${region.income == 'High' ? 100 : region.development * 100}%`}"></div>
       </div>
-      <div class="space-even">
-        <IntensityIcon
-          v-for="v, k in demand"
-          v-tip="{text: `This region's per-capita demand level for ${k}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}"
-          :resource="k" :intensity="demandIntensity(k)" />
+    </div>
+    <div>
+      <div>Recent Disasters</div>
+      <div>
+        <img :src="icons[ev.icon]" v-for="ev in events">
       </div>
     </div>
   </div>
-  <div class="region-item-disasters" v-if="events && events.length > 0">
-    <div>Recent Disasters</div>
-    <div>
-      <img :src="icons[ev.icon]" v-for="ev in events">
-    </div>
+  <div class="region-item--intensities cell">
+    <IntensityIcon
+      v-tip="{icon: 'habitability', text: `This region's habitability.`}"
+      resource="habitability" :intensity="habitability" :invert="true" />
+    <IntensityIcon
+      v-tip="{icon: 'contentedness', text: `This region's contentedness.`}"
+      resource="contentedness" :intensity="contentedness" :invert="true" />
+    <IntensityIcon
+      v-tip="{icon: 'wealth', text: `This region has ${incomeName} living standards. Higher living standards mean higher material footprints.`}"
+      resource="wealth" :intensity="incomeLevel" :invert="true" />
+    <IntensityIcon
+      v-for="v, k in demand"
+      v-tip="{text: `This region's per-capita demand level for ${k}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}"
+      :resource="k" :intensity="demandIntensity(k)" />
   </div>
 </div>
 </template>
@@ -104,70 +95,61 @@ export default {
 
 <style>
 .region-item {
-  padding: 1em;
-}
-.region-item-header {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid;
-}
-.region-stat {
-  margin-left: 0.5em;
-}
-.region-item-body {
-  display: flex;
-  justify-content: space-between;
-}
-.region-item-body .space-even {
-  align-items: center;
-}
-.region-item-body > div:last-child {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-.region-item-development {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.region-item-development .card-icon {
-  margin-right: 0.5em;
-}
-
-.seceded {
-  opacity: 0.75;
-  filter: grayscale(1);
-}
-.seceded-label {
   color: #fff;
-  background: #222;
-  border: 1px solid #fff;
-  font-family: 'Andada Pro';
-  text-transform: uppercase;
-  font-size: 0.8em;
-  padding: 0.1em 0.2em;
-  border-radius: 0.2em;
-  position: relative;
-  z-index: 1;
-}
-
-.region-item-image {
-  width: 120px;
-  height: 120px;
-  background-size: cover;
-  background-position: center center;
-}
-
-.region-item-disasters {
-  background: rgba(0,0,0,0.1);
-  padding: 0.25em 0.5em;
-}
-.region-item-disasters > div:first-child {
-  font-size: 0.75em;
 }
 .region-item-disasters img {
   width: 18px;
+}
+.region-stat {
+  margin-right: 0.5em;
+}
+.region-item--info {
+  margin-right: 0.5em;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  flex: 1;
+}
+.region-item--info > img {
+  border-radius: 0.3em;
+  height: 160px;
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.region-item--info .minibar {
+  display: inline-block;
+  margin-left: 0.5em;
+  height: 9px;
+  border-radius: 0.4em;
+  border: 1px solid #fff;
+  background: #fff;
+}
+.region-item--info .minibar-fill {
+  border-radius: 0.4em;
+}
+.region-item--info > * {
+  margin-bottom: 0.5em;
+}
+.region-item--intensities .card-icon {
+  width: 70px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+.region-item--intensities .card-icon img {
+  width: 28px;
+  margin-right: 0.5em;
+}
+
+.seceded-label {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 6em;
+  color: #fff;
+  background: red;
+  padding: 0.2em;
 }
 </style>

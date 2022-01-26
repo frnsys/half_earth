@@ -4,8 +4,9 @@ export default {
   contentedness: require('/assets/icons/contentedness.png'),
   emissions: require('/assets/icons/emissions.png'),
   warming: require('/assets/icons/warming.png'),
+  temperature: require('/assets/icons/temperature.svg'),
   biodiversity: require('/assets/icons/biodiversity.png'),
-  precipitation: require('/assets/icons/precipitation.png'),
+  precipitation: require('/assets/icons/precipitation.svg'),
   land: require('/assets/icons/land.png'),
   energy: require('/assets/icons/energy.png'),
   labor: require('/assets/icons/labor.png'),
@@ -53,6 +54,8 @@ export default {
   halted: require('/assets/icons/halted.png'),
   down_arrow: require('/assets/icons/down_arrow.png'),
   sea_level_rise: require('/assets/icons/sea_level_rise.png'),
+  arrow_right: require('/assets/icons/arrow_right.svg'),
+  arrow_left: require('/assets/icons/arrow_left.svg'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

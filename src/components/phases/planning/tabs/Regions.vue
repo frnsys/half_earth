@@ -1,13 +1,15 @@
 <template>
-<div class="planning--page">
-  <Globe id="regions-globe" :onReady="onGlobeReady" :onClick="onGlobeClick" />
+<div class="planning--page planning--page--regions">
+  <Globe id="regions-globe" class="cell" :onReady="onGlobeReady" :onClick="onGlobeClick" />
+  <div class="regions-browse" v-if="selectedRegion !== null">
+    <div class="region-change" @click="prevRegion"><img :src="icons.arrow_left"></div>
+    <div class="region-name cell">{{regions[selectedRegion].name}}</div>
+    <div class="region-change" @click="nextRegion"><img :src="icons.arrow_right"></div>
+  </div>
   <div v-for="region in regions">
     <RegionItem v-if="region.id == selectedRegion" :region="region" />
   </div>
-  <div class="regions-browse" v-if="selectedRegion !== null">
-    <div @click="prevRegion">Prev</div>
-    <div @click="nextRegion">Next</div>
-  </div>
+
 </div>
 </template>
 
@@ -25,7 +27,7 @@ export default {
   },
   data() {
     return {
-      selectedRegion: null,
+      selectedRegion: 0,
       regions: state.gameState.world.regions
     }
   },
@@ -37,6 +39,7 @@ export default {
       globe.scene.camera.updateProjectionMatrix();
       globe.clouds.visible = false;
       this.globe = globe;
+      this.centerOnRegion(this.selectedRegion);
     },
     nextRegion() {
       this.selectedRegion++;
@@ -89,12 +92,45 @@ export default {
 #regions-globe {
   height: 40vh;
   width: 100%;
+  padding: 0 !important;
 }
 #regions-globe canvas {
   max-height: 100%;
 }
+.region-name {
+  font-size: 1.4em;
+}
 .regions-browse {
   display: flex;
   justify-content: space-between;
+  margin: 0.5em 0;
 }
+.region-change {
+  background: #B3D2BC;
+  border-right: 1px solid #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
+  border-top: 1px solid #FDF7E2;
+  border-left: 1px solid #FDF7E2;
+  border-radius: 0.6em;
+  padding: 1em;
+}
+
+.planning--page--regions {
+  background: url('/assets/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.planning--page--regions .cell {
+  padding: 0.5em;
+  border-radius: 0.25em;
+  background: #304436;
+  border-left: 1px solid #1a1a1a;
+  border-top: 1px solid #1a1a1a;
+  border-right: 1px solid #FDF7E2;
+  border-bottom: 1px solid #FDF7E2;
+  color: #fff;
+  position: relative;
+}
+
 </style>
