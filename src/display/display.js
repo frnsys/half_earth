@@ -11,7 +11,9 @@ const DISPLAY_NAMES = {
 const FEATURE_DESCS = {
   'IsSolar': 'solar processes',
   'IsIntermittent': 'intermittent processes',
-  'IsNuclear': 'nuclear processes',
+  'CanMeltdown': 'processes that may meltdown',
+  'MakesNuclearWaste': 'processes that produce nuclear waste',
+  'IsLaborIntensive': 'especially labor-intensive processes',
   'IsCombustion': 'combustion processes',
   'IsFossil': 'fossil fuel processes',
   'IsCCS': 'carbon capture processes',

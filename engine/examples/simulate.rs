@@ -129,7 +129,9 @@ impl Scenario {
             Scenario::Nuclear => {
                 let mut to_promote = vec![];
                 for process in &mut game.state.processes {
-                    if process.features.contains(&ProcessFeature::IsNuclear) {
+                    let is_nuclear = process.features.contains(&ProcessFeature::CanMeltdown)
+                        || process.features.contains(&ProcessFeature::MakesNuclearWaste);
+                    if is_nuclear {
                         to_promote.push(process.id);
                     }
                 }

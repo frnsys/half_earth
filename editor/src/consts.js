@@ -35,11 +35,13 @@ const PROCESS_FEATURES = {
   'UsesSynFertilizer': 'For agriculture; does the process use a significant amount of synthetic fertilizer',
   'UsesLivestock': 'For agriculture; does the process use a significant amount of livestock',
   'IsIntermittent': 'For electricity sources; if the supply is intermittent',
-  'IsNuclear': 'For electricity sources, if the supply is nuclear',
+  'MakesNuclearWaste': 'For electricity sources, if the supply produces nuclear waste',
+  'CanMeltdown': 'For electricity sources, if the supply has a meltdown risk',
   'IsSolar': 'If the process depends on sunlight',
   'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
   'IsCombustion': 'If this process depends on combustion',
   'IsFossil': 'If this process uses fossil fuels',
+  'IsLaborIntensive': 'If this process is especially labor intensive',
 }
 
 const PROJECT_GROUPS = [
@@ -159,6 +161,9 @@ const CONDITIONS = {
   NPCRelationship: {
     choices: ['Neutral', 'Nemesis', 'Ally'],
     entity: 'NPC',
+  },
+  ProtectLand: {
+    compare: true
   }
 }
 

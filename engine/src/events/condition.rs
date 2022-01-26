@@ -30,6 +30,7 @@ pub enum Condition {
     FeedstockYears(Feedstock, Comparator, f32),
     HasFlag(Flag),
     HeavyProjects(Comparator, usize),
+    ProtectLand(Comparator, f32),
 }
 
 
@@ -137,6 +138,9 @@ impl Condition {
                 let heavy_projects = state.projects.iter()
                     .filter(|p| p.status == ProjectStatus::Finished && HEAVY_PROJECTS.contains(&p.group)).count();
                 comp.eval(heavy_projects as f32, *n as f32)
+            }
+            Condition::ProtectLand(comp, n) => {
+                comp.eval(state.protected_land, *n)
             }
         }
     }

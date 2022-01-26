@@ -9,19 +9,13 @@ pub enum ProcessFeature {
     UsesSynFertilizer,
     UsesLivestock,
     IsIntermittent,
-    IsNuclear,
+    CanMeltdown,
+    MakesNuclearWaste,
     IsSolar,
     IsCCS,
     IsCombustion,
     IsFossil,
-}
-
-// TODO use this for labor?
-#[derive(Debug, PartialEq, serde::Serialize, Clone)]
-pub enum ProcessIntensity {
-    Low,
-    Medium,
-    High
+    IsLaborIntensive,
 }
 
 #[derive(Debug, Clone)]

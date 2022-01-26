@@ -281,6 +281,7 @@ conds = {
     'ProjectBuilding':    lambda e: (ids[e['entity']], 'ProjectStatus::Building'),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'HeavyProjects':    lambda e: (comps[e['comparator']], e['value']),
+    'ProtectLand':    lambda e: (comps[e['comparator']], e['value']),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
     'HasFlag':          lambda e: ('Flag::{}'.format(e['value']),),
     'NPCRelationship':  lambda e: (ids[e['entity']], 'NPCRelation::{}'.format(e['subtype'])),
@@ -637,7 +638,8 @@ cond_to_factor = {
     },
     'ProcessMixShareFeature': {
         'IsCCS': 'IsCCS',
-        'IsNuclear': 'IsNuclear',
+        'MakesNuclearWaste': 'MakesNuclearWaste',
+        'CanMeltdown': 'CanMeltdown',
         'IsFossil': 'IsFossil',
         'UsesPesticides': 'UsesPesticides',
         'UsesLivestock': 'UsesLivestock',

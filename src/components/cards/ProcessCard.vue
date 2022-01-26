@@ -109,7 +109,9 @@ import icons from '/src/components/icons';
 const FEATURE_DESCS = {
   'IsSolar': 'This process relies on the sun.',
   'IsIntermittent': 'This process is intermittent.',
-  'IsNuclear': 'This process is nuclear.',
+  'CanMeltdown': 'This process can meltdown.',
+  'MakesNuclearWaste': 'This process produces nuclear waste.',
+  'IsLaborIntensive': 'This process is especially labor-intensive.',
   'IsCombustion': 'This process involves combustion.',
   'IsFossil': 'This process uses fossil fuels.',
   'IsCCS': 'This process captures and stores carbon.',
