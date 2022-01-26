@@ -5,10 +5,6 @@ const intensities = {
     'energy': [0, 0.001, 0.01, 0.1],
     'calories': [0, 0.001, 0.002, 0.01],
   },
-  'labor': {
-    'energy': [0, 0.001, 0.01, 0.1], // TODO labor
-    'calories': [0, 0.001, 0.002, 0.01], // TODO labor
-  },
   'energy': {
     'energy': [0, 0.001, 0.01, 0.1], // TODO EROI
     'calories': [0, 0.00015, 0.0005, 0.001],

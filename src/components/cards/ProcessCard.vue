@@ -64,9 +64,6 @@
         v-tip="intensityTip('energy')"
         resource="energy" :intensity="intensities.energy" />
       <IntensityIcon
-        v-tip="{text: 'Labor: Together with nature, the source of all things.', icon: 'labor'}"
-        resource="labor" :intensity="2" />
-      <IntensityIcon
         v-tip="intensityTip('water')"
         resource="water" :intensity="intensities.water" />
       <IntensityIcon
@@ -245,7 +242,6 @@ export default {
         energy: this.resources.electricity + this.resources.fuel,
         land: this.resources.land,
         water: this.resources.water,
-        // TODO labor
       };
       let intensities = Object.keys(values).reduce((acc, k) => {
         acc[k] = intensity.intensity(values[k], k, type);
