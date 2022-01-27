@@ -1,5 +1,5 @@
 <template>
-<div class="plan">
+<div class="planning--page plan">
   <Projects v-if="page == 'Add'"
     @close="page = null"
     @page="(p) => $emit('page', p)"

@@ -133,7 +133,7 @@ export default {
   flex-direction: column;
   flex: 1;
   overflow-y: scroll;
-  padding: 1em;
+  padding: 4em 1em 1em 1em;
 
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -184,13 +184,25 @@ export default {
 
 .planning > header {
   display: flex;
-  border-bottom: 1px solid #000;
+  position: absolute;
+  margin: 1em;
+  left: 0;
+  right: 0;
+  border-radius: 0.3em;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 .planning > header div {
   flex: 1;
   text-align: center;
-  padding: 0.25em;
-  border-right: 1px solid #000;
+  padding: 0.5em 0.25em;
+  border-right: 1px solid #aaa;
+}
+.planning > header div:first-child {
+  border-radius: 0.3em 0 0 0.3em;
+}
+.planning > header div:last-child {
+  border-radius: 0 0.3em 0.3em 0;
 }
 .planning > header div:hover {
   background: #e3b6a0;
