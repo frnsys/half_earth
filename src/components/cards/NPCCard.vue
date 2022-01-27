@@ -1,7 +1,7 @@
 <template>
-<Card class="npc">
+<Card class="npc" background="#724680">
   <template v-slot:header>
-    <div>{{name}}</div>
+    <div>Parliament</div>
     <div v-tip="{text: `Your relationship with ${name}.`, icon: 'relationship'}">
       <template v-for="i in consts.maxRelationship" >
         <img :src="icons.relationship" v-if="i <= npc.relationship" />
@@ -13,16 +13,16 @@
     <img
       :src="`/assets/characters/${npc.name}.png`"
       onerror="this.src='/assets/placeholders/character.png';" />
-    <div class="card-tack-cb npc-relationship">{{relationshipName}}</div>
+    <div class="card-tack-cb npc-tag"><img :src="icons[relationshipName.toLowerCase()]">{{relationshipName}}</div>
+  </template>
+  <template v-slot:name>
+    {{name}}
   </template>
   <template v-slot:body>
     <p v-if="relationshipName == 'Ally'" class="active" v-html="html"></p>
     <p v-else v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="html"></p>
   </template>
   <template v-slot:back>
-  </template>
-  <template v-slot:footer>
-    <div>GOSPLANT</div>
   </template>
 </Card>
 
@@ -57,8 +57,6 @@ export default {
 <style>
 .npc figure {
   text-align: center;
-  background: #fcf5e0;
-  border-radius: 0.3em;
   position: relative;
   padding: 2em 1em;
 }
@@ -71,13 +69,20 @@ export default {
 .npc p.active {
   opacity: 1;
 }
-.npc-relationship {
-  color: #fff;
-  background: #222;
-  border: 1px solid #fff;
-  text-transform: uppercase;
-  font-size: 0.8em;
-  padding: 0.1em 0.2em;
-  border-radius: 0.2em;
+
+.npc-tag {
+  color: #000;
+  background: #fff;
+  border-radius: 1em;
+  border: 1px solid #000;
+  text-align: center;
+  font-family: 'Apple ][', monospace;
+  padding: 0 0.25em;
+  line-height: 1.2;
+  display: flex;
+}
+.npc-tag img {
+  width: 12px !important;
+  margin-right: 2px;
 }
 </style>

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
 @font-face {
   font-family: 'Times Ten';
@@ -36,6 +36,18 @@
   font-style: italic;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Apple ][';
+  src: url('/assets/fonts/Apple/Apple.woff2') format('woff2'),
+      url('/assets/fonts/Apple/Apple.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 50%;
+  line-gap-override: 50%;
+}
+
 
 * {
   box-sizing: border-box;

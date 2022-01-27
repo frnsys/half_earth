@@ -1,25 +1,29 @@
 <template>
-<div class="card">
-  <header>
-    <slot name="header"></slot>
-  </header>
-  <figure v-if="!flipped">
-    <slot name="figure"></slot>
-  </figure>
-  <div class="card--body">
-    <slot v-if="!flipped" name="body"></slot>
-    <slot v-else name="back"></slot>
+<div class="card" @click="flipped = !flipped">
+  <div class="card-top" :style="{background: background}">
+    <header>
+      <slot name="header"></slot>
+    </header>
+    <figure v-if="!flipped">
+      <slot name="figure"></slot>
+    </figure>
   </div>
-  <footer>
-    <slot name="footer"></slot>
-    <img :src="flipped ? icons.flip : icons.info" @click="flipped = !flipped">
-  </footer>
+  <div class="card-mid card--name" :style="{background: background}">
+    <slot name="name"></slot>
+  </div>
+  <div class="card-bot" :style="{background: background}">
+    <div class="card--body">
+      <slot v-if="!flipped" name="body"></slot>
+      <slot v-else name="back"></slot>
+    </div>
+  </div>
 </div>
 </template>
 
 <script>
 
 export default {
+  props: ['background'],
   data() {
     return {
       flipped: false
@@ -41,10 +45,6 @@ export default {
 
 <style>
 .card {
-  border-radius: 0.6em;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.8);
-  padding: 0.25em 0.5em;
-  background: #222222;
   position: relative;
   width: 320px;
   height: 420px;
@@ -54,8 +54,26 @@ export default {
   margin: 0 auto;
 }
 
-.card header,
-.card footer {
+.card-top,
+.card-mid,
+.card-bot {
+  background: #222;
+  padding: 0.25em 0.5em;
+}
+
+.card-top {
+  border-radius: 0.75em 0.75em 0.1em 0.1em;
+}
+.card-bot {
+  border-radius: 0.1em 0.1em 0.75em 0.75em;
+}
+
+.card-mid {
+  margin: 0 auto;
+  width: calc(100% - 6px);
+}
+
+.card header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,16 +81,13 @@ export default {
   font-size: 0.8em;
   text-transform: uppercase;
 
-  background: #222;
   color: #fff;
   padding: 0 0.3em;
-  border-radius: 0.3em;
 }
+
+
 .card header {
   margin-bottom: 0.25em;
-}
-.card footer img {
-  width: 28px;
 }
 
 .card--body {
@@ -81,6 +96,13 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   color: #fff;
+  padding: 0.5em;
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(0,0,0,0.4);
+  border-left: 1px solid rgba(0,0,0,0.4);
+  border-radius: 0.5em;
+  margin: 0 0 0.5em 0;
 }
 .card--body p img {
   width: 18px;
@@ -90,9 +112,14 @@ export default {
 
 .card figure {
   position: relative;
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(0,0,0,0.4);
+  border-left: 1px solid rgba(0,0,0,0.4);
+  border-radius: 0.5em;
 }
 .card-image {
-  border-radius: 0.3em;
+  border-radius: 0.5em;
   pointer-events: none; /* prevent dragging */
 }
 .card-image-attribution {
@@ -162,8 +189,19 @@ export default {
 }
 
 .card header img {
-  width: 12px;
+  width: 16px;
   vertical-align: middle;
   margin-top: -2px;
+  margin-left: 1px;
+}
+.card header > div:first-child {
+  font-family: 'Apple ][', monospace;
+  font-size: 1.4em;
+}
+
+.card--name {
+  text-align: center;
+  font-size: 1.5em;
+  padding: 0.5em 0;
 }
 </style>

@@ -44,7 +44,6 @@ export default {
   relationship: require('/assets/icons/relationship.png'),
   relationship_empty: require('/assets/icons/relationship_empty.png'),
   add: require('/assets/icons/add.svg'),
-  ally: require('/assets/icons/ally.svg'),
   check: require('/assets/icons/check.png'),
   closed_borders: require('/assets/icons/ban.png'),
   development: require('/assets/icons/development.png'),
@@ -61,6 +60,12 @@ export default {
   arrow_right: require('/assets/icons/arrow_right.svg'),
   arrow_left: require('/assets/icons/arrow_left.svg'),
   settings: require('/assets/icons/settings.svg'),
+
+  // NPC relationships
+  ally: require('/assets/icons/npcs/ally.svg'),
+  neutral: require('/assets/icons/npcs/neutral.svg'),
+  friendly: require('/assets/icons/npcs/friendly.svg'),
+  nemesis: require('/assets/icons/npcs/nemesis.svg'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),

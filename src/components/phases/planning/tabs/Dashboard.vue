@@ -3,7 +3,7 @@
   <div class="planning--dashboard">
     <div class="dashboard--item">
       <div class="minicard">
-        +{{state.gameState.world.temperature.toFixed(1)}}°C
+        +{{state.gameState.world.temperature.toFixed(1)}}C
       </div>
       <img :src="icons.warming" />
       <div class="dashboard--item-name">Temp. Anomaly</div>
@@ -155,7 +155,7 @@ export default {
   font-size: 1.5em;
   width: 120px;
   height: 80px;
-  font-family: 'VT323', monospace;
+  font-family: 'Apple ][', monospace;
 }
 .dashboard--item img {
   position: absolute;

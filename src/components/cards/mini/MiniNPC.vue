@@ -10,7 +10,7 @@
     <div class="mini-npc-seats">
       <div :style="{background: factionColor}" v-for="i in factionSeats" />
     </div>
-    <div class="ally-tag" v-if="relationshipName == 'Ally'">
+    <div class="mini-npc-tag npc-tag" v-if="relationshipName == 'Ally'">
       <img :src="icons.ally">Ally
     </div>
   </template>
@@ -58,21 +58,6 @@ export default {
   transform: translate(-50%, -25%);
 }
 
-.ally-tag {
-  color: #000;
-  background: #fff;
-  border-radius: 1em;
-  border: 1px solid #000;
-  text-align: center;
-  font-family: 'VT323', monospace;
-  position: absolute;
-  padding: 0 0.25em;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  width: 60px;
-  bottom: 0;
-}
-
 .mini-npc-name {
   font-size: 0.85em;
 }
@@ -86,5 +71,13 @@ export default {
   width: 8px;
   display: inline-block;
   margin: 0 1px;
+}
+
+.mini-npc-tag {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 0;
+  width: 60px;
 }
 </style>
