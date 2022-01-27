@@ -1,6 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Andada+Pro&display=swap');
 
+@font-face {
+  font-family: 'Times Ten';
+  src: url('/assets/fonts/TimesTen/TimesTen.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Times Ten';
+  src: url('/assets/fonts/TimesTen/TimesTen-BoldItalic.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen-BoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Times Ten';
+  src: url('/assets/fonts/TimesTen/TimesTen-Bold.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Times Ten';
+  src: url('/assets/fonts/TimesTen/TimesTen-Italic.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen-Italic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,7 +45,7 @@ html, body {
   margin: 0;
   padding: 0;
   overscroll-behavior-y: contain;
-  font-family: "DM Mono", monospace;
+  font-family: 'Times Ten', monospace;
   user-select: none;
   font-size: 16px;
 }
