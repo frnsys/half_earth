@@ -1,9 +1,11 @@
 export default {
   political_capital: require('/assets/icons/pips/political_capital.png'),
-  extinction_rate: require('/assets/icons/extinction.alt.png'),
+  hud_political_capital: require('/assets/icons/political_capital.svg'),
+  extinction_rate: require('/assets/icons/extinction.svg'),
   contentedness: require('/assets/icons/contentedness.png'),
+  hud_contentedness: require('/assets/icons/contentedness.svg'),
   emissions: require('/assets/icons/emissions.png'),
-  warming: require('/assets/icons/warming.png'),
+  warming: require('/assets/icons/warming.svg'),
   temperature: require('/assets/icons/temperature.svg'),
   biodiversity: require('/assets/icons/biodiversity.png'),
   precipitation: require('/assets/icons/precipitation.svg'),
@@ -56,6 +58,7 @@ export default {
   sea_level_rise: require('/assets/icons/sea_level_rise.png'),
   arrow_right: require('/assets/icons/arrow_right.svg'),
   arrow_left: require('/assets/icons/arrow_left.svg'),
+  settings: require('/assets/icons/settings.svg'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),
