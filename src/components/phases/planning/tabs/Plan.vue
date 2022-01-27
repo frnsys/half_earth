@@ -8,30 +8,19 @@
     @close="page = null" @change="$emit('change')" />
   <div class="plan--changes" v-if="page == null">
     <div class="plan--change">
-      <div class="plan--action">Add</div>
       <div class="plan--add-change minicard" @click="selectPage('Add')">
-        <img :src="icons.add">
-      </div>
-    </div>
-    <div class="plan--change">
-      <div class="plan--action">Processes</div>
-      <div class="minicard processes-minicard" @click="selectPage('Processes')">
         <div>
-          <img :src="icons.electricity" />
-          <img :src="icons.fuel" />
-          <img :src="icons.plant_calories" />
-          <img :src="icons.animal_calories" />
+          <img :src="icons.add">
+          <div class="plan--action">Add</div>
         </div>
       </div>
     </div>
     <div class="plan--change" v-for="project in activeProjects">
-      <div class="plan--action">
-        <img v-if="project.status == 'Finished' || project.status == 'Active'" :src="icons.check">
-        <template v-else>{{projectStatus(project)}}</template>
-      </div>
       <MiniProject :project="project" />
-      <div class="plan--note">{{project.name}}</div>
     </div>
+  </div>
+  <div class="plan--production">
+    <div @click="selectPage('Processes')">Change Production</div>
   </div>
   <div class="plan--charts">
     <div class="plan--charts--tabs">
@@ -110,14 +99,14 @@ export default {
     markers() {
       return [{
         x: this.historical.data.length - 1,
-        color: '#5268A3',
+        color: '#000000',
       }, {
         text: 'Now',
         point: {x: this.historical.data.length - 1, y: 0.8},
         anchor: 'CENTER',
         background: '#FFECC7'
       }, {
-        text: 'With these changes',
+        text: 'Under current plan',
         point: {x: 50, y: 0.5},
         background: '#FFECC7'
       }];
@@ -138,7 +127,7 @@ export default {
           x: i,
           y: y/100
         })),
-        color: '#BC6A58',
+        color: '#aaaaaa',
       }
     },
     projection() {
@@ -148,7 +137,7 @@ export default {
       }));
       return {
         data,
-        color: '#CDB6AD'
+        color: '#FE4400'
       }
     },
     enterWorld() {
@@ -175,6 +164,11 @@ export default {
 </script>
 
 <style>
+.plan {
+  background: url('/assets/backgrounds/plan.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 .plan--changes {
   display: flex;
   justify-content: space-between;
@@ -192,13 +186,19 @@ export default {
 }
 .plan--change .minicard {
   background: #222;
+  border: 4px solid #fff;
+}
+.plan--change .minicard img {
+  width: 36px;
 }
 .plan--action {
   text-transform: uppercase;
   font-size: 0.7em;
+  font-family: 'Inter', sans-serif;
   /* center overflowed text */
   margin-left: -100%;
   margin-right: -100%;
+  color: #726060;
 }
 .plan--action img {
   height: 12px;
@@ -225,24 +225,45 @@ export default {
   margin-bottom: 0.5em;
 }
 .plan--charts--tabs img {
-  width: 16px;
+  width: 18px;
   vertical-align: middle;
+  margin-right: 3px;
+  margin-top: -2px;
 }
 .plan--charts--tabs > div {
-  border-radius: 0.2em;
-  border: 1px solid #000;
-  padding: 0 0.2em;
+  background: #fff;
+  padding: 0.3em 0.5em;
   margin: 0 0.1em;
+  border-radius: 0.5em;
   display: inline-block;
+  box-shadow: 1px 1px 0px rgb(0 0 0 / 50%);
 }
 .plan--charts--tabs > div.active {
-  background: #222;
-  color: #fff;
+  background: #CDABA1;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+.plan--charts .chart {
+  background: url('/assets/grid.png') #F0D4CC;
+  background-size: 60px;
+  border-radius: 0.4em;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 
 .plan--change .plan--add-change {
-  border: 1px solid #b39d72;
-  background: #e6d3af;
+  background: #F0D4CC;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-top: none;
+  border-left: none;
+}
+.plan--change .plan--add-change img {
+  width: 32px;
+  margin: 0 auto;
 }
 
 .plan > header {
@@ -261,11 +282,18 @@ export default {
 
 .plan--ready {
   font-size: 1.3em;
-  padding: 0.1em 0.25em;
+  padding: 2em 1em;
   position: absolute;
-  left: 50%;
-  bottom: 2em;
-  transform: translate(-50%, 0);
+  right: 1em;
+  bottom: 0em;
+  background: red;
+  border-radius: 10em;
+  border-right: 2px solid rgba(0,0,0,0.5);
+  border-bottom: 2px solid rgba(0,0,0,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+  border-left: 2px solid rgba(255,255,255,0.5);
+  box-shadow: 1px 2px 4px rgb(0 0 0 / 50%);
+  color: #fff;
 }
 
 .processes-minicard img {
@@ -319,5 +347,30 @@ export default {
 }
 .planning--page-tabs .disabled {
   opacity: 0.5;
+}
+
+.plan--production {
+  background: #F0D4CC;
+  border-radius: 0.4em;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding: 1em;
+  text-align: center;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-bottom: 1em;
+}
+
+.plan--production > div {
+  background: #fff;
+  padding: 1em 0.9em;
+  border-radius: 0.5em;
+  box-shadow: 1px 1px 0px rgb(0 0 0 / 50%);
+  max-width: 180px;
+  margin: 0 auto;
+  cursor: pointer;
 }
 </style>
