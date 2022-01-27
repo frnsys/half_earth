@@ -116,7 +116,7 @@ export default {
 }
 
 .planning--page--regions {
-  background: url('/assets/background.jpg');
+  background: url('/assets/backgrounds/regions.jpg');
   background-size: cover;
   background-repeat: no-repeat;
 }

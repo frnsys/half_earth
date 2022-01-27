@@ -5,7 +5,7 @@
       <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
     </div>
     <div v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
-      <img :src="icons.extinction_rate">
+      <img :src="icons.hud_extinction_rate">
       <IntensityBar :intensity="extinction" :max="5" />
     </div>
     <div :class="{'bad': state.gameState.world.contentedness < 0}"
@@ -14,7 +14,7 @@
       <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
     </div>
     <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
-      <img :src="icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
+      <img :src="icons.hud_warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
     </div>
     <div class="hud-settings">
       <img class="sound-toggle" :src="state.sound ? icons.sound : icons.no_sound" @click="toggleSound" />
@@ -63,9 +63,17 @@ export default {
   background: #202020;
   color: #fff;
   justify-content: space-between;
-  padding: 0.1em 0.5em;
   font-size: 0.75em;
   z-index: 5;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 60%);
+}
+.hud > div {
+  padding: 0.5em 0.25em;
+}
+.hud > div:first-child {
+  padding-left: 0.5em;
 }
 .hud img {
   height: 12px;
@@ -85,7 +93,7 @@ export default {
 }
 
 .hud-settings {
-	padding-left: 0.5em;
+  padding: 0.5em 0.5em !important;
 	border-left: 1px solid rgba(255,255,255,0.25);
   margin-top: -2px;
   box-shadow: -1px 0 0 #000;

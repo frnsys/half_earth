@@ -38,7 +38,6 @@ export default {
   color: #fff;
   background: #222;
   border: 1px solid #fff;
-  font-family: 'Andada Pro';
   text-transform: uppercase;
   font-size: 0.8em;
   padding: 0.1em 0.2em;

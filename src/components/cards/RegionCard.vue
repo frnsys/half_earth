@@ -107,7 +107,6 @@ export default {
   color: #fff;
   background: #222;
   border: 1px solid #fff;
-  font-family: 'Andada Pro';
   text-transform: uppercase;
   font-size: 0.8em;
   padding: 0.1em 0.2em;
@@ -122,6 +121,8 @@ export default {
   display: inline-block;
   text-transform: uppercase;
   background: rgba(0,0,0,0.35);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
 }
 .region-stat img {
   height: 10px;

@@ -298,7 +298,6 @@ export default {
   z-index: 2;
   font-size: 1.5em;
   padding: 0.4em;
-  font-family: "Andada Pro";
 }
 
 #event-stream .dialogue {

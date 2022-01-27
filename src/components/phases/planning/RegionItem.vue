@@ -107,9 +107,11 @@ export default {
 }
 .region-item--info {
   margin-right: 0.5em;
-  font-size: 0.8em;
+  font-size: 0.7em;
   text-transform: uppercase;
   flex: 1;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
 }
 .region-item--info > img {
   border-radius: 0.3em;

@@ -288,7 +288,6 @@ export default {
   flex-direction: column;
 }
 .report h2 {
-  font-family: 'Andada Pro';
   font-weight: normal;
   text-align: center;
   border-bottom: 1px solid;

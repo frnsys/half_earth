@@ -1,12 +1,12 @@
 <template>
-<div class="planning--page">
+<div class="planning--page planning--page--dashboard">
   <div class="planning--dashboard">
     <div class="dashboard--item">
       <div class="minicard">
         +{{state.gameState.world.temperature.toFixed(1)}}°C
       </div>
       <img :src="icons.warming" />
-      <div class="dashboard--item-name">Temperature Anomaly</div>
+      <div class="dashboard--item-name">Temp. Anomaly</div>
     </div>
     <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <div class="minicard">
@@ -145,16 +145,17 @@ export default {
 	justify-content: space-evenly;
 }
 .dashboard--item {
-  margin: 1.5em 1em;
+  margin: 1.5em 0.25em;
   position: relative;
   width: 120px;
   text-align: center;
 }
 .dashboard--item .minicard {
   color: #fff;
-  font-size: 1.3em;
+  font-size: 1.5em;
   width: 120px;
   height: 80px;
+  font-family: 'VT323', monospace;
 }
 .dashboard--item img {
   position: absolute;
@@ -163,8 +164,21 @@ export default {
   transform: translate(-50%, -50%);
   width: 32px;
 }
+.dashboard--item-name {
+  text-transform: uppercase;
+  font-size: 0.7em;
+  margin-top: 0.5em;
+  font-family: 'Inter', sans-serif;
+}
 
 .planning--dashboard .minicard {
   background: #222;
 }
+
+.planning--page--dashboard {
+  background: url('/assets/backgrounds/dashboard.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 </style>

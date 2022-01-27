@@ -154,11 +154,8 @@ class Globe {
   async addEmissionsThenUpdate(emissions) {
     await this.surface.addEmissions(emissions);
     let tgav = await this.surface.updateTemperature();
-    // TODO re-enable these?
-    // OR manually trigger them separately and only do them
-    // at the start of the Events phase
-    // await this.surface.updateBiomes(tgav);
-    // await this.updateSurface();
+    await this.surface.updateBiomes(tgav);
+    await this.updateSurface();
     return tgav;
   }
 

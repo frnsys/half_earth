@@ -56,7 +56,6 @@ export default {
 }
 .break h2 {
   margin-top: 0;
-  font-family: 'Andada Pro';
   text-transform: uppercase;
   font-style: italic;
 }
