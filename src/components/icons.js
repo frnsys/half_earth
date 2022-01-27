@@ -44,7 +44,7 @@ export default {
   relationship: require('/assets/icons/relationship.png'),
   relationship_empty: require('/assets/icons/relationship_empty.png'),
   add: require('/assets/icons/add.svg'),
-  ally: require('/assets/icons/ally.png'),
+  ally: require('/assets/icons/ally.svg'),
   check: require('/assets/icons/check.png'),
   closed_borders: require('/assets/icons/ban.png'),
   development: require('/assets/icons/development.png'),
