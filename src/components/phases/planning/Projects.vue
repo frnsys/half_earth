@@ -15,6 +15,7 @@
     </div>
     <div @click="$emit('close')">Back</div>
   </div>
+  <div class="card-drag-target"></div>
 
   <Cards>
     <ProjectCard v-for="i in projectOrder"

@@ -45,6 +45,7 @@ export default {
   relationship_empty: require('/assets/icons/relationship_empty.png'),
   add: require('/assets/icons/add.svg'),
   check: require('/assets/icons/check.png'),
+  check_blk: require('/assets/icons/check_blk.png'),
   closed_borders: require('/assets/icons/ban.png'),
   development: require('/assets/icons/development.png'),
   degrowth: require('/assets/icons/degrowth.png'),
@@ -61,6 +62,7 @@ export default {
   arrow_left: require('/assets/icons/arrow_left.svg'),
   settings: require('/assets/icons/settings.svg'),
   time: require('/assets/icons/time.svg'),
+  warning: require('/assets/icons/warning.svg'),
 
   // NPC relationships
   ally: require('/assets/icons/npcs/ally.svg'),

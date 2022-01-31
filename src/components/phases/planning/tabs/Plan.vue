@@ -440,4 +440,15 @@ export default {
 .plan-change-select .planning--page-tabs {
   margin: 0 0.5em;
 }
+
+.card-drag-target {
+  position: absolute;
+  left: 0.5em;
+  right: 0.5em;
+  background: rgba(0,0,0,0.7);
+  height: 62px;
+  z-index: -1;
+  box-shadow: 0 0 6px #ff66ff, inset 1px -2px 6px #ff66ff;
+  border-radius: 4px;
+}
 </style>

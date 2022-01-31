@@ -2,17 +2,20 @@
 <Card :background="style.background" :color="style.color">
   <template v-slot:header>
     <div>{{group}}</div>
-    <div v-if="implemented">
-      <img :src="icons.check">
+    <div v-if="implemented" class="project-cost">
+      <img :src="icons.check_blk"> Completed
     </div>
     <div v-else class="project-cost" v-tip="costTip">
-      <template v-if="kind != 'Policy'"><img class="project-time" :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
+      <template v-if="kind != 'Policy'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
     </div>
     <img class="barcode" src="/assets/barcode.png" />
   </template>
   <template v-slot:figure>
     <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
-      Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+      <div>
+        <img :src="icons.warning" />
+        Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+      </div>
     </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div v-if="status == 'Building'" class="card-tack-ul project-points">
@@ -348,11 +351,15 @@ export default {
   padding: 0.1em 0.25em 0;
   line-height: 1.2;
   display: flex;
+  text-transform: none;
 }
 .project-cost img {
   height: 12px;
   margin-top: 0 !important;
   width: auto !important;
+}
+.project-cost img:first-child {
+  margin-right: 0.2em;
 }
 .project-points {
   max-width: 110px;
@@ -406,6 +413,11 @@ export default {
   font-size: 0.85em;
   padding: 1em;
 }
+.project-required-majority img {
+  width: 24px;
+  display: block;
+  margin: 0 auto 0.5em;
+}
 
 .project-majority-tip {
   font-size: 0.6em;
@@ -446,9 +458,5 @@ export default {
 
 .card-spacer, .political-effects {
   flex: 1;
-}
-
-.project-time {
-  margin-right: 0.2em;
 }
 </style>
