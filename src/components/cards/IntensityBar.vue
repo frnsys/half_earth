@@ -26,7 +26,7 @@ export default {
       if (i <= this.intensity) {
         return {
           background: this.color,
-          boxShadow: `0px 0px 5px ${this.color}`,
+          boxShadow: `0px 0px 7px ${this.color}`,
         }
       } else {
         return {}

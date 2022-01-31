@@ -163,11 +163,14 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 32px;
+  box-shadow: 0px 1px 2px rgb(0 0 0 / 50%);
+  border-radius: 2em;
 }
 .dashboard--item-name {
   text-transform: uppercase;
-  font-size: 0.7em;
+  font-size: 0.6em;
   margin-top: 0.5em;
+  font-weight: bold;
   font-family: 'Inter', sans-serif;
 }
 
@@ -180,5 +183,4 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
 }
-
 </style>

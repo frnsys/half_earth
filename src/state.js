@@ -37,6 +37,7 @@ const init = {
   },
 
   sound: false,
+  tips: true,
 }
 
 const state = reactive(init);

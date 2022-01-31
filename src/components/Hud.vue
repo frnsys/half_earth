@@ -1,5 +1,6 @@
 <template>
-  <div class="hud">
+  <Menu v-if="showMenu" @close="showMenu = false" />
+  <div class="hud" v-else>
     <div>{{state.gameState.world.year}}</div>
     <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
       <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
@@ -16,24 +17,27 @@
     <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
       <img :src="icons.hud_warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
     </div>
-    <div class="hud-settings">
-      <img class="sound-toggle" :src="state.sound ? icons.sound : icons.no_sound" @click="toggleSound" />
+    <div class="hud-settings" @click="showMenu = true">
+      <img :src="icons.settings" />
     </div>
   </div>
 </template>
 
 <script>
 import state from '../state';
+import Menu from 'components/Menu.vue';
 import IntensityBar from './cards/IntensityBar.vue';
 import intensity from '/src/display/intensity';
 
 export default {
   components: {
+    Menu,
     IntensityBar,
   },
   data() {
     return {
       state,
+      showMenu: false,
     };
   },
   computed: {
@@ -43,16 +47,6 @@ export default {
     extinction() {
       return intensity.scale(state.gameState.world.extinction_rate, 'extinction');
     },
-  },
-  methods: {
-    toggleSound() {
-      state.sound = !state.sound;
-      if (state.sound && window.music.paused) {
-        window.music.play();
-      } else if (!state.sound && !window.music.paused) {
-        window.music.pause();
-      }
-    }
   }
 };
 </script>
@@ -82,14 +76,13 @@ export default {
   margin-right: 2px;
   margin-top: -2px;
 }
+.hud-settings img {
+  margin-right: 0;
+  margin-top: 2px;
+}
 
 .stat-pip {
   height: 8px;
-}
-
-.hud .sound-toggle {
-  margin-top: 0.15em;
-  margin-right: 0;
 }
 
 .hud-settings {

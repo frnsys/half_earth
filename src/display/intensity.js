@@ -50,7 +50,7 @@ function scale(val, key) {
 function color(intensity, invert) {
   intensity = invert ? 5 - intensity : intensity;
   if (intensity <= 1) {
-    return '#43CC70';
+    return '#2FE863';
   } else if (intensity === 2) {
     return '#FBC011';
   } else if (intensity === 3) {
