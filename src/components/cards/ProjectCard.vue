@@ -79,7 +79,7 @@
     </div>
   </template>
   <template v-slot:footer>
-    <div :class="`project-group project-group-${group}`">{{group}}</div>
+    <div class="project-group" :style="style">{{group}}</div>
   </template>
 </Card>
 </template>
@@ -88,6 +88,7 @@
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts.js';
 import {activeEffects} from '/src/display/project';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
@@ -169,6 +170,9 @@ export default {
   computed: {
     type() {
       return this.kind.toLowerCase();
+    },
+    style() {
+      return consts.groupStyle[this.group];
     },
     remainingCost() {
       if (this.implemented) {
@@ -354,41 +358,6 @@ export default {
   border-radius: 0.2em;
   color: #000;
   background: #888;
-}
-
-.project-group-Restoration {
-  background: #247f24;
-}
-.project-group-Protection {
-  background: #53a553;
-}
-.project-group-Nuclear {
-  background: orange;
-}
-.project-group-Agriculture {
-  background: wheat;
-}
-.project-group-Control {
-  background: #d83535;
-}
-.project-group-Population {
-  background: #6b6bec;
-}
-.project-group-Diet {
-  background: #f3ff56;
-}
-.project-group-Space {
-  background: #250441;
-  color: #d0c0e4;
-}
-.project-group-Geoengineering {
-  background: #61688b;
-}
-.project-group-Electrification {
-  background: #fcba03;
-}
-.project-group-Behavior {
-  background: #b8ad91;
 }
 
 .project-required-majority {

@@ -6,31 +6,44 @@
     @change="$emit('change')" />
   <Processes v-if="page == 'Processes'"
     @close="page = null" @change="$emit('change')" />
-  <div class="plan--changes" v-if="page == null">
-    <div class="plan--change">
-      <div class="plan--add-change minicard" @click="selectPage('Add')">
-        <div>
-          <img :src="icons.add">
-          <div class="plan--action">Add</div>
+  <ActivePlan v-if="page == 'All'"
+    @close="page = null"
+    @add="selectPage('Add')"
+    @change="$emit('change')" />
+  <div v-if="page == null">
+    <div class="plan--changes">
+      <div class="plan--change">
+        <div class="plan--add-change minicard" @click="selectPage('Add')">
+          <div>
+            <img :src="icons.add">
+            <div class="plan--action">Add</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="plan--change" v-for="project in activeProjects">
-      <MiniProject :project="project" />
-    </div>
-  </div>
-  <div class="plan--production">
-    <div @click="selectPage('Processes')">Change Production</div>
-  </div>
-  <div class="plan--charts">
-    <div class="plan--charts--tabs">
-      <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
-        <img :src="icons[key]">{{name}}
+      <div class="plan--change" v-for="project in activeProjects.slice(0, this.nProjects)">
+        <MiniProject :project="project" />
+      </div>
+      <div class="plan--change" v-for="i in placeholders">
+        <div class="plan--change-placeholder"></div>
+      </div>
+      <div class="plan--change" v-if="activeProjects.length > 5">
+        <div class="plan--change-view-all" @click="selectPage('All')">View<br />All</div>
       </div>
     </div>
-    <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
+    <div class="plan--production">
+      <div class="plan--production-bg"></div>
+      <div class="plan--production-button" @click="selectPage('Processes')">Change Production</div>
+    </div>
+    <div class="plan--charts">
+      <div class="plan--charts--tabs">
+        <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
+          <img :src="icons[key]">{{name}}
+        </div>
+      </div>
+      <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
+    </div>
+    <button class="plan--ready" @click="enterWorld">Ready</button>
   </div>
-  <button class="plan--ready" @click="enterWorld">Ready</button>
 </div>
 </template>
 
@@ -39,6 +52,7 @@ import game from '/src/game';
 import state from '/src/state';
 import Chart from '../Chart.vue';
 import format from '/src/display/format';
+import ActivePlan from '../ActivePlan.vue';
 import Processes from '../Processes.vue';
 import Projects from '../Projects.vue';
 import MiniProcess from 'components/cards/mini/MiniProcess.vue';
@@ -63,6 +77,7 @@ export default {
     MiniProject,
     Projects,
     Processes,
+    ActivePlan,
   },
   created() {
     this.charts = charts;
@@ -83,6 +98,16 @@ export default {
     }
   },
   computed: {
+    placeholders() {
+      return Math.max(0, 5 - this.activeProjects.length);
+    },
+    nProjects() {
+      if (this.activeProjects.length > 5) {
+        return 4; // Save one spot for "View All"
+      } else {
+        return this.activeProjects.length;
+      }
+    },
     activeProjects() {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
     },
@@ -172,21 +197,19 @@ export default {
 .plan--changes {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  align-content: start;
-  height: 360px;
+  height: 300px;
+  max-width: 320px;
   flex-wrap: wrap;
-  overflow-y: scroll;
-  flex-direction: column;
+  margin: 0 auto;
 }
 .plan--change {
-  width: 80px;
+  width: 90px;
   text-align: center;
-  margin: 0.5em 0.25em;
+  margin: 0.5em 0;
 }
 .plan--change .minicard {
   background: #222;
-  border: 4px solid #fff;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
 }
 .plan--change .minicard img {
   width: 36px;
@@ -265,6 +288,21 @@ export default {
   width: 32px;
   margin: 0 auto;
 }
+.plan--change-placeholder {
+  border: 1px dashed rgba(0,0,0,0.7);
+  height: 130px;
+  border-radius: 0.5em;
+}
+.plan--change-view-all {
+  height: 130px;
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1.3em;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+}
 
 .plan > header {
   display: flex;
@@ -326,7 +364,9 @@ export default {
 .planning--page-tabs {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid;
+  border-radius: 0.3em;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 .planning--page-tabs img {
   width: 32px;
@@ -337,7 +377,6 @@ export default {
   text-align: center;
   line-height: 1;
   border-right: 1px solid;
-  font-size: 0.7em;
 }
 .planning--page-tabs > div:last-child {
   border-right: none;
@@ -357,14 +396,27 @@ export default {
   border-bottom: 1px solid rgba(255,255,255,0.5);
   padding: 1em;
   text-align: center;
-  height: 220px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   margin-bottom: 1em;
+  position: relative;
+}
+.plan--production-bg {
+  position: absolute;
+  top: 1em;
+  bottom: 1em;
+  right: 1em;
+  left: 1em;
+  border-radius: 0.3em;
+  background: url(/assets/backgrounds/production.jpg);
+  mix-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
 }
 
-.plan--production > div {
+.plan--production-button {
   background: #fff;
   padding: 1em 0.9em;
   border-radius: 0.5em;
@@ -372,5 +424,6 @@ export default {
   max-width: 180px;
   margin: 0 auto;
   cursor: pointer;
+  z-index: 1;
 }
 </style>

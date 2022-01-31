@@ -133,7 +133,7 @@ export default {
   flex-direction: column;
   flex: 1;
   overflow-y: scroll;
-  padding: 4em 1em 1em 1em;
+  padding: 4em 0.5em 1em 0.5em;
 
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -185,9 +185,10 @@ export default {
 .planning > header {
   display: flex;
   position: absolute;
-  margin: 1em;
+  margin: 0.75em 0.5em;
   left: 0;
   right: 0;
+  z-index: 2;
   border-radius: 0.3em;
   background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.5);

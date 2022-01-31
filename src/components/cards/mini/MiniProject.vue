@@ -1,5 +1,5 @@
 <template>
-<MiniCard>
+<MiniCard :style="style">
   <template v-slot:body>
     <div class="minicard-background" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" />
     <div :style="{zIndex: 1}">
@@ -7,6 +7,7 @@
       <div v-if="project.status == 'Building'" class="project-progress">
         <div class="project-progress-fill" :style="{width: `${project.progress*100}%`}" />
       </div>
+      <div v-if="project.status == 'Finished' || project.status == 'Active'" class="project-check"><img :src="icons.check" /></div>
     </div>
   </template>
   <template v-slot:expanded>
@@ -45,6 +46,14 @@ export default {
     ProjectCard,
   },
   computed: {
+    style() {
+      let style = consts.groupStyle[this.project.group];
+      if (!style) {
+        return {border: `4px solid #fff`};
+      } else {
+        return {border: `4px solid ${style.background}`};
+      }
+    },
     icon() {
       return this.project.kind.toLowerCase();
     },
@@ -73,15 +82,27 @@ export default {
 
 <style>
 .project-progress {
-  height: 5px;
+  height: 9px;
   width: 80%;
-  background: #aaa;
+  background: #fff;
+  border: 1px solid #fff;
   margin: 0 auto;
   border-radius: 1em;
 }
 .project-progress-fill {
-  background: #41C56D;
-  height: 5px;
+  background: #2FE863;
+  height: 7px;
+  border-radius: 0.4em;
+}
+.project-check {
   border-radius: 1em;
+  background: rgba(0,0,0,0.4);
+  position: absolute;
+  right: 0.2em;
+  bottom: 0.2em;
+  padding: 0.2em 0.5em 0 0.5em;
+}
+.project-check img {
+  width: 16px !important;
 }
 </style>

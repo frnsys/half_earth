@@ -1,5 +1,5 @@
 <template>
-<div class="minicard" @click="expand">
+<div class="minicard" :style="style" @click="expand">
   <slot name="body"></slot>
 </div>
 <div class="minicard--expanded" v-if="expanded" @click="collapse" ref="overlay">
@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  props: ['style'],
   data() {
     return {
       expanded: false,
@@ -29,10 +30,10 @@ export default {
 
 <style>
 .minicard {
-  border-radius: 0.3em;
+  border-radius: 0.5em;
   padding: 0.5em;
-  width: 80px;
-  height: 120px;
+  width: 90px;
+  height: 130px;
   position: relative;
   display: flex;
   flex-direction: column;
