@@ -1,15 +1,15 @@
 <template>
 <div class="plan-change-select planning--page">
   <div class="planning--page-tabs">
-   <div @click="type = 'Research'" :class="{selected: type == 'Research'}">
+   <div class="project-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
       <img :src="icons.research" />
       <div>Research</div>
     </div>
-   <div @click="type = 'Initiative'" :class="{selected: type == 'Initiative'}">
+   <div class="project-tab" @click="type = 'Initiative'" :class="{selected: type == 'Initiative'}">
       <img :src="icons.initiative" />
       <div>Infrastructure</div>
     </div>
-   <div @click="type = 'Policy'" :class="{selected: type == 'Policy'}">
+   <div class="project-tab" @click="type = 'Policy'" :class="{selected: type == 'Policy'}">
       <img :src="icons.policy" />
       <div>Policies</div>
     </div>
@@ -72,21 +72,12 @@ export default {
   },
   computed: {
     projectOrder() {
-      let active = [];
-      let inactive = [];
+      let projects = state.gameState.projects
+        .filter((p) => p.kind == this.type && !p.locked);
 
-      let projects = state.gameState.projects.filter((p) => p.kind == this.type && !p.locked);
-      projects.forEach((p, i) => {
-        if (p.status == 'Building' || p.ongoing && p.status == 'Active') {
-          active.push(i);
-        } else {
-          inactive.push(i);
-        }
-      });
-
-      active.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
-      inactive.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
-      return active.concat(inactive);
+      let idxs = projects.map((p, i) => i);
+      idxs.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
+      return idxs;
     },
     projects() {
       return state.gameState.projects.filter((p) => p.kind == this.type && !p.locked);

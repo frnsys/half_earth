@@ -162,8 +162,8 @@ export default {
 }
 .cards .card {
   display: inline-flex;
-  min-width: 320px;
-  margin: 0 0.5em;
+  min-width: 280px;
+  margin: 0 0.25em;
   vertical-align: top;
   white-space: normal;
   user-select: none;

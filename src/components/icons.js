@@ -60,6 +60,7 @@ export default {
   arrow_right: require('/assets/icons/arrow_right.svg'),
   arrow_left: require('/assets/icons/arrow_left.svg'),
   settings: require('/assets/icons/settings.svg'),
+  time: require('/assets/icons/time.svg'),
 
   // NPC relationships
   ally: require('/assets/icons/npcs/ally.svg'),

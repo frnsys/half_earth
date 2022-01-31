@@ -345,11 +345,13 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 2;
-  background: #ff6b56;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 1em; /* Space for the hud */
+  padding: 2em 0 0 0 !important;
+  background: url('/assets/backgrounds/plan.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 .plan-change-select > header {
   color: #fff;
@@ -380,9 +382,13 @@ export default {
 }
 .planning--page-tabs > div:last-child {
   border-right: none;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
 }
 .planning--page-tabs > div.selected {
-  background: #eed793;
+  background: #FF66FF;
 }
 .planning--page-tabs .disabled {
   opacity: 0.5;
@@ -425,5 +431,13 @@ export default {
   margin: 0 auto;
   cursor: pointer;
   z-index: 1;
+}
+
+.project-tab {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7em;
+}
+.plan-change-select .planning--page-tabs {
+  margin: 0 0.5em;
 }
 </style>

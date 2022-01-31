@@ -76,7 +76,7 @@ export default {
   border-radius: 1em;
   border: 1px solid #000;
   text-align: center;
-  font-family: 'Apple ][', monospace;
+  font-family: 'W95FA', monospace;
   padding: 0 0.25em;
   line-height: 1.2;
   display: flex;

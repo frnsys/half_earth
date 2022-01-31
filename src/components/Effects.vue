@@ -671,6 +671,7 @@ export default {
   font-size: 0.9em;
   background: #475664;
   padding: 0.05em 0.2em;
+  color: #fff;
 }
 .card-tag img {
   height: 13px;
@@ -678,7 +679,12 @@ export default {
 }
 
 .unknown-param {
-  color: #9dbbd8;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  border-radius: 2em;
+  font-weight: bold;
+  padding: 0.25em 0.6em;
+  font-size: 0.9em;
 }
 
 </style>

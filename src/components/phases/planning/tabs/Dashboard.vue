@@ -152,10 +152,10 @@ export default {
 }
 .dashboard--item .minicard {
   color: #fff;
-  font-size: 1.5em;
+  font-size: 1.2em;
   width: 120px;
   height: 80px;
-  font-family: 'Apple ][', monospace;
+  font-family: 'W95FA', monospace;
 }
 .dashboard--item img {
   position: absolute;

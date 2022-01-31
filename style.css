@@ -38,16 +38,13 @@
 }
 
 @font-face {
-  font-family: 'Apple ][';
-  src: url('/assets/fonts/Apple/Apple.woff2') format('woff2'),
-      url('/assets/fonts/Apple/Apple.woff') format('woff');
+  font-family: 'W95FA';
+  src: url('/assets/fonts/W95FA/w95fa.woff2') format('woff2'),
+      url('/assets/fonts/W95FA/w95fa.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  size-adjust: 50%;
-  line-gap-override: 50%;
 }
-
 
 * {
   box-sizing: border-box;

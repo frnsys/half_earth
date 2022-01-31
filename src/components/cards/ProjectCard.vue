@@ -1,19 +1,20 @@
 <template>
-<Card>
+<Card :background="style.background" :color="style.color">
   <template v-slot:header>
-    <div>{{name}}</div>
+    <div>{{group}}</div>
     <div v-if="implemented">
       <img :src="icons.check">
     </div>
+    <div v-else class="project-cost" v-tip="costTip">
+      <template v-if="kind != 'Policy'"><img class="project-time" :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
+    </div>
+    <img class="barcode" src="/assets/barcode.png" />
   </template>
   <template v-slot:figure>
     <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
       Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
     </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <div v-if="!implemented" class="card-tack-ur project-cost" v-tip="costTip">
-      {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
-    </div>
     <div v-if="status == 'Building'" class="card-tack-ul project-points">
       <img
         v-for="_ in points"
@@ -26,17 +27,14 @@
     </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
-      <div>Nay</div>
-      <div>
-        <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
-      </div>
+      <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
     <div class="supporters" v-if="supportersDetailed.length > 0">
-      <div>Yea</div>
-      <div>
-        <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
-      </div>
+      <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
+  </template>
+  <template v-slot:name>
+    {{name}}
   </template>
   <template v-slot:body>
     <Effects :effects="activeEffects" />
@@ -72,8 +70,24 @@
     </div>
 
   </template>
-  <template v-slot:back>
-    <p>{{description}}</p>
+  <template v-slot:top-back>
+    <p class="card-desc">{{description}}</p>
+  </template>
+  <template v-slot:bot-back>
+    <div class="political-effects" v-if="opposersDetailed.length > 0 || supportersDetailed.length > 0">
+      <div class="political-effects-title">Political Effects</div>
+      <div class="political-effects-cols">
+        <div class="political-effects-opposers" v-if="opposersDetailed.length > 0">
+          <div class="political-effects-label">Nay</div>
+          <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        </div>
+        <div class="political-effects-supporters" v-if="supportersDetailed.length > 0">
+          <div class="political-effects-label">Yea</div>
+          <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        </div>
+      </div>
+    </div>
+    <div v-else class="card-spacer"></div>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>
@@ -172,20 +186,31 @@ export default {
       return this.kind.toLowerCase();
     },
     style() {
-      return consts.groupStyle[this.group];
+      let style = consts.groupStyle[this.group];
+      if (!style) {
+        return {
+          background: '#e0e0e0',
+          color: '#000',
+        };
+      } else {
+        if (!style.color) {
+          style.color = '#000';
+        }
+        return style;
+      }
     },
     remainingCost() {
       if (this.implemented) {
         return null;
       } else if (this.status == 'Building') {
         let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
-        return `${years} years left`;
+        return `${years} yrs left`;
       } else {
         let cost = this.points > 0 ? this.estimate : this.cost;
         if (this.kind == 'Policy') {
           return cost;
         } else {
-          return `${cost} years`;
+          return `${cost} yrs`;
         }
       }
     },
@@ -313,15 +338,21 @@ export default {
 
 <style>
 .project-cost {
-  color: #fff;
-  background: rgba(25,25,25,0.9);
-  padding: 0 0.2em;
-  border-radius: 0.2em;
-  text-transform: uppercase;
+  color: #000;
+  background: #fff;
+  border-radius: 1em;
+  border: 1px solid #000;
+  text-align: center;
+  font-family: 'W95FA', monospace;
   font-size: 0.9em;
+  padding: 0.1em 0.25em 0;
+  line-height: 1.2;
+  display: flex;
 }
 .project-cost img {
   height: 12px;
+  margin-top: 0 !important;
+  width: auto !important;
 }
 .project-points {
   max-width: 110px;
@@ -379,5 +410,45 @@ export default {
 .project-majority-tip {
   font-size: 0.6em;
   text-align: center;
+}
+
+.political-effects-label,
+.political-effects-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7em;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.political-effects img {
+  width: 28px;
+}
+.political-effects-cols {
+  display: flex;
+  justify-content: space-evenly;
+}
+.political-effects-opposers,
+.political-effects-supporters {
+  background: rgba(0,0,0,0.8);
+  width: 64px;
+  margin: 0.25em;
+  padding: 0.5em;
+  text-align: center;
+  border-radius: 0.5em;
+}
+.political-effects-supporters .political-effects-label {
+  color: #2FE863;
+}
+.political-effects-opposers .political-effects-label {
+  color: #FF0404;
+}
+
+.card-spacer, .political-effects {
+  flex: 1;
+}
+
+.project-time {
+  margin-right: 0.2em;
 }
 </style>

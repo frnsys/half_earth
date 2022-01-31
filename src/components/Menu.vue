@@ -204,8 +204,8 @@ header .dropdown-menu-inset {
 
 .dropdown-menu-stat-value {
   color: #fff;
-  font-family: 'Apple ][', monospace;
-  font-size: 1.5em;
+  font-family: 'W95FA', monospace;
+  font-size: 1.1em;
 }
 
 .dropdown-menu-stats-labels {
