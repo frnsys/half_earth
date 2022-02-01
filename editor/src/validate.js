@@ -310,12 +310,14 @@ const SPECS = {
 
   Industry: {
     key: 'name',
-    validate: ['name', 'resources'],
+    validate: ['name', 'resources', 'description'],
     questions: [],
     validateKey: (item, key) => {
       switch (key) {
         case 'name':
           return requireAtLeastOne(item.name);
+        case 'description':
+          return requireAtLeastOne(item.description);
         case 'resources':
           return requireNonEmptyObj(item.resources) && requireResources(item.resources);
         default:
