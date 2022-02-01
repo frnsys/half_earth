@@ -62,7 +62,7 @@
         resource="water" :intensity="intensities.water" />
       <IntensityIcon
         v-tip="intensityTip('biodiversity')"
-        resource="biodiversity" :intensity="intensities.biodiversity" />
+        resource="extinction_rate" :intensity="intensities.biodiversity" />
       <IntensityIcon
         v-tip="intensityTip('land')"
         resource="land" :intensity="intensities.land" />
