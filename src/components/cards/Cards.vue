@@ -19,6 +19,7 @@ import animate from 'lib/anim';
 const duration = 150; // ms
 
 export default {
+  props: ['enabled'],
   data() {
     return {
       down: false,
@@ -54,29 +55,34 @@ export default {
   methods: {
     drag(ev) {
       if (!this.down) return;
-      this.dragging = true;
       const dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
+      const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
-      // Don't allow vertical dragging
-      // const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
-      const dy = 0;
+      // Check if above threshold
+      if (Math.abs(dy) < 10 && Math.abs(dx) > 10) {
+        this.dragging = true;
 
-      // Scroll the element
-      let prev = this.$el.scrollLeft;
-      this.$el.scrollTop = this.pos.top - dy;
-      this.$el.scrollLeft = this.pos.left - dx;
-      let diff = this.$el.scrollLeft - prev; // For momentum
+        this.$emit('dragStart', this);
 
-      this.vel = diff;
+        // Stop snap-to-center animation if there is one
+        if (this.animation) this.animation.stop();
+
+        // Stop momentum if any
+        if (this.momentum) cancelAnimationFrame(this.momentum);
+        this.momentum = null;
+
+        // Scroll the element
+        let prev = this.$el.scrollLeft;
+        // No vertical dragging
+        // this.$el.scrollTop = this.pos.top - dy;
+        this.$el.scrollLeft = this.pos.left - dx;
+        let diff = this.$el.scrollLeft - prev; // For momentum
+
+        this.vel = diff;
+      }
     },
     startDrag(ev) {
-      // Stop snap-to-center animation if there is one
-      if (this.animation) this.animation.stop();
-
-      // Stop momentum if any
-      if (this.momentum) cancelAnimationFrame(this.momentum);
-      this.momentum = null;
-
+      if (!this.enabled) return;
       this.down = true;
       this.pos = {
         // Current mouse position
@@ -113,9 +119,12 @@ export default {
           let start = this.$el.scrollLeft;
           this.animation = animate(start, end, duration, (val) => {
             this.$el.scrollLeft = val;
+          }, () => {
+            this.$emit('dragEnd', target);
           });
         } else {
           this.$el.scrollLeft = end;
+          this.$emit('dragEnd', target);
         }
       }
     },
@@ -126,6 +135,8 @@ export default {
 
         // Momentum
         this.applyMomentum();
+      } else {
+        this.$emit('dragEnd', null);
       }
     },
     applyMomentum() {
@@ -172,10 +183,10 @@ export default {
 /* Margin on either side so
 the first and last cards have room
 to be centered */
-.cards .card:first-child {
+.cards > div:first-child {
   margin-left: 12em;
 }
-.cards .card:last-child {
+.cards > div:last-child {
   margin-right: 12em;
 }
 </style>

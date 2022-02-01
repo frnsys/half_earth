@@ -439,6 +439,8 @@ export default {
 }
 .plan-change-select .planning--page-tabs {
   margin: 0 0.5em;
+  position: relative;
+  z-index: 10;
 }
 
 .card-drag-target {

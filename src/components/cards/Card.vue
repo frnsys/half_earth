@@ -59,6 +59,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  border-radius: 0.6em;
 }
 
 .card-top,

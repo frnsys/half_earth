@@ -18,6 +18,13 @@ export default {
   // PC cost for research/infrastructure points
   pointCost: 3,
 
+  // Max points for a project
+  maxPoints: 15,
+
+  // In seconds
+  cardScanTime: 1,
+  cardWithdrawTime: 2,
+
   // Project group colors
   groupStyle: {
     Restoration: {

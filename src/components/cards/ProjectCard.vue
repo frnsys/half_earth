@@ -1,9 +1,14 @@
 <template>
-<Card :background="style.background" :color="style.color">
+<Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
   <template v-slot:header>
     <div>{{group}}</div>
     <div v-if="implemented" class="project-cost">
-      <img :src="icons.check_blk"> Completed
+      <template v-if="hasLevels">
+        Level {{level+1}}
+      </template>
+      <template v-else>
+        <img :src="icons.check_blk"> Completed
+      </template>
     </div>
     <div v-else class="project-cost" v-tip="costTip">
       <template v-if="kind != 'Policy'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
@@ -25,9 +30,6 @@
         v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
         :src="icons[type]">
     </div>
-    <div v-if="hasLevels" class="project-level">
-      Level {{level+1}}
-    </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
       <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
@@ -40,23 +42,8 @@
     {{name}}
   </template>
   <template v-slot:body>
+    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
     <Effects :effects="activeEffects" />
-
-    <div class="card-actions" v-if="(status == 'Inactive' || status == 'Building')">
-      <template v-if="kind == 'Policy'">
-        <button @click="payPoints" :disabled="!majoritySatisfied">
-          Implement
-          <div class="project-majority-tip" v-if="!majoritySatisfied">Needs Majority</div>
-        </button>
-      </template>
-      <template v-else>
-        <button @click="assignPoint" :disabled="!majoritySatisfied">+<img class="pip" :src="icons[type]"></button>
-        <button v-if="points > 0" @click="unassignPoint">-<img class="pip" :src="icons[type]"></button>
-      </template>
-    </div>
-    <div class="card-actions" v-else-if="haltable">
-      <button @click="halt">Stop</button>
-    </div>
 
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">
@@ -66,11 +53,12 @@
         <template v-else>
           <div>Next Level</div>
           <div>{{nextUpgrade.cost}}<img class="pip" :src="icons.political_capital"></div>
-          <button @click="upgrade(p)">Upgrade</button>
         </template>
       </div>
       <Effects :effects="nextUpgrade.effects" />
     </div>
+
+    <div class="project-status" v-if="status == 'Building'">{{ kind == 'Research' ? 'Researching' : 'Building'}}</div>
 
   </template>
   <template v-slot:top-back>
@@ -95,9 +83,6 @@
       Image: {{image.attribution}}
     </div>
   </template>
-  <template v-slot:footer>
-    <div class="project-group" :style="style">{{group}}</div>
-  </template>
 </Card>
 </template>
 
@@ -111,8 +96,6 @@ import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 import NPCS from '/assets/content/npcs.json';
 import {years_remaining} from 'half-earth-engine';
-
-const MAX_POINTS = 15;
 
 /*
 Description: Convert a decimal number into a fraction
@@ -218,9 +201,7 @@ export default {
       }
     },
     hasLevels() {
-      return this.status == 'Active'
-        && this.kind == 'Policy'
-        && this.upgrades.length > 0;
+      return this.upgrades.length > 0;
     },
     nextUpgrade() {
       if (this.upgrades.length === 0) {
@@ -275,47 +256,8 @@ export default {
     implemented() {
       return this.status == 'Finished' || this.status == 'Active';
     },
-    haltable() {
-      return this.implemented && (this.kind == 'Policy' || this.ongoing);
-    },
   },
   methods: {
-    assignPoint() {
-      if (state.points[this.type] > 0 && this.points < MAX_POINTS) {
-        game.setProjectPoints(this.id, this.points + 1);
-        if (this.status !== 'Building') {
-          game.startProject(this.id);
-
-          // Manually update status
-          this.status = state.gameState.projects[this.id].status;
-        }
-        state.points[this.type]--;
-        this.$emit('change');
-      }
-    },
-    unassignPoint() {
-      if (this.points > 0) {
-        game.setProjectPoints(this.id, this.points - 1);
-        if (this.status == 'Building' && this.points <= 1) {
-          game.stopProject(this.id);
-
-          // Manually update status
-          this.status = state.gameState.projects[this.id].status;
-        }
-        state.points[this.type]++;
-        this.$emit('change');
-      }
-    },
-    payPoints() {
-      // Only policies have points paid all at once,
-      // rather than assigned.
-      let available = state.gameState.political_capital;
-      if (this.status == 'Inactive' && available >= this.cost) {
-        game.changePoliticalCapital(-this.cost);
-        game.startProject(this.id);
-        this.$emit('change');
-      }
-    },
     upgrade() {
       let nextUpgrade = this.nextUpgrade;
       let available = state.gameState.political_capital;
@@ -365,12 +307,28 @@ export default {
   max-width: 110px;
 }
 
+.project-status {
+  color: #fff;
+  border-radius: 1em;
+  text-align: center;
+  font-family: 'W95FA', monospace;
+  font-size: 0.9em;
+  padding: 0.4em 0.5em 0.3em;
+  text-transform: uppercase;
+  background: #FF66FF;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 0;
+  border: 1px solid #b929b9;
+}
+
 .project-upgrade {
-  background: #333;
+  background: rgba(0,0,0,0.15);
   padding: 0.25em 0.5em;
   border-radius: 0.2em;
   font-size: 0.9em;
-  border: 2px solid #444;
+  border: 1px solid rgba(0,0,0,0.2);
 }
 .project-upgrade.upgrading {
   border: 2px solid #43CC70;
@@ -458,5 +416,31 @@ export default {
 
 .card-spacer, .political-effects {
   flex: 1;
+}
+
+.passed-stamp {
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+}
+.passed-stamp img {
+  width: 240px !important;
+}
+
+.in-progress {
+  animation-duration: 1.5s;
+  animation-name: progresspulse;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes progresspulse {
+  from {
+    box-shadow: 0 0 2px #FF66FF, inset 1px 0px 8px #FF66FF;
+  }
+
+  to {
+    box-shadow: 0 0 24px #FF66FF, inset 1px 0px 8px #FF66FF;
+  }
 }
 </style>

@@ -109,20 +109,14 @@ export default {
 }
 .pips {
   padding: 0.5em;
-  margin: 0.25em;
+  margin: 0 auto 0.5em;
   position: relative;
   text-align: center;
   font-size: 1.2em;
   color: #fff;
-}
-.pips--buy {
-  cursor: pointer;
   user-select: none;
   border-radius: 0.2em;
   background: rgba(0,0,0,0.1);
-}
-.pips--buy:hover {
-  background: rgba(255,255,255,0.3);
 }
 .pip-in-use {
   opacity: 0.5;
