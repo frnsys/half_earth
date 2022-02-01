@@ -1,6 +1,6 @@
 <template>
-<div class="card" @click="flipped = !flipped">
-  <div class="card-top" :style="{background, color}">
+<div class="card" @click="flip">
+  <div class="card-top" :style="{background, color}" v-if="hasFigure && hasHeader">
     <header :style="{color}">
       <slot name="header"></slot>
     </header>
@@ -11,7 +11,7 @@
       <slot name="top-back"></slot>
     </div>
   </div>
-  <div class="card-mid card--name" :style="{background, color}">
+  <div v-if="hasName" class="card-mid card--name" :style="{background, color}">
     <div :style="{visibility: flipped ? 'hidden' : 'visible'}">
       <slot name="name"></slot>
     </div>
@@ -30,21 +30,29 @@
 <script>
 
 export default {
-  props: ['background', 'color'],
+  props: ['background', 'color', 'noBack'],
   data() {
     return {
       flipped: false
     }
   },
   computed: {
-    hasExtras() {
-      return !!this.$slots.extras;
+    hasName() {
+      return !!this.$slots.name;
+    },
+    hasHeader() {
+      return !!this.$slots.header;
+    },
+    hasFigure() {
+      return !!this.$slots.figure;
     }
   },
   methods: {
     flip(ev) {
-      this.flipped = !this.flipped;
-      ev.stopImmediatePropagation();
+      if (!this.noBack) {
+        this.flipped = !this.flipped;
+        ev.stopImmediatePropagation();
+      }
     }
   }
 }

@@ -91,10 +91,13 @@ export default {
   padding: 0.5em;
   border-radius: 0.3em;
   margin: 1em;
-  border: 1px solid #7B7B7B;
+  border: 1px solid #707070;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
   display: flex;
   align-items: center;
   pointer-events: auto;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 70%);
 }
 .tip--icon {
   min-width: 36px;

@@ -1,7 +1,5 @@
 <template>
-<Card class="factors">
-  <template v-slot:header>
-  </template>
+<Card class="factors" :noBack="true">
   <template v-slot:body>
     <div class="factors--users">
       <div class="factors--total">
@@ -31,8 +29,6 @@
     </div>
   </template>
   <template v-slot:back>
-  </template>
-  <template v-slot:footer>
   </template>
 </Card>
 
@@ -111,7 +107,8 @@ export default {
   color: #727987;
 }
 
-.card.factors {
+.card.factors .card--body {
+  height: 410px;
   overflow-y: scroll;
   scrollbar-width: thin;
 }

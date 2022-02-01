@@ -1,10 +1,13 @@
 <template>
-<Card class="industry">
+<Card class="industry" color="#000000" background="palevioletred">
   <template v-slot:header>
-    <div>{{name}}</div>
+    <div>Sector</div>
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
+  </template>
+  <template v-slot:name>
+    {{name}}
   </template>
   <template v-slot:body>
     <div class="space-even">
@@ -28,14 +31,16 @@
       </template>
     </div>
   </template>
-  <template v-slot:back>
-    TODO active effects
+  <template v-slot:top-back>
+    <p class="card-desc">{{description}}</p>
+  </template>
+  <template v-slot:bot-back>
+    <div>
+      TODO active effects
+    </div>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>
-  </template>
-  <template v-slot:footer>
-    <div>GOSPLANT</div>
   </template>
 </Card>
 
