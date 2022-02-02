@@ -217,6 +217,10 @@ export default {
 
           } else if (this.type == 'Policy' && this.payPoints(this.selectedProject)) {
             this.pulseScan();
+            document.body.classList.add('screenshake');
+            setTimeout(() => {
+              document.body.classList.remove('screenshake');
+            }, 350);
 
           // If not enough PC
           } else {
@@ -483,5 +487,34 @@ export default {
   }
 }
 
+.screenshake {
+  animation-duration: 0.35s;
+  animation-name: screenshake;
+}
 
+@keyframes screenshake {
+  from {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-2px, -1px);
+  }
+
+  35% {
+    transform: translate(1px, 2px);
+  }
+
+  55% {
+    transform: translate(3px, 1px);
+  }
+
+  75% {
+    transform: translate(-1px, 2px);
+  }
+
+  to {
+    transform: translate(0, 0);
+  }
+}
 </style>
