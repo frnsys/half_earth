@@ -1,5 +1,8 @@
 <template>
 <div class="plan-change-select planning--page" :class="{scrolling}">
+  <HelpTip text="↑ Swipe this card up and hold to add it to your plan ↑" x="50%" y="150px" :center="true" />
+  <HelpTip text="⟵ Swipe sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
+
   <div class="planning--page-tabs">
    <div class="project-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
       <img :src="icons.research" />
@@ -57,6 +60,7 @@
 
 <script>
 import state from '/src/state';
+import HelpTip from 'components/Help.vue';
 import Cards from 'components/cards/Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
 import ScannerMixin from 'components/phases/ScannerMixin';
@@ -66,6 +70,7 @@ export default {
   components: {
     Cards,
     ProjectCard,
+    HelpTip,
   },
   data() {
     return {

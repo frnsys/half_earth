@@ -12,6 +12,7 @@
     @change="$emit('change')" />
   <div v-if="page == null">
     <div class="plan--changes">
+      <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
       <div class="plan--change">
         <div class="plan--add-change minicard" @click="selectPage('Add')">
           <div>
@@ -35,6 +36,7 @@
       <div class="plan--production-button" @click="selectPage('Processes')">Change Production</div>
     </div>
     <div class="plan--charts">
+      <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="220px" :center="true" />
       <div class="plan--charts--tabs">
         <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
           <img :src="icons[key]">{{name}}
@@ -55,6 +57,7 @@ import format from '/src/display/format';
 import ActivePlan from '../ActivePlan.vue';
 import Processes from '../Processes.vue';
 import Projects from '../Projects.vue';
+import HelpTip from 'components/Help.vue';
 import MiniProcess from 'components/cards/mini/MiniProcess.vue';
 import MiniProject from 'components/cards/mini/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
@@ -78,6 +81,7 @@ export default {
     Projects,
     Processes,
     ActivePlan,
+    HelpTip,
   },
   created() {
     this.charts = charts;
@@ -201,6 +205,7 @@ export default {
   max-width: 320px;
   flex-wrap: wrap;
   margin: 0 auto;
+  position: relative;
 }
 .plan--change {
   width: 90px;
@@ -241,6 +246,7 @@ export default {
 
 .plan--charts {
   margin-top: 0.5em;
+  position: relative;
 }
 .plan--charts--tabs {
   display: flex;

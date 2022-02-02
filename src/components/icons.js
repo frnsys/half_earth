@@ -63,6 +63,7 @@ export default {
   settings: require('/assets/icons/settings.svg'),
   time: require('/assets/icons/time.svg'),
   warning: require('/assets/icons/warning.svg'),
+  help: require('/assets/icons/help.svg'),
 
   // NPC relationships
   ally: require('/assets/icons/npcs/ally.svg'),

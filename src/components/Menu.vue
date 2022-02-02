@@ -46,7 +46,7 @@
   <img class="motto" src="/assets/motto.png" />
   <div class="dropdown-menu-buttons">
     <div class="dropdown-menu-button" :class="{active: state.sound}" @click="toggleSound">Sound: {{ state.sound ? 'On' : 'Off'}}</div>
-    <div class="dropdown-menu-button" :class="{active: state.tips}" @click="toggleTips">Tips: {{ state.tips ? 'On' : 'Off'}}</div>
+    <div class="dropdown-menu-button" :class="{active: !state.hideHelp}" @click="toggleTips">Tips: {{ !state.hideHelp ? 'On' : 'Off'}}</div>
     <div class="dropdown-menu-button" @click="restartGame">Restart Game</div>
     <div class="dropdown-menu-button" @click="TODO">Credits</div>
   </div>
@@ -85,7 +85,7 @@ export default {
       }
     },
     toggleTips() {
-      state.tips = !state.tips;
+      state.hideHelp = !state.hideHelp;
     },
     restartGame() {
       if (confirm('Are you sure you want to start over?')) {
@@ -102,7 +102,7 @@ export default {
   background-size: cover;
   background-position: center;
   position: absolute;
-  z-index: 3;
+  z-index: 20;
   left: 0;
   right: 0;
   bottom: 0;
