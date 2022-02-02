@@ -154,3 +154,148 @@ img {
   border-radius: 20px;
   border: transparent;
 }
+
+/* Scanner */
+.pips {
+  position: relative;
+}
+.pips .scan-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  z-index: -1;
+  background: #FF66FF;
+  box-shadow: 0px 0px 7px #FF66FF;
+}
+.card-scan-target {
+  position: absolute;
+  left: 0.5em;
+  right: 0.5em;
+  background: rgba(0,0,0,0.7);
+  height: 62px;
+  z-index: -1;
+  box-shadow: 0 0 6px #ff66ff, inset 1px -2px 6px #ff66ff;
+  border-radius: 4px;
+}
+.card-scan-target.scanning {
+  animation-duration: 1s;
+  animation-name: scanning;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.scan-error {
+  background: red !important;
+  box-shadow: 0px 0px 7px red !important;
+}
+.no-scan {
+  box-shadow: 0px 0px 7px red !important;
+}
+
+@keyframes scanning {
+  from {
+    box-shadow: 0 0 2px #6bff66, inset 1px 0px 8px #6bff66;
+  }
+
+  to {
+    box-shadow: 0 0 24px #6bff66, inset 1px 0px 8px #6bff66;
+  }
+}
+
+.card-withdraw-target {
+  position: absolute;
+  bottom: -68px;
+  height: 68px;
+  background: #eee;
+  border-radius: 0.5em 0.5em 0 0;
+  width: 310px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  border-left: 3px solid #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 60%), 0 0 8px #5f09f2;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #666;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1.3em;
+  overflow: hidden;
+}
+.withdraw-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  width: 0;
+  background: #f8bfb5;
+  border-radius: 0 0.2em 0.2em 0;
+  z-index: -1;
+}
+.card-withdraw-target.withdrawing {
+  animation-duration: 0.35s;
+  animation-name: withdrawing;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes withdrawing {
+  from {
+    box-shadow: 0 0 2px #EB3941;
+  }
+
+  to {
+    box-shadow: 0 0 24px #EB3941;
+  }
+}
+
+.shake {
+  animation-duration: 0.35s;
+  animation-name: shake;
+}
+
+@keyframes shake {
+  from {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-2px, -1px);
+  }
+
+  35% {
+    transform: translate(1px, 2px);
+  }
+
+  55% {
+    transform: translate(3px, 1px);
+  }
+
+  75% {
+    transform: translate(-1px, 2px);
+  }
+
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1.);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.scan-reject .project-required-majority {
+  animation-duration: 0.75s;
+  animation-name: pulse;
+  animation-iteration-count: infinite;
+}

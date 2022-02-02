@@ -305,6 +305,7 @@ export default {
 }
 .project-points {
   max-width: 110px;
+  text-align: left;
 }
 
 .project-status {

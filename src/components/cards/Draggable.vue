@@ -55,11 +55,13 @@ export default {
       const dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
+      let minY = this.minY();
+      let maxY = this.maxY();
       if (Math.abs(dx) < 20 && Math.abs(dy) > 10) {
         this.dragging = true;
         let rect = this.$el.getBoundingClientRect();
-        if (this.minY && rect.y <= this.minY) return;
-        if (this.maxY && rect.y >= this.maxY) return;
+        if (minY && rect.y <= minY) return;
+        if (maxY && rect.y >= maxY) return;
 
         this.$el.style.top = `${dy}px`;
         /* this.$el.style.left = `${dx}px`; */
