@@ -1,5 +1,6 @@
 const dpr = window.devicePixelRatio || 1;
 
+// https://gist.github.com/nikolas/b0cce2261f1382159b507dd492e1ceef?permalink_comment_id=3947508#gistcomment-3947508
 const lerpColor = function(pFrom, pTo, pRatio) {
   const ar = (pFrom & 0xFF0000) >> 16,
         ag = (pFrom & 0x00FF00) >> 8,
