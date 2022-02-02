@@ -9,7 +9,7 @@ export default {
   warming: require('/assets/icons/warming.png'),
   extinction_rate: require('/assets/icons/extinction.png'),
   temperature: require('/assets/icons/temperature.svg'),
-  biodiversity: require('/assets/icons/biodiversity.png'),
+  biodiversity: require('/assets/icons/extinction.png'),
   precipitation: require('/assets/icons/precipitation.svg'),
   land: require('/assets/icons/land.png'),
   energy: require('/assets/icons/energy.png'),
