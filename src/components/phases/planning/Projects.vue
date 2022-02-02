@@ -195,6 +195,7 @@ export default {
     },
     rejectScan() {
       this.$refs.target.classList.add('no-scan');
+      document.body.classList.add('scan-reject');
     },
     scanCard() {
       this.scanAnim = animate(0, 100, consts.cardScanTime * 1000, (val) => {
@@ -318,6 +319,7 @@ export default {
       this.scanning = false;
       this.$refs.target.classList.remove('scanning');
       this.$refs.target.classList.remove('no-scan');
+      document.body.classList.remove('scan-reject');
       if (this.scanAnim) {
         this.scanAnim.stop();
         this.scanAnim = null;
@@ -516,5 +518,23 @@ export default {
   to {
     transform: translate(0, 0);
   }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1.);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.scan-reject .project-required-majority {
+  animation-duration: 0.75s;
+  animation-name: pulse;
+  animation-iteration-count: infinite;
 }
 </style>
