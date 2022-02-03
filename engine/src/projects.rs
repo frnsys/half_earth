@@ -34,7 +34,11 @@ pub enum Group {
   Control,
   Protection,
   Electrification,
-  Behavior
+  Behavior,
+  Energy,
+  Materials,
+  Buildings,
+  Cities,
 }
 
 impl Default for Group {

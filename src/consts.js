@@ -45,7 +45,7 @@ export default {
     Population: {
       background: '#6b6bec',
     },
-    Diet: {
+    Food: {
       background: '#f3ff56',
     },
     Space: {
@@ -60,7 +60,21 @@ export default {
     },
     Behavior: {
       background: '#b8ad91',
-    }
+    },
+    Energy: {
+      background: '#fee94a',
+    },
+    Materials: {
+      background: '#5f2929',
+      color: '#ffffff',
+    },
+    Buildings: {
+      background: '#8f7ea9'
+    },
+    Cities: {
+      background: '#566b6a',
+      color: '#ffffff',
+    },
   }
 };
 

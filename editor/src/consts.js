@@ -57,6 +57,10 @@ const PROJECT_GROUPS = [
   'Protection',
   'Electrification',
   'Behavior',
+  "Energy",
+  "Materials",
+  "Buildings",
+  "Cities",
 ];
 
 const INCOME_LEVELS = [
