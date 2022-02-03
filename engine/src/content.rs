@@ -1736,7 +1736,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Diet,
+            group: ProjectGroup::Food,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2256,7 +2256,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Diet,
+            group: ProjectGroup::Food,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2385,7 +2385,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Initiative,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Diet,
+            group: ProjectGroup::Food,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3459,7 +3459,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Diet,
+            group: ProjectGroup::Food,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4270,7 +4270,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Diet,
+            group: ProjectGroup::Food,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -4911,7 +4911,20 @@ pub fn projects() -> Vec<Project> {
             points: 0,
             cost_modifier: 1.0,
             upgrades: vec![
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
 
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+
+                    ]
+                }
             ],
             supporters: vec![],
             opposers: vec![],

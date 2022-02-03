@@ -6,6 +6,7 @@ const OUTPUT_UNITS = {
   plant_calories: 1e-9/2e4,  // per 20000 Tcals
   animal_calories: 1e-9/2e4, // per 20000 Tcals
   water: 1e-12/50,           // per 50 km3
+  land: 100/104000000000000  // percent of habitable land
 };
 
 function formatNumber(val) {
@@ -52,8 +53,7 @@ function waterUsePercent(l) {
 }
 
 function demandPercent(demand, totalDemand, k) {
-  let scaledOutputDemand = output(totalDemand[k], k);
-  let percent = demand[k]/scaledOutputDemand[k] * 100;
+  let percent = demand[k]/totalDemand[k] * 100;
   if (percent < 1) {
     return '<1%';
   } else {

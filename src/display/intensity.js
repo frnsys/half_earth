@@ -44,6 +44,7 @@ function scale(val, key) {
     case 'extinction': return Math.round(val/60 * 4);
     case 'habitability': return Math.round(val/consts.base_habitability * 4);
     case 'world_outlook': return Math.round(val/(consts.base_outlook+consts.base_world_outlook) * 4);
+    case 'warming': return Math.floor(val) + 1;
   }
 }
 

@@ -62,6 +62,7 @@ export default {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  pointer-events: none;
 }
 .minicard--expanded .pips--buy {
   background: rgb(42 42 42);

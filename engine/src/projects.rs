@@ -28,7 +28,7 @@ pub enum Group {
   Nuclear,
   Restoration,
   Agriculture,
-  Diet,
+  Food,
   Geoengineering,
   Population,
   Control,

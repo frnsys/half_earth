@@ -1,5 +1,5 @@
 <template>
-<Card class="npc" background="#724680">
+<Card class="npc" background="#724680" :noBack="true">
   <template v-slot:header>
     <div>Parliament</div>
     <div v-tip="{text: `Your relationship with ${name}.`, icon: 'relationship'}">
@@ -77,12 +77,14 @@ export default {
   border: 1px solid #000;
   text-align: center;
   font-family: 'W95FA', monospace;
-  padding: 0 0.25em;
   line-height: 1.2;
   display: flex;
+  font-size: 0.9em;
+  padding: 0.2em 0.25em 0;
 }
 .npc-tag img {
   width: 12px !important;
   margin-right: 2px;
+  margin-top: -4px;
 }
 </style>

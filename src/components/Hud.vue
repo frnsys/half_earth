@@ -14,8 +14,9 @@
       <img :src="icons.hud_contentedness">
       <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
     </div>
-    <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
-      <img :src="icons.hud_warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
+    <div v-tip="{icon: 'warming', text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`}">
+      <img :src="icons.hud_warming">
+      <IntensityBar :intensity="warming" :max="5" />
     </div>
     <div class="hud-settings" @click="showMenu = true">
       <img :src="icons.settings" />
@@ -46,6 +47,9 @@ export default {
     },
     extinction() {
       return intensity.scale(state.gameState.world.extinction_rate, 'extinction');
+    },
+    warming() {
+      return intensity.scale(state.gameState.world.temperature, 'warming');
     },
   }
 };

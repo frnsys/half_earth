@@ -98,7 +98,7 @@ export default {
   max-height: 100%;
 }
 .region-name {
-  font-size: 1.4em;
+  font-size: 1.3em;
 }
 .regions-browse {
   display: flex;

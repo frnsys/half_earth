@@ -50,7 +50,7 @@ const PROJECT_GROUPS = [
   'Nuclear',
   'Restoration',
   'Agriculture',
-  'Diet',
+  'Food',
   'Geoengineering',
   'Population',
   'Control',

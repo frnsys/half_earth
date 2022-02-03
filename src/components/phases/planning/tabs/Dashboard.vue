@@ -79,6 +79,7 @@
       </div>
       <PieChart :dataset="dataset" :colors="colors" />
       <FactorsList :factors="tableData" />
+      <div class="dashboard-breakdown-note">Only direct impacts are shown.</div>
   </div>
 </div>
 </template>
@@ -329,5 +330,10 @@ export default {
   margin-right: 5px;
   position: relative;
   top: 3px;
+}
+.dashboard-breakdown-note {
+  text-align: center;
+  margin: 0 0 2em 0;
+  font-size: 0.8em;
 }
 </style>

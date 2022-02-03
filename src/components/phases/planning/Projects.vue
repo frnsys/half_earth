@@ -119,7 +119,6 @@ export default {
   },
   methods: {
     onDragStart() {
-      this.focusedProject = null;
       this.scrolling = true;
     },
     onDragEnd(card) {
