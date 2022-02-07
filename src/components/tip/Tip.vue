@@ -95,7 +95,6 @@ export default {
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   display: flex;
-  align-items: center;
   pointer-events: auto;
   box-shadow: 0 1px 2px rgb(0 0 0 / 70%);
 }

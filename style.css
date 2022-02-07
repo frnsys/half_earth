@@ -64,9 +64,10 @@ body {
   background: #000;
 }
 main {
-  max-width: 320px;
+  max-width: 420px;
   margin: 0 auto;
   overflow-x: hidden;
+  overflow-y: hidden;
   position: relative;
 
   display: flex;

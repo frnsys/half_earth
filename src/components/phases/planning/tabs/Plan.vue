@@ -358,6 +358,7 @@ export default {
   background: url('/assets/backgrounds/plan.jpg');
   background-size: cover;
   background-repeat: no-repeat;
+  overflow-y: hidden !important;
 }
 .plan-change-select > header {
   color: #fff;
