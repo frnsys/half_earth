@@ -81,7 +81,7 @@ export default {
 <style>
 .planning {
   background: #ffecc7;
-  height: calc(100vh - 16px);
+  height: calc(100% - 16px);
   display: flex;
   flex-direction: column;
 }

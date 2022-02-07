@@ -34,7 +34,7 @@ export default {
     startDrag(ev) {
       if (!this.draggable) return;
       this.down = true;
-      ev.preventDefault(); // Necessary to prevent address bar from showing on drag
+      /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
 
       // Stop snap-back animation if there is one
       if (this.animation) this.animation.stop();

@@ -203,7 +203,7 @@ export default {
       }
     },
     yMax() {
-      return (this.project && this.haltable) ? window.innerHeight - CARD_HEIGHT : window.innerHeight - CARD_HEIGHT - 68;
+      return (this.project && this.haltable) ? window.innerHeight - CARD_HEIGHT : window.innerHeight - CARD_HEIGHT - 80;
     },
 
     // Scanning
