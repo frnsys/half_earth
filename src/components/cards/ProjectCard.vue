@@ -347,7 +347,7 @@ export default {
 
 .project-upgrade {
   background: rgba(0,0,0,0.15);
-  padding: 0.25em 0.5em;
+  padding: 0.1em 0.3em;
   border-radius: 0.2em;
   font-size: 0.9em;
   border: 1px solid rgba(0,0,0,0.2);
@@ -369,6 +369,9 @@ export default {
 }
 .project-upgrade--title img {
   width: 12px;
+}
+.project-upgrade .effect--text img {
+  height: 12px;
 }
 
 .project-group {

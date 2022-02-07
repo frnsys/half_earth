@@ -95,7 +95,7 @@ export default {
 .card-mid {
   margin: 0 auto;
   width: calc(100% - 6px);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 2px rgba(0,0,0,0.5);
 }
 
 .card header {
