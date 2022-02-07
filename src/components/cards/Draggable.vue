@@ -52,8 +52,8 @@ export default {
     drag(ev) {
       if (!this.down) return;
       ev.preventDefault(); // Necessary to prevent address bar from showing on drag
-      const dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
-      const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
+      let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
+      let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
       let minY = this.minY();
       let maxY = this.maxY();
@@ -63,6 +63,13 @@ export default {
         if (minY && rect.y <= minY) return;
         if (maxY && rect.y >= maxY) return;
 
+        let top = parseFloat(this.$el.style.top) || 0;
+        let baseY = rect.y - top;
+        let minDY = minY - baseY;
+        let maxDY = maxY - baseY;
+
+        let deltaY = dy - top;
+        dy = Math.min(maxDY, Math.max(minDY, dy));
         this.$el.style.top = `${dy}px`;
         /* this.$el.style.left = `${dx}px`; */
         this.$emit('drag', this);
