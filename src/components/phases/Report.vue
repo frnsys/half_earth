@@ -214,9 +214,12 @@ export default {
       let contentednessChange = consts.contentednessPc[this.contentedness.end.intensity] || consts.contentednessPc[consts.contentednessPc.length - 1];
       let extinctionRateChange = consts.extinctionPc[this.extinction.end.intensity] || consts.extinctionPc[consts.extinctionPc.length - 1];
       let emissionsChange = state.gameState.world.emissions - state.cycleStartState.emissions;
+
+      // Double temp change score for every degree above 1C
+      let tempChangeMultiplier = Math.max(1, Math.max(0, Math.round(state.gameState.world.temperature) - 1) * 2);
       this.pc = {
         // Temp scored for every 0.1C change
-        temperature: Math.round(temperatureChange * 10) * -consts.temperaturePc,
+        temperature: Math.round(temperatureChange * 10) * -consts.temperaturePc * tempChangeMultiplier,
         contentedness: Math.round(contentednessChange),
         extinctionRate: Math.round(extinctionRateChange),
         emissions: Math.round(emissionsChange * 2) * -consts.emissionsPc,

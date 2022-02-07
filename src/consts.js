@@ -11,7 +11,7 @@ export default {
   extinctionPc: [20, 10, 0, -5, -5, -10],
 
   // PC change per -0.1C temp change
-  temperaturePc: 10,
+  temperaturePc: 2,
   // PC change per -0.5Gt emissions change
   emissionsPc: 5,
 
