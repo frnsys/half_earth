@@ -284,6 +284,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
+  background: #fadbae;
 }
 
 #event-stream-timer-fill {
@@ -298,7 +299,6 @@ export default {
   z-index: 2;
   font-size: 1.5em;
   padding: 0.4em;
-  font-family: "Andada Pro";
 }
 
 #event-stream .dialogue {

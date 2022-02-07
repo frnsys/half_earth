@@ -28,13 +28,17 @@ pub enum Group {
   Nuclear,
   Restoration,
   Agriculture,
-  Diet,
+  Food,
   Geoengineering,
   Population,
   Control,
   Protection,
   Electrification,
-  Behavior
+  Behavior,
+  Energy,
+  Materials,
+  Buildings,
+  Cities,
 }
 
 impl Default for Group {

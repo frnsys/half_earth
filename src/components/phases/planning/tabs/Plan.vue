@@ -1,47 +1,51 @@
 <template>
-<div class="plan">
+<div class="planning--page plan">
   <Projects v-if="page == 'Add'"
     @close="page = null"
     @page="(p) => $emit('page', p)"
     @change="$emit('change')" />
   <Processes v-if="page == 'Processes'"
     @close="page = null" @change="$emit('change')" />
-  <div class="plan--changes" v-if="page == null">
-    <div class="plan--change">
-      <div class="plan--action">Add</div>
-      <div class="plan--add-change minicard" @click="selectPage('Add')">
-        <img :src="icons.add">
-      </div>
-    </div>
-    <div class="plan--change">
-      <div class="plan--action">Processes</div>
-      <div class="minicard processes-minicard" @click="selectPage('Processes')">
-        <div>
-          <img :src="icons.electricity" />
-          <img :src="icons.fuel" />
-          <img :src="icons.plant_calories" />
-          <img :src="icons.animal_calories" />
+  <ActivePlan v-if="page == 'All'"
+    @close="page = null"
+    @add="selectPage('Add')"
+    @change="$emit('change')" />
+  <div v-if="page == null">
+    <div class="plan--changes">
+      <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
+      <div class="plan--change">
+        <div class="plan--add-change minicard" @click="selectPage('Add')">
+          <div>
+            <img :src="icons.add">
+            <div class="plan--action">Add</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="plan--change" v-for="project in activeProjects">
-      <div class="plan--action">
-        <img v-if="project.status == 'Finished' || project.status == 'Active'" :src="icons.check">
-        <template v-else>{{projectStatus(project)}}</template>
+      <div class="plan--change" v-for="project in activeProjects.slice(0, this.nProjects)">
+        <MiniProject :project="project" :key="project.id" />
       </div>
-      <MiniProject :project="project" />
-      <div class="plan--note">{{project.name}}</div>
-    </div>
-  </div>
-  <div class="plan--charts">
-    <div class="plan--charts--tabs">
-      <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
-        <img :src="icons[key]">{{name}}
+      <div class="plan--change" v-for="i in placeholders">
+        <div class="plan--change-placeholder"></div>
+      </div>
+      <div class="plan--change" v-if="activeProjects.length > 5">
+        <div class="plan--change-view-all" @click="selectPage('All')">View<br />All</div>
       </div>
     </div>
-    <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
+    <div class="plan--production">
+      <div class="plan--production-bg"></div>
+      <div class="plan--production-button" @click="selectPage('Processes')">Change Production</div>
+    </div>
+    <div class="plan--charts">
+      <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="220px" :center="true" />
+      <div class="plan--charts--tabs">
+        <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
+          <img :src="icons[key]">{{name}}
+        </div>
+      </div>
+      <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
+    </div>
+    <button class="plan--ready" @click="enterWorld">Ready</button>
   </div>
-  <button class="plan--ready" @click="enterWorld">Ready</button>
 </div>
 </template>
 
@@ -50,8 +54,10 @@ import game from '/src/game';
 import state from '/src/state';
 import Chart from '../Chart.vue';
 import format from '/src/display/format';
+import ActivePlan from '../ActivePlan.vue';
 import Processes from '../Processes.vue';
 import Projects from '../Projects.vue';
+import HelpTip from 'components/Help.vue';
 import MiniProcess from 'components/cards/mini/MiniProcess.vue';
 import MiniProject from 'components/cards/mini/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
@@ -74,6 +80,8 @@ export default {
     MiniProject,
     Projects,
     Processes,
+    ActivePlan,
+    HelpTip,
   },
   created() {
     this.charts = charts;
@@ -94,6 +102,16 @@ export default {
     }
   },
   computed: {
+    placeholders() {
+      return Math.max(0, 5 - this.activeProjects.length);
+    },
+    nProjects() {
+      if (this.activeProjects.length > 5) {
+        return 4; // Save one spot for "View All"
+      } else {
+        return this.activeProjects.length;
+      }
+    },
     activeProjects() {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
     },
@@ -110,14 +128,14 @@ export default {
     markers() {
       return [{
         x: this.historical.data.length - 1,
-        color: '#5268A3',
+        color: '#000000',
       }, {
         text: 'Now',
         point: {x: this.historical.data.length - 1, y: 0.8},
         anchor: 'CENTER',
         background: '#FFECC7'
       }, {
-        text: 'With these changes',
+        text: 'Under current plan',
         point: {x: 50, y: 0.5},
         background: '#FFECC7'
       }];
@@ -138,7 +156,7 @@ export default {
           x: i,
           y: y/100
         })),
-        color: '#BC6A58',
+        color: '#aaaaaa',
       }
     },
     projection() {
@@ -148,7 +166,7 @@ export default {
       }));
       return {
         data,
-        color: '#CDB6AD'
+        color: '#FE4400'
       }
     },
     enterWorld() {
@@ -175,30 +193,40 @@ export default {
 </script>
 
 <style>
+.plan {
+  background: url('/assets/backgrounds/plan.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 .plan--changes {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  align-content: start;
-  height: 360px;
+  height: 300px;
+  max-width: 320px;
   flex-wrap: wrap;
-  overflow-y: scroll;
-  flex-direction: column;
+  margin: 0 auto;
+  position: relative;
 }
 .plan--change {
-  width: 80px;
+  width: 90px;
   text-align: center;
-  margin: 0.5em 0.25em;
+  margin: 0.5em 0;
 }
 .plan--change .minicard {
   background: #222;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+}
+.plan--change .minicard img {
+  width: 36px;
 }
 .plan--action {
   text-transform: uppercase;
   font-size: 0.7em;
+  font-family: 'Inter', sans-serif;
   /* center overflowed text */
   margin-left: -100%;
   margin-right: -100%;
+  color: #726060;
 }
 .plan--action img {
   height: 12px;
@@ -218,6 +246,7 @@ export default {
 
 .plan--charts {
   margin-top: 0.5em;
+  position: relative;
 }
 .plan--charts--tabs {
   display: flex;
@@ -225,24 +254,61 @@ export default {
   margin-bottom: 0.5em;
 }
 .plan--charts--tabs img {
-  width: 16px;
+  width: 18px;
   vertical-align: middle;
+  margin-right: 3px;
+  margin-top: -2px;
 }
 .plan--charts--tabs > div {
-  border-radius: 0.2em;
-  border: 1px solid #000;
-  padding: 0 0.2em;
+  background: #fff;
+  padding: 0.3em 0.5em;
   margin: 0 0.1em;
+  border-radius: 0.5em;
   display: inline-block;
+  box-shadow: 1px 1px 0px rgb(0 0 0 / 50%);
 }
 .plan--charts--tabs > div.active {
-  background: #222;
-  color: #fff;
+  background: #CDABA1;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+.plan--charts .chart {
+  background: url('/assets/grid.png') #F0D4CC;
+  background-size: 60px;
+  border-radius: 0.4em;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  margin-bottom: 1em;
 }
 
 .plan--change .plan--add-change {
-  border: 1px solid #b39d72;
-  background: #e6d3af;
+  background: #F0D4CC;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-top: none;
+  border-left: none;
+}
+.plan--change .plan--add-change img {
+  width: 32px;
+  margin: 0 auto;
+}
+.plan--change-placeholder {
+  border: 1px dashed rgba(0,0,0,0.7);
+  height: 130px;
+  border-radius: 0.5em;
+}
+.plan--change-view-all {
+  height: 130px;
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1.3em;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
 }
 
 .plan > header {
@@ -261,11 +327,18 @@ export default {
 
 .plan--ready {
   font-size: 1.3em;
-  padding: 0.1em 0.25em;
+  padding: 2em 1em;
   position: absolute;
-  left: 50%;
-  bottom: 2em;
-  transform: translate(-50%, 0);
+  right: 1em;
+  bottom: 0em;
+  background: red;
+  border-radius: 10em;
+  border-right: 2px solid rgba(0,0,0,0.5);
+  border-bottom: 2px solid rgba(0,0,0,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+  border-left: 2px solid rgba(255,255,255,0.5);
+  box-shadow: 1px 2px 4px rgb(0 0 0 / 50%);
+  color: #fff;
 }
 
 .processes-minicard img {
@@ -279,11 +352,14 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 2;
-  background: #ff6b56;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 1em; /* Space for the hud */
+  padding: 2em 0 0 0 !important;
+  background: url('/assets/backgrounds/plan.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-y: hidden !important;
 }
 .plan-change-select > header {
   color: #fff;
@@ -298,7 +374,9 @@ export default {
 .planning--page-tabs {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid;
+  border-radius: 0.3em;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 .planning--page-tabs img {
   width: 32px;
@@ -309,15 +387,67 @@ export default {
   text-align: center;
   line-height: 1;
   border-right: 1px solid;
-  font-size: 0.7em;
 }
 .planning--page-tabs > div:last-child {
   border-right: none;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
 }
 .planning--page-tabs > div.selected {
-  background: #eed793;
+  background: #FF66FF;
 }
 .planning--page-tabs .disabled {
   opacity: 0.5;
+}
+
+.plan--production {
+  background: #F0D4CC;
+  border-radius: 0.4em;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding: 1em;
+  text-align: center;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-bottom: 1em;
+  position: relative;
+}
+.plan--production-bg {
+  position: absolute;
+  top: 1em;
+  bottom: 1em;
+  right: 1em;
+  left: 1em;
+  border-radius: 0.3em;
+  background: url(/assets/backgrounds/production.jpg);
+  mix-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
+}
+
+.plan--production-button {
+  background: #fff;
+  padding: 1em 0.9em;
+  border-radius: 0.5em;
+  box-shadow: 1px 1px 0px rgb(0 0 0 / 50%);
+  max-width: 180px;
+  margin: 0 auto;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.planning-sub-tab {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7em;
+}
+.plan-change-select .planning--page-tabs {
+  margin: 0 0.5em;
+  position: relative;
+  z-index: 10;
 }
 </style>

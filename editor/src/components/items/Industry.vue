@@ -20,6 +20,16 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <div>
+        <label>
+          Description
+          <Tip>Describe this industry.</Tip>
+        </label>
+        <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
+      </div>
+    </fieldset>
+
     <Notes :notes="localData.notes" @blur="saveNotes" />
 
     <div class="additional-actions">
@@ -41,6 +51,9 @@
         <ByproductsSummary :byproducts="localData.byproducts" :required="false" />
       </div>
     </fieldset>
+    <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
+    <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+
     <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
@@ -49,6 +62,11 @@
 <script>
 import ItemMixin from './ItemMixin';
 export default {
+  computed: {
+    descriptionHtml() {
+      return this.localData.description.replaceAll('\n', '<br />');
+    },
+  },
   mixins: [ItemMixin]
 };
 </script>

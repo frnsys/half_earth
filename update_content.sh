@@ -7,5 +7,5 @@ wget "http://half-earth-editor.frnsys.com/data" -O "$OUTPUT"
 
 cp "$OUTPUT" editor/data.json
 python3 parse_content.py
-cd engine; cargo test; cd ..
+# cd engine; cargo test; cd ..
 npm run build-wasm

@@ -201,6 +201,20 @@ valid_byproducts = ['CO2', 'CH4', 'N2O', 'Biodiveristy']
 valid_outputs = ['Electricity', 'Fuel', 'AnimalCalories', 'PlantCalories']
 incomes = ['low_income', 'lower_middle_income', 'upper_middle_income', 'high_income']
 
+PLACEHOLDERS = {
+    'Project': {
+        '_type': 'Project',
+        'name': 'Placeholder',
+        'type': 'Policy',
+        'group': 'Other',
+        'ongoing': 'false',
+        'gradual': 'false',
+        'locked': 'true',
+        'cost': 10,
+        'effects': [],
+    }
+}
+
 def param(e, k):
     return float(e['params'].get(k) or 0)
 
@@ -336,7 +350,8 @@ def define_effect(effect):
         effect_params = [
                 '0.' if isinstance(v, float) and v == 0 else str(v)
                 for v in effects[effect['type']](effect)]
-    except:
+    except Exception as e:
+        print('Exception defining event: {}'.format(repr(e)))
         return None
     if not effect_params:
         return 'Effect::{}'.format(effect['type'])
@@ -390,14 +405,19 @@ def define_field(k, v, item):
     elif k == 'name' or k == 'text':
         v = '"{}"'.format(v)
     elif k == 'type' and item['_type'] == 'Project':
-        return 'kind: ProjectType::{}'.format(v)
+        if v:
+            return 'kind: ProjectType::{}'.format(v)
+        else:
+            raise Exception('Project type undefined')
     elif k == 'group':
         return 'group: ProjectGroup::{}'.format(v)
     elif k == 'type' and item['_type'] == 'Event':
         if item.get('subphase') is not None:
             return 'phase: Phase::{}{}'.format(v, item['subphase'])
-        else:
+        elif v is not None:
             return 'phase: Phase::{}'.format(v)
+        else:
+            raise Exception('Event phase undefined')
     elif k == 'output':
         return 'output: Output::{}'.format(v)
     elif k == 'limit':
@@ -533,7 +553,12 @@ def define_structs(typ, items):
     structs = []
     for i, item in enumerate(items):
         item['id'] = i
-        structs.append(define_struct(typ, item))
+        try:
+            structs.append(define_struct(typ, item))
+        except:
+            placeholder = PLACEHOLDERS[typ]
+            placeholder['id'] = i
+            structs.append(define_struct(typ, placeholder))
     return ',\n'.join(structs)
 
 def define_array(name, typ):
@@ -549,7 +574,8 @@ def extract_branches(dialogue):
             for j, b in enumerate(l['next']):
                 b['id'] = branch_id
                 branch_id += 1
-                effects = 'vec![{}]'.format(', '.join(define_effect(e) for e in b.get('effects', [])))
+                effects = [define_effect(e) for e in b.get('effects', [])]
+                effects = 'vec![{}]'.format(', '.join(effects))
                 conditions = 'vec![{}]'.format(', '.join(define_condition(e) for e in b.get('conditions', [])))
                 branches.append('({}, {})'.format(effects, conditions))
     return branches

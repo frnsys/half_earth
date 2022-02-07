@@ -1,37 +1,26 @@
 <template>
 <div class="card-icon">
   <img :src="icons[resource]"/>
-  <div class="intensity-pips">
-    <div class="intensity-pip" :style="{background:color}" v-for="i in intensity"></div>
-  </div>
+  <IntensityBar :intensity="intensity" :invert="invert" :max="max" />
 </div>
 </template>
 
 <script>
+import IntensityBar from './IntensityBar.vue';
 import intensity from '/src/display/intensity';
 
 export default {
-  props: ['resource', 'intensity', 'invert'],
-  computed: {
-    color() {
-      return intensity.color(this.intensity, this.invert);
+  props: {
+    resource: String,
+    intensity: Number,
+    invert: Boolean,
+    max: {
+      type: Number,
+      default: 4
     }
+  },
+  components: {
+    IntensityBar
   }
 }
 </script>
-
-<style>
-.intensity-pips {
-  text-align: center;
-  line-height: 1;
-  margin-top: -8px;
-}
-.intensity-pip {
-  border-radius: 10em;
-  background: #aaaaaa;
-  width: 5px;
-  height: 6px;
-  display: inline-block;
-  margin: 0 1px;
-}
-</style>

@@ -1,63 +1,56 @@
 <template>
-  <div class="hud">
+  <Menu v-if="showMenu" @close="showMenu = false" />
+  <div class="hud" v-else>
     <div>{{state.gameState.world.year}}</div>
     <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
-      <img :src="icons.political_capital">{{Math.max(state.gameState.political_capital, 0)}}
+      <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
     </div>
     <div v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
-      <img :src="icons.extinction_rate">
-      <div class="intensity-pip stat-pip" :style="{background:extinction.color}" v-for="i in extinction.intensity"></div>
+      <img :src="icons.hud_extinction_rate">
+      <IntensityBar :intensity="extinction" :max="5" />
     </div>
     <div :class="{'bad': state.gameState.world.contentedness < 0}"
       v-tip="factors.tips.contentedness('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.')">
-      <img :src="icons.contentedness">
-      <div class="intensity-pip stat-pip" :style="{background:contentedness.color}" v-for="i in contentedness.intensity"></div>
+      <img :src="icons.hud_contentedness">
+      <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
     </div>
-    <div v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
-      <img :src="icons.emissions">{{state.gameState.world.emissions.toFixed(1)}}
+    <div v-tip="{icon: 'warming', text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`}">
+      <img :src="icons.hud_warming">
+      <IntensityBar :intensity="warming" :max="5" />
     </div>
-    <div v-tip="{icon: 'warming', text: 'The current global temperature anomaly. The higher this is, the more unpredictable the climate becomes.'}">
-      <img :src="icons.warming">+{{state.gameState.world.temperature.toFixed(1)}}°C
+    <div class="hud-settings" @click="showMenu = true">
+      <img :src="icons.settings" />
     </div>
-    <img class="sound-toggle" :src="state.sound ? icons.sound : icons.no_sound" @click="toggleSound" />
   </div>
 </template>
 
 <script>
 import state from '../state';
+import Menu from 'components/Menu.vue';
+import IntensityBar from './cards/IntensityBar.vue';
 import intensity from '/src/display/intensity';
 
 export default {
+  components: {
+    Menu,
+    IntensityBar,
+  },
   data() {
     return {
       state,
+      showMenu: false,
     };
   },
   computed: {
     contentedness() {
-      let val = intensity.scale(state.gameState.world.contentedness, 'world_outlook');
-      return {
-        intensity: val,
-        color: intensity.color(val, true)
-      }
+      return intensity.scale(state.gameState.world.contentedness, 'world_outlook');
     },
     extinction() {
-      let val = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
-      return {
-        intensity: val,
-        color: intensity.color(val, false)
-      }
+      return intensity.scale(state.gameState.world.extinction_rate, 'extinction');
     },
-  },
-  methods: {
-    toggleSound() {
-      state.sound = !state.sound;
-      if (state.sound && window.music.paused) {
-        window.music.play();
-      } else if (!state.sound && !window.music.paused) {
-        window.music.pause();
-      }
-    }
+    warming() {
+      return intensity.scale(state.gameState.world.temperature, 'warming');
+    },
   }
 };
 </script>
@@ -68,9 +61,17 @@ export default {
   background: #202020;
   color: #fff;
   justify-content: space-between;
-  padding: 0.1em 0.5em;
   font-size: 0.75em;
   z-index: 5;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 60%);
+}
+.hud > div {
+  padding: 0.5em 0.25em;
+}
+.hud > div:first-child {
+  padding-left: 0.5em;
 }
 .hud img {
   height: 12px;
@@ -79,13 +80,25 @@ export default {
   margin-right: 2px;
   margin-top: -2px;
 }
+.hud-settings img {
+  margin-right: 0;
+  margin-top: 2px;
+}
 
 .stat-pip {
   height: 8px;
 }
 
-.hud .sound-toggle {
-  margin-top: 0.15em;
-  margin-right: 0;
+.hud-settings {
+  padding: 0.5em 0.5em !important;
+	border-left: 1px solid rgba(255,255,255,0.25);
+  margin-top: -2px;
+  box-shadow: -1px 0 0 #000;
+  cursor: pointer;
+}
+
+.hud .intensity-pips {
+  display: inline-flex;
+  margin-left: 2px;
 }
 </style>

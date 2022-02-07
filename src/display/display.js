@@ -57,6 +57,8 @@ function enumDisplay(v) {
 function relationshipName(relationship) {
   if (relationship >= 5) {
     return 'Ally';
+  } else if (relationship >= 4) {
+    return 'Friendly';
   } else if (relationship <= 1) {
     return 'Nemesis';
   } else {

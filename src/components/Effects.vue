@@ -111,7 +111,7 @@ function render(e) {
           return {
             tip: {
               icon: 'contentedness',
-              text: 'TODO'
+              text: `${changeDir(e.param, e.random)} world contentedness by ${e.param == '?' ? 'an unknown amount' : formatParam(e.param)}.`,
             },
             text: `[contentedness] ${changeDir(e.param, e.random)} world contentedness by ${formatParam(e.param)}.`,
           }
@@ -295,10 +295,11 @@ function render(e) {
       }
       let currentDemand = demand[k];
       let afterDemand = demand[k] + val;
+      let demandChange = (afterDemand - currentDemand)/demand[k] * 100;
       return {
         tip: {
           icon: k,
-          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${afterDemand}.`
+          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${afterDemand}. This is a ${demandChange.toFixed(0)}% change of all ${name} demand.`
         },
         text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e.random)} demand for ${display.displayName(e.subtype)} by <img src="${icons[k]}">${Math.abs(val)}.`,
       }
@@ -365,9 +366,10 @@ function render(e) {
         kind = 'development time';
       }
       let amountName = e.param == '?' ? e.param : Math.ceil(Math.abs(amount));
+      let tipAmount = e.param == '?' ? 'by an unknown amount' : `from ${tipIcon}${project.cost}${unit} to ${tipIcon}${project.cost + amount}${unit}.`;
       let tip = {
         icon: 'cost',
-        text: `This effect reduces the ${kind} of this project from ${tipIcon}${project.cost}${unit} to ${tipIcon}${project.cost + amount}${unit}.`,
+        text: `This effect ${changeDir(e.param, e.random).toLowerCase()} the ${kind} of this project ${tipAmount}.`,
         card: {
           type: 'Project',
           data: project,
@@ -564,7 +566,7 @@ function render(e) {
       return {
         tip: {
           icon: 'chance',
-          text: 'TODO'
+          text: `${changeDir(p, e.random)} the chance of ${event} by ${Math.abs(p)}%`,
         },
         text: `${changeDir(p, e.random)} the chance of ${event} by ${Math.abs(p)}%`,
       }
@@ -671,6 +673,7 @@ export default {
   font-size: 0.9em;
   background: #475664;
   padding: 0.05em 0.2em;
+  color: #fff;
 }
 .card-tag img {
   height: 13px;
@@ -678,7 +681,12 @@ export default {
 }
 
 .unknown-param {
-  color: #9dbbd8;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  border-radius: 2em;
+  font-weight: bold;
+  padding: 0.25em 0.6em;
+  font-size: 0.9em;
 }
 
 </style>

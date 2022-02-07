@@ -44,13 +44,14 @@ function scale(val, key) {
     case 'extinction': return Math.round(val/60 * 4);
     case 'habitability': return Math.round(val/consts.base_habitability * 4);
     case 'world_outlook': return Math.round(val/(consts.base_outlook+consts.base_world_outlook) * 4);
+    case 'warming': return Math.floor(val) + 1;
   }
 }
 
 function color(intensity, invert) {
   intensity = invert ? 5 - intensity : intensity;
   if (intensity <= 1) {
-    return '#43CC70';
+    return '#2FE863';
   } else if (intensity === 2) {
     return '#FBC011';
   } else if (intensity === 3) {

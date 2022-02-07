@@ -213,8 +213,9 @@ class HexSphere {
 
   onTouchStart(ev) {
     ev.preventDefault();
-    ev.clientX = ev.touches[0].clientX;
-    ev.clientY = ev.touches[0].clientY;
+    let rect = ev.target.getBoundingClientRect();
+    ev.offsetX = ev.targetTouches[0].pageX - rect.left;
+    ev.offsetY = ev.targetTouches[0].pageY - rect.top;
     this.onMouseDown(ev);
   }
 }

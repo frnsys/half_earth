@@ -1,19 +1,28 @@
 <template>
-<Card>
+<Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
   <template v-slot:header>
-    <div>{{name}}</div>
-    <div v-if="implemented">
-      <img :src="icons.check">
+    <div>{{group}}</div>
+    <div v-if="implemented" class="project-cost">
+      <template v-if="hasLevels">
+        Level {{level+1}}
+      </template>
+      <template v-else>
+        <img :src="icons.check_blk"> Completed
+      </template>
     </div>
+    <div v-else class="project-cost" v-tip="costTip">
+      <template v-if="kind != 'Policy'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
+    </div>
+    <img class="barcode" src="/assets/barcode.png" />
   </template>
   <template v-slot:figure>
     <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
-      Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+      <div>
+        <img :src="icons.warning" />
+        Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+      </div>
     </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <div v-if="!implemented" class="card-tack-ur project-cost" v-tip="costTip">
-      {{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
-    </div>
     <div v-if="status == 'Building'" class="card-tack-ul project-points">
       <img
         v-for="_ in points"
@@ -21,41 +30,20 @@
         v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
         :src="icons[type]">
     </div>
-    <div v-if="hasLevels" class="project-level">
-      Level {{level+1}}
-    </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
-      <div>Nay</div>
-      <div>
-        <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
-      </div>
+      <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
     <div class="supporters" v-if="supportersDetailed.length > 0">
-      <div>Yea</div>
-      <div>
-        <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
-      </div>
+      <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
   </template>
+  <template v-slot:name>
+    {{name}}
+  </template>
   <template v-slot:body>
+    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
     <Effects :effects="activeEffects" />
-
-    <div class="card-actions" v-if="(status == 'Inactive' || status == 'Building')">
-      <template v-if="kind == 'Policy'">
-        <button @click="payPoints" :disabled="!majoritySatisfied">
-          Implement
-          <div class="project-majority-tip" v-if="!majoritySatisfied">Needs Majority</div>
-        </button>
-      </template>
-      <template v-else>
-        <button @click="assignPoint" :disabled="!majoritySatisfied">+<img class="pip" :src="icons[type]"></button>
-        <button v-if="points > 0" @click="unassignPoint">-<img class="pip" :src="icons[type]"></button>
-      </template>
-    </div>
-    <div class="card-actions" v-else-if="haltable">
-      <button @click="halt">Stop</button>
-    </div>
 
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">
@@ -65,21 +53,35 @@
         <template v-else>
           <div>Next Level</div>
           <div>{{nextUpgrade.cost}}<img class="pip" :src="icons.political_capital"></div>
-          <button @click="upgrade(p)">Upgrade</button>
         </template>
       </div>
       <Effects :effects="nextUpgrade.effects" />
     </div>
 
+    <div class="project-status" v-if="status == 'Building'">{{ kind == 'Research' ? 'Researching' : 'Building'}}</div>
+
   </template>
-  <template v-slot:back>
-    <p>{{description}}</p>
+  <template v-slot:top-back>
+    <p class="card-desc">{{description}}</p>
+  </template>
+  <template v-slot:bot-back>
+    <div class="political-effects" v-if="opposersDetailed.length > 0 || supportersDetailed.length > 0">
+      <div class="political-effects-title">Political Effects</div>
+      <div class="political-effects-cols">
+        <div class="political-effects-opposers" v-if="opposersDetailed.length > 0">
+          <div class="political-effects-label">Nay</div>
+          <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        </div>
+        <div class="political-effects-supporters" v-if="supportersDetailed.length > 0">
+          <div class="political-effects-label">Yea</div>
+          <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+        </div>
+      </div>
+    </div>
+    <div v-else class="card-spacer"></div>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>
-  </template>
-  <template v-slot:footer>
-    <div :class="`project-group project-group-${group}`">{{group}}</div>
   </template>
 </Card>
 </template>
@@ -88,13 +90,12 @@
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts.js';
 import {activeEffects} from '/src/display/project';
 import Effects from 'components/Effects.vue';
 import PROJECTS from '/assets/content/projects.json';
 import NPCS from '/assets/content/npcs.json';
 import {years_remaining} from 'half-earth-engine';
-
-const MAX_POINTS = 15;
 
 /*
 Description: Convert a decimal number into a fraction
@@ -170,25 +171,37 @@ export default {
     type() {
       return this.kind.toLowerCase();
     },
+    style() {
+      let style = consts.groupStyle[this.group];
+      if (!style) {
+        return {
+          background: '#e0e0e0',
+          color: '#000',
+        };
+      } else {
+        if (!style.color) {
+          style.color = '#000';
+        }
+        return style;
+      }
+    },
     remainingCost() {
       if (this.implemented) {
         return null;
       } else if (this.status == 'Building') {
         let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
-        return `${years} years left`;
+        return `${years} yrs left`;
       } else {
         let cost = this.points > 0 ? this.estimate : this.cost;
         if (this.kind == 'Policy') {
           return cost;
         } else {
-          return `${cost} years`;
+          return `${cost} yrs`;
         }
       }
     },
     hasLevels() {
-      return this.status == 'Active'
-        && this.kind == 'Policy'
-        && this.upgrades.length > 0;
+      return this.upgrades.length > 0;
     },
     nextUpgrade() {
       if (this.upgrades.length === 0) {
@@ -243,47 +256,8 @@ export default {
     implemented() {
       return this.status == 'Finished' || this.status == 'Active';
     },
-    haltable() {
-      return this.implemented && (this.kind == 'Policy' || this.ongoing);
-    },
   },
   methods: {
-    assignPoint() {
-      if (state.points[this.type] > 0 && this.points < MAX_POINTS) {
-        game.setProjectPoints(this.id, this.points + 1);
-        if (this.status !== 'Building') {
-          game.startProject(this.id);
-
-          // Manually update status
-          this.status = state.gameState.projects[this.id].status;
-        }
-        state.points[this.type]--;
-        this.$emit('change');
-      }
-    },
-    unassignPoint() {
-      if (this.points > 0) {
-        game.setProjectPoints(this.id, this.points - 1);
-        if (this.status == 'Building' && this.points <= 1) {
-          game.stopProject(this.id);
-
-          // Manually update status
-          this.status = state.gameState.projects[this.id].status;
-        }
-        state.points[this.type]++;
-        this.$emit('change');
-      }
-    },
-    payPoints() {
-      // Only policies have points paid all at once,
-      // rather than assigned.
-      let available = state.gameState.political_capital;
-      if (this.status == 'Inactive' && available >= this.cost) {
-        game.changePoliticalCapital(-this.cost);
-        game.startProject(this.id);
-        this.$emit('change');
-      }
-    },
     upgrade() {
       let nextUpgrade = this.nextUpgrade;
       let available = state.gameState.political_capital;
@@ -309,26 +283,53 @@ export default {
 
 <style>
 .project-cost {
-  color: #fff;
-  background: rgba(25,25,25,0.9);
-  padding: 0 0.2em;
-  border-radius: 0.2em;
-  text-transform: uppercase;
+  color: #000;
+  background: #fff;
+  border-radius: 1em;
+  border: 1px solid #000;
+  text-align: center;
+  font-family: 'W95FA', monospace;
   font-size: 0.9em;
+  padding: 0.1em 0.25em 0;
+  line-height: 1.2;
+  display: flex;
+  text-transform: none;
 }
 .project-cost img {
   height: 12px;
+  margin-top: 0 !important;
+  width: auto !important;
+}
+.project-cost img:first-child {
+  margin-right: 0.2em;
 }
 .project-points {
   max-width: 110px;
+  text-align: left;
+}
+
+.project-status {
+  color: #fff;
+  border-radius: 1em;
+  text-align: center;
+  font-family: 'W95FA', monospace;
+  font-size: 0.9em;
+  padding: 0.4em 0.5em 0.3em;
+  text-transform: uppercase;
+  background: #FF66FF;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 0;
+  border: 1px solid #b929b9;
 }
 
 .project-upgrade {
-  background: #333;
+  background: rgba(0,0,0,0.15);
   padding: 0.25em 0.5em;
   border-radius: 0.2em;
   font-size: 0.9em;
-  border: 2px solid #444;
+  border: 1px solid rgba(0,0,0,0.2);
 }
 .project-upgrade.upgrading {
   border: 2px solid #43CC70;
@@ -356,41 +357,6 @@ export default {
   background: #888;
 }
 
-.project-group-Restoration {
-  background: #247f24;
-}
-.project-group-Protection {
-  background: #53a553;
-}
-.project-group-Nuclear {
-  background: orange;
-}
-.project-group-Agriculture {
-  background: wheat;
-}
-.project-group-Control {
-  background: #d83535;
-}
-.project-group-Population {
-  background: #6b6bec;
-}
-.project-group-Diet {
-  background: #f3ff56;
-}
-.project-group-Space {
-  background: #250441;
-  color: #d0c0e4;
-}
-.project-group-Geoengineering {
-  background: #61688b;
-}
-.project-group-Electrification {
-  background: #fcba03;
-}
-.project-group-Behavior {
-  background: #b8ad91;
-}
-
 .project-required-majority {
   position: absolute;
   left: 0;
@@ -405,10 +371,78 @@ export default {
   color: #fff;
   font-size: 0.85em;
   padding: 1em;
+  border-radius: 10px;
+}
+.project-required-majority img {
+  width: 24px;
+  display: block;
+  margin: 0 auto 0.5em;
 }
 
 .project-majority-tip {
   font-size: 0.6em;
   text-align: center;
+}
+
+.political-effects-label,
+.political-effects-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7em;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.political-effects img {
+  width: 28px;
+}
+.political-effects-cols {
+  display: flex;
+  justify-content: space-evenly;
+}
+.political-effects-opposers,
+.political-effects-supporters {
+  background: rgba(0,0,0,0.8);
+  width: 64px;
+  margin: 0.25em;
+  padding: 0.5em;
+  text-align: center;
+  border-radius: 0.5em;
+}
+.political-effects-supporters .political-effects-label {
+  color: #2FE863;
+}
+.political-effects-opposers .political-effects-label {
+  color: #FF0404;
+}
+
+.card-spacer, .political-effects {
+  flex: 1;
+}
+
+.passed-stamp {
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+}
+.passed-stamp img {
+  width: 240px !important;
+}
+
+.in-progress {
+  animation-duration: 1.5s;
+  animation-name: progresspulse;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes progresspulse {
+  from {
+    box-shadow: 0 0 2px #FF66FF, inset 1px 0px 8px #FF66FF;
+  }
+
+  to {
+    box-shadow: 0 0 24px #FF66FF, inset 1px 0px 8px #FF66FF;
+  }
 }
 </style>

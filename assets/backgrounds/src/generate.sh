@@ -1,0 +1,1 @@
+convert artem-militonian-UYW6FZLlnL8-unsplash.jpg -resize 800x800 -dither Floyd-Steinberg -remap palette.alt.2.png -interpolate Nearest -filter point -resize 150% output.jpg

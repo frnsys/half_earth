@@ -36,7 +36,11 @@ const init = {
     initiative: 0,
   },
 
+  help: {},
+  hideHelp: false,
+
   sound: false,
+  tips: true,
 }
 
 const state = reactive(init);

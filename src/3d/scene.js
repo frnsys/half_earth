@@ -15,13 +15,13 @@ class Scene {
     this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer({
       antialias: false,
-      alpha: false,
+      alpha: true,
       preserveDrawingBuffer: false
     });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
     // this.renderer.setClearColor(0xeeeeee, 1);
-    this.renderer.setClearColor(0xffffe8, 1);
+    // this.renderer.setClearColor(0xffffe8, 1);
 
     let hemiLight = new THREE.HemisphereLight(0xeeeeee, 0x000000, opts.brightness);
     this.scene.add(hemiLight);

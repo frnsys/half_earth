@@ -91,11 +91,16 @@ class Chart {
 
     if (background) {
       this.ctx.fillStyle = background;
-      this.ctx.fillRect(
-        px.x - padding,
-        px.y - height - padding,
-        width + 2*padding,
-        height + 2*padding);
+      this.ctx.beginPath();
+      this.ctx.rect(
+          px.x - padding,
+          px.y - height - padding,
+          width + 2*padding,
+          height + 2*padding);
+      this.ctx.strokeStyle = 'black';
+      this.ctx.stroke();
+      this.ctx.fill();
+      this.ctx.closePath();
     }
     this.ctx.fillStyle = color || '#000000';
     this.ctx.fillText(text, px.x, px.y);

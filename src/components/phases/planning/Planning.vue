@@ -4,9 +4,9 @@
 <div class="planning">
   <header>
     <div :class="{active: page == PAGES.PLAN}" @click="selectPage(PAGES.PLAN)">Plan</div>
-    <div :class="{active: page == PAGES.PARLIAMENT}" @click="selectPage(PAGES.PARLIAMENT)">Parliament</div>
-    <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)">Dashboard</div>
-    <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">Regions</div>
+    <div :class="{active: page == PAGES.PARLIAMENT}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
+    <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)">Stats</div>
+    <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">World</div>
   </header>
 
   <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
@@ -81,7 +81,7 @@ export default {
 <style>
 .planning {
   background: #ffecc7;
-  height: calc(100vh - 16px);
+  height: calc(100% - 16px);
   display: flex;
   flex-direction: column;
 }
@@ -109,20 +109,14 @@ export default {
 }
 .pips {
   padding: 0.5em;
-  margin: 0.25em;
+  margin: 0 auto 0.5em;
   position: relative;
   text-align: center;
   font-size: 1.2em;
   color: #fff;
-}
-.pips--buy {
-  cursor: pointer;
   user-select: none;
   border-radius: 0.2em;
   background: rgba(0,0,0,0.1);
-}
-.pips--buy:hover {
-  background: rgba(255,255,255,0.3);
 }
 .pip-in-use {
   opacity: 0.5;
@@ -133,6 +127,7 @@ export default {
   flex-direction: column;
   flex: 1;
   overflow-y: scroll;
+  padding: 4em 0.5em 1em 0.5em;
 
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -183,13 +178,26 @@ export default {
 
 .planning > header {
   display: flex;
-  border-bottom: 1px solid #000;
+  position: absolute;
+  margin: 0.75em 0.5em;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  border-radius: 0.3em;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 .planning > header div {
   flex: 1;
   text-align: center;
-  padding: 0.25em;
-  border-right: 1px solid #000;
+  padding: 0.5em 0.25em;
+  border-right: 1px solid #aaa;
+}
+.planning > header div:first-child {
+  border-radius: 0.3em 0 0 0.3em;
+}
+.planning > header div:last-child {
+  border-radius: 0 0.3em 0.3em 0;
 }
 .planning > header div:hover {
   background: #e3b6a0;

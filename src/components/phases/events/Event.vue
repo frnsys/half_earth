@@ -82,7 +82,6 @@ export default {
   margin: 1em auto;
   border-radius: 0.35em;
   width: 180px;
-  font-family: 'Andada Pro';
 }
 .event .image-attribution {
   position: absolute;
@@ -103,7 +102,6 @@ export default {
   margin: 0 1em;
   border-radius: 0.3em;
   padding: 0.2em 0;
-  font-family: 'Andada Pro';
 }
 
 .event .dialogue {
