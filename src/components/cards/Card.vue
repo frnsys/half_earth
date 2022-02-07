@@ -152,6 +152,9 @@ export default {
   pointer-events: none; /* prevent dragging */
   display: block;
   border-left: 1px solid #555;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 .card-image-attribution {
   color: #787087;

@@ -2,7 +2,7 @@
 <div
   :id="id"
   class="draggable"
-  :class="{dragging:dragging}"
+  :class="{dragging:dragging, active:draggable}"
   @mousedown="startDrag"
   @touchstart="startDrag"
   @mousemove="drag"

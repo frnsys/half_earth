@@ -226,7 +226,7 @@ export default {
     rejectScan() {
       this.$refs.target.parentElement.classList.add('scan-fail');
       this.$refs.target.classList.add('no-scan');
-      document.body.classList.add('scan-reject');
+      document.querySelector('.draggable.active').classList.add('scan-reject');
       setTimeout(() => {
         this.$refs.target.parentElement.classList.remove('scan-fail');
       }, 500);
@@ -269,7 +269,7 @@ export default {
       this.$refs.target.classList.remove('scanning');
       this.$refs.target.classList.remove('no-scan');
       this.$refs.target.parentElement.classList.remove('scan-ok');
-      document.body.classList.remove('scan-reject');
+      document.querySelector('.draggable.active').classList.remove('scan-reject');
       if (this.scanAnim) {
         this.scanAnim.stop();
         this.scanAnim = null;
