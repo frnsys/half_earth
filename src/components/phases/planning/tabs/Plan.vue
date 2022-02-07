@@ -280,6 +280,7 @@ export default {
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
   border-right: 1px solid rgba(255,255,255,0.5);
   border-bottom: 1px solid rgba(255,255,255,0.5);
+  margin-bottom: 1em;
 }
 
 .plan--change .plan--add-change {

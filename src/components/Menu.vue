@@ -98,7 +98,8 @@ export default {
 
 <style>
 .dropdown-menu {
-  background: url('/assets/backgrounds/menu.jpg');
+  background-color: #1A1615;
+  background-image: url('/assets/backgrounds/menu.jpg');
   background-size: cover;
   background-position: center;
   position: absolute;

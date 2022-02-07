@@ -23,6 +23,11 @@ const playlist = [
   '/assets/music/airtone_-_spacetime(whitecube).mp3',
 ];
 
+const preload = [
+  '/assets/stamp.svg',
+  '/assets/backgrounds/menu.jpg',
+];
+
 // Hacky
 window.music = new Playlist(playlist);
 
@@ -36,6 +41,12 @@ export default {
     if (!debug.noSound && state.sound) {
       window.music.play();
     }
+
+    // Preload some images
+    preload.forEach((src) => {
+      let img = new Image();
+      img.src = src;
+    });
   },
   components: {
     Tip,
