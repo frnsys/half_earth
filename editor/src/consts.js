@@ -512,6 +512,11 @@ const SPEAKERS = [
   'The Soldier',
   'The Authoritarian',
   'The Analyst',
+  'The Animal Liberationist',
+  'The Posadist',
+  'The Half-Earth Socialist',
+  'The Fully-Automated Luxury Communist',
+  'The Malthusian',
 ];
 
 const EVENT_TYPES = [
