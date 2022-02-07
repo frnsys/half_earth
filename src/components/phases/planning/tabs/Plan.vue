@@ -439,7 +439,7 @@ export default {
   z-index: 1;
 }
 
-.project-tab {
+.planning-sub-tab {
   font-family: 'Inter', sans-serif;
   font-size: 0.7em;
 }

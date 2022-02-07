@@ -1,32 +1,32 @@
 <template>
 <div class="plan-change-select planning--page">
   <div class="planning--page-tabs">
-   <div @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
+   <div class="planning-sub-tab" @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
       <img :src="icons.electricity" />
       <div>Electricity</div>
     </div>
-    <div @click="if (allowBack) { output = 'Fuel'; }" :class="{selected: output == 'Fuel', disabled: !allowBack}">
+    <div class="planning-sub-tab" @click="if (allowBack) { output = 'Fuel'; }" :class="{selected: output == 'Fuel', disabled: !allowBack}">
       <img :src="icons.fuel" />
       <div>Fuel</div>
     </div>
-    <div @click="if (allowBack) { output = 'PlantCalories'; }" :class="{selected: output == 'PlantCalories', disabled: !allowBack}">
+    <div class="planning-sub-tab" @click="if (allowBack) { output = 'PlantCalories'; }" :class="{selected: output == 'PlantCalories', disabled: !allowBack}">
       <img :src="icons.plant_calories" />
-      <div>Plant Cals</div>
+      <div>Crops</div>
     </div>
-    <div @click="if (allowBack) { output = 'AnimalCalories'; }" :class="{selected: output == 'AnimalCalories', disabled: !allowBack}">
+    <div class="planning-sub-tab" @click="if (allowBack) { output = 'AnimalCalories'; }" :class="{selected: output == 'AnimalCalories', disabled: !allowBack}">
       <img :src="icons.animal_calories" />
-      <div>Animal Cals</div>
+      <div>Livestock</div>
     </div>
     <div :class="{disabled: !allowBack}" @click="if (allowBack) { $emit('close'); }">Back</div>
   </div>
 
-  <Cards>
+  <Cards :enabled="true">
     <ProcessCard v-for="p in processes" :process="p" :key="p.id">
       <template v-slot:actions>
-        <button :disabled="changedMixShare(p) === 0" @click="removePoint(p)">
+        <button :disabled="changedMixShare(p) === 0" @click="(ev) => { ev.stopPropagation(); removePoint(p) }">
           -<img class="pip" :src="icons.mix_token">
         </button>
-        <button :disabled="points === 0" @click="addPoint(p)">
+        <button :disabled="points === 0" @click="(ev) => { ev.stopPropagation(); addPoint(p) }">
           +<img class="pip" :src="icons.mix_token">
         </button>
       </template>

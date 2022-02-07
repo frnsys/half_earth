@@ -83,6 +83,7 @@ export default {
   flex-direction: column;
   border-radius: 0.75em 0.75em 0.1em 0.1em;
   box-shadow: 0 0 3px rgb(0 0 0 / 50%);
+  font-family: 'Inter', sans-serif;
 }
 .card-bot {
   flex: 1;

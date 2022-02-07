@@ -4,15 +4,15 @@
   <HelpTip text="⟵ Swipe sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
 
   <div class="planning--page-tabs">
-   <div class="project-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
+   <div class="planning-sub-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
       <img :src="icons.research" />
       <div>Research</div>
     </div>
-   <div class="project-tab" @click="type = 'Initiative'" :class="{selected: type == 'Initiative'}">
+   <div class="planning-sub-tab" @click="type = 'Initiative'" :class="{selected: type == 'Initiative'}">
       <img :src="icons.initiative" />
       <div>Infrastructure</div>
     </div>
-   <div class="project-tab" @click="type = 'Policy'" :class="{selected: type == 'Policy'}">
+   <div class="planning-sub-tab" @click="type = 'Policy'" :class="{selected: type == 'Policy'}">
       <img :src="icons.policy" />
       <div>Policies</div>
     </div>

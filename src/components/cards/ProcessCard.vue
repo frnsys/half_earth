@@ -1,7 +1,7 @@
 <template>
-<Card>
+<Card color="#ffffff">
   <template v-slot:header>
-    <div>{{name}}</div>
+    <div>{{output}}</div>
     <div v-tip="outputTip">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
   </template>
   <template v-slot:figure>
@@ -49,6 +49,9 @@
       <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
   </template>
+  <template v-slot:name>
+    {{name}}
+  </template>
   <template v-slot:body>
     <div class="card-actions" v-if="!!this.$slots.actions">
       <slot name="actions"></slot>
@@ -71,15 +74,14 @@
         resource="emissions" :intensity="intensities.emissions" />
     </div>
   </template>
-  <template v-slot:back>
-    <p>{{description}}</p>
-    <p>This process currently produces {{produced.amount}}<img :src="icons[output]" /> and {{produced.emissions}}<img :src="icons.emissions" /> per year.</p>
+  <template v-slot:top-back>
+    <p class="card-desc">{{description}}</p>
+  </template>
+  <template v-slot:bot-back>
+    <div class="card-spacer"></div>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>
-  </template>
-  <template v-slot:footer>
-    <div>GOSPLANT</div>
   </template>
 </Card>
 </template>
