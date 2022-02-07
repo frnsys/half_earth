@@ -82,6 +82,10 @@ impl GameInterface {
         self.game.upgrade_project(project_id);
     }
 
+    pub fn downgrade_project(&mut self, project_id: usize) {
+        self.game.downgrade_project(project_id);
+    }
+
     pub fn change_process_mix_share(&mut self, process_id: usize, change: isize) {
         self.game.state.change_mix_share(process_id, change);
     }
@@ -236,6 +240,16 @@ impl Game {
 
     pub fn upgrade_project(&mut self, project_id: usize) {
         let (remove_effects, add_effects) = self.state.upgrade_project(project_id);
+        for effect in remove_effects {
+            effect.unapply(&mut self.state, &mut self.event_pool, None);
+        }
+        for effect in add_effects {
+            effect.apply(&mut self.state, &mut self.event_pool, None);
+        }
+    }
+
+    pub fn downgrade_project(&mut self, project_id: usize) {
+        let (remove_effects, add_effects) = self.state.downgrade_project(project_id);
         for effect in remove_effects {
             effect.unapply(&mut self.state, &mut self.event_pool, None);
         }

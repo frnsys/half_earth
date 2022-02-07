@@ -126,6 +126,12 @@ function upgradeProject(id) {
   updateFactors();
 }
 
+function downgradeProject(id) {
+  game.downgrade_project(id);
+  updateState();
+  updateFactors();
+}
+
 function setTgav(tgav) {
   game.set_tgav(tgav);
   updateState();
@@ -203,7 +209,8 @@ export default {
   changeHabitability,
   checkRequests,
   changeProcessMixShare,
-  setProjectPoints, startProject, stopProject, upgradeProject,
+  setProjectPoints, startProject, stopProject,
+  upgradeProject, downgradeProject,
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
   playerSeats,

@@ -52,6 +52,9 @@ export default {
         effects: upgrades[idx].effects,
       }
     },
+    canDowngrade() {
+      return this.project.kind == 'Policy' && this.project.level > 0;
+    },
     implemented() {
       return this.project.status == 'Finished' || this.project.status == 'Active';
     },
@@ -121,6 +124,16 @@ export default {
     // Animations
     pulseProgress() {
       let el = this.$refs.scanProgress.parentElement;
+      animate(1, 1.2, 200, (val) => {
+        el.style.transform = `scale(${val})`;
+      }, () => {
+        animate(1.2, 1, 200, (val) => {
+          el.style.transform = `scale(${val})`;
+        });
+      });
+    },
+    pulseLevel() {
+      let el = document.querySelector('.draggable.active .project-cost');
       animate(1, 1.2, 200, (val) => {
         el.style.transform = `scale(${val})`;
       }, () => {
@@ -239,9 +252,11 @@ export default {
         if (this.scanning) {
           // Try to buy point
           let projectActive = p.status == 'Active' || p.status == 'Finished';
-          if (projectActive && this.nextUpgrade(p) && this.upgradeProject(p)) {
+          if (projectActive && this.nextUpgrade && this.upgradeProject) {
             this.pulseProgress();
-            if (this.nextUpgrade(p)) {
+            if (this.nextUpgrade) {
+              this.upgradeProject();
+              this.pulseLevel();
               this.scanCard();
             }
 
@@ -284,7 +299,11 @@ export default {
         this.$refs.withdrawProgress.style.width = `${val}%`;
       }, () => {
         if (this.withdrawing) {
-          game.stopProject(this.project.id);
+          if (this.canDowngrade) {
+            game.downgradeProject(this.project.id);
+          } else {
+            game.stopProject(this.project.id);
+          }
           this.$emit('change');
         }
         this.stopWithdrawingCard();

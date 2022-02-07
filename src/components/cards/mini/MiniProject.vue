@@ -19,7 +19,7 @@
     </div>
 
     <div class="card-withdraw-target" ref="withdrawTarget">
-      Withdraw
+      {{ canDowngrade ? 'Downgrade' : 'Withdraw' }}
       <div class="withdraw-bar" ref="withdrawProgress"></div>
     </div>
 

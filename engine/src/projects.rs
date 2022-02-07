@@ -208,6 +208,15 @@ impl Project {
         }
     }
 
+    pub fn downgrade(&mut self) -> bool {
+        if self.level > 0 {
+            self.level -= 1;
+            true
+        } else {
+            false
+        }
+    }
+
     pub fn active_effects(&self) -> &Vec<Effect> {
         if self.level == 0 {
             &self.effects

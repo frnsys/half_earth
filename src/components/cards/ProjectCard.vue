@@ -58,6 +58,13 @@
       <Effects :effects="nextUpgrade.effects" />
     </div>
 
+    <div class="project-upgrade" v-if="status == 'Active' && canDowngrade">
+      <div class="project-upgrade--title">
+        <div>Prev Level</div>
+      </div>
+      <Effects :effects="prevUpgrade.effects" />
+    </div>
+
     <div class="project-status" v-if="status == 'Building'">{{ kind == 'Research' ? 'Researching' : 'Building'}}</div>
 
   </template>
@@ -216,6 +223,20 @@ export default {
         cost: upgrade.cost,
         effects: this.upgrades[idx].effects,
       }
+    },
+    prevUpgrade() {
+      if (this.canDowngrade) {
+        let idx = this.level - 2;
+        let upgrade = idx < 0 ? {effects: this.effects, cost: 0} : this.upgrades[idx];
+        return {
+          cost: upgrade.cost,
+          effects: upgrade.effects,
+        }
+      }
+      return null;
+    },
+    canDowngrade() {
+      return this.kind == 'Policy' && this.level > 0;
     },
     upgradeQueued() {
         return state.queuedUpgrades[this.id] == true;

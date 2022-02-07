@@ -461,6 +461,27 @@ impl State {
         (remove_effects, add_effects)
     }
 
+    pub fn downgrade_project(&mut self, project_id: usize) -> (Vec<Effect>, Vec<Effect>) {
+        let mut remove_effects = Vec::new();
+        let mut add_effects = Vec::new();
+
+        let project = &mut self.projects[project_id];
+        for effect in project.active_effects() {
+            remove_effects.push(effect.clone());
+        }
+
+        let downgraded = project.downgrade();
+        if downgraded {
+            for effect in project.active_effects() {
+                add_effects.push(effect.clone());
+            }
+        } else {
+            remove_effects.clear();
+        }
+
+        (remove_effects, add_effects)
+    }
+
     pub fn change_mix_share(&mut self, process_id: usize, change: isize) {
         let process = &mut self.processes[process_id];
         let was_banned = process.is_banned();
