@@ -215,6 +215,16 @@ PLACEHOLDERS = {
     }
 }
 
+PROB_NAMES = {
+    'Guaranteed': 'Will',
+    'Likely': 'Likely to',
+    'Random': 'Could',
+    'Unlikely': 'Unlikely to',
+    'Rare': 'Small chance to',
+    'Improbable': 'Tiny chance to',
+    'Impossible': 'Won\'t',
+}
+
 def param(e, k):
     return float(e['params'].get(k) or 0)
 
@@ -953,7 +963,14 @@ if __name__ == '__main__':
             } for u in p.get('upgrades', [])],
             'outcomes': [{
                 'text': u.get('text', ''),
-                'effects': [parse_effect(e) for e in u['effects']]
+                'effects': [parse_effect(e) for e in u['effects']],
+
+                # This is a little misleading because the probability type is not only
+                # important but also whether or not their are conditions.
+                # E.g. there may be probabilities A and B, each "guaranteed",
+                # but B has some conditions that are necessary first while A
+                # has no required conditions.
+                'probability': PROB_NAMES[u['probability']['type']]
             } for u in p.get('outcomes', [])]
         }
         if fname:
@@ -1101,3 +1118,5 @@ if __name__ == '__main__':
 
     with open('assets/surface/tiles_to_regions.json', 'w') as f:
         json.dump(tiles_to_regions, f)
+
+    print('Done')

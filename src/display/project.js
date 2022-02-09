@@ -14,8 +14,9 @@ function activeEffects(project) {
 
 function outcomeEffects(projectDetails) {
   let allEffects = {};
-  projectDetails.outcomes.forEach(({effects}) => {
+  projectDetails.outcomes.forEach(({effects, probability}) => {
     for (const effect of effects) {
+      effect.probability = probability;
       let key = `${effect.type}${effect.subtype ? effect.subtype : ''}`;
       let hash = JSON.stringify(effect);
       if (!(key in allEffects)) {
