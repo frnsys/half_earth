@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background: #202020;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.logo {
+  height: 64px;
+  display: block;
+  margin: 1em auto 2em;
+}
+
+.summary-image {
+  max-width: 100%;
+  margin: 1em auto;
+  display: block;
+  border-radius: 0.5em;
+}
+
+.play-button {
+	font-size: 1.5em;
+	text-align: center;
+	margin: 2em auto;
+	width: 120px;
+	background: red;
+	color: #fff;
+	padding: 0.3em 0.5em;
+	border-radius: 0.5em;
+	cursor: pointer;
+	text-decoration: none;
+	display: block;
+	border-right: 1px solid rgba(0,0,0,0.5);
+	border-bottom: 1px solid rgba(0,0,0,0.5);
+	border-top: 1px solid rgba(255,255,255,0.5);
+	border-left: 1px solid rgba(255,255,255,0.5);
+	box-shadow: 1px 2px 4px rgb(0 0 0 / 50%);
+}
+.play-button:hover {
+  background: #eee;
+  color: #000;
+}
+
+section {
+  border: 1px solid #fff;
+  border-radius: 0.5em;
+  padding: 1em;
+  position: relative;
+  margin: 3em 0;
+}
+.badge {
+	display: flex;
+	align-items: center;
+  margin: 1em 0;
+}
+.badge img {
+  width: 32px;
+  margin-right: 8px;
+}
+
+.label {
+	border: 1px solid #fff;
+	text-align: center;
+	position: absolute;
+	top: 0;
+	font-size: 0.75em;
+	border-radius: 0.2em;
+	padding: 0.1em 0.25em;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #202020;
+}

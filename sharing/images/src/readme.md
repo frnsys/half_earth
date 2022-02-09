@@ -1,0 +1,23 @@
+All images in the Public Domain
+
+- `win1.jpg`: <https://commons.wikimedia.org/wiki/File:Forest_-_Flickr_-_%C5%81ukasz_Rawa.jpg>
+- `win2.jpg`: <https://commons.wikimedia.org/wiki/File:Forest_near_F%C3%BCrstenberg_2021-06-17_05.jpg>
+- `win3.jpg`: <https://commons.wikimedia.org/wiki/File:Cedar_waxwings_(Bombycilla_cedrorum)_near_the_North_Entrance_(42286423374).jpg>
+- `win4.jpg`: <https://commons.wikimedia.org/wiki/File:Impalas_at_Nairobi_National_Park,_Kenya.jpg>
+- `win5.jpg`: <https://commons.wikimedia.org/wiki/File:Beaver_near_Swan_Lake_(33797143245).jpg>
+- `win6.jpg`: <https://commons.wikimedia.org/wiki/File:Pel%C3%ADcano_en_Acapulco,_sobre_una_roca.jpg>
+- `win7.jpg`: <https://commons.wikimedia.org/wiki/File:Jungle.jpg>
+- `win8.jpg`: <https://commons.wikimedia.org/wiki/File:Sonny_Bono_Salton_Sea_National_Wildlife_Refuge_-_Waterfowl_at_Hazard_Ponds.png>
+- `win9.jpg`: <https://commons.wikimedia.org/wiki/File:Lemur_(33938731665).jpg>
+- `win10.jpg`: <https://commons.wikimedia.org/wiki/File:Plage_Whitesunday_island.jpg>
+- `win11.jpg`: <https://commons.wikimedia.org/wiki/File:Lake-sherburne-964855.jpg>
+- `win12.jpg`: <https://commons.wikimedia.org/wiki/File:Behi_afrikarrak.jpg>
+- `lose1.jpg`: <https://commons.wikimedia.org/wiki/File:Office_of_the_Administrator_(Lisa_P._Jackson)_-_Various_Images_(BP_Oil_Spill)_-_GULF_OF_MEXICO_-_Vessels_of_Opportunity_pull_oil_into_a_fire_boom_in_a_controlled_burn_with_a_second_-_DPLA_-_4a438522353666d0a387075e356eed4e.jpg>
+- `lose2.jpg`: <https://commons.wikimedia.org/wiki/File:2014_Washington_Landslide.jpg>
+- `lose3.jpg`: <https://commons.wikimedia.org/wiki/File:Jeddah_flood.jpg>
+- `lose4.jpg`: <https://commons.wikimedia.org/wiki/File:The_Rim_Fire_in_the_Stanislaus_National_Forest_near_in_California_began_on_Aug._17,_2013-0004.jpg>
+- `lose5.jpg`: <https://commons.wikimedia.org/wiki/File:Woolsey_Fire_-_tree_ridge_in_flames_20181119-PB-008.jpg>
+- `lose6.jpg`: <https://commons.wikimedia.org/wiki/File:Hurricane_Ike_Gilchrist_damage.jpg>
+- `lose7.jpg`: <https://commons.wikimedia.org/wiki/File:2012.09.29.110242_Bingham_Canyon_Mine_Utah.jpg>
+- `lose8.jpg`: <https://commons.wikimedia.org/wiki/File:Wolverine_Fire_from_Stehekin_Dock,_2015_(398fde61d0b5496db7ec4881cccf88f2).JPG>
+- `lose9.jpg`: <https://commons.wikimedia.org/wiki/File:Fish_kill_pollution.jpg>
