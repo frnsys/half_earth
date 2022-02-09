@@ -20,7 +20,7 @@
     <div :class="{disabled: !allowBack}" @click="if (allowBack) { $emit('close'); }">Back</div>
   </div>
 
-  <Cards :enabled="true">
+  <Cards>
     <ProcessCard v-for="p in processes" :process="p" :key="p.id">
       <template v-slot:actions>
         <button :disabled="changedMixShare(p) === 0" @click="(ev) => { ev.stopPropagation(); removePoint(p) }">

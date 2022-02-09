@@ -210,7 +210,7 @@ export default {
     yMin() {
       if (this.$refs.target) {
         let target = this.$refs.target.getBoundingClientRect();
-        return target.y + target.height - 6;
+        return target.y + target.height - 8;
       } else {
         return 0;
       }

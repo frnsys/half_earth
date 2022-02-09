@@ -4,149 +4,39 @@
 -->
 
 <template>
-<ul class="cards"
-  :class="{dragging:dragging}"
-  @mousedown="startDrag"
-  @touchstart="startDrag">
+<ul class="cards" ref="scroller" @scroll="scrolled">
   <slot></slot>
 </ul>
 </template>
 
 <script>
-import animate from 'lib/anim';
-
-// For animating snap-to-center
-const duration = 150; // ms
-
 export default {
-  props: ['enabled'],
   data() {
     return {
-      down: false,
-      dragging: false,
-      vel: 0,
-      pos: {
-        x: 0,
-        y: 0,
-        top: 0,
-        left: 0,
-      }
+      scrollTimeout: null,
     }
   },
-
-  // Have to bind these on the document because
-  // dragging likely brings the mouse out of the element's bounds
-  mounted() {
-    document.addEventListener('mousemove', this.drag);
-    document.addEventListener('mouseup', this.endDrag);
-    document.addEventListener('touchmove', this.drag);
-    document.addEventListener('touchend', this.endDrag);
-    this.$nextTick(() => {
-      this.snapToCenter(false);
-    });
-  },
-  unmounted() {
-    document.removeEventListener('mousemove', this.drag);
-    document.removeEventListener('mouseup', this.endDrag);
-    document.removeEventListener('touchmove', this.drag);
-    document.removeEventListener('touchend', this.endDrag);
-  },
-
   methods: {
-    drag(ev) {
-      if (!this.down) return;
-      const dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
-      const dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
-
-      // Check if above threshold
-      if (Math.abs(dy) < 10 && Math.abs(dx) > 10) {
-        this.dragging = true;
-
-        this.$emit('dragStart', this);
-
-        // Stop snap-to-center animation if there is one
-        if (this.animation) this.animation.stop();
-
-        // Stop momentum if any
-        if (this.momentum) cancelAnimationFrame(this.momentum);
-        this.momentum = null;
-
-        // Scroll the element
-        let prev = this.$el.scrollLeft;
-        // No vertical dragging
-        // this.$el.scrollTop = this.pos.top - dy;
-        this.$el.scrollLeft = this.pos.left - dx;
-        let diff = this.$el.scrollLeft - prev; // For momentum
-
-        this.vel = diff;
+    scrolled(ev) {
+      if (this.scrollTimeout !== null) {
+        clearTimeout(this.scrollTimeout);
       }
-    },
-    startDrag(ev) {
-      if (!this.enabled) return;
-      this.down = true;
-      this.pos = {
-        // Current mouse position
-        x: (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX),
-        y: (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY),
 
-        // Current scroll
-        left: this.$el.scrollLeft,
-        top: this.$el.scrollTop,
-      };
-    },
-    snapToCenter(anim) {
-      // Horizontal snap-to-center
-      let rect = this.$el.getBoundingClientRect();
-      let scrollLeft = this.$el.scrollLeft;
-      let centerOffset = scrollLeft + rect.width/2;
-
-      // Find the child closest to the center
-      let target = [...this.$el.children].reduce((acc, child) => {
-        let childRect = child.getBoundingClientRect();
-        let childCenterOffset = child.offsetLeft + childRect.width/2;
-        let offset = Math.abs(childCenterOffset - centerOffset);
-        if (!acc || offset < acc.offset) {
-          return {child, offset, width: childRect.width};
-        } else {
-          return acc;
+      // Wait to see if we've stopped scrolling
+      // If so, figure out what the focused/centered child is.
+      this.scrollTimeout = setTimeout(() => {
+        let xs = [...this.$refs.scroller.children].map((ch) => {
+          let rect = ch.getBoundingClientRect();
+          let pos = rect.x + rect.width/2;
+          return pos;
+        });
+        let rect = this.$refs.scroller.getBoundingClientRect();
+        let targetX = rect.x + this.$refs.scroller.clientWidth/2;
+        let idx = xs.findIndex((x) => x == targetX);
+        if (idx >= 0) {
+          this.$emit('focused', idx);
         }
-      }, null);
-
-      if (target) {
-        let end = target.child.offsetLeft - rect.width/2 + target.width/2;
-        if (anim) {
-          // Animate snap-to-center
-          let start = this.$el.scrollLeft;
-          this.animation = animate(start, end, duration, (val) => {
-            this.$el.scrollLeft = val;
-          }, () => {
-            this.$emit('dragEnd', target);
-          });
-        } else {
-          this.$el.scrollLeft = end;
-          this.$emit('dragEnd', target);
-        }
-      }
-    },
-    endDrag(ev) {
-      this.down = false;
-      if (this.dragging) {
-        this.dragging = false;
-
-        // Momentum
-        this.applyMomentum();
-      } else {
-        this.$emit('dragEnd', null);
-      }
-    },
-    applyMomentum() {
-      this.$el.scrollLeft += this.vel;
-      this.vel *= 0.95;
-      if (Math.abs(this.vel) > 0.5){
-        this.momentum = requestAnimationFrame(this.applyMomentum);
-      } else {
-        this.snapToCenter(true);
-      }
+      }, 50);
     }
   }
 }
@@ -156,20 +46,16 @@ export default {
 .cards {
   cursor: grab;
   white-space: nowrap;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
   position: relative;
   display: flex;
   align-items: center;
+  scroll-snap-type: x mandatory;
 }
-.cards.dragging {
-  cursor: grabbing;
-  user-select: none;
-
-  /* Disable pointer events
-  while dragging so we can't trigger
-  children click events */
-  pointer-events: none;
+.cards > * {
+  scroll-snap-align: center;
 }
 .cards .card {
   display: inline-flex;

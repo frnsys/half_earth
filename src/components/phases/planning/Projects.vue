@@ -1,7 +1,7 @@
 <template>
-<div class="plan-change-select planning--page" :class="{scrolling}">
+<div class="plan-change-select planning--page">
   <HelpTip text="↑ Swipe this card up and hold to add it to your plan ↑" x="50%" y="150px" :center="true" />
-  <HelpTip text="⟵ Swipe sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
+  <HelpTip text="⟵ Scroll sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
 
   <div class="planning--page-tabs">
    <div class="planning-sub-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
@@ -25,13 +25,13 @@
     <div class="withdraw-bar" ref="withdrawProgress"></div>
   </div>
 
-  <Cards @dragStart="onDragStart" @dragEnd="onDragEnd" :enabled="scrollable">
+  <Cards @focused="onFocused">
     <Draggable @drag="onDragVertical"
       @dragStop="onDragVerticalStop"
       v-for="i in projectOrder"
       :minY="yMin"
       :maxY="yMax"
-      :draggable="focusedProject == projects[i].id"
+      :draggable="focusedProject == i"
       :id="projects[i].id"
       :key="projects[i].id">
       <ProjectCard
@@ -75,34 +75,34 @@ export default {
   data() {
     return {
       state,
-      scrolling: false,
-      scrollable: true,
       focusedProject: 0,
       type: 'Research',
-      projectOrder: [],
     };
   },
   watch: {
     type(type) {
-      this.scrolling = false;
-      this.scrollable = true;
-      // Kind of hacky, but
-      // figure out what the focused card is
+      // Figure out what the focused card is
       this.$nextTick(() => {
-        for (let el of document.querySelectorAll('.draggable')) {
+        let scroller = document.querySelector('.cards');
+        let rect = scroller.getBoundingClientRect();
+        let targetX = rect.x + scroller.clientWidth/2;
+        let els = [...document.querySelectorAll('.draggable')];
+        let idx = els.findIndex((el) => {
           let rect = el.getBoundingClientRect();
-          if (rect.x > 0) {
-            this.focusedProject = el.id;
-            break;
-          }
-        }
+          let pos = rect.x + rect.width/2;
+          return pos == targetX;
+        });
+        this.focusedProject = this.projectOrder[idx];
       });
     }
   },
   computed: {
     project() {
       if (this.focusedProject !== null) {
-        return state.gameState.projects[this.focusedProject];
+        return this.projects[this.focusedProject];
+      } else {
+        // Default for loading
+        return state.gameState.projects[0];
       }
     },
     projectOrder() {
@@ -118,29 +118,15 @@ export default {
     },
   },
   methods: {
-    onDragStart() {
-      this.scrolling = true;
-    },
-    onDragEnd(card) {
-      if (card) {
-        this.focusedProject = parseInt(card.child.id);
-      }
-      this.scrolling = false;
+    onFocused(idx) {
+      this.focusedProject = this.projectOrder[idx];
     },
     onDragVertical(component) {
-      this.scrollable = false;
       this.checkDrag(component);
     },
     onDragVerticalStop() {
-      this.scrollable = true;
       this.stopDrag();
     },
   }
 }
 </script>
-
-<style>
-.plan-change-select.scrolling .card {
-  pointer-events: none;
-}
-</style>

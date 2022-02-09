@@ -4,12 +4,7 @@
   class="draggable"
   :class="{dragging:dragging, active:draggable}"
   @mousedown="startDrag"
-  @touchstart="startDrag"
-  @mousemove="drag"
-  @touchmove="drag"
-  @mouseup="stopDrag"
-  @touchend="stopDrag"
-  @mouseleave="stopDrag">
+  @touchstart="startDrag">
   <slot />
 </div>
 </template>
@@ -29,6 +24,24 @@ export default {
         y: 0
       }
     }
+  },
+
+  // Have to bind a lot of these to the body,
+  // because the mouse may leave target areas but we still
+  // need to respond to events there.
+  mounted() {
+    document.body.addEventListener('mouseup', this.stopDrag);
+    document.body.addEventListener('touchend', this.stopDrag);
+    document.body.addEventListener('mouseleave', this.stopDrag);
+    document.body.addEventListener('mousemove', this.drag);
+    document.body.addEventListener('touchmove', this.drag);
+  },
+  unmounted() {
+    document.body.removeEventListener('mouseup', this.stopDrag);
+    document.body.removeEventListener('touchend', this.stopDrag);
+    document.body.removeEventListener('mouseleave', this.stopDrag);
+    document.body.removeEventListener('mousemove', this.drag);
+    document.body.removeEventListener('touchmove', this.drag);
   },
   methods: {
     startDrag(ev) {
@@ -51,13 +64,13 @@ export default {
     },
     drag(ev) {
       if (!this.down) return;
-      ev.preventDefault(); // Necessary to prevent address bar from showing on drag
+      /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
       let minY = this.minY();
       let maxY = this.maxY();
-      if (Math.abs(dx) < 20 && Math.abs(dy) > 10) {
+      if (Math.abs(dx) < 10 && Math.abs(dy) > 10) {
         this.dragging = true;
         let rect = this.$el.getBoundingClientRect();
         if (minY && rect.y <= minY) return;
