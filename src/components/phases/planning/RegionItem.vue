@@ -12,7 +12,7 @@
         </div>
     </div>
     <div v-tip="{icon: 'development', text: `This region's progress to the next income level.`}">
-      <span>Development</span>
+      <span>Progress to Next Level</span>
       <div class="minibar">
         <div class="minibar-fill"
           :style="{width: `${region.income == 'High' ? 100 : region.development * 100}%`}"></div>
