@@ -58,6 +58,7 @@ export default {
   margin-top: 0;
   text-transform: uppercase;
   font-style: italic;
+  font-weight: normal;
 }
 
 .break--actions {

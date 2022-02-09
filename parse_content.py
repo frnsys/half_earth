@@ -1039,6 +1039,9 @@ if __name__ == '__main__':
         npc = {
             'name': p['name'],
             'description': p.get('description', ''),
+            'effects': p.get('effects', ''),
+            'likes': p.get('likes', ''),
+            'dislikes': p.get('dislikes', ''),
             'color': p.get('color', ''),
         }
         npcs.append(npc)
@@ -1048,6 +1051,8 @@ if __name__ == '__main__':
 
     all_effects = []
     def find_effects(item):
+        if item.get('_type') == 'NPC':
+            return []
         effects = item.get('effects', [])
         for v in item.values():
             if isinstance(v, dict):

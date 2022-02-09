@@ -107,7 +107,6 @@ export default {
   position: absolute;
   width: 16px;
   right: -4px;
-  bottom: -4px;
 }
 .tip--supicon {
   position: absolute;

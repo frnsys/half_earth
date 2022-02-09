@@ -328,7 +328,8 @@ const SPECS = {
 
   NPC: {
     key: 'name',
-    validate: ['name', 'description', 'locked', 'color'],
+    validate: ['name', 'description', 'effects',
+      'likes', 'dislikes', 'locked', 'color'],
     questions: ['name', 'description', 'notes'],
     validateKey: (item, key) => {
       switch (key) {

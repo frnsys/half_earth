@@ -1,5 +1,5 @@
 <template>
-<Card class="npc" background="#724680" :noBack="true">
+<Card class="npc" background="#724680">
   <template v-slot:header>
     <div>Parliament</div>
     <div v-tip="{text: `Your relationship with ${name}.`, icon: 'relationship'}">
@@ -19,10 +19,26 @@
     {{name}}
   </template>
   <template v-slot:body>
-    <p v-if="relationshipName == 'Ally'" class="active" v-html="html"></p>
-    <p v-else v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="html"></p>
+    <p v-if="relationshipName == 'Ally'" class="active" v-html="effectsHtml"></p>
+    <p v-else class="inactive" v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="effectsHtml"></p>
   </template>
-  <template v-slot:back>
+  <template v-slot:top-back>
+    <img
+      :src="`/assets/characters/${npc.name}.png`"
+      onerror="this.src='/assets/placeholders/character.png';" />
+    <p class="card-desc npc-desc">{{description}}</p>
+  </template>
+  <template v-slot:bot-back>
+    <div class="likes-dislikes">
+      <div>
+        <h3>Likes</h3>
+        <p>{{likes}}</p>
+      </div>
+      <div>
+        <h3>Dislikes</h3>
+        <p>{{dislikes}}</p>
+      </div>
+    </div>
   </template>
 </Card>
 
@@ -44,8 +60,8 @@ export default {
     };
   },
   computed: {
-    html() {
-      return display.fillIcons(this.description);
+    effectsHtml() {
+      return display.fillIcons(this.effects);
     },
     relationshipName() {
       return display.relationshipName(this.npc.relationship);
@@ -63,7 +79,7 @@ export default {
 .npc figure img {
   width: 120px;
 }
-.npc p {
+.npc p.inactive {
   opacity: 0.25;
 }
 .npc p.active {
@@ -86,5 +102,46 @@ export default {
   width: 12px !important;
   margin-right: 2px;
   margin-top: -4px;
+}
+
+.likes-dislikes {
+  display: flex;
+  width: 100%;
+}
+.likes-dislikes > div {
+  flex: 1;
+  padding: 0.5em;
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(0,0,0,0.4);
+  border-left: 1px solid rgba(0,0,0,0.4);
+  border-radius: 0.5em;
+  margin: 0 0.5em;
+}
+
+.npc-desc {
+  font-style: italic;
+  padding: 0 1em;
+  font-size: 0.75em;
+  z-index: 1;
+}
+
+.likes-dislikes h3 {
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  font-size: 0.55em;
+  text-align: center;
+  margin-top: 0.5em;
+}
+.likes-dislikes p {
+  font-family: 'W95FA';
+  font-size: 0.75em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.card-top-back > img {
+  height: 72px;
+  margin: 4em 0 0;
 }
 </style>

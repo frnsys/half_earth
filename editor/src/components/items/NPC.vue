@@ -13,13 +13,6 @@
     <fieldset>
       <div>
         <label>
-          Description
-          <Tip>Describe the effects of having this NPC in your coalition.</Tip>
-        </label>
-        <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
-      </div>
-      <div>
-        <label>
           Color
           <Tip>The color for this faction (used in parliament seats)</Tip>
         </label>
@@ -33,6 +26,39 @@
         <input type="checkbox" :id="`${item.id}_locked`" v-model="localData.locked">
       </div>
     </fieldset>
+    <fieldset>
+      <div>
+        <label>
+          Description
+          <Tip>Describe this NPC.</Tip>
+        </label>
+        <textarea v-model="localData.description" placeholder="A brief description" :class="flags('description')"/>
+      </div>
+      <div>
+        <label>
+          Effects
+          <Tip>Describe the effects of having this NPC in your coalition.</Tip>
+        </label>
+        <textarea v-model="localData.effects" placeholder="Describe the NPC's effects" :class="flags('effects')"/>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div>
+        <label>
+          Likes
+          <Tip>List this NPC's "likes"</Tip>
+        </label>
+        <textarea v-model="localData.likes" placeholder="This NPC's 'likes'" :class="flags('likes')"/>
+      </div>
+      <div>
+        <label>
+          Dislikes
+          <Tip>List this NPC's "dislikes"</Tip>
+        </label>
+        <textarea v-model="localData.dislikes" placeholder="This NPC's 'dislikes'" :class="flags('dislikes')"/>
+      </div>
+    </fieldset>
+
     <Notes :notes="localData.notes" @blur="saveNotes" />
 
     <div class="additional-actions">
@@ -48,8 +74,16 @@
     </div>
     <div class="item-summary-title" v-if="localData.name">{{localData.name}}</div>
     <div class="item-summary-title invalid" v-else>[MISSING NAME]</div>
+    <p class="item-summary-desc" v-if="localData.effects" v-html="effectsHtml"></p>
+    <p class="item-summary-desc invalid" v-else>[MISSING EFFECTS]</p>
     <p class="item-summary-desc" v-if="localData.description" v-html="descriptionHtml"></p>
     <p class="item-summary-desc invalid" v-else>[MISSING DESCRIPTION]</p>
+    <fieldset class="likes-dislikes">
+      <p class="item-summary-desc" v-if="localData.likes">Likes: {{localData.likes}}</p>
+      <p class="item-summary-desc invalid" v-else>[MISSING LIKES]</p>
+      <p class="item-summary-desc" v-if="localData.dislikes">Dislikes: {{localData.dislikes}}</p>
+      <p class="item-summary-desc invalid" v-else>[MISSING DISLIKES]</p>
+    </fieldset>
   </div>
 </li>
 </template>
@@ -62,7 +96,16 @@ export default {
     descriptionHtml() {
       return this.localData.description.replaceAll('\n', '<br />');
     },
+    effectsHtml() {
+      return this.localData.effects.replaceAll('\n', '<br />');
+    },
   },
   mixins: [ItemMixin]
 };
 </script>
+
+<style>
+.likes-dislikes > p {
+  flex: 1;
+}
+</style>
