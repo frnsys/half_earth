@@ -1,4 +1,5 @@
 import state from './state';
+import {initState} from './state';
 import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 
@@ -23,15 +24,11 @@ function updateFactors() {
 // Start a new run
 function newRun() {
   game = GameInterface.new(Difficulty.Normal);
+  let init = initState();
+  Object.keys(init).forEach((k) => {
+    state[k] = init[k];
+  });
   state.endYear = game.state().world.year + 100;
-  state.history = {
-    emissions: [],
-    land_use: [],
-  };
-  state.points = {
-    research: 0,
-    initiative: 0,
-  };
   updateState();
   updateFactors();
   loadMeta();
@@ -195,6 +192,7 @@ function loadMeta() {
   if (data !== null) {
     let parsed = JSON.parse(data);
     game.set_runs_played(parsed.runsPlayed || 0);
+    return parsed;
   }
 }
 

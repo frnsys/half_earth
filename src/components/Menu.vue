@@ -55,6 +55,7 @@
 
 <script>
 import state from '../state';
+import {saveSettings} from '../state';
 import IntensityBar from './cards/IntensityBar.vue';
 import intensity from '/src/display/intensity';
 
@@ -83,9 +84,11 @@ export default {
       } else if (!state.sound && !window.music.paused) {
         window.music.pause();
       }
+      saveSettings();
     },
     toggleTips() {
       state.hideHelp = !state.hideHelp;
+      saveSettings();
     },
     restartGame() {
       if (confirm('Are you sure you want to start over?')) {
