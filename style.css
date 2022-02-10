@@ -57,6 +57,7 @@ html, body {
   user-select: none;
   font-size: 16px;
   height: 100%;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -113,6 +114,7 @@ figure {
 
 img {
   max-width: 100%;
+  image-rendering: pixelated;
 }
 
 .good {
