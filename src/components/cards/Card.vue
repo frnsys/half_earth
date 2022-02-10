@@ -61,13 +61,20 @@ export default {
 <style>
 .card {
   position: relative;
-  width: 280px;
-  height: 420px;
+  width: 300px;
+  height: 430px;
   max-height: 70vh;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  border-radius: 0.6em;
+  border-radius: 0.75em;
+  -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0));
+  transition: all 250ms ease-out;
+}
+
+.card:hover{
+  -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0.4));
+  transform:translateY(-2px);
 }
 
 .card-top,
@@ -82,20 +89,49 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 0.75em 0.75em 0.1em 0.1em;
-  box-shadow: 0 0 3px rgb(0 0 0 / 50%);
+  /* box-shadow: 0 0 3px rgb(0 0 0 / 50%); */
   font-family: 'Inter', sans-serif;
+  position: relative;
 }
+
+.card-top:after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    border: 2px rgba(0,0,0,0.1) solid;
+    border-radius: 0.75em 0.75em 0.1em 0.1em;
+    pointer-events: none;
+}
+
 .card-bot {
   flex: 1;
   border-radius: 0.1em 0.1em 0.75em 0.75em;
-  box-shadow: 0px 1px 1px rgb(0 0 0 / 50%);
+  /* box-shadow: 0px 1px 1px rgb(0 0 0 / 50%); */
   display: flex;
+  position: relative;
+}
+
+.card-bot::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    border: 2px rgba(0,0,0,0.1) solid;
+    border-radius: 0.1em 0.1em 0.75em 0.75em;
+    pointer-events: none;
 }
 
 .card-mid {
   margin: 0 auto;
   width: calc(100% - 6px);
-  box-shadow: 0 2px 2px rgba(0,0,0,0.5);
+  /* box-shadow: 0 2px 2px rgba(0,0,0,0.5); */
+  box-shadow: 2px 0px 0px rgba(0,0,0,0.1), -2px 0px 0px rgba(0,0,0,0.1);
+  z-index: 1;
 }
 
 .card header {
@@ -120,16 +156,22 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  
   color: #fff;
-  padding: 0.5em;
+  padding: 1.2em 0.5em;
+
   border-right: 1px solid rgba(255,255,255,0.5);
   border-bottom: 1px solid rgba(255,255,255,0.5);
   border-top: 1px solid rgba(0,0,0,0.4);
   border-left: 1px solid rgba(0,0,0,0.4);
+
+  
   border-radius: 0.5em;
   margin: 0 0 0.5em 0;
   font-family: 'Inter', sans-serif;
   font-size: 0.8em;
+
+  background-color: rgba(0,0,0,0.05);
 }
 .card--body p img {
   width: 18px;
@@ -143,12 +185,13 @@ export default {
   border-bottom: 1px solid rgba(255,255,255,0.5);
   border-top: 1px solid rgba(0,0,0,0.4);
   border-left: 1px solid rgba(0,0,0,0.4);
-  border-radius: 12px;
+  border-radius: 5px;
   box-shadow: inset 2px 1px 0px rgb(0 0 0 / 60%);
   height: 173px;
+  overflow: hidden;
 }
 .card-image {
-  border-radius: 10px;
+  /* border-radius: 10px; */
   pointer-events: none; /* prevent dragging */
   display: block;
   border-left: 1px solid #555;
@@ -241,7 +284,7 @@ export default {
 .card--name {
   text-align: center;
   font-size: 1.5em;
-  padding: 0.5em 0;
+  padding: 0.5em 0.2em;
 }
 
 .card header .barcode {

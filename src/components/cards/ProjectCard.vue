@@ -343,6 +343,7 @@ export default {
   transform: translate(-50%, 50%);
   bottom: 0;
   border: 1px solid #b929b9;
+  z-index: 1;
 }
 
 .project-upgrade {
