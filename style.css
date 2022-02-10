@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 @font-face {
   font-family: 'Times Ten';
@@ -115,6 +115,10 @@ figure {
 img {
   max-width: 100%;
   image-rendering: pixelated;
+}
+
+strong{
+  font-weight: 600;
 }
 
 .good {
