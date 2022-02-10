@@ -70,4 +70,16 @@ export default {
   white-space: nowrap;
   overflow: hidden;
 }
+
+.active-plan .planning--page-tabs {
+  max-width: 100px;
+  margin: 0 auto;
+  width: 100%;
+}
+.active-plan .plan--changes {
+  height: auto;
+  max-width: 640px;
+  width: 100%;
+  column-gap: 1em;
+}
 </style>

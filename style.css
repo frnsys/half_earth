@@ -59,13 +59,11 @@ html, body {
   height: 100%;
 }
 
-/* TODO temporary mobile constraint */
 body {
   background: #000;
   touch-action: none;
 }
 main {
-  max-width: 420px;
   margin: 0 auto;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -180,6 +178,9 @@ img {
   z-index: -1;
   box-shadow: 0 0 6px #ff66ff, inset 1px -2px 6px #ff66ff;
   border-radius: 4px;
+  width: calc(100% - 1em);
+  max-width: 360px;
+  margin: 0 auto;
 }
 .card-scan-target.scanning {
   animation-duration: 1s;

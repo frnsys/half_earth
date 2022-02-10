@@ -1,5 +1,7 @@
 <template>
-<div id="globe"></div>
+<div id="globe">
+  <div v-if="!ready" class="globe-loading loading-text">Loading</div>
+</div>
 </template>
 
 <script>
@@ -15,6 +17,11 @@ export default {
     'onReady',
     'onClick',
   ],
+  data() {
+    return {
+      ready: false
+    }
+  },
   mounted() {
     getGlobe().then(({default: Globe}) => {
       if (globe == null) {
@@ -22,12 +29,14 @@ export default {
         globe.render();
         globe.init();
         globe.onReady(() => {
+          this.ready = true;
           if (this.onReady) {
             this.onReady(globe);
           }
         });
       } else {
         globe.setEl(this.$el);
+        this.ready = true;
         if (this.onReady) {
           this.onReady(globe);
         }
@@ -50,5 +59,17 @@ export default {
 <style>
 #globe {
   flex: 1;
+  position: relative;
+}
+
+.globe-loading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

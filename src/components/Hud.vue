@@ -2,24 +2,27 @@
   <Menu v-if="showMenu" @close="showMenu = false" />
   <div class="hud" v-else>
     <div>{{state.gameState.world.year}}</div>
-    <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
-      <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
-    </div>
-    <div v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
-      <img :src="icons.hud_extinction_rate">
-      <IntensityBar :intensity="extinction" :max="5" />
-    </div>
-    <div :class="{'bad': state.gameState.world.contentedness < 0}"
-      v-tip="factors.tips.contentedness('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.')">
-      <img :src="icons.hud_contentedness">
-      <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
-    </div>
-    <div v-tip="{icon: 'warming', text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`}">
-      <img :src="icons.hud_warming">
-      <IntensityBar :intensity="warming" :max="5" />
+    <div class="hud-bars">
+      <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
+        <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
+      </div>
+      <div v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
+        <img :src="icons.hud_extinction_rate">
+        <IntensityBar :intensity="extinction" :max="5" />
+      </div>
+      <div :class="{'bad': state.gameState.world.contentedness < 0}"
+        v-tip="factors.tips.contentedness('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.')">
+        <img :src="icons.hud_contentedness">
+        <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
+      </div>
+      <div v-tip="{icon: 'warming', text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`}">
+        <img :src="icons.hud_warming">
+        <IntensityBar :intensity="warming" :max="5" />
+      </div>
     </div>
     <div class="hud-settings" @click="showMenu = true">
       <img :src="icons.settings" />
+      <span>Menu</span>
     </div>
   </div>
 </template>
@@ -82,7 +85,7 @@ export default {
 }
 .hud-settings img {
   margin-right: 0;
-  margin-top: 2px;
+  margin-top: -3px;
 }
 
 .stat-pip {
@@ -92,7 +95,6 @@ export default {
 .hud-settings {
   padding: 0.5em 0.5em !important;
 	border-left: 1px solid rgba(255,255,255,0.25);
-  margin-top: -2px;
   box-shadow: -1px 0 0 #000;
   cursor: pointer;
 }
@@ -100,5 +102,30 @@ export default {
 .hud .intensity-pips {
   display: inline-flex;
   margin-left: 2px;
+}
+
+.hud-bars {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  max-width: 320px;
+}
+.hud-bars > div {
+  margin: 0 0.25em;
+}
+
+.hud-settings span {
+  margin-left: 5px;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  position: relative;
+  top: -1px;
+  vertical-align: middle;
+}
+
+@media only screen and (max-width: 520px) {
+  .hud-settings span {
+    display: none;
+  }
 }
 </style>

@@ -32,7 +32,7 @@ export default {
         });
         let rect = this.$refs.scroller.getBoundingClientRect();
         let targetX = rect.x + this.$refs.scroller.clientWidth/2;
-        let idx = xs.findIndex((x) => x == targetX);
+        let idx = xs.findIndex((x) => Math.abs(targetX - x) < 1);
         if (idx >= 0) {
           this.$emit('focused', idx);
         }
@@ -53,6 +53,9 @@ export default {
   display: flex;
   align-items: center;
   scroll-snap-type: x mandatory;
+  /* so there's enough space to center the
+  first and last items */
+  padding: 0 25%;
 }
 .cards > * {
   scroll-snap-align: center;

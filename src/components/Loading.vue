@@ -2,7 +2,7 @@
 <div id="loading">
   <div>
     <img src="/assets/gosplant.svg" />
-    <div id="loading-text">Booting Up</div>
+    <div class="loading-text">Booting Up</div>
   </div>
 </div>
 </template>
@@ -62,12 +62,12 @@ export default {
   width: 100%;
 }
 
-#loading-text {
+.loading-text {
   font-size: 0.8em;
 }
 
 /* https://stackoverflow.com/a/28074607 */
-#loading-text:after {
+.loading-text:after {
   overflow: hidden;
   display: inline-block;
   vertical-align: bottom;

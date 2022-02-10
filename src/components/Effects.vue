@@ -331,7 +331,6 @@ function render(e) {
         }
       };
       let tag = display.cardTag(process.name, display.enumKey(process.output));
-      console.log(e);
       return {
         tip: tip,
         text: `[unlocks] ${e.random ? `[chance] ${e.probability} unlock the ${tag} process.` : `Unlocks the ${tag} process.`}`,

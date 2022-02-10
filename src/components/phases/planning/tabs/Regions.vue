@@ -6,7 +6,7 @@
     <div class="region-name cell">{{regions[selectedRegion].name}}</div>
     <div class="region-change" @click="nextRegion"><img :src="icons.arrow_right"></div>
   </div>
-  <div v-for="region in regions">
+  <div class="regions-region" v-for="region in regions">
     <RegionItem v-if="region.id == selectedRegion" :region="region" />
   </div>
 
@@ -93,17 +93,24 @@ export default {
   height: 40vh;
   width: 100%;
   padding: 0 !important;
+  max-width: 480px;
+  margin: 0 auto;
 }
 #regions-globe canvas {
   max-height: 100%;
 }
 .region-name {
   font-size: 1.3em;
+  text-align: center;
+  flex: 1;
+  margin: 0 0.5em;
 }
 .regions-browse {
   display: flex;
   justify-content: space-between;
-  margin: 0.5em 0;
+  margin: 0.5em auto;
+  width: 100%;
+  max-width: 360px;
 }
 .region-change {
   background: #B3D2BC;
@@ -133,4 +140,9 @@ export default {
   position: relative;
 }
 
+.regions-region {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
 </style>

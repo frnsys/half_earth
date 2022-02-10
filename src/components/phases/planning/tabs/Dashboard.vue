@@ -199,9 +199,12 @@ export default {
 
 <style>
 .planning--dashboard {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-evenly;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 720px;
+  margin: 0 auto;
+  column-gap: 1em;
+  justify-content: center;
 }
 .dashboard--item {
   margin: 1.5em 0.25em;
@@ -243,6 +246,9 @@ export default {
   background-repeat: no-repeat;
 }
 
+.dashboard-breakdown {
+  margin: 0 auto;
+}
 .dashboard-breakdown h3 {
   text-align: center;
   font-family: 'Inter', sans-serif;
@@ -258,6 +264,12 @@ export default {
   font-size: 0.75em;
   padding: 0 0.5em;
   font-family: 'Inter', sans-serif;
+  width: 280px;
+  border-left: 1px solid #706041;
+  border-top: 1px solid #706041;
+  border-right: 1px solid #f3ecde;
+  border-bottom: 1px solid #f3ecde;
+  box-shadow: inset 1px 1px 4px rgb(0 0 0 / 30%);
 }
 .dashboard-breakdown .factors--total {
   background: #bbb4a7;

@@ -99,18 +99,18 @@ export default {
 }
 
 .parliament-seats {
-    display: flex;
-    justify-content: space-evenly;
-    width: 380px;
-    margin: 1em auto;
-    background: #724681;
-    border-radius: 0.75em 0.75em 12em 12em;
-    padding: 0.5em 0.5em 1em 0.5em;
-    max-width: 100%;
-    border-top: 1px solid #333;
-    border-left: 1px solid #333;
-    border-right: 1px solid #b49abd;
-    border-bottom: 1px solid #b49abd;
+  display: flex;
+  justify-content: space-evenly;
+  width: 380px;
+  margin: 1em auto;
+  background: #724681;
+  border-radius: 0.75em 0.75em 12em 12em;
+  padding: 0.5em 0.5em 1em 0.5em;
+  max-width: 100%;
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  border-right: 1px solid #b49abd;
+  border-bottom: 1px solid #b49abd;
 }
 .parliament-seats > div {
   display: flex;
@@ -129,13 +129,15 @@ export default {
 .coalition-seats {
   text-align: center;
   font-size: 1.8em;
-  margin-top: 0.75em;
   text-shadow: 1px 1px 2px black;
   color: #fff;
+  max-width: 180px;
+  margin: 0.75em auto 0;
 }
 
 .parliament .minicard-grid {
-  margin-top: 2em;
+  max-width: 560px;
+  margin: 2em auto 0;
 }
 .parliament .minicard-grid-item {
   background: #724681;

@@ -90,7 +90,7 @@ export default {
         let idx = els.findIndex((el) => {
           let rect = el.getBoundingClientRect();
           let pos = rect.x + rect.width/2;
-          return pos == targetX;
+          return Math.abs(targetX - pos) < 1;
         });
         this.focusedProject = this.projectOrder[idx];
       });

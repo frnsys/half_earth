@@ -11,7 +11,7 @@
     @add="selectPage('Add')"
     @change="$emit('change')" />
   <div v-if="page == null">
-    <div class="plan--changes">
+    <div class="plan--changes" :style="{maxWidth}">
       <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
       <div class="plan--change">
         <div class="plan--add-change minicard" @click="selectPage('Add')">
@@ -27,7 +27,7 @@
       <div class="plan--change" v-for="i in placeholders">
         <div class="plan--change-placeholder"></div>
       </div>
-      <div class="plan--change" v-if="activeProjects.length > 5">
+      <div class="plan--change" v-if="activeProjects.length > this.slots">
         <div class="plan--change-view-all" @click="selectPage('All')">View<br />All</div>
       </div>
     </div>
@@ -83,6 +83,13 @@ export default {
     ActivePlan,
     HelpTip,
   },
+  mounted() {
+    this.onResize();
+    window.addEventListener('resize', this.onResize);
+  },
+  unmounted() {
+    window.removeEventListener('resize', this.onResize);
+  },
   created() {
     this.charts = charts;
   },
@@ -93,6 +100,7 @@ export default {
       state,
       events,
       years,
+      slots: 5,
       page: null,
       chart: 'land',
       ranges: {
@@ -102,12 +110,21 @@ export default {
     }
   },
   computed: {
+    maxWidth() {
+      if (this.slots == 5) {
+        return '320px';
+      } else if (this.slots == 7) {
+        return '440px';
+      } else if (this.slots == 9) {
+        return '530px';
+      }
+    },
     placeholders() {
-      return Math.max(0, 5 - this.activeProjects.length);
+      return Math.max(0, this.slots - this.activeProjects.length);
     },
     nProjects() {
-      if (this.activeProjects.length > 5) {
-        return 4; // Save one spot for "View All"
+      if (this.activeProjects.length > this.slots) {
+        return this.slots - 1; // Save one spot for "View All"
       } else {
         return this.activeProjects.length;
       }
@@ -187,7 +204,16 @@ export default {
     selectPage(p) {
       this.page = p;
       this.$emit('page', p);
-    }
+    },
+    onResize() {
+      if (window.innerWidth > 680) {
+        this.slots = 9;
+      } else if (window.innerWidth > 560) {
+        this.slots = 7;
+      } else {
+        this.slots = 5;
+      }
+    },
   }
 }
 </script>
@@ -202,7 +228,6 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 300px;
-  max-width: 320px;
   flex-wrap: wrap;
   margin: 0 auto;
   position: relative;
@@ -402,6 +427,12 @@ export default {
   opacity: 0.5;
 }
 
+
+.plan--production, .plan--charts {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
 .plan--production {
   background: #F0D4CC;
   border-radius: 0.4em;
@@ -446,8 +477,17 @@ export default {
   font-size: 0.7em;
 }
 .plan-change-select .planning--page-tabs {
-  margin: 0 0.5em;
   position: relative;
   z-index: 10;
+  width: calc(100% - 1em);
+  max-width: 360px;
+  margin: 0 auto;
 }
+.planning--page-tabs div:first-child {
+  border-radius: 0.3em 0 0 0.3em;
+}
+.planning--page-tabs div:last-child {
+  border-radius: 0 0.3em 0.3em 0;
+}
+
 </style>

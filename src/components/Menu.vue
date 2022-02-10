@@ -1,54 +1,56 @@
 <template>
 <div class="dropdown-menu">
-  <div class="dropdown-menu-close dropdown-menu-button" @click="$emit('close')"><img src="/assets/icons/close.svg"></div>
-  <header>
-    <div class="dropdown-menu-inset">
-      <img src="/assets/gosplant.svg" />
+  <div class="dropdown-menu-content">
+    <div class="dropdown-menu-close dropdown-menu-button" @click="$emit('close')"><img src="/assets/icons/close.svg"></div>
+    <header>
+      <div class="dropdown-menu-inset">
+        <img src="/assets/gosplant.svg" />
+      </div>
+    </header>
+    <div class="dropdown-menu-time">
+      <img src="/assets/clock.png" />
+      <div class="dropdown-menu-inset dropdown-menu-year">{{state.gameState.world.year}}</div>
     </div>
-  </header>
-  <div class="dropdown-menu-time">
-    <img src="/assets/clock.png" />
-    <div class="dropdown-menu-inset dropdown-menu-year">{{state.gameState.world.year}}</div>
-  </div>
-  <div class="dropdown-menu-inset dropdown-menu-stats">
-    <div class="dropdown-menu-stat">
-      <img :src="icons.political_capital" />
-      <div class="dropdown-menu-stat-value">{{Math.max(state.gameState.political_capital, 0)}}</div>
+    <div class="dropdown-menu-inset dropdown-menu-stats">
+      <div class="dropdown-menu-stat">
+        <img :src="icons.political_capital" />
+        <div class="dropdown-menu-stat-value">{{Math.max(state.gameState.political_capital, 0)}}</div>
+      </div>
+      <div class="dropdown-menu-stat">
+        <img :src="icons.emissions" />
+        <div class="dropdown-menu-stat-value">{{`${state.gameState.world.emissions.toFixed(1)}Gt`}}</div>
+      </div>
+      <div class="dropdown-menu-stat">
+        <img :src="icons.warming" />
+        <div class="dropdown-menu-stat-value">+{{state.gameState.world.temperature.toFixed(1)}}C</div>
+      </div>
     </div>
-    <div class="dropdown-menu-stat">
-      <img :src="icons.emissions" />
-      <div class="dropdown-menu-stat-value">{{`${state.gameState.world.emissions.toFixed(1)}Gt`}}</div>
+    <div class="dropdown-menu-stats-labels">
+      <div class="dropdown-menu-stats-label">Political Capital</div>
+      <div class="dropdown-menu-stats-label">CO2 Emissions/Yr</div>
+      <div class="dropdown-menu-stats-label">Temp. Anomaly</div>
     </div>
-    <div class="dropdown-menu-stat">
-      <img :src="icons.warming" />
-      <div class="dropdown-menu-stat-value">+{{state.gameState.world.temperature.toFixed(1)}}C</div>
+    <div class="dropdown-menu-bars">
+      <div class="dropdown-menu-inset dropdown-menu-stat">
+        <img :src="icons.extinction_rate" />
+        <IntensityBar :intensity="extinction" :max="5" />
+      </div>
+      <div class="dropdown-menu-inset dropdown-menu-stat">
+        <img :src="icons.contentedness" />
+        <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
+      </div>
     </div>
-  </div>
-  <div class="dropdown-menu-stats-labels">
-    <div class="dropdown-menu-stats-label">Political Capital</div>
-    <div class="dropdown-menu-stats-label">CO2 Emissions/Yr</div>
-    <div class="dropdown-menu-stats-label">Temp. Anomaly</div>
-  </div>
-  <div class="dropdown-menu-bars">
-    <div class="dropdown-menu-inset dropdown-menu-stat">
-      <img :src="icons.extinction_rate" />
-      <IntensityBar :intensity="extinction" :max="5" />
+    <div class="dropdown-menu-stats-labels">
+      <div class="dropdown-menu-stats-label">Extinction Rate</div>
+      <div class="dropdown-menu-stats-label">Contentedness</div>
     </div>
-    <div class="dropdown-menu-inset dropdown-menu-stat">
-      <img :src="icons.contentedness" />
-      <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
+    <img class="motto" src="/assets/motto.png" />
+    <div class="dropdown-menu-buttons">
+      <div class="dropdown-menu-button" :class="{active: state.sound}" @click="toggleSound">Sound: {{ state.sound ? 'On' : 'Off'}}</div>
+      <div class="dropdown-menu-button" :class="{active: !state.hideHelp}" @click="toggleTips">Tips: {{ !state.hideHelp ? 'On' : 'Off'}}</div>
+      <div class="dropdown-menu-button" @click="restartGame">Restart Game</div>
+      <div class="dropdown-menu-button" @click="TODO">Credits</div>
     </div>
-  </div>
-  <div class="dropdown-menu-stats-labels">
-    <div class="dropdown-menu-stats-label">Extinction Rate</div>
-    <div class="dropdown-menu-stats-label">Contentedness</div>
-  </div>
-  <img class="motto" src="/assets/motto.png" />
-  <div class="dropdown-menu-buttons">
-    <div class="dropdown-menu-button" :class="{active: state.sound}" @click="toggleSound">Sound: {{ state.sound ? 'On' : 'Off'}}</div>
-    <div class="dropdown-menu-button" :class="{active: !state.hideHelp}" @click="toggleTips">Tips: {{ !state.hideHelp ? 'On' : 'Off'}}</div>
-    <div class="dropdown-menu-button" @click="restartGame">Restart Game</div>
-    <div class="dropdown-menu-button" @click="TODO">Credits</div>
   </div>
 </div>
 </template>
@@ -112,6 +114,7 @@ export default {
   bottom: 0;
   top: 0;
   padding: 1em 0.5em;
+  overflow-y: auto;
 }
 
 .dropdown-menu header {
@@ -275,4 +278,12 @@ header .dropdown-menu-inset {
   border-radius: 10em;
 }
 
+.dropdown-menu-content {
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+}
 </style>

@@ -179,13 +179,14 @@ export default {
 .planning > header {
   display: flex;
   position: absolute;
-  margin: 0.75em 0.5em;
-  left: 0;
-  right: 0;
+  margin: 0.75em auto;
+  left: 0.5em;
+  right: 0.5em;
   z-index: 2;
   border-radius: 0.3em;
   background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  max-width: 360px;
 }
 .planning > header div {
   flex: 1;
