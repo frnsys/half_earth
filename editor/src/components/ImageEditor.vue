@@ -144,7 +144,7 @@ export default {
         '-interpolate', 'Nearest',
         '-filter', 'point',
         '-resize', '150%',
-        'output.jpg'];
+        'output.png'];
 
       const processedFiles = await Magick.Call(inputFiles, command);
       const blob = processedFiles[0]['blob'];
