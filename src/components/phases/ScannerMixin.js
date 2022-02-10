@@ -201,7 +201,9 @@ export default {
 
       let current = parseInt(this.$refs.withdrawTarget.style.bottom);
       animate(current, -WITHDRAW_HEIGHT, 100, (val) => {
-        this.$refs.withdrawTarget.style.bottom = `${val}px`;
+        if (this.$refs.withdrawTarget) {
+          this.$refs.withdrawTarget.style.bottom = `${val}px`;
+        }
       });
     },
 
