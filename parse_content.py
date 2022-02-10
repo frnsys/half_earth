@@ -213,6 +213,15 @@ PLACEHOLDERS = {
         'locked': 'true',
         'cost': 10,
         'effects': [],
+    },
+    'Event': {
+        '_type': 'Event',
+        'type': 'World',
+        'subphase': 'Main',
+        'name': 'Placeholder',
+        'effects': [],
+        'probabilities': [],
+        'dialogue': [],
     }
 }
 
@@ -869,7 +878,10 @@ if __name__ == '__main__':
 
     def get_param(e):
         if e.get('params'):
-            ef = effects[e['type']](e)
+            try:
+                ef = effects[e['type']](e)
+            except KeyError:
+                ef = None
             if ef:
                 return ef[-1]
         return None
