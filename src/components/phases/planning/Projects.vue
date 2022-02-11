@@ -79,6 +79,9 @@ export default {
       type: 'Research',
     };
   },
+  mounted() {
+    this.$emit('page', this.type);
+  },
   watch: {
     type(type) {
       // Figure out what the focused card is
@@ -93,6 +96,9 @@ export default {
           return Math.abs(targetX - pos) < 1;
         });
         this.focusedProject = this.projectOrder[idx];
+
+        // Emit for events
+        this.$emit('page', type);
       });
     }
   },
