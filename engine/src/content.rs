@@ -1681,7 +1681,7 @@ pub fn projects() -> Vec<Project> {
             locked: false,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Other,
-            ongoing: false,
+            ongoing: true,
             gradual: false,
             outcomes: vec![
                 Outcome {
@@ -1893,36 +1893,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 11,
-            name: "Placeholder",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 12,
-            name: "Closed Borders",
+            name: "Close Borders",
             cost: 0,
             base_cost: Cost::Fixed(50),
             progress: 0.0,
@@ -1952,7 +1923,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 13,
+            id: 12,
             name: "Soil Fertility AI",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -1983,8 +1954,8 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 14,
-            name: "Placeholder",
+            id: 13,
+            name: "Vaccine Apartheid",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
@@ -1997,7 +1968,7 @@ pub fn projects() -> Vec<Project> {
             kind: ProjectType::Policy,
             locked: true,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Population,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2006,13 +1977,15 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![0, 6],
+            opposers: vec![1, 4, 5],
             active_outcome: None
         },
         Project {
-            id: 15,
+            id: 14,
             name: "Reruralization",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -2050,6 +2023,35 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![4, 9],
+            opposers: vec![8],
+            active_outcome: None
+        },
+        Project {
+            id: 15,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
             opposers: vec![],
             active_outcome: None
         },
@@ -2158,7 +2160,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyEventProbability(157, -0.2)
+                Effect::ModifyEventProbability(161, -0.2)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2485,7 +2487,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::UnlocksProject(44)
+                        Effect::UnlocksProject(46)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2562,7 +2564,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ProjectCostModifier(50, -0.5)
+                Effect::ProjectCostModifier(54, -0.5)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2595,9 +2597,9 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 25,
-            name: "Vegan Campaign",
+            name: "Long-Term Vegan Campaign",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(25),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
@@ -2630,8 +2632,8 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![1],
-            opposers: vec![2],
+            supporters: vec![1, 5, 10, 11],
+            opposers: vec![0, 2, 6],
             active_outcome: None
         },
         Project {
@@ -2689,7 +2691,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 27,
-            name: "Placeholder",
+            name: "Abolish Zoos",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
@@ -2697,12 +2699,13 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
+                Effect::ProjectCostModifier(109, -0.3)
             ],
             kind: ProjectType::Policy,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Restoration,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -2711,13 +2714,48 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![1, 4, 11],
+            opposers: vec![2, 6, 10],
             active_outcome: None
         },
         Project {
             id: 28,
+            name: "Eliminate Natural Predation",
+            cost: 0,
+            base_cost: Cost::Fixed(40),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
+                Effect::WorldVariable(WorldVariable::Emissions, 1.0),
+                Effect::WorldVariable(WorldVariable::Outlook, 5.0)
+            ],
+            kind: ProjectType::Research,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Control,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![1, 6, 8, 11],
+            opposers: vec![2, 10],
+            active_outcome: None
+        },
+        Project {
+            id: 29,
             name: "Expand Public Transit",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -2728,7 +2766,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
                 Effect::ModifyIndustryResources(6, Resource::Fuel, -0.4),
-                Effect::UnlocksProject(63)
+                Effect::UnlocksProject(70)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2772,7 +2810,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 29,
+            id: 30,
             name: "Factory Farming Reform",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -2782,8 +2820,8 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::OutputForProcess(18, -0.2),
-                Effect::ProjectCostModifier(54, -0.3),
-                Effect::ProjectCostModifier(75, -0.3)
+                Effect::UnlocksProject(82),
+                Effect::UnlocksProject(60)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -2815,7 +2853,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 30,
+            id: 31,
             name: "Agricultural robotics",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -2857,7 +2895,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 31,
+            id: 32,
             name: "Nuclear Fusion",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2909,7 +2947,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 32,
+            id: 33,
             name: "Ocean Iron Fertilization",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2981,7 +3019,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 33,
+            id: 34,
             name: "Mass Demilitarization",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3023,7 +3061,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 34,
+            id: 35,
             name: "Champagne Socialism",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -3054,8 +3092,8 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 35,
-            name: "Accelerate Development",
+            id: 36,
+            name: "Remove Fetters on the Forces of Production!",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
@@ -3086,7 +3124,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 36,
+            id: 37,
             name: "Degrowth in Developed Regions",
             cost: 0,
             base_cost: Cost::Dynamic(40., Factor::Income),
@@ -3127,7 +3165,36 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 37,
+            id: 38,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 39,
             name: "Restrictions on Air Travel",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -3169,21 +3236,23 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 38,
-            name: "Placeholder",
+            id: 40,
+            name: "Militarized Conservation",
             cost: 0,
-            base_cost: Cost::Fixed(10),
+            base_cost: Cost::Fixed(5),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-
+                Effect::TriggerEvent(35, 6),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
+                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
             kind: ProjectType::Policy,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Protection,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -3192,13 +3261,15 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![2, 6, 10],
+            opposers: vec![1, 4, 5],
             active_outcome: None
         },
         Project {
-            id: 39,
+            id: 41,
             name: "Co-Generation",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3240,7 +3311,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 40,
+            id: 42,
             name: "Energy Quotas",
             cost: 0,
             base_cost: Cost::Dynamic(1.5e-12, Factor::Output(Output::Electricity)),
@@ -3287,7 +3358,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 41,
+            id: 43,
             name: "Placeholder",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3316,7 +3387,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 42,
+            id: 44,
             name: "De-extinction Initiative",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -3390,7 +3461,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 43,
+            id: 45,
             name: "Cloud Brightening",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3431,7 +3502,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 44,
+            id: 46,
             name: "Biofabrication",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3483,7 +3554,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 45,
+            id: 47,
             name: "Placeholder",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3512,7 +3583,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 46,
+            id: 48,
             name: "Asteroid Mining",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -3522,7 +3593,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResourcesAmount(0, Resource::Fuel, 200.0),
-                Effect::ModifyEventProbability(58, -1.0)
+                Effect::ModifyEventProbability(60, -1.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -3554,7 +3625,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 47,
+            id: 49,
             name: "Phase Out Commercial Fishing",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -3619,7 +3690,49 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 48,
+            id: 50,
+            name: "Predator Reintroduction Program",
+            cost: 0,
+            base_cost: Cost::Fixed(15),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Emissions, 0.),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Restoration,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::TriggerEvent(44, 5)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![1, 5, 10],
+            opposers: vec![2, 9, 11],
+            active_outcome: None
+        },
+        Project {
+            id: 51,
             name: "Electric-Arc Furnaces",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3661,7 +3774,36 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 49,
+            id: 52,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 53,
             name: "Orbital Mirror Array",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -3703,7 +3845,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 50,
+            id: 54,
             name: "Battery Storage Network",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3744,7 +3886,65 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 51,
+            id: 55,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 56,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 57,
             name: "Space Elevator",
             cost: 0,
             base_cost: Cost::Fixed(60),
@@ -3798,7 +3998,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 52,
+            id: 58,
             name: "Hydrogen Steel",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3852,7 +4052,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 53,
+            id: 59,
             name: "Meatless Mondays",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3862,8 +4062,8 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::DemandAmount(Output::AnimalCalories, -14.0),
-                Effect::UnlocksProject(75),
-                Effect::UnlocksProject(54)
+                Effect::UnlocksProject(82),
+                Effect::UnlocksProject(60)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -3885,8 +4085,8 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 54,
-            name: "Veganism Mandate",
+            id: 60,
+            name: "Vegan Mandate",
             cost: 0,
             base_cost: Cost::Dynamic(4e-14, Factor::Output(Output::AnimalCalories)),
             progress: 0.0,
@@ -3895,10 +4095,11 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::DemandOutlookChange(Output::AnimalCalories, -1.0),
-                Effect::AddFlag(Flag::Vegan)
+                Effect::AddFlag(Flag::Vegan),
+                Effect::UnlocksProject(28)
             ],
             kind: ProjectType::Policy,
-            locked: false,
+            locked: true,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Food,
             ongoing: false,
@@ -3922,13 +4123,42 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![1],
-            opposers: vec![2, 4],
+            supporters: vec![1, 5, 6, 10, 11],
+            opposers: vec![0, 2, 8],
             active_outcome: None
         },
         Project {
-            id: 55,
-            name: "Ban on Outdoor Cats",
+            id: 61,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 62,
+            name: "Ban Outdoor Cats",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
@@ -3958,7 +4188,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 56,
+            id: 63,
             name: "Stop Food Aid",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3970,7 +4200,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             kind: ProjectType::Policy,
-            locked: false,
+            locked: true,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Population,
             ongoing: false,
@@ -3989,7 +4219,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 57,
+            id: 64,
             name: "Back to the Land",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4020,7 +4250,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 58,
+            id: 65,
             name: "Wood Skyscrapers",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4074,7 +4304,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 59,
+            id: 66,
             name: "3rd Generation Biofuels",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4126,7 +4356,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 60,
+            id: 67,
             name: "Solar Radiation Management",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4183,7 +4413,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 61,
+            id: 68,
             name: "Counterterrorism Forces",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4214,7 +4444,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 62,
+            id: 69,
             name: "Deep Sea Mining",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -4246,8 +4476,8 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 63,
-            name: "Total Ban on Cars",
+            id: 70,
+            name: "Ban Cars",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
@@ -4295,7 +4525,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 64,
+            id: 71,
             name: "Passive House Program Mandate",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -4327,8 +4557,8 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 65,
-            name: "Indigenous Land Management",
+            id: 72,
+            name: "Indigenous Ecosystem Management",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
@@ -4336,7 +4566,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyEventProbability(48, -0.25),
+                Effect::ModifyEventProbability(50, -0.25),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0)
             ],
             kind: ProjectType::Initiative,
@@ -4369,7 +4599,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 66,
+            id: 73,
             name: "The Ark",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -4421,7 +4651,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 67,
+            id: 74,
             name: "Breeder Reactor",
             cost: 0,
             base_cost: Cost::Fixed(35),
@@ -4473,7 +4703,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 68,
+            id: 75,
             name: "One-Child Policy",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -4484,7 +4714,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -50.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0),
-                Effect::TriggerEvent(108, 10)
+                Effect::TriggerEvent(112, 10)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -4527,7 +4757,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 69,
+            id: 76,
             name: "Mission to Titan",
             cost: 0,
             base_cost: Cost::Fixed(60),
@@ -4569,7 +4799,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 70,
+            id: 77,
             name: "Orbital Space Settlements",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -4578,7 +4808,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ProjectCostModifier(46, -0.25),
+                Effect::ProjectCostModifier(48, -0.25),
                 Effect::WorldVariable(WorldVariable::Population, -10000.0),
                 Effect::ModifyIndustryResourcesAmount(0, Resource::Fuel, 10.0)
             ],
@@ -4635,7 +4865,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 71,
+            id: 78,
             name: "Traditional animal husbandry mandate",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -4676,7 +4906,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 72,
+            id: 79,
             name: "DNA Sniffer",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -4707,7 +4937,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 73,
+            id: 80,
             name: "Relocate Industry to Space",
             cost: 0,
             base_cost: Cost::Fixed(100),
@@ -4765,7 +4995,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 74,
+            id: 81,
             name: "Biosphere 3",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -4798,7 +5028,7 @@ pub fn projects() -> Vec<Project> {
                     effects: vec![
                         Effect::PlayerVariable(PlayerVariable::ResearchPoints, 10.0),
                         Effect::ProjectCostModifier(5, -0.25),
-                        Effect::ProjectCostModifier(70, -0.25)
+                        Effect::ProjectCostModifier(77, -0.25)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -4819,7 +5049,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 75,
+            id: 82,
             name: "Vegetarian Mandate",
             cost: 0,
             base_cost: Cost::Dynamic(2e-14, Factor::Output(Output::AnimalCalories)),
@@ -4832,7 +5062,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::AddFlag(Flag::Vegetarian)
             ],
             kind: ProjectType::Policy,
-            locked: false,
+            locked: true,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Food,
             ongoing: false,
@@ -4846,12 +5076,12 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![1],
-            opposers: vec![0, 2, 4],
+            supporters: vec![1, 5, 6, 10, 11],
+            opposers: vec![0, 2, 8],
             active_outcome: None
         },
         Project {
-            id: 76,
+            id: 83,
             name: "Development Limits",
             cost: 0,
             base_cost: Cost::Fixed(100),
@@ -4861,7 +5091,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::StopDevelopment),
-                Effect::TriggerEvent(34, 5)
+                Effect::TriggerEvent(35, 5)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -4883,7 +5113,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 77,
+            id: 84,
             name: "Thorium Reactor",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4930,7 +5160,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 78,
+            id: 85,
             name: "Antarctic Pumping",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4983,7 +5213,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 79,
+            id: 86,
             name: "Ecological Education",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -5014,7 +5244,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 80,
+            id: 87,
             name: "SUV and Truck Ban",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5024,7 +5254,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryByproducts(6, Byproduct::Co2, -0.1),
-                Effect::UnlocksProject(63)
+                Effect::UnlocksProject(70)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -5046,7 +5276,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 81,
+            id: 88,
             name: "Land Expansion",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -5087,7 +5317,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 82,
+            id: 89,
             name: "Electrify Road Vehicles",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -5141,272 +5371,6 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 83,
-            name: "Hempcrete",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-
-            ],
-            kind: ProjectType::Research,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Materials,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-                Outcome {
-                    effects: vec![
-                        Effect::ModifyIndustryResources(7, Resource::Land, 1.5),
-                        Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.5)
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-
-                        ]
-                    }
-                }
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 84,
-            name: "Placeholder",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-
-            ],
-            kind: ProjectType::Policy,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 85,
-            name: "Energy Conservation Campaign",
-            cost: 0,
-            base_cost: Cost::Fixed(30),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-                Effect::Demand(Output::Electricity, -0.25)
-            ],
-            kind: ProjectType::Initiative,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Behavior,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-                Outcome {
-                    effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 0.)
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-
-                        ]
-                    }
-                }
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 86,
-            name: "Mini Nuclear Reactor",
-            cost: 0,
-            base_cost: Cost::Fixed(25),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-                Effect::Output(Output::Electricity, 0.)
-            ],
-            kind: ProjectType::Research,
-            locked: true,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Nuclear,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-
-                        ]
-                    }
-                }
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![1],
-            active_outcome: None
-        },
-        Project {
-            id: 87,
-            name: "Alternative Refrigerants",
-            cost: 0,
-            base_cost: Cost::Fixed(15),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-                Effect::ModifyIndustryResources(8, Resource::Electricity, -0.04)
-            ],
-            kind: ProjectType::Research,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Buildings,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-
-                        ]
-                    }
-                }
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 88,
-            name: "Universal Abortions & Contraceptives",
-            cost: 0,
-            base_cost: Cost::Fixed(10),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-                Effect::WorldVariable(WorldVariable::PopulationGrowth, -35.0)
-            ],
-            kind: ProjectType::Policy,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Population,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![0],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
-            id: 89,
-            name: "Phytomining",
-            cost: 0,
-            base_cost: Cost::Fixed(20),
-            progress: 0.0,
-            level: 0,
-            required_majority: 0.0,
-            completed_at: 0,
-            effects: vec![
-                Effect::ProjectCostModifier(97, -0.25)
-            ],
-            kind: ProjectType::Research,
-            locked: false,
-            status: ProjectStatus::Inactive,
-            group: ProjectGroup::Restoration,
-            ongoing: false,
-            gradual: false,
-            outcomes: vec![
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-
-                        ]
-                    }
-                }
-            ],
-            estimate: 0,
-            points: 0,
-            cost_modifier: 1.0,
-            upgrades: vec![
-
-            ],
-            supporters: vec![9],
-            opposers: vec![],
-            active_outcome: None
-        },
-        Project {
             id: 90,
             name: "Placeholder",
             cost: 0,
@@ -5437,37 +5401,27 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 91,
-            name: "De-extinction",
+            name: "Hempcrete",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::UnlocksProject(42)
+
             ],
             kind: ProjectType::Research,
             locked: false,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Materials,
             ongoing: false,
             gradual: false,
             outcomes: vec![
                 Outcome {
                     effects: vec![
-
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Likely,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
-
+                        Effect::ModifyIndustryResources(7, Resource::Land, 1.5),
+                        Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.5)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -5518,7 +5472,372 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 93,
-            name: "Ban on Non-Indigneous Hunting",
+            name: "Energy Conservation Campaign",
+            cost: 0,
+            base_cost: Cost::Fixed(30),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::Demand(Output::Electricity, -0.25)
+            ],
+            kind: ProjectType::Initiative,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Behavior,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Outlook, 0.)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 94,
+            name: "Mini Nuclear Reactor",
+            cost: 0,
+            base_cost: Cost::Fixed(25),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::Output(Output::Electricity, 0.)
+            ],
+            kind: ProjectType::Research,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Nuclear,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![1],
+            active_outcome: None
+        },
+        Project {
+            id: 95,
+            name: "Alternative Refrigerants",
+            cost: 0,
+            base_cost: Cost::Fixed(15),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::ModifyIndustryResources(8, Resource::Electricity, -0.04)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Buildings,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 96,
+            name: "Universal Abortions & Contraceptives",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::PopulationGrowth, -35.0)
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Population,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![0, 5],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 97,
+            name: "Phytomining",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::ProjectCostModifier(109, -0.25)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Restoration,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![9],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 98,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 99,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 100,
+            name: "Cap and Trade Program for Children",
+            cost: 0,
+            base_cost: Cost::Fixed(15),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Emissions, 0.)
+            ],
+            kind: ProjectType::Policy,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Population,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![0, 6],
+            opposers: vec![4, 5],
+            active_outcome: None
+        },
+        Project {
+            id: 101,
+            name: "De-extinction",
+            cost: 0,
+            base_cost: Cost::Fixed(20),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::UnlocksProject(44)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Likely,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
+                Outcome {
+                    effects: vec![
+
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![
+
+                        ]
+                    }
+                }
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 102,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 103,
+            name: "Ban Non-Indigneous Hunting",
             cost: 0,
             base_cost: Cost::Fixed(15),
             progress: 0.0,
@@ -5527,10 +5846,10 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0),
-                Effect::TriggerEvent(43, 3),
+                Effect::TriggerEvent(44, 3),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
-                Effect::ProjectCostModifier(54, -0.2),
-                Effect::ProjectCostModifier(75, -0.2)
+                Effect::UnlocksProject(60),
+                Effect::UnlocksProject(82)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -5552,7 +5871,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 94,
+            id: 104,
             name: "Floating Wind Turbines",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5593,7 +5912,38 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 95,
+            id: 105,
+            name: "Reduce CO2 Pollution from Oceanic Shipping",
+            cost: 0,
+            base_cost: Cost::Fixed(15),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+                Effect::ModifyIndustryByproducts(2, Byproduct::Co2, -0.66)
+            ],
+            kind: ProjectType::Research,
+            locked: false,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Energy,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![
+
+            ],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 106,
             name: "Marine Protected Areas",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5636,10 +5986,39 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 96,
+            id: 107,
+            name: "Placeholder",
+            cost: 0,
+            base_cost: Cost::Fixed(10),
+            progress: 0.0,
+            level: 0,
+            required_majority: 0.0,
+            completed_at: 0,
+            effects: vec![
+
+            ],
+            kind: ProjectType::Policy,
+            locked: true,
+            status: ProjectStatus::Inactive,
+            group: ProjectGroup::Other,
+            ongoing: false,
+            gradual: false,
+            outcomes: vec![
+
+            ],
+            estimate: 0,
+            points: 0,
+            cost_modifier: 1.0,
+            upgrades: vec![],
+            supporters: vec![],
+            opposers: vec![],
+            active_outcome: None
+        },
+        Project {
+            id: 108,
             name: "Cloud Seeding",
             cost: 0,
-            base_cost: Cost::Fixed(30),
+            base_cost: Cost::Fixed(10),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
@@ -5678,7 +6057,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::ModifyEventProbability(157, -0.2)
+                        Effect::ModifyEventProbability(161, -0.2)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -5699,7 +6078,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 97,
+            id: 109,
             name: "Remediation and Restoration",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -5759,10 +6138,10 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 98,
-            name: "Placeholder",
+            id: 110,
+            name: "Low-Methane Cattle Fodder",
             cost: 0,
-            base_cost: Cost::Fixed(10),
+            base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
@@ -5770,10 +6149,10 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
 
             ],
-            kind: ProjectType::Policy,
+            kind: ProjectType::Research,
             locked: true,
             status: ProjectStatus::Inactive,
-            group: ProjectGroup::Other,
+            group: ProjectGroup::Agriculture,
             ongoing: false,
             gradual: false,
             outcomes: vec![
@@ -5782,13 +6161,15 @@ pub fn projects() -> Vec<Project> {
             estimate: 0,
             points: 0,
             cost_modifier: 1.0,
-            upgrades: vec![],
-            supporters: vec![],
-            opposers: vec![],
+            upgrades: vec![
+
+            ],
+            supporters: vec![0, 2, 9],
+            opposers: vec![1, 10, 11],
             active_outcome: None
         },
         Project {
-            id: 99,
+            id: 111,
             name: "Long-Range Electric Aviation",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -5840,7 +6221,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 100,
+            id: 112,
             name: "Desalination Plants",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5850,7 +6231,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::DemandAmount(Output::Electricity, 3750000000000.0),
-                Effect::ModifyEventProbability(157, -0.05),
+                Effect::ModifyEventProbability(161, -0.05),
                 Effect::Resource(Resource::Water, 250000000000000.0)
             ],
             kind: ProjectType::Initiative,
@@ -5892,7 +6273,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 3750000000000.0),
-                        Effect::ModifyEventProbability(157, -0.1),
+                        Effect::ModifyEventProbability(161, -0.1),
                         Effect::Resource(Resource::Water, 500000000000000.0)
                     ]
                 },
@@ -5901,7 +6282,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 11250000000000.0),
-                        Effect::ModifyEventProbability(157, -0.15),
+                        Effect::ModifyEventProbability(161, -0.15),
                         Effect::Resource(Resource::Water, 750000000000000.0)
                     ]
                 },
@@ -5910,7 +6291,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 15000000000000.0),
-                        Effect::ModifyEventProbability(157, -0.2),
+                        Effect::ModifyEventProbability(161, -0.2),
                         Effect::Resource(Resource::Water, 1000000000000000.0)
                     ]
                 },
@@ -5919,7 +6300,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 18750000000000.0),
-                        Effect::ModifyEventProbability(157, -0.25),
+                        Effect::ModifyEventProbability(161, -0.25),
                         Effect::Resource(Resource::Water, 1250000000000000.0)
                     ]
                 },
@@ -5928,7 +6309,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 22500000000000.0),
-                        Effect::ModifyEventProbability(157, -0.3),
+                        Effect::ModifyEventProbability(161, -0.3),
                         Effect::Resource(Resource::Water, 1500000000000000.0)
                     ]
                 }
@@ -5938,7 +6319,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 101,
+            id: 113,
             name: "Bioenergy Carbon Capture and Sequestration (BECCS)",
             cost: 0,
             base_cost: Cost::Fixed(8),
@@ -5969,7 +6350,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 102,
+            id: 114,
             name: "Building Retrofit Program",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -5980,7 +6361,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::ModifyIndustryByproducts(8, Byproduct::Co2, -0.4),
                 Effect::ModifyIndustryResources(8, Resource::Electricity, -0.4),
-                Effect::ProjectCostModifier(64, -0.5)
+                Effect::ProjectCostModifier(71, -0.5)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -6002,7 +6383,7 @@ pub fn projects() -> Vec<Project> {
             active_outcome: None
         },
         Project {
-            id: 103,
+            id: 115,
             name: "Perennial Cereals",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6123,7 +6504,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
-                Effect::TriggerEvent(156, 5)
+                Effect::TriggerEvent(160, 5)
             ],
             probabilities: vec![
                 Probability {
@@ -6167,14 +6548,14 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: true,
             effects: vec![
-                Effect::AddEvent(41)
+                Effect::AddEvent(42)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::ProjectStatus(11, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -6182,7 +6563,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.3),
-                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::ProjectStatus(11, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -6200,7 +6581,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::AddEvent(19),
-                Effect::AddEvent(84)
+                Effect::AddEvent(86)
             ],
             probabilities: vec![
                 Probability {
@@ -6267,7 +6648,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(97, ProjectStatus::Active),
+                        Condition::ProjectStatus(109, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -6313,7 +6694,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::ProjectStatus(75, ProjectStatus::Active)
+                        Condition::ProjectStatus(82, ProjectStatus::Active)
                     ]
                 }
             ],
@@ -6336,8 +6717,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ProjectStatus(28, ProjectStatus::Finished),
-                        Condition::ProjectStatus(63, ProjectStatus::Finished),
+                        Condition::ProjectStatus(29, ProjectStatus::Finished),
+                        Condition::ProjectStatus(70, ProjectStatus::Finished),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -6371,7 +6752,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(51)
+                Effect::AddEvent(53)
             ],
             probabilities: vec![
                 Probability {
@@ -6452,7 +6833,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(123, 0)
+                Effect::TriggerEvent(127, 0)
             ],
             probabilities: vec![
                 Probability {
@@ -6525,7 +6906,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -6587,8 +6968,8 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(131),
-                Effect::AddEvent(162)
+                Effect::AddEvent(135),
+                Effect::AddEvent(166)
             ],
             probabilities: vec![
                 Probability {
@@ -6644,14 +7025,14 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(65, ProjectStatus::Active),
+                        Condition::ProjectStatus(72, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.5)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::ProjectStatus(65, ProjectStatus::Active),
+                        Condition::ProjectStatus(72, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0)
                     ]
                 },
@@ -6876,7 +7257,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(119),
+                Effect::AddEvent(123),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
             probabilities: vec![
@@ -6907,8 +7288,8 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(86, 5),
-                Effect::TriggerEvent(148, 5),
+                Effect::TriggerEvent(88, 5),
+                Effect::TriggerEvent(152, 5),
                 Effect::UnlocksNPC(3)
             ],
             probabilities: vec![
@@ -6927,6 +7308,28 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 29,
+            name: "Africa entirely self sufficient in food production",
+            phase: Phase::ReportStart,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::ProjectStatus(19, ProjectStatus::Building)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 30,
             name: "Polar Vortex",
             phase: Phase::WorldMain,
             locked: false,
@@ -6957,7 +7360,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 30,
+            id: 31,
             name: "Unrest - Secession",
             phase: Phase::PlanningStart,
             locked: true,
@@ -6981,14 +7384,14 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 31,
+            id: 32,
             name: "Severe Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(139),
-                Effect::AddEvent(56)
+                Effect::AddEvent(143),
+                Effect::AddEvent(58)
             ],
             probabilities: vec![
                 Probability {
@@ -7026,7 +7429,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 32,
+            id: 33,
             name: "Nuclear Meltdown",
             phase: Phase::WorldMain,
             locked: false,
@@ -7064,7 +7467,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 33,
+            id: 34,
             name: "Navier-Stokes Equation Solved",
             phase: Phase::WorldMain,
             locked: false,
@@ -7087,13 +7490,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 34,
+            id: 35,
             name: "The Wretched - Formation",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(140),
+                Effect::AddEvent(144),
                 Effect::UnlocksNPC(4)
             ],
             probabilities: vec![
@@ -7111,7 +7514,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 35,
+            id: 36,
             name: "Amazon Savannah",
             phase: Phase::WorldMain,
             locked: false,
@@ -7145,7 +7548,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 36,
+            id: 37,
             name: "Brownouts",
             phase: Phase::Icon,
             locked: true,
@@ -7173,15 +7576,15 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Energy)
         },
         Event {
-            id: 37,
+            id: 38,
             name: "Unrest - Revolts",
             phase: Phase::WorldMain,
             locked: true,
             regional: true,
             effects: vec![
-                Effect::TriggerEvent(30, 5),
+                Effect::TriggerEvent(31, 5),
                 Effect::AddRegionFlag("revolts".to_string()),
-                Effect::AddEvent(138)
+                Effect::AddEvent(142)
             ],
             probabilities: vec![
                 Probability {
@@ -7207,7 +7610,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 38,
+            id: 39,
             name: "Interplanetary Fleet or Space Yachts?",
             phase: Phase::PlanningStart,
             locked: false,
@@ -7220,8 +7623,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::ProjectStatus(74, ProjectStatus::Finished),
-                        Condition::ProjectStatus(70, ProjectStatus::Finished)
+                        Condition::ProjectStatus(81, ProjectStatus::Finished),
+                        Condition::ProjectStatus(77, ProjectStatus::Finished)
                     ]
                 }
             ],
@@ -7231,7 +7634,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 39,
+            id: 40,
             name: "Wildfires - Ancient Loss",
             phase: Phase::WorldMain,
             locked: true,
@@ -7254,7 +7657,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 40,
+            id: 41,
             name: "Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -7282,7 +7685,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Flood)
         },
         Event {
-            id: 41,
+            id: 42,
             name: "Border Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -7295,14 +7698,14 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                        Condition::ProjectStatus(11, ProjectStatus::Active)
                     ]
                 },
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.3),
-                        Condition::ProjectStatus(12, ProjectStatus::Active)
+                        Condition::ProjectStatus(11, ProjectStatus::Active)
                     ]
                 }
             ],
@@ -7312,7 +7715,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 42,
+            id: 43,
             name: "Extreme Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -7352,19 +7755,19 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Fire)
         },
         Event {
-            id: 43,
+            id: 44,
             name: "Carnivore fanatics form terrorist group: The Leather Underground",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(114)
+                Effect::AddEvent(118)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(54, ProjectStatus::Active),
+                        Condition::ProjectStatus(60, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -7375,7 +7778,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 44,
+            id: 45,
             name: "Planning - NPC quotes Posadist",
             phase: Phase::PlanningCoalition,
             locked: false,
@@ -7397,15 +7800,15 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 45,
+            id: 46,
             name: "Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(153),
-                Effect::AddEvent(31),
-                Effect::AddEvent(53)
+                Effect::AddEvent(157),
+                Effect::AddEvent(32),
+                Effect::AddEvent(55)
             ],
             probabilities: vec![
                 Probability {
@@ -7421,7 +7824,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 46,
+            id: 47,
             name: "Game Over",
             phase: Phase::BreakStart,
             locked: false,
@@ -7443,13 +7846,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 47,
+            id: 48,
             name: "Crop Failures - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(157)
+                Effect::AddEvent(161)
             ],
             probabilities: vec![
                 Probability {
@@ -7487,7 +7890,30 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 48,
+            id: 49,
+            name: "Blood Red Sunsets",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::ProjectStatus(67, ProjectStatus::Finished),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 50,
             name: "Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -7521,7 +7947,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Fire)
         },
         Event {
-            id: 49,
+            id: 51,
             name: "Eco-Anxiety",
             phase: Phase::ReportStart,
             locked: false,
@@ -7544,7 +7970,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 50,
+            id: 52,
             name: "Last Anti-Biotic Stops Working",
             phase: Phase::WorldMain,
             locked: false,
@@ -7568,7 +7994,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 51,
+            id: 53,
             name: "Extreme Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -7608,7 +8034,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Flood)
         },
         Event {
-            id: 52,
+            id: 54,
             name: "Migrations - No Borders",
             phase: Phase::WorldMain,
             locked: false,
@@ -7621,7 +8047,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(11, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -7629,7 +8055,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.5),
-                        Condition::ProjectStatus(12, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(11, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -7640,7 +8066,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 53,
+            id: 55,
             name: "Heatwave Kills Tens of Thousands of Elderly People",
             phase: Phase::WorldMain,
             locked: true,
@@ -7678,7 +8104,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 54,
+            id: 56,
             name: "Blackouts",
             phase: Phase::Icon,
             locked: true,
@@ -7706,7 +8132,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Energy)
         },
         Event {
-            id: 55,
+            id: 57,
             name: "Book extracts test",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -7728,7 +8154,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 56,
+            id: 58,
             name: "Severe Heatwaves",
             phase: Phase::Icon,
             locked: true,
@@ -7768,7 +8194,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Heat)
         },
         Event {
-            id: 57,
+            id: 59,
             name: "Arctic on Fire",
             phase: Phase::WorldMain,
             locked: false,
@@ -7785,7 +8211,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 58,
+            id: 60,
             name: "Rare Metals Shortage",
             phase: Phase::WorldMain,
             locked: false,
@@ -7822,7 +8248,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 59,
+            id: 61,
             name: "Severe Hurricane",
             phase: Phase::Icon,
             locked: true,
@@ -7856,7 +8282,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Flood)
         },
         Event {
-            id: 60,
+            id: 62,
             name: "Some charismatic megafauna goes extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -7873,7 +8299,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 61,
+            id: 63,
             name: "Desertification",
             phase: Phase::WorldMain,
             locked: false,
@@ -7890,13 +8316,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 62,
+            id: 64,
             name: "Green Meanies - Formation",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(163)
+                Effect::AddEvent(167)
             ],
             probabilities: vec![
                 Probability {
@@ -7913,13 +8339,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 63,
+            id: 65,
             name: "Large Derecho Storm - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(88)
+                Effect::AddEvent(90)
             ],
             probabilities: vec![
                 Probability {
@@ -7957,7 +8383,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 64,
+            id: 66,
             name: "Millions of Climate Refugees on the Move",
             phase: Phase::WorldMain,
             locked: false,
@@ -7987,7 +8413,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 65,
+            id: 67,
             name: "Methane ('Natural Gas') is Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -8010,15 +8436,15 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 66,
+            id: 68,
             name: "Unrest - Protest",
             phase: Phase::WorldMain,
             locked: false,
             regional: true,
             effects: vec![
-                Effect::AddEvent(104),
+                Effect::AddEvent(107),
                 Effect::AddRegionFlag("protests".to_string()),
-                Effect::AddEvent(70)
+                Effect::AddEvent(72)
             ],
             probabilities: vec![
                 Probability {
@@ -8049,13 +8475,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 67,
+            id: 69,
             name: "CO2 Leak",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(102)
+                Effect::AddEvent(105)
             ],
             probabilities: vec![
                 Probability {
@@ -8072,7 +8498,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 68,
+            id: 70,
             name: "Permafrost Contagion",
             phase: Phase::WorldMain,
             locked: true,
@@ -8094,7 +8520,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 69,
+            id: 71,
             name: "Greenland Ice-Sheet Collapses, Causes Huge Tsunami",
             phase: Phase::WorldMain,
             locked: false,
@@ -8111,7 +8537,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 70,
+            id: 72,
             name: "Protests",
             phase: Phase::Icon,
             locked: true,
@@ -8134,7 +8560,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Control)
         },
         Event {
-            id: 71,
+            id: 73,
             name: "Species Collapse",
             phase: Phase::WorldMain,
             locked: false,
@@ -8165,7 +8591,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 72,
+            id: 74,
             name: "Policies Intro",
             phase: Phase::PlanningPolicies,
             locked: false,
@@ -8187,7 +8613,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 73,
+            id: 75,
             name: "SRM - Solar Impacts",
             phase: Phase::WorldMain,
             locked: false,
@@ -8199,7 +8625,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -8210,7 +8636,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 74,
+            id: 76,
             name: "AMOC Collapse",
             phase: Phase::WorldMain,
             locked: false,
@@ -8227,13 +8653,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 75,
+            id: 77,
             name: "Doom Cult - Attacks",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(170)
+                Effect::AddEvent(174)
             ],
             probabilities: vec![
                 Probability {
@@ -8250,7 +8676,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 76,
+            id: 78,
             name: "Planning Intro",
             phase: Phase::PlanningStart,
             locked: false,
@@ -8272,20 +8698,20 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 77,
+            id: 79,
             name: "SRM - Respiratory Problems",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0),
-                Effect::AddEvent(85)
+                Effect::AddEvent(87)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -8296,7 +8722,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 78,
+            id: 80,
             name: "A Life of Leisure",
             phase: Phase::WorldMain,
             locked: false,
@@ -8320,7 +8746,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 79,
+            id: 81,
             name: "Earth Liberation Front Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -8351,7 +8777,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 80,
+            id: 82,
             name: "Island Abandoned",
             phase: Phase::WorldMain,
             locked: false,
@@ -8389,13 +8815,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 81,
+            id: 83,
             name: "Famine - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(89)
+                Effect::AddEvent(91)
             ],
             probabilities: vec![
                 Probability {
@@ -8412,7 +8838,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 82,
+            id: 84,
             name: "Wildfires - Smoke",
             phase: Phase::WorldMain,
             locked: true,
@@ -8436,20 +8862,20 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 83,
+            id: 85,
             name: "Ozone Health",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::AddEvent(85)
+                Effect::AddEvent(87)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -8460,13 +8886,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 84,
+            id: 86,
             name: "Extreme Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(42)
+                Effect::AddEvent(43)
             ],
             probabilities: vec![
                 Probability {
@@ -8504,20 +8930,20 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 85,
+            id: 87,
             name: "SRM - Assassination",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0),
-                Effect::SetProjectStatus(60, ProjectStatus::Stalled, 5)
+                Effect::SetProjectStatus(67, ProjectStatus::Stalled, 5)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -8528,7 +8954,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 86,
+            id: 88,
             name: "UFO Gift",
             phase: Phase::WorldMain,
             locked: true,
@@ -8551,7 +8977,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 87,
+            id: 89,
             name: "Exo-planetary conservation",
             phase: Phase::PlanningCoalition,
             locked: true,
@@ -8573,7 +8999,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Control)
         },
         Event {
-            id: 88,
+            id: 90,
             name: "Large Derecho Storm",
             phase: Phase::Icon,
             locked: true,
@@ -8613,7 +9039,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Heat)
         },
         Event {
-            id: 89,
+            id: 91,
             name: "Famine",
             phase: Phase::Icon,
             locked: true,
@@ -8635,7 +9061,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Food)
         },
         Event {
-            id: 90,
+            id: 92,
             name: "Urban Gardening",
             phase: Phase::WorldMain,
             locked: false,
@@ -8665,7 +9091,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 91,
+            id: 93,
             name: "Plant Breeding",
             phase: Phase::WorldMain,
             locked: false,
@@ -8682,7 +9108,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 92,
+            id: 94,
             name: "The Malthusians -- Formation",
             phase: Phase::PlanningStart,
             locked: false,
@@ -8705,7 +9131,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 93,
+            id: 95,
             name: "Chemtrail Terrorists: new group forms",
             phase: Phase::WorldMain,
             locked: false,
@@ -8717,11 +9143,11 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(43, ProjectStatus::Finished),
+                        Condition::ProjectStatus(45, ProjectStatus::Finished),
                         Condition::ProjectStatus(21, ProjectStatus::Finished),
-                        Condition::ProjectStatus(32, ProjectStatus::Finished),
-                        Condition::ProjectStatus(49, ProjectStatus::Finished),
-                        Condition::ProjectStatus(60, ProjectStatus::Finished),
+                        Condition::ProjectStatus(33, ProjectStatus::Finished),
+                        Condition::ProjectStatus(53, ProjectStatus::Finished),
+                        Condition::ProjectStatus(67, ProjectStatus::Finished),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -8732,14 +9158,14 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 94,
+            id: 96,
             name: "West Antarctic Collapse",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, 0.005),
-                Effect::TriggerEvent(123, 1)
+                Effect::TriggerEvent(127, 1)
             ],
             probabilities: vec![
                 Probability {
@@ -8770,30 +9196,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 95,
-            name: "Blood Red Sky",
-            phase: Phase::WorldMain,
-            locked: false,
-            regional: false,
-            effects: vec![
-
-            ],
-            probabilities: vec![
-                Probability {
-                    likelihood: Likelihood::Guaranteed,
-                    conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 1.0),
-                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
-                    ]
-                }
-            ],
-            prob_modifier: 1.0,
-            branches: vec![],
-            intensity: 0,
-            aspect: None
-        },
-        Event {
-            id: 96,
+            id: 97,
             name: "Great Barrier Reef Dead",
             phase: Phase::WorldMain,
             locked: false,
@@ -8831,7 +9234,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 97,
+            id: 98,
             name: "Acid Rain Damages Infrastructure and Ecosystems ",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -8844,7 +9247,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Emissions, Comparator::Greater, 0.)
                     ]
                 }
@@ -8855,7 +9258,29 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 98,
+            id: 99,
+            name: "Assasination attempt",
+            phase: Phase::ReportStart,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Likely,
+                    conditions: vec![
+                        Condition::NPCRelationship(1, NPCRelation::Ally)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 100,
             name: "NPC guidance - Geoengineer",
             phase: Phase::PlanningResearch,
             locked: false,
@@ -8883,7 +9308,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 99,
+            id: 101,
             name: "Black Market - Gasoline",
             phase: Phase::WorldMain,
             locked: false,
@@ -8906,7 +9331,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 100,
+            id: 102,
             name: "Blue Ocean Event",
             phase: Phase::WorldMain,
             locked: false,
@@ -8931,7 +9356,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 101,
+            id: 103,
             name: "Epidemic X: Bad, but it could have been worse...",
             phase: Phase::WorldMain,
             locked: true,
@@ -8949,7 +9374,24 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 102,
+            id: 104,
+            name: "Placeholder",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 105,
             name: "Fatal CO2 Leak from CCS Facility",
             phase: Phase::Icon,
             locked: true,
@@ -8971,14 +9413,14 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Health)
         },
         Event {
-            id: 103,
+            id: 106,
             name: "Permafrost Melting",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 2.0),
-                Effect::AddEvent(68)
+                Effect::AddEvent(70)
             ],
             probabilities: vec![
                 Probability {
@@ -9002,15 +9444,15 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 104,
+            id: 107,
             name: "Unrest - Riots",
             phase: Phase::WorldMain,
             locked: true,
             regional: true,
             effects: vec![
-                Effect::AddEvent(37),
+                Effect::AddEvent(38),
                 Effect::AddRegionFlag("riots".to_string()),
-                Effect::AddEvent(171)
+                Effect::AddEvent(175)
             ],
             probabilities: vec![
                 Probability {
@@ -9036,7 +9478,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 105,
+            id: 108,
             name: "Research Intro",
             phase: Phase::PlanningResearch,
             locked: false,
@@ -9058,7 +9500,24 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 106,
+            id: 109,
+            name: "Placeholder",
+            phase: Phase::WorldMain,
+            locked: false,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0,
+            aspect: None
+        },
+        Event {
+            id: 110,
             name: "Reruralization",
             phase: Phase::WorldMain,
             locked: false,
@@ -9070,7 +9529,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(15, ProjectStatus::Active),
+                        Condition::ProjectStatus(14, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -9081,20 +9540,20 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 107,
+            id: 111,
             name: "Ozone Depletion",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(83),
-                Effect::AddEvent(179)
+                Effect::AddEvent(85),
+                Effect::AddEvent(183)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -9105,7 +9564,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 108,
+            id: 112,
             name: "Dancing Plague",
             phase: Phase::WorldMain,
             locked: false,
@@ -9128,7 +9587,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 109,
+            id: 113,
             name: "Novel Disease",
             phase: Phase::WorldMain,
             locked: false,
@@ -9172,13 +9631,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 110,
+            id: 114,
             name: "Flooding - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(40),
+                Effect::AddEvent(41),
                 Effect::AddEvent(17)
             ],
             probabilities: vec![
@@ -9195,7 +9654,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 111,
+            id: 115,
             name: "Warming Leads to Declining Agricultural Yields",
             phase: Phase::WorldMain,
             locked: false,
@@ -9236,7 +9695,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 112,
+            id: 116,
             name: "Leather Underground Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -9248,7 +9707,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(54, ProjectStatus::Active),
+                        Condition::ProjectStatus(60, ProjectStatus::Active),
                         Condition::OutputDemandGap(Output::AnimalCalories, Comparator::GreaterEqual, 0.5)
                     ]
                 }
@@ -9259,14 +9718,14 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 113,
+            id: 117,
             name: "Doom Cult - Acceleration",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
-                Effect::AddEvent(75)
+                Effect::AddEvent(77)
             ],
             probabilities: vec![
                 Probability {
@@ -9283,19 +9742,19 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 114,
+            id: 118,
             name: "The Leather Underground - Attacks",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(112)
+                Effect::AddEvent(116)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(54, ProjectStatus::Active),
+                        Condition::ProjectStatus(60, ProjectStatus::Active),
                         Condition::OutputDemandGap(Output::AnimalCalories, Comparator::GreaterEqual, 0.5),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
@@ -9307,7 +9766,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 115,
+            id: 119,
             name: "NPC guidance - Ecologist",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -9335,7 +9794,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 116,
+            id: 120,
             name: "Uranium Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -9358,7 +9817,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 117,
+            id: 121,
             name: "World Intro 2",
             phase: Phase::WorldStart,
             locked: true,
@@ -9381,7 +9840,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 118,
+            id: 122,
             name: "Too Hot to Work",
             phase: Phase::WorldMain,
             locked: false,
@@ -9404,7 +9863,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 119,
+            id: 123,
             name: "Disease Outbreak",
             phase: Phase::Icon,
             locked: true,
@@ -9432,7 +9891,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Health)
         },
         Event {
-            id: 120,
+            id: 124,
             name: "Black Market - Meat",
             phase: Phase::WorldMain,
             locked: false,
@@ -9444,7 +9903,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(54, ProjectStatus::Active),
+                        Condition::ProjectStatus(60, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -9455,7 +9914,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 121,
+            id: 125,
             name: "Wet Bulb Event",
             phase: Phase::Icon,
             locked: true,
@@ -9495,13 +9954,13 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Heat)
         },
         Event {
-            id: 122,
+            id: 126,
             name: "Doom Cult - Formation",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(161)
+                Effect::AddEvent(165)
             ],
             probabilities: vec![
                 Probability {
@@ -9518,7 +9977,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 123,
+            id: 127,
             name: "Ice Sheet Tsunami",
             phase: Phase::WorldMain,
             locked: true,
@@ -9540,7 +9999,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 124,
+            id: 128,
             name: "Epidemic Y: The Big One",
             phase: Phase::WorldMain,
             locked: false,
@@ -9558,7 +10017,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 125,
+            id: 129,
             name: "Processes Intro",
             phase: Phase::PlanningProcesses,
             locked: false,
@@ -9580,13 +10039,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 126,
+            id: 130,
             name: "Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(48),
+                Effect::AddEvent(50),
                 Effect::AddEvent(5)
             ],
             probabilities: vec![
@@ -9615,21 +10074,21 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 127,
+            id: 131,
             name: "Brownouts - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(36),
-                Effect::AddEvent(54)
+                Effect::AddEvent(37),
+                Effect::AddEvent(56)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.6),
-                        Condition::ProjectStatus(50, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(54, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -9637,7 +10096,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Random,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.4),
-                        Condition::ProjectStatus(50, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(54, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -9645,7 +10104,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::ProcessMixShareFeature(ProcessFeature::IsIntermittent, Comparator::GreaterEqual, 0.25),
-                        Condition::ProjectStatus(50, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(54, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -9670,7 +10129,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 128,
+            id: 132,
             name: "Copper Shortage",
             phase: Phase::WorldMain,
             locked: true,
@@ -9688,12 +10147,12 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![Effect::AddEvent(151)], vec![]), (vec![Effect::ProjectCostModifier(16, 0.25)], vec![])],
+            branches: vec![(vec![Effect::AddEvent(155)], vec![]), (vec![Effect::ProjectCostModifier(16, 0.25)], vec![])],
             intensity: 0,
             aspect: None
         },
         Event {
-            id: 129,
+            id: 133,
             name: "Coalition Intro",
             phase: Phase::PlanningCoalition,
             locked: false,
@@ -9715,7 +10174,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 130,
+            id: 134,
             name: "Coal Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -9738,7 +10197,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 131,
+            id: 135,
             name: "Fish Depletion",
             phase: Phase::WorldMain,
             locked: true,
@@ -9761,7 +10220,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 132,
+            id: 136,
             name: "Migrations - Borders",
             phase: Phase::WorldMain,
             locked: false,
@@ -9774,7 +10233,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.1),
-                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::ProjectStatus(11, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -9782,7 +10241,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
                         Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 0.5),
-                        Condition::ProjectStatus(12, ProjectStatus::Active),
+                        Condition::ProjectStatus(11, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -9793,7 +10252,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 133,
+            id: 137,
             name: "Locust Infestation",
             phase: Phase::WorldMain,
             locked: false,
@@ -9823,7 +10282,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 134,
+            id: 138,
             name: "SRM Fleet Shot Down--Brace for Termination Shock",
             phase: Phase::WorldMain,
             locked: false,
@@ -9843,7 +10302,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Stalled),
+                        Condition::ProjectStatus(67, ProjectStatus::Stalled),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -9854,13 +10313,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 135,
+            id: 139,
             name: "Zoonotic Disease Outbreak - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(119)
+                Effect::AddEvent(123)
             ],
             probabilities: vec![
                 Probability {
@@ -9886,7 +10345,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 136,
+            id: 140,
             name: "Torches and Pitchforks outside your window...",
             phase: Phase::ReportStart,
             locked: false,
@@ -9909,7 +10368,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 137,
+            id: 141,
             name: "Planning - NPC quotes Malthusian",
             phase: Phase::PlanningPolicies,
             locked: false,
@@ -9921,7 +10380,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::ProjectStatus(68, ProjectStatus::Active)
+                        Condition::ProjectStatus(75, ProjectStatus::Active)
                     ]
                 }
             ],
@@ -9931,7 +10390,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 138,
+            id: 142,
             name: "Revolts",
             phase: Phase::Icon,
             locked: true,
@@ -9954,13 +10413,13 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 139,
+            id: 143,
             name: "Wet-Bulb Event - Intro",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(121)
+                Effect::AddEvent(125)
             ],
             probabilities: vec![
                 Probability {
@@ -9984,7 +10443,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 140,
+            id: 144,
             name: "The Wretched Attack",
             phase: Phase::WorldMain,
             locked: true,
@@ -10021,7 +10480,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 141,
+            id: 145,
             name: "Ex-Urban Explosion",
             phase: Phase::WorldMain,
             locked: false,
@@ -10043,7 +10502,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 142,
+            id: 146,
             name: "Massive Jellyfish Blooms",
             phase: Phase::WorldMain,
             locked: false,
@@ -10063,7 +10522,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Rare,
                     conditions: vec![
-                        Condition::ProjectStatus(47, ProjectStatus::Finished),
+                        Condition::ProjectStatus(49, ProjectStatus::Finished),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10074,16 +10533,22 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 143,
+            id: 147,
             name: "4000th nuclear reactor built",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, 1.0)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::ProcessMixShare(1, Comparator::Equal, 0.9),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
             ],
             prob_modifier: 1.0,
             branches: vec![],
@@ -10091,7 +10556,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 144,
+            id: 148,
             name: "Gossy Guide",
             phase: Phase::Manual,
             locked: false,
@@ -10108,20 +10573,20 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 145,
+            id: 149,
             name: "Iron Fillings Dead Ocean",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0),
-                Effect::AddEvent(131)
+                Effect::AddEvent(135)
             ],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(32, ProjectStatus::Active),
+                        Condition::ProjectStatus(33, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10132,13 +10597,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 146,
+            id: 150,
             name: "World Intro",
             phase: Phase::WorldStart,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(117)
+                Effect::AddEvent(121)
             ],
             probabilities: vec![
                 Probability {
@@ -10155,7 +10620,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 147,
+            id: 151,
             name: "NPC guidance - Malthusian",
             phase: Phase::PlanningPolicies,
             locked: false,
@@ -10167,7 +10632,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::ProjectStatus(56, ProjectStatus::Active)
+                        Condition::ProjectStatus(63, ProjectStatus::Active)
                     ]
                 }
             ],
@@ -10177,7 +10642,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 148,
+            id: 152,
             name: "UFO War",
             phase: Phase::WorldMain,
             locked: true,
@@ -10200,7 +10665,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 149,
+            id: 153,
             name: "Mega Dust Storms",
             phase: Phase::WorldMain,
             locked: true,
@@ -10237,7 +10702,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 150,
+            id: 154,
             name: "Boreal Forest Shift",
             phase: Phase::WorldMain,
             locked: false,
@@ -10254,7 +10719,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 151,
+            id: 155,
             name: "Copper mining is poisoning the water supply",
             phase: Phase::WorldMain,
             locked: true,
@@ -10271,7 +10736,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 152,
+            id: 156,
             name: "Report Intro",
             phase: Phase::ReportStart,
             locked: false,
@@ -10293,7 +10758,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 153,
+            id: 157,
             name: "Heatwaves",
             phase: Phase::Icon,
             locked: true,
@@ -10321,7 +10786,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Heat)
         },
         Event {
-            id: 154,
+            id: 158,
             name: "Book extracts - narrative gossy",
             phase: Phase::PlanningCoalition,
             locked: false,
@@ -10343,7 +10808,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 155,
+            id: 159,
             name: "Night Life Adaptation",
             phase: Phase::WorldMain,
             locked: false,
@@ -10366,7 +10831,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 156,
+            id: 160,
             name: "Pollinator - Collapse",
             phase: Phase::WorldMain,
             locked: true,
@@ -10397,7 +10862,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 157,
+            id: 161,
             name: "Crop Failures",
             phase: Phase::Icon,
             locked: true,
@@ -10437,7 +10902,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Food)
         },
         Event {
-            id: 158,
+            id: 162,
             name: "",
             phase: Phase::WorldMain,
             locked: false,
@@ -10449,7 +10914,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(54, ProjectStatus::Active),
+                        Condition::ProjectStatus(60, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
@@ -10467,7 +10932,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 159,
+            id: 163,
             name: "Mowed Lawns to Wild Meadows",
             phase: Phase::WorldMain,
             locked: false,
@@ -10479,8 +10944,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(15, ProjectStatus::Finished),
-                        Condition::ProjectStatus(64, ProjectStatus::Finished),
+                        Condition::ProjectStatus(14, ProjectStatus::Finished),
+                        Condition::ProjectStatus(71, ProjectStatus::Finished),
                         Condition::ProjectStatus(3, ProjectStatus::Finished),
                         Condition::ProjectStatus(20, ProjectStatus::Finished),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
@@ -10493,7 +10958,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 160,
+            id: 164,
             name: "Waste Leakage",
             phase: Phase::WorldMain,
             locked: true,
@@ -10505,7 +10970,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(97, ProjectStatus::Inactive),
+                        Condition::ProjectStatus(109, ProjectStatus::Inactive),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10516,14 +10981,14 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 161,
+            id: 165,
             name: "Doom Cult - Spreading",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
-                Effect::AddEvent(113)
+                Effect::AddEvent(117)
             ],
             probabilities: vec![
                 Probability {
@@ -10540,7 +11005,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 162,
+            id: 166,
             name: "Ocean Microorganisms",
             phase: Phase::WorldMain,
             locked: true,
@@ -10570,13 +11035,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 163,
+            id: 167,
             name: "Earth Liberation Front - Attacks",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(79)
+                Effect::AddEvent(81)
             ],
             probabilities: vec![
                 Probability {
@@ -10600,7 +11065,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 164,
+            id: 168,
             name: "Clean Air",
             phase: Phase::WorldMain,
             locked: false,
@@ -10623,19 +11088,20 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 165,
-            name: "Migration",
+            id: 169,
+            name: "Tens of Millions of Climate Migrants on the Move",
             phase: Phase::WorldMain,
             locked: false,
-            regional: true,
+            regional: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, -1.0),
+                Effect::Migration
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Guaranteed,
+                    likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Habitability, Comparator::Less, 5.0),
+                        Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10646,7 +11112,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 166,
+            id: 170,
             name: "Land restoration programs backtrack",
             phase: Phase::WorldMain,
             locked: false,
@@ -10659,7 +11125,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::ProjectStatus(97, ProjectStatus::Halted),
+                        Condition::ProjectStatus(109, ProjectStatus::Halted),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10670,7 +11136,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 167,
+            id: 171,
             name: "Initiatives Intro",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -10692,7 +11158,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 168,
+            id: 172,
             name: "Book extracts - narrative",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -10714,7 +11180,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 169,
+            id: 173,
             name: "First 100m-Inhabitant City",
             phase: Phase::WorldMain,
             locked: false,
@@ -10731,7 +11197,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 170,
+            id: 174,
             name: "Doom Cult Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -10753,7 +11219,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Force)
         },
         Event {
-            id: 171,
+            id: 175,
             name: "Riots",
             phase: Phase::Icon,
             locked: true,
@@ -10776,7 +11242,7 @@ pub fn events() -> Vec<Event> {
             aspect: Some(Aspect::Control)
         },
         Event {
-            id: 172,
+            id: 176,
             name: "Nimbys Strike Back--Infrastructure Project Cancelled",
             phase: Phase::WorldMain,
             locked: false,
@@ -10799,14 +11265,14 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 173,
+            id: 177,
             name: "The Ark Proposal",
             phase: Phase::PlanningStart,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::UnlocksProject(66),
-                Effect::ProjectRequest(66, true, 100)
+                Effect::UnlocksProject(73),
+                Effect::ProjectRequest(73, true, 100)
             ],
             probabilities: vec![
                 Probability {
@@ -10822,7 +11288,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 174,
+            id: 178,
             name: "Plan Commentary Example",
             phase: Phase::PlanningPlanChange,
             locked: true,
@@ -10844,7 +11310,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 175,
+            id: 179,
             name: "Bird-Watching Craze",
             phase: Phase::WorldMain,
             locked: false,
@@ -10867,7 +11333,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 176,
+            id: 180,
             name: "SRM - SAD",
             phase: Phase::WorldMain,
             locked: false,
@@ -10879,7 +11345,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10890,7 +11356,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 177,
+            id: 181,
             name: "Species Flourishing",
             phase: Phase::WorldMain,
             locked: false,
@@ -10920,7 +11386,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 178,
+            id: 182,
             name: "Success",
             phase: Phase::EndStart,
             locked: false,
@@ -10942,7 +11408,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 179,
+            id: 183,
             name: "Plant UV Exposure",
             phase: Phase::WorldMain,
             locked: true,
@@ -10954,7 +11420,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -10965,7 +11431,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 180,
+            id: 184,
             name: "Forest Infestation",
             phase: Phase::WorldMain,
             locked: false,
@@ -10995,7 +11461,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 181,
+            id: 185,
             name: "Deadly Leak from CCS Storage Facility",
             phase: Phase::WorldMain,
             locked: false,
@@ -11019,7 +11485,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 182,
+            id: 186,
             name: "Species Death",
             phase: Phase::WorldMain,
             locked: false,
@@ -11042,16 +11508,23 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 183,
-            name: "More severe - Migration",
+            id: 187,
+            name: "Hundreds of Millions of Climate Migrants on the Move",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-
+                Effect::Migration,
+                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
             probabilities: vec![
-
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::WorldVariable(WorldVariable::Emissions, Comparator::GreaterEqual, 3.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                }
             ],
             prob_modifier: 1.0,
             branches: vec![],
@@ -11059,7 +11532,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 184,
+            id: 188,
             name: "Fish Stocks Collapse",
             phase: Phase::WorldMain,
             locked: false,
@@ -11076,13 +11549,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 185,
+            id: 189,
             name: "Severe Hurricane - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(59)
+                Effect::AddEvent(61)
             ],
             probabilities: vec![
                 Probability {
@@ -11122,7 +11595,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 186,
+            id: 190,
             name: "SRM - Monsoon",
             phase: Phase::WorldMain,
             locked: false,
@@ -11134,7 +11607,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::ProjectStatus(60, ProjectStatus::Active),
+                        Condition::ProjectStatus(67, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -11145,7 +11618,7 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 187,
+            id: 191,
             name: "Flooded Farms",
             phase: Phase::WorldMain,
             locked: false,
@@ -11168,13 +11641,13 @@ pub fn events() -> Vec<Event> {
             aspect: None
         },
         Event {
-            id: 188,
+            id: 192,
             name: "Planning - Industrial agriculture (hive collapse)",
             phase: Phase::PlanningProcesses,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(156, 5)
+                Effect::TriggerEvent(160, 5)
             ],
             probabilities: vec![
                 Probability {

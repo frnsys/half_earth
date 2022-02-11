@@ -160,6 +160,7 @@ pub enum Phase {
     Icon,
     PlanningStart,
     PlanningEnd,
+    PlanningPlan,
     PlanningResearch,
     PlanningInitiatives,
     PlanningPolicies,
