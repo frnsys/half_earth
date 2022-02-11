@@ -1,6 +1,7 @@
 <template>
 <Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
   <template v-slot:header>
+    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
     <div>{{group}}</div>
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
@@ -42,7 +43,6 @@
     {{name}}
   </template>
   <template v-slot:body>
-    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
     <Effects :effects="activeEffects" />
 
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
