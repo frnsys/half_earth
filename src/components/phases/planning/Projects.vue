@@ -98,14 +98,25 @@ export default {
         this.focusedProject = this.projectOrder[idx];
 
         // Emit for events
-        this.$emit('page', type);
+        let page = type;
+        if (type == 'Initiative') {
+          page = 'Initiatives';
+        } else if (type == 'Policy') {
+          page = 'Policies';
+        }
+        this.$emit('page', page);
       });
     }
   },
   computed: {
     project() {
       if (this.focusedProject !== null) {
-        return this.projects[this.focusedProject];
+        let proj =  this.projects[this.focusedProject];
+        if (proj === undefined) {
+          return this.projects[0];
+        } else {
+          return proj;
+        }
       } else {
         // Default for loading
         return state.gameState.projects[0];
