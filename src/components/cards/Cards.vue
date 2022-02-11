@@ -53,6 +53,7 @@ export default {
   display: flex;
   align-items: center;
   scroll-snap-type: x mandatory;
+  scrollbar-color: #aaa transparent;
   /* so there's enough space to center the
   first and last items */
   padding: 0 25%;
