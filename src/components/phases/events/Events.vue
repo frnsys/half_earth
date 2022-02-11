@@ -32,6 +32,10 @@ import {sendSnapshot} from '/src/log';
 
 const MS_PER_YEAR = 2000;
 
+// Set an upper cap to the amount of emissions we pass to hector,
+// because very large numbers end up breaking it.
+const MAX_EMISSIONS = 200; // GtCO2eq
+
 function popIconEvents(arr, time) {
   let results = [];
   for (let i = arr.length - 1; i >= 0; i--) {
@@ -205,13 +209,18 @@ export default {
     },
     applyEmissions() {
       let world = state.gameState.world;
+
+      // Set an upper cap to the amount of emissions we pass to hector,
+      // because very large numbers end up breaking it.
+      let emissions_factor = Math.min(1.0, MAX_EMISSIONS/state.gameState.world.emissions);
+
       let emissions = {
         // Hector separates out FFI and LUC emissions
         // but we lump them together
         // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
-        'ffi_emissions': world.co2_emissions * 12/44 * 1e-15, // Pg C/y
-        'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
-        'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
+        'ffi_emissions': world.co2_emissions * 12/44 * 1e-15 * emissions_factor, // Pg C/y
+        'CH4_emissions': world.ch4_emissions * 1e-12 * emissions_factor, // Tg/y
+        'N2O_emissions': world.n2o_emissions * 1e-12 * emissions_factor, // Tg/y
       };
       this.globe.addEmissionsThenUpdate(emissions).then((tgav) => {
         game.setTgav(tgav);
