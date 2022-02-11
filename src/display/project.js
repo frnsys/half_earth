@@ -5,6 +5,8 @@ function activeEffects(project) {
   let activeOutcomeEffects = project.active_outcome == null ? [] : details.outcomes[project.active_outcome].effects;
   if (project.status == 'Inactive') {
     return details.effects.concat(outcomeEffects(details));
+  } else if (project.status == 'Building') {
+    return details.effects.concat(outcomeEffects(details));
   } else if (project.level === 0) {
     return details.effects.concat(activeOutcomeEffects);
   } else {
