@@ -23,4 +23,24 @@ function updateTransform(el, updates) {
   el.style.transform = Object.keys(transforms).reduce((acc, k) => acc += `${k}(${transforms[k]}) `, '');
 }
 
-export {clone, randChoice, slugify, updateTransform};
+function detectCenterElement(parent, elements) {
+  let rect = parent.getBoundingClientRect();
+  let targetX = rect.x + parent.clientWidth/2;
+
+  let minDist = null;
+  let closest = -1;
+
+  elements.forEach((el, idx) => {
+    let rect = el.getBoundingClientRect();
+    let pos = rect.x + rect.width/2;
+    let dist = Math.abs(targetX - pos);
+    if (minDist === null || dist < minDist) {
+      minDist = dist;
+      closest = idx;
+    }
+  });
+  return closest;
+}
+
+export {clone, randChoice, slugify,
+  updateTransform, detectCenterElement};

@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import {detectCenterElement} from 'lib/util';
+
 export default {
   data() {
     return {
@@ -25,14 +27,9 @@ export default {
       // Wait to see if we've stopped scrolling
       // If so, figure out what the focused/centered child is.
       this.scrollTimeout = setTimeout(() => {
-        let xs = [...this.$refs.scroller.children].map((ch) => {
-          let rect = ch.getBoundingClientRect();
-          let pos = rect.x + rect.width/2;
-          return pos;
-        });
-        let rect = this.$refs.scroller.getBoundingClientRect();
-        let targetX = rect.x + this.$refs.scroller.clientWidth/2;
-        let idx = xs.findIndex((x) => Math.abs(targetX - x) < 1);
+        let idx = detectCenterElement(
+          this.$refs.scroller,
+          [...this.$refs.scroller.children]);
         if (idx >= 0) {
           this.$emit('focused', idx);
         }

@@ -64,6 +64,7 @@ import HelpTip from 'components/Help.vue';
 import Cards from 'components/cards/Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
 import ScannerMixin from 'components/phases/ScannerMixin';
+import {detectCenterElement} from 'lib/util';
 
 export default {
   mixins: [ScannerMixin],
@@ -87,14 +88,8 @@ export default {
       // Figure out what the focused card is
       this.$nextTick(() => {
         let scroller = document.querySelector('.cards');
-        let rect = scroller.getBoundingClientRect();
-        let targetX = rect.x + scroller.clientWidth/2;
         let els = [...document.querySelectorAll('.draggable')];
-        let idx = els.findIndex((el) => {
-          let rect = el.getBoundingClientRect();
-          let pos = rect.x + rect.width/2;
-          return Math.abs(targetX - pos) < 1;
-        });
+        let idx = detectCenterElement(scroller, els);
         this.focusedProject = this.projectOrder[idx];
 
         // Emit for events
