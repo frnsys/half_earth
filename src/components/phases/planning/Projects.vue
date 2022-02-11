@@ -25,7 +25,7 @@
     <div class="withdraw-bar" ref="withdrawProgress"></div>
   </div>
 
-  <Cards @focused="onFocused">
+  <Cards @focused="onFocused" :disabled="!allowScroll">
     <Draggable @drag="onDragVertical"
       @dragStop="onDragVerticalStop"
       v-for="i in projectOrder"
@@ -76,6 +76,7 @@ export default {
   data() {
     return {
       state,
+      allowScroll: true,
       focusedProject: 0,
       type: 'Research',
     };
@@ -134,9 +135,11 @@ export default {
       this.focusedProject = this.projectOrder[idx];
     },
     onDragVertical(component) {
+      this.allowScroll = false;
       this.checkDrag(component);
     },
     onDragVerticalStop() {
+      this.allowScroll = true;
       this.stopDrag();
     },
   }

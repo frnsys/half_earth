@@ -70,7 +70,7 @@ export default {
 
       let minY = this.minY();
       let maxY = this.maxY();
-      if (Math.abs(dx) < 10 && Math.abs(dy) > 10) {
+      if (Math.abs(dy) > 10) {
         this.dragging = true;
         let rect = this.$el.getBoundingClientRect();
         if (minY && rect.y <= minY) return;

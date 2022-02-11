@@ -4,7 +4,7 @@
 -->
 
 <template>
-<ul class="cards" ref="scroller" @scroll="scrolled">
+<ul class="cards" :class="{noscroll: disabled}" ref="scroller" @scroll="scrolled">
   <slot></slot>
 </ul>
 </template>
@@ -13,6 +13,7 @@
 import {detectCenterElement} from 'lib/util';
 
 export default {
+  props: ['disabled'],
   data() {
     return {
       scrollTimeout: null,
@@ -75,5 +76,9 @@ to be centered */
 }
 .cards > div:last-child {
   margin-right: 12em;
+}
+
+.noscroll {
+  overflow: hidden;
 }
 </style>
