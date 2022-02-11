@@ -84,6 +84,8 @@
       <p class="item-summary-desc" v-if="localData.dislikes">Dislikes: {{localData.dislikes}}</p>
       <p class="item-summary-desc invalid" v-else>[MISSING DISLIKES]</p>
     </fieldset>
+
+    <div class="item-summary-notes" v-if="localData.notes" v-html="notesHtml"></div>
   </div>
 </li>
 </template>
