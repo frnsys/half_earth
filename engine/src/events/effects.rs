@@ -28,6 +28,7 @@ pub enum Flag {
     Degrowth,
     MetalsShortage,
     DeepSeaMining,
+    ParliamentSuspended,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]

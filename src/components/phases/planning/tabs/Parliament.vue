@@ -1,6 +1,7 @@
 <template>
 <div class="planning--page parliament">
-  <div class="parliament-seats">
+  <div class="parliament-suspended" v-if="suspended">Parliament Suspended</div>
+  <div class="parliament-seats" :class="{'parliament-suspended-fade': suspended}">
     <div v-for="col in seats">
       <template v-for="seat in col">
         <div v-if="seat !== null"
@@ -10,7 +11,7 @@
       </template>
     </div>
   </div>
-  <div class="coalition-seats">Your coalition has {{coalitionSeats}}/{{totalSeats}} seats.</div>
+  <div class="coalition-seats" :class="{'parliament-suspended-fade': suspended}">Your coalition has {{coalitionSeats}}/{{totalSeats}} seats.</div>
 
   <div class="minicard-grid">
     <div class="minicard-grid-item" v-for="npc in npcs">
@@ -35,6 +36,7 @@ export default {
   data() {
     return {
       totalSeats,
+      suspended: state.gameState.flags.includes('ParliamentSuspended'),
       npcs: state.gameState.npcs.filter((npc) => !npc.locked),
     }
   },
@@ -156,5 +158,24 @@ export default {
   overflow: visible;
   padding-top: 2.5em;
   height: auto;
+}
+
+.parliament-suspended {
+  position: absolute;
+  font-size: 3em;
+  left: 50%;
+  transform: translate(-50%, 0) rotate(-12deg);
+  color: #fff;
+  top: 4.5em;
+  max-width: 320px;
+  text-align: center;
+  z-index: 1;
+  background: #FF0404;
+  border-radius: 0.2em;
+  box-shadow: 1px 1px 2px rgb(0 0 0 / 50%);
+}
+
+.parliament-suspended-fade {
+  opacity: 0.5;
 }
 </style>

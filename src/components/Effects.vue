@@ -82,6 +82,12 @@ const FLAG_TIPS = {
       text: 'Prevents or stops metal shortages.'
     }
   },
+  'ParliamentSuspended': (demand) => {
+    return {
+      icon: 'The Authoritarian',
+      text: 'A parliamentary majority is no longer required for any project.',
+    }
+  },
 };
 
 function changeDir(change, ev) {

@@ -258,8 +258,12 @@ export default {
       return decimalToFraction(this.required_majority);
     },
     majoritySatisfied() {
-      let playerSeats = game.playerSeats();
-      return playerSeats >= this.required_majority;
+      if (state.gameState.flags.includes('ParliamentSuspended')) {
+        return true;
+      } else {
+        let playerSeats = game.playerSeats();
+        return playerSeats >= this.required_majority;
+      }
     },
     costTip() {
       if (this.kind == 'Policy') {
