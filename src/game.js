@@ -157,7 +157,7 @@ const roll = {
     return _roll('Planning', subphase, null);
   },
   world: (subphase) => {
-    return _roll('World', subphase, 5);
+    return _roll('World', subphase, 1);
   },
   report: (subphase) => {
     return _roll('Report', subphase, null);
