@@ -88,6 +88,18 @@ const FLAG_TIPS = {
       text: 'A parliamentary majority is no longer required for any project.',
     }
   },
+  'MoreLabor': (demand) => {
+    return {
+      icon: 'labor',
+      text: 'Research and infrastructure take 10% less time to complete.',
+    }
+  },
+  'MoreAutomation': (demand) => {
+    return {
+      icon: 'labor',
+      text: 'Research and infrastructure take 10% less time to complete.',
+    }
+  },
 };
 
 function changeDir(change, ev) {

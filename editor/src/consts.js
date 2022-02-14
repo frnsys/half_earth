@@ -517,6 +517,7 @@ const SPEAKERS = [
   'The Half-Earth Socialist',
   'The Fully-Automated Luxury Communist',
   'The Malthusian',
+  'The Ecofeminist',
 ];
 
 const EVENT_TYPES = [

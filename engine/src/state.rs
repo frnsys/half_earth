@@ -212,13 +212,24 @@ impl State {
             self.projects[id].active_outcome = Some(i);
         }
 
-        let modifier = if self.flags.contains(&Flag::MetalsShortage) && !self.flags.contains(&Flag::DeepSeaMining) {
+        let mut modifier = if self.flags.contains(&Flag::MetalsShortage) && !self.flags.contains(&Flag::DeepSeaMining) {
             0.8
         } else {
             1.
         };
+        if self.flags.contains(&Flag::MoreLabor) {
+            modifier *= 0.9;
+        }
+        if self.flags.contains(&Flag::MoreAutomation) {
+            modifier *= 0.9;
+        }
         for project in &mut self.projects {
-            project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, modifier);
+            project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, if project.kind == ProjectType::Policy {
+                1.0
+            } else {
+                // Modifier only relevant for built projects
+                modifier
+            });
             project.update_required_majority(&self.npcs);
         }
 
