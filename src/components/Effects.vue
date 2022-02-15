@@ -242,14 +242,14 @@ function render(e) {
           icon: k,
           text: `Global ${display.displayName(e.subtype)} output will change from <img src="${icons[k]}">${base} to <img src="${icons[k]}">${changed} with no change in impacts.`
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} all ${display.displayName(e.subtype)} production by <strong>${Math.abs(e.param)*100}%.</strong>`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} all ${display.displayName(e.subtype)} production by <strong>${(Math.abs(e.param)*100).toFixed(0)}%.</strong>`,
       }
     }
     case 'OutputForProcess': {
       let process = state.gameState.processes[e.entity];
       let tip = {
         icon: display.enumKey(process.output),
-        text: `Changes the output for this process by ${e.param*100}% with no change in impacts.`,
+        text: `Changes the output for this process by ${(e.param*100).toFixed(0)}% with no change in impacts.`,
         card: {
           type: 'Process',
           data: process,
@@ -258,13 +258,13 @@ function render(e) {
       let tag = display.cardTag(process.name, process.output.toLowerCase());
       return {
         tip: tip,
-        text: `[${process.output.toLowerCase()}] ${changeDir(e.param, e)} ${tag} output by <strong>${e.param*100}%.</strong>`
+        text: `[${process.output.toLowerCase()}] ${changeDir(e.param, e)} ${tag} output by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
     case 'OutputForFeature': {
       let tip = {
         icon: e.subtype,
-        text: `Changes the output for these processes by ${e.param*100}% without changing their impacts.`,
+        text: `Changes the output for these processes by ${(e.param*100).toFixed(0)}% without changing their impacts.`,
         card: {
           type: 'Processes',
           data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
@@ -272,13 +272,13 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} output for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${e.param*100}%.</strong>`
+        text: `${changeDir(e.param, e)} output for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
     case 'CO2ForFeature': {
       let tip = {
         icon: e.subtype,
-        text: `Changes the CO2 emissions for these processes by <strong>${e.param*100}%.</strong>`,
+        text: `Changes the CO2 emissions for these processes by <strong>${(e.param*100).toFixed(0)}%.</strong>`,
         card: {
           type: 'Processes',
           data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
@@ -286,7 +286,7 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${e.param*100}%.</strong>`
+        text: `${changeDir(e.param, e)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
     case 'Demand': {
@@ -299,7 +299,7 @@ function render(e) {
           icon: k,
           text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${Math.round(afterDemand)}.`
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} demand for ${display.displayName(e.subtype)} by <strong>${e.param*100}%</strong>.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} demand for ${display.displayName(e.subtype)} by <strong>${(e.param*100).toFixed(0)}%</strong>.`,
       }
     }
     case 'DemandAmount': {
