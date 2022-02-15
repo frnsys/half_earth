@@ -27,7 +27,10 @@ def pprint(obj, indent=0, prefix=''):
                     k, v))
 
 def emissions(snapshots):
-    return [gtco2eq(s['snapshot']['gameState']['world'] for s in snapshots)]
+    return [{
+        'year': s['snapshot']['gameState']['world']['year'],
+        'emissions': gtco2eq(s['snapshot']['gameState']['world'])
+    } for s in snapshots]
 
 def process_mix(snapshots):
     return [{
@@ -36,25 +39,53 @@ def process_mix(snapshots):
     } for p in snapshots[-1]['snapshot']['gameState']['processes']]
 
 def electricity_demand(snapshots):
-    return [s['snapshot']['gameState']['output_demand']['electricity'] * 1e-9 for s in snapshots]
+    return [{
+        'year': s['snapshot']['gameState']['world']['year'],
+        'demand': s['snapshot']['gameState']['output_demand']['electricity'] * 1e-9
+    } for s in snapshots]
 
 def active_projects(snapshots):
     projects = snapshots[-1]['snapshot']['gameState']['projects']
     return [p for p in projects if p['status'] != 'Inactive']
 
-db = Database('logs.db')
+def project_timeline(snapshots):
+    timeline = []
+    last_projects = {}
+    for i, s in enumerate(snapshots):
+        year = s['snapshot']['gameState']['world']['year']
+        projects = s['snapshot']['gameState']['projects']
+        timeline.append({
+            'year': year
+        })
+        for p in projects:
+            if p['status'] != 'Inactive':
+                last = last_projects.get(p['name'])
+                if last is None or p['status'] != last:
+                    timeline[-1][p['name']] = p['status']
+                last_projects[p['name']] = p['status']
+    return timeline
 
-print('Recent Sessions:')
-print('-'*50)
-sessions = db.sessions()
-sessions.reverse()
-for session in sessions[:10]:
-    print(session['id'])
-    print(' ', datetime.fromtimestamp(float(session['timestamp'])))
-    print('  Version:', session['version'])
-    print('  User-Agent:', session['useragent'])
-    print('  Snapshots:', len(db.snapshots(session['id'])))
-    snapshots = db.snapshots(session['id'])
-    if session['id'] == TARGET_SESSION:
+def events(snapshots):
+    return [{
+        'year': s['snapshot']['gameState']['world']['year'],
+        'events': s['snapshot']['events']
+    } for s in snapshots]
+
+
+if __name__ == '__main__':
+    db = Database('logs.db')
+
+    print('Recent Sessions:')
+    print('-'*50)
+    sessions = db.sessions()
+    sessions.reverse()
+    for session in sessions[:10]:
+        print(session['id'])
+        print(' ', datetime.fromtimestamp(float(session['timestamp'])))
+        print('  Version:', session['version'])
+        print('  User-Agent:', session['useragent'])
+        print('  Snapshots:', len(db.snapshots(session['id'])))
         snapshots = db.snapshots(session['id'])
-        import ipdb; ipdb.set_trace()
+        if session['id'] == TARGET_SESSION:
+            snapshots = db.snapshots(session['id'])
+            import ipdb; ipdb.set_trace()
