@@ -202,7 +202,7 @@ export default {
         return {
           name: npc.name,
           seats: npc.seats,
-          change: npc.seats - startSeats,
+          change: Math.round(npc.seats - startSeats),
         };
       }).filter((npc) => npc.change !== 0);
     },
@@ -289,6 +289,7 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 }
 .report h2 {
   font-weight: normal;
