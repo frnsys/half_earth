@@ -5,6 +5,7 @@ import Scene from './scene/Scene.vue';
 import regions from '/assets/content/regions.json';
 import EVENTS from '/assets/content/events.json';
 import {clone} from 'lib/util';
+import debug from '/src/debug';
 
 export default {
   data() {
@@ -20,7 +21,11 @@ export default {
   },
   computed: {
     hasEvent() {
-      return this.events.length > 0;
+      if (debug.hideEvents) {
+        return false;
+      } else {
+        return this.events.length > 0;
+      }
     },
     hasDialogue() {
       return this.event && this.event.dialogue;

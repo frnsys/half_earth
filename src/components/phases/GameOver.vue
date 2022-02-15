@@ -23,6 +23,7 @@
 import game from '/src/game';
 import state from '/src/state';
 import share from 'lib/share';
+import debug from '/src/debug';
 import EventsMixin from 'components/EventsMixin';
 import {randChoice} from 'lib/util';
 
@@ -44,7 +45,7 @@ export default {
   data() {
     return {
       badges: [],
-      showStart: false,
+      showStart: debug.hideEvents ? true : false,
       shareImgUrl: null,
       events: game.roll.break('Start')
     }

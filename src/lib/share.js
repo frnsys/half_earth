@@ -8,9 +8,13 @@ if (process.env.NODE_ENV === 'production') {
 
 function share(win, cb)  {
   state.gameState.win = win;
-  post(SHARE_SERVER, state.gameState, (data) => {
-    cb(data);
-  });
+  if (VERSION !== 'dev') {
+    post(SHARE_SERVER, state.gameState, (data) => {
+      cb(data);
+    });
+  } else {
+    cb({badges: [], url: ''});
+  }
 }
 
 function post(url, data, onSuccess, onErr) {
