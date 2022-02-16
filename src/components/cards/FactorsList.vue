@@ -20,7 +20,7 @@
         <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="arrow">⟵</span></template>{{user.displayAmount}}<img :src="icons[icon]"></div>
       </template>
       <template v-else>
-        <div class="factors--usage factors--usage-solo">{{user.amount}}<img :src="icons[icon]"></div>
+        <div class="factors--usage factors--usage-solo">{{user.displayAmount || user.amount || 0}}<img :src="icons[icon]"></div>
       </template>
     </div>
   </div>
