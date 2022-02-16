@@ -115,6 +115,8 @@ export default {
   top: 0;
   padding: 1em 0.5em;
   overflow-y: auto;
+
+  image-rendering: pixelated;
 }
 
 .dropdown-menu header {

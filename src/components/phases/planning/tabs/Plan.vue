@@ -220,9 +220,11 @@ export default {
 
 <style>
 .plan {
-  background: url('/assets/backgrounds/plan.jpg');
+  background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center center;
+  image-rendering: pixelated;
 }
 .plan--changes {
   display: flex;
@@ -381,10 +383,12 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   padding: 2em 0 0 0 !important;
-  background: url('/assets/backgrounds/plan.jpg');
+  background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: cetner center;
   overflow-y: hidden !important;
+  image-rendering: pixelated;
 }
 .plan-change-select > header {
   color: #fff;
@@ -459,6 +463,7 @@ export default {
   mix-blend-mode: multiply;
   background-size: cover;
   background-position: center;
+  image-rendering: pixelated;
 }
 
 .plan--production-button {

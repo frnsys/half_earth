@@ -98,6 +98,8 @@ export default {
   background: url('/assets/backgrounds/parliament.jpg');
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center center;
+  image-rendering: pixelated;
 }
 
 .parliament-seats {

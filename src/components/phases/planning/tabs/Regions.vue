@@ -123,9 +123,11 @@ export default {
 }
 
 .planning--page--regions {
-  background: url('/assets/backgrounds/regions.jpg');
+  background: url('/assets/backgrounds/regions.png');
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center center;
+  image-rendering: pixelated;
 }
 
 .planning--page--regions .cell {

@@ -224,6 +224,8 @@ export default {
   user-select: none;
   z-index: 10;
   align-items: center;
+
+  image-rendering: pixelated;
 }
 
 .dialogue--inner{
