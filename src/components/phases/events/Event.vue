@@ -57,7 +57,11 @@ export default {
   z-index: 10;
   bottom: 0;
   top: 0;
-  background: rgba(0,0,0,0.75);
+  /* background: rgba(0,0,0,0.75); */
+
+  background-image: url('/assets/backgrounds/screen-door.png');
+  background-repeat: repeat;
+
   padding: 8vh 1em;
   width: 100%;
 }
@@ -71,6 +75,13 @@ export default {
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
   position: relative;
   background: #222;
+}
+
+@media only screen and (min-width: 480px) {
+  .event--body{
+    margin: 0 auto;
+    width:481px;
+  }
 }
 .event .arc {
   text-transform: uppercase;

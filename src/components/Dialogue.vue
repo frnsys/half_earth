@@ -1,5 +1,6 @@
 <template>
 <div class="dialogue" @click="advance" v-if="current !== null">
+  <div class="dialogue--inner">
   <div class="dialogue--speech">
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
@@ -26,6 +27,7 @@
         </div>
       </template>
     </template>
+  </div>
   </div>
 </div>
 </template>
@@ -212,11 +214,28 @@ export default {
   bottom: 0;
   top: 0;
   padding: 1em;
-  background: rgba(255,255,255,0.8);
+
+
+  background-image: url('/assets/backgrounds/screen-door.png');
+  background-repeat: repeat;
+
   display: flex;
   flex-direction: column;
   user-select: none;
   z-index: 10;
+  align-items: center;
+}
+
+.dialogue--inner{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+}
+@media only screen and (min-width: 480px) {
+  .dialogue--inner{
+    width:481px;
+  }
 }
 
 .dialogue--speech {
@@ -224,36 +243,53 @@ export default {
   flex: 1;
   display: flex;
   align-items: end;
+  width: 100%;
 }
 .dialogue--body {
+  /* background: #FCF6BB; */
+  /* background: #222; */
+  /* color: #fff; */
   background: #fff;
   border: 1px solid #000;
   margin: 1em 0;
-  padding: 0.5em;
+  padding: 0.75em;
   width: 100%;
   border-radius: 0.3em;
-  box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
+  box-shadow: 2px 2px 0 rgb(0 0 0 / 70%);
+  width: 100%;
+
+  font-family: 'W95FA';
 }
 .dialogue--speaker img {
   width: 72px;
   display: block;
   margin: 0 auto;
+  image-rendering: auto;
 }
 .dialogue--speaker {
   position: absolute;
   left: 0;
   bottom: 0;
-  transform: translate(0%, 95%);
+  transform: translate(0%, 100%);
   background: #222;
   border-radius: 0.3em;
   padding: 0.25em;
   max-width: 82px;
-  box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
+  box-shadow: 2px 2px 0 rgb(0 0 0 / 70%);
 }
 .dialogue--speaker-name {
   font-size: 0.7em;
   text-transform: uppercase;
-  color: #333;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.5em;
+}
+
+.dialogue--text{
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+  line-height: 130%;
 }
 
 .dialogue--text img {
@@ -275,9 +311,13 @@ export default {
   border: 1px solid #000;
   border-radius: 0.3em;
   user-select: none;
-  box-shadow: 2px 2px 6px rgb(0 0 0 / 70%);
+  box-shadow: 2px 2px 0 rgb(0 0 0 / 70%);
+  max-width: calc(100% - 94px);
+
+  font-size:1.1em;
+  font-family: 'W95FA';
 }
 .dialogue--choice:hover {
-  background: #FF6B56;
+  background: #FF66FF;
 }
 </style>
