@@ -294,6 +294,12 @@ export default {
   right: 0;
   bottom: 0;
   background: #fadbae;
+
+  /* background-image: url('/assets/backgrounds/globe3edit.png'); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  image-rendering: pixelated;
 }
 
 #event-stream-timer-fill {

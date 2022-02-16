@@ -51,9 +51,11 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 2;
-  background: url('/assets/backgrounds/plan.jpg');
+  background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center center;
+  image-rendering: pixelated;
 }
 
 .planning--page.active-plan {

@@ -64,6 +64,8 @@ export default {
 
   padding: 8vh 1em;
   width: 100%;
+
+  image-rendering: pixelated;
 }
 .event--body {
   color: #fff;
@@ -126,6 +128,7 @@ export default {
   top: 0.85em;
 }
 .event--factors img {
+  image-rendering: auto;
   height: 22px;
   background: #222;
   border-radius: 1.2em;
