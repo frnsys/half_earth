@@ -159,6 +159,13 @@ function rank() {
         name: 'Post-Revolution Optimism',
         amount: 30
       });
+    } else if (k == 'land') {
+      rankings.push({
+        type: 'Event',
+        name: 'Protected Areas',
+        displayAmount: '10%',
+        amount: 0.1 * 104000000000000,
+      });
     } else if (k == 'biodiversity') {
         rankings.push({
           type: 'Event',
