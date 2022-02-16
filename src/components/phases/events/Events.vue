@@ -5,7 +5,7 @@
     {{year}}
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
-  <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" :style="{'background': warmingColour}" />
+  <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" :style="{'background-color': warmingColour}" />
   <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="dismissProject"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" />
@@ -82,8 +82,8 @@ export default {
       var temp = state.cycleStartState.temperature;
       if(temp <= 0) temp = 0.1;
       var r = 250;
-      var g = 255/temp;
-      var b = 230/temp;
+      var g = Math.round(255/temp);
+      var b = Math.round(230/temp);
 
       if(g >= 255) g = 255; r = 240;
       if(b >= 255) b = 255; r = 240;
@@ -315,7 +315,8 @@ export default {
   bottom: 0;
   /* background: #fadbae; */
 
-  /* background-image: url('/assets/backgrounds/globe3edit.png'); */
+  background-image: url('/assets/backgrounds/globe.png');
+  background-blend-mode: multiply;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
