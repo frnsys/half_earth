@@ -234,9 +234,14 @@ export default {
   flex-direction: column;
 
 }
-@media only screen and (min-width: 480px) {
+@media only screen and (min-width: 481px) {
   .dialogue--inner{
     width:481px;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .dialogue--inner{
+    width: 100%;
   }
 }
 
@@ -297,6 +302,7 @@ export default {
 .dialogue--text img {
   width: 16px;
   vertical-align: middle;
+  image-rendering: auto;
 }
 
 .dialogue--choices {
