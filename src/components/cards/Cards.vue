@@ -44,7 +44,7 @@ export default {
 .cards {
   cursor: grab;
   white-space: nowrap;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
   width: 100%;
   position: relative;
@@ -54,7 +54,7 @@ export default {
   scrollbar-color: #aaa transparent;
   /* so there's enough space to center the
   first and last items */
-  padding: 0 25%;
+  scroll-padding: 0 25%;
 }
 .cards > * {
   scroll-snap-align: center;
