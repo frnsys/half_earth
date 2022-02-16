@@ -51,10 +51,11 @@ export default {
   display: flex;
   align-items: center;
   scroll-snap-type: x mandatory;
+  scroll-snap-stop: always;
   scrollbar-color: #aaa transparent;
   /* so there's enough space to center the
   first and last items */
-  scroll-padding: 0 25%;
+  padding: 0 25%;
 }
 .cards > * {
   scroll-snap-align: center;
