@@ -41,7 +41,7 @@
       <div v-html="estimatedChanges"></div>
     </div>
     <div class="production--demand planning--demand">
-      <div v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${k}.`)">
+      <div v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${display.enumDisplay(k)}.`)">
         {{demand[k]}}<img :src="icons[k]">
       </div>
       <div v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">{{emissions}}<img :src="icons.emissions"></div>

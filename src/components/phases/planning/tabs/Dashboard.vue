@@ -41,7 +41,7 @@
       <img :src="icons.land" />
       <div class="dashboard--item-name">Land Use</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.land('Current energy use.')">
+    <div class="dashboard--item" v-tip="factors.tips.energy('Current energy use.')">
       <div class="minicard">
         {{`${format.twh(state.gameState.output_demand.electricity + state.gameState.output_demand.fuel).toLocaleString()}TWh`}}
         <div class="dashboard--change" v-if="changes.energy != 0" v-tip="{icon: 'energy', text: 'The estimated value after production changes have finished.'}">

@@ -38,6 +38,11 @@ export default {
   cardScanTime: 1,
   cardWithdrawTime: 2,
 
+  maxValues: {
+    biodiversity: 80,
+    contentedness: 40,
+  },
+
   // Project group colors
   groupStyle: {
     Restoration: {

@@ -2,7 +2,7 @@
 <div class="factors--users">
   <div class="factors--total">
     <div>Total:</div>
-    <div>{{total}}<img :src="icons[icon]" /></div>
+    <div>{{total}}<span class="type-total" v-if="consts.maxValues[type]">/{{consts.maxValues[type]}}</span><img :src="icons[icon]" /></div>
   </div>
   <div class="factors--user" v-for="user in relevantFactors" :class="{highlight: current && user.name == current.name}">
     <div>
@@ -12,7 +12,7 @@
       <template v-if="user.type == 'Region'">
         <IntensityIcon
           resource="wealth" :intensity="user.intensity" />
-        <div class="factors--usage">{{user.amount}}<img :src="icons[icon]"></div>
+        <div class="factors--usage">{{user.displayAmount}}<img :src="icons[icon]"></div>
       </template>
       <template v-else-if="user.type !== 'Project' && user.type !== 'Event'">
         <IntensityIcon
@@ -107,5 +107,9 @@ export default {
 .factors--usage-solo {
   width: 100%;
   text-align: right;
+}
+
+.type-total {
+  color: rgba(255,255,255,0.6);
 }
 </style>
