@@ -201,7 +201,12 @@ export default {
       } else {
         let cost = this.points > 0 ? this.estimate : this.cost;
         if (this.kind == 'Policy') {
-          return cost;
+          let changes = state.planChanges[this.project.id];
+          if (changes && changes.withdrawn) {
+            return 0;
+          } else {
+            return cost;
+          }
         } else {
           return `${cost} yrs`;
         }
@@ -219,8 +224,14 @@ export default {
         return null;
       }
       let upgrade = this.upgrades[idx];
+
+      let cost = upgrade.cost;
+      let changes = state.planChanges[this.project.id];
+      if (changes && changes.downgrades > 0) {
+        cost = 0;
+      }
       return {
-        cost: upgrade.cost,
+        cost,
         effects: this.upgrades[idx].effects,
       }
     },
@@ -453,6 +464,7 @@ export default {
   position: absolute;
   z-index: 2;
   top: -10px;
+  pointer-events: none;
 }
 .passed-stamp img {
   width: 240px !important;

@@ -280,6 +280,9 @@ export default {
         // Apply project upgrades
         this.upgradeProjects();
         state.phase = 'PLANNING';
+
+        // Reset session plan changes
+        state.planChanges = {};
       }
     }
   }

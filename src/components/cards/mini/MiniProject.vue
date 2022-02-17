@@ -22,7 +22,7 @@
     </transition>
 
     <div class="card-withdraw-target" ref="withdrawTarget">
-      {{ canDowngrade ? 'Downgrade' : 'Withdraw' }}
+      {{ refundable ? 'Undo' : (canDowngrade ? 'Downgrade' : 'Withdraw') }}
       <div class="withdraw-bar" ref="withdrawProgress"></div>
     </div>
 

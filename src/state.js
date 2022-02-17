@@ -37,6 +37,10 @@ function initState() {
       AnimalCalories: {},
     },
 
+    // Track changes made to the plan
+    // in a given session, so they can
+    // be reversed/refunded
+    planChanges: {},
     queuedUpgrades: {},
 
     // Compare beginning and end

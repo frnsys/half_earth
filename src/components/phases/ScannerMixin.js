@@ -65,6 +65,13 @@ export default {
     haltable() {
       return this.implemented && (this.project.kind == 'Policy' || this.project.ongoing);
     },
+    refundable() {
+      let changes = state.planChanges[this.project.id];
+      return changes !== undefined && (
+        changes.upgrades > 0
+        || changes.points > 0
+        || changes.passed || changes.withdrawn);
+    }
   },
   methods: {
     // Actions
@@ -86,11 +93,13 @@ export default {
       let available = state.gameState.political_capital;
       if (this.project.status == 'Inactive' && available >= this.project.cost) {
         game.changePoliticalCapital(-this.project.cost);
-        game.startProject(this.project.id);
-        this.$emit('change');
         return true;
       }
       return false;
+    },
+    passPolicy() {
+      game.startProject(this.project.id);
+      this.$emit('change');
     },
     assignPoint() {
       let p = this.project;
@@ -107,11 +116,25 @@ export default {
         this.$emit('change');
       }
     },
-    upgradeProject() {
+    unassignPoints(points) {
+      let p = this.project;
+      let newPoints = p.points - points;
+      game.setProjectPoints(p.id, newPoints);
+      if (p.status == 'Building' && newPoints == 0) {
+        game.stopProject(p.id);
+
+        // Manually update status
+        p.status = state.gameState.projects[p.id].status;
+      }
+      this.$emit('change');
+    },
+    upgradeProject(free) {
       let nextUpgrade = this.nextUpgrade;
       let available = state.gameState.political_capital;
-      if (nextUpgrade && available >= nextUpgrade.cost) {
-        game.changePoliticalCapital(-this.project.cost);
+      if (nextUpgrade && (free || available >= nextUpgrade.cost)) {
+        if (!free) {
+          game.changePoliticalCapital(-nextUpgrade.cost);
+        }
 
         // Policies upgraded instantly
         if (this.project.kind == 'Policy') {
@@ -181,7 +204,7 @@ export default {
       }
 
       // Check if withdrawing
-      if (!this.scanning && this.haltable) {
+      if (!this.scanning && (this.haltable || this.refundable)) {
         let botTarget = window.innerHeight - 150;
         let y = rect.y + rect.height;
         if (y >= botTarget) {
@@ -222,7 +245,7 @@ export default {
       }
     },
     yMax() {
-      return (this.project && this.haltable) ? window.innerHeight - CARD_HEIGHT : window.innerHeight - CARD_HEIGHT - 80;
+      return (this.project && (this.haltable || this.refundable)) ? window.innerHeight - CARD_HEIGHT : window.innerHeight - CARD_HEIGHT - 80;
     },
 
     // Scanning
@@ -256,25 +279,63 @@ export default {
         this.$refs.scanProgress.style.width = `${val}%`;
       }, () => {
         if (this.scanning) {
-          // Try to buy point
           let projectActive = p.status == 'Active' || p.status == 'Finished';
+
+          if (!(p.id in state.planChanges)) {
+            state.planChanges[p.id] = {
+              points: 0,
+              upgrades: 0,
+              downgrades: 0,
+              withdrawn: false,
+              passed: false,
+            };
+          }
+          let changes = state.planChanges[p.id];
+
+          // Upgrading projects
           if (projectActive && this.nextUpgrade && this.upgradeProject) {
             this.pulseProgress();
             if (this.nextUpgrade) {
-              this.upgradeProject();
+              let free = changes.downgrades > 0;
+              if (free) {
+                changes.downgrades--;
+              }
+              this.upgradeProject(free);
               this.pulseLevel();
-              this.scanCard();
+              if (this.nextUpgrade) {
+                this.scanCard();
+              }
+
+              // Refundable upgrade
+              changes.upgrades++;
             }
 
+          // Adding points to Research/Infrastructure
           } else if (this.type !== 'Policy' && this.buyPoint()) {
             this.assignPoint(p);
-
             this.pulseProgress();
             this.scanCard();
 
-          } else if (this.type == 'Policy' && this.payPoints(p)) {
+            // Refundable points
+            changes.points++;
+
+          // Passing Policies
+          // Free if withdrawn in this same session (i.e. undo the withdraw)
+          } else if (this.type == 'Policy' && (changes.withdrawn || this.payPoints())) {
+            this.passPolicy();
             this.pulseProgress();
             this.shakeScreen();
+
+            // Refundable
+            if (changes.withdrawn) {
+              changes.withdrawn = false;
+            } else {
+              changes.passed = true;
+            }
+
+            if (this.nextUpgrade) {
+              this.scanCard();
+            }
 
           // If not enough PC
           } else {
@@ -304,15 +365,59 @@ export default {
       this.withdrawAnim = animate(0, 100, consts.cardWithdrawTime * 1000, (val) => {
         this.$refs.withdrawProgress.style.width = `${val}%`;
       }, () => {
+        let keepWithdrawing = false;
         if (this.withdrawing) {
-          if (this.canDowngrade) {
+          if (!(this.project.id in state.planChanges)) {
+            state.planChanges[this.project.id] = {
+              points: 0,
+              upgrades: 0,
+              downgrades: 0,
+              withdrawn: false,
+              passed: false,
+            };
+          }
+          let changes = state.planChanges[this.project.id];
+          if (this.refundable) {
+            if (changes.upgrades > 0) {
+              let level = this.project.level;
+              let upgrades = PROJECTS[this.project.id].upgrades;
+              let cost = upgrades[level-1].cost;
+              game.changePoliticalCapital(cost);
+              if (this.project.kind == 'Policy') {
+                game.downgradeProject(this.project.id);
+              } else {
+                state.queuedUpgrades[this.project.id] = false;
+              }
+              changes.upgrades--;
+
+              // Can maybe keep withdrawing
+              keepWithdrawing = changes.upgrades > 0 || changes.passed;
+            } else if (changes.passed) {
+              game.changePoliticalCapital(this.project.cost);
+              game.stopProject(this.project.id);
+              changes.passed = false;
+            } else {
+              let points = changes.points;
+              let refund = this.nextPointCost * points;
+              this.unassignPoints(points);
+              game.changePoliticalCapital(refund);
+              changes.points = 0;
+            }
+          } else if (this.canDowngrade) {
             game.downgradeProject(this.project.id);
+            keepWithdrawing = this.project.level > 0;
+            changes.downgrades++;
           } else {
             game.stopProject(this.project.id);
+            changes.withdrawn = true;
           }
           this.$emit('change');
         }
-        this.stopWithdrawingCard();
+        if (keepWithdrawing) {
+          this.withdrawCard();
+        } else {
+          this.stopWithdrawingCard();
+        }
       }, true);
     },
     stopWithdrawingCard() {
