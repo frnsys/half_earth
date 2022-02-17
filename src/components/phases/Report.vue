@@ -214,8 +214,8 @@ export default {
     calculateChanges() {
       this.pcChange = 0;
       let temperatureChange = parseFloat(state.gameState.world.temperature.toFixed(1)) - parseFloat(state.cycleStartState.temperature.toFixed(1));
-      let contentednessChange = consts.contentednessPc[this.contentedness.end.intensity] || consts.contentednessPc[consts.contentednessPc.length - 1];
-      let extinctionRateChange = consts.extinctionPc[this.extinction.end.intensity] || consts.extinctionPc[consts.extinctionPc.length - 1];
+      let contentednessChange = consts.contentednessPc[this.contentedness.end] || consts.contentednessPc[consts.contentednessPc.length - 1];
+      let extinctionRateChange = consts.extinctionPc[this.extinction.end] || consts.extinctionPc[consts.extinctionPc.length - 1];
       let emissionsChange = state.gameState.world.emissions - state.cycleStartState.emissions;
 
       // Double temp change score for every degree above 1C
