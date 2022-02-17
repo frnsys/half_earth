@@ -317,13 +317,19 @@ export default {
   border-bottom: 1px solid rgba(255,255,255,0.5);
   border-top: none;
   border-left: none;
+  /* border-style: outset; */
+  /* border-color: #ffeedc; */
+}
+.plan--add-change:hover{
+  background: #FCEAE5;
+  box-shadow: 0 0 8px #ff66ff;
 }
 .plan--change .plan--add-change img {
-  width: 32px;
+  width: 24px;
   margin: 0 auto;
 }
 .plan--change-placeholder {
-  border: 1px dashed rgba(0,0,0,0.7);
+  border: 1px dashed rgba(0,0,0,0.5);
   height: 130px;
   border-radius: 0.7em;
 }
