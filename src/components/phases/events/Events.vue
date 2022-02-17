@@ -317,8 +317,10 @@ export default {
 }
 
 #event-stream-timer-fill {
-  height: 2px;
-  background: red;
+  height: 4px;
+  /* background: rgba(0,0,0,0.6); */
+  background-color: #fff;
+  border-radius: 2px;
 }
 #event-stream--year {
   position: absolute;
@@ -328,6 +330,7 @@ export default {
   z-index: 2;
   font-size: 1.5em;
   padding: 0.4em;
+  bottom:0.5em;
 }
 
 #event-stream .dialogue {
