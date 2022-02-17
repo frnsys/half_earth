@@ -307,3 +307,17 @@ strong{
   animation-name: pulse;
   animation-iteration-count: infinite;
 }
+
+.tipfade-enter-active,
+.tipfade-leave-active {
+  transition: all 180ms cubic-bezier(.31,.57,.62,1.01);
+  /* transform: translate(0px, 0px); */
+  
+}
+
+.tipfade-enter-from,
+.tipfade-leave-to {
+  opacity: 0;
+  transform: translate(0, -10px);
+  /* transform: scale(1.2); */
+}

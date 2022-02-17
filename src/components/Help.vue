@@ -1,7 +1,12 @@
 <template>
-<div class="help-tip" :style="style" @click="hide" v-if="!state.help[text] && !state.hideHelp">
+<transition name="tipfade">
+<div class="help-tip--outer" :style="style"  @click="hide" v-if="!state.help[text] && !state.hideHelp">
+  <div class="help-tip--inner" :class="{center : center}">
   <img :src="icons.help" /> {{text}}
 </div>
+</div>
+
+</transition>
 </template>
 
 <script>
@@ -20,9 +25,9 @@ export default {
         left: this.x,
         top: this.y,
       };
-      if (this.center) {
-        style.transform = 'translate(-50%, -50%)';
-      }
+      // if (this.center) {
+      //   style.transform = 'translate(-50%, -50%)';
+      // }
       return style;
     },
   },
@@ -35,16 +40,22 @@ export default {
 </script>
 
 <style>
-.help-tip {
+.help-tip--outer {
   position: absolute;
-  background: #FFFCE2;
+  z-index: 10;
+  width: fit-content;
+  cursor: pointer;
+}
+.help-tip--inner.center{
+  transform: translate(-50%, -50%);
+    background: #FFFCE2;
   border: 1px solid #000000;
   font-family: 'W95FA', monospace;
-  font-size: 0.7em;
+  font-size: 0.8em;
   padding: 0.5em 1em;
-  z-index: 10;
   box-shadow: 2px 2px 0 #000000;
   width: fit-content;
+
 }
 .help-tip img {
   top: 1px;
