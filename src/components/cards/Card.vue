@@ -201,12 +201,17 @@ export default {
   image-rendering: pixelated;
 }
 .card-image-attribution {
-  color: #787087;
+  color: rgba(255,255,255,0.8);
+  /* mix-blend-mode: difference; */
   font-family: 'Inter', sans-serif;
   font-size: 0.6em;
   text-transform: uppercase;
   width: 100%;
   text-align: center;
+  opacity: 0.8;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  padding:2px;
 }
 
 .card-actions {
