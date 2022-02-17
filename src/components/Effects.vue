@@ -462,7 +462,7 @@ function render(e) {
       let flag = e.param.split('::')[1];
       return {
         tip: FLAG_TIPS[flag](demand),
-        text: FLAGS[flag],
+        text: '<strong>' + FLAGS[flag] + '</strong>',
       }
     }
     case 'ModifyIndustryDemand': {
