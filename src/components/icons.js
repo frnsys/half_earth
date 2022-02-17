@@ -57,6 +57,8 @@ export default {
   alert: require('/assets/icons/alert.png'),
   halted: require('/assets/icons/halted.png'),
   down_arrow: require('/assets/icons/down_arrow.png'),
+  down_arrow_small: require('/assets/icons/down_arrow.svg'),
+  hourglass: require('/assets/icons/hourglass.svg'),
   sea_level_rise: require('/assets/icons/sea_level_rise.png'),
   arrow_right: require('/assets/icons/arrow_right.svg'),
   arrow_left: require('/assets/icons/arrow_left.svg'),

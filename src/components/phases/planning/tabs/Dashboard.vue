@@ -17,21 +17,52 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <div class="minicard">
-      {{`${state.gameState.world.emissions.toFixed(1)}Gt`}}
+        {{`${state.gameState.world.emissions.toFixed(1)}Gt`}}
+        <div class="dashboard--change" v-if="changes.emissions != 0" v-tip="{icon: 'emissions', text: 'The estimated value after production changes have finished.'}">
+          <img :src="icons.down_arrow_small" />
+          <div class="dashboard--change-value">
+            {{`${((changes.emissions * 1e-15) + state.gameState.world.emissions).toFixed(1)}Gt`}}
+          </div>
+        </div>
       </div>
       <img :src="icons.emissions" />
       <div class="dashboard--item-name">Emissions</div>
     </div>
     <div class="dashboard--item" v-tip="factors.tips.land('Current land use.')">
       <div class="minicard">
-      {{format.landUsePercent(state.gameState.resources_demand.land).toFixed(0)}}%
+        {{format.landUsePercent(state.gameState.resources_demand.land).toFixed(0)}}%
+        <div class="dashboard--change" v-if="changes.land != 0" v-tip="{icon: 'land', text: 'The estimated value after production changes have finished.'}">
+          <img :src="icons.down_arrow_small" />
+          <div class="dashboard--change-value">
+            {{format.landUsePercent(changes.land + state.gameState.resources_demand.land).toFixed(0)}}%
+          </div>
+        </div>
       </div>
       <img :src="icons.land" />
       <div class="dashboard--item-name">Land Use</div>
     </div>
+    <div class="dashboard--item" v-tip="factors.tips.land('Current energy use.')">
+      <div class="minicard">
+        {{`${format.twh(state.gameState.output_demand.electricity + state.gameState.output_demand.fuel).toLocaleString()}TWh`}}
+        <div class="dashboard--change" v-if="changes.energy != 0" v-tip="{icon: 'energy', text: 'The estimated value after production changes have finished.'}">
+          <img :src="icons.down_arrow_small" />
+          <div class="dashboard--change-value">
+            {{`${format.twh(changes.energy + state.gameState.output_demand.electricity + state.gameState.output_demand.fuel).toLocaleString()}TWh`}}
+          </div>
+        </div>
+      </div>
+      <img :src="icons.energy" />
+      <div class="dashboard--item-name">Energy Use</div>
+    </div>
     <div class="dashboard--item">
       <div class="minicard">
-        <span :style="{color: waterStress.color}">{{waterStress.label}}</span>
+        <span :style="{color: currentWaterStress.color}">{{currentWaterStress.label}}</span>
+        <div class="dashboard--change" v-if="changes.water != 0" v-tip="{icon: 'water', text: 'The estimated value after production changes have finished.'}">
+          <img :src="icons.down_arrow_small" />
+          <div class="dashboard--change-value" :style="{color: afterWaterStress.color}">
+            {{afterWaterStress.label}}
+          </div>
+        </div>
       </div>
       <img :src="icons.water" />
       <div class="dashboard--item-name">Water Stress</div>
@@ -45,7 +76,13 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
       <div class="minicard">
-        <span :style="{color: extinction.color}">{{extinction.label}}</span>
+        <span :style="{color: currentExtinction.color}">{{currentExtinction.label}}</span>
+        <div class="dashboard--change" v-if="changes.extinction != 0" v-tip="{icon: 'extinction_rate', text: 'The estimated value after production changes have finished.'}">
+          <img :src="icons.down_arrow_small" />
+          <div class="dashboard--change-value" :style="{color: afterExtinction.color}">
+            {{afterExtinction.label}}
+          </div>
+        </div>
       </div>
       <img :src="icons.extinction_rate" />
       <div class="dashboard--item-name">Extinction Rate</div>
@@ -89,6 +126,7 @@ import game from '/src/game';
 import state from '/src/state';
 import format from '/src/display/format';
 import factors from '/src/display/factors';
+import display from '/src/display/display';
 import intensity from '/src/display/intensity';
 import MiniCard from 'components/cards/mini/MiniCard.vue';
 import FactorsList from 'components/cards/FactorsList.vue';
@@ -138,12 +176,37 @@ export default {
       });
       return data;
     },
-    extinction() {
-      let int = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
-      return {
-        label: intensity.describe(int),
-        color: intensity.color(int, false)
-      }
+    changes() {
+      let changes = {
+        'land': 0,
+        'emissions': 0,
+        'water': 0,
+        'energy': 0,
+        'extinction': 0
+      };
+      state.gameState.processes.filter((p) => !p.locked).forEach((p) => {
+        let mix_change = (state.processMixChanges[p.output][p.id] || 0) * 0.05;
+        if (mix_change !== 0) {
+          let multiplier = mix_change * state.gameState.output_demand[display.enumKey(p.output)];
+          changes['land'] += p.resources.land * multiplier;
+          changes['water'] += p.resources.water * multiplier;
+          changes['energy'] += (p.resources.electricity + p.resources.fuel) * multiplier;
+          changes['emissions'] += format.co2eq(p.byproducts) * multiplier;
+          changes['extinction'] += p.byproducts.biodiversity * multiplier;
+        }
+      });
+
+      Object.keys(changes).forEach((k) => {
+        changes[k] = Math.round(changes[k]);
+      });
+
+      return changes;
+    },
+    currentExtinction() {
+      return this.extinction(state.gameState.world.extinction_rate);
+    },
+    afterExtinction() {
+      return this.extinction(this.changes.extinction + state.gameState.world.extinction_rate);
     },
     avgHabitability() {
       let total = state.gameState.world.regions.reduce((acc, r) => {
@@ -170,9 +233,21 @@ export default {
         color: intensity.color(avg, true)
       }
     },
-    waterStress() {
+    currentWaterStress() {
+      return this.waterStress(state.gameState.resources_demand.water);
+    },
+    afterWaterStress() {
+      return this.waterStress(this.changes.water + state.gameState.resources_demand.water);
+    },
+  },
+  methods: {
+    chooseBreakdown(choice) {
+      this.showBreakdownMenu = false;
+      this.breakdownFactor = choice;
+    },
+    waterStress(demand) {
       let label;
-      let percentUse = format.waterUsePercent(state.gameState.resources_demand.water);
+      let percentUse = format.waterUsePercent(demand);
       if (percentUse <= 0.2) {
         label = 'Very Low';
       } else if (percentUse <= 0.4) {
@@ -186,12 +261,13 @@ export default {
         label,
         color: intensity.color(percentUse * 4, false)
       }
-    }
-  },
-  methods: {
-    chooseBreakdown(choice) {
-      this.showBreakdownMenu = false;
-      this.breakdownFactor = choice;
+    },
+    extinction(extinction) {
+      let int = intensity.scale(extinction, 'extinction');
+      return {
+        label: intensity.describe(int),
+        color: intensity.color(int, false)
+      }
     }
   }
 }
@@ -219,7 +295,7 @@ export default {
   height: 80px;
   font-family: 'W95FA', monospace;
 }
-.dashboard--item img {
+.dashboard--item > img {
   position: absolute;
   top: 0;
   left: 50%;
@@ -349,5 +425,13 @@ export default {
   text-align: center;
   margin: 0 0 2em 0;
   font-size: 0.8em;
+}
+
+.dashboard--change {
+  font-size: 0.75em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.5em;
 }
 </style>

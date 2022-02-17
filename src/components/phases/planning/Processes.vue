@@ -64,25 +64,6 @@ function fmtPercent(n) {
   return n.toLocaleString(undefined, {maximumFractionDigits: 1});
 }
 
-function estimateAfter() {
-  let after = {
-    'land': 0,
-    'emissions': 0,
-    'water': 0,
-    'energy': 0,
-    'extinction': 0
-  };
-  state.gameState.processes.filter((p) => !p.locked).forEach((p) => {
-    let mix_share = p.mix_share + (state.processMixChanges[p.output][p.id] || 0);
-    after['land'] += p.resources.land * mix_share;
-    after['water'] += p.resources.water * mix_share;
-    after['energy'] += (p.resources.electricity + p.resources.fuel) * mix_share;
-    after['emissions'] += format.co2eq(p.byproducts) * mix_share;
-    after['extinction'] += p.byproducts.biodiversity * mix_share;
-  });
-  return after;
-}
-
 export default {
   components: {
     Cards,
@@ -168,10 +149,11 @@ export default {
         } else {
           change = (changed[k] - current[k])/current[k];
         }
+        change = Math.round(change * 100);
         if (change > 0.0) {
-          return `<span class="change-increase">increase ${k} by ${change > 1 ? '⚠️' : ''}${fmtPercent(Math.round(change*100))}%</span>`;
+          return `<span class="change-increase">increase ${k} by ${change > 100 ? '⚠️' : ''}${fmtPercent(change)}%</span>`;
         } else if (change < 0.0) {
-          return `<span class="change-decrease">decrease ${k} by ${fmtPercent(Math.round(Math.abs(change*100)))}%</span>`;
+          return `<span class="change-decrease">decrease ${k} by ${fmtPercent(Math.abs(change))}%</span>`;
         } else {
           return null;
         }
@@ -180,7 +162,7 @@ export default {
       if (descs.length == 0) {
         return `They won't have much effect.`;
       } else {
-        return `They'll ${lf.format(descs)}.`;
+        return `This output's production will: ${lf.format(descs)}.`;
       }
     }
   },

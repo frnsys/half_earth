@@ -5,7 +5,7 @@
   <header>
     <div :class="{active: page == PAGES.PLAN}" @click="selectPage(PAGES.PLAN)">Plan</div>
     <div :class="{active: page == PAGES.PARLIAMENT}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
-    <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)">Stats</div>
+    <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.hourglass" />Stats</div>
     <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">World</div>
   </header>
 
@@ -58,6 +58,17 @@ export default {
       state,
       events,
       page: PAGES.PLAN,
+    }
+  },
+  computed: {
+    hasChanges() {
+      let totalChanges = 0;
+      Object.values(state.processMixChanges).forEach((output) => {
+        totalChanges += Object.values(output).reduce((acc, change) => {
+          return acc + Math.abs(change);
+        }, 0);
+      });
+      return totalChanges !== 0;
     }
   },
   methods: {
@@ -228,5 +239,10 @@ export default {
 .minicard-grid-item-label {
   text-align: center;
   font-size: 0.8em;
+}
+
+.changes-icon {
+  width: 8px;
+  margin-right: 1px;
 }
 </style>
