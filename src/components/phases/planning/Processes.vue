@@ -38,7 +38,7 @@
     </div>
     <div class="process-mix-change-notice" v-if="hasChanges">
       <div>These changes will take {{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}} to take effect.</div>
-      <div>{{ estimatedChanges }}</div>
+      <div v-html="estimatedChanges"></div>
     </div>
     <div class="production--demand planning--demand">
       <div v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${k}.`)">
@@ -59,6 +59,29 @@ import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 
 const lf = new Intl.ListFormat('en');
+
+function fmtPercent(n) {
+  return n.toLocaleString(undefined, {maximumFractionDigits: 1});
+}
+
+function estimateAfter() {
+  let after = {
+    'land': 0,
+    'emissions': 0,
+    'water': 0,
+    'energy': 0,
+    'extinction': 0
+  };
+  state.gameState.processes.filter((p) => !p.locked).forEach((p) => {
+    let mix_share = p.mix_share + (state.processMixChanges[p.output][p.id] || 0);
+    after['land'] += p.resources.land * mix_share;
+    after['water'] += p.resources.water * mix_share;
+    after['energy'] += (p.resources.electricity + p.resources.fuel) * mix_share;
+    after['emissions'] += format.co2eq(p.byproducts) * mix_share;
+    after['extinction'] += p.byproducts.biodiversity * mix_share;
+  });
+  return after;
+}
 
 export default {
   components: {
@@ -132,15 +155,7 @@ export default {
         changed['the extinction rate'] += p.byproducts.biodiversity * mix_share;
       });
 
-      let intensities = {
-        'somewhat increase': [],
-        'significantly increase': [],
-        'increase': [],
-        'somewhat decrease': [],
-        'significantly decrease': [],
-        'decrease': []
-      }
-      Object.keys(current).forEach((k) => {
+      let descs = Object.keys(current).map((k) => {
         let change = 0;
         if (current[k] == 0) {
           if (changed[k] > 0) {
@@ -153,28 +168,19 @@ export default {
         } else {
           change = (changed[k] - current[k])/current[k];
         }
-        if (change > 0.5) {
-          intensities['significantly increase'].push(k);
-        } else if (change > 0.25) {
-          intensities['increase'].push(k);
-        } else if (change > 0.05) {
-          intensities['somewhat increase'].push(k);
-        } else if (change < -0.5) {
-          intensities['significantly decrease'].push(k);
-        } else if (change < -0.25) {
-          intensities['decrease'].push(k);
-        } else if (change < -0.05) {
-          intensities['somewhat decrease'].push(k);
+        if (change > 0.0) {
+          return `<span class="change-increase">increase ${k} by ${change > 1 ? '⚠️' : ''}${fmtPercent(Math.round(change*100))}%</span>`;
+        } else if (change < 0.0) {
+          return `<span class="change-decrease">decrease ${k} by ${fmtPercent(Math.round(Math.abs(change*100)))}%</span>`;
+        } else {
+          return null;
         }
-      });
+      }).filter((desc) => desc !== null);
 
-      let descs = Object.keys(intensities)
-        .filter((k) => intensities[k].length > 0)
-        .map((k) => `${k} ${lf.format(intensities[k])}`);
       if (descs.length == 0) {
-        return `These changes won't have much effect.`;
+        return `They won't have much effect.`;
       } else {
-        return `These changes will ${lf.format(descs)}.`;
+        return `They'll ${lf.format(descs)}.`;
       }
     }
   },
@@ -223,11 +229,19 @@ export default {
   color: #fff;
   padding: 0.25em;
   border-radius: 0.2em;
-  margin: 0.5em 1em 0 1em;
+  margin: 0.5em auto 0;
   text-align: center;
+  max-width: 320px;
 }
 
 .plan-change-select header .disabled {
   opacity: 0.5;
+}
+
+.change-decrease {
+  color: #2FE863;
+}
+.change-increase {
+  color: #EF3838;
 }
 </style>
