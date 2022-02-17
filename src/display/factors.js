@@ -34,6 +34,7 @@ function effectsFactor(k, effs) {
         amount = effects.incomeOutlookChange(state.gameState.world, eff.param);
         amount = Math.round(amount);
       } else if (eff.type == 'DemandOutlookChange') {
+        let k = display.enumKey(eff.subtype);
         amount = effects.demandOutlookChange(state.gameState.world, k, eff.param);
         amount = Math.round(amount);
       }

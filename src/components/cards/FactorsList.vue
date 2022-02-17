@@ -2,9 +2,9 @@
 <div class="factors--users">
   <div class="factors--total">
     <div>Total:</div>
-    <div>{{total}}<span class="type-total" v-if="consts.maxValues[type]">/{{consts.maxValues[type]}}</span><img :src="icons[icon]" /></div>
+    <div>{{factors.total}}<span class="type-total" v-if="consts.maxValues[factors.type]">/{{consts.maxValues[factors.type]}}</span><img :src="icons[factors.icon]" /></div>
   </div>
-  <div class="factors--user" v-for="user in relevantFactors" :class="{highlight: current && user.name == current.name}">
+  <div class="factors--user" v-for="user in relevantFactors" :class="{highlight: factors.current && user.name == factors.current.name}">
     <div>
       <div>{{user.name}}</div>
     </div>
@@ -12,15 +12,15 @@
       <template v-if="user.type == 'Region'">
         <IntensityIcon
           resource="wealth" :intensity="user.intensity" />
-        <div class="factors--usage">{{user.displayAmount}}<img :src="icons[icon]"></div>
+        <div class="factors--usage">{{user.displayAmount}}<img :src="icons[factors.icon]"></div>
       </template>
       <template v-else-if="user.type !== 'Project' && user.type !== 'Event'">
         <IntensityIcon
-          :resource="icon" :intensity="user.intensity" />
-        <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="arrow">⟵</span></template>{{user.displayAmount}}<img :src="icons[icon]"></div>
+          :resource="factors.icon" :intensity="user.intensity" />
+        <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="arrow">⟵</span></template>{{user.displayAmount}}<img :src="icons[factors.icon]"></div>
       </template>
       <template v-else>
-        <div class="factors--usage factors--usage-solo">{{user.displayAmount || user.amount || 0}}<img :src="icons[icon]"></div>
+        <div class="factors--usage factors--usage-solo">{{user.displayAmount || user.amount || 0}}<img :src="icons[factors.icon]"></div>
       </template>
     </div>
   </div>
@@ -36,22 +36,9 @@ export default {
   components: {
     IntensityIcon,
   },
-  data() {
-    return {
-      ...this.factors,
-    };
-  },
-  watch: {
-    factors(factors) {
-      // Kind of hacky, but update data when the factors change
-      Object.keys(factors).forEach((k) => {
-        this[k] = factors[k];
-      });
-    }
-  },
   computed: {
     relevantFactors() {
-      return state.factors[this.type].filter((user) => user.displayProduced !== 0);
+      return state.factors[this.factors.type].filter((user) => user.displayProduced !== 0);
     },
   }
 }

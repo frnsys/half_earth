@@ -529,9 +529,8 @@ def define_field(k, v, item):
             return 'upgrades: vec![\n{}\n]'.format(
                         indent(',\n'.join(define_upgrade(e) for e in v)))
     elif k == 'outcomes':
-        outcomes = [c for c in v if c.get('text')]
         return 'outcomes: vec![\n{}\n]'.format(
-                    indent(',\n'.join(define_outcome(o) for o in outcomes)))
+                    indent(',\n'.join(define_outcome(o) for o in v)))
     elif k in ['cost', 'points', 'estimate']: # Keep as integer
         pass
     elif k == 'points':

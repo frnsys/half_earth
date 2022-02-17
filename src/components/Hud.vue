@@ -3,19 +3,19 @@
   <div class="hud" v-else>
     <div>{{state.gameState.world.year}}</div>
     <div class="hud-bars">
-      <div v-tip="{icon: 'political_capital', text: 'How much political capital you have. Political capital is what you spend to implement your plans.'}">
+      <div v-tip="pcTip">
         <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
       </div>
-      <div v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
+      <div v-tip="biodiversityTip">
         <img :src="icons.hud_extinction_rate">
         <IntensityBar :intensity="extinction" :max="5" />
       </div>
       <div :class="{'bad': state.gameState.world.contentedness < 0}"
-        v-tip="factors.tips.contentedness('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.')">
+        v-tip="contentednessTip">
         <img :src="icons.hud_contentedness">
         <IntensityBar :intensity="contentedness" :max="5" :invert="true" />
       </div>
-      <div v-tip="{icon: 'warming', text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`}">
+      <div v-tip="warmingTip">
         <img :src="icons.hud_warming">
         <IntensityBar :intensity="warming" :max="5" />
       </div>
@@ -32,6 +32,7 @@ import state from '../state';
 import Menu from 'components/Menu.vue';
 import IntensityBar from './cards/IntensityBar.vue';
 import intensity from '/src/display/intensity';
+import factors from '/src/display/factors';
 
 export default {
   components: {
@@ -54,6 +55,26 @@ export default {
     warming() {
       return intensity.scale(state.gameState.world.temperature, 'warming');
     },
+    pcTip() {
+      return {
+        icon: 'political_capital',
+        text: 'How much political capital you have. Political capital is what you spend to implement your plans.'
+      };
+    },
+    warmingTip() {
+      return {
+        icon: 'warming',
+        text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`
+      };
+    },
+    biodiversityTip() {
+      return factors.tips.biodiversity(
+        'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.');
+    },
+    contentednessTip() {
+      return factors.tips.contentedness(
+        'How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.');
+    }
   }
 };
 </script>
