@@ -1,5 +1,5 @@
 <template>
-<div class="card" @click="flip">
+<div class="card" @click="flip" :class="{flipped : flipped}">
   <div class="card-top" :style="{background, color}" v-if="hasFigure && hasHeader">
     <header :style="{color}">
       <slot name="header"></slot>
@@ -54,7 +54,7 @@ export default {
         ev.stopImmediatePropagation();
       }
     }
-  }
+  },
 }
 </script>
 
@@ -70,11 +70,19 @@ export default {
   border-radius: 0.75em;
   -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0));
   transition: all 250ms ease-out;
+
+  transform-style: preserve-3d;
+
+  cursor: pointer;
 }
 
 .card:hover{
   -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0.4));
-  transform:translateY(-2px);
+}
+
+
+.card.flipped{
+  transform: rotateY(180deg);
 }
 
 .card-top,
@@ -305,6 +313,7 @@ export default {
   font-family: 'Inter', sans-serif;
   font-size: 0.8em;
   text-align: center;
+  margin: 5em 1em 1em 1em;
 }
 
 .card-top-back {
@@ -313,6 +322,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   height: 173px;
+  transform: rotateY(180deg);
 }
 .card-bot-back {
   width: 100%;
@@ -320,5 +330,10 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  transform: rotateY(180deg);
+}
+
+.card.flipped header{
+  transform: rotateY(180deg);
 }
 </style>
