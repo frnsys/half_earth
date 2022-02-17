@@ -141,9 +141,9 @@ export default {
         '-remap', 'palette.png',
 
         // Scale back up with nearest neighbor interpolation
-        '-interpolate', 'Nearest',
-        '-filter', 'point',
-        '-resize', '150%',
+        // '-interpolate', 'Nearest',
+        // '-filter', 'point',
+        // '-resize', '150%',
         'output.png'];
 
       const processedFiles = await Magick.Call(inputFiles, command);
