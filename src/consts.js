@@ -15,8 +15,12 @@ export default {
   pcPerCompletedProject: 5,
 
   // PC earned per intensity level of contentedness and extinction
-  contentednessPc: [0, 0, 5, 10, 20],
+  contentednessPc: [0, 0, 5, 10, 20, 30],
   extinctionPc: [20, 10, 0, -5, -5, -10],
+
+  // Bonus PC for the first n years
+  honeymoonPc: 15,
+  honeymoonYears: 5,
 
   // PC change per -0.1C temp change
   temperaturePc: 2,

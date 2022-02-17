@@ -28,7 +28,9 @@ function newRun() {
   Object.keys(init).forEach((k) => {
     state[k] = init[k];
   });
-  state.endYear = game.state().world.year + 100;
+  let year = game.state().world.year;
+  state.startYear = year;
+  state.endYear = year + 100;
   updateState();
   updateFactors();
   loadMeta();
