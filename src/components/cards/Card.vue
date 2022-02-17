@@ -110,7 +110,7 @@ export default {
     bottom: -2px;
     right: -2px;
     border: 2px rgba(0,0,0,0.1) solid;
-    border-radius: 0.75em 0.75em 0.1em 0.1em;
+    border-radius: 0.85em 0.85em 0.1em 0.1em;
     pointer-events: none;
 }
 
@@ -130,7 +130,7 @@ export default {
     bottom: -2px;
     right: -2px;
     border: 2px rgba(0,0,0,0.1) solid;
-    border-radius: 0.1em 0.1em 0.75em 0.75em;
+    border-radius: 0.1em 0.1em 0.85em 0.85em;
     pointer-events: none;
 }
 
