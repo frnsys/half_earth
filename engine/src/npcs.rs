@@ -1,5 +1,6 @@
-use serde::Serialize;
 use crate::projects::Project;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
+use serde::Serialize as Ser;
 
 pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Vec<NPC>) {
     let mut supporters: Vec<usize> = vec![];
@@ -33,7 +34,7 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
     }
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Clone)]
 pub struct NPC {
     pub id: usize,
     pub name: &'static str,
@@ -55,9 +56,26 @@ impl NPC {
     }
 }
 
-#[derive(Serialize, Debug, Clone, PartialEq)]
+#[derive(Ser, Debug, Clone, PartialEq)]
 pub enum NPCRelation {
     Neutral,
     Nemesis,
     Ally
+}
+
+impl Serialize for NPC {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut seq = serializer.serialize_struct("NPC", 7)?;
+        seq.serialize_field("id", &self.id)?;
+        seq.serialize_field("name", &self.name)?;
+        seq.serialize_field("relationship", &self.relationship)?;
+        seq.serialize_field("locked", &self.locked)?;
+        seq.serialize_field("support", &self.support)?;
+        seq.serialize_field("seats", &self.seats)?;
+        seq.serialize_field("is_ally", &(self.relation() == NPCRelation::Ally))?;
+        seq.end()
+    }
 }

@@ -57,6 +57,7 @@ const PROJECT_GROUPS = [
   'Protection',
   'Electrification',
   'Behavior',
+  'Limits',
   "Energy",
   "Materials",
   "Buildings",

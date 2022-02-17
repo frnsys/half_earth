@@ -81,8 +81,18 @@ impl Region {
     }
 
     // Outlook slowly rebounds over time
-    pub fn update_outlook(&mut self) {
-        self.outlook += 0.1;
+    pub fn update_outlook(&mut self, wretched_ally: bool, consumerist_ally: bool) {
+        let buffed = match self.income {
+            Income::Low => wretched_ally,
+            Income::LowerMiddle => wretched_ally,
+            Income::UpperMiddle => consumerist_ally,
+            Income::High => consumerist_ally,
+        };
+        self.outlook += if buffed {
+            0.3
+        } else {
+            0.1
+        };
         self.outlook = f32::min(10., self.outlook);
     }
 

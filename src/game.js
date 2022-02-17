@@ -142,6 +142,10 @@ function checkRequests() {
   return game.check_requests();
 }
 
+function isAlly(name) {
+  return state.gameState.npcs.find((npc) => npc.name == name).is_ally;
+}
+
 function _roll(phase, subphase, limit) {
   let p = Phase[`${phase}${subphase}`];
   if (p === undefined) {
@@ -211,5 +215,5 @@ export default {
   upgradeProject, downgradeProject,
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
-  playerSeats,
+  playerSeats, isAlly,
   updateFactors};

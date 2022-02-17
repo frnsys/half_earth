@@ -4,7 +4,7 @@ use crate::world::World;
 use crate::game::Difficulty;
 use crate::industries::Industry;
 use crate::events::{Effect, Request, Flag};
-use crate::projects::{Project, Status, Type as ProjectType};
+use crate::projects::{Project, Status, Type as ProjectType, Group};
 use crate::production::{
     ProductionOrder, Process,
     produce, calculate_required};
@@ -108,7 +108,7 @@ impl State {
             produced_by_process: Vec::new(),
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
-            protected_land: 0.,
+            protected_land: 0.1, // Starts at 10%
 
             last_outlook: starting_outlook,
         };
@@ -223,12 +223,40 @@ impl State {
         if self.flags.contains(&Flag::MoreAutomation) {
             modifier *= 0.9;
         }
+
+        let posadist_ally = self.is_ally("The Posadist");
+        let utopian_ally = self.is_ally("The Utopian");
+        let animal_ally = self.is_ally("The Animal Liberationist");
+        let ecofem_ally = self.is_ally("The Ecofeminist");
+        let malthus_ally = self.is_ally("The Malthusian");
         for project in &mut self.projects {
+            let mut group_modifier = 1.0;
+            if posadist_ally && project.group == Group::Nuclear {
+                group_modifier *= 0.5;
+            }
+            if ecofem_ally && (
+                project.group == Group::Food
+                || project.group == Group::Agriculture
+                || project.group == Group::Protection) {
+                group_modifier *= 0.75;
+            }
+            if utopian_ally && (
+                project.group == Group::Limits
+                || project.group == Group::Protection
+                || project.group == Group::Restoration) {
+                group_modifier *= 0.75;
+            }
+            if animal_ally && project.group == Group::Food {
+                group_modifier *= 0.5;
+            }
+            if malthus_ally && project.group == Group::Population {
+                group_modifier *= 0.5;
+            }
             project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, if project.kind == ProjectType::Policy {
                 1.0
             } else {
                 // Modifier only relevant for built projects
-                modifier
+                modifier * group_modifier
             });
             project.update_required_majority(&self.npcs);
         }
@@ -340,7 +368,9 @@ impl State {
         let fast = self.flags.contains(&Flag::FastDevelopment);
         let degrow = self.flags.contains(&Flag::Degrowth);
         self.world.develop_regions(stop, fast, degrow);
-        self.world.update_outlook();
+        let wretched_ally = self.is_ally("The Wretched");
+        let consumerist_ally = self.is_ally("The Consumerist");
+        self.world.update_outlook(wretched_ally, consumerist_ally);
     }
 
     // Every planning cycle

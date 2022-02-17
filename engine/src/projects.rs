@@ -35,6 +35,7 @@ pub enum Group {
   Protection,
   Electrification,
   Behavior,
+  Limits,
   Energy,
   Materials,
   Buildings,

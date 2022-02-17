@@ -25,7 +25,11 @@ export default {
       return this.project.kind.toLowerCase();
     },
     nextPointCost() {
-      return consts.pointCost;
+      if (this.type == 'Research' && game.isAlly('The Accelerationist')) {
+        return consts.discountedPointCost;
+      } else {
+        return consts.pointCost;
+      }
     },
     availablePoints() {
       if (this.type == 'Policy') {

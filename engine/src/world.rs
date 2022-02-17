@@ -57,9 +57,9 @@ impl World {
         }
     }
 
-    pub fn update_outlook(&mut self) {
+    pub fn update_outlook(&mut self, wretched_ally: bool, consumerist_ally: bool) {
         for region in &mut self.regions {
-            region.update_outlook();
+            region.update_outlook(wretched_ally, consumerist_ally);
         }
     }
 
