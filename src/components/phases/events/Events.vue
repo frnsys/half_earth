@@ -20,6 +20,7 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts';
 import Event from './Event.vue';
 import Project from './Project.vue';
 import Hud from 'components/Hud.vue';
@@ -29,12 +30,6 @@ import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import ICON_EVENTS from '/assets/content/icon_events.json';
 import {sign, randChoice} from 'lib/util';
 import {sendSnapshot} from '/src/log';
-
-const MS_PER_YEAR = 2000;
-
-// Set an upper cap to the amount of emissions we pass to hector,
-// because very large numbers end up breaking it.
-const MAX_EMISSIONS = 200; // GtCO2eq
 
 function popIconEvents(arr, time) {
   let results = [];
@@ -75,7 +70,7 @@ export default {
   },
   computed: {
     progress() {
-      return this.time/MS_PER_YEAR * 100;
+      return this.time/consts.msPerYear * 100;
     },
     warmingColour(){
       if(state.cycleStartState){
@@ -88,9 +83,7 @@ export default {
       if(g >= 255) g = 255; r = 240;
       if(b >= 255) b = 255; r = 240;
 
-      
-
-      return 'rgb(' + r + ',' + g + ',' + b + ')'; 
+      return 'rgb(' + r + ',' + g + ',' + b + ')';
 
       }
       else{
@@ -143,7 +136,7 @@ export default {
             regionId,
 
             // When in the year the event occurs
-            when: Math.random() * MS_PER_YEAR
+            when: Math.random() * consts.msPerYear
           }
         });
 
@@ -155,7 +148,7 @@ export default {
           if (!this.showingEvent) {
             this.time += elapsed;
 
-            if (this.time >= MS_PER_YEAR) {
+            if (this.time >= consts.msPerYear) {
               this.completedProjects = game.step();
               if (this.completedProjects.length > 0) {
                 this.stopped = true;
@@ -232,7 +225,7 @@ export default {
 
       // Set an upper cap to the amount of emissions we pass to hector,
       // because very large numbers end up breaking it.
-      let emissions_factor = Math.min(1.0, MAX_EMISSIONS/state.gameState.world.emissions);
+      let emissions_factor = Math.min(1.0, consts.maxEmissions/state.gameState.world.emissions);
 
       let emissions = {
         // Hector separates out FFI and LUC emissions
