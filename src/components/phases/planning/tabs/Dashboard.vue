@@ -287,6 +287,7 @@ export default {
   position: relative;
   width: 120px;
   text-align: center;
+  image-rendering: auto;
 }
 .dashboard--item .minicard {
   color: #fff;
