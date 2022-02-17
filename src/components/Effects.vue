@@ -689,10 +689,16 @@ export default {
   border-radius: 0.2em;
   display: inline-block;
   font-size: 0.9em;
-  background: #475664;
+  background-color: rgba(0,0,0,0.3);
   padding: 0.05em 0.2em;
-  color: #fff;
+  color: rgba(255,255,255,0.9);
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
+.card-tag:hover{
+  background-color: rgba(0,0,0,0.5);
+}
+
 .card-tag img {
   height: 13px;
   margin-right: 3px;
