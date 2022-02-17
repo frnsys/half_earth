@@ -179,7 +179,7 @@ strong{
   left: 0.5em;
   right: 0.5em;
   background: rgba(0,0,0,0.7);
-  height: 62px;
+  height: 68px;
   z-index: -1;
   box-shadow: 0 0 6px #ff66ff, inset 1px -2px 6px #ff66ff;
   border-radius: 4px;
@@ -308,6 +308,15 @@ strong{
   animation-iteration-count: infinite;
 }
 
+.opacityfade-enter-active,
+.opacityfade-leave-active {
+  transition: all 180ms cubic-bezier(.31,.57,.62,1.01);
+}
+
+.opacityfade-enter-from,
+.opacityfade-leave-to {
+  opacity: 0;
+}
 .tipfade-enter-active,
 .tipfade-leave-active {
   transition: all 180ms cubic-bezier(.31,.57,.62,1.01);
@@ -320,4 +329,34 @@ strong{
   opacity: 0;
   transform: translate(0, -10px);
   /* transform: scale(1.2); */
+}
+
+.appear-popdown-enter-active,
+.appear-popdown-leave-active {
+  transition: all 180ms cubic-bezier(.31,.57,.62,1.01);
+}
+
+.appear-popdown-enter-from,
+.appear-popdown-leave-to {
+  transform: translate(0, -40px);
+}
+
+
+.appear-bounceup-enter-active {
+  animation: bounce-in 0.4s ease-out;
+}
+.appear-bounceup-leave-active {
+  animation: bounce-in 0.4s ease-out reverse;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: translateY(100%);
+  }
+  50% {
+    transform: translateY(-5%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
