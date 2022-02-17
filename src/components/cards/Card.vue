@@ -180,6 +180,8 @@ export default {
   font-size: 0.8em;
 
   background-color: rgba(0,0,0,0.05);
+
+  image-rendering: auto;
 }
 .card--body p img {
   width: 18px;
@@ -212,7 +214,9 @@ export default {
   color: rgba(255,255,255,0.8);
   /* mix-blend-mode: difference; */
   font-family: 'Inter', sans-serif;
-  font-size: 0.6em;
+  font-size: 0.5em;
+  letter-spacing: 0.02em;
+  font-weight: 600;
   text-transform: uppercase;
   width: 100%;
   text-align: center;
@@ -310,10 +314,11 @@ export default {
 }
 
 .card-desc {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8em;
+  font-family: 'Times Ten', serif;
+  font-size: 1em;
   text-align: center;
   margin: 5em 1em 1em 1em;
+  font-style: italic;
 }
 
 .card-top-back {
