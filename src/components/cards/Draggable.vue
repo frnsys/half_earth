@@ -108,6 +108,7 @@ export default {
 <style>
 .draggable {
   position: relative;
+  perspective: 3000px;
 }
 .draggable.dragging {
   cursor: grabbing;
