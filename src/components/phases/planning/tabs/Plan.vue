@@ -325,7 +325,7 @@ export default {
 .plan--change-placeholder {
   border: 1px dashed rgba(0,0,0,0.7);
   height: 130px;
-  border-radius: 0.5em;
+  border-radius: 0.7em;
 }
 .plan--change-view-all {
   height: 130px;

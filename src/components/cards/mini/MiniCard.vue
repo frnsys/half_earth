@@ -1,15 +1,17 @@
 <template>
-<div class="minicard" :style="style" @click="expand">
+<div class="minicard" :style="style" :class="class" @click="expand">
   <slot name="body"></slot>
 </div>
+<transition name="opacityfade">
 <div class="minicard--expanded" v-if="expanded" @click="collapse" ref="overlay">
   <slot name="expanded"></slot>
 </div>
+</transition>
 </template>
 
 <script>
 export default {
-  props: ['style'],
+  props: ['style','class'],
   data() {
     return {
       expanded: false,
@@ -30,7 +32,7 @@ export default {
 
 <style>
 .minicard {
-  border-radius: 0.5em;
+  border-radius: 0.7em;
   padding: 0.5em;
   width: 90px;
   height: 130px;
@@ -41,14 +43,30 @@ export default {
   text-align: center;
   position: relative;
   overflow: hidden;
+  transition: all 200ms ease-out; 
+
+  image-rendering: auto;
 }
+.minicard:hover{
+  cursor: pointer;
+}
+
+.minicard.project:hover{
+  transform: scale(1.05);
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+}
+
 .minicard--expanded {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0,0,0,0.8);
+
+  background-color: rgba(0,0,0,0.2);
+  background-image: url('/assets/backgrounds/screen-door.png');
+  background-repeat: repeat;
+
   display: flex;
   justify-content: space-evenly;
   align-items: center;

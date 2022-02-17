@@ -1,5 +1,5 @@
 <template>
-<MiniCard :style="style">
+<MiniCard :style="style" :class="'project'">
   <template v-slot:body>
     <div class="minicard-background" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" />
     <div :style="{zIndex: 1}">
@@ -12,17 +12,21 @@
   </template>
 
   <template v-slot:expanded>
+    <transition appear name="appear-popdown">
     <div class="mini-scanbar">
+      <div class="scanbar-base"></div>
       <div class="scanbar-led scanbar-led-ok"></div>
       <div class="scanbar-led scanbar-led-bad"></div>
       <div class="card-scan-target" ref="target"></div>
     </div>
+    </transition>
 
     <div class="card-withdraw-target" ref="withdrawTarget">
       {{ canDowngrade ? 'Downgrade' : 'Withdraw' }}
       <div class="withdraw-bar" ref="withdrawProgress"></div>
     </div>
 
+    <transition appear name="appear-bounceup">
     <Draggable
       @drag="checkDrag"
       @dragStop="stopDrag"
@@ -33,6 +37,7 @@
         :project="project"
         @change="$emit('change')" />
     </Draggable>
+    </transition>
 
     <footer>
       <div class="pips">
@@ -118,6 +123,12 @@ export default {
 .mini-scanbar {
   height: 60px;
   width: 300px;
+  position: absolute;
+  top: 0;
+}
+.scanbar-base{
+  height: 100%;
+  width: 100%;
   border-radius: 0 0 0.5em 0.5em;
   position: absolute;
   top: 0;
@@ -130,6 +141,7 @@ export default {
 .mini-scanbar .card-scan-target {
   left: 0;
   right: 0;
+  position: relative;
 }
 
 .minicard--expanded .draggable {
@@ -163,5 +175,9 @@ export default {
   background: #EB3941;
   border: 1px solid #f4c6c6;
   box-shadow: 0 0 8px #EB3941;
+}
+
+.minicard-project:hover{
+  transform:scale(1.2);
 }
 </style>
