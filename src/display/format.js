@@ -52,12 +52,20 @@ function waterUsePercent(l) {
   return l/consts.starting_resources.water * 100;
 }
 
-function demandPercent(demand, totalDemand, k) {
-  let percent = demand[k]/totalDemand[k] * 100;
-  if (percent < 1) {
+function demandPercent(demand, totalDemand, k, round) {
+  return percent(demand[k]/totalDemand[k], round);
+}
+
+function percent(p, round) {
+  let percent = p * 100;
+  if (percent < 1 && percent > 0) {
     return '<1%';
   } else {
-    return `${percent.toFixed(1)}%`;
+    if (round) {
+      return `${Math.round(percent)}%`;
+    } else {
+      return `${percent.toFixed(1)}%`;
+    }
   }
 }
 
@@ -78,5 +86,5 @@ export default {
   co2eq, gtco2eq, twh,
   output, outputs,
   landUsePercent, waterUsePercent,
-  demandPercent,
+  demandPercent, percent,
   formatNumber, formatResource};

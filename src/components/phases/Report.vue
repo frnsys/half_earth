@@ -20,20 +20,20 @@
         <tr>
           <td><img :src="icons.contentedness"> Contentedness</td>
           <td>
-            <div class="intensity-pip stat-pip" :style="{background:contentedness.start.color}" v-for="i in contentedness.start.intensity"></div>
+            <IntensityBar :intensity="contentedness.start" :max="5" :invert="true" />
           </td>
           <td>
-            <div class="intensity-pip stat-pip" :style="{background:contentedness.end.color}" v-for="i in contentedness.end.intensity"></div>
+            <IntensityBar :intensity="contentedness.end" :max="5" :invert="true" />
           </td>
           <td>{{format.sign(pc.contentedness)}}</td>
         </tr>
         <tr>
           <td><img :src="icons.extinction_rate"> Extinction Rate</td>
           <td>
-            <div class="intensity-pip stat-pip" :style="{background:extinction.start.color}" v-for="i in extinction.start.intensity"></div>
+            <IntensityBar :intensity="extinction.start" :max="5" />
           </td>
           <td>
-            <div class="intensity-pip stat-pip" :style="{background:extinction.end.color}" v-for="i in extinction.end.intensity"></div>
+            <IntensityBar :intensity="extinction.end" :max="5" />
           </td>
           <td>{{format.sign(pc.extinctionRate)}}</td>
         </tr>
@@ -42,6 +42,12 @@
           <td>{{state.cycleStartState.emissions.toFixed(1)}}</td>
           <td>{{state.gameState.world.emissions.toFixed(1)}}</td>
           <td>{{format.sign(pc.emissions)}}</td>
+        </tr>
+        <tr v-if="honeymoonPc">
+          <td>Post-Revolution Optimism</td>
+          <td></td>
+          <td></td>
+          <td>{{format.sign(honeymoonPc)}}</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">
@@ -115,16 +121,18 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts';
 import intensity from '/src/display/intensity';
-import consts from '/src/consts.js';
 import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
+import IntensityBar from 'components/cards/IntensityBar.vue';
 
 
 export default {
   mixins: [EventsMixin],
   components: {
-    Hud
+    Hud,
+    IntensityBar
   },
   mounted() {
     this.showEvent();
@@ -161,28 +169,16 @@ export default {
       let start = intensity.scale(state.cycleStartState.contentedness, 'world_outlook');
       let end = intensity.scale(state.gameState.world.contentedness, 'world_outlook');
       return {
-        start: {
-          intensity: start,
-          color: intensity.color(start, true)
-        },
-        end: {
-          intensity: end,
-          color: intensity.color(end, true)
-        }
+        start,
+        end,
       }
     },
     extinction() {
       let start = intensity.scale(state.cycleStartState.extinctionRate, 'extinction');
       let end = intensity.scale(state.gameState.world.extinction_rate, 'extinction');
       return {
-        start: {
-          intensity: start,
-          color: intensity.color(start, false)
-        },
-        end: {
-          intensity: end,
-          color: intensity.color(end, false)
-        }
+        start,
+        end,
       }
     },
     regionIncomeChanges() {
@@ -206,6 +202,13 @@ export default {
         };
       }).filter((npc) => npc.change !== 0);
     },
+    honeymoonPc() {
+      if (state.gameState.world.year < state.startYear + consts.honeymoonYears) {
+        return consts.honeymoonPc;
+      } else {
+        return 0;
+      }
+    },
   },
   methods: {
     calculateChanges() {
@@ -226,6 +229,7 @@ export default {
       };
       this.pcChange += Object.values(this.pc).reduce((a,b) => a + b, 0);
       this.pcChange += state.cycleStartState.completedProjects.length * consts.pcPerCompletedProject;
+      this.pcChange += this.honeymoonPc;
     },
     updateProcessMix(output) {
       let removePoints = consts.processPointsPerCycle;

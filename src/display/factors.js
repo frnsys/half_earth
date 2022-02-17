@@ -77,7 +77,8 @@ function regionalFactors(k) {
       name: region.name,
       type: 'Region',
       intensity,
-      amount: format.output(region.demand[k], k)
+      amount: format.output(region.demand[k], k),
+      displayAmount: format.percent(region.demand[k]/state.gameState.output_demand[k], true),
     };
   }).filter((p) => p.amount !== 0);
 }
@@ -113,8 +114,12 @@ function productionFactors(k) {
 
     let out = p.output ? display.enumKey(p.output) : null;
     let displayAmount = total;
-    if (k == 'electricity' || k == 'fuel') {
-      displayAmount = format.output(total, k);
+    if (k == 'energy') {
+      let energyDemand = state.gameState.output_demand.electricity + state.gameState.output_demand.fuel;
+      displayAmount = format.percent(total/energyDemand, true);
+    } else if (k == 'electricity' || k == 'fuel') {
+      let demand = state.gameState.output_demand[k];
+      displayAmount = format.percent(total/demand, true);
     } else {
       displayAmount = format.formatResource[k](total);
     }
@@ -125,7 +130,7 @@ function productionFactors(k) {
       intensity: inten,
       amount: total,
       displayAmount: displayAmount,
-      displayProduced: out != null ? format.output(p.demand, out) : null,
+      displayProduced: out != null ? format.percent(p.demand/state.gameState.output_demand[out], true) : null,
     }
   }).filter((p) => p.output != null || (p.output == null && p.amount !== 0));
 }
