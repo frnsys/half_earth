@@ -1,4 +1,5 @@
 <template>
+<transition name="tipfade">
 <div class="tip-wrapper" v-if="show" :class="{overlay: card}" ref="overlay" @click="dismiss">
   <div class="tip" ref="tip">
     <div class="tip--icon" v-if="icon">
@@ -20,6 +21,7 @@
     </Cards>
   </div>
 </div>
+</transition>
 </template>
 
 <script>
@@ -90,13 +92,16 @@ export default {
   color: #fff;
   padding: 0.5em;
   border-radius: 0.3em;
-  margin: 1em;
+  margin: 1em auto;
   border: 1px solid #707070;
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   display: flex;
   pointer-events: auto;
   box-shadow: 0 1px 2px rgb(0 0 0 / 70%);
+  font-family: 'Inter', sans-serif;
+  max-width: 700px;
+  box-shadow: 0 0 9px rgba(0,0,0,0.8);
 }
 .tip--icon {
   min-width: 36px;
@@ -116,6 +121,8 @@ export default {
 }
 .tip--body {
   padding: 0 0.5em;
+  align-self: center;
+  font-size: 0.9em;
 }
 .tip--body img {
   width: 16px;
