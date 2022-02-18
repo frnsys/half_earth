@@ -318,7 +318,7 @@ export default {
 }
 
 .planning--page--dashboard {
-  background: url('/assets/backgrounds/dashboard.jpg');
+  background: url('/assets/backgrounds/dashboard.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

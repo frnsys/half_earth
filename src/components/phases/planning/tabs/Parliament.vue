@@ -95,7 +95,7 @@ export default {
 
 <style>
 .parliament {
-  background: url('/assets/backgrounds/parliament.jpg');
+  background: url('/assets/backgrounds/parliament.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

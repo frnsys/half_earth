@@ -13,8 +13,8 @@ import icons from 'components/icons';
 const preload = [
   '/assets/stamp.svg',
   '/assets/backgrounds/menu.jpg',
-  '/assets/backgrounds/dashboard.jpg',
-  '/assets/backgrounds/parliament.jpg',
+  '/assets/backgrounds/dashboard.png',
+  '/assets/backgrounds/parliament.png',
   '/assets/backgrounds/plan.png',
   '/assets/backgrounds/regions.png',
   '/assets/icons/close.svg',
