@@ -20,7 +20,7 @@
     <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
       <div>
         <img :src="icons.warning" />
-        Because of opposition, this requires a {{requiredMajorityFraction}} majority in parliament.
+        Because of opposition, this requires a majority in parliament.
       </div>
     </div>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />

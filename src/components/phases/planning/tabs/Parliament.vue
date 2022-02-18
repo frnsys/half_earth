@@ -11,7 +11,12 @@
       </template>
     </div>
   </div>
-  <div class="coalition-seats" :class="{'parliament-suspended-fade': suspended}">Your coalition has {{coalitionSeats}}/{{totalSeats}} seats.</div>
+  <div class="coalition-seats" :class="{'parliament-suspended-fade': suspended}" v-tip="{
+    icon: 'political_capital',
+    text: 'How many seats your coalition has. Draw parties to your coalition by implementing projects they support.'
+  }">
+    Your coalition has {{coalitionSeats}}/{{totalSeats}} seats.
+  </div>
 
   <div class="minicard-grid">
     <div class="minicard-grid-item" v-for="npc in npcs">

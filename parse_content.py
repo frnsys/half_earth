@@ -11,6 +11,7 @@ from collections import defaultdict
 BASE_WORLD_OUTLOOK = 20.
 BASE_REGIONAL_OUTLOOK = 10.
 BASE_REGIONAL_HABITABILITY = 10.
+ACTIVE_SPEAKERS = set()
 
 ids = {}
 flags = {}
@@ -617,6 +618,7 @@ def extract_dialogue(dialogue):
     dialogue['root'] = keys_to_ids[str(dialogue['root'])]
     dialogue['lines'] = {keys_to_ids[k]: l for k, l in dialogue['lines'].items()}
     for l in dialogue['lines'].values():
+        ACTIVE_SPEAKERS.add(l['speaker'])
         l['id'] = keys_to_ids[str(l['id'])]
         if isinstance(l['next'], list):
             for j, b in enumerate(l['next']):
@@ -1145,5 +1147,11 @@ if __name__ == '__main__':
 
     with open('assets/surface/tiles_to_regions.json', 'w') as f:
         json.dump(tiles_to_regions, f)
+
+    print('-'*20)
+    print('Active Speakers:')
+    for s in sorted(ACTIVE_SPEAKERS):
+        print(s)
+    print('-'*20)
 
     print('Done')

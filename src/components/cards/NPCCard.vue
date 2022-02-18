@@ -2,7 +2,10 @@
 <Card class="npc" background="#724680">
   <template v-slot:header>
     <div>Parliament</div>
-    <div v-tip="{text: `Your relationship with ${name}.`, icon: 'relationship'}">
+    <div v-tip="{
+      icon: 'relationship',
+      text: `Your relationship with ${name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.`,
+    }">
       <template v-for="i in consts.maxRelationship" >
         <img :src="icons.relationship" v-if="i <= npc.relationship" />
         <img :src="icons.relationship_empty" v-else />

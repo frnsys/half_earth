@@ -181,6 +181,9 @@ impl Project {
                 None => ()
             }
         }
+        if outcome.is_none() {
+            outcome = Some((&self.outcomes[0], 0));
+        }
         outcome
     }
 
@@ -228,8 +231,11 @@ impl Project {
 
     pub fn update_required_majority(&mut self, npcs: &Vec<NPC>) {
         let opposers = self.opposers.iter().filter(|id| npcs[**id].relation() != NPCRelation::Ally).count();
-        let m = opposers as f32;
-        self.required_majority = m/(1.+m);
+        self.required_majority = if opposers > 0 {
+            0.5
+        } else {
+            0.
+        };
     }
 }
 
