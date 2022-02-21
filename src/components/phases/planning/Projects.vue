@@ -39,6 +39,9 @@
         @change="$emit('change')" />
     </Draggable>
   </Cards>
+
+  <CardFocusArea />
+  
   <footer>
     <div class="pips">
       <div class="scan-progress" ref="scanProgress"></div>
@@ -63,6 +66,7 @@ import state from '/src/state';
 import HelpTip from 'components/Help.vue';
 import Cards from 'components/cards/Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
+import CardFocusArea from 'components/cards/CardFocusArea.vue';
 import ScannerMixin from 'components/phases/ScannerMixin';
 import {detectCenterElement} from 'lib/util';
 
@@ -72,6 +76,7 @@ export default {
     Cards,
     ProjectCard,
     HelpTip,
+    CardFocusArea
   },
   data() {
     return {

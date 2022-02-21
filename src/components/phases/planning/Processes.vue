@@ -32,6 +32,9 @@
       </template>
     </ProcessCard>
   </Cards>
+
+  <CardFocusArea />
+
   <div>
     <div class="available-mix-tokens">
         <img v-for="_ in points" class="pip" :src="icons.mix_token">
@@ -57,6 +60,7 @@ import Cards from 'components/cards/Cards.vue';
 import consts from '/src/consts.js';
 import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
+import CardFocusArea from 'components/cards/CardFocusArea.vue';
 
 const lf = new Intl.ListFormat('en');
 
@@ -68,6 +72,7 @@ export default {
   components: {
     Cards,
     ProcessCard,
+    CardFocusArea
   },
   data() {
     return {
