@@ -116,6 +116,12 @@ export default {
     if (this.current !== null) {
       this.play();
     }
+
+    document.addEventListener('keydown', this.onKeydown);
+
+  },
+  beforeDestroy: function () {
+    document.removeEventListener('keydown', this.onKeydown)
   },
   watch: {
     dialogue(dialogue) {
@@ -139,6 +145,11 @@ export default {
     },
   },
   methods: {
+    onKeydown(e){
+      if(e.keyCode === 13){
+        this.advance();
+      }
+    },
     play() {
       this.revealed = false;
       this.$refs.text.innerHTML = '';
