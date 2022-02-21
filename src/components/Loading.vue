@@ -10,6 +10,8 @@
 <script>
 import icons from 'components/icons';
 
+import PRELOAD_ASSETS from '/assets/content/preload_assets.json';
+
 const preload = [
   '/assets/stamp.svg',
   '/assets/backgrounds/menu.jpg',
@@ -22,6 +24,9 @@ const preload = [
   '/assets/clock.png',
   '/assets/motto.png',
 ];
+
+preload.concat(PRELOAD_ASSETS);
+
 Object.values(icons).forEach((icon) => preload.push(icon));
 
 export default {

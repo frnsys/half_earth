@@ -12,6 +12,7 @@ BASE_WORLD_OUTLOOK = 20.
 BASE_REGIONAL_OUTLOOK = 10.
 BASE_REGIONAL_HABITABILITY = 10.
 ACTIVE_SPEAKERS = set()
+PRELOAD_ASSETS = list()
 
 ids = {}
 flags = {}
@@ -914,6 +915,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
+            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
             # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
             # to_jpg(frm, to, width=600)
@@ -994,6 +996,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
+            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
             # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
             # to_jpg(frm, to, width=600)
@@ -1020,6 +1023,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
+            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
             # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
             # to_jpg(frm, to, width=600)
@@ -1048,6 +1052,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
+            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
             # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
             # to_jpg(frm, to, width=600)
@@ -1071,6 +1076,7 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
+            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
             # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
             # to_jpg(frm, to, width=600)
@@ -1148,6 +1154,13 @@ if __name__ == '__main__':
     with open('assets/surface/tiles_to_regions.json', 'w') as f:
         json.dump(tiles_to_regions, f)
 
+    with open('assets/content/preload_assets.json', 'w') as f:
+        json.dump(PRELOAD_ASSETS, f)
+
+    print('-'*20)
+    print('Images to Preload:')
+    for s in sorted(PRELOAD_ASSETS):
+        print(s)
     print('-'*20)
     print('Active Speakers:')
     for s in sorted(ACTIVE_SPEAKERS):
