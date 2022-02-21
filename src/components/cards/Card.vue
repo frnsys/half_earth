@@ -197,7 +197,7 @@ export default {
   border-left: 1px solid rgba(0,0,0,0.4);
   border-radius: 5px;
   box-shadow: inset 2px 1px 0px rgb(0 0 0 / 60%);
-  height: 173px;
+  height: 200px;
   overflow: hidden;
 }
 .card-image {
@@ -318,7 +318,7 @@ export default {
   font-family: 'Times Ten', serif;
   font-size: 1em;
   text-align: center;
-  margin: 5em 1em 1em 1em;
+  margin: 2em 1em 1em 1em;
   font-style: italic;
 }
 
@@ -327,7 +327,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  height: 173px;
+  height: 200px;
   transform: rotateY(180deg);
 }
 .card-bot-back {
