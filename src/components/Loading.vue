@@ -3,6 +3,7 @@
   <div>
     <img src="/assets/gosplant.svg" />
     <div class="loading-text">Booting Up</div>
+    <img class="motto" src="/assets/motto.png" />
   </div>
 </div>
 </template>
