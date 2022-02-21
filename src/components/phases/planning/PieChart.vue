@@ -27,6 +27,7 @@ export default {
 
 <style>
 .pie-chart {
-  height: 200px;
+  height: 320px;
+  width: 320px;
 }
 </style>
