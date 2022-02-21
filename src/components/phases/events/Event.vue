@@ -1,6 +1,6 @@
 <template>
 <div class="event">
-  <div class="event--body" :style="{backgroundImage: 'url(/assets/content/images/' + fname }">
+  <div class="event--body" :style="{backgroundImage: effectImageUrl }">
     <div class="arc">{{event.arc}}</div>
     <div class="event--factors">
       <img class="event--factor" v-for="factor in event.factors" :src="icons[factor]" v-tip="{icon: factor, text: describeFactor(factor)}"/>
@@ -49,16 +49,16 @@ export default {
     }
   },
   computed:{
-    fname(){
+    effectImageUrl(){
     
       if (this.event.image){
         if(this.event.image.fname){
-          return this.event.image.fname
+          return 'url(/assets/content/images/' + this.event.image.fname + ')'
         } else {
-          return 'missing_image.png'
+          return 'url(/assets/missing_content.png)'
         }
       } else {
-        return 'missing_image.png'
+        return 'url(/assets/missing_content.png)'
       }
     },
     hasVisibleEffects(){
