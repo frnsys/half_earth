@@ -1,6 +1,6 @@
 <template>
 <div class="event">
-  <div class="event--body" :style="{backgroundImage: `url(/assets/content/images/${event.image ? event.image.fname : 'missing_image.png'})`}">
+  <div class="event--body" :style="{backgroundImage: 'url(/assets/content/images/' + fname }">
     <div class="arc">{{event.arc}}</div>
     <div class="event--factors">
       <img class="event--factor" v-for="factor in event.factors" :src="icons[factor]" v-tip="{icon: factor, text: describeFactor(factor)}"/>
@@ -48,6 +48,20 @@ export default {
       return FACTOR_DESCS[factor] || factor;
     }
   },
+  computed:{
+    fname(){
+    
+      if (this.event.image){
+        if(this.event.image.fname){
+          return this.event.image.fname
+        } else {
+          return 'missing_image.png'
+        }
+      } else {
+        return 'missing_image.png'
+      }
+    }
+  }
 }
 </script>
 
@@ -69,14 +83,18 @@ export default {
 }
 .event--body {
   color: #fff;
-  height: 40vh;
+  height: 50vh;
   border-radius: 0.75em;
   border: 1px solid #222;
-  background-size: cover;
+  background-size: cover !important;
   background-position: center center;
+  background-repeat: no-repeat;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
   position: relative;
   background: #222;
+
+  image-rendering: pixelated;
+  font-family: 'Inter', sans-serif;
 }
 
 @media only screen and (min-width: 480px) {
@@ -140,5 +158,6 @@ export default {
   padding: 1em;
   background: #222;
   margin: 1em;
+  image-rendering: auto;
 }
 </style>
