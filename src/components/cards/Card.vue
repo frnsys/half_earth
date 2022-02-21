@@ -302,7 +302,8 @@ export default {
 .card--name {
   text-align: center;
   font-size: 1.5em;
-  padding: 0.5em 0.2em;
+  padding: 0.5em 0.5em;
+  line-height: 110%;
 }
 
 .card header .barcode {
