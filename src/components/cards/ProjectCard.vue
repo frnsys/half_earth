@@ -23,7 +23,7 @@
         Because of opposition, this requires a majority in parliament.
       </div>
     </div>
-    <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
+    <img class="card-image" :src="image.fname ? `/assets/content/images/${image.fname}` : '/assets/missing_content.png'" />
     <div v-if="status == 'Building'" class="card-tack-ul project-points">
       <img
         v-for="_ in points"
