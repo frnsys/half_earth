@@ -7,7 +7,7 @@
     </div>
     <div class="image-attribution">Image source: {{event.image ? event.image.attribution : ''}}</div>
     <div class="event--name">{{event.name}}</div>
-    <div class="event--effects">
+    <div class="event--effects" v-if="hasVisibleEffects">
       <Effects :effects="event.effects" />
     </div>
   </div>
@@ -60,6 +60,16 @@ export default {
       } else {
         return 'missing_image.png'
       }
+    },
+    hasVisibleEffects(){
+      if(!this.event.effects) return false;
+
+      for (let i = 0; i < this.event.effects.length; i++) {
+        const effect = this.event.effects[i];
+        if (effect.type != "AddEvent" && effect.type != "TriggerEvent") return true;
+      }
+
+      return false;
     }
   }
 }
@@ -87,7 +97,7 @@ export default {
   border-radius: 0.75em;
   border: 1px solid #222;
   background-size: cover !important;
-  background-position: center center;
+  background-position: center !important;
   background-repeat: no-repeat;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
   position: relative;
