@@ -1,5 +1,5 @@
 <template>
-<div class="event project-completed" :style="{backgroundImage: `url(/assets/content/images/${project.image ? project.image.fname : 'missing_image.png'})`}">
+<div class="event project-completed" :style="{backgroundImage: projectImageUrl}">
   <div class="event--body">
     <div class="arc">Project Completed</div>
     <div class="image-attribution">Image source: {{project.image ? project.image.attribution : ''}}</div>
@@ -31,15 +31,40 @@ export default {
       project,
       outcome: activeOutcome,
       effects: activeEffects(project),
+      image: details.image
     }
   },
+  computed:{
+    projectImageUrl(){
+    
+      if (this.image){
+        if(this.image.fname){
+          return 'url(/assets/content/images/' + this.image.fname + ')'
+        } else {
+          return 'url(/assets/missing_content.png)'
+        }
+      } else {
+        return 'url(/assets/missing_content.png)'
+      }
+    },
+  }
 }
 </script>
 
 <style>
+
+.project-completed .event--name{
+  font-family: 'Times Ten', serif;
+  text-align: center;
+  font-size: 1.5em;
+  padding: 0.5em 0.5em;
+  line-height: 110%;
+}
+
 .project-completed {
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
 }
 .event--outcome {
   font-size: 0.85em;
