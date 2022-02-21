@@ -12,7 +12,7 @@ import icons from 'components/icons';
 
 import PRELOAD_ASSETS from '/assets/content/preload_assets.json';
 
-const preload = [
+var preload = [
   '/assets/stamp.svg',
   '/assets/backgrounds/menu.jpg',
   '/assets/backgrounds/dashboard.png',
@@ -25,7 +25,10 @@ const preload = [
   '/assets/motto.png',
 ];
 
-preload.concat(PRELOAD_ASSETS);
+
+PRELOAD_ASSETS.forEach(asset => {
+  preload.push(asset);
+});
 
 Object.values(icons).forEach((icon) => preload.push(icon));
 
@@ -36,6 +39,7 @@ export default {
     }
   },
   mounted() {
+    // console.log(preload);
     preload.forEach((src) => {
       let img = new Image();
       img.onload = () => {
