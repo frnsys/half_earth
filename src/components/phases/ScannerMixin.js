@@ -178,11 +178,21 @@ export default {
         el.classList.remove('scan-error');
       }, 350);
     },
+    pulseCard() {
+      let el = document.querySelector('.draggable.active');
+      animate(1, 1.1, 200, (val) => {
+        el.style.transform = `scale(${val})`;
+      }, () => {
+        animate(1.1, 1, 200, (val) => {
+          el.style.transform = `scale(${val})`;
+        });
+      });
+    },
     shakeScreen() {
       document.body.classList.add('shake');
       setTimeout(() => {
         document.body.classList.remove('shake');
-      }, 350);
+      }, 500);
     },
 
     // Movement handling
@@ -314,6 +324,7 @@ export default {
           } else if (this.type !== 'Policy' && this.buyPoint()) {
             this.assignPoint(p);
             this.pulseProgress();
+            this.pulseCard();
             this.scanCard();
 
             // Refundable points
@@ -324,6 +335,7 @@ export default {
           } else if (this.type == 'Policy' && (changes.withdrawn || this.payPoints())) {
             this.passPolicy();
             this.pulseProgress();
+            this.pulseCard();
             this.shakeScreen();
 
             // Refundable
