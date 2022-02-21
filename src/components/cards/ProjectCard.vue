@@ -411,7 +411,6 @@ export default {
   color: #fff;
   font-size: 0.85em;
   padding: 1em;
-  border-radius: 10px;
 }
 .project-required-majority img {
   width: 24px;
