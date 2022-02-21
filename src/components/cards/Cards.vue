@@ -63,7 +63,7 @@ export default {
 .cards .card {
   display: inline-flex;
   min-width: 280px;
-  margin: 0 0.25em;
+  margin: 0 0.5em;
   vertical-align: top;
   white-space: normal;
   user-select: none;
