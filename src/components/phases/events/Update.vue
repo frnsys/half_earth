@@ -1,11 +1,10 @@
 <template>
-<div class="event project-completed" :style="{backgroundImage: imageUrl}">
+<div class="event project-completed" :style="{backgroundImage: imageUrl}" @click="tryDone">
   <div class="event--body">
     <template v-if="update.type == 'Project'">
       <div class="arc">Project Completed</div>
       <div class="image-attribution">Image source: {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{obj.name}}</div>
-      <div class="event--outcome">{{obj.activeOutcome.text}}</div>
       <div class="event--effects">
         <Effects :effects="obj.activeEffects" />
       </div>
@@ -66,6 +65,7 @@
       </div>
     </template>
   </div>
+  <Dialogue v-if="obj.activeOutcome" :dialogue="obj.activeOutcome.dialogue" :effects="[]" @done="dialogueDone" />
 </div>
 </template>
 
@@ -73,6 +73,7 @@
 import state from '/src/state';
 import consts from '/src/consts.json';
 import Effects from 'components/Effects.vue';
+import Dialogue from 'components/Dialogue.vue';
 import REGIONS from '/assets/content/regions.json';
 import PROJECTS from '/assets/content/projects.json';
 import {activeEffects} from '/src/display/project';
@@ -83,7 +84,23 @@ export default {
   props: ['update'],
   components: {
     Effects,
+    Dialogue,
     IntensityIcon
+  },
+  data() {
+    return {
+      canClose: this.update.type == 'Project' ? false : true,
+    }
+  },
+  methods: {
+    dialogueDone()  {
+      this.canClose = true;
+    },
+    tryDone() {
+      if (this.canClose) {
+        this.$emit('done');
+      }
+    }
   },
   computed:{
     obj() {
@@ -91,7 +108,7 @@ export default {
       if (type == 'Project') {
         let obj = state.gameState.projects[id];
         let details = PROJECTS[id];
-        obj.activeOutcome = details.outcomes[project.active_outcome];
+        obj.activeOutcome = details.outcomes[obj.active_outcome];
         obj.activeEffects = activeEffects(obj),
         obj.image = details.image;
         return obj;

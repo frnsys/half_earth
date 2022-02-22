@@ -6,7 +6,7 @@
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
   <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" :style="{'background-color': warmingColour}" />
-  <Update v-if="updates.length > 0" :update="updates[0]" @click="dismissUpdate"/>
+  <Update v-if="updates.length > 0" :update="updates[0]" @done="dismissUpdate"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && updates.length == 0" :event="event" @done="nextEvent" />
   <div id="event-stream--toasts">

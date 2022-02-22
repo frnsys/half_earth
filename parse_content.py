@@ -700,6 +700,7 @@ def condition_to_factor(cond):
 def parse_effect(e):
     effect = {
         'type': e['type'],
+        'hidden': e.get('hidden', False),
     }
     for k in effect_keys[e['type']]:
         if k == 'entity':
@@ -982,7 +983,7 @@ if __name__ == '__main__':
                 } for e in u['effects']]
             } for u in p.get('upgrades', [])],
             'outcomes': [{
-                'text': u.get('text', ''),
+                'dialogue': u['dialogue'],
                 'effects': [parse_effect(e) for e in u['effects']],
 
                 # This is a little misleading because the probability type is not only

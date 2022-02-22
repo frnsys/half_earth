@@ -267,6 +267,7 @@ export default {
   /* background: #FCF6BB; */
   /* background: #222; */
   /* color: #fff; */
+  color: #000;
   background: #fff;
   border: 1px solid #000;
   margin: 1em 0;
