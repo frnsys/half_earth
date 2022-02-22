@@ -1,8 +1,8 @@
 <template>
 <Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
   <template v-slot:header>
-    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
     <div>{{group}}</div>
+    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
         Level {{level+1}}
@@ -466,7 +466,7 @@ export default {
   pointer-events: none;
 }
 .passed-stamp img {
-  width: 240px !important;
+  width: 260px !important;
 }
 
 .in-progress {
