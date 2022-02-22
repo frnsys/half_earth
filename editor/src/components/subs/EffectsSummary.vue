@@ -74,10 +74,17 @@ export default {
         if (effect.entity) {
           let type = spec.entity == 'IconEvent' ? 'Event' : spec.entity;
           let match = state.itemsByType[type][effect.entity];
-          return {
-            url: `/?type=${match._type}#${match.id}`,
-            name: match.name,
-          };
+          if (match !== undefined) {
+            return {
+              url: `/?type=${match._type}#${match.id}`,
+              name: match.name,
+            };
+          } else {
+            return {
+              url: '',
+              name: '[MISSING]'
+            };
+          }
         } else {
           return {
             url: '',

@@ -35,6 +35,10 @@
         </template>
       </div>
     </div>
+    <div class="effect-hide">
+      <label>👁️</label>
+      <input type="checkbox" v-model="localData.hidden" :true-value="false" :false-value="true" @change="update" />
+    </div>
   </fieldset>
   <div class="effect-desc">{{desc}}</div>
 </div>
@@ -48,6 +52,9 @@ import SlimSelect from 'slim-select';
 export default {
   props: ['effect'],
   data() {
+    if (this.effect.hidden === undefined) {
+      this.effect.hidden = false;
+    }
     return {
       localData: this.effect
     };
@@ -84,6 +91,10 @@ export default {
     },
     update() {
       this.$emit('update', this.localData);
+    },
+    updateHidden(ev) {
+      this.localData.hidden = !ev.target.checked;
+      this.update();
     },
     updateParam(name, val) {
       if (!this.localData.params) {
@@ -152,5 +163,12 @@ export default {
   margin: 0.25em 0 0.5em 0;
   color: #555;
   text-align: center;
+}
+
+.effect-hide {
+  max-width: 16px;
+}
+.effect-hide input[type=checkbox] {
+  margin: 3px 0;
 }
 </style>

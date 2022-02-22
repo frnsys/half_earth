@@ -641,6 +641,7 @@ export default {
   computed: {
     renders() {
       let descs = this.effects
+        .filter((eff) => !eff.hidden)
         .map((ev) => {
           let desc = render(ev);
           if (desc) {
