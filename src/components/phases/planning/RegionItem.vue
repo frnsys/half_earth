@@ -18,7 +18,7 @@
           :style="{width: `${region.income == 'High' ? 100 : region.development * 100}%`}"></div>
       </div>
     </div>
-    <div>
+    <div class="region-disasters">
       <div>Recent Disasters</div>
       <div>
         <img :src="icons[ev.icon]" v-for="ev in events">
@@ -153,5 +153,9 @@ export default {
   color: #fff;
   background: red;
   padding: 0.2em;
+}
+
+.region-disasters img{
+max-width: 16px;
 }
 </style>
