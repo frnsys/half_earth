@@ -207,6 +207,17 @@ export default {
       this.localData.outcomes = [{
         id: uuid(),
         effects: [],
+        dialogue: {
+          root: 0,
+          lines: {
+            0: {
+              id: 0,
+              speaker: 'Gossy',
+              text: '',
+              next: null,
+            }
+          }
+        },
         probability: {
           id: uuid(),
           type: 'Guaranteed',

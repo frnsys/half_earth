@@ -150,7 +150,7 @@ function validateEffects(effects) {
 function validateOutcomes(outcomes) {
   return outcomes.every((outcome, i) => {
     // First outcome doesn't need text
-    return i == 0 || (requireAtLeastOne(outcome.text) && validateEffects(outcome.effects) && validateProbabilities([outcome.probability]));
+    return i == 0 || (validateDialogue(outcome.dialogue) && validateEffects(outcome.effects) && validateProbabilities([outcome.probability]));
   });
 }
 

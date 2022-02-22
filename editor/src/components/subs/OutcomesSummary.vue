@@ -1,7 +1,7 @@
 <template>
 <ul class="outcomes-summary" v-if="outcomes">
   <li v-for="(outcome, i) in outcomes" :key="outcome.id">
-    <div class="outcome-text" :class="{invalid: outcome.text === undefined || outcome.text === ''}">{{ outcome.text || '[MISSING TEXT]' }}</div>
+    <DialogueSummary :root="outcome.dialogue.root" :lines="outcome.dialogue.lines" />
     <EffectsSummary v-if="outcome.effects" :effects="outcome.effects" />
     <div class="probability-type" v-if="i < outcomes.length - 1">{{ outcome.probability.type }}</div>
     <div class="probability-type" v-else>Default</div>
@@ -16,12 +16,14 @@
 <script>
 import EffectsSummary from './EffectsSummary.vue';
 import ConditionsSummary from './ConditionsSummary.vue';
+import DialogueSummary from './DialogueSummary.vue';
 
 export default {
   props: ['outcomes'],
   components: {
     EffectsSummary,
-    ConditionsSummary
+    ConditionsSummary,
+    DialogueSummary,
   },
 }
 </script>

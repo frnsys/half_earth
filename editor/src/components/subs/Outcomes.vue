@@ -8,10 +8,10 @@
     <div class="field-group" v-for="(outcome, i) in localData" :key="outcome.id">
       <div>
         <label>
-          Outcome Text
-          <Tip>The text presented to the player when this outcome occurs.</Tip>
+          Outcome Dialogue
+          <Tip>The dialogue presented to the player when this outcome occurs.</Tip>
         </label>
-        <input type="text" placeholder="Outcome text" v-model="outcome.text" @blur="update" :class="outcomeFlag(i, 'text')" />
+        <Dialogue :id="outcome.id" :root="outcome.dialogue.root" :lines="outcome.dialogue.lines" />
       </div>
       <Probability v-if="i < localData.length - 1" :probability="outcome.probability" @update="saveOutcomeProbability(i, $event)" />
       <Effects :effects="outcome.effects" @update="saveOutcomeEffects(i, $event)" />
@@ -31,11 +31,12 @@ import uuid from '../../uuid';
 import Tip from '../Tip.vue';
 import Effects from './Effects.vue';
 import Probability from './Probability.vue';
+import Dialogue from './Dialogue.vue';
 
 export default {
   props: ['id', 'outcomes'],
   components: {
-    Tip, Effects, Probability,
+    Tip, Effects, Probability, Dialogue,
   },
   data() {
     return {
@@ -49,7 +50,17 @@ export default {
     addOutcome() {
       this.localData.unshift({
         id: uuid(),
-        text: '',
+        dialogue: {
+          root: 0,
+          lines: {
+            0: {
+              id: 0,
+              speaker: 'Gossy',
+              text: '',
+              next: null,
+            }
+          }
+        },
         effects: [],
         probability: {
           id: uuid(),
@@ -75,10 +86,7 @@ export default {
       this.update();
     },
     saveOutcomeProbability(i, probability) {
-      console.log(`setting probability for ${i}`);
-      console.log(probability);
       this.localData[i].probability = probability;
-      console.log(this.localData);
       this.update();
     },
     outcomeFlag(i, key) {
@@ -96,7 +104,7 @@ export default {
   justify-content: space-around;
 }
 .outcomes .field-group {
-  width: 49%;
+  width: 100%;
   position: relative;
 }
 .outcomes .effects {
