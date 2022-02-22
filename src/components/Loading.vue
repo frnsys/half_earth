@@ -27,9 +27,9 @@ var preload = [
 ];
 
 
-PRELOAD_ASSETS.forEach(asset => {
-  preload.push(asset);
-});
+// PRELOAD_ASSETS.forEach(asset => {
+//   preload.push(asset);
+// });
 
 Object.values(icons).forEach((icon) => preload.push(icon));
 
