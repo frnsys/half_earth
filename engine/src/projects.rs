@@ -230,7 +230,7 @@ impl Project {
     }
 
     pub fn update_required_majority(&mut self, npcs: &Vec<NPC>) {
-        let opposers = self.opposers.iter().filter(|id| npcs[**id].relation() != NPCRelation::Ally).count();
+        let opposers = self.opposers.iter().filter(|id| !npcs[**id].locked && npcs[**id].relation() != NPCRelation::Ally).count();
         self.required_majority = if opposers > 0 {
             0.5
         } else {
