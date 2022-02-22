@@ -1,4 +1,4 @@
-const LOG_HOST = 'https://half-earth-logs.frnsys.com';
+const LOG_HOST = 'https://logs.half.earth';
 
 /**
  * Generates a GUID string.
