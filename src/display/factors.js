@@ -4,6 +4,7 @@ import display from './display';
 import effects from './effects';
 import intensity from './intensity';
 import {activeEffects} from './project';
+import consts from '/src/consts.json';
 import EVENTS from '/assets/content/events.json';
 
 const VARS = ['land', 'water', 'energy', 'emissions', 'biodiversity', 'contentedness'];
@@ -168,9 +169,9 @@ function rank() {
     } else if (k == 'land') {
       rankings.push({
         type: 'Event',
-        name: 'Protected Areas',
+        name: 'Nature Preserves',
         displayAmount: '10%',
-        amount: 0.1 * 104000000000000,
+        amount: 0.1 * consts.starting_resources.land,
       });
     } else if (k == 'biodiversity') {
         rankings.push({

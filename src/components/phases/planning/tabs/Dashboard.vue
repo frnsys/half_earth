@@ -124,6 +124,7 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts.json';
 import format from '/src/display/format';
 import factors from '/src/display/factors';
 import display from '/src/display/display';
@@ -171,9 +172,14 @@ export default {
     },
     dataset() {
       let data = {};
+      let total = 0;
       state.factors[this.breakdownFactor].forEach((d) => {
         data[d.name] = d.amount;
+        total += d.amount;
       });
+      if (this.breakdownFactor === 'land') {
+        data['Unused'] = consts.starting_resources.land - total;
+      }
       return data;
     },
     changes() {

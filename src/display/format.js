@@ -6,7 +6,7 @@ const OUTPUT_UNITS = {
   plant_calories: 1e-9/2e4,  // per 20000 Tcals
   animal_calories: 1e-9/2e4, // per 20000 Tcals
   water: 1e-12/50,           // per 50 km3
-  land: 100/104000000000000  // percent of habitable land
+  land: 100/consts.starting_resources.land  // percent of habitable land
 };
 
 function formatNumber(val) {
