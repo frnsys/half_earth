@@ -18,20 +18,22 @@ function guid() {
 const sessionId = guid();
 
 function post(endpoint, data) {
-  return fetch(`${LOG_HOST}${endpoint}`, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: 'POST',
-    body: JSON.stringify(data)
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`Response ${res.status}`);
-      }
-      return res.json();
-    });
+  if (VERSION !== 'dev') {
+    return fetch(`${LOG_HOST}${endpoint}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Response ${res.status}`);
+        }
+        return res.json();
+      });
+  }
 }
 
 function startSession() {
