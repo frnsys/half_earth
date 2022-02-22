@@ -39,10 +39,13 @@ function newRun() {
 
 // Step the game by one year
 function step() {
-  let completedProjects = game.step();
+  let [completedProjects, regionChanges] = game.step();
   updateState();
   // updateFactors();
-  return completedProjects;
+  return {
+    completedProjects,
+    regionChanges
+  };
 }
 
 function stepCycle() {

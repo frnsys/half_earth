@@ -156,7 +156,7 @@ impl Game {
         }
     }
 
-    pub fn step(&mut self, rng: &mut SmallRng) -> Vec<usize> {
+    pub fn step(&mut self, rng: &mut SmallRng) -> (Vec<usize>, (Vec<usize>, Vec<usize>)) {
         let (completed_projects, remove_effects, add_effects) = self.state.step_projects(rng);
         for (effect, region_id) in remove_effects {
             effect.unapply(&mut self.state, &mut self.event_pool, region_id);
@@ -165,9 +165,9 @@ impl Game {
             effect.apply(&mut self.state, &mut self.event_pool, region_id);
         }
         self.state.step_production();
-        self.state.step_world();
+        let changes = self.state.step_world();
 
-        completed_projects
+        (completed_projects, changes)
     }
 
     pub fn step_cycle(&mut self) {

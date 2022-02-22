@@ -96,7 +96,7 @@
           <td class="report-empty">No changes</td>
         </tr>
         <tr v-for="r in regionIncomeChanges">
-          <td colspan="4">{{r.name}} is now {{r.income}} income.</td>
+          <td colspan="4">{{r.name}} is now {{display.enumDisplay(r.income, true)}} income.</td>
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header">

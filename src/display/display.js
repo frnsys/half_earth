@@ -50,8 +50,9 @@ function enumKey(v) {
   return v.split(/(?=[A-Z])/).join('_').toLowerCase();
 }
 
-function enumDisplay(v) {
-  return enumKey(v).replace('_', ' ');
+function enumDisplay(v, hyphen) {
+  let char = hyphen ? '-' : ' ';
+  return enumKey(v).replace('_', char);
 }
 
 function relationshipName(relationship) {

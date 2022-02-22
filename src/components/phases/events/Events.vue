@@ -6,9 +6,9 @@
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
   <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" :style="{'background-color': warmingColour}" />
-  <Project v-if="completedProjects.length > 0" :id="completedProjects[0]" @click="dismissProject"/>
+  <Update v-if="updates.length > 0" :update="updates[0]" @click="dismissUpdate"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
-  <Event v-else-if="event && !predialogue && completedProjects.length == 0" :event="event" @done="nextEvent" />
+  <Event v-else-if="event && !predialogue && updates.length == 0" :event="event" @done="nextEvent" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
       <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
@@ -22,7 +22,7 @@ import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
 import Event from './Event.vue';
-import Project from './Project.vue';
+import Update from './Update.vue';
 import Hud from 'components/Hud.vue';
 import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
@@ -51,7 +51,7 @@ export default {
       time: 0,
       predialogue: true,
       year: state.gameState.world.year,
-      completedProjects: [],
+      updates: [],
       stopped: false,
       done: false
     };
@@ -60,7 +60,7 @@ export default {
     Hud,
     Globe,
     Event,
-    Project,
+    Update,
   },
   mounted() {
     this.start();
@@ -149,10 +149,19 @@ export default {
             this.time += elapsed;
 
             if (this.time >= consts.msPerYear) {
-              this.completedProjects = game.step();
-              if (this.completedProjects.length > 0) {
+              let {completedProjects, regionChanges} = game.step();
+              this.updates = completedProjects.map((id) => ({
+                id, type: 'Project',
+              })).concat(regionChanges[0].map((id) => ({
+                id, type: 'Region:Up',
+              }))).concat(regionChanges[1].map((id) => ({
+                id, type: 'Region:Down',
+              })));
+              if (this.updates.length > 0) {
                 this.stopped = true;
-                state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(this.completedProjects);
+              }
+              if (completedProjects.length > 0) {
+                state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(completedProjects);
               }
               this.year = state.gameState.world.year;
 
@@ -196,7 +205,7 @@ export default {
         && state.gameState.world.year % 5 == 0) {
         this.stopped = true;
         this.done = true;
-        if (this.completedProjects.length == 0) {
+        if (this.updates.length == 0) {
           game.stepCycle();
           state.phase = 'REPORT';
         }
@@ -239,12 +248,12 @@ export default {
         game.setTgav(tgav);
       });
     },
-    dismissProject() {
-      this.completedProjects.shift();
-      if (this.completedProjects.length == 0 && this.done) {
+    dismissUpdate() {
+      this.updates.shift();
+      if (!this.updates.length > 0 && this.done) {
         state.phase = 'REPORT';
       } else {
-        this.stopped = this.completedProjects.length > 0;
+        this.stopped = this.updates.length > 0;
       }
     },
     showEventOnGlobe(eventId, regionId) {

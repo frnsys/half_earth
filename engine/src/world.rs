@@ -42,19 +42,32 @@ impl World {
         self.base_outlook + region_outlook
     }
 
-    pub fn develop_regions(&mut self, stop: bool, fast: bool, degrow: bool) {
+    /// Returns a vec of ids of regions that "leveled up"
+    /// and a vec of ids of regions that "leveled down"
+    pub fn develop_regions(&mut self, stop: bool, fast: bool, degrow: bool) -> (Vec<usize>, Vec<usize>) {
+        let mut up = vec![];
+        let mut down = vec![];
+
         let speed = if fast {
             1.25
         } else {
             1.
         };
         for region in &mut self.regions {
+            let start = region.income_level();
             if degrow && region.income == Income::High {
                 region.develop(-1.);
             } else if !stop && region.income != Income::High {
                 region.develop(speed);
             }
+            let end = region.income_level();
+            if (end < start) {
+                down.push(region.id);
+            } else if (end > start) {
+                up.push(region.id);
+            }
         }
+        (up, down)
     }
 
     pub fn update_outlook(&mut self, wretched_ally: bool, consumerist_ally: bool) {

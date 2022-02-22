@@ -360,17 +360,18 @@ impl State {
         feedstock_weights.other = 0.;
     }
 
-    pub fn step_world(&mut self) {
+    pub fn step_world(&mut self) -> (Vec<usize>, Vec<usize>) {
         self.world.year += 1;
         self.world.update_pop();
 
         let stop = self.flags.contains(&Flag::StopDevelopment);
         let fast = self.flags.contains(&Flag::FastDevelopment);
         let degrow = self.flags.contains(&Flag::Degrowth);
-        self.world.develop_regions(stop, fast, degrow);
+        let changes = self.world.develop_regions(stop, fast, degrow);
         let wretched_ally = self.is_ally("The Wretched");
         let consumerist_ally = self.is_ally("The Consumerist");
         self.world.update_outlook(wretched_ally, consumerist_ally);
+        changes
     }
 
     // Every planning cycle

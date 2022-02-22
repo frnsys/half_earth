@@ -2,7 +2,8 @@ use crate::consts;
 use crate::kinds::{Output, OutputMap};
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 
-const DEVELOP_SPEED: f32 = 0.003;
+// 40 years per level
+const DEVELOP_SPEED: f32 = 1./40.;
 
 #[derive(Clone)]
 pub struct Region {
