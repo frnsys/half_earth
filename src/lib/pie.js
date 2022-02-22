@@ -24,6 +24,32 @@ class PieChart {
     this.height = this.stage.clientHeight;
 
     this.canvas = document.createElement('canvas');
+
+    this.tooltip = document.createElement('div');
+    this.tooltip.style.display = 'none';
+    this.tooltip.style.position = 'absolute';
+    this.tooltip.style.fontSize = '0.65em';
+    this.tooltip.style.fontFamily = 'sans-serif';
+    this.stage.style.position = 'relative';
+    this.stage.appendChild(this.tooltip);
+
+    this.canvas.addEventListener('mousemove', (ev) => {
+      if (this.radius && this.labels) {
+        let bounds = ev.target.getBoundingClientRect();
+        let x = ev.clientX - bounds.left;
+        let y = ev.clientY - bounds.top;
+        let label = this.labelAtPoint(x, y);
+        if (label && !label.show) {
+          this.tooltip.innerText = label.label;
+          this.tooltip.style.left = `${label.x}px`;
+          this.tooltip.style.top = `${label.y}px`;
+          this.tooltip.style.display = 'block';
+        } else {
+          this.tooltip.style.display = 'none';
+        }
+      }
+    })
+
     this.ctx = this.canvas.getContext('2d');
     this.setSize();
     this.stage.appendChild(this.canvas);
@@ -53,7 +79,8 @@ class PieChart {
     let radius = Math.min(this.width/2, this.height/2) - outlineWidth * 2;
     let lastAngle = 0;
     let c = 2 * Math.PI;
-    let labels = [];
+    this.labels = [];
+    this.labelsSteps = [];
 
     // Outline
     this.ctx.beginPath();
@@ -79,26 +106,45 @@ class PieChart {
       this.ctx.closePath();
 
       let size = endAngle-lastAngle;
-      if (size > Math.PI/12) {
-        let angle = lastAngle + size/2;
-        let x = radius/2 * Math.cos(angle);
-        let y = radius/2 * Math.sin(angle);
-        let {width} = this.ctx.measureText(k);
-        labels.push({
-          x: center.x + x - width/2,
-          y: center.y + y,
-          label: k
-        });
-    }
+      let angle = lastAngle + size/2;
+      let x = radius/2 * Math.cos(angle);
+      let y = radius/2 * Math.sin(angle);
+      let {width} = this.ctx.measureText(k);
+      this.labels.push({
+        show: size > Math.PI/12,
+        x: center.x + x - width/2,
+        y: center.y + y,
+        label: k
+      });
+      this.labelsSteps.push(endAngle);
 
       lastAngle = endAngle;
     });
 
     // Labels have to come over so they're drawn on top
     this.ctx.fillStyle = '#000000';
-    labels.forEach(({x, y, label}) => {
-      this.ctx.fillText(label, x, y);
+    this.labels.forEach((l) => {
+      if (l.show) {
+        this.ctx.fillText(l.label, l.x, l.y);
+      }
     });
+
+    this.radius = radius;
+  }
+
+  labelAtPoint(x, y) {
+    let center = {x: this.width/2, y: this.height/2};
+    x -= center.x;
+    y -= center.y;
+    let dist = Math.sqrt(x**2 + y**2);
+    if (dist < this.radius) {
+      let ang = Math.atan2(y, x);
+      ang += Math.PI * 2;
+      ang %= Math.PI * 2;
+      let index = this.labelsSteps.findIndex(n => n >= ang);
+      let label = this.labels[index];
+      return label;
+    }
   }
 }
 
