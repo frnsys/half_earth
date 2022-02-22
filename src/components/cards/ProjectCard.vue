@@ -325,7 +325,7 @@ export default {
   border: 1px solid #000;
   text-align: center;
   font-family: 'W95FA', monospace;
-  font-size: 0.9em;
+  font-size: 1em;
   padding: 0.1em 0.25em 0;
   line-height: 1.2;
   display: flex;

@@ -197,7 +197,7 @@ export default {
   border-left: 1px solid rgba(0,0,0,0.4);
   border-radius: 5px;
   box-shadow: inset 2px 1px 0px rgb(0 0 0 / 60%);
-  height: 200px;
+  height: 190px;
   overflow: hidden;
 }
 .card-image {
@@ -327,7 +327,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  height: 200px;
+  height: 190px;
   transform: rotateY(180deg);
 }
 .card-bot-back {
