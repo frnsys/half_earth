@@ -1,6 +1,8 @@
 use crate::projects::Project;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 use serde::Serialize as Ser;
+use crate::save::{Saveable, coerce};
+use serde_json::{json, Value};
 
 pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Vec<NPC>) {
     let mut supporters: Vec<usize> = vec![];
@@ -77,5 +79,24 @@ impl Serialize for NPC {
         seq.serialize_field("seats", &self.seats)?;
         seq.serialize_field("is_ally", &(self.relation() == NPCRelation::Ally))?;
         seq.end()
+    }
+}
+
+
+impl Saveable for NPC {
+    fn save(&self) -> Value {
+        json!({
+            "relationship": self.relationship,
+            "locked": self.locked,
+            "support": self.support,
+            "seats": self.seats,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.relationship = coerce(&state["relationship"]);
+        self.locked = coerce(&state["locked"]);
+        self.support = coerce(&state["support"]);
+        self.seats = coerce(&state["seats"]);
     }
 }

@@ -2,6 +2,8 @@ use crate::consts;
 use super::ProductionOrder;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 use crate::kinds::{ResourceMap, ByproductMap, OutputMap, Output, Feedstock};
+use crate::save::{Saveable, coerce};
+use serde_json::{json, Value};
 
 #[derive(Debug, Copy, Clone, PartialEq, serde::Serialize)]
 pub enum ProcessFeature {
@@ -109,5 +111,24 @@ impl Serialize for Process {
         seq.serialize_field("opposers", &self.opposers)?;
         seq.serialize_field("extinction_rate", &self.extinction_rate())?;
         seq.end()
+    }
+}
+
+
+impl Saveable for Process {
+    fn save(&self) -> Value {
+        json!({
+            "mix_share": self.mix_share,
+            "output_modifier": self.output_modifier,
+            "byproduct_modifiers": self.byproduct_modifiers,
+            "locked": self.locked,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.mix_share = coerce(&state["mix_share"]);
+        self.output_modifier = coerce(&state["output_modifier"]);
+        self.byproduct_modifiers = coerce(&state["byproduct_modifiers"]);
+        self.locked = coerce(&state["locked"]);
     }
 }

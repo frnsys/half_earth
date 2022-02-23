@@ -17,10 +17,10 @@ import EventsMixin from 'components/EventsMixin';
 export default {
   mixins: [EventsMixin],
   mounted() {
-    this.showEvent();
+    this.init();
   },
   activated() {
-    this.showEvent();
+    this.init();
   },
   data() {
     return {
@@ -29,8 +29,12 @@ export default {
     }
   },
   methods: {
+    init() {
+      this.showEvent();
+      game.clearSave();
+    },
     startRun() {
-      game.newRun();
+      game.newRun(true);
       state.phase = 'PLANNING';
     }
   },

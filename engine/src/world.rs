@@ -1,6 +1,8 @@
 use crate::kinds::{OutputMap, ByproductMap};
 use crate::regions::{Region, Income};
 use serde::ser::{Serialize, Serializer, SerializeStruct};
+use crate::save::{Saveable, coerce};
+use serde_json::{json, Value};
 
 #[derive(Default, Clone)]
 pub struct World {
@@ -61,9 +63,9 @@ impl World {
                 region.develop(speed);
             }
             let end = region.income_level();
-            if (end < start) {
+            if end < start {
                 down.push(region.id);
-            } else if (end > start) {
+            } else if end > start {
                 up.push(region.id);
             }
         }
@@ -172,5 +174,51 @@ impl Serialize for World {
         seq.serialize_field("regions", &self.regions)?;
         seq.serialize_field("population", &self.population())?;
         seq.end()
+    }
+}
+
+impl Saveable for World {
+    fn save(&self) -> Value {
+        json!({
+            "year": self.year,
+            "base_outlook": self.base_outlook,
+            "temp_outlook": self.temp_outlook,
+            "extinction_rate": self.extinction_rate,
+            "temperature": self.temperature,
+            "precipitation": self.precipitation,
+            "sea_level_rise": self.sea_level_rise,
+            "water_stress": self.water_stress,
+            "co2_emissions": self.co2_emissions,
+            "ch4_emissions": self.ch4_emissions,
+            "n2o_emissions": self.n2o_emissions,
+            "temperature_modifier": self.temperature_modifier,
+            "regions": self.regions.iter().map(|o| o.save()).collect::<Vec<Value>>(),
+            "byproduct_mods": self.byproduct_mods,
+            "population_growth_modifier": self.population_growth_modifier,
+            "sea_level_rise_modifier": self.sea_level_rise_modifier,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.year = coerce(&state["year"]);
+        self.base_outlook = coerce(&state["base_outlook"]);
+        self.temp_outlook = coerce(&state["temp_outlook"]);
+        self.extinction_rate = coerce(&state["extinction_rate"]);
+        self.temperature = coerce(&state["temperature"]);
+        self.precipitation = coerce(&state["precipitation"]);
+        self.sea_level_rise = coerce(&state["sea_level_rise"]);
+        self.water_stress = coerce(&state["water_stress"]);
+        self.co2_emissions = coerce(&state["co2_emissions"]);
+        self.ch4_emissions = coerce(&state["ch4_emissions"]);
+        self.n2o_emissions = coerce(&state["n2o_emissions"]);
+        self.temperature_modifier = coerce(&state["temperature_modifier"]);
+        self.byproduct_mods = coerce(&state["byproduct_mods"]);
+        self.population_growth_modifier = coerce(&state["population_growth_modifier"]);
+        self.sea_level_rise_modifier = coerce(&state["sea_level_rise_modifier"]);
+
+        let regions: Vec<Value> = coerce(&state["regions"]);
+        for (o, o_s) in self.regions.iter_mut().zip(regions) {
+            o.load(o_s);
+        }
     }
 }

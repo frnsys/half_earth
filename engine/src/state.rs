@@ -12,11 +12,12 @@ use crate::kinds::{OutputMap, ResourceMap, ByproductMap, FeedstockMap};
 use crate::{content, consts};
 use rand::rngs::SmallRng;
 use serde::Serialize;
+use serde_json::{json, Value};
+use crate::save::{Saveable, coerce};
 
 #[derive(Default, Serialize, Clone)]
 pub struct State {
     pub world: World,
-    pub flags: Vec<Flag>,
     pub runs: usize,
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
@@ -26,9 +27,6 @@ pub struct State {
 
     pub political_capital: isize,
     pub research_points: isize,
-    pub malthusian_points: usize,
-    pub hes_points: usize,
-    pub falc_points: usize,
     pub npcs: Vec<NPC>,
 
     // Requests: (
@@ -38,6 +36,7 @@ pub struct State {
     //  political capital bounty
     // )
     pub requests: Vec<(Request, usize, bool, usize)>,
+    pub flags: Vec<Flag>,
 
     // Modifiers should start as all 1.
     pub output_modifier: OutputMap<f32>,
@@ -70,9 +69,6 @@ impl State {
             // political_capital: 10,
             political_capital: 100,
             research_points: 0,
-            malthusian_points: 0,
-            hes_points: 0,
-            falc_points: 0,
             flags: Vec::new(),
             game_over: false,
 
@@ -594,6 +590,75 @@ impl State {
             region.precip_hi *= 31536000. / 10.;
             // region.temp = region.pattern_idxs.iter().map(|idx| &temps[*idx]).sum::<f32>()/region.pattern_idxs.len() as f32;
         }
+    }
+}
+
+impl Saveable for State {
+    fn save(&self) -> Value {
+        json!({
+            "world": self.world.save(),
+            "industries": self.industries.iter().map(|o| o.save()).collect::<Vec<Value>>(),
+            "projects": self.projects.iter().map(|o| o.save()).collect::<Vec<Value>>(),
+            "processes": self.processes.iter().map(|o| o.save()).collect::<Vec<Value>>(),
+            "npcs": self.npcs.iter().map(|o| o.save()).collect::<Vec<Value>>(),
+            "political_capital": self.political_capital,
+            "research_points": self.research_points,
+            "requests": self.requests,
+            "flags": self.flags,
+            "output_modifier": self.output_modifier,
+            "output_demand": self.output_demand,
+            "output_demand_modifier": self.output_demand_modifier,
+            "output_demand_extras": self.output_demand_extras,
+            "byproducts": self.byproducts,
+            "resources_demand": self.resources_demand,
+            "resources": self.resources,
+            "feedstocks": self.feedstocks,
+            "produced": self.produced,
+            "produced_by_process": self.produced_by_process,
+            "consumed_resources": self.consumed_resources,
+            "consumed_feedstocks": self.consumed_feedstocks,
+            "protected_land": self.protected_land,
+            "last_outlook": self.last_outlook,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.world.load(state["world"].clone());
+        let industries: Vec<Value> = coerce(&state["industries"]);
+        for (o, o_s) in self.industries.iter_mut().zip(industries) {
+            o.load(o_s);
+        }
+        let projects: Vec<Value> = coerce(&state["projects"]);
+        for (o, o_s) in self.projects.iter_mut().zip(projects) {
+            o.load(o_s);
+        }
+        let processes: Vec<Value> = coerce(&state["processes"]);
+        for (o, o_s) in self.processes.iter_mut().zip(processes) {
+            o.load(o_s);
+        }
+        let npcs: Vec<Value> = coerce(&state["npcs"]);
+        for (o, o_s) in self.npcs.iter_mut().zip(npcs) {
+            o.load(o_s);
+        }
+        self.political_capital = coerce(&state["political_capital"]);
+        self.research_points = coerce(&state["research_points"]);
+        self.requests = coerce(&state["requests"]);
+        self.flags = coerce(&state["flags"]);
+
+        self.output_modifier = coerce(&state["output_modifier"]);
+        self.output_demand = coerce(&state["output_demand"]);
+        self.output_demand_modifier = coerce(&state["output_demand_modifier"]);
+        self.output_demand_extras = coerce(&state["output_demand_extras"]);
+        self.byproducts = coerce(&state["byproducts"]);
+        self.resources_demand = coerce(&state["resources_demand"]);
+        self.resources = coerce(&state["resources"]);
+        self.feedstocks = coerce(&state["feedstocks"]);
+        self.produced = coerce(&state["produced"]);
+        self.produced_by_process = coerce(&state["produced_by_process"]);
+        self.consumed_resources = coerce(&state["consumed_resources"]);
+        self.consumed_feedstocks = coerce(&state["consumed_feedstocks"]);
+        self.protected_land = coerce(&state["protected_land"]);
+        self.last_outlook = coerce(&state["last_outlook"]);
     }
 }
 

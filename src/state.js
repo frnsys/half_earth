@@ -70,5 +70,7 @@ function initState() {
 const init = initState();
 const state = reactive(init);
 
-export {initState, saveSettings};
+export {
+  initState, saveSettings,
+}
 export default state;

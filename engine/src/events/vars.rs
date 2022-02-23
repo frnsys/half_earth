@@ -26,7 +26,4 @@ pub enum LocalVariable {
 pub enum PlayerVariable {
     PoliticalCapital,
     ResearchPoints,
-    MalthusianPoints,
-    HESPoints,
-    FALCPoints,
 }

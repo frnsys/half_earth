@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import game from '/src/game';
 import state from '../state';
 import {saveSettings} from '../state';
 import IntensityBar from './cards/IntensityBar.vue';
@@ -94,6 +95,7 @@ export default {
     },
     restartGame() {
       if (confirm('Are you sure you want to start over?')) {
+        game.clearSave();
         location.reload();
       }
     }

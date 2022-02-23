@@ -100,9 +100,6 @@ const CONDITIONS = {
     compare: true,
     choices: [
       'PoliticalCapital',
-      'MalthusianPoints',
-      'FALCPoints',
-      'HESPoints',
     ],
   },
   Demand: {

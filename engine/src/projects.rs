@@ -3,9 +3,11 @@ use crate::state::State;
 use crate::kinds::{Output, OutputMap};
 use crate::events::{Effect, Probability};
 use rand::{Rng, rngs::SmallRng};
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
+use crate::save::{Saveable, coerce};
+use serde_json::{json, Value};
 
-#[derive(Serialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 pub enum Status {
     Inactive,
     Building,
@@ -393,5 +395,38 @@ mod test {
         let outcome = p.roll_outcome(&state, &mut rng);
         let (_outcome, i) = outcome.unwrap();
         assert_eq!(i, 0);
+    }
+}
+
+
+impl Saveable for Project {
+    fn save(&self) -> Value {
+        json!({
+            "locked": self.locked,
+            "cost": self.cost,
+            "cost_modifier": self.cost_modifier,
+            "progress": self.progress,
+            "points": self.points,
+            "estimate": self.estimate,
+            "status": self.status,
+            "level": self.level,
+            "completed_at": self.completed_at,
+            "required_majority": self.required_majority,
+            "active_outcome": self.active_outcome,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.locked = coerce(&state["locked"]);
+        self.cost = coerce(&state["cost"]);
+        self.cost_modifier = coerce(&state["cost_modifier"]);
+        self.progress = coerce(&state["progress"]);
+        self.points = coerce(&state["points"]);
+        self.estimate = coerce(&state["estimate"]);
+        self.status = coerce(&state["status"]);
+        self.level = coerce(&state["level"]);
+        self.completed_at = coerce(&state["completed_at"]);
+        self.required_majority = coerce(&state["required_majority"]);
+        self.active_outcome = coerce(&state["active_outcome"]);
     }
 }

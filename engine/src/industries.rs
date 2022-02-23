@@ -1,6 +1,8 @@
 use crate::consts;
 use serde::ser::{Serialize, Serializer, SerializeStruct};
 use crate::kinds::{ResourceMap, ByproductMap};
+use crate::save::{Saveable, coerce};
+use serde_json::{json, Value};
 
 #[derive(Clone)]
 pub struct Industry {
@@ -41,5 +43,26 @@ impl Serialize for Industry {
         seq.serialize_field("byproducts", &self.adj_byproducts())?;
         seq.serialize_field("extinction_rate", &self.extinction_rate())?;
         seq.end()
+    }
+}
+
+
+impl Saveable for Industry {
+    fn save(&self) -> Value {
+        json!({
+            "resources": self.resources,
+            "byproducts": self.byproducts,
+            "resource_modifiers": self.resource_modifiers,
+            "byproduct_modifiers": self.byproduct_modifiers,
+            "demand_modifier": self.demand_modifier,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.resources = coerce(&state["resources"]);
+        self.byproducts = coerce(&state["byproducts"]);
+        self.resource_modifiers = coerce(&state["resource_modifiers"]);
+        self.byproduct_modifiers = coerce(&state["byproduct_modifiers"]);
+        self.demand_modifier = coerce(&state["demand_modifier"]);
     }
 }

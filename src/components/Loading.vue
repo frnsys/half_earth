@@ -2,13 +2,14 @@
 <div id="loading">
   <div>
     <img src="/assets/gosplant.svg" />
-    <div class="loading-text">Booting Up</div>
+    <div class="loading-text">{{state.loadingSave ? 'Loading saved data' : 'Booting Up'}}</div>
     <img class="motto" src="/assets/motto.png" />
   </div>
 </div>
 </template>
 
 <script>
+import state from '/src/state';
 import icons from 'components/icons';
 
 import PRELOAD_ASSETS from '/assets/content/preload_assets.json';
@@ -35,6 +36,7 @@ Object.values(icons).forEach((icon) => preload.push(icon));
 export default {
   data() {
     return {
+      state,
       loaded: 0,
     }
   },

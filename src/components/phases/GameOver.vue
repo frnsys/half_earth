@@ -35,12 +35,10 @@ const MESSAGES = [
 export default {
   mixins: [EventsMixin],
   mounted() {
-    this.showEvent();
-    this.getShareImage();
+    this.init();
   },
   activated() {
-    this.showEvent();
-    this.getShareImage();
+    this.init();
   },
   data() {
     return {
@@ -51,8 +49,13 @@ export default {
     }
   },
   methods: {
+    init() {
+      this.showEvent();
+      this.getShareImage();
+      game.clearSave();
+    },
     startRun() {
-      game.newRun();
+      game.newRun(true);
       state.phase = 'PLANNING';
     },
     getShareImage() {

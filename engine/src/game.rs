@@ -6,6 +6,7 @@ use rand::{SeedableRng, rngs::SmallRng};
 use serde::Serialize;
 use crate::utils;
 use wasm_bindgen::prelude::*;
+use crate::save::Saveable;
 
 #[wasm_bindgen]
 pub enum Difficulty {
@@ -42,6 +43,16 @@ impl GameInterface {
 
     pub fn state(&self) -> Result<JsValue, JsValue> {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
+    }
+
+    pub fn get_save_state(&self) -> String {
+        self.game.state.save().to_string()
+    }
+
+    pub fn load_state(&mut self, value: JsValue) {
+        let value_str: String = serde_wasm_bindgen::from_value(value).unwrap();
+        let value = serde_json::from_str(&value_str).unwrap();
+        self.game.state.load(value);
     }
 
     pub fn set_runs_played(&mut self, n: usize) {

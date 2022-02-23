@@ -4,18 +4,18 @@ use crate::projects::Status;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock, Byproduct};
 use super::{WorldVariable, LocalVariable, PlayerVariable, EventPool};
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 use std::ops::Mul;
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub enum Request {
     Project,
     Process
 }
 
-#[derive(Serialize, PartialEq, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
 pub enum Flag {
     Electrified,
     Vegetarian,
@@ -133,9 +133,6 @@ impl Effect {
                 match var {
                     PlayerVariable::PoliticalCapital => state.political_capital += *change as isize,
                     PlayerVariable::ResearchPoints => state.research_points += *change as isize, // TODO need to use the rust state for points then
-                    PlayerVariable::MalthusianPoints => state.malthusian_points += *change as usize,
-                    PlayerVariable::HESPoints => state.hes_points += *change as usize,
-                    PlayerVariable::FALCPoints => state.falc_points += *change as usize,
                 }
             },
             Effect::RegionHabitability(latitude, change) => {
@@ -304,9 +301,6 @@ impl Effect {
                 match var {
                     PlayerVariable::PoliticalCapital => state.political_capital -= *change as isize,
                     PlayerVariable::ResearchPoints => state.research_points -= *change as isize,
-                    PlayerVariable::MalthusianPoints => state.malthusian_points -= *change as usize,
-                    PlayerVariable::HESPoints => state.hes_points -= *change as usize,
-                    PlayerVariable::FALCPoints => state.falc_points -= *change as usize,
                 }
             },
             Effect::RegionHabitability(latitude, change) => {

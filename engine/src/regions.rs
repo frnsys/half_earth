@@ -1,6 +1,8 @@
 use crate::consts;
 use crate::kinds::{Output, OutputMap};
 use serde::ser::{Serialize, Serializer, SerializeStruct};
+use crate::save::{Saveable, coerce};
+use serde_json::{json, Value};
 
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1./40.;
@@ -185,7 +187,7 @@ impl Serialize for Region {
     }
 }
 
-#[derive(PartialEq, serde::Serialize, Clone)]
+#[derive(PartialEq, serde::Serialize, serde::Deserialize, Clone)]
 pub enum Income {
     Low,
     LowerMiddle,
@@ -199,4 +201,36 @@ pub enum Latitude {
     Subtropic,
     Temperate,
     Frigid
+}
+
+impl Saveable for Region {
+    fn save(&self) -> Value {
+        json!({
+            "population": self.population,
+            "seceded": self.seceded,
+            "income": self.income,
+            "development": self.development,
+            "flags": self.flags,
+            "outlook": self.outlook,
+            "base_habitability": self.base_habitability,
+            "temp_lo": self.temp_lo,
+            "temp_hi": self.temp_hi,
+            "precip_lo": self.precip_lo,
+            "precip_hi": self.precip_hi,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        self.population = coerce(&state["population"]);
+        self.seceded = coerce(&state["seceded"]);
+        self.income = coerce(&state["income"]);
+        self.development = coerce(&state["development"]);
+        self.flags = coerce(&state["flags"]);
+        self.outlook = coerce(&state["outlook"]);
+        self.base_habitability = coerce(&state["base_habitability"]);
+        self.temp_lo = coerce(&state["temp_lo"]);
+        self.temp_hi = coerce(&state["temp_hi"]);
+        self.precip_lo = coerce(&state["precip_lo"]);
+        self.precip_hi = coerce(&state["precip_hi"]);
+    }
 }

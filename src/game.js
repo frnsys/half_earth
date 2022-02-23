@@ -1,12 +1,16 @@
 import state from './state';
+import debug from '/src/debug';
 import {initState} from './state';
 import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 
+// Version timestamp must be >= this value
+const EXPIRED_TIMESTAMP = 0;
+
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
 let game;
-newRun();
+newRun(false);
 
 // Get the updated game state,
 // and compute some additional variables
@@ -22,12 +26,25 @@ function updateFactors() {
 }
 
 // Start a new run
-function newRun() {
+function newRun(reset) {
   game = GameInterface.new(Difficulty.Normal);
-  let init = initState();
-  Object.keys(init).forEach((k) => {
-    state[k] = init[k];
-  });
+  if (reset) {
+    clearSave();
+  }
+
+  let save = loadGame();
+  if (reset || save === null) {
+    let init = initState();
+    Object.keys(init).forEach((k) => {
+      state[k] = init[k];
+    });
+  } else {
+    state.loadingSave = true;
+    Object.keys(save.state).forEach((k) => {
+      state[k] = save.state[k];
+    });
+    game.load_state(save.game);
+  }
   let year = game.state().world.year;
   state.startYear = year;
   state.endYear = year + 100;
@@ -35,6 +52,37 @@ function newRun() {
   updateFactors();
   loadMeta();
   return game
+}
+
+function saveGame() {
+  // Don't need to copy the entire gameState
+  let {gameState, ...substate} = state;
+  let s = {
+    state: substate,
+    version: VERSION,
+    version_timestamp: TIMESTAMP,
+    game: game.get_save_state(),
+  };
+  localStorage.setItem('gameData', JSON.stringify(s));
+}
+
+function loadGame() {
+  let data = localStorage.getItem('gameData');
+  if (data !== null) {
+    let parsed = JSON.parse(data);
+    let invalid = debug.noSave || parsed.version_timestamp < EXPIRED_TIMESTAMP;
+    if (invalid) {
+      return null;
+    } else {
+      return parsed;
+    }
+  } else {
+    return null;
+  }
+}
+
+function clearSave() {
+  localStorage.removeItem('gameData');
 }
 
 // Step the game by one year
@@ -193,11 +241,11 @@ function saveMeta() {
   let data = {
     runsPlayed: state.gameState.runs,
   };
-  localStorage.setItem('gameData', JSON.stringify(data));
+  localStorage.setItem('gameMeta', JSON.stringify(data));
 }
 
 function loadMeta() {
-  let data = localStorage.getItem('gameData');
+  let data = localStorage.getItem('gameMeta');
   if (data !== null) {
     let parsed = JSON.parse(data);
     game.set_runs_played(parsed.runsPlayed || 0);
@@ -209,7 +257,9 @@ updateState();
 updateFactors();
 
 export default {
-  newRun, saveMeta, step, stepCycle,
+  newRun, saveMeta,
+  saveGame, loadGame, clearSave,
+  step, stepCycle,
   updateState, setTgav,
   changePoliticalCapital,
   changeLocalOutlook,
