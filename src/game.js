@@ -1,5 +1,4 @@
 import state from './state';
-import debug from '/src/debug';
 import {initState} from './state';
 import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
@@ -10,7 +9,6 @@ const EXPIRED_TIMESTAMP = 0;
 // TODO let player choose difficulty;
 // also; this needs to be re-created for each run.
 let game;
-newRun(false);
 
 // Get the updated game state,
 // and compute some additional variables
@@ -66,11 +64,16 @@ function saveGame() {
   localStorage.setItem('gameData', JSON.stringify(s));
 }
 
+function hasSave() {
+  let data = loadGame();
+  return data !== null;
+}
+
 function loadGame() {
   let data = localStorage.getItem('gameData');
   if (data !== null) {
     let parsed = JSON.parse(data);
-    let invalid = debug.noSave || parsed.version_timestamp < EXPIRED_TIMESTAMP;
+    let invalid = parsed.version_timestamp < EXPIRED_TIMESTAMP;
     if (invalid) {
       return null;
     } else {
@@ -253,11 +256,8 @@ function loadMeta() {
   }
 }
 
-updateState();
-updateFactors();
-
 export default {
-  newRun, saveMeta,
+  newRun, saveMeta, hasSave,
   saveGame, loadGame, clearSave,
   step, stepCycle,
   updateState, setTgav,

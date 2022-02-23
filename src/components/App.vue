@@ -1,6 +1,9 @@
 <template>
-  <template v-if="!loaded">
-    <Loading  @loaded="loaded = true" />
+  <template v-if="!started">
+    <Start @started="started = true" />
+  </template>
+  <template v-else-if="!loaded">
+    <Loading @loaded="loaded = true" />
   </template>
   <template v-else>
     <Tip />
@@ -16,6 +19,7 @@
 import debug from '/src/debug';
 import state from '/src/state';
 import Tip from './tip/Tip.vue';
+import Start from './Start.vue';
 import Loading from './Loading.vue';
 import GameWin from './phases/GameWin.vue';
 import GameOver from './phases/GameOver.vue';
@@ -36,6 +40,7 @@ export default {
   data() {
     return {
       state,
+      started: false,
       loaded: false,
     };
   },
@@ -46,6 +51,7 @@ export default {
   },
   components: {
     Tip,
+    Start,
     Report,
     Stream,
     Planning,
