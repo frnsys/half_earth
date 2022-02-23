@@ -24,6 +24,7 @@ pub enum Condition {
     OutputDemandGap(Output, Comparator, f32),
     Demand(Output, Comparator, f32),
     ProjectStatus(usize, ProjectStatus),
+    ActiveProjectUpgrades(usize, Comparator, usize),
     RunsPlayed(Comparator, usize),
     RegionFlag(String),
     NPCRelationship(usize, NPCRelation),
@@ -116,6 +117,9 @@ impl Condition {
             },
             Condition::ProjectStatus(id, status) => {
                 state.projects[*id].status == *status
+            },
+            Condition::ActiveProjectUpgrades(id, comp, upgrades) => {
+                comp.eval(state.projects[*id].level as f32, *upgrades as f32)
             },
             Condition::NPCRelationship(id, relation) => {
                 state.npcs[*id].relation() == *relation

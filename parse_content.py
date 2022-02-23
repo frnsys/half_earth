@@ -315,6 +315,7 @@ conds = {
     'ProjectStalled':    lambda e: (ids[e['entity']], 'ProjectStatus::Stalled'),
     'ProjectHalted':    lambda e: (ids[e['entity']], 'ProjectStatus::Halted'),
     'ProjectBuilding':    lambda e: (ids[e['entity']], 'ProjectStatus::Building'),
+    'ActiveProjectUpgrades':    lambda e: (ids[e['entity']], comps[e['comparator']], e['value']),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'HeavyProjects':    lambda e: (comps[e['comparator']], e['value']),
     'ProtectLand':    lambda e: (comps[e['comparator']], e['value']),

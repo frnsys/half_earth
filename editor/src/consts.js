@@ -148,6 +148,10 @@ const CONDITIONS = {
   ProjectHalted: {
     entity: 'Project',
   },
+  ActiveProjectUpgrades: {
+    entity: 'Project',
+    compare: true,
+  },
   RunsPlayed: {
     compare: true,
   },
