@@ -242,6 +242,7 @@ impl Game {
         for effect in effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 
     pub fn stop_project(&mut self, project_id: usize) {
@@ -249,6 +250,7 @@ impl Game {
         for effect in effects {
             effect.unapply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 
     pub fn upgrade_project(&mut self, project_id: usize) {
@@ -259,6 +261,7 @@ impl Game {
         for effect in add_effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 
     pub fn downgrade_project(&mut self, project_id: usize) {
@@ -269,6 +272,7 @@ impl Game {
         for effect in add_effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 }
 
