@@ -25,13 +25,6 @@ const FLAG_TIPS = {
       text: `Fuel demand will change from <img src="${icons.fuel}">${demand.fuel} to <img src="${icons.fuel}">${demand.fuel - changedDemand} and electricity demand will change from <img src="${icons.electricity}">${demand.electricity} to <img src="${icons.electricity}">${demand.electricity + changedDemand}.`
     };
   },
-  'EVs': (demand) => {
-    // TODO
-    return {
-      icon: 'car',
-      text: 'TODO flag is not implemented in the engine yet'
-    }
-  },
   'Vegan': (demand) => {
     let changedDemand = parseInt((demand.animal_calories * 0.9).toFixed(0));
     return {
@@ -55,7 +48,7 @@ const FLAG_TIPS = {
   'HyperResearch': (demand) => {
     return {
       icon: 'research',
-      text: 'TODO'
+      text: `Research points are 1<img src="${icons.political_capital}"> cheaper.`
     }
   },
   'StopDevelopment': (demand) => {
@@ -191,20 +184,6 @@ function render(e) {
         default: {
           console.log(`Unhandled WorldVariable effect type: ${e.subtype}`);
           console.log(e);
-        }
-      }
-      return;
-    }
-    case 'LocalVariable': {
-      switch (e.subtype) {
-        case 'Outlook': {
-          return {
-            tip: {
-              icon: 'contentedness',
-              text: 'TODO',
-            },
-            text: `[contentedness] ${changeDir(e.param, e)} contentedness in TODO by ${e.param}.`,
-          }
         }
       }
       return;
@@ -612,7 +591,7 @@ function render(e) {
 
       let text;
       if (estimate == null) {
-        text = 'TODO';
+        text = 'We aren\'t tracking this feedstock.';
       } else if (estimate == 0) {
         text = 'This feedstock has been depleted.';
       } else if (isFinite(estimate)) {

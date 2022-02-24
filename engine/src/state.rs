@@ -260,7 +260,7 @@ impl State {
         (completed_projects, remove_effects, add_effects)
     }
 
-    pub fn step_production(&mut self) {
+    pub fn update_demand(&mut self) {
         let (output_demand, resources_demand) = self.calculate_demand();
         self.output_demand = output_demand;
         self.resources_demand = resources_demand;
@@ -311,16 +311,22 @@ impl State {
         self.produced_by_process = produced_by_process;
         self.produced = produced_by_type * self.output_modifier;
         self.byproducts += byproducts;
-
         self.consumed_resources = consumed_resources;
         self.consumed_feedstocks = consumed_feedstocks;
-        self.resources_demand.water += consumed_resources.water;
-        self.resources_demand.land += consumed_resources.land;
+        self.resources_demand.water += self.consumed_resources.water;
+        self.resources_demand.land += self.consumed_resources.land;
+    }
+
+    pub fn step_production(&mut self) {
+        self.update_demand();
+
+        let orders: Vec<ProductionOrder> = self.processes.iter()
+            .map(|p| p.production_order(&self.output_demand)).collect();
 
         let lic_pop = self.world.lic_population();
-        self.world.co2_emissions = byproducts.co2 + self.world.byproduct_mods.co2;
-        self.world.ch4_emissions = byproducts.ch4 + self.world.byproduct_mods.ch4;
-        self.world.n2o_emissions = byproducts.n2o + self.world.byproduct_mods.n2o;
+        self.world.co2_emissions = self.byproducts.co2 + self.world.byproduct_mods.co2;
+        self.world.ch4_emissions = self.byproducts.ch4 + self.world.byproduct_mods.ch4;
+        self.world.n2o_emissions = self.byproducts.n2o + self.world.byproduct_mods.n2o;
         self.world.extinction_rate = self.processes.iter().zip(&self.produced_by_process).fold(0., |acc, (p, amount)| {
             acc + (p.extinction_rate() * *amount)
         }) + self.industries.iter().fold(0., |acc, ind| {
@@ -329,13 +335,13 @@ impl State {
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't
-        self.feedstocks -= consumed_feedstocks;
+        self.feedstocks -= self.consumed_feedstocks;
         for k in self.feedstocks.keys() {
             self.feedstocks[k] = f32::max(self.feedstocks[k], 0.);
         }
-        self.resources.fuel -= consumed_resources.fuel - self.produced.fuel;
+        self.resources.fuel -= self.consumed_resources.fuel - self.produced.fuel;
         self.resources.fuel = self.resources.fuel.max(0.);
-        self.resources.electricity -= consumed_resources.electricity - self.produced.electricity;
+        self.resources.electricity -= self.consumed_resources.electricity - self.produced.electricity;
         self.resources.electricity = self.resources.electricity.max(0.);
 
         // Get resource deficit/surplus
@@ -884,15 +890,5 @@ mod test {
         state.output_demand_modifier = outputs!(fuel: 2.);
         let (other_output_demand, _) = state.calculate_demand();
         assert_eq!(2. * (output_demand.fuel + 100.), other_output_demand.fuel);
-    }
-
-    #[test]
-    fn test_step_projects() {
-        // TODO
-    }
-
-    #[test]
-    fn test_step_production() {
-        // TODO
     }
 }

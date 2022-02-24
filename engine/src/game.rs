@@ -69,6 +69,12 @@ impl GameInterface {
         }
     }
 
+    pub fn collect_research_points(&mut self) -> isize {
+        let points = self.game.state.research_points;
+        self.game.state.research_points = 0;
+        points
+    }
+
     pub fn change_local_outlook(&mut self, amount: isize, region_id: usize) {
         self.game.state.world.regions[region_id].outlook += amount as f32;
     }
@@ -188,10 +194,6 @@ impl Game {
     /// Generate a projection
     pub fn simulate(&self, rng: &mut SmallRng, years: usize) -> Vec<Snapshot> {
         let mut snapshots: Vec<Snapshot> = Vec::new();
-
-        // TODO can probably re structure all of this so
-        // that there is only a struct that deals with all things production
-        // rather than having to clone the entire state
         let mut state = self.state.clone();
 
         // Dummy event pool
@@ -240,6 +242,7 @@ impl Game {
         for effect in effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 
     pub fn stop_project(&mut self, project_id: usize) {
@@ -247,6 +250,7 @@ impl Game {
         for effect in effects {
             effect.unapply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 
     pub fn upgrade_project(&mut self, project_id: usize) {
@@ -257,6 +261,7 @@ impl Game {
         for effect in add_effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 
     pub fn downgrade_project(&mut self, project_id: usize) {
@@ -267,6 +272,7 @@ impl Game {
         for effect in add_effects {
             effect.apply(&mut self.state, &mut self.event_pool, None);
         }
+        self.state.update_demand();
     }
 }
 

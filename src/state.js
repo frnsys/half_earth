@@ -58,6 +58,7 @@ function initState() {
       research: 0,
       initiative: 0,
     },
+    refundableResearchPoints: 0,
   };
 
   let settings = loadSettings();

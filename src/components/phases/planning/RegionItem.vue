@@ -27,7 +27,7 @@
   </div>
   <div class="region-item--intensities cell">
     <IntensityIcon
-      v-tip="{icon: 'habitability', text: `This region's habitability.`}"
+      v-tip="{icon: 'habitability', text: `This region's habitability. Natural disasters and hotter temperatures lower habitability.`}"
       resource="habitability" :intensity="habitability" :invert="true" />
     <IntensityIcon
       v-tip="{icon: 'contentedness', text: `This region's contentedness.`}"
@@ -37,7 +37,7 @@
       resource="wealth" :intensity="incomeLevel" :invert="true" />
     <IntensityIcon
       v-for="v, k in demand"
-      v-tip="{text: `This region's per-capita demand level for ${display.enumDisplay(k)}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}. This makes up ${demandPercent(k)} of total demand for ${display.enumDisplay(k)}.`, icon: k}"
+      v-tip="{text: `This region's per-capita demand level for ${display.enumDisplay(k)}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}<img src='${icons[k]}' />. This makes up ${demandPercent(k)} of total demand for ${display.enumDisplay(k)}.`, icon: k}"
       :resource="k" :intensity="demandIntensity(k)" />
   </div>
 </div>

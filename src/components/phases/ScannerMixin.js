@@ -26,11 +26,16 @@ export default {
       return this.project.kind.toLowerCase();
     },
     nextPointCost() {
-      if (this.type == 'Research' && game.isAlly('The Accelerationist')) {
-        return consts.discountedPointCost;
-      } else {
-        return consts.pointCost;
+      let discount = 0;
+      if (this.type == 'Research') {
+        if (game.isAlly('The Accelerationist')) {
+          discount++;
+        }
+        if (state.gameState.flags.includes('HyperResearch')) {
+          discount++;
+        }
       }
+      return Math.max(0, consts.pointCost - discount);
     },
     availablePoints() {
       if (this.type == 'Policy') {
@@ -80,10 +85,16 @@ export default {
       if (this.project.points >= consts.maxPoints) {
         return false;
       }
+      if (this.project.kind == 'Research' && state.points.research > 0) {
+        return true;
+      }
       let cost = this.nextPointCost;
       if (cost <= state.gameState.political_capital) {
         game.changePoliticalCapital(-cost);
         state.points[this.type.toLowerCase()]++;
+        if (this.project.kind == 'Research') {
+          state.refundableResearchPoints++;
+        }
         return true;
       }
       return false;
@@ -207,7 +218,7 @@ export default {
       let topTarget = -20;
       let y = rect.y;
       if (y >= topTarget) {
-        
+
         var p = Math.min(1, SCANBAR_HEIGHT/(topTarget - y));
         var px =  Math.abs(p * SCANBAR_HEIGHT) + topTarget;
         this.$refs.target.style.top = `${px}px`
@@ -244,8 +255,6 @@ export default {
           this.stopWithdrawingCard();
         }
       }
-
-      
     },
     stopDrag() {
       this.stopScanningCard();
@@ -385,7 +394,8 @@ export default {
       this.$refs.target.classList.remove('scanning');
       this.$refs.target.classList.remove('no-scan');
       this.$refs.target.parentElement.classList.remove('scan-ok');
-      document.querySelector('.draggable.active').classList.remove('scan-reject');
+      let active = document.querySelector('.draggable.active');
+      if (active) active.classList.remove('scan-reject');
       if (this.scanAnim) {
         this.scanAnim.stop();
         this.scanAnim = null;
@@ -434,6 +444,15 @@ export default {
             } else {
               let points = changes.points;
               let refund = this.nextPointCost * points;
+
+              // Don't allow stored research-only points to be converted into PC,
+              // instead convert them back into research points
+              if (this.project.kind == 'Research') {
+                let excessPoints = Math.max(points - state.refundableResearchPoints, 0);
+                refund = this.nextPointCost * (points - excessPoints);
+                state.refundableResearchPoints = Math.max(0, state.refundableResearchPoints - points);
+                state.points.research += excessPoints;
+              }
               this.unassignPoints(points);
               game.changePoliticalCapital(refund);
               changes.points = 0;
