@@ -8,6 +8,7 @@ use serde::{Serialize, Deserialize};
 use std::ops::Mul;
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
+const CLOSED_BORDERS_MULTILPIER: f32 = 0.5;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub enum Request {
@@ -21,7 +22,6 @@ pub enum Flag {
     Vegetarian,
     Vegan,
     ClosedBorders,
-    EVs,
     HyperResearch,
     StopDevelopment,
     FastDevelopment,
@@ -198,7 +198,12 @@ impl Effect {
             },
             Effect::Migration => {
                 if let Some(id) = region_id {
-                    let leave_pop = state.world.regions[id].population * MIGRATION_WAVE_PERCENT_POP;
+                    let modifier = if state.flags.contains(&Flag::ClosedBorders) {
+                        CLOSED_BORDERS_MULTILPIER
+                    } else {
+                        1.
+                    };
+                    let leave_pop = state.world.regions[id].population * MIGRATION_WAVE_PERCENT_POP * modifier;
                     state.world.regions[id].population -= leave_pop;
 
                     // Find the most habitable regions
@@ -380,7 +385,12 @@ impl Effect {
             },
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent/100.;
-            }
+            },
+            Effect::AddFlag(flag) => {
+                if let Some(idx) = state.flags.iter().position(|x| x == flag) {
+                    state.flags.remove(idx);
+                }
+            },
 
             // Other effects aren't reversible
             _ => ()

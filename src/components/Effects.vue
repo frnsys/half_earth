@@ -25,13 +25,6 @@ const FLAG_TIPS = {
       text: `Fuel demand will change from <img src="${icons.fuel}">${demand.fuel} to <img src="${icons.fuel}">${demand.fuel - changedDemand} and electricity demand will change from <img src="${icons.electricity}">${demand.electricity} to <img src="${icons.electricity}">${demand.electricity + changedDemand}.`
     };
   },
-  'EVs': (demand) => {
-    // TODO
-    return {
-      icon: 'car',
-      text: 'TODO flag is not implemented in the engine yet'
-    }
-  },
   'Vegan': (demand) => {
     let changedDemand = parseInt((demand.animal_calories * 0.9).toFixed(0));
     return {

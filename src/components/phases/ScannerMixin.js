@@ -26,11 +26,16 @@ export default {
       return this.project.kind.toLowerCase();
     },
     nextPointCost() {
-      if (this.type == 'Research' && game.isAlly('The Accelerationist')) {
-        return consts.discountedPointCost;
-      } else {
-        return consts.pointCost;
+      let discount = 0;
+      if (this.type == 'Research') {
+        if (game.isAlly('The Accelerationist')) {
+          discount++;
+        }
+        if (state.gameState.flags.includes('HyperResearch')) {
+          discount++;
+        }
       }
+      return Math.max(0, consts.pointCost - discount);
     },
     availablePoints() {
       if (this.type == 'Policy') {
@@ -385,7 +390,8 @@ export default {
       this.$refs.target.classList.remove('scanning');
       this.$refs.target.classList.remove('no-scan');
       this.$refs.target.parentElement.classList.remove('scan-ok');
-      document.querySelector('.draggable.active').classList.remove('scan-reject');
+      let active = document.querySelector('.draggable.active');
+      if (active) active.classList.remove('scan-reject');
       if (this.scanAnim) {
         this.scanAnim.stop();
         this.scanAnim = null;
