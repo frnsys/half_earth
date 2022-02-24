@@ -188,20 +188,6 @@ function render(e) {
       }
       return;
     }
-    case 'LocalVariable': {
-      switch (e.subtype) {
-        case 'Outlook': {
-          return {
-            tip: {
-              icon: 'contentedness',
-              text: 'TODO',
-            },
-            text: `[contentedness] ${changeDir(e.param, e)} contentedness in TODO by ${e.param}.`,
-          }
-        }
-      }
-      return;
-    }
     case 'PlayerVariable': {
       switch (e.subtype) {
         case 'ResearchPoints': {
