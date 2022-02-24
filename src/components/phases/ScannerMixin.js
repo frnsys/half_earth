@@ -7,6 +7,7 @@ import animate from 'lib/anim';
 
 const CARD_HEIGHT = 420;
 const WITHDRAW_HEIGHT = 68;
+const SCANBAR_HEIGHT = 80;
 
 export default {
   components: {
@@ -200,6 +201,18 @@ export default {
       // Check if scanning
       let rect = component.$el.getBoundingClientRect();
       let target = this.$refs.target.getBoundingClientRect();
+
+
+      // Pop down scanner
+      let topTarget = -20;
+      let y = rect.y;
+      if (y >= topTarget) {
+        
+        var p = Math.min(1, SCANBAR_HEIGHT/(topTarget - y));
+        var px =  Math.abs(p * SCANBAR_HEIGHT) + topTarget;
+        this.$refs.target.style.top = `${px}px`
+      }
+
       if (rect.y < (target.y + target.height)) {
         if (!this.scanning && this.scanAllowed()) {
           this.scanning = true;
@@ -231,15 +244,24 @@ export default {
           this.stopWithdrawingCard();
         }
       }
+
+      
     },
     stopDrag() {
       this.stopScanningCard();
       this.stopWithdrawingCard();
 
-      let current = parseInt(this.$refs.withdrawTarget.style.bottom);
-      animate(current, -WITHDRAW_HEIGHT, 100, (val) => {
+      let botTargetCurrent = parseInt(this.$refs.withdrawTarget.style.bottom);
+      animate(botTargetCurrent, -WITHDRAW_HEIGHT, 100, (val) => {
         if (this.$refs.withdrawTarget) {
           this.$refs.withdrawTarget.style.bottom = `${val}px`;
+        }
+      });
+
+      let topTargetCurrent = parseInt(this.$refs.target.style.top);
+      animate(topTargetCurrent, 0, 100, (val) => {
+        if (this.$refs.target) {
+          this.$refs.target.style.top = `${val}px`;
         }
       });
     },
@@ -304,7 +326,7 @@ export default {
 
           // Upgrading projects
           if (projectActive && this.nextUpgrade && this.upgradeProject) {
-            this.pulseProgress();
+            // this.pulseProgress();
             if (this.nextUpgrade) {
               let free = changes.downgrades > 0;
               if (free) {
@@ -323,7 +345,7 @@ export default {
           // Adding points to Research/Infrastructure
           } else if (this.type !== 'Policy' && this.buyPoint()) {
             this.assignPoint(p);
-            this.pulseProgress();
+            // this.pulseProgress();
             this.pulseCard();
             this.scanCard();
 
@@ -334,7 +356,7 @@ export default {
           // Free if withdrawn in this same session (i.e. undo the withdraw)
           } else if (this.type == 'Policy' && (changes.withdrawn || this.payPoints())) {
             this.passPolicy();
-            this.pulseProgress();
+            // this.pulseProgress();
             this.pulseCard();
             this.shakeScreen();
 
@@ -369,6 +391,7 @@ export default {
         this.scanAnim = null;
         this.$refs.scanProgress.style.width = '0';
       }
+
     },
 
     // Withdrawing
@@ -441,5 +464,5 @@ export default {
         this.$refs.withdrawProgress.style.width = '0';
       }
     },
-  }
+  },
 }

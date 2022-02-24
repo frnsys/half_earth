@@ -190,11 +190,11 @@ export default {
 .planning > header {
   display: flex;
   position: absolute;
-  margin: 0.75em auto;
+  margin: 0 auto;
   left: 0.5em;
   right: 0.5em;
   z-index: 2;
-  border-radius: 0.3em;
+  border-radius: 0 0 0.3em 0.3em;
   background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.5);
   max-width: 360px;
@@ -206,17 +206,17 @@ export default {
   border-right: 1px solid #aaa;
 }
 .planning > header div:first-child {
-  border-radius: 0.3em 0 0 0.3em;
+  border-radius: 0 0 0 0.3em;
 }
 .planning > header div:last-child {
-  border-radius: 0 0.3em 0.3em 0;
+  border-radius: 0 0 0.3em 0;
 }
 .planning > header div:hover {
-  background: #e3b6a0;
+  background: #cc99cc;
 }
 .planning > header div.active {
-  background: #e47d4a;
-  color: #fff;
+  background: var(--colour-pink);
+  color: #000;
 }
 .planning > header div:last-child {
   border-right: none;

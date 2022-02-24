@@ -389,7 +389,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2em 0 0 0 !important;
+  padding: 28px 0 0 0 !important;
   background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
@@ -410,12 +410,14 @@ export default {
 .planning--page-tabs {
   display: flex;
   justify-content: space-between;
-  border-radius: 0.3em;
+  border-radius: 0 0 0.3em 0.3em;
   background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 .planning--page-tabs img {
-  width: 32px;
+  width: 16px;
+  image-rendering: auto;
+  display: inline-block;
 }
 .planning--page-tabs > div {
   flex: 1;
@@ -423,6 +425,8 @@ export default {
   text-align: center;
   line-height: 1;
   border-right: 1px solid;
+  /* display: flex; */
+  /* align-items: center; */
 }
 .planning--page-tabs > div:last-child {
   border-right: none;
@@ -496,10 +500,10 @@ export default {
   margin: 0 auto;
 }
 .planning--page-tabs div:first-child {
-  border-radius: 0.3em 0 0 0.3em;
+  border-radius: 0 0 0 0.3em;
 }
 .planning--page-tabs div:last-child {
-  border-radius: 0 0.3em 0.3em 0;
+  border-radius: 0 0 0.3em 0;
 }
 
 </style>

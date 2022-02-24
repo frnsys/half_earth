@@ -90,6 +90,7 @@ export default {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   box-shadow: 0 1px 4px rgb(0 0 0 / 60%);
+  height: 28px;
 }
 .hud > div {
   padding: 0.5em 0.25em;

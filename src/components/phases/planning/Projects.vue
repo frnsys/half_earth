@@ -18,7 +18,18 @@
     </div>
     <div @click="$emit('close')">Back</div>
   </div>
-  <div class="card-scan-target" ref="target"></div>
+  <!-- <div class="card-scan-target" ref="target"></div> -->
+
+  <div class="scanbar-wrapper"  ref="target">
+    <div class="mini-scanbar">
+        <div class="scanbar-base">
+          <div class="scan-progress-bar" ref="scanProgress"></div>
+        </div>
+        <div class="scanbar-led scanbar-led-ok"></div>
+        <div class="scanbar-led scanbar-led-bad"></div>
+        <div class="card-scan-target"></div>
+    </div>
+  </div>
 
   <div class="card-withdraw-target" ref="withdrawTarget">
     {{ refundable ? 'Undo' : (canDowngrade ? 'Downgrade' : 'Withdraw') }}
@@ -44,7 +55,7 @@
   
   <footer>
     <div class="pips">
-      <div class="scan-progress" ref="scanProgress"></div>
+      <div class="scan-progress" ></div>
       <template v-if="type == 'Policy'">
         {{availablePoints}}<img class="pip" :src="icons.political_capital">
       </template>
@@ -150,3 +161,21 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.scanbar-wrapper{
+  width: 100%;
+  position: absolute;
+  height:60px;
+  top:-20px;
+}
+.mini-scanbar {
+  height: 60px;
+  position: relative;
+  /* top: 0; */
+  margin:0 auto;
+}
+
+
+</style>

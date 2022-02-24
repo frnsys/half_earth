@@ -13,11 +13,13 @@
 
   <template v-slot:expanded>
     <transition appear name="appear-popdown">
-    <div class="mini-scanbar">
-      <div class="scanbar-base"></div>
+    <div class="mini-scanbar" ref="target">
+      <div class="scanbar-base">
+        <div class="scan-progress-bar" ref="scanProgress"></div>
+      </div>
       <div class="scanbar-led scanbar-led-ok"></div>
       <div class="scanbar-led scanbar-led-bad"></div>
-      <div class="card-scan-target" ref="target"></div>
+      <div class="card-scan-target" ></div>
     </div>
     </transition>
 
@@ -41,7 +43,7 @@
 
     <footer>
       <div class="pips">
-        <div class="scan-progress" ref="scanProgress"></div>
+        <!-- <div class="scan-progress" ref="scanProgress"></div> -->
         <template v-if="type == 'Policy'">
           {{availablePoints}}<img class="pip" :src="icons.political_capital">
         </template>
