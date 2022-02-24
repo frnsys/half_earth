@@ -3,7 +3,7 @@ use crate::regions::{Region, Latitude};
 use crate::projects::Status;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock, Byproduct};
-use super::{WorldVariable, LocalVariable, PlayerVariable, EventPool};
+use super::{WorldVariable, PlayerVariable, EventPool};
 use serde::{Serialize, Deserialize};
 use std::ops::Mul;
 
@@ -35,7 +35,6 @@ pub enum Flag {
 
 #[derive(Serialize, PartialEq, Debug, Clone)]
 pub enum Effect {
-    LocalVariable(LocalVariable, f32),
     WorldVariable(WorldVariable, f32),
     PlayerVariable(PlayerVariable, f32),
     RegionHabitability(Latitude, f32),
@@ -94,19 +93,6 @@ impl Effect {
         match self {
             Effect::GameOver => {
                 state.game_over = true;
-            },
-            Effect::LocalVariable(var, change) => {
-                if let Some(id) = region_id {
-                    let region = &mut state.world.regions[id];
-                    match var {
-                        LocalVariable::Population => region.population *= 1. + *change,
-                        LocalVariable::Outlook => {
-                            region.outlook += *change;
-                            check_game_over(state);
-                        },
-                        LocalVariable::Habitability => region.base_habitability += *change,
-                    }
-                }
             },
             Effect::WorldVariable(var, change) => {
                 match var {
@@ -274,16 +260,6 @@ impl Effect {
 
     pub fn unapply(&self, state: &mut State, event_pool: &mut EventPool, region_id: Option<usize>) {
         match self {
-            Effect::LocalVariable(var, change) => {
-                if let Some(id) = region_id {
-                    let region = &mut state.world.regions[id];
-                    match var {
-                        LocalVariable::Population => region.population /= 1. + *change,
-                        LocalVariable::Outlook => region.outlook -= *change,
-                        LocalVariable::Habitability => region.base_habitability -= *change,
-                    }
-                }
-            },
             Effect::WorldVariable(var, change) => {
                 match var {
                     WorldVariable::Year => state.world.year -= *change as usize,
@@ -404,7 +380,6 @@ impl Mul<f32> for Effect {
 
     fn mul(self, rhs: f32) -> Self {
         match self {
-            Effect::LocalVariable(var, val) => Effect::LocalVariable(var, val * rhs),
             Effect::WorldVariable(var, val) => Effect::WorldVariable(var, val * rhs),
             Effect::PlayerVariable(var, val) => Effect::PlayerVariable(var, val * rhs),
             Effect::Resource(resource, val) => Effect::Resource(resource, val * rhs),

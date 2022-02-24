@@ -48,7 +48,7 @@ const FLAG_TIPS = {
   'HyperResearch': (demand) => {
     return {
       icon: 'research',
-      text: 'TODO'
+      text: `Research points are 1<img src="${icons.political_capital}"> cheaper.`
     }
   },
   'StopDevelopment': (demand) => {
@@ -605,7 +605,7 @@ function render(e) {
 
       let text;
       if (estimate == null) {
-        text = 'TODO';
+        text = 'We aren\'t tracking this feedstock.';
       } else if (estimate == 0) {
         text = 'This feedstock has been depleted.';
       } else if (isFinite(estimate)) {
