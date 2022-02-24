@@ -77,11 +77,15 @@
       <div class="political-effects-cols">
         <div class="political-effects-opposers" v-if="opposersDetailed.length > 0">
           <div class="political-effects-label">Nay</div>
-          <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+          <div class="political-effects-portraits">
+            <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+          </div>
         </div>
         <div class="political-effects-supporters" v-if="supportersDetailed.length > 0">
           <div class="political-effects-label">Yea</div>
-          <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+          <div class="political-effects-portraits">
+            <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+          </div>
         </div>
       </div>
     </div>
@@ -407,7 +411,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   text-align: center;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.6);
   color: #fff;
   font-size: 0.85em;
   padding: 1em;
@@ -432,21 +436,33 @@ export default {
   font-weight: bold;
   margin-bottom: 0.5em;
 }
+.political-effects-portraits{
+  display: flex;
+}
 .political-effects img {
   width: 28px;
+  image-rendering: auto;
+  margin: 0 2px;
 }
+
 .political-effects-cols {
   display: flex;
   justify-content: space-evenly;
 }
 .political-effects-opposers,
 .political-effects-supporters {
-  background: rgba(0,0,0,0.8);
-  width: 64px;
+  background: rgba(0,0,0,0.4);
+  /* width: 64px; */
   margin: 0.25em;
   padding: 0.5em;
   text-align: center;
   border-radius: 0.5em;
+
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(0,0,0,0.4);
+  border-left: 1px solid rgba(0,0,0,0.4);
+
 }
 .political-effects-supporters .political-effects-label {
   color: #2FE863;
