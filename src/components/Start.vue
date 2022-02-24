@@ -3,11 +3,13 @@
   <div id="start-bg"></div>
   <div id="start-screen">
     <div id="start-screen-inset">
-      <img src="/assets/intro.svg" />
-      <div class="start-subtitle">A Planetary Crisis Planning Game</div>
-      <button v-if="hasSave()" @click="continueGame">Continue</button>
-      <button @click="startGame">New Game</button>
-      <button @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
+      <div id="start-inner">
+        <img src="/assets/intro.svg" />
+        <div class="start-subtitle">A Planetary Crisis Planning Game</div>
+        <button v-if="hasSave()" @click="continueGame">Continue</button>
+        <button @click="startGame">New Game</button>
+        <button @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
+      </div>
     </div>
   </div>
 </div>
@@ -63,6 +65,7 @@ export default {
   background-image: url(/assets/backgrounds/start.png);
   background-size: cover;
   background-position: center center;
+  image-rendering: pixelated;
 }
 #start-screen img {
   display: block;
@@ -94,10 +97,26 @@ export default {
   border-bottom: 1px solid #888;
   border-right: 1px solid #888;
   min-height: calc(100vh - 2em);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#start-inner{
+  margin-bottom: 3em;
 }
 
 .start-subtitle {
   font-size: 0.8em;
   margin: 0 0 1.5em 0;
+}
+
+@media only screen and (min-width: 481px) {
+  #start-screen img{
+    max-width:500px;
+  }
+  #start-screen button {
+    max-width: 450px;
+  }
 }
 </style>
