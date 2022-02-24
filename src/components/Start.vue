@@ -72,6 +72,7 @@ export default {
   margin: 0em auto 1em;
   width: 100%;
   max-width: 260px;
+  max-height: 60vh;
 }
 #start-screen button {
   display: block;
