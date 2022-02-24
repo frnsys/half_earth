@@ -1,7 +1,8 @@
 <template>
 <div class="plan-change-select planning--page">
   <div class="planning--page-tabs">
-   <div class="planning-sub-tab" @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
+  <div class="unspent-warning" v-if="!allowBack">There are still unused production points!</div>
+   <div class="planning-sub-tab"  @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
       <img :src="icons.electricity" />
       <div>Electricity</div>
     </div>
@@ -20,6 +21,12 @@
     <div :class="{disabled: !allowBack}" @click="if (allowBack) { $emit('close'); }">Back</div>
   </div>
 
+  <div class="available-mix-tokens">
+    <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: `One production point represents 5% of an entire production sector's productive capacity.`}">
+
+    </div>
+  </div>
+
   <Cards>
     <ProcessCard v-for="p in processes" :process="p" :key="p.id">
       <template v-slot:actions>
@@ -33,15 +40,14 @@
     </ProcessCard>
   </Cards>
 
-  <CardFocusArea />
+  <!-- <CardFocusArea /> -->
 
   <div>
-    <div class="available-mix-tokens">
-        <img v-for="_ in points" class="pip" :src="icons.mix_token">
-    </div>
-    <div class="process-mix-change-notice" v-if="hasChanges">
-      <div>These changes will take {{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}} to take effect.</div>
+    <div class="process-mix-change-notice-wrapper" v-if="hasChanges">
+      <div class="process-mix-change-notice" >
+      <div>These changes will take <strong>{{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}}</strong> to take effect.</div>
       <div v-html="estimatedChanges"></div>
+      </div>
     </div>
     <div class="production--demand planning--demand">
       <div v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${display.enumDisplay(k)}.`)">
@@ -156,9 +162,9 @@ export default {
         }
         change = Math.round(change * 100);
         if (change > 0.0) {
-          return `<span class="change-increase">increase ${k} by ${change > 100 ? '⚠️' : ''}${fmtPercent(change)}%</span>`;
+          return `<span class="change-increase"><strong>increase ${k} by ${change > 100 ? '⚠️' : ''}${fmtPercent(change)}%</strong></span>`;
         } else if (change < 0.0) {
-          return `<span class="change-decrease">decrease ${k} by ${fmtPercent(Math.abs(change))}%</span>`;
+          return `<span class="change-decrease"><strong>decrease ${k} by ${fmtPercent(Math.abs(change))}%</strong></span>`;
         } else {
           return null;
         }
@@ -169,7 +175,7 @@ export default {
       } else {
         return `This output's production will: ${lf.format(descs)}.`;
       }
-    }
+    },
   },
   methods: {
     changedMixShare(p) {
@@ -208,10 +214,40 @@ export default {
 .available-mix-tokens {
   height: 24px;
   text-align: center;
+  /* margin-top: -50px; */
+  width: 360px;
+  margin: 0 auto;
+  margin-top: 5px;
+  z-index: 5;
+}
+
+.mix-token{
+  height: 20px;
+  width: calc(100%/20);
+  background-color: var(--colour-pink);
+  display: inline-block;
+  box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+
+}
+
+.mix-token:first-of-type{
+  border-radius: 0.3em 0 0 0.3em;
+}
+.mix-token:last-of-type{
+  border-radius: 0 0.3em 0.3em 0;
+}
+
+.process-mix-change-notice-wrapper{
+  width: 100%;
+  position: absolute;
+  bottom: 50px;
 }
 
 .process-mix-change-notice {
-  font-size: 0.75em;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7em;
   background: #222;
   color: #fff;
   padding: 0.25em;
@@ -230,5 +266,24 @@ export default {
 }
 .change-increase {
   color: #EF3838;
+}
+
+.unspent-warning{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+  text-align: center;
+  z-index: 1;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.5em;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 0 0 0.6em 0.6em !important;
+  border-right: none !important;
 }
 </style>

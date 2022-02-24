@@ -128,6 +128,17 @@ strong{
   font-weight: 600;
 }
 
+.recess{
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+.outset{
+  box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+}
+
 .good {
   color: #43CC70;
 }
