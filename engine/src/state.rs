@@ -313,12 +313,12 @@ impl State {
         self.byproducts += byproducts;
         self.consumed_resources = consumed_resources;
         self.consumed_feedstocks = consumed_feedstocks;
+        self.resources_demand.water += self.consumed_resources.water;
+        self.resources_demand.land += self.consumed_resources.land;
     }
 
     pub fn step_production(&mut self) {
         self.update_demand();
-        self.resources_demand.water += self.consumed_resources.water;
-        self.resources_demand.land += self.consumed_resources.land;
 
         let orders: Vec<ProductionOrder> = self.processes.iter()
             .map(|p| p.production_order(&self.output_demand)).collect();
