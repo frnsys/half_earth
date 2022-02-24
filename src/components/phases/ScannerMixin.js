@@ -9,6 +9,7 @@ const CARD_HEIGHT = 420;
 const WITHDRAW_HEIGHT = 68;
 const SCANBAR_HEIGHT = 80;
 
+
 export default {
   components: {
     Draggable,
@@ -22,6 +23,20 @@ export default {
     }
   },
   computed: {
+    withdrawTime(){
+      if(!this.process){
+        return consts.cardWithdrawTime
+      } else {
+        return 0.3;
+      }
+    },
+    scanTime(){
+      if(!this.process){
+        return consts.cardScanTime
+      } else {
+        return 0.5;
+      }
+    },
     icon() {
       return this.project.kind.toLowerCase();
     },
@@ -72,6 +87,16 @@ export default {
         changes.upgrades > 0
         || changes.points > 0
         || changes.passed || changes.withdrawn);
+    },
+    processAddable(){
+      if(!this.process) return false
+      if (this.points === 0) return false
+      return true
+    },
+    processSubtractable(){
+      if(!this.process) return false
+      if (this.changedMixShare(this.process) === 0) return false
+      return true
     }
   },
   methods: {
@@ -202,6 +227,8 @@ export default {
       let rect = component.$el.getBoundingClientRect();
       let target = this.$refs.target.getBoundingClientRect();
 
+      
+
 
       // Pop down scanner
       let topTarget = -20;
@@ -227,12 +254,13 @@ export default {
       }
 
       // Check if withdrawing
-      if (!this.scanning && (this.haltable || this.refundable)) {
+      if (!this.scanning && (this.haltable || this.refundable || this.processSubtractable)) {
         let botTarget = window.innerHeight - 150;
         let y = rect.y + rect.height;
         if (y >= botTarget) {
           let p = Math.min(1, (y - botTarget)/WITHDRAW_HEIGHT);
           this.$refs.withdrawTarget.style.bottom = `-${(1-p) * WITHDRAW_HEIGHT}px`
+          
         }
 
         if (y > window.innerHeight - WITHDRAW_HEIGHT/3) {
@@ -277,11 +305,16 @@ export default {
       }
     },
     yMax() {
-      return (this.project && (this.haltable || this.refundable)) ? window.innerHeight - CARD_HEIGHT : window.innerHeight - CARD_HEIGHT - 80;
+      if((this.project && (this.haltable || this.refundable)) || (this.process && this.processSubtractable)){
+        return window.innerHeight - CARD_HEIGHT
+      } else {
+        return window.innerHeight - CARD_HEIGHT - 80
+      }
     },
 
     // Scanning
     scanAllowed() {
+      if(!this.process){
       let p = this.project;
       let playerSeats = game.playerSeats();
       if (p.required_majority > 0
@@ -296,6 +329,13 @@ export default {
       } else {
         return true;
       }
+      } else {
+        if(this.processAddable){
+          return true
+        } else {
+          return false
+        }
+      }
     },
     rejectScan() {
       this.$refs.target.parentElement.classList.add('scan-fail');
@@ -306,76 +346,95 @@ export default {
       }, 500);
     },
     scanCard() {
+      
+      const proc = this.process;
+
       let p = this.project;
-      this.scanAnim = animate(0, 100, consts.cardScanTime * 1000, (val) => {
+      this.scanAnim = animate(0, 100, this.scanTime * 1000, (val) => {
         this.$refs.scanProgress.style.width = `${val}%`;
       }, () => {
+
+        
+        
         if (this.scanning) {
-          let projectActive = p.status == 'Active' || p.status == 'Finished';
+          if(!this.process){
+            let projectActive = p.status == 'Active' || p.status == 'Finished';
 
-          if (!(p.id in state.planChanges)) {
-            state.planChanges[p.id] = {
-              points: 0,
-              upgrades: 0,
-              downgrades: 0,
-              withdrawn: false,
-              passed: false,
-            };
-          }
-          let changes = state.planChanges[p.id];
+            if (!(p.id in state.planChanges)) {
+              state.planChanges[p.id] = {
+                points: 0,
+                upgrades: 0,
+                downgrades: 0,
+                withdrawn: false,
+                passed: false,
+              };
+            }
+            let changes = state.planChanges[p.id];
 
-          // Upgrading projects
-          if (projectActive && this.nextUpgrade && this.upgradeProject) {
-            // this.pulseProgress();
-            if (this.nextUpgrade) {
-              let free = changes.downgrades > 0;
-              if (free) {
-                changes.downgrades--;
+            // Upgrading projects
+            if (projectActive && this.nextUpgrade && this.upgradeProject) {
+              // this.pulseProgress();
+              if (this.nextUpgrade) {
+                let free = changes.downgrades > 0;
+                if (free) {
+                  changes.downgrades--;
+                }
+                this.upgradeProject(free);
+                this.pulseLevel();
+                if (this.nextUpgrade) {
+                  this.scanCard();
+                }
+
+                // Refundable upgrade
+                changes.upgrades++;
               }
-              this.upgradeProject(free);
-              this.pulseLevel();
+
+            // Adding points to Research/Infrastructure
+            } else if (this.type !== 'Policy' && this.buyPoint()) {
+              this.assignPoint(p);
+              // this.pulseProgress();
+              this.pulseCard();
+              this.scanCard();
+
+              // Refundable points
+              changes.points++;
+
+            // Passing Policies
+            // Free if withdrawn in this same session (i.e. undo the withdraw)
+            } else if (this.type == 'Policy' && (changes.withdrawn || this.payPoints())) {
+              this.passPolicy();
+              // this.pulseProgress();
+              this.pulseCard();
+              this.shakeScreen();
+
+              // Refundable
+              if (changes.withdrawn) {
+                changes.withdrawn = false;
+              } else {
+                changes.passed = true;
+              }
+
               if (this.nextUpgrade) {
                 this.scanCard();
               }
 
-              // Refundable upgrade
-              changes.upgrades++;
-            }
-
-          // Adding points to Research/Infrastructure
-          } else if (this.type !== 'Policy' && this.buyPoint()) {
-            this.assignPoint(p);
-            // this.pulseProgress();
-            this.pulseCard();
-            this.scanCard();
-
-            // Refundable points
-            changes.points++;
-
-          // Passing Policies
-          // Free if withdrawn in this same session (i.e. undo the withdraw)
-          } else if (this.type == 'Policy' && (changes.withdrawn || this.payPoints())) {
-            this.passPolicy();
-            // this.pulseProgress();
-            this.pulseCard();
-            this.shakeScreen();
-
-            // Refundable
-            if (changes.withdrawn) {
-              changes.withdrawn = false;
+            // If not enough PC
             } else {
-              changes.passed = true;
+              this.rejectScan();
+              this.shakeProgress();
+              this.stopScanningCard();
             }
-
-            if (this.nextUpgrade) {
-              this.scanCard();
-            }
-
-          // If not enough PC
           } else {
-            this.rejectScan();
-            this.shakeProgress();
-            this.stopScanningCard();
+            // Handle processes here
+            if(this.processAddable){
+              this.addPoint(proc);
+              this.pulseCard();
+              this.scanCard();
+            } else {
+              this.rejectScan();
+              this.shakeProgress();
+              this.stopScanningCard();
+            }
           }
         }
       }, true);
@@ -397,11 +456,12 @@ export default {
     // Withdrawing
     withdrawCard() {
       this.$refs.withdrawTarget.classList.add('withdrawing');
-      this.withdrawAnim = animate(0, 100, consts.cardWithdrawTime * 1000, (val) => {
+      this.withdrawAnim = animate(0, 100, this.withdrawTime * 1000, (val) => {
         this.$refs.withdrawProgress.style.width = `${val}%`;
       }, () => {
         let keepWithdrawing = false;
         if (this.withdrawing) {
+          if (!this.process){
           if (!(this.project.id in state.planChanges)) {
             state.planChanges[this.project.id] = {
               points: 0,
@@ -447,11 +507,22 @@ export default {
             changes.withdrawn = true;
           }
           this.$emit('change');
+        
+         }else{
+          this.removePoint(this.process);
+         }
         }
         if (keepWithdrawing) {
           this.withdrawCard();
         } else {
-          this.stopWithdrawingCard();
+          keepWithdrawing = this.processSubtractable;
+          
+          if (keepWithdrawing) {
+            this.withdrawCard();
+          } else {
+            this.stopWithdrawingCard();
+          }
+
         }
       }, true);
     },

@@ -340,7 +340,7 @@ export default {
 .process-mix-cells{
   height: 100%;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 .process-mix-cell {
   height: calc(100%/20);
@@ -351,11 +351,11 @@ export default {
   border-top: 1px solid rgba(255,255,255,0.5);
 }
 
-.process-mix-cell:last-of-type{
+.process-mix-cell:first-of-type{
   border-radius: 0 0.75em 0 0;
 }
 
-.process-mix-cell:first-of-type{
+.process-mix-cell:last-of-type{
   border-radius: 0 0 0.75em 0;
 }
 

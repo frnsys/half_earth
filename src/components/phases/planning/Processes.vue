@@ -22,25 +22,50 @@
   </div>
 
   <div class="available-mix-tokens">
-    <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: `One production point represents 5% of an entire production sector's productive capacity.`}">
+    <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: `One production point represents 5% of an entire production sector's productive capacity.`}"></div>
+  </div>
 
+  <div class="scanbar-wrapper"  ref="target">
+    <div class="mini-scanbar">
+        <div class="scanbar-base">
+          <div class="scan-progress-bar" ref="scanProgress"></div>
+        </div>
+        <div class="scanbar-led scanbar-led-ok"></div>
+        <div class="scanbar-led scanbar-led-bad"></div>
+        <div class="card-scan-target"></div>
     </div>
   </div>
 
   <Cards>
-    <ProcessCard v-for="p in processes" :process="p" :key="p.id">
-      <template v-slot:actions>
+    <Draggable 
+      @drag="onDragVertical"
+      @dragStop="onDragVerticalStop"
+      v-for="p in processes"
+      :minY="yMin"
+      :maxY="yMax"
+      :draggable="focusedProcess == p"
+      :id="p.id"
+      :key="p.id"
+    >
+    <ProcessCard :process="p" >
+      <!-- <template v-slot:actions>
         <button :disabled="changedMixShare(p) === 0" @click="(ev) => { ev.stopPropagation(); removePoint(p) }">
           -<img class="pip" :src="icons.mix_token">
         </button>
         <button :disabled="points === 0" @click="(ev) => { ev.stopPropagation(); addPoint(p) }">
           +<img class="pip" :src="icons.mix_token">
         </button>
-      </template>
+      </template> -->
     </ProcessCard>
+    </Draggable>
   </Cards>
 
-  <!-- <CardFocusArea /> -->
+  <CardFocusArea />
+
+  <div class="card-withdraw-target" ref="withdrawTarget">
+    Remove points
+    <div class="withdraw-bar" ref="withdrawProgress"></div>
+  </div>
 
   <div>
     <div class="process-mix-change-notice-wrapper" v-if="hasChanges">
@@ -68,6 +93,9 @@ import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
 
+import ScannerMixin from 'components/phases/ScannerMixin';
+import {detectCenterElement} from 'lib/util';
+
 const lf = new Intl.ListFormat('en');
 
 function fmtPercent(n) {
@@ -75,6 +103,7 @@ function fmtPercent(n) {
 }
 
 export default {
+  mixins:[ScannerMixin],
   components: {
     Cards,
     ProcessCard,
@@ -85,11 +114,42 @@ export default {
       state,
       points: 0,
       output: 'Electricity',
-
+      allowScroll: true,
+      focusedProcess: 0,
       allowBack: true
     };
   },
+  mounted(){
+    this.$emit('page', this.output);
+  },
+  watch: {
+    output(output) {
+      // Figure out what the focused card is
+      this.$nextTick(() => {
+        let scroller = document.querySelector('.cards');
+        let els = [...document.querySelectorAll('.draggable')];
+        let idx = detectCenterElement(scroller, els);
+        this.focusedProcess = this.processes[idx];
+
+        
+        this.$emit('page', page);
+      });
+    }
+  },
   computed: {
+    process() {
+      if (this.focusedProcess !== null) {
+        let proc =  this.processes[this.focusedProcess];
+        if (proc === undefined) {
+          return this.processes[0];
+        } else {
+          return proc;
+        }
+      } else {
+        // Default for loading
+        return state.gameState.processes[0];
+      }
+    },
     processes() {
       let processes = state.gameState.processes.filter((p) => !p.locked && p.output === this.output);
       processes.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
@@ -183,6 +243,7 @@ export default {
       return p.mix_share + change;
     },
     removePoint(p) {
+      console.log(p);
       let change = state.processMixChanges[this.output][p.id] || 0;
       if (p.mix_share + change > 0) {
         this.points += 1;
@@ -191,10 +252,12 @@ export default {
       }
     },
     addPoint(p) {
+      console.log(p);
       if (this.points > 0) {
         let change = state.processMixChanges[this.output][p.id] || 0;
         this.points -= 1;
         state.processMixChanges[this.output][p.id] = change + 1;
+        console.log('added');
         if (this.points == 0) {
           this.allowBack = true;
         }
@@ -205,12 +268,38 @@ export default {
       if (this.points == 0) {
         this.$emit('change');
       }
-    }
+    },
+    onFocused(idx) {
+      this.focusedProcess = this.processes[idx];
+    },
+    onDragVertical(component) {
+      this.allowScroll = false;
+      this.checkDrag(component);
+    },
+    onDragVerticalStop() {
+      this.allowScroll = true;
+      this.stopDrag();
+    },
+  
   }
 }
 </script>
 
 <style>
+.scanbar-wrapper{
+  width: 100%;
+  position: absolute;
+  height:60px;
+  top:-20px;
+}
+.mini-scanbar {
+  height: 60px;
+  position: relative;
+  /* top: 0; */
+  margin:0 auto;
+}
+
+
 .available-mix-tokens {
   height: 24px;
   text-align: center;
