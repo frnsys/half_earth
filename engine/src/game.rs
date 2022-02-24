@@ -69,6 +69,12 @@ impl GameInterface {
         }
     }
 
+    pub fn collect_research_points(&mut self) -> isize {
+        let points = self.game.state.research_points;
+        self.game.state.research_points = 0;
+        points
+    }
+
     pub fn change_local_outlook(&mut self, amount: isize, region_id: usize) {
         self.game.state.world.regions[region_id].outlook += amount as f32;
     }

@@ -17,6 +17,7 @@ function updateState() {
   state.gameState.industries.forEach((ind) => {
     ind.demand = game.industry_demand(ind.id);
   });
+  state.points.research += game.collect_research_points();
 }
 
 function updateFactors() {
