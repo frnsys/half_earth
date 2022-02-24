@@ -73,10 +73,10 @@ export default {
 the first and last cards have room
 to be centered */
 .cards > div:first-child {
-  margin-left: 12em;
+  margin-left: 20em;
 }
 .cards > div:last-child {
-  margin-right: 12em;
+  margin-right: 20em;
 }
 
 .noscroll {
