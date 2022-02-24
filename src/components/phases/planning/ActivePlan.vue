@@ -80,8 +80,10 @@ export default {
 }
 .active-plan .plan--changes {
   height: auto;
-  max-width: 640px;
+  max-width: 530px;
   width: 100%;
-  column-gap: 1em;
+  column-gap: 1.25em;
+
+  justify-content: left;
 }
 </style>
