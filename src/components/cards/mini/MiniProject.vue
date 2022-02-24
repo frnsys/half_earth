@@ -120,62 +120,6 @@ export default {
   width: 16px !important;
 }
 
-.mini-scanbar {
-  height: 60px;
-  width: 300px;
-  position: absolute;
-  top: 0;
-}
-.scanbar-base{
-  height: 100%;
-  width: 100%;
-  border-radius: 0 0 0.5em 0.5em;
-  position: absolute;
-  top: 0;
-  background: #eee;
-  border-right: 2px solid rgba(0,0,0,0.6);
-  border-bottom: 2px solid rgba(0,0,0,0.6);
-  border-left: 2px solid #fff;
-  box-shadow: 0 0 8px rgba(0,0,0,0.6);
-}
-.mini-scanbar .card-scan-target {
-  left: 0;
-  right: 0;
-  position: relative;
-}
-
-.minicard--expanded .draggable {
-  z-index: -1;
-  margin-top: 3em;
-}
-
-.scanbar-led {
-  height: 10px;
-  width: 10px;
-  border-radius: 100em;
-  position: absolute;
-  bottom: 1em;
-}
-.scanbar-led-ok {
-  right: 1em;
-  background: #789782;
-  border: 1px solid #3f704f;
-}
-.scan-ok .scanbar-led-ok {
-  background: #5dee8d;
-  border: 1px solid #c0fad3;
-  box-shadow: 0 0 8px #31f471;
-}
-.scanbar-led-bad {
-  right: 2.25em;
-  background: #944d50;
-  border: 1px solid #794343;
-}
-.scan-fail .scanbar-led-bad {
-  background: #EB3941;
-  border: 1px solid #f4c6c6;
-  box-shadow: 0 0 8px #EB3941;
-}
 
 .minicard-project:hover{
   transform:scale(1.2);
