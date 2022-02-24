@@ -85,10 +85,16 @@ export default {
       if (this.project.points >= consts.maxPoints) {
         return false;
       }
+      if (this.project.kind == 'Research' && state.points.research > 0) {
+        return true;
+      }
       let cost = this.nextPointCost;
       if (cost <= state.gameState.political_capital) {
         game.changePoliticalCapital(-cost);
         state.points[this.type.toLowerCase()]++;
+        if (this.project.kind == 'Research') {
+          state.refundableResearchPoints++;
+        }
         return true;
       }
       return false;
@@ -440,6 +446,15 @@ export default {
             } else {
               let points = changes.points;
               let refund = this.nextPointCost * points;
+
+              // Don't allow stored research-only points to be converted into PC,
+              // instead convert them back into research points
+              if (this.project.kind == 'Research') {
+                let excessPoints = Math.max(points - state.refundableResearchPoints, 0);
+                refund = this.nextPointCost * (points - excessPoints);
+                state.refundableResearchPoints = Math.max(0, state.refundableResearchPoints - points);
+                state.points.research += excessPoints;
+              }
               this.unassignPoints(points);
               game.changePoliticalCapital(refund);
               changes.points = 0;
