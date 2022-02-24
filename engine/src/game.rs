@@ -194,10 +194,6 @@ impl Game {
     /// Generate a projection
     pub fn simulate(&self, rng: &mut SmallRng, years: usize) -> Vec<Snapshot> {
         let mut snapshots: Vec<Snapshot> = Vec::new();
-
-        // TODO can probably re structure all of this so
-        // that there is only a struct that deals with all things production
-        // rather than having to clone the entire state
         let mut state = self.state.clone();
 
         // Dummy event pool

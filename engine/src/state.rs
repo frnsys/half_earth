@@ -885,14 +885,4 @@ mod test {
         let (other_output_demand, _) = state.calculate_demand();
         assert_eq!(2. * (output_demand.fuel + 100.), other_output_demand.fuel);
     }
-
-    #[test]
-    fn test_step_projects() {
-        // TODO
-    }
-
-    #[test]
-    fn test_step_production() {
-        // TODO
-    }
 }

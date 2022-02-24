@@ -6,7 +6,9 @@ import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 // Version timestamp must be >= this value
 const EXPIRED_TIMESTAMP = 0;
 
-// TODO let player choose difficulty;
+// Would let player choose difficulty;
+// except at this point implementing different difficulty levels
+// will be way too complicated. Maybe revisit at some point.
 // also; this needs to be re-created for each run.
 let game;
 
