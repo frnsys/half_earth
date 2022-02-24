@@ -1,5 +1,5 @@
 <template>
-<div class="card" @click="flip" :class="{flipped : flipped}">
+<div class="card" @click="flip" :class="{flipped : flipped, process : isProcess}">
   <div class="card-top" :style="{background, color}" v-if="hasFigure && hasHeader">
     <header :style="{color}">
       <slot name="header"></slot>
@@ -24,13 +24,16 @@
       <slot name="bot-back"></slot>
     </div>
   </div>
+
+  <div v-if="isProcess" class="process-mix-bar">
+    <slot name="process-mix"></slot>
+  </div>
 </div>
 </template>
 
 <script>
-
 export default {
-  props: ['background', 'color', 'noBack'],
+  props: ['background', 'color', 'noBack', 'isProcess'],
   data() {
     return {
       flipped: false
@@ -74,6 +77,11 @@ export default {
   transform-style: preserve-3d;
 
   cursor: pointer;
+}
+
+.card.process{
+  width: 280px;
+  margin:0 0.75em !important;
 }
 
 .card:hover{
@@ -341,5 +349,16 @@ export default {
 
 .card.flipped header{
   transform: rotateY(180deg);
+}
+
+.process-mix-bar{
+  width: 20px;
+  height: 100%;
+  /* background-color: red; */
+  background-color: rgba(0,0,0,0.4);
+  position: absolute;
+  right: -10px;
+  z-index: -50;
+  border-radius: 0 0.75em 0.75em 0;
 }
 </style>

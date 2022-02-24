@@ -1,5 +1,5 @@
 <template>
-<Card color="#ffffff">
+<Card color="#ffffff" :isProcess="true">
   <template v-slot:header>
     <div>{{output}}</div>
     <div v-tip="outputTip">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
@@ -17,15 +17,7 @@
           <div class="process-mix-percent">{{changedMixShare*5}}%</div>
         </template>
       </div>
-      <div class="process-mix-cells">
-        <div class="process-mix-cell" v-for="i in 20" :class="{
-          active: i <= process.mix_share,
-          depleted: feedstockEstimate == 0,
-          shrink: i <= process.mix_share && i > changedMixShare,
-          grow: i > process.mix_share && i <= changedMixShare,
-          excess: (i <= process.mix_share || i <= changedMixShare) && i > maxShare,
-        }"/>
-      </div>
+      
     </div>
     <div class="card-tack-ul process-details">
       <div>
@@ -82,6 +74,18 @@
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>
+  </template>
+
+  <template v-slot:process-mix>
+    <div class="process-mix-cells">
+        <div class="process-mix-cell" v-for="i in 20" :class="{
+          active: i <= process.mix_share,
+          depleted: feedstockEstimate == 0,
+          shrink: i <= process.mix_share && i > changedMixShare,
+          grow: i > process.mix_share && i <= changedMixShare,
+          excess: (i <= process.mix_share || i <= changedMixShare) && i > maxShare,
+        }"/>
+      </div>
   </template>
 </Card>
 </template>
@@ -333,13 +337,28 @@ export default {
 .process-mix-percents.depleted {
   color: #aaa;
 }
-.process-mix-cell {
-  height: 6px;
-  width: 6px;
-  background: #222;
-  margin: 1px;
-  border: 1px solid #222;
+.process-mix-cells{
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
 }
+.process-mix-cell {
+  height: calc(100%/20);
+  width: 100%;
+  margin: 1px;
+  box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+}
+
+.process-mix-cell:last-of-type{
+  border-radius: 0 0.75em 0 0;
+}
+
+.process-mix-cell:first-of-type{
+  border-radius: 0 0 0.75em 0;
+}
+
 .process-mix-cell.active {
   background: #1B97F3;
 }
