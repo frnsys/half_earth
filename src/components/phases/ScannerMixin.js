@@ -218,7 +218,7 @@ export default {
       let topTarget = -20;
       let y = rect.y;
       if (y >= topTarget) {
-        
+
         var p = Math.min(1, SCANBAR_HEIGHT/(topTarget - y));
         var px =  Math.abs(p * SCANBAR_HEIGHT) + topTarget;
         this.$refs.target.style.top = `${px}px`
@@ -255,8 +255,6 @@ export default {
           this.stopWithdrawingCard();
         }
       }
-
-      
     },
     stopDrag() {
       this.stopScanningCard();
