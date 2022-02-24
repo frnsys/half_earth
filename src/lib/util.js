@@ -1,3 +1,5 @@
+const GAME_SEED = Math.random();
+
 function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
@@ -42,5 +44,31 @@ function detectCenterElement(parent, elements) {
   return closest;
 }
 
-export {clone, randChoice, slugify,
-  updateTransform, detectCenterElement};
+// https://stackoverflow.com/a/38336308/1097920
+function sumDigits(n) {
+  let sum = 0;
+  while (n) {
+      sum += n % 10;
+      n = Math.floor(n / 10);
+  }
+  return sum;
+}
+
+// Seedable RNG
+// https://stackoverflow.com/a/47593316/1097920
+function mulberry32(a) {
+  return function() {
+    var t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+function rngForYear(year) {
+  let seed = sumDigits(year) * GAME_SEED;
+  return mulberry32(seed);
+}
+
+export {clone, randChoice, rngForYear,
+  slugify, updateTransform, detectCenterElement};
