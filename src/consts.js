@@ -29,7 +29,6 @@ export default {
 
   // PC cost for research/infrastructure points
   pointCost: 3,
-  discountedPointCost: 2,
 
   // Max points for a project
   maxPoints: 15,

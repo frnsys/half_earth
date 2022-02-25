@@ -188,17 +188,6 @@ const SUBPHASES = {
 }
 
 const EFFECTS = {
-  LocalVariable: {
-    choices: ['Outlook', 'Habitability'],
-    params: {
-      'Change': Number
-    },
-    desc: {
-      'Outlook': 'Change outlook for a region: regional outlook starts at 10 (best); 0 is the worst',
-      'Habitability': 'Change habitability of a region: habitability starts at 10 (best); 0 is uninhabitable',
-    }
-  },
-
   WorldVariable: {
     choices: [
       'Emissions',

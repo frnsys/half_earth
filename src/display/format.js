@@ -1,3 +1,4 @@
+import state from '/src/state';
 import consts from '/src/consts.json';
 
 const OUTPUT_UNITS = {
@@ -49,7 +50,8 @@ function landUsePercent(m2) {
 }
 
 function waterUsePercent(l) {
-  return l/consts.starting_resources.water * 100;
+  // return l/consts.starting_resources.water * 100;
+  return l/state.gameState.resources.water * 100;
 }
 
 function demandPercent(demand, totalDemand, k, round) {
@@ -74,9 +76,9 @@ function sign(v) {
 }
 
 const formatResource = {
-  'land': (v) => `${landUsePercent(v).toFixed(1)}%`,
+  'land': (v) => percent(landUsePercent(v)/100, true),
   'emissions': (v) => `${(v * 1e-15).toFixed(1)}Gt`,
-  'water': (v) => `${(waterUsePercent(v)).toFixed(1)}%`,
+  'water': (v) => percent(waterUsePercent(v)/100, true),
   'energy': (v) => `${(v*1e-9).toFixed(1)}TWh`,
   'biodiversity': (v) => `${v.toFixed(0)}`,
 };

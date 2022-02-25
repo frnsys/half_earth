@@ -35,9 +35,6 @@
     <p class="card-desc">{{description}}</p>
   </template>
   <template v-slot:bot-back>
-    <div>
-      TODO active effects
-    </div>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
     </div>

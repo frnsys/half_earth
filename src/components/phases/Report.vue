@@ -279,6 +279,7 @@ export default {
         });
         // Apply project upgrades
         this.upgradeProjects();
+        state.refundableResearchPoints = 0;
         state.phase = 'PLANNING';
 
         // Reset session plan changes

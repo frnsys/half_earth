@@ -10,22 +10,52 @@ import EVENTS from '/assets/content/events.json';
 const VARS = ['land', 'water', 'energy', 'emissions', 'biodiversity', 'contentedness'];
 const DEMAND_VARS = ['electricity', 'fuel', 'plant_calories', 'animal_calories'];
 
+// https://stackoverflow.com/a/50636286/1097920
+function partition(array, filter) {
+  let pass = [], fail = [];
+  array.forEach((e, idx, arr) => (filter(e, idx, arr) ? pass : fail).push(e));
+  return [pass, fail];
+}
+
 function effectsFactor(k, effs) {
   if (k == 'emissions') {
     return effs
       .filter((eff) => eff.subtype == 'Emissions')
       .reduce((acc, eff) => acc + eff.param, 0);
   } else if (k == 'water') {
-    // TODO no effects that influence this directly
-    // TODO update for desalination etc, resource effect
-    return 0;
+    let val = effs
+      .filter((eff) => eff.type == 'Resource' && eff.subtype == 'Water')
+      .reduce((acc, eff) => acc + eff.param, 0);
+    return format.sign(format.output(val, k));
   } else if (k == 'land') {
     return effs
       .filter((eff) => eff.type == 'ProtectLand')
       .reduce((acc, eff) => acc + eff.param, 0);
   } else if (k == 'energy') {
-    // TODO no effects that influence this directly
-    return 0;
+      return effs
+      .filter((eff) => {
+        return eff.type == 'DemandAmount' && (eff.subtype == 'Electricity' || eff.subtype == 'Fuel')
+      }).reduce((acc, eff) => acc + eff.param, 0);
+  } else if (k == 'fuel') {
+      return effs
+      .filter((eff) => {
+        return eff.type == 'DemandAmount' && eff.subtype == 'Fuel';
+      }).reduce((acc, eff) => acc + eff.param, 0);
+  } else if (k == 'electricity') {
+      return effs
+      .filter((eff) => {
+        return eff.type == 'DemandAmount' && eff.subtype == 'Electricity';
+      }).reduce((acc, eff) => acc + eff.param, 0);
+  } else if (k == 'plant_calories') {
+      return effs
+      .filter((eff) => {
+        return eff.type == 'DemandAmount' && eff.subtype == 'PlantCalories';
+      }).reduce((acc, eff) => acc + eff.param, 0);
+  } else if (k == 'animal_calories') {
+      return effs
+      .filter((eff) => {
+        return eff.type == 'DemandAmount' && eff.subtype == 'AnimalCalories';
+      }).reduce((acc, eff) => acc + eff.param, 0);
   } else if (k == 'contentedness') {
     return effs.reduce((acc, eff) => {
       let amount = 0;
@@ -53,10 +83,24 @@ function projectFactors(k) {
     return p.status == 'Active' || p.status == 'Finished';
   }).map((p) => {
     let effs = activeEffects(p);
+    let amount = effectsFactor(k, effs);
+    let displayAmount;
+    if (k == 'energy' || DEMAND_VARS.includes(k)) {
+      let demand;
+      if (k == 'energy') {
+        demand = state.gameState.output_demand.electricity + state.gameState.output_demand.fuel;
+      } else {
+        demand = state.gameState.output_demand[k];
+      }
+      displayAmount = format.percent(amount/demand, true);
+    } else {
+      displayAmount = amount;
+    }
     return {
       name: p.name,
       type: 'Project',
-      amount: effectsFactor(k, effs)
+      amount,
+      displayAmount,
     };
   }).filter((p) => p.amount !== 0);
 }
@@ -111,7 +155,7 @@ function productionFactors(k) {
       (p.output == 'Electricity' || p.output == 'Fuel')
       ? 'energy' : 'calories';
 
-    let total = base * p.demand;
+    let total = base * p.demand * (state.gameState.output_demand_modifier[k] || 1);
     let inten = intensity.intensity(base, k, type);
 
     let out = p.output ? display.enumKey(p.output) : null;
@@ -149,9 +193,9 @@ function rank() {
     if (DEMAND_VARS.includes(k)) {
       rankings = rankings.concat(regionalFactors(k));
     } else {
-      rankings = rankings.concat(projectFactors(k));
       rankings = rankings.concat(eventFactors(k));
     }
+    rankings = rankings.concat(projectFactors(k));
 
     if (k == 'contentedness') {
       if (state.gameState.world.temp_outlook !== 0) {
@@ -186,8 +230,16 @@ function rank() {
         });
     }
 
-    rankings.sort((a, b) => Math.abs(a.amount) > Math.abs(b.amount) ? -1 : 1)
-    factors[k] = rankings;
+    // Split into modifiers (which don't make up demand percentages)
+    // and contributors (who do make up demand percentages);
+    let [modifiers, contribs] = partition(rankings, (r) => {
+      let amount = r.displayAmount || r.amount;
+      return typeof amount === 'string' && (amount.startsWith('+') || amount.startsWith('-'));
+    });
+
+    modifiers.sort();
+    contribs.sort((a, b) => Math.abs(a.amount) > Math.abs(b.amount) ? -1 : 1)
+    factors[k] = modifiers.concat(contribs);
   });
 
   return factors;
@@ -264,7 +316,7 @@ const tips = {
         data: {
           icon: 'water',
           type: 'water',
-          total: `${Math.round(format.waterUsePercent(state.gameState.resources_demand.water))}%`,
+          total: `${format.output(state.gameState.resources_demand.water, 'water')}/${format.output(state.gameState.resources.water, 'water')}`,
           current,
         }
       }

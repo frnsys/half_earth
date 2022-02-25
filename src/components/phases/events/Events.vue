@@ -263,10 +263,10 @@ export default {
         history.push(ev);
         state.annualRegionEvents[regionId] = history;
 
-        // TODO distinguish inland vs coastal events
         let region = state.gameState.world.regions[regionId];
         let tiles = regionsToTiles[region.name];
-        let hexIdx = randChoice(tiles.inland.concat(tiles.coasts));
+        let cands = ev.name == 'Severe Hurricane' ? tiles.coasts : tiles.inland.concat(tiles.coasts);
+        let hexIdx = randChoice(cands);
         // let label = sign(ev.effect.value);
         let mesh = this.globe.show({
           icon: ev.icon,

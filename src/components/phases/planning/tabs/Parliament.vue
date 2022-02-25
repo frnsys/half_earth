@@ -29,6 +29,7 @@
 <script>
 import state from '/src/state';
 import consts from '/src/consts';
+import {rngForYear} from '/src/lib/util';
 import NPCS from '/assets/content/npcs.json';
 import MiniNPC from 'components/cards/mini/MiniNPC.vue';
 
@@ -73,8 +74,16 @@ export default {
         }
       });
 
-      // TODO what to do with extra seats?
+      // Assign extra seats randomly
+      // We generate the assignment based on the current year
+      // so that it's consistent
       let extraSeats = totalSeats - usedSeats;
+      let rng = rngForYear(state.gameState.world.year);
+      while (extraSeats > 0) {
+        let s = seats[Math.floor(rng() * seats.length)];
+        s.seats++;
+        extraSeats--;
+      }
 
       return consts.parliamentSeats.map((nSeats) => {
         return [...Array(nSeats).keys()].map(() => {
@@ -130,7 +139,7 @@ export default {
   height: 18px;
   margin: 0.5em;
   background: #aaa;
-  
+
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
   border-right: 1px solid rgba(255,255,255,0.5);
   border-bottom: 1px solid rgba(255,255,255,0.5);
