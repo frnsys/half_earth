@@ -9,6 +9,7 @@ import icons from 'components/icons';
 import {slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts';
 import format from '/src/display/format';
 import factors from '/src/display/factors';
 import effects from '/src/display/effects';
@@ -122,7 +123,7 @@ function render(e) {
           return {
             tip: {
               icon: 'contentedness',
-              text: `${changeDir(e.param, e)} world contentedness by ${e.param == '?' ? 'an unknown amount' : formatParam(e.param)}.`,
+              text: `Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
             },
             text: `[contentedness] ${changeDir(e.param, e)} world contentedness by ${formatParam(e.param)}.`,
           }
@@ -140,7 +141,7 @@ function render(e) {
           return {
             tip: {
               icon: 'extinction_rate',
-              text: `Current biodiversity pressure is ${state.gameState.world.extinction_rate.toFixed(0)}.`,
+              text: `Current biodiversity pressure is ${state.gameState.world.extinction_rate.toFixed(0)}<span class="type-total">/${consts.maxValues['biodiversity']}</span>.`,
             },
             text: `[extinction_rate] ${changeDir(e.param, e)} biodiversity pressure by ${formatParam(e.param)}.`,
           }
@@ -540,9 +541,9 @@ function render(e) {
         tip: {
           icon: 'contentedness',
           subicon: k,
-          text: `Regional contentedness changes based on demand for ${display.displayName(e.subtype)}.  Global contentedness will change by ${change}.`
+          text: `This changes regional contentedness based on demand for ${display.displayName(e.subtype)}. Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
         },
-        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} contentedness by <strong>${Math.abs(change)}</strong>.`
+        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} world contentedness by <strong>${Math.abs(change)}</strong>.`
       }
     }
     case 'IncomeOutlookChange': {
@@ -552,7 +553,7 @@ function render(e) {
         tip: {
           icon: 'contentedness',
           subicon: 'wealth',
-          text: `Regional contentedness changes by ${e.param} per income level (wealthier regions will feel it more). Global contentedness will change by ${change}.`
+          text: `This changes regional contentedness by ${e.param} per income level (wealthier regions will feel it more). Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
         },
         text: `[contentedness] ${changeDir(e.param, e)} contentedness by <strong>${Math.abs(change)}</strong>.`
       }
@@ -563,9 +564,9 @@ function render(e) {
       return {
         tip: {
           icon: 'chance',
-          text: `${changeDir(p, e)} the chance of ${event} by <strong>${Math.abs(p)}</strong>%`,
+          text: `${changeDir(p, e)} the chance of "${event}" by <strong>${Math.abs(p)}</strong>%`,
         },
-        text: `${changeDir(p, e)} the chance of ${event} by <strong>${Math.abs(p)}</strong>%`,
+        text: `${changeDir(p, e)} the chance of "${event}" by <strong>${Math.abs(p)}</strong>%`,
       }
     }
     case 'ProtectLand': {
