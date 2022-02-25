@@ -12,6 +12,7 @@
     <li>Troy Vettese</li>
     <li>Francis Tseng</li>
   </ul>
+  <h2>Thank you for playing!</h2>
 </div>
 </template>
 
