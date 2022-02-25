@@ -24,3 +24,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.card-icon img{
+  pointer-events: none;
+}
+</style>

@@ -48,14 +48,7 @@
       :key="p.id"
     >
     <ProcessCard :process="p" >
-      <!-- <template v-slot:actions>
-        <button :disabled="changedMixShare(p) === 0" @click="(ev) => { ev.stopPropagation(); removePoint(p) }">
-          -<img class="pip" :src="icons.mix_token">
-        </button>
-        <button :disabled="points === 0" @click="(ev) => { ev.stopPropagation(); addPoint(p) }">
-          +<img class="pip" :src="icons.mix_token">
-        </button>
-      </template> -->
+
     </ProcessCard>
     </Draggable>
   </Cards>

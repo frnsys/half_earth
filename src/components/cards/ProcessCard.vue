@@ -340,7 +340,7 @@ export default {
 .process-mix-cells{
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 .process-mix-cell {
   height: calc(100%/20);
@@ -349,30 +349,36 @@ export default {
   box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
   border-left: 1px solid rgba(255,255,255,0.5);
   border-top: 1px solid rgba(255,255,255,0.5);
-}
-
-.process-mix-cell:first-of-type{
-  border-radius: 0 0.75em 0 0;
+  background-color: rgba(0,0,0,0.1);
 }
 
 .process-mix-cell:last-of-type{
+  border-radius: 0 0.75em 0 0;
+}
+
+.process-mix-cell:first-of-type{
   border-radius: 0 0 0.75em 0;
 }
 
 .process-mix-cell.active {
   background: #1B97F3;
+  box-shadow: 0 0 8px #1B97F3;
 }
 .process-mix-cell.active.depleted {
   background: #6190B3;
+  box-shadow: 0 0 0px #6190B3;
 }
 .process-mix-cell.active.shrink {
   background: #F28435;
+  box-shadow: 0 0 0px #F28435;
 }
 .process-mix-cell.grow {
   background: #43CC70;
+  box-shadow: 0 0 8px #43CC70;
 }
 .process-mix-cell.excess {
   background: #DC322E !important;
+  box-shadow: 0 0 8px #DC322E !important;
 }
 
 .alert-icon {

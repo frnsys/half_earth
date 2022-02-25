@@ -79,10 +79,7 @@ export default {
   cursor: pointer;
 }
 
-.card.process{
-  width: 280px;
-  margin:0 0.75em !important;
-}
+
 
 .card:hover{
   -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0.4));
@@ -351,14 +348,23 @@ export default {
   transform: rotateY(180deg);
 }
 
+.card.process{
+
+  margin:0 0.75em !important;
+  padding-right: calc(1.5em - 8px);
+}
+
 .process-mix-bar{
-  width: 20px;
+  width: calc(1.2em + 5px);
+  right: 0px;
+
   height: 100%;
-  /* background-color: red; */
-  background-color: rgba(0,0,0,0.4);
+
+  background-color: #222;
+
   position: absolute;
-  right: -10px;
-  z-index: -50;
-  border-radius: 0 0.75em 0.75em 0;
+  z-index: 1;
+  border-radius: 0 1em 1em 0;
+  padding:20px 5px;
 }
 </style>

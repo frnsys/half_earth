@@ -228,6 +228,16 @@ export default {
         });
       });
     },
+    shrinkPulseCard() {
+      let el = document.querySelector('.draggable.active');
+      animate(1, 0.95, 200, (val) => {
+        el.style.transform = `scale(${val})`;
+      }, () => {
+        animate(0.95, 1, 200, (val) => {
+          el.style.transform = `scale(${val})`;
+        });
+      });
+    },
     shakeScreen() {
       document.body.classList.add('shake');
       setTimeout(() => {
@@ -277,7 +287,7 @@ export default {
           
         }
 
-        if (y > window.innerHeight - WITHDRAW_HEIGHT/3) {
+        if (y > window.innerHeight - WITHDRAW_HEIGHT + 10) {
           if (!this.withdrawing) {
             this.withdrawing = true;
             this.withdrawCard();
@@ -472,6 +482,7 @@ export default {
       this.withdrawAnim = animate(0, 100, this.withdrawTime * 1000, (val) => {
         this.$refs.withdrawProgress.style.width = `${val}%`;
       }, () => {
+        this.shrinkPulseCard();
         let keepWithdrawing = false;
         if (this.withdrawing) {
           if (!this.process){
