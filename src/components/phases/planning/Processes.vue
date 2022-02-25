@@ -48,14 +48,7 @@
       :key="p.id"
     >
     <ProcessCard :process="p" >
-      <!-- <template v-slot:actions>
-        <button :disabled="changedMixShare(p) === 0" @click="(ev) => { ev.stopPropagation(); removePoint(p) }">
-          -<img class="pip" :src="icons.mix_token">
-        </button>
-        <button :disabled="points === 0" @click="(ev) => { ev.stopPropagation(); addPoint(p) }">
-          +<img class="pip" :src="icons.mix_token">
-        </button>
-      </template> -->
+
     </ProcessCard>
     </Draggable>
   </Cards>
@@ -124,21 +117,24 @@ export default {
   },
   watch: {
     output(output) {
+
       // Figure out what the focused card is
       this.$nextTick(() => {
         let scroller = document.querySelector('.cards');
         let els = [...document.querySelectorAll('.draggable')];
         let idx = detectCenterElement(scroller, els);
         this.focusedProcess = this.processes[idx];
+        this.focusedProcess.idx = idx;
 
-        
-        this.$emit('page', page);
+        this.$emit('page', this.output);
       });
     }
   },
   computed: {
     process() {
       if (this.focusedProcess !== null) {
+        // console.log(this.focusedProcess.idx);
+        // console.log(this.processes);
         let proc =  this.processes[this.focusedProcess.idx];
         if (proc === undefined) {
           return this.processes[0];
