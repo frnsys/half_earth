@@ -37,6 +37,11 @@ export default {
   cardScanTime: 1,
   cardWithdrawTime: 2,
 
+  // In seconds
+  processCardScanTime: 0.5,
+  processCardWithdrawTime: 0.4,
+ 
+  
   maxValues: {
     biodiversity: 80,
     contentedness: 40,

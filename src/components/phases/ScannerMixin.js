@@ -27,14 +27,14 @@ export default {
       if(!this.process){
         return consts.cardWithdrawTime
       } else {
-        return 0.3;
+        return consts.processCardWithdrawTime
       }
     },
     scanTime(){
       if(!this.process){
         return consts.cardScanTime
       } else {
-        return 0.5;
+        return consts.processCardScanTime
       }
     },
     icon() {
