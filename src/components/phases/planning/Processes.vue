@@ -117,21 +117,24 @@ export default {
   },
   watch: {
     output(output) {
+
       // Figure out what the focused card is
       this.$nextTick(() => {
         let scroller = document.querySelector('.cards');
         let els = [...document.querySelectorAll('.draggable')];
         let idx = detectCenterElement(scroller, els);
         this.focusedProcess = this.processes[idx];
+        this.focusedProcess.idx = idx;
 
-        
-        this.$emit('page', page);
+        this.$emit('page', this.output);
       });
     }
   },
   computed: {
     process() {
       if (this.focusedProcess !== null) {
+        // console.log(this.focusedProcess.idx);
+        // console.log(this.processes);
         let proc =  this.processes[this.focusedProcess.idx];
         if (proc === undefined) {
           return this.processes[0];

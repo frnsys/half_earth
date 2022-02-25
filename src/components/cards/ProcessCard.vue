@@ -6,34 +6,8 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    <div class="card-tack-ur process-mix">
-      <div class="process-excess-alert"
-        v-if="process.mix_share > maxShare || changedMixShare > maxShare"
-        v-tip="{icon: 'alert', text: 'This process can\'t produce this much because of feedstock or other limits. You should reallocate its points to other processes.'}"><img :src="icons.alert" /></div>
-      <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}" v-tip="changeTip">
-        <div class="process-mix-percent">{{process.mix_share*5}}%</div>
-        <template v-if="hasChange">
-          <div><img :src="icons.down_arrow"></div>
-          <div class="process-mix-percent">{{changedMixShare*5}}%</div>
-        </template>
-      </div>
-      
-    </div>
-    <div class="card-tack-ul process-details">
-      <div>
-        <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
-        <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
-        <img v-if="feedstockName != 'other'"
-          v-tip="{text: `This process uses ${feedstockName}. ${feedstockEstimateDesc}`, icon: feedstockIcon}"
-          class="process-feedstock" :src="icons[feedstockIcon]">
-        <div class="feedstock-remaining" v-if="feedstockName != 'other' && feedstockName != 'soil'">
-          <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
-        </div>
-      </div>
-      <div>
-        <img class="process--feature" v-for="feature in featureIcons" :src="icons[feature.icon]" v-tip="{icon: feature.icon, text: feature.text}"/>
-      </div>
-    </div>
+    
+    
     <div class="opposers" v-if="opposersDetailed.length > 0">
       <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
@@ -43,11 +17,31 @@
   </template>
   <template v-slot:name>
     {{name}}
+
+    <div class="process-mix">
+      <div class="process-excess-alert"
+        v-if="process.mix_share > maxShare || changedMixShare > maxShare"
+        v-tip="{icon: 'alert', text: 'This process can\'t produce this much because of feedstock or other limits. You should reallocate its points to other processes.'}"><img :src="icons.alert" /></div>
+      <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}" v-tip="changeTip">
+        <div class="process-mix-percent" :class="{before: hasChange}">{{process.mix_share*5}}%</div>
+        <template v-if="hasChange">
+          <small>▶</small>
+          <div class="process-mix-percent after" :class="{
+            shrink: process.mix_share > changedMixShare,
+            grow: process.mix_share < changedMixShare,
+          }">{{changedMixShare*5}}%</div>
+        </template>
+      </div>
+      
+    </div>
   </template>
   <template v-slot:body>
     <div class="card-actions" v-if="!!this.$slots.actions">
       <slot name="actions"></slot>
     </div>
+
+    
+    
     <div class="process-intensity space-even">
       <IntensityIcon
         v-tip="intensityTip('energy')"
@@ -70,6 +64,21 @@
     <p class="card-desc">{{description}}</p>
   </template>
   <template v-slot:bot-back>
+    <div class="process-details">
+      <div>
+        <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
+        <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
+        <img v-if="feedstockName != 'other'"
+          v-tip="{text: `This process uses ${feedstockName}. ${feedstockEstimateDesc}`, icon: feedstockIcon}"
+          class="process-feedstock" :src="icons[feedstockIcon]">
+        <div class="feedstock-remaining" v-if="feedstockName != 'other' && feedstockName != 'soil'">
+          <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
+        </div>
+      </div>
+      <div>
+        <img class="process--feature" v-for="feature in featureIcons" :src="icons[feature.icon]" v-tip="{icon: feature.icon, text: feature.text}"/>
+      </div>
+    </div>
     <div class="card-spacer"></div>
     <div class="card-image-attribution">
       Image: {{image.attribution}}
@@ -304,6 +313,11 @@ export default {
   margin: 0.5em 0;
 }
 
+.process-intensity img{
+  width: 24px;
+  margin-bottom: 2px;
+}
+
 .process-trend,
 .process-feedstock {
   width: 24px;
@@ -318,21 +332,42 @@ export default {
 
 .process-mix {
   display: flex;
+  justify-content: center;
+  margin-top:10px;
 }
 .process-mix img {
   width: 18px;
   vertical-align: top;
 }
+.process-mix small{
+  font-size:0.5em;
+  margin: 0 0.5em;
+}
 
 .process-mix-percent {
-  background: #222;
+  background: #111;
   color: #fff;
-  padding: 0.1em 0.15em;
+  padding: 0.2em 0.15em 0.1em;
   border-radius: 0.2em;
-  font-size: 0.8em;
+  font-size: 0.9em;
+  font-family: 'W95FA';
 }
+
+.process-mix-percent.before{
+ color: #aaa;
+}
+
+.process-mix-percent.after.shrink{
+color: #FF9A52;
+}
+.process-mix-percent.after.grow{
+color: #63FF96;
+}
+
 .process-mix-percents {
   text-align: center;
+  display: flex;
+  align-items: center;
 }
 .process-mix-percents.depleted {
   color: #aaa;
