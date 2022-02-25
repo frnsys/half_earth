@@ -73,15 +73,18 @@ export default {
       }
     },
     canDowngrade() {
+      if (this.process) return false;
       return this.project.kind == 'Policy' && this.project.level > 0;
     },
     implemented() {
+      if (this.process) return false;
       return this.project.status == 'Finished' || this.project.status == 'Active';
     },
     haltable() {
       return this.implemented && (this.project.kind == 'Policy' || this.project.ongoing);
     },
     refundable() {
+      if (this.process) return false;
       let changes = state.planChanges[this.project.id];
       return changes !== undefined && (
         changes.upgrades > 0

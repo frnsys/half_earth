@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <Cards>
+  <Cards @focused="onFocused" :disabled="!allowScroll">
     <Draggable 
       @drag="onDragVertical"
       @dragStop="onDragVerticalStop"
@@ -139,7 +139,7 @@ export default {
   computed: {
     process() {
       if (this.focusedProcess !== null) {
-        let proc =  this.processes[this.focusedProcess];
+        let proc =  this.processes[this.focusedProcess.idx];
         if (proc === undefined) {
           return this.processes[0];
         } else {
@@ -243,7 +243,6 @@ export default {
       return p.mix_share + change;
     },
     removePoint(p) {
-      console.log(p);
       let change = state.processMixChanges[this.output][p.id] || 0;
       if (p.mix_share + change > 0) {
         this.points += 1;
@@ -252,12 +251,10 @@ export default {
       }
     },
     addPoint(p) {
-      console.log(p);
       if (this.points > 0) {
         let change = state.processMixChanges[this.output][p.id] || 0;
         this.points -= 1;
         state.processMixChanges[this.output][p.id] = change + 1;
-        console.log('added');
         if (this.points == 0) {
           this.allowBack = true;
         }
@@ -271,6 +268,7 @@ export default {
     },
     onFocused(idx) {
       this.focusedProcess = this.processes[idx];
+      this.focusedProcess.idx = idx;
     },
     onDragVertical(component) {
       this.allowScroll = false;
