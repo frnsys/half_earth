@@ -1,6 +1,6 @@
 <template>
 <Calibration v-if="calibrationOpen" @close="calibrationOpen = false" />
-<div class="calibration-open" v-else @click="calibrationOpen = true">Calibration</div>
+<!-- <div class="calibration-open" v-else @click="calibrationOpen = true">Calibration</div> -->
 <nav>
   <div class="tab" :class="{selected: type == 'World'}" @click="() => type = 'World'">Worlds</div>
   <div class="tab" :class="{selected: type == 'Region'}" @click="() => type = 'Region'">Regions</div>
