@@ -52,7 +52,7 @@
   </Cards>
 
   <CardFocusArea />
-  
+
   <footer>
     <div class="pips">
       <div class="scan-progress" ></div>
@@ -82,7 +82,7 @@ import ScannerMixin from 'components/phases/ScannerMixin';
 import {detectCenterElement} from 'lib/util';
 
 export default {
-  mixins: [ScannerMixin],
+  mixins: [ScannerMixin('Project')],
   components: {
     Cards,
     ProjectCard,

@@ -71,7 +71,7 @@ import PROJECTS from '/assets/content/projects.json';
 import ScannerMixin from 'components/phases/ScannerMixin';
 
 export default {
-  mixins: [ScannerMixin],
+  mixins: [ScannerMixin('Project')],
   props: ['project'],
   data() {
     return {
