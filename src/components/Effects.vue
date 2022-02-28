@@ -596,7 +596,7 @@ function render(e) {
     }
     case 'ModifyEventProbability': {
       let event = EVENTS[e.entity].name;
-      let p = e.param == '?' ? '?' : Math.abs(e.param * 100);
+      let p = e.param == '?' ? '?' : e.param * 100;
       return {
         tip: {
           icon: 'chance',
