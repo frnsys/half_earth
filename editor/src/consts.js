@@ -320,6 +320,11 @@ const EFFECTS = {
     desc: 'Unlocks a project.'
   },
 
+  LocksProject: {
+    entity: 'Project',
+    desc: 'Locks a project.'
+  },
+
   UnlocksProcess: {
     entity: 'Process',
     desc: 'Unlocks a process.'

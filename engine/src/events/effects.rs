@@ -51,6 +51,7 @@ pub enum Effect {
 
     AddEvent(usize),
     TriggerEvent(usize, usize),
+    LocksProject(usize),
     UnlocksProject(usize),
     UnlocksProcess(usize),
     UnlocksNPC(usize),
@@ -166,6 +167,9 @@ impl Effect {
             },
             Effect::TriggerEvent(id, years) => {
                 event_pool.queue_event(*id, region_id, *years);
+            },
+            Effect::LocksProject(id) => {
+                state.projects[*id].locked = true;
             },
             Effect::UnlocksProject(id) => {
                 state.projects[*id].locked = false;
@@ -366,6 +370,18 @@ impl Effect {
                 if let Some(idx) = state.flags.iter().position(|x| x == flag) {
                     state.flags.remove(idx);
                 }
+            },
+            Effect::LocksProject(id) => {
+                state.projects[*id].locked = false;
+            },
+            Effect::UnlocksProject(id) => {
+                state.projects[*id].locked = true;
+            },
+            Effect::UnlocksProcess(id) => {
+                state.processes[*id].locked = true;
+            },
+            Effect::UnlocksNPC(id) => {
+                state.npcs[*id].locked = true;
             },
 
             // Other effects aren't reversible

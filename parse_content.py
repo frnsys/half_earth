@@ -253,6 +253,7 @@ def nearest_multiple(v):
 
 effects = {
     'UnlocksProject':   lambda e: (ids[e['entity']],),
+    'LocksProject':     lambda e: (ids[e['entity']],),
     'UnlocksProcess':   lambda e: (ids[e['entity']],),
     'UnlocksNPC':       lambda e: (ids[e['entity']],),
     'AddEvent':         lambda e: (ids[e['entity']],),
@@ -339,6 +340,7 @@ effect_keys = {
   'TriggerEvent': ['entity', 'params'],
   'AddEvent': ['entity'],
   'UnlocksProject': ['entity'],
+  'LocksProject': ['entity'],
   'UnlocksProcess': ['entity'],
   'UnlocksNPC': ['entity'],
   'SetProjectStatus': ['entity', 'subtype', 'params'],
