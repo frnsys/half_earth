@@ -226,14 +226,13 @@ export default {
   top: 0;
   padding: 1em;
 
-
   background-image: url('/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   display: flex;
   flex-direction: column;
   user-select: none;
-  z-index: 10;
+  z-index: 11;
   align-items: center;
 
   image-rendering: pixelated;
