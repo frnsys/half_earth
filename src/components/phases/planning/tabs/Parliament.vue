@@ -5,7 +5,8 @@
     <div v-for="col in seats">
       <template v-for="seat in col">
         <div v-if="seat !== null"
-          :class="{coalitionSeat: seat.isAlly}"
+          @click="focusedNpcName = seat.name"
+          :class="{coalitionSeat: seat.isAlly, focused: focusedNpcName == seat.name}"
           :style="{background: seat.color}"></div>
         <div v-else></div>
       </template>
@@ -19,7 +20,7 @@
   </div>
 
   <div class="minicard-grid">
-    <div class="minicard-grid-item" v-for="npc in npcs">
+    <div class="minicard-grid-item" v-for="npc in npcs" :class="{focused: focusedNpcName == npc.name}">
       <MiniNPC :npc="npc" />
     </div>
   </div>
@@ -42,6 +43,7 @@ export default {
   data() {
     return {
       totalSeats,
+      focusedNpcName: null,
       suspended: state.gameState.flags.includes('ParliamentSuspended'),
       npcs: state.gameState.npcs.filter((npc) => !npc.locked),
     }
@@ -63,7 +65,7 @@ export default {
     },
     seats() {
       let usedSeats = 0;
-      let seats = state.gameState.npcs.map((npc) => {
+      let seats = state.gameState.npcs.filter((npc) => !npc.locked).map((npc) => {
         let seats = this.factionSeats(npc);
         usedSeats += seats;
         return {
@@ -147,6 +149,9 @@ export default {
 .parliament-seats .coalitionSeat {
   border: 2px solid #000;
 }
+.parliament-seats .focused {
+  box-shadow: 0 0 6px yellow;
+}
 
 .coalition-seats {
   text-align: center;
@@ -197,5 +202,9 @@ export default {
 
 .parliament-suspended-fade {
   opacity: 0.5;
+}
+
+.minicard-grid-item.focused {
+  box-shadow: 0 0 12px yellow;
 }
 </style>

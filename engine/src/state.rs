@@ -61,9 +61,11 @@ impl State {
         let world = content::world(difficulty);
         let starting_outlook = world.outlook();
         let mut npcs = content::npcs();
-        let n_npcs = npcs.len() as f32;
+        let n_npcs = npcs.iter().filter(|npc| !npc.locked).count() as f32;
         for npc in &mut npcs {
-            npc.seats = 1./n_npcs;
+            if !npc.locked {
+                npc.seats = 1./n_npcs;
+            }
         }
         let mut state = State {
             // political_capital: 10,
@@ -78,8 +80,7 @@ impl State {
             processes: content::processes(),
             industries: content::industries(),
 
-            runs: 1, // TODO TEMP TESTING
-            // runs: 0,
+            runs: 0,
             requests: Vec::new(),
 
             output_modifier: outputs!(
