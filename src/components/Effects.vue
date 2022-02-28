@@ -155,6 +155,15 @@ function render(e) {
             text: `[warming] ${changeDir(e.param, e)} the global temperature by ${formatParam(e.param)}<strong>°c</strong>.`
           };
         }
+        case 'Precipitation': {
+          return {
+            tip: {
+              icon: 'water',
+              text: `This will directly change global precipitation by ${format.sign(e.param)}<strong>cm/yr</strong>.`,
+            },
+            text: `[water] ${changeDir(e.param, e)} global precipitation by ${formatParam(e.param)}<strong>cm/yr</strong>.`
+          };
+        }
         case 'PopulationGrowth': {
           return {
             tip: {
@@ -205,6 +214,31 @@ function render(e) {
       }
       return;
     }
+    case 'ProcessLimit': {
+      let process = state.gameState.processes[e.entity];
+      let p = Math.abs(e.param/process.limit * 100);
+      if (p < 1) {
+        p = '<1%';
+      } else {
+        p = `${Math.round(p)}%`;
+      }
+      return {
+        tip: {
+          icon: 'alert',
+          text: `.`
+        },
+        text: `${changeDir(e.param, e)} maximum output for ${process.name} by <strong>${p}</strong>`,
+      }
+    }
+    case 'RegionHabitability': {
+      return {
+        tip: {
+          icon: 'habitability',
+          text: `Lower habitability means unhappier people who may need to migrate to more hospitable locales.`
+        },
+        text: `[habitability] ${changeDir(e.param, e)} habitability in ${e.subtype.toLowerCase()} regions by ${formatParam(e.param)}.`,
+      }
+    }
     case 'Resource': {
       let k = display.enumKey(e.subtype);
       let amount = format.output(e.param, k);
@@ -254,7 +288,7 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} output for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
+        text: `${changeDir(e.param, e)} output for<span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
     case 'CO2ForFeature': {
