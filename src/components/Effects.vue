@@ -183,8 +183,10 @@ function render(e) {
           };
         }
         default: {
-          console.log(`Unhandled WorldVariable effect type: ${e.subtype}`);
-          console.log(e);
+          if (VERSION === 'dev') {
+            console.log(`Unhandled WorldVariable effect type: ${e.subtype}`);
+            console.log(e);
+          }
         }
       }
       return;
@@ -560,13 +562,13 @@ function render(e) {
     }
     case 'ModifyEventProbability': {
       let event = EVENTS[e.entity].name;
-      let p = e.param * 100;
+      let p = e.param == '?' ? '?' : Math.abs(e.param * 100);
       return {
         tip: {
           icon: 'chance',
-          text: `${changeDir(p, e)} the chance of "${event}" by <strong>${Math.abs(p)}</strong>%`,
+          text: `${changeDir(p, e)} the chance of "${event}" by ${formatParam(p)}%`,
         },
-        text: `${changeDir(p, e)} the chance of "${event}" by <strong>${Math.abs(p)}</strong>%`,
+        text: `${changeDir(p, e)} the chance of "${event}" by ${formatParam(p)}%`,
       }
     }
     case 'ProtectLand': {
@@ -609,10 +611,13 @@ function render(e) {
       }
     }
 
-    default:
-      console.log(`Unhandled effect type: ${e.type}`);
-      console.log(e);
+    default: {
+      if (VERSION === 'dev') {
+        console.log(`Unhandled effect type: ${e.type}`);
+        console.log(e);
+      }
       return null;
+    }
   }
 }
 

@@ -456,7 +456,8 @@ export default {
             (item.probabilities || []).forEach((prob) => {
               prob.conditions.forEach((cond) => {
                 if (cond.type.startsWith('Project') || cond.type == 'ProcessMixShare') {
-                  children[cond.entity].push(item.id);
+                  let e = children[cond.entity]
+                  if (e) e.push(item.id);
                 } else if (cond.type == 'ProcessMixShareFeature') {
                   processesByFeature[cond.subtype].forEach((id) => {
                     children[id].push(item.id);

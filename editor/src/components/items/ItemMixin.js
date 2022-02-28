@@ -49,8 +49,8 @@ export default {
     Upgrades, UpgradesSummary,
   },
   created() {
+    this.validate();
     if (this.localData._validation === undefined) {
-      this.validate();
       this.save();
     }
   },
