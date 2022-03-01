@@ -169,7 +169,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  
+
   color: #fff;
   padding: 1.2em 0.5em;
 
@@ -178,7 +178,7 @@ export default {
   border-top: 1px solid rgba(0,0,0,0.4);
   border-left: 1px solid rgba(0,0,0,0.4);
 
-  
+
   border-radius: 0.5em;
   margin: 0 0 0.5em 0;
   font-family: 'Inter', sans-serif;
@@ -286,7 +286,7 @@ export default {
 }
 .card-tack-cb {
   position: absolute;
-  bottom: 0;
+  bottom: 1em;
   left: 50%;
   transform: translate(-50%, 50%);
 }

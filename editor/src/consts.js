@@ -177,7 +177,7 @@ const SUBPHASES = {
   World: ['Main', 'Start', 'End'],
   Planning: [
     'Start', 'End', 'Plan',
-    'Regions', 'Coalition',
+    'Regions', 'Parliament',
     'Dashboard', 'Research', 'Initiatives',
     'Policies', 'Processes', 'PlanChange'],
   Report: ['Start'],
@@ -512,6 +512,7 @@ const SPEAKERS = [
   'The Accelerationist',
   'The Malthusian',
   'The Ecofeminist',
+  'The Consumerist',
 ];
 
 const EVENT_TYPES = [

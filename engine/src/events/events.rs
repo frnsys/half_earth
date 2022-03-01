@@ -165,7 +165,9 @@ pub enum Phase {
     PlanningInitiatives,
     PlanningPolicies,
     PlanningProcesses,
-    PlanningCoalition,
+    PlanningParliament,
+    PlanningRegions,
+    PlanningDashboard,
     PlanningPlanChange,
     Manual,
 }

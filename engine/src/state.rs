@@ -224,6 +224,7 @@ impl State {
         let posadist_ally = self.is_ally("The Posadist");
         let utopian_ally = self.is_ally("The Utopian");
         let animal_ally = self.is_ally("The Animal Liberationist");
+        let environ_ally = self.is_ally("The Environmentalist");
         let ecofem_ally = self.is_ally("The Ecofeminist");
         let malthus_ally = self.is_ally("The Malthusian");
         for project in &mut self.projects {
@@ -242,6 +243,9 @@ impl State {
                 || project.group == Group::Protection
                 || project.group == Group::Restoration) {
                 group_modifier *= 0.75;
+            }
+            if environ_ally && project.group == Group::Protection {
+                group_modifier *= 0.5;
             }
             if animal_ally && project.group == Group::Food {
                 group_modifier *= 0.5;
