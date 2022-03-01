@@ -136,7 +136,17 @@ export default {
     },
     projectOrder() {
       let projects = state.gameState.projects
-        .filter((p) => p.kind == this.type && !p.locked);
+        .filter((p) => {
+          return p.kind == this.type
+            && !p.locked
+            // Filter out finished projects
+            && p.status !== 'Finished'
+
+            // Filter out finished policies
+            // but only ones added before
+            // this planning session
+            && (p.status !== 'Active' || p.id in state.planChanges)
+        });
 
       let idxs = projects.map((p, i) => i);
       idxs.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
