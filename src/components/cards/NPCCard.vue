@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import state from '/src/state';
 import Card from './Card.vue';
 import display from '/src/display/display';
 import NPCS from '/assets/content/npcs.json';
@@ -59,6 +60,7 @@ export default {
   },
   data() {
     return {
+      state,
       ...NPCS[this.npc.id],
     };
   },

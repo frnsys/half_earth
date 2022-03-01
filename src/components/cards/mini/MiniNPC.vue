@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import state from '/src/state';
 import consts from '/src/consts';
 import NPCCard from '../NPCCard.vue';
 import MiniCard from './MiniCard.vue';
@@ -40,7 +41,7 @@ export default {
       return display.relationshipName(this.npc.relationship);
     },
     factionSeats() {
-      return Math.floor(this.npc.seats * totalSeats);
+      return Math.floor(this.npc.seats * totalSeats) + (state.extraSeats[this.npc.name] || 0);
     },
     factionColor(npc) {
       return NPCS[this.npc.id].color;

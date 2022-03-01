@@ -20,7 +20,7 @@
   </div>
 
   <div class="minicard-grid">
-    <div class="minicard-grid-item" v-for="npc in npcs" :class="{focused: focusedNpcName == npc.name}">
+    <div class="minicard-grid-item" v-for="npc in npcs" :class="{focused: focusedNpcName == npc.name}" :key="npc.id">
       <MiniNPC :npc="npc" />
     </div>
   </div>
@@ -42,10 +42,10 @@ export default {
   },
   data() {
     return {
+      state,
       totalSeats,
       focusedNpcName: null,
       suspended: state.gameState.flags.includes('ParliamentSuspended'),
-      npcs: state.gameState.npcs.filter((npc) => !npc.locked),
     }
   },
   methods: {
@@ -54,6 +54,9 @@ export default {
     }
   },
   computed: {
+    npcs() {
+      return state.gameState.npcs.filter((npc) => !npc.locked);
+    },
     coalitionSeats() {
       return state.gameState.npcs.reduce((acc, npc) => {
         if (npc.relationship >= 5) {
@@ -65,7 +68,8 @@ export default {
     },
     seats() {
       let usedSeats = 0;
-      let seats = state.gameState.npcs.filter((npc) => !npc.locked).map((npc) => {
+      let npcs = state.gameState.npcs.filter((npc) => !npc.locked);
+      let seats = npcs.map((npc) => {
         let seats = this.factionSeats(npc);
         usedSeats += seats;
         return {
@@ -81,9 +85,14 @@ export default {
       // so that it's consistent
       let extraSeats = totalSeats - usedSeats;
       let rng = rngForYear(state.gameState.world.year);
+      state.extraSeats = npcs.reduce((acc, npc) => {
+        acc[npc.name] = 0;
+        return acc;
+      }, {});
       while (extraSeats > 0) {
         let s = seats[Math.floor(rng() * seats.length)];
         s.seats++;
+        state.extraSeats[s.name]++;
         extraSeats--;
       }
 

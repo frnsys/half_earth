@@ -319,6 +319,7 @@ export default {
 .dialogue--choices {
   text-align: right;
   flex: 1;
+  margin-left: 5em;
 }
 .dialogue--choice {
   background: #fff;
