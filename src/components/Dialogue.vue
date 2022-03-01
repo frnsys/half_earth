@@ -173,7 +173,7 @@ export default {
     },
     selectChoice(ev, branch) {
       ev.stopImmediatePropagation();
-      game.applyBranchEffects(this.eventId, this.regionId, branch);
+      game.applyBranchEffects(this.eventId, this.regionId, branch.id);
 
       this.current = branch.line_id;
       if (this.current !== null) {
