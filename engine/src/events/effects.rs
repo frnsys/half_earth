@@ -32,6 +32,7 @@ pub enum Flag {
     MoreLabor,
     MoreAutomation,
     MoreLeisure,
+    EcosystemModeling,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]
@@ -60,10 +61,9 @@ pub enum Effect {
     ProjectRequest(usize, bool, usize),
     ProcessRequest(usize, bool, usize),
 
-    SetProjectStatus(usize, Status, usize),
-
     Migration,
     RegionLeave,
+    TerminationShock,
     AddRegionFlag(String),
 
     AddFlag(Flag),
@@ -360,9 +360,20 @@ impl Effect {
             Effect::ProjectCostModifier(id, change) => {
                 state.projects[*id].cost_modifier -= change;
             },
-            Effect::SetProjectStatus(id, status, duration) => {
-                state.projects[*id].status = *status;
-                // TODO apply duration?
+            Effect::TerminationShock => {
+                let p = state.projects.iter().find(|p| p.name == "Solar Radiation Management").unwrap();
+                let effects = p.active_effects();
+                let mut temp = 0.;
+                for eff in effects {
+                    match eff {
+                        Effect::WorldVariable(typ, val) => match typ {
+                            WorldVariable::Temperature => temp += val,
+                            _ => ()
+                        },
+                        _ => ()
+                    };
+                };
+                state.world.temperature_modifier -= temp;
             },
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent/100.;

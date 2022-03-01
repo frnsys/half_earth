@@ -261,6 +261,9 @@ impl State {
             if malthus_ally && project.group == Group::Population {
                 group_modifier *= 0.5;
             }
+            if self.flags.contains(&Flag::EcosystemModeling) && project.group == Group::Restoration {
+                modifier *= 1.1;
+            }
             project.update_cost(self.world.year, self.world.income_level(), &self.output_demand, if project.kind == ProjectType::Policy {
                 1.0
             } else {

@@ -66,6 +66,7 @@ export default {
   time: require('/assets/icons/time.svg'),
   warning: require('/assets/icons/warning.svg'),
   help: require('/assets/icons/help.svg'),
+  birb: require('/assets/icons/biodiversity.png'),
 
   // NPC relationships
   ally: require('/assets/icons/npcs/ally.svg'),

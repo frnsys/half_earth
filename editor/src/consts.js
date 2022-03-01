@@ -335,13 +335,8 @@ const EFFECTS = {
     desc: 'Unlocks an NPC.'
   },
 
-  SetProjectStatus: {
-    entity: 'Project',
-    choices: ['Active', 'Stalled', 'Halted'],
-    params: {
-      'Duration': Number
-    },
-    desc: 'Changes the specified project\'s status for the specified number of years.'
+  TerminationShock: {
+    desc: 'Special effect for termination shock'
   },
 
   RegionLeave: {

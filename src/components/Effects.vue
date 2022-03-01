@@ -14,6 +14,7 @@ import format from '/src/display/format';
 import factors from '/src/display/factors';
 import effects from '/src/display/effects';
 import display from '/src/display/display';
+import {activeEffects} from '/src/display/project';
 import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
 import ICONEVENTS from '/assets/content/icon_events.json';
@@ -98,6 +99,12 @@ const FLAG_TIPS = {
     return {
       icon: 'labor',
       text: 'Research and infrastructure take 10% less time to complete.',
+    }
+  },
+  'EcosystemModeling': (demand) => {
+    return {
+      icon: 'birb',
+      text: 'Restoration projects take 10% less time to complete.',
     }
   },
 };
@@ -572,7 +579,7 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[emissions] ${changeDir(e.param, e)} ${e.subtype} emissions for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}.`,
+        text: `[emissions] ${changeDir(e.param, e)} ${e.subtype} emissions for ${tag} by <strong>${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}</strong>.`,
       }
     }
     case 'DemandOutlookChange': {
@@ -659,6 +666,22 @@ function render(e) {
         },
         text: `<strong>Locks</strong> ${project.name}`,
       }
+    }
+    case 'TerminationShock': {
+      let proj = state.gameState.projects.find((p) => p.name == 'Solar Radiation Management');
+      let effects = activeEffects(proj);
+      let temp_change = 0;
+      let temp_effect = effects.find((eff) => eff.subtype == 'Temperature');
+      if (temp_effect) {
+        temp_change = -temp_effect.param;
+      }
+      return {
+        tip: {
+          icon: 'warming',
+          text: `This will directly change the global temperature anomaly by ${format.sign(temp_change)}<strong>°c</strong>.`,
+        },
+        text: `[warming] ${changeDir(temp_change, e)} the global temperature by ${formatParam(temp_change)}<strong>°c</strong>.`
+      };
     }
     default: {
       if (VERSION === 'dev') {

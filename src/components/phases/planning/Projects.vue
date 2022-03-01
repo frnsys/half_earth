@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import debug from '/src/debug';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
 import Cards from 'components/cards/Cards.vue';
@@ -135,10 +136,15 @@ export default {
       }
     },
     projectOrder() {
-      let projects = state.gameState.projects
+      let idxs = this.projects.map((p, i) => i);
+      idxs.sort((a, b) => this.projects[a].name.toLowerCase().localeCompare(this.projects[b].name.toLowerCase()))
+      return idxs;
+    },
+    projects() {
+      return state.gameState.projects
         .filter((p) => {
           return p.kind == this.type
-            && !p.locked
+            && (!p.locked || debug.showAllProjects)
             // Filter out finished projects
             && p.status !== 'Finished'
 
@@ -147,13 +153,6 @@ export default {
             // this planning session
             && (p.status !== 'Active' || p.id in state.planChanges)
         });
-
-      let idxs = projects.map((p, i) => i);
-      idxs.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
-      return idxs;
-    },
-    projects() {
-      return state.gameState.projects.filter((p) => p.kind == this.type && !p.locked);
     },
   },
   methods: {
