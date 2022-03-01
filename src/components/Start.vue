@@ -35,6 +35,9 @@ export default {
     },
     toggleSound() {
       state.sound = !state.sound;
+      if (!state.sound) {
+        window.music.pause();
+      }
       saveSettings();
     },
     sound() {
