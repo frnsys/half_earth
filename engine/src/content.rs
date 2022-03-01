@@ -12009,7 +12009,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![],
+            branches: vec![(vec![Effect::NPCRelationship(1, 2)], vec![]), (vec![Effect::NPCRelationship(6, 2)], vec![]), (vec![Effect::NPCRelationship(7, 2)], vec![])],
             intensity: 0,
             aspect: None
         },

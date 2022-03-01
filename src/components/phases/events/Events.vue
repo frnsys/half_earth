@@ -149,6 +149,7 @@ export default {
             this.time += elapsed;
 
             if (this.time >= consts.msPerYear) {
+              this.year = state.gameState.world.year;
               let {completedProjects, regionChanges} = game.step();
               this.updates = completedProjects.map((id) => ({
                 id, type: 'Project',
@@ -157,13 +158,18 @@ export default {
               }))).concat(regionChanges[1].map((id) => ({
                 id, type: 'Region:Down',
               })));
+              if ((this.year + 1) % 5 == 0) {
+                let policyOutcomes = game.rollNewPolicyOutcomes().map((id) => ({
+                  id, type: 'Policy',
+                }));
+                this.updates = this.updates.concat(policyOutcomes);
+              }
               if (this.updates.length > 0) {
                 this.stopped = true;
               }
               if (completedProjects.length > 0) {
                 state.cycleStartState.completedProjects = state.cycleStartState.completedProjects.concat(completedProjects);
               }
-              this.year = state.gameState.world.year;
 
               // Add to historical data
               state.history.emissions.push(state.gameState.world.emissions);
@@ -351,7 +357,7 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 1.25em;
+  bottom: 4em;
   padding: 1em;
   text-align: center;
   font-size: 0.8em;

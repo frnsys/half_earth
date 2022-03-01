@@ -38,6 +38,10 @@ pub struct State {
     pub requests: Vec<(Request, usize, bool, usize)>,
     pub flags: Vec<Flag>,
 
+    // Keep track of what policies
+    // need to have rolled outcomes
+    pub new_policies: Vec<usize>,
+
     // Modifiers should start as all 1.
     pub output_modifier: OutputMap<f32>,
     pub output_demand: OutputMap<f32>,
@@ -82,6 +86,7 @@ impl State {
 
             runs: 0,
             requests: Vec::new(),
+            new_policies: Vec::new(),
 
             output_modifier: outputs!(
                 fuel: 1.,
@@ -428,17 +433,8 @@ impl State {
 
         // Ugh hacky
         let project = &self.projects[project_id];
-        let mut active_outcome = None;
         if project.kind == ProjectType::Policy {
-            match project.roll_outcome(self, rng) {
-                Some((outcome, i)) => {
-                    for effect in &outcome.effects {
-                        effects.push(effect.clone());
-                    }
-                    active_outcome = Some(i);
-                },
-                None => ()
-            }
+            self.new_policies.push(project.id);
         }
 
         let project = &mut self.projects[project_id];
@@ -448,7 +444,6 @@ impl State {
             for effect in &project.effects {
                 effects.push(effect.clone());
             }
-            project.active_outcome = active_outcome;
         } else {
             project.status = Status::Building;
         }
@@ -477,6 +472,7 @@ impl State {
             for effect in &project.effects {
                 effects.push(effect.clone());
             }
+            self.new_policies.retain(|&id| id != project.id);
         }
 
         for npc_id in &project.supporters {
@@ -487,6 +483,26 @@ impl State {
         }
 
         effects
+    }
+
+    pub fn roll_new_policy_outcomes(&mut self, rng: &mut SmallRng) -> (Vec<usize>, Vec<Effect>) {
+        let mut effects: Vec<Effect> = Vec::new();
+        let ids: Vec<usize> = self.new_policies.drain(..).collect();
+        for id in &ids {
+            let mut active_outcome = None;
+            match self.projects[*id].roll_outcome(self, rng) {
+                Some((outcome, i)) => {
+                    for effect in &outcome.effects {
+                        effects.push(effect.clone());
+                    }
+                    active_outcome = Some(i);
+                },
+                None => ()
+            }
+            self.projects[*id].active_outcome = active_outcome;
+        }
+
+        (ids, effects)
     }
 
     pub fn upgrade_project(&mut self, project_id: usize) -> (Vec<Effect>, Vec<Effect>) {
@@ -616,6 +632,7 @@ impl Saveable for State {
             "research_points": self.research_points,
             "requests": self.requests,
             "flags": self.flags,
+            "new_policies": self.new_policies,
             "output_modifier": self.output_modifier,
             "output_demand": self.output_demand,
             "output_demand_modifier": self.output_demand_modifier,
@@ -655,7 +672,7 @@ impl Saveable for State {
         self.research_points = coerce(&state["research_points"]);
         self.requests = coerce(&state["requests"]);
         self.flags = coerce(&state["flags"]);
-
+        self.new_policies = coerce(&state["new_policies"]);
         self.output_modifier = coerce(&state["output_modifier"]);
         self.output_demand = coerce(&state["output_demand"]);
         self.output_demand_modifier = coerce(&state["output_demand_modifier"]);
