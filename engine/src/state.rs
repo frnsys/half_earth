@@ -225,6 +225,9 @@ impl State {
         if self.flags.contains(&Flag::MoreAutomation) {
             modifier *= 0.9;
         }
+        if self.flags.contains(&Flag::MoreLeisure) {
+            modifier *= 1.1;
+        }
 
         let posadist_ally = self.is_ally("The Posadist");
         let utopian_ally = self.is_ally("The Utopian");

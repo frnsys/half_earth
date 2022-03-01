@@ -88,6 +88,12 @@ const FLAG_TIPS = {
       text: 'Research and infrastructure take 10% less time to complete.',
     }
   },
+  'MoreLeisure': (demand) => {
+    return {
+      icon: 'labor',
+      text: 'Research and infrastructure take 10% more time to complete.',
+    }
+  },
   'MoreAutomation': (demand) => {
     return {
       icon: 'labor',
@@ -644,7 +650,16 @@ function render(e) {
         text: `[${k}] ${changeDir(e.param, e)} ${name} supply by <strong>${e.param*100}%.</strong>`,
       }
     }
-
+    case 'LocksProject': {
+      let project = state.gameState.projects[e.entity];
+      return {
+        tip: {
+          icon: 'alert',
+          text: `${project.name} will be unavailable while this project is active.`,
+        },
+        text: `<strong>Locks</strong> ${project.name}`,
+      }
+    }
     default: {
       if (VERSION === 'dev') {
         console.log(`Unhandled effect type: ${e.type}`);

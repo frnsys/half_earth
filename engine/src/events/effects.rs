@@ -31,6 +31,7 @@ pub enum Flag {
     ParliamentSuspended,
     MoreLabor,
     MoreAutomation,
+    MoreLeisure,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]
