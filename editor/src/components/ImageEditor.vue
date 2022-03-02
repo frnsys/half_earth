@@ -137,7 +137,7 @@ export default {
         '-extent', `${this.dimensions}`,
 
         // Apply dither
-        '-dither', 'Riemersma',
+        '-dither', 'Floyd-Steinberg',
         '-remap', 'palette.png',
 
         // Scale back up with nearest neighbor interpolation
