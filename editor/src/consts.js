@@ -122,6 +122,10 @@ const CONDITIONS = {
     compare: true,
     choices: Object.keys(RESOURCES),
   },
+  ProcessOutput: {
+    compare: true,
+    entity: 'Process',
+  },
   ProcessMixShare: {
     compare: true,
     entity: 'Process',
@@ -493,7 +497,7 @@ const SPEAKERS = [
   'The Citizen',
   'The Doom Cultist',
   'The Leather Underground',
-  'The Green Meanies',
+  'The Earth Liberation Front',
   'The Wretched',
   'The Spacer',
   'The Doctor',
@@ -508,6 +512,7 @@ const SPEAKERS = [
   'The Malthusian',
   'The Ecofeminist',
   'The Consumerist',
+  'The Bandung Bloc',
 ];
 
 const EVENT_TYPES = [

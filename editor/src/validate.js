@@ -170,8 +170,24 @@ function validateVariables(variables) {
 }
 
 function validateDialogue(dialogue) {
-  return dialogue !== undefined && dialogue.lines && dialogue.lines.length > 0 && dialogue.lines.every((l) => {
-    return requireOneOfChoice(l.speaker, consts.SPEAKERS) && requireAtLeastOne(l.text);
+  let ids = [];
+  let fringe = [dialogue.root];
+  while (fringe.length > 0) {
+    let id = fringe.shift();
+    ids.push(id);
+    let line = dialogue.lines[id];
+    if (typeof line.next === 'string') {
+      fringe.push(line.next);
+    } else if (Array.isArray(line.next)) {
+      fringe = fringe.concat(
+        line.next.map((b) => b.line_id)
+        .filter((id) => !ids.includes(id)));
+    }
+  }
+  return dialogue !== undefined && dialogue.lines && Object.values(dialogue.lines).length > 0 && ids.every((id) => {
+    let l = dialogue.lines[id];
+    // Hacky, but if l.next is null, we assume it's the end of a branch and so its ok for the text to be empty
+    return requireOneOfChoice(l.speaker, consts.SPEAKERS) && (l.next == null || requireAtLeastOne(l.text));
   });
 }
 

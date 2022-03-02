@@ -66,13 +66,15 @@ export default {
   },
   methods: {
     setupSelect() {
-      if (this.select) this.select.destroy();
-      let sel = `${this.localData.id}-entity-select`;
-      let el = document.getElementById(sel);
-      if (el) {
-        this.select = new SlimSelect({
-          select: el
-        });
+      if (this.localData.id !== undefined) {
+        if (this.select) this.select.destroy();
+        let sel = `${this.localData.id}-entity-select`;
+        let el = document.getElementById(sel);
+        if (el) {
+          this.select = new SlimSelect({
+            select: el
+          });
+        }
       }
     },
     update() {
