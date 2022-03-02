@@ -46,7 +46,9 @@ export default {
       let value = '';
       if (spec.entity) {
         let match = state.itemsByType[spec.entity][condition.entity];
-        value += `${match.name}`;
+        if (match) {
+          value += `${match.name}`;
+        }
       }
       if (spec.compare) {
         value += ` ${condition.comparator} ${(condition.value !== undefined && condition.value !== '') ? condition.value : '[MISSING]'}`;

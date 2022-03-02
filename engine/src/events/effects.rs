@@ -31,6 +31,8 @@ pub enum Flag {
     ParliamentSuspended,
     MoreLabor,
     MoreAutomation,
+    MoreLeisure,
+    EcosystemModeling,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]
@@ -51,6 +53,7 @@ pub enum Effect {
 
     AddEvent(usize),
     TriggerEvent(usize, usize),
+    LocksProject(usize),
     UnlocksProject(usize),
     UnlocksProcess(usize),
     UnlocksNPC(usize),
@@ -58,10 +61,9 @@ pub enum Effect {
     ProjectRequest(usize, bool, usize),
     ProcessRequest(usize, bool, usize),
 
-    SetProjectStatus(usize, Status, usize),
-
     Migration,
     RegionLeave,
+    TerminationShock,
     AddRegionFlag(String),
 
     AddFlag(Flag),
@@ -166,6 +168,9 @@ impl Effect {
             },
             Effect::TriggerEvent(id, years) => {
                 event_pool.queue_event(*id, region_id, *years);
+            },
+            Effect::LocksProject(id) => {
+                state.projects[*id].locked = true;
             },
             Effect::UnlocksProject(id) => {
                 state.projects[*id].locked = false;
@@ -355,9 +360,20 @@ impl Effect {
             Effect::ProjectCostModifier(id, change) => {
                 state.projects[*id].cost_modifier -= change;
             },
-            Effect::SetProjectStatus(id, status, duration) => {
-                state.projects[*id].status = *status;
-                // TODO apply duration?
+            Effect::TerminationShock => {
+                let p = state.projects.iter().find(|p| p.name == "Solar Radiation Management").unwrap();
+                let effects = p.active_effects();
+                let mut temp = 0.;
+                for eff in effects {
+                    match eff {
+                        Effect::WorldVariable(typ, val) => match typ {
+                            WorldVariable::Temperature => temp += val,
+                            _ => ()
+                        },
+                        _ => ()
+                    };
+                };
+                state.world.temperature_modifier -= temp;
             },
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent/100.;
@@ -366,6 +382,18 @@ impl Effect {
                 if let Some(idx) = state.flags.iter().position(|x| x == flag) {
                     state.flags.remove(idx);
                 }
+            },
+            Effect::LocksProject(id) => {
+                state.projects[*id].locked = false;
+            },
+            Effect::UnlocksProject(id) => {
+                state.projects[*id].locked = true;
+            },
+            Effect::UnlocksProcess(id) => {
+                state.processes[*id].locked = true;
+            },
+            Effect::UnlocksNPC(id) => {
+                state.npcs[*id].locked = true;
             },
 
             // Other effects aren't reversible

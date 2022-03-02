@@ -9,10 +9,14 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
     let mut opposers: Vec<usize> = vec![];
     for project in projects {
         for id in &project.supporters {
-            supporters.push(*id);
+            if !npcs[*id].locked {
+                supporters.push(*id);
+            }
         }
         for id in &project.opposers {
-            opposers.push(*id);
+            if !npcs[*id].locked {
+                opposers.push(*id);
+            }
         }
     }
 
@@ -27,12 +31,16 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
 
     let mut total_support = 0.;
     for npc in &mut *npcs {
-        npc.support = f32::max(0., npc.support);
-        total_support += npc.support;
+        if !npc.locked {
+            npc.support = f32::max(0., npc.support);
+            total_support += npc.support;
+        }
     }
 
     for npc in &mut *npcs {
-        npc.seats = npc.support/total_support;
+        if !npc.locked {
+            npc.seats = npc.support/total_support;
+        }
     }
 }
 

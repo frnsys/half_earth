@@ -52,7 +52,7 @@
   </Cards>
 
   <CardFocusArea />
-  
+
   <footer>
     <div class="pips">
       <div class="scan-progress" ></div>
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import debug from '/src/debug';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
 import Cards from 'components/cards/Cards.vue';
@@ -82,7 +83,7 @@ import ScannerMixin from 'components/phases/ScannerMixin';
 import {detectCenterElement} from 'lib/util';
 
 export default {
-  mixins: [ScannerMixin],
+  mixins: [ScannerMixin('Project')],
   components: {
     Cards,
     ProjectCard,
@@ -135,15 +136,23 @@ export default {
       }
     },
     projectOrder() {
-      let projects = state.gameState.projects
-        .filter((p) => p.kind == this.type && !p.locked);
-
-      let idxs = projects.map((p, i) => i);
-      idxs.sort((a, b) => projects[a].name.toLowerCase().localeCompare(projects[b].name.toLowerCase()))
+      let idxs = this.projects.map((p, i) => i);
+      idxs.sort((a, b) => this.projects[a].name.toLowerCase().localeCompare(this.projects[b].name.toLowerCase()))
       return idxs;
     },
     projects() {
-      return state.gameState.projects.filter((p) => p.kind == this.type && !p.locked);
+      return state.gameState.projects
+        .filter((p) => {
+          return p.kind == this.type
+            && (!p.locked || debug.showAllProjects)
+            // Filter out finished projects
+            && p.status !== 'Finished'
+
+            // Filter out finished policies
+            // but only ones added before
+            // this planning session
+            && (p.status !== 'Active' || p.id in state.planChanges)
+        });
     },
   },
   methods: {

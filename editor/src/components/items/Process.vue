@@ -155,11 +155,11 @@
     <fieldset class="stances">
       <div v-if="localData.supporters && localData.supporters.length > 0">
         <h5>Supporters</h5>
-        <span v-for="id in localData.supporters">{{npc(id).name}}</span>
+        <span v-for="id in localData.supporters">{{npc(id) ? npc(id).name : id}}</span>
       </div>
       <div v-if="localData.opposers && localData.opposers.length > 0">
         <h5>Opposers</h5>
-        <span v-for="id in localData.opposers">{{npc(id).name}}</span>
+        <span v-for="id in localData.opposers">{{npc(id) ? npc(id).name : id}}</span>
       </div>
     </fieldset>
 

@@ -21,6 +21,11 @@ export default {
   },
   computed: {
     hasEvent() {
+      if (debug.hideIntro) {
+        this.events = this.events.filter(([eventId, _]) => {
+          return EVENTS[eventId].arc !== 'Tutorial';
+        });
+      }
       if (debug.hideEvents) {
         return false;
       } else {

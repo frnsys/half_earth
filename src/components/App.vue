@@ -1,6 +1,6 @@
 <template>
   <template v-if="!started">
-    <Start @started="started = true" />
+    <Start @started="start" />
   </template>
   <template v-else-if="!loaded">
     <Loading @loaded="loaded = true" />
@@ -44,9 +44,12 @@ export default {
       loaded: false,
     };
   },
-  mounted() {
-    if (!debug.noSound && state.sound) {
-      window.music.play();
+  methods: {
+    start() {
+      if (!debug.noSound && state.sound) {
+        window.music.play();
+      }
+      this.started = true;
     }
   },
   components: {

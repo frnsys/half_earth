@@ -37,7 +37,7 @@
   </div>
 
   <Cards @focused="onFocused" :disabled="!allowScroll">
-    <Draggable 
+    <Draggable
       @drag="onDragVertical"
       @dragStop="onDragVerticalStop"
       v-for="p in processes"
@@ -96,7 +96,7 @@ function fmtPercent(n) {
 }
 
 export default {
-  mixins:[ScannerMixin],
+  mixins:[ScannerMixin('Process')],
   components: {
     Cards,
     ProcessCard,
@@ -274,7 +274,7 @@ export default {
       this.allowScroll = true;
       this.stopDrag();
     },
-  
+
   }
 }
 </script>

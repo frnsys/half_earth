@@ -9,10 +9,12 @@ import icons from 'components/icons';
 import {slugify} from 'lib/util';
 import game from '/src/game';
 import state from '/src/state';
+import consts from '/src/consts';
 import format from '/src/display/format';
 import factors from '/src/display/factors';
 import effects from '/src/display/effects';
 import display from '/src/display/display';
+import {activeEffects} from '/src/display/project';
 import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
 import ICONEVENTS from '/assets/content/icon_events.json';
@@ -87,10 +89,22 @@ const FLAG_TIPS = {
       text: 'Research and infrastructure take 10% less time to complete.',
     }
   },
+  'MoreLeisure': (demand) => {
+    return {
+      icon: 'labor',
+      text: 'Research and infrastructure take 10% more time to complete.',
+    }
+  },
   'MoreAutomation': (demand) => {
     return {
       icon: 'labor',
       text: 'Research and infrastructure take 10% less time to complete.',
+    }
+  },
+  'EcosystemModeling': (demand) => {
+    return {
+      icon: 'birb',
+      text: 'Restoration projects take 10% less time to complete.',
     }
   },
 };
@@ -122,7 +136,7 @@ function render(e) {
           return {
             tip: {
               icon: 'contentedness',
-              text: `${changeDir(e.param, e)} world contentedness by ${e.param == '?' ? 'an unknown amount' : formatParam(e.param)}.`,
+              text: `Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
             },
             text: `[contentedness] ${changeDir(e.param, e)} world contentedness by ${formatParam(e.param)}.`,
           }
@@ -140,7 +154,7 @@ function render(e) {
           return {
             tip: {
               icon: 'extinction_rate',
-              text: `Current biodiversity pressure is ${state.gameState.world.extinction_rate.toFixed(0)}.`,
+              text: `Current biodiversity pressure is ${state.gameState.world.extinction_rate.toFixed(0)}<span class="type-total">/${consts.maxValues['biodiversity']}</span>.`,
             },
             text: `[extinction_rate] ${changeDir(e.param, e)} biodiversity pressure by ${formatParam(e.param)}.`,
           }
@@ -152,6 +166,15 @@ function render(e) {
               text: `This will directly change the global temperature anomaly by ${format.sign(e.param)}<strong>°c</strong>.`,
             },
             text: `[warming] ${changeDir(e.param, e)} the global temperature by ${formatParam(e.param)}<strong>°c</strong>.`
+          };
+        }
+        case 'Precipitation': {
+          return {
+            tip: {
+              icon: 'water',
+              text: `This will directly change global precipitation by ${format.sign(e.param)}<strong>cm/yr</strong>.`,
+            },
+            text: `[water] ${changeDir(e.param, e)} global precipitation by ${formatParam(e.param)}<strong>cm/yr</strong>.`
           };
         }
         case 'PopulationGrowth': {
@@ -182,8 +205,10 @@ function render(e) {
           };
         }
         default: {
-          console.log(`Unhandled WorldVariable effect type: ${e.subtype}`);
-          console.log(e);
+          if (VERSION === 'dev') {
+            console.log(`Unhandled WorldVariable effect type: ${e.subtype}`);
+            console.log(e);
+          }
         }
       }
       return;
@@ -201,6 +226,31 @@ function render(e) {
         }
       }
       return;
+    }
+    case 'ProcessLimit': {
+      let process = state.gameState.processes[e.entity];
+      let p = Math.abs(e.param/process.limit * 100);
+      if (p < 1) {
+        p = '<1%';
+      } else {
+        p = `${Math.round(p)}%`;
+      }
+      return {
+        tip: {
+          icon: 'alert',
+          text: `.`
+        },
+        text: `${changeDir(e.param, e)} maximum output for ${process.name} by <strong>${p}</strong>`,
+      }
+    }
+    case 'RegionHabitability': {
+      return {
+        tip: {
+          icon: 'habitability',
+          text: `Lower habitability means unhappier people who may need to migrate to more hospitable locales.`
+        },
+        text: `[habitability] ${changeDir(e.param, e)} habitability in ${e.subtype.toLowerCase()} regions by ${formatParam(e.param)}.`,
+      }
     }
     case 'Resource': {
       let k = display.enumKey(e.subtype);
@@ -251,7 +301,7 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} output for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
+        text: `${changeDir(e.param, e)} output for<span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
     case 'CO2ForFeature': {
@@ -529,7 +579,7 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[emissions] ${changeDir(e.param, e)} ${e.subtype} emissions for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}.`,
+        text: `[emissions] ${changeDir(e.param, e)} ${e.subtype} emissions for ${tag} by <strong>${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}</strong>.`,
       }
     }
     case 'DemandOutlookChange': {
@@ -540,9 +590,9 @@ function render(e) {
         tip: {
           icon: 'contentedness',
           subicon: k,
-          text: `Regional contentedness changes based on demand for ${display.displayName(e.subtype)}.  Global contentedness will change by ${change}.`
+          text: `This changes regional contentedness based on demand for ${display.displayName(e.subtype)}. Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
         },
-        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} contentedness by <strong>${Math.abs(change)}</strong>.`
+        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} world contentedness by <strong>${Math.abs(change)}</strong>.`
       }
     }
     case 'IncomeOutlookChange': {
@@ -552,20 +602,20 @@ function render(e) {
         tip: {
           icon: 'contentedness',
           subicon: 'wealth',
-          text: `Regional contentedness changes by ${e.param} per income level (wealthier regions will feel it more). Global contentedness will change by ${change}.`
+          text: `This changes regional contentedness by ${e.param} per income level (wealthier regions will feel it more). Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
         },
         text: `[contentedness] ${changeDir(e.param, e)} contentedness by <strong>${Math.abs(change)}</strong>.`
       }
     }
     case 'ModifyEventProbability': {
       let event = EVENTS[e.entity].name;
-      let p = e.param * 100;
+      let p = e.param == '?' ? '?' : e.param * 100;
       return {
         tip: {
           icon: 'chance',
-          text: `${changeDir(p, e)} the chance of ${event} by <strong>${Math.abs(p)}</strong>%`,
+          text: `${changeDir(p, e)} the chance of "${event}" by ${formatParam(p)}%`,
         },
-        text: `${changeDir(p, e)} the chance of ${event} by <strong>${Math.abs(p)}</strong>%`,
+        text: `${changeDir(p, e)} the chance of "${event}" by ${formatParam(p)}%`,
       }
     }
     case 'ProtectLand': {
@@ -607,11 +657,39 @@ function render(e) {
         text: `[${k}] ${changeDir(e.param, e)} ${name} supply by <strong>${e.param*100}%.</strong>`,
       }
     }
-
-    default:
-      console.log(`Unhandled effect type: ${e.type}`);
-      console.log(e);
+    case 'LocksProject': {
+      let project = state.gameState.projects[e.entity];
+      return {
+        tip: {
+          icon: 'alert',
+          text: `${project.name} will be unavailable while this project is active.`,
+        },
+        text: `<strong>Locks</strong> ${project.name}`,
+      }
+    }
+    case 'TerminationShock': {
+      let proj = state.gameState.projects.find((p) => p.name == 'Solar Radiation Management');
+      let effects = activeEffects(proj);
+      let temp_change = 0;
+      let temp_effect = effects.find((eff) => eff.subtype == 'Temperature');
+      if (temp_effect) {
+        temp_change = -temp_effect.param;
+      }
+      return {
+        tip: {
+          icon: 'warming',
+          text: `This will directly change the global temperature anomaly by ${format.sign(temp_change)}<strong>°c</strong>.`,
+        },
+        text: `[warming] ${changeDir(temp_change, e)} the global temperature by ${formatParam(temp_change)}<strong>°c</strong>.`
+      };
+    }
+    default: {
+      if (VERSION === 'dev') {
+        console.log(`Unhandled effect type: ${e.type}`);
+        console.log(e);
+      }
       return null;
+    }
   }
 }
 

@@ -103,6 +103,10 @@ impl GameInterface {
         self.game.downgrade_project(project_id);
     }
 
+    pub fn roll_new_policy_outcomes(&mut self) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(&self.game.roll_new_policy_outcomes(&mut self.rng))?)
+    }
+
     pub fn change_process_mix_share(&mut self, process_id: usize, change: isize) {
         self.game.state.change_mix_share(process_id, change);
     }
@@ -274,6 +278,16 @@ impl Game {
         }
         self.state.update_demand();
     }
+
+    pub fn roll_new_policy_outcomes(&mut self, rng: &mut SmallRng) -> Vec<usize> {
+        let (ids, effects) = self.state.roll_new_policy_outcomes(rng);
+        for effect in effects {
+            effect.apply(&mut self.state, &mut self.event_pool, None);
+        }
+        self.state.update_demand();
+        ids
+    }
+
 }
 
 #[derive(Serialize)]

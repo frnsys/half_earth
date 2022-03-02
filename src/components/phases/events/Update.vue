@@ -1,8 +1,8 @@
 <template>
 <div class="event project-completed" :style="{backgroundImage: imageUrl}" @click="tryDone">
   <div class="event--body">
-    <template v-if="update.type == 'Project'">
-      <div class="arc">Project Completed</div>
+    <template v-if="update.type == 'Project' || update.type == 'Policy'">
+      <div class="arc">{{ update.type == 'Project' ? 'Project Completed' : 'Policy Outcome' }}</div>
       <div class="image-attribution">Image source: {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{obj.name}}</div>
       <div class="event--effects">
@@ -89,7 +89,7 @@ export default {
   },
   data() {
     return {
-      canClose: this.update.type == 'Project' ? false : true,
+      canClose: (this.update.type == 'Project' || this.update.type == 'Policy') ? false : true,
     }
   },
   methods: {
@@ -105,7 +105,7 @@ export default {
   computed:{
     obj() {
       let {id, type} = this.update;
-      if (type == 'Project') {
+      if (type == 'Project' || type == 'Policy') {
         let obj = state.gameState.projects[id];
         let details = PROJECTS[id];
         obj.activeOutcome = details.outcomes[obj.active_outcome];

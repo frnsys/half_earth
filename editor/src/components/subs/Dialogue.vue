@@ -37,7 +37,7 @@
           <template v-if="line.decision">
             <label>
               Go To
-              <input type="checkbox" v-model="b._goto" class="dia-line-goto">
+              <input type="checkbox" v-model="b._goto" class="dia-line-goto" @change="goToChange(b)">
             </label>
             <div v-if="b._goto">
               <select v-model="b.line_id">
@@ -183,6 +183,14 @@ export default {
           this.lines[id].next = null;
           this.lines[id].decision = false;
         }
+      }
+    },
+    goToChange(b) {
+      // Restore the original line this branch pointed to
+      if (b._goto) {
+        b._original_line_id = b.line_id;
+      } else {
+        b.line_id = b._original_line_id;
       }
     }
   }

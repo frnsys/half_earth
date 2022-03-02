@@ -173,7 +173,7 @@ export default {
     },
     selectChoice(ev, branch) {
       ev.stopImmediatePropagation();
-      game.applyBranchEffects(this.eventId, this.regionId, branch);
+      game.applyBranchEffects(this.eventId, this.regionId, branch.id);
 
       this.current = branch.line_id;
       if (this.current !== null) {
@@ -226,14 +226,13 @@ export default {
   top: 0;
   padding: 1em;
 
-
   background-image: url('/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   display: flex;
   flex-direction: column;
   user-select: none;
-  z-index: 10;
+  z-index: 11;
   align-items: center;
 
   image-rendering: pixelated;
@@ -320,6 +319,7 @@ export default {
 .dialogue--choices {
   text-align: right;
   flex: 1;
+  margin-left: 5em;
 }
 .dialogue--choice {
   background: #fff;

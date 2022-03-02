@@ -177,7 +177,7 @@ const SUBPHASES = {
   World: ['Main', 'Start', 'End'],
   Planning: [
     'Start', 'End', 'Plan',
-    'Regions', 'Coalition',
+    'Regions', 'Parliament',
     'Dashboard', 'Research', 'Initiatives',
     'Policies', 'Processes', 'PlanChange'],
   Report: ['Start'],
@@ -320,6 +320,11 @@ const EFFECTS = {
     desc: 'Unlocks a project.'
   },
 
+  LocksProject: {
+    entity: 'Project',
+    desc: 'Locks a project.'
+  },
+
   UnlocksProcess: {
     entity: 'Process',
     desc: 'Unlocks a process.'
@@ -330,13 +335,8 @@ const EFFECTS = {
     desc: 'Unlocks an NPC.'
   },
 
-  SetProjectStatus: {
-    entity: 'Project',
-    choices: ['Active', 'Stalled', 'Halted'],
-    params: {
-      'Duration': Number
-    },
-    desc: 'Changes the specified project\'s status for the specified number of years.'
+  TerminationShock: {
+    desc: 'Special effect for termination shock'
   },
 
   RegionLeave: {
@@ -507,6 +507,7 @@ const SPEAKERS = [
   'The Accelerationist',
   'The Malthusian',
   'The Ecofeminist',
+  'The Consumerist',
 ];
 
 const EVENT_TYPES = [

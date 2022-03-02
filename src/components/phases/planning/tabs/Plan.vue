@@ -1,13 +1,13 @@
 <template>
 <div class="planning--page plan">
   <Projects v-if="page == 'Add'"
-    @close="page = null"
+    @close="close"
     @page="(p) => $emit('page', p)"
     @change="$emit('change')" />
   <Processes v-if="page == 'Processes'"
-    @close="page = null" @change="$emit('change')" />
+    @close="close" @change="$emit('change')" />
   <ActivePlan v-if="page == 'All'"
-    @close="page = null"
+    @close="close"
     @add="selectPage('Add')"
     @change="$emit('change')" />
   <div v-if="page == null">
@@ -192,6 +192,10 @@ export default {
     }
   },
   methods: {
+    close() {
+      this.page = null;
+      this.$emit('page', 'Plan');
+    },
     projectStatus(p) {
       if (p.kind == 'Research' && p.status == 'Building') {
         return 'Researching';

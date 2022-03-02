@@ -3,7 +3,10 @@ import PROJECTS from '/assets/content/projects.json';
 function activeEffects(project) {
   let details = PROJECTS[project.id];
   let activeOutcomeEffects = project.active_outcome == null ? [] : details.outcomes[project.active_outcome].effects;
-  if (project.status == 'Inactive') {
+  if (project.kind == 'Policy' && project.status !== 'Active') {
+    // Project outcome effects are secret and delayed
+    return details.effects;
+  } else if (project.status == 'Inactive') {
     return details.effects.concat(outcomeEffects(details));
   } else if (project.status == 'Building') {
     return details.effects.concat(outcomeEffects(details));

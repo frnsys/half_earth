@@ -28,6 +28,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// TODO While testing
+const versionTag = document.createElement('div');
+versionTag.innerText = `v.${VERSION}`;
+versionTag.id = 'version-tag';
+document.body.appendChild(versionTag);
+
 const app = createApp(App);
 app.directive('tip', tip);
 app.config.globalProperties['icons'] = icons;

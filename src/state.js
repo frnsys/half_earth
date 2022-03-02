@@ -59,6 +59,9 @@ function initState() {
       initiative: 0,
     },
     refundableResearchPoints: 0,
+
+    // Kind of hacky
+    extraSeats: {}
   };
 
   let settings = loadSettings();

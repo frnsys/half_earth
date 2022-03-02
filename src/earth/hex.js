@@ -127,8 +127,10 @@ class HexSphere {
     let iconMat = icons[iconName];
     const sprite = new THREE.Sprite(iconMat.clone());
     sprite.scale.set(size, size, size);
-    sprite.position.copy(
-      tile.centerPointVec.add(tile.normal));
+    if (tile) {
+      sprite.position.copy(
+        tile.centerPointVec.add(tile.normal));
+    }
 
     this.parent.add(sprite);
 

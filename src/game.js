@@ -4,7 +4,7 @@ import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 
 // Version timestamp must be >= this value
-const EXPIRED_TIMESTAMP = 0;
+const EXPIRED_TIMESTAMP = 1646115265;
 
 // Would let player choose difficulty;
 // except at this point implementing different difficulty levels
@@ -188,6 +188,13 @@ function downgradeProject(id) {
   updateFactors();
 }
 
+function rollNewPolicyOutcomes() {
+  let ids = game.roll_new_policy_outcomes();
+  updateState();
+  updateFactors();
+  return ids;
+}
+
 function setTgav(tgav) {
   game.set_tgav(tgav);
   updateState();
@@ -269,6 +276,7 @@ export default {
   changeHabitability,
   checkRequests,
   changeProcessMixShare,
+  rollNewPolicyOutcomes,
   setProjectPoints, startProject, stopProject,
   upgradeProject, downgradeProject,
   applyEvent, applyEvents, applyIconEvents, roll, simulate,

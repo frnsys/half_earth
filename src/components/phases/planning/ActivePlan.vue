@@ -75,7 +75,7 @@ export default {
 
 .active-plan .planning--page-tabs {
   max-width: 100px;
-  margin: 0 auto;
+  margin: -0.75em auto 0;
   width: 100%;
 }
 .active-plan .plan--changes {

@@ -361,13 +361,13 @@ export default {
       }
     },
     getDescendants(node) {
-      let children = this.children[node];
+      let children = this.children[node] || [];
       return children.concat(children.flatMap((ch) => this.getDescendants(ch)));
     },
     getMaxDepths(nodes, depths, depth) {
       depths = depths || {};
       depth = depth || 0;
-      nodes.forEach((node) => {
+      (nodes || []).forEach((node) => {
         depths[node] = depth;
         this.getMaxDepths(this.children[node], depths, depth+1);
       });
@@ -380,7 +380,9 @@ export default {
       }, {});
       Object.keys(this.tree).forEach((k) => {
         this.children[k].forEach((ch) => {
-          parents[ch].push(k);
+          if (this.items[ch] !== undefined) {
+            parents[ch].push(k);
+          }
         });
       });
       let roots = Object.keys(parents)
@@ -397,18 +399,26 @@ export default {
     },
     dataForNode(node) {
       let data = this.items[node];
-      return {
-        id: node,
-        text: data.name || '[MISSING NAME]',
-        type: data._type,
-        subtype: subtypeForItem(data),
-        valid: this.validateItem(data),
-        data
-      };
+      if (data === undefined) {
+        return {
+          id: node,
+          data: {},
+          text: '[MISSING DATA]'
+        }
+      } else {
+        return {
+          id: node,
+          text: data.name || '[MISSING NAME]',
+          type: data._type,
+          subtype: subtypeForItem(data),
+          valid: this.validateItem(data),
+          data
+        };
+      }
     },
     updateTree() {
       this.tree = Object.values(this.items).filter((item) => {
-        return ['Event', 'Project', 'Process'].includes(item._type);
+        return ['Event', 'Project', 'Process', 'NPC'].includes(item._type);
       }).reduce((acc, item) => {
         acc[item.id] = item;
         return acc;
@@ -446,7 +456,8 @@ export default {
             (item.probabilities || []).forEach((prob) => {
               prob.conditions.forEach((cond) => {
                 if (cond.type.startsWith('Project') || cond.type == 'ProcessMixShare') {
-                  children[cond.entity].push(item.id);
+                  let e = children[cond.entity]
+                  if (e) e.push(item.id);
                 } else if (cond.type == 'ProcessMixShareFeature') {
                   processesByFeature[cond.subtype].forEach((id) => {
                     children[id].push(item.id);
@@ -486,7 +497,7 @@ export default {
       const recurseChildren = (parent) => {
         let paNode = nodes[parent];
         let y = paNode.y;
-        this.children[parent].forEach((ch, i) => {
+        (this.children[parent] || []).forEach((ch, i) => {
           let existing = nodes[ch];
           if (!existing) {
             if (i > 0) {
