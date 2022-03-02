@@ -145,6 +145,7 @@ export default {
   /* box-shadow: 0 2px 2px rgba(0,0,0,0.5); */
   box-shadow: 2px 0px 0px rgba(0,0,0,0.1), -2px 0px 0px rgba(0,0,0,0.1);
   z-index: 1;
+  position: relative;
 }
 
 .card header {

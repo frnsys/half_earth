@@ -4,7 +4,7 @@
   <div class="dialogue--speech">
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
-        :src="`/assets/characters/${line.speaker}.png`"
+        :src="`/assets/characters/${line.speaker}.webp`"
         onerror="this.src='/assets/placeholders/character.png';"
         v-tip="{icon: line.speaker, text: `${line.speaker}.`}" />
     </div>
