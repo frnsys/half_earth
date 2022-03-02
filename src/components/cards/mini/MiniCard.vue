@@ -4,7 +4,9 @@
 </div>
 <transition name="opacityfade">
 <div class="minicard--expanded" v-if="expanded" @click="collapse" ref="overlay">
-  <slot name="expanded"></slot>
+  <transition appear name="appear-bounceup">
+    <slot name="expanded"></slot>
+  </transition>
 </div>
 </transition>
 </template>

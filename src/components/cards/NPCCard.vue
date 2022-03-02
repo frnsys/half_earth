@@ -14,20 +14,20 @@
   </template>
   <template v-slot:figure>
     <img
-      :src="`/assets/characters/${npc.name}.png`"
+      :src="`/assets/characters/${npc.name}.webp`"
       onerror="this.src='/assets/placeholders/character.png';" />
-    <div class="card-tack-cb npc-tag"><img :src="icons[relationshipName.toLowerCase()]">{{relationshipName}}</div>
   </template>
   <template v-slot:name>
+    <div class="npc-tag"><img :src="icons[relationshipName.toLowerCase()]">{{relationshipName}}</div>
     {{name}}
   </template>
   <template v-slot:body>
-    <p v-if="relationshipName == 'Ally'" class="active" v-html="effectsHtml"></p>
-    <p v-else class="inactive" v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="effectsHtml"></p>
+    <p v-if="relationshipName == 'Ally'" class="npc-effect active" v-html="effectsHtml"></p>
+    <p v-else class="npc-effect inactive" v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="effectsHtml"></p>
   </template>
   <template v-slot:top-back>
     <img
-      :src="`/assets/characters/${npc.name}.png`"
+      :src="`/assets/characters/${npc.name}.webp`"
       onerror="this.src='/assets/placeholders/character.png';" />
     <p class="card-desc npc-desc">{{description}}</p>
   </template>
@@ -79,29 +79,41 @@ export default {
 .npc figure {
   text-align: center;
   position: relative;
-  padding: 2em 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(0,0,0,0.1);
 }
 .npc figure img {
-  width: 120px;
+  width: 140px;
+  image-rendering: auto;
+  margin: 0 auto;
 }
 .npc p.inactive {
-  opacity: 0.25;
+  opacity: 0.5;
+  text-align: center;
 }
 .npc p.active {
   opacity: 1;
+  text-align: center;
 }
 
 .npc-tag {
   color: #000;
   background: #fff;
-  border-radius: 1em;
+  border-radius: 1rem;
   border: 1px solid #000;
   text-align: center;
   font-family: 'W95FA', monospace;
   line-height: 1.2;
   display: flex;
-  font-size: 0.9em;
-  padding: 0.2em 0.25em 0;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.25rem 0;
+
+  position: absolute;
+  top: -1.7rem;
+  left: 50%;
+  transform: translate(-50%, 50%);
 }
 .npc-tag img {
   width: 12px !important;
@@ -147,6 +159,8 @@ export default {
 
 .card-top-back > img {
   height: 72px;
-  margin: 4em 0 0;
+  margin: 2em 0 0;
+  image-rendering: auto;
+
 }
 </style>

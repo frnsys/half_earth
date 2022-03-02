@@ -52,20 +52,21 @@ export default {
 
 <style>
 .mini-character {
-  width: 48px;
+  width: 62px;
   position: absolute;
   left: 50%;
   top: 0;
-  transform: translate(-50%, -25%);
+  transform: translate(-50%, -35%);
 }
 
 .mini-npc-name {
   font-size: 0.85em;
+  margin-bottom: 0.2rem;
 }
 
 .mini-npc-seats {
   text-align: center;
-  padding-bottom: 0.5em;
+  padding: 0 0.4em;
 }
 .mini-npc-seats > div {
   height: 8px;
@@ -75,10 +76,10 @@ export default {
 }
 
 .mini-npc-tag {
+  top: auto;
   position: absolute;
   left: 50%;
   transform: translate(-50%, 50%);
-  bottom: 0;
-  width: 60px;
+  bottom: -1rem;
 }
 </style>
