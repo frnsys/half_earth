@@ -134,13 +134,13 @@ import FactorsList from 'components/cards/FactorsList.vue';
 import PieChart from '../PieChart.vue';
 
 const COLORS = {
-  'land': [0xF0FEC4, 0x306B33],
-  'water': [0xDCF7FD, 0x4C6AA5],
+  'land': [0xB7FF7A, 0x0E681F],
+  'water': [0x7DE1EF, 0x4560FF],
   'energy': [0xFDCE4C, 0xE81224],
-  'emissions': [0xF2F7E2, 0x9CB55C],
-  'biodiversity': [0xe5bce6, 0xA442A6],
-  'electricity': [0xD6F5A1, 0xFF8956],
-  'fuel': [0xF7F6C7, 0xBF8462],
+  'emissions': [0xF2F7E2, 0x6CB30B],
+  'biodiversity': [0xEA8BCF, 0x6865F8],
+  'electricity': [0xFFFF1A, 0xFF8C1A],
+  'fuel': [0xF7F6C7, 0xD3753F],
   'animal_calories': [0xF8AD72, 0xCA5704],
   'plant_calories': [0xB1EF8F, 0x06CA9B],
 };
@@ -291,16 +291,17 @@ export default {
 .dashboard--item {
   margin: 1.5em 0.25em;
   position: relative;
-  width: 120px;
+  width: 111px;
   text-align: center;
   image-rendering: auto;
 }
 .dashboard--item .minicard {
-  color: #fff;
+  /* color: #fff; */
   font-size: 1.2em;
-  width: 120px;
+  width: 111px;
   height: 80px;
   font-family: 'W95FA', monospace;
+  letter-spacing: 0.01em;
 }
 .dashboard--item > img {
   position: absolute;
@@ -312,15 +313,21 @@ export default {
   border-radius: 2em;
 }
 .dashboard--item-name {
+  color: rgba(0,0,0,0.8);
   text-transform: uppercase;
   font-size: 0.6em;
   margin-top: 0.5em;
+  letter-spacing: 0.01em;
   font-weight: bold;
   font-family: 'Inter', sans-serif;
 }
 
 .planning--dashboard .minicard {
-  background: #222;
+  background: #EBDEC6;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+
 }
 
 .planning--page--dashboard {
@@ -332,7 +339,17 @@ export default {
 }
 
 .dashboard-breakdown {
+  background-color: rgb(241 228 191);
   margin: 0 auto;
+
+  border-radius: 1em;
+  
+  padding: 1em;
+
+  box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+
 }
 .dashboard-breakdown h3 {
   text-align: center;
@@ -345,7 +362,7 @@ export default {
   border-radius: 0.5em;
   max-height: 50vh;
   overflow-y: scroll;
-  margin: 2em 0;
+  margin: 2em auto;
   font-size: 0.75em;
   padding: 0 0.5em;
   font-family: 'Inter', sans-serif;

@@ -78,7 +78,7 @@ class PieChart {
 
   // Data should be in the format of {label: number}
   render(data, colors) {
-    let outlineWidth = 1;
+    let outlineWidth = 0;
     let total = Object.values(data).reduce((acc, val) => acc + val, 0);
     let center = {x: this.width/2, y: this.height/2};
     let radius = Math.min(this.width/2, this.height/2) - outlineWidth * 2;
