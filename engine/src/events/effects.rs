@@ -33,6 +33,8 @@ pub enum Flag {
     MoreAutomation,
     MoreLeisure,
     EcosystemModeling,
+    LaborResistance,
+    LaborSabotage,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]

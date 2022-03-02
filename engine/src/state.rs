@@ -228,6 +228,12 @@ impl State {
         if self.flags.contains(&Flag::MoreLeisure) {
             modifier *= 1.1;
         }
+        if self.flags.contains(&Flag::LaborResistance) {
+            modifier *= 1.05;
+        }
+        if self.flags.contains(&Flag::LaborSabotage) {
+            modifier *= 1.05;
+        }
 
         let posadist_ally = self.is_ally("The Posadist");
         let utopian_ally = self.is_ally("The Utopian");

@@ -60,6 +60,13 @@
             </label>
             <input type="text" v-model="localData.icon" />
           </div>
+          <div v-if="localData.type == 'Icon'">
+            <label>
+              Event Intensity
+              <Tip>Icon event intensity.</Tip>
+            </label>
+            <input type="number" v-model="localData.intensity" />
+          </div>
           <div>
             <label :for="`${item.id}_locked`">
               Locked

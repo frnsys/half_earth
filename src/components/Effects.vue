@@ -107,6 +107,18 @@ const FLAG_TIPS = {
       text: 'Restoration projects take 10% less time to complete.',
     }
   },
+  'LaborResistance': (demand) => {
+    return {
+      icon: 'labor',
+      text: 'Research and infrastructure take 5% more time to complete.',
+    }
+  },
+  'LaborSabotage': (demand) => {
+    return {
+      icon: 'labor',
+      text: 'Research and infrastructure take 5% more time to complete.',
+    }
+  },
 };
 
 function changeDir(change, ev) {

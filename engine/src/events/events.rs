@@ -5,19 +5,6 @@ use super::{Effect, Condition, Probability, Likelihood};
 use serde::Serialize;
 use wasm_bindgen::prelude::*;
 
-#[derive(Debug, Clone, Serialize)]
-pub enum Aspect {
-    Flood,
-    Fire,
-    Energy,
-    Heat,
-    Food,
-    Force,
-    Control,
-    Health,
-    Construction
-}
-
 #[derive(Debug, Default)]
 pub struct EventPool {
     pub events: Vec<Event>,
@@ -207,9 +194,8 @@ pub struct Event {
 
     pub prob_modifier: f32,
 
-    /// Icon event intensity and aspect
+    /// Icon event intensity
     pub intensity: usize,
-    pub aspect: Option<Aspect>,
 }
 
 impl Event {
@@ -250,7 +236,6 @@ mod test {
             regional: false,
             prob_modifier: 1.,
             intensity: 0,
-            aspect: None,
             effects: vec![],
             branches: vec![],
             probabilities: vec![Probability {
@@ -273,7 +258,6 @@ mod test {
             regional: false,
             prob_modifier: 1.,
             intensity: 0,
-            aspect: None,
             effects: vec![],
             branches: vec![],
             probabilities: vec![Probability {
@@ -319,7 +303,6 @@ mod test {
             regional: false,
             prob_modifier: 1.,
             intensity: 0,
-            aspect: None,
 
             effects: vec![],
             branches: vec![],
@@ -398,7 +381,6 @@ mod test {
             phase: Phase::WorldMain,
             prob_modifier: 1.,
             intensity: 0,
-            aspect: None,
 
             // Note: locked so it doesn't trigger on its own
             locked: true,

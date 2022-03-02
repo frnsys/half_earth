@@ -36,7 +36,7 @@ use crate::regions::{Region, Income, Latitude};
 use crate::projects::{Project, Outcome, Upgrade, Factor, Cost};
 use crate::production::{Process, ProcessFeature};
 use crate::kinds::{Resource, Output, Feedstock, Byproduct, ByproductMap, ResourceMap};
-use crate::events::{Event, Aspect, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
+use crate::events::{Event, Effect, Flag, Probability, Likelihood, Condition, Comparator, WorldVariable, LocalVariable, PlayerVariable};
 use crate::projects::{Status as ProjectStatus, Type as ProjectType, Group as ProjectGroup};
 use crate::npcs::{NPC, NPCRelation};
 '''
@@ -153,7 +153,6 @@ specs = {
         'prob_modifier': 1.0,
         'dialogue': None,
         'intensity': 0,
-        'aspect': None
     },
     'NPC': {
         'id': None,
@@ -438,7 +437,10 @@ def define_field(k, v, item):
         return 'group: ProjectGroup::{}'.format(v)
     elif k == 'type' and item['_type'] == 'Event':
         if item.get('subphase') is not None:
-            return 'phase: Phase::{}{}'.format(v, item['subphase'])
+            if v == 'Icon':
+                return 'phase: Phase::{}'.format(v)
+            else:
+                return 'phase: Phase::{}{}'.format(v, item['subphase'])
         elif v is not None:
             return 'phase: Phase::{}'.format(v)
         else:
@@ -465,15 +467,6 @@ def define_field(k, v, item):
         return 'resource_modifiers: resources!()'
     elif k == 'byproduct_modifiers':
         return 'byproduct_modifiers: byproducts!()'
-    elif k == 'aspects':
-        aspects = ['Aspect::{}'.format(a) for a in v]
-        return 'aspects: vec![\n{}\n]'.format(
-                    indent(',\n'.join(aspects)))
-    elif k == 'aspect':
-        if v is not None:
-            return 'aspect: Some(Aspect::{})'.format(v)
-        else:
-            return 'aspect: None'
     if k == 'cost':
         if item.get('_type') == 'Project':
             return 'cost: 0'
@@ -943,7 +936,6 @@ if __name__ == '__main__':
             icon_events[id] = {
                 'name': ev['name'],
                 'icon': ev['icon'],
-                'aspect': ev['aspect'],
                 'intensity': ev['intensity'],
                 'effects': [parse_effect(e) for e in ev.get('effects', [])]
             }

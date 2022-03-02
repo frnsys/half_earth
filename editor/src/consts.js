@@ -492,7 +492,7 @@ const SPEAKERS = [
   'The Alien',
   'The Citizen',
   'The Doom Cultist',
-  'The Meat Militia',
+  'The Leather Underground',
   'The Green Meanies',
   'The Wretched',
   'The Spacer',
