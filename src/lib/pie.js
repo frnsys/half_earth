@@ -28,8 +28,11 @@ class PieChart {
     this.tooltip = document.createElement('div');
     this.tooltip.style.display = 'none';
     this.tooltip.style.position = 'absolute';
-    this.tooltip.style.fontSize = '0.65em';
-    this.tooltip.style.fontFamily = 'sans-serif';
+    this.tooltip.style.fontSize = '12px';
+    this.tooltip.style.fontFamily = 'W95FA, sans-serif';
+    // this.tooltip.style.background = '#000';
+    // this.tooltip.style.color = '#fff';
+    // this.tooltip.style.padding = '2px';
     this.stage.style.position = 'relative';
     this.stage.appendChild(this.tooltip);
 
@@ -69,6 +72,8 @@ class PieChart {
 
   reset() {
     this.ctx.clearRect(0, 0, this.width, this.height);
+
+    this.ctx.font = '12px "W95FA"';
   }
 
   // Data should be in the format of {label: number}
@@ -86,7 +91,7 @@ class PieChart {
     this.ctx.beginPath();
     this.ctx.arc(center.x, center.y, radius+outlineWidth, 0, 2 * Math.PI);
     this.ctx.fillStyle = '#222222';
-    this.ctx.fill();
+    // this.ctx.fill();
     this.ctx.closePath();
 
     // Filter to keys that have an amount that would show up
@@ -111,6 +116,7 @@ class PieChart {
       let y = radius/2 * Math.sin(angle);
       let {width} = this.ctx.measureText(k);
       this.labels.push({
+        w: width,
         show: size > Math.PI/12,
         x: center.x + x - width/2,
         y: center.y + y,
@@ -122,9 +128,14 @@ class PieChart {
     });
 
     // Labels have to come over so they're drawn on top
-    this.ctx.fillStyle = '#000000';
     this.labels.forEach((l) => {
+      
+      this.ctx.fillStyle = '#000000';
       if (l.show) {
+        this.ctx.beginPath();
+        // this.ctx.rect(l.x - 2, l.y - 12, l.w + 4, 16);
+        // this.ctx.fill();
+        // this.ctx.fillStyle = '#FFFFFF';
         this.ctx.fillText(l.label, l.x, l.y);
       }
     });
