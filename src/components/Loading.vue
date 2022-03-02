@@ -4,6 +4,12 @@
     <img src="/assets/gosplant.svg" />
     <div class="loading-text">{{state.loadingSave ? 'Loading saved data' : 'Booting Up'}}</div>
     <img class="motto" src="/assets/motto.png" />
+
+    <div class='fonts'>
+      <span style='font-family: "W95FA"'>a</span>
+      <span style='font-family: "Inter"'>a</span>
+      <span style='font-family: "Times Ten"'>a</span>
+    </div>
   </div>
 </div>
 </template>
@@ -75,6 +81,11 @@ export default {
 
 .loading-text {
   font-size: 0.8em;
+}
+
+.fonts{
+  position: absolute;
+  left: -1000px;
 }
 
 /* https://stackoverflow.com/a/28074607 */
