@@ -91,6 +91,7 @@ export default {
   font-weight: 600;
   box-shadow: 0 1px 4px rgb(0 0 0 / 60%);
   height: 29px;
+  min-height: 29px;
 }
 .hud > div {
   padding: 0.5em 0.25em;
