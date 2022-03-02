@@ -13,7 +13,9 @@
         {{line.speaker}}
       </div>
       <div class="dialogue--text" ref="text"></div>
+      <div class="dialogue--effects">
       <Effects :effects="effects" v-if="effects && revealed" />
+      </div>
     </div>
   </div>
   <div class="dialogue--choices">
@@ -291,7 +293,7 @@ export default {
   transform: translate(0%, 100%);
   background: #222;
   border-radius: 0.3em;
-  padding: 0.25em;
+  padding: 0.05em;
   max-width: 82px;
   box-shadow: 2px 2px 0 rgb(0 0 0 / 70%);
 }
@@ -311,9 +313,10 @@ export default {
 }
 
 .dialogue--text img {
-  width: 16px;
+  width: 20px;
   vertical-align: middle;
   image-rendering: auto;
+  margin-bottom: 2px;
 }
 
 .dialogue--choices {
@@ -339,5 +342,13 @@ export default {
 }
 .dialogue--choice:hover {
   background: #FF66FF;
+}
+
+.dialogue--effects .effect--text{
+  font-family: 'Inter';
+  padding: 1em 1em 0 1em;
+  margin: 0.5em 0;
+  border-top: 1px dotted black;
+  image-rendering: auto;
 }
 </style>
