@@ -13,8 +13,8 @@
         {{line.speaker}}
       </div>
       <div class="dialogue--text" ref="text"></div>
-      <div class="dialogue--effects">
-      <Effects :effects="effects" v-if="effects && revealed" />
+      <div class="dialogue--effects" v-if="effects && revealed && isLastLine">
+        <Effects :effects="effects"  />
       </div>
     </div>
   </div>
