@@ -4,9 +4,9 @@
 </div>
 <transition name="opacityfade">
 <div class="minicard--expanded" v-if="expanded" @click="collapse" ref="overlay">
-  <transition appear name="appear-bounceup">
+  <transition-group appear name="appear-bounceup">
     <slot name="expanded"></slot>
-  </transition>
+  </transition-group>
 </div>
 </transition>
 </template>
@@ -45,7 +45,7 @@ export default {
   text-align: center;
   position: relative;
   overflow: hidden;
-  transition: all 200ms ease-out; 
+  transition: all 200ms ease-out;
 
   image-rendering: auto;
 }
