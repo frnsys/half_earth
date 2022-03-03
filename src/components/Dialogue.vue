@@ -327,13 +327,18 @@ export default {
   text-align: right;
   flex: 1;
   margin-left: 5em;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
+
 .dialogue--choice {
   background: #fff;
   text-align: right;
   display: inline-block;
   padding: 0.5em;
   margin-left: 0.5em;
+  margin-bottom: 0.2em;
   cursor: pointer;
   border: 1px solid #000;
   border-radius: 0.3em;
