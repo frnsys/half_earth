@@ -15,7 +15,7 @@
   <template v-slot:figure>
     <img
       :src="`/assets/characters/${npc.name}.webp`"
-      onerror="this.src='/assets/placeholders/character.png';" />
+      @error="fallbackPortrait" />
   </template>
   <template v-slot:name>
     <div class="npc-tag"><img :src="icons[relationshipName.toLowerCase()]">{{relationshipName}}</div>
@@ -28,7 +28,7 @@
   <template v-slot:top-back>
     <img
       :src="`/assets/characters/${npc.name}.webp`"
-      onerror="this.src='/assets/placeholders/character.png';" />
+      @error="fallbackPortrait" />
     <p class="card-desc npc-desc">{{description}}</p>
   </template>
   <template v-slot:bot-back>
@@ -71,6 +71,11 @@ export default {
     relationshipName() {
       return display.relationshipName(this.npc.relationship);
     }
+  },
+  methods:{
+    fallbackPortrait(e){
+      e.target.src ='/assets/characters/' + this.npc.name + '.png'
+    },
   }
 }
 </script>

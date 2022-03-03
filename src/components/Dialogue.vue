@@ -5,7 +5,7 @@
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
         :src="`/assets/characters/${line.speaker}.webp`"
-        onerror="this.src='/assets/placeholders/character.png';"
+        @error="fallbackPortrait"
         v-tip="{icon: line.speaker, text: `${line.speaker}.`}" />
     </div>
     <div class="dialogue--body">
@@ -145,8 +145,12 @@ export default {
     isLastLine() {
       return this.line.next == null;
     },
+    
   },
   methods: {
+    fallbackPortrait(e){
+      e.target.src ='/assets/characters/' + this.line.speaker + '.png'
+    },
     onKeydown(e){
       if(e.keyCode === 13){
         this.advance();
