@@ -1,5 +1,5 @@
 <template>
-<transition name="tipfade">
+<transition name="opacityfade">
 <div class="tip-wrapper" v-if="show" :class="{overlay: card}" ref="overlay" @click="dismiss">
   <div class="tip" ref="tip">
     <div class="tip--icon" v-if="icon">
@@ -9,6 +9,7 @@
     </div>
     <div class="tip--body" v-if="text" v-html="text"></div>
   </div>
+  <transition appear name="appear-bounceup">
   <div class="tip--card">
     <ProcessCard v-if="card && card.type == 'Process'" :process="card.data" />
     <ProjectCard v-if="card && card.type == 'Project'" :project="card.data" />
@@ -20,6 +21,7 @@
       <ProcessCard v-for="p in card.data" :process="p" />
     </Cards>
   </div>
+  </transition>
 </div>
 </transition>
 </template>

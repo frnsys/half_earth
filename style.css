@@ -451,7 +451,7 @@ strong{
 
 @keyframes bounce-in {
   0% {
-    transform: translateY(100%);
+    transform: translateY(60%);
   }
   50% {
     transform: translateY(-5%);

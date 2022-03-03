@@ -5,7 +5,7 @@
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
         :src="`/assets/characters/${line.speaker}.webp`"
-        onerror="this.src='/assets/placeholders/character.png';"
+        @error="fallbackPortrait"
         v-tip="{icon: line.speaker, text: `${line.speaker}.`}" />
     </div>
     <div class="dialogue--body">
@@ -13,8 +13,8 @@
         {{line.speaker}}
       </div>
       <div class="dialogue--text" ref="text"></div>
-      <div class="dialogue--effects">
-      <Effects :effects="effects" v-if="effects && revealed" />
+      <div class="dialogue--effects" v-if="effects && revealed && isLastLine">
+        <Effects :effects="effects"  />
       </div>
     </div>
   </div>
@@ -145,8 +145,12 @@ export default {
     isLastLine() {
       return this.line.next == null;
     },
+    
   },
   methods: {
+    fallbackPortrait(e){
+      e.target.src ='/assets/characters/' + this.line.speaker + '.png'
+    },
     onKeydown(e){
       if(e.keyCode === 13){
         this.advance();
@@ -333,13 +337,18 @@ export default {
   text-align: right;
   flex: 1;
   margin-left: 5em;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
+
 .dialogue--choice {
   background: #fff;
   text-align: right;
   display: inline-block;
   padding: 0.5em;
   margin-left: 0.5em;
+  margin-bottom: 0.2em;
   cursor: pointer;
   border: 1px solid #000;
   border-radius: 0.3em;

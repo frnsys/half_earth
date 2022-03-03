@@ -80,6 +80,6 @@ export default {
   position: absolute;
   left: 50%;
   transform: translate(-50%, 50%);
-  bottom: -1rem;
+  bottom: 0;
 }
 </style>

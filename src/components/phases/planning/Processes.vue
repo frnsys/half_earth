@@ -307,7 +307,7 @@ export default {
 .mix-token{
   height: 20px;
   width: calc(100%/20);
-  background-color: var(--colour-pink);
+  background-color: #1B97F3;
   display: inline-block;
   box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
   border-left: 1px solid rgba(255,255,255,0.5);
