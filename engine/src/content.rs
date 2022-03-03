@@ -1781,17 +1781,6 @@ pub fn projects() -> Vec<Project> {
 
                         ]
                     }
-                },
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-
-                        ]
-                    }
                 }
             ],
             estimate: 0,
@@ -2127,7 +2116,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::AddFlag(Flag::ParliamentSuspended)
+                Effect::AddFlag(Flag::ParliamentSuspended),
+                Effect::WorldVariable(WorldVariable::Outlook, -10.0)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -2154,7 +2144,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![6],
+            supporters: vec![0, 6],
             opposers: vec![],
             active_outcome: None
         },
@@ -2879,7 +2869,7 @@ pub fn projects() -> Vec<Project> {
                         Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Random,
+                        likelihood: Likelihood::Likely,
                         conditions: vec![
 
                         ]
@@ -3014,17 +3004,6 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 1.0)
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Likely,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
                         Effect::WorldVariable(WorldVariable::Outlook, 10.0),
                         Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0)
                     ],
@@ -3155,18 +3134,8 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
+                        Effect::WorldVariable(WorldVariable::Outlook, 2.0),
                         Effect::NPCRelationship(2, -1)
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Likely,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 2.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -3296,7 +3265,7 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::UnlocksProcess(20),
-                        Effect::WorldVariable(WorldVariable::Outlook, 1.0)
+                        Effect::WorldVariable(WorldVariable::Outlook, 2.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Improbable,
@@ -3893,17 +3862,6 @@ pub fn projects() -> Vec<Project> {
 
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Likely,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
                         likelihood: Likelihood::Random,
                         conditions: vec![
 
@@ -4202,7 +4160,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-
+                        Effect::Output(Output::AnimalCalories, -0.05)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -4831,17 +4789,6 @@ pub fn projects() -> Vec<Project> {
 
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Impossible,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
                         likelihood: Likelihood::Guaranteed,
                         conditions: vec![
 
@@ -5078,8 +5025,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 0.),
-                        Effect::WorldVariable(WorldVariable::PopulationGrowth, 0.)
+
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -5188,7 +5134,7 @@ pub fn projects() -> Vec<Project> {
             id: 77,
             name: "The Ark",
             cost: 0,
-            base_cost: Cost::Fixed(30),
+            base_cost: Cost::Fixed(50),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
@@ -5203,6 +5149,17 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
+                Outcome {
+                    effects: vec![
+                        Effect::WorldVariable(WorldVariable::Outlook, -8.0)
+                    ],
+                    probability: Probability {
+                        likelihood: Likelihood::Random,
+                        conditions: vec![
+
+                        ]
+                    }
+                },
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Outlook, -8.0)
@@ -5955,17 +5912,6 @@ pub fn projects() -> Vec<Project> {
 
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Random,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
                         likelihood: Likelihood::Guaranteed,
                         conditions: vec![
 
@@ -6116,7 +6062,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 0.)
+
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -6198,10 +6144,10 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-
+                        Effect::ModifyEventProbability(175, -0.05)
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Impossible,
+                        likelihood: Likelihood::Improbable,
                         conditions: vec![
 
                         ]
@@ -6622,7 +6568,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![],
+            supporters: vec![2, 8],
             opposers: vec![],
             active_outcome: None
         },
@@ -6754,7 +6700,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 111,
-            name: "Search for extraterrestrial intelligence",
+            name: "Search for Extraterrestrial Intelligence",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
@@ -6824,17 +6770,6 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Random,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
                 Outcome {
                     effects: vec![
 
@@ -6938,7 +6873,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::CO2ForFeature(ProcessFeature::UsesLivestock, -0.000528),
+                Effect::CO2ForFeature(ProcessFeature::UsesLivestock, -0.0005),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 0.5)
             ],
             kind: ProjectType::Research,
@@ -7043,17 +6978,6 @@ pub fn projects() -> Vec<Project> {
             ongoing: false,
             gradual: false,
             outcomes: vec![
-                Outcome {
-                    effects: vec![
-                        Effect::Demand(Output::Fuel, 0.05)
-                    ],
-                    probability: Probability {
-                        likelihood: Likelihood::Rare,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0)
@@ -9351,7 +9275,8 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::ProjectRequest(14, true, 20),
-                Effect::ProjectRequest(14, false, 20)
+                Effect::ProjectRequest(14, false, 20),
+                Effect::AddEvent(145)
             ],
             probabilities: vec![
                 Probability {
@@ -11149,7 +11074,7 @@ pub fn events() -> Vec<Event> {
             id: 145,
             name: "Permafrost Pandemic",
             phase: Phase::WorldMain,
-            locked: false,
+            locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -3.0),
