@@ -17,6 +17,7 @@ pub enum Condition {
     LocalVariable(LocalVariable, Comparator, f32),
     WorldVariable(WorldVariable, Comparator, f32),
     PlayerVariable(PlayerVariable, Comparator, f32),
+    ProcessOutput(usize, Comparator, f32),
     ProcessMixShare(usize, Comparator, f32),
     ProcessMixShareFeature(ProcessFeature, Comparator, f32),
     ResourcePressure(Resource, Comparator, f32),
@@ -72,6 +73,10 @@ impl Condition {
                     PlayerVariable::PoliticalCapital => state.political_capital as f32,
                     PlayerVariable::ResearchPoints => state.research_points as f32,
                 };
+                comp.eval(val, *other_val)
+            },
+            Condition::ProcessOutput(id, comp, other_val) => {
+                let val = state.produced_by_process[*id];
                 comp.eval(val, *other_val)
             },
             Condition::ProcessMixShare(id, comp, other_val) => {

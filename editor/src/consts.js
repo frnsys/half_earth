@@ -513,6 +513,7 @@ const SPEAKERS = [
   'The Ecofeminist',
   'The Consumerist',
   'The Bandung Bloc',
+  'The Environmentalist',
 ];
 
 const EVENT_TYPES = [

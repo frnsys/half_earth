@@ -170,6 +170,7 @@ function validateVariables(variables) {
 }
 
 function validateDialogue(dialogue) {
+  if (dialogue === undefined) return false;
   let ids = [];
   let fringe = [dialogue.root];
   while (fringe.length > 0) {
@@ -187,7 +188,7 @@ function validateDialogue(dialogue) {
   return dialogue !== undefined && dialogue.lines && Object.values(dialogue.lines).length > 0 && ids.every((id) => {
     let l = dialogue.lines[id];
     // Hacky, but if l.next is null, we assume it's the end of a branch and so its ok for the text to be empty
-    return requireOneOfChoice(l.speaker, consts.SPEAKERS) && (l.next == null || requireAtLeastOne(l.text));
+    return requireOneOfChoice(l.speaker, consts.SPEAKERS) && ((ids.length > 1 && l.next == null) || requireAtLeastOne(l.text));
   });
 }
 

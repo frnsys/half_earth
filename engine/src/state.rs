@@ -392,7 +392,7 @@ impl State {
         let fast = self.flags.contains(&Flag::FastDevelopment);
         let degrow = self.flags.contains(&Flag::Degrowth);
         let changes = self.world.develop_regions(stop, fast, degrow);
-        let wretched_ally = self.is_ally("The Wretched");
+        let wretched_ally = self.is_ally("The Bandung Bloc");
         let consumerist_ally = self.is_ally("The Consumerist");
         self.world.update_outlook(wretched_ally, consumerist_ally);
         changes
