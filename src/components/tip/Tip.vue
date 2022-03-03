@@ -136,4 +136,8 @@ export default {
 .tip--card .card {
   pointer-events: auto;
 }
+.tip--card .card.process {
+  margin: 0 auto !important;
+  padding-right: 0 !important;
+}
 </style>

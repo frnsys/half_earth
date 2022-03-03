@@ -10,6 +10,7 @@ pub enum ProcessFeature {
     UsesPesticides,
     UsesSynFertilizer,
     UsesLivestock,
+    UsesOil,
     IsIntermittent,
     CanMeltdown,
     MakesNuclearWaste,

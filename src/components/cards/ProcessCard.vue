@@ -6,8 +6,8 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-    
-    
+
+
     <div class="opposers" v-if="opposersDetailed.length > 0">
       <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
     </div>
@@ -32,7 +32,7 @@
           }">{{changedMixShare*5}}%</div>
         </template>
       </div>
-      
+
     </div>
   </template>
   <template v-slot:body>
@@ -40,8 +40,6 @@
       <slot name="actions"></slot>
     </div>
 
-    
-    
     <div class="process-intensity space-even">
       <IntensityIcon
         v-tip="intensityTip('energy')"
@@ -468,5 +466,9 @@ color: #63FF96;
 
 .process-excess-alert {
   margin: 1px 2px 1px;
+}
+
+.process.card .card-top header {
+  padding-right: 1.3em;
 }
 </style>

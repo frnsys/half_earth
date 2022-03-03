@@ -41,6 +41,7 @@ const PROCESS_FEATURES = {
   'IsCCS': 'Whether this process produces CO2 that is then stored/transported/used',
   'IsCombustion': 'If this process depends on combustion',
   'IsFossil': 'If this process uses fossil fuels',
+  'UsesOil': 'If this process uses oil',
   'IsLaborIntensive': 'If this process is especially labor intensive',
 }
 
@@ -281,7 +282,13 @@ const EFFECTS = {
     },
     desc: 'Increase/decrease emissions for the selected process (without changing its output), e.g. 20 is a 20% increase in emissions.'
   },
-
+  BiodiversityPressureForFeature: {
+    choices: Object.keys(PROCESS_FEATURES),
+    params: {
+      'Change': Number
+    },
+    desc: 'Increase/decrease biodiversity pressure for the selected process (without changing its output), e.g. 5 increase biodiversity pressure by 5.'
+  },
   ProcessLimit: {
     entity: 'Process',
     params: {
@@ -403,6 +410,14 @@ const EFFECTS = {
     desc: 'Changes the player\'s relationship with this NPC by a fixed amount. Relationships are from 0-6, <=1 is a nemesis and >=5 is an ally/in the coalition.'
   },
 
+  ModifyProcessByproducts: {
+    entity: 'Process',
+    choices:  Object.keys(BYPRODUCTS),
+    params: {
+      'Multiplier': Number
+    },
+    desc: 'Changes byproducts for an process, e.g. -0.2 is 20% fewer byproducts.'
+  },
   ModifyIndustryByproducts: {
     entity: 'Industry',
     choices:  Object.keys(BYPRODUCTS),

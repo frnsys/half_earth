@@ -50,6 +50,7 @@ pub enum Effect {
     OutputForFeature(ProcessFeature, f32),
     OutputForProcess(usize, f32),
     CO2ForFeature(ProcessFeature, f32),
+    BiodiversityPressureForFeature(ProcessFeature, f32),
     ProcessLimit(usize, f32),
     Feedstock(Feedstock, f32),
 
@@ -72,6 +73,7 @@ pub enum Effect {
     AutoClick(usize, f32),
     NPCRelationship(usize, isize),
 
+    ModifyProcessByproducts(usize, Byproduct, f32),
     ModifyIndustryByproducts(usize, Byproduct, f32),
     ModifyIndustryResources(usize, Resource, f32),
     ModifyIndustryResourcesAmount(usize, Resource, f32),
@@ -156,6 +158,11 @@ impl Effect {
                     process.byproduct_modifiers.co2 += pct_change;
                 }
             },
+            Effect::BiodiversityPressureForFeature(feat, pct_change) => {
+                for process in state.processes.iter_mut().filter(|p| p.features.contains(feat)) {
+                    process.byproduct_modifiers.biodiversity += pct_change;
+                }
+            },
             Effect::ProcessLimit(id, change) => {
                 let process = &mut state.processes[*id];
                 if let Some(limit) = process.limit {
@@ -226,6 +233,9 @@ impl Effect {
                 state.npcs[*id].relationship += change;
             },
 
+            Effect::ModifyProcessByproducts(id, byproduct, change) => {
+                state.processes[*id].byproduct_modifiers[*byproduct] += change;
+            },
             Effect::ModifyIndustryByproducts(id, byproduct, change) => {
                 state.industries[*id].byproduct_modifiers[*byproduct] += change;
             },
@@ -322,6 +332,11 @@ impl Effect {
                     process.byproduct_modifiers.co2 -= pct_change;
                 }
             },
+            Effect::BiodiversityPressureForFeature(feat, pct_change) => {
+                for process in state.processes.iter_mut().filter(|p| p.features.contains(feat)) {
+                    process.byproduct_modifiers.biodiversity -= pct_change;
+                }
+            },
             Effect::ProcessLimit(id, change) => {
                 let process = &mut state.processes[*id];
                 if let Some(limit) = process.limit {
@@ -333,6 +348,9 @@ impl Effect {
             },
             Effect::NPCRelationship(id, change) => {
                 state.npcs[*id].relationship -= change;
+            },
+            Effect::ModifyProcessByproducts(id, byproduct, change) => {
+                state.processes[*id].byproduct_modifiers[*byproduct] -= change;
             },
             Effect::ModifyIndustryByproducts(id, byproduct, change) => {
                 state.industries[*id].byproduct_modifiers[*byproduct] -= change;

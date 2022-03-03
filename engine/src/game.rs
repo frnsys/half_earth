@@ -200,6 +200,14 @@ impl Game {
         let mut snapshots: Vec<Snapshot> = Vec::new();
         let mut state = self.state.clone();
 
+        // Hacky, but ignore all feedstock constraints
+        // otherwise projections are weird
+        // because the simulation can't react to events
+        state.feedstocks.oil *= 10000.;
+        state.feedstocks.coal *= 10000.;
+        state.feedstocks.natural_gas *= 10000.;
+        state.feedstocks.uranium *= 10000.;
+
         // Dummy event pool
         let mut event_pool = EventPool::new(content::events());
         for _ in 0..years {

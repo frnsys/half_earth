@@ -16,6 +16,7 @@ const FEATURE_DESCS = {
   'IsLaborIntensive': 'especially labor-intensive processes',
   'IsCombustion': 'combustion processes',
   'IsFossil': 'fossil fuel processes',
+  'UsesOil': 'oil processes',
   'IsCCS': 'carbon capture processes',
   'UsesLivestock': 'processes that use livestock',
   'UsesPesticides': 'processes that use pesticides',

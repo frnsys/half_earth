@@ -124,6 +124,7 @@ export default {
   IsLaborIntensive: require('/assets/icons/features/is_labor_intensive.png'),
   IsSolar: require('/assets/icons/features/is_solar.png'),
   IsFossil: require('/assets/icons/features/is_fossil.png'),
+  UsesOil: require('/assets/icons/feedstocks/oil.png'),
   UsesLivestock: require('/assets/icons/features/uses_livestock.png'),
   UsesPesticides: require('/assets/icons/features/uses_pesticides.png'),
   UsesSynFertilizer: require('/assets/icons/features/uses_syn_fertilizer.png'),

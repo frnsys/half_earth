@@ -330,6 +330,20 @@ function render(e) {
         text: `${changeDir(e.param, e)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
+    case 'BiodiversityPressureForFeature': {
+      let tip = {
+        icon: e.subtype,
+        text: `Changes the biodiversity pressure for these processes by <strong>${e.param}.</strong>`,
+        card: {
+          type: 'Processes',
+          data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+        }
+      };
+      return {
+        tip,
+        text: `${changeDir(e.param, e)} biodiversity for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${e.param}.</strong>`
+      }
+    }
     case 'Demand': {
       let k = display.enumKey(e.subtype);
       let name = display.displayName(e.subtype);
@@ -572,6 +586,33 @@ function render(e) {
         text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} ${resource.toLowerCase()} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${Math.abs(demandAfter - demandBefore)}`}.`,
       }
     }
+    case 'ModifyProcessByproducts': {
+      let process = state.gameState.processes[e.entity];
+      let p = Math.abs(e.param * 100);
+      let emissionsBefore = format.co2eq(process.byproducts) * state.gameState.produced_by_process[e.entity] * 1e-15;
+      let emissionsAfter = emissionsBefore * (1 + e.param);
+      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions * 100;
+      let label = e.subtype == 'Biodiversity' ? 'biodiversity pressure' : `${e.subtype} emissions`;
+      let short = e.subtype == 'Biodiversity' ? 'biodiversity pressure' : 'emissions';
+      let icon = e.subtype == 'Biodiversity' ? 'biodiversity' : 'emissions';
+      let change = e.subtype == 'Biodiversity' ? `${process.byproducts.biodiversity} to ${e.param}<img src="${icons[icon]}."` : `${emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1)} to <img src="${icons.emissions}">${emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1)}. This is a ${emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1)}% change of all emissions.`
+      let tip = {
+        icon: icon,
+        text: e.param == '?' ?
+          `Changes ${label} for ${process.name} by an unknown amount.`
+          : `This will change ${short} for ${process.name} from <img src="${icons[icon]}">${change}`,
+        card: {
+          type: 'Process',
+          data: process,
+        }
+      };
+      let tag = display.cardTag(process.name);
+      return {
+        tip: tip,
+        text: `[${icon}] ${changeDir(e.param, e)} ${label} for ${tag} by <strong>${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}</strong>.`,
+      }
+    }
+
     case 'ModifyIndustryByproducts': {
       let industry = state.gameState.industries[e.entity];
       let p = Math.abs(e.param * 100);

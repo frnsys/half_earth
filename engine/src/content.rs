@@ -643,27 +643,27 @@ pub fn processes() -> Vec<Process> {
             id: 3,
             name: "Geothermal",
             output: Output::Electricity,
-            limit: None,
+            limit: Some(1576800000000.0),
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.0,
-                water: 0.0
+                land: 2.24,
+                water: 1.02
             ),
             byproducts: byproducts!(
                 ch4: 0.0,
-                co2: 0.0,
+                co2: 122.0,
                 n2o: 0.0
             ),
-            locked: true,
+            locked: false,
             features: vec![
 
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
-            supporters: vec![],
+            supporters: vec![8],
             opposers: vec![]
         },
         Process {
@@ -1210,7 +1210,8 @@ pub fn processes() -> Vec<Process> {
             locked: false,
             features: vec![
                 ProcessFeature::IsCombustion,
-                ProcessFeature::IsFossil
+                ProcessFeature::IsFossil,
+                ProcessFeature::UsesOil
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
@@ -1292,7 +1293,8 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: false,
             features: vec![
-                ProcessFeature::IsFossil
+                ProcessFeature::IsFossil,
+                ProcessFeature::UsesOil
             ],
             output_modifier: 0.0,
             byproduct_modifiers: byproducts!(),
@@ -1647,9 +1649,9 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 5,
-            name: "Ban Crypto Mining",
+            name: "Crack Down on Crypto-Mining",
             cost: 0,
-            base_cost: Cost::Fixed(20),
+            base_cost: Cost::Fixed(5),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
@@ -1669,17 +1671,6 @@ pub fn projects() -> Vec<Project> {
 
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Random,
-                        conditions: vec![
-
-                        ]
-                    }
-                },
-                Outcome {
-                    effects: vec![
-
-                    ],
-                    probability: Probability {
                         likelihood: Likelihood::Guaranteed,
                         conditions: vec![
 
@@ -1693,7 +1684,7 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
 
             ],
-            supporters: vec![8],
+            supporters: vec![1, 6, 8],
             opposers: vec![7],
             active_outcome: None
         },
@@ -5814,7 +5805,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Feedstock(Feedstock::Oil, 1.0)
+                Effect::Feedstock(Feedstock::Oil, 2.0),
+                Effect::CO2ForFeature(ProcessFeature::UsesOil, 0.2),
+                Effect::BiodiversityPressureForFeature(ProcessFeature::UsesOil, 0.5)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -5842,7 +5835,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![],
-            opposers: vec![],
+            opposers: vec![1, 4, 5, 8],
             active_outcome: None
         },
         Project {
