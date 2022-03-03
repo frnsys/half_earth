@@ -191,7 +191,8 @@ export default {
   width: 120px;
   overflow: visible;
   padding-top: 2.5em;
-  height: auto;
+  padding-bottom: 1em;
+  height: 100%;
 }
 
 .parliament-suspended {
