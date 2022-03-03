@@ -175,7 +175,17 @@ export default {
     },
     selectChoice(ev, branch) {
       ev.stopImmediatePropagation();
-      game.applyBranchEffects(this.eventId, this.regionId, branch.id);
+
+      // this.eventID will be undefined
+      // for project outcome dialogues.
+      // The whole dialogue system was really written with
+      // events in mind; it'd be a pretty big rewrite to
+      // fully support project dialogues with branch effects.
+      // So we just assume project dialogues won't have branch effects
+      // which, at time of writing, none of them do.
+      if (this.eventId !== undefined) {
+        game.applyBranchEffects(this.eventId, this.regionId, branch.id);
+      }
 
       this.current = branch.line_id;
       if (this.current !== null) {
