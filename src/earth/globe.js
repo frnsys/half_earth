@@ -8,10 +8,31 @@ import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
 import state from '/src/state';
 
+
 const Surface = RPC.initialize(
   new Worker(new URL('./worker.js', import.meta.url))
 );
 const texLoader = new THREE.TextureLoader();
+const objLoader = new THREE.ObjectLoader();
+
+function loadObjects(that){
+
+  const colonyActive = (project) => project.name == "Space Colony" && project.status == 'Active' || project.name == "Space Colony" && project.status == 'Finished'
+
+  if(state.gameState.projects.some(colonyActive)){
+    objLoader.load('./assets/models/colony.json',
+    function ( obj ) {
+      // Add the loaded object to the scene
+      that.orbital = obj;
+      that.sphere.add( that.orbital );
+    },
+    // onError callback
+    function ( err ) {
+      console.error( 'An error happened', err );
+    }
+    );
+  }
+}
 
 class Globe {
   constructor(el) {
@@ -100,7 +121,7 @@ class Globe {
     );
     this.scene.add(this.sphere);
 
-    
+    loadObjects(this);
 
     // Create the clouds layer
     this.cloudsMaterial = new THREE.ShaderMaterial({
@@ -227,6 +248,14 @@ class Globe {
     if (this.sphere && this.rotate && !this.rotationPaused) {
       this.sphere.rotation.y += 0.003;
     }
+
+    // Rotate orbital
+    if (this.sphere && this.rotate && this.orbital) {
+      this.orbital.rotation.z -= 0.01;
+    }
+
+    
+    
     this.tickPings();
 
     requestAnimationFrame(this.render.bind(this));
