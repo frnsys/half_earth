@@ -33,6 +33,7 @@ export default {
   plant_calories: require('/assets/icons/plantcalories.png'),
   animal_calories: require('/assets/icons/animalcalories.png'),
   unlocks: require('/assets/icons/unlocks.png'),
+  locks: require('/assets/icons/locks.png'),
   cost: require('/assets/icons/cost.png'),
   ban: require('/assets/icons/ban.png'),
   implement: require('/assets/icons/implement.png'),
