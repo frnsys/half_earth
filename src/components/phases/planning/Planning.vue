@@ -117,6 +117,7 @@ export default {
 .pip {
   width: 22px;
   vertical-align: middle;
+  image-rendering: auto;
 }
 .pips {
   padding: 0.5em;

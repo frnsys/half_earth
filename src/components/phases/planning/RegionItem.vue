@@ -21,7 +21,7 @@
     <div class="region-disasters">
       <div>Recent Disasters</div>
       <div>
-        <img :src="icons[ev.icon]" v-for="ev in events">
+        <img class="pip-icon" :src="icons[ev.icon]" v-for="ev in events">
       </div>
     </div>
   </div>

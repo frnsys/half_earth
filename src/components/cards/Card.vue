@@ -163,6 +163,7 @@ export default {
 
 .card header {
   margin-bottom: 0.25em;
+  image-rendering: auto;
 }
 
 .card--body {

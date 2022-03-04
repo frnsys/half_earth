@@ -3,7 +3,7 @@
   <div class="dashboard-breakdown-menu-overlay" v-if="showBreakdownMenu">
     <div class="dashboard-breakdown-menu">
       <div v-for="choice in breakdownChoices" @click="chooseBreakdown(choice)">
-        <img :src="icons[choice]" />{{choice.replace('_', ' ')}}
+        <img class="pip-icon" :src="icons[choice]" />{{choice.replace('_', ' ')}}
       </div>
     </div>
   </div>
@@ -112,7 +112,7 @@
   <div class="dashboard-breakdown">
       <h3>Breakdown</h3>
       <div class="dashboard-breakdown-select" @click="showBreakdownMenu = true">
-        <img :src="icons[breakdownFactor]" />{{ breakdownFactor.replace('_', ' ') }} ▼
+        <img class="pip-icon" :src="icons[breakdownFactor]" />{{ breakdownFactor.replace('_', ' ') }} ▼
       </div>
       <PieChart :dataset="dataset" :colors="colors" />
       <FactorsList :factors="tableData" />

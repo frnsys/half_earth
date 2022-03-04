@@ -1,6 +1,6 @@
 <template>
 <div class="card-icon">
-  <img :src="icons[resource]"/>
+  <img class="pip-icon" :src="icons[resource]"/>
   <IntensityBar :intensity="intensity" :invert="invert" :max="max" />
 </div>
 </template>
