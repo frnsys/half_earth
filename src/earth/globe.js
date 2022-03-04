@@ -100,13 +100,7 @@ class Globe {
     );
     this.scene.add(this.sphere);
 
-    // Set up hexsphere for locating icons
-    this.hexsphere = new HexSphere(this.scene, this.sphere, 5.2, 8, 0.98);
-    this.hexsphere.onClick((intersects) => {
-      // Pause rotation on click
-      if (this.rotate) this.pauseRotation(2000);
-      this._onClick.forEach((fn) => fn(intersects));
-    });
+    
 
     // Create the clouds layer
     this.cloudsMaterial = new THREE.ShaderMaterial({
@@ -124,6 +118,14 @@ class Globe {
       this.cloudsMaterial
     );
     this.sphere.add(this.clouds);
+
+    // Set up hexsphere for locating icons
+    this.hexsphere = new HexSphere(this.scene, this.sphere, 5.4, 8, 0.98);
+    this.hexsphere.onClick((intersects) => {
+      // Pause rotation on click
+      if (this.rotate) this.pauseRotation(2000);
+      this._onClick.forEach((fn) => fn(intersects));
+    });
 
     const canvas = this.scene.renderer.domElement;
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
