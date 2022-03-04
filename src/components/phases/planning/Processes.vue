@@ -298,15 +298,17 @@ export default {
   height: 24px;
   text-align: center;
   /* margin-top: -50px; */
-  width: 360px;
+  width: 100%;
   margin: 0 auto;
   margin-top: 5px;
   z-index: 5;
+  position: absolute;
+  top:72px;
 }
 
 .mix-token{
   height: 20px;
-  width: calc(100%/20);
+  width: 18px;
   background-color: #1B97F3;
   display: inline-block;
   box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
