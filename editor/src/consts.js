@@ -527,7 +527,7 @@ const SPEAKERS = [
   'The Malthusian',
   'The Ecofeminist',
   'The Consumerist',
-  'The Bandung Bloc',
+  'The Fanonist',
   'The Environmentalist',
 ];
 
