@@ -12,12 +12,12 @@
     </div>
   </div>
   <div v-if="hasName" class="card-mid card--name" :style="{background, color}">
-    <div :style="{visibility: flipped ? 'hidden' : 'visible'}">
+    <div :style="{visibility: flipped ? 'hidden' : 'visible'}" ref="name">
       <slot name="name"></slot>
     </div>
   </div>
   <div class="card-bot" :style="{background, color}">
-    <div v-if="!flipped" class="card--body" :style="{color}">
+    <div v-if="!flipped" class="card--body" :style="{color}" ref="body">
       <slot name="body"></slot>
     </div>
     <div v-else class="card-bot-back">
@@ -32,12 +32,38 @@
 </template>
 
 <script>
+import textFit from 'textfit';
+
+const nameFitConfig = {
+  alignHoriz: true,
+  alignVert: true,
+  multiLine: true,
+  minFontSize: 16,
+  maxFontSize: 24,
+};
+
+const bodyFitConfig = {
+  alignHoriz: true,
+  alignVert: true,
+  multiLine: true,
+  minFontSize: 11,
+  maxFontSize: 13,
+};
+
 export default {
   props: ['background', 'color', 'noBack', 'isProcess'],
   data() {
     return {
       flipped: false
     }
+  },
+  mounted() {
+    textFit(this.$refs.name, nameFitConfig);
+    textFit(this.$refs.body, bodyFitConfig);
+  },
+  updated() {
+    textFit(this.$refs.name, nameFitConfig);
+    textFit(this.$refs.body, bodyFitConfig);
   },
   computed: {
     hasName() {
@@ -180,6 +206,7 @@ export default {
   border-top: 1px solid rgba(0,0,0,0.4);
   border-left: 1px solid rgba(0,0,0,0.4);
 
+  height: 150px;
 
   border-radius: 0.5em;
   margin: 0 0 0.5em 0;
@@ -194,6 +221,9 @@ export default {
   width: 18px;
   vertical-align: middle;
   margin-right: 2px;
+}
+.card--body .effect {
+  margin: 0.5em 0;
 }
 
 .card figure {
@@ -309,8 +339,11 @@ export default {
 .card--name {
   text-align: center;
   font-size: 1.5em;
-  padding: 0.5em 0.5em;
-  line-height: 110%;
+  padding: 0.1em 0.5em;
+  line-height: 1.25;
+}
+.card--name > div {
+  height: 38px;
 }
 
 .card header .barcode {

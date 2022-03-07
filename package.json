@@ -13,6 +13,7 @@
     "half-earth-engine": "file:engine/pkg",
     "hector-wasm": "file:hector/wasm",
     "hexasphere.js": "^0.2.2",
+    "textfit": "^2.4.0",
     "three": "^0.129.0",
     "upng-js": "^2.1.0",
     "vue": "^3.1.4"
