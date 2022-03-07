@@ -374,9 +374,6 @@ export default (type) => {
         this.scanAnim = animate(0, 100, this.scanTime * 1000, (val) => {
           this.$refs.scanProgress.style.width = `${val}%`;
         }, () => {
-
-
-
           if (this.scanning) {
             if(!isProcess){
               let projectActive = p.status == 'Active' || p.status == 'Finished';

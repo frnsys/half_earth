@@ -36,13 +36,15 @@
     </div>
   </div>
 
-  <Cards @focused="onFocused" :disabled="!allowScroll">
+  <Cards @focused="onFocused" @scrolled="onScrolled" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
       @drag="onDragVertical"
+      @tryScroll="tryScroll"
       @dragStop="onDragVerticalStop"
       v-for="p in processes"
       :minY="yMin"
       :maxY="yMax"
+      :disabled="!allowSwipe"
       :draggable="focusedProcess == p"
       :id="p.id"
       :key="p.id"
@@ -87,7 +89,7 @@ import ProcessCard from 'components/cards/ProcessCard.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
 
 import ScannerMixin from 'components/phases/ScannerMixin';
-import {detectCenterElement} from 'lib/util';
+import {detectCenterElement, isTouchDevice} from 'lib/util';
 
 const lf = new Intl.ListFormat('en');
 
@@ -108,6 +110,7 @@ export default {
       points: 0,
       output: 'Electricity',
       allowScroll: true,
+      allowSwipe: true,
       focusedProcess: 0,
       allowBack: true
     };
@@ -271,10 +274,23 @@ export default {
       this.checkDrag(component);
     },
     onDragVerticalStop() {
-      this.allowScroll = true;
       this.stopDrag();
+      if (!isTouchDevice()) {
+        this.allowScroll = true;
+      }
     },
-
+    tryScroll() {
+      this.allowScroll = true;
+    },
+    onScrolled() {
+      this.allowSwipe = false;
+    },
+    onScrollEnd() {
+      this.allowSwipe = true;
+      if (isTouchDevice()) {
+        this.allowScroll = false;
+      }
+    }
   }
 }
 </script>

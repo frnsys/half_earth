@@ -4,7 +4,7 @@
 -->
 
 <template>
-<ul class="cards" :class="{noscroll: disabled}" ref="scroller" @scroll="scrolled">
+<ul class="cards" ref="scroller" @scroll="scrolled">
   <slot></slot>
 </ul>
 </template>
@@ -17,6 +17,15 @@ export default {
   data() {
     return {
       scrollTimeout: null,
+      scrollDoneTimeout: null,
+      scrollLeft: 0,
+    }
+  },
+  watch: {
+    disabled(val) {
+      if (val) {
+        this.scrollLeft = this.$refs.scroller.scrollLeft;
+      }
     }
   },
   mounted() {
@@ -25,6 +34,12 @@ export default {
   },
   methods: {
     scrolled(ev) {
+      if (this.disabled) {
+        this.$refs.scroller.scrollLeft = this.scrollLeft;
+        return;
+      }
+      this.$emit('scrolled');
+
       if (this.scrollTimeout !== null) {
         clearTimeout(this.scrollTimeout);
       }
@@ -36,7 +51,20 @@ export default {
           this.$refs.scroller,
           [...this.$refs.scroller.children]);
         if (idx >= 0) {
-          this.$emit('focused', idx);
+          if (this.scrollDoneTimeout !== null) {
+            clearInterval(this.scrollDoneTimeout);
+          }
+          let last = this.$refs.scroller.scrollLeft;
+          this.scrollDoneTimeout = setInterval(() => {
+            let nextLast = this.$refs.scroller.scrollLeft;
+            if (last == nextLast) {
+              this.$emit('focused', idx);
+              this.$emit('scrollEnd');
+              clearInterval(this.scrollDoneTimeout);
+            } else {
+              last = nextLast;
+            }
+          }, 50);
         }
       }, 50);
     }
@@ -59,7 +87,13 @@ export default {
   scrollbar-color: #aaa transparent;
   /* so there's enough space to center the
   first and last items */
-  padding: 0 25%;
+  padding: 1em 25% 0;
+
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
 }
 .cards > * {
   scroll-snap-align: center;

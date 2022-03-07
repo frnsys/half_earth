@@ -61,17 +61,22 @@ export default {
     if (this.$refs.name) {
       textFit(this.$refs.name, nameFitConfig);
     }
-    if (this.$refs.body) {
-      textFit(this.$refs.body, bodyFitConfig);
-    }
+    // TODO this messes up card rendering
+    // mainly because the card body can contain
+    // more than just a list of effects, and if it does,
+    // things break. E.g. if a project is Building/Researching,
+    // the HTML that includes the tag indicating that breaks everything
+    /* if (this.$refs.body) { */
+    /*   textFit(this.$refs.body, bodyFitConfig); */
+    /* } */
   },
   updated() {
     if (this.$refs.name) {
       textFit(this.$refs.name, nameFitConfig);
     }
-    if (this.$refs.body) {
-      textFit(this.$refs.body, bodyFitConfig);
-    }
+    /* if (this.$refs.body) { */
+    /*   textFit(this.$refs.body, bodyFitConfig); */
+    /* } */
   },
   computed: {
     hasName() {

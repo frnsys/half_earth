@@ -31,10 +31,11 @@ export default {
 .inner{
   background-color: rgba(0,0,0,0.1);
   /* background-image: url('/assets/backgrounds/screen-door.png'); */
-  height: 520px;
   width: 350px;
   pointer-events: none;
   border-radius: 1em;
+  margin-top: 2em;
+  height: calc(100vh - 7.5em);
 
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
   border-right: 1px solid rgba(255,255,255,0.5);

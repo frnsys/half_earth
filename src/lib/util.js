@@ -70,5 +70,12 @@ function rngForYear(year) {
   return mulberry32(seed);
 }
 
+// https://stackoverflow.com/a/4819886/1097920
+function isTouchDevice() {
+  return (('ontouchstart' in window) ||
+     (navigator.maxTouchPoints > 0) ||
+     (navigator.msMaxTouchPoints > 0));
+}
+
 export {clone, randChoice, rngForYear,
-  slugify, updateTransform, detectCenterElement};
+  slugify, updateTransform, detectCenterElement, isTouchDevice};

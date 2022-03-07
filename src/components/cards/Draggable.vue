@@ -14,7 +14,7 @@ import animate from 'lib/anim';
 import {updateTransform} from 'lib/util';
 
 export default {
-  props: ['id', 'draggable', 'minY', 'maxY'],
+  props: ['id', 'draggable', 'minY', 'maxY', 'disabled'],
   data() {
     return {
       down: false,
@@ -45,6 +45,7 @@ export default {
   },
   methods: {
     startDrag(ev) {
+      if (this.disabled) return;
       if (!this.draggable) return;
       this.down = true;
       /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
@@ -63,6 +64,9 @@ export default {
       };
     },
     drag(ev) {
+      if (this.disabled) {
+        this.stopDrag();
+      };
       if (!this.down) return;
       /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
@@ -85,7 +89,10 @@ export default {
         dy = Math.min(maxDY, Math.max(minDY, dy));
         this.$el.style.top = `${dy}px`;
         /* this.$el.style.left = `${dx}px`; */
+
         this.$emit('drag', this);
+      } else if (Math.abs(dx) >= 2) {
+        this.$emit('tryScroll', this);
       }
     },
     stopDrag() {
@@ -98,8 +105,8 @@ export default {
         this.$el.style.top = `${top}px`;
         this.$el.style.left = `${left}px`;
       });
-      /* updateTransform(this.$el, {rotate: '0deg'}); */
       this.$emit('dragStop', this);
+      /* updateTransform(this.$el, {rotate: '0deg'}); */
     }
   }
 }

@@ -36,12 +36,14 @@
     <div class="withdraw-bar" ref="withdrawProgress"></div>
   </div>
 
-  <Cards @focused="onFocused" :disabled="!allowScroll">
+  <Cards @focused="onFocused" @scrolled="onScrolled" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable @drag="onDragVertical"
+      @tryScroll="tryScroll"
       @dragStop="onDragVerticalStop"
       v-for="i in projectOrder"
       :minY="yMin"
       :maxY="yMax"
+      :disabled="!allowSwipe"
       :draggable="focusedProject == i"
       :id="projects[i].id"
       :key="projects[i].id">
@@ -80,7 +82,7 @@ import Cards from 'components/cards/Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
 import ScannerMixin from 'components/phases/ScannerMixin';
-import {detectCenterElement} from 'lib/util';
+import {detectCenterElement, isTouchDevice} from 'lib/util';
 
 export default {
   mixins: [ScannerMixin('Project')],
@@ -94,6 +96,7 @@ export default {
     return {
       state,
       allowScroll: true,
+      allowSwipe: true,
       focusedProject: 0,
       type: 'Research',
     };
@@ -164,9 +167,23 @@ export default {
       this.checkDrag(component);
     },
     onDragVerticalStop() {
-      this.allowScroll = true;
       this.stopDrag();
+      if (!isTouchDevice()) {
+        this.allowScroll = true;
+      }
     },
+    tryScroll() {
+      this.allowScroll = true;
+    },
+    onScrolled() {
+      this.allowSwipe = false;
+    },
+    onScrollEnd() {
+      this.allowSwipe = true;
+      if (isTouchDevice()) {
+        this.allowScroll = false;
+      }
+    }
   }
 }
 </script>
