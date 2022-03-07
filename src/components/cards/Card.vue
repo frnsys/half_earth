@@ -58,12 +58,20 @@ export default {
     }
   },
   mounted() {
-    textFit(this.$refs.name, nameFitConfig);
-    textFit(this.$refs.body, bodyFitConfig);
+    if (this.$refs.name) {
+      textFit(this.$refs.name, nameFitConfig);
+    }
+    if (this.$refs.body) {
+      textFit(this.$refs.body, bodyFitConfig);
+    }
   },
   updated() {
-    textFit(this.$refs.name, nameFitConfig);
-    textFit(this.$refs.body, bodyFitConfig);
+    if (this.$refs.name) {
+      textFit(this.$refs.name, nameFitConfig);
+    }
+    if (this.$refs.body) {
+      textFit(this.$refs.body, bodyFitConfig);
+    }
   },
   computed: {
     hasName() {

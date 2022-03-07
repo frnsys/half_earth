@@ -19,6 +19,10 @@ export default {
       scrollTimeout: null,
     }
   },
+  mounted() {
+    // Hack to start with first card focused
+    this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
+  },
   methods: {
     scrolled(ev) {
       if (this.scrollTimeout !== null) {

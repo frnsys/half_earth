@@ -221,7 +221,7 @@ strong{
   background: red !important;
   box-shadow: 0px 0px 7px red !important;
 }
-.no-scan {
+.no-scan .mini-scanbar {
   box-shadow: 0px 0px 7px red !important;
 }
 
