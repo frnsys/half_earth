@@ -258,7 +258,7 @@ export default (type) => {
         let y = rect.y;
         if (y >= topTarget) {
           var p = Math.min(1, SCANBAR_HEIGHT/(topTarget - y));
-          var px =  Math.abs(p * SCANBAR_HEIGHT) + topTarget;
+          var px =  Math.abs(p * SCANBAR_HEIGHT * 1.8) + topTarget; //um surely theres a better way 2 do this
           this.$refs.target.style.top = `${px}px`
         }
 

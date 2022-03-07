@@ -179,6 +179,10 @@ strong{
   border: transparent;
 }
 
+.pip-icon{
+  image-rendering: auto;
+}
+
 /* Scanner */
 .pips {
   position: relative;

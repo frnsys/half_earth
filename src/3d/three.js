@@ -6,7 +6,9 @@
 
 export * from 'three/src/constants.js';
 export { Raycaster } from 'three/src/core/Raycaster.js';
+export { Object3D } from 'three/src/core/Object3D.js';
 export { TextureLoader } from 'three/src/loaders/TextureLoader.js';
+export { ObjectLoader } from 'three/src/loaders/ObjectLoader.js';
 export { EventDispatcher } from 'three/src/core/EventDispatcher.js';
 export { Scene } from 'three/src/scenes/Scene.js';
 export { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js';

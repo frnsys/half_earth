@@ -53,6 +53,7 @@ export default {
   height: 14px;
   width: 14px;
   vertical-align: middle;
+  image-rendering: auto;
 }
 .factors--user > div, .factors--total {
   display: flex;
@@ -77,6 +78,10 @@ export default {
   font-size: 14px;
 }
 
+.factors--usage img{
+  image-rendering: auto;
+}
+
 .factors--total {
   border: 1px solid #fff;
   position: sticky;
@@ -89,6 +94,7 @@ export default {
 .arrow {
   color: #727987;
 }
+
 
 /* hacky, but so exhausted at this point */
 .factors--usage-solo {

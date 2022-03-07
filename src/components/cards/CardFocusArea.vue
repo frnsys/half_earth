@@ -25,6 +25,8 @@ export default {
   align-items: center;
   justify-content: center;
   pointer-events: none;
+
+  padding-bottom: 1em;
 }
 .inner{
   background-color: rgba(0,0,0,0.1);

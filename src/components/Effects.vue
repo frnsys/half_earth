@@ -313,7 +313,7 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} output for<span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
+        text: `${changeDir(e.param, e)} output for<span><img class="effect-feature" src="${icons[e.subtype]}" /><strong>${display.describeFeature(e.subtype)}</strong></span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
       }
     }
     case 'CO2ForFeature': {
@@ -712,12 +712,17 @@ function render(e) {
     }
     case 'LocksProject': {
       let project = state.gameState.projects[e.entity];
+      let tag = display.cardTag(project.name, project.kind.toLowerCase());
       return {
         tip: {
           icon: 'alert',
           text: `${project.name} will be unavailable while this project is active.`,
+          card: {
+            type: 'Project',
+            data: project
+          }
         },
-        text: `<strong>Locks</strong> ${project.name}`,
+        text: `[locks] <strong>Locks</strong> ${tag}`,
       }
     }
     case 'TerminationShock': {
