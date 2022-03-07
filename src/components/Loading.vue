@@ -3,6 +3,9 @@
   <div>
     <img src="/assets/gosplant.svg" />
     <div class="loading-text">{{state.loadingSave ? 'Loading saved data' : 'Booting Up'}}</div>
+    <div class="loading-bar">
+      <div class="loading-bar-fill" :style="{width: barWidth}"></div>
+    </div>
     <img class="motto" src="/assets/motto.png" />
 
     <div class='fonts'>
@@ -47,7 +50,6 @@ export default {
     }
   },
   mounted() {
-    // console.log(preload);
     preload.forEach((src) => {
       let img = new Image();
       img.onload = () => {
@@ -58,6 +60,11 @@ export default {
       };
       img.src = src;
     });
+  },
+  computed: {
+    barWidth() {
+      return `${this.loaded/preload.length * 100}%`;
+    }
   }
 }
 </script>
@@ -101,5 +108,18 @@ export default {
   to {
     width: 20px;
   }
+}
+
+.loading-bar {
+  height: 7px;
+  width: 220px;
+  margin: 0.5em auto;
+  border: 1px solid #fff;
+  border-radius: 0.5em;
+  overflow: hidden;
+}
+.loading-bar-fill {
+  height: 100%;
+  background: #fff;
 }
 </style>
