@@ -77,5 +77,16 @@ function isTouchDevice() {
      (navigator.msMaxTouchPoints > 0));
 }
 
-export {clone, randChoice, rngForYear,
+function scaleText(el, minSize) {
+  if (el.scrollHeight > el.clientHeight) {
+    let fontSize = parseFloat(getComputedStyle(el).fontSize);
+    fontSize = Math.round(fontSize);
+    while (el.scrollHeight > el.clientHeight && fontSize > minSize) {
+      fontSize--;
+      el.style.fontSize = `${fontSize}px`;
+    }
+  }
+}
+
+export {clone, randChoice, rngForYear, scaleText,
   slugify, updateTransform, detectCenterElement, isTouchDevice};

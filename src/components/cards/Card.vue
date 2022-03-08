@@ -33,6 +33,7 @@
 
 <script>
 import textFit from 'textfit';
+import {scaleText} from 'lib/util';
 
 const nameFitConfig = {
   alignHoriz: true,
@@ -40,14 +41,6 @@ const nameFitConfig = {
   multiLine: true,
   minFontSize: 16,
   maxFontSize: 24,
-};
-
-const effectsFitConfig = {
-  alignHoriz: true,
-  alignVert: true,
-  multiLine: true,
-  minFontSize: 10,
-  maxFontSize: 13,
 };
 
 const descFitConfig = {
@@ -95,7 +88,7 @@ export default {
       if (this.$refs.body) {
         let effects = this.$refs.body.querySelector('.solo-effects');
         if (effects) {
-          textFit(effects, effectsFitConfig);
+          scaleText(effects, 9);
         }
       }
 
@@ -435,5 +428,8 @@ export default {
 .solo-effects {
   width: 100%;
   height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 </style>
