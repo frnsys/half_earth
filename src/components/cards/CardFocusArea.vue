@@ -25,8 +25,6 @@ export default {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-
-  padding-bottom: 1em;
 }
 .inner{
   background-color: rgba(0,0,0,0.1);
@@ -35,7 +33,7 @@ export default {
   pointer-events: none;
   border-radius: 1em;
   margin-top: 2em;
-  height: calc(100vh - 7.5em);
+  height: 520px;
 
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
   border-right: 1px solid rgba(255,255,255,0.5);

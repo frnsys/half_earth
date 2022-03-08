@@ -150,7 +150,7 @@ export default {
 }
 .planning--page .cards {
   flex: 1;
-  margin-top: -1em;
+  margin-top: 24px;
 }
 
 .project--upgrade--title {

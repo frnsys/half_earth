@@ -92,12 +92,14 @@ export default {
       // more than just a list of effects, and if it does,
       // things break. E.g. if a project is Building/Researching,
       // the HTML that includes the tag indicating that breaks everything
-      if (this.$refs.body) {
-        let effects = this.$refs.body.querySelector('.effects');
-        if (effects) {
-          textFit(effects, effectsFitConfig);
-        }
-      }
+      // TODO still breaks if we have additional stuff,
+      // requires .effects have static width/height
+      /* if (this.$refs.body) { */
+      /*   let effects = this.$refs.body.querySelector('.effects'); */
+      /*   if (effects) { */
+      /*     textFit(effects, effectsFitConfig); */
+      /*   } */
+      /* } */
 
       let desc = this.$el.querySelector('.card-desc');
       if (desc) {
