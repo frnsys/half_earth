@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     fitTexts() {
-      if (this.$refs.name) {
+      if (this.$refs.name && !this.isProcess) {
         textFit(this.$refs.name, nameFitConfig);
       }
       // Can't target the body as a whole,
