@@ -43,7 +43,7 @@
     {{name}}
   </template>
   <template v-slot:body>
-    <Effects :effects="activeEffects" />
+    <Effects class="solo-effects" :effects="activeEffects" />
 
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">

@@ -46,7 +46,7 @@ const effectsFitConfig = {
   alignHoriz: true,
   alignVert: true,
   multiLine: true,
-  minFontSize: 11,
+  minFontSize: 10,
   maxFontSize: 13,
 };
 
@@ -92,14 +92,12 @@ export default {
       // more than just a list of effects, and if it does,
       // things break. E.g. if a project is Building/Researching,
       // the HTML that includes the tag indicating that breaks everything
-      // TODO still breaks if we have additional stuff,
-      // requires .effects have static width/height
-      /* if (this.$refs.body) { */
-      /*   let effects = this.$refs.body.querySelector('.effects'); */
-      /*   if (effects) { */
-      /*     textFit(effects, effectsFitConfig); */
-      /*   } */
-      /* } */
+      if (this.$refs.body) {
+        let effects = this.$refs.body.querySelector('.solo-effects');
+        if (effects) {
+          textFit(effects, effectsFitConfig);
+        }
+      }
 
       let desc = this.$el.querySelector('.card-desc');
       if (desc) {
@@ -432,5 +430,10 @@ export default {
   z-index: 1;
   border-radius: 0 1em 1em 0;
   padding:20px 5px;
+}
+
+.solo-effects {
+  width: 100%;
+  height: 110px;
 }
 </style>
