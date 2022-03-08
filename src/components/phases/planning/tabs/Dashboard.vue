@@ -111,7 +111,7 @@
   </div>
   <div class="dashboard-breakdown">
       <h3>Breakdown</h3>
-      <div class="dashboard-breakdown-select" @click="showBreakdownMenu = true">
+      <div class="dashboard-breakdown-select btn" @click="showBreakdownMenu = true">
         <img class="pip-icon" :src="icons[breakdownFactor]" />{{ breakdownFactor.replace('_', ' ') }} ▼
       </div>
       <PieChart :dataset="dataset" :colors="colors" />
@@ -429,7 +429,7 @@ export default {
   cursor: pointer;
 }
 .dashboard-breakdown-select {
-  background: #fff;
+  /* background: #fff;
   border-radius: 0.5em;
   box-shadow: 2px 2px 0 #747474;
   text-align: center;
@@ -437,13 +437,13 @@ export default {
   font-size: 1.5em;
   width: fit-content;
   margin: 0 auto 0.5em;
-  padding: 0.5em 0.75em;
+  padding: 0.5em 0.75em; */
 }
 .dashboard-breakdown-select img {
   width: 24px;
   margin-right: 5px;
   position: relative;
-  top: 3px;
+  /* top: 3px; */
 }
 .dashboard-breakdown-note {
   text-align: center;

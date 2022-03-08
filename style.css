@@ -102,6 +102,48 @@ button:disabled {
   border: 1px solid #aaa;
   pointer-events: none;
 }
+
+button:active{
+  border-left: 2px solid rgba(0,0,0,0.5);
+  border-top: 2px solid rgba(0,0,0,0.5);
+  border-right: 2px solid rgba(255,255,255,0.5);
+  border-bottom: 2px solid rgba(255,255,255,0.5);
+  background-color: #b6b6b6;
+}
+
+.btn{
+  background: #fff;
+  border-radius: 0.5em;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 1rem;
+  width: fit-content;
+  margin: 0 auto 0.5em;
+  padding: 0.5em 0.75em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  border-left: 2px solid rgba(255,255,255,0.5);
+  border-top: 2px solid rgba(255,255,255,0.5);
+  border-right: 2px solid rgba(0,0,0,0.5);
+  border-bottom: 2px solid rgba(0,0,0,0.5);
+
+}
+
+.btn:hover{
+  background-color: #D3D3D3;
+}
+
+.btn:active{
+  border-left: 2px solid rgba(0,0,0,0.5);
+  border-top: 2px solid rgba(0,0,0,0.5);
+  border-right: 2px solid rgba(255,255,255,0.5);
+  border-bottom: 2px solid rgba(255,255,255,0.5);
+  background-color: #b6b6b6;
+}
+
+
 .actions {
   text-align: center;
   margin: 1em 0;

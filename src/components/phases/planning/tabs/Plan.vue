@@ -33,7 +33,7 @@
     </div>
     <div class="plan--production">
       <div class="plan--production-bg"></div>
-      <div class="plan--production-button" @click="selectPage('Processes')">Change Production</div>
+      <div class="plan--production-button btn" @click="selectPage('Processes')">Change Production</div>
     </div>
     <div class="plan--charts">
       <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="220px" :center="true" />
@@ -364,13 +364,16 @@ export default {
 }
 
 .plan--ready {
-  font-size: 1.3em;
-  padding: 2em 1em;
+  font-family: 'W95FA';
+  font-size: 1.3rem;
+  /* padding: 2em 1em; */
   position: absolute;
-  right: 0.5em;
-  bottom: 0.5em;
+  width: 7rem;
+  height: 7rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
   background: red;
-  border-radius: 10em;
+  border-radius: 50%;
   border-right: 2px solid rgba(0,0,0,0.5);
   border-bottom: 2px solid rgba(0,0,0,0.5);
   border-top: 1px solid rgba(255,255,255,0.5);
@@ -483,10 +486,7 @@ export default {
 }
 
 .plan--production-button {
-  background: #fff;
   padding: 1em 0.9em;
-  border-radius: 0.5em;
-  box-shadow: 1px 1px 0px rgb(0 0 0 / 50%);
   max-width: 180px;
   margin: 0 auto;
   cursor: pointer;

@@ -2,9 +2,9 @@
 <div class="planning--page planning--page--regions">
   <Globe id="regions-globe" class="cell" :onReady="onGlobeReady" :onClick="onGlobeClick" />
   <div class="regions-browse" v-if="selectedRegion !== null">
-    <div class="region-change" @click="prevRegion"><img :src="icons.arrow_left"></div>
+    <div class="region-change btn" @click="prevRegion"><img :src="icons.arrow_left"></div>
     <div class="region-name cell" ref="regionName">{{regions[selectedRegion].name}}</div>
-    <div class="region-change" @click="nextRegion"><img :src="icons.arrow_right"></div>
+    <div class="region-change btn" @click="nextRegion"><img :src="icons.arrow_right"></div>
   </div>
   <div class="regions-region" v-for="region in regions">
     <RegionItem v-if="region.id == selectedRegion" :region="region" />
@@ -137,10 +137,10 @@ export default {
 }
 .region-change {
   background: #B3D2BC;
-  border-right: 1px solid #1a1a1a;
+  /* border-right: 1px solid #1a1a1a;
   border-bottom: 1px solid #1a1a1a;
   border-top: 1px solid #FDF7E2;
-  border-left: 1px solid #FDF7E2;
+  border-left: 1px solid #FDF7E2; */
   border-radius: 0.6em;
   padding: 1em;
   display: flex;
