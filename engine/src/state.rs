@@ -392,7 +392,7 @@ impl State {
         let fast = self.flags.contains(&Flag::FastDevelopment);
         let degrow = self.flags.contains(&Flag::Degrowth);
         let changes = self.world.develop_regions(stop, fast, degrow);
-        let wretched_ally = self.is_ally("The Bandung Bloc");
+        let wretched_ally = self.is_ally("The Fanonist");
         let consumerist_ally = self.is_ally("The Consumerist");
         self.world.update_outlook(wretched_ally, consumerist_ally);
         changes
@@ -440,9 +440,7 @@ impl State {
         completed
     }
 
-    pub fn start_project(&mut self, project_id: usize, rng: &mut SmallRng) -> Vec<Effect> {
-        let mut effects: Vec<Effect> = Vec::new();
-
+    pub fn start_project(&mut self, project_id: usize, rng: &mut SmallRng) {
         // Ugh hacky
         let project = &self.projects[project_id];
         if project.kind == ProjectType::Policy {
@@ -450,15 +448,7 @@ impl State {
         }
 
         let project = &mut self.projects[project_id];
-
-        if project.kind == ProjectType::Policy {
-            project.status = Status::Active;
-            for effect in &project.effects {
-                effects.push(effect.clone());
-            }
-        } else {
-            project.status = Status::Building;
-        }
+        project.status = Status::Building;
 
         for npc_id in &project.supporters {
             self.npcs[*npc_id].relationship += 1;
@@ -466,8 +456,6 @@ impl State {
         for npc_id in &project.opposers {
             self.npcs[*npc_id].relationship -= 1;
         }
-
-        effects
     }
 
     pub fn stop_project(&mut self, project_id: usize) -> Vec<Effect> {
@@ -481,9 +469,6 @@ impl State {
         }
 
         if project.kind == ProjectType::Policy {
-            for effect in &project.effects {
-                effects.push(effect.clone());
-            }
             self.new_policies.retain(|&id| id != project.id);
         }
 
@@ -512,6 +497,10 @@ impl State {
                 None => ()
             }
             self.projects[*id].active_outcome = active_outcome;
+            self.projects[*id].status = Status::Active;
+            for effect in &self.projects[*id].effects {
+                effects.push(effect.clone());
+            }
         }
 
         (ids, effects)

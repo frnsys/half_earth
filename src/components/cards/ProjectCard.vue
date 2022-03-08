@@ -2,7 +2,7 @@
 <Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
   <template v-slot:header>
     <div>{{group}}</div>
-    <div class="passed-stamp" v-if="kind == 'Policy' && status == 'Active'"><img src="/assets/stamp.svg"></div>
+    <div class="passed-stamp" v-if="kind == 'Policy' && (status == 'Active' || status == 'Building')"><img src="/assets/stamp.svg"></div>
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
         Level {{level+1}}
@@ -12,7 +12,7 @@
       </template>
     </div>
     <div v-else class="project-cost" v-tip="costTip">
-      <template v-if="kind != 'Policy'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy'">
+      <template v-if="kind != 'Policy' || status == 'Building'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy' && status != 'Building'">
     </div>
     <img class="barcode" src="/assets/barcode.png" />
   </template>
@@ -200,8 +200,12 @@ export default {
       if (this.implemented) {
         return null;
       } else if (this.status == 'Building') {
-        let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
-        return `${years} yrs left`;
+        if (this.kind == 'Policy') {
+          return '1 planning cycle left';
+        } else {
+          let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
+          return `${years} yrs left`;
+        }
       } else {
         let cost = this.points > 0 ? this.estimate : this.cost;
         if (this.kind == 'Policy') {

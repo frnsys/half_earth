@@ -250,10 +250,7 @@ impl Game {
     }
 
     pub fn start_project(&mut self, project_id: usize, rng: &mut SmallRng) {
-        let effects = self.state.start_project(project_id, rng);
-        for effect in effects {
-            effect.apply(&mut self.state, &mut self.event_pool, None);
-        }
+        self.state.start_project(project_id, rng);
         self.state.update_demand();
     }
 
