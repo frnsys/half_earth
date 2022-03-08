@@ -155,6 +155,11 @@ export default {
       if(e.keyCode === 13){
         this.advance();
       }
+      if (VERSION === 'dev') {
+        if(e.keyCode === 27){
+        this.end();
+        }
+      }
     },
     play() {
       this.revealed = false;
