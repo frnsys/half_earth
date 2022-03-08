@@ -46,7 +46,6 @@ export default {
 
 <style>
 .factors--users {
-  position: relative;
   padding-top: 1em;
 }
 .factors--users > div {
@@ -88,7 +87,7 @@ export default {
 
 .factors--total {
   border: 1px solid #fff;
-  position: sticky;
+  position: absolute;
   top: 0.5em;
   left: 1.5em;
   right: 1.5em;

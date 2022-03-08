@@ -115,7 +115,9 @@
         <img class="pip-icon" :src="icons[breakdownFactor]" />{{ breakdownFactor.replace('_', ' ') }} ▼
       </div>
       <PieChart :dataset="dataset" :colors="colors" />
-      <FactorsList :factors="tableData" />
+      <div class="dashboard--factors">
+        <FactorsList :factors="tableData" />
+      </div>
       <div class="dashboard-breakdown-note">Only direct impacts are shown.</div>
   </div>
 </div>
@@ -364,7 +366,7 @@ export default {
   overflow-y: scroll;
   margin: 2em auto;
   font-size: 0.75em;
-  padding: 0 0.5em;
+  padding: 2.5em 0.5em 0;
   font-family: 'Inter', sans-serif;
   width: 280px;
   border-left: 1px solid #706041;
@@ -377,10 +379,15 @@ export default {
   background: #bbb4a7;
   border: 1px solid #6b6161;
   top: 0.5em;
+  left: 2.5em;
+  right: 2.5em;
   box-shadow: 0 0 2px rgba(0,0,0,0.5);
 }
 .dashboard-breakdown .factors--usage {
   font-size: 12px;
+}
+.dashboard--factors {
+  position: relative;
 }
 
 .dashboard-breakdown-menu-overlay {
