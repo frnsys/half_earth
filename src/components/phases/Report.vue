@@ -4,117 +4,117 @@
   <div class="report">
     <h2>Report</h2>
     <div class="report--body">
-      <table>
+      <div class="report--inner">
+        <section>
+      <table class="report--changes">
         <tr>
-          <th></th>
-          <th>{{state.cycleStartState.year}}</th>
-          <th>{{state.gameState.world.year}}</th>
+          <th><strong>Changes</strong></th>
+          <th><strong>{{state.cycleStartState.year}}</strong></th>
+          <th><small>▶</small></th>
+          <th><strong>{{state.gameState.world.year}}</strong></th>
           <th><img src="/assets/icons/pips/political_capital.png"></th>
         </tr>
-        <tr>
+        
+        <tr class="report--primary-change" v-tip="warmingTip">
           <td><img :src="icons.warming"> Temperature</td>
-          <td>{{state.cycleStartState.temperature.toFixed(1)}}</td>
-          <td>{{state.gameState.world.temperature.toFixed(1)}}</td>
-          <td>{{format.sign(pc.temperature)}}</td>
+          <td>+{{state.cycleStartState.temperature.toFixed(1)}}°c</td>
+          <td><small>▶</small></td>
+          <td>+{{state.gameState.world.temperature.toFixed(1)}}°c</td>
+          <td><strong>{{format.sign(pc.temperature)}}</strong></td>
         </tr>
-        <tr>
+        <tr class="report--primary-change" v-tip="contentednessTip">
           <td><img :src="icons.contentedness"> Contentedness</td>
           <td>
             <IntensityBar :intensity="contentedness.start" :max="5" :invert="true" />
           </td>
+          <td><small>▶</small></td>
           <td>
             <IntensityBar :intensity="contentedness.end" :max="5" :invert="true" />
           </td>
-          <td>{{format.sign(pc.contentedness)}}</td>
+          <td><strong>{{format.sign(pc.contentedness)}}</strong></td>
         </tr>
-        <tr>
+        <tr class="report--primary-change" v-tip="biodiversityTip">
           <td><img :src="icons.extinction_rate"> Extinction Rate</td>
           <td>
             <IntensityBar :intensity="extinction.start" :max="5" />
           </td>
+          <td><small>▶</small></td>
           <td>
             <IntensityBar :intensity="extinction.end" :max="5" />
           </td>
-          <td>{{format.sign(pc.extinctionRate)}}</td>
+          <td><strong>{{format.sign(pc.extinctionRate)}}</strong></td>
         </tr>
-        <tr>
+        <tr class="report--primary-change" v-tip="emissionsTip">
           <td><img :src="icons.emissions"> Emissions</td>
           <td>{{state.cycleStartState.emissions.toFixed(1)}}</td>
+          <td><small>▶</small></td>
           <td>{{state.gameState.world.emissions.toFixed(1)}}</td>
-          <td>{{format.sign(pc.emissions)}}</td>
+          <td><strong>{{format.sign(pc.emissions)}}</strong></td>
         </tr>
-        <tr v-if="honeymoonPc">
+        <tr class="report--primary-change" v-if="honeymoonPc">
           <td>Post-Revolution Optimism</td>
           <td></td>
           <td></td>
-          <td>{{format.sign(honeymoonPc)}}</td>
+          <td></td>
+          <td><strong>{{format.sign(honeymoonPc)}}</strong></td>
         </tr>
         <tr class="report-spacer"></tr>
-        <tr class="report-header">
+        <tr class="report-header" v-if="state.cycleStartState.completedProjects.length != 0">
           <td>Completed Projects</td>
         </tr>
-        <tr v-if="state.cycleStartState.completedProjects.length === 0">
-          <td class="report-empty">None</td>
-        </tr>
+        
         <tr v-for="project in state.cycleStartState.completedProjects">
-          <td colspan="3">{{state.gameState.projects[project].name}}</td>
-          <td>{{format.sign(consts.pcPerCompletedProject)}}</td>
+          <td colspan="4">{{state.gameState.projects[project].name}}</td>
+          <td><strong>{{format.sign(consts.pcPerCompletedProject)}}</strong></td>
         </tr>
-        <tr class="report-spacer"></tr>
-        <tr class="report-header">
+        <tr class="report-spacer" v-if="state.cycleStartState.completedProjects.length != 0"></tr>
+        <tr class="report-header" v-if="requestsFulfilled.length != 0">
           <td>Completed Requests</td>
         </tr>
-        <tr v-if="requestsFulfilled.length === 0">
-          <td class="report-empty">None</td>
-        </tr>
         <tr v-for="request in requestsFulfilled">
-          <td colspan="3">{{request.name}}</td>
-          <td>{{format.sign(request.bounty)}}</td>
+          <td colspan="4">{{request.name}}</td>
+          <td><strong>{{format.sign(request.bounty)}}</strong></td>
         </tr>
-        <tr class="report-spacer"></tr>
-        <tr>
-          <td colspan="3">Total <img src="/assets/icons/pips/political_capital.png"> Change</td>
+        <tr class="report-spacer" v-if="requestsFulfilled.length != 0"></tr>
+        <tr class="report--total-change">
+          <td colspan="4">Total <img src="/assets/icons/pips/political_capital.png"> Change</td>
           <td>{{format.sign(pcChange)}}</td>
         </tr>
-        <tr class="report-spacer"></tr>
-        <tr class="report-header">
+        </table>
+        </section>
+        <section>
+        <table>
+        <tr class="report-header" v-if="seatChanges.length != 0">
           <td>Parliament</td>
-        </tr>
-        <tr v-if="seatChanges.length === 0">
-          <td class="report-empty">No changes</td>
         </tr>
         <tr v-for="npc in seatChanges">
           <td colspan="2">{{npc.name}}</td>
           <td>{{format.sign(npc.change)}}</td>
           <td>{{npc.seats}}</td>
         </tr>
-        <tr class="report-spacer"></tr>
-        <tr class="report-header">
+        <tr class="report-spacer" v-if="seatChanges.length != 0"></tr>
+        <tr class="report-header" v-if="regionIncomeChanges.length != 0">
           <td>Regions</td>
-        </tr>
-        <tr v-if="regionIncomeChanges.length === 0">
-          <td class="report-empty">No changes</td>
         </tr>
         <tr v-for="r in regionIncomeChanges">
           <td colspan="4">{{r.name}} is now {{display.enumDisplay(r.income, true)}} income.</td>
         </tr>
-        <tr class="report-spacer"></tr>
-        <tr class="report-header">
+        <tr class="report-spacer" v-if="regionIncomeChanges.length != 0"></tr>
+        <tr class="report-header" v-if="regionDisasters.length != 0">
           <td>Disasters</td>
-        </tr>
-        <tr v-if="regionDisasters.length === 0">
-          <td class="report-empty">None</td>
         </tr>
         <tr v-for="r in regionDisasters">
           <td>{{r.name}}</td>
-          <td colspan="3" class="report-disasters">
+          <td colspan="4" class="report-disasters">
             <img :src="icons[ev.icon]" v-for="ev in r.events">
           </td>
         </tr>
 
       </table>
+        </section>
+      <button class="btn" @click="nextPhase">Next</button>
+      </div>
     </div>
-    <button @click="nextPhase">Next</button>
   </div>
 </template>
 
@@ -209,6 +209,30 @@ export default {
         return 0;
       }
     },
+    warmingTip() {
+      return {
+        icon: 'warming',
+        text: `The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital.`
+      };
+    },
+    biodiversityTip() {
+      return {
+        icon: 'extinction_rate',
+        text: `The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital.`
+      };
+    },
+    contentednessTip() {
+      return {
+        icon: 'contentedness',
+        text: `How people around the world feel about the state of things. <strong>Increasing or maintaining contentedness</strong> will gain you political capital.`
+      };
+    },
+    emissionsTip() {
+      return {
+        icon: 'emissions',
+        text: `Current annual emissions, in gigatonnes of CO2 equivalent. <strong>Reducing emissions</strong> will gain you political capital.`
+      };
+    }
   },
   methods: {
     calculateChanges() {
@@ -292,27 +316,73 @@ export default {
 
 <style>
 .report {
-  background: wheat;
+  background-image: url('/assets/backgrounds/report.png');
+  background-colour: #FFF7D9;
   color: #000;
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  image-rendering: pixelated;
 }
 .report h2 {
   font-weight: normal;
   text-align: center;
-  border-bottom: 1px solid;
+  /* border-bottom: 1px solid; */
 }
-.report table {
-  width: 100%;
+
+.report--total-change{
+  font-weight: 600;
+}
+
+.report--inner{
+  padding: calc(1rem - 4px);
+  box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+  background-color: #FFF7D9;
   max-width: 360px;
   margin: 0 auto;
+  border-radius: 1rem;
+  background-image: url('/assets/watermark.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 200px;
+}
+
+.report section{
+  padding: 0.5rem;
+}
+
+.report table {
+  width: 100%;
   border-collapse: collapse;
+
+  font-family: 'Inter';
+  font-size: 0.8rem;
+
+  image-rendering: auto;
 }
 .report th {
   font-weight: normal;
+  padding: 4px;
 }
+
+.report th:first-of-type{
+  padding-left: 0;
+}
+
+.report td{
+  padding: 4px;
+}
+
+.report td:first-of-type{
+  padding-left: 0;
+}
+
 .report img {
   height: 20px;
   vertical-align: middle;
@@ -323,24 +393,51 @@ export default {
 }
 .report button {
   display: block;
-  margin: 1em auto;
+  /* margin: 1em auto; */
+  font-family: 'Times Ten', serif;
+  position:sticky !important;
+  bottom: 1rem;
+  width: 100%;
 }
 .report--body {
   flex: 1;
 }
 
 .report-empty {
-  color: #888;
+  color: rgba(0,0,0,0.5);
 }
 .report-header {
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid rgba(0,0,0,1);
+  /* font-weight: 600; */
 }
 .report-spacer {
-  height: 12px;
+  height: 8px;
+}
+
+.report--primary-change {
+}
+.report--primary-change td{
+  padding-top:6px;
+  padding-bottom: 6px;
+  /* font-weight: 600; */
 }
 
 .report-disasters img {
   margin-right: 2px;
   height: 18px;
+}
+.report small{
+  font-size:0.6rem;
+  margin: 0 0.5em;
+  opacity: 0.5;
+}
+
+@media only screen and (min-width: 481px) {
+  .report--inner{
+    max-width: 430px;
+  }
+  .report table {
+    font-size: 0.9rem;
+  }
 }
 </style>
