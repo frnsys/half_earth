@@ -336,7 +336,7 @@ export default {
   text-transform: none;
 }
 .project-cost img {
-  height: 12px;
+  height: 13px;
   margin-top: 0 !important;
   width: auto !important;
 }
