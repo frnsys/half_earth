@@ -27,6 +27,7 @@ import NPCCard from '../NPCCard.vue';
 import MiniCard from './MiniCard.vue';
 import display from '/src/display/display';
 import NPCS from '/assets/content/npcs.json';
+import textFit from 'textfit';
 
 const totalSeats = consts.parliamentSeats.reduce((acc,s) => acc + s, 0);
 
@@ -35,6 +36,12 @@ export default {
   components: {
     MiniCard,
     NPCCard,
+  },
+  mounted() {
+    this.fitText();
+  },
+  activated() {
+    this.fitText();
   },
   computed: {
     relationshipName() {
@@ -45,6 +52,20 @@ export default {
     },
     factionColor(npc) {
       return NPCS[this.npc.id].color;
+    }
+  },
+  methods: {
+    fitText() {
+      let npcName = this.$el.parentNode.querySelector('.mini-npc-name');
+      if (npcName) {
+        textFit(npcName, {
+          alignHoriz: true,
+          alignVert: true,
+          multiLine: true,
+          minFontSize: 11,
+          maxFontSize: 13,
+        });
+      }
     }
   }
 }
@@ -62,6 +83,8 @@ export default {
 .mini-npc-name {
   font-size: 0.85em;
   margin-bottom: 0.2rem;
+  height: 24px;
+  width: 100%;
 }
 
 .mini-npc-seats {

@@ -73,7 +73,7 @@
         </tr>
         <tr class="report-spacer"></tr>
         <tr>
-          <td colspan="3">Total Change</td>
+          <td colspan="3">Total <img src="/assets/icons/pips/political_capital.png"> Change</td>
           <td>{{format.sign(pcChange)}}</td>
         </tr>
         <tr class="report-spacer"></tr>

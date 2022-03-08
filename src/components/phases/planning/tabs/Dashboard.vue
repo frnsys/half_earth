@@ -10,19 +10,19 @@
   <div class="planning--dashboard">
     <div class="dashboard--item">
       <div class="minicard">
-        +{{state.gameState.world.temperature.toFixed(1)}}C
+        <span>+{{state.gameState.world.temperature.toFixed(1)}}C</span>
       </div>
       <img :src="icons.warming" />
       <div class="dashboard--item-name">Temp. Anomaly</div>
     </div>
     <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <div class="minicard">
-        {{`${state.gameState.world.emissions.toFixed(1)}Gt`}}
+        <span>{{`${state.gameState.world.emissions.toFixed(1)}Gt`}}</span>
         <div class="dashboard--change" v-if="changes.emissions != 0" v-tip="{icon: 'emissions', text: 'The estimated value after production changes have finished.'}">
           <img :src="icons.down_arrow_small" />
-          <div class="dashboard--change-value">
+          <span class="dashboard--change-value">
             {{`${((changes.emissions * 1e-15) + state.gameState.world.emissions).toFixed(1)}Gt`}}
-          </div>
+          </span>
         </div>
       </div>
       <img :src="icons.emissions" />
@@ -30,12 +30,12 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.land('Current land use.')">
       <div class="minicard">
-        {{format.landUsePercent(state.gameState.resources_demand.land).toFixed(0)}}%
+        <span>{{format.landUsePercent(state.gameState.resources_demand.land).toFixed(0)}}%</span>
         <div class="dashboard--change" v-if="changes.land != 0" v-tip="{icon: 'land', text: 'The estimated value after production changes have finished.'}">
           <img :src="icons.down_arrow_small" />
-          <div class="dashboard--change-value">
+          <span class="dashboard--change-value">
             {{format.landUsePercent(changes.land + state.gameState.resources_demand.land).toFixed(0)}}%
-          </div>
+          </span>
         </div>
       </div>
       <img :src="icons.land" />
@@ -43,12 +43,12 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.energy('Current energy use.')">
       <div class="minicard">
-        {{`${format.twh(state.gameState.output_demand.electricity + state.gameState.output_demand.fuel).toLocaleString()}TWh`}}
+        <span>{{`${Math.round(format.twh(state.gameState.output_demand.electricity + state.gameState.output_demand.fuel)/1000).toLocaleString()}PWh`}}</span>
         <div class="dashboard--change" v-if="changes.energy != 0" v-tip="{icon: 'energy', text: 'The estimated value after production changes have finished.'}">
           <img :src="icons.down_arrow_small" />
-          <div class="dashboard--change-value">
+          <span class="dashboard--change-value">
             {{`${format.twh(changes.energy + state.gameState.output_demand.electricity + state.gameState.output_demand.fuel).toLocaleString()}TWh`}}
-          </div>
+          </span>
         </div>
       </div>
       <img :src="icons.energy" />
@@ -59,9 +59,9 @@
         <span :style="{color: currentWaterStress.color}">{{currentWaterStress.label}}</span>
         <div class="dashboard--change" v-if="changes.water != 0" v-tip="{icon: 'water', text: 'The estimated value after production changes have finished.'}">
           <img :src="icons.down_arrow_small" />
-          <div class="dashboard--change-value" :style="{color: afterWaterStress.color}">
+          <span class="dashboard--change-value" :style="{color: afterWaterStress.color}">
             {{afterWaterStress.label}}
-          </div>
+          </span>
         </div>
       </div>
       <img :src="icons.water" />
@@ -69,7 +69,7 @@
     </div>
     <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Average sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year`}">
       <div class="minicard">
-        {{state.gameState.world.sea_level_rise.toFixed(2)}}m
+        <span>{{state.gameState.world.sea_level_rise.toFixed(2)}}m</span>
       </div>
       <img :src="icons.sea_level_rise" />
       <div class="dashboard--item-name">Sea Level Rise</div>
@@ -80,7 +80,7 @@
         <div class="dashboard--change" v-if="changes.extinction != 0" v-tip="{icon: 'extinction_rate', text: 'The estimated value after production changes have finished.'}">
           <img :src="icons.down_arrow_small" />
           <div class="dashboard--change-value" :style="{color: afterExtinction.color}">
-            {{afterExtinction.label}}
+            <span>{{afterExtinction.label}}</span>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        {{format.formatNumber(state.gameState.world.population)}}
+        <span>{{format.formatNumber(state.gameState.world.population)}}</span>
       </div>
       <img :src="icons.population" />
       <div class="dashboard--item-name">Population</div>
@@ -343,7 +343,7 @@ export default {
   margin: 0 auto;
 
   border-radius: 1em;
-  
+
   padding: 1em;
 
   box-shadow: inset -1px -1px 0px rgb(0 0 0 / 50%);
@@ -457,5 +457,10 @@ export default {
   left: 0;
   right: 0;
   bottom: 0.5em;
+}
+.dashboard--change img {
+  transform: rotate(-90deg);
+  position: relative;
+  top: -3px;
 }
 </style>

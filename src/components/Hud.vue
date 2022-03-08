@@ -94,7 +94,9 @@ export default {
   min-height: 29px;
 }
 .hud > div {
-  padding: 0.5em 0.25em;
+  padding: 0 0.25em;
+  display: flex;
+  align-items: center;
 }
 .hud > div:first-child {
   padding-left: 0.5em;
@@ -116,15 +118,19 @@ export default {
 }
 
 .hud-settings {
-  padding: 0.5em 0.5em !important;
+  padding: 0 0.5em !important;
 	border-left: 1px solid rgba(255,255,255,0.25);
   box-shadow: -1px 0 0 #000;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .hud .intensity-pips {
-  display: inline-flex;
+  display: inline;
   margin-left: 2px;
+  top: -1px;
+  position: relative;
 }
 
 .hud-bars {

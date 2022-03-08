@@ -367,8 +367,8 @@ export default {
   font-size: 1.3em;
   padding: 2em 1em;
   position: absolute;
-  right: 1em;
-  bottom: 0em;
+  right: 0.5em;
+  bottom: 0.5em;
   background: red;
   border-radius: 10em;
   border-right: 2px solid rgba(0,0,0,0.5);
@@ -377,6 +377,7 @@ export default {
   border-left: 2px solid rgba(255,255,255,0.5);
   box-shadow: 1px 2px 4px rgb(0 0 0 / 50%);
   color: #fff;
+  z-index: 2;
 }
 
 .processes-minicard img {

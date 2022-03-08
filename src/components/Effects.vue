@@ -1,7 +1,9 @@
 <template>
+<div class="effects">
   <div v-for="{tip, text} in renders" class="effect" v-tip="tip ? tip : 'missing tip'">
     <div class="effect--text" v-html="text" />
   </div>
+</div>
 </template>
 
 <script>

@@ -45,6 +45,9 @@ export default {
 </script>
 
 <style>
+.factors--users {
+  padding-top: 1em;
+}
 .factors--users > div {
   margin: 0.5em 0;
   padding: 0 0.25em;
@@ -84,8 +87,10 @@ export default {
 
 .factors--total {
   border: 1px solid #fff;
-  position: sticky;
-  top: 0;
+  position: absolute;
+  top: 0.5em;
+  left: 1.5em;
+  right: 1.5em;
   background: #222222;
   border-radius: 0.2em;
   padding: 0.1em 0.25em !important;

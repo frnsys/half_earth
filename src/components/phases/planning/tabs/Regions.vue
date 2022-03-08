@@ -3,7 +3,7 @@
   <Globe id="regions-globe" class="cell" :onReady="onGlobeReady" :onClick="onGlobeClick" />
   <div class="regions-browse" v-if="selectedRegion !== null">
     <div class="region-change" @click="prevRegion"><img :src="icons.arrow_left"></div>
-    <div class="region-name cell">{{regions[selectedRegion].name}}</div>
+    <div class="region-name cell" ref="regionName">{{regions[selectedRegion].name}}</div>
     <div class="region-change" @click="nextRegion"><img :src="icons.arrow_right"></div>
   </div>
   <div class="regions-region" v-for="region in regions">
@@ -19,6 +19,7 @@ import Globe from 'components/Globe.vue'
 import RegionItem from '../RegionItem.vue';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import tilesToRegions from '/assets/surface/tiles_to_regions.json';
+import textFit from 'textfit';
 
 export default {
   components: {
@@ -31,7 +32,28 @@ export default {
       regions: state.gameState.world.regions
     }
   },
+  mounted() {
+    this.fitRegionName();
+  },
+  activated() {
+    this.fitRegionName();
+  },
+  watch: {
+    selectedRegion() {
+      this.$nextTick(() => {
+        this.fitRegionName();
+      });
+    }
+  },
   methods: {
+    fitRegionName() {
+      textFit(this.$refs.regionName, {
+        alignHoriz: true,
+        alignVert: true,
+        multiLine: false,
+        maxFontSize: 21,
+      });
+    },
     onGlobeReady(globe) {
       globe.clear();
       globe.rotate = false;
@@ -104,6 +126,7 @@ export default {
   text-align: center;
   flex: 1;
   margin: 0 0.5em;
+  height: 54px;
 }
 .regions-browse {
   display: flex;
@@ -120,6 +143,7 @@ export default {
   border-left: 1px solid #FDF7E2;
   border-radius: 0.6em;
   padding: 1em;
+  display: flex;
 }
 
 .planning--page--regions {

@@ -333,11 +333,13 @@ export default {
 
 }
 
-.mix-token:first-of-type{
-  border-radius: 0.3em 0 0 0.3em;
+.mix-token:first-of-type {
+  border-top-left-radius: 0.3em;
+  border-bottom-left-radius: 0.3em;
 }
 .mix-token:last-of-type{
-  border-radius: 0 0.3em 0.3em 0;
+  border-top-right-radius: 0.3em;
+  border-bottom-right-radius: 0.3em;
 }
 
 .process-mix-change-notice-wrapper{

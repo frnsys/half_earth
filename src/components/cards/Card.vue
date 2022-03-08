@@ -42,12 +42,20 @@ const nameFitConfig = {
   maxFontSize: 24,
 };
 
-const bodyFitConfig = {
+const effectsFitConfig = {
   alignHoriz: true,
   alignVert: true,
   multiLine: true,
   minFontSize: 11,
   maxFontSize: 13,
+};
+
+const descFitConfig = {
+  alignHoriz: true,
+  alignVert: true,
+  multiLine: true,
+  minFontSize: 11,
+  maxFontSize: 16,
 };
 
 export default {
@@ -58,25 +66,10 @@ export default {
     }
   },
   mounted() {
-    if (this.$refs.name) {
-      textFit(this.$refs.name, nameFitConfig);
-    }
-    // TODO this messes up card rendering
-    // mainly because the card body can contain
-    // more than just a list of effects, and if it does,
-    // things break. E.g. if a project is Building/Researching,
-    // the HTML that includes the tag indicating that breaks everything
-    /* if (this.$refs.body) { */
-    /*   textFit(this.$refs.body, bodyFitConfig); */
-    /* } */
+    this.fitTexts();
   },
   updated() {
-    if (this.$refs.name) {
-      textFit(this.$refs.name, nameFitConfig);
-    }
-    /* if (this.$refs.body) { */
-    /*   textFit(this.$refs.body, bodyFitConfig); */
-    /* } */
+    this.fitTexts();
   },
   computed: {
     hasName() {
@@ -90,6 +83,27 @@ export default {
     }
   },
   methods: {
+    fitTexts() {
+      if (this.$refs.name) {
+        textFit(this.$refs.name, nameFitConfig);
+      }
+      // Can't target the body as a whole,
+      // mainly because the card body can contain
+      // more than just a list of effects, and if it does,
+      // things break. E.g. if a project is Building/Researching,
+      // the HTML that includes the tag indicating that breaks everything
+      if (this.$refs.body) {
+        let effects = this.$refs.body.querySelector('.effects');
+        if (effects) {
+          textFit(effects, effectsFitConfig);
+        }
+      }
+
+      let desc = this.$el.querySelector('.card-desc');
+      if (desc) {
+        textFit(desc, descFitConfig);
+      }
+    },
     flip(ev) {
       if (!this.noBack) {
         this.flipped = !this.flipped;
@@ -371,8 +385,10 @@ export default {
   font-family: 'Times Ten', serif;
   font-size: 1em;
   text-align: center;
-  margin: 2em 1em 1em 1em;
+  margin: 1em;
   font-style: italic;
+  height: 150px;
+  width: 100%;
 }
 
 .card-top-back {
