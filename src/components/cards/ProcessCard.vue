@@ -17,6 +17,11 @@
   </template>
   <template v-slot:name>
     {{name}}
+  </template>
+  <template v-slot:body>
+    <div class="card-actions" v-if="!!this.$slots.actions">
+      <slot name="actions"></slot>
+    </div>
 
     <div class="process-mix">
       <div class="process-excess-alert"
@@ -32,12 +37,6 @@
           }">{{changedMixShare*5}}%</div>
         </template>
       </div>
-
-    </div>
-  </template>
-  <template v-slot:body>
-    <div class="card-actions" v-if="!!this.$slots.actions">
-      <slot name="actions"></slot>
     </div>
 
     <div class="process-intensity space-even">
@@ -331,7 +330,7 @@ export default {
 .process-mix {
   display: flex;
   justify-content: center;
-  margin-top:10px;
+  /* margin-top:10px; */
 }
 .process-mix img {
   width: 18px;
@@ -347,7 +346,7 @@ export default {
   color: #fff;
   padding: 0.2em 0.15em 0.1em;
   border-radius: 0.2em;
-  font-size: 0.9em;
+  font-size: 1.5rem;
   font-family: 'W95FA';
 }
 
@@ -468,7 +467,4 @@ color: #63FF96;
   margin: 1px 2px 1px;
 }
 
-.process.card .card-top header {
-  padding-right: 1.3em;
-}
 </style>
