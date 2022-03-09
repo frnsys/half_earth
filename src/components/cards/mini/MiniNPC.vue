@@ -27,7 +27,7 @@ import NPCCard from '../NPCCard.vue';
 import MiniCard from './MiniCard.vue';
 import display from '/src/display/display';
 import NPCS from '/assets/content/npcs.json';
-import textFit from 'textfit';
+import {scaleText} from 'lib/util';
 
 const totalSeats = consts.parliamentSeats.reduce((acc,s) => acc + s, 0);
 
@@ -58,13 +58,7 @@ export default {
     fitText() {
       let npcName = this.$el.parentNode.querySelector('.mini-npc-name');
       if (npcName) {
-        textFit(npcName, {
-          alignHoriz: true,
-          alignVert: true,
-          multiLine: true,
-          minFontSize: 11,
-          maxFontSize: 13,
-        });
+        scaleText(npcName, 11);
       }
     }
   }

@@ -4,12 +4,13 @@
 -->
 
 <template>
-<ul class="cards" ref="scroller" @scroll="scrolled">
+<ul class="cards" ref="scroller" @scroll.passive="scrollHandler">
   <slot></slot>
 </ul>
 </template>
 
 <script>
+import debounce from "lodash.debounce";
 import {detectCenterElement} from 'lib/util';
 
 export default {
@@ -17,9 +18,16 @@ export default {
   data() {
     return {
       scrollTimeout: null,
-      scrollDoneTimeout: null,
       scrollLeft: 0,
     }
+  },
+  created() {
+    this.scrollHandler = debounce((ev) => {
+      this.scrolled(ev);
+    }, 100);
+  },
+  beforeUnmount() {
+    this.scrollHandler.cancel();
   },
   watch: {
     disabled(val) {
@@ -41,32 +49,25 @@ export default {
       this.$emit('scrolled');
 
       if (this.scrollTimeout !== null) {
-        clearTimeout(this.scrollTimeout);
+        clearInterval(this.scrollTimeout);
       }
 
       // Wait to see if we've stopped scrolling
       // If so, figure out what the focused/centered child is.
-      this.scrollTimeout = setTimeout(() => {
-        let idx = detectCenterElement(
-          this.$refs.scroller,
-          [...this.$refs.scroller.children]);
-        if (idx >= 0) {
-          if (this.scrollDoneTimeout !== null) {
-            clearInterval(this.scrollDoneTimeout);
-          }
-          let last = this.$refs.scroller.scrollLeft;
-          this.scrollDoneTimeout = setInterval(() => {
-            let nextLast = this.$refs.scroller.scrollLeft;
-            if (last == nextLast) {
-              this.$emit('focused', idx);
-              this.$emit('scrollEnd');
-              clearInterval(this.scrollDoneTimeout);
-            } else {
-              last = nextLast;
-            }
-          }, 50);
+      let last = this.$refs.scroller.scrollLeft;
+      this.scrollTimeout = setInterval(() => {
+        let nextLast = this.$refs.scroller.scrollLeft;
+        if (last == nextLast) {
+          let idx = detectCenterElement(
+            this.$refs.scroller,
+            [...this.$refs.scroller.children]);
+          this.$emit('focused', idx);
+          this.$emit('scrollEnd');
+          clearInterval(this.scrollTimeout);
+        } else {
+          last = nextLast;
         }
-      }, 50);
+      }, 100);
     }
   }
 }

@@ -11,13 +11,14 @@
 
 <script>
 import animate from 'lib/anim';
-import {updateTransform} from 'lib/util';
+import {updateTransform, isTouchDevice} from 'lib/util';
 
 export default {
-  props: ['id', 'draggable', 'minY', 'maxY', 'disabled'],
+  props: ['id', 'draggable', 'minY', 'maxY'],
   data() {
     return {
       down: false,
+      enabled: false,
       dragging: false,
       pos: {
         x: 0,
@@ -25,27 +26,51 @@ export default {
       }
     }
   },
-
-  // Have to bind a lot of these to the body,
-  // because the mouse may leave target areas but we still
-  // need to respond to events there.
   mounted() {
-    document.body.addEventListener('mouseup', this.stopDrag);
-    document.body.addEventListener('touchend', this.stopDrag);
-    document.body.addEventListener('mouseleave', this.stopDrag);
-    document.body.addEventListener('mousemove', this.drag);
-    document.body.addEventListener('touchmove', this.drag);
+    if (this.draggable) {
+      this.enable();
+    }
   },
   unmounted() {
-    document.body.removeEventListener('mouseup', this.stopDrag);
-    document.body.removeEventListener('touchend', this.stopDrag);
-    document.body.removeEventListener('mouseleave', this.stopDrag);
-    document.body.removeEventListener('mousemove', this.drag);
-    document.body.removeEventListener('touchmove', this.drag);
+    this.disable();
+  },
+  watch: {
+    draggable(draggable, prev) {
+      if (draggable !== prev) {
+        if (!draggable) {
+          this.disable();
+        } else if (!this.enabled) {
+          this.enable();
+        }
+      }
+    }
   },
   methods: {
+    enable() {
+      if (this.enabled) return;
+      this.enabled = true;
+      if (isTouchDevice) {
+        document.body.addEventListener('touchend', this.stopDrag);
+        document.body.addEventListener('touchmove', this.drag, {passive: true});
+      } else {
+        document.body.addEventListener('mouseup', this.stopDrag);
+        document.body.addEventListener('mouseleave', this.stopDrag);
+        document.body.addEventListener('mousemove', this.drag, {passive: true});
+      }
+    },
+    disable() {
+      if (!this.enabled) return;
+      this.enabled = false;
+      if (isTouchDevice) {
+        document.body.removeEventListener('touchend', this.stopDrag);
+        document.body.removeEventListener('touchmove', this.drag, {passive: true});
+      } else {
+        document.body.removeEventListener('mouseup', this.stopDrag);
+        document.body.removeEventListener('mouseleave', this.stopDrag);
+        document.body.removeEventListener('mousemove', this.drag, {passive: true});
+      }
+    },
     startDrag(ev) {
-      if (this.disabled) return;
       if (!this.draggable) return;
       this.down = true;
       /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
@@ -64,9 +89,7 @@ export default {
       };
     },
     drag(ev) {
-      if (this.disabled) {
-        this.stopDrag();
-      };
+      if (!this.draggable) this.stopDrag();
       if (!this.down) return;
       /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;

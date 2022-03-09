@@ -71,7 +71,7 @@ function rngForYear(year) {
 }
 
 // https://stackoverflow.com/a/4819886/1097920
-function isTouchDevice() {
+function _isTouchDevice() {
   return (('ontouchstart' in window) ||
      (navigator.maxTouchPoints > 0) ||
      (navigator.msMaxTouchPoints > 0));
@@ -79,14 +79,20 @@ function isTouchDevice() {
 
 function scaleText(el, minSize) {
   if (el.scrollHeight > el.clientHeight) {
-    let fontSize = parseFloat(getComputedStyle(el).fontSize);
-    fontSize = Math.round(fontSize);
-    while (el.scrollHeight > el.clientHeight && fontSize > minSize) {
-      fontSize--;
-      el.style.fontSize = `${fontSize}px`;
-    }
+    let intv = setInterval(() => {
+      let fontSize = parseFloat(getComputedStyle(el).fontSize);
+      fontSize = Math.round(fontSize);
+      while (el.scrollHeight > el.clientHeight && fontSize > minSize) {
+        fontSize--;
+        el.style.fontSize = `${fontSize}px`;
+      }
+      clearInterval(intv);
+    }, 1);
   }
 }
+
+// Cache this value
+const isTouchDevice = _isTouchDevice();
 
 export {clone, randChoice, rngForYear, scaleText,
   slugify, updateTransform, detectCenterElement, isTouchDevice};

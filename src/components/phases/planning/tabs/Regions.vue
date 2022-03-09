@@ -19,7 +19,7 @@ import Globe from 'components/Globe.vue'
 import RegionItem from '../RegionItem.vue';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
 import tilesToRegions from '/assets/surface/tiles_to_regions.json';
-import textFit from 'textfit';
+import {scaleText} from 'lib/util';
 
 export default {
   components: {
@@ -47,12 +47,7 @@ export default {
   },
   methods: {
     fitRegionName() {
-      textFit(this.$refs.regionName, {
-        alignHoriz: true,
-        alignVert: true,
-        multiLine: false,
-        maxFontSize: 21,
-      });
+      scaleText(this.$refs.regionName, 18);
     },
     onGlobeReady(globe) {
       globe.clear();
@@ -127,6 +122,9 @@ export default {
   flex: 1;
   margin: 0 0.5em;
   height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 .regions-browse {
   display: flex;

@@ -43,8 +43,7 @@
       v-for="i in projectOrder"
       :minY="yMin"
       :maxY="yMax"
-      :disabled="!allowSwipe"
-      :draggable="focusedProject == i"
+      :draggable="allowSwipe && focusedProject == i"
       :id="projects[i].id"
       :key="projects[i].id">
       <ProjectCard
@@ -168,7 +167,7 @@ export default {
     },
     onDragVerticalStop() {
       this.stopDrag();
-      if (!isTouchDevice()) {
+      if (!isTouchDevice) {
         this.allowScroll = true;
       }
     },
@@ -180,7 +179,7 @@ export default {
     },
     onScrollEnd() {
       this.allowSwipe = true;
-      if (isTouchDevice()) {
+      if (isTouchDevice) {
         this.allowScroll = false;
       }
     }

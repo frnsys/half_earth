@@ -32,24 +32,7 @@
 </template>
 
 <script>
-import textFit from 'textfit';
 import {scaleText} from 'lib/util';
-
-const nameFitConfig = {
-  alignHoriz: true,
-  alignVert: true,
-  multiLine: true,
-  minFontSize: 16,
-  maxFontSize: 24,
-};
-
-const descFitConfig = {
-  alignHoriz: true,
-  alignVert: true,
-  multiLine: true,
-  minFontSize: 11,
-  maxFontSize: 16,
-};
 
 export default {
   props: ['background', 'color', 'noBack', 'isProcess'],
@@ -78,7 +61,7 @@ export default {
   methods: {
     fitTexts() {
       if (this.$refs.name && !this.isProcess) {
-        textFit(this.$refs.name, nameFitConfig);
+        scaleText(this.$refs.name, 16);
       }
       // Can't target the body as a whole,
       // mainly because the card body can contain
@@ -94,7 +77,7 @@ export default {
 
       let desc = this.$el.querySelector('.card-desc');
       if (desc) {
-        textFit(desc, descFitConfig);
+        scaleText(desc, 11);
       }
     },
     flip(ev) {
@@ -364,6 +347,9 @@ export default {
 }
 .card--name > div {
   height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .card header .barcode {
