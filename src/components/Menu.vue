@@ -298,4 +298,14 @@ header .dropdown-menu-inset {
   justify-content: space-between;
   min-height: 100%;
 }
+
+@media only screen and (min-width: 480px) {
+  .dropdown-menu{
+    display: flex;
+  }
+  .dropdown-menu-content {
+    min-height: auto;
+    align-self: center;
+  }
+}
 </style>
