@@ -44,8 +44,7 @@
       v-for="p in processes"
       :minY="yMin"
       :maxY="yMax"
-      :disabled="!allowSwipe"
-      :draggable="focusedProcess == p"
+      :draggable="allowSwipe && focusedProcess == p"
       :id="p.id"
       :key="p.id"
     >
@@ -275,7 +274,7 @@ export default {
     },
     onDragVerticalStop() {
       this.stopDrag();
-      if (!isTouchDevice()) {
+      if (!isTouchDevice) {
         this.allowScroll = true;
       }
     },
@@ -287,7 +286,7 @@ export default {
     },
     onScrollEnd() {
       this.allowSwipe = true;
-      if (isTouchDevice()) {
+      if (isTouchDevice) {
         this.allowScroll = false;
       }
     }

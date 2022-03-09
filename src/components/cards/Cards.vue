@@ -4,7 +4,7 @@
 -->
 
 <template>
-<ul class="cards" ref="scroller" @scroll.passive="scrollHandler">
+<ul class="cards" ref="scroller" @scroll.passive="onScroll">
   <slot></slot>
 </ul>
 </template>
@@ -41,13 +41,15 @@ export default {
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
   },
   methods: {
-    scrolled(ev) {
+    onScroll(ev) {
       if (this.disabled) {
         this.$refs.scroller.scrollLeft = this.scrollLeft;
         return;
       }
       this.$emit('scrolled');
-
+      this.scrollHandler(ev);
+    },
+    scrolled(ev) {
       if (this.scrollTimeout !== null) {
         clearInterval(this.scrollTimeout);
       }
