@@ -14,6 +14,7 @@
     "hector-wasm": "file:hector/wasm",
     "hexasphere.js": "^0.2.2",
     "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "three": "^0.129.0",
     "upng-js": "^2.1.0",
     "vue": "^3.1.4"
