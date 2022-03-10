@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
 import {detectCenterElement} from 'lib/util';
 
 export default {
@@ -22,9 +22,9 @@ export default {
     }
   },
   created() {
-    this.scrollHandler = debounce((ev) => {
+    this.scrollHandler = throttle((ev) => {
       this.scrolled(ev);
-    }, 100);
+    }, 16);
   },
   beforeUnmount() {
     this.scrollHandler.cancel();
