@@ -280,7 +280,7 @@ export default {
   position: relative;
   flex: 1;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   width: 100%;
 }
 .dialogue--body {
@@ -344,7 +344,7 @@ export default {
   margin-left: 5em;
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
 }
 
 .dialogue--choice {
