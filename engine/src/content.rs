@@ -6932,7 +6932,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             kind: ProjectType::Initiative,
-            locked: false,
+            locked: true,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Geoengineering,
             ongoing: false,
