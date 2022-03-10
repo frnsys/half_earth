@@ -338,6 +338,7 @@ export default {
   line-height: 1.2;
   display: flex;
   text-transform: none;
+  white-space: nowrap;
 }
 .project-cost img {
   height: 13px;

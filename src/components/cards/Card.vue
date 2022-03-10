@@ -100,7 +100,6 @@ export default {
   flex-direction: column;
   margin: 0 auto;
   border-radius: 0.75em;
-  -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0));
   transition: all 250ms ease-out;
 
   transform-style: preserve-3d;
@@ -111,7 +110,7 @@ export default {
 
 
 .card:hover{
-  -webkit-filter: drop-shadow(0px 7px 9px rgba(0,0,0,0.4));
+  box-shadow: 0 5px 5px rgba(0,0,0,0.15)
 }
 
 
@@ -364,10 +363,10 @@ export default {
   font-family: 'Times Ten', serif;
   font-size: 1em;
   text-align: center;
-  margin: 1em;
+  margin: 1em auto;
   font-style: italic;
-  height: 150px;
-  width: 100%;
+  max-height: 150px;
+  width: calc(100% - 1rem);
 }
 
 .card-top-back {

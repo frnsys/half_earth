@@ -75,7 +75,7 @@ export default {
   margin: 0em auto 1em;
   width: 100%;
   max-width: 260px;
-  max-height: 60vh;
+  max-height: 55vh;
 }
 #start-screen button {
   display: block;
@@ -93,14 +93,21 @@ export default {
 }
 
 #start-screen-inset {
+
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  top: 1rem;
+
   padding: 1em;
-  margin: 1em;
+  /* margin: 1em; */
   border-radius: 2em;
   border-top: 1px solid #000;
   border-left: 1px solid #000;
   border-bottom: 1px solid #888;
   border-right: 1px solid #888;
-  min-height: calc(100vh - 2em);
+  /* min-height: calc(100vh - 2em); */
   display: flex;
   flex-direction: column;
   justify-content: center;
