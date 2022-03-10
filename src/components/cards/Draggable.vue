@@ -17,16 +17,18 @@ export default {
   props: ['id', 'draggable', 'minY', 'maxY'],
   data() {
     return {
-      down: false,
-      enabled: false,
       dragging: false,
-      pos: {
-        x: 0,
-        y: 0
-      }
     }
   },
   mounted() {
+    this.top = 0;
+    this.enabled = false;
+    this.down = false;
+    this.elY = 0;
+    this.pos = {
+      x: 0,
+      y: 0,
+    };
     if (this.draggable) {
       this.enable();
     }
@@ -57,6 +59,15 @@ export default {
         document.body.addEventListener('mouseleave', this.stopDrag);
         document.body.addEventListener('mousemove', this.drag, {passive: true});
       }
+
+      // Get and cache current y position of this element
+      this.observer = new IntersectionObserver((entries) => {
+        let rect = entries[0].boundingClientRect;
+        this.elY = rect.y;
+        this.elHeight = rect.height;
+        this.observer.disconnect();
+      });
+      this.observer.observe(this.$el);
     },
     disable() {
       if (!this.enabled) return;
@@ -73,12 +84,10 @@ export default {
     startDrag(ev) {
       if (!this.draggable) return;
       this.down = true;
-      /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
 
       // Stop snap-back animation if there is one
       if (this.animation) this.animation.stop();
 
-      /* updateTransform(this.$el, {rotate: '-2deg'}); */
       this.$el.style.cursor = 'grab';
 
       let x = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX);
@@ -91,7 +100,6 @@ export default {
     drag(ev) {
       if (!this.draggable) this.stopDrag();
       if (!this.down) return;
-      /* ev.preventDefault(); // Necessary to prevent address bar from showing on drag */
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
@@ -99,21 +107,20 @@ export default {
       let maxY = this.maxY();
       if (Math.abs(dy) > 10) {
         this.dragging = true;
-        let rect = this.$el.getBoundingClientRect();
-        if (minY && rect.y <= minY) return;
-        if (maxY && rect.y >= maxY) return;
+        let y = this.elY + this.top;
+        if (minY && y <= minY) return;
+        if (maxY && y >= maxY) return;
 
-        let top = parseFloat(this.$el.style.top) || 0;
-        let baseY = rect.y - top;
+        let baseY = y - this.top;
         let minDY = minY - baseY;
         let maxDY = maxY - baseY;
 
-        let deltaY = dy - top;
+        let deltaY = dy - this.top;
         dy = Math.min(maxDY, Math.max(minDY, dy));
-        this.$el.style.top = `${dy}px`;
-        /* this.$el.style.left = `${dx}px`; */
+        this.$el.style.transform = `translate(0, ${dy}px)`;
+        this.top = dy;
 
-        this.$emit('drag', this);
+        this.$emit('drag', {y, height: this.elHeight});
       } else if (Math.abs(dx) >= 2) {
         this.$emit('tryScroll', this);
       }
@@ -123,13 +130,12 @@ export default {
       this.dragging = false;
 
       this.animation = animate(
-        [parseInt(this.$el.style.top), parseInt(this.$el.style.left)],
-        [0, 0], 100, (top, left) => {
-        this.$el.style.top = `${top}px`;
-        this.$el.style.left = `${left}px`;
+        this.top,
+        0, 100, (top) => {
+        this.top = top;
+        this.$el.style.transform = `translate(0, ${top}px)`;
       });
       this.$emit('dragStop', this);
-      /* updateTransform(this.$el, {rotate: '0deg'}); */
     }
   }
 }

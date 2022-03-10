@@ -8,6 +8,7 @@ import animate from 'lib/anim';
 const CARD_HEIGHT = 420;
 const WITHDRAW_HEIGHT = 68;
 const SCANBAR_HEIGHT = 80;
+const TARGET_HEIGHT = 60;
 
 
 export default (type) => {
@@ -23,6 +24,10 @@ export default (type) => {
         withdrawing: false,
         withdrawAnim: null,
       }
+    },
+    mounted() {
+      this.targetTop = 0;
+      this.withdrawTargetBottom = WITHDRAW_HEIGHT;
     },
     computed: {
       withdrawTime(){
@@ -222,21 +227,25 @@ export default (type) => {
       },
       pulseCard() {
         let el = document.querySelector('.draggable.active');
+        let m = el.style.transform.match(/,\s?(-?[\d\.]+)/)[1];
+        let y = parseFloat(m);
         animate(1, 1.1, 200, (val) => {
-          el.style.transform = `scale(${val})`;
+          el.style.transform = `translate(0, ${y}px) scale(${val})`;
         }, () => {
           animate(1.1, 1, 200, (val) => {
-            el.style.transform = `scale(${val})`;
+            el.style.transform = `translate(0, ${y}px) scale(${val})`;
           });
         });
       },
       shrinkPulseCard() {
         let el = document.querySelector('.draggable.active');
+        let m = el.style.transform.match(/,\s?(-?[\d\.]+)/)[1];
+        let y = parseFloat(m);
         animate(1, 0.95, 200, (val) => {
-          el.style.transform = `scale(${val})`;
+          el.style.transform = `translate(0, ${y}px) scale(${val})`;
         }, () => {
           animate(0.95, 1, 200, (val) => {
-            el.style.transform = `scale(${val})`;
+            el.style.transform = `translate(0, ${y}px) scale(${val})`;
           });
         });
       },
@@ -248,23 +257,19 @@ export default (type) => {
       },
 
       // Movement handling
-      checkDrag(component) {
-        // Check if scanning
-        let rect = component.$el.getBoundingClientRect();
-        let target = this.$refs.target.getBoundingClientRect();
-
+      checkDrag(dragRect) {
         // Pop down scanner
         let topTarget = -20;
-        let y = rect.y;
+        let y = dragRect.y;
         if (y >= topTarget) {
           var p = Math.min(1, SCANBAR_HEIGHT/(topTarget - y));
           var px =  Math.abs(p * SCANBAR_HEIGHT * 1.8) + topTarget; //um surely theres a better way 2 do this
-          this.$refs.target.style.top = `${px}px`
+          this.targetTop = px;
+          this.$refs.target.style.transform = `translate(0, ${px}px)`;
         }
 
         // Get updated target bounding rect
-        target = this.$refs.target.getBoundingClientRect();
-        if (rect.y < (target.y + target.height)) {
+        if (y < (this.targetTop + TARGET_HEIGHT)) {
           if (!this.scanning && this.scanAllowed()) {
             this.scanning = true;
             this.$refs.target.parentElement.classList.add('scan-ok');
@@ -280,11 +285,11 @@ export default (type) => {
         // Check if withdrawing
         if (!this.scanning && (this.haltable || this.refundable || this.processSubtractable)) {
           let botTarget = window.innerHeight - 150;
-          let y = rect.y + rect.height;
+          let y = dragRect.y + dragRect.height;
           if (y >= botTarget) {
             let p = Math.min(1, (y - botTarget)/WITHDRAW_HEIGHT);
-            this.$refs.withdrawTarget.style.bottom = `-${(1-p) * WITHDRAW_HEIGHT}px`
-
+            this.withdrawTargetBottom = (1-p) * WITHDRAW_HEIGHT;
+            this.$refs.withdrawTarget.style.transform = `translate(-50%, ${this.withdrawTargetBottom}px)`
           }
 
           if (y > window.innerHeight - WITHDRAW_HEIGHT + 10) {
@@ -301,17 +306,17 @@ export default (type) => {
         this.stopScanningCard();
         this.stopWithdrawingCard();
 
-        let botTargetCurrent = parseInt(this.$refs.withdrawTarget.style.bottom);
-        animate(botTargetCurrent, -WITHDRAW_HEIGHT, 100, (val) => {
+        animate(this.withdrawTargetBottom, WITHDRAW_HEIGHT, 100, (val) => {
+          this.withdrawTargetBottom = val;
           if (this.$refs.withdrawTarget) {
-            this.$refs.withdrawTarget.style.bottom = `${val}px`;
+            this.$refs.withdrawTarget.style.transform = `translate(-50%, ${val}px)`;
           }
         });
 
-        let topTargetCurrent = parseInt(this.$refs.target.style.top);
-        animate(topTargetCurrent, 0, 100, (val) => {
+        animate(this.targetTop, 0, 100, (val) => {
+          this.targetTop = val;
           if (this.$refs.target) {
-            this.$refs.target.style.top = `${val}px`;
+            this.$refs.target.style.transform = `translate(0, ${val}px)`;
           }
         });
       },
@@ -321,7 +326,7 @@ export default (type) => {
       yMin() {
         if (this.$refs.target) {
           let target = this.$refs.target.getBoundingClientRect();
-          return target.y + target.height - 8;
+          return target.y + TARGET_HEIGHT - 8;
         } else {
           return 0;
         }

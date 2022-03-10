@@ -36,8 +36,9 @@
     </div>
   </div>
 
-  <Cards @focused="onFocused" @scrolled="onScrolled" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
+  <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
+      ref="draggables"
       @drag="onDragVertical"
       @tryScroll="tryScroll"
       @dragStop="onDragVerticalStop"
@@ -268,20 +269,18 @@ export default {
       this.focusedProcess = this.processes[idx];
       this.focusedProcess.idx = idx;
     },
-    onDragVertical(component) {
+    onDragVertical(rect) {
       this.allowScroll = false;
-      this.checkDrag(component);
+      this.checkDrag(rect);
     },
     onDragVerticalStop() {
       this.stopDrag();
-      if (!isTouchDevice) {
-        this.allowScroll = true;
-      }
+      this.allowScroll = true;
     },
     tryScroll() {
       this.allowScroll = true;
     },
-    onScrolled() {
+    onScrollStart() {
       this.allowSwipe = false;
     },
     onScrollEnd() {
@@ -300,6 +299,7 @@ export default {
   position: absolute;
   height:60px;
   top:-20px;
+  z-index: 1;
 }
 .mini-scanbar {
   height: 60px;

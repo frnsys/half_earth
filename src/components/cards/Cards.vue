@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce";
 import {detectCenterElement} from 'lib/util';
 
 export default {
@@ -21,56 +20,47 @@ export default {
       scrollLeft: 0,
     }
   },
-  created() {
-    this.scrollHandler = debounce((ev) => {
-      this.scrolled(ev);
-    }, 100);
-  },
   beforeUnmount() {
-    this.scrollHandler.cancel();
+    clearInterval(this.scrollTimeout);
   },
   watch: {
     disabled(val) {
       if (val) {
-        this.scrollLeft = this.$refs.scroller.scrollLeft;
+        this.$refs.scroller.style.overflowX = 'hidden';
+      } else {
+        this.$refs.scroller.style.overflowX = 'visible';
       }
     }
   },
   mounted() {
     // Hack to start with first card focused
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
+    this.last = this.$refs.scroller.scrollLeft;
+    this.scrolling = false;
+
+    // Wait to see if we've stopped scrolling
+    // If so, figure out what the focused/centered child is.
+    this.scrollTimeout = setInterval(() => {
+      let nextLast = this.$refs.scroller.scrollLeft;
+      if (this.scrolling && this.last == nextLast) {
+        let idx = detectCenterElement(
+          this.$refs.scroller,
+          [...this.$refs.scroller.children]);
+        this.$emit('focused', idx);
+        this.$emit('scrollEnd');
+        this.scrolling = false;
+      } else {
+        this.last = nextLast;
+      }
+    }, 100);
   },
   methods: {
     onScroll(ev) {
-      if (this.disabled) {
-        this.$refs.scroller.scrollLeft = this.scrollLeft;
-        return;
+      if (!this.scrolling) {
+        this.$emit('scrollStart');
+        this.scrolling = true;
       }
-      this.$emit('scrolled');
-      this.scrollHandler(ev);
     },
-    scrolled(ev) {
-      if (this.scrollTimeout !== null) {
-        clearInterval(this.scrollTimeout);
-      }
-
-      // Wait to see if we've stopped scrolling
-      // If so, figure out what the focused/centered child is.
-      let last = this.$refs.scroller.scrollLeft;
-      this.scrollTimeout = setInterval(() => {
-        let nextLast = this.$refs.scroller.scrollLeft;
-        if (last == nextLast) {
-          let idx = detectCenterElement(
-            this.$refs.scroller,
-            [...this.$refs.scroller.children]);
-          this.$emit('focused', idx);
-          this.$emit('scrollEnd');
-          clearInterval(this.scrollTimeout);
-        } else {
-          last = nextLast;
-        }
-      }, 100);
-    }
   }
 }
 </script>

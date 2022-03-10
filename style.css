@@ -251,6 +251,7 @@ strong{
   width: calc(100% - 1em);
   max-width: 360px;
   margin: 0 auto;
+  opacity: 0.1;
 }
 .card-scan-target.scanning {
   animation-duration: 1s;
@@ -360,13 +361,13 @@ strong{
 
 .card-withdraw-target {
   position: absolute;
-  bottom: -68px;
   height: 68px;
+  bottom: 0;
   background: #eee;
   border-radius: 0.5em 0.5em 0 0;
   width: 310px;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 68px);
   border-left: 3px solid #fff;
   box-shadow: 0 1px 4px rgb(0 0 0 / 60%), 0 0 8px #5f09f2;
   border-top: 2px solid #fff;
