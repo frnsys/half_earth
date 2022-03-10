@@ -1,27 +1,42 @@
 <template>
 <div class="card" @click="flip" :class="{flipped : flipped, process : isProcess}">
-  <div class="card-top" :style="{background, color}" v-if="hasFigure && hasHeader">
-    <header :style="{color}">
-      <slot name="header"></slot>
-    </header>
-    <figure v-if="!flipped">
-      <slot name="figure"></slot>
-    </figure>
-    <div v-else class="card-top-back">
-      <slot name="top-back"></slot>
+  <div class="card-front">
+    <div class="card-top" :style="{background, color}" v-if="hasFigure && hasHeader">
+      <header :style="{color}">
+        <slot name="header"></slot>
+      </header>
+      <figure>
+        <slot name="figure"></slot>
+      </figure>
+    </div>
+    <div v-if="hasName" class="card-mid card--name" :style="{background, color}">
+      <div class="name-wrapper" ref="name" >
+        <slot name="name"></slot>
+      </div>
+    </div>
+    <div class="card-bot" :style="{background, color}">
+      <div class="card--body" :style="{color}" ref="body">
+        <slot name="body"></slot>
+      </div>
     </div>
   </div>
-  <div v-if="hasName" class="card-mid card--name" :style="{background, color}">
-    <div :style="{visibility: flipped ? 'hidden' : 'visible'}" ref="name">
-      <slot name="name"></slot>
+
+  <div class="card-back">
+    <div class="card-top" :style="{background, color}">
+      <header :style="{color}">
+        <slot name="header"></slot>
+      </header>
+      <div class="card-top-back" :style="{background, color}">
+        <slot name="top-back"></slot>
+      </div>
     </div>
-  </div>
-  <div class="card-bot" :style="{background, color}">
-    <div v-if="!flipped" class="card--body" :style="{color}" ref="body">
-      <slot name="body"></slot>
+    <div v-if="hasName" :style="{background, color}" class="card-mid card--name" >
+      <div></div>
     </div>
-    <div v-else class="card-bot-back">
-      <slot name="bot-back"></slot>
+    <div class="card-bot" :style="{background, color}">
+      <div class="card-bot-back">
+        <slot name="bot-back"></slot>
+      </div>
     </div>
   </div>
 
@@ -93,20 +108,37 @@ export default {
 <style>
 .card {
   position: relative;
-  width: 300px;
+  width: 280px;
   height: 430px;
   max-height: 70vh;
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
   border-radius: 0.75em;
+
   transition: all 250ms ease-out;
 
   transform-style: preserve-3d;
 
+  transform: rotateY(0deg);
+
   cursor: pointer;
 }
 
+
+.card-front, .card-back{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top:0;
+  left:0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-back{
+  transform: rotateY(180deg);
+}
 
 
 .card:hover{
@@ -119,10 +151,14 @@ export default {
 }
 
 .card-top,
-.card-mid,
-.card-bot {
+.card-mid{
   background: #222;
   padding: 0.25em 0.5em;
+}
+
+.card-bot{
+  background: #222;
+  padding: 0.25em 0.5em 0.5em 0.5em;
 }
 
 .card-top {
@@ -130,49 +166,26 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 0.75em 0.75em 0.1em 0.1em;
-  /* box-shadow: 0 0 3px rgb(0 0 0 / 50%); */
   font-family: 'Inter', sans-serif;
   position: relative;
+  min-height: 220px;
 }
 
-.card-top:after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    bottom: -2px;
-    right: -2px;
-    border: 2px rgba(0,0,0,0.1) solid;
-    border-radius: 0.85em 0.85em 0.1em 0.1em;
-    pointer-events: none;
-}
 
 .card-bot {
   flex: 1;
   border-radius: 0.1em 0.1em 0.75em 0.75em;
-  /* box-shadow: 0px 1px 1px rgb(0 0 0 / 50%); */
   display: flex;
   position: relative;
+  min-height: 155px;
 }
 
-.card-bot::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    bottom: -2px;
-    right: -2px;
-    border: 2px rgba(0,0,0,0.1) solid;
-    border-radius: 0.1em 0.1em 0.85em 0.85em;
-    pointer-events: none;
-}
+
 
 .card-mid {
   margin: 0 auto;
   width: calc(100% - 6px);
-  /* box-shadow: 0 2px 2px rgba(0,0,0,0.5); */
-  box-shadow: 2px 0px 0px rgba(0,0,0,0.1), -2px 0px 0px rgba(0,0,0,0.1);
-  z-index: 1;
+ 
   position: relative;
 }
 
@@ -208,7 +221,7 @@ export default {
   border-top: 1px solid rgba(0,0,0,0.4);
   border-left: 1px solid rgba(0,0,0,0.4);
 
-  height: 150px;
+  height: 100%;
 
   border-radius: 0.5em;
   margin: 0 0 0.5em 0;
@@ -240,7 +253,6 @@ export default {
   overflow: hidden;
 }
 .card-image {
-  /* border-radius: 10px; */
   pointer-events: none; /* prevent dragging */
   display: block;
   border-left: 1px solid #555;
@@ -344,6 +356,7 @@ export default {
   padding: 0.1em 0.5em;
   line-height: 1.25;
 }
+
 .card--name > div {
   height: 38px;
   display: flex;
@@ -375,7 +388,6 @@ export default {
   justify-content: space-around;
   align-items: center;
   height: 190px;
-  transform: rotateY(180deg);
 }
 .card-bot-back {
   width: 100%;
@@ -383,31 +395,31 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  transform: rotateY(180deg);
 }
 
-.card.flipped header{
-  transform: rotateY(180deg);
+
+.card.process figure{
+  width: calc(100% - 0.5rem);
 }
 
-.card.process{
-
-  margin:0 0.75em !important;
-  padding-right: calc(1.5em - 8px);
+.card.process .card--body{
+  margin-right: 0.5rem;
 }
 
 .process-mix-bar{
-  width: calc(1.2em + 5px);
-  right: 0px;
+  width: 10px;
+  right: -2px;
 
-  height: 100%;
+  height: 90%;
+  margin-top: 10%;
 
   background-color: #222;
 
   position: absolute;
   z-index: 1;
-  border-radius: 0 1em 1em 0;
-  padding:20px 5px;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .solo-effects {
