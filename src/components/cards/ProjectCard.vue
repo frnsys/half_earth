@@ -338,6 +338,7 @@ export default {
   line-height: 1.2;
   display: flex;
   text-transform: none;
+  white-space: nowrap;
 }
 .project-cost img {
   height: 13px;
@@ -367,6 +368,9 @@ export default {
   bottom: 0;
   border: 1px solid #b929b9;
   z-index: 1;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .project-upgrade {

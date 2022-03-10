@@ -13,6 +13,8 @@
 import animate from 'lib/anim';
 import {updateTransform, isTouchDevice} from 'lib/util';
 
+import throttle from "lodash.throttle";
+
 export default {
   props: ['id', 'draggable', 'minY', 'maxY'],
   data() {
@@ -47,17 +49,22 @@ export default {
       }
     }
   },
+  created(){
+    this.dragHandler = throttle((ev) => {
+      this.drag(ev);
+    }, 16);
+  },
   methods: {
     enable() {
       if (this.enabled) return;
       this.enabled = true;
       if (isTouchDevice) {
         document.body.addEventListener('touchend', this.stopDrag);
-        document.body.addEventListener('touchmove', this.drag, {passive: true});
+        document.body.addEventListener('touchmove', this.dragHandler, {passive: true});
       } else {
         document.body.addEventListener('mouseup', this.stopDrag);
         document.body.addEventListener('mouseleave', this.stopDrag);
-        document.body.addEventListener('mousemove', this.drag, {passive: true});
+        document.body.addEventListener('mousemove', this.dragHandler, {passive: true});
       }
 
       // Get and cache current y position of this element
@@ -74,11 +81,11 @@ export default {
       this.enabled = false;
       if (isTouchDevice) {
         document.body.removeEventListener('touchend', this.stopDrag);
-        document.body.removeEventListener('touchmove', this.drag, {passive: true});
+        document.body.removeEventListener('touchmove', this.dragHandler, {passive: true});
       } else {
         document.body.removeEventListener('mouseup', this.stopDrag);
         document.body.removeEventListener('mouseleave', this.stopDrag);
-        document.body.removeEventListener('mousemove', this.drag, {passive: true});
+        document.body.removeEventListener('mousemove', this.dragHandler, {passive: true});
       }
     },
     startDrag(ev) {

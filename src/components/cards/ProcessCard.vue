@@ -385,11 +385,9 @@ color: #63FF96;
 }
 
 .process-mix-cell:last-of-type{
-  border-radius: 0 0.75em 0 0;
 }
 
 .process-mix-cell:first-of-type{
-  border-radius: 0 0 0.75em 0;
 }
 
 .process-mix-cell.active {
