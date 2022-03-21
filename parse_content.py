@@ -14,6 +14,7 @@ BASE_REGIONAL_HABITABILITY = 10.
 ACTIVE_SPEAKERS = set()
 PRELOAD_ASSETS = list()
 
+STRUCT_ERRORS = 0
 ids = {}
 flags = {}
 rust_output = []
@@ -309,6 +310,7 @@ conds = {
     'ResourcePressure': lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ResourceDemandGap':lambda e: ('Resource::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'FeedstockYears':        lambda e: ('Feedstock::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
+    'ProcessOutput':  lambda e: (ids[e['entity']], comps[e['comparator']], value(e)),
     'ProcessMixShare':  lambda e: (ids[e['entity']], comps[e['comparator']], value(e)),
     'ProcessMixShareFeature': lambda e: ('ProcessFeature::{}'.format(e['subtype']), comps[e['comparator']], value(e)),
     'ProjectActive':    lambda e: (ids[e['entity']], 'ProjectStatus::Active'),
@@ -379,7 +381,8 @@ def define_effect(effect):
                 '0.' if isinstance(v, float) and v == 0 else str(v)
                 for v in effects[effect['type']](effect)]
     except Exception as e:
-        print('Exception defining event: {}'.format(repr(e)))
+        print('Exception defining effect: {}'.format(repr(e)))
+        print(effect)
         return None
     if not effect_params:
         return 'Effect::{}'.format(effect['type'])
@@ -571,14 +574,21 @@ def define_struct(typ, data):
         raise
 
 def define_structs(typ, items):
+    global STRUCT_ERRORS
     structs = []
     for i, item in enumerate(items):
         item['id'] = i
         try:
             structs.append(define_struct(typ, item))
-        except:
+        except Exception as e:
+            print('***********************************')
+            print('Exception while defining:', repr(e))
+            print(item)
+            print('Using placeholder instead')
+            print('***********************************')
             placeholder = PLACEHOLDERS[typ]
             placeholder['id'] = i
+            STRUCT_ERRORS += 1
             structs.append(define_struct(typ, placeholder))
     return ',\n'.join(structs)
 
@@ -1158,14 +1168,16 @@ if __name__ == '__main__':
     with open('assets/content/preload_assets.json', 'w') as f:
         json.dump(PRELOAD_ASSETS, f)
 
-    print('-'*20)
-    print('Images to Preload:')
-    for s in sorted(PRELOAD_ASSETS):
-        print(s)
-    print('-'*20)
-    print('Active Speakers:')
-    for s in sorted(ACTIVE_SPEAKERS):
-        print(s)
-    print('-'*20)
+    # print('-'*20)
+    # print('Images to Preload:')
+    # for s in sorted(PRELOAD_ASSETS):
+    #     print(s)
+    # print('-'*20)
+    # print('Active Speakers:')
+    # for s in sorted(ACTIVE_SPEAKERS):
+    #     print(s)
+    # print('-'*20)
 
+    if STRUCT_ERRORS > 0:
+        raise Exception('There were {} struct definition errors'.format(STRUCT_ERRORS))
     print('Done')
