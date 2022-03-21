@@ -208,13 +208,15 @@ export default (type) => {
       },
       pulseLevel() {
         let el = document.querySelector('.draggable.active .project-cost');
-        animate(1, 1.2, 200, (val) => {
-          el.style.transform = `scale(${val})`;
-        }, () => {
-          animate(1.2, 1, 200, (val) => {
+        if (el) {
+          animate(1, 1.2, 200, (val) => {
             el.style.transform = `scale(${val})`;
+          }, () => {
+            animate(1.2, 1, 200, (val) => {
+              el.style.transform = `scale(${val})`;
+            });
           });
-        });
+        }
       },
       shakeProgress() {
         let el = this.$refs.scanProgress.parentElement;
@@ -227,27 +229,31 @@ export default (type) => {
       },
       pulseCard() {
         let el = document.querySelector('.draggable.active');
-        let m = el.style.transform.match(/,\s?(-?[\d\.]+)/)[1];
-        let y = parseFloat(m);
-        animate(1, 1.1, 200, (val) => {
-          el.style.transform = `translate(0, ${y}px) scale(${val})`;
-        }, () => {
-          animate(1.1, 1, 200, (val) => {
+        if (el) {
+          let m = el.style.transform.match(/,\s?(-?[\d\.]+)/)[1];
+          let y = parseFloat(m);
+          animate(1, 1.1, 200, (val) => {
             el.style.transform = `translate(0, ${y}px) scale(${val})`;
+          }, () => {
+            animate(1.1, 1, 200, (val) => {
+              el.style.transform = `translate(0, ${y}px) scale(${val})`;
+            });
           });
-        });
+        }
       },
       shrinkPulseCard() {
         let el = document.querySelector('.draggable.active');
-        let m = el.style.transform.match(/,\s?(-?[\d\.]+)/)[1];
-        let y = parseFloat(m);
-        animate(1, 0.95, 200, (val) => {
-          el.style.transform = `translate(0, ${y}px) scale(${val})`;
-        }, () => {
-          animate(0.95, 1, 200, (val) => {
+        if (el) {
+          let m = el.style.transform.match(/,\s?(-?[\d\.]+)/)[1];
+          let y = parseFloat(m);
+          animate(1, 0.95, 200, (val) => {
             el.style.transform = `translate(0, ${y}px) scale(${val})`;
+          }, () => {
+            animate(0.95, 1, 200, (val) => {
+              el.style.transform = `translate(0, ${y}px) scale(${val})`;
+            });
           });
-        });
+        }
       },
       shakeScreen() {
         document.body.classList.add('shake');
@@ -367,7 +373,8 @@ export default (type) => {
       rejectScan() {
         this.$refs.target.parentElement.classList.add('scan-fail');
         this.$refs.target.classList.add('no-scan');
-        document.querySelector('.draggable.active').classList.add('scan-reject');
+        let el = document.querySelector('.draggable.active');
+        if (el) el.classList.add('scan-reject');
         setTimeout(() => {
           this.$refs.target.parentElement.classList.remove('scan-fail');
         }, 500);
