@@ -356,7 +356,7 @@ function render(e) {
           icon: k,
           text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${Math.round(afterDemand)}.`
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} demand for ${display.displayName(e.subtype)} by <strong>${(e.param*100).toFixed(0)}%</strong>.`,
+        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} demand for ${display.displayName(e.subtype)} by <strong>${(Math.abs(e.param)*100).toFixed(0)}%</strong>.`,
       }
     }
     case 'DemandAmount': {
