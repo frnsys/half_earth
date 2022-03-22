@@ -1,6 +1,5 @@
 use crate::state::State;
 use crate::regions::{Region, Latitude};
-use crate::projects::Status;
 use crate::production::ProcessFeature;
 use crate::kinds::{Resource, Output, Feedstock, Byproduct};
 use super::{WorldVariable, PlayerVariable, EventPool};

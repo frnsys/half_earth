@@ -1,6 +1,6 @@
 use super::processes::Process;
-use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, Output, OutputMap, Feedstock};
-use good_lp::{default_solver, variable, variables, Expression, Solution, SolverModel, Variable};
+use std::collections::HashMap;
+use crate::kinds::{ResourceMap, ByproductMap, FeedstockMap, OutputMap, Feedstock};
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -8,99 +8,118 @@ pub struct ProductionOrder<'a> {
     pub amount: f32
 }
 
-/// With a constrained amount of resources, allocate the available resources across the provided
-/// production orders/processes.
-/// Returns the amount produced for each provided order, the consumed resources, and the byproducts
-/// of production.
-/// This is currently formulated as a linear programming problem, but ideally we have a non-linear
-/// formulation instead (see dev notes).
-pub fn calculate_production(orders: &[ProductionOrder], resources: &ResourceMap<f32>, feedstocks: &FeedstockMap<f32>) -> (Vec<f32>, ResourceMap<f32>, FeedstockMap<f32>, ByproductMap<f32>) {
-    let mut vars = variables!();
-    let mut consumed_resources: ResourceMap<Expression> = resources!();
-    let mut consumed_feedstocks: FeedstockMap<Expression> = feedstocks!();
-    let mut created_byproducts: ByproductMap<Expression> = byproducts!();
+fn rank_orders(orders: &[ProductionOrder],
+               indices: &mut [usize],
+               resources: &ResourceMap<f32>,
+               feedstocks: &FeedstockMap<f32>) {
 
-    // println!("PLANNER:");
-    // println!("Resources: {:?}", resources);
-    // println!("Orders: {:?}", orders);
+    let mut byproduct_maxs: ByproductMap<f32> = byproducts!();
+    let mut resource_scores = vec![];
+    let mut feedstock_scores = vec![];
+    let mut scores: HashMap<usize, (f32, f32)> = HashMap::default();
 
-    let mut filled_demand: Expression = 0.into();
-    let amounts: Vec<Variable> = orders.iter().map(|order| {
-        // Ran into issues where solutions couldn't be found if the min was set to
-        // 0. I can't figure out why because it seems under the constraints provided
-        // a valid solution will always be for all `amount_to_produce` to equal 0.
-        // let amount_to_produce = vars.add(variable().min(0.).max(order.amount));
-        let amount_to_produce = vars.add(variable().max(order.amount));
-
-        // Add 1. to avoid zero division issues
-        filled_demand += amount_to_produce/(order.amount + 1.);
-
-        // Calculate consumed resources and produced byproducts.
-        // Apply output modifiers as a reduction in resource costs
-        // and byproducts emitted.
-        for (k, v) in order.process.adj_resources().items() {
-            consumed_resources[k] += amount_to_produce * *v;
-        }
-        for (k, v) in order.process.adj_byproducts().items() {
-            created_byproducts[k] += amount_to_produce * *v;
+    for i in indices.iter() {
+        let process = orders[*i].process;
+        let byproducts = process.adj_byproducts();
+        for (k, v) in byproducts.items() {
+            byproduct_maxs[k] = v.max(byproduct_maxs[k]);
         }
 
-        // Ignore "Other" feedstock
-        match order.process.feedstock.0 {
-            Feedstock::Other | Feedstock::Soil => (),
-            _ => {
-                consumed_feedstocks[order.process.feedstock.0] += amount_to_produce * order.process.adj_feedstock_amount();
-            }
-        }
-        amount_to_produce
-    }).collect();
+        let r = process.adj_resources();
+        let resource_score: f32 = r.items().iter().map(|(k, v)| *v/(resources[*k] + 1.)).sum();
+        resource_scores.push(resource_score);
 
-    let mut problem = vars
-        .maximise(filled_demand)
-        .using(default_solver);
+        let f = process.adj_feedstock_amount();
+        let feedstock_score = f/(feedstocks[process.feedstock.0] + 1.);
+        feedstock_scores.push(feedstock_score);
 
-    for k in consumed_resources.keys() {
-        problem = problem.with(consumed_resources[k].clone().leq(resources[k]));
-    }
-    for k in consumed_feedstocks.keys() {
-        // Ignore "Other" feedstock
-        match k {
-            Feedstock::Other | Feedstock::Soil => (),
-            _ => {
-                problem = problem.with(consumed_feedstocks[k].clone().leq(feedstocks[k]));
-            }
-        }
+        scores.insert(*i, (resource_score, feedstock_score));
     }
 
-    let mut consumed_r = resources!();
-    let mut consumed_f = feedstocks!();
-    let mut byproducts = byproducts!();
+    let max_resource_score = resource_scores.iter().fold(-f32::INFINITY, |a, &b| a.max(b));
+    let max_feedstock_score = feedstock_scores.iter().fold(-f32::INFINITY, |a, &b| a.max(b));
 
-    // Ensure values are min 0,
-    // slight negatives might occur because of the -1 min constraint above,
-    // but these are usually negligible amounts
-    let produced: Vec<f32> = match problem.solve() {
-        Ok(solution) => {
-            for k in consumed_resources.keys() {
-                consumed_r[k] = f32::max(solution.eval(consumed_resources[k].clone()) as f32, 0.);
-            }
-            for k in consumed_feedstocks.keys() {
-                consumed_f[k] = f32::max(solution.eval(consumed_feedstocks[k].clone()) as f32, 0.);
-            }
-            // Byproducts are ok to be negative (e.g. CO2 sequestration)
-            for k in created_byproducts.keys() {
-                byproducts[k] = solution.eval(created_byproducts[k].clone()) as f32;
-            }
-            amounts.iter().map(|var| f32::max(solution.value(*var) as f32, 0.)).collect()
-        },
-        Err(err) => {
-            println!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            println!("Planner error: {:?}", err);
-            println!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            amounts.iter().map(|_| 0.).collect()
-        }
+    // Sort so that the best (lowest) scoring are at the end
+    indices.sort_by_cached_key(|i| {
+        let (r, f) = scores.get(i).unwrap();
+        let resource_score = r/max_resource_score;
+        let feedstock_score = f/max_feedstock_score;
+
+        let byproducts = orders[*i].process.adj_byproducts();
+        let byproduct_score: f32 = byproducts.items().iter().map(|(k, v)| *v/(byproduct_maxs[*k] + 1.)).sum();
+        let score = feedstock_score + resource_score + byproduct_score;
+
+        // Hacky
+        -((score * 100000.).round() as isize)
+    });
+}
+
+fn produce_amount(order: &ProductionOrder,
+                  available_resources: &mut ResourceMap<f32>,
+                  available_feedstocks: &mut FeedstockMap<f32>,
+                  produced_byproducts: &mut ByproductMap<f32>) -> f32 {
+    let byproducts = order.process.adj_byproducts();
+    let feedstock = order.process.feedstock.0;
+    let feedstock_amount = order.process.adj_feedstock_amount();
+    let resources = order.process.adj_resources();
+
+    let feedstock_max = match feedstock {
+        Feedstock::Other | Feedstock::Soil => order.amount,
+        _ => available_feedstocks[feedstock]/feedstock_amount
     };
-    (produced, consumed_r, consumed_f, byproducts)
+    let resource_max = resources.items().map(|(k, v)| available_resources[k]/v)
+        .iter().fold(f32::INFINITY, |a, &b| a.min(b));
+
+    let amount_produced = order.amount.min(feedstock_max.min(resource_max));
+
+    for (k, v) in resources.items() {
+        available_resources[k] -= v * amount_produced;
+    }
+    for (k, v) in byproducts.items() {
+        produced_byproducts[k] += v * amount_produced;
+    }
+    available_feedstocks[feedstock] -= feedstock_amount * amount_produced;
+
+    amount_produced
+}
+
+pub fn calculate_production(orders: &[ProductionOrder],
+                            starting_resources: &ResourceMap<f32>,
+                            starting_feedstocks: &FeedstockMap<f32>) -> (Vec<f32>, ResourceMap<f32>, FeedstockMap<f32>, ByproductMap<f32>) {
+    let mut resources = starting_resources.clone();
+    let mut feedstocks = starting_feedstocks.clone();
+    let mut produced_byproducts: ByproductMap<f32> = byproducts!();
+    let mut produced = vec![0.; orders.len()];
+
+    let mut orders_by_output: OutputMap<Vec<usize>> = outputs!();
+    for (i, order) in orders.iter().enumerate() {
+        orders_by_output[order.process.output].push(i);
+    }
+
+    let mut continue_production = true;
+    while continue_production {
+        for (_, order_idxs) in orders_by_output.items_mut() {
+            if order_idxs.is_empty() {
+                continue
+            }
+
+            rank_orders(orders, order_idxs, &resources, &feedstocks);
+
+            // Ok to unwrap b/c we check if `orders` is empty
+            let order_idx = order_idxs.pop().unwrap();
+            let amount = produce_amount(
+                &orders[order_idx],
+                &mut resources,
+                &mut feedstocks,
+                &mut produced_byproducts);
+            produced[order_idx] = amount;
+        }
+        continue_production = !orders_by_output.values().iter().all(|idxs| idxs.is_empty());
+    }
+
+    let consumed_resources = *starting_resources - resources;
+    let consumed_feedstocks = *starting_feedstocks - feedstocks;
+    (produced, consumed_resources, consumed_feedstocks, produced_byproducts)
 }
 
 /// Calculate the total required resources to completely
@@ -185,7 +204,17 @@ mod test {
         let feedstocks = feedstocks!(oil: 100., coal: 100.);
         let (produced, consumed_r, consumed_f, _byproducts) = calculate_production(&orders, &resources, &feedstocks);
 
-        let expected = [50., 50., 0.];
+        let expected = [0., 50., 30.];
+
+        let (required_r, required_f) = calculate_required(&orders);
+        // println!("Required Resources: {:?}", required_r);
+        // println!("Required Feedstocks: {:?}", required_f);
+        // for order in &orders {
+        //     println!("Order: {:?} -> {:?} {:?}", order.process.name, order.amount, order.process.output);
+        // }
+        // println!("Produced: {:?}", produced);
+        // println!("Consumed Resources: {:?}", consumed_r);
+        // println!("Consumed Feedstocks: {:?}", feedstocks);
         assert!(produced.len() == expected.len());
         assert!(produced.iter().zip(expected)
                 .all(|(x1,x2)| approx_eq!(f32, *x1, x2, epsilon=1e-2)));
@@ -196,7 +225,8 @@ mod test {
         assert_eq!(consumed_r, expected);
 
         let expected = feedstocks!(
-            oil: 100.
+            oil: 50.,
+            coal: 30.
         );
         assert_eq!(consumed_f, expected);
 

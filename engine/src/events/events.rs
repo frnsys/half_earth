@@ -2,7 +2,6 @@ use crate::state::State;
 use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
-use serde::Serialize;
 use wasm_bindgen::prelude::*;
 
 #[derive(Debug, Default)]
