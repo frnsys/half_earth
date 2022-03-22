@@ -301,7 +301,7 @@ function render(e) {
       let tag = display.cardTag(process.name, process.output.toLowerCase());
       return {
         tip: tip,
-        text: `[${process.output.toLowerCase()}] ${changeDir(e.param, e)} ${tag} output by <strong>${(e.param*100).toFixed(0)}%.</strong>`
+        text: `[${process.output.toLowerCase()}] ${changeDir(e.param, e)} ${tag} output by <strong>${(Math.abs(e.param)*100).toFixed(0)}%.</strong>`
       }
     }
     case 'OutputForFeature': {

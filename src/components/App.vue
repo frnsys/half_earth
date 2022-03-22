@@ -10,8 +10,8 @@
     <Planning v-if="state.phase == 'PLANNING'" />
     <Stream v-else-if="state.phase == 'EVENTS'" />
     <Report v-else-if="state.phase == 'REPORT'" />
-    <GameOver v-else-if="state.phase == 'BREAK'" />
-    <GameWin v-else-if="state.phase == 'END'" />
+    <GameOver v-else-if="state.phase == 'GAMEOVER'" />
+    <GameWin v-else-if="state.phase == 'GAMEWIN'" />
   </template>
 </template>
 

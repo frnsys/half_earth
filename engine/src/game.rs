@@ -64,8 +64,6 @@ impl GameInterface {
 
         if self.game.state.political_capital < 0 {
             self.game.state.game_over = true;
-        } else {
-            self.game.state.game_over = false;
         }
     }
 

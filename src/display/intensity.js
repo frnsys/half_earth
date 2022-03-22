@@ -40,10 +40,10 @@ function intensity(val, key, type) {
 
 function scale(val, key) {
   switch (key) {
-    case 'outlook': return Math.round(val/consts.base_outlook * 4);
+    case 'outlook': return Math.max(1, Math.round(val/consts.base_outlook * 4));
     case 'extinction': return Math.round(val/60 * 4);
     case 'habitability': return Math.round(val/consts.base_habitability * 4);
-    case 'world_outlook': return Math.round(val/(consts.base_outlook+consts.base_world_outlook) * 4);
+    case 'world_outlook': return Math.max(1, Math.round(val/(consts.base_outlook+consts.base_world_outlook) * 4));
     case 'warming': return Math.floor(val) + 1;
   }
 }
