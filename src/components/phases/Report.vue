@@ -11,7 +11,7 @@
         <tr>
           <th><strong>Changes</strong></th>
           <th><strong>{{state.cycleStartState.year}}</strong></th>
-          <th><small>▶</small></th>
+          <th><small><img :src="icons.arrow_right"></small></th>
           <th><strong>{{state.gameState.world.year}}</strong></th>
           <th><img src="/assets/icons/pips/political_capital.png"></th>
         </tr>
@@ -19,7 +19,7 @@
         <tr class="report--primary-change" v-tip="warmingTip">
           <td><img :src="icons.warming"> Temperature</td>
           <td>+{{state.cycleStartState.temperature.toFixed(1)}}°c</td>
-          <td><small>▶</small></td>
+          <th><small><img :src="icons.arrow_right"></small></th>
           <td>+{{state.gameState.world.temperature.toFixed(1)}}°c</td>
           <td><strong>{{format.sign(pc.temperature)}}</strong></td>
         </tr>
@@ -28,7 +28,7 @@
           <td>
             <IntensityBar :intensity="contentedness.start" :max="5" :invert="true" />
           </td>
-          <td><small>▶</small></td>
+          <th><small><img :src="icons.arrow_right"></small></th>
           <td>
             <IntensityBar :intensity="contentedness.end" :max="5" :invert="true" />
           </td>
@@ -39,7 +39,7 @@
           <td>
             <IntensityBar :intensity="extinction.start" :max="5" />
           </td>
-          <td><small>▶</small></td>
+          <th><small><img :src="icons.arrow_right"></small></th>
           <td>
             <IntensityBar :intensity="extinction.end" :max="5" />
           </td>
@@ -48,7 +48,7 @@
         <tr class="report--primary-change" v-tip="emissionsTip">
           <td><img :src="icons.emissions"> Emissions</td>
           <td>{{state.cycleStartState.emissions.toFixed(1)}}</td>
-          <td><small>▶</small></td>
+          <th><small><img :src="icons.arrow_right"></small></th>
           <td>{{state.gameState.world.emissions.toFixed(1)}}</td>
           <td><strong>{{format.sign(pc.emissions)}}</strong></td>
         </tr>
@@ -457,6 +457,13 @@ export default {
   font-size:0.6rem;
   margin: 0 0.5em;
   opacity: 0.5;
+}
+.report small img {
+  height: 12px;
+  margin-top: -5px;
+}
+.report tr:first-child small img {
+  margin-left: -4px;
 }
 
 .report-overlay {
