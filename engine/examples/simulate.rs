@@ -470,7 +470,7 @@ fn single_run(id: usize, rng: &mut SmallRng, scenarios: &Vec<Scenario>, dir: &st
             }
         }
 
-        let completed_projects = game.step(rng);
+        let (completed_projects, _) = game.step(rng);
 
         if report.scenarios.contains(&Scenario::DAC) {
             let p_id = find_project_id(&game, "Direct Air Capture");

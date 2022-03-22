@@ -182,16 +182,16 @@ impl State {
                 }
             }
             let completed = project.build();
-            if project.gradual {
-                for effect in &project.effects {
-                    add_effects.push((effect.clone() * project.progress, None));
-                }
-            } else if completed {
+            if completed {
                 project.completed_at = self.world.year;
                 for effect in &project.effects {
                     add_effects.push((effect.clone(), None));
                 }
                 completed_projects.push(project.id);
+            } else if project.gradual {
+                for effect in &project.effects {
+                    add_effects.push((effect.clone() * project.progress, None));
+                }
             }
         }
 
@@ -461,6 +461,18 @@ impl State {
     pub fn stop_project(&mut self, project_id: usize) -> Vec<Effect> {
         let mut effects: Vec<Effect> = Vec::new();
         let project = &mut self.projects[project_id];
+
+        if project.status == Status::Active || project.status == Status::Finished {
+            for effect in project.active_effects() {
+                effects.push(effect.clone());
+            }
+
+            if let Some(outcome_id) = project.active_outcome {
+                for effect in &project.outcomes[outcome_id].effects {
+                    effects.push(effect.clone());
+                }
+            }
+        }
 
         if project.progress > 0. {
             project.status = Status::Halted;
@@ -752,15 +764,17 @@ mod test {
         let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
-        let p = state.projects.iter().find(|p| p.kind == ProjectType::Policy && p.effects.len() > 0).unwrap();
-        let id = p.id;
+        let id = {
+            let p = state.projects.iter_mut().find(|p| p.kind == ProjectType::Policy && p.effects.len() > 0).unwrap();
+            p.set_points(10);
+            p.id
+        };
 
         assert_eq!(state.projects[id].status, Status::Inactive);
 
         // Start
-        let effects = state.start_project(id, &mut rng);
-        assert_eq!(state.projects[id].status, Status::Active);
-        assert!(effects.len() > 0);
+        state.start_project(id, &mut rng);
+        assert_eq!(state.projects[id].status, Status::Building);
 
         for npc_id in &state.projects[id].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 4);
@@ -769,9 +783,19 @@ mod test {
             assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
+        // Build until the project is completed
+        let mut effects = vec![];
+        loop {
+            let (completed, _, effs) = state.step_projects(&mut rng);
+            if completed.contains(&id) {
+                effects = effs.iter().map(|(eff, _)| eff.clone()).collect();
+                break;
+            }
+        }
+
         // Stop
         let uneffects = state.stop_project(id);
-        assert_eq!(state.projects[id].status, Status::Inactive);
+        assert_eq!(state.projects[id].status, Status::Halted);
         assert_eq!(effects.len(), uneffects.len());
         for npc_id in &state.projects[id].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 3);
@@ -786,15 +810,17 @@ mod test {
         let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
-        let p = state.projects.iter().find(|p| p.kind == ProjectType::Initiative).unwrap();
-        let id = p.id;
+        let id = {
+            let p = state.projects.iter_mut().find(|p| p.kind == ProjectType::Initiative).unwrap();
+            p.set_points(10);
+            p.id
+        };
 
         assert_eq!(state.projects[id].status, Status::Inactive);
 
         // Start
-        let effects = state.start_project(id, &mut rng);
+        state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Building);
-        assert_eq!(effects.len(), 0); // No immediate effects
 
         for npc_id in &state.projects[id].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 4);
@@ -803,9 +829,19 @@ mod test {
             assert_eq!(state.npcs[*npc_id].relationship, 2);
         }
 
+        // Build until the project is completed
+        let mut effects = vec![];
+        loop {
+            let (completed, _, effs) = state.step_projects(&mut rng);
+            if completed.contains(&id) {
+                effects = effs.iter().map(|(eff, _)| eff.clone()).collect();
+                break;
+            }
+        }
+
         // Stop
         let uneffects = state.stop_project(id);
-        assert_eq!(state.projects[id].status, Status::Inactive);
+        assert_eq!(state.projects[id].status, Status::Halted);
         assert_eq!(effects.len(), uneffects.len());
         for npc_id in &state.projects[id].supporters {
             assert_eq!(state.npcs[*npc_id].relationship, 3);
@@ -815,9 +851,8 @@ mod test {
         }
 
         // Start again
-        let effects = state.start_project(id, &mut rng);
+        state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Building);
-        assert_eq!(effects.len(), 0); // No immediate effects
 
         state.projects[id].set_points(10);
         state.projects[id].build();
@@ -833,10 +868,23 @@ mod test {
         let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
-        let p = state.projects.iter().find(|p| p.upgrades.len() > 0 && p.kind == ProjectType::Policy).unwrap();
-        let id = p.id;
+        let id = {
+            let p = state.projects.iter_mut().find(|p| p.upgrades.len() > 0 && p.kind == ProjectType::Policy).unwrap();
+            p.set_points(10);
+            p.id
+        };
 
-        let effects = state.start_project(id, &mut rng);
+        state.start_project(id, &mut rng);
+
+        let mut effects = vec![];
+        loop {
+            let (completed, _, effs) = state.step_projects(&mut rng);
+            if completed.contains(&id) {
+                effects = effs.iter().map(|(eff, _)| eff.clone()).collect();
+                break;
+            }
+        }
+
         let (uneffects, new_effects) = state.upgrade_project(id);
 
         assert_eq!(state.projects[id].level, 1);
@@ -849,10 +897,23 @@ mod test {
         let mut rng = SmallRng::from_entropy();
         let mut state = State::new(Difficulty::Normal);
 
-        let p = state.projects.iter().find(|p| p.upgrades.len() == 0 && p.kind == ProjectType::Policy).unwrap();
-        let id = p.id;
+        let id = {
+            let p = state.projects.iter_mut().find(|p| p.upgrades.len() == 0 && p.kind == ProjectType::Policy).unwrap();
+            p.set_points(10);
+            p.id
+        };
 
-        let _effects = state.start_project(id, &mut rng);
+        state.start_project(id, &mut rng);
+
+        let mut effects = vec![];
+        loop {
+            let (completed, _, effs) = state.step_projects(&mut rng);
+            if completed.contains(&id) {
+                effects = effs.iter().map(|(eff, _)| eff.clone()).collect();
+                break;
+            }
+        }
+
         let (uneffects, new_effects) = state.upgrade_project(id);
 
         assert_eq!(state.projects[id].level, 0);
