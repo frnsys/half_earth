@@ -22,6 +22,7 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.scrollTimeout);
+    document.removeEventListener('keydown', this.onKeyDown);
   },
   watch: {
     disabled(val) {
@@ -33,6 +34,8 @@ export default {
     }
   },
   mounted() {
+    document.addEventListener('keydown', this.onKeyDown);
+
     // Hack to start with first card focused
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
     this.last = this.$refs.scroller.scrollLeft;
@@ -61,6 +64,48 @@ export default {
         this.scrolling = true;
       }
     },
+    onKeyDown(ev) {
+      if (ev.key == 'ArrowUp') {
+        let children = [...this.$refs.scroller.children];
+        let idx = detectCenterElement(
+          this.$refs.scroller, children);
+
+        let left = 0;
+        if (idx < children.length - 1) {
+          let el = children[idx];
+          left = el.offsetLeft - el.offsetWidth/2;
+        } else {
+          let el = children[0];
+          left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
+        }
+        this.$refs.scroller.scroll({
+          left: left,
+          behavior: 'smooth'
+        });
+
+        return false;
+      } else if (ev.key == 'ArrowDown') {
+        let children = [...this.$refs.scroller.children];
+        let idx = detectCenterElement(
+          this.$refs.scroller, children);
+
+        let left = 0;
+        if (idx > 0) {
+          let el = children[idx-1];
+          left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
+        } else {
+          let el = children[children.length-1];
+          left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
+        }
+        this.$refs.scroller.scroll({
+          left: left,
+          behavior: 'smooth'
+        });
+
+
+        return false;
+      }
+    }
   }
 }
 </script>
