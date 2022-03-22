@@ -1,12 +1,8 @@
 import sys
+import json
+import click
 from db import Database
 from datetime import datetime
-import matplotlib.pyplot as plt
-
-if len(sys.argv) > 1:
-    TARGET_SESSION = sys.argv[1]
-else:
-    TARGET_SESSION = None
 
 def gtco2eq(byproducts):
   co2eq = byproducts['co2_emissions'] + byproducts['ch4_emissions'] * 36 + byproducts['n2o_emissions'] * 298
@@ -60,9 +56,26 @@ def project_timeline(snapshots):
         for p in projects:
             if p['status'] != 'Inactive':
                 last = last_projects.get(p['name'])
-                if last is None or p['status'] != last:
-                    timeline[-1][p['name']] = p['status']
-                last_projects[p['name']] = p['status']
+                status = (p['status'], p['points'], p['level'])
+                if last is None or last != status:
+                    timeline[-1][p['name']] = status
+                last_projects[p['name']] = status
+    return timeline
+
+def process_timeline(snapshots):
+    timeline = []
+    last_processes = {}
+    for i, s in enumerate(snapshots):
+        year = s['snapshot']['gameState']['world']['year']
+        processes = s['snapshot']['gameState']['processes']
+        timeline.append({
+            'year': year
+        })
+        for p in processes:
+            last = last_processes.get(p['name'])
+            if last is None or p['mix_share'] != last:
+                timeline[-1][p['name']] = p['mix_share']
+            last_processes[p['name']] = p['mix_share']
     return timeline
 
 def events(snapshots):
@@ -71,21 +84,58 @@ def events(snapshots):
         'events': s['snapshot']['events']
     } for s in snapshots]
 
+def save_playback_script(snapshots, path):
+    script = {
+        'processes': [],
+        'projects': [],
+        'events': [],
+    }
+    for mix in process_timeline(snapshots):
+        del mix['year']
+        script['processes'].append(mix)
+    for changes in project_timeline(snapshots):
+        del changes['year']
+        script['projects'].append({name: vals for name, vals in changes.items()})
+    for year in events(snapshots):
+        print(year['events'])
+        script['events'].append(year['events'])
+    with open(path, 'w') as f:
+        json.dump(script, f)
 
-if __name__ == '__main__':
+@click.command()
+@click.option('--id', default=None, help='Target session ID')
+@click.option('--script_path', default=None, help='Path to save playback script to')
+@click.option('--date', default=None, help='Target date',
+        type=click.DateTime(formats=['%m/%d']))
+def main(id, script_path, date):
     db = Database('logs.db')
 
-    print('Recent Sessions:')
-    print('-'*50)
     sessions = db.sessions()
     sessions.reverse()
-    for session in sessions[:10]:
-        print(session['id'])
-        print(' ', datetime.fromtimestamp(float(session['timestamp'])))
-        print('  Version:', session['version'])
-        print('  User-Agent:', session['useragent'])
-        print('  Snapshots:', len(db.snapshots(session['id'])))
-        snapshots = db.snapshots(session['id'])
-        if session['id'] == TARGET_SESSION:
+
+    # Browsing
+    if id is None and date is None:
+        sessions = sessions[:100]
+
+    for session in sessions:
+        dt = datetime.fromtimestamp(float(session['timestamp']))
+
+        # Browsing
+        if id is None:
+            display = date is None or (dt.month == date.month and dt.day == date.day)
+            if display:
+                print(session['id'])
+                print(' ', dt)
+                print('  Version:', session['version'])
+                print('  User-Agent:', session['useragent'])
+                print('  Snapshots:', len(db.snapshots(session['id'])))
+
+        if session['id'] == id:
             snapshots = db.snapshots(session['id'])
-            import ipdb; ipdb.set_trace()
+            if script_path:
+                save_playback_script(snapshots, script_path)
+            else:
+                import ipdb; ipdb.set_trace()
+
+if __name__ == '__main__':
+    main()
