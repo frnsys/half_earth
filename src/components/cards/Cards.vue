@@ -28,8 +28,10 @@ export default {
     disabled(val) {
       if (val) {
         this.$refs.scroller.style.overflowX = 'hidden';
+        this.$refs.scroller.style.paddingBottom = `${this.scrollbarHeight}px`;
       } else {
         this.$refs.scroller.style.overflowX = 'visible';
+        this.$refs.scroller.style.paddingBottom = '0px';
       }
     }
   },
@@ -40,6 +42,11 @@ export default {
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
     this.last = this.$refs.scroller.scrollLeft;
     this.scrolling = false;
+
+    // Calculate scroll bar height so we can accommodate it
+    // when it disappears when overflowX is set to hidden.
+    // This prevents the layout from shifting when a card is being dragged.
+    this.scrollbarHeight = this.$refs.scroller.offsetHeight - this.$refs.scroller.clientHeight;
 
     // Wait to see if we've stopped scrolling
     // If so, figure out what the focused/centered child is.
