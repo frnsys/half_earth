@@ -58,14 +58,11 @@ export default {
     enable() {
       if (this.enabled) return;
       this.enabled = true;
-      if (isTouchDevice) {
-        document.body.addEventListener('touchend', this.stopDrag);
-        document.body.addEventListener('touchmove', this.dragHandler, {passive: true});
-      } else {
-        document.body.addEventListener('mouseup', this.stopDrag);
-        document.body.addEventListener('mouseleave', this.stopDrag);
-        document.body.addEventListener('mousemove', this.dragHandler, {passive: true});
-      }
+      document.body.addEventListener('touchend', this.stopDrag);
+      document.body.addEventListener('touchmove', this.dragHandler, {passive: true});
+      document.body.addEventListener('mouseup', this.stopDrag);
+      document.body.addEventListener('mouseleave', this.stopDrag);
+      document.body.addEventListener('mousemove', this.dragHandler, {passive: true});
 
       // Get and cache current y position of this element
       this.observer = new IntersectionObserver((entries) => {
@@ -79,14 +76,11 @@ export default {
     disable() {
       if (!this.enabled) return;
       this.enabled = false;
-      if (isTouchDevice) {
-        document.body.removeEventListener('touchend', this.stopDrag);
-        document.body.removeEventListener('touchmove', this.dragHandler, {passive: true});
-      } else {
-        document.body.removeEventListener('mouseup', this.stopDrag);
-        document.body.removeEventListener('mouseleave', this.stopDrag);
-        document.body.removeEventListener('mousemove', this.dragHandler, {passive: true});
-      }
+      document.body.removeEventListener('touchend', this.stopDrag);
+      document.body.removeEventListener('touchmove', this.dragHandler, {passive: true});
+      document.body.removeEventListener('mouseup', this.stopDrag);
+      document.body.removeEventListener('mouseleave', this.stopDrag);
+      document.body.removeEventListener('mousemove', this.dragHandler, {passive: true});
     },
     startDrag(ev) {
       if (!this.draggable) return;
