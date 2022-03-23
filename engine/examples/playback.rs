@@ -10,7 +10,7 @@ use std::{env, fs::File, io::BufReader, collections::HashMap};
 struct PlaybackScript {
     processes: Vec<HashMap<String, usize>>,
     projects: Vec<HashMap<String, (ProjectStatus, usize, usize)>>,
-    events: Vec<Vec<(usize, Option<usize>)>>,
+    events: Vec<Vec<(usize, Option<usize>, String)>>,
 }
 
 impl PlaybackScript {
@@ -19,19 +19,19 @@ impl PlaybackScript {
     }
 }
 
-fn find_project_id(game: &Game, name: &String) -> usize {
-    game.state.projects.iter().find(|p| p.name == name).expect(format!("No project named: {}", name).as_str()).id
+fn find_project_id(game: &Game, ref_id: &String) -> usize {
+    game.state.projects.iter().find(|p| p.ref_id == ref_id).expect(format!("No project with ref_id: {}", ref_id).as_str()).id
 }
 
-fn find_process_id(game: &Game, name: &String) -> usize {
-    game.state.processes.iter().find(|p| p.name == name).expect(format!("No process named: {}", name).as_str()).id
+fn find_process_id(game: &Game, ref_id: &String) -> usize {
+    game.state.processes.iter().find(|p| p.ref_id == ref_id).expect(format!("No process with ref_id: {}", ref_id).as_str()).id
+}
+
+fn find_event_id(game: &Game, ref_id: &String) -> usize {
+    game.event_pool.events.iter().find(|e| e.ref_id == ref_id).expect(format!("No event with ref_id: {}", ref_id).as_str()).id
 }
 
 fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
-    let file = File::open("renames.json").unwrap();
-    let reader = BufReader::new(file);
-    let renames: HashMap<String, String> = serde_json::from_reader(reader).unwrap();
-
     let difficulty = Difficulty::Normal;
     let mut game = Game::new(difficulty);
     let mut emissions = get_emissions(game.state.world.year);
@@ -40,9 +40,8 @@ fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
     for i in 0..years {
         println!("Step {:?}", i);
         let project_changes = &script.projects[i];
-        for (name, (status, points, level)) in project_changes {
-            let name = renames.get(name).unwrap_or(name);
-            let project_id = find_project_id(&game, &name);
+        for (ref_id, (status, points, level)) in project_changes {
+            let project_id = find_project_id(&game, &ref_id);
             let status_change = {
                 let project = &mut game.state.projects[project_id];
                 project.points = *points;
@@ -72,15 +71,15 @@ fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
                 game.downgrade_project(project_id);
             }
 
-            println!("  Project Change: {:?} -> {:?} / {:?} / {:?}", name, status, points, level);
+            println!("  Project Change: {:?} -> {:?} / {:?} / {:?}", game.state.projects[project_id].name, status, points, level);
         }
 
         let process_mix_changes = &script.processes[i];
-        for (name, mix_share) in process_mix_changes {
-            let name = renames.get(name).unwrap_or(name);
-            let process_id = find_process_id(&game, &name);
-            game.state.processes[process_id].mix_share = *mix_share;
-            println!("Process Mix Change: {:?} -> {:?}", name, mix_share);
+        for (ref_id, mix_share) in process_mix_changes {
+            let process_id = find_process_id(&game, &ref_id);
+            let process = &mut game.state.processes[process_id];
+            process.mix_share = *mix_share;
+            println!("Process Mix Change: {:?} -> {:?}", process.name, mix_share);
         }
 
         let completed_projects = game.step(rng);
@@ -106,9 +105,10 @@ fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
         println!("  Temp: {:?}", game.state.world.temperature);
 
         let events = &script.events[i];
-        for (event_id, region_id) in events {
-            println!("  Event: {:?}", game.event_pool.events[*event_id].name);
-            game.apply_event(*event_id, *region_id);
+        for (_event_id, region_id, ref_id) in events {
+            let event_id = find_event_id(&game, &ref_id);
+            println!("  Event: {:?}", game.event_pool.events[event_id].name);
+            game.apply_event(event_id, *region_id);
         }
 
         println!("\n");

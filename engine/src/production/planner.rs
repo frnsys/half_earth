@@ -147,6 +147,7 @@ mod test {
     fn gen_processes() -> Vec<Process> {
         vec![Process {
             id: 0,
+            ref_id: "test_process_a",
             name: "Test Process A",
             limit: None,
             mix_share: 10,
@@ -162,6 +163,7 @@ mod test {
             supporters: vec![],
         }, Process {
             id: 1,
+            ref_id: "test_process_b",
             name: "Test Process B",
             limit: None,
             mix_share: 10,
@@ -177,6 +179,7 @@ mod test {
             supporters: vec![],
         }, Process {
             id: 2,
+            ref_id: "test_process_c",
             name: "Test Process C",
             limit: None,
             mix_share: 20,

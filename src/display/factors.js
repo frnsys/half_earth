@@ -106,7 +106,7 @@ function projectFactors(k) {
 }
 
 function eventFactors(k) {
-  return state.events.map(([eventId, _regionId]) => {
+  return state.events.map(([eventId, _regionId, _refId]) => {
     let event = EVENTS[eventId];
     return {
       name: event.name,

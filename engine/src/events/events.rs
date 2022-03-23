@@ -171,6 +171,7 @@ pub struct Event {
     /// to user-facing details
     /// (e.g. event text, etc).
     pub id: usize,
+    pub ref_id: &'static str,
 
     /// This phase this event can occur in
     pub phase: Phase,
@@ -229,6 +230,7 @@ mod test {
     fn gen_events() -> Vec<Event> {
         vec![Event {
             id: 0,
+            ref_id: "test_event_a",
             name: "Test Event A",
             phase: Phase::WorldMain,
             locked: false,
@@ -251,6 +253,7 @@ mod test {
             }]
         }, Event {
             id: 1,
+            ref_id: "test_event_b",
             name: "Test Event B",
             phase: Phase::WorldMain,
             locked: false,
@@ -297,6 +300,7 @@ mod test {
         let events = vec![Event {
             id: 0,
             name: "Test Event A",
+            ref_id: "test_event_a",
             phase: Phase::Icon,
             locked: false,
             regional: false,
@@ -376,6 +380,7 @@ mod test {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = vec![Event {
             id: 0,
+            ref_id: "test_event_a",
             name: "Test Event A",
             phase: Phase::WorldMain,
             prob_modifier: 1.,

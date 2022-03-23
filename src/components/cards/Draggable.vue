@@ -12,7 +12,6 @@
 <script>
 import animate from 'lib/anim';
 import {updateTransform, isTouchDevice} from 'lib/util';
-
 import throttle from "lodash.throttle";
 
 export default {

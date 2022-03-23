@@ -27,6 +27,7 @@ import Hud from 'components/Hud.vue';
 import Globe from 'components/Globe.vue'
 import EventsMixin from 'components/EventsMixin';
 import regionsToTiles from '/assets/surface/regions_to_tiles.json';
+import EVENTS from '/assets/content/events.json';
 import ICON_EVENTS from '/assets/content/icon_events.json';
 import {sign, randChoice} from 'lib/util';
 import {sendSnapshot} from '/src/log';
@@ -219,8 +220,9 @@ export default {
       }
 
       this.events = game.roll.world('Main');
-      this.events.forEach((ev) => {
-        state.events.push(ev);
+      this.events.forEach(([evId, regionId]) => {
+        let ev = EVENTS[evId];
+        state.events.push([evId, regionId, ev['ref_id']]);
       });
       this.applyEmissions();
 

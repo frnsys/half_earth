@@ -107,6 +107,7 @@ specs = {
         'name': None,
         'output': None,
         'limit': None,
+        'ref_id': None,
         'mix_share': 0,
         'feedstock': None,
         'resources': {},
@@ -120,6 +121,7 @@ specs = {
     },
     'Project': {
         'id': None,
+        'ref_id': None,
         'name': None,
         'cost': 0,
         'base_cost': 0,
@@ -145,6 +147,7 @@ specs = {
     },
     'Event': {
         'id': None,
+        'ref_id': None,
         'name': None,
         'type': None,
         'locked': 'false',
@@ -425,6 +428,8 @@ def define_condition(cond):
             cond_type, ', '.join(cond_params))
 
 def define_field(k, v, item):
+    if k == 'ref_id':
+        return 'ref_id: "{}"'.format(v)
     if k == 'active_outcome':
         return 'active_outcome: None'
     if k == 'income_level':
@@ -577,6 +582,7 @@ def define_structs(typ, items):
     global STRUCT_ERRORS
     structs = []
     for i, item in enumerate(items):
+        item['ref_id'] = item['id']
         item['id'] = i
         try:
             structs.append(define_struct(typ, item))
@@ -903,6 +909,7 @@ if __name__ == '__main__':
     all_events = {}
     for ev in items_by_type['Event']:
         id = ev['id']
+        ref_id = ev['ref_id']
         image = ev.get('image', {})
         fname = image.get('image', None)
         attribution = image.get('attribution', None)
@@ -912,6 +919,7 @@ if __name__ == '__main__':
                 factor = condition_to_factor(cond)
                 if factor is not None: factors.add(factor)
         event = {
+            'ref_id': ref_id,
             'name': ev.get('name', ''),
             'arc': ev.get('arc', ''),
             'dialogue': extract_dialogue(ev.get('dialogue', {})),

@@ -24,6 +24,7 @@ pub enum ProcessFeature {
 #[derive(Debug, Clone)]
 pub struct Process {
     pub id: usize,
+    pub ref_id: &'static str,
     pub name: &'static str,
     pub mix_share: usize,
     pub limit: Option<f32>,
@@ -97,8 +98,9 @@ impl Serialize for Process {
     where
         S: Serializer,
     {
-        let mut seq = serializer.serialize_struct("Process", 13)?;
+        let mut seq = serializer.serialize_struct("Process", 14)?;
         seq.serialize_field("id", &self.id)?;
+        seq.serialize_field("ref_id", &self.ref_id)?;
         seq.serialize_field("name", &self.name)?;
         seq.serialize_field("output", &self.output)?;
         seq.serialize_field("limit", &self.limit)?;

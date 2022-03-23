@@ -561,6 +561,7 @@ pub fn processes() -> Vec<Process> {
             name: "Solar PV",
             output: Output::Electricity,
             limit: None,
+            ref_id: "0e7c8ae6-e36f-4167-b880-cc7ff3605a8d",
             mix_share: 1,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -589,6 +590,7 @@ pub fn processes() -> Vec<Process> {
             name: "Nuclear Power",
             output: Output::Electricity,
             limit: None,
+            ref_id: "1af360c3-5f08-4fae-9ea1-8264d4c1fc5a",
             mix_share: 2,
             feedstock: (Feedstock::Uranium, 0.0009),
             resources: resources!(
@@ -617,6 +619,7 @@ pub fn processes() -> Vec<Process> {
             name: "Geothermal",
             output: Output::Electricity,
             limit: Some(1576800000000.0),
+            ref_id: "1dd7a323-1342-46f1-8035-d63385e57475",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -644,6 +647,7 @@ pub fn processes() -> Vec<Process> {
             name: "Smallholder Farms",
             output: Output::PlantCalories,
             limit: None,
+            ref_id: "239e930d-c363-45bf-8d00-7f8075b1fded",
             mix_share: 6,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -672,6 +676,7 @@ pub fn processes() -> Vec<Process> {
             name: "BECCS",
             output: Output::Electricity,
             limit: None,
+            ref_id: "28a39677-163d-4a39-88ee-c6a842bec79c",
             mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -701,6 +706,7 @@ pub fn processes() -> Vec<Process> {
             name: "Fast Breeder Nuclear Power",
             output: Output::Electricity,
             limit: None,
+            ref_id: "3c98e8cd-539b-42e6-aa4a-e182cb08c5b5",
             mix_share: 0,
             feedstock: (Feedstock::Uranium, 1.5e-05),
             resources: resources!(
@@ -727,6 +733,7 @@ pub fn processes() -> Vec<Process> {
             name: "Cellular Meat",
             output: Output::AnimalCalories,
             limit: None,
+            ref_id: "4e3ac93f-1207-488d-8dff-8ad8fd2226d2",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -754,6 +761,7 @@ pub fn processes() -> Vec<Process> {
             name: "Blue Hydrogen",
             output: Output::Fuel,
             limit: None,
+            ref_id: "4e3efe6b-0cce-46b3-9dde-05c252ddbdff",
             mix_share: 0,
             feedstock: (Feedstock::NaturalGas, 0.1139),
             resources: resources!(
@@ -782,6 +790,7 @@ pub fn processes() -> Vec<Process> {
             name: "Hydropower",
             output: Output::Electricity,
             limit: Some(16000000000000.0),
+            ref_id: "719d08f4-8d02-41a3-9f0f-57bfd936ea9a",
             mix_share: 3,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -809,6 +818,7 @@ pub fn processes() -> Vec<Process> {
             name: "Industrial Crop Ag",
             output: Output::PlantCalories,
             limit: None,
+            ref_id: "7635bc42-e342-4789-8a98-2da2ea33eae0",
             mix_share: 14,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -838,6 +848,7 @@ pub fn processes() -> Vec<Process> {
             name: "Terrestrial Wind Power",
             output: Output::Electricity,
             limit: None,
+            ref_id: "7fa623e7-264f-42a8-92b5-6e621539cb03",
             mix_share: 1,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -865,6 +876,7 @@ pub fn processes() -> Vec<Process> {
             name: "Thorium Nuclear Power",
             output: Output::Electricity,
             limit: None,
+            ref_id: "82f54fbe-7f34-4e90-a01c-1ea6d5035e23",
             mix_share: 0,
             feedstock: (Feedstock::Thorium, 0.00125),
             resources: resources!(
@@ -892,6 +904,7 @@ pub fn processes() -> Vec<Process> {
             name: "Grey Hydrogen",
             output: Output::Fuel,
             limit: None,
+            ref_id: "8681d780-79aa-4819-8cf6-363257b0fc9d",
             mix_share: 0,
             feedstock: (Feedstock::NaturalGas, 0.1018),
             resources: resources!(
@@ -919,6 +932,7 @@ pub fn processes() -> Vec<Process> {
             name: "Coal Power Generation",
             output: Output::Electricity,
             limit: None,
+            ref_id: "874248df-119a-4308-be03-5ac179942027",
             mix_share: 7,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
@@ -947,6 +961,7 @@ pub fn processes() -> Vec<Process> {
             name: "Organic Livestock Ag",
             output: Output::AnimalCalories,
             limit: None,
+            ref_id: "91a681be-7145-4caf-9238-440f84383d44",
             mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -974,6 +989,7 @@ pub fn processes() -> Vec<Process> {
             name: "Coal",
             output: Output::Fuel,
             limit: None,
+            ref_id: "97dbea06-5d32-4e8f-b9f1-f939f61ba9eb",
             mix_share: 2,
             feedstock: (Feedstock::Coal, 512.559),
             resources: resources!(
@@ -1001,6 +1017,7 @@ pub fn processes() -> Vec<Process> {
             name: "Natural Gas Power Gen",
             output: Output::Electricity,
             limit: None,
+            ref_id: "991816ff-14f8-4751-b2ae-08c6ceef88a5",
             mix_share: 5,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
@@ -1029,6 +1046,7 @@ pub fn processes() -> Vec<Process> {
             name: "Industrial Livestock Ag",
             output: Output::AnimalCalories,
             limit: None,
+            ref_id: "9cc8b9c8-33ef-46eb-b83f-7fcf34f06a31",
             mix_share: 20,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1058,6 +1076,7 @@ pub fn processes() -> Vec<Process> {
             name: "Nuclear Fusion",
             output: Output::Electricity,
             limit: None,
+            ref_id: "b30c7bef-f826-4a6b-a76d-b8412480bb9e",
             mix_share: 0,
             feedstock: (Feedstock::Lithium, 0.00012),
             resources: resources!(
@@ -1086,6 +1105,7 @@ pub fn processes() -> Vec<Process> {
             name: "Floating Wind Turbines",
             output: Output::Electricity,
             limit: None,
+            ref_id: "c576787c-860e-4798-9d31-85ff807a83ad",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -1113,6 +1133,7 @@ pub fn processes() -> Vec<Process> {
             name: "Green Hydrogen",
             output: Output::Fuel,
             limit: Some(99999999999.0),
+            ref_id: "c63cde74-fc44-415b-88d0-21aeeb6377e4",
             mix_share: 0,
             feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
@@ -1140,6 +1161,7 @@ pub fn processes() -> Vec<Process> {
             name: "Petroleum Power Gen",
             output: Output::Electricity,
             limit: None,
+            ref_id: "ca2a45eb-1186-45b6-b7cf-8f29af4bed6a",
             mix_share: 1,
             feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
@@ -1169,6 +1191,7 @@ pub fn processes() -> Vec<Process> {
             name: "Biofuels",
             output: Output::Fuel,
             limit: None,
+            ref_id: "cbaec5b1-86fd-4add-8624-84394ecb4cc3",
             mix_share: 3,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1197,6 +1220,7 @@ pub fn processes() -> Vec<Process> {
             name: "Natural Gas",
             output: Output::Fuel,
             limit: None,
+            ref_id: "cc4176ed-34d4-4e72-b1b0-389d941b6a64",
             mix_share: 4,
             feedstock: (Feedstock::NaturalGas, 210.3942),
             resources: resources!(
@@ -1224,6 +1248,7 @@ pub fn processes() -> Vec<Process> {
             name: "Petroleum",
             output: Output::Fuel,
             limit: None,
+            ref_id: "d1110c6e-ff30-4087-93a8-7573667d5439",
             mix_share: 11,
             feedstock: (Feedstock::Oil, 0.3),
             resources: resources!(
@@ -1252,6 +1277,7 @@ pub fn processes() -> Vec<Process> {
             name: "Concentrated Solar Power",
             output: Output::Electricity,
             limit: Some(1000000000000.0),
+            ref_id: "d505cd5e-fa05-44f2-a80e-8c777bc06929",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -1280,6 +1306,7 @@ pub fn processes() -> Vec<Process> {
             name: "Organic Crop Ag",
             output: Output::PlantCalories,
             limit: None,
+            ref_id: "d630401b-5c01-4383-861d-9a659f521a34",
             mix_share: 0,
             feedstock: (Feedstock::Soil, 1.0),
             resources: resources!(
@@ -1307,6 +1334,7 @@ pub fn processes() -> Vec<Process> {
             name: "Algae Biofuels",
             output: Output::Fuel,
             limit: None,
+            ref_id: "e54d7e47-31fe-4578-8966-841207c8bd97",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -1335,6 +1363,7 @@ pub fn processes() -> Vec<Process> {
             name: "Vertical Farming",
             output: Output::PlantCalories,
             limit: Some(1026000000000000.0),
+            ref_id: "eaa6fd79-b858-4987-8dd5-f31e59bf37bb",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
@@ -1364,6 +1393,7 @@ pub fn projects() -> Vec<Project> {
     vec![
         Project {
             id: 0,
+            ref_id: "00a4f6c3-e708-427c-acfe-52de344563dc",
             name: "Next-Gen Solar PV",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -1405,6 +1435,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 1,
+            ref_id: "01ab3a68-9679-424e-8800-c3f2ae5c1b55",
             name: "Luxury for All",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -1448,6 +1479,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 2,
+            ref_id: "0402c473-cf21-46bf-bfa5-858536cdbcf2",
             name: "Carbon Capture and Sequestration",
             cost: 0,
             base_cost: Cost::Fixed(27),
@@ -1489,6 +1521,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 3,
+            ref_id: "0ae2d071-932f-425e-adc9-cf4dbad18a01",
             name: "Space Colony",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -1569,6 +1602,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 4,
+            ref_id: "0ddde847-b220-41c4-886b-751e2336cb69",
             name: "Crack Down on Crypto-Mining",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -1610,6 +1644,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 5,
+            ref_id: "0de73397-2a3b-4f56-862f-dca49bf67da9",
             name: "Sewage Treatment Plants",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -1654,6 +1689,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 6,
+            ref_id: "10e4f8fe-c711-48bf-ae9d-e3b9237e3bce",
             name: "Esperanto",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -1697,6 +1733,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 7,
+            ref_id: "12ee7d1e-eb96-4a46-bb28-9319ac28676c",
             name: "Expand National Parks",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -1742,6 +1779,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 8,
+            ref_id: "13019eaf-ac6c-4667-a98e-e83427c68117",
             name: "Green Hydrogen",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -1783,6 +1821,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 9,
+            ref_id: "15a13124-e375-41a5-8759-4ead300dbae0",
             name: "Continental Smart Grid",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -1827,6 +1866,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 10,
+            ref_id: "19ba1cd1-3591-48db-9c75-9cc64f550cd4",
             name: "Cellular Meat",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -1871,6 +1911,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 11,
+            ref_id: "1d50bab3-5620-4ac5-804f-a6d59b1499d2",
             name: "Fanonist Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -1916,6 +1957,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 12,
+            ref_id: "1edcaecf-472d-4c61-a2d7-93b6a9a0f631",
             name: "Utopian Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -1960,6 +2002,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 13,
+            ref_id: "1fdea3c5-5e35-477b-aac0-d45deb4f6d68",
             name: "Consumerist Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -2004,6 +2047,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 14,
+            ref_id: "253493da-791c-4d22-a797-550cb370635d",
             name: "Close Borders",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -2046,6 +2090,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 15,
+            ref_id: "266014fc-f827-4980-9397-a1b03ecb6ae7",
             name: "Ecofeminist Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -2090,6 +2135,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 16,
+            ref_id: "26b75bf4-4263-41fd-8663-be07f26e6a3d",
             name: "Underwater Biosphere",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2131,6 +2177,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 17,
+            ref_id: "2a7e7b1b-377f-4b59-b277-3ab131125820",
             name: "Phage Therapy",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2172,6 +2219,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 18,
+            ref_id: "2d8ae83b-4584-4eac-b660-72ee0f63e0db",
             name: "Suspend Parliament",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2215,6 +2263,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 19,
+            ref_id: "2d9a3ca4-9264-4714-b95a-dca743ff8505",
             name: "Soil Fertility AI",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -2257,6 +2306,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 20,
+            ref_id: "30b235cd-6d50-45d5-a808-0b30f738bb05",
             name: "Mine Moon for Tritium",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -2298,6 +2348,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 21,
+            ref_id: "3435924f-4197-4c5a-a79e-cb9220def1bc",
             name: "Reconcile Town and Country",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2342,6 +2393,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 22,
+            ref_id: "35d312aa-37e2-4005-99b7-6ec4d2ad27a2",
             name: "Mass Electrification",
             cost: 0,
             base_cost: Cost::Dynamic(5e-13, Factor::Output(Output::Fuel)),
@@ -2383,6 +2435,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 23,
+            ref_id: "36095254-e666-4666-8823-0306a947c350",
             name: "Gadgets, Fast Fashion, and Endless TV",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2427,6 +2480,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 24,
+            ref_id: "36650070-79f8-425c-8893-66aa7f53e7a1",
             name: "Mass Enhanced Weathering",
             cost: 0,
             base_cost: Cost::Fixed(0),
@@ -2468,6 +2522,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 25,
+            ref_id: "37177342-6cc3-4345-aa4d-05f9ae7dd315",
             name: "Drought-Resistant Crops",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -2509,6 +2564,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 26,
+            ref_id: "378c9bb3-1f9f-43fe-9cab-a985a9590413",
             name: "Half-Earth",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -2585,6 +2641,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 27,
+            ref_id: "387ed612-9b7a-4c81-82db-8a8697172667",
             name: "Direct Air Capture",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -2786,6 +2843,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 28,
+            ref_id: "3ca99ce5-c765-4ee8-851d-cd7fabebea62",
             name: "Food Waste Campaign",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -2834,6 +2892,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 29,
+            ref_id: "3d08c5bd-8d0b-4243-865e-387efec46de8",
             name: "Animal Liberationist Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -2878,6 +2937,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 30,
+            ref_id: "3ed5c2c0-6fde-4f1a-aa14-1917be9404a8",
             name: "Carbon-Negative Concrete",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -2919,6 +2979,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 31,
+            ref_id: "3fe30749-664d-4a81-9e01-e249d63ff8f9",
             name: "Artificial Moons",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -2961,6 +3022,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 32,
+            ref_id: "41314f73-3fdd-4cca-92f4-9f689ebfeb12",
             name: "High-Density Batteries",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -3005,6 +3067,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 33,
+            ref_id: "4597c4f4-7705-409c-8eba-9075ca6e9427",
             name: "Expand Recycling",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3047,6 +3110,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 34,
+            ref_id: "4815cbbc-32a8-4add-a023-feb8aa2eaa7f",
             name: "Abolish Zoos",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3091,6 +3155,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 35,
+            ref_id: "4a9d6df6-fc90-4a0f-ac18-498e0ec1bc69",
             name: "Eliminate Natural Predation",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -3135,6 +3200,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 36,
+            ref_id: "4bc5051c-48d0-4003-b93a-634aae972a5f",
             name: "Feminist Science and Technology Studies",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3178,6 +3244,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 37,
+            ref_id: "4cf09d09-1505-434a-9041-1c394907efe3",
             name: "Expand Public Transit",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -3222,6 +3289,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 38,
+            ref_id: "4daef9cc-ea75-4c0f-83e3-7df3278a84f3",
             name: "Factory Farming Reform",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -3265,6 +3333,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 39,
+            ref_id: "4f3411f9-54f2-41ee-9e78-a14b392bb053",
             name: "Agricultural Robotics",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3310,6 +3379,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 40,
+            ref_id: "50b35794-387f-4be6-9945-0557b0815bf9",
             name: "Nuclear Fusion",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -3363,6 +3433,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 41,
+            ref_id: "5703ffc0-57d6-4253-8491-2d2b602bcdd3",
             name: "Ocean Iron Fertilization",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3428,6 +3499,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 42,
+            ref_id: "58acdfec-01b9-49c2-986f-c8d5e11a4bda",
             name: "Mass Demilitarization",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3471,6 +3543,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 43,
+            ref_id: "58f5a607-e8d3-4785-8302-9dfb21ee858a",
             name: "Psyop",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -3513,6 +3586,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 44,
+            ref_id: "59d20baa-0d1f-4c11-b5a1-e261ff2f7939",
             name: "Champagne Socialism",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -3554,6 +3628,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 45,
+            ref_id: "5a226064-21eb-4356-b695-9f4b5983afd5",
             name: "Remove Fetters on the Forces of Production!",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3597,6 +3672,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 46,
+            ref_id: "5c67f0aa-5f1b-4139-bab0-b18ebd793761",
             name: "Degrowth in  Developed Regions",
             cost: 0,
             base_cost: Cost::Dynamic(40., Factor::Income),
@@ -3639,6 +3715,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 47,
+            ref_id: "5d818aee-8b01-44eb-89d0-6a8335df0006",
             name: "Multistrata Agroforestry",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -3693,6 +3770,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 48,
+            ref_id: "5e69fb2f-1fa5-4e70-a723-58944141964c",
             name: "Restrictions on Air Travel",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -3735,6 +3813,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 49,
+            ref_id: "627d922e-d0d1-4131-ace6-5bfd525aab84",
             name: "Militarized Conservation",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -3778,6 +3857,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 50,
+            ref_id: "630eaa03-40a1-4332-9c5c-759d8bfe97ad",
             name: "Co-Generation",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3819,6 +3899,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 51,
+            ref_id: "6366e03b-e699-4324-925d-6b9615fb8780",
             name: "Energy Quotas",
             cost: 0,
             base_cost: Cost::Dynamic(1.5e-12, Factor::Output(Output::Electricity)),
@@ -3877,6 +3958,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 52,
+            ref_id: "696469d1-c319-458d-9fe9-6dfe3e8d2443",
             name: "Stakhanovite Shock Workers",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3920,6 +4002,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 53,
+            ref_id: "69654c23-965e-40b3-bd05-3cd32550a871",
             name: "De-extinction Initiative",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -3983,6 +4066,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 54,
+            ref_id: "6b9390d3-90b5-425b-bc43-49475b9d3460",
             name: "Cloud Brightening",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4025,6 +4109,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 55,
+            ref_id: "6da3e550-7b94-4267-aa93-c014a9cca115",
             name: "Biofabrication",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4066,6 +4151,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 56,
+            ref_id: "6e66300f-d4fa-419e-bc91-9d62cc08899d",
             name: "Ban High-Seas Fishing",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4109,6 +4195,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 57,
+            ref_id: "6e9ae4e8-2b2d-4fb9-b85a-e02ef238354d",
             name: "Asteroid Mining",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -4153,6 +4240,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 58,
+            ref_id: "6ea4471c-177c-4813-bf6c-9a7c3f268e56",
             name: "Phase Out Commercial Fishing",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -4219,6 +4307,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 59,
+            ref_id: "76ee5397-e5ec-440c-8b25-f489f2a6fd8f",
             name: "Predator Reintroduction Program",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4263,6 +4352,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 60,
+            ref_id: "770ca3d6-d55b-4814-92c0-b3fc198409f7",
             name: "Electric-Arc Furnaces",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4305,6 +4395,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 61,
+            ref_id: "7b098547-96b4-49b0-9ba0-d93d406133b5",
             name: "Open-Ocean Fish Farms",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -4347,6 +4438,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 62,
+            ref_id: "7fa53099-1311-45d6-90ca-4ed7f5acf526",
             name: "Battery Storage Network",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4391,6 +4483,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 63,
+            ref_id: "85f26ed9-db90-4ab2-bd36-ad3523f5dde1",
             name: "Coastal Wetland Protection and Restoration",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4434,6 +4527,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 64,
+            ref_id: "8e0ffc50-4b6a-4124-a5da-95acf40162bc",
             name: "Space Elevator",
             cost: 0,
             base_cost: Cost::Fixed(60),
@@ -4491,6 +4585,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 65,
+            ref_id: "928a827c-79da-43f2-98f9-75038b82f0db",
             name: "Meatless Mondays",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -4536,6 +4631,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 66,
+            ref_id: "92989dda-fe6f-4e29-9031-0fb735c49ba7",
             name: "Vegan Mandate",
             cost: 0,
             base_cost: Cost::Dynamic(4e-14, Factor::Output(Output::AnimalCalories)),
@@ -4581,6 +4677,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 67,
+            ref_id: "94a713fe-60ca-449c-8c1d-c74be6eec842",
             name: "Green Roofs",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -4622,6 +4719,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 68,
+            ref_id: "953ba1e1-d0da-4929-a597-7572ebc7f1e3",
             name: "Biochar",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -4664,6 +4762,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 69,
+            ref_id: "99b199b8-37be-4533-9c77-7ecd7434132e",
             name: "Ban Outdoor Cats",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -4707,6 +4806,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 70,
+            ref_id: "9a2cf85b-80b1-4146-8e0b-c33b9a624b72",
             name: "Stop Food Aid",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4752,6 +4852,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 71,
+            ref_id: "a28c51d5-1911-469d-9064-24c9ed4aec1a",
             name: "Abolish Prisons",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4794,6 +4895,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 72,
+            ref_id: "a31e3b21-b18f-4067-a57d-877312697371",
             name: "Wooden Skyscrapers",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4846,6 +4948,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 73,
+            ref_id: "a4b6165b-80de-4c58-9fdc-53bb44ba61ac",
             name: "3rd Generation Biofuels",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4887,6 +4990,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 74,
+            ref_id: "aae6cd80-9563-4621-9add-e673aac79fba",
             name: "Rien Faire Comme une Bête",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -4932,6 +5036,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 75,
+            ref_id: "abff294f-8058-495c-995c-f86a93ee2d8c",
             name: "Solar Radiation Management",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5044,6 +5149,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 76,
+            ref_id: "b1fdb72b-1628-4cb8-8913-11374ff0231c",
             name: "Deep Sea Mining",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -5086,6 +5192,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 77,
+            ref_id: "b3034bb5-7a01-4f1a-ade1-3c75a13d5dab",
             name: "Ban Cars",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -5130,6 +5237,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 78,
+            ref_id: "b38f3042-0608-4b81-9904-f960774f5746",
             name: "Passive Building Retrofit and Mandate",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -5173,6 +5281,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 79,
+            ref_id: "b5629cb1-4389-41d3-8868-e4e63e7c56d9",
             name: "Indigenous Sovereignty over Traditional Territories  ",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -5216,6 +5325,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 80,
+            ref_id: "b604f545-17ca-4468-a35d-3fa2404557e5",
             name: "The Ark",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -5268,6 +5378,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 81,
+            ref_id: "b9330772-11e3-4cba-8535-feb15417a893",
             name: "Breeder Reactor",
             cost: 0,
             base_cost: Cost::Fixed(35),
@@ -5320,6 +5431,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 82,
+            ref_id: "ba27ca11-8654-4ae4-b2af-98edefbd6507",
             name: "One-Child Policy",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -5374,6 +5486,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 83,
+            ref_id: "bb68a1f0-65fe-48cc-b21b-dbb47a21c9f6",
             name: "Mission to Titan",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -5417,6 +5530,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 84,
+            ref_id: "bce075ca-b519-43a4-89d5-2bc659e546d8",
             name: "Orbital Space Settlements",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -5485,6 +5599,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 85,
+            ref_id: "c0410b29-9c2e-43fc-8212-1a390e6a15ca",
             name: "Mostly Full Automation",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -5540,6 +5655,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 86,
+            ref_id: "c7c83ed1-21ff-424e-a43d-18877e405b19",
             name: "Relocate Industry to Space",
             cost: 0,
             base_cost: Cost::Fixed(50),
@@ -5606,6 +5722,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 87,
+            ref_id: "c7dee0a9-84b3-44da-92f3-1c4b14072b3e",
             name: "Biosphere 3",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -5660,6 +5777,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 88,
+            ref_id: "cb38a206-6ee2-48ca-9de8-6ffc980b052b",
             name: "Vegetarian Mandate",
             cost: 0,
             base_cost: Cost::Dynamic(2e-14, Factor::Output(Output::AnimalCalories)),
@@ -5704,6 +5822,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 89,
+            ref_id: "cbbb9aa7-f2f4-4d1e-938c-9b99d599fd1d",
             name: "Limits to Growth (For Some)",
             cost: 0,
             base_cost: Cost::Fixed(100),
@@ -5749,6 +5868,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 90,
+            ref_id: "cdb3e67a-375b-444e-940e-fe9b5ef28e74",
             name: "Thorium Reactor",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5790,6 +5910,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 91,
+            ref_id: "cfaacae5-9977-49cb-968e-1c9fe1a50879",
             name: "Antarctic Pumping",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5843,6 +5964,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 92,
+            ref_id: "cff717f2-881f-4e6a-b5ec-da2b0580f6bc",
             name: "Environmentalist Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -5887,6 +6009,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 93,
+            ref_id: "d6063fc6-97a1-42e2-8d01-3cabd5bac5ea",
             name: "Unconventional Petroleum Industry",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -5930,6 +6053,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 94,
+            ref_id: "d6d6b04c-8b48-4be0-aec5-34de695a9ec7",
             name: "Masculinity De-Tox",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -5974,6 +6098,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 95,
+            ref_id: "d81fc159-322f-4b49-a83c-fcba7ad0de6f",
             name: "Electrify Road Vehicles",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -6016,6 +6141,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 96,
+            ref_id: "d87eb30e-c9ac-479c-9832-e77d52ada370",
             name: "Ban Exotic Animal Trade",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6060,6 +6186,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 97,
+            ref_id: "d8a119bd-479e-4706-a73a-c0bad0b660a7",
             name: "Hempcrete",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6102,6 +6229,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 98,
+            ref_id: "d937ae7d-7681-4287-9f13-16d118421ebe",
             name: "Malthusian Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -6146,6 +6274,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 99,
+            ref_id: "db25b922-3610-4f6c-b06b-e6f68cb512ba",
             name: "Energy Conservation Campaign",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -6188,6 +6317,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 100,
+            ref_id: "dd4e5692-0cb1-4d16-9c30-68db20794591",
             name: "Alternative Refrigerants",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6229,6 +6359,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 101,
+            ref_id: "e07bcc6c-cb84-4797-b480-560152091526",
             name: "Universal Family Planning",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6272,6 +6403,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 102,
+            ref_id: "e4e8f054-7867-4c64-a6b0-bf7d689091b8",
             name: "Flexitarian",
             cost: 0,
             base_cost: Cost::Fixed(25),
@@ -6316,6 +6448,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 103,
+            ref_id: "e57729b5-27ad-4f6b-ae10-60955b63b1e1",
             name: "Cap and Trade Program for Children",
             cost: 0,
             base_cost: Cost::Fixed(40),
@@ -6358,6 +6491,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 104,
+            ref_id: "e5d8d6cc-2ed6-4493-8052-e679d861deeb",
             name: "De-Extinction",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6410,6 +6544,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 105,
+            ref_id: "ebe16973-2208-4d10-be54-5f4631745ff7",
             name: "Restore Desert Habitats",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6464,6 +6599,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 106,
+            ref_id: "ec454270-4b62-427c-838a-0e449dac2586",
             name: "Ecosocialist Video Game ",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -6506,6 +6642,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 107,
+            ref_id: "ee2cc642-09f6-4bdb-9827-9a12ec9035bf",
             name: "Compost",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6549,6 +6686,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 108,
+            ref_id: "ee5c9d8e-ecd8-4e05-baec-d18c1e19886a",
             name: "Ban Non-Indigenous Hunting",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6592,6 +6730,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 109,
+            ref_id: "eefd8ee2-1bb9-4756-b24d-94c1741f8e35",
             name: "Floating Wind Turbines",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6633,6 +6772,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 110,
+            ref_id: "ef1defb9-97ca-4a83-ae25-0815f99ded28",
             name: "Improved Oceanic Shipping",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6674,6 +6814,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 111,
+            ref_id: "ef35f447-6ed9-42aa-a7ba-102e5277be9d",
             name: "Marine Protected Areas",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6718,6 +6859,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 112,
+            ref_id: "ef6df1af-c2b3-43b7-b51e-93e526779f9b",
             name: "Pedestrian and Bike-Friendly Cities",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6760,6 +6902,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 113,
+            ref_id: "f026f0d5-6aeb-4dd8-aea9-ab7aa8ddac68",
             name: "Advances in Ecosystem Modelling",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -6804,6 +6947,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 114,
+            ref_id: "f12ed99c-9fa9-402c-adc5-67e2a87b73ee",
             name: "Accelerationist Curriculum",
             cost: 0,
             base_cost: Cost::Fixed(5),
@@ -6848,6 +6992,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 115,
+            ref_id: "f218ce74-26b1-49d6-9513-ed9a0bec7177",
             name: "Search for Extraterrestrial Life",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6903,6 +7048,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 116,
+            ref_id: "f222af23-bd21-4c18-b606-aef510d46b83",
             name: "Cloud Seeding",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -6955,6 +7101,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 117,
+            ref_id: "f2fef5c9-633c-49eb-bfb8-95292bb9debf",
             name: "Remediate Damaged Ecosystems",
             cost: 0,
             base_cost: Cost::Fixed(20),
@@ -7015,6 +7162,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 118,
+            ref_id: "f327aaab-c618-4d62-9552-3a18641c85c9",
             name: "Low-Methane Cattle Fodder",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -7068,6 +7216,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 119,
+            ref_id: "f7b1721c-a1dd-4250-b9b3-760d4d372cd2",
             name: "Long-Range Electric Aviation",
             cost: 0,
             base_cost: Cost::Fixed(30),
@@ -7120,6 +7269,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 120,
+            ref_id: "fd76da01-3649-4776-8bb5-eb7385b94f0e",
             name: "Desalination Plants",
             cost: 0,
             base_cost: Cost::Fixed(10),
@@ -7207,6 +7357,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 121,
+            ref_id: "feb6e5f3-4e7d-4891-9476-14c123a2ea86",
             name: "Bioenergy Carbon Capture and Sequestration (BECCS)",
             cost: 0,
             base_cost: Cost::Fixed(8),
@@ -7249,6 +7400,7 @@ pub fn projects() -> Vec<Project> {
         },
         Project {
             id: 122,
+            ref_id: "ff462e0a-aea0-4d87-9106-887eda1a7201",
             name: "Perennial Cereals",
             cost: 0,
             base_cost: Cost::Fixed(15),
@@ -7295,6 +7447,7 @@ pub fn events() -> Vec<Event> {
     vec![
         Event {
             id: 0,
+            ref_id: "00905466-8813-487f-9012-2784c85c6ec3",
             name: "Oil Pollution Causes High Infant Mortality",
             phase: Phase::WorldMain,
             locked: false,
@@ -7318,6 +7471,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 1,
+            ref_id: "03c39cbf-e458-4306-bd19-a90cd579245a",
             name: "Eutrophication - A Problem Solved",
             phase: Phase::WorldMain,
             locked: false,
@@ -7343,6 +7497,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 2,
+            ref_id: "03dcaceb-b5fe-4a6a-8f4d-e8cec7840524",
             name: "Coffee and Chocolate Shortage",
             phase: Phase::WorldMain,
             locked: false,
@@ -7365,6 +7520,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 3,
+            ref_id: "0631b696-1e92-451b-a202-a803f4da0067",
             name: "Ash Dieback",
             phase: Phase::WorldMain,
             locked: false,
@@ -7386,6 +7542,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 4,
+            ref_id: "0729ad45-f1db-43e0-985e-4c8defc77974",
             name: "Algae Farmers",
             phase: Phase::WorldStart,
             locked: false,
@@ -7409,6 +7566,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 5,
+            ref_id: "0a4ca3e3-a636-4b3d-9247-95b523617024",
             name: "Pollinator - Decline",
             phase: Phase::WorldMain,
             locked: false,
@@ -7432,6 +7590,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 6,
+            ref_id: "0bdbdf13-233d-44db-b4d8-edb9df05430f",
             name: "Migrations - Border Attack",
             phase: Phase::WorldMain,
             locked: true,
@@ -7464,6 +7623,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 7,
+            ref_id: "0d5ca322-7962-4882-860d-b8704530608d",
             name: "Severe Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: true,
@@ -7508,6 +7668,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 8,
+            ref_id: "0d6ef5fc-5743-44eb-8cb2-7a3d5b64ebee",
             name: "Last Fossil Fuel Burnt",
             phase: Phase::WorldMain,
             locked: false,
@@ -7530,6 +7691,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 9,
+            ref_id: "0dd6823c-5d86-465c-8c8e-79818ee0e6f6",
             name: "New Wines in Old Biomes",
             phase: Phase::WorldMain,
             locked: false,
@@ -7552,6 +7714,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 10,
+            ref_id: "0ef195f8-b4b2-42e5-b5a7-142e497fe707",
             name: "New Cuisine",
             phase: Phase::WorldMain,
             locked: true,
@@ -7581,6 +7744,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 11,
+            ref_id: "0fe46482-975d-4b99-a95e-073841b7e83c",
             name: "Ally - The Consumerist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -7603,6 +7767,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 12,
+            ref_id: "11ace984-b29b-4043-8fd7-cf712f3de6f1",
             name: "Urban Farming",
             phase: Phase::WorldMain,
             locked: true,
@@ -7628,6 +7793,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 13,
+            ref_id: "11fdbc07-0a94-493d-8c50-dacb06654ec8",
             name: "Deadly Heat Dome",
             phase: Phase::WorldMain,
             locked: false,
@@ -7672,6 +7838,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 14,
+            ref_id: "1226f162-9a74-40c3-8741-0648d78e9d70",
             name: "Nemesis - The Consumerist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -7693,6 +7860,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 15,
+            ref_id: "12f70374-0c81-4fac-ac5f-856cdfd1f2c5",
             name: "Regions Intro",
             phase: Phase::PlanningRegions,
             locked: false,
@@ -7714,6 +7882,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 16,
+            ref_id: "149d9043-2ef0-42e7-b690-6d6b2e068749",
             name: "Extreme Flooding - Intro",
             phase: Phase::WorldMain,
             locked: true,
@@ -7757,6 +7926,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 17,
+            ref_id: "14ef3abd-bdf3-431b-9cee-0083456fbb59",
             name: "Nuclear Waste",
             phase: Phase::WorldMain,
             locked: false,
@@ -7793,6 +7963,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 18,
+            ref_id: "15981220-f02d-4e1e-895d-16280a432d2b",
             name: "Collapse of the Greenland Ice Sheet",
             phase: Phase::WorldMain,
             locked: false,
@@ -7837,6 +8008,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 19,
+            ref_id: "15e08a5f-98f9-4b8a-b277-5a0158e3c973",
             name: "Geoengineer Desert Commentary",
             phase: Phase::PlanningPlanChange,
             locked: false,
@@ -7858,6 +8030,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 20,
+            ref_id: "173ef01d-23b9-4d48-86fa-8eb20db26548",
             name: "Hot Soil Emissions",
             phase: Phase::WorldMain,
             locked: false,
@@ -7880,6 +8053,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 21,
+            ref_id: "1ac6f4f2-87f9-4f45-879e-e262de9862c5",
             name: "SRM - Crop Yields",
             phase: Phase::WorldMain,
             locked: false,
@@ -7902,6 +8076,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 22,
+            ref_id: "1b003c12-ccc9-4db5-8233-70cdd936379e",
             name: "Commentary - Artificial Moons",
             phase: Phase::PlanningPlanChange,
             locked: false,
@@ -7923,6 +8098,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 23,
+            ref_id: "1b4e1e5f-b269-401d-b41e-0c1cde0d36a6",
             name: "Severe Flooding - Intro",
             phase: Phase::WorldMain,
             locked: true,
@@ -7967,6 +8143,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 24,
+            ref_id: "1b9c111c-1578-4008-98ab-1a1747eb8bde",
             name: "Ocean Acidification",
             phase: Phase::WorldMain,
             locked: false,
@@ -7991,6 +8168,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 25,
+            ref_id: "1ce2b2cb-1982-427b-b1ce-a7b6681f1bff",
             name: "Severe Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -8044,6 +8222,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 26,
+            ref_id: "1d4d880b-c638-4169-a60d-787fe8a3d33a",
             name: "NIMBYs Strike Back",
             phase: Phase::WorldMain,
             locked: true,
@@ -8068,6 +8247,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 27,
+            ref_id: "1eae684c-abab-476c-85d8-6222eca09a25",
             name: "P = NP",
             phase: Phase::WorldMain,
             locked: false,
@@ -8090,6 +8270,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 28,
+            ref_id: "1f2fbab8-2a83-46cd-b32f-22f0563e1d3b",
             name: "Are We Preserving Too Much Land?",
             phase: Phase::PlanningPlanChange,
             locked: false,
@@ -8123,6 +8304,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 29,
+            ref_id: "1fc46868-61e2-4346-bfd7-ba32d04d8a9c",
             name: "A Global Dustbowl: Unsustainable Loss of Top Soil",
             phase: Phase::WorldMain,
             locked: false,
@@ -8163,6 +8345,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 30,
+            ref_id: "23ff1832-526d-4f0a-bab9-5b5449bccaf6",
             name: "Last Coral Reef Bleaches",
             phase: Phase::WorldMain,
             locked: true,
@@ -8186,6 +8369,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 31,
+            ref_id: "257f9d69-1376-4e03-82da-b14ef71252ca",
             name: "Oil Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -8208,6 +8392,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 32,
+            ref_id: "26471dcc-a724-48f6-8c8e-4f846e502080",
             name: "Indigenous Nations Block Oil Infrastructure",
             phase: Phase::WorldMain,
             locked: false,
@@ -8231,6 +8416,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 33,
+            ref_id: "2a2eb928-5a28-4155-a02a-c8c83cd38bba",
             name: "Severe Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -8270,6 +8456,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 34,
+            ref_id: "2ae6d71d-e2d7-4a81-aa65-e32808760a3f",
             name: "New Mosquito-Borne Disease",
             phase: Phase::WorldMain,
             locked: false,
@@ -8300,6 +8487,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 35,
+            ref_id: "2c9d895f-2621-4db8-b59d-d25035429030",
             name: "UFO Visit",
             phase: Phase::WorldMain,
             locked: true,
@@ -8324,6 +8512,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 36,
+            ref_id: "2dbbebf2-b279-4a2a-aa85-2023323894e0",
             name: "Most of World Self-Sufficient in Plant Crops",
             phase: Phase::WorldMain,
             locked: false,
@@ -8363,6 +8552,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 37,
+            ref_id: "30c7873c-14b2-4744-b621-8d9f80798b67",
             name: "Unrest - Secession",
             phase: Phase::PlanningStart,
             locked: true,
@@ -8386,6 +8576,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 38,
+            ref_id: "314b7b83-afdd-4386-9c49-ac54e23531e0",
             name: "Desertification",
             phase: Phase::WorldMain,
             locked: false,
@@ -8425,6 +8616,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 39,
+            ref_id: "3154ddc9-d9d4-484f-96ea-47ad03509327",
             name: "Day Zero - Water Restrictions in Place",
             phase: Phase::ReportStart,
             locked: false,
@@ -8458,6 +8650,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 40,
+            ref_id: "34037870-f8b6-44d9-9bef-c4a2e779c5cd",
             name: "Recovery of the Niger Delta",
             phase: Phase::WorldMain,
             locked: false,
@@ -8483,6 +8676,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 41,
+            ref_id: "349b3fb7-ecbf-4e5f-85a4-485d334c329e",
             name: "Severe Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: true,
@@ -8527,6 +8721,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 42,
+            ref_id: "34a37330-27df-451e-8b8c-5fba43b86c5d",
             name: "Nuclear Meltdown",
             phase: Phase::WorldMain,
             locked: false,
@@ -8564,6 +8759,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 43,
+            ref_id: "357127a2-54b3-4794-89e6-7aac59fb37ab",
             name: "Ally - The Accelerationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -8586,6 +8782,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 44,
+            ref_id: "35fedd4b-0505-462a-bb73-3b7c8d57c401",
             name: "Plan Intro 2",
             phase: Phase::PlanningPlan,
             locked: true,
@@ -8607,6 +8804,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 45,
+            ref_id: "370cdf54-4a8f-472d-8872-e89b55ef5a1f",
             name: "Navier-Stokes Equation Solved",
             phase: Phase::WorldMain,
             locked: false,
@@ -8629,6 +8827,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 46,
+            ref_id: "38616e16-71ea-42ab-ab02-ac32f1925f6a",
             name: "The Wretched - Formation",
             phase: Phase::WorldMain,
             locked: true,
@@ -8651,6 +8850,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 47,
+            ref_id: "397c3ba4-91af-4255-b622-7e1ba09a6fec",
             name: "Amazon Becomes a Savannah",
             phase: Phase::WorldMain,
             locked: false,
@@ -8677,6 +8877,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 48,
+            ref_id: "3a41955e-8a8f-465e-b9a4-6e126fa2febf",
             name: "Brownouts",
             phase: Phase::Icon,
             locked: true,
@@ -8704,6 +8905,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 49,
+            ref_id: "3b7ce92d-b11a-4325-9cfd-a3ad3c44ef5c",
             name: "Unrest - Revolts",
             phase: Phase::WorldMain,
             locked: true,
@@ -8737,6 +8939,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 50,
+            ref_id: "3d40ccac-b13b-4b4a-8d88-4ef50450d028",
             name: "Interplanetary Ark or Space Yachts?",
             phase: Phase::PlanningStart,
             locked: false,
@@ -8760,6 +8963,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 51,
+            ref_id: "4103d231-92b7-4fe4-bcf9-b3e47e9f40ce",
             name: "Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -8787,6 +8991,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 52,
+            ref_id: "428d8ad7-4bd3-44fc-a9b8-f0cd203cfb7f",
             name: "Border Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -8816,6 +9021,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 53,
+            ref_id: "42c04f89-e640-46b6-9d38-428a27217799",
             name: "Extreme Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -8855,6 +9061,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 54,
+            ref_id: "44585837-00f9-4af8-9fba-e03031f82095",
             name: "The Leather Underground - Formation",
             phase: Phase::WorldMain,
             locked: true,
@@ -8884,6 +9091,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 55,
+            ref_id: "4820bad7-b9b2-4ba6-aac8-3f1618489651",
             name: "Ally - The Posadist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -8906,6 +9114,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 56,
+            ref_id: "4874c5ea-a3b5-49ea-afb3-8c65b112a7e6",
             name: "Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -8929,6 +9138,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 57,
+            ref_id: "4ac049ca-975d-4e4f-b1db-ee48d25b5f31",
             name: "Game Over: Overthrown",
             phase: Phase::BreakStart,
             locked: false,
@@ -8956,6 +9166,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 58,
+            ref_id: "4aea58b4-cc65-4b69-b7a6-74dfa3e8866f",
             name: "Crop Failures - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -8999,6 +9210,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 59,
+            ref_id: "4b81c0e9-a1c1-4d55-9bfb-64ae18b16705",
             name: "Nemesis - The Animal Liberationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9020,6 +9232,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 60,
+            ref_id: "4c06a709-9a47-41f3-b8bb-f6008305a7a6",
             name: "Blood Red Sunsets",
             phase: Phase::WorldMain,
             locked: true,
@@ -9042,6 +9255,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 61,
+            ref_id: "4e76976a-d780-4023-8e89-52e869150b9a",
             name: "Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -9075,6 +9289,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 62,
+            ref_id: "5061d079-55b0-49e2-a7f4-d7a9428eb80a",
             name: "Eco-Anxiety",
             phase: Phase::WorldMain,
             locked: true,
@@ -9098,6 +9313,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 63,
+            ref_id: "50a13cf2-f8db-48bf-ad74-482d9a87098a",
             name: "Last Antibiotic Stops Working",
             phase: Phase::WorldMain,
             locked: false,
@@ -9123,6 +9339,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 64,
+            ref_id: "5370e2bb-1982-4638-8983-aa9de8d5e8a2",
             name: "Extreme Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -9162,6 +9379,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 65,
+            ref_id: "550f9b20-d5c0-4f0d-8ae4-9ec9fc5ff2d9",
             name: "Nemesis - The Ecofeminist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9183,6 +9401,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 66,
+            ref_id: "597a29e6-6d89-4f5c-a3a1-59263267bb9f",
             name: "Panama Disease Destroys Banana Harvest",
             phase: Phase::WorldMain,
             locked: false,
@@ -9206,6 +9425,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 67,
+            ref_id: "5ccacdc2-9412-4b30-b488-ae1d1abfe334",
             name: "Nemesis - The Utopian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9227,6 +9447,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 68,
+            ref_id: "5f13eae7-593d-4d93-bd9e-4f3573385768",
             name: "Migrations - No Borders",
             phase: Phase::WorldMain,
             locked: true,
@@ -9259,6 +9480,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 69,
+            ref_id: "60a3cde3-5c5d-4765-979a-3a72d8ffe2b8",
             name: "Heatwave Kills Tens of Thousands of Elderly People",
             phase: Phase::WorldMain,
             locked: true,
@@ -9281,6 +9503,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 70,
+            ref_id: "60c00433-5489-40ea-893f-b5b810395fdf",
             name: "Blackouts",
             phase: Phase::Icon,
             locked: true,
@@ -9308,6 +9531,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 71,
+            ref_id: "62a09d9e-9977-4b2d-a28f-9ee2181bac13",
             name: "Ally - The Utopian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9330,6 +9554,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 72,
+            ref_id: "633a0419-5ae0-4b07-b31b-66832448497d",
             name: "Severe Heatwaves",
             phase: Phase::Icon,
             locked: true,
@@ -9369,6 +9594,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 73,
+            ref_id: "64207df3-5e14-4abc-a36e-32d1212394ee",
             name: "Methane 'Bomb' Released in Arctic",
             phase: Phase::WorldMain,
             locked: false,
@@ -9412,6 +9638,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 74,
+            ref_id: "651b2975-3c4b-4834-aa33-7576a4b8a647",
             name: "Rare Metals Shortage",
             phase: Phase::WorldMain,
             locked: false,
@@ -9448,6 +9675,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 75,
+            ref_id: "6601cf87-637c-45eb-96a4-b8970ac289ba",
             name: "Severe Hurricane",
             phase: Phase::Icon,
             locked: true,
@@ -9481,6 +9709,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 76,
+            ref_id: "66ebad37-9f5b-49a3-bad7-865a0cc00cf5",
             name: "Vaquita Porpoise Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -9511,6 +9740,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 77,
+            ref_id: "6af9b609-9b33-4f2a-b4ac-0228a399df22",
             name: "Earth Liberation Front - Formation",
             phase: Phase::WorldMain,
             locked: false,
@@ -9547,6 +9777,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 78,
+            ref_id: "6bb0cf05-7405-4ba2-bc37-29e9ab404a6d",
             name: "Nemesis - The Fanonist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9568,6 +9799,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 79,
+            ref_id: "6bb73d43-9dc8-4bbd-8684-48e8f10ec47e",
             name: "Large Derecho Storm - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -9611,6 +9843,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 80,
+            ref_id: "6d447363-e3a7-43d0-8d51-d97b6691baa4",
             name: "Methane ('Natural Gas') is Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -9633,6 +9866,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 81,
+            ref_id: "6da59b7e-bd2d-4fad-8e5c-a9c49f31799c",
             name: "Unrest - Protest",
             phase: Phase::WorldMain,
             locked: false,
@@ -9671,6 +9905,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 82,
+            ref_id: "6dd4ddb6-2f75-4558-869c-f82ed024b1fa",
             name: "Wheat Rust Destroys Harvest ",
             phase: Phase::WorldMain,
             locked: false,
@@ -9695,6 +9930,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 83,
+            ref_id: "6ec2a46b-781b-47f3-ac8a-4accd26c14ff",
             name: "Permafrost Contagion",
             phase: Phase::WorldMain,
             locked: true,
@@ -9719,6 +9955,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 84,
+            ref_id: "704492d9-97c9-4b59-84ee-b7918a97e4e7",
             name: "General Strike",
             phase: Phase::WorldMain,
             locked: false,
@@ -9757,6 +9994,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 85,
+            ref_id: "734fe07c-bc09-4dbb-9e00-95c05b71541a",
             name: "Eutrophication - A Global Problem",
             phase: Phase::WorldMain,
             locked: false,
@@ -9782,6 +10020,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 86,
+            ref_id: "737a31d2-9949-45c1-baae-ed511b2f6b21",
             name: "Protests",
             phase: Phase::Icon,
             locked: true,
@@ -9804,6 +10043,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 87,
+            ref_id: "74898d2a-84b8-473d-9f06-d9aaeaa1e858",
             name: "Gaia Worship",
             phase: Phase::WorldMain,
             locked: false,
@@ -9828,6 +10068,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 88,
+            ref_id: "74d3d4e9-b7af-414d-a1ad-fbe8d6937c72",
             name: "Game Over: Assassinated",
             phase: Phase::BreakStart,
             locked: true,
@@ -9849,6 +10090,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 89,
+            ref_id: "759aec6c-acec-4166-83ac-9da98c68e4f6",
             name: "Policies Intro",
             phase: Phase::PlanningPolicies,
             locked: false,
@@ -9870,6 +10112,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 90,
+            ref_id: "7672e21d-6044-41fd-81b5-f54d73a1d194",
             name: "Plan Intro 3",
             phase: Phase::PlanningPlan,
             locked: true,
@@ -9891,6 +10134,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 91,
+            ref_id: "776c7a07-db17-450e-82b0-5bf959dd1eff",
             name: "SRM - Solar Impacts",
             phase: Phase::WorldMain,
             locked: false,
@@ -9913,6 +10157,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 92,
+            ref_id: "78e78056-06f3-4153-9a3a-52b670cd7901",
             name: "Game Over: Coup",
             phase: Phase::BreakStart,
             locked: false,
@@ -9934,6 +10179,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 93,
+            ref_id: "790072fb-1655-4bf6-9107-dce65358665b",
             name: "AMOC Collapse",
             phase: Phase::WorldMain,
             locked: false,
@@ -9967,6 +10213,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 94,
+            ref_id: "7997ae9e-a15e-48bb-a93f-a330fc025918",
             name: "Ecotopia",
             phase: Phase::WorldMain,
             locked: true,
@@ -10001,6 +10248,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 95,
+            ref_id: "7a33fd26-c01f-479e-bcb2-f1b550262836",
             name: "Planning Intro",
             phase: Phase::PlanningStart,
             locked: false,
@@ -10022,6 +10270,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 96,
+            ref_id: "7a6d3fea-09f5-4bb5-91c3-91485d449600",
             name: "SRM - Respiratory Problems",
             phase: Phase::WorldMain,
             locked: false,
@@ -10045,6 +10294,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 97,
+            ref_id: "7ad0d7a0-b901-4157-8de7-9a7877d620d2",
             name: "The Realm of Freedom",
             phase: Phase::WorldMain,
             locked: false,
@@ -10080,6 +10330,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 98,
+            ref_id: "7cb7bc7e-7f74-43f4-b054-f81b2d9417bb",
             name: "Earth Liberation Front Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -10110,6 +10361,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 99,
+            ref_id: "7d6752f7-01ae-44fa-8f3f-049d5633aa9a",
             name: "Island Abandoned",
             phase: Phase::WorldMain,
             locked: false,
@@ -10142,6 +10394,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 100,
+            ref_id: "7f4e7975-5c5b-451e-b46f-471d8e8301bc",
             name: "Potato Blight Destroys Harvest",
             phase: Phase::WorldMain,
             locked: false,
@@ -10165,6 +10418,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 101,
+            ref_id: "7fa11694-1be3-4f8b-9273-a00b4b4e8891",
             name: "Famine - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -10187,6 +10441,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 102,
+            ref_id: "80ce20f8-d566-4684-a929-8c64440ee9ab",
             name: "Wildfires - Smoke",
             phase: Phase::WorldMain,
             locked: false,
@@ -10233,6 +10488,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 103,
+            ref_id: "81d39ae2-3a30-4f41-9b57-ab2b30ea1579",
             name: "Dashboard Intro",
             phase: Phase::PlanningDashboard,
             locked: false,
@@ -10254,6 +10510,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 104,
+            ref_id: "831dc1b4-433d-402a-aeb5-4033fd3f533d",
             name: "Ozone Health",
             phase: Phase::WorldMain,
             locked: true,
@@ -10278,6 +10535,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 105,
+            ref_id: "83633bce-5a68-4935-a906-3ddc12cfb70e",
             name: "Extreme Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: true,
@@ -10321,6 +10579,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 106,
+            ref_id: "842a38a9-1a3b-433b-8cc7-445467b7104f",
             name: "SRM - Assassination",
             phase: Phase::WorldMain,
             locked: true,
@@ -10343,6 +10602,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 107,
+            ref_id: "866ccd6a-e618-45eb-932a-5bd45134a43e",
             name: "UFO Gift",
             phase: Phase::WorldMain,
             locked: true,
@@ -10365,6 +10625,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 108,
+            ref_id: "86e43888-d5ba-4ba9-8093-13e15ac08616",
             name: "Nemesis - The Accelerationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -10386,6 +10647,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 109,
+            ref_id: "87b3a021-7c8e-4e8e-88d2-ce42582a8469",
             name: "Lithium Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -10408,6 +10670,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 110,
+            ref_id: "885b9fcd-0db9-4ded-b842-8dfcd6afa959",
             name: "Large Derecho Storm",
             phase: Phase::Icon,
             locked: true,
@@ -10447,6 +10710,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 111,
+            ref_id: "895a7968-7092-4150-95ce-27eb80dccce9",
             name: "Ally - The Ecofeminist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -10469,6 +10733,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 112,
+            ref_id: "8bf68f3f-a1a9-4600-adc3-1a318aa2acdd",
             name: "Famine",
             phase: Phase::Icon,
             locked: true,
@@ -10490,6 +10755,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 113,
+            ref_id: "8c01d968-2d03-41f1-acc1-ca3a18307432",
             name: "Urban Gardening",
             phase: Phase::WorldMain,
             locked: false,
@@ -10513,6 +10779,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 114,
+            ref_id: "8c2ccc0b-708a-4ec4-b91a-9e3c6dbf5fe9",
             name: "Mendel-Mania",
             phase: Phase::WorldMain,
             locked: false,
@@ -10537,6 +10804,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 115,
+            ref_id: "8ce0f299-2991-4c3e-9780-2f8924bc3283",
             name: "Mega Dust Storms",
             phase: Phase::WorldMain,
             locked: true,
@@ -10568,6 +10836,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 116,
+            ref_id: "8d6a02c6-5b68-44ac-a000-6f1aa3403631",
             name: "West Antarctic Collapse",
             phase: Phase::WorldMain,
             locked: true,
@@ -10605,6 +10874,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 117,
+            ref_id: "8e29a8c3-1397-4aed-bdc9-5e45a29d4ca3",
             name: "Great Barrier Reef Dead",
             phase: Phase::WorldMain,
             locked: false,
@@ -10643,6 +10913,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 118,
+            ref_id: "8f82e197-7be6-4472-9850-b3b50253b797",
             name: "Acid Rain Damages Infrastructure and Ecosystems ",
             phase: Phase::WorldMain,
             locked: false,
@@ -10673,6 +10944,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 119,
+            ref_id: "8fef8b9f-3789-4be0-a837-5f4453e60b85",
             name: "Assassination Thwarted",
             phase: Phase::ReportStart,
             locked: false,
@@ -10695,6 +10967,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 120,
+            ref_id: "900bf2c2-e847-44aa-ae9f-054c2e8cea01",
             name: "NPC guidance - Geoengineer",
             phase: Phase::PlanningResearch,
             locked: false,
@@ -10716,6 +10989,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 121,
+            ref_id: "90aa3b01-8c55-49cf-9819-bb719fb052f1",
             name: "Toxic Airborne Event",
             phase: Phase::WorldMain,
             locked: false,
@@ -10738,6 +11012,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 122,
+            ref_id: "9141df89-3a80-4a8d-886d-8bebdcc819d3",
             name: "Blue Ocean Event",
             phase: Phase::WorldMain,
             locked: false,
@@ -10776,6 +11051,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 123,
+            ref_id: "941a05f0-7a18-4b86-ae09-05f309562f9f",
             name: "Epidemic X",
             phase: Phase::WorldMain,
             locked: true,
@@ -10806,6 +11082,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 124,
+            ref_id: "942eb5a6-aec5-4735-976c-7ed7955b6833",
             name: "A New Prometheus",
             phase: Phase::WorldMain,
             locked: false,
@@ -10843,6 +11120,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 125,
+            ref_id: "94cc4a91-c4bd-4c2d-9e57-8123471a7976",
             name: "Nemesis - The Malthusian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -10864,6 +11142,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 126,
+            ref_id: "95a589b2-fdca-419a-899d-b52977288bac",
             name: "River Restoration",
             phase: Phase::WorldMain,
             locked: false,
@@ -10890,6 +11169,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 127,
+            ref_id: "962bf605-85bb-4995-9201-bfeb0b8644ac",
             name: "The Wretched Attack",
             phase: Phase::Icon,
             locked: true,
@@ -10929,6 +11209,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 128,
+            ref_id: "9659d41d-4330-4acb-9833-67ff4310a9f2",
             name: "Permafrost Melting",
             phase: Phase::WorldMain,
             locked: false,
@@ -10959,6 +11240,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 129,
+            ref_id: "96de0e7a-b1ed-4462-be91-3430bfa04f21",
             name: "Unrest - Riots",
             phase: Phase::WorldMain,
             locked: true,
@@ -10992,6 +11274,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 130,
+            ref_id: "984bdb81-be16-4332-9f8d-13e9a83bd1ee",
             name: "Research Intro",
             phase: Phase::PlanningResearch,
             locked: false,
@@ -11013,6 +11296,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 131,
+            ref_id: "9d8bc289-1d4d-4cbe-8c34-19ce1c148de0",
             name: "Thwaites Glacier Collapses",
             phase: Phase::WorldMain,
             locked: false,
@@ -11037,6 +11321,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 132,
+            ref_id: "9e516982-9d13-44b6-a05b-cb39faa3c6cf",
             name: "Reruralization",
             phase: Phase::WorldMain,
             locked: false,
@@ -11059,6 +11344,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 133,
+            ref_id: "9f1210be-e712-43db-90d4-6c47e20552fe",
             name: "Ozone Depletion",
             phase: Phase::WorldMain,
             locked: false,
@@ -11081,6 +11367,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 134,
+            ref_id: "9f71123f-9844-47e3-aa40-a1a82998bc14",
             name: "Ally - The Malthusian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11103,6 +11390,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 135,
+            ref_id: "9f87a1fa-7520-4484-9146-2f2deb7166ee",
             name: "Dancing Plague",
             phase: Phase::WorldMain,
             locked: false,
@@ -11125,6 +11413,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 136,
+            ref_id: "9fc8c4b9-46e7-47a4-aef1-903b1b686bd1",
             name: "Nemesis - The Posadist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11146,6 +11435,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 137,
+            ref_id: "a1dbc515-6977-48ce-80e5-b93ba2f36148",
             name: "Novel Disease",
             phase: Phase::WorldMain,
             locked: false,
@@ -11191,6 +11481,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 138,
+            ref_id: "a22be863-1ad4-4139-a41c-a6292582a310",
             name: "Flooding - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -11213,6 +11504,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 139,
+            ref_id: "a23a424a-02b0-4e9f-9cca-fa70baf1c819",
             name: "Regenerative Crop Agriculture",
             phase: Phase::BreakStart,
             locked: true,
@@ -11235,6 +11527,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 140,
+            ref_id: "a2c1572f-8936-46bd-a987-4ef536b37b8e",
             name: "Warming Leads to Declining Agricultural Yields",
             phase: Phase::WorldMain,
             locked: false,
@@ -11258,6 +11551,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 141,
+            ref_id: "a2c41b53-daca-4eae-9562-e90eea191817",
             name: "Ally - The Environmentalist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11280,6 +11574,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 142,
+            ref_id: "a60db8e4-12e9-48ee-a5aa-d52cac98ef37",
             name: "Australian 'Dinosaur Trees' Destroyed in Wildfire",
             phase: Phase::WorldMain,
             locked: false,
@@ -11324,6 +11619,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 143,
+            ref_id: "a6368ee0-43d5-44d3-a792-dee4b9e61a03",
             name: "Leather Underground - Attacks",
             phase: Phase::WorldMain,
             locked: true,
@@ -11354,6 +11650,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 144,
+            ref_id: "a640552c-fccf-4947-8c85-e08691d6e239",
             name: "Coup",
             phase: Phase::ReportStart,
             locked: false,
@@ -11375,6 +11672,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 145,
+            ref_id: "a7f64fd9-e19a-4f24-b172-894eae680afa",
             name: "NPC guidance - Ecologist",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -11396,6 +11694,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 146,
+            ref_id: "a7fac6d6-9143-469c-b6d6-4f7a8be3208f",
             name: "Uranium Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -11419,6 +11718,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 147,
+            ref_id: "a86839dc-b913-427e-bfb6-6122c574a84d",
             name: "Rotational Grazing",
             phase: Phase::BreakStart,
             locked: true,
@@ -11440,6 +11740,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 148,
+            ref_id: "a9917295-afe6-4134-92b4-2d4af2f50717",
             name: "Year without a Summer",
             phase: Phase::WorldMain,
             locked: false,
@@ -11482,6 +11783,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 149,
+            ref_id: "aac2ac1f-05d6-4559-a370-91e9968109d3",
             name: "Environmental Injustice - Unconventional Oil ",
             phase: Phase::WorldMain,
             locked: false,
@@ -11506,6 +11808,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 150,
+            ref_id: "abc60f4e-2e0f-4864-9890-613ac00e1528",
             name: "Mountain Gorilla Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -11535,6 +11838,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 151,
+            ref_id: "abe2c603-6a5e-45a2-b4c9-a547b9a8dc9c",
             name: "Nemesis - The Environmentalist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11556,6 +11860,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 152,
+            ref_id: "ad0e464e-b760-4e4a-804e-efc6de1a893e",
             name: "Too Hot to Work",
             phase: Phase::WorldMain,
             locked: false,
@@ -11579,6 +11884,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 153,
+            ref_id: "adaf60ed-b995-4bfe-8d2a-13d7f5a21b90",
             name: "Disease Outbreak",
             phase: Phase::Icon,
             locked: true,
@@ -11606,6 +11912,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 154,
+            ref_id: "aed41482-2acf-4b66-a004-9a0b78e0a278",
             name: "Silent Spring",
             phase: Phase::WorldMain,
             locked: false,
@@ -11631,6 +11938,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 155,
+            ref_id: "b5ad9856-4b72-4f18-ae9d-9d4e9144c368",
             name: "Chthulucene",
             phase: Phase::WorldMain,
             locked: false,
@@ -11656,6 +11964,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 156,
+            ref_id: "b6afe728-ec4f-4265-a33b-8925ebd62af5",
             name: "Ice Sheet Tsunami",
             phase: Phase::WorldMain,
             locked: true,
@@ -11677,6 +11986,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 157,
+            ref_id: "b71fba0c-16a4-45da-9d43-6fb78a9c0ef7",
             name: "Epidemic Y: The Big One",
             phase: Phase::WorldMain,
             locked: false,
@@ -11708,6 +12018,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 158,
+            ref_id: "b7386941-5c51-40d9-9882-3db7b808bf45",
             name: "Processes Intro",
             phase: Phase::PlanningProcesses,
             locked: false,
@@ -11729,6 +12040,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 159,
+            ref_id: "b7901234-6530-48ab-b346-85042e1626c0",
             name: "Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -11757,6 +12069,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 160,
+            ref_id: "b9cde3bb-7c3b-49ac-8760-076008a4485d",
             name: "Brownouts - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -11811,6 +12124,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 161,
+            ref_id: "ba9a2c5e-4bd2-45b2-83e7-52afc11771a7",
             name: "Copper Shortage",
             phase: Phase::WorldMain,
             locked: false,
@@ -11847,6 +12161,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 162,
+            ref_id: "ba9e6f5c-804c-49f2-8004-d754cf41cc53",
             name: "Mushrooms at the End of the World",
             phase: Phase::WorldMain,
             locked: true,
@@ -11872,6 +12187,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 163,
+            ref_id: "badd8988-658d-4beb-8eeb-031adff72de0",
             name: "Permafrost Pandemic",
             phase: Phase::WorldMain,
             locked: true,
@@ -11896,6 +12212,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 164,
+            ref_id: "baff8c09-31e6-479f-be2a-42f5a3298bdd",
             name: "Parliament Intro",
             phase: Phase::PlanningParliament,
             locked: false,
@@ -11917,6 +12234,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 165,
+            ref_id: "bd621d95-72e8-4dcd-a7ba-24b28798a146",
             name: "Day Zero - Water Restrictions Needed Soon",
             phase: Phase::PlanningStart,
             locked: false,
@@ -11940,6 +12258,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 166,
+            ref_id: "be96b0a5-cb58-40d0-8ff7-e6d9b33b6802",
             name: "Coal Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -11962,6 +12281,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 167,
+            ref_id: "bf57890d-6628-4de0-919a-c886ca029773",
             name: "Fish Populations Collapse ",
             phase: Phase::WorldMain,
             locked: true,
@@ -11993,6 +12313,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 168,
+            ref_id: "bf7af2b4-303c-4672-8bbb-6825dff0de7b",
             name: "Global Equality ",
             phase: Phase::WorldMain,
             locked: false,
@@ -12011,6 +12332,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 169,
+            ref_id: "bfc030ff-ff6a-4b27-84e2-eb352eb8c22f",
             name: "Migrations - Borders",
             phase: Phase::WorldMain,
             locked: true,
@@ -12043,6 +12365,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 170,
+            ref_id: "c01f85df-7e9f-45fa-8131-03e7a9b89c35",
             name: "Locust Infestation",
             phase: Phase::WorldMain,
             locked: false,
@@ -12072,6 +12395,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 171,
+            ref_id: "c0f21d5b-7e84-4825-8a44-f0d5811810c3",
             name: "Welcome Back",
             phase: Phase::PlanningStart,
             locked: false,
@@ -12093,6 +12417,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 172,
+            ref_id: "c166fcf8-f939-4d82-aadb-2f3d7255c99f",
             name: "SRM - Fleet Shot Down",
             phase: Phase::WorldMain,
             locked: true,
@@ -12115,6 +12440,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 173,
+            ref_id: "c38eeaaf-f6cf-4f39-8d60-837e74f8a481",
             name: "Torches and Pitchforks Outside Your Window...",
             phase: Phase::ReportStart,
             locked: false,
@@ -12143,6 +12469,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 174,
+            ref_id: "c41501d7-e713-4de0-9fc4-98f3ab7e4ca4",
             name: "Planning - NPC quotes Malthusian",
             phase: Phase::PlanningPlanChange,
             locked: false,
@@ -12164,6 +12491,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 175,
+            ref_id: "c5a92e79-a441-4909-9264-4d6f5aba40e2",
             name: "Plan Intro",
             phase: Phase::PlanningPlan,
             locked: true,
@@ -12185,6 +12513,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 176,
+            ref_id: "c6210a32-d473-401f-a4ed-539a3fc0f5ca",
             name: "Revolts",
             phase: Phase::Icon,
             locked: true,
@@ -12207,6 +12536,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 177,
+            ref_id: "c83c1b3c-995c-4e22-83a2-72b49ad405a0",
             name: "Wet-Bulb Event",
             phase: Phase::WorldMain,
             locked: true,
@@ -12253,6 +12583,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 178,
+            ref_id: "c8717708-f814-4641-a94b-45ed2ae878bd",
             name: "The Wretched - Attack",
             phase: Phase::WorldMain,
             locked: true,
@@ -12283,6 +12614,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 179,
+            ref_id: "c8c6b4f1-5b3b-4fb7-94b7-c428af75e899",
             name: "Ex-Urban Explosion",
             phase: Phase::WorldMain,
             locked: false,
@@ -12307,6 +12639,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 180,
+            ref_id: "ca75ad5b-48c9-4435-9338-6e6ab83c5e6d",
             name: "Massive Jellyfish Blooms",
             phase: Phase::WorldMain,
             locked: false,
@@ -12339,6 +12672,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 181,
+            ref_id: "cb3481a9-b544-4057-8251-a2b7940d45f2",
             name: "4000th nuclear reactor built",
             phase: Phase::WorldMain,
             locked: false,
@@ -12363,6 +12697,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 182,
+            ref_id: "ccca593b-3f9e-40ff-af4f-85bff4975074",
             name: "World Intro",
             phase: Phase::WorldStart,
             locked: false,
@@ -12385,6 +12720,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 183,
+            ref_id: "cefda80d-1637-49aa-9f6d-ec9eb1582ae5",
             name: "Communist Cockaigne",
             phase: Phase::WorldMain,
             locked: false,
@@ -12408,6 +12744,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 184,
+            ref_id: "d18017f1-b554-4b0c-b46e-335e945c1605",
             name: "Volcanic Eruption ",
             phase: Phase::WorldMain,
             locked: false,
@@ -12430,6 +12767,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 185,
+            ref_id: "d59cc48a-39d4-40c5-b8b8-fefcb71c2e14",
             name: "UFO War",
             phase: Phase::WorldMain,
             locked: true,
@@ -12453,6 +12791,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 186,
+            ref_id: "d63f633b-df33-4c1e-be34-19499b4e4221",
             name: "Hail Cannons",
             phase: Phase::WorldStart,
             locked: true,
@@ -12474,6 +12813,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 187,
+            ref_id: "d86ac750-3a91-497a-b3be-d7177f01fe51",
             name: "Boreal Forest Shift",
             phase: Phase::WorldMain,
             locked: false,
@@ -12498,6 +12838,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 188,
+            ref_id: "d91521e2-3180-4af3-891e-7dc852548504",
             name: "Environmental Injustice - Copper",
             phase: Phase::WorldMain,
             locked: false,
@@ -12522,6 +12863,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 189,
+            ref_id: "d955f86a-1cb6-4a42-9488-1d6a07dd9dc7",
             name: "Report Intro",
             phase: Phase::ReportStart,
             locked: false,
@@ -12543,6 +12885,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 190,
+            ref_id: "d9706bb9-1f5c-42c9-bdc0-4701856840bb",
             name: "Aurochs Return to the Eurasian Plains",
             phase: Phase::WorldMain,
             locked: false,
@@ -12587,6 +12930,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 191,
+            ref_id: "d9de9a58-b263-4564-98b2-18bcb139a315",
             name: "Heatwaves",
             phase: Phase::Icon,
             locked: true,
@@ -12614,6 +12958,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 192,
+            ref_id: "d9f89d3a-ce18-427f-a75f-c47da2f7b5df",
             name: "Book Extract - Havana",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -12636,6 +12981,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 193,
+            ref_id: "dbb39d38-a05f-490e-bea4-f142cc7ee143",
             name: "Night Life Adaptation",
             phase: Phase::WorldMain,
             locked: true,
@@ -12658,6 +13004,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 194,
+            ref_id: "dbcd3e9d-50f3-4c03-a20a-e9d274a4cfc9",
             name: "Pollinator - Collapse",
             phase: Phase::WorldMain,
             locked: true,
@@ -12681,6 +13028,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 195,
+            ref_id: "dd02fa5e-2989-411e-a426-90737a6d801a",
             name: "Crop Failures",
             phase: Phase::Icon,
             locked: true,
@@ -12720,6 +13068,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 196,
+            ref_id: "dd466ca5-a79b-484d-9923-1cf440378242",
             name: "Extra Animals",
             phase: Phase::WorldMain,
             locked: false,
@@ -12749,6 +13098,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 197,
+            ref_id: "dd581ada-708f-4c96-a8df-6867c103cfeb",
             name: "From Mowing Lawns to Rewilding Meadows",
             phase: Phase::WorldMain,
             locked: false,
@@ -12779,6 +13129,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 198,
+            ref_id: "dd60a5df-2497-43f8-85db-435b9fe8c1a7",
             name: "The Leather Underground Attack",
             phase: Phase::Icon,
             locked: true,
@@ -12806,6 +13157,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 199,
+            ref_id: "e2589831-62a0-46df-b4f4-dc9f8ab047b7",
             name: "Environmental Injustice - Rare Earth Metals",
             phase: Phase::WorldMain,
             locked: false,
@@ -12830,6 +13182,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 200,
+            ref_id: "e36869ea-ecd7-4378-900a-dd5f2296fbf3",
             name: "Ally - The Animal Liberationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -12852,6 +13205,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 201,
+            ref_id: "e3f34325-68c4-494d-9f34-c066e6a6a4a4",
             name: "Ally - The Authoritarian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -12880,6 +13234,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 202,
+            ref_id: "e43ecf83-f1af-4237-8ed2-ef8dd26dcfdd",
             name: "Ocean Microorganisms",
             phase: Phase::WorldMain,
             locked: true,
@@ -12909,6 +13264,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 203,
+            ref_id: "e44e30b9-4abb-4042-a8af-b3ee377d9812",
             name: "Earth Liberation Front - Attacks",
             phase: Phase::WorldMain,
             locked: true,
@@ -12931,6 +13287,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 204,
+            ref_id: "e4b7a153-4e4a-4767-9d60-f1fc9beb637c",
             name: "Clean Air",
             phase: Phase::WorldMain,
             locked: false,
@@ -12953,6 +13310,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 205,
+            ref_id: "e4f5fd12-a22a-405b-9cdd-7d492c7e357b",
             name: "Millions of Climate Refugees on the Move",
             phase: Phase::WorldMain,
             locked: false,
@@ -12980,6 +13338,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 206,
+            ref_id: "e646218f-0396-44c8-9715-691aaa9e8f91",
             name: "Initiatives Intro",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -13001,6 +13360,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 207,
+            ref_id: "e6a29635-c477-4e26-862b-7fc47cb52c28",
             name: "Sabotage",
             phase: Phase::WorldMain,
             locked: false,
@@ -13040,6 +13400,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 208,
+            ref_id: "e9a30fb6-1dd1-4ff5-a381-d134738a6110",
             name: "First 100m-Inhabitant City",
             phase: Phase::WorldMain,
             locked: false,
@@ -13079,6 +13440,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 209,
+            ref_id: "efbc567a-70b7-47a5-9f26-c17615179d17",
             name: "Feminist Citizen-Scientists",
             phase: Phase::WorldMain,
             locked: false,
@@ -13111,6 +13473,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 210,
+            ref_id: "f0030cb9-c3bf-4d80-9485-3add483d7c59",
             name: "Nemesis - The Authoritarian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -13132,6 +13495,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 211,
+            ref_id: "f29eee36-312d-48f7-91f7-865786c2fcfe",
             name: "Riots",
             phase: Phase::Icon,
             locked: true,
@@ -13154,6 +13518,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 212,
+            ref_id: "f39281d3-5fcd-463f-803e-c276cfbeff96",
             name: "Ocean Plastic Weighs More than World's Fish",
             phase: Phase::WorldMain,
             locked: false,
@@ -13185,6 +13550,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 213,
+            ref_id: "f3ec3980-6237-49c8-b3d7-c5444c16a983",
             name: "The Ark Proposal",
             phase: Phase::PlanningStart,
             locked: false,
@@ -13207,6 +13573,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 214,
+            ref_id: "f42d019f-fca0-4326-9c8d-fec2b5966350",
             name: "More and More Mega-Dams ",
             phase: Phase::WorldMain,
             locked: false,
@@ -13230,6 +13597,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 215,
+            ref_id: "f5b516db-cb23-407e-bacc-c06b173dd67a",
             name: "Bird-Watching Craze",
             phase: Phase::WorldMain,
             locked: false,
@@ -13252,6 +13620,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 216,
+            ref_id: "f637bf55-04b5-4003-a1a8-1df41e766ab1",
             name: "SRM - SAD",
             phase: Phase::WorldMain,
             locked: false,
@@ -13274,6 +13643,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 217,
+            ref_id: "f69e6b71-961f-4941-91e5-d8e2a26d7eb0",
             name: "Endangered Species Back from the Brink ",
             phase: Phase::WorldMain,
             locked: false,
@@ -13304,6 +13674,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 218,
+            ref_id: "f6aebdb6-ba40-4710-8728-f1ac85ec72b6",
             name: "Success",
             phase: Phase::EndStart,
             locked: false,
@@ -13325,6 +13696,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 219,
+            ref_id: "f79ad87d-b169-42a9-8d04-0ca6aea843d8",
             name: "Insect Infestation Weakens Forest",
             phase: Phase::WorldMain,
             locked: false,
@@ -13356,6 +13728,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 220,
+            ref_id: "f9c7529e-012f-4821-a821-7fa60eafb120",
             name: "Deadly Leak from CCS Storage Facility",
             phase: Phase::WorldMain,
             locked: false,
@@ -13400,6 +13773,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 221,
+            ref_id: "f9cb7a22-6a90-4614-81d1-4308a2b80a05",
             name: "Polar Bear Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -13424,6 +13798,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 222,
+            ref_id: "fa6a7345-f0e2-4ef7-827a-0894e86af834",
             name: "Tens of Millions of Climate Migrants on the Move",
             phase: Phase::WorldMain,
             locked: true,
@@ -13447,6 +13822,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 223,
+            ref_id: "fabea2a2-c356-48be-a056-708aca2e6542",
             name: "Ally - The Fanonist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -13469,6 +13845,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 224,
+            ref_id: "fb0c5aab-1927-463f-8173-5dcbdac4ea1a",
             name: "Assassination",
             phase: Phase::ReportStart,
             locked: true,
@@ -13491,6 +13868,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 225,
+            ref_id: "fb3f3cfe-751b-4063-b9a8-129c600a5573",
             name: "Severe Hurricane - Intro",
             phase: Phase::WorldMain,
             locked: false,
@@ -13536,6 +13914,7 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 226,
+            ref_id: "fd9163b0-a3b4-41f8-a807-a6fb1fcb52e7",
             name: "SRM - Weakening Monsoon",
             phase: Phase::WorldMain,
             locked: false,

@@ -55,11 +55,11 @@ def project_timeline(snapshots):
         })
         for p in projects:
             if p['status'] != 'Inactive':
-                last = last_projects.get(p['name'])
+                last = last_projects.get(p['ref_id'])
                 status = (p['status'], p['points'], p['level'])
                 if last is None or last != status:
-                    timeline[-1][p['name']] = status
-                last_projects[p['name']] = status
+                    timeline[-1][p['ref_id']] = status
+                last_projects[p['ref_id']] = status
     return timeline
 
 def process_timeline(snapshots):
@@ -72,10 +72,10 @@ def process_timeline(snapshots):
             'year': year
         })
         for p in processes:
-            last = last_processes.get(p['name'])
+            last = last_processes.get(p['ref_id'])
             if last is None or p['mix_share'] != last:
-                timeline[-1][p['name']] = p['mix_share']
-            last_processes[p['name']] = p['mix_share']
+                timeline[-1][p['ref_id']] = p['mix_share']
+            last_processes[p['ref_id']] = p['mix_share']
     return timeline
 
 def events(snapshots):
