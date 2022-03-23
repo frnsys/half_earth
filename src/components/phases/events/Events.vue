@@ -242,7 +242,10 @@ export default {
 
       // Set an upper cap to the amount of emissions we pass to hector,
       // because very large numbers end up breaking it.
-      let emissions_factor = Math.min(1.0, consts.maxEmissions/state.gameState.world.emissions);
+      let emissions_factor = 1.0;
+      if (state.gameState.world.emissions !== 0) {
+        emissions_factor = Math.min(1.0, consts.maxEmissions/Math.abs(state.gameState.world.emissions));
+      }
 
       let emissions = {
         // Hector separates out FFI and LUC emissions
