@@ -12,6 +12,10 @@
 <script>
 import {detectCenterElement} from 'lib/util';
 
+// How many scroll events we wait until
+// declaring that scrolling has started
+const SCROLL_COUNTDOWN = 10;
+
 export default {
   props: ['disabled'],
   data() {
@@ -21,7 +25,7 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.scrollTimeout);
-    document.removeEventListener('keydown', this.onKeyDown);
+    // document.removeEventListener('keydown', this.onKeyDown);
   },
   watch: {
     disabled(val) {
@@ -35,7 +39,7 @@ export default {
     }
   },
   mounted() {
-    document.addEventListener('keydown', this.onKeyDown);
+    // document.addEventListener('keydown', this.onKeyDown);
 
     // Hack to start with first card focused
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
@@ -47,6 +51,8 @@ export default {
     // Just a flag to identify if we just started scrolling
     // as opposed to if we're in the middle of scrolling
     this.scrolling = false;
+
+    this.scrollCountdown = SCROLL_COUNTDOWN;
 
     // Calculate scroll bar height so we can accommodate it
     // when it disappears when overflowX is set to hidden.
@@ -69,19 +75,28 @@ export default {
         this.$emit('focused', idx);
         this.$emit('scrollEnd');
         this.scrolling = false;
+        this.scrollCountdown = SCROLL_COUNTDOWN;
       } else {
         this.last = nextLast;
       }
-    }, 100);
+    }, 16);
   },
   methods: {
     onScroll(ev) {
       // If we're not already in a scroll action
       // and a scroll event is fired, that means
-      // we started scrolling
+      // we started scrolling.
+      // But we wait until seeing a certain number of
+      // scroll events until firing a scrollStart event
+      // to deal with some timing issues that cause
+      // mobile dragging to be wonky
       if (!this.scrolling) {
-        this.scrolling = true;
-        this.$emit('scrollStart');
+        if (this.scrollCountdown > 0) {
+          this.scrollCountdown--;
+        } else {
+          this.scrolling = true;
+          this.$emit('scrollStart');
+        }
       }
     },
     onKeyDown(ev) {

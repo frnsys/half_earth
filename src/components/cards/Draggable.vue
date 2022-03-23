@@ -123,7 +123,7 @@ export default {
       let minY = this.minY();
       let maxY = this.maxY();
 
-      if (Math.abs(dy) > 10) {
+      if (Math.abs(dy) > Math.abs(dx)) {
         this.dragging = true;
         let y = this.elY + this.top;
         if (minY && y <= minY) return;
@@ -139,8 +139,6 @@ export default {
         this.top = dy;
 
         this.$emit('drag', {y, height: this.elHeight});
-      } else if (Math.abs(dx) >= 2) {
-        this.$emit('tryScroll', this);
       }
     },
     stopDrag() {

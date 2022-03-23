@@ -39,9 +39,9 @@
   <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
       ref="draggables"
-      @drag="onDragVertical"
+      @drag="onDrag"
       @tryScroll="tryScroll"
-      @dragStop="onDragVerticalStop"
+      @dragStop="onDragStop"
       v-for="p in processes"
       :minY="yMin"
       :maxY="yMax"

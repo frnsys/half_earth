@@ -30,18 +30,17 @@ export default {
       this.focusedIdx = idx;
       this.focused = this.items(idx);
     },
-    onDragVertical(rect) {
+    onDrag(rect) {
       this.allowScroll = false;
 
+      // TODO temporarily disabling this to focus on drag handling
       // This triggers the scanner functionalities
-      this.checkDrag(rect);
+      // this.checkDrag(rect);
     },
-    onDragVerticalStop() {
+    onDragStop() {
+      // TODO temporarily disabling this to focus on drag handling
       // This stops/cancels the scanner functionalities
-      this.stopDrag();
-      this.allowScroll = true;
-    },
-    tryScroll() {
+      // this.stopDrag();
       this.allowScroll = true;
     },
     onScrollStart() {
