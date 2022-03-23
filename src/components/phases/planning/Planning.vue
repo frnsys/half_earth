@@ -3,10 +3,10 @@
 <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
 <div class="planning">
   <header>
-    <div :class="{active: page == PAGES.PLAN}" @click="selectPage(PAGES.PLAN)">Plan</div>
-    <div :class="{active: page == PAGES.PARLIAMENT}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
-    <div :class="{active: page == PAGES.DASHBOARD}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.hourglass" />Stats</div>
-    <div :class="{active: page == PAGES.REGIONS}" @click="selectPage(PAGES.REGIONS)">World</div>
+    <div :class="{active: page == PAGES.PLAN, highlight: planHighlighted}" @click="selectPage(PAGES.PLAN)">Plan</div>
+    <div :class="{active: page == PAGES.PARLIAMENT, disabled: parliamentDisabled, highlight: parliamentHighlighted}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
+    <div :class="{active: page == PAGES.DASHBOARD, disabled: dashboardDisabled, highlight: dashboardHighlighted}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.hourglass" />Stats</div>
+    <div :class="{active: page == PAGES.REGIONS, disabled: regionsDisabled, highlight: regionsHighlighted}" @click="selectPage(PAGES.REGIONS)">World</div>
   </header>
 
   <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
@@ -25,6 +25,7 @@ import Dashboard from './tabs/Dashboard.vue';
 import Plan from './tabs/Plan.vue';
 import Regions from './tabs/Regions.vue';
 import EventsMixin from 'components/EventsMixin';
+import tutorial from '/src/tutorial';
 
 const PAGES = {
   PLAN: 'Plan',
@@ -69,10 +70,40 @@ export default {
         }, 0);
       });
       return totalChanges !== 0;
-    }
+    },
+    parliamentDisabled() {
+      return state.tutorial < tutorial.PARLIAMENT;
+    },
+    parliamentHighlighted() {
+      return state.tutorial == tutorial.PARLIAMENT;
+    },
+    dashboardDisabled() {
+      return state.tutorial < tutorial.DASHBOARD;
+    },
+    dashboardHighlighted() {
+      return state.tutorial == tutorial.DASHBOARD;
+    },
+    regionsDisabled() {
+      return state.tutorial < tutorial.REGIONS;
+    },
+    regionsHighlighted() {
+      return state.tutorial == tutorial.REGIONS;
+    },
+    planHighlighted() {
+      return state.tutorial == tutorial.PLAN;
+    },
   },
   methods: {
     selectPage(p) {
+      if (p == PAGES.PARLIAMENT && state.tutorial == tutorial.PARLIAMENT) {
+        state.tutorial++;
+      } else if (p == PAGES.DASHBOARD && state.tutorial == tutorial.DASHBOARD) {
+        state.tutorial++;
+      } else if (p == PAGES.REGIONS && state.tutorial == tutorial.REGIONS) {
+        state.tutorial++;
+      } else if (p == PAGES.PLAN && state.tutorial == tutorial.PLAN) {
+        state.tutorial++;
+      }
       this.page = p;
       this.events = game.roll.planning(this.page);
       this.showEvent();
@@ -199,6 +230,16 @@ export default {
   background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.5);
   max-width: 360px;
+}
+.planning > header div.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.planning > header div.highlight {
+  animation-duration: 0.75s;
+  animation-name: highlight;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 .planning > header div {
   flex: 1;

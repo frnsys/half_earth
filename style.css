@@ -143,6 +143,17 @@ button:active{
   background-color: #b6b6b6;
 }
 
+.btn.disabled {
+  filter: grayscale(1);
+  pointer-events: none;
+  opacity: 0.5;
+}
+.btn.highlight {
+  animation-duration: 0.75s;
+  animation-name: highlight;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
 
 .actions {
   text-align: center;
@@ -519,4 +530,14 @@ strong{
   border-radius: 0.3em;
   border: 1px solid #fff;
   opacity: 0.8;
+}
+
+@keyframes highlight {
+  from {
+    box-shadow: 0 0 4px red;
+  }
+
+  to {
+    box-shadow: 0 0 16px red;
+  }
 }

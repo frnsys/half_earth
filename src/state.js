@@ -24,6 +24,7 @@ function initState() {
     gameState: null,
     phase: 'PLANNING',
     newRunCount: 0,
+    tutorial: 0,
 
     // Track which events have occurred
     events: [],

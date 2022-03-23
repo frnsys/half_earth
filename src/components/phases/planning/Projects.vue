@@ -16,7 +16,7 @@
       <img :src="icons.policy" />
       <div>Policies</div>
     </div>
-    <div @click="$emit('close')">Back</div>
+    <div @click="$emit('close')" :class="{disabled: backDisabled, highlight: backHighlighted}">Back</div>
   </div>
   <!-- <div class="card-scan-target" ref="target"></div> -->
 
@@ -84,6 +84,7 @@ import ProjectCard from 'components/cards/ProjectCard.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
 import ScannerMixin from 'components/phases/ScannerMixin';
 import {detectCenterElement, isTouchDevice} from 'lib/util';
+import tutorial from '/src/tutorial';
 
 export default {
   mixins: [ScannerMixin('Project')],
@@ -126,6 +127,12 @@ export default {
     }
   },
   computed: {
+    backDisabled() {
+      return state.tutorial < tutorial.PROJECTS_BACK;
+    },
+    backHighlighted() {
+      return state.tutorial == tutorial.PROJECTS_BACK;
+    },
     project() {
       if (this.focusedProject !== null) {
         let proj =  this.projects[this.focusedProject];
