@@ -45,7 +45,7 @@
       v-for="i in projectOrder"
       :minY="yMin"
       :maxY="yMax"
-      :draggable="allowSwipe && focusedProject == i"
+      :draggable="allowSwipe && focused == i"
       :id="projects[i].id"
       :key="projects[i].id">
       <ProjectCard
@@ -79,27 +79,20 @@
 import debug from '/src/debug';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
-import Cards from 'components/cards/Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
-import CardFocusArea from 'components/cards/CardFocusArea.vue';
+import CardsMixin from 'components/phases/CardsMixin';
 import ScannerMixin from 'components/phases/ScannerMixin';
-import {detectCenterElement, isTouchDevice} from 'lib/util';
 import tutorial from '/src/tutorial';
 
 export default {
-  mixins: [ScannerMixin('Project')],
+  mixins: [ScannerMixin('Project'), CardsMixin],
   components: {
-    Cards,
     ProjectCard,
     HelpTip,
-    CardFocusArea
   },
   data() {
     return {
       state,
-      allowScroll: true,
-      allowSwipe: true,
-      focusedProject: 0,
       type: 'Research',
     };
   },
@@ -109,12 +102,7 @@ export default {
   watch: {
     type(type) {
       // Figure out what the focused card is
-      this.$nextTick(() => {
-        let scroller = document.querySelector('.cards');
-        let els = [...document.querySelectorAll('.draggable')];
-        let idx = detectCenterElement(scroller, els);
-        this.onFocused(idx);
-
+      this.updateFocused(() => {
         // Emit for events
         let page = type;
         if (type == 'Initiative') {
@@ -134,8 +122,8 @@ export default {
       return state.tutorial == tutorial.PROJECTS_BACK;
     },
     project() {
-      if (this.focusedProject !== null) {
-        let proj =  this.projects[this.focusedProject];
+      if (this.focused !== null) {
+        let proj =  this.projects[this.focused];
         if (proj === undefined) {
           return this.projects[0];
         } else {
@@ -167,29 +155,9 @@ export default {
     },
   },
   methods: {
-    onFocused(idx) {
-      this.focusedProject = this.projectOrder[idx];
+    items(idx) {
+      return this.projectOrder[idx];
     },
-    onDragVertical(rect) {
-      this.allowScroll = false;
-      this.checkDrag(rect);
-    },
-    onDragVerticalStop() {
-      this.stopDrag();
-      this.allowScroll = true;
-    },
-    tryScroll() {
-      this.allowScroll = true;
-    },
-    onScrollStart() {
-      this.allowSwipe = false;
-    },
-    onScrollEnd() {
-      this.allowSwipe = true;
-      if (isTouchDevice) {
-        this.allowScroll = false;
-      }
-    }
   }
 }
 </script>

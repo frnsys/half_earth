@@ -45,7 +45,7 @@
       v-for="p in processes"
       :minY="yMin"
       :maxY="yMax"
-      :draggable="allowSwipe && focusedProcess == p"
+      :draggable="allowSwipe && focused == p"
       :id="p.id"
       :key="p.id"
     >
@@ -82,15 +82,13 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import Cards from 'components/cards/Cards.vue';
 import consts from '/src/consts.js';
 import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
-import CardFocusArea from 'components/cards/CardFocusArea.vue';
 import tutorial from '/src/tutorial';
 
+import CardsMixin from 'components/phases/CardsMixin';
 import ScannerMixin from 'components/phases/ScannerMixin';
-import {detectCenterElement, isTouchDevice} from 'lib/util';
 
 const lf = new Intl.ListFormat('en');
 
@@ -99,20 +97,15 @@ function fmtPercent(n) {
 }
 
 export default {
-  mixins:[ScannerMixin('Process')],
+  mixins:[ScannerMixin('Process'), CardsMixin],
   components: {
-    Cards,
     ProcessCard,
-    CardFocusArea
   },
   data() {
     return {
       state,
       points: 0,
       output: 'Electricity',
-      allowScroll: true,
-      allowSwipe: true,
-      focusedProcess: 0,
       allowBack: true
     };
   },
@@ -121,15 +114,7 @@ export default {
   },
   watch: {
     output(output) {
-
-      // Figure out what the focused card is
-      this.$nextTick(() => {
-        let scroller = document.querySelector('.cards');
-        let els = [...document.querySelectorAll('.draggable')];
-        let idx = detectCenterElement(scroller, els);
-        this.focusedProcess = this.processes[idx];
-        this.focusedProcess.idx = idx;
-
+      this.updateFocused(() => {
         this.$emit('page', this.output);
       });
     }
@@ -142,10 +127,10 @@ export default {
       return state.tutorial == tutorial.PROCESSES_BACK;
     },
     process() {
-      if (this.focusedProcess !== null) {
+      if (this.focused !== null) {
         // console.log(this.focusedProcess.idx);
         // console.log(this.processes);
-        let proc =  this.processes[this.focusedProcess.idx];
+        let proc =  this.processes[this.focusedIdx];
         if (proc === undefined) {
           return this.processes[0];
         } else {
@@ -244,6 +229,9 @@ export default {
     },
   },
   methods: {
+    items(idx) {
+      return this.processes[idx];
+    },
     changedMixShare(p) {
       let change = state.processMixChanges[this.output][p.id] || 0;
       return p.mix_share + change;
@@ -272,30 +260,6 @@ export default {
         this.$emit('change');
       }
     },
-    onFocused(idx) {
-      this.focusedProcess = this.processes[idx];
-      this.focusedProcess.idx = idx;
-    },
-    onDragVertical(rect) {
-      this.allowScroll = false;
-      this.checkDrag(rect);
-    },
-    onDragVerticalStop() {
-      this.stopDrag();
-      this.allowScroll = true;
-    },
-    tryScroll() {
-      this.allowScroll = true;
-    },
-    onScrollStart() {
-      this.allowSwipe = false;
-    },
-    onScrollEnd() {
-      this.allowSwipe = true;
-      if (isTouchDevice) {
-        this.allowScroll = false;
-      }
-    }
   }
 }
 </script>
@@ -314,7 +278,6 @@ export default {
   /* top: 0; */
   margin:0 auto;
 }
-
 
 .available-mix-tokens {
   height: 24px;
