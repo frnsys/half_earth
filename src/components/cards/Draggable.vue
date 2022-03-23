@@ -12,7 +12,7 @@
 <script>
 import animate from 'lib/anim';
 import throttle from "lodash.throttle";
-import {updateTransform, isTouchDevice} from 'lib/util';
+import {updateTransform} from 'lib/util';
 
 export default {
   props: ['id', 'draggable', 'minY', 'maxY'],

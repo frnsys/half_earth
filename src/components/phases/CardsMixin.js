@@ -1,6 +1,6 @@
 import Cards from 'components/cards/Cards.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
-import {detectCenterElement, isTouchDevice} from 'lib/util';
+import {detectCenterElement} from 'lib/util';
 
 export default {
   components: {
