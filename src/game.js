@@ -1,4 +1,5 @@
 import state from './state';
+import debug from './debug';
 import {initState} from './state';
 import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
@@ -46,12 +47,20 @@ function newRun(reset) {
     });
     game.load_state(save.game);
   }
-  let year = game.state().world.year;
+  let gameState = game.state();
+  let year = gameState.world.year;
   state.startYear = year;
   state.endYear = year + 100;
+
+  loadMeta();
+  if (debug.resetRuns) {
+    game.set_runs_played(0);
+  }
+
   updateState();
   updateFactors();
-  loadMeta();
+
+  state.newRunCount = gameState.runs + 1;
   return game
 }
 
@@ -252,7 +261,7 @@ function playerSeats() {
 // Save/load game metadata
 function saveMeta() {
   let data = {
-    runsPlayed: state.gameState.runs,
+    runsPlayed: state.newRunCount,
   };
   localStorage.setItem('gameMeta', JSON.stringify(data));
 }

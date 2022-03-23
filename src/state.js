@@ -23,6 +23,7 @@ function initState() {
     endYear: 0,
     gameState: null,
     phase: 'PLANNING',
+    newRunCount: 0,
 
     // Track which events have occurred
     events: [],

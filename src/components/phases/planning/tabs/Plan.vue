@@ -188,6 +188,7 @@ export default {
     },
     enterWorld() {
       game.saveGame();
+      game.saveMeta();
       state.phase = 'EVENTS';
     }
   },
