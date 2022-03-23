@@ -40,7 +40,6 @@
     <Draggable
       ref="draggables"
       @drag="onDrag"
-      @tryScroll="tryScroll"
       @dragStop="onDragStop"
       v-for="i in projectOrder"
       :minY="yMin"

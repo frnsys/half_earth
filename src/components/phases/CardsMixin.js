@@ -31,16 +31,13 @@ export default {
       this.focused = this.items(idx);
     },
     onDrag(rect) {
-      this.allowScroll = false;
-
-      // TODO temporarily disabling this to focus on drag handling
       // This triggers the scanner functionalities
-      // this.checkDrag(rect);
+      this.checkDrag(rect);
+      this.allowScroll = false;
     },
     onDragStop() {
-      // TODO temporarily disabling this to focus on drag handling
       // This stops/cancels the scanner functionalities
-      // this.stopDrag();
+      this.stopDrag();
       this.allowScroll = true;
     },
     onScrollStart() {
