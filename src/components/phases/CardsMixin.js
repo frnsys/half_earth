@@ -32,9 +32,12 @@ export default {
     },
     onDragVertical(rect) {
       this.allowScroll = false;
+
+      // This triggers the scanner functionalities
       this.checkDrag(rect);
     },
     onDragVerticalStop() {
+      // This stops/cancels the scanner functionalities
       this.stopDrag();
       this.allowScroll = true;
     },
@@ -46,9 +49,6 @@ export default {
     },
     onScrollEnd() {
       this.allowSwipe = true;
-      if (isTouchDevice) {
-        this.allowScroll = false;
-      }
     }
   }
 }

@@ -65,46 +65,49 @@ export default {
       }
     },
     onKeyDown(ev) {
-      if (ev.key == 'ArrowUp') {
-        let children = [...this.$refs.scroller.children];
-        let idx = detectCenterElement(
-          this.$refs.scroller, children);
+      // TODO this is all messed up
+      //if (ev.key == 'ArrowUp' || ev.key == 'ArrowRight') {
+      //  ev.preventDefault();
+      //  let children = [...this.$refs.scroller.children];
+      //  let idx = detectCenterElement(
+      //    this.$refs.scroller, children);
 
-        let left = 0;
-        if (idx < children.length - 1) {
-          let el = children[idx];
-          left = el.offsetLeft - el.offsetWidth/2;
-        } else {
-          let el = children[0];
-          left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
-        }
-        this.$refs.scroller.scroll({
-          left: left,
-          behavior: 'smooth'
-        });
+      //  let left = 0;
+      //  if (idx < children.length - 1) {
+      //    let el = children[idx];
+      //    left = el.offsetLeft - el.offsetWidth/2;
+      //  } else {
+      //    let el = children[0];
+      //    left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
+      //  }
+      //  this.$refs.scroller.scroll({
+      //    left: left,
+      //    behavior: 'smooth'
+      //  });
 
-        return false;
-      } else if (ev.key == 'ArrowDown') {
-        let children = [...this.$refs.scroller.children];
-        let idx = detectCenterElement(
-          this.$refs.scroller, children);
+      //  return false;
+      //} else if (ev.key == 'ArrowDown' || ev.key == 'ArrowLeft') {
+      //  ev.preventDefault();
+      //  let children = [...this.$refs.scroller.children];
+      //  let idx = detectCenterElement(
+      //    this.$refs.scroller, children);
 
-        let left = 0;
-        if (idx > 0) {
-          let el = children[idx-1];
-          left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
-        } else {
-          let el = children[children.length-1];
-          left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
-        }
-        this.$refs.scroller.scroll({
-          left: left,
-          behavior: 'smooth'
-        });
+      //  let left = 0;
+      //  if (idx > 0) {
+      //    let el = children[idx-1];
+      //    left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
+      //  } else {
+      //    let el = children[children.length-1];
+      //    left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
+      //  }
+      //  this.$refs.scroller.scroll({
+      //    left: left,
+      //    behavior: 'smooth'
+      //  });
 
 
-        return false;
-      }
+      //  return false;
+      //}
     }
   }
 }

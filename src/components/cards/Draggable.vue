@@ -11,8 +11,8 @@
 
 <script>
 import animate from 'lib/anim';
-import {updateTransform, isTouchDevice} from 'lib/util';
 import throttle from "lodash.throttle";
+import {updateTransform, isTouchDevice} from 'lib/util';
 
 export default {
   props: ['id', 'draggable', 'minY', 'maxY'],
@@ -22,26 +22,43 @@ export default {
     }
   },
   mounted() {
+    // Keep track of the top offset from the element's starting y position;
+    // this is updated as the component is dragged
     this.top = 0;
+
+    // Whether or not dragging is enabled
     this.enabled = false;
-    this.down = false;
+
+    // Whether or not dragging is started,
+    // i.e. the component has been clicked or touched
+    this.dragStarted = false;
+
+    // Cache the starting y position of the element
     this.elY = 0;
+
+    // Current position of the cursor
     this.pos = {
       x: 0,
       y: 0,
     };
+
     if (this.draggable) {
       this.enable();
     }
   },
-  unmounted() {
+  beforeUnmount() {
     this.disable();
   },
   watch: {
     draggable(draggable, prev) {
+      // Check if draggable prop has changed
       if (draggable !== prev) {
+        // If not draggable, disable dragging events
         if (!draggable) {
           this.disable();
+
+        // If draggable and not already enabled,
+        // enable dragging events
         } else if (!this.enabled) {
           this.enable();
         }
@@ -49,6 +66,8 @@ export default {
     }
   },
   created(){
+    // Throttle the drag handler to avoid unnecessary computations
+    // 16ms is for 60fps
     this.dragHandler = throttle((ev) => {
       this.drag(ev);
     }, 16);
@@ -83,28 +102,29 @@ export default {
     },
     startDrag(ev) {
       if (!this.draggable) return;
-      this.down = true;
+      this.dragStarted = true;
 
       // Stop snap-back animation if there is one
       if (this.animation) this.animation.stop();
 
       this.$el.style.cursor = 'grab';
 
+      // Update current mouse position
       let x = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX);
       let y = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY);
       this.pos = {
-        // Current mouse position
         x, y
       };
     },
     drag(ev) {
       if (!this.draggable) this.stopDrag();
-      if (!this.down) return;
+      if (!this.dragStarted) return;
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
       let minY = this.minY();
       let maxY = this.maxY();
+
       if (Math.abs(dy) > 10) {
         this.dragging = true;
         let y = this.elY + this.top;
@@ -126,7 +146,7 @@ export default {
       }
     },
     stopDrag() {
-      this.down = false;
+      this.dragStarted = false;
       this.dragging = false;
 
       this.animation = animate(
@@ -158,4 +178,3 @@ export default {
   pointer-events: none;
 }
 </style>
-
