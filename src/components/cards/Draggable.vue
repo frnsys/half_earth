@@ -31,7 +31,7 @@ export default {
 
     // Whether or not dragging is started,
     // i.e. the component has been clicked or touched
-    this.dragStarted = false;
+    this.down = false;
 
     // Cache the starting y position of the element
     this.elY = 0;
@@ -56,6 +56,7 @@ export default {
         // If not draggable, disable dragging events
         if (!draggable) {
           this.disable();
+          this.stopDrag();
 
         // If draggable and not already enabled,
         // enable dragging events
@@ -100,7 +101,7 @@ export default {
     },
     startDrag(ev) {
       if (!this.draggable) return;
-      this.dragStarted = true;
+      this.down = true;
 
       // Stop snap-back animation if there is one
       if (this.animation) this.animation.stop();
@@ -115,8 +116,7 @@ export default {
       };
     },
     drag(ev) {
-      if (!this.draggable) this.stopDrag();
-      if (!this.dragStarted) return;
+      if (!this.down) return;
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
@@ -144,7 +144,7 @@ export default {
       }
     },
     stopDrag() {
-      this.dragStarted = false;
+      this.down = false;
       this.dragging = false;
 
       this.animation = animate(

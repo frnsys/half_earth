@@ -17,7 +17,6 @@ export default {
   data() {
     return {
       scrollTimeout: null,
-      scrollLeft: 0,
     }
   },
   beforeUnmount() {
@@ -40,7 +39,13 @@ export default {
 
     // Hack to start with first card focused
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
+
+    // We use this to determine if the scrolling (and its momentum)
+    // have stopped
     this.last = this.$refs.scroller.scrollLeft;
+
+    // Just a flag to identify if we just started scrolling
+    // as opposed to if we're in the middle of scrolling
     this.scrolling = false;
 
     // Calculate scroll bar height so we can accommodate it
@@ -52,6 +57,11 @@ export default {
     // If so, figure out what the focused/centered child is.
     this.scrollTimeout = setInterval(() => {
       let nextLast = this.$refs.scroller.scrollLeft;
+
+      // If we are still within a scroll action and
+      // momentum/snapping has finished
+      // (i.e. the scroll left position hasn't changed),
+      // we're done scrolling.
       if (this.scrolling && this.last == nextLast) {
         let idx = detectCenterElement(
           this.$refs.scroller,
@@ -66,9 +76,12 @@ export default {
   },
   methods: {
     onScroll(ev) {
+      // If we're not already in a scroll action
+      // and a scroll event is fired, that means
+      // we started scrolling
       if (!this.scrolling) {
-        this.$emit('scrollStart');
         this.scrolling = true;
+        this.$emit('scrollStart');
       }
     },
     onKeyDown(ev) {
