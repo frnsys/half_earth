@@ -25,7 +25,7 @@ class Database:
         timestamp = datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()
         con, cur = self._con()
         cur.execute(
-            'INSERT INTO sessions(session, version, timestamp, useragent) VALUES (?,?,?,?)',
+            'INSERT OR IGNORE INTO sessions(session, version, timestamp, useragent) VALUES (?,?,?,?)',
             (session_id, version, timestamp, user_agent))
         con.commit()
 
