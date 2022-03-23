@@ -55,6 +55,7 @@ function newRun(reset) {
   loadMeta();
   if (debug.resetRuns) {
     game.set_runs_played(0);
+    state.tutorial = 0;
   }
 
   updateState();
@@ -262,6 +263,7 @@ function playerSeats() {
 function saveMeta() {
   let data = {
     runsPlayed: state.newRunCount,
+    tutorial: state.tutorial,
   };
   localStorage.setItem('gameMeta', JSON.stringify(data));
 }
@@ -271,6 +273,7 @@ function loadMeta() {
   if (data !== null) {
     let parsed = JSON.parse(data);
     game.set_runs_played(parsed.runsPlayed || 0);
+    state.tutorial = parsed.tutorial || 0;
     return parsed;
   }
 }

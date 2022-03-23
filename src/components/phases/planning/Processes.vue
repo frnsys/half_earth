@@ -18,7 +18,7 @@
       <img :src="icons.animal_calories" />
       <div>Livestock</div>
     </div>
-    <div :class="{disabled: !allowBack}" @click="if (allowBack) { $emit('close'); }">Back</div>
+    <div :class="{disabled: !allowBack || backDisabled, highlight: backHighlighted}" @click="if (allowBack) { $emit('close'); }">Back</div>
   </div>
 
   <div class="available-mix-tokens">
@@ -87,6 +87,7 @@ import consts from '/src/consts.js';
 import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
+import tutorial from '/src/tutorial';
 
 import ScannerMixin from 'components/phases/ScannerMixin';
 import {detectCenterElement, isTouchDevice} from 'lib/util';
@@ -134,6 +135,12 @@ export default {
     }
   },
   computed: {
+    backDisabled() {
+      return state.tutorial < tutorial.PROCESSES_BACK;
+    },
+    backHighlighted() {
+      return state.tutorial == tutorial.PROCESSES_BACK;
+    },
     process() {
       if (this.focusedProcess !== null) {
         // console.log(this.focusedProcess.idx);

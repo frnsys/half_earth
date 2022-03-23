@@ -1791,8 +1791,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyEventProbability(69, -0.5),
-                Effect::ModifyEventProbability(47, -0.5),
+                Effect::ModifyEventProbability(70, -0.5),
+                Effect::ModifyEventProbability(48, -0.5),
                 Effect::UnlocksProject(22),
                 Effect::UnlocksProject(51)
             ],
@@ -2139,7 +2139,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyEventProbability(62, -0.7)
+                Effect::ModifyEventProbability(63, -0.7)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -2193,7 +2193,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::TriggerEvent(83, 5)
+                        Effect::TriggerEvent(84, 5)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2224,7 +2224,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.05),
-                Effect::ModifyEventProbability(193, -0.1)
+                Effect::ModifyEventProbability(195, -0.1)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -2309,7 +2309,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::Output(Output::PlantCalories, 0.1),
                 Effect::Output(Output::AnimalCalories, 0.1),
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::TriggerEvent(111, 5)
+                Effect::TriggerEvent(113, 5)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -2476,7 +2476,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyEventProbability(193, -0.2)
+                Effect::ModifyEventProbability(195, -0.2)
             ],
             kind: ProjectType::Research,
             locked: true,
@@ -2520,8 +2520,8 @@ pub fn projects() -> Vec<Project> {
                 Effect::ProtectLand(50.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -20.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -5.0),
-                Effect::ModifyEventProbability(155, -0.5),
-                Effect::ModifyEventProbability(121, -0.5)
+                Effect::ModifyEventProbability(157, -0.5),
+                Effect::ModifyEventProbability(123, -0.5)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -3449,7 +3449,7 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -2.5),
-                        Effect::ModifyEventProbability(73, -10.0)
+                        Effect::ModifyEventProbability(74, -10.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -3606,7 +3606,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::Degrowth),
-                Effect::TriggerEvent(166, 10)
+                Effect::TriggerEvent(168, 10)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -3649,7 +3649,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -0.5),
-                Effect::TriggerEvent(160, 5)
+                Effect::TriggerEvent(162, 5)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -3743,7 +3743,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::TriggerEvent(45, 6),
+                Effect::TriggerEvent(46, 6),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
                 Effect::RegionHabitability(Latitude::Tropic, -2.0)
             ],
@@ -4118,8 +4118,8 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResourcesAmount(0, Resource::Fuel, 200.0),
-                Effect::TriggerEvent(183, 10),
-                Effect::ModifyEventProbability(73, -0.99),
+                Effect::TriggerEvent(185, 10),
+                Effect::ModifyEventProbability(74, -0.99),
                 Effect::UnlocksProject(84)
             ],
             kind: ProjectType::Initiative,
@@ -4230,7 +4230,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::WorldVariable(WorldVariable::Emissions, -2.0),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::LocksProject(35),
-                Effect::TriggerEvent(53, 5)
+                Effect::TriggerEvent(54, 5)
             ],
             kind: ProjectType::Research,
             locked: true,
@@ -4548,7 +4548,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::AddFlag(Flag::Vegan),
                 Effect::UnlocksProject(35),
                 Effect::LocksProject(88),
-                Effect::TriggerEvent(53, 5)
+                Effect::TriggerEvent(54, 5)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -4718,7 +4718,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::RegionHabitability(Latitude::Tropic, -3.0),
                 Effect::RegionHabitability(Latitude::Subtropic, -1.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::TriggerEvent(45, 0),
+                Effect::TriggerEvent(46, 0),
                 Effect::UnlocksProject(89)
             ],
             kind: ProjectType::Policy,
@@ -4966,7 +4966,7 @@ pub fn projects() -> Vec<Project> {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Precipitation, -2.0),
                         Effect::Migration,
-                        Effect::TriggerEvent(59, 2)
+                        Effect::TriggerEvent(60, 2)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -4988,7 +4988,7 @@ pub fn projects() -> Vec<Project> {
                         Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
                         Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                         Effect::Migration,
-                        Effect::TriggerEvent(116, 2)
+                        Effect::TriggerEvent(118, 2)
                     ]
                 },
                 Upgrade {
@@ -5097,7 +5097,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::ModifyIndustryResources(6, Resource::Fuel, -0.4),
                 Effect::ModifyIndustryDemand(3, -0.12),
                 Effect::WorldVariable(WorldVariable::Outlook, -4.0),
-                Effect::AddEvent(92)
+                Effect::AddEvent(94)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -5181,7 +5181,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyEventProbability(60, -0.25),
+                Effect::ModifyEventProbability(61, -0.25),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::UnlocksProject(59)
             ],
@@ -5549,7 +5549,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResourcesAmount(0, Resource::Fuel, 400.0),
-                Effect::TriggerEvent(183, 10),
+                Effect::TriggerEvent(185, 10),
                 Effect::UnlocksProject(57),
                 Effect::UnlocksProject(20)
             ],
@@ -5670,7 +5670,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::DemandOutlookChange(Output::AnimalCalories, -0.5),
                 Effect::AddFlag(Flag::Vegetarian),
-                Effect::TriggerEvent(53, 5),
+                Effect::TriggerEvent(54, 5),
                 Effect::ProjectCostModifier(66, -0.75)
             ],
             kind: ProjectType::Policy,
@@ -5713,7 +5713,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::StopDevelopment),
-                Effect::TriggerEvent(45, 5),
+                Effect::TriggerEvent(46, 5),
                 Effect::LocksProject(45),
                 Effect::RegionHabitability(Latitude::Tropic, -2.0),
                 Effect::RegionHabitability(Latitude::Subtropic, -2.0)
@@ -6025,8 +6025,8 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
-                Effect::ModifyEventProbability(121, -0.5),
-                Effect::ModifyEventProbability(155, -0.5),
+                Effect::ModifyEventProbability(123, -0.5),
+                Effect::ModifyEventProbability(157, -0.5),
                 Effect::UnlocksProject(56)
             ],
             kind: ProjectType::Policy,
@@ -6283,7 +6283,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::Demand(Output::AnimalCalories, -0.25),
                 Effect::UnlocksProject(66),
                 Effect::UnlocksProject(88),
-                Effect::TriggerEvent(53, 6)
+                Effect::TriggerEvent(54, 6)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -6419,7 +6419,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
-                Effect::ModifyEventProbability(193, -0.05),
+                Effect::ModifyEventProbability(195, -0.05),
                 Effect::Output(Output::AnimalCalories, -0.05)
             ],
             kind: ProjectType::Initiative,
@@ -6558,7 +6558,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0),
-                Effect::TriggerEvent(53, 3),
+                Effect::TriggerEvent(54, 3),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
             kind: ProjectType::Policy,
@@ -6933,7 +6933,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::ModifyEventProbability(193, -0.2)
+                        Effect::ModifyEventProbability(195, -0.2)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -7129,7 +7129,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::DemandAmount(Output::Electricity, 3750000000000.0),
-                Effect::ModifyEventProbability(193, -0.05),
+                Effect::ModifyEventProbability(195, -0.05),
                 Effect::Resource(Resource::Water, 250000000000000.0)
             ],
             kind: ProjectType::Initiative,
@@ -7160,7 +7160,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 3750000000000.0),
-                        Effect::ModifyEventProbability(193, -0.1),
+                        Effect::ModifyEventProbability(195, -0.1),
                         Effect::Resource(Resource::Water, 500000000000000.0)
                     ]
                 },
@@ -7169,7 +7169,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 11250000000000.0),
-                        Effect::ModifyEventProbability(193, -0.15),
+                        Effect::ModifyEventProbability(195, -0.15),
                         Effect::Resource(Resource::Water, 750000000000000.0)
                     ]
                 },
@@ -7178,7 +7178,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 15000000000000.0),
-                        Effect::ModifyEventProbability(193, -0.2),
+                        Effect::ModifyEventProbability(195, -0.2),
                         Effect::Resource(Resource::Water, 1000000000000000.0)
                     ]
                 },
@@ -7187,7 +7187,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 18750000000000.0),
-                        Effect::ModifyEventProbability(193, -0.25),
+                        Effect::ModifyEventProbability(195, -0.25),
                         Effect::Resource(Resource::Water, 1250000000000000.0)
                     ]
                 },
@@ -7196,7 +7196,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 10,
                     effects: vec![
                         Effect::DemandAmount(Output::Electricity, 22500000000000.0),
-                        Effect::ModifyEventProbability(193, -0.3),
+                        Effect::ModifyEventProbability(195, -0.3),
                         Effect::Resource(Resource::Water, 1500000000000000.0)
                     ]
                 }
@@ -7415,7 +7415,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
-                Effect::TriggerEvent(192, 5)
+                Effect::TriggerEvent(194, 5)
             ],
             probabilities: vec![
                 Probability {
@@ -7437,7 +7437,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: true,
             effects: vec![
-                Effect::AddEvent(51),
+                Effect::AddEvent(52),
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
             ],
             probabilities: vec![
@@ -7470,7 +7470,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::AddEvent(25),
-                Effect::AddEvent(103)
+                Effect::AddEvent(105)
             ],
             probabilities: vec![
                 Probability {
@@ -7698,7 +7698,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-
+                Effect::AddEvent(90)
             ],
             probabilities: vec![
                 Probability {
@@ -7719,7 +7719,7 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(63)
+                Effect::AddEvent(64)
             ],
             probabilities: vec![
                 Probability {
@@ -7798,7 +7798,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(154, 1),
+                Effect::TriggerEvent(156, 1),
                 Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, 0.005)
             ],
             probabilities: vec![
@@ -7972,8 +7972,8 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(165),
-                Effect::AddEvent(200),
+                Effect::AddEvent(167),
+                Effect::AddEvent(202),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
             ],
             probabilities: vec![
@@ -8275,7 +8275,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: true,
             effects: vec![
-                Effect::AddEvent(151),
+                Effect::AddEvent(153),
                 Effect::RegionHabitability(Latitude::Tropic, -2.0)
             ],
             probabilities: vec![
@@ -8305,8 +8305,8 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(105, 5),
-                Effect::TriggerEvent(183, 5),
+                Effect::TriggerEvent(107, 5),
+                Effect::TriggerEvent(185, 5),
                 Effect::UnlocksNPC(3)
             ],
             probabilities: vec![
@@ -8391,7 +8391,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(113, 5),
+                Effect::TriggerEvent(115, 5),
                 Effect::Output(Output::PlantCalories, -0.1),
                 Effect::Output(Output::AnimalCalories, -0.1),
                 Effect::WorldVariable(WorldVariable::Precipitation, -10.0)
@@ -8488,8 +8488,8 @@ pub fn events() -> Vec<Event> {
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(175),
-                Effect::AddEvent(71)
+                Effect::AddEvent(177),
+                Effect::AddEvent(72)
             ],
             probabilities: vec![
                 Probability {
@@ -8586,6 +8586,27 @@ pub fn events() -> Vec<Event> {
         },
         Event {
             id: 44,
+            name: "Plan Intro 2",
+            phase: Phase::PlanningPlan,
+            locked: true,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0
+        },
+        Event {
+            id: 45,
             name: "Navier-Stokes Equation Solved",
             phase: Phase::WorldMain,
             locked: false,
@@ -8607,13 +8628,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 45,
+            id: 46,
             name: "The Wretched - Formation",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(176)
+                Effect::AddEvent(178)
             ],
             probabilities: vec![
                 Probability {
@@ -8629,7 +8650,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 46,
+            id: 47,
             name: "Amazon Becomes a Savannah",
             phase: Phase::WorldMain,
             locked: false,
@@ -8655,7 +8676,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 47,
+            id: 48,
             name: "Brownouts",
             phase: Phase::Icon,
             locked: true,
@@ -8682,7 +8703,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 48,
+            id: 49,
             name: "Unrest - Revolts",
             phase: Phase::WorldMain,
             locked: true,
@@ -8690,7 +8711,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::TriggerEvent(37, 5),
                 Effect::AddRegionFlag("revolts".to_string()),
-                Effect::AddEvent(174)
+                Effect::AddEvent(176)
             ],
             probabilities: vec![
                 Probability {
@@ -8715,7 +8736,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 49,
+            id: 50,
             name: "Interplanetary Ark or Space Yachts?",
             phase: Phase::PlanningStart,
             locked: false,
@@ -8738,7 +8759,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 50,
+            id: 51,
             name: "Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -8765,7 +8786,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 51,
+            id: 52,
             name: "Border Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -8794,7 +8815,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 52,
+            id: 53,
             name: "Extreme Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -8833,13 +8854,13 @@ pub fn events() -> Vec<Event> {
             intensity: 3
         },
         Event {
-            id: 53,
+            id: 54,
             name: "The Leather Underground - Formation",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(141)
+                Effect::AddEvent(143)
             ],
             probabilities: vec![
                 Probability {
@@ -8862,7 +8883,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 54,
+            id: 55,
             name: "Ally - The Posadist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -8884,15 +8905,15 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 55,
+            id: 56,
             name: "Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(189),
+                Effect::AddEvent(191),
                 Effect::AddEvent(41),
-                Effect::AddEvent(68)
+                Effect::AddEvent(69)
             ],
             probabilities: vec![
                 Probability {
@@ -8907,7 +8928,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 56,
+            id: 57,
             name: "Game Over: Overthrown",
             phase: Phase::BreakStart,
             locked: false,
@@ -8934,13 +8955,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 57,
+            id: 58,
             name: "Crop Failures - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(193)
+                Effect::AddEvent(195)
             ],
             probabilities: vec![
                 Probability {
@@ -8977,7 +8998,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 58,
+            id: 59,
             name: "Nemesis - The Animal Liberationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -8998,7 +9019,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 59,
+            id: 60,
             name: "Blood Red Sunsets",
             phase: Phase::WorldMain,
             locked: true,
@@ -9020,7 +9041,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 60,
+            id: 61,
             name: "Wildfires",
             phase: Phase::Icon,
             locked: true,
@@ -9053,7 +9074,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 61,
+            id: 62,
             name: "Eco-Anxiety",
             phase: Phase::WorldMain,
             locked: true,
@@ -9076,7 +9097,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 62,
+            id: 63,
             name: "Last Antibiotic Stops Working",
             phase: Phase::WorldMain,
             locked: false,
@@ -9101,7 +9122,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 63,
+            id: 64,
             name: "Extreme Flooding",
             phase: Phase::Icon,
             locked: true,
@@ -9140,7 +9161,7 @@ pub fn events() -> Vec<Event> {
             intensity: 3
         },
         Event {
-            id: 64,
+            id: 65,
             name: "Nemesis - The Ecofeminist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9161,7 +9182,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 65,
+            id: 66,
             name: "Panama Disease Destroys Banana Harvest",
             phase: Phase::WorldMain,
             locked: false,
@@ -9184,7 +9205,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 66,
+            id: 67,
             name: "Nemesis - The Utopian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9205,7 +9226,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 67,
+            id: 68,
             name: "Migrations - No Borders",
             phase: Phase::WorldMain,
             locked: true,
@@ -9237,7 +9258,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 68,
+            id: 69,
             name: "Heatwave Kills Tens of Thousands of Elderly People",
             phase: Phase::WorldMain,
             locked: true,
@@ -9259,7 +9280,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 69,
+            id: 70,
             name: "Blackouts",
             phase: Phase::Icon,
             locked: true,
@@ -9286,7 +9307,7 @@ pub fn events() -> Vec<Event> {
             intensity: 2
         },
         Event {
-            id: 70,
+            id: 71,
             name: "Ally - The Utopian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9308,7 +9329,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 71,
+            id: 72,
             name: "Severe Heatwaves",
             phase: Phase::Icon,
             locked: true,
@@ -9347,7 +9368,7 @@ pub fn events() -> Vec<Event> {
             intensity: 2
         },
         Event {
-            id: 72,
+            id: 73,
             name: "Methane 'Bomb' Released in Arctic",
             phase: Phase::WorldMain,
             locked: false,
@@ -9390,7 +9411,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 73,
+            id: 74,
             name: "Rare Metals Shortage",
             phase: Phase::WorldMain,
             locked: false,
@@ -9426,7 +9447,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 74,
+            id: 75,
             name: "Severe Hurricane",
             phase: Phase::Icon,
             locked: true,
@@ -9459,7 +9480,7 @@ pub fn events() -> Vec<Event> {
             intensity: 3
         },
         Event {
-            id: 75,
+            id: 76,
             name: "Vaquita Porpoise Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -9489,13 +9510,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 76,
+            id: 77,
             name: "Earth Liberation Front - Formation",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(201)
+                Effect::AddEvent(203)
             ],
             probabilities: vec![
                 Probability {
@@ -9525,7 +9546,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 77,
+            id: 78,
             name: "Nemesis - The Fanonist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -9546,13 +9567,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 78,
+            id: 79,
             name: "Large Derecho Storm - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(108)
+                Effect::AddEvent(110)
             ],
             probabilities: vec![
                 Probability {
@@ -9589,7 +9610,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 79,
+            id: 80,
             name: "Methane ('Natural Gas') is Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -9611,15 +9632,15 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 80,
+            id: 81,
             name: "Unrest - Protest",
             phase: Phase::WorldMain,
             locked: false,
             regional: true,
             effects: vec![
-                Effect::AddEvent(127),
+                Effect::AddEvent(129),
                 Effect::AddRegionFlag("protests".to_string()),
-                Effect::AddEvent(85)
+                Effect::AddEvent(86)
             ],
             probabilities: vec![
                 Probability {
@@ -9649,7 +9670,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 81,
+            id: 82,
             name: "Wheat Rust Destroys Harvest ",
             phase: Phase::WorldMain,
             locked: false,
@@ -9673,7 +9694,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 82,
+            id: 83,
             name: "Permafrost Contagion",
             phase: Phase::WorldMain,
             locked: true,
@@ -9682,7 +9703,7 @@ pub fn events() -> Vec<Event> {
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::ProjectRequest(17, true, 20),
                 Effect::ProjectRequest(17, false, 20),
-                Effect::AddEvent(161)
+                Effect::AddEvent(163)
             ],
             probabilities: vec![
                 Probability {
@@ -9697,7 +9718,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 83,
+            id: 84,
             name: "General Strike",
             phase: Phase::WorldMain,
             locked: false,
@@ -9735,7 +9756,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 84,
+            id: 85,
             name: "Eutrophication - A Global Problem",
             phase: Phase::WorldMain,
             locked: false,
@@ -9760,7 +9781,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 85,
+            id: 86,
             name: "Protests",
             phase: Phase::Icon,
             locked: true,
@@ -9782,7 +9803,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 86,
+            id: 87,
             name: "Gaia Worship",
             phase: Phase::WorldMain,
             locked: false,
@@ -9806,7 +9827,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 87,
+            id: 88,
             name: "Game Over: Assassinated",
             phase: Phase::BreakStart,
             locked: true,
@@ -9827,7 +9848,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 88,
+            id: 89,
             name: "Policies Intro",
             phase: Phase::PlanningPolicies,
             locked: false,
@@ -9848,7 +9869,28 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 89,
+            id: 90,
+            name: "Plan Intro 3",
+            phase: Phase::PlanningPlan,
+            locked: true,
+            regional: false,
+            effects: vec![
+
+            ],
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![
+                        Condition::RunsPlayed(Comparator::Equal, 0)
+                    ]
+                }
+            ],
+            prob_modifier: 1.0,
+            branches: vec![],
+            intensity: 0
+        },
+        Event {
+            id: 91,
             name: "SRM - Solar Impacts",
             phase: Phase::WorldMain,
             locked: false,
@@ -9870,7 +9912,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 90,
+            id: 92,
             name: "Game Over: Coup",
             phase: Phase::BreakStart,
             locked: false,
@@ -9891,7 +9933,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 91,
+            id: 93,
             name: "AMOC Collapse",
             phase: Phase::WorldMain,
             locked: false,
@@ -9924,7 +9966,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 92,
+            id: 94,
             name: "Ecotopia",
             phase: Phase::WorldMain,
             locked: true,
@@ -9958,7 +10000,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 93,
+            id: 95,
             name: "Planning Intro",
             phase: Phase::PlanningStart,
             locked: false,
@@ -9979,14 +10021,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 94,
+            id: 96,
             name: "SRM - Respiratory Problems",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::AddEvent(104)
+                Effect::AddEvent(106)
             ],
             probabilities: vec![
                 Probability {
@@ -10002,7 +10044,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 95,
+            id: 97,
             name: "The Realm of Freedom",
             phase: Phase::WorldMain,
             locked: false,
@@ -10037,7 +10079,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 96,
+            id: 98,
             name: "Earth Liberation Front Attacks",
             phase: Phase::Icon,
             locked: true,
@@ -10067,7 +10109,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 97,
+            id: 99,
             name: "Island Abandoned",
             phase: Phase::WorldMain,
             locked: false,
@@ -10076,7 +10118,7 @@ pub fn events() -> Vec<Event> {
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::Migration,
                 Effect::NPCRelationship(4, -2),
-                Effect::TriggerEvent(45, 2)
+                Effect::TriggerEvent(46, 2)
             ],
             probabilities: vec![
                 Probability {
@@ -10099,7 +10141,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 98,
+            id: 100,
             name: "Potato Blight Destroys Harvest",
             phase: Phase::WorldMain,
             locked: false,
@@ -10122,13 +10164,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 99,
+            id: 101,
             name: "Famine - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(110)
+                Effect::AddEvent(112)
             ],
             probabilities: vec![
                 Probability {
@@ -10144,7 +10186,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 100,
+            id: 102,
             name: "Wildfires - Smoke",
             phase: Phase::WorldMain,
             locked: false,
@@ -10190,7 +10232,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 101,
+            id: 103,
             name: "Dashboard Intro",
             phase: Phase::PlanningDashboard,
             locked: false,
@@ -10211,14 +10253,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 102,
+            id: 104,
             name: "Ozone Health",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::AddEvent(104),
+                Effect::AddEvent(106),
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -1.0)
             ],
             probabilities: vec![
@@ -10235,13 +10277,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 103,
+            id: 105,
             name: "Extreme Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(52)
+                Effect::AddEvent(53)
             ],
             probabilities: vec![
                 Probability {
@@ -10278,7 +10320,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 104,
+            id: 106,
             name: "SRM - Assassination",
             phase: Phase::WorldMain,
             locked: true,
@@ -10300,7 +10342,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 105,
+            id: 107,
             name: "UFO Gift",
             phase: Phase::WorldMain,
             locked: true,
@@ -10322,7 +10364,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 106,
+            id: 108,
             name: "Nemesis - The Accelerationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -10343,7 +10385,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 107,
+            id: 109,
             name: "Lithium Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -10365,7 +10407,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 108,
+            id: 110,
             name: "Large Derecho Storm",
             phase: Phase::Icon,
             locked: true,
@@ -10404,7 +10446,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 109,
+            id: 111,
             name: "Ally - The Ecofeminist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -10426,7 +10468,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 110,
+            id: 112,
             name: "Famine",
             phase: Phase::Icon,
             locked: true,
@@ -10447,7 +10489,7 @@ pub fn events() -> Vec<Event> {
             intensity: 5
         },
         Event {
-            id: 111,
+            id: 113,
             name: "Urban Gardening",
             phase: Phase::WorldMain,
             locked: false,
@@ -10470,7 +10512,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 112,
+            id: 114,
             name: "Mendel-Mania",
             phase: Phase::WorldMain,
             locked: false,
@@ -10494,7 +10536,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 113,
+            id: 115,
             name: "Mega Dust Storms",
             phase: Phase::WorldMain,
             locked: true,
@@ -10525,14 +10567,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 114,
+            id: 116,
             name: "West Antarctic Collapse",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, 0.005),
-                Effect::TriggerEvent(154, 1)
+                Effect::TriggerEvent(156, 1)
             ],
             probabilities: vec![
                 Probability {
@@ -10562,7 +10604,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 115,
+            id: 117,
             name: "Great Barrier Reef Dead",
             phase: Phase::WorldMain,
             locked: false,
@@ -10600,7 +10642,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 116,
+            id: 118,
             name: "Acid Rain Damages Infrastructure and Ecosystems ",
             phase: Phase::WorldMain,
             locked: false,
@@ -10630,13 +10672,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 117,
+            id: 119,
             name: "Assassination Thwarted",
             phase: Phase::ReportStart,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(222)
+                Effect::AddEvent(224)
             ],
             probabilities: vec![
                 Probability {
@@ -10652,7 +10694,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 118,
+            id: 120,
             name: "NPC guidance - Geoengineer",
             phase: Phase::PlanningResearch,
             locked: false,
@@ -10673,7 +10715,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 119,
+            id: 121,
             name: "Toxic Airborne Event",
             phase: Phase::WorldMain,
             locked: false,
@@ -10695,7 +10737,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 120,
+            id: 122,
             name: "Blue Ocean Event",
             phase: Phase::WorldMain,
             locked: false,
@@ -10733,7 +10775,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 121,
+            id: 123,
             name: "Epidemic X",
             phase: Phase::WorldMain,
             locked: true,
@@ -10763,7 +10805,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 122,
+            id: 124,
             name: "A New Prometheus",
             phase: Phase::WorldMain,
             locked: false,
@@ -10800,7 +10842,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 123,
+            id: 125,
             name: "Nemesis - The Malthusian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -10821,7 +10863,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 124,
+            id: 126,
             name: "River Restoration",
             phase: Phase::WorldMain,
             locked: false,
@@ -10829,7 +10871,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -0.8),
-                Effect::ModifyEventProbability(50, 0.5),
+                Effect::ModifyEventProbability(51, 0.5),
                 Effect::ModifyEventProbability(25, -0.25)
             ],
             probabilities: vec![
@@ -10847,7 +10889,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 125,
+            id: 127,
             name: "The Wretched Attack",
             phase: Phase::Icon,
             locked: true,
@@ -10886,14 +10928,14 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 126,
+            id: 128,
             name: "Permafrost Melting",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 2.0),
-                Effect::AddEvent(82)
+                Effect::AddEvent(83)
             ],
             probabilities: vec![
                 Probability {
@@ -10916,15 +10958,15 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 127,
+            id: 129,
             name: "Unrest - Riots",
             phase: Phase::WorldMain,
             locked: true,
             regional: true,
             effects: vec![
-                Effect::AddEvent(48),
+                Effect::AddEvent(49),
                 Effect::AddRegionFlag("riots".to_string()),
-                Effect::AddEvent(209)
+                Effect::AddEvent(211)
             ],
             probabilities: vec![
                 Probability {
@@ -10949,13 +10991,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 128,
+            id: 130,
             name: "Research Intro",
             phase: Phase::PlanningResearch,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(173)
+                Effect::AddEvent(175)
             ],
             probabilities: vec![
                 Probability {
@@ -10970,14 +11012,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 129,
+            id: 131,
             name: "Thwaites Glacier Collapses",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
-                Effect::AddEvent(114),
+                Effect::AddEvent(116),
                 Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.65)
             ],
             probabilities: vec![
@@ -10994,7 +11036,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 130,
+            id: 132,
             name: "Reruralization",
             phase: Phase::WorldMain,
             locked: false,
@@ -11016,13 +11058,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 131,
+            id: 133,
             name: "Ozone Depletion",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(102)
+                Effect::AddEvent(104)
             ],
             probabilities: vec![
                 Probability {
@@ -11038,7 +11080,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 132,
+            id: 134,
             name: "Ally - The Malthusian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11060,13 +11102,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 133,
+            id: 135,
             name: "Dancing Plague",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::TriggerEvent(61, 3)
+                Effect::TriggerEvent(62, 3)
             ],
             probabilities: vec![
                 Probability {
@@ -11082,7 +11124,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 134,
+            id: 136,
             name: "Nemesis - The Posadist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11103,15 +11145,15 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 135,
+            id: 137,
             name: "Novel Disease",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::AddEvent(151),
-                Effect::AddEvent(121)
+                Effect::AddEvent(153),
+                Effect::AddEvent(123)
             ],
             probabilities: vec![
                 Probability {
@@ -11148,13 +11190,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 136,
+            id: 138,
             name: "Flooding - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(50),
+                Effect::AddEvent(51),
                 Effect::AddEvent(23)
             ],
             probabilities: vec![
@@ -11170,7 +11212,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 137,
+            id: 139,
             name: "Regenerative Crop Agriculture",
             phase: Phase::BreakStart,
             locked: true,
@@ -11192,7 +11234,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 138,
+            id: 140,
             name: "Warming Leads to Declining Agricultural Yields",
             phase: Phase::WorldMain,
             locked: false,
@@ -11215,7 +11257,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 139,
+            id: 141,
             name: "Ally - The Environmentalist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11237,7 +11279,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 140,
+            id: 142,
             name: "Australian 'Dinosaur Trees' Destroyed in Wildfire",
             phase: Phase::WorldMain,
             locked: false,
@@ -11281,14 +11323,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 141,
+            id: 143,
             name: "Leather Underground - Attacks",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::AddEvent(196)
+                Effect::AddEvent(198)
             ],
             probabilities: vec![
                 Probability {
@@ -11311,7 +11353,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 142,
+            id: 144,
             name: "Coup",
             phase: Phase::ReportStart,
             locked: false,
@@ -11332,7 +11374,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 143,
+            id: 145,
             name: "NPC guidance - Ecologist",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -11353,7 +11395,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 144,
+            id: 146,
             name: "Uranium Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -11376,7 +11418,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 145,
+            id: 147,
             name: "Rotational Grazing",
             phase: Phase::BreakStart,
             locked: true,
@@ -11397,7 +11439,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 146,
+            id: 148,
             name: "Year without a Summer",
             phase: Phase::WorldMain,
             locked: false,
@@ -11439,7 +11481,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 147,
+            id: 149,
             name: "Environmental Injustice - Unconventional Oil ",
             phase: Phase::WorldMain,
             locked: false,
@@ -11463,7 +11505,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 148,
+            id: 150,
             name: "Mountain Gorilla Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -11492,7 +11534,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 149,
+            id: 151,
             name: "Nemesis - The Environmentalist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -11513,14 +11555,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 150,
+            id: 152,
             name: "Too Hot to Work",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::AddEvent(191)
+                Effect::AddEvent(193)
             ],
             probabilities: vec![
                 Probability {
@@ -11536,7 +11578,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 151,
+            id: 153,
             name: "Disease Outbreak",
             phase: Phase::Icon,
             locked: true,
@@ -11563,7 +11605,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 152,
+            id: 154,
             name: "Silent Spring",
             phase: Phase::WorldMain,
             locked: false,
@@ -11588,7 +11630,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 153,
+            id: 155,
             name: "Chthulucene",
             phase: Phase::WorldMain,
             locked: false,
@@ -11613,7 +11655,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 154,
+            id: 156,
             name: "Ice Sheet Tsunami",
             phase: Phase::WorldMain,
             locked: true,
@@ -11634,7 +11676,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 155,
+            id: 157,
             name: "Epidemic Y: The Big One",
             phase: Phase::WorldMain,
             locked: false,
@@ -11665,7 +11707,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 156,
+            id: 158,
             name: "Processes Intro",
             phase: Phase::PlanningProcesses,
             locked: false,
@@ -11686,13 +11728,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 157,
+            id: 159,
             name: "Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(60),
+                Effect::AddEvent(61),
                 Effect::AddEvent(7)
             ],
             probabilities: vec![
@@ -11714,14 +11756,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 158,
+            id: 160,
             name: "Brownouts - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(47),
-                Effect::AddEvent(69)
+                Effect::AddEvent(48),
+                Effect::AddEvent(70)
             ],
             probabilities: vec![
                 Probability {
@@ -11768,7 +11810,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 159,
+            id: 161,
             name: "Copper Shortage",
             phase: Phase::WorldMain,
             locked: false,
@@ -11800,11 +11842,11 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![Effect::TriggerEvent(186, 5)], vec![]), (vec![Effect::ProjectCostModifier(22, 0.25)], vec![])],
+            branches: vec![(vec![Effect::TriggerEvent(188, 5)], vec![]), (vec![Effect::ProjectCostModifier(22, 0.25)], vec![])],
             intensity: 0
         },
         Event {
-            id: 160,
+            id: 162,
             name: "Mushrooms at the End of the World",
             phase: Phase::WorldMain,
             locked: true,
@@ -11829,7 +11871,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 161,
+            id: 163,
             name: "Permafrost Pandemic",
             phase: Phase::WorldMain,
             locked: true,
@@ -11853,7 +11895,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 162,
+            id: 164,
             name: "Parliament Intro",
             phase: Phase::PlanningParliament,
             locked: false,
@@ -11874,7 +11916,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 163,
+            id: 165,
             name: "Day Zero - Water Restrictions Needed Soon",
             phase: Phase::PlanningStart,
             locked: false,
@@ -11897,7 +11939,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 164,
+            id: 166,
             name: "Coal Running Out",
             phase: Phase::WorldMain,
             locked: false,
@@ -11919,7 +11961,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 165,
+            id: 167,
             name: "Fish Populations Collapse ",
             phase: Phase::WorldMain,
             locked: true,
@@ -11950,7 +11992,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 166,
+            id: 168,
             name: "Global Equality ",
             phase: Phase::WorldMain,
             locked: false,
@@ -11968,7 +12010,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 167,
+            id: 169,
             name: "Migrations - Borders",
             phase: Phase::WorldMain,
             locked: true,
@@ -12000,7 +12042,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 168,
+            id: 170,
             name: "Locust Infestation",
             phase: Phase::WorldMain,
             locked: false,
@@ -12029,7 +12071,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 169,
+            id: 171,
             name: "Welcome Back",
             phase: Phase::PlanningStart,
             locked: false,
@@ -12050,7 +12092,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 170,
+            id: 172,
             name: "SRM - Fleet Shot Down",
             phase: Phase::WorldMain,
             locked: true,
@@ -12072,7 +12114,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 171,
+            id: 173,
             name: "Torches and Pitchforks Outside Your Window...",
             phase: Phase::ReportStart,
             locked: false,
@@ -12100,7 +12142,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 172,
+            id: 174,
             name: "Planning - NPC quotes Malthusian",
             phase: Phase::PlanningPlanChange,
             locked: false,
@@ -12121,13 +12163,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 173,
+            id: 175,
             name: "Plan Intro",
             phase: Phase::PlanningPlan,
             locked: true,
             regional: false,
             effects: vec![
-
+                Effect::AddEvent(44)
             ],
             probabilities: vec![
                 Probability {
@@ -12142,7 +12184,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 174,
+            id: 176,
             name: "Revolts",
             phase: Phase::Icon,
             locked: true,
@@ -12164,7 +12206,7 @@ pub fn events() -> Vec<Event> {
             intensity: 3
         },
         Event {
-            id: 175,
+            id: 177,
             name: "Wet-Bulb Event",
             phase: Phase::WorldMain,
             locked: true,
@@ -12210,14 +12252,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 176,
+            id: 178,
             name: "The Wretched - Attack",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                Effect::AddEvent(125)
+                Effect::AddEvent(127)
             ],
             probabilities: vec![
                 Probability {
@@ -12240,7 +12282,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 177,
+            id: 179,
             name: "Ex-Urban Explosion",
             phase: Phase::WorldMain,
             locked: false,
@@ -12264,7 +12306,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 178,
+            id: 180,
             name: "Massive Jellyfish Blooms",
             phase: Phase::WorldMain,
             locked: false,
@@ -12296,7 +12338,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 179,
+            id: 181,
             name: "4000th nuclear reactor built",
             phase: Phase::WorldMain,
             locked: false,
@@ -12320,7 +12362,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 180,
+            id: 182,
             name: "World Intro",
             phase: Phase::WorldStart,
             locked: false,
@@ -12342,7 +12384,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 181,
+            id: 183,
             name: "Communist Cockaigne",
             phase: Phase::WorldMain,
             locked: false,
@@ -12365,7 +12407,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 182,
+            id: 184,
             name: "Volcanic Eruption ",
             phase: Phase::WorldMain,
             locked: false,
@@ -12387,7 +12429,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 183,
+            id: 185,
             name: "UFO War",
             phase: Phase::WorldMain,
             locked: true,
@@ -12410,7 +12452,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 184,
+            id: 186,
             name: "Hail Cannons",
             phase: Phase::WorldStart,
             locked: true,
@@ -12431,7 +12473,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 185,
+            id: 187,
             name: "Boreal Forest Shift",
             phase: Phase::WorldMain,
             locked: false,
@@ -12455,7 +12497,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 186,
+            id: 188,
             name: "Environmental Injustice - Copper",
             phase: Phase::WorldMain,
             locked: false,
@@ -12479,7 +12521,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 187,
+            id: 189,
             name: "Report Intro",
             phase: Phase::ReportStart,
             locked: false,
@@ -12500,7 +12542,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 188,
+            id: 190,
             name: "Aurochs Return to the Eurasian Plains",
             phase: Phase::WorldMain,
             locked: false,
@@ -12544,7 +12586,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 189,
+            id: 191,
             name: "Heatwaves",
             phase: Phase::Icon,
             locked: true,
@@ -12571,7 +12613,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 190,
+            id: 192,
             name: "Book Extract - Havana",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -12593,7 +12635,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 191,
+            id: 193,
             name: "Night Life Adaptation",
             phase: Phase::WorldMain,
             locked: true,
@@ -12615,7 +12657,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 192,
+            id: 194,
             name: "Pollinator - Collapse",
             phase: Phase::WorldMain,
             locked: true,
@@ -12638,7 +12680,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 193,
+            id: 195,
             name: "Crop Failures",
             phase: Phase::Icon,
             locked: true,
@@ -12677,7 +12719,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 194,
+            id: 196,
             name: "Extra Animals",
             phase: Phase::WorldMain,
             locked: false,
@@ -12706,7 +12748,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 195,
+            id: 197,
             name: "From Mowing Lawns to Rewilding Meadows",
             phase: Phase::WorldMain,
             locked: false,
@@ -12736,7 +12778,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 196,
+            id: 198,
             name: "The Leather Underground Attack",
             phase: Phase::Icon,
             locked: true,
@@ -12763,7 +12805,7 @@ pub fn events() -> Vec<Event> {
             intensity: 1
         },
         Event {
-            id: 197,
+            id: 199,
             name: "Environmental Injustice - Rare Earth Metals",
             phase: Phase::WorldMain,
             locked: false,
@@ -12787,7 +12829,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 198,
+            id: 200,
             name: "Ally - The Animal Liberationist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -12809,7 +12851,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 199,
+            id: 201,
             name: "Ally - The Authoritarian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -12837,7 +12879,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 200,
+            id: 202,
             name: "Ocean Microorganisms",
             phase: Phase::WorldMain,
             locked: true,
@@ -12866,13 +12908,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 201,
+            id: 203,
             name: "Earth Liberation Front - Attacks",
             phase: Phase::WorldMain,
             locked: true,
             regional: false,
             effects: vec![
-                Effect::AddEvent(96)
+                Effect::AddEvent(98)
             ],
             probabilities: vec![
                 Probability {
@@ -12888,7 +12930,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 202,
+            id: 204,
             name: "Clean Air",
             phase: Phase::WorldMain,
             locked: false,
@@ -12910,7 +12952,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 203,
+            id: 205,
             name: "Millions of Climate Refugees on the Move",
             phase: Phase::WorldMain,
             locked: false,
@@ -12918,10 +12960,10 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::Migration,
-                Effect::AddEvent(220),
+                Effect::AddEvent(222),
                 Effect::UnlocksProject(14),
-                Effect::AddEvent(67),
-                Effect::AddEvent(167)
+                Effect::AddEvent(68),
+                Effect::AddEvent(169)
             ],
             probabilities: vec![
                 Probability {
@@ -12937,7 +12979,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 204,
+            id: 206,
             name: "Initiatives Intro",
             phase: Phase::PlanningInitiatives,
             locked: false,
@@ -12958,7 +13000,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 205,
+            id: 207,
             name: "Sabotage",
             phase: Phase::WorldMain,
             locked: false,
@@ -12997,7 +13039,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 206,
+            id: 208,
             name: "First 100m-Inhabitant City",
             phase: Phase::WorldMain,
             locked: false,
@@ -13036,14 +13078,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 207,
+            id: 209,
             name: "Feminist Citizen-Scientists",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
-                Effect::TriggerEvent(85, 2)
+                Effect::TriggerEvent(86, 2)
             ],
             probabilities: vec![
                 Probability {
@@ -13068,7 +13110,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 208,
+            id: 210,
             name: "Nemesis - The Authoritarian",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -13089,7 +13131,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 209,
+            id: 211,
             name: "Riots",
             phase: Phase::Icon,
             locked: true,
@@ -13111,7 +13153,7 @@ pub fn events() -> Vec<Event> {
             intensity: 2
         },
         Event {
-            id: 210,
+            id: 212,
             name: "Ocean Plastic Weighs More than World's Fish",
             phase: Phase::WorldMain,
             locked: false,
@@ -13142,7 +13184,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 211,
+            id: 213,
             name: "The Ark Proposal",
             phase: Phase::PlanningStart,
             locked: false,
@@ -13164,7 +13206,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 212,
+            id: 214,
             name: "More and More Mega-Dams ",
             phase: Phase::WorldMain,
             locked: false,
@@ -13187,7 +13229,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 213,
+            id: 215,
             name: "Bird-Watching Craze",
             phase: Phase::WorldMain,
             locked: false,
@@ -13209,7 +13251,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 214,
+            id: 216,
             name: "SRM - SAD",
             phase: Phase::WorldMain,
             locked: false,
@@ -13231,7 +13273,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 215,
+            id: 217,
             name: "Endangered Species Back from the Brink ",
             phase: Phase::WorldMain,
             locked: false,
@@ -13261,7 +13303,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 216,
+            id: 218,
             name: "Success",
             phase: Phase::EndStart,
             locked: false,
@@ -13282,7 +13324,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 217,
+            id: 219,
             name: "Insect Infestation Weakens Forest",
             phase: Phase::WorldMain,
             locked: false,
@@ -13313,7 +13355,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 218,
+            id: 220,
             name: "Deadly Leak from CCS Storage Facility",
             phase: Phase::WorldMain,
             locked: false,
@@ -13357,7 +13399,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 219,
+            id: 221,
             name: "Polar Bear Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
@@ -13381,7 +13423,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 220,
+            id: 222,
             name: "Tens of Millions of Climate Migrants on the Move",
             phase: Phase::WorldMain,
             locked: true,
@@ -13404,7 +13446,7 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 221,
+            id: 223,
             name: "Ally - The Fanonist",
             phase: Phase::PlanningPlan,
             locked: false,
@@ -13426,14 +13468,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 222,
+            id: 224,
             name: "Assassination",
             phase: Phase::ReportStart,
             locked: true,
             regional: false,
             effects: vec![
                 Effect::GameOver,
-                Effect::AddEvent(87)
+                Effect::AddEvent(88)
             ],
             probabilities: vec![
                 Probability {
@@ -13448,13 +13490,13 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 223,
+            id: 225,
             name: "Severe Hurricane - Intro",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
-                Effect::AddEvent(74)
+                Effect::AddEvent(75)
             ],
             probabilities: vec![
                 Probability {
@@ -13493,14 +13535,14 @@ pub fn events() -> Vec<Event> {
             intensity: 0
         },
         Event {
-            id: 224,
+            id: 226,
             name: "SRM - Weakening Monsoon",
             phase: Phase::WorldMain,
             locked: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
-                Effect::TriggerEvent(170, 6),
+                Effect::TriggerEvent(172, 6),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
                 Effect::RegionHabitability(Latitude::Tropic, -3.0)
             ],

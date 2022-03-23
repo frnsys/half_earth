@@ -14,7 +14,7 @@
     <div class="plan--changes" :style="{maxWidth}">
       <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
       <div class="plan--change">
-        <div class="plan--add-change minicard" @click="selectPage('Add')">
+        <div class="plan--add-change minicard" @click="selectPage('Add')" :class="{highlight: projectsHighlighted}">
           <div>
             <img :src="icons.add">
             <div class="plan--action">Add</div>
@@ -33,7 +33,7 @@
     </div>
     <div class="plan--production">
       <div class="plan--production-bg"></div>
-      <div class="plan--production-button btn" @click="selectPage('Processes')">Change Production</div>
+      <div class="plan--production-button btn" :class="{disabled: processesDisabled, highlight: processesHighlighted}" @click="selectPage('Processes')">Change Production</div>
     </div>
     <div class="plan--charts">
       <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="220px" :center="true" />
@@ -44,7 +44,7 @@
       </div>
       <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
     </div>
-    <button class="plan--ready" @click="enterWorld">Ready</button>
+    <button class="plan--ready" :class="{disabled: readyDisabled, highlight: readyHighlighted}" @click="enterWorld">Ready</button>
   </div>
 </div>
 </template>
@@ -62,6 +62,7 @@ import MiniProcess from 'components/cards/mini/MiniProcess.vue';
 import MiniProject from 'components/cards/mini/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
+import tutorial from '/src/tutorial';
 
 const charts = {
   'land': 'Land Use',
@@ -186,14 +187,37 @@ export default {
         color: '#FE4400'
       }
     },
-    enterWorld() {
-      game.saveGame();
-      game.saveMeta();
-      state.phase = 'EVENTS';
+    processesDisabled() {
+      return state.tutorial < tutorial.PROCESSES;
+    },
+    processesHighlighted() {
+      return state.tutorial == tutorial.PROCESSES;
+    },
+    readyDisabled() {
+      return state.tutorial < tutorial.READY;
+    },
+    readyHighlighted() {
+      return state.tutorial == tutorial.READY;
+    },
+    projectsHighlighted() {
+      return state.tutorial == tutorial.PROJECTS;
     }
   },
   methods: {
+    enterWorld() {
+      if (state.tutorial == tutorial.READY) {
+        state.tutorial++;
+      }
+      game.saveGame();
+      game.saveMeta();
+      state.phase = 'EVENTS';
+    },
     close() {
+      if (this.page == 'Add' && state.tutorial == tutorial.PROJECTS_BACK) {
+        state.tutorial++;
+      } else if (this.page == 'Processes' && state.tutorial == tutorial.PROCESSES_BACK) {
+        state.tutorial++;
+      }
       this.page = null;
       this.$emit('page', 'Plan');
     },
@@ -383,6 +407,21 @@ export default {
   color: #fff;
   z-index: 2;
 }
+.plan--ready.disabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.plan--ready.highlight {
+  animation-duration: 0.75s;
+  animation-name: highlight;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.plan--ready:hover {
+  background: red;
+  transform: scale(1.05);
+}
 
 .processes-minicard img {
   width: 28px;
@@ -449,6 +488,13 @@ export default {
 }
 .planning--page-tabs .disabled {
   opacity: 0.5;
+  pointer-events: none;
+}
+.planning--page-tabs .highlight {
+  animation-duration: 0.75s;
+  animation-name: highlight;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 
@@ -512,4 +558,10 @@ export default {
   border-radius: 0 0 0.3em 0;
 }
 
+.plan--add-change.highlight {
+  animation-duration: 0.75s;
+  animation-name: highlight;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
 </style>

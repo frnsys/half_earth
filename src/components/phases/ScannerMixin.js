@@ -4,6 +4,7 @@ import consts from '/src/consts';
 import PROJECTS from '/assets/content/projects.json';
 import Draggable from 'components/cards/Draggable.vue';
 import animate from 'lib/anim';
+import tutorial from '/src/tutorial';
 
 const CARD_HEIGHT = 420;
 const WITHDRAW_HEIGHT = 68;
@@ -421,6 +422,9 @@ export default (type) => {
 
               // Adding points to Research/Infrastructure
               } else if (this.type !== 'Policy' && this.buyPoint()) {
+                if (state.tutorial == tutorial.PROJECTS) {
+                  state.tutorial++;
+                }
                 this.assignPoint(p);
                 // this.pulseProgress();
                 this.pulseCard();
@@ -432,6 +436,10 @@ export default (type) => {
               // Passing Policies
               // Free if withdrawn in this same session (i.e. undo the withdraw)
               } else if (this.type == 'Policy' && (changes.withdrawn || this.payPoints())) {
+                if (state.tutorial == tutorial.PROJECTS) {
+                  state.tutorial++;
+                }
+
                 this.passPolicy();
                 // this.pulseProgress();
                 this.pulseCard();
@@ -457,6 +465,10 @@ export default (type) => {
             } else {
               // Handle processes here
               if(this.processAddable){
+                if (state.tutorial == tutorial.PROCESSES) {
+                  state.tutorial++;
+                }
+
                 this.addPoint(proc);
                 this.pulseCard();
                 this.scanCard();
