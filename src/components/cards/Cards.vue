@@ -146,9 +146,7 @@ export default {
   scroll-snap-type: x mandatory;
   scroll-snap-stop: always;
   scrollbar-color: #aaa transparent;
-  /* so there's enough space to center the
-  first and last items */
-  padding: 1em 25% 0;
+  padding: 1em 0 0;
 
   bottom: 0;
   top: 0;
@@ -156,9 +154,21 @@ export default {
   right: 0;
   position: absolute;
 }
-.cards > * {
+
+.cards > div {
   scroll-snap-align: center;
 }
+
+/* Margin on either side so
+the first and last cards have room
+to be centered */
+.cards > div:first-child {
+  margin-left: 50vw;
+}
+.cards > div:last-child {
+  margin-right: 50vw;
+}
+
 .cards .card {
   display: inline-flex;
   min-width: 280px;
@@ -166,16 +176,6 @@ export default {
   vertical-align: top;
   white-space: normal;
   user-select: none;
-}
-
-/* Margin on either side so
-the first and last cards have room
-to be centered */
-.cards > div:first-child {
-  margin-left: 20em;
-}
-.cards > div:last-child {
-  margin-right: 20em;
 }
 
 .noscroll {
