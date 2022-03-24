@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // TODO While testing
 const versionTag = document.createElement('div');
-versionTag.innerText = `v.${VERSION}`;
+versionTag.innerHTML = `This is a beta version, so things may change. <a target="_blank" href="https://forms.gle/bL7mWMFGq7NQiVjs9">File a bug report</a>. v.${VERSION}. `;
 versionTag.id = 'version-tag';
 document.body.appendChild(versionTag);
 

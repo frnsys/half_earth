@@ -546,11 +546,14 @@ strong{
   bottom: 1em;
   background: #222;
   color: #fff;
-  font-size: 0.75em;
+  font-size: 0.6em;
   padding: 0.2em 0.3em;
   border-radius: 0.3em;
   border: 1px solid #fff;
   opacity: 0.8;
+}
+#version-tag a {
+  color: #DEC92B;
 }
 
 @keyframes highlight {
