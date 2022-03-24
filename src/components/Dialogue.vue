@@ -130,7 +130,10 @@ export default {
       if (dialogue !== null) {
         this.revealed = false;
         this.current = dialogue.root;
-        this.play();
+        this.$emit('started');
+        this.$nextTick(() => {
+          this.play();
+        });
       }
     }
   },
@@ -145,19 +148,19 @@ export default {
     isLastLine() {
       return this.line.next == null;
     },
-    
+
   },
   methods: {
     fallbackPortrait(e){
       e.target.src ='/assets/characters/' + this.line.speaker + '.png'
     },
     onKeydown(e){
-      if(e.keyCode === 13){
+      if(e.keyCode === 13) {
         this.advance();
       }
       if (VERSION === 'dev') {
-        if(e.keyCode === 27){
-        this.end();
+        if(e.keyCode === 27) {
+          this.end();
         }
       }
     },

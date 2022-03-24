@@ -65,7 +65,7 @@
       </div>
     </template>
   </div>
-  <Dialogue v-if="obj.activeOutcome" :dialogue="obj.activeOutcome.dialogue" :effects="[]" @done="dialogueDone" />
+  <Dialogue v-if="obj.activeOutcome" :dialogue="obj.activeOutcome.dialogue" :effects="[]" @started="dialogueStart" @done="dialogueDone" />
 </div>
 </template>
 
@@ -93,6 +93,9 @@ export default {
     }
   },
   methods: {
+    dialogueStart()  {
+      this.canClose = false;
+    },
     dialogueDone()  {
       this.canClose = true;
     },
