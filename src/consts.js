@@ -34,14 +34,11 @@ export default {
   maxPoints: 15,
 
   // In seconds
-  cardScanTime: 1,
-  cardWithdrawTime: 2,
-
-  // In seconds
+  projectCardScanTime: 1,
+  projectCardWithdrawTime: 2,
   processCardScanTime: 0.5,
   processCardWithdrawTime: 0.4,
- 
-  
+
   maxValues: {
     biodiversity: 80,
     contentedness: 40,

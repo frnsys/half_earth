@@ -18,32 +18,16 @@
     </div>
     <div @click="$emit('close')" :class="{disabled: backDisabled, highlight: backHighlighted}">Back</div>
   </div>
-  <!-- <div class="card-scan-target" ref="target"></div> -->
 
-  <div class="scanbar-wrapper"  ref="target">
-    <div class="mini-scanbar">
-        <div class="scanbar-base">
-          <div class="scan-progress-bar" ref="scanProgress"></div>
-        </div>
-        <div class="scanbar-led scanbar-led-ok"></div>
-        <div class="scanbar-led scanbar-led-bad"></div>
-        <div class="card-scan-target"></div>
-    </div>
-  </div>
-
-  <div class="card-withdraw-target" ref="withdrawTarget">
-    {{ refundable ? 'Undo' : (canDowngrade ? 'Downgrade' : 'Withdraw') }}
-    <div class="withdraw-bar" ref="withdrawProgress"></div>
-  </div>
+  <AddScanner ref="addScanner" :project="project" />
+  <RemoveScanner ref="removeScanner" :project="project" />
 
   <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
-      ref="draggables"
       @drag="onDrag"
       @dragStop="onDragStop"
       v-for="i in projectOrder"
-      :minY="yMin"
-      :maxY="yMax"
+      :yBounds="yBounds"
       :draggable="allowSwipe && focused == i"
       :id="projects[i].id"
       :key="projects[i].id">
@@ -56,20 +40,7 @@
   <CardFocusArea />
 
   <footer>
-    <div class="pips">
-      <div class="scan-progress" ></div>
-      <template v-if="type == 'Policy'">
-        {{availablePoints}}<img class="pip" :src="icons.political_capital">
-      </template>
-      <template v-else>
-        <template v-if="availablePoints > 0">
-          {{availablePoints}}<img class="pip" :src="icons[icon]">
-        </template>
-        <template v-else>
-          {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons[icon]">
-        </template>
-      </template>
-    </div>
+    <Points :kind="project.kind" />
   </footer>
 </div>
 </template>
@@ -79,15 +50,21 @@ import debug from '/src/debug';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
-import CardsMixin from 'components/phases/CardsMixin';
-import ScannerMixin from 'components/phases/ScannerMixin';
 import tutorial from '/src/tutorial';
 
+import CardsMixin from 'components/phases/CardsMixin';
+import Points from 'components/scanner/project/Points.vue';
+import AddScanner from 'components/scanner/project/AddScanner.vue';
+import RemoveScanner from 'components/scanner/project/RemoveScanner.vue';
+
 export default {
-  mixins: [ScannerMixin('Project'), CardsMixin],
+  mixins: [CardsMixin],
   components: {
+    Points,
     ProjectCard,
     HelpTip,
+    AddScanner,
+    RemoveScanner,
   },
   data() {
     return {
@@ -101,16 +78,16 @@ export default {
   watch: {
     type(type) {
       // Figure out what the focused card is
-      this.updateFocused(() => {
-        // Emit for events
-        let page = type;
-        if (type == 'Initiative') {
-          page = 'Initiatives';
-        } else if (type == 'Policy') {
-          page = 'Policies';
-        }
-        this.$emit('page', page);
-      });
+      this.updateFocused();
+
+      // Emit for events
+      let page = type;
+      if (type == 'Initiative') {
+        page = 'Initiatives';
+      } else if (type == 'Policy') {
+        page = 'Policies';
+      }
+      this.$emit('page', page);
     }
   },
   computed: {
@@ -154,28 +131,16 @@ export default {
     },
   },
   methods: {
+    yBounds() {
+      return [0, 600]; // TODO
+      /* if (!this._yBounds) { */
+      /*   let el = document.querySelector(); */
+      /* } */
+      /* return this._yBounds; */
+    },
     items(idx) {
       return this.projectOrder[idx];
     },
   }
 }
 </script>
-
-<style scoped>
-
-.scanbar-wrapper{
-  width: 100%;
-  position: absolute;
-  height:60px;
-  top:-20px;
-  z-index: 1;
-}
-.mini-scanbar {
-  height: 60px;
-  position: relative;
-  /* top: 0; */
-  margin:0 auto;
-}
-
-
-</style>

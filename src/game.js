@@ -1,5 +1,6 @@
 import state from './state';
 import debug from './debug';
+import consts from '/src/consts';
 import {initState} from './state';
 import factors from '/src/display/factors';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
@@ -283,6 +284,19 @@ function loadMeta() {
   }
 }
 
+function nextPointCost(kind) {
+  let discount = 0;
+  if (kind == 'Research') {
+    if (isAlly('The Accelerationist')) {
+      discount++;
+    }
+    if (state.gameState.flags.includes('HyperResearch')) {
+      discount++;
+    }
+  }
+  return Math.max(0, consts.pointCost - discount);
+}
+
 export default {
   newRun, saveMeta, hasSave,
   saveGame, loadGame, clearSave,
@@ -299,4 +313,4 @@ export default {
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
   playerSeats, isAlly,
-  updateFactors};
+  updateFactors, nextPointCost};

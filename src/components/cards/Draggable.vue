@@ -15,7 +15,7 @@ import throttle from "lodash.throttle";
 import {updateTransform} from 'lib/util';
 
 export default {
-  props: ['id', 'draggable', 'minY', 'maxY'],
+  props: ['id', 'draggable', 'yBounds'],
   data() {
     return {
       dragging: false,
@@ -82,14 +82,7 @@ export default {
       window.addEventListener('mouseup', this.stopDrag);
       window.addEventListener('touchend', this.stopDrag);
 
-      // Get and cache current y position of this element
-      this.observer = new IntersectionObserver((entries) => {
-        let rect = entries[0].boundingClientRect;
-        this.elY = rect.y;
-        this.elHeight = rect.height;
-        this.observer.disconnect();
-      });
-      this.observer.observe(this.$el);
+      this.getPosition();
     },
     disable() {
       if (!this.enabled) return;
@@ -98,6 +91,16 @@ export default {
       document.body.removeEventListener('mousemove', this.dragHandler, {passive: true});
       window.removeEventListener('mouseup', this.stopDrag);
       window.removeEventListener('touchend', this.stopDrag);
+    },
+    getPosition() {
+      // Get and cache current y position of this element
+      this.observer = new IntersectionObserver((entries) => {
+        let rect = entries[0].boundingClientRect;
+        this.elY = rect.y;
+        this.elHeight = rect.height;
+        this.observer.disconnect();
+      });
+      this.observer.observe(this.$el);
     },
     startDrag(ev) {
       if (!this.draggable) return;
@@ -120,8 +123,7 @@ export default {
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
-      let minY = this.minY();
-      let maxY = this.maxY();
+      let [minY, maxY] = this.yBounds();
 
       if (Math.abs(dy) > Math.abs(dx)) {
         this.dragging = true;

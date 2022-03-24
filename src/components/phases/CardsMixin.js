@@ -1,11 +1,16 @@
 import Cards from 'components/cards/Cards.vue';
 import CardFocusArea from 'components/cards/CardFocusArea.vue';
+import Draggable from 'components/cards/Draggable.vue';
 import {detectCenterElement} from 'lib/util';
 
 export default {
   components: {
     Cards,
-    CardFocusArea
+    CardFocusArea,
+    Draggable,
+  },
+  mounted() {
+    this.updateFocused();
   },
   data() {
     return {
@@ -16,14 +21,13 @@ export default {
     }
   },
   methods: {
-    updateFocused(cb) {
+    updateFocused() {
       // Figure out what the focused card is
       this.$nextTick(() => {
         let scroller = document.querySelector('.cards');
         let els = [...document.querySelectorAll('.draggable')];
         let idx = detectCenterElement(scroller, els);
         this.onFocused(idx);
-        cb();
       });
     },
     onFocused(idx) {
@@ -32,12 +36,14 @@ export default {
     },
     onDrag(rect) {
       // This triggers the scanner functionalities
-      this.checkDrag(rect);
+      this.$refs.addScanner.checkDrag(rect);
+      this.$refs.removeScanner.checkDrag(rect);
       this.allowScroll = false;
     },
     onDragStop() {
       // This stops/cancels the scanner functionalities
-      this.stopDrag();
+      this.$refs.addScanner.stopDrag();
+      this.$refs.removeScanner.stopDrag();
       this.allowScroll = true;
     },
     onScrollStart() {

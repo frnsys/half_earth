@@ -316,6 +316,9 @@ strong{
   z-index: -1;
 }
 
+.minicard--expanded .mini-scanbar {
+  margin: 0 0 0 -13px;
+}
 .minicard--expanded .draggable {
   z-index: 0;
   margin-top: 3em;
@@ -350,7 +353,21 @@ strong{
   box-shadow: 0 0 8px #EB3941;
 }
 
-
+.scanbar-wrapper{
+  width: 100%;
+  position: absolute;
+  height:60px;
+  top: -20px;
+  z-index: 1;
+  transition: transform 0.25s;
+  visibility: hidden;
+}
+.mini-scanbar {
+  height: 60px;
+  position: relative;
+  /* top: 0; */
+  margin:0 auto;
+}
 .scan-progress-bar {
   position: absolute;
   left: 0;
@@ -372,13 +389,12 @@ strong{
 
 .card-withdraw-target {
   position: absolute;
-  height: 68px;
-  bottom: 0;
+  height: 60px;
+  bottom: -60px;
   background: #eee;
   border-radius: 0.5em 0.5em 0 0;
   width: 310px;
-  left: 50%;
-  transform: translate(-50%, 68px);
+  left: calc(50% - 310px/2);
   border-left: 3px solid #fff;
   box-shadow: 0 1px 4px rgb(0 0 0 / 60%), 0 0 8px #5f09f2;
   border-top: 2px solid #fff;
@@ -389,6 +405,8 @@ strong{
   justify-content: space-around;
   font-size: 1.3em;
   overflow: hidden;
+  transition: transform 0.25s;
+  visibility: hidden;
 }
 .withdraw-bar {
   position: absolute;
@@ -400,7 +418,7 @@ strong{
   border-radius: 0 0.2em 0.2em 0;
   z-index: -1;
 }
-.card-withdraw-target.withdrawing {
+.card-withdraw-target.scanning {
   animation-duration: 0.35s;
   animation-name: withdrawing;
   animation-iteration-count: infinite;

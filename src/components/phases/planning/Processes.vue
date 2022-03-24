@@ -25,25 +25,14 @@
     <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: `One production point represents 5% of an entire production sector's productive capacity.`}"></div>
   </div>
 
-  <div class="scanbar-wrapper"  ref="target">
-    <div class="mini-scanbar">
-        <div class="scanbar-base">
-          <div class="scan-progress-bar" ref="scanProgress"></div>
-        </div>
-        <div class="scanbar-led scanbar-led-ok"></div>
-        <div class="scanbar-led scanbar-led-bad"></div>
-        <div class="card-scan-target"></div>
-    </div>
-  </div>
+  <AddScanner ref="addScanner" :points="points" :process="process" :addPoint="addPoint" />
 
   <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
-      ref="draggables"
       @drag="onDrag"
       @dragStop="onDragStop"
       v-for="p in processes"
-      :minY="yMin"
-      :maxY="yMax"
+      :yBounds="yBounds"
       :draggable="allowSwipe && focused == p"
       :id="p.id"
       :key="p.id"
@@ -56,10 +45,7 @@
 
   <CardFocusArea />
 
-  <div class="card-withdraw-target" ref="withdrawTarget">
-    Remove points
-    <div class="withdraw-bar" ref="withdrawProgress"></div>
-  </div>
+  <RemoveScanner ref="removeScanner" :process="process" :removePoint="removePoint" />
 
   <div>
     <div class="process-mix-change-notice-wrapper" v-if="hasChanges">
@@ -87,7 +73,8 @@ import ProcessCard from 'components/cards/ProcessCard.vue';
 import tutorial from '/src/tutorial';
 
 import CardsMixin from 'components/phases/CardsMixin';
-import ScannerMixin from 'components/phases/ScannerMixin';
+import AddScanner from 'components/scanner/process/AddScanner.vue';
+import RemoveScanner from 'components/scanner/process/RemoveScanner.vue';
 
 const lf = new Intl.ListFormat('en');
 
@@ -96,9 +83,11 @@ function fmtPercent(n) {
 }
 
 export default {
-  mixins:[ScannerMixin('Process'), CardsMixin],
+  mixins: [CardsMixin],
   components: {
     ProcessCard,
+    AddScanner,
+    RemoveScanner,
   },
   data() {
     return {
@@ -113,9 +102,8 @@ export default {
   },
   watch: {
     output(output) {
-      this.updateFocused(() => {
-        this.$emit('page', this.output);
-      });
+      this.updateFocused();
+      this.$emit('page', this.output);
     }
   },
   computed: {
@@ -228,12 +216,15 @@ export default {
     },
   },
   methods: {
+    yBounds() {
+      return [0, 600]; // TODO
+      /* if (!this._yBounds) { */
+      /*   let el = document.querySelector(); */
+      /* } */
+      /* return this._yBounds; */
+    },
     items(idx) {
       return this.processes[idx];
-    },
-    changedMixShare(p) {
-      let change = state.processMixChanges[this.output][p.id] || 0;
-      return p.mix_share + change;
     },
     removePoint(p) {
       let change = state.processMixChanges[this.output][p.id] || 0;
@@ -264,20 +255,6 @@ export default {
 </script>
 
 <style>
-.scanbar-wrapper{
-  width: 100%;
-  position: absolute;
-  height:60px;
-  top:-20px;
-  z-index: 1;
-}
-.mini-scanbar {
-  height: 60px;
-  position: relative;
-  /* top: 0; */
-  margin:0 auto;
-}
-
 .available-mix-tokens {
   height: 24px;
   text-align: center;

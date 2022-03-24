@@ -12,50 +12,21 @@
   </template>
 
   <template v-slot:expanded>
-    <transition appear name="appear-popdown">
-    <div class="mini-scanbar" ref="target">
-      <div class="scanbar-base">
-        <div class="scan-progress-bar" ref="scanProgress"></div>
-      </div>
-      <div class="scanbar-led scanbar-led-ok"></div>
-      <div class="scanbar-led scanbar-led-bad"></div>
-      <div class="card-scan-target" ></div>
-    </div>
-    </transition>
+    <AddScanner ref="addScanner" :project="project" />
+    <RemoveScanner ref="removeScanner" :project="project" />
 
-    <div class="card-withdraw-target" ref="withdrawTarget">
-      {{ refundable ? 'Undo' : (canDowngrade ? 'Downgrade' : 'Withdraw') }}
-      <div class="withdraw-bar" ref="withdrawProgress"></div>
-    </div>
-
-    <transition appear name="appear-bounceup">
     <Draggable
-      @drag="checkDrag"
-      @dragStop="stopDrag"
-      :minY="yMin"
-      :maxY="yMax"
+      @drag="onDrag"
+      @dragStop="onDragStop"
+      :yBounds="yBounds"
       :draggable="true">
       <ProjectCard
         :project="project"
         @change="$emit('change')" />
     </Draggable>
-    </transition>
 
     <footer>
-      <div class="pips">
-        <!-- <div class="scan-progress" ref="scanProgress"></div> -->
-        <template v-if="type == 'Policy'">
-          {{availablePoints}}<img class="pip" :src="icons.political_capital">
-        </template>
-        <template v-else>
-          <template v-if="availablePoints > 0">
-            {{availablePoints}}<img class="pip" :src="icons[icon]">
-          </template>
-          <template v-else>
-            {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons[icon]">
-          </template>
-        </template>
-      </div>
+      <Points :kind="project.kind" />
     </footer>
   </template>
 </MiniCard>
@@ -67,11 +38,13 @@ import state from '/src/state';
 import consts from '/src/consts';
 import MiniCard from './MiniCard.vue';
 import ProjectCard from '../ProjectCard.vue';
+import Draggable from 'components/cards/Draggable.vue';
 import PROJECTS from '/assets/content/projects.json';
-import ScannerMixin from 'components/phases/ScannerMixin';
+import Points from 'components/scanner/project/Points.vue';
+import AddScanner from 'components/scanner/project/AddScanner.vue';
+import RemoveScanner from 'components/scanner/project/RemoveScanner.vue';
 
 export default {
-  mixins: [ScannerMixin('Project')],
   props: ['project'],
   data() {
     return {
@@ -80,10 +53,24 @@ export default {
     }
   },
   components: {
+    Points,
     MiniCard,
     ProjectCard,
+    AddScanner,
+    RemoveScanner,
+    Draggable,
   },
   computed: {
+    availablePoints() {
+      if (this.project.kind == 'Policy') {
+        return state.gameState.political_capital;
+      } else {
+        return state.points[this.project.kind.toLowerCase()];
+      }
+    },
+    icon() {
+      return this.project.kind.toLowerCase();
+    },
     style() {
       let style = consts.groupStyle[this.project.group];
       if (!style) {
@@ -91,6 +78,23 @@ export default {
       } else {
         return {border: `4px solid ${style.background}`};
       }
+    },
+  },
+  methods: {
+    yBounds() {
+      return [0, 600]; // TODO
+      /* if (!this._yBounds) { */
+      /*   let el = document.querySelector(); */
+      /* } */
+      /* return this._yBounds; */
+    },
+    onDrag(rect) {
+      this.$refs.addScanner.checkDrag(rect);
+      this.$refs.removeScanner.checkDrag(rect);
+    },
+    onDragStop() {
+      this.$refs.addScanner.stopDrag();
+      this.$refs.removeScanner.stopDrag();
     },
   }
 }
@@ -121,7 +125,6 @@ export default {
 .project-check img {
   width: 16px !important;
 }
-
 
 .minicard-project:hover{
   transform:scale(1.2);

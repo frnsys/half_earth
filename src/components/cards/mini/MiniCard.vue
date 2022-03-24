@@ -85,6 +85,7 @@ export default {
   justify-content: space-evenly;
   width: 100%;
   pointer-events: none;
+  margin-top: 1em;
 }
 .minicard--expanded .pips--buy {
   background: rgb(42 42 42);
