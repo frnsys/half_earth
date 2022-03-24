@@ -11,8 +11,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       let rect = this.$refs.target.getBoundingClientRect();
-      this.baseY = rect.y + this.revealTarget;
-      this.baseHeight = rect.height;
+      this.topY = rect.y + this.revealTarget;
+      this.botY = this.topY + rect.height;
     });
   },
   methods: {
@@ -71,10 +71,9 @@ export default {
         target.style.visibility = 'visible';
         target.style.transform = `translate(0, ${this.revealTarget}px)`;
 
-        let startY = dragRect.y;
-        let endY = dragRect.y + dragRect.height;
-        let intersects = (startY > this.baseY && startY < this.baseY + this.baseHeight)
-          || (endY > this.baseY && endY < this.baseY + this.baseHeight)
+        let topY = dragRect.y;
+        let botY = dragRect.y + dragRect.height;
+        let intersects = topY < this.botY && botY > this.topY;
         if (intersects) {
           if (!this.scanning && this.scanAllowed()) {
             this.scanning = true;
