@@ -319,6 +319,9 @@ strong{
 .minicard--expanded .mini-scanbar {
   margin: 0 0 0 -13px;
 }
+.minicard--expanded .scanbar-wrapper {
+  top: -50px;
+}
 .minicard--expanded .draggable {
   z-index: 0;
   margin-top: 3em;

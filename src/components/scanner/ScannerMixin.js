@@ -10,12 +10,25 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      this.getEdges();
+
+      // Hacky...double-check position
+      // after animations have finished
+      setTimeout(() => {
+        this.getEdges();
+      }, 500);
+    });
+    window.addEventListener('resize', this.getEdges);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.getEdges);
+  },
+  methods: {
+    getEdges() {
       let rect = this.$refs.target.getBoundingClientRect();
       this.topY = rect.y + this.revealTarget;
       this.botY = this.topY + rect.height;
-    });
-  },
-  methods: {
+    },
     targetRef() {
       return this.$refs.target;
     },
@@ -71,9 +84,7 @@ export default {
         target.style.visibility = 'visible';
         target.style.transform = `translate(0, ${this.revealTarget}px)`;
 
-        let topY = dragRect.y;
-        let botY = dragRect.y + dragRect.height;
-        let intersects = topY < this.botY && botY > this.topY;
+        let intersects = dragRect.topY < this.botY && dragRect.botY > this.topY;
         if (intersects) {
           if (!this.scanning && this.scanAllowed()) {
             this.scanning = true;

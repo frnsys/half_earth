@@ -44,10 +44,18 @@ export default {
 
     if (this.draggable) {
       this.enable();
+
+      // Hacky...double-check position
+      // after animations have finished
+      setTimeout(() => {
+        this.getPosition();
+      }, 400);
     }
+    window.addEventListener('resize', this.getPosition);
   },
   beforeUnmount() {
     this.disable();
+    window.removeEventListener('resize', this.getPosition);
   },
   watch: {
     draggable(draggable, prev) {
@@ -96,8 +104,8 @@ export default {
       // Get and cache current y position of this element
       this.observer = new IntersectionObserver((entries) => {
         let rect = entries[0].boundingClientRect;
-        this.elY = rect.y;
-        this.elHeight = rect.height;
+        this.topY = rect.y;
+        this.height = rect.height;
         this.observer.disconnect();
       });
       this.observer.observe(this.$el);
@@ -127,7 +135,7 @@ export default {
 
       if (Math.abs(dy) > Math.abs(dx)) {
         this.dragging = true;
-        let y = this.elY + this.top;
+        let y = this.topY + this.top;
         if (minY && y <= minY) return;
         if (maxY && y >= maxY) return;
 
@@ -140,7 +148,7 @@ export default {
         this.$el.style.transform = `translate(0, ${dy}px)`;
         this.top = dy;
 
-        this.$emit('drag', {y, height: this.elHeight});
+        this.$emit('drag', {topY: y, botY: y + this.height});
       }
     },
     stopDrag() {
