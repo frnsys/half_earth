@@ -1,7 +1,7 @@
 import debug from './debug';
 
 export default {
-  msPerYear: debug.fastYears ? 2000 : 8000,
+  msPerYear: debug.fastYears ? 2000 : 6000,
 
 // Set an upper cap to the amount of emissions we pass to hector,
 // because very large numbers end up breaking it.
