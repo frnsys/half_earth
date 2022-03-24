@@ -18,34 +18,17 @@
     </div>
     <div @click="$emit('close')" :class="{disabled: backDisabled, highlight: backHighlighted}">Back</div>
   </div>
-  <!-- <div class="card-scan-target" ref="target"></div> -->
 
-  <div class="scanbar-wrapper"  ref="target">
-    <div class="mini-scanbar">
-        <div class="scanbar-base">
-          <div class="scan-progress-bar" ref="scanProgress"></div>
-        </div>
-        <div class="scanbar-led scanbar-led-ok"></div>
-        <div class="scanbar-led scanbar-led-bad"></div>
-        <div class="card-scan-target"></div>
-    </div>
-  </div>
-
-  <div class="card-withdraw-target" ref="withdrawTarget">
-    {{ refundable ? 'Undo' : (canDowngrade ? 'Downgrade' : 'Withdraw') }}
-    <div class="withdraw-bar" ref="withdrawProgress"></div>
-  </div>
+  <AddScanner ref="addScanner" :project="project" />
+  <RemoveScanner ref="removeScanner" :project="project" />
 
   <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
-      ref="draggables"
-      @drag="onDragVertical"
-      @tryScroll="tryScroll"
-      @dragStop="onDragVerticalStop"
+      @drag="onDrag"
+      @dragStop="onDragStop"
       v-for="i in projectOrder"
-      :minY="yMin"
-      :maxY="yMax"
-      :draggable="allowSwipe && focusedProject == i"
+      :yBounds="yBounds"
+      :draggable="allowSwipe && focused == i"
       :id="projects[i].id"
       :key="projects[i].id">
       <ProjectCard
@@ -57,20 +40,7 @@
   <CardFocusArea />
 
   <footer>
-    <div class="pips">
-      <div class="scan-progress" ></div>
-      <template v-if="type == 'Policy'">
-        {{availablePoints}}<img class="pip" :src="icons.political_capital">
-      </template>
-      <template v-else>
-        <template v-if="availablePoints > 0">
-          {{availablePoints}}<img class="pip" :src="icons[icon]">
-        </template>
-        <template v-else>
-          {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons[icon]">
-        </template>
-      </template>
-    </div>
+    <Points :kind="project.kind" />
   </footer>
 </div>
 </template>
@@ -79,27 +49,26 @@
 import debug from '/src/debug';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
-import Cards from 'components/cards/Cards.vue';
 import ProjectCard from 'components/cards/ProjectCard.vue';
-import CardFocusArea from 'components/cards/CardFocusArea.vue';
-import ScannerMixin from 'components/phases/ScannerMixin';
-import {detectCenterElement, isTouchDevice} from 'lib/util';
 import tutorial from '/src/tutorial';
 
+import CardsMixin from 'components/phases/CardsMixin';
+import Points from 'components/scanner/project/Points.vue';
+import AddScanner from 'components/scanner/project/AddScanner.vue';
+import RemoveScanner from 'components/scanner/project/RemoveScanner.vue';
+
 export default {
-  mixins: [ScannerMixin('Project')],
+  mixins: [CardsMixin],
   components: {
-    Cards,
+    Points,
     ProjectCard,
     HelpTip,
-    CardFocusArea
+    AddScanner,
+    RemoveScanner,
   },
   data() {
     return {
       state,
-      allowScroll: true,
-      allowSwipe: true,
-      focusedProject: 0,
       type: 'Research',
     };
   },
@@ -109,21 +78,16 @@ export default {
   watch: {
     type(type) {
       // Figure out what the focused card is
-      this.$nextTick(() => {
-        let scroller = document.querySelector('.cards');
-        let els = [...document.querySelectorAll('.draggable')];
-        let idx = detectCenterElement(scroller, els);
-        this.onFocused(idx);
+      this.updateFocused();
 
-        // Emit for events
-        let page = type;
-        if (type == 'Initiative') {
-          page = 'Initiatives';
-        } else if (type == 'Policy') {
-          page = 'Policies';
-        }
-        this.$emit('page', page);
-      });
+      // Emit for events
+      let page = type;
+      if (type == 'Initiative') {
+        page = 'Initiatives';
+      } else if (type == 'Policy') {
+        page = 'Policies';
+      }
+      this.$emit('page', page);
     }
   },
   computed: {
@@ -134,8 +98,8 @@ export default {
       return state.tutorial == tutorial.PROJECTS_BACK;
     },
     project() {
-      if (this.focusedProject !== null) {
-        let proj =  this.projects[this.focusedProject];
+      if (this.focused !== null) {
+        let proj =  this.projects[this.focused];
         if (proj === undefined) {
           return this.projects[0];
         } else {
@@ -167,48 +131,15 @@ export default {
     },
   },
   methods: {
-    onFocused(idx) {
-      this.focusedProject = this.projectOrder[idx];
+    yBounds() {
+      return [
+        this.$refs.addScanner.botY - 10,
+        this.$refs.removeScanner.topY + 10 - 430, // card height
+      ];
     },
-    onDragVertical(rect) {
-      this.allowScroll = false;
-      this.checkDrag(rect);
+    items(idx) {
+      return this.projectOrder[idx];
     },
-    onDragVerticalStop() {
-      this.stopDrag();
-      this.allowScroll = true;
-    },
-    tryScroll() {
-      this.allowScroll = true;
-    },
-    onScrollStart() {
-      this.allowSwipe = false;
-    },
-    onScrollEnd() {
-      this.allowSwipe = true;
-      if (isTouchDevice) {
-        this.allowScroll = false;
-      }
-    }
   }
 }
 </script>
-
-<style scoped>
-
-.scanbar-wrapper{
-  width: 100%;
-  position: absolute;
-  height:60px;
-  top:-20px;
-  z-index: 1;
-}
-.mini-scanbar {
-  height: 60px;
-  position: relative;
-  /* top: 0; */
-  margin:0 auto;
-}
-
-
-</style>

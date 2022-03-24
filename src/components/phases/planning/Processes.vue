@@ -25,27 +25,15 @@
     <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: `One production point represents 5% of an entire production sector's productive capacity.`}"></div>
   </div>
 
-  <div class="scanbar-wrapper"  ref="target">
-    <div class="mini-scanbar">
-        <div class="scanbar-base">
-          <div class="scan-progress-bar" ref="scanProgress"></div>
-        </div>
-        <div class="scanbar-led scanbar-led-ok"></div>
-        <div class="scanbar-led scanbar-led-bad"></div>
-        <div class="card-scan-target"></div>
-    </div>
-  </div>
+  <AddScanner ref="addScanner" :points="points" :process="process" :addPoint="addPoint" />
 
   <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
-      ref="draggables"
-      @drag="onDragVertical"
-      @tryScroll="tryScroll"
-      @dragStop="onDragVerticalStop"
+      @drag="onDrag"
+      @dragStop="onDragStop"
       v-for="p in processes"
-      :minY="yMin"
-      :maxY="yMax"
-      :draggable="allowSwipe && focusedProcess == p"
+      :yBounds="yBounds"
+      :draggable="allowSwipe && focused == p"
       :id="p.id"
       :key="p.id"
     >
@@ -57,10 +45,7 @@
 
   <CardFocusArea />
 
-  <div class="card-withdraw-target" ref="withdrawTarget">
-    Remove points
-    <div class="withdraw-bar" ref="withdrawProgress"></div>
-  </div>
+  <RemoveScanner ref="removeScanner" :process="process" :removePoint="removePoint" />
 
   <div>
     <div class="process-mix-change-notice-wrapper" v-if="hasChanges">
@@ -82,15 +67,14 @@
 <script>
 import game from '/src/game';
 import state from '/src/state';
-import Cards from 'components/cards/Cards.vue';
 import consts from '/src/consts.js';
 import format from '/src/display/format';
 import ProcessCard from 'components/cards/ProcessCard.vue';
-import CardFocusArea from 'components/cards/CardFocusArea.vue';
 import tutorial from '/src/tutorial';
 
-import ScannerMixin from 'components/phases/ScannerMixin';
-import {detectCenterElement, isTouchDevice} from 'lib/util';
+import CardsMixin from 'components/phases/CardsMixin';
+import AddScanner from 'components/scanner/process/AddScanner.vue';
+import RemoveScanner from 'components/scanner/process/RemoveScanner.vue';
 
 const lf = new Intl.ListFormat('en');
 
@@ -99,20 +83,17 @@ function fmtPercent(n) {
 }
 
 export default {
-  mixins:[ScannerMixin('Process')],
+  mixins: [CardsMixin],
   components: {
-    Cards,
     ProcessCard,
-    CardFocusArea
+    AddScanner,
+    RemoveScanner,
   },
   data() {
     return {
       state,
       points: 0,
       output: 'Electricity',
-      allowScroll: true,
-      allowSwipe: true,
-      focusedProcess: 0,
       allowBack: true
     };
   },
@@ -121,17 +102,8 @@ export default {
   },
   watch: {
     output(output) {
-
-      // Figure out what the focused card is
-      this.$nextTick(() => {
-        let scroller = document.querySelector('.cards');
-        let els = [...document.querySelectorAll('.draggable')];
-        let idx = detectCenterElement(scroller, els);
-        this.focusedProcess = this.processes[idx];
-        this.focusedProcess.idx = idx;
-
-        this.$emit('page', this.output);
-      });
+      this.updateFocused();
+      this.$emit('page', this.output);
     }
   },
   computed: {
@@ -142,10 +114,10 @@ export default {
       return state.tutorial == tutorial.PROCESSES_BACK;
     },
     process() {
-      if (this.focusedProcess !== null) {
+      if (this.focused !== null) {
         // console.log(this.focusedProcess.idx);
         // console.log(this.processes);
-        let proc =  this.processes[this.focusedProcess.idx];
+        let proc =  this.processes[this.focusedIdx];
         if (proc === undefined) {
           return this.processes[0];
         } else {
@@ -244,9 +216,14 @@ export default {
     },
   },
   methods: {
-    changedMixShare(p) {
-      let change = state.processMixChanges[this.output][p.id] || 0;
-      return p.mix_share + change;
+    yBounds() {
+      return [
+        this.$refs.addScanner.botY - 10,
+        this.$refs.removeScanner.topY + 10 - 430, // card height
+      ];
+    },
+    items(idx) {
+      return this.processes[idx];
     },
     removePoint(p) {
       let change = state.processMixChanges[this.output][p.id] || 0;
@@ -272,50 +249,11 @@ export default {
         this.$emit('change');
       }
     },
-    onFocused(idx) {
-      this.focusedProcess = this.processes[idx];
-      this.focusedProcess.idx = idx;
-    },
-    onDragVertical(rect) {
-      this.allowScroll = false;
-      this.checkDrag(rect);
-    },
-    onDragVerticalStop() {
-      this.stopDrag();
-      this.allowScroll = true;
-    },
-    tryScroll() {
-      this.allowScroll = true;
-    },
-    onScrollStart() {
-      this.allowSwipe = false;
-    },
-    onScrollEnd() {
-      this.allowSwipe = true;
-      if (isTouchDevice) {
-        this.allowScroll = false;
-      }
-    }
   }
 }
 </script>
 
 <style>
-.scanbar-wrapper{
-  width: 100%;
-  position: absolute;
-  height:60px;
-  top:-20px;
-  z-index: 1;
-}
-.mini-scanbar {
-  height: 60px;
-  position: relative;
-  /* top: 0; */
-  margin:0 auto;
-}
-
-
 .available-mix-tokens {
   height: 24px;
   text-align: center;

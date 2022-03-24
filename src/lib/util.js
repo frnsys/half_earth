@@ -70,13 +70,6 @@ function rngForYear(year) {
   return mulberry32(seed);
 }
 
-// https://stackoverflow.com/a/4819886/1097920
-function _isTouchDevice() {
-  return (('ontouchstart' in window) ||
-     (navigator.maxTouchPoints > 0) ||
-     (navigator.msMaxTouchPoints > 0));
-}
-
 function scaleText(el, minSize) {
   if (el.scrollHeight > el.clientHeight) {
     let intv = setInterval(() => {
@@ -91,8 +84,5 @@ function scaleText(el, minSize) {
   }
 }
 
-// Cache this value
-const isTouchDevice = _isTouchDevice();
-
 export {clone, randChoice, rngForYear, scaleText,
-  slugify, updateTransform, detectCenterElement, isTouchDevice};
+  slugify, updateTransform, detectCenterElement};

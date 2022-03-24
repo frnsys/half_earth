@@ -1,4 +1,6 @@
 import {reactive} from 'vue';
+import debug from './debug';
+import tutorial from '/src/tutorial';
 
 function saveSettings() {
   let data = {
@@ -24,7 +26,7 @@ function initState() {
     gameState: null,
     phase: 'PLANNING',
     newRunCount: 0,
-    tutorial: 0,
+    tutorial: debug.hideIntro ? tutorial.READY + 1 : 0,
 
     // Track which events have occurred
     events: [],
