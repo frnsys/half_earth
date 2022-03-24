@@ -34,8 +34,8 @@ export default {
   maxPoints: 15,
 
   // In seconds
-  projectCardScanTime: 1,
-  projectCardWithdrawTime: 2,
+  projectCardScanTime: 0.7,
+  projectCardWithdrawTime: 1.4,
   processCardScanTime: 0.5,
   processCardWithdrawTime: 0.4,
 
