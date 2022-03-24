@@ -136,18 +136,16 @@ export default {
       if (Math.abs(dy) > Math.abs(dx)) {
         this.dragging = true;
         let y = this.topY + this.top;
-        if (minY && y <= minY) return;
-        if (maxY && y >= maxY) return;
+        if (y > minY && y < maxY) {
+          let baseY = y - this.top;
+          let minDY = minY - baseY;
+          let maxDY = maxY - baseY;
 
-        let baseY = y - this.top;
-        let minDY = minY - baseY;
-        let maxDY = maxY - baseY;
-
-        let deltaY = dy - this.top;
-        dy = Math.min(maxDY, Math.max(minDY, dy));
-        this.$el.style.transform = `translate(0, ${dy}px)`;
-        this.top = dy;
-
+          let deltaY = dy - this.top;
+          dy = Math.min(maxDY, Math.max(minDY, dy));
+          this.$el.style.transform = `translate(0, ${dy}px)`;
+          this.top = dy;
+        }
         this.$emit('drag', {topY: y, botY: y + this.height});
       }
     },

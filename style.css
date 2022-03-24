@@ -362,7 +362,7 @@ strong{
   height:60px;
   top: -20px;
   z-index: 1;
-  transition: transform 0.25s;
+  transition: transform 0.15s;
   visibility: hidden;
 }
 .mini-scanbar {
@@ -408,7 +408,7 @@ strong{
   justify-content: space-around;
   font-size: 1.3em;
   overflow: hidden;
-  transition: transform 0.25s;
+  transition: transform 0.15s;
   visibility: hidden;
 }
 .withdraw-bar {

@@ -132,11 +132,10 @@ export default {
   },
   methods: {
     yBounds() {
-      return [0, 600]; // TODO
-      /* if (!this._yBounds) { */
-      /*   let el = document.querySelector(); */
-      /* } */
-      /* return this._yBounds; */
+      return [
+        this.$refs.addScanner.botY - 10,
+        this.$refs.removeScanner.topY + 10 - 430, // card height
+      ];
     },
     items(idx) {
       return this.projectOrder[idx];
