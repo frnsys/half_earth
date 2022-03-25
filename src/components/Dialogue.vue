@@ -155,13 +155,11 @@ export default {
       e.target.src ='/assets/characters/' + this.line.speaker + '.png'
     },
     onKeydown(e){
-      if(e.keyCode === 13) {
+      if(e.key === 'Enter') {
         this.advance();
       }
-      if (VERSION === 'dev') {
-        if(e.keyCode === 27) {
-          this.end();
-        }
+      if (VERSION === 'dev' && e.key === 'Escape') {
+        this.end();
       }
     },
     play() {
@@ -170,6 +168,7 @@ export default {
       let el = document.createElement('div');
       el.innerHTML = this.line.text;
       if (this.line.text.length > 0) {
+        if (this.revealAnim) clearInterval(this.revealAnim);
         revealChars(this.$refs.text, extractChars(el), {
           onStart: (revealAnim) => this.revealAnim = revealAnim
         }).then(() => {
