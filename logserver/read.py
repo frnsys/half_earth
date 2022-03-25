@@ -118,14 +118,14 @@ def main(id, script_path, date):
         sessions = sessions[:100]
 
     for session in sessions:
-        dt = datetime.fromtimestamp(float(session['timestamp']))
+        dt = datetime.utcfromtimestamp(float(session['timestamp']))
 
         # Browsing
         if id is None:
             display = date is None or (dt.month == date.month and dt.day == date.day)
             if display:
                 print(session['id'])
-                print(' ', dt)
+                print(' ', dt, 'UTC')
                 print('  Version:', session['version'])
                 print('  User-Agent:', session['useragent'])
                 print('  Snapshots:', len(db.snapshots(session['id'])))
