@@ -625,7 +625,7 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 2.24,
+                land: 0.0224,
                 water: 1.02
             ),
             byproducts: byproducts!(
@@ -1139,7 +1139,7 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 3.0,
                 fuel: 0.0,
-                land: 0.529,
+                land: 0.0529,
                 water: 0.27
             ),
             byproducts: byproducts!(
@@ -1367,7 +1367,7 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 1.67,
+                electricity: 0.0167,
                 fuel: 0.0,
                 land: 7.35e-05,
                 water: 0.0073529
@@ -2101,8 +2101,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::NPCRelationship(5, 3),
                 Effect::UnlocksProject(94),
-                Effect::UnlocksProject(36),
-                Effect::UnlocksProject(47)
+                Effect::UnlocksProject(36)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -6555,7 +6554,8 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::ModifyEventProbability(195, -0.05),
-                Effect::Output(Output::AnimalCalories, -0.05)
+                Effect::Output(Output::AnimalCalories, -0.05),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
