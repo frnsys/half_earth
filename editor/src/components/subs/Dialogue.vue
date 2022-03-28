@@ -50,8 +50,8 @@
         </div>
         <button v-if="line.next.length < 3" @click="addBranch(line.id)">+ {{line.decision ? 'Response' : 'Branch'}}</button>
       </div>
-      <Dialogue v-if="!(line.decision && line.next[branch]._goto)" :root="line.next[branch].line_id" :lines="lines" :nested="true" :color="branchColor" />
-      <div v-else-if="line.decision && line.next[branch]._goto">
+      <Dialogue v-if="line.next[branch] && !(line.decision && line.next[branch]._goto)" :root="line.next[branch].line_id" :lines="lines" :nested="true" :color="branchColor" />
+      <div v-else-if="line.next[branch] && line.decision && line.next[branch]._goto">
         <div class="dia-summary-line">
           <div class="dia-summary-goto">Go To</div>
           <div class="dia-summary-speaker">{{lines[line.next[branch].line_id].speaker || "MISSING SPEAKER"}}</div>
@@ -88,8 +88,11 @@ export default {
       while (line) {
         dialogue.push(line);
         if (Array.isArray(line.next)) {
-          let next = line.next[this.branch].line_id;
-          line = this.lines[next];
+          let next = line.next[this.branch];
+          if (next) {
+            let nextId = next.line_id;
+            line = this.lines[nextId];
+          }
           break; // Stop at the first branch
         } else {
           line = this.lines[line.next];
