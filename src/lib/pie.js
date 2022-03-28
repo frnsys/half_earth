@@ -17,6 +17,9 @@ const lerpColor = function(pFrom, pTo, pRatio) {
   return (rr << 16) + (rg << 8) + (rb | 0);
 };
 
+const LABEL_MAX_WIDTH = 40;
+const LABEL_LINE_HEIGHT = 12;
+
 class PieChart {
   constructor(stageEl) {
     this.stage = stageEl;
@@ -114,11 +117,9 @@ class PieChart {
       let angle = lastAngle + size/2;
       let x = radius/2 * Math.cos(angle);
       let y = radius/2 * Math.sin(angle);
-      let {width} = this.ctx.measureText(k);
       this.labels.push({
-        w: width,
         show: size > Math.PI/12,
-        x: center.x + x - width/2,
+        x: center.x + x,
         y: center.y + y,
         label: k
       });
@@ -129,14 +130,31 @@ class PieChart {
 
     // Labels have to come over so they're drawn on top
     this.labels.forEach((l) => {
-      
       this.ctx.fillStyle = '#000000';
       if (l.show) {
-        this.ctx.beginPath();
-        // this.ctx.rect(l.x - 2, l.y - 12, l.w + 4, 16);
-        // this.ctx.fill();
-        // this.ctx.fillStyle = '#FFFFFF';
-        this.ctx.fillText(l.label, l.x, l.y);
+        let parts = l.label.split(' ');
+        let cur = '';
+        let lines = [];
+        let maxWidth = 0;
+        while (parts.length > 0) {
+          cur += parts.shift() + ' ';
+          let width = this.ctx.measureText(cur).width;
+          if (width > maxWidth) maxWidth = width;
+          if (width >= LABEL_MAX_WIDTH) {
+            lines.push(cur);
+            cur = '';
+          }
+        }
+        if (cur.length > 0) {
+          lines.push(cur);
+        }
+
+        let y = l.y - ((lines.length - 1) * LABEL_LINE_HEIGHT)/2;
+        lines.forEach((line) => {
+          this.ctx.beginPath();
+          this.ctx.fillText(line, l.x - maxWidth/2, y);
+          y += LABEL_LINE_HEIGHT;
+        });
       }
     });
 
