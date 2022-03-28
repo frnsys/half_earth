@@ -4,10 +4,11 @@
   <div class="parliament-seats" :class="{'parliament-suspended-fade': suspended}">
     <div v-for="col in seats">
       <template v-for="seat in col">
-        <div v-if="seat !== null"
-          @click="focusedNpcName = seat.name"
-          :class="{coalitionSeat: seat.isAlly, focused: focusedNpcName == seat.name}"
-          :style="{background: seat.color}"></div>
+        <div v-if="seat !== null" :class="{coalitionSeat: seat.isAlly}">
+          <img
+            :src="`/assets/characters/${seat.name}.png`"
+            onerror="this.src='/assets/placeholders/character.png';" />
+        </div>
         <div v-else></div>
       </template>
     </div>
@@ -20,7 +21,7 @@
   </div>
 
   <div class="minicard-grid">
-    <div class="minicard-grid-item" v-for="npc in npcs" :class="{focused: focusedNpcName == npc.name}" :key="npc.id">
+    <div class="minicard-grid-item" v-for="npc in npcs" :key="npc.id">
       <MiniNPC :npc="npc" />
     </div>
   </div>
@@ -44,7 +45,6 @@ export default {
     return {
       state,
       totalSeats,
-      focusedNpcName: null,
       suspended: state.gameState.flags.includes('ParliamentSuspended'),
     }
   },
@@ -146,20 +146,13 @@ export default {
   flex-direction: column;
 }
 .parliament-seats > div > div {
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
   margin: 0.5em;
-  background: #aaa;
-
-  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
-  border-right: 1px solid rgba(255,255,255,0.5);
-  border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 .parliament-seats .coalitionSeat {
-  border: 2px solid #000;
-}
-.parliament-seats .focused {
-  box-shadow: 0 0 6px yellow;
+  box-shadow: 0 0 7px yellow;
+  border-radius: 2em;
 }
 
 .coalition-seats {
@@ -212,9 +205,5 @@ export default {
 
 .parliament-suspended-fade {
   opacity: 0.5;
-}
-
-.minicard-grid-item.focused {
-  box-shadow: 0 0 12px yellow;
 }
 </style>
