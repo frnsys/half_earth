@@ -151,8 +151,9 @@ export default {
   margin: 0.5em;
 }
 .parliament-seats .coalitionSeat {
-  box-shadow: 0 0 7px yellow;
-  border-radius: 2em;
+  box-shadow: 0 0 7px yellow, 0 0 12px 5px #ff66ff;
+  border-radius: 0.2em;
+  background: #fdf7e2;
 }
 
 .coalition-seats {
