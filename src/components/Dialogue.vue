@@ -367,7 +367,7 @@ export default {
   font-family: 'W95FA';
 }
 .dialogue--choice:hover {
-  background: #FF66FF;
+  background: var(--colour-pink);
 }
 
 .dialogue--effects .effect--text{

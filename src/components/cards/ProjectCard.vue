@@ -354,19 +354,19 @@ export default {
 }
 
 .project-status {
-  color: #fff;
+  color: #000;
   border-radius: 1em;
   text-align: center;
   font-family: 'W95FA', monospace;
   font-size: 0.9em;
   padding: 0.4em 0.5em 0.3em;
   text-transform: uppercase;
-  background: #FF66FF;
+  background: var(--colour-pink);
   position: absolute;
   left: 50%;
   transform: translate(-50%, 50%);
   bottom: 0;
-  border: 1px solid #b929b9;
+  border: 1px solid #438d0c;
   z-index: 1;
 
   backface-visibility: hidden;
@@ -502,11 +502,11 @@ export default {
 
 @keyframes progresspulse {
   from {
-    box-shadow: 0 0 2px #FF66FF, inset 1px 0px 8px #FF66FF;
+    box-shadow: 0 0 2px var(--colour-pink), inset 1px 0px 8px var(--colour-pink);
   }
 
   to {
-    box-shadow: 0 0 24px #FF66FF, inset 1px 0px 8px #FF66FF;
+    box-shadow: 0 0 24px var(--colour-pink), inset 1px 0px 8px var(--colour-pink);
   }
 }
 </style>

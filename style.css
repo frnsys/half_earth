@@ -46,7 +46,7 @@
 }
 
 :root {
-  --colour-pink: #ff66ff;
+  --colour-pink: #B9F80D;
 }
 
 * {
@@ -247,8 +247,8 @@ strong{
   bottom: 0;
   width: 0;
   z-index: -1;
-  background: #FF66FF;
-  box-shadow: 0px 0px 7px #FF66FF;
+  background: var(--colour-pink);
+  box-shadow: 0px 0px 7px var(--colour-pink);
 }
 .card-scan-target {
   position: absolute;
@@ -257,7 +257,7 @@ strong{
   background: rgba(0,0,0,0.7);
   height: 68px;
   z-index: -1;
-  box-shadow: 0 0 6px #ff66ff, inset 1px -2px 6px #ff66ff;
+  box-shadow: 0 0 6px var(--colour-pink), inset 1px -2px 6px var(--colour-pink);
   border-radius: 4px;
   width: calc(100% - 1em);
   max-width: 360px;

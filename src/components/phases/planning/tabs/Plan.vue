@@ -352,7 +352,7 @@ export default {
 }
 .plan--add-change:hover{
   background: #FCEAE5;
-  box-shadow: 0 0 8px #ff66ff;
+  box-shadow: 0 0 8px var(--colour-pink);
 }
 .plan--change .plan--add-change img {
   width: 24px;
@@ -484,7 +484,7 @@ export default {
   justify-content: space-around;
 }
 .planning--page-tabs > div.selected {
-  background: #FF66FF;
+  background: var(--colour-pink);
 }
 .planning--page-tabs .disabled {
   opacity: 0.5;

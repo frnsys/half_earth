@@ -254,7 +254,7 @@ export default {
   border-radius: 0 0 0.3em 0;
 }
 .planning > header div:hover {
-  background: #cc99cc;
+  background: #d4e4a7;
 }
 .planning > header div.active {
   background: var(--colour-pink);
