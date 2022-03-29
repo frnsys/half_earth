@@ -55,4 +55,9 @@ export default {
   border-radius: 0.2em;
   font-size: 0.8em;
 }
+
+/* so this doesn't interfere with scrolling */
+.card.factors .card-back {
+  display: none;
+}
 </style>
