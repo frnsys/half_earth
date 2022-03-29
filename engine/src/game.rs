@@ -118,8 +118,13 @@ impl GameInterface {
     }
 
     pub fn eval_branch_conditions(&mut self, event_id: usize, region_id: Option<usize>, branch_id: usize) -> bool {
-        let (_effects, conds) = &self.game.event_pool.events[event_id].branches[branch_id];
-        conds.iter().all(|c| c.eval(&self.game.state, region_id))
+        let event = &self.game.event_pool.events[event_id];
+        if branch_id < event.branches.len() {
+            let (_effects, conds) = &event.branches[branch_id];
+            conds.iter().all(|c| c.eval(&self.game.state, region_id))
+        } else {
+            false
+        }
     }
 
     pub fn apply_branch_effects(&mut self, event_id: usize, region_id: Option<usize>, branch_id: usize)  {
