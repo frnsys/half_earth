@@ -48,29 +48,18 @@ export default {
       suspended: state.gameState.flags.includes('ParliamentSuspended'),
     }
   },
-  methods: {
-    factionSeats(npc) {
-      return Math.floor(npc.seats * totalSeats);
-    }
-  },
   computed: {
     npcs() {
       return state.gameState.npcs.filter((npc) => !npc.locked);
     },
     coalitionSeats() {
-      return state.gameState.npcs.reduce((acc, npc) => {
-        if (npc.relationship >= 5) {
-          return acc + this.factionSeats(npc);
-        } else {
-          return acc;
-        }
-      }, 0);
+      return this.seats.flat().filter((s) => s.isAlly).length;
     },
     seats() {
       let usedSeats = 0;
       let npcs = state.gameState.npcs.filter((npc) => !npc.locked);
       let seats = npcs.map((npc) => {
-        let seats = this.factionSeats(npc);
+        let seats = Math.floor(npc.seats * totalSeats);
         usedSeats += seats;
         return {
           name: npc.name,
