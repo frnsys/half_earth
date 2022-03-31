@@ -1757,7 +1757,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::ProjectRequest(26, true, 50)
+
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2852,7 +2852,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.05),
-                Effect::WorldVariable(WorldVariable::Emissions, 8.0)
+                Effect::WorldVariable(WorldVariable::Emissions, -3.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4493,7 +4493,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::ProtectLand(7.0),
-                Effect::WorldVariable(WorldVariable::Emissions, -2.0)
+                Effect::WorldVariable(WorldVariable::Emissions, -0.04)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4685,7 +4685,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -0.8)
+                Effect::WorldVariable(WorldVariable::Emissions, -0.03)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4727,7 +4727,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -39.0),
+                Effect::WorldVariable(WorldVariable::Emissions, -0.15),
                 Effect::Output(Output::PlantCalories, 0.1)
             ],
             kind: ProjectType::Initiative,
@@ -5302,7 +5302,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Emissions, -12.9)
+                        Effect::WorldVariable(WorldVariable::Emissions, -0.43)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -6651,7 +6651,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -2.5),
+                Effect::WorldVariable(WorldVariable::Emissions, -0.08),
                 Effect::Output(Output::PlantCalories, 0.05),
                 Effect::UnlocksProject(28)
             ],
@@ -6869,7 +6869,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::UnlocksProject(77),
-                Effect::WorldVariable(WorldVariable::Emissions, -10.0)
+                Effect::WorldVariable(WorldVariable::Emissions, -0.35)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -7119,7 +7119,7 @@ pub fn projects() -> Vec<Project> {
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Restoration,
             ongoing: true,
-            gradual: false,
+            gradual: true,
             outcomes: vec![
                 Outcome {
                     effects: vec![
@@ -11408,7 +11408,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![], vec![])],
+            branches: vec![],
             intensity: 0
         },
         Event {
@@ -11959,7 +11959,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![], vec![])],
+            branches: vec![],
             intensity: 0
         },
         Event {
