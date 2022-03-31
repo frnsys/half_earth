@@ -123,7 +123,7 @@ impl GameInterface {
             let (_effects, conds) = &event.branches[branch_id];
             conds.iter().all(|c| c.eval(&self.game.state, region_id))
         } else {
-            false
+            true
         }
     }
 

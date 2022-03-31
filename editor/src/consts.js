@@ -204,7 +204,7 @@ const EFFECTS = {
       'Change': Number
     },
     desc: {
-      'Emissions': 'Change emissions by a fixed amount, in gigatonnes',
+      'Emissions': 'Change annual emissions by a fixed amount, in gigatonnes',
       'ExtinctionRate': 'Change extinction rate by a fixed amount. 60 is the worst extinction rate; 0 is baseline extinction rate',
       'Temperature': 'Change temperature by a fixed amount, in C',
       'Precipitation': 'Change average precipitation by a fixed amount, cm/yr',

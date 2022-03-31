@@ -1001,7 +1001,7 @@ if __name__ == '__main__':
                 } for e in u['effects']]
             } for u in p.get('upgrades', [])],
             'outcomes': [{
-                'dialogue': u['dialogue'],
+                'dialogue': extract_dialogue(u['dialogue']),
                 'effects': [parse_effect(e) for e in u['effects']],
 
                 # This is a little misleading because the probability type is not only
