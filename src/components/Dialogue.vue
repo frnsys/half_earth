@@ -215,10 +215,17 @@ export default {
     },
     nextLine() {
       if (Array.isArray(this.line.next)) {
-        let branch = this.line.next.find((b) => {
-          return game.evalBranchConditions(this.eventId, this.regionId, b.id);
-        });
-        this.current = branch.line_id;
+        // This occurs for project outcomes, which have no associated event
+        // For project outcomes we effectively don't support branching
+        if (this.eventId === undefined) {
+          let branch = this.line.next[0];
+          this.current = branch.line_id;
+        } else {
+          let branch = this.line.next.find((b) => {
+            return game.evalBranchConditions(this.eventId, this.regionId, b.id);
+          });
+          this.current = branch.line_id;
+        }
       } else {
         this.current = this.line.next;
       }
