@@ -349,8 +349,15 @@ export default {
   margin-right: 0.2em;
 }
 .project-points {
-  max-width: 110px;
+  max-width: 58px;
   text-align: left;
+}
+.project-points .pip {
+  margin-left: -15px;
+}
+.project-points .pip:first-child,
+.project-points .pip:nth-child(7) {
+  margin-left: 0px;
 }
 
 .project-status {
