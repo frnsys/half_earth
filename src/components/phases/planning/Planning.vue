@@ -170,6 +170,7 @@ export default {
   flex-direction: column;
   flex: 1;
   overflow-y: scroll;
+  overflow-x: hidden;
   padding: 4em 0.5em 1em 0.5em;
 
   scrollbar-width: none; /* Firefox */
