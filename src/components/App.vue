@@ -29,8 +29,7 @@ import Planning from './phases/planning/Planning.vue';
 import Playlist from 'lib/playlist';
 
 const playlist = [
-  '/assets/music/airtone_-_disOrder.mp3',
-  '/assets/music/airtone_-_spacetime(whitecube).mp3',
+  '/assets/music/5yr_plan.mp3',
 ];
 
 // Hacky
