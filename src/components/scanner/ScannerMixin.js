@@ -25,9 +25,11 @@ export default {
   },
   methods: {
     getEdges() {
-      let rect = this.$refs.target.getBoundingClientRect();
-      this.topY = rect.y + this.revealTarget;
-      this.botY = this.topY + rect.height;
+      if (this.$refs.target) {
+        let rect = this.$refs.target.getBoundingClientRect();
+        this.topY = rect.y + this.revealTarget;
+        this.botY = this.topY + rect.height;
+      }
     },
     targetRef() {
       return this.$refs.target;

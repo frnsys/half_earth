@@ -227,7 +227,7 @@ function isAlly(name) {
 function _roll(phase, subphase, limit) {
   let p = Phase[`${phase}${subphase}`];
   if (p === undefined) {
-    console.error(`Event phase "${phase}${subphase}" is not defined as an enum variant!`);
+    console.warn(`Event phase "${phase}${subphase}" is not defined as an enum variant!`);
     return [];
   } else {
     return game.roll_events(p, limit);
