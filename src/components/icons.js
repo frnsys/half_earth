@@ -74,6 +74,7 @@ export default {
   neutral: require('/assets/icons/npcs/neutral.svg'),
   friendly: require('/assets/icons/npcs/friendly.svg'),
   nemesis: require('/assets/icons/npcs/nemesis.svg'),
+  clock: require('/assets/icons/clock.png'),
 
   // Cards
   info: require('/assets/placeholders/info.svg'),
