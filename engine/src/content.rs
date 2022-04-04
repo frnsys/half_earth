@@ -2444,8 +2444,8 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::DemandAmount(Output::Electricity, 1000000.0),
-                Effect::DemandAmount(Output::Fuel, 1000000.0),
+                Effect::DemandAmount(Output::Electricity, 1000000000000.0),
+                Effect::DemandAmount(Output::Fuel, 1000000000000.0),
                 Effect::UnlocksProject(1)
             ],
             kind: ProjectType::Policy,
@@ -2988,7 +2988,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
-                Effect::Demand(Output::Electricity, -0.001)
+                Effect::Demand(Output::Electricity, -0.1)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -5540,7 +5540,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::ProjectCostModifier(64, -0.25),
                 Effect::WorldVariable(WorldVariable::Population, -10000.0),
-                Effect::ModifyIndustryResourcesAmount(0, Resource::Fuel, 10.0),
+                Effect::ModifyIndustryResourcesAmount(0, Resource::Fuel, 10000000000000.0),
                 Effect::UnlocksProject(86),
                 Effect::UnlocksProject(83)
             ],
@@ -6063,7 +6063,6 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::ModifyIndustryByproducts(6, Byproduct::Co2, -0.1),
                 Effect::Demand(Output::AnimalCalories, -0.1),
-                Effect::WorldVariable(WorldVariable::Emissions, 0.),
                 Effect::LocksProject(77)
             ],
             kind: ProjectType::Policy,

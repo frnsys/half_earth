@@ -319,9 +319,11 @@ function render(e) {
       }
     }
     case 'CO2ForFeature': {
+      let amount = e.param * 100;
+      let label = Math.abs(amount) >= 1 ? amount.toFixed(0) : '<1';
       let tip = {
         icon: e.subtype,
-        text: `Changes the CO2 emissions for these processes by <strong>${(e.param*100).toFixed(0)}%.</strong>`,
+        text: `${changeDir(e.param, e)} the CO2 emissions for these processes by <strong>${label}%.</strong>`,
         card: {
           type: 'Processes',
           data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
@@ -329,7 +331,7 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
+        text: `${changeDir(e.param, e)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${label}%.</strong>`
       }
     }
     case 'BiodiversityPressureForFeature': {

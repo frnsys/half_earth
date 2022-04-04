@@ -33,7 +33,7 @@ export default {
   pointCost: 3,
 
   // Max points for a project
-  maxPoints: 15,
+  maxPoints: 12,
 
   // In seconds
   projectCardScanTime: 0.7,
