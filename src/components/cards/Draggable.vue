@@ -11,6 +11,7 @@
 
 <script>
 import animate from 'lib/anim';
+import consts from '/src/consts';
 import throttle from "lodash.throttle";
 import {updateTransform} from 'lib/util';
 
@@ -22,6 +23,8 @@ export default {
     }
   },
   mounted() {
+    this.$el.style.transform = `scale(${consts.cardScale})`;
+
     // Keep track of the top offset from the element's starting y position;
     // this is updated as the component is dragged
     this.top = 0;
@@ -143,13 +146,14 @@ export default {
 
           let deltaY = dy - this.top;
           dy = Math.min(maxDY, Math.max(minDY, dy));
-          this.$el.style.transform = `translate(0, ${dy}px)`;
+          this.$el.style.transform = `scale(${consts.cardScale}) translate(0, ${dy}px)`;
           this.top = dy;
         }
         this.$emit('drag', {topY: y, botY: y + this.height});
       }
     },
     stopDrag() {
+      if (!this.down) return;
       this.down = false;
       this.dragging = false;
 
@@ -157,7 +161,8 @@ export default {
         this.top,
         0, 100, (top) => {
         this.top = top;
-        this.$el.style.transform = `translate(0, ${top}px)`;
+        updateTransform(this.$el, {});
+        this.$el.style.transform = `scale(${consts.cardScale}) translate(0, ${top}px)`;
       });
       this.$emit('dragStop', this);
     }

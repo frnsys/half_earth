@@ -110,7 +110,6 @@ export default {
   position: relative;
   width: 280px;
   height: 430px;
-  max-height: 70vh;
   margin: 0 auto;
   border-radius: 0.75em;
   cursor: pointer;

@@ -1,6 +1,8 @@
 import debug from './debug';
 
 export default {
+  cardScale: window.innerHeight < 600 ? 0.9 : 1.0,
+
   msPerYear: debug.fastYears ? 2000 : 6000,
 
 // Set an upper cap to the amount of emissions we pass to hector,

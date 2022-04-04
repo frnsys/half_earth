@@ -134,7 +134,7 @@ export default {
     yBounds() {
       return [
         this.$refs.addScanner.botY - 10,
-        this.$refs.removeScanner.topY + 10 - 430, // card height
+        this.$refs.removeScanner.topY + 10 - this.cardHeight,
       ];
     },
     items(idx) {

@@ -1,4 +1,5 @@
 import animate from 'lib/anim';
+import consts from '/src/consts';
 import {updateTransform} from 'lib/util';
 
 export default {
@@ -51,10 +52,10 @@ export default {
     pulseCard() {
       let el = document.querySelector('.draggable.active');
       if (el) {
-        animate(1, 1.05, 100, (val) => {
+        animate(consts.cardScale, consts.cardScale*1.05, 100, (val) => {
           updateTransform(el, {scale: val});
         }, () => {
-          animate(1.05, 1, 100, (val) => {
+          animate(consts.cardScale*1.05, consts.cardScale, 100, (val) => {
             updateTransform(el, {scale: val});
           });
         });
@@ -63,10 +64,10 @@ export default {
     shrinkPulseCard() {
       let el = document.querySelector('.draggable.active');
       if (el) {
-        animate(1, 0.95, 100, (val) => {
+        animate(consts.cardScale, consts.cardScale*0.95, 100, (val) => {
           updateTransform(el, {scale: val});
         }, () => {
-          animate(0.95, 1, 100, (val) => {
+          animate(consts.cardScale*0.95, consts.cardScale, 100, (val) => {
             updateTransform(el, {scale: val});
           });
         });
