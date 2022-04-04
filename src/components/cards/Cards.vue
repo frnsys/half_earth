@@ -4,9 +4,9 @@
 -->
 
 <template>
-<ul class="cards" ref="scroller" @scroll.passive="onScroll">
+<div class="cards" ref="scroller" @scroll.passive="onScroll">
   <slot></slot>
-</ul>
+</div>
 </template>
 
 <script>
@@ -182,6 +182,16 @@ to be centered */
 }
 .cards > div:last-child {
   margin-right: 50vw;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* This is really hacky,
+  but for some reason mobile Safari doesn't respect
+  the margin-right rule above, so the last card doesn't
+  properly center except with this rule. */
+  .cards > div:last-child {
+    padding-right: 60px;
+  }
 }
 
 .cards .card {
