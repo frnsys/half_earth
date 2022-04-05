@@ -26,9 +26,10 @@
     <img class="card-image" :src="image.fname ? `/assets/content/images/${image.fname}` : '/assets/missing_content.png'" />
     <div v-if="status == 'Building'" class="card-tack-ul project-points">
       <img
-        v-for="_ in points"
+        v-for="i in consts.maxPoints"
         class="pip"
-        v-tip="{text: `${points} ${kind} points are allocated to this project`, icon: type}"
+        v-tip="{text: `POINT: ${i} ${points} ${kind} points are allocated to this project`, icon: type}"
+        :class="{'empty-point': i > points}"
         :src="icons[type]">
     </div>
 
@@ -352,9 +353,6 @@ export default {
   max-width: 58px;
   text-align: left;
 }
-.project-points .pip {
-  margin-left: -15px;
-}
 .project-points .pip:first-child,
 .project-points .pip:nth-child(7) {
   margin-left: 0px;
@@ -505,6 +503,11 @@ export default {
   animation-name: progresspulse;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+.empty-point {
+  opacity: 0.5;
+  filter: grayscale(0.6) brightness(1.3);
 }
 
 @keyframes progresspulse {
