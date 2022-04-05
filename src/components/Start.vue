@@ -20,6 +20,9 @@ import game from '/src/game';
 import state from '/src/state';
 import {saveSettings} from '../state';
 
+const notification = new Audio('/assets/notification.wav');
+notification.volume = 0.5;
+
 export default {
   methods: {
     hasSave() {
@@ -37,6 +40,8 @@ export default {
       state.sound = !state.sound;
       if (!state.sound) {
         window.music.pause();
+      } else {
+        notification.play();
       }
       saveSettings();
     },
