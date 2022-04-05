@@ -11,12 +11,13 @@
           <img :src="icons.precipitation">{{Math.round(region.precip_lo)}}-{{Math.round(region.precip_hi)}}cm/yr
         </div>
     </div>
-    <div v-tip="{icon: 'development', text: `This region's progress to the next income level.`}">
-      <span>Progress to Next Level</span>
-      <div class="minibar">
+    <div v-tip="{icon: 'development', text: `This region's progress to the next income level.`}" :class="{'max-level': region.income == 'High'}">
+      <span>Progress to Next Level:</span>
+      <div class="minibar" v-if="region.income != 'High'">
         <div class="minibar-fill"
           :style="{width: `${region.income == 'High' ? 100 : region.development * 100}%`}"></div>
       </div>
+      <span v-else> (Max Level)</span>
     </div>
     <div class="region-disasters">
       <div>Recent Disasters</div>
@@ -156,6 +157,10 @@ export default {
 }
 
 .region-disasters img{
-max-width: 16px;
+  max-width: 16px;
+}
+
+.max-level {
+  opacity: 0.5;
 }
 </style>
