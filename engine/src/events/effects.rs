@@ -34,6 +34,7 @@ pub enum Flag {
     EcosystemModeling,
     LaborResistance,
     LaborSabotage,
+    AlienEncounter,
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]
