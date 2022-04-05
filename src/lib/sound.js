@@ -30,10 +30,12 @@ class Sound {
   }
 
   // Duration in ms
-  fade(start, end, duration) {
+  fade(start, end, duration, cb) {
     this.audio.volume = start;
     animate(start, end, duration, (val) => {
       this.audio.volume = val;
+    }, () => {
+      if (cb) cb();
     });
   }
 }

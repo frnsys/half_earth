@@ -30,6 +30,7 @@ import Playlist from 'lib/playlist';
 
 const playlist = [
   '/assets/music/5yr_plan.mp3',
+  '/assets/music/5yr_plan.mp3', // hack to fade it back into itself
 ];
 
 // Hacky

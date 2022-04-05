@@ -92,8 +92,10 @@ export default {
       state.sound = !state.sound;
       if (state.sound && window.music.paused) {
         window.music.play();
-      } else if (!state.sound && !window.music.paused) {
-        window.music.pause();
+      } else if (!state.sound) {
+        window.music.mute();
+      } else {
+        window.music.unmute();
       }
       saveSettings();
     },
