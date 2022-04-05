@@ -70,7 +70,7 @@ export default {
     pcTip() {
       return {
         icon: 'political_capital',
-        text: 'How much political capital you have. Political capital is what you spend to implement your plans.'
+        text: 'How much political capital you have. Political capital is what you spend to implement your plans. If you run out you\'ll be pushed out of government.'
       };
     },
     warmingTip() {

@@ -8494,7 +8494,8 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::TriggerEvent(107, 5),
                 Effect::TriggerEvent(185, 5),
-                Effect::UnlocksNPC(3)
+                Effect::UnlocksNPC(3),
+                Effect::AddFlag(Flag::AlienEncounter)
             ],
             probabilities: vec![
                 Probability {
