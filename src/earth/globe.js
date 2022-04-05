@@ -8,9 +8,12 @@ import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
 import state from '/src/state';
 
-
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const Surface = RPC.initialize(
-  new Worker(new URL('./worker.js', import.meta.url))
+  new Worker(new URL('./surface.worker.js', import.meta.url))
+);
+const Temperature = RPC.initialize(
+  new Worker(new URL('./temp.worker.js', import.meta.url))
 );
 const texLoader = new THREE.TextureLoader();
 const objLoader = new THREE.ObjectLoader();
@@ -82,14 +85,21 @@ class Globe {
 
   async init() {
     let startYear = state.gameState.world.year;
-    this.surface = await new Surface(startYear);
-    await this.surface.init();
+    this.temperature = await new Temperature(startYear);
+    await this.temperature.init();
 
-    let pixelsBuf = await this.surface.pixelsBuf;
-    let width = await this.surface.width;
-    let height = await this.surface.height;
-    let pixels = new Uint8Array(pixelsBuf);
-    this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
+    if (!isMobile) {
+      this.surface = await new Surface();
+      await this.surface.init();
+
+      let pixelsBuf = await this.surface.pixelsBuf;
+      let width = await this.surface.width;
+      let height = await this.surface.height;
+      let pixels = new Uint8Array(pixelsBuf);
+      this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
+    } else {
+      this.surfaceTexture = texLoader.load('./assets/surface/static_surface.png');
+    }
     this.surfaceTexture.flipY = true;
 
     this.material = new THREE.ShaderMaterial({
@@ -157,17 +167,20 @@ class Globe {
   }
 
   async updateSurface() {
-    // Since SharedArrayBuffer support is lacking
-    // in some mobile browsers, do this instead.
-    await this.surface.updateTexture();
-    let newPixelsBuf = await this.surface.pixelsBuf;
-    let newPixels = new Uint8Array(newPixelsBuf);
-    this.surfaceTexture.image.data.set(newPixels);
-    this.surfaceTexture.needsUpdate = true;
+    if (this.surface) {
+      // Since SharedArrayBuffer support is lacking
+      // in some mobile browsers, do this instead.
+      // await this.surface.updateTexture();
+      let newPixelsBuf = await this.surface.pixelsBuf;
+      let newPixels = new Uint8Array(newPixelsBuf);
 
-    // With SharedArrayBuffer we'd only need to do:
-    // await this.surface.updateTexture();
-    // this.surfaceTexture.needsUpdate = true;
+      this.surfaceTexture.image.data.set(newPixels);
+      this.surfaceTexture.needsUpdate = true;
+
+      // With SharedArrayBuffer we'd only need to do:
+      // await this.surface.updateTexture();
+      // this.surfaceTexture.needsUpdate = true;
+    }
   }
 
   // Calculate new temperature anomaly
@@ -175,8 +188,8 @@ class Globe {
   // See comments for Surface.addEmissions
   // for what `emissions` should look like.
   async addEmissionsThenUpdate(emissions) {
-    await this.surface.addEmissions(emissions);
-    let tgav = await this.surface.updateTemperature();
+    await this.temperature.addEmissions(emissions);
+    let tgav = await this.temperature.updateTemperature();
     await this.surface.updateBiomes(tgav);
     await this.updateSurface();
     return tgav;
@@ -254,8 +267,6 @@ class Globe {
       this.orbital.rotation.z -= 0.01;
     }
 
-    
-    
     this.tickPings();
 
     requestAnimationFrame(this.render.bind(this));
