@@ -145,6 +145,11 @@ export default {
   width: 28px;
   margin-right: 0.5em;
 }
+.region-item--intensities .card-icon:nth-child(4) {
+  margin-top: 0.5em;
+  border-top: 1px solid rgba(0,0,0,0.2);
+  padding-top: 0.5em;
+}
 
 .seceded-label {
   position: absolute;
