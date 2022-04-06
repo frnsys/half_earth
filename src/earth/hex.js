@@ -4,6 +4,7 @@ import iconNames from '/assets/content/icons.json';
 import debug from '../debug';
 
 import tileHeights from '/assets/surface/tile_heights.json';
+import tilesToRegions from '/assets/surface/tiles_to_regions.json';
 
 const raycaster = new THREE.Raycaster();
 const vertAxis = new THREE.Vector3(0,1,0);
@@ -28,7 +29,6 @@ const icons = iconNames.concat(['political_capital', 'discontent', 'content']).r
   acc[name] = iconMat;
   return acc;
 }, {});
-
 
 function vector(p1, p2) {
   return {
@@ -81,27 +81,30 @@ class HexSphere {
     this.scene = scene;
     this.parent = parent;
     this.hexasphere = new Hexasphere(radius, subdivisions, tileWidth);
+    let regionTiles = Object.keys(tilesToRegions).map((idx) => parseInt(idx));
     this.hexasphere.tiles.forEach((tile, idx) => {
-      tile.mesh = generateTileMesh(tile);
-      tile.mesh.userData.idx = idx;
-      parent.add(tile.mesh);
+      if (regionTiles.includes(idx)) {
+        tile.mesh = generateTileMesh(tile);
+        tile.mesh.userData.idx = idx;
+        parent.add(tile.mesh);
 
-      let bnd = tile.boundary;
-      let normal = calculateSurfaceNormal(bnd[1], bnd[2], bnd[3]);
-      tile.normal = new THREE.Vector3(normal.x, normal.y, normal.z);
+        let bnd = tile.boundary;
+        let normal = calculateSurfaceNormal(bnd[1], bnd[2], bnd[3]);
+        tile.normal = new THREE.Vector3(normal.x, normal.y, normal.z);
 
-      let center = tile.centerPoint;
-      tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
+        let center = tile.centerPoint;
+        tile.centerPointVec = new THREE.Vector3(center.x, center.y, center.z);
 
-      let height = tileHeights[idx];
-      if (height !== undefined) {
-        tile.mesh.position.add(tile.normal.multiplyScalar(height));
+        let height = tileHeights[idx];
+        if (height !== undefined) {
+          tile.mesh.position.add(tile.normal.multiplyScalar(height));
+        }
+
+        if (debug.showTiles) {
+          this.showText(`${idx}`, idx, {dist: 2.0});
+        }
+        this.selectables.push(tile.mesh);
       }
-
-      if (debug.showTiles) {
-        this.showText(`${idx}`, idx, {dist: 2.0});
-      }
-      this.selectables.push(tile.mesh);
     });
 
     // Interaction
