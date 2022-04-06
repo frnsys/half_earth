@@ -126,6 +126,10 @@ export default {
   align-self: center;
   font-size: 0.9em;
 }
+.tip--body strong {
+  /* color: #ffee5d; */
+  color: #43cc70;
+}
 .tip--body img {
   width: 16px;
   vertical-align: middle;
@@ -139,5 +143,10 @@ export default {
 .tip--card .card.process {
   margin: 0 auto !important;
   padding-right: 0 !important;
+}
+
+*[data-tip]:hover {
+  opacity: 0.8;
+  cursor: pointer;
 }
 </style>

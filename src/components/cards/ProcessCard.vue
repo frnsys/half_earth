@@ -30,7 +30,7 @@
       <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}" v-tip="changeTip">
         <div class="process-mix-percent" :class="{before: hasChange}">{{process.mix_share*5}}%</div>
         <template v-if="hasChange">
-          <small>▶</small>
+          <img :src="icons.arrow_right" />
           <div class="process-mix-percent after" :class="{
             shrink: process.mix_share > changedMixShare,
             grow: process.mix_share < changedMixShare,
@@ -465,4 +465,7 @@ color: #63FF96;
   margin: 1px 2px 1px;
 }
 
+.process-mix-percents img {
+  filter: invert(1);
+}
 </style>

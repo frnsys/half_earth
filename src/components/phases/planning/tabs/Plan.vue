@@ -486,6 +486,9 @@ export default {
 .planning--page-tabs > div.selected {
   background: var(--colour-pink);
 }
+.planning--page-tabs > div:hover {
+  background: #d4e4a7;
+}
 .planning--page-tabs .disabled {
   opacity: 0.5;
   pointer-events: none;

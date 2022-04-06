@@ -127,7 +127,7 @@ import intensity from '/src/display/intensity';
 import Hud from 'components/Hud.vue';
 import EventsMixin from 'components/EventsMixin';
 import IntensityBar from 'components/cards/IntensityBar.vue';
-
+import factors from '/src/display/factors';
 
 export default {
   mixins: [EventsMixin],
@@ -241,22 +241,16 @@ export default {
       };
     },
     biodiversityTip() {
-      return {
-        icon: 'extinction_rate',
-        text: `The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital.`
-      };
+      return factors.tips.biodiversity(
+        `The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital.`);
     },
     contentednessTip() {
-      return {
-        icon: 'contentedness',
-        text: `How people around the world feel about the state of things. <strong>Increasing or maintaining contentedness</strong> will gain you political capital.`
-      };
+      return factors.tips.contentedness(
+        `How people around the world feel about the state of things. <strong>Increasing or maintaining contentedness</strong> will gain you political capital.`);
     },
     emissionsTip() {
-      return {
-        icon: 'emissions',
-        text: `Current annual emissions, in gigatonnes of CO2 equivalent. <strong>Reducing emissions</strong> will gain you political capital.`
-      };
+      return factors.tips.emissions(
+        `Current annual emissions, in gigatonnes of CO2 equivalent. <strong>Reducing emissions</strong> will gain you political capital.`);
     }
   },
   methods: {

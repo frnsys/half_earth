@@ -150,17 +150,6 @@ export default {
   vertical-align: middle;
   image-rendering: auto;
 }
-.pips {
-  padding: 0.5em;
-  margin: 0 auto 0.5em;
-  position: relative;
-  text-align: center;
-  font-size: 1.2em;
-  color: #fff;
-  user-select: none;
-  border-radius: 0.2em;
-  background: rgba(0,0,0,0.1);
-}
 .pip-in-use {
   opacity: 0.5;
 }

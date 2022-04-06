@@ -6,6 +6,7 @@
     <button @click="startRun">Try Again</button>
   </div>
   <div v-if="shareImgUrl && showStart">
+    <img :src="shareImgUrl" />
     <div class="badges-section">
       <h3>Badges</h3>
       <div class="badges">
