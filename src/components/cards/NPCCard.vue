@@ -22,7 +22,7 @@
     {{name}}
   </template>
   <template v-slot:body>
-    <p v-if="relationshipName == 'Ally'" class="npc-effect active" v-html="effectsHtml"></p>
+    <p v-if="isAlly" class="npc-effect active" v-html="effectsHtml"></p>
     <p v-else class="npc-effect inactive" v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="effectsHtml"></p>
   </template>
   <template v-slot:top-back>
@@ -52,6 +52,7 @@ import state from '/src/state';
 import Card from './Card.vue';
 import display from '/src/display/display';
 import NPCS from '/assets/content/npcs.json';
+import icons from '/src/components/icons';
 
 export default {
   props: ['npc'],
@@ -65,8 +66,11 @@ export default {
     };
   },
   computed: {
+    isAlly() {
+      return this.relationshipName == 'Ally';
+    },
     effectsHtml() {
-      return display.fillIcons(this.effects);
+      return `${this.isAlly ? '' : `<img src="${icons.locks}" />`}${display.fillIcons(this.effects)}`;
     },
     relationshipName() {
       return display.relationshipName(this.npc.relationship);
