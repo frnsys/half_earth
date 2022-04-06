@@ -24,7 +24,7 @@
       </div>
     </div>
     <img class="card-image" :src="image.fname ? `/assets/content/images/${image.fname}` : '/assets/missing_content.png'" />
-    <div v-if="status == 'Building'" class="card-tack-ul project-points">
+    <div v-if="kind != 'Policy' && status == 'Building'" class="card-tack-ul project-points">
       <img
         v-for="i in consts.maxPoints"
         class="pip"
