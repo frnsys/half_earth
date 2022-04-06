@@ -71,7 +71,7 @@ pub enum Effect {
 
     AddFlag(Flag),
     AutoClick(usize, f32),
-    NPCRelationship(usize, isize),
+    NPCRelationship(usize, f32),
 
     ModifyProcessByproducts(usize, Byproduct, f32),
     ModifyIndustryByproducts(usize, Byproduct, f32),

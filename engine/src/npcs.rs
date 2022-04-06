@@ -48,7 +48,7 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
 pub struct NPC {
     pub id: usize,
     pub name: &'static str,
-    pub relationship: isize,
+    pub relationship: f32,
     pub locked: bool,
     pub support: f32,
     pub seats: f32,
@@ -56,9 +56,9 @@ pub struct NPC {
 
 impl NPC {
     pub fn relation(&self) -> NPCRelation {
-        if self.relationship >= 5 {
+        if self.relationship >= 5. {
             NPCRelation::Ally
-        } else if self.relationship <= 1 {
+        } else if self.relationship <= 1. {
             NPCRelation::Nemesis
         } else {
             NPCRelation::Neutral

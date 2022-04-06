@@ -15,6 +15,8 @@ use serde::Serialize;
 use serde_json::{json, Value};
 use crate::save::{Saveable, coerce};
 
+const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
+
 #[derive(Default, Serialize, Clone)]
 pub struct State {
     pub world: World,
@@ -187,6 +189,14 @@ impl State {
                 for effect in &project.effects {
                     add_effects.push((effect.clone(), None));
                 }
+
+                for npc_id in &project.supporters {
+                    self.npcs[*npc_id].relationship += RELATIONSHIP_CHANGE_AMOUNT;
+                }
+                for npc_id in &project.opposers {
+                    self.npcs[*npc_id].relationship -= RELATIONSHIP_CHANGE_AMOUNT;
+                }
+
                 completed_projects.push(project.id);
             } else if project.gradual {
                 for effect in &project.effects {
@@ -449,13 +459,6 @@ impl State {
 
         let project = &mut self.projects[project_id];
         project.status = Status::Building;
-
-        for npc_id in &project.supporters {
-            self.npcs[*npc_id].relationship += 1;
-        }
-        for npc_id in &project.opposers {
-            self.npcs[*npc_id].relationship -= 1;
-        }
     }
 
     pub fn stop_project(&mut self, project_id: usize) -> Vec<Effect> {
@@ -472,6 +475,13 @@ impl State {
                     effects.push(effect.clone());
                 }
             }
+
+            for npc_id in &project.supporters {
+                self.npcs[*npc_id].relationship -= RELATIONSHIP_CHANGE_AMOUNT;
+            }
+            for npc_id in &project.opposers {
+                self.npcs[*npc_id].relationship += RELATIONSHIP_CHANGE_AMOUNT;
+            }
         }
 
         if project.progress > 0. {
@@ -482,13 +492,6 @@ impl State {
 
         if project.kind == ProjectType::Policy {
             self.new_policies.retain(|&id| id != project.id);
-        }
-
-        for npc_id in &project.supporters {
-            self.npcs[*npc_id].relationship -= 1;
-        }
-        for npc_id in &project.opposers {
-            self.npcs[*npc_id].relationship += 1;
         }
 
         effects
@@ -572,24 +575,24 @@ impl State {
 
         let (support_change, oppose_change) = if !was_banned && process.is_banned() {
             // Ban
-            (-1, 1)
+            (-1., 1.)
         } else if was_banned && !process.is_banned() {
             // Unban
-            (1, -1)
+            (1., -1.)
         } else if was_promoted && !process.is_promoted() {
             // Unpromote
-            (-1, 1)
+            (-1., 1.)
         } else if !was_promoted && process.is_promoted() {
             // Promote
-            (1, -1)
+            (1., -1.)
         } else {
-            (0, 0)
+            (0., 0.)
         };
         for npc_id in &process.supporters {
-            self.npcs[*npc_id].relationship += support_change;
+            self.npcs[*npc_id].relationship += support_change * RELATIONSHIP_CHANGE_AMOUNT;
         }
         for npc_id in &process.opposers {
-            self.npcs[*npc_id].relationship += oppose_change;
+            self.npcs[*npc_id].relationship += oppose_change *  RELATIONSHIP_CHANGE_AMOUNT;
         }
     }
 

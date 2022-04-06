@@ -161,7 +161,7 @@ specs = {
     'NPC': {
         'id': None,
         'name': None,
-        'relationship': 3,
+        'relationship': 3.,
         'locked': 'false',
         'support': 100,
         'seats': 0.,
@@ -284,7 +284,7 @@ effects = {
     'TerminationShock': lambda _: (),
     'GameOver':         lambda _: (),
     'AutoClick':        lambda e: (ids[e['entity']], param(e, 'Chance')),
-    'NPCRelationship':  lambda e: (ids[e['entity']], int(param(e, 'Change'))),
+    'NPCRelationship':  lambda e: (ids[e['entity']], param(e, 'Change')),
     'ModifyProcessByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(byproduct_map[e['subtype']]), param(e, 'Multiplier')),
     'ModifyIndustryByproducts':  lambda e: (ids[e['entity']], 'Byproduct::{}'.format(byproduct_map[e['subtype']]), param(e, 'Multiplier')),
     'ModifyIndustryResources':   lambda e: (ids[e['entity']], 'Resource::{}'.format(e['subtype']), param(e, 'Multiplier')),

@@ -1920,7 +1920,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(4, 3),
+                Effect::NPCRelationship(4, 3.0),
                 Effect::RegionHabitability(Latitude::Tropic, 2.0),
                 Effect::RegionHabitability(Latitude::Subtropic, 2.0),
                 Effect::UnlocksProject(47),
@@ -1966,7 +1966,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(5, 3),
+                Effect::NPCRelationship(5, 3.0),
                 Effect::UnlocksProject(106),
                 Effect::UnlocksProject(21),
                 Effect::UnlocksProject(71)
@@ -2011,7 +2011,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(2, 3),
+                Effect::NPCRelationship(2, 3.0),
                 Effect::UnlocksProject(23),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
                 Effect::UnlocksProject(118)
@@ -2099,7 +2099,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(5, 3),
+                Effect::NPCRelationship(5, 3.0),
                 Effect::UnlocksProject(94),
                 Effect::UnlocksProject(36)
             ],
@@ -2370,7 +2370,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::NPCRelationship(4, 2)
+                        Effect::NPCRelationship(4, 2.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -2900,7 +2900,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(9, 3),
+                Effect::NPCRelationship(9, 3.0),
                 Effect::Demand(Output::AnimalCalories, -0.1),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
                 Effect::UnlocksProject(65)
@@ -3209,7 +3209,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::PlayerVariable(PlayerVariable::ResearchPoints, 20.0),
-                Effect::NPCRelationship(5, 3),
+                Effect::NPCRelationship(5, 3.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0)
             ],
             kind: ProjectType::Policy,
@@ -3266,7 +3266,7 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                        Effect::NPCRelationship(2, -1)
+                        Effect::NPCRelationship(2, -1.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -3508,7 +3508,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 20.0),
-                Effect::NPCRelationship(6, -5)
+                Effect::NPCRelationship(6, -5.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4860,7 +4860,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(6, -5),
+                Effect::NPCRelationship(6, -5.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
             ],
             kind: ProjectType::Policy,
@@ -5973,7 +5973,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::UnlocksProject(102),
-                Effect::NPCRelationship(8, 3),
+                Effect::NPCRelationship(8, 3.0),
                 Effect::UnlocksProject(113),
                 Effect::UnlocksProject(59)
             ],
@@ -6236,9 +6236,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(0, 3),
+                Effect::NPCRelationship(0, 3.0),
                 Effect::UnlocksProject(70),
-                Effect::NPCRelationship(4, -3),
+                Effect::NPCRelationship(4, -3.0),
                 Effect::UnlocksProject(49)
             ],
             kind: ProjectType::Policy,
@@ -6955,7 +6955,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::NPCRelationship(7, 3),
+                Effect::NPCRelationship(7, 3.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
                 Effect::UnlocksProject(45),
                 Effect::UnlocksProject(64)
@@ -8518,7 +8518,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::NPCRelationship(4, 2),
+                Effect::NPCRelationship(4, 2.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0)
             ],
             probabilities: vec![
@@ -8657,7 +8657,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::NPCRelationship(4, 2),
+                Effect::NPCRelationship(4, 2.0),
                 Effect::RegionHabitability(Latitude::Tropic, 2.0)
             ],
             probabilities: vec![
@@ -10220,8 +10220,8 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
-                Effect::NPCRelationship(8, 3),
-                Effect::NPCRelationship(1, 3)
+                Effect::NPCRelationship(8, 3.0),
+                Effect::NPCRelationship(1, 3.0)
             ],
             probabilities: vec![
                 Probability {
@@ -10369,7 +10369,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::Migration,
-                Effect::NPCRelationship(4, -2),
+                Effect::NPCRelationship(4, -2.0),
                 Effect::TriggerEvent(46, 2)
             ],
             probabilities: vec![
@@ -10786,7 +10786,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.05),
-                Effect::NPCRelationship(4, 2)
+                Effect::NPCRelationship(4, 2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -11088,7 +11088,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::NPCRelationship(7, 2),
+                Effect::NPCRelationship(7, 2.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 3.0)
             ],
             probabilities: vec![
@@ -11920,7 +11920,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::NPCRelationship(8, -2)
+                Effect::NPCRelationship(8, -2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -11944,7 +11944,7 @@ pub fn events() -> Vec<Event> {
             locked: false,
             regional: false,
             effects: vec![
-                Effect::NPCRelationship(5, 2),
+                Effect::NPCRelationship(5, 2.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0)
             ],
             probabilities: vec![
@@ -11994,7 +11994,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -1000000000.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -6.0),
-                Effect::NPCRelationship(0, 2)
+                Effect::NPCRelationship(0, 2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -12195,7 +12195,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -3.0),
                 Effect::WorldVariable(WorldVariable::Population, -50000000.0),
-                Effect::NPCRelationship(0, 2)
+                Effect::NPCRelationship(0, 2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -12229,7 +12229,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![Effect::NPCRelationship(1, 2)], vec![]), (vec![Effect::NPCRelationship(6, 2)], vec![]), (vec![Effect::NPCRelationship(7, 2)], vec![])],
+            branches: vec![(vec![Effect::NPCRelationship(1, 2.0)], vec![]), (vec![Effect::NPCRelationship(6, 2.0)], vec![]), (vec![Effect::NPCRelationship(7, 2.0)], vec![])],
             intensity: 0
         },
         Event {
@@ -12320,8 +12320,8 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
-                Effect::NPCRelationship(4, 2),
-                Effect::NPCRelationship(1, 2)
+                Effect::NPCRelationship(4, 2.0),
+                Effect::NPCRelationship(1, 2.0)
             ],
             probabilities: vec![
 
@@ -12544,8 +12544,8 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::WorldVariable(WorldVariable::Population, -20000000.0),
-                Effect::NPCRelationship(4, -2),
-                Effect::NPCRelationship(0, 2)
+                Effect::NPCRelationship(4, -2.0),
+                Effect::NPCRelationship(0, 2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -12609,7 +12609,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![Effect::NPCRelationship(4, 2), Effect::NPCRelationship(0, -2), Effect::NPCRelationship(6, -2)], vec![]), (vec![Effect::NPCRelationship(4, -2), Effect::NPCRelationship(0, 2), Effect::NPCRelationship(6, 2)], vec![])],
+            branches: vec![(vec![Effect::NPCRelationship(4, 2.0), Effect::NPCRelationship(0, -2.0), Effect::NPCRelationship(6, -2.0)], vec![]), (vec![Effect::NPCRelationship(4, -2.0), Effect::NPCRelationship(0, 2.0), Effect::NPCRelationship(6, 2.0)], vec![])],
             intensity: 0
         },
         Event {
@@ -13093,7 +13093,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![Effect::WorldVariable(WorldVariable::Outlook, 1.0), Effect::NPCRelationship(9, 3), Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)], vec![]), (vec![Effect::WorldVariable(WorldVariable::Outlook, 1.0), Effect::NPCRelationship(2, 1), Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)], vec![])],
+            branches: vec![(vec![Effect::WorldVariable(WorldVariable::Outlook, 1.0), Effect::NPCRelationship(9, 3.0), Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)], vec![]), (vec![Effect::WorldVariable(WorldVariable::Outlook, 1.0), Effect::NPCRelationship(2, 1.0), Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)], vec![])],
             intensity: 0
         },
         Event {
@@ -13407,8 +13407,8 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::ModifyIndustryDemand(8, 0.1),
-                Effect::NPCRelationship(7, 2),
-                Effect::NPCRelationship(0, -2)
+                Effect::NPCRelationship(7, 2.0),
+                Effect::NPCRelationship(0, -2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -13650,7 +13650,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::NPCRelationship(8, 2)
+                Effect::NPCRelationship(8, 2.0)
             ],
             probabilities: vec![
                 Probability {
@@ -13780,7 +13780,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
-                Effect::NPCRelationship(8, -2),
+                Effect::NPCRelationship(8, -2.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
             probabilities: vec![
@@ -13946,7 +13946,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 0,
             name: "The Malthusian",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -13954,7 +13954,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 1,
             name: "The Utopian",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -13962,7 +13962,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 2,
             name: "The Consumerist",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -13970,7 +13970,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 3,
             name: "The Posadist",
-            relationship: 3,
+            relationship: 3.0,
             locked: true,
             support: 100.0,
             seats: 0.0
@@ -13978,7 +13978,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 4,
             name: "The Fanonist",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -13986,7 +13986,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 5,
             name: "The Ecofeminist",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -13994,7 +13994,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 6,
             name: "The Authoritarian",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -14002,7 +14002,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 7,
             name: "The Accelerationist",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -14010,7 +14010,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 8,
             name: "The Environmentalist",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
@@ -14018,7 +14018,7 @@ pub fn npcs() -> Vec<NPC> {
         NPC {
             id: 9,
             name: "The Animal Liberationist",
-            relationship: 3,
+            relationship: 3.0,
             locked: false,
             support: 100.0,
             seats: 0.0
