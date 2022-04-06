@@ -6,7 +6,9 @@
   </template>
   <template v-slot:figure>
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
-
+    <div class="process-limit-alert"
+      v-if="maxShare < 20"
+      v-tip="{icon: 'alert', text: `Because of resource availability this process can only make up to ${maxShare * 5}% of production.${process.mix_share > maxShare || changedMixShare > maxShare ? ' You should reallocate its points to other processes.' : ''}`}"><img :src="icons.alert" /></div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
       <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
@@ -83,13 +85,14 @@
   </template>
 
   <template v-slot:process-mix>
-    <div class="process-mix-cells">
+    <div class="process-mix-cells" v-tip="{icon: 'mix_token', text: maxShare < 20 ? `Because of resource availability this process can only make up to ${maxShare * 5}% of production.` : `There is currently no limit on this process' mix share.`}">
         <div class="process-mix-cell" v-for="i in 20" :class="{
           active: i <= process.mix_share,
           depleted: feedstockEstimate == 0,
           shrink: i <= process.mix_share && i > changedMixShare,
           grow: i > process.mix_share && i <= changedMixShare,
           excess: (i <= process.mix_share || i <= changedMixShare) && i > maxShare,
+          disabled: i > maxShare,
         }"/>
       </div>
   </template>
@@ -171,25 +174,7 @@ export default {
       };
     },
     maxShare() {
-      let max_share = 1;
-      let demand = state.gameState.output_demand[display.enumKey(this.process.output)];
-
-      // Hard-coded limit
-      if (this.process.limit) {
-        max_share = Math.min(this.process.limit/demand, 1);
-      }
-
-      // Limit based on feedstock supply
-      if (this.process.feedstock) {
-        let feedstock = display.enumKey(this.feedstock[0]);
-        if (feedstock !== 'other' && feedstock !== 'soil') {
-          let per_output = this.feedstock[1];
-          let feedstockLimit = state.gameState.feedstocks[feedstock]/per_output;
-          let feedstockMaxShare = Math.min(feedstockLimit/demand, 1);
-          max_share = Math.min(max_share, feedstockMaxShare);
-        }
-      }
-      return Math.floor(max_share * 100/5);
+      return game.processMaxShare(this.process);
     },
     feedstockIcon() {
       return display.enumKey(this.feedstock[0]);
@@ -409,6 +394,11 @@ color: #63FF96;
 .process-mix-cell.excess {
   background: #DC322E !important;
   box-shadow: 0 0 8px #DC322E !important;
+  opacity: 1 !important;
+}
+.process-mix-cell.disabled {
+  background: #838383;
+  opacity: 0.05;
 }
 
 .alert-icon {
@@ -462,10 +452,21 @@ color: #63FF96;
 }
 
 .process-excess-alert {
-  margin: 1px 2px 1px;
+  margin: 5px 2px 1px;
 }
 
 .process-mix-percents img {
   filter: invert(1);
+}
+
+.process-limit-alert {
+  position: absolute;
+  top: 5px;
+  width: 28px;
+  left: 5px;
+  background: #ee7373;
+  border-radius: 20em;
+  padding: 4px 5px 2px 5px;
+  border: 1px solid #222;
 }
 </style>

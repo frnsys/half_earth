@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
 import tutorial from '/src/tutorial';
@@ -31,7 +32,8 @@ export default {
       return consts.processCardScanTime;
     },
     addable() {
-      return this.points !== 0;
+      let change = state.processMixChanges[this.process.output][this.process.id] || 0;
+      return this.points !== 0 && change + 1 <= game.processMaxShare(this.process);
     },
   },
   methods: {

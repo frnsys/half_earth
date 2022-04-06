@@ -236,10 +236,12 @@ export default {
     addPoint(p) {
       if (this.points > 0) {
         let change = state.processMixChanges[this.output][p.id] || 0;
-        this.points -= 1;
-        state.processMixChanges[this.output][p.id] = change + 1;
-        if (this.points == 0) {
-          this.allowBack = true;
+        if (change + 1 <= game.processMaxShare(p)) {
+          this.points -= 1;
+          state.processMixChanges[this.output][p.id] = change + 1;
+          if (this.points == 0) {
+            this.allowBack = true;
+          }
         }
       }
 

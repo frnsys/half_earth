@@ -3,6 +3,7 @@ import debug from './debug';
 import consts from '/src/consts';
 import {initState} from './state';
 import factors from '/src/display/factors';
+import display from '/src/display/display';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 import tutorial from '/src/tutorial';
 
@@ -297,6 +298,28 @@ function nextPointCost(kind) {
   return Math.max(0, consts.pointCost - discount);
 }
 
+function processMaxShare(process) {
+  let max_share = 1;
+  let demand = state.gameState.output_demand[display.enumKey(process.output)];
+
+  // Hard-coded limit
+  if (process.limit) {
+    max_share = Math.min(process.limit/demand, 1);
+  }
+
+  // Limit based on feedstock supply
+  if (process.feedstock) {
+    let feedstock = display.enumKey(process.feedstock[0]);
+    if (feedstock !== 'other' && feedstock !== 'soil') {
+      let per_output = process.feedstock[1];
+      let feedstockLimit = state.gameState.feedstocks[feedstock]/per_output;
+      let feedstockMaxShare = Math.min(feedstockLimit/demand, 1);
+      max_share = Math.min(max_share, feedstockMaxShare);
+    }
+  }
+  return Math.floor(max_share * 100/5);
+}
+
 export default {
   newRun, saveMeta, hasSave,
   saveGame, loadGame, clearSave,
@@ -313,4 +336,4 @@ export default {
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
   playerSeats, isAlly,
-  updateFactors, nextPointCost};
+  updateFactors, nextPointCost, processMaxShare};
