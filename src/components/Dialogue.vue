@@ -1,5 +1,5 @@
 <template>
-<div class="dialogue" @click="advance" v-if="current !== null">
+<div class="dialogue" v-if="current !== null">
   <div class="dialogue--inner">
   <div class="dialogue--speech">
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
@@ -8,7 +8,7 @@
         @error="fallbackPortrait"
         v-tip="{icon: line.speaker, text: `${line.speaker}.`}" />
     </div>
-    <div class="dialogue--body">
+    <div class="dialogue--body" @click="advance">
       <div class="dialogue--speaker-name" v-if="line.speaker !== '[GAME]'">
         {{line.speaker}}
       </div>
@@ -28,6 +28,9 @@
           {{branch.text}}
         </div>
       </template>
+      <div v-else class="dialogue--choice" @click="advance">
+        (Next)
+      </div>
     </template>
   </div>
   </div>
