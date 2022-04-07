@@ -8476,7 +8476,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::LocalVariable(LocalVariable::Habitability, Comparator::GreaterEqual, 1.5),
+                        Condition::LocalVariable(LocalVariable::Habitability, Comparator::LessEqual, 1.5),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
