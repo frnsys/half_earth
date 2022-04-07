@@ -42,11 +42,12 @@ export default {
     this.init();
   },
   data() {
+    let events = game.roll.break('Start');
     return {
       badges: [],
-      showStart: debug.hideEvents ? true : false,
+      showStart: debug.hideEvents || events.length == 0 ? true : false,
       shareImgUrl: null,
-      events: game.roll.break('Start')
+      events,
     }
   },
   methods: {

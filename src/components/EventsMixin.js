@@ -26,6 +26,11 @@ export default {
           return EVENTS[eventId].arc !== 'Tutorial';
         });
       }
+      if (debug.hideWorldEvents) {
+        this.events = this.events.filter(([eventId, _]) => {
+          return EVENTS[eventId].phase !== 'World';
+        });
+      }
       if (debug.hideEvents) {
         return false;
       } else {

@@ -5,6 +5,18 @@
     <h2>Well Played!</h2>
     <button @click="startRun">Try Again?</button>
   </div>
+  <div v-if="shareImgUrl && showStart">
+    <img :src="shareImgUrl" />
+    <div class="badges-section">
+      <h3>Badges</h3>
+      <div class="badges">
+        <img v-for="badge in badges"
+          :src="`/assets/badges/${badge.name}.png`"
+          v-tip="{text: badge.desc}" />
+      </div>
+    </div>
+    <a class="twitter-share-button" :href="`https://twitter.com/intent/tweet?text=${shareImgUrl}`" target="_blank">Tweet</a>
+  </div>
 </div>
 </template>
 
@@ -31,12 +43,19 @@ export default {
   methods: {
     init() {
       this.showEvent();
+      this.getShareImage();
       game.clearSave();
     },
     startRun() {
       game.newRun(true);
       state.phase = 'PLANNING';
-    }
+    },
+    getShareImage() {
+      share(false, ({badges, url}) => {
+        this.shareImgUrl = url;
+        this.badges = badges;
+      });
+    },
   },
 }
 </script>

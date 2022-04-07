@@ -121,7 +121,16 @@ impl Condition {
                 comp.eval(state.runs as f32, *runs as f32)
             },
             Condition::ProjectStatus(id, status) => {
-                state.projects[*id].status == *status
+                match status {
+                    ProjectStatus::Active | ProjectStatus::Finished => {
+                        match state.projects[*id].status {
+                            ProjectStatus::Active => true,
+                            ProjectStatus::Finished => true,
+                            _ => false,
+                        }
+                    },
+                    _ => state.projects[*id].status == *status
+                }
             },
             Condition::ActiveProjectUpgrades(id, comp, upgrades) => {
                 comp.eval(state.projects[*id].level as f32, *upgrades as f32)
