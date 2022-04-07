@@ -25,7 +25,11 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.scrollTimeout);
-    // document.removeEventListener('keydown', this.onKeyDown);
+    clearInterval(this.focusCheck);
+
+    this.$refs.scroller.removeEventListener('mousedown', this.dragStart);
+    this.$refs.scroller.removeEventListener('mousemove', this.drag);
+    this.$refs.scroller.removeEventListener('click', this.dragStop, true);
   },
   watch: {
     disabled(val) {
@@ -39,7 +43,15 @@ export default {
     }
   },
   mounted() {
-    // document.addEventListener('keydown', this.onKeyDown);
+    // Horizontally dragging for desktop
+    // Use 'click' instead of 'mouseup' so we can properly
+    // intercept other click events to the cards
+    this.pos = {left: 0, x: 0};
+    this.down = false;
+    this.dragging = false;
+    this.$refs.scroller.addEventListener('mousedown', this.dragStart);
+    this.$refs.scroller.addEventListener('mousemove', this.drag);
+    this.$refs.scroller.addEventListener('click', this.dragStop, true);
 
     // Hack to start with first card focused
     this.$refs.scroller.scrollLeft = this.$refs.scroller.clientWidth/2;
@@ -80,8 +92,50 @@ export default {
         this.last = nextLast;
       }
     }, 16);
+
+    // Fallback for if the focused card detection messes up
+    this.focusCheck = setInterval(() => {
+      if (!this.scrolling) {
+        let idx = detectCenterElement(
+          this.$refs.scroller,
+          [...this.$refs.scroller.children]);
+        this.$emit('focused', idx);
+      }
+    }, 100);
   },
   methods: {
+    // Drag to scroll horizontally on desktop
+    dragStart(ev) {
+      if (this.disabled) return;
+      this.pos = {
+        left: this.$refs.scroller.scrollLeft,
+        x: ev.clientX,
+      };
+      this.down = true;
+      this.$refs.scroller.style.userSelect = 'none';
+    },
+    drag(ev) {
+      if (this.disabled) return;
+      const dx = ev.clientX - this.pos.x;
+      if (this.down && Math.abs(dx) > 10) {
+        this.dragging = true;
+        this.$refs.scroller.classList.add('unlock-scroll');
+        this.$refs.scroller.scrollLeft = this.pos.left - dx;
+      }
+    },
+    dragStop(ev) {
+      if (this.dragging) {
+        this.$refs.scroller.classList.remove('unlock-scroll');
+
+        // Necessary for firefox to snap to the nearest card
+        this.$refs.scroller.scroll();
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+      }
+      this.down = false;
+      this.dragging = false;
+    },
+
     onScroll(ev) {
       // If we're not already in a scroll action
       // and a scroll event is fired, that means
@@ -99,51 +153,6 @@ export default {
         }
       }
     },
-    onKeyDown(ev) {
-      // TODO this is all messed up
-      //if (ev.key == 'ArrowUp' || ev.key == 'ArrowRight') {
-      //  ev.preventDefault();
-      //  let children = [...this.$refs.scroller.children];
-      //  let idx = detectCenterElement(
-      //    this.$refs.scroller, children);
-
-      //  let left = 0;
-      //  if (idx < children.length - 1) {
-      //    let el = children[idx];
-      //    left = el.offsetLeft - el.offsetWidth/2;
-      //  } else {
-      //    let el = children[0];
-      //    left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
-      //  }
-      //  this.$refs.scroller.scroll({
-      //    left: left,
-      //    behavior: 'smooth'
-      //  });
-
-      //  return false;
-      //} else if (ev.key == 'ArrowDown' || ev.key == 'ArrowLeft') {
-      //  ev.preventDefault();
-      //  let children = [...this.$refs.scroller.children];
-      //  let idx = detectCenterElement(
-      //    this.$refs.scroller, children);
-
-      //  let left = 0;
-      //  if (idx > 0) {
-      //    let el = children[idx-1];
-      //    left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
-      //  } else {
-      //    let el = children[children.length-1];
-      //    left = el.offsetLeft - el.offsetWidth - el.offsetWidth/2;
-      //  }
-      //  this.$refs.scroller.scroll({
-      //    left: left,
-      //    behavior: 'smooth'
-      //  });
-
-
-      //  return false;
-      //}
-    }
   }
 }
 </script>
@@ -168,6 +177,11 @@ export default {
   left: 0;
   right: 0;
   position: absolute;
+}
+
+.unlock-scroll {
+  scroll-snap-type: none;
+  scroll-snap-stop: none;
 }
 
 .cards > div {

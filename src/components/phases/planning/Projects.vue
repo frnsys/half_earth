@@ -1,7 +1,7 @@
 <template>
 <div class="plan-change-select planning--page">
   <HelpTip text="↑ Swipe this card up and hold to add it to your plan ↑" x="50%" y="150px" :center="true" />
-  <HelpTip text="⟵ Scroll sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
+  <HelpTip text="⟵ Swipe sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
 
   <div class="planning--page-tabs">
    <div class="planning-sub-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
