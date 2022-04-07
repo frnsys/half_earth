@@ -135,3 +135,46 @@ impl Saveable for Process {
         self.locked = coerce(&state["locked"]);
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use float_cmp::approx_eq;
+    use crate::kinds::{Feedstock, Output};
+
+    #[test]
+    fn test_output_limit() {
+        let mut p = Process {
+            id: 0,
+            ref_id: "test_process_a",
+            name: "Test Process A",
+            limit: None,
+            mix_share: 20, // Full mix share
+            output: Output::Fuel,
+            output_modifier: 0.,
+            byproduct_modifiers: byproducts!(),
+            resources: resources!(water: 1.),
+            byproducts: byproducts!(),
+            feedstock: (Feedstock::Oil, 1.),
+            features: vec![],
+            locked: false,
+            opposers: vec![],
+            supporters: vec![],
+        };
+
+        let demand = outputs!(
+            fuel: 1000.,
+            electricity: 0.,
+            animal_calories: 0.,
+            plant_calories: 0.
+        );
+        let order = p.production_order(&demand);
+        assert_eq!(order.amount, 1000.);
+
+        // Fuel demand is more than this process's limit
+        p.limit = Some(100.);
+
+        let order = p.production_order(&demand);
+        assert_eq!(order.amount, 100.);
+    }
+}
