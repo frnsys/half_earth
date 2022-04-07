@@ -188,7 +188,7 @@ const SUBPHASES = {
   Report: ['Start'],
   Break: ['Start'],
   End: ['Start'],
-  Interstitial: ['Start'],
+  Interstitial: ['Start', 'Win'],
   Icon: [],
   Manual: [],
 }

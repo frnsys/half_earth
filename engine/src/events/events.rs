@@ -157,6 +157,7 @@ pub enum Phase {
     PlanningDashboard,
     PlanningPlanChange,
     InterstitialStart,
+    InterstitialWin,
     Manual,
 }
 

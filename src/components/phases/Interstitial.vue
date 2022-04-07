@@ -47,6 +47,9 @@ export default {
   },
   data() {
     let events = game.roll.interstitial('Start');
+    if (game.gameWon()) {
+      events = events.concat(game.roll.interstitial('Win'));
+    }
     return {
       ready: false,
       state,
@@ -74,15 +77,13 @@ export default {
       return state.gameState.game_over;
     },
     gameWin() {
-      return state.gameState.world.emission <= consts.winState.emissions
-        && state.gameState.world.extinction_rate <= consts.winState.extinction
-        && state.gameState.world.temperature <= consts.winState.temperature;
+      return game.gameWon();
     },
     world() {
       let idx = intensity.scale(state.gameState.world.temperature, 'warming');
       if (state.gameState.world.emissions > 0) {
         return 'still warming';
-      } else if (state.gameState.world.emissions < 0) {
+      } else if (state.gameState.world.emissions <= 0) {
         return 'recovering';
       } else if (state.gameState.world.temperature >= 2) {
         return 'becoming unbearable';
