@@ -118,7 +118,11 @@ impl EventPool {
         while i < self.triggered.len() {
             let (p, ev_id, region_id) = self.triggered[i];
             if p == phase {
-                happening.push((&self.events[ev_id], region_id));
+                // Double-check that this event isn't locked
+                // by the time we get to it
+                if (!self.events[ev_id].locked) {
+                    happening.push((&self.events[ev_id], region_id));
+                }
                 self.triggered.remove(i);
                 if let Some(n) = limit {
                     if happening.len() >= n {
