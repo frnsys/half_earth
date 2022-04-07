@@ -72,6 +72,7 @@ impl Condition {
                 let val = match var {
                     PlayerVariable::PoliticalCapital => state.political_capital as f32,
                     PlayerVariable::ResearchPoints => state.research_points as f32,
+                    PlayerVariable::YearsToDeath => state.death_year as f32 - state.world.year as f32,
                 };
                 comp.eval(val, *other_val)
             },

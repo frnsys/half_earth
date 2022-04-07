@@ -15,6 +15,7 @@ use serde::Serialize;
 use serde_json::{json, Value};
 use crate::save::{Saveable, coerce};
 
+const LIFESPAN: usize = 60;
 const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
 
 #[derive(Default, Serialize, Clone)]
@@ -26,6 +27,7 @@ pub struct State {
     pub processes: Vec<Process>,
 
     pub game_over: bool,
+    pub death_year: usize,
 
     pub political_capital: isize,
     pub research_points: isize,
@@ -74,11 +76,11 @@ impl State {
             }
         }
         let mut state = State {
-            // political_capital: 10,
             political_capital: 100,
             research_points: 0,
             flags: Vec::new(),
             game_over: false,
+            death_year: world.year + LIFESPAN,
 
             world,
             npcs,
@@ -397,6 +399,10 @@ impl State {
     pub fn step_world(&mut self) -> (Vec<usize>, Vec<usize>) {
         self.world.year += 1;
         self.world.update_pop();
+
+        if self.world.year >= self.death_year {
+            self.game_over = true;
+        }
 
         let stop = self.flags.contains(&Flag::StopDevelopment);
         let fast = self.flags.contains(&Flag::FastDevelopment);

@@ -1,11 +1,8 @@
 <template>
   <Menu v-if="showMenu" @close="showMenu = false" />
   <div class="hud" v-else>
-    <div class="hud-year" v-tip="yearTip">
+    <div class="hud-year">
       <div>{{state.gameState.world.year}}</div>
-      <div class="game-progress-bar">
-        <div class="game-progress-bar-fill" :style="{width: gameProgress}"></div>
-      </div>
     </div>
     <div class="hud-bars">
       <div v-tip="pcTip">
@@ -51,13 +48,6 @@ export default {
     };
   },
   computed: {
-    yearsLeft() {
-      return state.endYear - state.gameState.world.year;
-    },
-    gameProgress() {
-      let elapsed = state.gameState.world.year - state.startYear;
-      return `${elapsed}%`;
-    },
     contentedness() {
       return intensity.scale(state.gameState.world.contentedness, 'world_outlook');
     },
@@ -87,12 +77,6 @@ export default {
       return factors.tips.contentedness(
         'How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.');
     },
-    yearTip() {
-      return {
-        icon: 'clock',
-        text: `The current year and how many until your planning tenure ends. You have ${this.yearsLeft} years remaining.`
-      };
-    }
   }
 };
 </script>
@@ -173,17 +157,6 @@ export default {
 .hud-year {
   padding-top: 0.5em !important;
   display: block !important;
-}
-.game-progress-bar {
-  height: 2px;
-  width: 100%;
-  background: #555;
-  border-radius: 1em;
-  overflow: hidden;
-}
-.game-progress-bar-fill {
-  background: #43CC70;
-  height: 2px;
 }
 
 @media only screen and (max-width: 520px) {

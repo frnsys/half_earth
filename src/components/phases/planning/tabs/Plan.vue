@@ -96,7 +96,7 @@ export default {
   },
   data() {
     let events = game.roll.planning('Plan');
-    let years = state.endYear - 1990;
+    let years = state.gameState.death_year - 1990;
     return {
       state,
       events,

@@ -26,4 +26,5 @@ pub enum LocalVariable {
 pub enum PlayerVariable {
     PoliticalCapital,
     ResearchPoints,
+    YearsToDeath,
 }

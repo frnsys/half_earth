@@ -53,7 +53,6 @@ function newRun(reset) {
   let gameState = game.state();
   let year = gameState.world.year;
   state.startYear = year;
-  state.endYear = year + 100;
 
   loadMeta();
   if (debug.resetRuns) {
@@ -323,6 +322,12 @@ function processMaxShare(process) {
   return Math.floor(max_share * 100/5);
 }
 
+function gameWon() {
+  return state.gameState.world.emissions <= consts.winState.emissions
+    && state.gameState.world.extinction_rate <= consts.winState.extinction
+    && state.gameState.world.temperature <= consts.winState.temperature;
+}
+
 export default {
   newRun, saveMeta, hasSave,
   saveGame, loadGame, clearSave,
@@ -338,5 +343,5 @@ export default {
   upgradeProject, downgradeProject,
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
-  playerSeats, isAlly,
+  playerSeats, isAlly, gameWon,
   updateFactors, nextPointCost, processMaxShare};

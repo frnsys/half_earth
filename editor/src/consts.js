@@ -101,6 +101,7 @@ const CONDITIONS = {
     compare: true,
     choices: [
       'PoliticalCapital',
+      'YearsToDeath',
     ],
   },
   Demand: {

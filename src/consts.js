@@ -3,6 +3,13 @@ import debug from './debug';
 export default {
   cardScale: window.innerHeight < 600 ? 0.9 : 1.0,
 
+  // Have to all be below these values to win
+  winState: {
+    emissions: 0,
+    extinction: 10,
+    temperature: 1,
+  },
+
   msPerYear: debug.fastYears ? 2000 : 6000,
 
 // Set an upper cap to the amount of emissions we pass to hector,
