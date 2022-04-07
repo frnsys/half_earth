@@ -203,6 +203,7 @@ export default {
   justify-content: space-evenly;
   padding: 1em;
   font-size: 1.1em;
+  position: relative;
 }
 .planning--demand img {
   width: 22px;
