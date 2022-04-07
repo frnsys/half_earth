@@ -160,14 +160,17 @@ impl Serialize for World {
         seq.serialize_field("contentedness", &self.outlook())?;
         seq.serialize_field("temp_outlook", &self.temp_outlook)?;
         seq.serialize_field("extinction_rate", &self.extinction_rate)?;
+        // seq.serialize_field("extinction_rate", &10)?; // For testing win state
         seq.serialize_field("tgav_extinction_rate", &self.tgav_extinction_rate())?;
         seq.serialize_field("slr_extinction_rate", &self.slr_extinction_rate())?;
         seq.serialize_field("temperature", &self.temperature)?;
+        // seq.serialize_field("temperature", &1)?; // For testing win state
         seq.serialize_field("precipitation", &self.precipitation)?;
         seq.serialize_field("sea_level_rise", &self.sea_level_rise)?;
         seq.serialize_field("sea_level_rise_rate", &self.sea_level_rise_rate())?;
         seq.serialize_field("water_stress", &self.water_stress)?;
         seq.serialize_field("emissions", &total_emissions)?;
+        // seq.serialize_field("emissions", &0)?; // For testing win state
         seq.serialize_field("co2_emissions", &self.co2_emissions)?;
         seq.serialize_field("ch4_emissions", &self.ch4_emissions)?;
         seq.serialize_field("n2o_emissions", &self.n2o_emissions)?;

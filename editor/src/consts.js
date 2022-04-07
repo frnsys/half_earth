@@ -191,7 +191,7 @@ const SUBPHASES = {
   End: ['Start'],
   Interstitial: ['Start', 'Win'],
   Icon: [],
-  Manual: [],
+  Cutscene: ['Intro'],
 }
 
 const EFFECTS = {
@@ -541,7 +541,7 @@ const EVENT_TYPES = [
   'End',        // Occur at the end of the game (victory)
   'Interstitial', // Occurs before planning sessions
   'Icon',       // Occur in the world/event stream, but only as icons
-  'Manual',     // Event that is manually triggered
+  'Cutscene',    // Cutscene dialogue
 ];
 
 const DYNAMIC_COST_FACTORS = Object.keys(OUTPUTS).concat(['Time', 'Income']);

@@ -212,6 +212,7 @@ export default {
       if (this.current === null) return;
       if (this.revealed && !this.isLastLine && !this.line.decision) {
         this.nextLine();
+        this.$emit('advanced');
       } else {
         this.skipReveal();
       }
@@ -347,7 +348,7 @@ export default {
 }
 
 .dialogue--text img {
-  width: 20px;
+  height: 20px;
   vertical-align: middle;
   image-rendering: auto;
   margin-bottom: 2px;

@@ -158,7 +158,7 @@ pub enum Phase {
     PlanningPlanChange,
     InterstitialStart,
     InterstitialWin,
-    Manual,
+    CutsceneIntro,
 }
 
 #[derive(Debug, Clone)]

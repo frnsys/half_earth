@@ -1195,6 +1195,10 @@ if __name__ == '__main__':
     with open('assets/surface/tiles_to_regions.json', 'w') as f:
         json.dump(tiles_to_regions, f)
 
+    other_asset_dirs = ['assets/environments/out', 'assets/cutscenes/out']
+    for d in other_asset_dirs:
+        for f in os.listdir(d):
+            PRELOAD_ASSETS.append(os.path.join(d, f))
     with open('assets/content/preload_assets.json', 'w') as f:
         json.dump(PRELOAD_ASSETS, f)
 

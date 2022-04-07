@@ -1,4 +1,5 @@
 export default {
+  gosplant: require('/assets/gosplant_inverse.svg'),
   hud_political_capital: require('/assets/icons/hud/political_capital.svg'),
   hud_extinction_rate: require('/assets/icons/hud/extinction.svg'),
   hud_contentedness: require('/assets/icons/hud/contentedness.svg'),

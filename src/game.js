@@ -253,6 +253,9 @@ const roll = {
   interstitial: (subphase) => {
     return _roll('Interstitial', subphase, null);
   },
+  cutscene: (subphase) => {
+    return _roll('Cutscene', subphase, null);
+  },
   icon: () => {
     return _roll('Icon', '', null);
   },
