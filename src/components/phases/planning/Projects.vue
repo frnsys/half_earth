@@ -22,7 +22,7 @@
   <AddScanner ref="addScanner" :project="project" />
   <RemoveScanner ref="removeScanner" :project="project" />
 
-  <Cards @focused="onFocused" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
+  <Cards @focused="onFocus" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
       @drag="onDrag"
       @dragStop="onDragStop"
@@ -131,6 +131,12 @@ export default {
     },
   },
   methods: {
+    onFocus(idx) {
+      this.onFocused(idx);
+      if (!state.viewed.includes(this.project.ref_id)) {
+        state.viewed.push(this.project.ref_id);
+      }
+    },
     yBounds() {
       return [
         this.$refs.addScanner.botY - 10,

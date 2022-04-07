@@ -1,7 +1,8 @@
 <template>
-<Card color="#ffffff" :isProcess="true">
+<Card color="#ffffff" :isProcess="true" :class="{'is-new': isNew}">
   <template v-slot:header>
     <div>{{output}}</div>
+    <img v-if="isNew" class="new-card-icon" src="/assets/new.svg" />
     <div v-tip="outputTip">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
   </template>
   <template v-slot:figure>
@@ -141,6 +142,9 @@ export default {
     };
   },
   computed: {
+    isNew() {
+      return !state.viewed.includes(this.ref_id);
+    },
     outputTip() {
       return {
         icon: this.output,

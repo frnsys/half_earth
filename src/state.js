@@ -63,6 +63,10 @@ function initState() {
     },
     refundableResearchPoints: 0,
 
+    // Viewed project and process ids,
+    // so we can keep track of which ones are new
+    viewed: [],
+
     // Kind of hacky
     extraSeats: {}
   };

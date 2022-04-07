@@ -429,4 +429,14 @@ export default {
   flex-direction: column;
   justify-content: space-around;
 }
+
+.new-card-icon {
+  position: absolute;
+  left: -2.1em;
+  top: 2em;
+  width: 64px !important;
+  z-index: 1;
+  transform: rotate(-16deg);
+}
+
 </style>

@@ -1,7 +1,8 @@
 <template>
-<Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
+<Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building', 'is-new': isNew}">
   <template v-slot:header>
     <div>{{group}}</div>
+    <img v-if="isNew" class="new-card-icon" src="/assets/new.svg" />
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
         Level {{level+1}}
@@ -180,6 +181,9 @@ export default {
     }
   },
   computed: {
+    isNew() {
+      return !state.viewed.includes(this.ref_id);
+    },
     type() {
       return this.kind.toLowerCase();
     },
@@ -504,6 +508,10 @@ export default {
   animation-name: progresspulse;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+.is-new {
+  box-shadow: 0 0 12px red;
 }
 
 .empty-point {

@@ -13,6 +13,7 @@
   <div v-if="page == null">
     <div class="plan--changes" :style="{maxWidth}">
       <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
+      <img class="plan-new-icon" v-if="anyNewProjects" src="/assets/new.svg" />
       <div class="plan--change">
         <div class="plan--add-change minicard" @click="selectPage('Add')" :class="{highlight: projectsHighlighted}">
           <div>
@@ -32,6 +33,7 @@
       </div>
     </div>
     <div class="plan--production">
+      <img class="plan-new-icon" v-if="anyNewProcesses" src="/assets/new.svg" />
       <div class="plan--production-bg"></div>
       <div class="plan--production-button btn" :class="{disabled: processesDisabled, highlight: processesHighlighted}" @click="selectPage('Processes')">Change Production</div>
     </div>
@@ -111,6 +113,14 @@ export default {
     }
   },
   computed: {
+    anyNewProjects() {
+      let allProjects = state.gameState.projects.filter((p) => !p.locked).map((p) => p.ref_id);
+      return allProjects.some((ref_id) => !state.viewed.includes(ref_id));
+    },
+    anyNewProcesses() {
+      let allProcesses = state.gameState.processes.filter((p) => !p.locked).map((p) => p.ref_id);
+      return allProcesses.some((ref_id) => !state.viewed.includes(ref_id));
+    },
     maxWidth() {
       if (this.slots == 5) {
         return '320px';
@@ -566,5 +576,30 @@ export default {
   animation-name: highlight;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+.plan-new-icon {
+  width: 48px;
+  position: absolute;
+  z-index: 1;
+  transform: rotate(-16deg);
+  left: -1em;
+  top: 0;
+  animation-duration: 0.75s;
+  animation-name: new-pulse;
+  animation-iteration-count: infinite;
+}
+
+
+@keyframes new-pulse {
+  from {
+    transform: rotate(-16deg) scale(1.);
+  }
+  50% {
+    transform: rotate(-16deg) scale(1.05);
+  }
+  to {
+    transform: rotate(-16deg) scale(1);
+  }
 }
 </style>
