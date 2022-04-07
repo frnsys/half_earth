@@ -2,7 +2,6 @@
 <Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building'}">
   <template v-slot:header>
     <div>{{group}}</div>
-    <div class="passed-stamp" v-if="kind == 'Policy' && (status == 'Active' || status == 'Building')"><img src="/assets/stamp.svg"></div>
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
         Level {{level+1}}
@@ -44,6 +43,7 @@
     {{name}}
   </template>
   <template v-slot:body>
+    <div class="passed-stamp" v-if="kind == 'Policy' && (status == 'Active' || status == 'Building')"><img src="/assets/stamp.svg"></div>
     <Effects class="solo-effects" :effects="activeEffects" />
 
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
@@ -491,7 +491,8 @@ export default {
 .passed-stamp {
   position: absolute;
   z-index: 2;
-  top: -10px;
+  top: -160%;
+  left: 10px;
   pointer-events: none;
 }
 .passed-stamp img {
