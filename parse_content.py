@@ -295,6 +295,7 @@ effects = {
     'IncomeOutlookChange':       lambda e: (param(e, 'Multiplier'),),
     'ProjectCostModifier':       lambda e: (ids[e['entity']], param(e, 'Change')),
     'ProtectLand':               lambda e: (param(e, 'Percent'),),
+    'BailOut':                   lambda e: (int(param(e, 'Amount')),),
 }
 comps = {
     '<': 'Comparator::Less',
@@ -370,6 +371,7 @@ effect_keys = {
   'IncomeOutlookChange': ['params'],
   'ProjectCostModifier': ['entity', 'params'],
   'ProtectLand': ['params'],
+  'BailOut': ['params'],
   'ProcessLimit': ['entity', 'params'],
   'RegionHabitability': ['subtype', 'params'],
 };

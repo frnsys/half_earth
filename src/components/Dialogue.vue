@@ -158,9 +158,6 @@ export default {
       e.target.src ='/assets/characters/' + this.line.speaker + '.png'
     },
     onKeydown(e){
-      if(e.key === 'Enter') {
-        this.advance();
-      }
       if (VERSION === 'dev' && e.key === 'Escape') {
         this.end();
       }

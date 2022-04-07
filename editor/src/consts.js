@@ -489,6 +489,13 @@ const EFFECTS = {
       'Percent': Number
     },
     desc: 'Place the specified amount of land under protection, e.g. 20 means 20% of land under protection.'
+  },
+
+  BailOut: {
+    params: {
+      'Amount': Number
+    },
+    desc: 'Reset the player\'s political capital to this amount.'
   }
 };
 
@@ -531,6 +538,7 @@ const SPEAKERS = [
   'The Consumerist',
   'The Fanonist',
   'The Environmentalist',
+  'The Hero',
 ];
 
 const EVENT_TYPES = [

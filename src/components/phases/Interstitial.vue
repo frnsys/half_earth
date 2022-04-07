@@ -9,6 +9,7 @@
     <div>People are {{contentedness}}.</div>
     <div>Biodiversity is {{biodiversity}}.</div>
     <div>The world is {{world}}.</div>
+    <div>Parliament is {{parliament}}.</div>
     <div>You have {{yearsLeft}} years left in your tenure.</div>
   </div>
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
@@ -60,7 +61,7 @@ export default {
     this.start();
   },
   beforeUnmount() {
-    this.sound.pause();
+    this.sound.stop();
   },
   data() {
     let events = game.roll.interstitial('Start');
@@ -98,6 +99,15 @@ export default {
     },
     gameWin() {
       return game.gameWon();
+    },
+    parliament() {
+      if (state.gameState.political_capital <= 20) {
+        return 'conspiring against you';
+      } else if (state.gameState.political_capital <= 200) {
+        return 'ready to work with you';
+      } else {
+        return 'trusts you completely';
+      }
     },
     world() {
       let idx = intensity.scale(state.gameState.world.temperature, 'warming');

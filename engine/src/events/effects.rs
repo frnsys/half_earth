@@ -35,6 +35,7 @@ pub enum Flag {
     LaborResistance,
     LaborSabotage,
     AlienEncounter,
+    BailedOut
 }
 
 #[derive(Serialize, PartialEq, Debug, Clone)]
@@ -85,6 +86,7 @@ pub enum Effect {
 
     ProtectLand(f32),
 
+    BailOut(usize),
     GameOver
 }
 
@@ -99,6 +101,12 @@ impl Effect {
         match self {
             Effect::GameOver => {
                 state.game_over = true;
+            },
+            Effect::BailOut(amount) => {
+                if state.political_capital < 0 {
+                    state.political_capital = 0;
+                }
+                state.political_capital += *amount as isize;
             },
             Effect::WorldVariable(var, change) => {
                 match var {

@@ -71,7 +71,7 @@ class Playlist {
     this.xFading = true;
 
     let cur = this.current;
-    cur.fade(cur.volume, 0, xFadeSecs * 1000, () => {
+    cur.fade(Math.min(1, cur.volume), 0, xFadeSecs * 1000, () => {
       cur.pause();
       cur.reset();
       cur.volume = this.volume;
