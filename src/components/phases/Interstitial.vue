@@ -137,7 +137,7 @@ export default {
         } else {
           this.showEvent();
         }
-      }, 3500);
+      }, 2200);
 
       // Hack to get it to crossfade loop
       let sounds = [

@@ -481,6 +481,18 @@ strong{
   }
 }
 
+@keyframes strong-pulse {
+  from {
+    transform: scale(1.);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 .scan-reject .project-required-majority {
   animation-duration: 0.75s;
   animation-name: pulse;

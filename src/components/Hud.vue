@@ -5,7 +5,7 @@
       <div>{{state.gameState.world.year}}</div>
     </div>
     <div class="hud-bars">
-      <div v-tip="pcTip">
+      <div v-tip="pcTip" :class="{warnPc: state.gameState.political_capital <= 20}">
         <img :src="icons.hud_political_capital">{{Math.max(state.gameState.political_capital, 0)}}
       </div>
       <div v-tip="biodiversityTip">
@@ -20,6 +20,11 @@
       <div v-tip="warmingTip">
         <img :src="icons.hud_warming">
         <IntensityBar :intensity="warming" :max="5" />
+      </div>
+      <div v-tip="emissionsTip">
+        <img :src="icons.hud_emissions">
+        <span class="emissions-up" v-if="state.gameState.world.emissions >= 0">↑</span>
+        <span class="emissions-down" v-else>↓</span>
       </div>
     </div>
     <div class="hud-settings" @click="showMenu = true">
@@ -60,23 +65,27 @@ export default {
     pcTip() {
       return {
         icon: 'political_capital',
-        text: 'How much political capital you have. Political capital is what you spend to implement your plans. If you run out you\'ll be pushed out of government.'
+        text: 'How much political capital you have. Political capital is what you spend to implement your plans. <b class="tip-warn">If you run out you\'ll be pushed out of government.</b>'
       };
     },
     warmingTip() {
       return {
         icon: 'warming',
-        text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes.`
+        text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>`
       };
     },
     biodiversityTip() {
       return factors.tips.biodiversity(
-        'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.');
+        'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 10.</b>');
     },
     contentednessTip() {
       return factors.tips.contentedness(
-        'How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions.');
+        'How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>');
     },
+    emissionsTip() {
+      return factors.tips.emissions(
+        `Current annual emissions are ${state.gameState.world.emissions.toFixed(1)}. <b class="tip-goal">Your goal is to get this to below 0.</b>`);
+    }
   }
 };
 </script>
@@ -157,6 +166,26 @@ export default {
 .hud-year {
   padding-top: 0.5em !important;
   display: block !important;
+}
+
+.warnPc {
+  color: #eb3941;
+  animation-duration: 0.75s;
+  animation-name: strong-pulse;
+  animation-iteration-count: infinite;
+}
+
+.tip-warn {
+  color: #eb3941;
+}
+.tip-goal {
+  color: #43cc70;
+}
+.emissions-up {
+  color: #eb3941;
+}
+.emissions-down {
+  color: #43cc70;
 }
 
 @media only screen and (max-width: 520px) {

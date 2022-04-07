@@ -4,6 +4,7 @@ export default {
   hud_extinction_rate: require('/assets/icons/hud/extinction.svg'),
   hud_contentedness: require('/assets/icons/hud/contentedness.svg'),
   hud_warming: require('/assets/icons/hud/warming.svg'),
+  hud_emissions: require('/assets/icons/hud/emissions.svg'),
   political_capital: require('/assets/icons/pips/political_capital.png'),
   contentedness: require('/assets/icons/contentedness.png'),
   emissions: require('/assets/icons/emissions.png'),
