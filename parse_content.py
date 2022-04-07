@@ -700,6 +700,12 @@ cond_to_factor = {
         'Outlook': 'contentedness',
         'Habitability': 'habitability',
     },
+    'Demand': {
+        'AnimalCalories': 'animal_calories',
+        'PlantCalories': 'plant_calories',
+        'Electricity': 'electricity',
+        'Fuel': 'fuel',
+    },
     'ProcessMixShareFeature': {
         'IsCCS': 'IsCCS',
         'MakesNuclearWaste': 'MakesNuclearWaste',
@@ -708,9 +714,24 @@ cond_to_factor = {
         'UsesOil': 'UsesOil',
         'UsesPesticides': 'UsesPesticides',
         'UsesLivestock': 'UsesLivestock',
+        'IsIntermittent': 'IsIntermittent',
     }
 }
+
 def condition_to_factor(cond):
+    if cond['type'] == 'ProjectActive' or cond['type'] == 'ProjectFinished':
+        return 'ProjectFinished:{}'.format(ids[cond['entity']])
+    elif cond['type'] == 'ProjectInactive':
+        return 'ProjectInactive:{}'.format(ids[cond['entity']])
+    elif cond['type'] == 'ProjectBuilding':
+        return 'ProjectBuilding:{}'.format(ids[cond['entity']])
+    elif cond['type'] == 'ProcessOutput':
+        return 'ProcessOutput:{}'.format(ids[cond['entity']])
+    elif cond['type'] == 'ProcessMixShare':
+        return 'ProcessMixShare:{}'.format(ids[cond['entity']])
+    elif cond['type'] == 'NPCRelationship':
+        return 'NPCRelationship:{}:{}'.format(cond['subtype'], ids[cond['entity']])
+
     subtypes = cond_to_factor.get(cond['type'], {})
     return subtypes.get(cond['subtype'])
 
@@ -920,6 +941,7 @@ if __name__ == '__main__':
                 if factor is not None: factors.add(factor)
         event = {
             'ref_id': ref_id,
+            'phase': ev.get('type', ''),
             'name': ev.get('name', ''),
             'arc': ev.get('arc', ''),
             'dialogue': extract_dialogue(ev.get('dialogue', {})),

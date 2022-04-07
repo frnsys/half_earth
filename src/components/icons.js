@@ -37,6 +37,8 @@ export default {
   cost: require('/assets/icons/cost.png'),
   ban: require('/assets/icons/ban.png'),
   implement: require('/assets/icons/implement.png'),
+  project: require('/assets/icons/implement.png'),
+  process: require('/assets/icons/process.png'),
   request: require('/assets/icons/request.png'),
   chance: require('/assets/icons/chance.png'),
   protect: require('/assets/icons/protect.png'),
