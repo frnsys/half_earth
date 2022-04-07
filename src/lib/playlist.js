@@ -80,6 +80,7 @@ class Playlist {
     this.next.play();
     this.next.fade(0, this.volume, xFadeSecs * 1000, () => {
       this.index = this.nextIndex;
+      this.xFading = false;
     });
   }
 
