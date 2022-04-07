@@ -188,6 +188,7 @@ const SUBPHASES = {
   Report: ['Start'],
   Break: ['Start'],
   End: ['Start'],
+  Interstitial: ['Start'],
   Icon: [],
   Manual: [],
 }
@@ -537,6 +538,7 @@ const EVENT_TYPES = [
   'Report',     // Occurs during the reports
   'Break',      // Occur between runs
   'End',        // Occur at the end of the game (victory)
+  'Interstitial', // Occurs before planning sessions
   'Icon',       // Occur in the world/event stream, but only as icons
   'Manual',     // Event that is manually triggered
 ];

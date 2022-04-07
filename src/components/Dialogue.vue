@@ -269,6 +269,8 @@ export default {
   align-items: center;
 
   image-rendering: pixelated;
+
+  animation: fade-in 0.5s;
 }
 
 .dialogue--inner{
@@ -310,6 +312,7 @@ export default {
   width: 100%;
 
   font-family: 'W95FA';
+  animation: fade-in 0.5s;
 }
 .dialogue--speaker img {
   width: 72px;

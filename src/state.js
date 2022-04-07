@@ -22,9 +22,8 @@ function loadSettings() {
 
 function initState() {
   let state = {
-    endYear: 0,
     gameState: null,
-    phase: 'PLANNING',
+    phase: 'INTERSTITIAL',
     newRunCount: 0,
     tutorial: debug.hideIntro ? tutorial.READY + 1 : 0,
 

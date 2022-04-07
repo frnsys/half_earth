@@ -7,6 +7,7 @@
   </template>
   <template v-else>
     <Tip />
+    <Interstitial v-if="state.phase == 'INTERSTITIAL'" />
     <Planning v-if="state.phase == 'PLANNING'" />
     <Stream v-else-if="state.phase == 'EVENTS'" />
     <Report v-else-if="state.phase == 'REPORT'" />
@@ -23,6 +24,7 @@ import Start from './Start.vue';
 import Loading from './Loading.vue';
 import GameWin from './phases/GameWin.vue';
 import GameOver from './phases/GameOver.vue';
+import Interstitial from './phases/Interstitial.vue';
 import Report from './phases/Report.vue';
 import Stream from './phases/events/Events.vue';
 import Planning from './phases/planning/Planning.vue';
@@ -61,6 +63,7 @@ export default {
     GameOver,
     GameWin,
     Loading,
+    Interstitial,
   },
 }
 </script>

@@ -2,8 +2,7 @@
   <Hud />
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
   <div class="report">
-    <div class="report-overlay" :class="{gameOver: gameOver, gameWin: gameWin}"></div>
-    <h2>{{reportTitle}}</h2>
+    <h2>Report</h2>
     <div class="report--body">
       <div class="report--inner">
         <section>
@@ -113,7 +112,7 @@
 
       </table>
         </section>
-      <button class="btn" :class="{gameOver: gameOver, gameWin: gameWin}" @click="nextPhase">{{buttonText}}</button>
+      <button class="btn" @click="nextPhase">Next</button>
       </div>
     </div>
   </div>
@@ -152,30 +151,6 @@ export default {
     }
   },
   computed: {
-    gameOver() {
-      return state.gameState.game_over;
-    },
-    gameWin() {
-      return state.gameState.world.year >= state.endYear;
-    },
-    reportTitle() {
-      if (this.gameOver) {
-        return 'Game Over';
-      } else if (this.gameWin) {
-        return 'Success!';
-      } else {
-        return 'Report';
-      }
-    },
-    buttonText() {
-      if (this.gameOver) {
-        return 'Game Over';
-      } else if (this.gameWin) {
-        return 'Success!';
-      } else {
-        return 'Next';
-      }
-    },
     requestsFulfilled() {
       return game.checkRequests().map(([kind, id, active, bounty]) => {
         let text;
@@ -309,25 +284,17 @@ export default {
     nextPhase() {
       game.changePoliticalCapital(this.pcChange);
 
-      if (this.gameOver) {
-        game.saveMeta();
-        state.phase = 'GAMEOVER';
-      } else if (this.gameWin) {
-        game.saveMeta();
-        state.phase = 'GAMEWIN';
-      } else {
-        // Apply process mix changes
-        Object.keys(state.processMixChanges).forEach((output) => {
-          this.updateProcessMix(output);
-        });
-        // Apply project upgrades
-        this.upgradeProjects();
-        state.refundableResearchPoints = 0;
-        state.phase = 'PLANNING';
+      // Apply process mix changes
+      Object.keys(state.processMixChanges).forEach((output) => {
+        this.updateProcessMix(output);
+      });
+      // Apply project upgrades
+      this.upgradeProjects();
+      state.refundableResearchPoints = 0;
+      state.phase = 'INTERSTITIAL';
 
-        // Reset session plan changes
-        state.planChanges = {};
-      }
+      // Reset session plan changes
+      state.planChanges = {};
     }
   }
 }
@@ -458,29 +425,6 @@ export default {
 }
 .report tr:first-child small img {
   margin-left: -4px;
-}
-
-.report-overlay {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-.report-overlay.gameOver {
-  background: #ef38383b;
-}
-.report-overlay .gameWin {
-  background: #ff66ff3d;
-}
-
-.report--body .btn.gameOver {
-  background: red;
-  color: #fff;
-}
-.report--body .btn.gameWin {
-  background: #43cc70;
-  color: #fff;
 }
 
 @media only screen and (min-width: 481px) {

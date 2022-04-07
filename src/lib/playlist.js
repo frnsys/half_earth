@@ -47,6 +47,12 @@ class Playlist {
     this.current.pause();
   }
 
+  stop() {
+    this.sounds.forEach((sound) => {
+      sound.pause();
+    });
+  }
+
   mute() {
     this.muted = true;
     this.sounds.forEach((sound) => {
