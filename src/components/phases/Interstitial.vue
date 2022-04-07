@@ -12,6 +12,7 @@
     <div>You have {{yearsLeft}} years left in your tenure.</div>
   </div>
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
+  <div class="interstitial--image-credit">Image: {{locale.credit}}</div>
   <div class="interstitial--next" v-if="ready && !gameOver && !gameWin">
     <button class="btn" @click="nextPhase">Continue</button>
   </div>
@@ -32,6 +33,22 @@ const LOCALES = [{
   name: 'Havana',
   background: 'pexels-matthias-oben-3687869.jpg',
   ambience: 'city_noise.mp3',
+  credit: 'Matthias Oben',
+}, {
+  name: 'The Sahel Reserve',
+  background: '1280px-Adansonia_digitata_Bild1139.jpg',
+  ambience: 'grasslands.mp3',
+  credit: 'Marco Schmidt, CC BY-SA 2.5, via Wikimedia Commons',
+}, {
+  name: 'Port-au-Prince',
+  background: 'robin-canfield-CkCV7vTmmz4-unsplash.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Robin Canfield',
+}, {
+  name: 'San Cristóbal de las Casas',
+  background: '1536px-Street_Scene_with_Church_Cupola_-_San_Cristobal_de_las_Casas_-_Chiapas_-_Mexico.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Adam Jones, CC BY 2.0, via Wikimedia Commons',
 }];
 
 export default {
@@ -57,8 +74,11 @@ export default {
     }
   },
   computed: {
+    number() {
+      return Math.round((state.gameState.world.year - state.startYear)/5) + 1;
+    },
     title() {
-      let n = Math.round((state.gameState.world.year - state.startYear)/5) + 1;
+      let n = this.number;
       let ext = 'th';
       if (n == 1) {
         ext = 'st';
@@ -70,8 +90,8 @@ export default {
       return `The ${n}${ext} Planning Session`;
     },
     locale() {
-      // TODO
-      return LOCALES[0];
+      let idx = this.number - 1 % LOCALES.length;
+      return LOCALES[idx];
     },
     gameOver() {
       return state.gameState.game_over;
@@ -229,5 +249,16 @@ export default {
   left: 0;
   right: 0;
   animation: fade-in 0.75s;
+}
+
+.interstitial--image-credit {
+  text-align: left;
+  position: absolute;
+  left: 0.5em;
+  bottom: 0.5em;
+  color: #fff;
+  font-size: 0.7em;
+  max-width: 200px;
+  text-shadow: 0 0 2px black;
 }
 </style>
