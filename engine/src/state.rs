@@ -727,10 +727,10 @@ mod test {
         state.change_mix_share(0, 10);
         assert_eq!(state.processes[0].is_promoted(), true);
         for npc_id in &state.processes[0].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 4.);
+            assert_eq!(state.npcs[*npc_id].relationship, 3. + RELATIONSHIP_CHANGE_AMOUNT);
         }
         for npc_id in &state.processes[0].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 2.);
+            assert_eq!(state.npcs[*npc_id].relationship, 3. - RELATIONSHIP_CHANGE_AMOUNT);
         }
 
         state.change_mix_share(0, -8);
@@ -752,10 +752,10 @@ mod test {
         state.change_mix_share(0, -5);
         assert_eq!(state.processes[0].is_banned(), true);
         for npc_id in &state.processes[0].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 2.);
+            assert_eq!(state.npcs[*npc_id].relationship, 3. - RELATIONSHIP_CHANGE_AMOUNT);
         }
         for npc_id in &state.processes[0].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 4.);
+            assert_eq!(state.npcs[*npc_id].relationship, 3. + RELATIONSHIP_CHANGE_AMOUNT);
         }
 
         state.change_mix_share(0, 2);
@@ -785,19 +785,18 @@ mod test {
         state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Building);
 
-        for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 4.);
-        }
-        for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 2.);
-        }
-
         // Build until the project is completed
         let mut effects = vec![];
         loop {
             let (completed, _, effs) = state.step_projects(&mut rng);
             if completed.contains(&id) {
                 effects = effs.iter().map(|(eff, _)| eff.clone()).collect();
+                for npc_id in &state.projects[id].supporters {
+                    assert_eq!(state.npcs[*npc_id].relationship, 3. + RELATIONSHIP_CHANGE_AMOUNT);
+                }
+                for npc_id in &state.projects[id].opposers {
+                    assert_eq!(state.npcs[*npc_id].relationship, 3. - RELATIONSHIP_CHANGE_AMOUNT);
+                }
                 break;
             }
         }
@@ -831,19 +830,18 @@ mod test {
         state.start_project(id, &mut rng);
         assert_eq!(state.projects[id].status, Status::Building);
 
-        for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 4.);
-        }
-        for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 2.);
-        }
-
         // Build until the project is completed
         let mut effects = vec![];
         loop {
             let (completed, _, effs) = state.step_projects(&mut rng);
             if completed.contains(&id) {
                 effects = effs.iter().map(|(eff, _)| eff.clone()).collect();
+                for npc_id in &state.projects[id].supporters {
+                    assert_eq!(state.npcs[*npc_id].relationship, 3. + RELATIONSHIP_CHANGE_AMOUNT);
+                }
+                for npc_id in &state.projects[id].opposers {
+                    assert_eq!(state.npcs[*npc_id].relationship, 3. - RELATIONSHIP_CHANGE_AMOUNT);
+                }
                 break;
             }
         }
