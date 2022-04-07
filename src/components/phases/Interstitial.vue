@@ -131,7 +131,11 @@ export default {
     start() {
       // Wait a beat before showing the event
       setTimeout(() => {
-        this.showEvent();
+        if (!this.hasEvent) {
+          this.ready = true;
+        } else {
+          this.showEvent();
+        }
       }, 3500);
 
       // Hack to get it to crossfade loop
@@ -223,5 +227,6 @@ export default {
   bottom: 0.5em;
   left: 0;
   right: 0;
+  animation: fade-in 0.75s;
 }
 </style>
