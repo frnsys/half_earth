@@ -727,19 +727,19 @@ mod test {
         state.change_mix_share(0, 10);
         assert_eq!(state.processes[0].is_promoted(), true);
         for npc_id in &state.processes[0].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 4.);
         }
         for npc_id in &state.processes[0].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 2.);
         }
 
         state.change_mix_share(0, -8);
         assert_eq!(state.processes[0].is_promoted(), false);
         for npc_id in &state.processes[0].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
         for npc_id in &state.processes[0].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
     }
 
@@ -752,19 +752,19 @@ mod test {
         state.change_mix_share(0, -5);
         assert_eq!(state.processes[0].is_banned(), true);
         for npc_id in &state.processes[0].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 2.);
         }
         for npc_id in &state.processes[0].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 4.);
         }
 
         state.change_mix_share(0, 2);
         assert_eq!(state.processes[0].is_banned(), false);
         for npc_id in &state.processes[0].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
         for npc_id in &state.processes[0].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
     }
 
@@ -786,10 +786,10 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Building);
 
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 4.);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 2.);
         }
 
         // Build until the project is completed
@@ -807,10 +807,10 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Halted);
         assert_eq!(effects.len(), uneffects.len());
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
     }
 
@@ -832,10 +832,10 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Building);
 
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 4);
+            assert_eq!(state.npcs[*npc_id].relationship, 4.);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 2);
+            assert_eq!(state.npcs[*npc_id].relationship, 2.);
         }
 
         // Build until the project is completed
@@ -853,10 +853,10 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Halted);
         assert_eq!(effects.len(), uneffects.len());
         for npc_id in &state.projects[id].supporters {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
         for npc_id in &state.projects[id].opposers {
-            assert_eq!(state.npcs[*npc_id].relationship, 3);
+            assert_eq!(state.npcs[*npc_id].relationship, 3.);
         }
 
         // Start again
