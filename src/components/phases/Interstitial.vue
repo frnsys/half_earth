@@ -36,10 +36,10 @@ const LOCALES = [{
   ambience: 'city_noise.mp3',
   credit: 'Matthias Oben',
 }, {
-  name: 'The Sahel Reserve',
-  background: '1280px-Adansonia_digitata_Bild1139.jpg',
-  ambience: 'grasslands.mp3',
-  credit: 'Marco Schmidt, CC BY-SA 2.5, via Wikimedia Commons',
+  name: 'Ouagadougou',
+  background: '2560px-Ouagadougou_BCEAO_day.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Wegmann, CC BY-SA 3.0, via Wikimedia Commons',
 }, {
   name: 'Port-au-Prince',
   background: 'robin-canfield-CkCV7vTmmz4-unsplash.jpg',
@@ -50,6 +50,16 @@ const LOCALES = [{
   background: '1536px-Street_Scene_with_Church_Cupola_-_San_Cristobal_de_las_Casas_-_Chiapas_-_Mexico.jpg',
   ambience: 'city_noise.mp3',
   credit: 'Adam Jones, CC BY 2.0, via Wikimedia Commons',
+}, {
+  name: 'Paris',
+  background: 'pexels-pierre-blaché-3073666.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Pierre Blaché',
+}, {
+  name: 'Gangtok',
+  background: '2560px-Gangtok_from_Tibet_Road.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Thebrowniris, CC BY 3.0, via Wikimedia Commons',
 }];
 
 export default {
