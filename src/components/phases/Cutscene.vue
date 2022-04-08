@@ -14,9 +14,6 @@ import Playlist from '/src/lib/playlist';
 import EventsMixin from 'components/EventsMixin';
 import intensity from '/src/display/intensity';
 
-const SCRIPT = [{
-}]
-
 // One per line of dialogue
 const IMAGES = [
   'pexels-lt-chan-2833366.jpg',

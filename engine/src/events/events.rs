@@ -2,6 +2,9 @@ use crate::state::State;
 use std::collections::HashSet;
 use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
 use super::{Effect, Condition, Probability, Likelihood};
+use serde_json::{json, Value};
+use crate::save::{Saveable, coerce};
+use serde::{Serialize, Deserialize};
 use wasm_bindgen::prelude::*;
 
 #[derive(Debug, Default)]
@@ -127,7 +130,7 @@ impl EventPool {
 }
 
 #[wasm_bindgen]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Phase {
     WorldMain,
     WorldStart,
@@ -216,6 +219,47 @@ impl Event {
         }
     }
 }
+
+#[derive(Serialize, Deserialize)]
+struct EventSpec {
+    ref_id: String,
+    locked: bool,
+    occurred: bool,
+    prob_modifier: f32,
+}
+
+impl Saveable for EventPool {
+    fn save(&self) -> Value {
+        let ev_specs: Vec<EventSpec> = self.events.iter().map(|ev| {
+            EventSpec {
+                ref_id: ev.ref_id.to_string(),
+                locked: ev.locked,
+                occurred: ev.occurred,
+                prob_modifier: ev.prob_modifier,
+            }
+        }).collect();
+        json!({
+            "events": ev_specs,
+            "queue": self.queue,
+            "triggered": self.triggered,
+        })
+    }
+
+    fn load(&mut self, state: Value) {
+        let ev_specs: Vec<EventSpec> = coerce(&state["events"]);
+        for spec in ev_specs {
+            if let Some(ev) = self.events.iter_mut().find(|ev| ev.ref_id == spec.ref_id) {
+                ev.locked = spec.locked;
+                ev.occurred = spec.occurred;
+                ev.prob_modifier = spec.prob_modifier;
+            }
+        }
+        self.queue = coerce(&state["queue"]);
+        self.triggered = coerce(&state["triggered"]);
+    }
+}
+
+
 
 #[cfg(test)]
 mod test {

@@ -8,7 +8,8 @@ import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 import tutorial from '/src/tutorial';
 
 // Version timestamp must be >= this value
-const EXPIRED_TIMESTAMP = 1646115265;
+const EXPIRED_TIMESTAMP = 1649382197;
+
 
 // Would let player choose difficulty;
 // except at this point implementing different difficulty levels
@@ -49,6 +50,7 @@ function newRun(reset) {
       state[k] = save.state[k];
     });
     game.load_state(save.game);
+    game.load_event_pool(save.event_pool);
   }
   let gameState = game.state();
   let year = gameState.world.year;
@@ -75,6 +77,7 @@ function saveGame() {
     version: VERSION,
     version_timestamp: TIMESTAMP,
     game: game.get_save_state(),
+    event_pool: game.get_event_pool(),
   };
   localStorage.setItem('gameData', JSON.stringify(s));
 }

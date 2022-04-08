@@ -49,10 +49,20 @@ impl GameInterface {
         self.game.state.save().to_string()
     }
 
+    pub fn get_save_event_pool(&self) -> String {
+        self.game.event_pool.save().to_string()
+    }
+
     pub fn load_state(&mut self, value: JsValue) {
         let value_str: String = serde_wasm_bindgen::from_value(value).unwrap();
         let value = serde_json::from_str(&value_str).unwrap();
         self.game.state.load(value);
+    }
+
+    pub fn load_event_pool(&mut self, value: JsValue) {
+        let value_str: String = serde_wasm_bindgen::from_value(value).unwrap();
+        let value = serde_json::from_str(&value_str).unwrap();
+        self.game.event_pool.load(value);
     }
 
     pub fn set_runs_played(&mut self, n: usize) {
