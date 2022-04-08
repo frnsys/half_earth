@@ -30,11 +30,7 @@ export default {
   },
   computed: {
     icon() {
-      if (this.process.output == 'Electricity' || this.process.output == 'Fuel') {
-        return 'energy';
-      } else {
-        return 'food';
-      }
+      return this.process.output.toLowerCase();
     }
   }
 }

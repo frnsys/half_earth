@@ -77,7 +77,7 @@ function saveGame() {
     version: VERSION,
     version_timestamp: TIMESTAMP,
     game: game.get_save_state(),
-    event_pool: game.get_event_pool(),
+    event_pool: game.get_save_event_pool(),
   };
   localStorage.setItem('gameData', JSON.stringify(s));
 }

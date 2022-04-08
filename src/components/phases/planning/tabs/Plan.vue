@@ -13,7 +13,7 @@
   <div v-if="page == null">
     <div class="plan--changes" :style="{maxWidth}">
       <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
-      <img class="plan-new-icon" v-if="anyNewProjects" src="/assets/new.svg" />
+      <img class="plan-new-icon plan-new-projects-icon" v-if="anyNewProjects" src="/assets/new.svg" />
       <div class="plan--change">
         <div class="plan--add-change minicard" @click="selectPage('Add')" :class="{highlight: projectsHighlighted}">
           <div>
@@ -33,8 +33,13 @@
       </div>
     </div>
     <div class="plan--production">
-      <img class="plan-new-icon" v-if="anyNewProcesses" src="/assets/new.svg" />
-      <div class="plan--production-bg"></div>
+      <div class="plan--production-icons">
+        <img class="plan-new-icon" v-if="anyNewProcesses" src="/assets/new.svg" />
+        <img class="plan-limit-alert" v-if="processesOverLimit.length > 0" :src="icons.alert" v-tip="{icon: 'alert', text: `The following processes can't produce as much as they need to: ${processesOverLimit.join(', ')}`}"/>
+      </div>
+      <div class="plan--production--processes">
+        <MiniProcess v-for="process in maxProcesses" :process="process" :key="process.id" />
+      </div>
       <div class="plan--production-button btn" :class="{disabled: processesDisabled, highlight: processesHighlighted}" @click="selectPage('Processes')">Change Production</div>
     </div>
     <div class="plan--charts">
@@ -139,6 +144,27 @@ export default {
       } else {
         return this.activeProjects.length;
       }
+    },
+    maxProcesses() {
+      let maxProcesses = {
+        Electricity: null,
+        Fuel: null,
+        AnimalCalories: null,
+        PlantCalories: null,
+      };
+      state.gameState.processes.forEach((p) => {
+        let curMax = maxProcesses[p.output];
+        if (curMax == null || p.mix_share > curMax.mix_share) {
+          maxProcesses[p.output] = p;
+        }
+      });
+      return Object.values(maxProcesses);
+    },
+    processesOverLimit() {
+      return state.gameState.processes.filter((p) => p.mix_share > 0).filter((p) => {
+        let maxShare = game.processMaxShare(p);
+        return p.mix_share > maxShare;
+      }).map((p) => p.name);
     },
     activeProjects() {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
@@ -578,18 +604,46 @@ export default {
   animation-direction: alternate;
 }
 
-.plan-new-icon {
-  width: 48px;
+.plan--production-icons {
   position: absolute;
   z-index: 1;
-  transform: rotate(-16deg);
   left: -1em;
   top: 0;
+}
+.plan--production-icons img {
+  display: block;
+  margin-bottom: 8px;
+}
+.plan-new-icon {
+  width: 48px;
+  transform: rotate(-16deg);
   animation-duration: 0.75s;
   animation-name: new-pulse;
   animation-iteration-count: infinite;
 }
+.plan-limit-alert, .plan-feedstock-alert {
+  width: 36px;
+  margin: 0 7px;
+  animation-duration: 0.75s;
+  animation-name: pulse;
+  animation-iteration-count: infinite;
+}
+.plan-new-projects-icon {
+  position: absolute;
+  z-index: 1;
+  left: -1em;
+  top: 0;
+}
 
+.plan--production--processes {
+  display: flex;
+  margin-bottom: 1em;
+}
+.plan--production--processes .minicard {
+  height: 110px;
+  margin: 0 0.25em;
+  border: 1px dashed rgba(0,0,0,0.5);
+}
 
 @keyframes new-pulse {
   from {
