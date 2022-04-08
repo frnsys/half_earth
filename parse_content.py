@@ -151,6 +151,7 @@ specs = {
         'name': None,
         'type': None,
         'locked': 'false',
+        'occurred': 'false',
         'regional': 'false',
         'effects': [],
         'probabilities': [],

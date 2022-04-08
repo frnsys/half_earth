@@ -7450,6 +7450,7 @@ pub fn events() -> Vec<Event> {
             name: "Oil Pollution Causes High Infant Mortality",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::RegionHabitability(Latitude::Tropic, -2.0),
@@ -7474,6 +7475,7 @@ pub fn events() -> Vec<Event> {
             name: "Eutrophication - A Problem Solved",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
@@ -7500,6 +7502,7 @@ pub fn events() -> Vec<Event> {
             name: "Coffee and Chocolate Shortage",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::RegionHabitability(Latitude::Temperate, -2.0)
@@ -7523,6 +7526,7 @@ pub fn events() -> Vec<Event> {
             name: "Ash Dieback",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
@@ -7545,6 +7549,7 @@ pub fn events() -> Vec<Event> {
             name: "Algae Farmers",
             phase: Phase::WorldStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(118),
@@ -7569,6 +7574,7 @@ pub fn events() -> Vec<Event> {
             name: "Pollinator - Decline",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
@@ -7593,6 +7599,7 @@ pub fn events() -> Vec<Event> {
             name: "Migrations - Border Attack",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::AddEvent(52),
@@ -7626,6 +7633,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(25),
@@ -7671,6 +7679,7 @@ pub fn events() -> Vec<Event> {
             name: "Last Fossil Fuel Burnt",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
@@ -7694,6 +7703,7 @@ pub fn events() -> Vec<Event> {
             name: "New Wines in Old Biomes",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0)
@@ -7717,6 +7727,7 @@ pub fn events() -> Vec<Event> {
             name: "New Cuisine",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0)
@@ -7747,6 +7758,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Consumerist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::PlayerVariable(PlayerVariable::PoliticalCapital, 50.0)
@@ -7770,6 +7782,7 @@ pub fn events() -> Vec<Event> {
             name: "Urban Farming",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Demand(Output::PlantCalories, -0.1),
@@ -7796,6 +7809,7 @@ pub fn events() -> Vec<Event> {
             name: "Deadly Heat Dome",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -50000.0),
@@ -7841,6 +7855,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Consumerist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -7864,6 +7879,7 @@ pub fn events() -> Vec<Event> {
             name: "Regions Intro",
             phase: Phase::PlanningRegions,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(92)
@@ -7886,6 +7902,7 @@ pub fn events() -> Vec<Event> {
             name: "Extreme Flooding - Intro",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(66)
@@ -7930,6 +7947,7 @@ pub fn events() -> Vec<Event> {
             name: "Nuclear Waste",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
@@ -7967,6 +7985,7 @@ pub fn events() -> Vec<Event> {
             name: "Collapse of the Greenland Ice Sheet",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::TriggerEvent(160, 1),
@@ -8012,6 +8031,7 @@ pub fn events() -> Vec<Event> {
             name: "Geoengineer Desert Commentary",
             phase: Phase::PlanningPlanChange,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8034,6 +8054,7 @@ pub fn events() -> Vec<Event> {
             name: "Hot Soil Emissions",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 5.0)
@@ -8057,6 +8078,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Crop Yields",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1)
@@ -8080,6 +8102,7 @@ pub fn events() -> Vec<Event> {
             name: "Commentary - Artificial Moons",
             phase: Phase::PlanningPlanChange,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8102,6 +8125,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Flooding - Intro",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(33),
@@ -8147,6 +8171,7 @@ pub fn events() -> Vec<Event> {
             name: "Ocean Acidification",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(171),
@@ -8172,6 +8197,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Wildfires",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8226,6 +8252,7 @@ pub fn events() -> Vec<Event> {
             name: "NIMBYs Strike Back",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ProjectCostModifier(9, 0.2),
@@ -8251,6 +8278,7 @@ pub fn events() -> Vec<Event> {
             name: "P = NP",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddFlag(Flag::HyperResearch)
@@ -8274,6 +8302,7 @@ pub fn events() -> Vec<Event> {
             name: "Are We Preserving Too Much Land?",
             phase: Phase::PlanningPlanChange,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8308,6 +8337,7 @@ pub fn events() -> Vec<Event> {
             name: "A Global Dustbowl: Unsustainable Loss of Top Soil",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::OutputForProcess(9, -0.12),
@@ -8349,6 +8379,7 @@ pub fn events() -> Vec<Event> {
             name: "Last Coral Reef Bleaches",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
@@ -8373,6 +8404,7 @@ pub fn events() -> Vec<Event> {
             name: "Oil Running Out",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(93)
@@ -8396,6 +8428,7 @@ pub fn events() -> Vec<Event> {
             name: "Indigenous Nations Block Oil Infrastructure",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::OutputForProcess(24, -0.05),
@@ -8420,6 +8453,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Flooding",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8460,6 +8494,7 @@ pub fn events() -> Vec<Event> {
             name: "New Mosquito-Borne Disease",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::AddEvent(157),
@@ -8491,6 +8526,7 @@ pub fn events() -> Vec<Event> {
             name: "UFO Visit",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::TriggerEvent(110, 5),
@@ -8517,6 +8553,7 @@ pub fn events() -> Vec<Event> {
             name: "Most of World Self-Sufficient in Plant Crops",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0)
@@ -8556,6 +8593,7 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Secession",
             phase: Phase::PlanningStart,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::PlayerVariable(PlayerVariable::PoliticalCapital, -100.0),
@@ -8580,6 +8618,7 @@ pub fn events() -> Vec<Event> {
             name: "Desertification",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::TriggerEvent(118, 5),
@@ -8620,6 +8659,7 @@ pub fn events() -> Vec<Event> {
             name: "Day Zero - Water Restrictions in Place",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.2),
@@ -8654,6 +8694,7 @@ pub fn events() -> Vec<Event> {
             name: "Recovery of the Niger Delta",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
@@ -8679,6 +8720,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(181),
@@ -8724,6 +8766,7 @@ pub fn events() -> Vec<Event> {
             name: "Nuclear Meltdown",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -3.0),
@@ -8762,6 +8805,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Accelerationist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ProjectCostModifier(86, -0.25)
@@ -8785,6 +8829,7 @@ pub fn events() -> Vec<Event> {
             name: "Plan Intro 2",
             phase: Phase::PlanningPlan,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8807,6 +8852,7 @@ pub fn events() -> Vec<Event> {
             name: "Navier-Stokes Equation Solved",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddFlag(Flag::HyperResearch)
@@ -8830,6 +8876,7 @@ pub fn events() -> Vec<Event> {
             name: "The Wretched - Formation",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(182)
@@ -8853,6 +8900,7 @@ pub fn events() -> Vec<Event> {
             name: "Amazon Becomes a Savannah",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 10.0),
@@ -8880,6 +8928,7 @@ pub fn events() -> Vec<Event> {
             name: "Brownouts",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8908,6 +8957,7 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Revolts",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::TriggerEvent(37, 5),
@@ -8942,6 +8992,7 @@ pub fn events() -> Vec<Event> {
             name: "Interplanetary Ark or Space Yachts?",
             phase: Phase::PlanningStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(3),
@@ -8966,6 +9017,7 @@ pub fn events() -> Vec<Event> {
             name: "Flooding",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -8994,6 +9046,7 @@ pub fn events() -> Vec<Event> {
             name: "Border Attacks",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
 
@@ -9024,6 +9077,7 @@ pub fn events() -> Vec<Event> {
             name: "Extreme Wildfires",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9064,6 +9118,7 @@ pub fn events() -> Vec<Event> {
             name: "Passed On",
             phase: Phase::BreakStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9087,6 +9142,7 @@ pub fn events() -> Vec<Event> {
             name: "The Leather Underground - Formation",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(147)
@@ -9117,6 +9173,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Posadist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ProjectCostModifier(3, -0.25)
@@ -9140,6 +9197,7 @@ pub fn events() -> Vec<Event> {
             name: "Heatwaves - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(198),
@@ -9164,6 +9222,7 @@ pub fn events() -> Vec<Event> {
             name: "Game Over: Overthrown",
             phase: Phase::BreakStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9192,6 +9251,7 @@ pub fn events() -> Vec<Event> {
             name: "Crop Failures - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(203)
@@ -9236,6 +9296,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Animal Liberationist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9259,6 +9320,7 @@ pub fn events() -> Vec<Event> {
             name: "Bail Out",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddFlag(Flag::BailedOut),
@@ -9282,6 +9344,7 @@ pub fn events() -> Vec<Event> {
             name: "Blood Red Sunsets",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
@@ -9305,6 +9368,7 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9339,6 +9403,7 @@ pub fn events() -> Vec<Event> {
             name: "Eco-Anxiety",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
@@ -9363,6 +9428,7 @@ pub fn events() -> Vec<Event> {
             name: "Last Antibiotic Stops Working",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
@@ -9389,6 +9455,7 @@ pub fn events() -> Vec<Event> {
             name: "Extreme Flooding",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9429,6 +9496,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Ecofeminist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9452,6 +9520,7 @@ pub fn events() -> Vec<Event> {
             name: "Panama Disease Destroys Banana Harvest",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
@@ -9476,6 +9545,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Utopian",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9499,6 +9569,7 @@ pub fn events() -> Vec<Event> {
             name: "Migrations - No Borders",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::Migration,
@@ -9532,6 +9603,7 @@ pub fn events() -> Vec<Event> {
             name: "Heatwave Kills Tens of Thousands of Elderly People",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -30000.0)
@@ -9555,6 +9627,7 @@ pub fn events() -> Vec<Event> {
             name: "Blackouts",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9583,6 +9656,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Utopian",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ProjectCostModifier(26, -0.5)
@@ -9606,6 +9680,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Heatwaves",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9646,6 +9721,7 @@ pub fn events() -> Vec<Event> {
             name: "Methane 'Bomb' Released in Arctic",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 25.0)
@@ -9690,6 +9766,7 @@ pub fn events() -> Vec<Event> {
             name: "Rare Metals Shortage",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddFlag(Flag::MetalsShortage)
@@ -9727,6 +9804,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Hurricane",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9761,6 +9839,7 @@ pub fn events() -> Vec<Event> {
             name: "Vaquita Porpoise Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
@@ -9792,6 +9871,7 @@ pub fn events() -> Vec<Event> {
             name: "Earth Liberation Front - Formation",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(211)
@@ -9829,6 +9909,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Fanonist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9852,6 +9933,7 @@ pub fn events() -> Vec<Event> {
             name: "Large Derecho Storm - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(113)
@@ -9896,6 +9978,7 @@ pub fn events() -> Vec<Event> {
             name: "Methane ('Natural Gas') is Running Out",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -9919,6 +10002,7 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Protest",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::AddEvent(133),
@@ -9958,6 +10042,7 @@ pub fn events() -> Vec<Event> {
             name: "Wheat Rust Destroys Harvest ",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
@@ -9983,6 +10068,7 @@ pub fn events() -> Vec<Event> {
             name: "Permafrost Contagion",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -10008,6 +10094,7 @@ pub fn events() -> Vec<Event> {
             name: "General Strike",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddFlag(Flag::LaborResistance)
@@ -10047,6 +10134,7 @@ pub fn events() -> Vec<Event> {
             name: "Eutrophication - A Global Problem",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -10073,6 +10161,7 @@ pub fn events() -> Vec<Event> {
             name: "Protests",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
 
@@ -10096,6 +10185,7 @@ pub fn events() -> Vec<Event> {
             name: "Gaia Worship",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
@@ -10121,6 +10211,7 @@ pub fn events() -> Vec<Event> {
             name: "Game Over: Assassinated",
             phase: Phase::BreakStart,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10143,6 +10234,7 @@ pub fn events() -> Vec<Event> {
             name: "Policies Intro",
             phase: Phase::PlanningPolicies,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10165,6 +10257,7 @@ pub fn events() -> Vec<Event> {
             name: "Plan Intro 3",
             phase: Phase::PlanningPlan,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10187,6 +10280,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Solar Impacts",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.1)
@@ -10210,6 +10304,7 @@ pub fn events() -> Vec<Event> {
             name: "Game Over: Coup",
             phase: Phase::BreakStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10232,6 +10327,7 @@ pub fn events() -> Vec<Event> {
             name: "AMOC Collapse",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::TriggerEvent(33, 25),
@@ -10266,6 +10362,7 @@ pub fn events() -> Vec<Event> {
             name: "Ecotopia",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
@@ -10300,6 +10397,7 @@ pub fn events() -> Vec<Event> {
             name: "Planning Intro",
             phase: Phase::PlanningStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10322,6 +10420,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Respiratory Problems",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
@@ -10346,6 +10445,7 @@ pub fn events() -> Vec<Event> {
             name: "The Realm of Freedom",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 20.0)
@@ -10382,6 +10482,7 @@ pub fn events() -> Vec<Event> {
             name: "Earth Liberation Front Attacks",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10413,6 +10514,7 @@ pub fn events() -> Vec<Event> {
             name: "Island Abandoned",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -10446,6 +10548,7 @@ pub fn events() -> Vec<Event> {
             name: "Potato Blight Destroys Harvest",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1),
@@ -10470,6 +10573,7 @@ pub fn events() -> Vec<Event> {
             name: "Famine - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(115)
@@ -10493,6 +10597,7 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - Smoke",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::OutputForFeature(ProcessFeature::IsSolar, -0.03),
@@ -10540,6 +10645,7 @@ pub fn events() -> Vec<Event> {
             name: "Dashboard Intro",
             phase: Phase::PlanningDashboard,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10562,6 +10668,7 @@ pub fn events() -> Vec<Event> {
             name: "Ozone Health",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
@@ -10587,6 +10694,7 @@ pub fn events() -> Vec<Event> {
             name: "Extreme Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(53)
@@ -10631,6 +10739,7 @@ pub fn events() -> Vec<Event> {
             name: "Intro Cutscene",
             phase: Phase::CutsceneIntro,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10653,6 +10762,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Assassination",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -3.0)
@@ -10676,6 +10786,7 @@ pub fn events() -> Vec<Event> {
             name: "UFO Gift",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -50.0)
@@ -10699,6 +10810,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Accelerationist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10722,6 +10834,7 @@ pub fn events() -> Vec<Event> {
             name: "Lithium Running Out",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(20)
@@ -10745,6 +10858,7 @@ pub fn events() -> Vec<Event> {
             name: "Large Derecho Storm",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10785,6 +10899,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Ecofeminist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 10.0)
@@ -10808,6 +10923,7 @@ pub fn events() -> Vec<Event> {
             name: "Famine",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -10830,6 +10946,7 @@ pub fn events() -> Vec<Event> {
             name: "Urban Gardening",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Demand(Output::PlantCalories, -0.05),
@@ -10854,6 +10971,7 @@ pub fn events() -> Vec<Event> {
             name: "Mendel-Mania",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, 0.05)
@@ -10878,6 +10996,7 @@ pub fn events() -> Vec<Event> {
             name: "Mega Dust Storms",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -10000.0),
@@ -10910,6 +11029,7 @@ pub fn events() -> Vec<Event> {
             name: "West Antarctic Collapse",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRiseRate, 0.005),
@@ -10948,6 +11068,7 @@ pub fn events() -> Vec<Event> {
             name: "Great Barrier Reef Dead",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
@@ -10987,6 +11108,7 @@ pub fn events() -> Vec<Event> {
             name: "Acid Rain Damages Infrastructure and Ecosystems ",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -11018,6 +11140,7 @@ pub fn events() -> Vec<Event> {
             name: "Assassination Thwarted",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(233)
@@ -11041,6 +11164,7 @@ pub fn events() -> Vec<Event> {
             name: "NPC guidance - Geoengineer",
             phase: Phase::PlanningResearch,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -11063,6 +11187,7 @@ pub fn events() -> Vec<Event> {
             name: "Toxic Airborne Event",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
@@ -11086,6 +11211,7 @@ pub fn events() -> Vec<Event> {
             name: "Blue Ocean Event",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::SeaLevelRise, 0.),
@@ -11125,6 +11251,7 @@ pub fn events() -> Vec<Event> {
             name: "Passed On",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::GameOver
@@ -11147,6 +11274,7 @@ pub fn events() -> Vec<Event> {
             name: "Epidemic X",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -100000000.0),
@@ -11178,6 +11306,7 @@ pub fn events() -> Vec<Event> {
             name: "A New Prometheus",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::NPCRelationship(7, 1.0),
@@ -11216,6 +11345,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Malthusian",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -11239,6 +11369,7 @@ pub fn events() -> Vec<Event> {
             name: "River Restoration",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
@@ -11266,6 +11397,7 @@ pub fn events() -> Vec<Event> {
             name: "The Wretched Attack",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -11306,6 +11438,7 @@ pub fn events() -> Vec<Event> {
             name: "Permafrost Melting",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 2.0),
@@ -11337,6 +11470,7 @@ pub fn events() -> Vec<Event> {
             name: "Unrest - Riots",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::AddEvent(49),
@@ -11371,6 +11505,7 @@ pub fn events() -> Vec<Event> {
             name: "Research Intro",
             phase: Phase::PlanningResearch,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(179)
@@ -11393,6 +11528,7 @@ pub fn events() -> Vec<Event> {
             name: "Thwaites Glacier Collapses",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
@@ -11418,6 +11554,7 @@ pub fn events() -> Vec<Event> {
             name: "Reruralization",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
@@ -11441,6 +11578,7 @@ pub fn events() -> Vec<Event> {
             name: "Ozone Depletion",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(106)
@@ -11464,6 +11602,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Malthusian",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(98)
@@ -11487,6 +11626,7 @@ pub fn events() -> Vec<Event> {
             name: "Dancing Plague",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::TriggerEvent(64, 3)
@@ -11510,6 +11650,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Posadist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -11533,6 +11674,7 @@ pub fn events() -> Vec<Event> {
             name: "Novel Disease",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
@@ -11579,6 +11721,7 @@ pub fn events() -> Vec<Event> {
             name: "Flooding - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(51),
@@ -11602,6 +11745,7 @@ pub fn events() -> Vec<Event> {
             name: "Regenerative Crop Agriculture",
             phase: Phase::BreakStart,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Feedstock(Feedstock::Soil, 0.1),
@@ -11625,6 +11769,7 @@ pub fn events() -> Vec<Event> {
             name: "Warming Leads to Declining Agricultural Yields",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
@@ -11649,6 +11794,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Environmentalist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ProjectCostModifier(97, -1.0)
@@ -11672,6 +11818,7 @@ pub fn events() -> Vec<Event> {
             name: "Australian 'Dinosaur Trees' Destroyed in Wildfire",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -11717,6 +11864,7 @@ pub fn events() -> Vec<Event> {
             name: "Leather Underground - Attacks",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -11748,6 +11896,7 @@ pub fn events() -> Vec<Event> {
             name: "Coup",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::GameOver
@@ -11771,6 +11920,7 @@ pub fn events() -> Vec<Event> {
             name: "NPC guidance - Ecologist",
             phase: Phase::PlanningInitiatives,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -11793,6 +11943,7 @@ pub fn events() -> Vec<Event> {
             name: "Uranium Running Out",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(90),
@@ -11817,6 +11968,7 @@ pub fn events() -> Vec<Event> {
             name: "Rotational Grazing",
             phase: Phase::BreakStart,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::CO2ForFeature(ProcessFeature::UsesLivestock, 0.12)
@@ -11839,6 +11991,7 @@ pub fn events() -> Vec<Event> {
             name: "Year without a Summer",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -11882,6 +12035,7 @@ pub fn events() -> Vec<Event> {
             name: "Environmental Injustice - Unconventional Oil ",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -11907,6 +12061,7 @@ pub fn events() -> Vec<Event> {
             name: "Mountain Gorilla Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
@@ -11937,6 +12092,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Environmentalist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -11960,6 +12116,7 @@ pub fn events() -> Vec<Event> {
             name: "Too Hot to Work",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -11984,6 +12141,7 @@ pub fn events() -> Vec<Event> {
             name: "Disease Outbreak",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12012,6 +12170,7 @@ pub fn events() -> Vec<Event> {
             name: "Silent Spring",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
@@ -12038,6 +12197,7 @@ pub fn events() -> Vec<Event> {
             name: "Chthulucene",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::NPCRelationship(5, 1.0),
@@ -12064,6 +12224,7 @@ pub fn events() -> Vec<Event> {
             name: "Ice Sheet Tsunami",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0)
@@ -12086,6 +12247,7 @@ pub fn events() -> Vec<Event> {
             name: "Epidemic Y: The Big One",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Population, -1000000000.0),
@@ -12117,6 +12279,7 @@ pub fn events() -> Vec<Event> {
             name: "Processes Intro",
             phase: Phase::PlanningProcesses,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12139,6 +12302,7 @@ pub fn events() -> Vec<Event> {
             name: "Wildfires - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(63),
@@ -12168,6 +12332,7 @@ pub fn events() -> Vec<Event> {
             name: "Brownouts - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(48),
@@ -12223,6 +12388,7 @@ pub fn events() -> Vec<Event> {
             name: "Copper Shortage",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 0.)
@@ -12260,6 +12426,7 @@ pub fn events() -> Vec<Event> {
             name: "Mushrooms at the End of the World",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
@@ -12286,6 +12453,7 @@ pub fn events() -> Vec<Event> {
             name: "Permafrost Pandemic",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -3.0),
@@ -12310,6 +12478,7 @@ pub fn events() -> Vec<Event> {
             name: "Parliament Intro",
             phase: Phase::PlanningParliament,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12332,6 +12501,7 @@ pub fn events() -> Vec<Event> {
             name: "Day Zero - Water Restrictions Needed Soon",
             phase: Phase::PlanningStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -12356,6 +12526,7 @@ pub fn events() -> Vec<Event> {
             name: "Coal Running Out",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12379,6 +12550,7 @@ pub fn events() -> Vec<Event> {
             name: "Fish Populations Collapse ",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
@@ -12411,6 +12583,7 @@ pub fn events() -> Vec<Event> {
             name: "Global Equality ",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0)
@@ -12428,6 +12601,7 @@ pub fn events() -> Vec<Event> {
             name: "Migrations - Borders",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
                 Effect::AddEvent(6),
@@ -12461,6 +12635,7 @@ pub fn events() -> Vec<Event> {
             name: "Locust Infestation",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.01)
@@ -12491,6 +12666,7 @@ pub fn events() -> Vec<Event> {
             name: "Welcome Back",
             phase: Phase::PlanningStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12513,6 +12689,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Fleet Shot Down",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::TerminationShock
@@ -12536,6 +12713,7 @@ pub fn events() -> Vec<Event> {
             name: "Torches and Pitchforks Outside Your Window...",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::GameOver
@@ -12565,6 +12743,7 @@ pub fn events() -> Vec<Event> {
             name: "Planning - NPC quotes Malthusian",
             phase: Phase::PlanningPlanChange,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12587,6 +12766,7 @@ pub fn events() -> Vec<Event> {
             name: "Plan Intro",
             phase: Phase::PlanningPlan,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(44)
@@ -12609,6 +12789,7 @@ pub fn events() -> Vec<Event> {
             name: "Revolts",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
 
@@ -12632,6 +12813,7 @@ pub fn events() -> Vec<Event> {
             name: "Wet-Bulb Event",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
@@ -12677,6 +12859,7 @@ pub fn events() -> Vec<Event> {
             name: "The Wretched - Attack",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
@@ -12708,6 +12891,7 @@ pub fn events() -> Vec<Event> {
             name: "Ex-Urban Explosion",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
@@ -12733,6 +12917,7 @@ pub fn events() -> Vec<Event> {
             name: "Massive Jellyfish Blooms",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
@@ -12766,6 +12951,7 @@ pub fn events() -> Vec<Event> {
             name: "4000th nuclear reactor built",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
@@ -12791,6 +12977,7 @@ pub fn events() -> Vec<Event> {
             name: "World Intro",
             phase: Phase::WorldStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12814,6 +13001,7 @@ pub fn events() -> Vec<Event> {
             name: "Communist Cockaigne",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
@@ -12838,6 +13026,7 @@ pub fn events() -> Vec<Event> {
             name: "Passed On",
             phase: Phase::BreakStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12861,6 +13050,7 @@ pub fn events() -> Vec<Event> {
             name: "A Better World",
             phase: Phase::InterstitialWin,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12883,6 +13073,7 @@ pub fn events() -> Vec<Event> {
             name: "Volcanic Eruption ",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Temperature, -1.0),
@@ -12906,6 +13097,7 @@ pub fn events() -> Vec<Event> {
             name: "UFO War",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -10.0),
@@ -12930,6 +13122,7 @@ pub fn events() -> Vec<Event> {
             name: "Growing Older",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -12952,6 +13145,7 @@ pub fn events() -> Vec<Event> {
             name: "Hail Cannons",
             phase: Phase::WorldStart,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(116)
@@ -12974,6 +13168,7 @@ pub fn events() -> Vec<Event> {
             name: "Boreal Forest Shift",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 5.0),
@@ -12999,6 +13194,7 @@ pub fn events() -> Vec<Event> {
             name: "Environmental Injustice - Copper",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -13024,6 +13220,7 @@ pub fn events() -> Vec<Event> {
             name: "Report Intro",
             phase: Phase::ReportStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13046,6 +13243,7 @@ pub fn events() -> Vec<Event> {
             name: "Aurochs Return to the Eurasian Plains",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -0.5),
@@ -13091,6 +13289,7 @@ pub fn events() -> Vec<Event> {
             name: "Heatwaves",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13119,6 +13318,7 @@ pub fn events() -> Vec<Event> {
             name: "Book Extract - Havana",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13142,6 +13342,7 @@ pub fn events() -> Vec<Event> {
             name: "Night Life Adaptation",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
@@ -13165,6 +13366,7 @@ pub fn events() -> Vec<Event> {
             name: "Pollinator - Collapse",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1),
@@ -13189,6 +13391,7 @@ pub fn events() -> Vec<Event> {
             name: "Growing Old",
             phase: Phase::InterstitialStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13211,6 +13414,7 @@ pub fn events() -> Vec<Event> {
             name: "Crop Failures",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13251,6 +13455,7 @@ pub fn events() -> Vec<Event> {
             name: "Extra Animals",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13281,6 +13486,7 @@ pub fn events() -> Vec<Event> {
             name: "From Mowing Lawns to Rewilding Meadows",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 3.0),
@@ -13312,6 +13518,7 @@ pub fn events() -> Vec<Event> {
             name: "The Leather Underground Attack",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13340,6 +13547,7 @@ pub fn events() -> Vec<Event> {
             name: "Environmental Injustice - Rare Earth Metals",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -13365,6 +13573,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Animal Liberationist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
@@ -13388,6 +13597,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Authoritarian",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(43)
@@ -13417,6 +13627,7 @@ pub fn events() -> Vec<Event> {
             name: "Ocean Microorganisms",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Demand(Output::PlantCalories, 0.1)
@@ -13447,6 +13658,7 @@ pub fn events() -> Vec<Event> {
             name: "Earth Liberation Front - Attacks",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(100)
@@ -13470,6 +13682,7 @@ pub fn events() -> Vec<Event> {
             name: "Clean Air",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 4.0)
@@ -13493,6 +13706,7 @@ pub fn events() -> Vec<Event> {
             name: "Millions of Climate Refugees on the Move",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
@@ -13521,6 +13735,7 @@ pub fn events() -> Vec<Event> {
             name: "Initiatives Intro",
             phase: Phase::PlanningInitiatives,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13543,6 +13758,7 @@ pub fn events() -> Vec<Event> {
             name: "Sabotage",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddFlag(Flag::LaborSabotage),
@@ -13583,6 +13799,7 @@ pub fn events() -> Vec<Event> {
             name: "First 100m-Inhabitant City",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ModifyIndustryDemand(8, 0.1)
@@ -13621,6 +13838,7 @@ pub fn events() -> Vec<Event> {
             name: "Passed On",
             phase: Phase::BreakStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13645,6 +13863,7 @@ pub fn events() -> Vec<Event> {
             name: "Feminist Citizen-Scientists",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
@@ -13678,6 +13897,7 @@ pub fn events() -> Vec<Event> {
             name: "Nemesis - The Authoritarian",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13701,6 +13921,7 @@ pub fn events() -> Vec<Event> {
             name: "Riots",
             phase: Phase::Icon,
             locked: true,
+            occurred: false,
             regional: true,
             effects: vec![
 
@@ -13724,6 +13945,7 @@ pub fn events() -> Vec<Event> {
             name: "Ocean Plastic Weighs More than World's Fish",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
@@ -13756,6 +13978,7 @@ pub fn events() -> Vec<Event> {
             name: "The Ark Proposal",
             phase: Phase::PlanningStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::UnlocksProject(80),
@@ -13779,6 +14002,7 @@ pub fn events() -> Vec<Event> {
             name: "More and More Mega-Dams ",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
@@ -13803,6 +14027,7 @@ pub fn events() -> Vec<Event> {
             name: "Bird-Watching Craze",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0)
@@ -13826,6 +14051,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - SAD",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
@@ -13849,6 +14075,7 @@ pub fn events() -> Vec<Event> {
             name: "Endangered Species Back from the Brink ",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
@@ -13880,6 +14107,7 @@ pub fn events() -> Vec<Event> {
             name: "Success",
             phase: Phase::EndStart,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
 
@@ -13902,6 +14130,7 @@ pub fn events() -> Vec<Event> {
             name: "Insect Infestation Weakens Forest",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 40.0),
@@ -13934,6 +14163,7 @@ pub fn events() -> Vec<Event> {
             name: "Deadly Leak from CCS Storage Facility",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
@@ -13979,6 +14209,7 @@ pub fn events() -> Vec<Event> {
             name: "Polar Bear Declared Extinct",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
@@ -14004,6 +14235,7 @@ pub fn events() -> Vec<Event> {
             name: "Tens of Millions of Climate Migrants on the Move",
             phase: Phase::WorldMain,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Migration,
@@ -14028,6 +14260,7 @@ pub fn events() -> Vec<Event> {
             name: "Ally - The Fanonist",
             phase: Phase::PlanningPlan,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::ProjectCostModifier(46, -0.5)
@@ -14051,6 +14284,7 @@ pub fn events() -> Vec<Event> {
             name: "Assassination",
             phase: Phase::InterstitialStart,
             locked: true,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::GameOver,
@@ -14074,6 +14308,7 @@ pub fn events() -> Vec<Event> {
             name: "Severe Hurricane - Intro",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::AddEvent(77)
@@ -14120,6 +14355,7 @@ pub fn events() -> Vec<Event> {
             name: "SRM - Weakening Monsoon",
             phase: Phase::WorldMain,
             locked: false,
+            occurred: false,
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
