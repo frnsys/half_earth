@@ -190,8 +190,10 @@ class Globe {
   async addEmissionsThenUpdate(emissions) {
     await this.temperature.addEmissions(emissions);
     let tgav = await this.temperature.updateTemperature();
-    await this.surface.updateBiomes(tgav);
-    await this.updateSurface();
+    if (this.surface) {
+      await this.surface.updateBiomes(tgav);
+      await this.updateSurface();
+    }
     return tgav;
   }
 
