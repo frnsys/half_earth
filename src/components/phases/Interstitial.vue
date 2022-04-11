@@ -29,6 +29,9 @@ import Playlist from '/src/lib/playlist';
 import EventsMixin from 'components/EventsMixin';
 import intensity from '/src/display/intensity';
 
+// List from Troy:
+// Bandung, Hanoi, Mexico City, Budapest, Thiruvananthapuram, Luanda, Ayn Issa, Ferrara, Vienna, Beijing, Aden, Caracas, Algiers, Belgrade, Moscow, Managua, Buenos Aires, Trier, Prague, Porto Alegre, Seattle/Burlington/Bronx, Dar es Salaam
+
 // TODO
 const LOCALES = [{
   name: 'Havana',
@@ -56,10 +59,45 @@ const LOCALES = [{
   ambience: 'city_noise.mp3',
   credit: 'Pierre Blaché',
 }, {
-  name: 'Gangtok',
-  background: '2560px-Gangtok_from_Tibet_Road.jpg',
+  name: 'Bandung',
+  background: 'Street_Braga,_Bandung_City,_West_Java,_Indonesia.jpg',
   ambience: 'city_noise.mp3',
-  credit: 'Thebrowniris, CC BY 3.0, via Wikimedia Commons',
+  credit: 'PACARNYAKEYES, CC BY-SA 4.0, via Wikimedia Commons',
+}, {
+  name: 'Seattle',
+  background: '2560px-Seattle_4.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Daniel Schwen, CC BY-SA 4.0, via Wikimedia Commons',
+}, {
+  name: 'Hanoi',
+  background: '2560px-Vietnam,_Hanoi,_Streets_of_central_Hanoi_2.jpg',
+  ambience: 'city_noise.mp3',
+  credit: '© Vyacheslav Argenberg / http://www.vascoplanet.com/, CC BY 4.0, via Wikimedia Commons',
+}, {
+  name: 'Dar es Salaam',
+  background: 'Dar_es_Salaam_before_dusk.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Muhammad Mahdi Karim, GFDL 1.2, via Wikimedia Commons',
+}, {
+  name: 'Ayn Issa',
+  background: '2560px-Another_Year_Without_Daesh.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Combined Joint Task Force - Operation Inherent Resolve/Sgt. Raymond Boyington, Public domain, via Wikimedia Commons',
+}, {
+  name: 'Algiers',
+  background: '2560px-Martyrs_Memorial,_A_cloudy_day_in_Algiers.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'EL Hacene Boulkroune, CC BY-SA 4.0, via Wikimedia Commons',
+}, {
+  name: 'Managua',
+  background: 'Old_Managua_Cathedral_from_Highway_2.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Byralaal, CC BY-SA 4.0, via Wikimedia Commons',
+}, {
+  name: 'Prague',
+  background: '2560px-Vltava_river_in_Prague.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Dmitry A. Mottl, CC BY-SA 4.0, via Wikimedia Commons',
 }];
 
 export default {
