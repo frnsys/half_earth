@@ -24,6 +24,15 @@ function animate(start, end, duration, updateFn, cb, linear) {
     let elapsed = timestamp - startTime;
     let vals = linear ? start.map((_, i) => elapsed/duration * changes[i])
       : start.map((s, i) => easeInOutQuad(elapsed, s, changes[i], duration));
+
+    // If timestamp is very large it can cause
+    // the value to overshoot the end target,
+    // so clamp it in case.
+    if (end >= start) {
+      vals = vals.map((v) => Math.min(v, end));
+    } else {
+      vals = vals.map((v) => Math.max(v, end));
+    }
     updateFn(...vals);
     if (elapsed < duration) {
       anim.id = requestAnimationFrame(update);
