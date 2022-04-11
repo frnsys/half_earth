@@ -17,6 +17,7 @@ use crate::save::{Saveable, coerce};
 
 const LIFESPAN: usize = 60;
 const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
+const PRODUCTION_SHORTAGE_PENALTY: f32 = 40.;
 
 #[derive(Default, Serialize, Clone)]
 pub struct State {
@@ -394,6 +395,11 @@ impl State {
         }
         feedstock_weights.soil = 0.; // TODO add this back in?
         feedstock_weights.other = 0.;
+
+        // Outlook impacts based on production shortages
+        // If all demand met is 0 it should be an instant game over, basically.
+        let demand_met = self.produced/self.output_demand;
+        self.world.shortages_outlook = PRODUCTION_SHORTAGE_PENALTY - ((demand_met.fuel + demand_met.electricity + demand_met.animal_calories + demand_met.plant_calories) * PRODUCTION_SHORTAGE_PENALTY/4.);
     }
 
     pub fn step_world(&mut self) -> (Vec<usize>, Vec<usize>) {

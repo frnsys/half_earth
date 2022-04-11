@@ -254,19 +254,9 @@ export default {
       this.breakdownFactor = choice;
     },
     waterStress(demand) {
-      let label;
       let percentUse = format.waterUsePercent(demand);
-      if (percentUse <= 0.2) {
-        label = 'Very Low';
-      } else if (percentUse <= 0.4) {
-        label = 'Low';
-      } else if (percentUse <= 0.6) {
-        label = 'High';
-      } else {
-        label = 'Very High';
-      }
       return {
-        label,
+        label: `${percentUse.toFixed(0)}%`,
         color: intensity.color(percentUse * 4, false)
       }
     },

@@ -9,6 +9,7 @@ pub struct World {
     pub year: usize,
     pub base_outlook: f32,
     pub temp_outlook: f32,
+    pub shortages_outlook: f32,
     pub extinction_rate: f32,
     pub temperature: f32,     // global temp anomaly, C
     pub precipitation: f32,   // global precip avg
@@ -41,7 +42,7 @@ impl World {
 
     pub fn outlook(&self) -> f32 {
         let region_outlook = self.regions.iter().map(|r| r.outlook).sum::<f32>()/self.regions.len() as f32;
-        self.base_outlook + region_outlook
+        self.base_outlook - self.shortages_outlook + region_outlook
     }
 
     /// Returns a vec of ids of regions that "leveled up"
@@ -79,7 +80,7 @@ impl World {
     }
 
     pub fn update_temp_outlook(&mut self, temp_change: f32) {
-        let outlook_change = temp_change * 5. * self.temperature.powf(2.);
+        let outlook_change = temp_change * 6. * self.temperature.powf(2.);
         self.temp_outlook += outlook_change;
         self.base_outlook += outlook_change;
         for region in &mut self.regions {
@@ -155,10 +156,11 @@ impl Serialize for World {
     {
         let total_emissions = (self.co2_emissions + (self.n2o_emissions * 298.) + (self.ch4_emissions * 36.)) * 1e-15;
 
-        let mut seq = serializer.serialize_struct("World", 17)?;
+        let mut seq = serializer.serialize_struct("World", 18)?;
         seq.serialize_field("year", &self.year)?;
         seq.serialize_field("contentedness", &self.outlook())?;
         seq.serialize_field("temp_outlook", &self.temp_outlook)?;
+        seq.serialize_field("shortages_outlook", &self.shortages_outlook)?;
         seq.serialize_field("extinction_rate", &self.extinction_rate)?;
         // seq.serialize_field("extinction_rate", &10)?; // For testing win state
         seq.serialize_field("tgav_extinction_rate", &self.tgav_extinction_rate())?;
@@ -186,6 +188,7 @@ impl Saveable for World {
             "year": self.year,
             "base_outlook": self.base_outlook,
             "temp_outlook": self.temp_outlook,
+            "shortages_outlook": self.shortages_outlook,
             "extinction_rate": self.extinction_rate,
             "temperature": self.temperature,
             "precipitation": self.precipitation,
@@ -206,6 +209,7 @@ impl Saveable for World {
         self.year = coerce(&state["year"]);
         self.base_outlook = coerce(&state["base_outlook"]);
         self.temp_outlook = coerce(&state["temp_outlook"]);
+        self.shortages_outlook = coerce(&state["shortages_outlook"]);
         self.extinction_rate = coerce(&state["extinction_rate"]);
         self.temperature = coerce(&state["temperature"]);
         self.precipitation = coerce(&state["precipitation"]);

@@ -35,7 +35,8 @@
     <div class="plan--production">
       <div class="plan--production-icons">
         <img class="plan-new-icon" v-if="anyNewProcesses" src="/assets/new.svg" />
-        <img class="plan-limit-alert" v-if="processesOverLimit.length > 0" :src="icons.alert" v-tip="{icon: 'alert', text: `The following processes can't produce as much as they need to: ${processesOverLimit.join(', ')}`}"/>
+        <img class="plan-alert" v-if="processesOverLimit.length > 0" :src="icons.alert" v-tip="{icon: 'alert', text: `The following processes can't produce as much as they need to: ${processesOverLimit.join(', ')}`}"/>
+        <img class="plan-alert" v-if="productionShortages" :src="icons.alert" v-tip="{icon: 'alert', text: `${productionShortages}. A resource such as land or water may be overexploited and thus limiting how much processes can produce.`}"/>
       </div>
       <div class="plan--production--processes">
         <MiniProcess v-for="process in maxProcesses" :process="process" :key="process.id" />
@@ -61,6 +62,7 @@ import game from '/src/game';
 import state from '/src/state';
 import Chart from '../Chart.vue';
 import format from '/src/display/format';
+import display from '/src/display/display';
 import ActivePlan from '../ActivePlan.vue';
 import Processes from '../Processes.vue';
 import Projects from '../Projects.vue';
@@ -123,6 +125,34 @@ export default {
     }
   },
   computed: {
+    productionShortages() {
+      let total = 0;
+      let problems = {};
+      Object.keys(state.gameState.output_demand).forEach((k) => {
+        let met = state.gameState.produced[k]/state.gameState.output_demand[k];
+        if (met >= 0.99) {
+          return
+        } else if (met >= 0.85) {
+          problems[k] = 'mild';
+        } else if (met >= 0.75) {
+          problems[k] = 'alarming';
+        } else if (met >= 0.5) {
+          problems[k] = 'severe';
+        } else {
+          problems[k] = 'critical';
+        }
+      });
+      let keys = Object.keys(problems);
+      if (keys.length > 0) {
+        if (keys.length > 1) {
+          return `There are multiple production shortages: ${keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${problems[k]})</b>`).join(', ')}`;
+        } else {
+          return `There is a <b class="shortage-${problems[keys[0]]}">${problems[keys[0]]} ${display.enumDisplay(keys[0])}</b> production shortage`;
+        }
+      } else {
+        return;
+      }
+    },
     anyNewProjects() {
       let allProjects = state.gameState.projects.filter((p) => !p.locked).map((p) => p.ref_id);
       return allProjects.some((ref_id) => !state.viewed.includes(ref_id));
@@ -626,7 +656,7 @@ export default {
   animation-name: new-pulse;
   animation-iteration-count: infinite;
 }
-.plan-limit-alert, .plan-feedstock-alert {
+.plan-alert {
   width: 36px;
   margin: 0 7px;
   animation-duration: 0.75s;
@@ -648,6 +678,16 @@ export default {
   height: 110px;
   margin: 0 0.25em;
   border: 1px dashed rgba(0,0,0,0.5);
+}
+
+.shortage-alarming {
+  color: #efea38;
+}
+.shortage-severe {
+  color: #ef9038;
+}
+.shortage-critical {
+  color: #ef3838;
 }
 
 @keyframes new-pulse {

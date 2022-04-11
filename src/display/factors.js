@@ -205,6 +205,13 @@ function rank() {
           amount: Math.round(state.gameState.world.temp_outlook)
         });
       }
+      if (state.gameState.world.shortages_outlook !== 0) {
+        rankings.push({
+          type: 'Event',
+          name: 'Production Shortages',
+          amount: Math.round(-state.gameState.world.shortages_outlook)
+        });
+      }
       rankings.push({
         type: 'Event',
         name: 'Post-Revolution Optimism',
