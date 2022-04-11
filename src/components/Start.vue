@@ -20,9 +20,6 @@ import game from '/src/game';
 import state from '/src/state';
 import {saveSettings} from '../state';
 
-const notification = new Audio('/assets/notification.wav');
-notification.volume = 0.5;
-
 export default {
   methods: {
     hasSave() {
@@ -39,9 +36,10 @@ export default {
     toggleSound() {
       state.sound = !state.sound;
       if (!state.sound) {
-        window.music.pause();
+        window.audioManager.mute();
       } else {
-        notification.play();
+        window.audioManager.unmute();
+        window.audioManager.playOneShot('/assets/sounds/notification.wav');
       }
       saveSettings();
     },

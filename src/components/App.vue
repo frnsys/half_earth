@@ -30,15 +30,13 @@ import Interstitial from './phases/Interstitial.vue';
 import Report from './phases/Report.vue';
 import Stream from './phases/events/Events.vue';
 import Planning from './phases/planning/Planning.vue';
-import Playlist from 'lib/playlist';
-
-const playlist = [
-  '/assets/music/5yr_plan.mp3',
-  '/assets/music/5yr_plan.mp3', // hack to fade it back into itself
-];
+import AudioManager from '/src/audio/manager';
 
 // Hacky
-window.music = new Playlist(playlist);
+window.audioManager = new AudioManager();
+if (!state.sound) {
+  window.audioManager.muted = true;
+}
 
 export default {
   data() {
@@ -50,9 +48,6 @@ export default {
   },
   methods: {
     start() {
-      if (!debug.noSound && state.sound) {
-        window.music.play();
-      }
       this.started = true;
     }
   },

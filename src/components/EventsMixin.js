@@ -1,7 +1,6 @@
 // Mixin for components that need to load and present events
 import game from '/src/game';
 import Dialogue from './Dialogue.vue'
-import Scene from './scene/Scene.vue';
 import regions from '/assets/content/regions.json';
 import EVENTS from '/assets/content/events.json';
 import {clone} from 'lib/util';
@@ -16,7 +15,6 @@ export default {
     };
   },
   components: {
-    Scene,
     Dialogue,
   },
   computed: {

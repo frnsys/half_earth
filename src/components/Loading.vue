@@ -61,6 +61,10 @@ export default {
       };
       img.src = src;
     });
+    window.audioManager.startSoundtrack('/assets/music/143208__klerrp__maxtor-diamondmax-d540x-5400rpm-bb.mp3');
+  },
+  beforeUnmount() {
+    window.audioManager.stopSoundtrack();
   },
   computed: {
     barWidth() {

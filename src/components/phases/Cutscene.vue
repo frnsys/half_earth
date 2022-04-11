@@ -10,7 +10,6 @@ import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
 import animate from '/src/lib/anim';
-import Playlist from '/src/lib/playlist';
 import EventsMixin from 'components/EventsMixin';
 import intensity from '/src/display/intensity';
 
@@ -32,6 +31,7 @@ export default {
   mixins: [EventsMixin],
   mounted() {
     this.start();
+    window.audioManager.startSoundtrack('/assets/music/330353__zxcvbn9__spring-arrives.mp3', false);
   },
   activated() {
     this.start();
@@ -64,6 +64,7 @@ export default {
       }, 1500);
     },
     nextPhase() {
+      window.audioManager.stopSoundtrack(true);
       animate(1.0, 0.0, 1000, (val) => {
         this.$el.style.opacity = val;
       }, () => {

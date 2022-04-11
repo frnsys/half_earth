@@ -25,7 +25,6 @@ import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
 import animate from '/src/lib/anim';
-import Playlist from '/src/lib/playlist';
 import EventsMixin from 'components/EventsMixin';
 import intensity from '/src/display/intensity';
 
@@ -109,7 +108,7 @@ export default {
     this.start();
   },
   beforeUnmount() {
-    this.sound.stop();
+    window.audioManager.stopAtmosphere(true);
   },
   data() {
     let events = game.roll.interstitial('Start');
@@ -217,13 +216,8 @@ export default {
         }
       }, 2200);
 
-      // Hack to get it to crossfade loop
-      let sounds = [
-        `/assets/environments/ambience/${this.locale.ambience}`,
-        `/assets/environments/ambience/${this.locale.ambience}`,
-      ];
-      this.sound = new Playlist(sounds);
-      this.sound.play();
+      window.audioManager.stopSoundtrack(true);
+      window.audioManager.startAtmosphere(`/assets/environments/ambience/${this.locale.ambience}`, true)
     },
     nextPhase() {
       if (this.gameOver) {

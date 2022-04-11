@@ -90,12 +90,10 @@ export default {
   methods: {
     toggleSound() {
       state.sound = !state.sound;
-      if (state.sound && window.music.paused) {
-        window.music.play();
-      } else if (!state.sound) {
-        window.music.mute();
+      if (state.sound) {
+        window.audioManager.unmute();
       } else {
-        window.music.unmute();
+        window.audioManager.mute();
       }
       saveSettings();
     },

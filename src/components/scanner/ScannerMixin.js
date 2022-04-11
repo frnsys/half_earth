@@ -75,6 +75,7 @@ export default {
     },
     shakeScreen() {
       document.body.classList.add('shake');
+      window.audioManager.playOneShot('/assets/sounds/impact.mp3');
       setTimeout(() => {
         document.body.classList.remove('shake');
       }, 500);
