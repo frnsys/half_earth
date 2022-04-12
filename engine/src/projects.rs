@@ -140,7 +140,7 @@ pub struct Project {
 /// for the given amount of points.
 /// Has to be at least 1
 pub fn years_for_points(points: usize, cost: usize) -> f32 {
-    (cost as f32/(points as f32).powf(1./3.)).round().max(1.)
+    (cost as f32/(points as f32).powf(1./2.75)).round().max(1.)
 }
 
 impl Project {

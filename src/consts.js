@@ -18,7 +18,7 @@ export default {
 
   parliamentSeats: [2,3,4,5,5,5,4,3,2],
   maxRelationship: 6,
-  processPointsPerCycle: 3,
+  processPointsPerCycle: 5,
 
   // How much PC is earned when completing a project
   pcPerCompletedProject: 5,

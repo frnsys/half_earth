@@ -86,7 +86,7 @@ export default {
         } else if (factor.startsWith('ProjectBuilding')) {
           label = 'being built';
         }
-        return `This event occurs because "${name}" is ${label}.`;
+        return `This event can occur if "${name}" is ${label}.`;
       } else if (factor.startsWith('Process')) {
         let id = parseInt(factor.split(':')[1]);
         let name = state.gameState.processes[id].name;
@@ -100,7 +100,7 @@ export default {
         let relType = parts[1]
         let id = parseInt(parts[2]);
         let name = state.gameState.npcs[id].name;
-        return `This event occurs because ${name} is ${relType == 'Ally' ? 'an' : 'a'} ${relType}.`
+        return `This event can occur if ${name} is ${relType == 'Ally' ? 'an' : 'a'} ${relType}.`
       } else {
         return FACTOR_DESCS[factor] || factor;
       }
