@@ -279,7 +279,7 @@ export default {
         case 'energy': {
           let amount = format.twh(state.gameState.output_demand.fuel + state.gameState.output_demand.electricity);
           return factors.tips.energy(
-            `Energy: Something something. You're using ${amount}TWh of energy.`,
+            `Energy: The fundamental mover. You're using ${amount}TWh of energy.`,
             this.process);
         }
         case 'biodiversity': {

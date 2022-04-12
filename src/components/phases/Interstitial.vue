@@ -178,7 +178,7 @@ export default {
         'suffering',
         'plummeting',
       ];
-      idx = Math.min(idx, descs.length);
+      idx = Math.min(idx, descs.length - 1);
       return descs[idx];
     },
     contentedness() {

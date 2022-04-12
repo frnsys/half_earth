@@ -101,7 +101,8 @@
         </tr>
         <tr class="report-spacer" v-if="regionIncomeChanges.length != 0"></tr>
         <tr class="report-header" v-if="regionDisasters.length != 0">
-          <td>Disasters</td>
+          <td colspan="2">Disasters</td>
+          <td colspan="3" class="report-header-desc">Reduce the <img :src="icons.habitability"/> habitability of regions</td>
         </tr>
         <tr v-for="r in regionDisasters">
           <td>{{r.name}}</td>
@@ -425,6 +426,16 @@ export default {
 }
 .report tr:first-child small img {
   margin-left: -4px;
+}
+
+.report-header-desc {
+  font-size: 0.8em;
+  color: #333;
+  text-align: right !important;
+}
+.report-header-desc img {
+  height: 14px;
+  vertical-align: top;
 }
 
 @media only screen and (min-width: 481px) {
