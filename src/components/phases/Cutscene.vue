@@ -20,7 +20,7 @@ const IMAGES = [
   'gosplant_world.jpg',
   'gosplant_world.jpg',
   'pexels-marco-allasio-4275996.jpg',
-  'pexels-mentatdgt-1185433.jpg',
+  'ryoji-iwata-X53e51WfjlE-unsplash.jpg',
   'hasan-almasi-OwqLxCvoVxI-unsplash.jpg',
   'matthew-tenbruggencate-0HJWobhGhJs-unsplash.jpg',
   'hasan-almasi-OwqLxCvoVxI-unsplash.jpg',
