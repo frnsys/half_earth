@@ -14,6 +14,7 @@ class Sound {
     return this._volume;
   }
   set volume(val) {
+    val = Math.min(Math.max(val, 0), 1);
     this._volume = val
     this.audio.volume = val;
   }
@@ -36,7 +37,7 @@ class Sound {
   // Duration in ms
   fadeIn(duration, cb) {
     animate(0, 1, duration, (val) => {
-      this.audio.volume = val * this._volume;
+      this.volume = val * this._volume;
     }, () => {
       if (cb) cb();
     });
@@ -44,7 +45,7 @@ class Sound {
 
   fadeOut(duration, cb) {
     animate(1, 0, duration, (val) => {
-      this.audio.volume = val * this._volume;
+      this.volume = val * this._volume;
     }, () => {
       if (cb) cb();
     });
