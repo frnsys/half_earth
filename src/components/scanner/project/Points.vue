@@ -8,7 +8,7 @@
       {{availablePoints}}<img class="pip" :src="icons[icon]">
     </template>
     <template v-else>
-      {{nextPointCost}}<img class="pip" :src="icons.political_capital"> ⮕ <img class="pip" :src="icons[icon]">
+      {{nextPointCost}}<img class="pip" :src="icons.political_capital"> <img :src="icons.arrow_right" class="pip-arrow"/> <img class="pip" :src="icons[icon]">
     </template>
   </div>
 </div>
@@ -57,5 +57,9 @@ export default {
 }
 .pips-group:nth-child(2) {
   margin-left: 0.5em;
+}
+
+.pip-arrow {
+  filter: invert(1);
 }
 </style>
