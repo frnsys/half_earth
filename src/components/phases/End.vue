@@ -1,21 +1,20 @@
 <template>
 <div class="break">
   <Dialogue v-if="hasDialogue" v-bind="event" @done="showStart = true" />
+  <div class="badges-section" v-if="badges && showStart">
+    <div class="badges">
+      <img v-for="badge in badges"
+        :src="`/assets/badges/${badge.name}.png`"
+        v-tip="{text: badge.desc}" />
+    </div>
+  </div>
   <div class="break--actions" v-if="showStart">
     <h2>{{message}}</h2>
-    <button @click="startRun">Try Again</button>
+    <button @click="startRun">Try Again?</button>
   </div>
   <div v-if="shareImgUrl && showStart">
-    <img :src="shareImgUrl" />
-    <div class="badges-section">
-      <h3>Badges</h3>
-      <div class="badges">
-        <img v-for="badge in badges"
-          :src="`/assets/badges/${badge.name}.png`"
-          v-tip="{text: badge.desc}" />
-      </div>
-    </div>
-    <a class="twitter-share-button" :href="`https://twitter.com/intent/tweet?text=${shareImgUrl}`" target="_blank">Tweet</a>
+    <img class="share-image" crossorigin="anonymous" :src="shareImgUrl" />
+    <a class="twitter-share-button" :href="`https://twitter.com/intent/tweet?text=${shareUrl}`" target="_blank">Tweet</a>
   </div>
 </div>
 </template>
@@ -25,8 +24,8 @@ import game from '/src/game';
 import state from '/src/state';
 import share from 'lib/share';
 import debug from '/src/debug';
-import EventsMixin from 'components/EventsMixin';
 import {randChoice} from 'lib/util';
+import EventsMixin from 'components/EventsMixin';
 
 const MESSAGES = [
   'The world can still be salvaged...',
@@ -34,6 +33,7 @@ const MESSAGES = [
 ];
 
 export default {
+  props: ['lose'],
   mixins: [EventsMixin],
   mounted() {
     this.init();
@@ -42,12 +42,21 @@ export default {
     this.init();
   },
   data() {
-    let events = game.roll.break('Start');
+    let events = this.lose ? game.roll.break('Start') : game.roll.end('Start');
     return {
       badges: [],
       showStart: debug.hideEvents || events.length == 0 ? true : false,
       shareImgUrl: null,
       events,
+    }
+  },
+  computed: {
+    message() {
+      if (this.lose) {
+        return randChoice(MESSAGES);
+      } else {
+        return 'Well Played!';
+      }
     }
   },
   methods: {
@@ -61,17 +70,13 @@ export default {
       state.phase = 'PLANNING';
     },
     getShareImage() {
-      share(false, ({badges, url}) => {
-        this.shareImgUrl = url;
+      share(!this.lose, ({badges, url, image}) => {
+        this.shareImgUrl = image;
+        this.shareUrl = url;
         this.badges = badges;
       });
     },
   },
-  computed: {
-    message() {
-      return randChoice(MESSAGES);
-    }
-  }
 }
 </script>
 
@@ -105,10 +110,11 @@ export default {
   font-size: 0.7em;
   color: #fff;
   text-align: center;
+  margin: 0 0 0.3em 0;
 }
 .badges-section {
   text-align: center;
-  margin: 0.5em 0;
+  margin: 0;
 }
 .badges img {
   width: 32px;
@@ -120,17 +126,25 @@ export default {
   text-align: center;
   color: #fff;
   background: #1EA1F2;
-  width: 120px;
+  width: 80px;
+  font-size: 0.9em;
   margin: 0em auto 1em auto;
   padding: 0.35em 0;
   border-radius: 0.3em;
-  border-left: 1px solid #b0d9f3;
-  border-top: 1px solid #b0d9f3;
-  border-right: 1px solid #1b587e;
-  border-bottom: 1px solid #1b587e;
+  border-left: 2px solid #638ba4;
+  border-top: 2px solid #638ba4;
+  border-right: 2px solid #1b587e;
+  border-bottom: 2px solid #1b587e;
   text-decoration: none;
 }
 .twitter-share-button:hover {
   background: #177dbd;
+}
+
+.share-image {
+  display: block;
+  max-width: 500px;
+  margin: 0 auto 1em;
+  border-radius: 0.4em;
 }
 </style>

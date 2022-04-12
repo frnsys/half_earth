@@ -19,7 +19,7 @@ short
 small
 tall
 tiny
- boiling
+boiling
 breezy
 broken
 bumpy
@@ -78,7 +78,6 @@ heavy
 light
 many
 numerous
-Sound
 cooing
 deafening
 faint
@@ -278,7 +277,6 @@ important
 long
 young
 national
-british
 right
 early
 possible
@@ -315,7 +313,6 @@ free
 short
 easy
 strong
-european
 central
 similar
 human
@@ -332,18 +329,15 @@ foreign
 simple
 recent
 concerned
-american
 various
 close
 fine
-english
 wrong
 present
 royal
 natural
 individual
 nice
-french
 following
 current
 modern
@@ -364,7 +358,6 @@ dead
 specific
 appropriate
 top
-soviet
 basic
 military
 original
@@ -381,10 +374,7 @@ ready
 green
 useful
 effective
-western
 traditional
-scottish
-german
 independent
 deep
 interesting
@@ -451,7 +441,6 @@ excellent
 quiet
 soft
 potential
-northern
 religious
 quick
 very
@@ -465,12 +454,10 @@ limited
 conservative
 lovely
 usual
-ltd
 unable
 rural
 initial
 substantial
-christian
 bright
 average
 leading
@@ -487,10 +474,7 @@ democratic
 growing
 sufficient
 scientific
-eastern
 correct
-inc
-irish
 expensive
 educational
 mental
@@ -507,7 +491,6 @@ dry
 historical
 thin
 daily
-southern
 increasing
 wild
 alone
@@ -523,12 +506,10 @@ tall
 busy
 bloody
 prepared
-russian
 moral
 careful
 clean
 attractive
-japanese
 vital
 thick
 alternative
@@ -575,7 +556,6 @@ massive
 unique
 secondary
 parliamentary
-african
 unknown
 subsequent
 angry
@@ -597,12 +577,10 @@ remaining
 agricultural
 alright
 healthy
-italian
 principal
 tired
 efficient
 comfortable
-chinese
 relative
 friendly
 conventional
@@ -619,7 +597,6 @@ federal
 keen
 flat
 silent
-indian
 video-taped
 worried
 pale
@@ -656,12 +633,10 @@ mass
 brilliant
 maximum
 absolute
-tory
 electronic
 visual
 electric
 cool
-spanish
 literary
 continuing
 supreme
@@ -718,7 +693,6 @@ visible
 accurate
 distant
 still
-greek
 complicated
 musical
 precise
@@ -761,7 +735,6 @@ steady
 classic
 equivalent
 intellectual
-victorian
 level
 ultimate
 creative
@@ -780,8 +753,6 @@ outer
 revolutionary
 bitter
 changing
-australian
-native
 imperial
 strict
 wise
@@ -793,7 +764,6 @@ experimental
 spiritual
 intense
 rational
-ethnic
 generous
 inadequate
 prominent
@@ -801,7 +771,6 @@ logical
 bare
 historic
 modest
-dutch
 acute
 electrical
 valid
@@ -815,12 +784,9 @@ liable
 multiple
 ruling
 curious
-arab
 sole
-jewish
 managing
 pregnant
-latin
 nearby
 exact
 underlying
@@ -885,7 +851,6 @@ aggressive
 spare
 painful
 abstract
-asian
 associated
 legislative
 monthly
@@ -895,7 +860,6 @@ explicit
 nasty
 just
 faint
-coloured
 ridiculous
 amazing
 comparable
@@ -906,7 +870,6 @@ back
 decent
 unnecessary
 flying
-fucking
 random
 influential
 dull
@@ -941,7 +904,6 @@ mild
 occupational
 excessive
 progressive
-iraqi
 exceptional
 integrated
 striking
@@ -1007,7 +969,6 @@ neutral
 artistic
 content
 mature
-colonial
 ambitious
 evil
 magnetic
@@ -1032,7 +993,6 @@ blank
 absent
 favourable
 polish
-israeli
 developed
 profound
 representative
@@ -1043,15 +1003,12 @@ reduced
 cruel
 coastal
 peculiar
-racial
 ugly
-swiss
 crude
 extended
 selected
 eager
 feminist
-canadian
 bold
 relaxed
 corresponding
@@ -1069,7 +1026,6 @@ bored
 charming
 minimal
 mobile
-turkish
 orange
 rear
 passive
@@ -1130,7 +1086,6 @@ sound
 protective
 fortunate
 slim
-islamic
 defensive
 divine
 stuck
@@ -1166,7 +1121,6 @@ toxic
 select
 redundant
 integral
-then
 probable
 amateur
 fond
@@ -1188,7 +1142,6 @@ civilian
 instant
 lengthy
 adverse
-korean
 unconscious
 anonymous
 aesthetic
@@ -1255,7 +1208,6 @@ lexical
 noisy
 gradual
 accused
-homeless
 supporting
 coming
 renewed
@@ -1273,7 +1225,6 @@ imaginative
 governing
 accepted
 vocational
-palestinian
 mighty
 puzzled
 worldwide
@@ -1285,7 +1236,6 @@ eventual
 spontaneous
 vivid
 rude
-nineteenth-century
 faithful
 ministerial
 innovative
@@ -1315,7 +1265,7 @@ fragile
 helpful
 helpless
 important
- impossible
+impossible
 innocent
 inquisitive
 modern
@@ -1328,14 +1278,13 @@ real
 rich
 shy
 sleepy
-stupid
 super
 tame
 uninterested
 wandering
 wild
 wrong
- adorable
+adorable
 alert
 average
 beautiful

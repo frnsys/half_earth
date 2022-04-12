@@ -32,6 +32,7 @@ def index():
         return jsonify(
                 success=True,
                 badges=badges,
+                image=url_for('image', fname='{}.jpg'.format(id), _external=True),
                 url=url_for('summary', id=id, _external=True))
 
 @app.route('/img/<fname>')

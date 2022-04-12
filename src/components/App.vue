@@ -12,8 +12,8 @@
     <Planning v-if="state.phase == 'PLANNING'" />
     <Stream v-else-if="state.phase == 'EVENTS'" />
     <Report v-else-if="state.phase == 'REPORT'" />
-    <GameOver v-else-if="state.phase == 'GAMEOVER'" />
-    <GameWin v-else-if="state.phase == 'GAMEWIN'" />
+    <End :lose="true" v-else-if="state.phase == 'GAMEOVER'" />
+    <End :lose="false" v-else-if="state.phase == 'GAMEWIN'" />
   </template>
 </template>
 
@@ -23,8 +23,7 @@ import state from '/src/state';
 import Tip from './tip/Tip.vue';
 import Start from './Start.vue';
 import Loading from './Loading.vue';
-import GameWin from './phases/GameWin.vue';
-import GameOver from './phases/GameOver.vue';
+import End from './phases/End.vue';
 import Cutscene from './phases/Cutscene.vue';
 import Interstitial from './phases/Interstitial.vue';
 import Report from './phases/Report.vue';
@@ -57,8 +56,7 @@ export default {
     Report,
     Stream,
     Planning,
-    GameOver,
-    GameWin,
+    End,
     Loading,
     Cutscene,
     Interstitial,

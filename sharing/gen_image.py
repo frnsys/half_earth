@@ -5,26 +5,24 @@ from PIL import Image, ImageFont, ImageDraw, ImageOps
 
 msgs_lose = [
     "were ousted from power by a furious mob in {year}",
-    "were exiled by revolutionaries from the Global South in {year}",
-    "were assassinated by a coalition from the Global South in {year}",
-    "were executed by a reactionary force formed by the former wealthy nations in {year}"
+    "were exiled by popular revolutionaries {year}",
+    "were assassinated by a global coalition in {year}",
 ]
 msgs_win = [
     "ushered the world into a prosperous future",
 ]
-
-prefixes = [
-    'Try your best',
-    'Give it a shot',
-    'Take a chance',
-    'Better the world',
-    'Don\'t mess up',
-    'Have a go',
-    'Turn things around',
+msgs_died = [
+    "failed to make the world a better place in time",
+]
+msgs_pc = [
+    "were pushed out of parliament in a coup in {year}",
+    "were executed by a reactionary force formed by the former wealthy nations in {year}",
 ]
 
 bgs_win = [os.path.join('images/win', f) for f in os.listdir('images/win')]
-bgs_lose = [os.path.join('images/lose', f) for f in os.listdir('images/lose')]
+bgs_lose = [os.path.join('images/lose/generic', f) for f in os.listdir('images/lose/generic')]
+bgs_death = [os.path.join('images/lose/death', f) for f in os.listdir('images/lose/death')]
+bgs_coup = [os.path.join('images/lose/coup', f) for f in os.listdir('images/lose/coup')]
 
 # for Twitter
 size = (1200, 675)
@@ -35,12 +33,18 @@ lg_font = ImageFont.truetype('fonts/TimesTen.ttf', 86)
 sm_font = ImageFont.truetype('fonts/Inter-Medium.ttf', 42)
 badge_font = ImageFont.truetype('fonts/Inter-Light.ttf', 18)
 
+
 def msg_from_summary(summary):
-    # TODO
     if summary['win']:
         return random.choice(msgs_win)
     else:
-        return random.choice(msgs_lose)
+        s = summary['scenario']
+        if s['political_capital'] <= 0:
+            return random.choice(msgs_pc)
+        elif s['world']['year'] >= s['death_year']:
+            return random.choice(msgs_died)
+        else:
+            return random.choice(msgs_lose)
 
 
 def gen_image(year, summary, outpath):
@@ -54,7 +58,14 @@ def gen_image(year, summary, outpath):
     if summary['win']:
         bg = random.choice(bgs_win)
     else:
-        bg = random.choice(bgs_lose)
+        s = summary['scenario']
+        if s['political_capital'] <= 0:
+            bg = random.choice(bgs_coup)
+        elif s['world']['year'] >= s['death_year']:
+            bg = random.choice(bgs_death)
+        else:
+            bg = random.choice(bgs_lose)
+
 
     thumbnail = ImageOps.fit(
         Image.open(bg),
@@ -78,9 +89,9 @@ def gen_image(year, summary, outpath):
     by = 16
 
     r_padding = 15
-    rx = x-r_padding
-    ry = by - r_padding
-    draw.rounded_rectangle((rx, ry, rx+badges_width+r_padding, ry+badge_size + 2*r_padding), fill="#20202000", radius=16)
+    # rx = x - r_padding
+    # ry = by - r_padding
+    # draw.rounded_rectangle((rx, ry, rx+badges_width+r_padding, ry+badge_size + 2*r_padding), fill="#20202000", radius=16)
 
     for f in badges:
         img.paste(f, box=(x, by), mask=f)
@@ -99,7 +110,7 @@ def gen_image(year, summary, outpath):
                 font=lg_font, stroke_width=3, stroke_fill='#000')
         y += h + v_padding
 
-    text = '{} at half.earth'.format(random.choice(prefixes))
+    text = 'Play at half.earth'
     w, h = draw.textsize(text, font=sm_font)
     draw.text(((size[0] - w) / 2, size[1] - h - 16), text,
             font=sm_font, fill='#FEC007', stroke_width=2, stroke_fill='#000')
