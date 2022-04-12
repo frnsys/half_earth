@@ -1,6 +1,7 @@
 <template>
 <div class="event">
   <div class="event--body" :style="{backgroundImage: effectImageUrl }">
+    <HelpTip :text="factorTip" x="75%" y="-18px" />
     <div class="arc">{{event.arc}}</div>
     <div class="event--factors">
       <img class="event--factor" v-for="factor in event.factors" :src="icons[factorIcon(factor)]" v-tip="{icon: factorIcon(factor), text: describeFactor(factor)}"/>
@@ -17,6 +18,7 @@
 
 <script>
 import state from '/src/state';
+import HelpTip from 'components/Help.vue';
 import Effects from 'components/Effects.vue';
 import Dialogue from 'components/Dialogue.vue';
 
@@ -40,11 +42,21 @@ const FACTOR_DESCS = {
   'fuel': 'This event is influenced by the demand for fuel.',
 };
 
+const factorTip = '↓The factors behind this event.↓';
+
 export default {
   props: ['event'],
   components: {
     Effects,
-    Dialogue
+    Dialogue,
+    HelpTip,
+  },
+  beforeMount() {
+    this.factorTip = factorTip;
+  },
+  beforeUnmount() {
+    // Hide tip
+    state.help[factorTip] = true;
   },
   methods: {
     done() {

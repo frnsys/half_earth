@@ -45,17 +45,19 @@ export default {
   z-index: 10;
   width: fit-content;
   cursor: pointer;
+  color: #000;
 }
-.help-tip--inner.center{
-  transform: translate(-50%, -50%);
-    background: #FFFCE2;
+.help-tip--inner {
+  background: #FFFCE2;
   border: 1px solid #000000;
   font-family: 'W95FA', monospace;
   font-size: 0.8em;
   padding: 0.5em 1em;
   box-shadow: 2px 2px 0 #000000;
   width: fit-content;
-
+}
+.help-tip--inner.center {
+  transform: translate(-50%, -50%);
 }
 .help-tip img {
   top: 1px;
