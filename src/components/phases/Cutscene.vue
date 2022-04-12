@@ -90,12 +90,7 @@ export default {
 }
 
 .win-con, .lose-con {
-  background: #111;
-  color: #fff;
-  border-radius: 0.2em;
-  word-break: keep-all;
-  white-space: nowrap;
-  box-shadow: 0 0 6px 3px #111;
+  text-decoration: underline;
 }
 
 .cutscene--skip {

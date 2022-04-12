@@ -52,7 +52,9 @@
       </div>
       <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
     </div>
-    <button class="plan--ready" :class="{disabled: readyDisabled, highlight: readyHighlighted}" @click="enterWorld">Ready</button>
+    <div class="plan--ready-container">
+      <button class="plan--ready" :class="{disabled: readyDisabled, highlight: readyHighlighted}" @click="enterWorld">Ready</button>
+    </div>
   </div>
 </div>
 </template>
@@ -459,11 +461,19 @@ export default {
   border-right: none;
 }
 
+.plan--ready-container {
+  position: absolute;
+  max-width: 680px;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, 0);
+  text-align: right;
+  bottom: 0.5em;
+}
 .plan--ready {
   font-family: 'W95FA';
   font-size: 1.3rem;
   /* padding: 2em 1em; */
-  position: absolute;
   width: 7rem;
   height: 7rem;
   right: 0.5rem;
