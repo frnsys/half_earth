@@ -20,7 +20,9 @@ class Sound {
 
   play(loop) {
     if (loop) this.audio.loop = true;
-    this.audio.play();
+    this.audio.play().catch((_err) => {
+      // Ignore
+    });
   }
 
   pause() {
