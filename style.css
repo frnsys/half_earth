@@ -112,6 +112,7 @@ button:active{
 }
 
 .btn{
+  color: #000;
   background: #fff;
   border-radius: 0.5em;
   text-align: center;
