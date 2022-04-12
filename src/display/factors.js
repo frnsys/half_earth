@@ -277,7 +277,7 @@ const tips = {
         data: {
           icon: 'extinction_rate',
           type: 'biodiversity',
-          total: Math.round(state.gameState.world.extinction_rate),
+          total: Math.max(0, Math.round(state.gameState.world.extinction_rate)),
           current,
         }
       }

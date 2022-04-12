@@ -178,7 +178,7 @@ export default {
         'suffering',
         'plummeting',
       ];
-      idx = Math.min(idx, descs.length - 1);
+      idx = Math.max(0, Math.min(idx, descs.length - 1));
       return descs[idx];
     },
     contentedness() {
@@ -191,7 +191,7 @@ export default {
         'happy',
         'ecstatic',
       ];
-      idx = Math.min(idx, descs.length);
+      idx = Math.max(0, Math.min(idx, descs.length - 1));
       return descs[idx];
     },
     yearsLeft() {
