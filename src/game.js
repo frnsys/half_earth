@@ -39,11 +39,13 @@ function newRun(reset) {
   }
 
   let save = loadGame();
+  let newGame = false;
   if (reset || save === null) {
     let init = initState();
     Object.keys(init).forEach((k) => {
       state[k] = init[k];
     });
+    newGame = true;
   } else {
     state.loadingSave = true;
     Object.keys(save.state).forEach((k) => {
@@ -55,6 +57,12 @@ function newRun(reset) {
   let gameState = game.state();
   let year = gameState.world.year;
   state.startYear = year;
+
+  if (newGame) {
+    // Set all starting projects/processes as "viewed"
+    state.viewed = gameState.projects.filter((p) => !p.locked).map((p) => p.ref_id)
+      .concat(gameState.processes.filter((p) => !p.locked).map((p) => p.ref_id));
+  }
 
   loadMeta();
   if (debug.resetRuns) {
