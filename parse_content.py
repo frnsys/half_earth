@@ -19,6 +19,8 @@ ids = {}
 flags = {}
 rust_output = []
 
+USE_JPGS = False
+
 regions_to_patterns = json.load(open('assets/src/scaling_patterns/out/regions_pscl.json'))
 
 consts_template = \
@@ -760,7 +762,7 @@ def to_jpg(path, outpath, width=None):
         ratio = h/w
         new_h = int(ratio * width)
         im = im.resize((width, new_h), Image.ANTIALIAS)
-    im.convert('RGB').save(outpath, quality=30)
+    im.convert('RGB').save(outpath, quality=90)
 
 
 def indent(text, levels=1):
@@ -950,8 +952,7 @@ if __name__ == '__main__':
             'arc': ev.get('arc', ''),
             'dialogue': extract_dialogue(ev.get('dialogue', {})),
             'image': {
-                # 'fname': fname.replace('.png', '.jpg') if fname is not None else None,
-                'fname': fname,
+                'fname': (fname.replace('.png', '.jpg') if fname is not None else None) if USE_JPGS else fname,
                 'attribution': attribution,
             },
             'factors': list(factors),
@@ -961,10 +962,11 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
-            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
-            # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            # to_jpg(frm, to, width=600)
+            if USE_JPGS:
+                to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+                to_jpg(frm, to)
+            PRELOAD_ASSETS.append(to)
 
         all_events[id] = event
 
@@ -1011,8 +1013,7 @@ if __name__ == '__main__':
         project = {
             'name': p['name'],
             'image': {
-                # 'fname': fname if fname is not None else None,
-                'fname': fname,
+                'fname': (fname.replace('.png', '.jpg') if fname is not None else None) if USE_JPGS else fname,
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
@@ -1041,10 +1042,11 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
-            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
-            # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            # to_jpg(frm, to, width=600)
+            if USE_JPGS:
+                to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+                to_jpg(frm, to)
+            PRELOAD_ASSETS.append(to)
         projects.append(project)
     with open('assets/content/projects.json', 'w') as f:
         json.dump(projects, f)
@@ -1059,8 +1061,7 @@ if __name__ == '__main__':
         attribution = image.get('attribution', None)
         process = {
             'image': {
-                # 'fname': fname.replace('.png', '.jpg') if fname is not None else None,
-                'fname': fname,
+                'fname': (fname.replace('.png', '.jpg') if fname is not None else None) if USE_JPGS else fname,
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
@@ -1068,10 +1069,11 @@ if __name__ == '__main__':
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
-            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
-            # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            # to_jpg(frm, to, width=600)
+            if USE_JPGS:
+                to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+                to_jpg(frm, to)
+            PRELOAD_ASSETS.append(to)
         processes.append(process)
         processes_by_output[p['output']].append(p)
     with open('assets/content/processes.json', 'w') as f:
@@ -1089,18 +1091,18 @@ if __name__ == '__main__':
         attribution = image.get('attribution', None)
         industry = {
             'image': {
-                # 'fname': fname.replace('.png', '.jpg') if fname is not None else None,
-                'fname': fname,
+                'fname': (fname.replace('.png', '.jpg') if fname is not None else None) if USE_JPGS else fname,
                 'attribution': attribution,
             },
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
-            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
-            # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            # to_jpg(frm, to, width=600)
+            if USE_JPGS:
+                to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+                to_jpg(frm, to)
+            PRELOAD_ASSETS.append(to)
         industries.append(industry)
     with open('assets/content/industries.json', 'w') as f:
         json.dump(industries, f)
@@ -1113,18 +1115,18 @@ if __name__ == '__main__':
         attribution = image.get('attribution', None)
         region = {
             'image': {
-                # 'fname': fname.replace('.png', '.jpg') if fname is not None else None,
-                'fname': fname,
+                'fname': (fname.replace('.png', '.jpg') if fname is not None else None) if USE_JPGS else fname,
                 'attribution': attribution,
             },
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
             to = 'assets/content/images/{}'.format(fname)
-            PRELOAD_ASSETS.append(to)
             shutil.copyfile(frm, to)
-            # to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
-            # to_jpg(frm, to, width=600)
+            if USE_JPGS:
+                to = 'assets/content/images/{}'.format(fname.replace('.png', '.jpg'))
+                to_jpg(frm, to)
+            PRELOAD_ASSETS.append(to)
         regions.append(region)
     with open('assets/content/regions.json', 'w') as f:
         json.dump(regions, f)
