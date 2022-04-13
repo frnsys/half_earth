@@ -160,10 +160,10 @@ export default {
     onKeydown(e){
       if (VERSION === 'dev' && e.key === 'Escape') {
         this.end();
-      } else if (e.key === 'Enter') {
+      } else if (e.key === 'Enter' && this.current !== null) {
         if (this.isLastLine) {
           this.end();
-        } else {
+        } else if (!this.line.decision) {
           this.advance();
         }
       }
