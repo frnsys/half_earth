@@ -34,6 +34,7 @@ function updateFactors() {
 // Start a new run
 function newRun(reset) {
   game = GameInterface.new(Difficulty.Normal);
+  let startYear = game.state().world.year;
   if (reset) {
     clearSave();
   }
@@ -55,8 +56,7 @@ function newRun(reset) {
     game.load_event_pool(save.event_pool);
   }
   let gameState = game.state();
-  let year = gameState.world.year;
-  state.startYear = year;
+  state.startYear = startYear;
 
   if (newGame) {
     // Set all starting projects/processes as "viewed"
@@ -65,9 +65,12 @@ function newRun(reset) {
   }
 
   loadMeta();
+  gameState = game.state();
   if (debug.resetRuns) {
     game.set_runs_played(0);
     state.tutorial = 0;
+  } else if (gameState.runs > 0) {
+    state.tutorial = tutorial.READY + 1;
   }
 
   updateState();
