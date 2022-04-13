@@ -115,7 +115,12 @@ export default {
     planChangeEvents() {
       this.events = game.roll.planning('PlanChange');
       this.showEvent();
-    }
+    },
+    afterEvents() {
+      if (state.gameState.flags.includes('SkipTutorial')) {
+        state.tutorial = tutorial.READY + 1;
+      }
+    },
   }
 }
 </script>

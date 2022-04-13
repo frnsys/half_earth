@@ -7887,7 +7887,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -8860,7 +8861,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -10265,7 +10267,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -10288,7 +10291,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -10433,7 +10437,7 @@ pub fn events() -> Vec<Event> {
                 }
             ],
             prob_modifier: 1.0,
-            branches: vec![(vec![], vec![]), (vec![], vec![]), (vec![], vec![]), (vec![], vec![])],
+            branches: vec![(vec![], vec![]), (vec![Effect::AddFlag(Flag::SkipTutorial)], vec![]), (vec![], vec![]), (vec![], vec![])],
             intensity: 0
         },
         Event {
@@ -10676,7 +10680,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -11536,7 +11541,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -12310,7 +12316,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -12509,7 +12516,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -12797,7 +12805,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -13009,6 +13018,7 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
                         Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -13251,7 +13261,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],
@@ -13766,7 +13777,8 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![
-                        Condition::RunsPlayed(Comparator::Equal, 0)
+                        Condition::RunsPlayed(Comparator::Equal, 0),
+                        Condition::WithoutFlag(Flag::SkipTutorial)
                     ]
                 }
             ],

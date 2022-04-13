@@ -167,6 +167,9 @@ const CONDITIONS = {
   HasFlag: {
     flag: true,
   },
+  WithoutFlag: {
+    flag: true,
+  },
   HeavyProjects: {
     compare: true,
   },

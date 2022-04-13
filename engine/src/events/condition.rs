@@ -31,6 +31,7 @@ pub enum Condition {
     NPCRelationship(usize, NPCRelation),
     FeedstockYears(Feedstock, Comparator, f32),
     HasFlag(Flag),
+    WithoutFlag(Flag),
     HeavyProjects(Comparator, usize),
     ProtectLand(Comparator, f32),
 }
@@ -149,6 +150,9 @@ impl Condition {
             },
             Condition::HasFlag(flag) => {
                 state.flags.contains(flag)
+            },
+            Condition::WithoutFlag(flag) => {
+                !state.flags.contains(flag)
             },
             Condition::HeavyProjects(comp, n) => {
                 let heavy_projects = state.projects.iter()
