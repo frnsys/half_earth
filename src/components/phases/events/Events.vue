@@ -2,7 +2,7 @@
 <Hud />
 <div id="event-stream">
   <div id="event-stream--year">
-    {{year}}
+    {{state.gameState.world.year}}
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
   <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" :style="{'background-color': warmingColour}" />
@@ -47,11 +47,11 @@ export default {
   data() {
     let events = game.roll.world('Start');
     return {
+      state,
       events,
       toasts: [],
       time: 0,
       predialogue: true,
-      year: state.gameState.world.year,
       updates: [],
       stopped: false,
       done: false
