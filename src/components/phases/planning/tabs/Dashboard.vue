@@ -54,7 +54,7 @@
       <img :src="icons.energy" />
       <div class="dashboard--item-name">Energy Use</div>
     </div>
-    <div class="dashboard--item">
+    <div class="dashboard--item" v-tip="factors.tips.water('Current water use.')">
       <div class="minicard">
         <span :style="{color: currentWaterStress.color}">{{currentWaterStress.label}}</span>
         <div class="dashboard--change" v-if="changes.water != 0" v-tip="{icon: 'water', text: 'The estimated value after production changes have finished.'}">

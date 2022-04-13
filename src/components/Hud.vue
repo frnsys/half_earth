@@ -84,7 +84,7 @@ export default {
     },
     emissionsTip() {
       return factors.tips.emissions(
-        `Current annual emissions are ${state.gameState.world.emissions.toFixed(1)}. <b class="tip-goal">Your goal is to get this to below 0.</b>`);
+        `Current annual emissions are ${state.gameState.world.emissions.toFixed(1)} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>`);
     }
   }
 };

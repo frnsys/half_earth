@@ -178,7 +178,7 @@ function productionFactors(k) {
       displayAmount: displayAmount,
       displayProduced: out != null ? format.percent(p.demand/state.gameState.output_demand[out], true) : null,
     }
-  }).filter((p) => p.output != null || (p.output == null && p.amount !== 0));
+  }).filter((p) => p.amount !== 0 && (p.output != null || (p.output == null && p.amount !== 0)));
 }
 
 function rank() {
