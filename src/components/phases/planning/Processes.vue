@@ -69,6 +69,7 @@ import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts.js';
 import format from '/src/display/format';
+import display from '/src/display/display';
 import ProcessCard from 'components/cards/ProcessCard.vue';
 import tutorial from '/src/tutorial';
 
@@ -153,6 +154,16 @@ export default {
     estimatedChanges() {
       if (this.points !== 0) return '';
 
+      // Total demand for each of these
+      let before = {
+        'emissions': state.gameState.world.emissions/1e-15, // convert from gtco2eq to g co2eq
+        'energy use': state.gameState.output_demand.fuel + state.gameState.output_demand.electricity,
+        'land use': state.gameState.resources_demand.land,
+        'water use': state.gameState.resources_demand.water,
+        'the extinction rate': state.gameState.world.extinction_rate,
+      };
+
+      // Demand for each of these just from the current set of processes
       let current = {
         'emissions': 0,
         'energy use': 0,
@@ -162,13 +173,15 @@ export default {
       };
       this.processes.forEach((p) => {
         let mix_share = p.mix_share;
-        current['land use'] += p.resources.land * mix_share;
-        current['water use'] += p.resources.water * mix_share;
-        current['energy use'] += (p.resources.electricity + p.resources.fuel) * mix_share;
-        current['emissions'] += format.co2eq(p.byproducts) * mix_share;
-        current['the extinction rate'] += p.byproducts.biodiversity * mix_share;
+        let total = mix_share/20 * state.gameState.output_demand[display.enumKey(p.output)];
+        current['land use'] += p.resources.land * total;
+        current['water use'] += p.resources.water * total;
+        current['energy use'] += (p.resources.electricity + p.resources.fuel) * total;
+        current['emissions'] += format.co2eq(p.byproducts) * total;
+        current['the extinction rate'] += p.byproducts.biodiversity * total;
       });
 
+      // Changed demand for each of these, just for the current set of processes
       let changed = {
         'emissions': 0,
         'energy use': 0,
@@ -178,25 +191,33 @@ export default {
       };
       this.processes.forEach((p) => {
         let mix_share = p.mix_share + (state.processMixChanges[this.output][p.id] || 0);
-        changed['land use'] += p.resources.land * mix_share;
-        changed['water use'] += p.resources.water * mix_share;
-        changed['energy use'] += (p.resources.electricity + p.resources.fuel) * mix_share;
-        changed['emissions'] += format.co2eq(p.byproducts) * mix_share;
-        changed['the extinction rate'] += p.byproducts.biodiversity * mix_share;
+        let total = mix_share/20 * state.gameState.output_demand[display.enumKey(p.output)];
+        changed['land use'] += p.resources.land * total;
+        changed['water use'] += p.resources.water * total;
+        changed['energy use'] += (p.resources.electricity + p.resources.fuel) * total;
+        changed['emissions'] += format.co2eq(p.byproducts) * total;
+        changed['the extinction rate'] += p.byproducts.biodiversity * total;
       });
 
-      let descs = Object.keys(current).map((k) => {
+      // Changed overall/total/global demand for each of these
+      let after = {};
+      Object.keys(before).forEach((k) => {
+        // Subtract out previous process demand, then add in changed process demand
+        after[k] = before[k] - current[k] + changed[k];
+      });
+
+      let descs = Object.keys(before).map((k) => {
         let change = 0;
-        if (current[k] == 0) {
-          if (changed[k] > 0) {
+        if (before[k] == 0) {
+          if (after[k] > 0) {
             change = 1;
-          } else if (changed[k] < 0) {
+          } else if (after[k] < 0) {
             change = -1;
           } else {
             change = 0;
           }
         } else {
-          change = (changed[k] - current[k])/current[k];
+          change = (after[k] - before[k])/before[k];
         }
         change = Math.round(change * 100);
         if (change > 0.0) {
