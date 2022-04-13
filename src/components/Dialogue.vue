@@ -170,18 +170,20 @@ export default {
     },
     play() {
       this.revealed = false;
-      this.$refs.text.innerHTML = '';
-      let el = document.createElement('div');
-      el.innerHTML = this.line.text;
-      if (this.line.text.length > 0) {
-        if (this.revealAnim) clearInterval(this.revealAnim);
-        revealChars(this.$refs.text, extractChars(el), {
-          onStart: (revealAnim) => this.revealAnim = revealAnim
-        }).then(() => {
+      if (this.$refs.text) {
+        this.$refs.text.innerHTML = '';
+        let el = document.createElement('div');
+        el.innerHTML = this.line.text;
+        if (this.line.text.length > 0) {
+          if (this.revealAnim) clearInterval(this.revealAnim);
+          revealChars(this.$refs.text, extractChars(el), {
+            onStart: (revealAnim) => this.revealAnim = revealAnim
+          }).then(() => {
+            this.revealed = true;
+          });
+        } else {
           this.revealed = true;
-        });
-      } else {
-        this.revealed = true;
+        }
       }
     },
     end() {
@@ -245,8 +247,10 @@ export default {
     skipReveal() {
       if (this.revealAnim) clearInterval(this.revealAnim);
       if (this.current !== null) {
-        this.$refs.text.innerHTML = this.line.text;
-        this.revealed = true;
+        if (this.$refs.text) {
+          this.$refs.text.innerHTML = this.line.text;
+          this.revealed = true;
+        }
       }
     }
   },
