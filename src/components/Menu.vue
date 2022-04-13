@@ -153,9 +153,9 @@ header .dropdown-menu-inset {
   display: inline-block;
   width: 48px;
   height: 48px;
-  position: absolute;
+  position: fixed;
   top: 1em;
-  right: 0.5em;
+  right: 0.75em;
 }
 .dropdown-menu-button {
   background: #C4BAB4;
@@ -305,7 +305,7 @@ header .dropdown-menu-inset {
   }
   .dropdown-menu-content {
     min-height: auto;
-    align-self: center;
+    align-self: start;
   }
 }
 </style>
