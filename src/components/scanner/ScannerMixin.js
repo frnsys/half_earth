@@ -10,6 +10,8 @@ export default {
     }
   },
   mounted() {
+    this.scanTimeMultiplier = 1;
+
     this.$nextTick(() => {
       this.getEdges();
 
@@ -123,15 +125,18 @@ export default {
     },
     scanCard() {
       let progressRef = this.progressRef();
-      this.scanAnim = animate(0, 100, this.scanTime * 1000, (val) => {
+      this.scanAnim = animate(0, 100, this.scanTime * 1000 * this.scanTimeMultiplier, (val) => {
         progressRef.style.width = `${val}%`;
       }, () => {
         if (this.scanning) {
+          this.scanTimeMultiplier *= 4/5;
+          this.scanTimeMultiplier = Math.max(0.2, this.scanTimeMultiplier);
           this.finishScan();
         }
       }, true);
     },
     stopScanningCard() {
+      this.scanTimeMultiplier = 1;
       this.scanning = false;
       let ref = this.targetRef();
       ref.classList.remove('scanning');
