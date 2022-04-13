@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import state from '/src/state';
 
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isSafari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
 const Surface = RPC.initialize(
   new Worker(new URL('./surface.worker.js', import.meta.url))
 );
@@ -88,7 +89,7 @@ class Globe {
     this.temperature = await new Temperature(startYear);
     await this.temperature.init();
 
-    if (!isMobile) {
+    if (!isMobile && !isSafari) {
       this.surface = await new Surface();
       await this.surface.init();
 

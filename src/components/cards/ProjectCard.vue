@@ -1,7 +1,7 @@
 <template>
-<Card :background="style.background" :color="style.color" :class="{'in-progress': status == 'Building', 'is-new': isNew}">
+<Card :background="style.background" :color="style.color" :class="{'in-progress': project.status == 'Building', 'is-new': isNew}">
   <template v-slot:header>
-    <div>{{group}}</div>
+    <div>{{project.group}}</div>
     <img v-if="isNew" class="new-card-icon" src="/assets/new.svg" />
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
@@ -12,25 +12,25 @@
       </template>
     </div>
     <div v-else class="project-cost" v-tip="costTip">
-      <template v-if="kind != 'Policy' || status == 'Building'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="kind == 'Policy' && status != 'Building'">
+      <template v-if="project.kind != 'Policy' || project.status == 'Building'"><img :src="icons.time"/> </template>{{remainingCost}}<img :src="icons.political_capital" v-if="project.kind == 'Policy' && project.status != 'Building'">
     </div>
     <img class="barcode" src="/assets/barcode.png" />
   </template>
   <template v-slot:figure>
-    <div class="project-required-majority" v-if="required_majority > 0 && !majoritySatisfied">
+    <div class="project-required-majority" v-if="project.required_majority > 0 && !majoritySatisfied">
       <div>
         <img :src="icons.warning" />
         Because of opposition, this requires a majority in parliament.
       </div>
     </div>
-    <img class="card-image" :src="image.fname ? `/assets/content/images/${image.fname}` : '/assets/missing_content.png'" />
-    <div v-if="kind != 'Policy' && status == 'Building'" class="card-tack-ul project-points">
+    <img class="card-image" :src="info.image.fname ? `/assets/content/images/${info.image.fname}` : '/assets/missing_content.png'" />
+    <div v-if="project.kind != 'Policy' && project.status == 'Building'" class="card-tack-ul project-points">
       <img
         v-for="i in consts.maxPoints"
         class="pip"
-        v-tip="{text: `POINT: ${i} ${points} ${kind} points are allocated to this project`, icon: type}"
-        :class="{'empty-point': i > points}"
-        :src="icons[type]">
+        v-tip="{text: `POINT: ${i} ${project.points} ${project.kind} points are allocated to this project`, icon: type}"
+        :class="{'empty-point': i > project.points}"
+        :src="icons[project.type]">
     </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
@@ -41,13 +41,13 @@
     </div>
   </template>
   <template v-slot:name>
-    {{name}}
+    {{project.name}}
   </template>
   <template v-slot:body>
-    <div class="passed-stamp" v-if="kind == 'Policy' && (status == 'Active' || status == 'Building')"><img src="/assets/stamp.svg"></div>
+    <div class="passed-stamp" v-if="project.kind == 'Policy' && (project.status == 'Active' || project.status == 'Building')"><img src="/assets/stamp.svg"></div>
     <Effects class="solo-effects" :effects="activeEffects" />
 
-    <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="status == 'Active' && nextUpgrade !== null">
+    <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="project.status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">
         <template v-if="upgradeQueued">
           <div>Upgrading in one planning cycle.</div>
@@ -60,18 +60,18 @@
       <Effects :effects="nextUpgrade.effects" />
     </div>
 
-    <div class="project-upgrade" v-if="status == 'Active' && canDowngrade">
+    <div class="project-upgrade" v-if="project.status == 'Active' && canDowngrade">
       <div class="project-upgrade--title">
         <div>Prev Level</div>
       </div>
       <Effects :effects="prevUpgrade.effects" />
     </div>
 
-    <div class="project-status" v-if="status == 'Building'">{{ kind == 'Research' ? 'Researching' : 'Building'}}</div>
+    <div class="project-status" v-if="project.status == 'Building'">{{ project.kind == 'Research' ? 'Researching' : 'Building'}}</div>
 
   </template>
   <template v-slot:top-back>
-    <p class="card-desc">{{description}}</p>
+    <p class="card-desc">{{info.description}}</p>
   </template>
   <template v-slot:bot-back>
     <div class="political-effects" v-if="opposersDetailed.length > 0 || supportersDetailed.length > 0">
@@ -93,7 +93,7 @@
     </div>
     <div v-else class="card-spacer"></div>
     <div class="card-image-attribution">
-      Image: {{image.attribution}}
+      Image: {{info.image.attribution}}
     </div>
   </template>
 </Card>
@@ -166,29 +166,18 @@ export default {
     Card,
     Effects,
   },
-  data() {
-    return {
-      ...this.project,
-      ...PROJECTS[this.project.id],
-    };
-  },
-  watch: {
-    project(project) {
-      // Kind of hacky, but update data when the project changes
-      Object.keys(project).forEach((k) => {
-        this[k] = project[k];
-      });
-    }
-  },
   computed: {
+    info() {
+      return PROJECTS[this.project.id];
+    },
     isNew() {
-      return !state.viewed.includes(this.ref_id);
+      return !state.viewed.includes(this.project.ref_id);
     },
     type() {
-      return this.kind.toLowerCase();
+      return this.project.kind.toLowerCase();
     },
     style() {
-      let style = consts.groupStyle[this.group];
+      let style = consts.groupStyle[this.project.group];
       if (!style) {
         return {
           background: '#e0e0e0',
@@ -204,16 +193,16 @@ export default {
     remainingCost() {
       if (this.implemented) {
         return null;
-      } else if (this.status == 'Building') {
-        if (this.kind == 'Policy') {
+      } else if (this.project.status == 'Building') {
+        if (this.project.kind == 'Policy') {
           return '1 planning cycle left';
         } else {
           let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
           return `${years} yrs left`;
         }
       } else {
-        let cost = this.points > 0 ? this.estimate : this.cost;
-        if (this.kind == 'Policy') {
+        let cost = this.project.points > 0 ? this.project.estimate : this.project.cost;
+        if (this.project.kind == 'Policy') {
           let changes = state.planChanges[this.project.id];
           if (changes && changes.withdrawn) {
             return 0;
@@ -226,17 +215,17 @@ export default {
       }
     },
     hasLevels() {
-      return this.upgrades.length > 0;
+      return this.info.upgrades.length > 0;
     },
     nextUpgrade() {
-      if (this.upgrades.length === 0) {
+      if (this.info.upgrades.length === 0) {
         return null;
       }
-      let idx = this.level;
-      if (idx >= this.upgrades.length) {
+      let idx = this.project.level;
+      if (idx >= this.info.upgrades.length) {
         return null;
       }
-      let upgrade = this.upgrades[idx];
+      let upgrade = this.info.upgrades[idx];
 
       let cost = upgrade.cost;
       let changes = state.planChanges[this.project.id];
@@ -245,13 +234,13 @@ export default {
       }
       return {
         cost,
-        effects: this.upgrades[idx].effects,
+        effects: this.info.upgrades[idx].effects,
       }
     },
     prevUpgrade() {
       if (this.canDowngrade) {
-        let idx = this.level - 2;
-        let upgrade = idx < 0 ? {effects: this.effects, cost: 0} : this.upgrades[idx];
+        let idx = this.project.level - 2;
+        let upgrade = idx < 0 ? {effects: this.info.effects, cost: 0} : this.info.upgrades[idx];
         return {
           cost: upgrade.cost,
           effects: upgrade.effects,
@@ -260,50 +249,50 @@ export default {
       return null;
     },
     canDowngrade() {
-      return this.kind == 'Policy' && this.level > 0;
+      return this.project.kind == 'Policy' && this.project.level > 0;
     },
     upgradeQueued() {
-        return state.queuedUpgrades[this.id] == true;
+        return state.queuedUpgrades[this.project.id] == true;
     },
     activeEffects() {
-      return activeEffects(this);
+      return activeEffects(this.project);
     },
     supportersDetailed() {
-      return this.supporters
+      return this.project.supporters
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
     },
     opposersDetailed() {
-      return this.opposers
+      return this.project.opposers
         .filter((id) => !state.gameState.npcs[id].locked)
         .map((id) => NPCS[id]);
     },
     requiredMajorityFraction() {
-      return decimalToFraction(this.required_majority);
+      return decimalToFraction(this.project.required_majority);
     },
     majoritySatisfied() {
       if (state.gameState.flags.includes('ParliamentSuspended')) {
         return true;
       } else {
         let playerSeats = game.playerSeats();
-        return playerSeats >= this.required_majority;
+        return playerSeats >= this.project.required_majority;
       }
     },
     costTip() {
-      if (this.kind == 'Policy') {
+      if (this.project.kind == 'Policy') {
         return {
           icon: 'political_capital',
           text: `This policy costs ${this.remainingCost} political capital to implement.`
         }
       } else {
         return {
-          icon: this.type,
-          text: `This will take about ${this.remainingCost} to finish. Allocate more ${this.kind} points to accelerate its progress.`
+          icon: this.project.type,
+          text: `This will take about ${this.remainingCost} to finish. Allocate more ${this.project.kind} points to accelerate its progress.`
         }
       }
     },
     implemented() {
-      return this.status == 'Finished' || this.status == 'Active';
+      return this.project.status == 'Finished' || this.project.status == 'Active';
     },
   },
   methods: {
@@ -315,15 +304,15 @@ export default {
 
         // Policies upgraded instantly
         if (this.kind == 'Policy') {
-          game.upgradeProject(this.id);
+          game.upgradeProject(this.project.id);
         } else {
-          state.queuedUpgrades[this.id] = true;
+          state.queuedUpgrades[this.project.id] = true;
         }
         this.$emit('change');
       }
     },
     halt() {
-      game.stopProject(this.id);
+      game.stopProject(this.project.id);
       this.$emit('change');
     }
   }

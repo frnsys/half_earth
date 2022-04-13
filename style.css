@@ -81,6 +81,7 @@ main {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 320px;
 }
 
 button {
