@@ -8,7 +8,7 @@ import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 import tutorial from '/src/tutorial';
 
 // Version timestamp must be >= this value
-const EXPIRED_TIMESTAMP = 1649382197;
+const EXPIRED_TIMESTAMP = 1649864144;
 
 
 // Would let player choose difficulty;

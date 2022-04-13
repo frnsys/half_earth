@@ -36,7 +36,7 @@
       <div class="plan--production-icons">
         <img class="plan-new-icon" v-if="anyNewProcesses" src="/assets/new.svg" />
         <img class="plan-alert" v-if="processesOverLimit.length > 0" :src="icons.alert" v-tip="{icon: 'alert', text: `The following processes can't produce as much as they need to: ${processesOverLimit.join(', ')}`}"/>
-        <img class="plan-alert" v-if="productionShortages" :src="icons.alert" v-tip="{icon: 'alert', text: `${productionShortages}. A resource such as land or water may be overexploited and thus limiting how much processes can produce.`}"/>
+        <img class="plan-alert" v-if="productionShortages" :src="icons.alert" v-tip="{icon: 'alert', text: `${productionShortages}. ${inputShortages}`}"/>
       </div>
       <div class="plan--production--processes">
         <MiniProcess v-for="process in maxProcesses" :process="process" :key="process.id" />
@@ -74,6 +74,8 @@ import MiniProject from 'components/cards/mini/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
 import tutorial from '/src/tutorial';
+
+const lf = new Intl.ListFormat('en');
 
 const charts = {
   'land': 'Land Use',
@@ -130,9 +132,36 @@ export default {
     }
   },
   computed: {
+    inputShortages() {
+      let keys = [];
+
+      let resourceShortages = {};
+      Object.keys(state.gameState.required_resources).forEach((k) => {
+        let shortage = state.gameState.required_resources[k] - state.gameState.resources[k];
+        if (shortage > 0) {
+          resourceShortages[k] = shortage;
+          keys.push(k);
+        }
+      });
+      let feedstockShortages = {};
+      Object.keys(state.gameState.required_feedstocks).forEach((k) => {
+        let shortage = state.gameState.required_feedstocks[k] - state.gameState.feedstocks[k];
+        if (shortage > 0 && k !== 'other' && k !== 'soil') {
+          feedstockShortages[k] = shortage;
+          keys.push(k);
+        }
+      });
+
+      if (keys.length > 0) {
+        return `There is not enough ${lf.format(keys)}. You should change your production mixes to use less of these or reduce demand elsewhere.`;
+      } else {
+        return '';
+      }
+    },
     productionShortages() {
       let total = 0;
       let problems = {};
+
       Object.keys(state.gameState.output_demand).forEach((k) => {
         let met = state.gameState.produced[k]/state.gameState.output_demand[k];
         if (met >= 0.99) {
@@ -150,7 +179,7 @@ export default {
       let keys = Object.keys(problems);
       if (keys.length > 0) {
         if (keys.length > 1) {
-          return `There are multiple production shortages: ${keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${problems[k]})</b>`).join(', ')}`;
+          return `There are multiple production shortages: ${lf.format(keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${problems[k]})</b>`))}`;
         } else {
           return `There is a <b class="shortage-${problems[keys[0]]}">${problems[keys[0]]} ${display.enumDisplay(keys[0])}</b> production shortage`;
         }

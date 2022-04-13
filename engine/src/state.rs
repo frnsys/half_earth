@@ -60,6 +60,9 @@ pub struct State {
     pub produced_by_process: Vec<f32>,
     pub consumed_resources: ResourceMap<f32>,
     pub consumed_feedstocks: FeedstockMap<f32>,
+    pub required_resources: ResourceMap<f32>,
+    pub required_feedstocks: FeedstockMap<f32>,
+
     pub protected_land: f32,
 
     last_outlook: f32,
@@ -115,6 +118,8 @@ impl State {
             produced_by_process: Vec::new(),
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
+            required_resources: resources!(),
+            required_feedstocks: feedstocks!(),
             protected_land: 0.1, // Starts at 10%
 
             last_outlook: starting_outlook,
@@ -123,9 +128,11 @@ impl State {
         let (output_demand, _) = state.calculate_demand();
         let orders: Vec<ProductionOrder> = state.processes.iter()
             .map(|p| p.production_order(&output_demand)).collect();
-        let (required_resources, _) = calculate_required(&orders);
+        let (required_resources, required_feedstocks) = calculate_required(&orders);
         state.resources.electricity = required_resources.electricity;
         state.resources.fuel = required_resources.fuel;
+        state.required_resources = required_resources;
+        state.required_feedstocks = required_feedstocks;
 
         // Bit of a hack to generate initial state values
         state.step_production();
@@ -329,6 +336,8 @@ impl State {
         let (required_resources, required_feedstocks) = calculate_required(&orders);
         self.output_demand.electricity += required_resources.electricity;
         self.output_demand.fuel += required_resources.fuel;
+        self.required_resources = required_resources;
+        self.required_feedstocks = required_feedstocks;
 
         // Now re-calculate orders
         let orders: Vec<ProductionOrder> = self.processes.iter()
@@ -652,6 +661,7 @@ impl Saveable for State {
     fn save(&self) -> Value {
         json!({
             "world": self.world.save(),
+            "death_year": self.death_year,
             "industries": self.industries.iter().map(|o| o.save()).collect::<Vec<Value>>(),
             "projects": self.projects.iter().map(|o| o.save()).collect::<Vec<Value>>(),
             "processes": self.processes.iter().map(|o| o.save()).collect::<Vec<Value>>(),
@@ -673,6 +683,8 @@ impl Saveable for State {
             "produced_by_process": self.produced_by_process,
             "consumed_resources": self.consumed_resources,
             "consumed_feedstocks": self.consumed_feedstocks,
+            "required_resources": self.required_resources,
+            "required_feedstocks": self.required_feedstocks,
             "protected_land": self.protected_land,
             "last_outlook": self.last_outlook,
         })
@@ -696,6 +708,7 @@ impl Saveable for State {
         for (o, o_s) in self.npcs.iter_mut().zip(npcs) {
             o.load(o_s);
         }
+        self.death_year = coerce(&state["death_year"]);
         self.political_capital = coerce(&state["political_capital"]);
         self.research_points = coerce(&state["research_points"]);
         self.requests = coerce(&state["requests"]);
@@ -713,6 +726,8 @@ impl Saveable for State {
         self.produced_by_process = coerce(&state["produced_by_process"]);
         self.consumed_resources = coerce(&state["consumed_resources"]);
         self.consumed_feedstocks = coerce(&state["consumed_feedstocks"]);
+        self.required_resources = coerce(&state["required_resources"]);
+        self.required_feedstocks = coerce(&state["required_feedstocks"]);
         self.protected_land = coerce(&state["protected_land"]);
         self.last_outlook = coerce(&state["last_outlook"]);
     }
