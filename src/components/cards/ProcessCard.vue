@@ -133,6 +133,21 @@ export default {
     Card,
     IntensityIcon,
   },
+  mounted() {
+    if (this.hasChange) {
+      let i = 0;
+      let els = [...this.$el.querySelectorAll('.process-mix-cell')];
+      if (this.change < 0) {
+        els.reverse();
+      }
+      els.forEach((el) => {
+        if (el.classList.contains('shrink') || el.classList.contains('grow')) {
+          el.style.animationDelay = `${i*0.25}s`;
+          i++;
+        }
+      });
+    }
+  },
   data() {
     return {
       state,
@@ -219,9 +234,11 @@ export default {
         return 'very-high';
       }
     },
+    change() {
+      return state.processMixChanges[this.process.output][this.process.id] || 0;
+    },
     hasChange() {
-      let change = state.processMixChanges[this.process.output][this.process.id] || 0;
-      return change !== 0;
+      return this.change !== 0;
     },
     changedMixShare() {
       let change = state.processMixChanges[this.process.output][this.process.id] || 0;
@@ -389,16 +406,63 @@ color: #63FF96;
 }
 .process-mix-cell.active.shrink {
   background: #F28435;
-  box-shadow: 0 0 0px #F28435;
+  box-shadow: 0 0 2px #F28435;
+  animation-duration: 0.5s;
+  animation-name: shrink-glow;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
+
 .process-mix-cell.grow {
   background: #43CC70;
   box-shadow: 0 0 8px #43CC70;
+  animation-duration: 0.5s;
+  animation-name: grow-glow;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
+
+@keyframes shrink-glow {
+  from {
+    box-shadow: 0 0 2px #f28435;
+    opacity: 0.7;
+  }
+  to {
+    box-shadow: 0 0 4px #f28435;
+    opacity: 1.0;
+  }
+}
+
+@keyframes grow-glow {
+  from {
+    box-shadow: 0 0 8px #43CC70;
+    opacity: 0.7;
+  }
+  to {
+    box-shadow: 0 0 12px #43CC70;
+    opacity: 1.0;
+  }
+}
+
+@keyframes excess-glow {
+  from {
+    box-shadow: 0 0 8px #DC322E !important;
+    opacity: 0.7;
+  }
+  to {
+    box-shadow: 0 0 12px #DC322E !important;
+    opacity: 1.0;
+  }
+}
+
 .process-mix-cell.excess {
   background: #DC322E !important;
   box-shadow: 0 0 8px #DC322E !important;
   opacity: 1 !important;
+  animation-duration: 0.5s;
+  animation-name: excess-glow;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 .process-mix-cell.disabled {
   background: #838383;
