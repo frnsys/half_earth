@@ -152,8 +152,6 @@ export default {
       }, 0)/2);
     },
     estimatedChanges() {
-      if (this.points !== 0) return '';
-
       // Total demand for each of these
       let before = {
         'emissions': state.gameState.world.emissions/1e-15, // convert from gtco2eq to g co2eq
