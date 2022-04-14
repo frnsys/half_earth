@@ -102,7 +102,7 @@ impl Condition {
             Condition::OutputDemandGap(output, comp, other_val) => {
                 let available = state.produced[*output];
                 let demand = state.output_demand[*output];
-                let val = (available - demand)/demand;
+                let val = 1. - (available/demand).min(1.);
                 comp.eval(val, *other_val)
             },
             Condition::Demand(output, comp, other_val) => {

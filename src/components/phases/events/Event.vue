@@ -1,7 +1,7 @@
 <template>
 <div class="event">
   <div class="event--body" :style="{backgroundImage: effectImageUrl }">
-    <HelpTip :text="factorTip" x="75%" y="-18px" />
+    <HelpTip :text="factorTip" x="55%" y="-18px" />
     <div class="arc">{{event.arc}}</div>
     <div class="event--factors">
       <img class="event--factor" v-for="factor in event.factors" :src="icons[factorIcon(factor)]" v-tip="{icon: factorIcon(factor), text: describeFactor(factor)}"/>
@@ -42,7 +42,7 @@ const FACTOR_DESCS = {
   'fuel': 'This event is influenced by the demand for fuel.',
 };
 
-const factorTip = '↓The factors behind this event.↓';
+const factorTip = 'The factors behind this event.↓';
 
 export default {
   props: ['event'],
