@@ -366,6 +366,7 @@ export default {
   padding: 1em;
   text-align: center;
   font-size: 0.8em;
+  z-index: 0;
 }
 .toast--body {
   display: inline-block;
