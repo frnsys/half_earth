@@ -64,7 +64,7 @@
         </tr>
 
         <tr v-for="project in state.cycleStartState.completedProjects">
-          <td colspan="4">{{state.gameState.projects[project].name}}</td>
+          <td colspan="4" v-tip="{icon: 'project', text: 'This project was completed.', card: {type: 'Project', data: state.gameState.projects[project]}}">{{state.gameState.projects[project].name}}</td>
           <td><strong>{{format.sign(consts.pcPerCompletedProject)}}</strong></td>
         </tr>
         <tr class="report-spacer" v-if="state.cycleStartState.completedProjects.length != 0"></tr>
@@ -93,6 +93,16 @@
           <td>{{npc.seats}}</td>
         </tr>
         <tr class="report-spacer" v-if="seatChanges.length != 0"></tr>
+
+        <tr class="report-header" v-if="worldEvents.length != 0">
+          <td colspan="2">Events</td>
+          <td colspan="3" class="report-header-desc">Tap for more details.</td>
+        </tr>
+        <tr v-for="ev in worldEvents">
+          <td colspan="5" v-tip="ev.tip">{{ev.name}}</td>
+        </tr>
+        <tr class="report-spacer" v-if="worldEvents.length != 0"></tr>
+
         <tr class="report-header" v-if="regionIncomeChanges.length != 0">
           <td>Regions</td>
         </tr>
@@ -110,7 +120,6 @@
             <img :src="icons[ev.icon]" v-for="ev in r.events">
           </td>
         </tr>
-
       </table>
         </section>
       <button class="btn" @click="nextPhase">Next</button>
@@ -125,6 +134,7 @@ import state from '/src/state';
 import consts from '/src/consts';
 import intensity from '/src/display/intensity';
 import Hud from 'components/Hud.vue';
+import EVENTS from '/assets/content/events.json';
 import EventsMixin from 'components/EventsMixin';
 import IntensityBar from 'components/cards/IntensityBar.vue';
 import factors from '/src/display/factors';
@@ -190,6 +200,22 @@ export default {
         return {
           name: state.gameState.world.regions[id].name,
           events: state.annualRegionEvents[id],
+        }
+      });
+    },
+    worldEvents() {
+      return state.worldEvents.map((ev_id) => {
+        let ev = EVENTS[ev_id];
+        return {
+          name: ev.name,
+          tip: {
+            icon: 'chance',
+            text: 'This event occurred during this planning cycle.',
+            card: {
+              type: 'Event',
+              data: ev
+            }
+          }
         }
       });
     },

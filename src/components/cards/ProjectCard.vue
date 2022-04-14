@@ -30,7 +30,7 @@
         class="pip"
         v-tip="{text: `POINT: ${i} ${project.points} ${project.kind} points are allocated to this project`, icon: type}"
         :class="{'empty-point': i > project.points}"
-        :src="icons[project.type]">
+        :src="icons[type]">
     </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
@@ -286,7 +286,7 @@ export default {
         }
       } else {
         return {
-          icon: this.project.type,
+          icon: this.type,
           text: `This will take about ${this.remainingCost} to finish. Allocate more ${this.project.kind} points to accelerate its progress.`
         }
       }

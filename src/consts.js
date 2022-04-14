@@ -10,7 +10,7 @@ export default {
     temperature: 1,
   },
 
-  msPerYear: debug.fastYears ? 2000 : 4000,
+  msPerYear: debug.fastYears ? 500 : 4000,
 
 // Set an upper cap to the amount of emissions we pass to hector,
 // because very large numbers end up breaking it.

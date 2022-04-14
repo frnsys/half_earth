@@ -6,7 +6,7 @@
     <div id="event-stream-timer-fill" :style="{width: `${progress}%`}"></div>
   </div>
   <Globe id="events-globe" ref="globe" :onReady="onGlobeReady" :style="{'background-color': warmingColour}" />
-  <Update v-if="updates.length > 0" :update="updates[0]" @done="dismissUpdate"/>
+  <Update v-if="updates.length > 0 && !this.skipping" :update="updates[0]" @done="dismissUpdate"/>
   <Dialogue v-if="event && predialogue" v-bind="event" @done="nextEvent" />
   <Event v-else-if="event && !predialogue && updates.length == 0" :event="event" @done="nextEvent" />
   <div id="event-stream--toasts">
@@ -14,6 +14,7 @@
       <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
     </div>
   </div>
+  <button class="events--skip btn" @click="skip">Skip</button>
 </div>
 </template>
 
@@ -54,7 +55,8 @@ export default {
       predialogue: true,
       updates: [],
       stopped: false,
-      done: false
+      done: false,
+      skipping: false,
     };
   },
   components: {
@@ -71,7 +73,10 @@ export default {
   },
   computed: {
     progress() {
-      return this.time/consts.msPerYear * 100;
+      return this.time/this.msPerYear * 100;
+    },
+    msPerYear() {
+      return this.skipping ? 10 : consts.msPerYear;
     },
     warmingColour(){
       if(state.cycleStartState){
@@ -113,6 +118,7 @@ export default {
       // Cache starting values for report
       this._startYear = state.gameState.world.year;
       state.annualRegionEvents = {};
+      state.worldEvents = [];
       state.cycleStartState = {
         year: this._startYear,
         extinctionRate: state.gameState.world.extinction_rate,
@@ -137,7 +143,7 @@ export default {
             regionId,
 
             // When in the year the event occurs
-            when: Math.random() * consts.msPerYear
+            when: Math.random() * this.msPerYear
           }
         });
 
@@ -149,7 +155,7 @@ export default {
           if (!this.showingEvent) {
             this.time += elapsed;
 
-            if (this.time >= consts.msPerYear) {
+            if (this.time >= this.msPerYear) {
               this.year = state.gameState.world.year;
               let {completedProjects, regionChanges} = game.step();
               this.updates = completedProjects.map((id) => ({
@@ -165,7 +171,7 @@ export default {
                 }));
                 this.updates = this.updates.concat(policyOutcomes);
               }
-              if (this.updates.length > 0) {
+              if (this.updates.length > 0 && !this.skipping) {
                 this.stopped = true;
               }
               if (completedProjects.length > 0) {
@@ -212,7 +218,7 @@ export default {
         && state.gameState.world.year % 5 == 0) {
         this.stopped = true;
         this.done = true;
-        if (this.updates.length == 0) {
+        if (this.updates.length == 0 || this.skipping) {
           game.stepCycle();
           state.phase = 'REPORT';
         }
@@ -223,10 +229,11 @@ export default {
       this.events.forEach(([evId, regionId]) => {
         let ev = EVENTS[evId];
         state.events.push([evId, regionId, ev['ref_id']]);
+        state.worldEvents.push(evId);
       });
       this.applyEmissions();
 
-      if (this.hasEvent) {
+      if (this.hasEvent && !this.skipping) {
         this.showEvent();
         this.globe.pauseRotation();
       } else {
@@ -315,6 +322,9 @@ export default {
         return {hexIdx, mesh};
       }
     },
+    skip() {
+      this.skipping = true;
+    }
   },
 }
 </script>
@@ -383,4 +393,13 @@ export default {
   height: 20px;
   vertical-align: middle;
 }
+
+.events--skip {
+  position: fixed;
+  right: 1em;
+  bottom: 0.5em;
+  z-index: 9;
+  font-size: 0.8em;
+}
+
 </style>

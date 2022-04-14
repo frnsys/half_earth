@@ -19,8 +19,6 @@ export default {
       // tip card; if so don't change the card.
       if (!el.closest('.tip--card') && el.dataset.card) {
         tip.card = JSON.parse(el.dataset.card);
-      } else {
-        tip.card = undefined;
       }
 
       tip.show = true;

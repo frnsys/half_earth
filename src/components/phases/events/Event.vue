@@ -12,7 +12,7 @@
       <Effects :effects="event.effects" />
     </div>
   </div>
-  <Dialogue v-bind="event" :effects="[]" @done="done" />
+  <Dialogue v-if="!asCard" v-bind="event" :effects="[]" @done="done" />
 </div>
 </template>
 
@@ -45,7 +45,7 @@ const FACTOR_DESCS = {
 const factorTip = 'The factors behind this event.↓';
 
 export default {
-  props: ['event'],
+  props: ['event', 'asCard'],
   components: {
     Effects,
     Dialogue,

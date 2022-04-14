@@ -17,6 +17,7 @@
     <FactorsCard v-if="card && card.type == 'Factors'" :factors="card.data" />
     <RegionCard v-if="card && card.type == 'Region'" :region="card.data" />
     <NPCCard v-if="card && card.type == 'NPC'" :npc="card.data" />
+    <Event v-if="card && card.type == 'Event'" :event="card.data" :asCard="true" />
     <Cards v-if="card && card.type == 'Processes'">
       <ProcessCard v-for="p in card.data" :process="p" />
     </Cards>
@@ -34,10 +35,12 @@ import ProjectCard from 'components/cards/ProjectCard.vue';
 import IndustryCard from 'components/cards/IndustryCard.vue';
 import FactorsCard from 'components/cards/FactorsCard.vue';
 import RegionCard from 'components/cards/RegionCard.vue';
+import Event from 'components/phases/events/Event.vue';
 
 export default {
   components: {
     Cards,
+    Event,
     NPCCard,
     ProcessCard,
     ProjectCard,
@@ -136,6 +139,8 @@ export default {
 }
 .tip--card {
   pointer-events: none;
+  max-width: 520px;
+  margin: 0 auto;
 }
 .tip--card .card {
   pointer-events: auto;
@@ -143,6 +148,13 @@ export default {
 .tip--card .card.process {
   margin: 0 auto !important;
   padding-right: 0 !important;
+}
+
+.tip--card .event {
+  position: relative;
+  background: none;
+  pointer-events: auto;
+  padding: 0 1em;
 }
 
 *[data-tip]:hover {

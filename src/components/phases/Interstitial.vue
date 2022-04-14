@@ -214,7 +214,7 @@ export default {
         } else {
           this.showEvent();
         }
-      }, 2200);
+      }, 1200);
 
       window.audioManager.stopSoundtrack(true);
       window.audioManager.startAtmosphere(`/assets/environments/ambience/${this.locale.ambience}`, true)
