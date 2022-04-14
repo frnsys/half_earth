@@ -1,7 +1,7 @@
 <template>
 <div class="plan-change-select planning--page">
-  <HelpTip text="↑ Swipe this card up and hold to add it to your plan ↑" x="50%" y="150px" :center="true" />
-  <HelpTip text="⟵ Swipe sideways to see other projects ⟶ " x="50%" y="250px" :center="true" />
+  <HelpTip :text="scanTip" x="50%" y="150px" :center="true" />
+  <HelpTip :text="scrollTip" x="50%" y="250px" :center="true" />
 
   <div class="planning--page-tabs">
    <div class="planning-sub-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
@@ -22,9 +22,9 @@
   <AddScanner ref="addScanner" :project="project" />
   <RemoveScanner ref="removeScanner" :project="project" />
 
-  <Cards @focused="onFocus" @scrollStart="onScrollStart" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
+  <Cards @focused="onFocus" @scrollStart="onScrollStarted" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
-      @drag="onDrag"
+      @drag="onDragStarted"
       @dragStop="onDragStop"
       v-for="i in projectOrder"
       :yBounds="yBounds"
@@ -56,6 +56,9 @@ import CardsMixin from 'components/phases/CardsMixin';
 import Points from 'components/scanner/project/Points.vue';
 import AddScanner from 'components/scanner/project/AddScanner.vue';
 import RemoveScanner from 'components/scanner/project/RemoveScanner.vue';
+
+const scanTip = '↑ Swipe this card up and hold to add it to your plan ↑';
+const scrollTip = '⟵ Swipe sideways to see other projects ⟶ ';
 
 export default {
   mixins: [CardsMixin],
@@ -91,6 +94,12 @@ export default {
     }
   },
   computed: {
+    scanTip() {
+      return scanTip;
+    },
+    scrollTip() {
+      return scrollTip;
+    },
     backDisabled() {
       return state.tutorial < tutorial.PROJECTS_BACK;
     },
@@ -136,6 +145,14 @@ export default {
       if (!state.viewed.includes(this.project.ref_id)) {
         state.viewed.push(this.project.ref_id);
       }
+    },
+    onScrollStarted() {
+      state.help[scrollTip] = true;
+      this.onScrollStart();
+    },
+    onDragStarted(rect) {
+      state.help[scanTip] = true;
+      this.onDrag(rect);
     },
     yBounds() {
       return [

@@ -12,7 +12,7 @@
     @change="$emit('change')" />
   <div v-if="page == null">
     <div class="plan--changes" :style="{maxWidth}">
-      <HelpTip text="Add some cards to get started" x="50%" y="220px" :center="true" />
+      <HelpTip :text="addTip" x="50%" y="220px" :center="true" />
       <img class="plan-new-icon plan-new-projects-icon" v-if="anyNewProjects" src="/assets/new.svg" />
       <div class="plan--change">
         <div class="plan--add-change minicard" @click="selectPage('Add')" :class="{highlight: projectsHighlighted}">
@@ -76,6 +76,7 @@ import historicalEmissions from '/assets/historical/emissions.json';
 import tutorial from '/src/tutorial';
 
 const lf = new Intl.ListFormat('en');
+const addTip = 'Add some cards to get started';
 
 const charts = {
   'land': 'Land Use',
@@ -132,6 +133,9 @@ export default {
     }
   },
   computed: {
+    addTip() {
+      return addTip;
+    },
     inputShortages() {
       let keys = [];
 
@@ -339,6 +343,9 @@ export default {
     selectPage(p) {
       this.page = p;
       this.$emit('page', p);
+      if (p == 'Add') {
+        state.help[addTip] = true;
+      }
     },
     onResize() {
       if (window.innerWidth > 680) {
