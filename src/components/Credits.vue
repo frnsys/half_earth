@@ -50,6 +50,7 @@
     <li>Matt Goerzen</li>
     <li>Neilson Koerner-Safrata</li>
     <li>Kira Simon-Kennedy</li>
+    <li>Nicholas Carter</li>
   </ul>
   <h2>Thank you for playing!</h2>
 </div>

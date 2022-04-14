@@ -8585,15 +8585,6 @@ pub fn events() -> Vec<Event> {
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
-                    conditions: vec![
-                        Condition::ProjectStatus(25, ProjectStatus::Active),
-                        Condition::ProjectStatus(122, ProjectStatus::Active),
-                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::Less, 0.1),
-                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
-                    ]
-                },
-                Probability {
                     likelihood: Likelihood::Improbable,
                     conditions: vec![
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::GreaterEqual, 2.0),
@@ -8604,6 +8595,15 @@ pub fn events() -> Vec<Event> {
                     likelihood: Likelihood::Improbable,
                     conditions: vec![
                         Condition::ProjectStatus(75, ProjectStatus::Active),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
+                    ]
+                },
+                Probability {
+                    likelihood: Likelihood::Random,
+                    conditions: vec![
+                        Condition::ProjectStatus(25, ProjectStatus::Active),
+                        Condition::ProjectStatus(122, ProjectStatus::Active),
+                        Condition::OutputDemandGap(Output::PlantCalories, Comparator::Less, 0.1),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
