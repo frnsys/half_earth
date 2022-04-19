@@ -56,6 +56,17 @@ class Globe {
     this.pauseTimeout = null;
   }
 
+  resetCamera() {
+    this.scene.resetCamera();
+
+    // Zoom out a bit more on
+    // these devices to save resources
+    if (isMobile || isSafari) {
+      this.scene.camera.zoom = 0.06;
+      this.scene.camera.updateProjectionMatrix();
+    }
+  }
+
   setEl(el) {
     el.appendChild(this.scene.renderer.domElement);
   }

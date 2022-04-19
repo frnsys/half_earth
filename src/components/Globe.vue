@@ -49,7 +49,7 @@ export default {
       });
 
       globe.scene.resize();
-      globe.scene.resetCamera();
+      globe.resetCamera();
       this.globe = globe;
     });
   },
