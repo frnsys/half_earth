@@ -74,15 +74,15 @@ def gen_image(year, summary, outpath):
     )
 
     msg = msg_from_summary(summary)
-    text = 'Me and {}s {}.'.format(
-            summary['faction'], msg.format(year=year))
+    fac = summary['faction']
+    ending = 's' if not fac.endswith('s') else ''
+    text = 'Me and {}{} {}.'.format(fac, ending, msg.format(year=year))
     para = textwrap.wrap(text, width=26)
 
     img = Image.new('RGB', size, color=0)
     img.paste(thumbnail)
 
     draw = ImageDraw.Draw(img)
-
 
     badges_width = len(badges) * badge_size + (len(badges) - 1) * badge_spacing
     x = round(size[0]/2 - badges_width/2)
