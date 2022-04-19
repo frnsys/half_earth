@@ -1,14 +1,15 @@
-from db import Database
 from gen_id import gen_id
 from gen_image import gen_image
 from summarize import summarize
 from flask_cors import CORS
 from flask import Flask, request, redirect, jsonify, render_template, send_from_directory, url_for
 from badges import BADGES
+from db import db, save_session, get_session
 
 app = Flask(__name__)
 CORS(app)
-db = Database('history.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///history.db'
+db.init_app(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -23,7 +24,7 @@ def index():
                 data['world']['year'],
                 summary,
                 img_path)
-        db.add(id, summary)
+        save_session(id, summary)
 
         badges = [{
             'name': b,
@@ -41,8 +42,8 @@ def image(fname):
 
 @app.route('/<id>')
 def summary(id):
-    data = db.session(id)
-    summary = data['data']
+    session = get_session(id)
+    summary = json.loads(session.data)
     fname = '{}.jpg'.format(id)
     badges = [{
         'name': b,

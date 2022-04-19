@@ -1,36 +1,23 @@
 import json
-import sqlite3
+from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
 
-class Database:
-    def __init__(self, path):
-        self.path = path
-        _, cur = self._con()
-        cur.execute('CREATE TABLE IF NOT EXISTS sessions \
-                (id text primary key,\
-                timestamp text,\
-                data json not null)')
+db = SQLAlchemy()
 
-    def _con(self):
-        con = sqlite3.connect(self.path)
-        cur = con.cursor()
-        return con, cur
+class Session(db.Model):
+    __tablename__ = 'sessions'
+    id = db.Column(db.String(255), primary_key=True)
+    timestamp = db.Column(db.String(255), nullable=False)
+    data = db.Column(db.JSON, nullable=False)
 
-    def add(self, id, data):
-        timestamp = datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()
-        con, cur = self._con()
-        cur.execute(
-            'INSERT INTO sessions(id, timestamp, data) VALUES (?,?,?)',
-            (id, timestamp, json.dumps(data)))
-        con.commit()
+def save_session(id, summary):
+    timestamp = datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()
+    session = Session(id=id, timestamp=timestamp, data=json.dumps(summary))
+    db.session.add(session)
+    db.session.commit()
 
-    def session(self, id):
-        _, cur = self._con()
-        res = cur.execute(
-                'SELECT timestamp, data FROM sessions WHERE id == ?',
-                (id,)).fetchone()
-        if res:
-            return {
-                'timestamp': res[0],
-                'data': json.loads(res[1])
-            }
+def get_session(id):
+    return Session.query.get_or_404(id)
+
+def find_sessions(id):
+    return Session.query.filter_by(id=id).all()
