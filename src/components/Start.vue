@@ -2,13 +2,20 @@
 <div>
   <div id="start-bg"></div>
   <div id="start-screen">
+    <template v-if="showCredits">
+      <Credits @click="showCredits = false" />
+    </template>
     <div id="start-screen-inset">
       <div id="start-inner">
         <img src="/assets/intro.svg" />
         <div class="start-subtitle">A Planetary Crisis Planning Game</div>
         <button v-if="hasSave()" @click="continueGame">Continue</button>
         <button @click="startGame">New Game</button>
-        <button @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
+        <div class="two-buttons">
+          <button @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
+          <hr />
+          <button @click="showCredits = true">Credits</button>
+        </div>
       </div>
     </div>
   </div>
@@ -19,8 +26,17 @@
 import game from '/src/game';
 import state from '/src/state';
 import {saveSettings} from '../state';
+import Credits from './Credits.vue';
 
 export default {
+  components: {
+    Credits,
+  },
+  data() {
+    return {
+      showCredits: false
+    }
+  },
   methods: {
     hasSave() {
       return game.hasSave();
@@ -123,6 +139,29 @@ export default {
 .start-subtitle {
   font-size: 0.8em;
   margin: 0 0 1.5em 0;
+}
+
+.two-buttons {
+  display: flex;
+  max-width: 450px;
+  margin: 0 auto;
+}
+.two-buttons hr {
+  border: none;
+  border-right: 1px solid #fff;
+  margin: 0 2px;
+  margin-top: 12px;
+}
+
+#start-screen .credits {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: #111;
+  z-index: 10;
+  overflow-y: auto;
 }
 
 @media only screen and (min-width: 481px) {

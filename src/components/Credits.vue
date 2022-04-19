@@ -13,10 +13,12 @@
   <h2>Design</h2>
   <ul>
     <li>Son La Pham</li>
+    <li>Francis Tseng</li>
   </ul>
   <h2>Development</h2>
   <ul>
     <li>Francis Tseng</li>
+    <li>Son La Pham</li>
   </ul>
   <h2>Research and Writing</h2>
   <ul>
