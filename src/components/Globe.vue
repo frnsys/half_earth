@@ -36,6 +36,8 @@ export default {
         });
       } else {
         globe.setEl(this.$el);
+        globe.active = true;
+        globe.render();
         this.ready = true;
         if (this.onReady) {
           this.onReady(globe);
@@ -52,6 +54,9 @@ export default {
       globe.resetCamera();
       this.globe = globe;
     });
+  },
+  beforeUnmount() {
+    this.globe.active = false;
   },
 }
 </script>

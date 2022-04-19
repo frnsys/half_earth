@@ -51,6 +51,7 @@ class Globe {
     this.pings = [];
     this.icons = [];
 
+    this.active = true;
     this.rotate = true;
     this.rotationPaused = false;
     this.pauseTimeout = null;
@@ -283,7 +284,9 @@ class Globe {
 
     this.tickPings();
 
-    requestAnimationFrame(this.render.bind(this));
+    if (this.active) {
+      requestAnimationFrame(this.render.bind(this));
+    }
   }
 }
 
