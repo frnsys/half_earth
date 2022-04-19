@@ -121,7 +121,7 @@ export default {
   justify-content: space-evenly;
   width: 380px;
   margin: 1em auto;
-  background: #724681;
+  background: #965FA9;
   border-radius: 0.75em 0.75em 12em 12em;
   padding: 0.5em 0.5em 1em 0.5em;
   max-width: 100%;
@@ -129,6 +129,7 @@ export default {
   border-left: 1px solid #333;
   border-right: 1px solid #b49abd;
   border-bottom: 1px solid #b49abd;
+  image-rendering: auto;
 }
 .parliament-seats > div {
   display: flex;
@@ -159,7 +160,7 @@ export default {
   margin: 2em auto 0;
 }
 .parliament .minicard-grid-item {
-  background: #724681;
+  background: #965FA9;
   border-right: 1px solid #333;
   border-bottom: 1px solid #333;
   border-top: 1px solid #b49abd;
