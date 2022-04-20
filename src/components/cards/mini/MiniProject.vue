@@ -61,6 +61,10 @@ export default {
     Draggable,
   },
   computed: {
+    cardHeight() {
+      let el = document.querySelector('.draggable');
+      return el.getBoundingClientRect().height;
+    },
     availablePoints() {
       if (this.project.kind == 'Policy') {
         return state.gameState.political_capital;
