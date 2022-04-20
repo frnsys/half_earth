@@ -13,7 +13,7 @@
         <span>+{{state.gameState.world.temperature.toFixed(1)}}C</span>
       </div>
       <img :src="icons.warming" />
-      <div class="dashboard--item-name">Temp. Anomaly</div>
+      <div class="dashboard--item-name">Warming</div>
     </div>
     <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
       <div class="minicard">
@@ -54,7 +54,7 @@
       <img :src="icons.energy" />
       <div class="dashboard--item-name">Energy Use</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.water('Current water use.')">
+    <div class="dashboard--item" v-tip="factors.tips.water('Current water demand.')">
       <div class="minicard">
         <span :style="{color: currentWaterStress.color}">{{currentWaterStress.label}}</span>
         <div class="dashboard--change" v-if="changes.water != 0" v-tip="{icon: 'water', text: 'The estimated value after production changes have finished.'}">

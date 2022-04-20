@@ -72,6 +72,7 @@ export default {
     dismiss(ev) {
       if (ev.target == this.$refs.overlay || this.$refs.tip.contains(ev.target)) {
         this.show = false;
+        this.card = null;
       }
     }
   }

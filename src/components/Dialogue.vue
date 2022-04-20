@@ -5,8 +5,7 @@
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
         :src="`/assets/characters/${line.speaker}.webp`"
-        @error="fallbackPortrait"
-        v-tip="{icon: line.speaker, text: `${line.speaker}.`}" />
+        @error="fallbackPortrait" />
     </div>
     <div class="dialogue--body" @click="advance">
       <div class="dialogue--speaker-name" v-if="line.speaker !== '[GAME]'">

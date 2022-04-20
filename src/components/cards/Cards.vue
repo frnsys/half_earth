@@ -215,6 +215,7 @@ to be centered */
   vertical-align: top;
   white-space: normal;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .noscroll {

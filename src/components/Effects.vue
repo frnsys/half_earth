@@ -345,7 +345,7 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} biodiversity for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${e.param}.</strong>`
+        text: `${changeDir(e.param, e)} biodiversity pressure for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${e.param}.</strong>`
       }
     }
     case 'Demand': {

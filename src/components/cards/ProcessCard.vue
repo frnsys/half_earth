@@ -284,7 +284,7 @@ export default {
         case 'emissions': {
           let amount = state.gameState.world.emissions;
           return factors.tips.emissions(
-            `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)}Gt per year.`,
+            `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)} gigatonnes per year.`,
             this.process);
         }
         case 'water': {
