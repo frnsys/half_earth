@@ -106,6 +106,12 @@ export default {
       this.startYear();
     },
     start() {
+      if (state.gameState.world.temperature <= 1 || state.gameState.world.extinction_rate <= 20 || state.gameState.world.emissions <= 0) {
+        window.audioManager.startSoundtrack('/assets/music/report_good.mp3', true);
+      } else {
+        window.audioManager.startSoundtrack('/assets/music/report_bad.mp3', true);
+      }
+
       // Show any world start events
       this.stopped = false;
       if (this.hasEvent) {

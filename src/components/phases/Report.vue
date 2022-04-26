@@ -146,12 +146,10 @@ export default {
     IntensityBar
   },
   mounted() {
-    this.showEvent();
-    this.calculateChanges();
+    this.start();
   },
   activated() {
-    this.showEvent();
-    this.calculateChanges();
+    this.start();
   },
   data() {
     let events = game.roll.report('Start');
@@ -256,6 +254,10 @@ export default {
     }
   },
   methods: {
+    start() {
+      this.showEvent();
+      this.calculateChanges();
+    },
     calculateChanges() {
       this.pcChange = 0;
       let temperatureChange = parseFloat(state.gameState.world.temperature.toFixed(1)) - parseFloat(state.cycleStartState.temperature.toFixed(1));
