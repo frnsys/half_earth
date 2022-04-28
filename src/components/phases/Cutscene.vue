@@ -31,7 +31,8 @@ export default {
   mixins: [EventsMixin],
   mounted() {
     this.start();
-    window.audioManager.startSoundtrack('/assets/music/330353__zxcvbn9__spring-arrives.mp3', false);
+    /* window.audioManager.startSoundtrack('/assets/music/330353__zxcvbn9__spring-arrives.mp3', false); */
+    window.audioManager.startSoundtrack('/assets/music/intro.mp3', false);
   },
   activated() {
     this.start();

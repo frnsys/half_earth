@@ -49,6 +49,11 @@ export default {
   mounted() {
     game.updateFactors();
     this.showEvent();
+
+    window.audioManager.startSoundtrack('/assets/music/planning.mp3', true);
+  },
+  beforeUnmount() {
+    window.audioManager.stopSoundtrack(true);
   },
   activated() {
     this.showEvent();

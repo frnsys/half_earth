@@ -37,7 +37,7 @@ class Sound {
   // Duration in ms
   fadeIn(duration, cb) {
     animate(0, 1, duration, (val) => {
-      this.volume = val * this._volume;
+      this.volume = val;
     }, () => {
       if (cb) cb();
     });
@@ -45,7 +45,7 @@ class Sound {
 
   fadeOut(duration, cb) {
     animate(1, 0, duration, (val) => {
-      this.volume = val * this._volume;
+      this.volume = val;
     }, () => {
       if (cb) cb();
     });

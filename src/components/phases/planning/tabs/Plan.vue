@@ -101,14 +101,10 @@ export default {
   mounted() {
     this.onResize();
 
-    window.audioManager.startSoundtrack('/assets/music/5yr_plan.mp3', true);
     window.addEventListener('resize', this.onResize);
 
     game.saveGame();
     game.saveMeta();
-  },
-  beforeUnmount() {
-    window.audioManager.stopSoundtrack(true);
   },
   unmounted() {
     window.removeEventListener('resize', this.onResize);

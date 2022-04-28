@@ -29,6 +29,10 @@
     <li>Francis Tseng</li>
     <li>Troy Vettese</li>
   </ul>
+  <h2>Music</h2>
+  <ul>
+    <li>PRINCE SHIMA</li>
+  </ul>
   <h2>Playtesting</h2>
   <ul>
     <li>Spencer Roberts</li>
