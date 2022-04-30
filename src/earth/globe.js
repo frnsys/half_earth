@@ -181,6 +181,8 @@ class Globe {
 
   async updateSurface() {
     if (this.surface) {
+      await this.surface.updateTexture();
+
       // Since SharedArrayBuffer support is lacking
       // in some mobile browsers, do this instead.
       // await this.surface.updateTexture();

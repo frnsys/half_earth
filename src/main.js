@@ -28,12 +28,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// TODO While testing
-const versionTag = document.createElement('div');
-versionTag.innerHTML = `v.${VERSION}. <a target="_blank" href="https://forms.gle/bL7mWMFGq7NQiVjs9">File a bug report</a>.`;
-versionTag.id = 'version-tag';
-document.body.appendChild(versionTag);
-
 const app = createApp(App);
 app.directive('tip', tip);
 app.config.globalProperties['icons'] = icons;
