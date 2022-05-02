@@ -6,7 +6,7 @@
     <div class="loading-bar">
       <div class="loading-bar-fill" :style="{width: barWidth}"></div>
     </div>
-    <img class="motto" src="/assets/motto.png" />
+    <!-- <img class="motto" src="/assets/motto.png" /> -->
 
     <div class='fonts'>
       <span style='font-family: "W95FA"'>a</span>
