@@ -1,6 +1,6 @@
 <template>
 <div class="credits">
-  <div class="credits--inner recess">
+  <div class="credits--inner">
   <h2>Concept</h2>
   <ul>
     <li>Arthur Röing Baer</li>
@@ -88,6 +88,11 @@ export default {
   border-radius: 2em;
   padding: 1rem;
   background-color: rgba(0,0,0,0.1);
+
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #888;
+  border-right: 1px solid #888;
 }
 
 @media only screen and (min-width: 481px) {
