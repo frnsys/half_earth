@@ -148,7 +148,7 @@ export default {
 }
 .two-buttons hr {
   border: none;
-  border-right: 1px solid #fff;
+  border-right: 1px solid rgba(255,255,255,0.7);;
   margin: 0 2px;
   margin-top: 12px;
 }
