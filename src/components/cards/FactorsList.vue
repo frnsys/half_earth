@@ -109,6 +109,6 @@ export default {
 .factor-relation {
   margin: 0 3px;
   font-size: 0.8em;
-  color: #ccc;
+  color: #a5a5a5;
 }
 </style>
