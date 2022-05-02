@@ -1,6 +1,8 @@
 <template>
+  <transition name="menu">
   <Menu v-if="showMenu" @close="showMenu = false" />
-  <div class="hud" v-else>
+  </transition>
+  <div class="hud" >
     <div class="hud-year">
       <div>{{state.gameState.world.year}}</div>
     </div>

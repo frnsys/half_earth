@@ -1,7 +1,7 @@
 <template>
 <div class="dropdown-menu">
   <div class="dropdown-menu-content">
-    <div class="dropdown-menu-close dropdown-menu-button" @click="$emit('close')"><img src="/assets/icons/close.svg"></div>
+    <div class="dropdown-menu-close dropdown-menu-button btn" @click="$emit('close')"><img src="/assets/icons/close.svg"></div>
     <header>
       <div class="dropdown-menu-inset">
         <img src="/assets/gosplant.svg" />
@@ -12,8 +12,8 @@
     </template>
     <template v-else>
       <div class="dropdown-menu-time">
-        <img src="/assets/clock.png" />
-        <div class="dropdown-menu-inset dropdown-menu-year">{{state.gameState.world.year}}</div>
+        <Clock />
+        <div class="dropdown-menu-inset dropdown-menu-year">{{locale}}, {{state.gameState.world.year}}</div>
       </div>
       <div class="dropdown-menu-inset dropdown-menu-stats">
         <div class="dropdown-menu-stat">
@@ -67,11 +67,15 @@ import {saveSettings} from '../state';
 import IntensityBar from './cards/IntensityBar.vue';
 import intensity from '/src/display/intensity';
 import Credits from './Credits.vue';
+import Clock from './Clock.vue';
+
+const LOCALES = [{ name: 'Havana'}, {  name: 'Ouagadougou'}, {  name: 'Port-au-Prince'}, {  name: 'San Cristóbal de las Casas'}, {  name: 'Paris'}, {  name: 'Bandung'}, {  name: 'Seattle'}, {  name: 'Hanoi'}, {  name: 'Dar es Salaam'}, {  name: 'Ayn Issa'}, {  name: 'Algiers', }, {name: 'Managua'}, {name: 'Prague',}];
 
 export default {
   components: {
     Credits,
     IntensityBar,
+    Clock
   },
   data() {
     return {
@@ -85,6 +89,11 @@ export default {
     },
     extinction() {
       return intensity.scale(state.gameState.world.extinction_rate, 'extinction');
+    },
+    locale() {
+      let idx = Math.round((state.gameState.world.year - state.startYear)/5) + 1 - 1 % LOCALES.length;
+      return LOCALES[idx].name;
+      return 'San Cristóbal de las Casas'
     },
   },
   methods: {
@@ -171,6 +180,11 @@ header .dropdown-menu-inset {
 .dropdown-menu-button.active {
   background: #2FE863;
 }
+
+.dropdown-menu-button:hover{
+  background-color: #D3D3D3;
+}
+
 .dropdown-menu-buttons {
   text-transform: uppercase;
   font-size: 0.55em;
@@ -282,12 +296,13 @@ header .dropdown-menu-inset {
   width: 10em;
   text-align: center;
   height: 100px;
-  font-size: 2em;
+  font-size: 1.5em;
   display: flex;
   margin-left: 0.25em;
   align-items: center;
   justify-content: space-around;
   border-radius: 10em;
+  flex-grow: 1;
 }
 
 .dropdown-menu-content {
@@ -299,13 +314,32 @@ header .dropdown-menu-inset {
   min-height: 100%;
 }
 
-@media only screen and (min-width: 480px) {
+@media only screen and (min-width: 481px) {
   .dropdown-menu{
     display: flex;
   }
+  .dropdown-menu-year{
+    width: auto;
+    padding: 1rem;
+  }
   .dropdown-menu-content {
     min-height: auto;
-    align-self: start;
+    max-height: 100vh;
+    align-self: center;
+  }
+
+  .dropdown-menu-buttons{
+    flex-direction: column;
+  }
+
+  .dropdown-menu-buttons > .dropdown-menu-button {
+    margin: 0.5em 0;
+    font-size: 0.7rem;
+  }
+
+  .dropdown-menu-content {
+    max-width: 80vw;
+    width: 500px;
   }
 }
 </style>
