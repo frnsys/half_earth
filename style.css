@@ -535,6 +535,18 @@ strong{
   transform: translate(0, -40px);
 }
 
+.menu-enter-active,
+.menu-leave-active {
+  transition: all 220ms ease-out;
+}
+
+.menu-enter-from,
+.menu-leave-to {
+  transform: translate(0, -100%);
+}
+
+
+
 
 .appear-bounceup-enter-active {
   animation: bounce-in 0.4s ease-out;
