@@ -106,7 +106,7 @@ export default {
   border-top: 1px solid rgba(255,255,255,0.7);
   border-radius: 0;
   color: #fff;
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-family: 'Times Ten';
   padding-top: 1em;
 }
@@ -152,6 +152,9 @@ export default {
   margin: 0 2px;
   margin-top: 12px;
 }
+.two-buttons button {
+  margin-top: 0 !important;
+}
 
 #start-screen .credits {
   position: fixed;
@@ -170,6 +173,7 @@ export default {
   }
   #start-screen button {
     max-width: 450px;
+    font-size: 1.5em;
   }
 }
 </style>
