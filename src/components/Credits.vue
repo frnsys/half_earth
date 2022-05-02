@@ -1,5 +1,6 @@
 <template>
 <div class="credits">
+  <div class="credits--inner recess">
   <h2>Concept</h2>
   <ul>
     <li>Arthur Röing Baer</li>
@@ -59,6 +60,9 @@
     <li>Nicholas Carter</li>
   </ul>
   <h2>Thank you for playing!</h2>
+
+  <button class="btn" @click="$emit('closeCredits')">Back</button>
+  </div>
 </div>
 </template>
 
@@ -73,8 +77,23 @@ export default {
   flex: 1;
   padding: 1em;
   color: #fff;
+
+
 }
 .credits h2 {
   font-weight: normal;
+}
+
+.credits--inner{
+  border-radius: 2em;
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.1);
+}
+
+@media only screen and (min-width: 481px) {
+  .credits li{
+    font-size: 1.2em;
+    line-height: 1.5;
+  }
 }
 </style>

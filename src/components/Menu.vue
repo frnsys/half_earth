@@ -8,7 +8,7 @@
       </div>
     </header>
     <template v-if="showCredits">
-      <Credits />
+      <Credits @closeCredits="showCredits = false"/>
     </template>
     <template v-else>
       <div class="dropdown-menu-time">
