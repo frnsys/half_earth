@@ -242,7 +242,7 @@ export default {
     },
     biodiversityTip() {
       return factors.tips.biodiversity(
-        `The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital. <b class="tip-goal">Your goal is to get this to below 10.</b>`);
+        `The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital. <b class="tip-goal">Your goal is to get this to below 20.</b>`);
     },
     contentednessTip() {
       return factors.tips.contentedness(

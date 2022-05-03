@@ -206,7 +206,7 @@ specs = {
     }
 }
 valid_resources = ['Land', 'Water', 'Fuel', 'Electricity']
-valid_byproducts = ['CO2', 'CH4', 'N2O', 'Biodiveristy']
+valid_byproducts = ['CO2', 'CH4', 'N2O', 'Biodiversity']
 valid_outputs = ['Electricity', 'Fuel', 'AnimalCalories', 'PlantCalories']
 incomes = ['low_income', 'lower_middle_income', 'upper_middle_income', 'high_income']
 
@@ -329,7 +329,7 @@ conds = {
     'ActiveProjectUpgrades':    lambda e: (ids[e['entity']], comps[e['comparator']], e['value']),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'HeavyProjects':    lambda e: (comps[e['comparator']], e['value']),
-    'ProtectLand':    lambda e: (comps[e['comparator']], e['value']),
+    'ProtectLand':    lambda e: (comps[e['comparator']], float(e['value'])),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
     'HasFlag':          lambda e: ('Flag::{}'.format(e['value']),),
     'WithoutFlag':          lambda e: ('Flag::{}'.format(e['value']),),

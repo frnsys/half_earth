@@ -47,6 +47,7 @@ export default {
     this.PAGES = PAGES;
   },
   mounted() {
+    game.updateProduction();
     game.updateFactors();
     this.showEvent();
 

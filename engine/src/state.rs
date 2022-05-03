@@ -361,11 +361,9 @@ impl State {
         self.resources_demand.land += self.consumed_resources.land;
     }
 
-    pub fn step_production(&mut self) {
+    // Update production effects
+    pub fn update_production(&mut self) {
         self.update_demand();
-
-        let orders: Vec<ProductionOrder> = self.processes.iter()
-            .map(|p| p.production_order(&self.output_demand)).collect();
 
         let lic_pop = self.world.lic_population();
         self.world.co2_emissions = self.byproducts.co2 + self.world.byproduct_mods.co2;
@@ -376,6 +374,13 @@ impl State {
         }) + self.industries.iter().fold(0., |acc, ind| {
             acc + ind.extinction_rate() * lic_pop
         }) + self.world.base_extinction_rate();
+    }
+
+    pub fn step_production(&mut self) {
+        self.update_production();
+
+        let orders: Vec<ProductionOrder> = self.processes.iter()
+            .map(|p| p.production_order(&self.output_demand)).collect();
 
         // Float imprecision sometimes causes these values
         // to be slightly negative, so ensure they aren't

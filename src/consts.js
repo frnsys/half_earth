@@ -6,7 +6,7 @@ export default {
   // Have to all be below these values to win
   winState: {
     emissions: 0,
-    extinction: 10,
+    extinction: 20,
     temperature: 1,
   },
 
@@ -49,7 +49,7 @@ export default {
   processCardWithdrawTime: 0.4,
 
   maxValues: {
-    biodiversity: 80,
+    biodiversity: 120,
     contentedness: 40,
   },
 

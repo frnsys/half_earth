@@ -31,6 +31,11 @@ function updateFactors() {
   state.factors = factors.rank();
 }
 
+function updateProduction() {
+  game.update_production();
+  updateState();
+}
+
 // Start a new run
 function newRun(reset) {
   game = GameInterface.new(Difficulty.Normal);
@@ -361,4 +366,5 @@ export default {
   applyEvent, applyEvents, applyIconEvents, roll, simulate,
   applyBranchEffects, evalBranchConditions,
   playerSeats, isAlly, gameWon,
-  updateFactors, nextPointCost, processMaxShare};
+  updateProduction, updateFactors,
+  nextPointCost, processMaxShare};

@@ -13,6 +13,26 @@ class AudioManager {
     this.oneshots = {};
   }
 
+  get soundtrack() {
+    return this._soundtrack;
+  }
+  set soundtrack(val) {
+    if (this._soundtrack) {
+      this._soundtrack.stop();
+    }
+    this._soundtrack = val;
+  }
+
+  get atmosphere() {
+    return this._atmosphere;
+  }
+  set atmosphere(val) {
+    if (this._atmosphere) {
+      this.atmosphere.stop();
+    }
+    this._atmosphere = val;
+  }
+
   startPlaylist(tracks, fade) {
     if (tracks.length == 1) {
       // For crossfading looping

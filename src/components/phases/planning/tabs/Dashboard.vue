@@ -67,7 +67,7 @@
       <img :src="icons.water" />
       <div class="dashboard--item-name">Water Stress</div>
     </div>
-    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Average sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year`}">
+    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Average sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year.`}">
       <div class="minicard">
         <span>{{state.gameState.world.sea_level_rise.toFixed(2)}}m</span>
       </div>
@@ -200,7 +200,7 @@ export default {
           changes['water'] += p.resources.water * multiplier;
           changes['energy'] += (p.resources.electricity + p.resources.fuel) * multiplier;
           changes['emissions'] += format.co2eq(p.byproducts) * multiplier;
-          changes['extinction'] += p.byproducts.biodiversity * multiplier;
+          changes['extinction'] += p.extinction_rate * multiplier;
         }
       });
 
@@ -425,6 +425,10 @@ export default {
   border-bottom: none;
   cursor: pointer;
 }
+.dashboard-breakdown .factor-relation {
+  color: #282828 !important;
+}
+
 .dashboard-breakdown-select {
   /* background: #fff;
   border-radius: 0.5em;

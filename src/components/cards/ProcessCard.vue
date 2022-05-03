@@ -250,7 +250,7 @@ export default {
         ? 'energy' : 'calories';
       let values = {
         emissions: format.co2eq(this.byproducts),
-        biodiversity: this.byproducts.biodiversity,
+        biodiversity: this.extinction_rate,
         energy: this.resources.electricity + this.resources.fuel,
         land: this.resources.land,
         water: this.resources.water,
