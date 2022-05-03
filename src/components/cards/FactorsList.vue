@@ -17,7 +17,7 @@
       <template v-else-if="user.type !== 'Project' && user.type !== 'Event'">
         <IntensityIcon
           :resource="factors.icon" :intensity="user.intensity" />
-        <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="factor-relation">{{factors.type == 'emissions' ? 'makes' : 'uses'}}</span></template>{{user.displayAmount}}<img :src="icons[factors.icon]"></div>
+        <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="factor-relation">{{relation}}</span></template>{{user.displayAmount}}<img :src="icons[factors.icon]"></div>
       </template>
       <template v-else>
         <div class="factors--usage factors--usage-solo">{{user.displayAmount || user.amount || 0}}<img :src="icons[factors.icon]"></div>

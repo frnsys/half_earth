@@ -169,6 +169,7 @@ function productionFactors(k) {
     } else {
       displayAmount = format.formatResource[k](total);
     }
+
     return {
       name: p.name,
       produced: p.demand,

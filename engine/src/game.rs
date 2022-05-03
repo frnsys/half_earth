@@ -41,6 +41,11 @@ impl GameInterface {
         self.game.step_cycle();
     }
 
+
+    pub fn update_production(&mut self) {
+        self.game.update_production();
+    }
+
     pub fn state(&self) -> Result<JsValue, JsValue> {
         Ok(serde_wasm_bindgen::to_value(&self.game.state)?)
     }
@@ -184,6 +189,10 @@ impl Game {
             state: State::new(difficulty),
             event_pool: EventPool::new(content::events()),
         }
+    }
+
+    pub fn update_production(&mut self) {
+        self.state.update_production();
     }
 
     pub fn step(&mut self, rng: &mut SmallRng) -> (Vec<usize>, (Vec<usize>, Vec<usize>)) {
