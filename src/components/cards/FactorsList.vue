@@ -37,6 +37,15 @@ export default {
     IntensityIcon,
   },
   computed: {
+    relation() {
+      if (this.factors.type == 'emissions') {
+        return 'makes';
+      } else if (this.factors.type == 'biodiversity') {
+        return 'causes';
+      } else {
+        return 'uses';
+      }
+    },
     relevantFactors() {
       return state.factors[this.factors.type].filter((user) => user.displayProduced !== 0);
     },
