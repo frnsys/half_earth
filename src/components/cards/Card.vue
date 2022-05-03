@@ -380,6 +380,8 @@ export default {
   font-style: italic;
   max-height: 150px;
   width: calc(100% - 1rem);
+  /* optically drop down a bit */
+  transform: translateY(10px); 
 }
 
 .card-top-back {
