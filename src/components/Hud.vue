@@ -78,7 +78,7 @@ export default {
     },
     biodiversityTip() {
       return factors.tips.biodiversity(
-        'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 10.</b>');
+        'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>');
     },
     contentednessTip() {
       return factors.tips.contentedness(
