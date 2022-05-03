@@ -200,7 +200,7 @@ export default {
           changes['water'] += p.resources.water * multiplier;
           changes['energy'] += (p.resources.electricity + p.resources.fuel) * multiplier;
           changes['emissions'] += format.co2eq(p.byproducts) * multiplier;
-          changes['extinction'] += p.byproducts.biodiversity * multiplier;
+          changes['extinction'] += p.extinction_rate * multiplier;
         }
       });
 

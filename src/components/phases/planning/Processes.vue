@@ -176,7 +176,7 @@ export default {
         current['water use'] += p.resources.water * total;
         current['energy use'] += (p.resources.electricity + p.resources.fuel) * total;
         current['emissions'] += format.co2eq(p.byproducts) * total;
-        current['the extinction rate'] += p.byproducts.biodiversity * total;
+        current['the extinction rate'] += p.extinction_rate * total;
       });
 
       // Changed demand for each of these, just for the current set of processes
@@ -194,7 +194,7 @@ export default {
         changed['water use'] += p.resources.water * total;
         changed['energy use'] += (p.resources.electricity + p.resources.fuel) * total;
         changed['emissions'] += format.co2eq(p.byproducts) * total;
-        changed['the extinction rate'] += p.byproducts.biodiversity * total;
+        changed['the extinction rate'] += p.extinction_rate * total;
       });
 
       // Changed overall/total/global demand for each of these
