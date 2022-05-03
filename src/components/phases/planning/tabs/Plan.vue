@@ -11,7 +11,7 @@
     @add="selectPage('Add')"
     @change="$emit('change')" />
   <div v-if="page == null">
-    <div class="plan--changes" :style="{maxWidth}">
+    <div class="plan--changes" :class="maxWidth">
       <HelpTip :text="addTip" x="50%" y="220px" :center="true" />
       <img class="plan-new-icon plan-new-projects-icon" v-if="anyNewProjects" src="/assets/new.svg" />
       <div class="plan--change">
@@ -29,7 +29,7 @@
         <div class="plan--change-placeholder"></div>
       </div>
       <div class="plan--change" v-if="activeProjects.length > this.slots">
-        <div class="plan--change-view-all" @click="selectPage('All')">View<br />All</div>
+        <div class="plan--change-view-all btn" @click="selectPage('All')">View<br />All</div>
       </div>
     </div>
     <div class="plan--production">
@@ -44,16 +44,18 @@
       <div class="plan--production-button btn" :class="{disabled: processesDisabled, highlight: processesHighlighted}" @click="selectPage('Processes')">Change Production</div>
     </div>
     <div class="plan--charts">
-      <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="220px" :center="true" />
+      <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="160px" :center="true" />
+      <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
       <div class="plan--charts--tabs">
         <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
           <img :src="icons[key]">{{name}}
         </div>
       </div>
-      <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
     </div>
-    <div class="plan--ready-container">
+    <div class="plan--ready-outer">
+    <div class="plan--ready-inner">
       <button class="plan--ready" :class="{disabled: readyDisabled, highlight: readyHighlighted}" @click="enterWorld">Ready</button>
+    </div>
     </div>
   </div>
 </div>
@@ -197,11 +199,11 @@ export default {
     },
     maxWidth() {
       if (this.slots == 5) {
-        return '320px';
+        return 's';
       } else if (this.slots == 7) {
-        return '440px';
+        return 'm';
       } else if (this.slots == 9) {
-        return '530px';
+        return 'l';
       }
     },
     placeholders() {
@@ -372,6 +374,53 @@ export default {
   margin: 0 auto;
   position: relative;
 }
+
+/* maxWidth() {
+      if (this.slots == 5) {
+        return '320px';
+      } else if (this.slots == 7) {
+        return '440px';
+      } else if (this.slots == 9) {
+        return '530px';
+      }
+    }, */
+
+.plan--changes.s{
+  max-width: 320px;
+}
+.plan--changes.m{
+  max-width: 440px; 
+}
+.plan--changes.l{
+  max-width: 530px;
+}
+
+@media only screen and (min-width: 481px) {
+  .plan--changes .plan--change,
+  .plan--change .minicard{
+    width: 105px;
+  }
+
+  .plan--changes .plan--change{
+    margin: 1rem 0;
+  }
+
+  .plan--changes .plan--change .minicard, 
+  .plan--changes .plan--change .plan--change-view-all,
+  .plan--changes .plan--change .plan--change-placeholder {
+    height: 155px;
+  }
+
+  .plan--changes{
+    height: auto;
+  }
+  .plan--changes.l{
+    max-width: 610px;
+  }
+
+  
+}
+
 .plan--change {
   width: 90px;
   text-align: center;
@@ -416,22 +465,40 @@ export default {
 .plan--charts--tabs {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 0.5em;
+  margin-bottom: 8em;
 }
 .plan--charts--tabs img {
   width: 18px;
+  height: 18px;
   vertical-align: middle;
   margin-right: 3px;
-  margin-top: -2px;
+  /* margin-top: -2px; */
+  image-rendering: auto;
 }
 .plan--charts--tabs > div {
+  width:50%;
+  display: flex;
+  justify-content: center;
   background: #fff;
-  padding: 0.3em 0.5em;
-  margin: 0 0.1em;
+  padding: 0.5em 0.5em;
   border-radius: 0.5em;
-  display: inline-block;
   box-shadow: 1px 1px 0px rgb(0 0 0 / 50%);
+  cursor: pointer;
 }
+
+.plan--charts--tabs > div:hover{
+  background-color: #D3D3D3;
+}
+
+.plan--charts--tabs > div:first-of-type {
+  border-radius: 0 0 0 0.5em;
+}
+
+.plan--charts--tabs > div:last-of-type {
+  border-radius: 0 0 0.5em 0;
+
+}
+
 .plan--charts--tabs > div.active {
   background: #CDABA1;
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
@@ -441,11 +508,11 @@ export default {
 .plan--charts .chart {
   background: url('/assets/grid.png') #F0D4CC;
   background-size: 60px;
-  border-radius: 0.4em;
+  border-radius: 0.4em 0.4em 0 0;
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
   border-right: 1px solid rgba(255,255,255,0.5);
   border-bottom: 1px solid rgba(255,255,255,0.5);
-  margin-bottom: 1em;
+  /* margin-bottom: 1em; */
 }
 
 .plan--change .plan--add-change {
@@ -469,17 +536,18 @@ export default {
 .plan--change-placeholder {
   border: 1px dashed rgba(0,0,0,0.5);
   height: 130px;
-  border-radius: 0.7em;
+  border-radius: 0.9em;
 }
 .plan--change-view-all {
   height: 130px;
-  border-radius: 6px;
+  border-radius: 0.9rem;
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: space-around;
   font-size: 1.3em;
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+  cursor: pointer;
+  width: auto;
 }
 
 .plan > header {
@@ -496,23 +564,45 @@ export default {
   border-right: none;
 }
 
-.plan--ready-container {
+.plan--ready-outer {
+  z-index: 19;
   position: absolute;
-  max-width: 680px;
-  left: 50%;
   width: 100%;
-  transform: translate(-50%, 0);
-  text-align: right;
-  bottom: 0.5em;
+  left:0;
+  bottom:0;
+  display: flex;
+  justify-content: center;
+  /* border: 1px solid green; */
+  pointer-events: none;
 }
+
+.plan--ready-inner {
+  text-align: right;
+  max-width: 640px;
+  width: 100%;
+  padding:1rem;
+  /* border: 1px solid red; */
+  pointer-events: none;
+}
+
+@media only screen and (min-width: 481px) {
+  .plan--ready-inner {
+    width: 520px;
+  }
+  .plan--ready-inner .plan--ready{
+    width: 7rem;
+    height: 7rem;
+  }
+}
+
 .plan--ready {
+  pointer-events: all;
+  position:relative;
   font-family: 'W95FA';
   font-size: 1.3rem;
   /* padding: 2em 1em; */
-  width: 7rem;
-  height: 7rem;
-  right: 0.5rem;
-  bottom: 0.5rem;
+  width: 6rem;
+  height: 6rem;
   background: red;
   border-radius: 50%;
   border-right: 2px solid rgba(0,0,0,0.5);
@@ -522,6 +612,7 @@ export default {
   box-shadow: 1px 2px 4px rgb(0 0 0 / 50%);
   color: #fff;
   z-index: 2;
+  transition: all 150ms ease-out;
 }
 .plan--ready.disabled {
   filter: grayscale(1);
@@ -537,11 +628,14 @@ export default {
 .plan--ready:hover {
   background: red;
   transform: scale(1.05);
+  box-shadow: 0px 0px 12px 1px red;
 }
 
 .processes-minicard img {
   width: 28px;
 }
+
+
 
 .plan-change-select {
   position: absolute;
@@ -630,12 +724,13 @@ export default {
   border-bottom: 1px solid rgba(255,255,255,0.5);
   padding: 1em;
   text-align: center;
-  min-height: 200px;
+  /* min-height: 200px; */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin-bottom: 1em;
   position: relative;
+  margin:0.5em auto 1em;
+
 }
 .plan--production-bg {
   position: absolute;
@@ -652,11 +747,13 @@ export default {
 }
 
 .plan--production-button {
-  padding: 1em 0.9em;
-  max-width: 180px;
-  margin: 0 auto;
+  padding: 0.5em 0.9em;
+  /* max-width: 180px; */
+  width:100%;
+  margin: 1rem auto 0;
   cursor: pointer;
   z-index: 1;
+  display: inline-block;
 }
 
 .planning-sub-tab {
@@ -676,6 +773,8 @@ export default {
 .planning--page-tabs div:last-child {
   border-radius: 0 0 0.3em 0;
 }
+
+
 
 .plan--add-change.highlight {
   animation-duration: 0.75s;
@@ -717,12 +816,19 @@ export default {
 
 .plan--production--processes {
   display: flex;
-  margin-bottom: 1em;
 }
-.plan--production--processes .minicard {
-  height: 110px;
+.plan--production--processes .miniprocess--wrapper{
   margin: 0 0.25em;
-  border: 1px dashed rgba(0,0,0,0.5);
+
+}
+
+.plan--production--processes .miniprocess--wrapper .minicard {
+  height: 110px;
+  width: auto;
+  /* border: 1px dotted rgba(0,0,0,0.5); */
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 
 .shortage-alarming {

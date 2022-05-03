@@ -78,9 +78,9 @@ export default {
     style() {
       let style = consts.groupStyle[this.project.group];
       if (!style) {
-        return {border: `4px solid #fff`};
+        return {border: `5px solid #fff`};
       } else {
-        return {border: `4px solid ${style.background}`};
+        return {border: `5px solid ${style.background}`};
       }
     },
   },

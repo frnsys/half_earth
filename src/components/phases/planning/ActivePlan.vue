@@ -59,15 +59,18 @@ export default {
 }
 
 .planning--page.active-plan {
-  padding-top: 2.5em;
+  padding-top: calc(4em + 10px);
 }
 
 .plan--change-name {
-  text-align: center;
-  font-family: 'Inter', sans-serif;
+  color: rgba(0,0,0,0.8);
+  text-transform: uppercase;
   font-size: 0.6em;
+  letter-spacing: 0.01em;
   font-weight: bold;
-  margin: 0.5em 0;
+  font-family: 'Inter', sans-serif;
+ 
+  margin: 1em 0 0.5em;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -77,7 +80,18 @@ export default {
   max-width: 100px;
   margin: -0.75em auto 0;
   width: 100%;
+  position:relative;
+  top:-33px;
 }
+
+.active-plan .planning--page-tabs div{
+  border-bottom-left-radius: 0.3em !important;
+}
+
+.active-plan .planning--page-tabs:hover {
+  border-bottom-left-radius: 0.3em !important;
+}
+
 .active-plan .plan--changes {
   height: auto;
   max-width: 530px;
@@ -85,5 +99,11 @@ export default {
   column-gap: 1.25em;
 
   justify-content: left;
+}
+
+@media only screen and (min-width: 481px) {
+  .active-plan .plan--changes {
+    max-width: 610px;
+  }
 }
 </style>

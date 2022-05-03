@@ -36,7 +36,7 @@ export default {
 
 <style>
 .minicard {
-  border-radius: 0.7em;
+  border-radius: 0.9rem;
   padding: 0.5em;
   width: 90px;
   height: 130px;
@@ -100,6 +100,10 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 0;
+}
+
+.minicard-process-icon{
+  width: 42px;
 }
 
 .minicard > header img,
