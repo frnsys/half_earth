@@ -400,6 +400,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -418,6 +419,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -436,6 +438,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -454,6 +457,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -472,6 +476,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 29.13,
                 n2o: 0.0
@@ -490,6 +495,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 10975.989104986089
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -508,6 +514,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -525,6 +532,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 0.0
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 39.72,
                 n2o: 0.0
@@ -543,6 +551,7 @@ pub fn industries() -> Vec<Industry> {
                 water: 24484.91379101743
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -571,6 +580,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.557
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 40.0,
                 n2o: 0.0
@@ -600,6 +610,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.13666
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.0,
                 co2: 115.0,
                 n2o: 0.0
@@ -629,6 +640,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.02
             ),
             byproducts: byproducts!(
+                biodiversity: 5.0,
                 ch4: 0.0,
                 co2: 122.0,
                 n2o: 0.0
@@ -657,6 +669,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.1085
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.17454714961005954,
                 n2o: 0.0
@@ -686,6 +699,7 @@ pub fn processes() -> Vec<Process> {
                 water: 986.4
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.0,
                 co2: -1166.67,
                 n2o: 0.06337
@@ -715,6 +729,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.472
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.0,
                 co2: 115.0,
                 n2o: 0.0
@@ -743,6 +758,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.018
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.463,
                 n2o: 0.0
@@ -771,6 +787,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 1.07,
                 co2: 45.85,
                 n2o: 0.0
@@ -800,6 +817,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1530.5
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.0,
                 co2: 9.0,
                 n2o: 0.0
@@ -828,6 +846,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.34
             ),
             byproducts: byproducts!(
+                biodiversity: 2.0,
                 ch4: 0.0,
                 co2: 0.21120205102817205,
                 n2o: 0.0004035833376284048
@@ -858,6 +877,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.022
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 10.0,
                 n2o: 0.0
@@ -886,6 +906,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.1367
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.0,
                 co2: 11.5,
                 n2o: 0.0
@@ -914,6 +935,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.912,
                 co2: 75.6,
                 n2o: 0.0
@@ -942,6 +964,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00392
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.57829,
                 co2: 970.0,
                 n2o: 0.0
@@ -971,6 +994,7 @@ pub fn processes() -> Vec<Process> {
                 water: 5.29
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.03989345809939511,
                 co2: 2.666692563487021,
                 n2o: 0.005197664197
@@ -999,6 +1023,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00392
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.57829,
                 co2: 353.81,
                 n2o: 0.0
@@ -1027,6 +1052,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.3688
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 2.7,
                 co2: 412.7691,
                 n2o: 0.0
@@ -1056,6 +1082,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.489
             ),
             byproducts: byproducts!(
+                biodiversity: 2.0,
                 ch4: 0.026329682345600774,
                 co2: 1.7600170919014337,
                 n2o: 0.0033631944802367066
@@ -1086,6 +1113,7 @@ pub fn processes() -> Vec<Process> {
                 water: 9.28e-05
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 3.95e-05,
                 n2o: 0.0
@@ -1115,6 +1143,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.022
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 10.0,
                 n2o: 0.0
@@ -1143,6 +1172,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.27
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0,
                 n2o: 0.0
@@ -1171,6 +1201,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.6191,
                 co2: 1005.0,
                 n2o: 0.0
@@ -1201,6 +1232,7 @@ pub fn processes() -> Vec<Process> {
                 water: 986.4
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 174.86,
                 n2o: 0.06337
@@ -1230,6 +1262,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.3688
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 2.7,
                 co2: 180.54,
                 n2o: 0.0
@@ -1258,6 +1291,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.6191,
                 co2: 247.03,
                 n2o: 0.0
@@ -1287,6 +1321,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.00414
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 31.2,
                 n2o: 0.0
@@ -1316,6 +1351,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.03
             ),
             byproducts: byproducts!(
+                biodiversity: 1.0,
                 ch4: 0.0,
                 co2: 0.3200031076184425,
                 n2o: 0.0
@@ -1344,6 +1380,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.03
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 655.7,
                 n2o: 0.0
@@ -1373,6 +1410,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.0073529
             ),
             byproducts: byproducts!(
+                biodiversity: 0.0,
                 ch4: 0.0,
                 co2: 0.0502,
                 n2o: 0.0
@@ -7310,7 +7348,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![2],
-            opposers: vec![1],
+            opposers: vec![],
             active_outcome: None
         },
         Project {

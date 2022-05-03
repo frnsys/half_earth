@@ -206,7 +206,7 @@ specs = {
     }
 }
 valid_resources = ['Land', 'Water', 'Fuel', 'Electricity']
-valid_byproducts = ['CO2', 'CH4', 'N2O', 'Biodiveristy']
+valid_byproducts = ['CO2', 'CH4', 'N2O', 'Biodiversity']
 valid_outputs = ['Electricity', 'Fuel', 'AnimalCalories', 'PlantCalories']
 incomes = ['low_income', 'lower_middle_income', 'upper_middle_income', 'high_income']
 
