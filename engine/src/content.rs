@@ -1943,7 +1943,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![7, 8, 9],
-            opposers: vec![],
+            opposers: vec![2],
             active_outcome: None
         },
         Project {
@@ -3267,7 +3267,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 6.0),
+                Effect::WorldVariable(WorldVariable::Outlook, 3.0),
                 Effect::ModifyIndustryResources(6, Resource::Fuel, -0.4),
                 Effect::UnlocksProject(78)
             ],
@@ -3356,11 +3356,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Demand(Output::Electricity, 0.05),
-                Effect::Output(Output::PlantCalories, -0.05),
+                Effect::Output(Output::PlantCalories, 0.05),
                 Effect::UnlocksProject(20),
-                Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
+                Effect::WorldVariable(WorldVariable::Outlook, 2.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -3483,7 +3481,7 @@ pub fn projects() -> Vec<Project> {
                         Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
                     ],
                     probability: Probability {
-                        likelihood: Likelihood::Random,
+                        likelihood: Likelihood::Unlikely,
                         conditions: vec![
 
                         ]
@@ -4047,7 +4045,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Rare,
@@ -5097,7 +5095,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 76,
             ref_id: "abff294f-8058-495c-995c-f86a93ee2d8c",
-            name: "Solar Radiation Management",
+            name: "Solar Radiation Management (SRM)",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
@@ -5219,7 +5217,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::DeepSeaMining),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -5405,7 +5403,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, -8.0)
+                        Effect::WorldVariable(WorldVariable::Outlook, -2.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -5416,7 +5414,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, 10.0)
+                        Effect::WorldVariable(WorldVariable::Outlook, 3.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -5849,7 +5847,8 @@ pub fn projects() -> Vec<Project> {
                 Effect::DemandOutlookChange(Output::AnimalCalories, -0.5),
                 Effect::AddFlag(Flag::Vegetarian),
                 Effect::TriggerEvent(56, 5),
-                Effect::ProjectCostModifier(66, -0.75)
+                Effect::ProjectCostModifier(66, -0.75),
+                Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -7151,7 +7150,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 118,
             ref_id: "f2fef5c9-633c-49eb-bfb8-95292bb9debf",
-            name: "Remediate Damaged Ecosystems",
+            name: "Remediate and Protect Ecosystems",
             cost: 0,
             base_cost: Cost::Fixed(20),
             progress: 0.0,
@@ -7160,7 +7159,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
-                Effect::WorldVariable(WorldVariable::Emissions, -10.0),
+                Effect::WorldVariable(WorldVariable::Emissions, -2.0),
                 Effect::ProtectLand(10.0)
             ],
             kind: ProjectType::Initiative,
@@ -7188,20 +7187,29 @@ pub fn projects() -> Vec<Project> {
             upgrades: vec![
                 Upgrade {
                     active: false,
-                    cost: 20,
+                    cost: 10,
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0),
-                        Effect::WorldVariable(WorldVariable::Emissions, -15.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                        Effect::WorldVariable(WorldVariable::Emissions, -1.0),
                         Effect::ProtectLand(15.0)
                     ]
                 },
                 Upgrade {
                     active: false,
-                    cost: 20,
+                    cost: 10,
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -15.0),
-                        Effect::WorldVariable(WorldVariable::Emissions, -20.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                        Effect::WorldVariable(WorldVariable::Emissions, -1.0),
                         Effect::ProtectLand(20.0)
+                    ]
+                },
+                Upgrade {
+                    active: false,
+                    cost: 10,
+                    effects: vec![
+                        Effect::ProtectLand(25.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0),
+                        Effect::WorldVariable(WorldVariable::Emissions, -1.0)
                     ]
                 }
             ],
@@ -9752,7 +9760,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-
+                Effect::WorldVariable(WorldVariable::Outlook, 8.0)
             ],
             probabilities: vec![
                 Probability {
