@@ -6,7 +6,7 @@ export default {
   // Have to all be below these values to win
   winState: {
     emissions: 0,
-    extinction: 10,
+    extinction: 20,
     temperature: 1,
   },
 
