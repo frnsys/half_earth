@@ -329,7 +329,7 @@ conds = {
     'ActiveProjectUpgrades':    lambda e: (ids[e['entity']], comps[e['comparator']], e['value']),
     'RunsPlayed':    lambda e: (comps[e['comparator']], e['value']),
     'HeavyProjects':    lambda e: (comps[e['comparator']], e['value']),
-    'ProtectLand':    lambda e: (comps[e['comparator']], e['value']),
+    'ProtectLand':    lambda e: (comps[e['comparator']], float(e['value'])),
     'RegionFlag':    lambda e: ('"{}".to_string()'.format(e['value']),),
     'HasFlag':          lambda e: ('Flag::{}'.format(e['value']),),
     'WithoutFlag':          lambda e: ('Flag::{}'.format(e['value']),),
