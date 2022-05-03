@@ -143,7 +143,7 @@ export default {
 
 .two-buttons {
   display: flex;
-  max-width: 450px;
+  max-width: 280px;
   margin: 0 auto;
 }
 .two-buttons hr {
@@ -174,6 +174,10 @@ export default {
   #start-screen button {
     max-width: 450px;
     font-size: 1.5em;
+  }
+
+  .two-buttons {
+    max-width: 450px;
   }
 }
 </style>
