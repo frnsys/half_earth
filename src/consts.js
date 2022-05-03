@@ -49,7 +49,7 @@ export default {
   processCardWithdrawTime: 0.4,
 
   maxValues: {
-    biodiversity: 80,
+    biodiversity: 120,
     contentedness: 40,
   },
 

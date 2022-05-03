@@ -89,7 +89,7 @@ impl Process {
     pub fn extinction_rate(&self) -> f32 {
         let pressure = self.adj_byproducts().biodiversity;
         let land = self.adj_resources().land;
-        (pressure/1e4 + land/consts::STARTING_RESOURCES.land) * 100.
+        (pressure/3e16 + land/consts::STARTING_RESOURCES.land) * 100.
     }
 }
 

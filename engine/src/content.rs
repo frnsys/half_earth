@@ -817,7 +817,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1530.5
             ),
             byproducts: byproducts!(
-                biodiversity: 1.0,
+                biodiversity: 3.0,
                 ch4: 0.0,
                 co2: 9.0,
                 n2o: 0.0
@@ -1291,7 +1291,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                biodiversity: 0.0,
+                biodiversity: 1.0,
                 ch4: 0.6191,
                 co2: 247.03,
                 n2o: 0.0

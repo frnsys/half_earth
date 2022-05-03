@@ -18,8 +18,8 @@ const intensities = {
     'calories': [-1, 0, 0.5, 1],
   },
   'biodiversity': {
-    'energy': [0, 1, 2, 3],
-    'calories': [0, 1, 2, 3],
+    'energy': [0, 1e-15, 1e-14, 1.5e-14],
+    'calories': [0, 1e-16, 1e-15, 1e-14],
   },
 };
 
@@ -41,7 +41,7 @@ function intensity(val, key, type) {
 function scale(val, key) {
   switch (key) {
     case 'outlook': return Math.max(1, Math.round(val/consts.base_outlook * 4));
-    case 'extinction': return Math.max(0, Math.round(val/60 * 4));
+    case 'extinction': return Math.max(0, Math.round(val/100 * 4));
     case 'habitability': return Math.max(0, Math.round(val/consts.base_habitability * 4));
     case 'world_outlook': return Math.max(1, Math.round(val/(consts.base_outlook+consts.base_world_outlook) * 4));
     case 'warming': return Math.floor(val) + 1;
