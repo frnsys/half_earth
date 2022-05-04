@@ -1,5 +1,6 @@
 <template>
 <div class="interstitial" :style="{'background-image': `url('/assets/environments/out/${locale.background}')`}">
+  <div class="interstitial--inner">
   <header>
     <h3>{{state.gameState.world.year}}</h3><br />
     <h1>{{title}}</h1><br />
@@ -16,6 +17,7 @@
   <div class="interstitial--image-credit">Image: {{locale.credit}}</div>
   <div class="interstitial--next" v-if="ready && !gameOver && !gameWin">
     <button class="btn" @click="nextPhase">Continue</button>
+  </div>
   </div>
 </div>
 </template>
@@ -253,7 +255,15 @@ export default {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+
+.interstitial--inner{
+  padding-bottom: 1rem;
+}
+
 .interstitial h1,
 .interstitial h2,
 .interstitial h3 {
@@ -273,7 +283,7 @@ export default {
   font-style: italic;
 }
 .interstitial header {
-  margin: 2em 0;
+  margin: 1em 0 2em 0;
   text-align: center;
 }
 .interstitial--summary {
@@ -313,4 +323,9 @@ export default {
   max-width: 200px;
   text-shadow: 0 0 2px black;
 }
+
+.btn{
+  font-family: 'Times Ten', serif;
+}
+
 </style>
