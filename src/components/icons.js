@@ -66,6 +66,7 @@ export default {
   hourglass: require('/assets/icons/hourglass.svg'),
   sea_level_rise: require('/assets/icons/sea_level_rise.png'),
   arrow_right: require('/assets/icons/arrow_right.svg'),
+  arrow_right_light: require('/assets/icons/arrow_right_light.svg'),
   arrow_left: require('/assets/icons/arrow_left.svg'),
   settings: require('/assets/icons/settings.svg'),
   time: require('/assets/icons/time.svg'),
