@@ -565,7 +565,7 @@ export default {
 }
 
 .plan--ready-outer {
-  z-index: 19;
+  z-index: 10;
   position: absolute;
   width: 100%;
   left:0;
