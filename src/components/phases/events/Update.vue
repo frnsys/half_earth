@@ -1,5 +1,5 @@
 <template>
-<div class="event project-completed" :style="{backgroundImage: imageUrl}" @click="tryDone">
+<div class="event project-completed" :style="{backgroundImage: imageUrl}" @click="tryDone" :class="{regionup : isRegion}">
   <div class="event--body">
     <template v-if="update.type == 'Project' || update.type == 'Policy'">
       <div class="arc">{{ update.type == 'Project' ? 'Project Completed' : 'Policy Outcome' }}</div>
@@ -9,17 +9,17 @@
         <Effects :effects="obj.activeEffects" />
       </div>
     </template>
-    <template v-else-if="update.type == 'Region:Up'">
+    <template v-else-if="update.type == 'Region:Up'" >
       <div class="arc">Region Developed</div>
       <div class="image-attribution">Image source: {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{obj.name}}</div>
-      <div class="event--outcome">This region's income level has increased to {{display.enumDisplay(obj.income, true)}}.</div>
+      <div class="event--outcome">This region's income level has increased to <strong>{{display.enumDisplay(obj.income, true)}}</strong>. Demand for <img :src="icons.electricity">electricity, <img :src="icons.fuel">fuel, <img :src="icons.plant_calories">plant and <img :src="icons.animal_calories">animal-based food has been updated.</div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
             v-tip="{icon: 'wealth', text: `This region previous income level.`}"
             resource="wealth" :intensity="obj.income_level" :invert="true" />
-          ⟶
+          <img :src="icons.arrow_right_light">
           <IntensityIcon
             v-tip="{icon: 'wealth', text: `This region new income level.`}"
             resource="wealth" :intensity="obj.income_level + 1" :invert="true" />
@@ -30,7 +30,7 @@
           <IntensityIcon
             v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[0]" />
-          ⟶
+          <img :src="icons.arrow_right_light">
           <IntensityIcon
             v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[1]" />
@@ -40,13 +40,13 @@
     <template v-else-if="update.type == 'Region:Down'">
       <div class="arc">Region Contracted</div>
       <div class="event--name">{{obj.name}}</div>
-      <div class="event--outcome">This region's income level has contracted to {{display.enumDisplay(obj.income, true)}}.</div>
+      <div class="event--outcome">This region's income level has contracted to <strong>{{display.enumDisplay(obj.income, true)}}</strong>. Demand for electricity, fuel, plant and animal-based food been updated.</div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
             v-tip="{icon: 'wealth', text: `This region previous income level.`}"
             resource="wealth" :intensity="obj.income_level + 2" :invert="true" />
-          ⟶
+          <img :src="icons.arrow_right_light">
           <IntensityIcon
             v-tip="{icon: 'wealth', text: `This region new income level.`}"
             resource="wealth" :intensity="obj.income_level + 1" :invert="true" />
@@ -57,7 +57,7 @@
           <IntensityIcon
             v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[0]" />
-          ⟶
+          <img :src="icons.arrow_right_light">
           <IntensityIcon
             v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[1]" />
@@ -134,6 +134,13 @@ export default {
         return obj;
       }
     },
+    isRegion(){
+      if(this.update.type == 'Region:Up' || this.update.type == 'Region:Down'){
+        return true
+      } else {
+        return false
+      }
+    },
     imageUrl() {
       if (this.obj.image){
         if(this.obj.image.fname){
@@ -165,8 +172,24 @@ export default {
   background-position: center;
 }
 .event--outcome {
-  font-size: 0.85em;
-  margin: 1em 2em;
+  /* font-family: 'Times Ten', serif; */
+  text-align: center;
+  opacity: 0.8;
+  font-size: 0.8em;
+  padding: 1rem;
+  margin: 1rem 2rem;
+  border-radius:0.5rem;
+  box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
+  border-right: 1px solid rgba(255,255,255,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  line-height: 1.4;
+}
+
+.event--outcome img{
+  width:14px;
+  margin-bottom: -2px;
+  margin-right: 2px;
+  image-rendering: auto;
 }
 
 .event--icon-changes {
@@ -201,5 +224,19 @@ export default {
 }
 .event--icon-changes-group .event--icon-change img {
   width: 20px;
+}
+
+.event.regionup .event--body{
+  height: auto;
+  padding-bottom: 3rem;
+}
+
+.event.regionup .label{
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase;
+  font-size: 0.6em;
+  letter-spacing: 0.01em;
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;
 }
 </style>
