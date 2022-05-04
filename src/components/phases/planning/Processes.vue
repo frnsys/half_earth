@@ -1,7 +1,7 @@
 <template>
 <div class="plan-change-select planning--page">
   <div class="planning--page-tabs">
-  <div class="unspent-warning" v-if="!allowBack">There are still unused production points!</div>
+  <div class="unspent-warning" v-if="!allowBack">Drag a card up to assign leftover production</div>
    <div class="planning-sub-tab"  @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
       <img :src="icons.electricity" />
       <div>Electricity</div>
@@ -55,10 +55,10 @@
       </div>
     </div>
     <div class="production--demand planning--demand">
-      <div v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${display.enumDisplay(k)}.`)">
-        {{demand[k]}}<img :src="icons[k]">
+      <div class="demand-unit" v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${display.enumDisplay(k)}.`)">
+        <span>{{demand[k]}}</span><img class="demand-icon" :src="icons[k]"/>
       </div>
-      <div v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">{{emissions}}<img :src="icons.emissions"></div>
+      <div class="demand-unit" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')"><span>{{emissions}}</span><img class="demand-icon" :src="icons.emissions"></div>
     </div>
   </div>
 </div>
@@ -349,15 +349,46 @@ export default {
   background-color: rgba(255,255,255,0.8);
   text-align: center;
   z-index: 1;
-  font-family: 'Inter', sans-serif;
+  font-family: 'W95FA', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 0.5em;
-  font-weight: 600;
+  font-size: 0.6em;
+  /* font-weight: 600; */
   display: flex;
   justify-content: center;
   flex-direction: column;
   border-radius: 0 0 0.6em 0.6em !important;
   border-right: none !important;
+}
+.planning--demand {
+  display: flex;
+  justify-content: center;
+  font-size: 1.1em;
+  position: relative;
+  max-width: 530px;
+  margin:0 auto;
+  margin-bottom: 1rem;
+}
+
+.demand-unit{
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: center;
+  background-color: rgba(0,0,0,0.1);
+  padding: 0.5em;
+  color:white;
+  border-radius: 0.2rem;
+  margin: 0 0.5em;
+
+}
+
+.demand-unit span{
+  margin-right: 0.2rem;
+}
+
+.demand-icon{
+  image-rendering: auto;
+  width: 22px;
+  height: 22px;
 }
 </style>
