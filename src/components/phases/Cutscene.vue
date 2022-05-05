@@ -91,6 +91,7 @@ export default {
 }
 
 .win-con, .lose-con {
+  font-style: normal;
   text-decoration: underline;
 }
 
