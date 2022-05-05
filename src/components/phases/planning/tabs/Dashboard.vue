@@ -457,7 +457,7 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0.5em;
+  bottom: 0.75em;
 }
 .dashboard--change img {
   transform: rotate(-90deg);
