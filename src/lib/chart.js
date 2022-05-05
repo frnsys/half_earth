@@ -39,6 +39,7 @@ class Chart {
   reset() {
     this._reset();
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.font = '12px "W95FA"';
   }
 
   _drawLine(pixels, color) {

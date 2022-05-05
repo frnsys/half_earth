@@ -258,11 +258,11 @@ export default {
         text: 'Now',
         point: {x: this.historical.data.length - 1, y: 0.8},
         anchor: 'CENTER',
-        background: '#FFECC7'
+        background: '#FFFCE2'
       }, {
         text: 'Under current plan',
         point: {x: 50, y: 0.5},
-        background: '#FFECC7'
+        background: '#FFFCE2'
       }];
     },
     historical() {
