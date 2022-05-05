@@ -110,7 +110,6 @@
     </div>
   </div>
   <div class="dashboard-breakdown">
-      <h3>Breakdown</h3>
       <div class="dashboard-breakdown-select btn" @click="showBreakdownMenu = true">
         <img class="pip-icon" :src="icons[breakdownFactor]" />{{ breakdownFactor.replace('_', ' ') }} ▼
       </div>
@@ -430,15 +429,10 @@ export default {
 }
 
 .dashboard-breakdown-select {
-  /* background: #fff;
-  border-radius: 0.5em;
-  box-shadow: 2px 2px 0 #747474;
-  text-align: center;
-  text-transform: capitalize;
-  font-size: 1.5em;
-  width: fit-content;
-  margin: 0 auto 0.5em;
-  padding: 0.5em 0.75em; */
+  margin-top:0.5rem;
+  margin-bottom: 1rem;
+  min-width: 87%;
+  justify-content: center;
 }
 .dashboard-breakdown-select img {
   width: 24px;
