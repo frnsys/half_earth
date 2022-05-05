@@ -10,7 +10,7 @@
   </div>
   <div class="break--actions" v-if="showStart">
     <h2>{{message}}</h2>
-    <button @click="startRun">Try Again?</button>
+    <button class='try-again-button' @click="startRun">Try Again?</button>
   </div>
   <div v-if="shareImgUrl && showStart">
     <img class="share-image" crossorigin="anonymous" :src="shareImgUrl" />
@@ -146,5 +146,9 @@ export default {
   max-width: 500px;
   margin: 0 auto 1em;
   border-radius: 0.4em;
+}
+
+.try-again-button{
+  font-family: 'Times Ten', serif;
 }
 </style>
