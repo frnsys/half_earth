@@ -587,7 +587,7 @@ export default {
 
 @media only screen and (min-width: 481px) {
   .plan--ready-inner {
-    width: 520px;
+    width: 650px;
   }
   .plan--ready-inner .plan--ready{
     width: 7rem;
