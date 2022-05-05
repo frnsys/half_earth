@@ -166,7 +166,7 @@ export default {
 }
 
 .hud-year {
-  padding-top: 0.5em !important;
+  padding-top: 0.62em !important;
   display: block !important;
 }
 
