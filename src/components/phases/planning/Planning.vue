@@ -3,10 +3,10 @@
 <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
 <div class="planning">
   <header>
-    <div :class="{active: page == PAGES.PLAN, highlight: planHighlighted}" @click="selectPage(PAGES.PLAN)">Plan</div>
-    <div :class="{active: page == PAGES.PARLIAMENT, disabled: parliamentDisabled, highlight: parliamentHighlighted}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
-    <div :class="{active: page == PAGES.DASHBOARD, disabled: dashboardDisabled, highlight: dashboardHighlighted}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.hourglass" />Stats</div>
-    <div :class="{active: page == PAGES.REGIONS, disabled: regionsDisabled, highlight: regionsHighlighted}" @click="selectPage(PAGES.REGIONS)">World</div>
+    <div class="planning--tab" :class="{active: page == PAGES.PLAN, highlight: planHighlighted}" @click="selectPage(PAGES.PLAN)">Plan</div>
+    <div class="planning--tab" :class="{active: page == PAGES.PARLIAMENT, disabled: parliamentDisabled, highlight: parliamentHighlighted}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
+    <div class="planning--tab" :class="{active: page == PAGES.DASHBOARD, disabled: dashboardDisabled, highlight: dashboardHighlighted}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.time" />Stats</div>
+    <div class="planning--tab" :class="{active: page == PAGES.REGIONS, disabled: regionsDisabled, highlight: regionsHighlighted}" @click="selectPage(PAGES.REGIONS)">World</div>
   </header>
 
   <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
@@ -273,8 +273,18 @@ export default {
   font-size: 0.8em;
 }
 
+.planning--tab{
+  position: relative;
+}
+
 .changes-icon {
-  width: 8px;
-  margin-right: 1px;
+  border-radius: 5px;
+  width: 18px;
+  padding: 4px;
+  border: 1px solid;
+  background: white;
+  position: absolute;
+  bottom: -0.9rem;
+  left: calc(50% - 9px);
 }
 </style>
