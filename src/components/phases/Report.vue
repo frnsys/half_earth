@@ -467,6 +467,11 @@ export default {
 }
 
 @media only screen and (min-width: 481px) {
+  .report--body{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
   .report--inner{
     max-width: 430px;
   }
