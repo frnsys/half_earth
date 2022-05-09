@@ -13155,7 +13155,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Likely,
                     conditions: vec![
-                        Condition::Demand(Output::AnimalCalories, Comparator::GreaterEqual, 2920000000000000.0),
+                        Condition::Demand(Output::AnimalCalories, Comparator::GreaterEqual, 146.0),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
@@ -13602,7 +13602,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::Demand(Output::AnimalCalories, Comparator::Less, 146000000.0),
+                        Condition::Demand(Output::AnimalCalories, Comparator::Less, 10.0),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 }
