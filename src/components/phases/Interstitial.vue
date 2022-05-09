@@ -99,6 +99,11 @@ const LOCALES = [{
   background: '2560px-Vltava_river_in_Prague.jpg',
   ambience: 'city_noise.mp3',
   credit: 'Dmitry A. Mottl, CC BY-SA 4.0, via Wikimedia Commons',
+}, {
+  name: 'Havana',
+  background: 'pexels-matthias-oben-3687869.jpg',
+  ambience: 'city_noise.mp3',
+  credit: 'Matthias Oben',
 }];
 
 export default {
