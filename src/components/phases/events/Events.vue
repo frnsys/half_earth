@@ -102,7 +102,9 @@ export default {
       this.globe = globe;
       this.globe.clear();
       this.globe.rotate = true;
-      this.globe.clouds.visible = true;
+      if (this.globe.clouds) {
+        this.globe.clouds.visible = true;
+      }
       this.startYear();
     },
     start() {
