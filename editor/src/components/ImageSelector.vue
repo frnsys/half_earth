@@ -1,13 +1,17 @@
 <template>
 <div class="overlay image-selector" @click="tryClose" ref="overlay">
   <template v-for="img in images">
-    <img :src="`/image/${img.image}`" @click="select(img)" />
+    <div>
+      <img :src="`/image/${img.image}`" @click="select(img)" />
+      <div style="color:#fff;">{{img.name}}</div>
+    </div>
   </template>
 </div>
 </template>
 
 <script>
 import state from '/src/state';
+import allImages from '../../all_images.json';
 
 export default {
   props: ['image', 'dimensions'],
@@ -19,8 +23,14 @@ export default {
   computed: {
     images() {
       return Object.values(this.state.items)
-        .filter((i) => !i.deleted && i.image)
-        .map((i) => i.image);
+        /* .filter((i) => !i.deleted && i.image) */
+        .filter((i) => i.image)
+        .map((i) => {
+          return {
+            name: i.name,
+            ...i.image
+          }
+        }).concat(allImages);
     }
   },
   methods: {
