@@ -6,11 +6,14 @@
 <template>
 <div class="cards" ref="scroller" @scroll.passive="onScroll">
   <slot></slot>
+  <div v-if="isSafari" class="safari-scroll-margin"></div>
 </div>
 </template>
 
 <script>
 import {detectCenterElement} from 'lib/util';
+
+const isSafari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
 
 // How many scroll events we wait until
 // declaring that scrolling has started
@@ -20,6 +23,7 @@ export default {
   props: ['disabled'],
   data() {
     return {
+      isSafari,
       scrollTimeout: null,
     }
   },
@@ -220,5 +224,14 @@ to be centered */
 
 .noscroll {
   overflow: hidden;
+}
+
+.safari-scroll-margin {
+  width: 50vw;
+  scroll-snap-align: none !important;
+  height: 10px;
+  flex-basis: 50vw;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 </style>

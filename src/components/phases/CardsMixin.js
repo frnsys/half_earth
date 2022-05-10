@@ -25,10 +25,12 @@ export default {
       // Figure out what the focused card is
       this.$nextTick(() => {
         let scroller = document.querySelector('.cards');
-        let els = [...document.querySelectorAll('.draggable')];
-        let idx = detectCenterElement(scroller, els);
-        this.cardHeight = els[idx].getBoundingClientRect().height;
-        this.onFocused(idx);
+        if (scroller) {
+          let els = [...document.querySelectorAll('.draggable')];
+          let idx = detectCenterElement(scroller, els);
+          this.cardHeight = els[idx].getBoundingClientRect().height;
+          this.onFocused(idx);
+        }
       });
     },
     onFocused(idx) {

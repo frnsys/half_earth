@@ -63,17 +63,20 @@ export default {
         if (changes.upgrades > 0) {
           let level = this.project.level;
           let upgrades = PROJECTS[this.project.id].upgrades;
-          let cost = upgrades[level-1].cost;
-          game.changePoliticalCapital(cost);
-          if (this.project.kind == 'Policy') {
-            game.downgradeProject(this.project.id);
-          } else {
-            state.queuedUpgrades[this.project.id] = false;
-          }
-          changes.upgrades--;
+          let upgrade = upgrades[level-1];
+          if (upgrade) {
+            let cost = upgrade.cost;
+            game.changePoliticalCapital(cost);
+            if (this.project.kind == 'Policy') {
+              game.downgradeProject(this.project.id);
+            } else {
+              state.queuedUpgrades[this.project.id] = false;
+            }
+            changes.upgrades--;
 
-          // Can maybe keep withdrawing
-          keepWithdrawing = changes.upgrades > 0 || changes.passed;
+            // Can maybe keep withdrawing
+            keepWithdrawing = changes.upgrades > 0 || changes.passed;
+          }
         } else if (changes.passed) {
           game.changePoliticalCapital(this.project.cost);
           game.stopProject(this.project.id);
