@@ -8,7 +8,7 @@ BADGES = {
         'desc': 'You had an extraterrestrial encounter.'
     },
     'biodiversity': {
-        'fn': lambda s: s['world']['extinction_rate'] <= 15,
+        'fn': lambda s: s['world']['extinction_rate'] is not None and s['world']['extinction_rate'] <= 15,
         'desc': 'Planetary life flourished under your tenure.'
     },
     'electrification': {
@@ -18,7 +18,7 @@ BADGES = {
         'desc': 'You helped electrify the world.',
     },
     'extinction': {
-        'fn': lambda s: s['world']['extinction_rate'] >= 45,
+        'fn': lambda s: s['world']['extinction_rate'] is not None and s['world']['extinction_rate'] >= 60,
         'desc': 'Planetary life suffered under your tenure.',
     },
     'fossil_fuels': {
