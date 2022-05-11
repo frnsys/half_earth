@@ -16,6 +16,7 @@
           <hr />
           <button @click="showCredits = true">Credits</button>
         </div>
+        <div class="book-line">Based on the book <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em>.</div>
       </div>
     </div>
   </div>
@@ -165,6 +166,20 @@ export default {
   background: #111;
   z-index: 10;
   overflow-y: auto;
+}
+
+.book-line {
+  font-size: 0.8em;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.5);
+  padding: 0.25em;
+  border-radius: 0.25em;
+}
+.book-line a {
+  color: #fff;
 }
 
 @media only screen and (min-width: 481px) {
