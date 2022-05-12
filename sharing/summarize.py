@@ -16,14 +16,13 @@ def summarize(scenario):
 
 
 def estimate_faction(scenario):
-    ally = max(scenario['npcs'], key=lambda npc: npc['relationship'])
-    max_val = ally['relationship']
-    top = []
-    for npc in scenario['npcs']:
-        if npc['relationship'] == max_val:
-            top.append(npc)
-    if len(top) > 1:
-        ally = random.choice(top)
+    allies = [npc for npc in scenario['npcs'] if npc['is_ally']]
+    weights = [npc['relationship'] for npc in allies]
+    if not allies:
+        closest_ally = max(scenario['npcs'], key=lambda npc: npc['relationship'])
+        allies = [closest_ally]
+        weights = [closest_ally['relationship']]
+    ally = random.choices(population=allies, weights=weights, k=1)[0]
     name = ally['name']
     return name[0].lower() + name[1:] + 's'
 
