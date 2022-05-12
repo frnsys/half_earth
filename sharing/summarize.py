@@ -4,8 +4,11 @@ from badges import BADGES
 def summarize(scenario):
     badges = []
     for badge, spec in BADGES.items():
-        if spec['fn'](scenario):
-            badges.append(badge)
+        try:
+            if spec['fn'](scenario):
+                badges.append(badge)
+        except:
+            print('Error evaluating badge: {}'.format(badge))
 
     return {
         'win': scenario['win'],
