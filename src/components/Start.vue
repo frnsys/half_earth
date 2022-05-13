@@ -9,14 +9,16 @@
       <div id="start-inner">
         <img src="/assets/intro.svg" />
         <div class="start-subtitle">A Planetary Crisis Planning Game</div>
-        <button v-if="hasSave()" @click="continueGame">Continue</button>
-        <button @click="startGame">New Game</button>
+        <button class="start-button" v-if="hasSave()" @click="continueGame">Continue</button>
+        <button class="start-button" @click="startGame">New Game</button>
         <div class="two-buttons">
-          <button @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
+          <button class="start-button" @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
           <hr />
-          <button @click="showCredits = true">Credits</button>
+          <button class="start-button" @click="showCredits = true">Credits</button>
         </div>
-        <div class="book-line">Based on the book <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em>.</div>
+        <a class="book-line " target="_blank" href="https://www.versobooks.com/books/3818-half-earth-socialism">
+          <span>Read the book:&nbsp;<em>Half-Earth Socialism</em>.</span>
+        </a>
       </div>
     </div>
   </div>
@@ -134,7 +136,7 @@ export default {
 }
 
 #start-inner{
-  margin-bottom: 3em;
+  /* margin-bottom: 3em; */
 }
 
 .start-subtitle {
@@ -169,18 +171,44 @@ export default {
 }
 
 .book-line {
-  font-size: 0.8em;
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.5);
-  padding: 0.25em;
-  border-radius: 0.25em;
-}
-.book-line a {
   color: #fff;
+  text-decoration: none;
+  padding: 0.4rem 0.5rem;
+  text-transform: none;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: 0.25em;
+  box-shadow: 2px 0px 5px rgba(0,0,0,0.1);
+  transition: all 50ms ease-out;
+  letter-spacing: 0.01em;
+  display: flex;
+  justify-content: center;
+  width: 280px;
+  margin:1rem auto 0;
 }
+
+.book-line span{
+  border-bottom: 1px solid white;
+}
+
+.book-line:hover span{
+  border-bottom: 1px solid #111;
+}
+
+.book-line:hover{
+  background-color: rgba(0,0,0,0.9);
+  box-shadow: 0px 0px 10px #B9F80D;
+  background: #B9F80D;
+  color:#111;
+}
+
+
+
+#start-inner .start-button:hover{
+  color:rgba(255,255,255,0.7);
+}
+
 
 @media only screen and (min-width: 481px) {
   #start-screen img{
@@ -194,5 +222,13 @@ export default {
   .two-buttons {
     max-width: 450px;
   }
+
+  .book-line{
+    bottom: 1rem;
+    font-size: 1rem;
+    padding: 0.75rem;
+    width: 450px;
+  }
 }
+
 </style>
