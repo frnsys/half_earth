@@ -6291,7 +6291,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::UnlocksProject(49)
             ],
             kind: ProjectType::Policy,
-            locked: true,
+            locked: false,
             status: ProjectStatus::Inactive,
             group: ProjectGroup::Behavior,
             ongoing: false,
@@ -9442,7 +9442,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 63,
             ref_id: "4c06a709-9a47-41f3-b8bb-f6008305a7a6",
-            name: "Blood Red Sunsets",
+            name: "Blood-Red Sunsets",
             phase: Phase::WorldMain,
             locked: true,
             occurred: false,
@@ -11722,7 +11722,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::UnlocksProject(99)
+                Effect::WorldVariable(WorldVariable::PopulationGrowth, -1.0)
             ],
             probabilities: vec![
                 Probability {

@@ -17,7 +17,7 @@ use crate::save::{Saveable, coerce};
 
 const LIFESPAN: usize = 60;
 const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
-const PRODUCTION_SHORTAGE_PENALTY: f32 = 40.;
+const PRODUCTION_SHORTAGE_PENALTY: f32 = 60.;
 
 #[derive(Default, Serialize, Clone)]
 pub struct State {
