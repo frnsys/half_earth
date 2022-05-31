@@ -11910,7 +11910,7 @@ pub fn events() -> Vec<Event> {
             ref_id: "a3e0e579-8b7b-4e2c-ad4f-104eb7cbd7e2",
             name: "Production Shortage",
             phase: Phase::PlanningStart,
-            locked: false,
+            locked: true,
             occurred: false,
             regional: false,
             effects: vec![
