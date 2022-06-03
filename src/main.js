@@ -7,6 +7,7 @@ import display from '/src/display/display';
 import tip from 'components/tip/directive';
 import App from 'components/App.vue';
 import debug from './debug';
+import {loadLanguage} from '/src/i18n';
 
 import * as Sentry from "@sentry/browser";
 import { Integrations } from "@sentry/tracing";
@@ -28,16 +29,18 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const app = createApp(App);
-app.directive('tip', tip);
-app.config.globalProperties['icons'] = icons;
-app.config.globalProperties['consts'] = consts;
-app.config.globalProperties['format'] = format;
-app.config.globalProperties['factors'] = factors;
-app.config.globalProperties['display'] = display;
-app.config.globalProperties['debug'] = debug;
-app.mount('#main');
-startSession();
+loadLanguage(() => {
+  const app = createApp(App);
+  app.directive('tip', tip);
+  app.config.globalProperties['icons'] = icons;
+  app.config.globalProperties['consts'] = consts;
+  app.config.globalProperties['format'] = format;
+  app.config.globalProperties['factors'] = factors;
+  app.config.globalProperties['display'] = display;
+  app.config.globalProperties['debug'] = debug;
+  app.mount('#main');
+  startSession();
+});
 
 // window.onbeforeunload = () => {
 //   return 'Are you sure you want to quit?';
