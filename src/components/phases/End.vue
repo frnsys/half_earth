@@ -66,8 +66,9 @@ export default {
       game.clearSave();
     },
     startRun() {
-      game.newRun(true);
-      state.phase = 'PLANNING';
+      window.location.reload();
+      /* game.newRun(true); */
+      /* state.phase = 'PLANNING'; */
     },
     getShareImage() {
       share(!this.lose, ({badges, url, image}) => {
