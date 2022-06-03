@@ -33,7 +33,6 @@ import intensity from '/src/display/intensity';
 // List from Troy:
 // Bandung, Hanoi, Mexico City, Budapest, Thiruvananthapuram, Luanda, Ayn Issa, Ferrara, Vienna, Beijing, Aden, Caracas, Algiers, Belgrade, Moscow, Managua, Buenos Aires, Trier, Prague, Porto Alegre, Seattle/Burlington/Bronx, Dar es Salaam
 
-// TODO
 const LOCALES = [{
   name: 'Havana',
   background: 'pexels-matthias-oben-3687869.jpg',

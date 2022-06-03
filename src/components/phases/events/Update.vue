@@ -3,7 +3,7 @@
   <div class="event--body">
     <template v-if="update.type == 'Project' || update.type == 'Policy'">
       <div class="arc">{{ update.type == 'Project' ? 'Project Completed' : 'Policy Outcome' }}</div>
-      <div class="image-attribution">Image source: {{obj.image ? obj.image.attribution : ''}}</div>
+      <div class="image-attribution">Image: {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{obj.name}}</div>
       <div class="event--effects">
         <Effects :effects="obj.activeEffects" />
@@ -11,28 +11,28 @@
     </template>
     <template v-else-if="update.type == 'Region:Up'" >
       <div class="arc">Region Developed</div>
-      <div class="image-attribution">Image source: {{obj.image ? obj.image.attribution : ''}}</div>
+      <div class="image-attribution">Image: {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{obj.name}}</div>
       <div class="event--outcome">This region's income level has increased to <strong>{{display.enumDisplay(obj.income, true)}}</strong>. Demand for <img :src="icons.electricity">electricity, <img :src="icons.fuel">fuel, <img :src="icons.plant_calories">plant and <img :src="icons.animal_calories">animal-based food has been updated.</div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region previous income level.`}"
+            v-tip="{icon: 'wealth', text: `This region's previous income level.`}"
             resource="wealth" :intensity="obj.income_level" :invert="true" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region new income level.`}"
+            v-tip="{icon: 'wealth', text: `This region's new income level.`}"
             resource="wealth" :intensity="obj.income_level + 1" :invert="true" />
         </div>
       </div>
       <div class="event--icon-changes event--icon-changes-group">
         <div class="event--icon-change" v-for="v, k in obj.changes">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[0]" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[1]" />
         </div>
       </div>
@@ -44,22 +44,22 @@
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region previous income level.`}"
+            v-tip="{icon: 'wealth', text: `This region's previous income level.`}"
             resource="wealth" :intensity="obj.income_level + 2" :invert="true" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region new income level.`}"
+            v-tip="{icon: 'wealth', text: `This region's new income level.`}"
             resource="wealth" :intensity="obj.income_level + 1" :invert="true" />
         </div>
       </div>
       <div class="event--icon-changes event--icon-changes-group">
         <div class="event--icon-change" v-for="v, k in obj.changes">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[0]" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
             :resource="k" :intensity="v[1]" />
         </div>
       </div>

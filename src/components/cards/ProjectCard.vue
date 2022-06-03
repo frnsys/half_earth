@@ -28,7 +28,7 @@
       <img
         v-for="i in consts.maxPoints"
         class="pip"
-        v-tip="{text: `POINT: ${i} ${project.points} ${project.kind} points are allocated to this project`, icon: type}"
+        v-tip="{text: `${project.points} ${project.kind} points are allocated to this project`, icon: type}"
         :class="{'empty-point': i > project.points}"
         :src="icons[type]">
     </div>
