@@ -190,6 +190,13 @@ export default {
               state.history.emissions.push(state.gameState.world.emissions);
               state.history.land_use.push(state.gameState.resources_demand.land);
 
+              if (iconEvents.length > 0) {
+                iconEvents.forEach(({eventId, regionId}) => {
+                  this.showEventOnGlobe(eventId, regionId);
+                });
+                game.applyIconEvents(iconEvents);
+              }
+
               this.rollEvent();
               return;
 
@@ -198,9 +205,8 @@ export default {
                 let events = [];
                 popIconEvents(iconEvents, this.time).forEach(({eventId, regionId}) => {
                   events.push({eventId, regionId});
-                  let icon = this.showEventOnGlobe(eventId, regionId);
-                  let ev = ICON_EVENTS[eventId];
-
+                  this.showEventOnGlobe(eventId, regionId);
+                  /* let ev = ICON_EVENTS[eventId]; */
                   // If autoclickers for this event, roll for autoclick
                   // if (icon && eventId in state.gameState.autoclickers) {
                   //   let chance = state.gameState.autoclickers[eventId];
@@ -241,9 +247,17 @@ export default {
       });
       this.applyEmissions();
 
-      if (this.hasEvent && !this.skipping) {
-        this.showEvent();
-        this.globe.pauseRotation();
+      if (this.hasEvent) {
+        if (!this.skipping) {
+          this.showEvent();
+          this.globe.pauseRotation();
+        } else {
+          // Apply skipped events
+          this.events.forEach(([eventId, regionId]) => {
+            game.applyEvent(eventId, regionId);
+          });
+          this.startYear();
+        }
       } else {
         this.startYear();
       }
