@@ -61,6 +61,7 @@ export default {
   },
   data() {
     let events = game.roll.planning('Start');
+    events = events.concat(game.roll.planning('Plan'));
     return {
       state,
       events,

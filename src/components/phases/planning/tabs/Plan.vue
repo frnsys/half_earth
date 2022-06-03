@@ -115,11 +115,9 @@ export default {
     this.charts = charts;
   },
   data() {
-    let events = game.roll.planning('Plan');
     let years = state.gameState.death_year - 1990;
     return {
       state,
-      events,
       years,
       slots: 5,
       page: null,
@@ -389,7 +387,7 @@ export default {
   max-width: 320px;
 }
 .plan--changes.m{
-  max-width: 440px; 
+  max-width: 440px;
 }
 .plan--changes.l{
   max-width: 530px;
@@ -405,7 +403,7 @@ export default {
     margin: 1rem 0;
   }
 
-  .plan--changes .plan--change .minicard, 
+  .plan--changes .plan--change .minicard,
   .plan--changes .plan--change .plan--change-view-all,
   .plan--changes .plan--change .plan--change-placeholder {
     height: 155px;
@@ -418,7 +416,7 @@ export default {
     max-width: 610px;
   }
 
-  
+
 }
 
 .plan--change {
