@@ -11,7 +11,7 @@ def summarize(scenario):
             print('Error evaluating badge: {}'.format(badge))
 
     return {
-        'win': scenario['win'],
+        'win': scenario.get('win', False),
         'badges': badges,
         'faction': estimate_faction(scenario),
         'scenario': scenario,
