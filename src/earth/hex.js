@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import Hexasphere from 'hexasphere.js';
+import ICONS from '/src/components/icons';
 import iconNames from '/assets/content/icons.json';
 import debug from '../debug';
 
@@ -24,7 +25,7 @@ const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: 
 // Load icons
 const texLoader = new THREE.TextureLoader();
 const icons = iconNames.concat(['political_capital', 'discontent', 'content']).reduce((acc, name) => {
-  const map = texLoader.load(`./assets/icons/pips/${name}.png`);
+  const map = texLoader.load(ICONS[name]);
   const iconMat = new THREE.SpriteMaterial({map});
   acc[name] = iconMat;
   return acc;

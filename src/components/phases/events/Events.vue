@@ -11,7 +11,7 @@
   <Event v-else-if="event && !predialogue && updates.length == 0" :event="event" @done="nextEvent" />
   <div id="event-stream--toasts">
     <div class="toast" v-for="toast, i in toasts" :style="{opacity: (i+1)/(toasts.length+1)}">
-      <div class="toast--body"><img :src="`/assets/icons/pips/${toast.icon}.png`"> {{toast.desc}}</div>
+      <div class="toast--body"><img :src="icons[toast.icon]"> {{toast.desc}}</div>
     </div>
   </div>
   <button class="events--skip btn" @click="skip">Skip</button>

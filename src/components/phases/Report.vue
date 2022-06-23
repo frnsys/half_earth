@@ -12,7 +12,7 @@
           <th><strong>{{state.cycleStartState.year}}</strong></th>
           <th><small><img :src="icons.arrow_right"></small></th>
           <th><strong>{{state.gameState.world.year}}</strong></th>
-          <th><img src="/assets/icons/pips/political_capital.png"></th>
+          <th><img :src="icons.political_capital"></th>
         </tr>
 
         <tr class="report--primary-change" v-tip="warmingTip">
@@ -77,7 +77,7 @@
         </tr>
         <tr class="report-spacer" v-if="requestsFulfilled.length != 0"></tr>
         <tr class="report--total-change">
-          <td colspan="4">Total <img src="/assets/icons/pips/political_capital.png"> Change</td>
+          <td colspan="4">Total <img :src="icons.political_capital"> Change</td>
           <td>{{format.sign(pcChange)}}</td>
         </tr>
         </table>

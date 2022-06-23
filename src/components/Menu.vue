@@ -1,7 +1,7 @@
 <template>
 <div class="dropdown-menu">
   <div class="dropdown-menu-content">
-    <div class="dropdown-menu-close dropdown-menu-button btn" @click="$emit('close')"><img src="/assets/icons/close.svg"></div>
+    <div class="dropdown-menu-close dropdown-menu-button btn" @click="$emit('close')"><img :src="icons.close"></div>
     <header>
       <div class="dropdown-menu-inset">
         <img src="/assets/gosplant.svg" />

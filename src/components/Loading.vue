@@ -31,7 +31,6 @@ var preload = [
   '/assets/backgrounds/plan.png',
   '/assets/backgrounds/regions.png',
   '/assets/backgrounds/report.png',
-  '/assets/icons/close.svg',
   '/assets/gosplant.svg',
   '/assets/clock.png',
   '/assets/motto.png',

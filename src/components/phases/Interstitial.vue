@@ -55,7 +55,7 @@ const LOCALES = [{
   credit: 'Adam Jones, CC BY 2.0, via Wikimedia Commons',
 }, {
   name: 'Paris',
-  background: 'pexels-pierre-blaché-3073666.jpg',
+  background: 'pexels-pierre-blache-3073666.jpg',
   ambience: 'city_noise.mp3',
   credit: 'Pierre Blaché',
 }, {

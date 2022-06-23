@@ -4,3 +4,4 @@ dist
 editor/uploads/*
 editor/data.json
 assets/content/images/*
+out/

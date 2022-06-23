@@ -1,15 +1,19 @@
 {
   "name": "half-earth",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "main": "platforms/electron/main.js",
+  "description": "A Planetary Crisis Planning Game.",
   "scripts": {
-    "start": "webpack serve --host 0.0.0.0 --progress --compress --mode=development --env version=dev",
+    "start": "electron-forge start",
     "build": "rm -rf dist; NODE_ENV=production webpack --mode production --env production --env version=$(git describe --always) --env timestamp=$(git log -1 --format=%ct) --progress",
     "build-wasm": "cd engine; wasm-pack build --release",
-    "test": "cd engine; cargo test; wasm-pack test --headless --firefox"
+    "test": "cd engine; cargo test; wasm-pack test --headless --firefox",
+    "electron": "electron ."
   },
   "dependencies": {
     "@sentry/browser": "^6.15.0",
     "@sentry/tracing": "^6.15.0",
+    "electron-squirrel-startup": "^1.0.0",
     "half-earth-engine": "file:engine/pkg",
     "hector-wasm": "file:hector/wasm",
     "hexasphere.js": "^0.2.2",
@@ -20,8 +24,15 @@
     "vue": "^3.1.4"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.64",
+    "@electron-forge/maker-deb": "^6.0.0-beta.64",
+    "@electron-forge/maker-flatpak": "^6.0.0-beta.64",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
+    "@electron-forge/maker-zip": "^6.0.0-beta.64",
     "@vue/compiler-sfc": "^3.1.4",
     "css-loader": "^5.2.6",
+    "electron": "^19.0.6",
     "mini-css-extract-plugin": "^2.2.0",
     "raw-loader": "^4.0.2",
     "sass": "^1.35.1",
@@ -35,5 +46,36 @@
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2",
     "webpack-glsl-loader": "git+https://github.com/grieve/webpack-glsl-loader.git"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "Half-Earth Socialism",
+        "executableName": "half-earth",
+        "ignore": [
+            "^/node_modules",
+            "^/engine",
+            "^/hector",
+            "^/editor",
+            "^/logserver",
+            "^/data",
+            "^/builds",
+            "^/sharing/(?!badges)",
+            "^/platforms/itchio",
+            "^/studies",
+            "^/assets/src/(?!icons|shadows|satellite|landuse|historical_data|biome_lookup)",
+            ".md$", ".py$", ".sh$", ".blend1?$"]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin",
+            "win32",
+            "linux"
+          ]
+        }
+      ]
+    }
   }
 }
