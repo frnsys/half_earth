@@ -14,7 +14,7 @@ const createWindow = () => {
   mainWindow.maximize();
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('index.html');
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -27,8 +27,9 @@ app.whenReady().then(() => {
   // Change relative paths to absolute paths
   protocol.interceptFileProtocol('file', function(req, callback) {
     var url = req.url.substr(7);
-    const p = url.startsWith('/assets') ? path.normalize(__dirname + '../../../' + url) : url;
-    callback({path: p})
+    const p = url.startsWith('/assets') ? path.normalize(__dirname + url) : url;
+    // Decoding seems necessary to avoid issues with e.g. spaces in path?
+    callback({path: decodeURI(p)})
   })
 
   createWindow()

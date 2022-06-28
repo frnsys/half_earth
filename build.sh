@@ -50,5 +50,5 @@ npx electron-forge make --skip-package --platform win32
 mv out ../build
 
 ../itchio/butler push "../build/make/zip/linux/x64/Half-Earth Socialism-linux-x64-${VERSION}.zip" frnsys/half-earth-socialism:linux-stable
-../platforms/itchio/butler push "../build/make/zip/darwin/x64/Half-Earth Socialism-darwin-x64-${VERSION}.zip" frnsys/half-earth-socialism:mac-stable
-../platforms/itchio/butler push "../build/make/zip/win32/x64/Half-Earth Socialism-win32-x64-${VERSION}.zip" frnsys/half-earth-socialism:win-stable
+../itchio/butler push "../build/make/zip/darwin/x64/Half-Earth Socialism-darwin-x64-${VERSION}.zip" frnsys/half-earth-socialism:mac-stable
+../itchio/butler push "../build/make/zip/win32/x64/Half-Earth Socialism-win32-x64-${VERSION}.zip" frnsys/half-earth-socialism:win-stable

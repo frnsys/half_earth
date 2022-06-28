@@ -2,6 +2,9 @@ import {reactive} from 'vue';
 import debug from './debug';
 import tutorial from '/src/tutorial';
 
+const userAgent = navigator.userAgent.toLowerCase();
+const isElectron = userAgent.indexOf(' electron/') > -1;
+
 function saveSettings() {
   let data = {
     help: state.help,
@@ -71,10 +74,11 @@ function initState() {
     extraSeats: {}
   };
 
+
   let settings = loadSettings();
   state.help = settings.help || {};
   state.hideHelp = settings.hideHelp !== undefined ? settings.hideHelp : false;
-  state.sound = settings.sound !== undefined ? settings.sound : false;
+  state.sound = settings.sound !== undefined ? settings.sound : (isElectron ? true : false);
   return state;
 }
 
