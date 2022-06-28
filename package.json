@@ -1,10 +1,10 @@
 {
   "name": "half-earth",
   "version": "1.0.0",
-  "main": "platforms/electron/main.js",
+  "main": "electron.js",
   "description": "A Planetary Crisis Planning Game.",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "webpack serve --host 0.0.0.0 --progress --compress --mode=development --env version=dev",
     "build": "rm -rf dist; NODE_ENV=production webpack --mode production --env production --env version=$(git describe --always) --env timestamp=$(git log -1 --format=%ct) --progress",
     "build-wasm": "cd engine; wasm-pack build --release",
     "test": "cd engine; cargo test; wasm-pack test --headless --firefox",
@@ -59,9 +59,7 @@
             "^/editor",
             "^/logserver",
             "^/data",
-            "^/builds",
             "^/sharing/(?!badges)",
-            "^/platforms/itchio",
             "^/studies",
             "^/assets/src/(?!icons|shadows|satellite|landuse|historical_data|biome_lookup)",
             ".md$", ".py$", ".sh$", ".blend1?$"]

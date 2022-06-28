@@ -25,7 +25,7 @@ function realizeSymlinks() {
     rm -rf "$1/app/assets/backgrounds/src"
 }
 
-rm -rf out
+rm -rf ../build
 
 npm run build-wasm
 npm run build
@@ -47,6 +47,8 @@ npx electron-forge make --skip-package --platform linux
 npx electron-forge make --skip-package --platform darwin
 npx electron-forge make --skip-package --platform win32
 
-./platforms/itchio/butler push "./out/make/zip/linux/x64/Half-Earth Socialism-linux-x64-${VERSION}.zip" frnsys/half-earth-socialism:linux-stable
-./platforms/itchio/butler push "./out/make/zip/darwin/x64/Half-Earth Socialism-darwin-x64-${VERSION}.zip" frnsys/half-earth-socialism:mac-stable
-./platforms/itchio/butler push "./out/make/zip/win32/x64/Half-Earth Socialism-win32-x64-${VERSION}.zip" frnsys/half-earth-socialism:win-stable
+mv out ../build
+
+../itchio/butler push "../build/make/zip/linux/x64/Half-Earth Socialism-linux-x64-${VERSION}.zip" frnsys/half-earth-socialism:linux-stable
+../platforms/itchio/butler push "../build/make/zip/darwin/x64/Half-Earth Socialism-darwin-x64-${VERSION}.zip" frnsys/half-earth-socialism:mac-stable
+../platforms/itchio/butler push "../build/make/zip/win32/x64/Half-Earth Socialism-win32-x64-${VERSION}.zip" frnsys/half-earth-socialism:win-stable
