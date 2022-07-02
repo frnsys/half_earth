@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build Electron apps for itch.io
+# Build Electron apps for itch.io and steam
 # Requires https://itchio.itch.io/butler
 
 VERSION=1.0.0

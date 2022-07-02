@@ -26,10 +26,28 @@ const createWindow = () => {
 app.whenReady().then(() => {
   // Change relative paths to absolute paths
   protocol.interceptFileProtocol('file', function(req, callback) {
-    var url = req.url.substr(7);
-    const p = url.startsWith('/assets') ? path.normalize(__dirname + url) : url;
-    // Decoding seems necessary to avoid issues with e.g. spaces in path?
-    callback({path: decodeURI(p)})
+    if (process.platform === 'win32') {
+      // Assume if this substring is present
+      // we're already dealing with an absolute path
+      if (req.url.includes('resources/app')) {
+        // Strip `file:///`
+        let path = req.url.substr(8);
+        callback({path: decodeURI(path)});
+      } else {
+        // Strip `file:///E:`
+        var url = req.url.substr(10);
+        if (url.startsWith('/assets')) {
+          const p = path.normalize(__dirname + url);
+          callback({path: decodeURI(p)})
+        }
+      }
+    } else {
+      // Strip off `file://`
+      const url = req.url.substr(7);
+      const p = url.startsWith('/assets') ? path.normalize(__dirname + url) : url;
+      // Decoding seems necessary to avoid issues with e.g. spaces in path?
+      callback({path: decodeURI(p)})
+    }
   })
 
   createWindow()
