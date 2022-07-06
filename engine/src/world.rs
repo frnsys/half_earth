@@ -61,7 +61,9 @@ impl World {
             if degrow && region.income == Income::High {
                 region.develop(-1.);
             } else if !stop && region.income != Income::High {
-                region.develop(speed);
+                if !(degrow && region.income == Income::UpperMiddle) {
+                    region.develop(speed);
+                }
             }
             let end = region.income_level();
             if end < start {

@@ -3182,7 +3182,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::PlayerVariable(PlayerVariable::ResearchPoints, 20.0),
-                Effect::NPCRelationship(5, 3.0),
+                Effect::NPCRelationship(5, 2.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0)
             ],
             kind: ProjectType::Policy,
@@ -9945,7 +9945,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 81,
             ref_id: "6af9b609-9b33-4f2a-b4ac-0228a399df22",
-            name: "Earth Liberation Front - Formation",
+            name: "Earth Liberation Front - (Re)Formation",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
@@ -13943,19 +13943,22 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 1.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -1.0),
+                Effect::ProjectRequest(117, true, 20),
+                Effect::ProcessRequest(21, false, 5),
+                Effect::ProcessRequest(1, false, 5)
             ],
             probabilities: vec![
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::NPCRelationship(5, NPCRelation::Ally),
-                        Condition::ProcessMixShare(24, Comparator::GreaterEqual, 0.2),
+                        Condition::ProcessMixShare(24, Comparator::GreaterEqual, 0.3),
                         Condition::WorldVariable(WorldVariable::Year, Comparator::Greater, 2025.0)
                     ]
                 },
                 Probability {
-                    likelihood: Likelihood::Random,
+                    likelihood: Likelihood::Unlikely,
                     conditions: vec![
                         Condition::NPCRelationship(5, NPCRelation::Ally),
                         Condition::ProcessMixShare(1, Comparator::GreaterEqual, 0.05),
