@@ -52,6 +52,7 @@ module.exports = (env) => ({
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(env.version),
       TIMESTAMP: JSON.stringify(env.timestamp),
+      PLATFORM: JSON.stringify(process.env.PLATFORM),
     }),
 
     new webpack.DefinePlugin({

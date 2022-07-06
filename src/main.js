@@ -38,6 +38,7 @@ loadLanguage(() => {
   app.config.globalProperties['factors'] = factors;
   app.config.globalProperties['display'] = display;
   app.config.globalProperties['debug'] = debug;
+  app.config.globalProperties['PLATFORM'] = PLATFORM;
   app.mount('#main');
   startSession();
 });

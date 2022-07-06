@@ -16,7 +16,10 @@
           <hr />
           <button class="start-button" @click="showCredits = true">Credits</button>
         </div>
-        <a class="book-line " target="_blank" href="https://www.versobooks.com/books/3818-half-earth-socialism">
+        <a class="book-line" v-if="PLATFORM == 'STEAM'">
+          <span>Based on the book:&nbsp;<em>Half-Earth Socialism</em>.</span>
+        </a>
+        <a class="book-line " target="_blank" href="https://www.versobooks.com/books/3818-half-earth-socialism" v-else>
           <span>Read the book:&nbsp;<em>Half-Earth Socialism</em>.</span>
         </a>
       </div>

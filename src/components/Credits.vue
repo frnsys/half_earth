@@ -59,7 +59,8 @@
     <li>Kira Simon-Kennedy</li>
     <li>Nicholas Carter</li>
   </ul>
-  <h3>Based on the book <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
+  <h3 v-if="PLATFORM == 'STEAM'">Based on the book <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
+  <h3 v-else>Based on the book <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
   <h2>Thank you for playing!</h2>
 
   <button class="btn" @click="$emit('closeCredits')">Back</button>
