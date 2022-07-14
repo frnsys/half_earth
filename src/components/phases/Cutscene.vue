@@ -1,7 +1,7 @@
 <template>
 <div class="cutscene" :style="{'background-image': `url('/assets/cutscenes/out/${image}')`}">
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" @advanced="advanced" />
-  <button class="cutscene--skip btn" @click="nextPhase">Skip</button>
+  <button class="cutscene--skip btn" @click="nextPhase">{{t('Skip')}}</button>
 </div>
 </template>
 

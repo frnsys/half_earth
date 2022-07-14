@@ -1,6 +1,6 @@
 <template>
   <div class="card-withdraw-target" ref="target">
-    {{ refundable ? 'Undo' : (canDowngrade ? 'Downgrade' : 'Withdraw') }}
+    {{ refundable ? t('Undo') : (canDowngrade ? t('Downgrade') : t('Withdraw')) }}
     <div class="withdraw-bar" ref="progress"></div>
   </div>
 </template>

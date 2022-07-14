@@ -1,28 +1,28 @@
 <template>
 <div class="plan-change-select planning--page">
   <div class="planning--page-tabs">
-  <div class="unspent-warning" v-if="!allowBack">Drag a card up to assign leftover production</div>
+  <div class="unspent-warning" v-if="!allowBack">{{t('Drag a card up to assign leftover production')}}</div>
    <div class="planning-sub-tab"  @click="if (allowBack) { output = 'Electricity'; }" :class="{selected: output == 'Electricity', disabled: !allowBack}">
       <img :src="icons.electricity" />
-      <div>Electricity</div>
+      <div>{{t('Electricity')}}</div>
     </div>
     <div class="planning-sub-tab" @click="if (allowBack) { output = 'Fuel'; }" :class="{selected: output == 'Fuel', disabled: !allowBack}">
       <img :src="icons.fuel" />
-      <div>Fuel</div>
+      <div>{{t('Fuel')}}</div>
     </div>
     <div class="planning-sub-tab" @click="if (allowBack) { output = 'PlantCalories'; }" :class="{selected: output == 'PlantCalories', disabled: !allowBack}">
       <img :src="icons.plant_calories" />
-      <div>Crops</div>
+      <div>{{t('Crops')}}</div>
     </div>
     <div class="planning-sub-tab" @click="if (allowBack) { output = 'AnimalCalories'; }" :class="{selected: output == 'AnimalCalories', disabled: !allowBack}">
       <img :src="icons.animal_calories" />
-      <div>Livestock</div>
+      <div>{{t('Livestock')}}</div>
     </div>
-    <div :class="{disabled: !allowBack || backDisabled, highlight: backHighlighted}" @click="if (allowBack) { $emit('close'); }">Back</div>
+    <div :class="{disabled: !allowBack || backDisabled, highlight: backHighlighted}" @click="if (allowBack) { $emit('close'); }">{{t('Back')}}</div>
   </div>
 
   <div class="available-mix-tokens">
-    <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: `One production point represents 5% of an entire production sector's productive capacity.`}"></div>
+    <div class="mix-token" v-for="_ in points" v-tip="{icon : 'mix_token', text: t(`One production point represents 5% of an entire production sector's productive capacity.`)}"></div>
   </div>
 
   <AddScanner ref="addScanner" :points="points" :process="process" :addPoint="addPoint" />
@@ -50,21 +50,22 @@
   <div>
     <div class="process-mix-change-notice-wrapper" v-if="hasChanges">
       <div class="process-mix-change-notice" >
-      <div>These changes will take <strong>{{changesTime}} planning cycle{{changesTime > 1 ? 's' : ''}}</strong> to take effect.</div>
+      <div>{{t('These changes will take {changesTime} planning cycle{ext} to take effect.', {changesTime, ext: changesTime > 1 ? 's' : ''})}}</div>
       <div v-html="estimatedChanges"></div>
       </div>
     </div>
     <div class="production--demand planning--demand">
-      <div class="demand-unit" v-for="v, k in demand" v-tip="factors.tips[k](`Global demand for ${display.enumDisplay(k)}.`)">
+      <div class="demand-unit" v-for="v, k in demand" v-tip="factors.tips[k](t('Global demand for {output}.', {demand: display.enumDisplay(k)}))">
         <span>{{demand[k]}}</span><img class="demand-icon" :src="icons[k]"/>
       </div>
-      <div class="demand-unit" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')"><span>{{emissions}}</span><img class="demand-icon" :src="icons.emissions"></div>
+      <div class="demand-unit" v-tip="factors.tips.emissions(t('Current annual emissions, in gigatonnes of CO2 equivalent.'))"><span>{{emissions}}</span><img class="demand-icon" :src="icons.emissions"></div>
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts.js';
@@ -219,18 +220,20 @@ export default {
         }
         change = Math.round(change * 100);
         if (change > 0.0) {
-          return `<span class="change-increase"><strong>increase ${k} by ${change > 100 ? '⚠️' : ''}${fmtPercent(change)}%</strong></span>`;
+          let s = t('increase {k} by {warn}{change}%', {k, warn: change > 100 ? '⚠️' : '', change: fmtPercent(change)});
+          return `<span class="change-increase"><strong>${s}</strong></span>`;
         } else if (change < 0.0) {
-          return `<span class="change-decrease"><strong>decrease ${k} by ${fmtPercent(Math.abs(change))}%</strong></span>`;
+          let s = t('decrease {k} by {}%', {k, change: fmtPercent(Math.abs(change))});
+          return `<span class="change-decrease"><strong>${s}</strong></span>`;
         } else {
           return null;
         }
       }).filter((desc) => desc !== null);
 
       if (descs.length == 0) {
-        return `They won't have much effect.`;
+        return t(`They won't have much effect.`);
       } else {
-        return `This output's production will: ${lf.format(descs)}.`;
+        return `${t("This output's production will")}: ${lf.format(descs)}.`;
       }
     },
   },

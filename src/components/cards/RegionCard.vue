@@ -20,7 +20,7 @@
   <template v-slot:body>
     <div class="space-even">
       <IntensityIcon
-        v-tip="{icon: 'wealth', text: `This region has ${incomeName} living standards. Higher living standards mean higher material footprints.`}"
+        v-tip="{icon: 'wealth', text: t(`This region has {incomeName} living standards. Higher living standards mean higher material footprints.`, {incomeName: t(incomeName)})}"
         resource="wealth" :intensity="incomeLevel" :invert="true" />
       <IntensityIcon
         v-tip="{icon: 'habitability', text: `This region's habitability.`}"
@@ -30,7 +30,7 @@
         resource="contentedness" :intensity="contentedness" :invert="true" />
       <IntensityIcon
         v-for="v, k in demand"
-        v-tip="{text: `This region's per-capita demand level for ${k}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}. This makes up ${demandPercent(k)} of total demand for ${k}.`, icon: k}"
+        v-tip="{text: t(`This region's per-capita demand level for {output}. The total regions's demand is {demand}. This makes up {demandPercent} of total demand for {output}.`, {output: k, demand: demand[k] < 1 ? '<1' : demand[k], demandPercent: demandPercent(k)}), icon: k}"
         :resource="k" :intensity="demandIntensity(k)" />
     </div>
   </template>

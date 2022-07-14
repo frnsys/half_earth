@@ -1,7 +1,7 @@
 <template>
 <div class="credits">
   <div class="credits--inner">
-  <h2>Concept</h2>
+  <h2>{{t('Concept')}}</h2>
   <ul>
     <li>Arthur Röing Baer</li>
     <li>Chiara Di Leone</li>
@@ -11,17 +11,17 @@
     <li>Gregory Vettese</li>
     <li>Troy Vettese</li>
   </ul>
-  <h2>Design</h2>
+  <h2>{{t('Design')}}</h2>
   <ul>
     <li>Son La Pham</li>
     <li>Francis Tseng</li>
   </ul>
-  <h2>Development</h2>
+  <h2>{{t('Development')}}</h2>
   <ul>
     <li>Francis Tseng</li>
     <li>Son La Pham</li>
   </ul>
-  <h2>Research and Writing</h2>
+  <h2>{{t('Research and Writing')}}</h2>
   <ul>
     <li>Lucy Chinen</li>
     <li>Drew Pendergrass</li>
@@ -30,11 +30,11 @@
     <li>Francis Tseng</li>
     <li>Troy Vettese</li>
   </ul>
-  <h2>Music</h2>
+  <h2>{{t('Music')}}</h2>
   <ul>
     <li>PRINCE SHIMA</li>
   </ul>
-  <h2>Playtesting</h2>
+  <h2>{{t('Playtesting')}}</h2>
   <ul>
     <li>Spencer Roberts</li>
     <li>Dargan Frierson</li>
@@ -59,11 +59,11 @@
     <li>Kira Simon-Kennedy</li>
     <li>Nicholas Carter</li>
   </ul>
-  <h3 v-if="PLATFORM == 'STEAM'">Based on the book <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
-  <h3 v-else>Based on the book <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
-  <h2>Thank you for playing!</h2>
+  <h3 v-if="PLATFORM == 'STEAM'">{{t('Based on the book')}} <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
+  <h3 v-else>{{t('Based on the book')}} <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
+  <h2>{{t('Thank you for playing!')}}</h2>
 
-  <button class="btn" @click="$emit('closeCredits')">Back</button>
+  <button class="btn" @click="$emit('closeCredits')">{{t('Back')}}</button>
   </div>
 </div>
 </template>

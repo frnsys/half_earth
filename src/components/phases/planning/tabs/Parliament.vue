@@ -1,6 +1,6 @@
 <template>
 <div class="planning--page parliament">
-  <div class="parliament-suspended" v-if="suspended">Parliament Suspended</div>
+  <div class="parliament-suspended" v-if="suspended">{{t('Parliament Suspended')}}</div>
   <div class="parliament-seats" :class="{'parliament-suspended-fade': suspended}">
     <div v-for="col in seats">
       <template v-for="seat in col">
@@ -15,9 +15,9 @@
   </div>
   <div class="coalition-seats" :class="{'parliament-suspended-fade': suspended}" v-tip="{
     icon: 'political_capital',
-    text: 'How many seats your coalition has. Draw parties to your coalition by implementing projects they support.'
+    text: t('How many seats your coalition has. Draw parties to your coalition by implementing projects they support.')
   }">
-    Your coalition has {{coalitionSeats}}/{{totalSeats}} seats.
+    {{t('Your coalition has {coalitionSeats}/{totalSeats} seats.', {coalitionSeats, totalSeats})}}
   </div>
 
   <div class="minicard-grid">

@@ -2,13 +2,13 @@
   <Hud />
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
   <div class="report">
-    <h2>Report</h2>
+    <h2>{{t('Report')}}</h2>
     <div class="report--body">
       <div class="report--inner">
         <section>
       <table class="report--changes">
         <tr>
-          <th><strong>Changes</strong></th>
+          <th><strong>{{t('Changes')}}</strong></th>
           <th><strong>{{state.cycleStartState.year}}</strong></th>
           <th><small><img :src="icons.arrow_right"></small></th>
           <th><strong>{{state.gameState.world.year}}</strong></th>
@@ -16,14 +16,14 @@
         </tr>
 
         <tr class="report--primary-change" v-tip="warmingTip">
-          <td><img :src="icons.warming"> Temperature</td>
+          <td><img :src="icons.warming"> {{t('Temperature')}}</td>
           <td>+{{state.cycleStartState.temperature.toFixed(1)}}°c</td>
           <th><small><img :src="icons.arrow_right"></small></th>
           <td>+{{state.gameState.world.temperature.toFixed(1)}}°c</td>
           <td><strong>{{format.sign(pc.temperature)}}</strong></td>
         </tr>
         <tr class="report--primary-change" v-tip="contentednessTip">
-          <td><img :src="icons.contentedness"> Contentedness</td>
+          <td><img :src="icons.contentedness"> {{t('Contentedness')}}</td>
           <td>
             <IntensityBar :intensity="contentedness.start" :max="5" :invert="true" />
           </td>
@@ -34,7 +34,7 @@
           <td><strong>{{format.sign(pc.contentedness)}}</strong></td>
         </tr>
         <tr class="report--primary-change" v-tip="biodiversityTip">
-          <td><img :src="icons.extinction_rate"> Extinction Rate</td>
+          <td><img :src="icons.extinction_rate"> {{t('Extinction Rate')}}</td>
           <td>
             <IntensityBar :intensity="extinction.start" :max="5" />
           </td>
@@ -45,14 +45,14 @@
           <td><strong>{{format.sign(pc.extinctionRate)}}</strong></td>
         </tr>
         <tr class="report--primary-change" v-tip="emissionsTip">
-          <td><img :src="icons.emissions"> Emissions</td>
+          <td><img :src="icons.emissions"> {{t('Emissions')}}</td>
           <td>{{state.cycleStartState.emissions.toFixed(1)}}</td>
           <th><small><img :src="icons.arrow_right"></small></th>
           <td>{{state.gameState.world.emissions.toFixed(1)}}</td>
           <td><strong>{{format.sign(pc.emissions)}}</strong></td>
         </tr>
         <tr class="report--primary-change" v-if="honeymoonPc">
-          <td>Post-Revolution Optimism</td>
+          <td>{{t('Post-Revolution Optimism')}}</td>
           <td></td>
           <td></td>
           <td></td>
@@ -60,24 +60,24 @@
         </tr>
         <tr class="report-spacer"></tr>
         <tr class="report-header" v-if="state.cycleStartState.completedProjects.length != 0">
-          <td>Completed Projects</td>
+          <td>{{t('Completed Projects')}}</td>
         </tr>
 
         <tr v-for="project in state.cycleStartState.completedProjects">
-          <td colspan="4" v-tip="{icon: 'project', text: 'This project was completed.', card: {type: 'Project', data: state.gameState.projects[project]}}">{{state.gameState.projects[project].name}}</td>
+          <td colspan="4" v-tip="{icon: 'project', text: t('This project was completed.'), card: {type: 'Project', data: state.gameState.projects[project]}}">{{state.gameState.projects[project].name}}</td>
           <td><strong>{{format.sign(consts.pcPerCompletedProject)}}</strong></td>
         </tr>
         <tr class="report-spacer" v-if="state.cycleStartState.completedProjects.length != 0"></tr>
         <tr class="report-header" v-if="requestsFulfilled.length != 0">
-          <td>Completed Requests</td>
+          <td>{{t('Completed Requests')}}</td>
         </tr>
         <tr v-for="request in requestsFulfilled">
-          <td colspan="4">{{request.name}}</td>
+          <td colspan="4">{{t(request.text)}}</td>
           <td><strong>{{format.sign(request.bounty)}}</strong></td>
         </tr>
         <tr class="report-spacer" v-if="requestsFulfilled.length != 0"></tr>
         <tr class="report--total-change">
-          <td colspan="4">Total <img :src="icons.political_capital"> Change</td>
+          <td colspan="4"><img :src="icons.political_capital"> {{t('Total Change')}}</td>
           <td>{{format.sign(pcChange)}}</td>
         </tr>
         </table>
@@ -85,50 +85,51 @@
         <section>
         <table>
         <tr class="report-header" v-if="seatChanges.length != 0">
-          <td>Parliament</td>
+          <td>{{t('Parliament')}}</td>
         </tr>
         <tr v-for="npc in seatChanges">
-          <td colspan="2">{{npc.name}}</td>
+          <td colspan="2">{{t(npc.name)}}</td>
           <td>{{format.sign(npc.change)}}</td>
           <td>{{npc.seats}}</td>
         </tr>
         <tr class="report-spacer" v-if="seatChanges.length != 0"></tr>
 
         <tr class="report-header" v-if="worldEvents.length != 0">
-          <td colspan="2">Events</td>
-          <td colspan="3" class="report-header-desc">Tap for more details.</td>
+          <td colspan="2">{{t('Events')}}</td>
+          <td colspan="3" class="report-header-desc">{{t('Tap for more details.')}}</td>
         </tr>
         <tr v-for="ev in worldEvents">
-          <td colspan="5" v-tip="ev.tip">{{ev.name}}</td>
+          <td colspan="5" v-tip="ev.tip">{{t(ev.name)}}</td>
         </tr>
         <tr class="report-spacer" v-if="worldEvents.length != 0"></tr>
 
         <tr class="report-header" v-if="regionIncomeChanges.length != 0">
-          <td>Regions</td>
+          <td>{{t('Regions')}}</td>
         </tr>
         <tr v-for="r in regionIncomeChanges">
-          <td colspan="4">{{r.name}} is now {{display.enumDisplay(r.income, true)}} income.</td>
+          <td colspan="4">{{t('{region} is now {income} income.', {region: t(r.name), income: t(display.enumDisplay(r.income, true))})}}</td>
         </tr>
         <tr class="report-spacer" v-if="regionIncomeChanges.length != 0"></tr>
         <tr class="report-header" v-if="regionDisasters.length != 0">
-          <td colspan="2">Disasters</td>
-          <td colspan="3" class="report-header-desc">Reduce the <img :src="icons.habitability"/> habitability of regions</td>
+          <td colspan="2">{{t('Disasters')}}</td>
+          <td colspan="3" class="report-header-desc"><img :src="icons.habitability"/> {{t('Reduce the habitability of regions.')}}</td>
         </tr>
         <tr v-for="r in regionDisasters">
-          <td>{{r.name}}</td>
+          <td>{{t(r.name)}}</td>
           <td colspan="4" class="report-disasters">
             <img :src="icons[ev.icon]" v-for="ev in r.events">
           </td>
         </tr>
       </table>
         </section>
-      <button class="btn" @click="nextPhase">Next</button>
+      <button class="btn" @click="nextPhase">{{t('Next')}}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
@@ -208,7 +209,7 @@ export default {
           name: ev.name,
           tip: {
             icon: 'chance',
-            text: 'This event occurred during this planning cycle.',
+            text: t('This event occurred during this planning cycle.'),
             card: {
               type: 'Event',
               data: ev

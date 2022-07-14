@@ -2,7 +2,7 @@
 <div id="loading">
   <div>
     <img src="/assets/gosplant.svg" />
-    <div class="loading-text">{{state.loadingSave ? 'Loading saved data' : 'Booting Up'}}</div>
+    <div class="loading-text">{{state.loadingSave ? t('Loading saved data') : t('Booting Up')}}</div>
     <div class="loading-bar">
       <div class="loading-bar-fill" :style="{width: barWidth}"></div>
     </div>

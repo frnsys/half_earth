@@ -8,7 +8,7 @@
 </Card>
 
 <div class="factors-note">
-Only direct impacts are shown.
+{{t('Only direct impacts are shown.')}}
 </div>
 </template>
 

@@ -4,25 +4,26 @@
   <header>
     <h3>{{state.gameState.world.year}}</h3><br />
     <h1>{{title}}</h1><br />
-    <h2>{{locale.name}}</h2>
+    <h2>{{t(locale.name)}}</h2>
   </header>
   <div class="interstitial--summary">
-    <div>People are {{contentedness}}.</div>
-    <div>Biodiversity is {{biodiversity}}.</div>
-    <div>The world is {{world}}.</div>
-    <div>Parliament {{parliament}}.</div>
-    <div>You have {{yearsLeft}} years left in your tenure.</div>
+    <div>{{t(`People are ${contentedness}`)}}.</div>
+    <div>{{t(`Biodiversity is ${biodiversity}`)}}.</div>
+    <div>{{t(`The world is ${world}`)}}.</div>
+    <div>{{t(`Parliament ${parliament}`)}}.</div>
+    <div>{{t('You have {yearsLeft} years left in your tenure.', {yearsLeft})}}</div>
   </div>
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
   <div class="interstitial--image-credit">Image: {{locale.credit}}</div>
   <div class="interstitial--next" v-if="ready && !gameOver && !gameWin">
-    <button class="btn" @click="nextPhase">Continue</button>
+    <button class="btn" @click="nextPhase">{{t('Continue')}}</button>
   </div>
   </div>
 </div>
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
@@ -141,7 +142,7 @@ export default {
       } else if (n == 3) {
         ext = 'rd';
       }
-      return `The ${n}${ext} Planning Session`;
+      return t(`The {n}{ext} Planning Session`, {n, ext});
     },
     locale() {
       let idx = this.number - 1 % LOCALES.length;

@@ -1,10 +1,10 @@
 <template>
 <Card class="npc" background="#724680">
   <template v-slot:header>
-    <div>Parliament</div>
+    <div>{{t('Parliament')}}</div>
     <div v-tip="{
       icon: 'relationship',
-      text: `Your relationship with ${name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.`,
+      text: t(`Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.`, {name}),
     }">
       <template v-for="i in consts.maxRelationship" >
         <img :src="icons.relationship" v-if="i <= npc.relationship" />
@@ -18,28 +18,28 @@
       @error="fallbackPortrait" />
   </template>
   <template v-slot:name>
-    <div class="npc-tag"><img :src="icons[relationshipName.toLowerCase()]">{{relationshipName}}</div>
-    {{name}}
+    <div class="npc-tag"><img :src="icons[relationshipName.toLowerCase()]">{{t(relationshipName)}}</div>
+    {{t(name)}}
   </template>
   <template v-slot:body>
     <p v-if="isAlly" class="npc-effect active" v-html="effectsHtml"></p>
-    <p v-else class="npc-effect inactive" v-tip="{text: `Improve your relationship with ${name} to activate this ability.`, icon: 'relationship'}" v-html="effectsHtml"></p>
+    <p v-else class="npc-effect inactive" v-tip="{text: t(`Improve your relationship with {name} to activate this ability.`, {name}), icon: 'relationship'}" v-html="effectsHtml"></p>
   </template>
   <template v-slot:top-back>
     <img
       :src="`/assets/characters/${npc.name}.webp`"
       @error="fallbackPortrait" />
-    <p class="card-desc npc-desc">{{description}}</p>
+    <p class="card-desc npc-desc">{{t(description)}}</p>
   </template>
   <template v-slot:bot-back>
     <div class="likes-dislikes">
       <div>
-        <h3>Likes</h3>
-        <p>{{likes}}</p>
+        <h3>{{t('Likes')}}</h3>
+        <p>{{t(likes)}}</p>
       </div>
       <div>
-        <h3>Dislikes</h3>
-        <p>{{dislikes}}</p>
+        <h3>{{t('Dislikes')}}</h3>
+        <p>{{t(dislikes)}}</p>
       </div>
     </div>
   </template>

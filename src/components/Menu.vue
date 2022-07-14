@@ -30,9 +30,9 @@
         </div>
       </div>
       <div class="dropdown-menu-stats-labels">
-        <div class="dropdown-menu-stats-label">Political Capital</div>
-        <div class="dropdown-menu-stats-label">CO2 Emissions/Yr</div>
-        <div class="dropdown-menu-stats-label">Temp. Anomaly</div>
+        <div class="dropdown-menu-stats-label">{{t('Political Capital')}}</div>
+        <div class="dropdown-menu-stats-label">{{t('CO2 Emissions/Yr')}}</div>
+        <div class="dropdown-menu-stats-label">{{t('Temp. Anomaly')}}</div>
       </div>
       <div class="dropdown-menu-bars">
         <div class="dropdown-menu-inset dropdown-menu-stat">
@@ -45,15 +45,15 @@
         </div>
       </div>
       <div class="dropdown-menu-stats-labels">
-        <div class="dropdown-menu-stats-label">Extinction Rate</div>
-        <div class="dropdown-menu-stats-label">Contentedness</div>
+        <div class="dropdown-menu-stats-label">{{t('Extinction Rate')}}</div>
+        <div class="dropdown-menu-stats-label">{{t('Contentedness')}}</div>
       </div>
       <img class="motto" src="/assets/motto.png" />
       <div class="dropdown-menu-buttons">
-        <div class="dropdown-menu-button" :class="{active: state.sound}" @click="toggleSound">Sound: {{ state.sound ? 'On' : 'Off'}}</div>
-        <div class="dropdown-menu-button" :class="{active: !state.hideHelp}" @click="toggleTips">Tips: {{ !state.hideHelp ? 'On' : 'Off'}}</div>
-        <div class="dropdown-menu-button" @click="restartGame">Restart Game</div>
-        <div class="dropdown-menu-button" @click="showCredits = true">Credits</div>
+        <div class="dropdown-menu-button" :class="{active: state.sound}" @click="toggleSound">{{t('Sound')}}: {{ state.sound ? t('On') : t('Off')}}</div>
+        <div class="dropdown-menu-button" :class="{active: !state.hideHelp}" @click="toggleTips">{{t('Tips')}}: {{ !state.hideHelp ? t('On') : t('Off')}}</div>
+        <div class="dropdown-menu-button" @click="restartGame">{{t('Restart Game')}}</div>
+        <div class="dropdown-menu-button" @click="showCredits = true">{{t('Credits')}}</div>
       </div>
     </template>
   </div>
@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '../state';
 import {saveSettings} from '../state';
@@ -93,7 +94,6 @@ export default {
     locale() {
       let idx = Math.round((state.gameState.world.year - state.startYear)/5) + 1 - 1 % LOCALES.length;
       return LOCALES[idx].name;
-      return 'San Cristóbal de las Casas'
     },
   },
   methods: {
@@ -111,7 +111,7 @@ export default {
       saveSettings();
     },
     restartGame() {
-      if (confirm('Are you sure you want to start over?')) {
+      if (confirm(t('Are you sure you want to start over?'))) {
         game.clearSave();
         location.reload();
       }

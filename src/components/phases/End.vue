@@ -5,12 +5,12 @@
     <div class="badges">
       <img v-for="badge in badges"
         :src="`/assets/badges/${badge.name}.png`"
-        v-tip="{text: badge.desc}" />
+        v-tip="{text: t(badge.desc)}" />
     </div>
   </div>
   <div class="break--actions" v-if="showStart">
-    <h2>{{message}}</h2>
-    <button class='try-again-button' @click="startRun">Try Again?</button>
+    <h2>{{t(message)}}</h2>
+    <button class='try-again-button' @click="startRun">{{t('Try Again?')}}</button>
   </div>
   <div v-if="shareImgUrl && showStart">
     <img class="share-image" crossorigin="anonymous" :src="shareImgUrl" />

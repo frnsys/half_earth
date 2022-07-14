@@ -14,11 +14,12 @@
       <div class="toast--body"><img :src="icons[toast.icon]"> {{toast.desc}}</div>
     </div>
   </div>
-  <button class="events--skip btn" @click="skip">Skip</button>
+  <button class="events--skip btn" @click="skip">{{t('Skip')}}</button>
 </div>
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts';
@@ -336,7 +337,7 @@ export default {
 
         this.toasts.push({
           icon: ev.icon,
-          desc: `${ev.name} in ${region.name}`
+          desc: t(`{disaster} in {region}`, {disaster: t(ev.name), region: t(region.name)})
         });
         if (this.toasts.length > 3) {
           this.toasts.shift();

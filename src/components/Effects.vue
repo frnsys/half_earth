@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import icons from 'components/icons';
 import {slugify} from 'lib/util';
 import game from '/src/game';

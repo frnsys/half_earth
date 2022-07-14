@@ -2,64 +2,64 @@
 <div class="event project-completed" :style="{backgroundImage: imageUrl}" @click="tryDone" :class="{regionup : isRegion}">
   <div class="event--body">
     <template v-if="update.type == 'Project' || update.type == 'Policy'">
-      <div class="arc">{{ update.type == 'Project' ? 'Project Completed' : 'Policy Outcome' }}</div>
+      <div class="arc">{{ update.type == 'Project' ? t('Project Completed') : t('Policy Outcome') }}</div>
       <div class="image-attribution">Image: {{obj.image ? obj.image.attribution : ''}}</div>
-      <div class="event--name">{{obj.name}}</div>
+      <div class="event--name">{{t(obj.name)}}</div>
       <div class="event--effects">
         <Effects :effects="obj.activeEffects" />
       </div>
     </template>
     <template v-else-if="update.type == 'Region:Up'" >
-      <div class="arc">Region Developed</div>
+      <div class="arc">{{t('Region Developed')}}</div>
       <div class="image-attribution">Image: {{obj.image ? obj.image.attribution : ''}}</div>
-      <div class="event--name">{{obj.name}}</div>
-      <div class="event--outcome">This region's income level has increased to <strong>{{display.enumDisplay(obj.income, true)}}</strong>. Demand for <img :src="icons.electricity">electricity, <img :src="icons.fuel">fuel, <img :src="icons.plant_calories">plant and <img :src="icons.animal_calories">animal-based food has been updated.</div>
+      <div class="event--name">{{t(obj.name)}}</div>
+      <div class="event--outcome" v-html="t(`This region's income level has increased to <strong>{income}</strong>. Demand for <img :src='icons.electricity'>electricity, <img :src='icons.fuel'>fuel, <img :src='icons.plant_calories'>plant and <img :src='icons.animal_calories'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true)})"></div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region's previous income level.`}"
+            v-tip="{icon: 'wealth', text: t(`This region's previous income level.`)}"
             resource="wealth" :intensity="obj.income_level" :invert="true" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region's new income level.`}"
+            v-tip="{icon: 'wealth', text: t(`This region's new income level.`)}"
             resource="wealth" :intensity="obj.income_level + 1" :invert="true" />
         </div>
       </div>
       <div class="event--icon-changes event--icon-changes-group">
         <div class="event--icon-change" v-for="v, k in obj.changes">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: t(`This region's previous demand for {output}.`, {output: display.enumDisplay(k)})}"
             :resource="k" :intensity="v[0]" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: t(`This region's new demand for {output}.`, {output: display.enumDisplay(k)})}"
             :resource="k" :intensity="v[1]" />
         </div>
       </div>
     </template>
     <template v-else-if="update.type == 'Region:Down'">
-      <div class="arc">Region Contracted</div>
-      <div class="event--name">{{obj.name}}</div>
-      <div class="event--outcome">This region's income level has contracted to <strong>{{display.enumDisplay(obj.income, true)}}</strong>. Demand for electricity, fuel, plant and animal-based food been updated.</div>
+      <div class="arc">{{t('Region Contracted')}}</div>
+      <div class="event--name">{{t(obj.name)}}</div>
+      <div class="event--outcome" v-html="t(`This region's income level has contracted to <strong>{income}</strong>. Demand for <img :src='icons.electricity'>electricity, <img :src='icons.fuel'>fuel, <img :src='icons.plant_calories'>plant and <img :src='icons.animal_calories'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true)})"></div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region's previous income level.`}"
+            v-tip="{icon: 'wealth', text: t(`This region's previous income level.`)}"
             resource="wealth" :intensity="obj.income_level + 2" :invert="true" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: 'wealth', text: `This region's new income level.`}"
+            v-tip="{icon: 'wealth', text: t(`This region's new income level.`)}"
             resource="wealth" :intensity="obj.income_level + 1" :invert="true" />
         </div>
       </div>
       <div class="event--icon-changes event--icon-changes-group">
         <div class="event--icon-change" v-for="v, k in obj.changes">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: t(`This region's previous demand for {output}.`, {output: display.enumDisplay(k)})}"
             :resource="k" :intensity="v[0]" />
           <img :src="icons.arrow_right_light">
           <IntensityIcon
-            v-tip="{icon: k, text: `This region's previous demand for ${display.enumDisplay(k)}.`}"
+            v-tip="{icon: k, text: t(`This region's new demand for {output}.`, {output: display.enumDisplay(k)})}"
             :resource="k" :intensity="v[1]" />
         </div>
       </div>

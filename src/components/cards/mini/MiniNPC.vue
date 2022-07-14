@@ -6,12 +6,12 @@
         :src="`/assets/characters/${npc.name}.png`"
         onerror="this.src='/assets/placeholders/character.png';" />
     </div>
-    <div class="mini-npc-name">{{npc.name}}</div>
+    <div class="mini-npc-name">{{t(npc.name)}}</div>
     <div class="mini-npc-seats">
       <div :style="{background: factionColor}" v-for="i in factionSeats" />
     </div>
     <div class="mini-npc-tag npc-tag" v-if="relationshipName == 'Ally'">
-      <img :src="icons.ally">Ally
+      <img :src="icons.ally">{{t('Ally')}}
     </div>
   </template>
   <template v-slot:expanded>

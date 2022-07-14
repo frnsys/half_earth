@@ -24,14 +24,16 @@ if (!availableLanguages.includes(lang)) {
 // Load phrases for language
 let phrases = {};
 function loadLanguage(cb) {
-  // TODO
-  // fetch(`/static/lang/${lang}.json`)
-  //   .then(response => response.json())
-  //   .then(json => {
-  //     phrases = json;
-  //     cb();
-  //   });
-  cb();
+  if (lang == 'en') {
+    cb();
+  } else {
+    fetch(`/assets/lang/${lang}.json`)
+      .then(response => response.json())
+      .then(json => {
+        phrases = json;
+        cb();
+      });
+  }
 }
 
 function t(key, data) {

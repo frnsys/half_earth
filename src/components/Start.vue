@@ -8,19 +8,19 @@
     <div id="start-screen-inset">
       <div id="start-inner">
         <img src="/assets/intro.svg" />
-        <div class="start-subtitle">A Planetary Crisis Planning Game</div>
-        <button class="start-button" v-if="hasSave()" @click="continueGame">Continue</button>
-        <button class="start-button" @click="startGame">New Game</button>
+        <div class="start-subtitle">{{t('A Planetary Crisis Planning Game')}}</div>
+        <button class="start-button" v-if="hasSave()" @click="continueGame">{{t('Continue')}}</button>
+        <button class="start-button" @click="startGame">{{t('New Game')}}</button>
         <div class="two-buttons">
-          <button class="start-button" @click="toggleSound">Sound: {{sound() ? 'On': 'Off'}}</button>
+          <button class="start-button" @click="toggleSound">{{t('Sound')}}: {{sound() ? t('On'): t('Off')}}</button>
           <hr />
-          <button class="start-button" @click="showCredits = true">Credits</button>
+          <button class="start-button" @click="showCredits = true">{{t('Credits')}}</button>
         </div>
         <a class="book-line" v-if="PLATFORM == 'STEAM'">
-          <span>Based on the book:&nbsp;<em>Half-Earth Socialism</em>.</span>
+          <span>{{t('Based on the book')}}:&nbsp;<em>Half-Earth Socialism</em>.</span>
         </a>
         <a class="book-line " target="_blank" href="https://www.versobooks.com/books/3818-half-earth-socialism" v-else>
-          <span>Read the book:&nbsp;<em>Half-Earth Socialism</em>.</span>
+          <span>{{t('Read the book')}}:&nbsp;<em>Half-Earth Socialism</em>.</span>
         </a>
       </div>
     </div>

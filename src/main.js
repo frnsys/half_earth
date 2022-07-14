@@ -7,7 +7,7 @@ import display from '/src/display/display';
 import tip from 'components/tip/directive';
 import App from 'components/App.vue';
 import debug from './debug';
-import {loadLanguage} from '/src/i18n';
+import t, {loadLanguage} from '/src/i18n';
 
 import * as Sentry from "@sentry/browser";
 import { Integrations } from "@sentry/tracing";
@@ -32,6 +32,7 @@ if (process.env.NODE_ENV === 'production') {
 loadLanguage(() => {
   const app = createApp(App);
   app.directive('tip', tip);
+  app.config.globalProperties['t'] = t;
   app.config.globalProperties['icons'] = icons;
   app.config.globalProperties['consts'] = consts;
   app.config.globalProperties['format'] = format;

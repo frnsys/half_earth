@@ -1,6 +1,6 @@
 <template>
 <div id="globe">
-  <div v-if="!ready" class="globe-loading loading-text">Loading</div>
+  <div v-if="!ready" class="globe-loading loading-text">{{t('Loading')}}</div>
 </div>
 </template>
 

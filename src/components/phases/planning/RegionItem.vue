@@ -2,25 +2,25 @@
 <div class="region-item">
   <div class="region-item--info cell">
     <img :src="`/assets/content/images/${image.fname}`" />
-    <div v-if="region.seceded" class="seceded-label">Seceded</div>
+    <div v-if="region.seceded" class="seceded-label">{{t('Seceded')}}</div>
     <div>
-        <div class="region-stat" v-tip="{icon: 'temperature', text: 'This region\'s current temperature range.'}">
+        <div class="region-stat" v-tip="{icon: 'temperature', text: t('This region\'s current temperature range.')}">
           <img :src="icons.temperature">{{Math.round(region.temp_lo)}}-{{Math.round(region.temp_hi)}}°C
         </div>
-        <div class="region-stat" v-tip="{icon: 'precipitation', text: 'This region\'s current precipitation range.'}">
-          <img :src="icons.precipitation">{{Math.round(region.precip_lo)}}-{{Math.round(region.precip_hi)}}cm/yr
+        <div class="region-stat" v-tip="{icon: 'precipitation', text: t('This region\'s current precipitation range.')}">
+          <img :src="icons.precipitation">{{Math.round(region.precip_lo)}}-{{Math.round(region.precip_hi)}} {{t('cm/yr')}}
         </div>
     </div>
-    <div v-tip="{icon: 'development', text: `This region's progress to the next income level.`}" :class="{'max-level': region.income == 'High'}">
-      <span>Development Progress:</span>
+    <div v-tip="{icon: 'development', text: t(`This region's progress to the next income level.`)}" :class="{'max-level': region.income == 'High'}">
+      <span>{{t('Development Progress')}}:</span>
       <div class="minibar" v-if="region.income != 'High'">
         <div class="minibar-fill"
           :style="{width: `${region.income == 'High' ? 100 : region.development * 100}%`}"></div>
       </div>
-      <span v-else> (Max Level)</span>
+      <span v-else> ({{t('Max Level')}})</span>
     </div>
     <div class="region-disasters">
-      <div>Recent Disasters</div>
+      <div>{{t('Recent Disasters')}}</div>
       <div>
         <img class="pip-icon" :src="icons[ev.icon]" v-for="ev in events">
       </div>
@@ -28,17 +28,17 @@
   </div>
   <div class="region-item--intensities cell">
     <IntensityIcon
-      v-tip="{icon: 'habitability', text: `This region's habitability. Natural disasters and hotter temperatures lower habitability.`}"
+      v-tip="{icon: 'habitability', text: t(`This region's habitability. Natural disasters and hotter temperatures lower habitability.`)}"
       resource="habitability" :intensity="habitability" :invert="true" />
     <IntensityIcon
-      v-tip="{icon: 'contentedness', text: `This region's contentedness.`}"
+      v-tip="{icon: 'contentedness', text: t(`This region's contentedness.`)}"
       resource="contentedness" :intensity="contentedness" :invert="true" />
     <IntensityIcon
-      v-tip="{icon: 'wealth', text: `This region has ${incomeName} living standards. Higher living standards mean higher material footprints.`}"
+      v-tip="{icon: 'wealth', text: t(`This region has {incomeName} living standards. Higher living standards mean higher material footprints.`, {incomeName: t(incomeName)})}"
       resource="wealth" :intensity="incomeLevel" :invert="true" />
     <IntensityIcon
       v-for="v, k in demand"
-      v-tip="{text: `This region's per-capita demand level for ${display.enumDisplay(k)}. The total regions's demand is ${demand[k] < 1 ? '<1' : demand[k]}<img src='${icons[k]}' />. This makes up ${demandPercent(k)} of total demand for ${display.enumDisplay(k)}.`, icon: k}"
+      v-tip="{text: t(`This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.`, {output: display.enumDisplay(k), demand: demand[k] < 1 ? '<1' : demand[k], percent: demandPercent(k), icon: icons[k]}), icon: k}"
       :resource="k" :intensity="demandIntensity(k)" />
   </div>
 </div>

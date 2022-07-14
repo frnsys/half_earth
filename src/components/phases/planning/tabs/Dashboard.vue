@@ -3,7 +3,7 @@
   <div class="dashboard-breakdown-menu-overlay" v-if="showBreakdownMenu">
     <div class="dashboard-breakdown-menu">
       <div v-for="choice in breakdownChoices" @click="chooseBreakdown(choice)">
-        <img class="pip-icon" :src="icons[choice]" />{{choice.replace('_', ' ')}}
+        <img class="pip-icon" :src="icons[choice]" />{{t(choice.replace('_', ' '))}}
       </div>
     </div>
   </div>
@@ -13,12 +13,12 @@
         <span>+{{state.gameState.world.temperature.toFixed(1)}}C</span>
       </div>
       <img :src="icons.warming" />
-      <div class="dashboard--item-name">Warming</div>
+      <div class="dashboard--item-name">{{t('Temp. Anomaly')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.emissions('Current annual emissions, in gigatonnes of CO2 equivalent.')">
+    <div class="dashboard--item" v-tip="factors.tips.emissions(t('Current annual emissions, in gigatonnes of CO2 equivalent.'))">
       <div class="minicard">
         <span>{{`${state.gameState.world.emissions.toFixed(1)}Gt`}}</span>
-        <div class="dashboard--change" v-if="changes.emissions != 0" v-tip="{icon: 'emissions', text: 'The estimated value after production changes have finished.'}">
+        <div class="dashboard--change" v-if="changes.emissions != 0" v-tip="{icon: 'emissions', text: t('The estimated value after production changes have finished.')}">
           <img :src="icons.down_arrow_small" />
           <span class="dashboard--change-value">
             {{`${((changes.emissions * 1e-15) + state.gameState.world.emissions).toFixed(1)}Gt`}}
@@ -26,12 +26,12 @@
         </div>
       </div>
       <img :src="icons.emissions" />
-      <div class="dashboard--item-name">Emissions</div>
+      <div class="dashboard--item-name">{{t('Emissions')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.land('Current land use.')">
+    <div class="dashboard--item" v-tip="factors.tips.land(t('Current land use.'))">
       <div class="minicard">
         <span>{{format.landUsePercent(state.gameState.resources_demand.land).toFixed(0)}}%</span>
-        <div class="dashboard--change" v-if="changes.land != 0" v-tip="{icon: 'land', text: 'The estimated value after production changes have finished.'}">
+        <div class="dashboard--change" v-if="changes.land != 0" v-tip="{icon: 'land', text: t('The estimated value after production changes have finished.')}">
           <img :src="icons.down_arrow_small" />
           <span class="dashboard--change-value">
             {{format.landUsePercent(changes.land + state.gameState.resources_demand.land).toFixed(0)}}%
@@ -39,12 +39,12 @@
         </div>
       </div>
       <img :src="icons.land" />
-      <div class="dashboard--item-name">Land Use</div>
+      <div class="dashboard--item-name">{{t('Land Use')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.energy('Current energy use.')">
+    <div class="dashboard--item" v-tip="factors.tips.energy(t('Current energy use.'))">
       <div class="minicard">
         <span>{{`${Math.round(format.twh(state.gameState.output_demand.electricity + state.gameState.output_demand.fuel)/1000).toLocaleString()}PWh`}}</span>
-        <div class="dashboard--change" v-if="changes.energy != 0" v-tip="{icon: 'energy', text: 'The estimated value after production changes have finished.'}">
+        <div class="dashboard--change" v-if="changes.energy != 0" v-tip="{icon: 'energy', text: t('The estimated value after production changes have finished.')}">
           <img :src="icons.down_arrow_small" />
           <span class="dashboard--change-value">
             {{`${format.twh(changes.energy + state.gameState.output_demand.electricity + state.gameState.output_demand.fuel).toLocaleString()}TWh`}}
@@ -52,77 +52,78 @@
         </div>
       </div>
       <img :src="icons.energy" />
-      <div class="dashboard--item-name">Energy Use</div>
+      <div class="dashboard--item-name">{{t('Energy Use')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.water('Current water demand.')">
+    <div class="dashboard--item" v-tip="factors.tips.water(t('Current water demand.'))">
       <div class="minicard">
-        <span :style="{color: currentWaterStress.color}">{{currentWaterStress.label}}</span>
-        <div class="dashboard--change" v-if="changes.water != 0" v-tip="{icon: 'water', text: 'The estimated value after production changes have finished.'}">
+        <span :style="{color: currentWaterStress.color}">{{t(currentWaterStress.label)}}</span>
+        <div class="dashboard--change" v-if="changes.water != 0" v-tip="{icon: 'water', text: t('The estimated value after production changes have finished.')}">
           <img :src="icons.down_arrow_small" />
           <span class="dashboard--change-value" :style="{color: afterWaterStress.color}">
-            {{afterWaterStress.label}}
+            {{t(afterWaterStress.label)}}
           </span>
         </div>
       </div>
       <img :src="icons.water" />
-      <div class="dashboard--item-name">Water Stress</div>
+      <div class="dashboard--item-name">{{t('Water Stress')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: `Average sea levels have risen by ${state.gameState.world.sea_level_rise.toFixed(2)}m and are rising at a rate of ${(state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)}mm per year.`}">
+    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: t(`Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.`, {rise: state.gameState.world.sea_level_rise.toFixed(2), rate: (state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)})}">
       <div class="minicard">
         <span>{{state.gameState.world.sea_level_rise.toFixed(2)}}m</span>
       </div>
       <img :src="icons.sea_level_rise" />
-      <div class="dashboard--item-name">Sea Level Rise</div>
+      <div class="dashboard--item-name">{{t('Sea Level Rise')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="factors.tips.biodiversity('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.')">
+    <div class="dashboard--item" v-tip="factors.tips.biodiversity(t('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.'))">
       <div class="minicard">
-        <span :style="{color: currentExtinction.color}">{{currentExtinction.label}}</span>
-        <div class="dashboard--change" v-if="changes.extinction != 0" v-tip="{icon: 'extinction_rate', text: 'The estimated value after production changes have finished.'}">
+        <span :style="{color: currentExtinction.color}">{{t(currentExtinction.label)}}</span>
+        <div class="dashboard--change" v-if="changes.extinction != 0" v-tip="{icon: 'extinction_rate', text: t('The estimated value after production changes have finished.')}">
           <img :src="icons.down_arrow_small" />
           <div class="dashboard--change-value" :style="{color: afterExtinction.color}">
-            <span>{{afterExtinction.label}}</span>
+            <span>{{t(afterExtinction.label)}}</span>
           </div>
         </div>
       </div>
       <img :src="icons.extinction_rate" />
-      <div class="dashboard--item-name">Extinction Rate</div>
+      <div class="dashboard--item-name">{{t('Extinction Rate')}}</div>
     </div>
     <div class="dashboard--item">
       <div class="minicard">
         <span>{{format.formatNumber(state.gameState.world.population)}}</span>
       </div>
       <img :src="icons.population" />
-      <div class="dashboard--item-name">Population</div>
+      <div class="dashboard--item-name">{{t('Population')}}</div>
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        <span :style="{color: avgIncomeLevel.color}">{{avgIncomeLevel.label}}</span>
+        <span :style="{color: avgIncomeLevel.color}">{{t(avgIncomeLevel.label)}}</span>
       </div>
       <img :src="icons.wealth" />
-      <div class="dashboard--item-name">Avg. Living Standards</div>
+      <div class="dashboard--item-name">{{t('Avg. Living Standards')}}</div>
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        <span :style="{color: avgHabitability.color}">{{avgHabitability.label}}</span>
+        <span :style="{color: avgHabitability.color}">{{t(avgHabitability.label)}}</span>
       </div>
       <img :src="icons.habitability" />
-      <div class="dashboard--item-name">Avg. Habitability</div>
+      <div class="dashboard--item-name">{{t('Avg. Habitability')}}</div>
     </div>
   </div>
   <div class="dashboard-breakdown">
       <div class="dashboard-breakdown-select btn" @click="showBreakdownMenu = true">
-        <img class="pip-icon" :src="icons[breakdownFactor]" />{{ breakdownFactor.replace('_', ' ') }} ▼
+        <img class="pip-icon" :src="icons[breakdownFactor]" />{{ t(breakdownFactor.replace('_', ' ')) }} ▼
       </div>
       <PieChart :dataset="dataset" :colors="colors" />
       <div class="dashboard--factors">
         <FactorsList :factors="tableData" />
       </div>
-      <div class="dashboard-breakdown-note">Only direct impacts are shown.</div>
+      <div class="dashboard-breakdown-note">{{t('Only direct impacts are shown.')}}</div>
   </div>
 </div>
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import consts from '/src/consts.json';
@@ -175,7 +176,7 @@ export default {
       let data = {};
       let total = 0;
       state.factors[this.breakdownFactor].forEach((d) => {
-        data[d.name] = d.amount;
+        data[t(d.name)] = d.amount;
         total += d.amount;
       });
       if (this.breakdownFactor === 'land') {

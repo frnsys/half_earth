@@ -18,7 +18,7 @@
         <div class="plan--add-change minicard" @click="selectPage('Add')" :class="{highlight: projectsHighlighted}">
           <div>
             <img :src="icons.add">
-            <div class="plan--action">Add</div>
+            <div class="plan--action">{{t('Add')}}</div>
           </div>
         </div>
       </div>
@@ -29,32 +29,32 @@
         <div class="plan--change-placeholder"></div>
       </div>
       <div class="plan--change" v-if="activeProjects.length > this.slots">
-        <div class="plan--change-view-all btn" @click="selectPage('All')">View<br />All</div>
+        <div class="plan--change-view-all btn" @click="selectPage('All')">{{t('View All')}}</div>
       </div>
     </div>
     <div class="plan--production">
       <div class="plan--production-icons">
         <img class="plan-new-icon" v-if="anyNewProcesses" src="/assets/new.svg" />
-        <img class="plan-alert" v-if="processesOverLimit.length > 0" :src="icons.alert" v-tip="{icon: 'alert', text: `The following processes can't produce as much as they need to: ${processesOverLimit.join(', ')}`}"/>
+        <img class="plan-alert" v-if="processesOverLimit.length > 0" :src="icons.alert" v-tip="{icon: 'alert', text: t(`The following processes can't produce as much as they need to: {processesOverLimit}`, {processesOverLimit: processesOverLimit.join(', ')})}"/>
         <img class="plan-alert" v-if="productionShortages" :src="icons.alert" v-tip="{icon: 'alert', text: `${productionShortages}. ${inputShortages}`}"/>
       </div>
       <div class="plan--production--processes">
         <MiniProcess v-for="process in maxProcesses" :process="process" :key="process.id" />
       </div>
-      <div class="plan--production-button btn" :class="{disabled: processesDisabled, highlight: processesHighlighted}" @click="selectPage('Processes')">Change Production</div>
+      <div class="plan--production-button btn" :class="{disabled: processesDisabled, highlight: processesHighlighted}" @click="selectPage('Processes')">{{t('Change Production')}}</div>
     </div>
     <div class="plan--charts">
-      <HelpTip text="The predicted effect of your current plan is shown here" x="50%" y="160px" :center="true" />
+      <HelpTip :text="t('The predicted effect of your current plan is shown here.')" x="50%" y="160px" :center="true" />
       <Chart :datasets="datasets" :markers="markers" :ranges="ranges"/>
       <div class="plan--charts--tabs">
         <div v-for="name, key in charts" :class="{active: key == chart}" @click="setChart(key)">
-          <img :src="icons[key]">{{name}}
+          <img :src="icons[key]">{{t(name)}}
         </div>
       </div>
     </div>
     <div class="plan--ready-outer">
     <div class="plan--ready-inner">
-      <button class="plan--ready" :class="{disabled: readyDisabled, highlight: readyHighlighted}" @click="enterWorld">Ready</button>
+      <button class="plan--ready" :class="{disabled: readyDisabled, highlight: readyHighlighted}" @click="enterWorld">{{t('Ready')}}</button>
     </div>
     </div>
   </div>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import Chart from '../Chart.vue';
@@ -78,7 +79,7 @@ import historicalEmissions from '/assets/historical/emissions.json';
 import tutorial from '/src/tutorial';
 
 const lf = new Intl.ListFormat('en');
-const addTip = 'Add some cards to get started';
+const addTip = t('Add some cards to get started');
 
 const charts = {
   'land': 'Land Use',
@@ -153,7 +154,8 @@ export default {
       });
 
       if (keys.length > 0) {
-        return `There is not enough ${lf.format(keys)}. You should change your production mixes to use less of these or reduce demand elsewhere.`;
+        return t(`There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.`, {
+          resources: lf.format(keys)});
       } else {
         return '';
       }
@@ -253,12 +255,12 @@ export default {
         x: this.historical.data.length - 1,
         color: '#000000',
       }, {
-        text: 'Now',
+        text: t('Now'),
         point: {x: this.historical.data.length - 1, y: 0.8},
         anchor: 'CENTER',
         background: '#FFFCE2'
       }, {
-        text: 'Under current plan',
+        text: t('Under current plan'),
         point: {x: 50, y: 0.5},
         background: '#FFFCE2'
       }];
@@ -325,13 +327,6 @@ export default {
       }
       this.page = null;
       this.$emit('page', 'Plan');
-    },
-    projectStatus(p) {
-      if (p.kind == 'Research' && p.status == 'Building') {
-        return 'Researching';
-      } else {
-        return p.status;
-      }
     },
     setChart(key) {
       this.chart = key;

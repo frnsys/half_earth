@@ -1,7 +1,7 @@
 <template>
 <MiniCard>
   <template v-slot:body>
-    <div v-if="region.seceded" class="seceded-label">Seceded</div>
+    <div v-if="region.seceded" class="seceded-label">{{t('Seceded')}}</div>
     <div class="minicard-background" :style="{backgroundImage: `url(/assets/content/images/${image.fname})`}" :class="{seceded: region.seceded}" />
   </template>
   <template v-slot:expanded>

@@ -1,12 +1,12 @@
 <template>
 <div class="factors--users">
   <div class="factors--total">
-    <div>Total:</div>
+    <div>{{t('Total')}}:</div>
     <div>{{factors.total}}<span class="type-total" v-if="consts.maxValues[factors.type]">/{{consts.maxValues[factors.type]}}</span><img :src="icons[factors.icon]" /></div>
   </div>
   <div class="factors--user" v-for="user in relevantFactors" :class="{highlight: factors.current && user.name == factors.current.name}">
     <div>
-      <div>{{user.name}}</div>
+      <div>{{t(user.name)}}</div>
     </div>
     <div>
       <template v-if="user.type == 'Region'">
@@ -17,7 +17,7 @@
       <template v-else-if="user.type !== 'Project' && user.type !== 'Event'">
         <IntensityIcon
           :resource="factors.icon" :intensity="user.intensity" />
-        <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="factor-relation">{{relation}}</span></template>{{user.displayAmount}}<img :src="icons[factors.icon]"></div>
+        <div class="factors--usage"><template v-if="user.displayProduced !== null">{{user.displayProduced}}<img :src="icons[user.output]"><span class="factor-relation">{{t(relation)}}</span></template>{{user.displayAmount}}<img :src="icons[factors.icon]"></div>
       </template>
       <template v-else>
         <div class="factors--usage factors--usage-solo">{{user.displayAmount || user.amount || 0}}<img :src="icons[factors.icon]"></div>

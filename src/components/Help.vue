@@ -2,7 +2,7 @@
 <transition name="tipfade">
 <div class="help-tip--outer" :style="style"  @click="hide" v-if="!state.help[text] && !state.hideHelp">
   <div class="help-tip--inner" :class="{center : center}">
-  <img :src="icons.help" /> {{text}}
+  <img :src="icons.help" /> {{t(text)}}
 </div>
 </div>
 

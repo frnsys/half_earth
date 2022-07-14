@@ -1,6 +1,6 @@
 <template>
   <div class="card-withdraw-target" ref="target">
-    Remove points
+    {{t('Remove points')}}
     <div class="withdraw-bar" ref="progress"></div>
   </div>
 </template>

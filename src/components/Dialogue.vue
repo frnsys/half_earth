@@ -9,7 +9,7 @@
     </div>
     <div class="dialogue--body" @click="advance">
       <div class="dialogue--speaker-name" v-if="line.speaker !== '[GAME]'">
-        {{line.speaker}}
+        {{t(line.speaker)}}
       </div>
       <div class="dialogue--text" ref="text"></div>
       <div class="dialogue--effects" v-if="effects && revealed && isLastLine">
@@ -20,15 +20,15 @@
   <div class="dialogue--choices">
     <template v-if="revealed">
       <div v-if="isLastLine" class="dialogue--choice" @click="end">
-        (Continue)
+        ({{t('Continue')}})
       </div>
       <template v-else-if="line.decision" v-for="branch in line.next" :key="branch.id">
         <div class="dialogue--choice" @click="(ev) => selectChoice(ev, branch)">
-          {{branch.text}}
+          {{t(branch.text)}}
         </div>
       </template>
       <div v-else class="dialogue--choice" @click="advance">
-        (Next)
+        ({{t('Next')}})
       </div>
     </template>
   </div>

@@ -6,17 +6,17 @@
   <div class="planning--page-tabs">
    <div class="planning-sub-tab" @click="type = 'Research'" :class="{selected: type == 'Research'}">
       <img :src="icons.research" />
-      <div>Research</div>
+      <div>{{t('Research')}}</div>
     </div>
    <div class="planning-sub-tab" @click="type = 'Initiative'" :class="{selected: type == 'Initiative'}">
       <img :src="icons.initiative" />
-      <div>Infrastructure</div>
+      <div>{{t('Infrastructure')}}</div>
     </div>
    <div class="planning-sub-tab" @click="type = 'Policy'" :class="{selected: type == 'Policy'}">
       <img :src="icons.policy" />
-      <div>Policies</div>
+      <div>{{t('Policies')}}</div>
     </div>
-    <div @click="$emit('close')" :class="{disabled: backDisabled, highlight: backHighlighted}">Back</div>
+    <div @click="$emit('close')" :class="{disabled: backDisabled, highlight: backHighlighted}">{{t('Back')}}</div>
   </div>
 
   <AddScanner ref="addScanner" :project="project" />
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import debug from '/src/debug';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
@@ -57,8 +58,8 @@ import Points from 'components/scanner/project/Points.vue';
 import AddScanner from 'components/scanner/project/AddScanner.vue';
 import RemoveScanner from 'components/scanner/project/RemoveScanner.vue';
 
-const scanTip = '↑ Swipe this card up and hold to add it to your plan ↑';
-const scrollTip = '⟵ Swipe sideways to see other projects ⟶ ';
+const scanTip = t('↑ Swipe this card up and hold to add it to your plan ↑');
+const scrollTip = t('⟵ Swipe sideways to see other projects ⟶ ');
 
 export default {
   mixins: [CardsMixin],

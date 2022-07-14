@@ -12,7 +12,7 @@
     <ProcessCard :process="process" />
   </template>
 </MiniCard>
-<small class="process--label">{{label}}</small>
+<small class="process--label">{{t(label)}}</small>
 </div>
 </template>
 

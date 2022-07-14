@@ -31,12 +31,13 @@
     </div>
     <div class="hud-settings" @click="showMenu = true">
       <img :src="icons.settings" />
-      <span>Menu</span>
+      <span>{{t('Menu')}}</span>
     </div>
   </div>
 </template>
 
 <script>
+import t from '/src/i18n';
 import state from '../state';
 import Menu from 'components/Menu.vue';
 import IntensityBar from './cards/IntensityBar.vue';
@@ -67,26 +68,26 @@ export default {
     pcTip() {
       return {
         icon: 'political_capital',
-        text: 'How much political capital you have. Political capital is what you spend to implement your plans. <b class="tip-warn">If you run out you\'ll be pushed out of government.</b>'
+        text: t('How much political capital you have. Political capital is what you spend to implement your plans. <b class="tip-warn">If you run out you\'ll be pushed out of government.</b>')
       };
     },
     warmingTip() {
       return {
         icon: 'warming',
-        text: `The current global temperature anomaly is +${state.gameState.world.temperature.toFixed(1)}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>`
+        text: t(`The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>`, {anomaly: state.gameState.world.temperature.toFixed(1)})
       };
     },
     biodiversityTip() {
       return factors.tips.biodiversity(
-        'The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>');
+        t('The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>'));
     },
     contentednessTip() {
       return factors.tips.contentedness(
-        'How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>');
+        t('How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>'));
     },
     emissionsTip() {
       return factors.tips.emissions(
-        `Current annual emissions are ${state.gameState.world.emissions.toFixed(1)} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>`);
+        t(`Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>`, {emissions: state.gameState.world.emissions.toFixed(1)}));
     }
   }
 };

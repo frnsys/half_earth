@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import Chart from 'lib/chart';
 
 export default {
@@ -24,7 +25,7 @@ export default {
       });
       this.markers.forEach((marker) => {
         if (marker.text) {
-          this.chart.drawLabel(marker.text, marker.point, marker);
+          this.chart.drawLabel(t(marker.text), marker.point, marker);
         } else if (marker.x) {
           this.chart.drawVLine(marker.x, marker.color);
         } else if (marker.y) {

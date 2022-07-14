@@ -1,14 +1,14 @@
 <template>
 <Card :background="style.background" :color="style.color" :class="{'in-progress': project.status == 'Building', 'is-new': isNew}">
   <template v-slot:header>
-    <div>{{project.group}}</div>
+    <div>{{t(project.group)}}</div>
     <img v-if="isNew" class="new-card-icon" src="/assets/new.svg" />
     <div v-if="implemented" class="project-cost">
       <template v-if="hasLevels">
-        Level {{level+1}}
+        {{t('Level')}} {{level+1}}
       </template>
       <template v-else>
-        <img :src="icons.check_blk"> Completed
+        <img :src="icons.check_blk"> {{t('Completed')}}
       </template>
     </div>
     <div v-else class="project-cost" v-tip="costTip">
@@ -20,7 +20,7 @@
     <div class="project-required-majority" v-if="project.required_majority > 0 && !majoritySatisfied">
       <div>
         <img :src="icons.warning" />
-        Because of opposition, this requires a majority in parliament.
+        {{t('Because of opposition, this requires a majority in parliament.')}}
       </div>
     </div>
     <img class="card-image" :src="info.image.fname ? `/assets/content/images/${info.image.fname}` : '/assets/missing_content.png'" />
@@ -28,20 +28,20 @@
       <img
         v-for="i in consts.maxPoints"
         class="pip"
-        v-tip="{text: `${project.points} ${project.kind} points are allocated to this project`, icon: type}"
+        v-tip="{text: t(`{points} {kind} points are allocated to this project`, {points: project.points, kind: project.kind}), icon: type}"
         :class="{'empty-point': i > project.points}"
         :src="icons[type]">
     </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
-      <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
     <div class="supporters" v-if="supportersDetailed.length > 0">
-      <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
   </template>
   <template v-slot:name>
-    {{project.name}}
+    {{t(project.name)}}
   </template>
   <template v-slot:body>
     <div class="passed-stamp" v-if="project.kind == 'Policy' && (project.status == 'Active' || project.status == 'Building')"><img src="/assets/stamp.svg"></div>
@@ -50,10 +50,10 @@
     <div class="project-upgrade" :class="{upgrading: upgradeQueued}" v-if="project.status == 'Active' && nextUpgrade !== null">
       <div class="project-upgrade--title">
         <template v-if="upgradeQueued">
-          <div>Upgrading in one planning cycle.</div>
+          <div>{{t('Upgrading in one planning cycle.')}}</div>
         </template>
         <template v-else>
-          <div>Next Level</div>
+          <div>{{t('Next Level')}}</div>
           <div>{{nextUpgrade.cost}}<img class="pip" :src="icons.political_capital"></div>
         </template>
       </div>
@@ -62,31 +62,31 @@
 
     <div class="project-upgrade" v-if="project.status == 'Active' && canDowngrade">
       <div class="project-upgrade--title">
-        <div>Prev Level</div>
+        <div>{{t('Prev Level')}}</div>
       </div>
       <Effects :effects="prevUpgrade.effects" />
     </div>
 
-    <div class="project-status" v-if="project.status == 'Building'">{{ project.kind == 'Research' ? 'Researching' : 'Building'}}</div>
+    <div class="project-status" v-if="project.status == 'Building'">{{ project.kind == 'Research' ? t('Researching') : t('Building')}}</div>
 
   </template>
   <template v-slot:top-back>
-    <p class="card-desc">{{info.description}}</p>
+    <p class="card-desc">{{t(info.description)}}</p>
   </template>
   <template v-slot:bot-back>
     <div class="political-effects" v-if="opposersDetailed.length > 0 || supportersDetailed.length > 0">
-      <div class="political-effects-title">Political Effects</div>
+      <div class="political-effects-title">{{t('Political Effects')}}</div>
       <div class="political-effects-cols">
         <div class="political-effects-opposers" v-if="opposersDetailed.length > 0">
-          <div class="political-effects-label">Nay</div>
+          <div class="political-effects-label">{{t('Nay')}}</div>
           <div class="political-effects-portraits">
-            <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you implement it, your relationship will worsen by -<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+            <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
           </div>
         </div>
         <div class="political-effects-supporters" v-if="supportersDetailed.length > 0">
-          <div class="political-effects-label">Yea</div>
+          <div class="political-effects-label">{{t('Yea')}}</div>
           <div class="political-effects-portraits">
-            <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+            <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
           </div>
         </div>
       </div>
@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
@@ -195,10 +196,10 @@ export default {
         return null;
       } else if (this.project.status == 'Building') {
         if (this.project.kind == 'Policy') {
-          return '1 planning cycle left';
+          return t('1 planning cycle left');
         } else {
           let years = years_remaining(this.project.progress, this.project.points, this.project.cost);
-          return `${years} yrs left`;
+          return t(`{years} yrs left`, {years});
         }
       } else {
         let cost = this.project.points > 0 ? this.project.estimate : this.project.cost;
@@ -210,7 +211,7 @@ export default {
             return cost;
           }
         } else {
-          return `${cost} yrs`;
+          return t('{cost} yrs', {cost});
         }
       }
     },
@@ -282,12 +283,14 @@ export default {
       if (this.project.kind == 'Policy') {
         return {
           icon: 'political_capital',
-          text: `This policy costs ${this.remainingCost} political capital to implement.`
+          text: t(`This policy costs {remainingCost} political capital to implement.`, {
+            remainingCost: this.remainingCost})
         }
       } else {
         return {
           icon: this.type,
-          text: `This will take about ${this.remainingCost} to finish. Allocate more ${this.project.kind} points to accelerate its progress.`
+          text: t(`This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.`, {
+            remainingCost: this.remainingCost, kind: this.project.kind})
         }
       }
     },

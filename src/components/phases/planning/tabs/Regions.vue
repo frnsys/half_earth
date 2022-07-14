@@ -3,7 +3,7 @@
   <Globe id="regions-globe" class="cell" :onReady="onGlobeReady" :onClick="onGlobeClick" />
   <div class="regions-browse" v-if="selectedRegion !== null">
     <div class="region-change btn" @click="prevRegion"><img :src="icons.arrow_left"></div>
-    <div class="region-name cell" ref="regionName">{{regions[selectedRegion].name}}</div>
+    <div class="region-name cell" ref="regionName">{{t(regions[selectedRegion].name)}}</div>
     <div class="region-change btn" @click="nextRegion"><img :src="icons.arrow_right"></div>
   </div>
   <div class="regions-region" v-for="region in regions">

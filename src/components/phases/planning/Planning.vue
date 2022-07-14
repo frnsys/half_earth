@@ -3,10 +3,10 @@
 <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
 <div class="planning">
   <header>
-    <div class="planning--tab" :class="{active: page == PAGES.PLAN, highlight: planHighlighted}" @click="selectPage(PAGES.PLAN)">Plan</div>
-    <div class="planning--tab" :class="{active: page == PAGES.PARLIAMENT, disabled: parliamentDisabled, highlight: parliamentHighlighted}" @click="selectPage(PAGES.PARLIAMENT)">Govt</div>
-    <div class="planning--tab" :class="{active: page == PAGES.DASHBOARD, disabled: dashboardDisabled, highlight: dashboardHighlighted}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.time" />Stats</div>
-    <div class="planning--tab" :class="{active: page == PAGES.REGIONS, disabled: regionsDisabled, highlight: regionsHighlighted}" @click="selectPage(PAGES.REGIONS)">World</div>
+    <div class="planning--tab" :class="{active: page == PAGES.PLAN, highlight: planHighlighted}" @click="selectPage(PAGES.PLAN)">{{t('Plan')}}</div>
+    <div class="planning--tab" :class="{active: page == PAGES.PARLIAMENT, disabled: parliamentDisabled, highlight: parliamentHighlighted}" @click="selectPage(PAGES.PARLIAMENT)">{{t('Govt')}}</div>
+    <div class="planning--tab" :class="{active: page == PAGES.DASHBOARD, disabled: dashboardDisabled, highlight: dashboardHighlighted}" @click="selectPage(PAGES.DASHBOARD)"><img class="changes-icon" v-if="hasChanges" :src="icons.time" />{{t('Stats')}}</div>
+    <div class="planning--tab" :class="{active: page == PAGES.REGIONS, disabled: regionsDisabled, highlight: regionsHighlighted}" @click="selectPage(PAGES.REGIONS)">{{t('World')}}</div>
   </header>
 
   <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />

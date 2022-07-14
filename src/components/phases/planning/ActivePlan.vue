@@ -1,20 +1,20 @@
 <template>
 <div class="planning--page active-plan">
   <div class="planning--page-tabs">
-    <div @click="$emit('close')">Back</div>
+    <div @click="$emit('close')">{{t('Back')}}</div>
   </div>
   <div class="plan--changes">
     <div class="plan--change">
       <div class="plan--add-change minicard" @click="$emit('add')">
         <div>
           <img :src="icons.add">
-          <div class="plan--action">Add</div>
+          <div class="plan--action">{{t('Add')}}</div>
         </div>
       </div>
     </div>
     <div class="plan--change" v-for="project in activeProjects">
       <MiniProject :project="project" />
-      <div class="plan--change-name">{{ project.name }}</div>
+      <div class="plan--change-name">{{ t(project.name) }}</div>
     </div>
   </div>
 </div>
@@ -38,8 +38,6 @@ export default {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
     },
   },
-  methods: {
-  }
 }
 </script>
 
@@ -69,7 +67,7 @@ export default {
   letter-spacing: 0.01em;
   font-weight: bold;
   font-family: 'Inter', sans-serif;
- 
+
   margin: 1em 0 0.5em;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -2,12 +2,12 @@
 <div class="event">
   <div class="event--body" :style="{backgroundImage: effectImageUrl }">
     <HelpTip :text="factorTip" x="55%" y="-18px" />
-    <div class="arc">{{event.arc}}</div>
+    <div class="arc">{{t(event.arc)}}</div>
     <div class="event--factors">
       <img class="event--factor" v-for="factor in event.factors" :src="icons[factorIcon(factor)]" v-tip="{icon: factorIcon(factor), text: describeFactor(factor)}"/>
     </div>
     <div class="image-attribution">Image: {{event.image ? event.image.attribution : ''}}</div>
-    <div class="event--name">{{event.name}}</div>
+    <div class="event--name">{{t(event.name)}}</div>
     <div class="event--effects" v-if="hasVisibleEffects">
       <Effects :effects="event.effects" />
     </div>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import state from '/src/state';
 import HelpTip from 'components/Help.vue';
 import Effects from 'components/Effects.vue';
@@ -42,7 +43,7 @@ const FACTOR_DESCS = {
   'fuel': 'This event is influenced by the demand for fuel.',
 };
 
-const factorTip = 'The factors behind this event.↓';
+const factorTip = t('The factors behind this event.↓');
 
 export default {
   props: ['event', 'asCard'],
@@ -86,23 +87,23 @@ export default {
         } else if (factor.startsWith('ProjectBuilding')) {
           label = 'being built';
         }
-        return `This event can occur if "${name}" is ${label}.`;
+        return t(`This event can occur if "{name}" is {label}.`, {name: t(name), label: t(label)});
       } else if (factor.startsWith('Process')) {
         let id = parseInt(factor.split(':')[1]);
         let name = state.gameState.processes[id].name;
         if (factor.startsWith('ProcessOutput')) {
-          return `This event is influenced by the output of ${name}.`;
+          return t(`This event is influenced by the output of {name}.`, {name: t(name)});
         } else if (factor.startsWith('ProcessMixShare')) {
-          return `This event is influenced by the mix share of ${name}.`;
+          return t(`This event is influenced by the mix share of {name}.`, {name: t(name)});
         }
       } else if (factor.startsWith('NPCRelationship')) {
         let parts = factor.split(':');
         let relType = parts[1]
         let id = parseInt(parts[2]);
         let name = state.gameState.npcs[id].name;
-        return `This event can occur if ${name} is ${relType == 'Ally' ? 'an' : 'a'} ${relType}.`
+        return t(`This event can occur if {name} is your {relType}.`, {relType: t(relType), name: t(name)})
       } else {
-        return FACTOR_DESCS[factor] || factor;
+        return t(FACTOR_DESCS[factor] || factor);
       }
     }
   },

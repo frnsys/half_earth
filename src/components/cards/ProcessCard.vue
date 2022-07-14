@@ -1,7 +1,7 @@
 <template>
 <Card color="#ffffff" :isProcess="true" :class="{'is-new': isNew}">
   <template v-slot:header>
-    <div>{{output}}</div>
+    <div>{{display.enumDisplay(output)}}</div>
     <img v-if="isNew" class="new-card-icon" src="/assets/new.svg" />
     <div v-tip="outputTip">{{produced.amount}}<img :src="icons[output]"> {{produced.emissions}}<img :src="icons.emissions"></div>
   </template>
@@ -9,17 +9,17 @@
     <img class="card-image" :src="`/assets/content/images/${image.fname}`" />
     <div class="process-limit-alert"
       v-if="maxShare < 20"
-      v-tip="{icon: 'alert', text: `Because of resource availability this process can only make up to ${maxShare * 5}% of production.${process.mix_share > maxShare || changedMixShare > maxShare ? ' You should reallocate its points to other processes.' : ''}`}"><img :src="icons.alert" /></div>
+      v-tip="{icon: 'alert', text: t('Because of resource availability this process can only make up to {maxPercent}% of production. {suggestion}', {maxPercent: maxShare * 5, suggestion: process.mix_share > maxShare || changedMixShare > maxShare ? t('You should reallocate its points to other processes.') : ''})}"><img :src="icons.alert" /></div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
-      <img v-for="npc in opposersDetailed" v-tip="{text: `${npc.name} is opposed to this. If you ban it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you ban it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
     <div class="supporters" v-if="supportersDetailed.length > 0">
-      <img v-for="npc in supportersDetailed" v-tip="{text: `${npc.name} supports this. If you implement it, your relationship will improve by +<img src='${icons.relationship}' />.`, icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
   </template>
   <template v-slot:name>
-    {{name}}
+    {{t(name)}}
   </template>
   <template v-slot:body>
     <div class="card-actions" v-if="!!this.$slots.actions">
@@ -29,7 +29,7 @@
     <div class="process-mix">
       <div class="process-excess-alert"
         v-if="process.mix_share > maxShare || changedMixShare > maxShare"
-        v-tip="{icon: 'alert', text: 'This process can\'t produce this much because of feedstock or other limits. You should reallocate its points to other processes.'}"><img :src="icons.alert" /></div>
+        v-tip="{icon: 'alert', text: t(`This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes.`)}"><img :src="icons.alert" /></div>
       <div class="process-mix-percents" :class="{depleted: feedstockEstimate == 0}" v-tip="changeTip">
         <div class="process-mix-percent" :class="{before: hasChange}">{{process.mix_share*5}}%</div>
         <template v-if="hasChange">
@@ -61,7 +61,7 @@
     </div>
   </template>
   <template v-slot:top-back>
-    <p class="card-desc">{{description}}</p>
+    <p class="card-desc">{{t(description)}}</p>
   </template>
   <template v-slot:bot-back>
     <div class="process-details">
@@ -69,14 +69,14 @@
         <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
         <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
         <img v-if="feedstockName != 'other'"
-          v-tip="{text: `This process uses ${feedstockName}. ${feedstockEstimateDesc}`, icon: feedstockIcon}"
+          v-tip="{text: t(`This process uses {feedstockName}. {feedstockEstimateDesc}`, {feedstockName, feedstockEstimateDesc}), icon: feedstockIcon}"
           class="process-feedstock" :src="icons[feedstockIcon]">
         <div class="feedstock-remaining" v-if="feedstockName != 'other' && feedstockName != 'soil'">
           <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
         </div>
       </div>
       <div>
-        <img class="process--feature" v-for="feature in featureIcons" :src="icons[feature.icon]" v-tip="{icon: feature.icon, text: feature.text}"/>
+        <img class="process--feature" v-for="feature in featureIcons" :src="icons[feature.icon]" v-tip="{icon: feature.icon, text: t(feature.text)}"/>
       </div>
     </div>
     <div class="card-spacer"></div>
@@ -86,7 +86,7 @@
   </template>
 
   <template v-slot:process-mix>
-    <div class="process-mix-cells" v-tip="{icon: 'mix_token', text: maxShare < 20 ? `Because of resource availability this process can only make up to ${maxShare * 5}% of production.` : `There is currently no limit on this process' mix share.`}">
+    <div class="process-mix-cells" v-tip="{icon: 'mix_token', text: maxShare < 20 ? t(`Because of resource availability this process can only make up to {maxPercent}% of production.`, {maxPercent: maxShare * 5}) : t(`There is currently no limit on this process' mix share.`)}">
         <div class="process-mix-cell" v-for="i in 20" :class="{
           active: i <= process.mix_share,
           depleted: feedstockEstimate == 0,
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import Card from './Card.vue';
 import game from '/src/game';
 import state from '/src/state';
@@ -163,20 +164,20 @@ export default {
     outputTip() {
       return {
         icon: this.output,
-        text: `This process currently produces ${this.produced.amount}<img src='${icons[this.output]}'> and ${this.produced.emissions}<img src='${icons.emissions}'> per year.`
+        text: t(`This process currently produces {amount}<img src='{outputIcon}'> and {emissions}<img src='{emissionsIcon}'> per year.`, {emissionsIcon: icons.emissions, outputIcon: icons[this.output], emissions: this.produced.emissions, amount: this.producedAmount})
       }
     },
     changeTip() {
       return {
         icon: 'mix_token',
-        text: `This process currently makes up ${this.process.mix_share*5}% of ${this.output} production.`
+        text: t(`This process currently makes up {mixPercent}% of {output} production.`, {output: this.output, mixPercent: this.process.mix_share*5})
       };
     },
     featureIcons() {
       return this.features.map((feat) => {
         return {
           icon: feat,
-          text: FEATURE_DESCS[feat]
+          text: t(FEATURE_DESCS[feat])
         };
       });
     },
@@ -213,11 +214,11 @@ export default {
       if (this.feedstockEstimate == null) {
         return '';
       } else if (this.feedstockEstimate == 0) {
-        return 'This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.';
+        return t('This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.');
       } else if (isFinite(this.feedstockEstimate)) {
-        return `At current usage rates the estimated supply is expected to last ${this.feedstockEstimate} years.`;
+        return t(`At current usage rates the estimated supply is expected to last {years} years.`, {years: this.feedstockEstimate});
       } else {
-        return `At current usage rates the estimated supply is expected to last indefinitely.`;
+        return t(`At current usage rates the estimated supply is expected to last indefinitely.`);
       }
     },
     feedstockLevel() {
@@ -278,31 +279,31 @@ export default {
         case 'land': {
           let amount = format.landUsePercent(state.gameState.resources_demand.land);
           return factors.tips.land(
-            `Land: They're not making anymore of it. You're using ${amount.toFixed(0)}% of land.`,
+            t(`Land: They're not making anymore of it. You're using {percent}% of land.`, {percent: amount.toFixed(0)}),
             this.process);
         }
         case 'emissions': {
           let amount = state.gameState.world.emissions;
           return factors.tips.emissions(
-            `Emissions: A shroud around the earth. You're emitting ${amount.toFixed(1)} gigatonnes per year.`,
+            t(`Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.`, {amount: amount.toFixed(1)}),
             this.process);
         }
         case 'water': {
           let amount = format.waterUsePercent(state.gameState.resources_demand.water);
           return factors.tips.water(
-            `Water: The giver of life. You're using ${amount.toFixed(0)}% of water resources.`,
+            t(`Water: The giver of life. You're using {percent}% of water resources.`, {percent: amount.toFixed(0)}),
             this.process);
         }
         case 'energy': {
           let amount = format.twh(state.gameState.output_demand.fuel + state.gameState.output_demand.electricity);
           return factors.tips.energy(
-            `Energy: The fundamental mover. You're using ${amount}TWh of energy.`,
+            t(`Energy: The fundamental mover. You're using {amount}TWh of energy.`, {amount}),
             this.process);
         }
         case 'biodiversity': {
           let amount = state.gameState.world.extinction_rate;
           return factors.tips.biodiversity(
-            `Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is ${amount.toFixed(0)}.`,
+            t(`Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.`, {amount}),
             this.process);
         }
       }

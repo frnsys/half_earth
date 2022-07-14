@@ -1,3 +1,4 @@
+import t from '/src/i18n';
 import icons from 'components/icons';
 
 const DISPLAY_NAMES = {
@@ -53,7 +54,8 @@ function enumKey(v) {
 
 function enumDisplay(v, hyphen) {
   let char = hyphen ? '-' : ' ';
-  return enumKey(v).replace('_', char);
+  let text = enumKey(v).replace('_', char);
+  return t(text);
 }
 
 function relationshipName(relationship) {
@@ -69,11 +71,11 @@ function relationshipName(relationship) {
 }
 
 function displayName(key) {
-  return DISPLAY_NAMES[key];
+  return t(DISPLAY_NAMES[key]);
 }
 
 function describeFeature(feature) {
-  return FEATURE_DESCS[feature];
+  return t(FEATURE_DESCS[feature]);
 }
 
 export default {
