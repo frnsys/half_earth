@@ -2,6 +2,12 @@
 <div>
   <div id="start-bg"></div>
   <div id="start-screen">
+    <div id="lang-select">
+      <select @change="selectLang">
+        <option value="en" :selected="lang == 'en'">EN</option>
+        <option value="es" :selected="lang == 'es'">ES</option>
+      </select>
+    </div>
     <template v-if="showCredits">
       <Credits @click="showCredits = false" />
     </template>
@@ -29,6 +35,7 @@
 </template>
 
 <script>
+import {lang} from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import {saveSettings} from '../state';
@@ -40,6 +47,7 @@ export default {
   },
   data() {
     return {
+      lang,
       showCredits: false
     }
   },
@@ -67,6 +75,10 @@ export default {
     },
     sound() {
       return state.sound;
+    },
+    selectLang(ev) {
+      let lang = ev.target.value;
+      window.location.search = `?lang=${lang}`;
     }
   },
 }
@@ -210,6 +222,13 @@ export default {
 
 #start-inner .start-button:hover{
   color:rgba(255,255,255,0.7);
+}
+
+#lang-select {
+  position: fixed;
+  right: 1em;
+  top: 1em;
+  z-index: 2;
 }
 
 

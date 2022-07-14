@@ -61,5 +61,5 @@ if (lang == 'es') {
   });
 }
 
-export { loadLanguage, formatter };
+export { loadLanguage, formatter, lang };
 export default t;
