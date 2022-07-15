@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import state from '/src/state';
 import Card from './Card.vue';
 import display from '/src/display/display';
@@ -70,7 +71,7 @@ export default {
       return this.relationshipName == 'Ally';
     },
     effectsHtml() {
-      return `${this.isAlly ? '' : `<img src="${icons.locks}" />`}${display.fillIcons(this.effects)}`;
+      return `${this.isAlly ? '' : `<img src="${icons.locks}" />`}${display.fillIcons(t(this.effects))}`;
     },
     relationshipName() {
       return display.relationshipName(this.npc.relationship);

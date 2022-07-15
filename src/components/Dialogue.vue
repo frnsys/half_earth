@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import t from '/src/i18n';
 import game from '/src/game';
 import state from '/src/state';
 import display from '/src/display/display';
@@ -172,7 +173,7 @@ export default {
       if (this.$refs.text) {
         this.$refs.text.innerHTML = '';
         let el = document.createElement('div');
-        el.innerHTML = this.line.text;
+        el.innerHTML = t(this.line.text);
         if (this.line.text.length > 0) {
           if (this.revealAnim) clearInterval(this.revealAnim);
           revealChars(this.$refs.text, extractChars(el), {

@@ -27,99 +27,120 @@ const FLAG_TIPS = {
     let changedDemand = parseInt((demand.fuel * 0.8).toFixed(0));
     return {
       icon: 'electricity',
-      text: `Fuel demand will change from <img src="${icons.fuel}">${demand.fuel} to <img src="${icons.fuel}">${demand.fuel - changedDemand} and electricity demand will change from <img src="${icons.electricity}">${demand.electricity} to <img src="${icons.electricity}">${demand.electricity + changedDemand}.`
+      text: t('Fuel demand will change from <img src="{iconFuel}">{prevDemandFuel} to <img src="{iconFuel}">{nextDemandFuel} and electricity demand will change from <img src="{iconElec}">{prevDemandElec} to <img src="{iconElec}">{nextDemandElec}.', {
+        iconFuel: icons.fuel,
+        iconElec: icons.electricity,
+        prevDemandFuel: demand.fuel,
+        nextDemandFuel: demand.fuel - changedDemand,
+        prevDemandElec: demand.electricity,
+        nextDemandElec: demand.electricity + changedDemand,
+      })
     };
   },
   'Vegan': (demand) => {
     let changedDemand = parseInt((demand.animal_calories * 0.9).toFixed(0));
     return {
       icon: 'plant_calories',
-      text: `Animal calorie demand will change from <img src="${icons.animal_calories}">${demand.animal_calories} to <img src="${icons.animal_calories}">${demand.animal_calories - changedDemand} and plant calorie demand will change from <img src="${icons.plant_calories}">${demand.plant_calories} to <img src="${icons.plant_calories}">${demand.plant_calories + changedDemand}.`
+      text: t(`Animal calorie demand will change from <img src="{iconACals}">{prevDemandACals} to <img src="{iconACals}">{nextDemandACals} and plant calorie demand will change from <img src="{iconPCals}">{prevDemandPCals} to <img src="{iconPCals}">{nextDemandPCals}.`, {
+        iconACals: icons.animal_calories,
+        iconPCals: icons.plant_calories,
+        prevDemandACals: demand.animal_calories,
+        nextDemandACals: demand.animal_calories - changedDemand,
+        prevDemandPCals: demand.pnimal_calories,
+        nextDemandPCals: demand.animal_calories + changedDemand,
+      })
     }
   },
   'Vegetarian': (demand) => {
     let changedDemand = parseInt((demand.animal_calories * 0.75).toFixed(0));
     return {
       icon: 'plant_calories',
-      text: `Animal calorie demand will change from <img src="${icons.animal_calories}">${demand.animal_calories} to <img src="${icons.animal_calories}">${demand.animal_calories - changedDemand} and plant calorie demand will change from <img src="${icons.plant_calories}">${demand.plant_calories} to <img src="${icons.plant_calories}">${demand.plant_calories + changedDemand}.`
+      text: t(`Animal calorie demand will change from <img src="{iconACals}">{prevDemandACals} to <img src="{iconACals}">{nextDemandACals} and plant calorie demand will change from <img src="{iconPCals}">{prevDemandPCals} to <img src="{iconPCals}">{nextDemandPCals}.`, {
+        iconACals: icons.animal_calories,
+        iconPCals: icons.plant_calories,
+        prevDemandACals: demand.animal_calories,
+        nextDemandACals: demand.animal_calories - changedDemand,
+        prevDemandPCals: demand.pnimal_calories,
+        nextDemandPCals: demand.animal_calories + changedDemand,
+      })
     }
   },
   'ClosedBorders': (demand) => {
     return {
       icon: 'closed_borders',
-      text: 'Migrations will have less of an impact when they occur. But there might be other consequences.'
+      text: t('Migrations will have less of an impact when they occur. But there might be other consequences.')
     }
   },
   'HyperResearch': (demand) => {
     return {
       icon: 'research',
-      text: `Research points are 1<img src="${icons.political_capital}"> cheaper.`
+      text: t(`Research points are 1<img src="{iconPC}"> cheaper.`, {iconPC: icons.political_capital})
     }
   },
   'StopDevelopment': (demand) => {
     return {
       icon: 'ban',
-      text: 'Stops regional development throughout the world.'
+      text: t('Stops regional development throughout the world.')
     }
   },
   'FastDevelopment': (demand) => {
     return {
       icon: 'development',
-      text: 'Accelerates regional development throughout the world.'
+      text: t('Accelerates regional development throughout the world.')
     }
   },
   'Degrowth': (demand) => {
     return {
       icon: 'degrowth',
-      text: 'Contract the economies of the wealthiest regions.'
+      text: t('Contract the economies of the wealthiest regions.')
     }
   },
   'DeepSeaMining': (demand) => {
     return {
       icon: 'ocean',
-      text: 'Prevents or stops metal shortages.'
+      text: t('Prevents or stops metal shortages.')
     }
   },
   'ParliamentSuspended': (demand) => {
     return {
       icon: 'The Authoritarian',
-      text: 'A parliamentary majority is no longer required for any project.',
+      text: t('A parliamentary majority is no longer required for any project.'),
     }
   },
   'MoreLabor': (demand) => {
     return {
       icon: 'labor',
-      text: 'Research and infrastructure take 10% less time to complete.',
+      text: t('Research and infrastructure take 10% less time to complete.'),
     }
   },
   'MoreLeisure': (demand) => {
     return {
       icon: 'labor',
-      text: 'Research and infrastructure take 10% more time to complete.',
+      text: t('Research and infrastructure take 10% more time to complete.'),
     }
   },
   'MoreAutomation': (demand) => {
     return {
       icon: 'labor',
-      text: 'Research and infrastructure take 10% less time to complete.',
+      text: t('Research and infrastructure take 10% less time to complete.'),
     }
   },
   'EcosystemModeling': (demand) => {
     return {
       icon: 'birb',
-      text: 'Restoration projects take 10% less time to complete.',
+      text: t('Restoration projects take 10% less time to complete.'),
     }
   },
   'LaborResistance': (demand) => {
     return {
       icon: 'labor',
-      text: 'Research and infrastructure take 5% more time to complete.',
+      text: t('Research and infrastructure take 5% more time to complete.'),
     }
   },
   'LaborSabotage': (demand) => {
     return {
       icon: 'labor',
-      text: 'Research and infrastructure take 5% more time to complete.',
+      text: t('Research and infrastructure take 5% more time to complete.'),
     }
   },
 };
@@ -128,9 +149,9 @@ function changeDir(change, ev) {
   if (change == '?') {
     return 'Changes';
   } else if (ev.random) {
-    return `${change < 0 ? `${ev.probability} reduce` : `${ev.probability} increase`}`
+    return t(`${change < 0 ? `${ev.probability} reduce` : `${ev.probability} increase`}`);
   } else {
-    return `${change < 0 ? '<strong>Reduces</strong>' : '<strong>Increases</strong>'}`
+    return `${change < 0 ? `<strong>${t('Reduces')}</strong>` : `<strong>${t('Increases')}</strong>`}`;
   }
 }
 
@@ -151,72 +172,111 @@ function render(e) {
           return {
             tip: {
               icon: 'contentedness',
-              text: `Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
+              text: t(`Current world contentedness is {contentedness}<span class="type-total">/{maxContentedness}</span>.`, {
+                contentedness: Math.round(state.gameState.world.contentedness),
+                maxContentedness: consts.maxValues['contentedness']
+              }),
             },
-            text: `[contentedness] ${changeDir(e.param, e)} world contentedness by ${formatParam(e.param)}.`,
+            text: `[contentedness] ${t('{changeDir} world contentedness by {amount}.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param),
+            })}`,
           }
         }
         case 'Emissions': {
           return {
             tip: {
               icon: 'emissions',
-              text: `This will directly change annual emissions by ${e.param == '?' ? 'an unknown amount' : format.sign(e.param)}.${e.param !== '?' ? ` That's a ${(e.param/state.gameState.world.emissions * 100).toFixed(1)}% change.` : ''}`,
+              text: t(`This will directly change annual emissions by {amount}.{percent}`, {
+                amount: e.param == '?' ? t('an unknown amount') : format.sign(e.param),
+                percent: e.param !== '?' ? ` ${t("That's a {percent}% change.", {percent: (e.param/state.gameState.world.emissions * 100).toFixed(1)})}` : ''
+              })
             },
-            text: `[emissions] ${changeDir(e.param, e)} emissions by ${formatParam(e.param)}.`
+            text: `[emissions] ${t('{changeDir} emissions by {amount}.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param)
+            })}`
           }
         }
         case 'ExtinctionRate': {
           return {
             tip: {
               icon: 'extinction_rate',
-              text: `Current biodiversity pressure is ${state.gameState.world.extinction_rate.toFixed(0)}<span class="type-total">/${consts.maxValues['biodiversity']}</span>.`,
+              text: t(`Current biodiversity pressure is {amount}<span class="type-total">/{maxAmount}</span>.`, {
+                amount: state.gameState.world.extinction_rate.toFixed(0),
+                maxAmount: consts.maxValues['biodiversity']
+              }),
             },
-            text: `[extinction_rate] ${changeDir(e.param, e)} biodiversity pressure by ${formatParam(e.param)}.`,
+            text: `[extinction_rate] ${t('{changeDir} biodiversity pressure by {amount}.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param)
+            })}`
           }
         }
         case 'Temperature': {
           return {
             tip: {
               icon: 'warming',
-              text: `This will directly change the global temperature anomaly by ${format.sign(e.param)}<strong>°c</strong>.`,
+              text: t(`This will directly change the global temperature anomaly by {amount}<strong>°c</strong>.`, {
+                amount: format.sign(e.param)
+              }),
             },
-            text: `[warming] ${changeDir(e.param, e)} the global temperature by ${formatParam(e.param)}<strong>°c</strong>.`
+            text: `[warming] ${t('{changeDir} the global temperature by {amount}<strong>°c</strong>.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param)
+            })}`
           };
         }
         case 'Precipitation': {
           return {
             tip: {
               icon: 'water',
-              text: `This will directly change global precipitation by ${format.sign(e.param)}<strong>cm/yr</strong>.`,
+              text: t(`This will directly change global precipitation by {amount}<strong>cm/yr</strong>.`, {
+                amount: format.sign(e.param)
+              }),
             },
-            text: `[water] ${changeDir(e.param, e)} global precipitation by ${formatParam(e.param)}<strong>cm/yr</strong>.`
+            text: `[water] ${t('{changeDir} global precipitation by {amount}<strong>cm/yr</strong>.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param)
+            })}`
           };
         }
         case 'PopulationGrowth': {
           return {
             tip: {
               icon: 'population',
-              text: 'The number of people on the planet.',
+              text: t('The number of people on the planet.'),
             },
-            text: `[population] ${changeDir(e.param, e)} global population growth by ${formatParam(e.param)}<strong>%.</strong>`,
+            text: `[population] ${t('{changeDir} global population growth by {amount}<strong>%.</strong>', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param)
+            })}`,
           };
         }
         case 'Population': {
           return {
             tip: {
               icon: 'population',
-              text: 'The number of people on the planet.',
+              text: t('The number of people on the planet.'),
             },
-            text: `[population] ${changeDir(e.param, e)} global population by ${formatParam(e.param)}.`,
+            text: `[population] ${t('{changeDir} global population by {amount}.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param)
+            })}`,
           };
         }
         case 'SeaLevelRiseRate': {
           return {
             tip: {
               icon: 'sea_level_rise',
-              text: `The amount of sea level rise is currently ${state.gameState.world.sea_level_rise.toFixed(2)}m.`,
+              text: t(`The amount of sea level rise is currently {amount}m.`, {
+                amount: state.gameState.world.sea_level_rise.toFixed(2)
+              }),
             },
-            text: `[sea_level_rise] ${changeDir(e.param, e)} the rate of sea level rise by ${formatParam(e.param * 1000)}mm/year.`,
+            text: `[sea_level_rise] ${t('{changeDir} the rate of sea level rise by {amount}mm/year.', {
+              changeDir: changeDir(e.param, e),
+              amount: formatParam(e.param * 1000)
+            })}`,
           };
         }
         default: {
@@ -234,9 +294,12 @@ function render(e) {
           return {
             tip: {
               icon: 'research',
-              text: 'Research points: Allocate them to research projects!'
+              text: t('Research points: Allocate them to research projects!')
             },
-            text: `[research] ${e.random ? 'Possible ' : ''}+${formatParam(e.param)} research points.`,
+            text: `[research] ${t('{random}+{amount} research points.', {
+              random: e.random ? 'Possible ' : '',
+              amount: formatParam(e.param)
+            })}`,
           }
         }
       }
@@ -250,31 +313,51 @@ function render(e) {
       } else {
         p = `${Math.round(p)}%`;
       }
+      let text = t(`{changeDir} maximum output for {process} by <strong>{amount}</strong>`, {
+        amount: p,
+        process: process.name,
+        changeDir: changeDir(e.param, e),
+      });
       return {
         tip: {
           icon: 'alert',
-          text: `.`
+          text: text,
         },
-        text: `${changeDir(e.param, e)} maximum output for ${process.name} by <strong>${p}</strong>`,
+        text: text,
       }
     }
     case 'RegionHabitability': {
       return {
         tip: {
           icon: 'habitability',
-          text: `Lower habitability means unhappier people who may need to migrate to more hospitable locales.`
+          text: t(`Lower habitability means unhappier people who may need to migrate to more hospitable locales.`)
         },
-        text: `[habitability] ${changeDir(e.param, e)} habitability in ${e.subtype.toLowerCase()} regions by ${formatParam(e.param)}.`,
+        text: `[habitability] ${t('{changeDir} habitability in {type} regions by {amount}.', {
+          amount: formatParam(e.param),
+          type: t(e.subtype.toLowerCase()),
+          changeDir: changeDir(e.param, e),
+        })}`,
       }
     }
     case 'Resource': {
       let k = display.enumKey(e.subtype);
       let amount = format.output(e.param, k);
       let percent = (e.param/state.gameState.resources[k] * 100).toFixed(1);
-      let text = `${changeDir(e.param, e)} ${display.enumDisplay(k)} supply by <img src="${icons[k]}">${Math.abs(amount)} (${format.sign(percent)}% of current supply).`;
+      let text = t(`{changeDir} {name} supply by <img src="{icon}">{amount} ({percent}% of current supply).`, {
+          percent: format.sign(percent),
+          amount: Math.abs(amount),
+          icon: icons[k],
+          name: display.enumDisplay(k),
+          changeDir: changeDir(e.param, e),
+      });
       return {
         tip: factors.tips[k](text),
-        text: `[${k}] ${changeDir(e.param, e)} ${display.enumDisplay(k)} supply by [${k}]${Math.abs(amount)}.`,
+        text: t(`[{icon}] {changeDir} {name} supply by [{icon}]{amount}.`, {
+          amount: Math.abs(amount),
+          name: display.enumDisplay(k),
+          changeDir: changeDir(e.param, e),
+          icon: k,
+        }),
       }
     }
     case 'Output': {
@@ -284,16 +367,28 @@ function render(e) {
       return {
         tip: {
           icon: k,
-          text: `Global ${display.displayName(e.subtype)} output will change from <img src="${icons[k]}">${base} to <img src="${icons[k]}">${changed} with no change in impacts.`
+          text: t(`Global {name} output will change from <img src="{icon}">{base} to <img src="{icon}">{changed} with no change in impacts.`, {
+            changed: changed,
+            base: base,
+            icon: icons[k],
+            name: display.displayName(e.subtype),
+          })
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} all ${display.displayName(e.subtype)} production by <strong>${(Math.abs(e.param)*100).toFixed(0)}%.</strong>`,
+        text: t(`[{icon}] {changeDir} all {name} production by <strong>{percent}%.</strong>`, {
+          percent: (Math.abs(e.param)*100).toFixed(0),
+          name: display.displayName(e.subtype),
+          changeDir: changeDir(e.param, e),
+          icon: e.subtype.toLowerCase(),
+        }),
       }
     }
     case 'OutputForProcess': {
       let process = state.gameState.processes[e.entity];
       let tip = {
         icon: display.enumKey(process.output),
-        text: `Changes the output for this process by ${(e.param*100).toFixed(0)}% with no change in impacts.`,
+        text: t(`Changes the output for this process by {percent}% with no change in impacts.`, {
+          percent: (e.param*100).toFixed(0),
+        }),
         card: {
           type: 'Process',
           data: process,
@@ -302,13 +397,20 @@ function render(e) {
       let tag = display.cardTag(process.name, process.output.toLowerCase());
       return {
         tip: tip,
-        text: `[${process.output.toLowerCase()}] ${changeDir(e.param, e)} ${tag} output by <strong>${(Math.abs(e.param)*100).toFixed(0)}%.</strong>`
+        text: t(`[{icon}] {changeDir} {tag} output by <strong>{percent}%.</strong>`, {
+          percent: (Math.abs(e.param)*100).toFixed(0),
+          tag: tag,
+          changeDir: changeDir(e.param, e),
+          icon: process.output.toLowerCase(),
+        })
       }
     }
     case 'OutputForFeature': {
       let tip = {
         icon: e.subtype,
-        text: `Changes the output for these processes by ${(e.param*100).toFixed(0)}% without changing their impacts.`,
+        text: t(`Changes the output for these processes by {percent}% without changing their impacts.`, {
+          percent: (e.param*100).toFixed(0),
+        }),
         card: {
           type: 'Processes',
           data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
@@ -316,7 +418,12 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} output for<span><img class="effect-feature" src="${icons[e.subtype]}" /><strong>${display.describeFeature(e.subtype)}</strong></span> by <strong>${(e.param*100).toFixed(0)}%.</strong>`
+        text: t(`{changeDir} output for <span><img class="effect-feature" src="{icon}" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>`, {
+          percent: (e.param*100).toFixed(0),
+          feature: display.describeFeature(e.subtype),
+          icon: icons[e.subtype],
+          changeDir: changeDir(e.param, e),
+        })
       }
     }
     case 'CO2ForFeature': {
@@ -324,7 +431,10 @@ function render(e) {
       let label = Math.abs(amount) >= 1 ? amount.toFixed(0) : '<1';
       let tip = {
         icon: e.subtype,
-        text: `${changeDir(e.param, e)} the CO2 emissions for these processes by <strong>${label}%.</strong>`,
+        text: t(`{changeDir} the CO2 emissions for these processes by <strong>{percent}%.</strong>`, {
+          percent: label,
+          changeDir: changeDir(e.param, e),
+        }),
         card: {
           type: 'Processes',
           data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
@@ -332,13 +442,20 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} CO2 emissions for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${label}%.</strong>`
+        text: t(`{changeDir} CO2 emissions for <span><img class="effect-feature" src="{icon}" />{feature}</span> by <strong>{percent}%.</strong>`, {
+          percent: label,
+          feature: display.describeFeature(e.subtype),
+          icon: icons[e.subtype],
+          changeDir: changeDir(e.param, e),
+        })
       }
     }
     case 'BiodiversityPressureForFeature': {
       let tip = {
         icon: e.subtype,
-        text: `Changes the biodiversity pressure for these processes by <strong>${e.param}.</strong>`,
+        text: t(`Changes the biodiversity pressure for these processes by <strong>{amount}.</strong>`, {
+          amount: e.param,
+        }),
         card: {
           type: 'Processes',
           data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
@@ -346,7 +463,12 @@ function render(e) {
       };
       return {
         tip,
-        text: `${changeDir(e.param, e)} biodiversity pressure for <span><img class="effect-feature" src="${icons[e.subtype]}" />${display.describeFeature(e.subtype)}</span> by <strong>${e.param}.</strong>`
+        text: t(`{changeDir} biodiversity pressure for <span><img class="effect-feature" src="{icon}" />{feature}</span> by <strong>{amount}.</strong>`, {
+          amount: e.param,
+          feature: display.describeFeature(e.subtype),
+          icon: icons[e.subtype],
+          changeDir: changeDir(e.param, e),
+        })
       }
     }
     case 'Demand': {
@@ -357,9 +479,19 @@ function render(e) {
       return {
         tip: {
           icon: k,
-          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${Math.round(afterDemand)}.`
+          text: t(`This changes {name} demand from <img src="{icon}">{currentDemand} to <img src="{icon}">{afterDemand}.`, {
+            afterDemand: Math.round(afterDemand),
+            currentDemand: currentDemand,
+            icon: icons[k],
+            name: name,
+          })
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} demand for ${display.displayName(e.subtype)} by <strong>${(Math.abs(e.param)*100).toFixed(0)}%</strong>.`,
+        text: t(`[{icon}] {changeDir} demand for {name} by <strong>{percent}%</strong>.`, {
+          percent: (Math.abs(e.param)*100).toFixed(0),
+          name: display.displayName(e.subtype),
+          changeDir: changeDir(e.param, e),
+          icon: e.subtype.toLowerCase(),
+        }),
       }
     }
     case 'DemandAmount': {
@@ -377,16 +509,28 @@ function render(e) {
       return {
         tip: {
           icon: k,
-          text: `This changes ${name} demand from <img src="${icons[k]}">${currentDemand} to <img src="${icons[k]}">${afterDemand}. This is a ${demandChange.toFixed(0)}% change of all ${name} demand.`
+          text: t(`This changes {name} demand from <img src="{icon}">{currentDemand} to <img src="{icon}">{afterDemand}. This is a {percent}% change of all {name} demand.`, {
+            percent: demandChange.toFixed(0),
+            afterDemand: afterDemand,
+            currentDemand: currentDemand,
+            icon: icons[k],
+            name: name,
+          })
         },
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} demand for ${display.displayName(e.subtype)} by <img src="${icons[k]}">${Math.abs(val)}.`,
+        text: t(`[{type}] {changeDir} demand for {name} by <img src="{icon}">{amount}.`, {
+          amount: Math.abs(val),
+          icon: icons[k],
+          name: display.displayName(e.subtype),
+          changeDir: changeDir(e.param, e),
+          type: e.subtype.toLowerCase(),
+        }),
       }
     }
     case 'UnlocksProject': {
       let project = state.gameState.projects[e.entity];
       let tip = {
         icon: 'unlocks',
-        text: `${e.random ? e.probability : 'Will'} unlock this project:`,
+        text: t(`${e.random ? e.probability : 'Will'} unlock this project:`),
         card: {
           type: 'Project',
           data: project
@@ -395,14 +539,14 @@ function render(e) {
       let tag = display.cardTag(project.name, project.kind.toLowerCase());
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] ${e.probability} unlock the ${tag} project.` : `<strong>Unlocks</strong> the ${tag} project.`}`,
+        text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock the {tag} project.`, {tag})}` : t('<strong>Unlocks</strong> the {tag} project.', {tag})}`,
       }
     }
     case 'UnlocksProcess': {
       let process = state.gameState.processes[e.entity];
       let tip = {
         icon: 'unlocks',
-        text: `${e.random ? e.probability : 'Will'} unlock this process:`,
+        text: t(`${e.random ? e.probability : 'Will'} unlock this process:`),
         card: {
           type: 'Process',
           data: process
@@ -411,14 +555,14 @@ function render(e) {
       let tag = display.cardTag(process.name, display.enumKey(process.output));
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] ${e.probability} unlock the ${tag} process.` : `<strong>Unlocks</strong> the ${tag} process.`}`,
+        text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock the {tag} process.`, {tag})}` : t('<strong>Unlocks</strong> the {tag} process.', {tag})}`,
       }
     }
     case 'UnlocksNPC': {
       let npc = state.gameState.npcs[e.entity];
       let tip = {
         icon: 'unlocks',
-        text: 'This new character will be unlocked:',
+        text: t('This new character will be unlocked:'),
         card: {
           type: 'NPC',
           data: npc
@@ -426,7 +570,7 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] ${e.probability} unlock ${npc.name}.` : `Unlocks ${npc.name}.`}`,
+        text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock {name}.`, {name: npc.name})}` : t('<strong>Unlocks</strong> {name}.', {name: npc.name})}`,
       }
     }
     case 'ProjectCostModifier': {
@@ -437,17 +581,26 @@ function render(e) {
       let tipIcon = project.kind == 'Policy' ? `<img src="${icons.political_capital}">` : '';
       let unit = project.kind == 'Policy' ? '' : ' years';
       let tag = display.cardTag(project.name, project.kind.toLowerCase());
-      let kind = 'cost';
+      let kind = t('cost');
       if (project.kind == 'Research') {
-        kind = 'research time';
+        kind = t('research time');
       } else if (project.kind == 'Initiative') {
-        kind = 'development time';
+        kind = t('development time');
       }
       let amountName = e.param == '?' ? e.param : Math.ceil(Math.abs(amount));
-      let tipAmount = e.param == '?' ? 'by an unknown amount' : `from ${tipIcon}${project.cost}${unit} to ${tipIcon}${project.cost + amount}${unit}.`;
+      let tipAmount = e.param == '?' ? t('by an unknown amount') : t(`from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit}.`, {
+        newCost: project.cost + amount,
+        unit: unit,
+        cost: project.cost,
+        tipIcon: tipIcon,
+      });
       let tip = {
         icon: 'cost',
-        text: `This effect ${changeDir(e.param, e).toLowerCase()} the ${kind} of this project ${tipAmount}.`,
+        text: t(`This effect {changeDir} the {kind} of this project {tipAmount}.`, {
+          tipAmount: tipAmount,
+          kind: kind,
+          changeDir: changeDir(e.param, e).toLowerCase(),
+        }),
         card: {
           type: 'Project',
           data: project,
@@ -455,7 +608,14 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `[cost] ${e.random ? '[chance]' : ''}${changeDir(e.param, e)} ${kind} of ${tag} by ${icon}${formatParam(amountName)}${unit}.`,
+        text: `[cost] ${e.random ? '[chance]' : ''}${t('{changeDir} {kind} of {tag} by {icon}{amount}{unit}.', {
+          changeDir: changeDir(e.param, e),
+          kind: kind,
+          tag: tag,
+          icon: icon,
+          unit: unit,
+          amount: formatParam(amountName)
+        })}`,
       }
     }
     case 'ProjectRequest': {
@@ -463,7 +623,7 @@ function render(e) {
       if (e.subtype == 'Ban') {
         let tip = {
           icon: 'request',
-          text: `You received a request to stop this project:`,
+          text: t(`You received a request to stop this project:`),
           card: {
             type: 'Project',
             data: project
@@ -471,12 +631,12 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[ban] I request that you stop ${project.name}. (+${e.param}PC)`,
+          text: `[ban] ${t('I request that you stop {name}.', {name: project.name})} (+${e.param}PC)`,
         }
       } else {
         let tip = {
           icon: 'request',
-          text: `You received a request to implement this project:`,
+          text: t(`You received a request to implement this project:`),
           card: {
             type: 'Project',
             data: project
@@ -484,7 +644,7 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[implement] I request that you implement ${project.name}. (+${e.param}PC)`,
+          text: `[implement] ${t('I request that you implement {name}.', {name: project.name})} (+${e.param}PC)`,
         }
       }
     }
@@ -493,7 +653,7 @@ function render(e) {
       if (e.subtype == 'Ban') {
         let tip = {
           icon: 'request',
-          text: `You received a request to ban this process:`,
+          text: t(`You received a request to ban this process:`),
           card: {
             type: 'Process',
             data: process
@@ -501,12 +661,12 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[ban] I request that you stop ${process.name}. (+${e.param}PC)`,
+          text: `[ban] ${t('I request that you stop {name}.', {name: process.name})} (+${e.param}PC)`,
         }
       } else {
         let tip = {
           icon: 'request',
-          text: `You received a request to promote this process:`,
+          text: t(`You received a request to promote this process:`),
           card: {
             type: 'Process',
             data: process
@@ -514,7 +674,7 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[implement] I request that you implement ${process.name}. (+${e.param}PC)`,
+          text: `[implement] ${t('I request that you implement {name}.', {name: process.name})} (+${e.param}PC)`,
         }
       }
     }
@@ -522,7 +682,7 @@ function render(e) {
       let flag = e.param.split('::')[1];
       return {
         tip: FLAG_TIPS[flag](demand),
-        text: '<strong>' + FLAGS[flag] + '</strong>',
+        text: '<strong>' + t(FLAGS[flag]) + '</strong>',
       }
     }
     case 'ModifyIndustryDemand': {
@@ -531,8 +691,11 @@ function render(e) {
       let tip = {
         icon: 'demand',
         text: e.param == '?' ?
-          `Changes demand for ${industry.name} by an unknown amount.`
-          : `Changes demand for ${industry.name} by <strong>${p.toFixed(0)}%.</strong>`,
+          t(`Changes demand for {name} by an unknown amount.`, {name: industry.name})
+          : t(`Changes demand for {name} by <strong>{percent}%.</strong>`, {
+            percent: p.toFixed(0),
+            name: industry.name,
+          }),
         card: {
           type: 'Industry',
           data: industry,
@@ -541,7 +704,11 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `${changeDir(e.param, e)} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `<strong>${p.toFixed(0)}%</strong>`}.`,
+        text: t(`{changeDir} demand for {tag} by {amount}.`, {
+          amount: e.param == '?' ? formatParam(e.param) : `<strong>${p.toFixed(0)}%</strong>`,
+          tag: tag,
+          changeDir: changeDir(e.param, e),
+        }),
       }
     }
     case 'ModifyIndustryResources': {
@@ -555,8 +722,18 @@ function render(e) {
       let tip = {
         icon: k,
         text: e.param == '?' ?
-          `This will change ${resource} demand for ${industry.name} by some unknown amount.`
-          : `This will change ${resource} demand for ${industry.name} from <img src="${icons[k]}">${demandBefore} to <img src="${icons[k]}">${demandAfter < 1 ? '<1' : demandAfter.toFixed(0)}. This is a ${demandChange.toFixed(0)}% change of all ${resource} demand.`,
+          t(`This will change {resource} demand for {name} by some unknown amount.`, {
+            name: industry.name,
+            resource: resource,
+          })
+          : t(`This will change {resource} demand for {name} from <img src="{icon}">{demandBefore} to <img src="{icon}">{demandAfter}. This is a {percent}% change of all {resource} demand.`, {
+              percent: demandChange.toFixed(0),
+              demandAfter: demandAfter < 1 ? '<1' : demandAfter.toFixed(0),
+              demandBefore: demandBefore,
+              icon: icons[k],
+              name: industry.name,
+              resource: resource,
+          }),
         card: {
           type: 'Industry',
           data: industry,
@@ -565,7 +742,13 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} ${resource.toLowerCase()} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `<strong>${p.toFixed(0)}%</strong>`}.`,
+        text: t(`[{icon}] {changeDir} {resource} demand for {tag} by {amount}.`, {
+          amount: e.param == '?' ? formatParam(e.param) : `<strong>${p.toFixed(0)}%</strong>`,
+          tag: tag,
+          resource: resource.toLowerCase(),
+          changeDir: changeDir(e.param, e),
+          icon: e.subtype.toLowerCase(),
+        }),
       }
     }
     case 'ModifyIndustryResourcesAmount': {
@@ -578,8 +761,18 @@ function render(e) {
       let tip = {
         icon: k,
         text: e.param == '?' ?
-          `This will change ${resource} demand for ${industry.name} by some unknown amount.`
-          : `This will change ${resource} demand for ${industry.name} from <img src="${icons[k]}">${demandBefore} to <img src="${icons[k]}">${demandAfter < 1 ? '<1' : demandAfter.toFixed(0)}. This is a ${demandChange.toFixed(0)}% change of all ${resource} demand.`,
+          t(`This will change {resource} demand for {name} by some unknown amount.`, {
+            name: industry.name,
+            resource: resource,
+          })
+          : t(`This will change {resource} demand for {name} from <img src="{icon}">{demandBefore} to <img src="{icon}">{demandAfter}. This is a {percent}% change of all {resource} demand.`, {
+            percent: demandChange.toFixed(0),
+            demandAfter: demandAfter < 1 ? '<1' : demandAfter.toFixed(0),
+            demandBefore: demandBefore,
+            icon: icons[k],
+            name: industry.name,
+            resource: resource,
+          }),
         card: {
           type: 'Industry',
           data: industry,
@@ -588,24 +781,50 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} ${resource.toLowerCase()} demand for ${tag} by ${e.param == '?' ? formatParam(e.param) : `${Math.abs(demandAfter - demandBefore)}`}.`,
+        text: t(`[{icon}] {changeDir} {resource} demand for {tag} by {amount}.`, {
+          amount: e.param == '?' ? formatParam(e.param) : `${Math.abs(demandAfter - demandBefore)}`,
+          tag: tag,
+          resource: resource.toLowerCase(),
+          changeDir: changeDir(e.param, e),
+          icon: e.subtype.toLowerCase(),
+        }),
       }
     }
+
     case 'ModifyProcessByproducts': {
       let process = state.gameState.processes[e.entity];
       let p = Math.abs(e.param * 100);
       let emissionsBefore = format.co2eq(process.byproducts) * state.gameState.produced_by_process[e.entity] * 1e-15;
       let emissionsAfter = emissionsBefore * (1 + e.param);
       let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions * 100;
-      let label = e.subtype == 'Biodiversity' ? 'biodiversity pressure' : `${e.subtype} emissions`;
-      let short = e.subtype == 'Biodiversity' ? 'biodiversity pressure' : 'emissions';
+      let label = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t(`{type} emissions`, {type: e.subtype});
+      let short = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t('emissions');
       let icon = e.subtype == 'Biodiversity' ? 'biodiversity' : 'emissions';
-      let change = e.subtype == 'Biodiversity' ? `${process.byproducts.biodiversity} to ${e.param}<img src="${icons[icon]}."` : `${emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1)} to <img src="${icons.emissions}">${emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1)}. This is a ${emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1)}% change of all emissions.`
+      let change = e.subtype == 'Biodiversity' ?
+        t(`{fromAmount} to {toAmount}<img src="{icon}">.`, {
+          icon: icons[icon],
+          toAmount: e.param,
+          fromAmount: process.byproducts.biodiversity,
+        })
+        : t(`{emissionsBefore} to <img src="{icon}">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.`, {
+          icon: icons.emissions,
+          emissionsChange: emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1),
+          emissionsAfter: emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1),
+          emissionsBefore: emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1),
+        })
       let tip = {
         icon: icon,
         text: e.param == '?' ?
-          `Changes ${label} for ${process.name} by an unknown amount.`
-          : `This will change ${short} for ${process.name} from <img src="${icons[icon]}">${change}`,
+          t(`Changes {label} for {name} by an unknown amount.`, {
+            name: process.name,
+            label: label,
+          })
+          : t(`This will change {short} for {name} from <img src="{icon}">{change}`, {
+            change: change,
+            icon: icons[icon],
+            name: process.name,
+            short: short,
+          }),
         card: {
           type: 'Process',
           data: process,
@@ -614,7 +833,13 @@ function render(e) {
       let tag = display.cardTag(process.name);
       return {
         tip: tip,
-        text: `[${icon}] ${changeDir(e.param, e)} ${label} for ${tag} by <strong>${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}</strong>.`,
+        text: t(`[{icon}] {changeDir} {label} for {tag} by <strong>{percent}</strong>.`, {
+          percent: e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`,
+          tag: tag,
+          label: label,
+          changeDir: changeDir(e.param, e),
+          icon: icon,
+        }),
       }
     }
 
@@ -627,8 +852,16 @@ function render(e) {
       let tip = {
         icon: 'emissions',
         text: e.param == '?' ?
-          `Changes emissions for ${industry.name} by an unknown amount.`
-          : `This will change emissions for ${industry.name} from <img src="${icons.emissions}">${emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1)} to <img src="${icons.emissions}">${emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1)}. This is a ${emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1)}% change of all emissions.`,
+          t(`Changes emissions for {name} by an unknown amount.`, {
+            name: industry.name,
+          })
+          : t(`This will change emissions for {name} from <img src="{icon}">{emissionsBefore} to <img src="{icon}">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.`, {
+            name: industry.name,
+            icon: icons.emissions,
+            emissionsChange: emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1),
+            emissionsAfter: emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1),
+            emissionsBefore: emissionsBefore > 0 && emissionsBefore < 1 ? '<1' : emissionsBefore.toFixed(1),
+          }),
         card: {
           type: 'Industry',
           data: industry,
@@ -637,7 +870,12 @@ function render(e) {
       let tag = display.cardTag(industry.name);
       return {
         tip: tip,
-        text: `[emissions] ${changeDir(e.param, e)} ${e.subtype} emissions for ${tag} by <strong>${e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`}</strong>.`,
+        text: t(`[emissions] {changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.`, {
+          percent: e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`,
+          tag: tag,
+          type: e.subtype,
+          changeDir: changeDir(e.param, e),
+        }),
       }
     }
     case 'DemandOutlookChange': {
@@ -648,9 +886,17 @@ function render(e) {
         tip: {
           icon: 'contentedness',
           subicon: k,
-          text: `This changes regional contentedness based on demand for ${display.displayName(e.subtype)}. Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
+          text: t(`This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class="type-total">/{maxAmount}</span>.`, {
+            name: display.displayName(e.subtype),
+            maxAmount: consts.maxValues['contentedness'],
+            amount: Math.round(state.gameState.world.contentedness),
+          }),
         },
-        text: `[contentedness] [${e.subtype.toLowerCase()}] ${changeDir(e.param, e)} world contentedness by <strong>${Math.abs(change)}</strong>.`
+        text: t(`[contentedness] [{icon}] {changeDir} world contentedness by <strong>{amount}</strong>.`, {
+          amount: Math.abs(change),
+          changeDir: changeDir(e.param, e),
+          icon: e.subtype.toLowerCase(),
+        })
       }
     }
     case 'IncomeOutlookChange': {
@@ -660,29 +906,43 @@ function render(e) {
         tip: {
           icon: 'contentedness',
           subicon: 'wealth',
-          text: `This changes regional contentedness by ${e.param} per income level (wealthier regions will feel it more). Current world contentedeness is ${Math.round(state.gameState.world.contentedness)}<span class="type-total">/${consts.maxValues['contentedness']}</span>.`,
+          text: t(`This changes regional contentedness by {amount} per income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class="type-total">/{maxContentedness}</span>.`, {
+            maxContentedness: consts.maxValues['contentedness'],
+            contentedness: Math.round(state.gameState.world.contentedness),
+            amount: e.param,
+          }),
         },
-        text: `[contentedness] ${changeDir(e.param, e)} contentedness by <strong>${Math.abs(change)}</strong>.`
+        text: t(`[contentedness] {changeDir} contentedness by <strong>{amount}</strong>.`, {
+          amount: Math.abs(change),
+          changeDir: changeDir(e.param, e),
+        })
       }
     }
     case 'ModifyEventProbability': {
       let event = EVENTS[e.entity].name;
       let p = e.param == '?' ? '?' : e.param * 100;
+      let text = t(`{changeDir} the chance of "{event}" by {percent}%`, {
+        event: t(event),
+        percent: formatParam(p),
+        changeDir: changeDir(p, e),
+      });
       return {
         tip: {
           icon: 'chance',
-          text: `${changeDir(p, e)} the chance of "${event}" by ${formatParam(p)}%`,
+          text: text,
         },
-        text: `${changeDir(p, e)} the chance of "${event}" by ${formatParam(p)}%`,
+        text: text
       }
     }
     case 'ProtectLand': {
       return {
         tip: {
           icon: 'land',
-          text: 'This will limit the amount of land that processes can use.'
+          text: t('This will limit the amount of land that processes can use.')
         },
-        text: `[land] Place <strong>${e.param}%</strong> of land under protection.`,
+        text: t(`[land] Place <strong>{percent}%</strong> of land under protection.`, {
+          percent: e.param,
+        }),
       }
     }
     case 'Feedstock': {
@@ -699,20 +959,27 @@ function render(e) {
 
       let text;
       if (estimate == null) {
-        text = 'We aren\'t tracking this feedstock.';
+        text = t("We aren't tracking this feedstock.");
       } else if (estimate == 0) {
-        text = 'This feedstock has been depleted.';
+        text = t('This feedstock has been depleted.');
       } else if (isFinite(estimate)) {
-        text = `At current usage rates the estimated supply is expected to last ${estimate} years.`;
+        text = t(`At current usage rates the estimated supply is expected to last {estimate} years.`, {
+          estimate: estimate,
+        });
       } else {
-        text = `At current usage rates the estimated supply is expected to last indefinitely.`;
+        text = t(`At current usage rates the estimated supply is expected to last indefinitely.`);
       }
       return {
         tip: {
           icon: k,
           text,
         },
-        text: `[${k}] ${changeDir(e.param, e)} ${name} supply by <strong>${e.param*100}%.</strong>`,
+        text: t(`[{icon}] {changeDir} {name} supply by <strong>{percent}%.</strong>`, {
+          icon: k,
+          name: name,
+          percent: e.param*100,
+          changeDir: changeDir(e.param, e),
+        }),
       }
     }
     case 'LocksProject': {
@@ -721,13 +988,17 @@ function render(e) {
       return {
         tip: {
           icon: 'alert',
-          text: `${project.name} will be unavailable while this project is active.`,
+          text: t(`{name} will be unavailable while this project is active.`, {
+            name: project.name,
+          }),
           card: {
             type: 'Project',
             data: project
           }
         },
-        text: `[locks] <strong>Locks</strong> ${tag}`,
+        text: t(`[locks] <strong>Locks</strong> {tag}`, {
+          tag: tag,
+        }),
       }
     }
     case 'TerminationShock': {
@@ -741,9 +1012,14 @@ function render(e) {
       return {
         tip: {
           icon: 'warming',
-          text: `This will directly change the global temperature anomaly by ${format.sign(temp_change)}<strong>°c</strong>.`,
+          text: t(`This will directly change the global temperature anomaly by {amount}<strong>°c</strong>.`, {
+            amount: format.sign(temp_change),
+          }),
         },
-        text: `[warming] ${changeDir(temp_change, e)} the global temperature by ${formatParam(temp_change)}<strong>°c</strong>.`
+        text: t(`[warming] {changeDir} the global temperature by {amount}<strong>°c</strong>.`, {
+          amount: formatParam(temp_change),
+          changeDir: changeDir(temp_change, e),
+        })
       };
     }
     default: {

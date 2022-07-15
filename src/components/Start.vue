@@ -3,7 +3,7 @@
   <div id="start-bg"></div>
   <div id="start-screen">
     <div id="lang-select">
-      <select @change="selectLang">
+      <select @change="selectLang" :style="{display: 'none'}">
         <option value="en" :selected="lang == 'en'">EN</option>
         <option value="es" :selected="lang == 'es'">ES</option>
       </select>
