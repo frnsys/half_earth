@@ -8,6 +8,9 @@
         <option value="es" :selected="lang == 'es'">ES</option>
       </select>
     </div>
+    <div id="lang-note" v-if="lang == 'es'">
+      Esta traducción aún no está terminada. Si ve un error o falta una traducción, o si desea ser voluntario, envíe un mensaje directo a @frnsys en Twitter. ¡Gracias!
+    </div>
     <template v-if="showCredits">
       <Credits @click="showCredits = false" />
     </template>
@@ -231,6 +234,16 @@ export default {
   z-index: 2;
 }
 
+#lang-note {
+  position: fixed;
+  padding: 0.5em;
+  top: 0.5em;
+  width: 420px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: rgba(0,0,0,0.8);
+  z-index: 10;
+}
 
 @media only screen and (min-width: 481px) {
   #start-screen img{
