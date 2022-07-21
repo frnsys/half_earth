@@ -223,7 +223,7 @@ export default {
           let s = t('increase {k} by {warn}{change}%', {k, warn: change > 100 ? '⚠️' : '', change: fmtPercent(change)});
           return `<span class="change-increase"><strong>${s}</strong></span>`;
         } else if (change < 0.0) {
-          let s = t('decrease {k} by {}%', {k, change: fmtPercent(Math.abs(change))});
+          let s = t('decrease {k} by {change}%', {k, change: fmtPercent(Math.abs(change))});
           return `<span class="change-decrease"><strong>${s}</strong></span>`;
         } else {
           return null;
