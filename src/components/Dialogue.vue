@@ -42,6 +42,7 @@ import game from '/src/game';
 import state from '/src/state';
 import display from '/src/display/display';
 import Effects from 'components/Effects.vue';
+import * as Sentry from "@sentry/browser";
 
 // Extract "chars" which might be
 // actual chars or be HTML elements
@@ -206,6 +207,12 @@ export default {
         game.applyBranchEffects(this.eventId, this.regionId, branch.id);
       }
 
+      Sentry.addBreadcrumb({
+        category: "dialogue",
+        message: `Choice selected. Current event id: ${this.eventId}, line id: ${this.current}`,
+        level: "info",
+      });
+
       this.current = branch.line_id;
       if (this.current !== null) {
         this.play();
@@ -228,10 +235,20 @@ export default {
         // For project outcomes we effectively don't support branching
         if (this.eventId === undefined) {
           let branch = this.line.next[0];
+          Sentry.addBreadcrumb({
+            category: "dialogue",
+            message: `Next line (outcome). Line id: ${this.current}`,
+            level: "info",
+          });
           this.current = branch.line_id;
         } else {
           let branch = this.line.next.find((b) => {
             return game.evalBranchConditions(this.eventId, this.regionId, b.id);
+          });
+          Sentry.addBreadcrumb({
+            category: "dialogue",
+            message: `Next line. Current event id: ${this.eventId}, line id: ${this.current}`,
+            level: "info",
           });
           this.current = branch.line_id;
         }
