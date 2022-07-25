@@ -140,7 +140,7 @@ export default {
       };
     },
     startYear() {
-      sendSnapshot(state);
+      // sendSnapshot(state);
 
       this.time = 0;
       this.globe.resumeRotation();

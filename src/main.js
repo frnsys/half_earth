@@ -41,7 +41,7 @@ loadLanguage(() => {
   app.config.globalProperties['debug'] = debug;
   app.config.globalProperties['PLATFORM'] = PLATFORM;
   app.mount('#main');
-  startSession();
+  // startSession();
 });
 
 // window.onbeforeunload = () => {
