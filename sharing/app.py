@@ -18,6 +18,8 @@ def index():
         return redirect('https://half.earth/')
     else:
         data = request.get_json()
+        if data is None:
+            return jsonify(success=False)
         summary = summarize(data)
         id = gen_id()
         img_path = 'uploads/{}.jpg'.format(id)
