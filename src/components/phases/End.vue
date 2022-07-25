@@ -71,10 +71,13 @@ export default {
       /* state.phase = 'PLANNING'; */
     },
     getShareImage() {
-      share(!this.lose, ({badges, url, image}) => {
-        this.shareImgUrl = image;
-        this.shareUrl = url;
-        this.badges = badges;
+      share(!this.lose, (data) => {
+        if (data.success) {
+          let {badges, url, image} = data;
+          this.shareImgUrl = image;
+          this.shareUrl = url;
+          this.badges = badges;
+        }
       });
     },
   },
