@@ -15,6 +15,7 @@ import {sessionId, startSession} from '/src/log';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
+    release: VERSION,
     dsn: "https://9c8cd525d7c64214836351b406f6e860@o545203.ingest.sentry.io/6087646",
     integrations: [new Integrations.BrowserTracing()],
 
