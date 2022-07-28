@@ -1,7 +1,8 @@
 const params = new URLSearchParams(window.location.search);
 
 const defaultLanguage = 'en';
-const availableLanguages = ['en', 'es'];
+// const availableLanguages = ['en', 'es'];
+const availableLanguages = ['en']; // while we're just testing, use only English
 
 function getPreferredLanguages() {
   if (navigator.languages && navigator.languages.length) {
