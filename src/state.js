@@ -28,6 +28,7 @@ function initState() {
     gameState: null,
     phase: 'INTRO',
     newRunCount: 0,
+    tutorialRestarted: false,
     tutorial: debug.hideIntro ? tutorial.READY + 1 : 0,
 
     // Track which events have occurred

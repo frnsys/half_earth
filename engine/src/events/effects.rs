@@ -17,6 +17,7 @@ pub enum Request {
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
 pub enum Flag {
+    RepeatTutorial,
     SkipTutorial,
     Electrified,
     Vegetarian,

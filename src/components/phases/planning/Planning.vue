@@ -126,6 +126,12 @@ export default {
     afterEvents() {
       if (state.gameState.flags.includes('SkipTutorial')) {
         state.tutorial = tutorial.READY + 1;
+      } else if (state.gameState.flags.includes('RepeatTutorial') && !state.tutorialRestarted) {
+        state.tutorialRestarted = true;
+        state.tutorial = 0;
+        // Re-roll for tutorial start
+        this.events = game.roll.planning('Start');
+        this.showEvent();
       }
     },
   }
