@@ -30,6 +30,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.64",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
     "@electron-forge/maker-zip": "^6.0.0-beta.64",
+    "@sentry/webpack-plugin": "^1.19.0",
     "@vue/compiler-sfc": "^3.1.4",
     "css-loader": "^5.2.6",
     "electron": "^19.0.6",
@@ -53,16 +54,20 @@
         "name": "Half-Earth Socialism",
         "executableName": "half-earth",
         "ignore": [
-            "^/node_modules",
-            "^/engine",
-            "^/hector",
-            "^/editor",
-            "^/logserver",
-            "^/data",
-            "^/sharing/(?!badges)",
-            "^/studies",
-            "^/assets/src/(?!icons|shadows|satellite|landuse|historical_data|biome_lookup)",
-            ".md$", ".py$", ".sh$", ".blend1?$"]
+          "^/node_modules",
+          "^/engine",
+          "^/hector",
+          "^/editor",
+          "^/logserver",
+          "^/data",
+          "^/sharing/(?!badges)",
+          "^/studies",
+          "^/assets/src/(?!icons|shadows|satellite|landuse|historical_data|biome_lookup)",
+          ".md$",
+          ".py$",
+          ".sh$",
+          ".blend1?$"
+        ]
       },
       "makers": [
         {

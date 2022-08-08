@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const { VueLoaderPlugin } = require('vue-loader')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const dev = process.env.NODE_ENV !== 'production';
+const SentryPlugin = require("@sentry/webpack-plugin");
 
 module.exports = (env) => ({
   entry: {
@@ -49,10 +50,15 @@ module.exports = (env) => ({
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin(),
 
+    new SentryPlugin({
+      release: env.version,
+      include: "./dist",
+    }),
+
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(env.version),
       TIMESTAMP: JSON.stringify(env.timestamp),
-      PLATFORM: JSON.stringify(process.env.PLATFORM),
+      PLATFORM: JSON.stringify(env.PLATFORM),
     }),
 
     new webpack.DefinePlugin({
