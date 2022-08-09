@@ -58,7 +58,7 @@ module.exports = (env) => ({
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(env.version),
       TIMESTAMP: JSON.stringify(env.timestamp),
-      PLATFORM: JSON.stringify(env.PLATFORM),
+      PLATFORM: JSON.stringify(env.platform),
     }),
 
     new webpack.DefinePlugin({
@@ -79,6 +79,9 @@ module.exports = (env) => ({
 
       // Proxy three.js exports to reduce bundle size
       'three$': path.resolve('./src/3d/three.js')
+    },
+    fallback: {
+      'path': require.resolve('path-browserify')
     }
   },
   experiments: {

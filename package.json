@@ -5,13 +5,13 @@
   "description": "A Planetary Crisis Planning Game.",
   "scripts": {
     "start": "webpack serve --host 0.0.0.0 --progress --compress --mode=development --env version=dev --env timestamp=$(git log -1 --format=%ct)",
-    "build": "rm -rf dist; NODE_ENV=production webpack --mode production --env production --env version=$(git describe --always) --env timestamp=$(git log -1 --format=%ct) --progress",
+    "build": "rm -rf dist; NODE_ENV=production webpack --mode production --env production --env version=$(git describe --always) --env timestamp=$(git log -1 --format=%ct) --env platform=$PLATFORM --progress",
     "build-wasm": "cd engine; wasm-pack build --release",
     "test": "cd engine; cargo test; wasm-pack test --headless --firefox",
     "electron": "electron ."
   },
   "dependencies": {
-    "@sentry/browser": "^6.15.0",
+    "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.15.0",
     "electron-squirrel-startup": "^1.0.0",
     "half-earth-engine": "file:engine/pkg",
@@ -19,6 +19,7 @@
     "hexasphere.js": "^0.2.2",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "path-browserify": "^1.0.1",
     "three": "^0.129.0",
     "upng-js": "^2.1.0",
     "vue": "^3.1.4"

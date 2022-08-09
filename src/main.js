@@ -1,3 +1,4 @@
+import path from 'path';
 import {createApp} from 'vue';
 import consts from '/src/consts';
 import icons from 'components/icons';

@@ -27,7 +27,8 @@ function realizeSymlinks() {
 rm -rf ../build
 
 npm run build-wasm
-PLATFORM="$1" npm run build
+export PLATFORM="$1"
+npm run build
 
 # win32 requires a clean wine prefix,
 # since mine main prefix is configured in a way that
