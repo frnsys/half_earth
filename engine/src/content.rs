@@ -4014,7 +4014,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Outlook, -1.0)
+                        Effect::WorldVariable(WorldVariable::Outlook, 1.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,

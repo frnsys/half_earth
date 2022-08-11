@@ -21,6 +21,7 @@ import {activeEffects} from '/src/display/project';
 import FLAGS from '/assets/content/flags.json';
 import EVENTS from '/assets/content/events.json';
 import ICONEVENTS from '/assets/content/icon_events.json';
+import * as Sentry from "@sentry/vue";
 
 const FLAG_TIPS = {
   'Electrified': (demand) => {
@@ -164,6 +165,10 @@ function formatParam(param) {
 }
 
 function render(e) {
+  Sentry.setContext("effect", {
+    effect: e
+  });
+
   let demand = format.outputs(state.gameState.output_demand);
   switch (e.type) {
     case 'WorldVariable': {

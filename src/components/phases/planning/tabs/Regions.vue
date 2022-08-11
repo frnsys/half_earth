@@ -36,9 +36,11 @@ export default {
     this.fitRegionName();
   },
   beforeUnmount() {
-    Object.keys(tilesToRegions).forEach((idx) => {
-      this.globe.hexsphere.unhighlightIdx(idx);
-    });
+    if (this.globe) {
+      Object.keys(tilesToRegions).forEach((idx) => {
+        this.globe.hexsphere.unhighlightIdx(idx);
+      });
+    }
   },
   activated() {
     this.fitRegionName();
