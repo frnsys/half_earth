@@ -80,8 +80,6 @@ module.exports = (env) => ({
 
       // Proxy three.js exports to reduce bundle size
       'three$': path.resolve('./src/3d/three.js'),
-
-      'sentry$': env.target == 'ELECTRON' ? '@sentry/electron' : '@sentry/browser',
     },
     fallback: {
       'path': require.resolve('path-browserify')
