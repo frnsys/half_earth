@@ -53,7 +53,8 @@ module.exports = (env) => ({
     new SentryPlugin({
       release: env.version,
       include: "./dist",
-      urlPrefix: "~/dist"
+      urlPrefix: "~/dist",
+      cleanArtifacts: true,
     }),
 
     new webpack.DefinePlugin({
