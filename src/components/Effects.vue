@@ -102,6 +102,12 @@ const FLAG_TIPS = {
       text: t('Prevents or stops metal shortages.')
     }
   },
+  'MetalsShortage': (demand) => {
+    return {
+      icon: 'iron_and_steel',
+      text: t('Infrastructure projects take 20% longer to finish.')
+    }
+  },
   'ParliamentSuspended': (demand) => {
     return {
       icon: 'The Authoritarian',
