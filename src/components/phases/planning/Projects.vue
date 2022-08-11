@@ -40,7 +40,7 @@
   <CardFocusArea />
 
   <footer>
-    <Points :kind="project.kind" />
+    <Points :kind="type" />
   </footer>
 </div>
 </template>

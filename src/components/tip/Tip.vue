@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     dismiss(ev) {
-      if (ev.target == this.$refs.overlay || this.$refs.tip.contains(ev.target)) {
+      if (ev.target == this.$refs.overlay || (this.$refs.tip && this.$refs.tip.contains(ev.target))) {
         this.show = false;
         this.card = null;
       }
