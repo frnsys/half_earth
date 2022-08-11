@@ -53,6 +53,7 @@ module.exports = (env) => ({
     new SentryPlugin({
       release: env.version,
       include: "./dist",
+      urlPrefix: "~/dist"
     }),
 
     new webpack.DefinePlugin({
@@ -78,7 +79,9 @@ module.exports = (env) => ({
       'components': path.resolve('./src/components'),
 
       // Proxy three.js exports to reduce bundle size
-      'three$': path.resolve('./src/3d/three.js')
+      'three$': path.resolve('./src/3d/three.js'),
+
+      'sentry$': env.target == 'ELECTRON' ? '@sentry/electron' : '@sentry/browser',
     },
     fallback: {
       'path': require.resolve('path-browserify')

@@ -216,8 +216,8 @@ export default {
     start() {
       // Wait a beat before showing the event
       setTimeout(() => {
-        this.showEvent();
         this.ready = true;
+        this.showEvent();
       }, 1200);
       window.audioManager.stopSoundtrack(true);
       window.audioManager.startAtmosphere(`/assets/environments/ambience/${this.locale.ambience}`, true)
