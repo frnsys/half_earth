@@ -26,8 +26,11 @@ function realizeSymlinks() {
 
 rm -rf ../build
 
+export SENTRY_ORG=jain-family-institute
+export SENTRY_PROJECT=half-earth
 npm run build-wasm
 export PLATFORM="$1"
+export TARGET=ELECTRON
 npm run build
 
 # win32 requires a clean wine prefix,
