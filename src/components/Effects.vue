@@ -1013,7 +1013,7 @@ function render(e) {
       }
     }
     case 'TerminationShock': {
-      let proj = state.gameState.projects.find((p) => p.name == 'Solar Radiation Management');
+      let proj = state.gameState.projects.find((p) => p.name.includes('Solar Radiation Management'));
       let effects = activeEffects(proj);
       let temp_change = 0;
       let temp_effect = effects.find((eff) => eff.subtype == 'Temperature');
