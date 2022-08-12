@@ -11,6 +11,7 @@ import debug from './debug';
 import t, {loadLanguage} from '/src/i18n';
 
 import * as Sentry from "@sentry/vue";
+import { Wasm as WasmIntegration } from "@sentry/wasm";
 import {sessionId, startSession} from '/src/log';
 
 loadLanguage(() => {
@@ -21,6 +22,7 @@ loadLanguage(() => {
       app,
       release: VERSION,
       dsn: "https://9c8cd525d7c64214836351b406f6e860@o545203.ingest.sentry.io/6087646",
+      integrations: [new WasmIntegration()],
       beforeSend: function(event, hint) {
         console.error(hint.originalException || hint.syntheticException);
         let stacktrace = event.exception && event.exception.values[0].stacktrace;
