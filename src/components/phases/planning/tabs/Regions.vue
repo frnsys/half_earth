@@ -80,6 +80,8 @@ export default {
       this.centerOnRegion(this.selectedRegion);
     },
     centerOnRegion(regionId) {
+      if (!this.globe) return;
+
       // Reset highlights
       Object.keys(tilesToRegions).forEach((idx) => {
         this.globe.hexsphere.unhighlightIdx(idx);
