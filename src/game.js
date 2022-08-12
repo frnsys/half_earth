@@ -6,6 +6,7 @@ import factors from '/src/display/factors';
 import display from '/src/display/display';
 import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
 import tutorial from '/src/tutorial';
+import * as Sentry from "@sentry/vue";
 
 // Version timestamp must be >= this value
 const EXPIRED_TIMESTAMP = 1649864144;
@@ -107,6 +108,9 @@ function loadGame() {
   let data = localStorage.getItem('gameData');
   if (data !== null) {
     let parsed = JSON.parse(data);
+    Sentry.setContext("save_data", {
+      save_data: parsed
+    });
     let invalid = parsed.version_timestamp < EXPIRED_TIMESTAMP;
     if (invalid) {
       return null;
