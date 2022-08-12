@@ -27,9 +27,11 @@ export default {
         let scroller = document.querySelector('.cards');
         if (scroller) {
           let els = [...document.querySelectorAll('.draggable')];
-          let idx = detectCenterElement(scroller, els);
-          this.cardHeight = els[idx].getBoundingClientRect().height;
-          this.onFocused(idx);
+          if (els.length > 0) {
+            let idx = detectCenterElement(scroller, els);
+            this.cardHeight = els[idx].getBoundingClientRect().height;
+            this.onFocused(idx);
+          }
         }
       });
     },

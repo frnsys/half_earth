@@ -19,8 +19,8 @@
     <div @click="$emit('close')" :class="{disabled: backDisabled, highlight: backHighlighted}">{{t('Back')}}</div>
   </div>
 
-  <AddScanner ref="addScanner" :project="project" />
-  <RemoveScanner ref="removeScanner" :project="project" />
+  <AddScanner ref="addScanner" :project="project" v-if="project" />
+  <RemoveScanner ref="removeScanner" :project="project" v-if="project" />
 
   <Cards @focused="onFocus" @scrollStart="onScrollStarted" @scrollEnd="onScrollEnd" :disabled="!allowScroll">
     <Draggable
@@ -111,13 +111,17 @@ export default {
       if (this.focused !== null) {
         let proj =  this.projects[this.focused];
         if (proj === undefined) {
-          return this.projects[0];
+          if (this.projects.length === 0) {
+            return null;
+          } else {
+            return this.projects[0];
+          }
         } else {
           return proj;
         }
       } else {
         // Default for loading
-        return state.gameState.projects[0];
+        return null;
       }
     },
     projectOrder() {
@@ -143,8 +147,10 @@ export default {
   methods: {
     onFocus(idx) {
       this.onFocused(idx);
-      if (!state.viewed.includes(this.project.ref_id)) {
-        state.viewed.push(this.project.ref_id);
+      if (this.project) {
+        if (!state.viewed.includes(this.project.ref_id)) {
+          state.viewed.push(this.project.ref_id);
+        }
       }
     },
     onScrollStarted() {
