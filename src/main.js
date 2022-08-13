@@ -24,7 +24,7 @@ loadLanguage(() => {
       dsn: "https://9c8cd525d7c64214836351b406f6e860@o545203.ingest.sentry.io/6087646",
       integrations: [new WasmIntegration()],
       beforeSend: function(event, hint) {
-        console.error(hint.originalException || hint.syntheticException);
+        // console.error(hint.originalException || hint.syntheticException);
         let stacktrace = event.exception && event.exception.values[0].stacktrace;
         if (stacktrace && stacktrace.frames) {
           stacktrace.frames.forEach(function(frame) {

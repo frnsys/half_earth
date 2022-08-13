@@ -56,7 +56,9 @@ export default {
     });
   },
   beforeUnmount() {
-    this.globe.active = false;
+    if (this.globe) {
+      this.globe.active = false;
+    }
   },
 }
 </script>

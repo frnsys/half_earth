@@ -42,7 +42,7 @@ import game from '/src/game';
 import state from '/src/state';
 import display from '/src/display/display';
 import Effects from 'components/Effects.vue';
-import * as Sentry from "@sentry/browser";
+import * as Sentry from "@sentry/vue";
 
 // Extract "chars" which might be
 // actual chars or be HTML elements
@@ -155,7 +155,7 @@ export default {
 
   },
   methods: {
-    fallbackPortrait(e){
+    fallbackPortrait(e) {
       e.target.src ='/assets/characters/' + this.line.speaker + '.png'
     },
     onKeydown(e){
