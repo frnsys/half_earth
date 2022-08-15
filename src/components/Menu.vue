@@ -92,7 +92,7 @@ export default {
       return intensity.scale(state.gameState.world.extinction_rate, 'extinction');
     },
     locale() {
-      let idx = Math.round((state.gameState.world.year - state.startYear)/5) + 1 - 1 % LOCALES.length;
+      let idx = (Math.round((state.gameState.world.year - state.startYear)/5) + 1 - 1) % LOCALES.length;
       return LOCALES[idx].name;
     },
   },
