@@ -5018,7 +5018,7 @@ pub fn projects() -> Vec<Project> {
                 Effect::WorldVariable(WorldVariable::Outlook, 4.0),
                 Effect::LocksProject(51),
                 Effect::AddFlag(Flag::MoreLeisure),
-                Effect::Output(Output::Fuel, -0.2),
+                Effect::Demand(Output::Fuel, -0.2),
                 Effect::Demand(Output::Electricity, -0.2)
             ],
             kind: ProjectType::Policy,
