@@ -108,7 +108,7 @@ function loadGame() {
   let data = localStorage.getItem('gameData');
   if (data !== null) {
     let parsed = JSON.parse(data);
-    sendSnapshot(parsed); // Log save data for debugging
+    // sendSnapshot(parsed);
     let invalid = parsed.version_timestamp < EXPIRED_TIMESTAMP;
     if (invalid) {
       return null;

@@ -70,10 +70,10 @@ fn produce_amount(order: &ProductionOrder,
     let resource_max = resources.items().map(|(k, v)| available_resources[k]/v)
         .iter().fold(f32::INFINITY, |a, &b| a.min(b));
 
-    let amount_produced = order.amount.min(feedstock_max.min(resource_max));
+    let amount_produced = order.amount.min(feedstock_max.min(resource_max)).max(0.);
 
     for (k, v) in resources.items() {
-        available_resources[k] -= v * amount_produced;
+        available_resources[k] = (available_resources[k] - v * amount_produced).max(0.);
     }
     for (k, v) in byproducts.items() {
         produced_byproducts[k] += v * amount_produced;
