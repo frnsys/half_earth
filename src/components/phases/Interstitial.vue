@@ -15,7 +15,7 @@
   </div>
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
   <div class="interstitial--image-credit">Image: {{locale.credit}}</div>
-  <div class="interstitial--next" v-if="ready && !gameOver && !gameWin">
+  <div class="interstitial--next" v-if="ready">
     <button class="btn" @click="nextPhase">{{t('Continue')}}</button>
   </div>
   </div>
