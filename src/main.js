@@ -41,6 +41,12 @@ loadLanguage(() => {
     });
   }
 
+  document.addEventListener('keydown', (ev) => {
+    if (ev.shiftKey && ev.key == 'I') {
+      alert(`This is your game session id:\n${sessionId}\nPlease include this if you are submitting a bug report.`);
+    }
+  });
+
   app.directive('tip', tip);
   app.config.globalProperties['t'] = t;
   app.config.globalProperties['icons'] = icons;

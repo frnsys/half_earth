@@ -144,6 +144,11 @@ export default {
   computed: {
     line() {
       let line = this.dialogue.lines[this.current];
+
+      Sentry.setContext("line", {
+        line
+      });
+
       return {
         ...line,
         text: this.dialogue.context ? parseText(line.text, this.dialogue.context) : line.text,
