@@ -4278,7 +4278,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 58,
             ref_id: "76ee5397-e5ec-440c-8b25-f489f2a6fd8f",
-            name: "Reintroduce Apex Predators ",
+            name: "Reintroduce Apex Predators",
             cost: 0,
             base_cost: Cost::Fixed(10),
             progress: 0.0,
@@ -5263,7 +5263,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ModifyIndustryResources(8, Resource::Electricity, -0.4),
-                Effect::ModifyIndustryByproducts(8, Byproduct::Co2, -0.4),
+                Effect::ModifyIndustryResources(8, Resource::Fuel, -0.4),
                 Effect::UnlocksProject(66)
             ],
             kind: ProjectType::Initiative,
@@ -6787,7 +6787,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(2, Byproduct::Co2, -0.66)
+                Effect::ModifyIndustryResources(2, Resource::Fuel, -0.66)
             ],
             kind: ProjectType::Research,
             locked: false,
