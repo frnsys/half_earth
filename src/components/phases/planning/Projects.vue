@@ -58,6 +58,8 @@ import Points from 'components/scanner/project/Points.vue';
 import AddScanner from 'components/scanner/project/AddScanner.vue';
 import RemoveScanner from 'components/scanner/project/RemoveScanner.vue';
 
+import PROJECT_LOCKERS from '/assets/content/project_lockers.json';
+
 const scanTip = t('↑ Swipe this card up and hold to add it to your plan ↑');
 const scrollTip = t('⟵ Swipe sideways to see other projects ⟶ ');
 
@@ -134,6 +136,13 @@ export default {
         .filter((p) => {
           return p.kind == this.type
             && (!p.locked || debug.showAllProjects)
+
+            // Filter out projects that are mutually exclusive
+            // with active projects
+            && (PROJECT_LOCKERS[p.id] === undefined ||
+              (state.gameState.projects[PROJECT_LOCKERS[p.id]].status == 'Active' ||
+              state.gameState.projects[PROJECT_LOCKERS[p.id]].status == 'Finished'))
+
             // Filter out finished projects
             && p.status !== 'Finished'
 

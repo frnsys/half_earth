@@ -1005,11 +1005,25 @@ if __name__ == '__main__':
         json.dump(all_events, f)
 
     projects = []
+    project_lockers = {}
     for p in items_by_type['Project']:
         id = p['id']
         image = p.get('image', {})
         fname = image.get('image', None)
         attribution = image.get('attribution', None)
+        effs = [parse_effect(e) for e in p.get('effects', [])]
+
+        # Hacky way to fix a bug where,
+        # - if project A locks project B (i.e. they are supposed to be mutually exclusive)
+        # - and project B is not yet unlocked
+        # - and project A is active
+        # - and then project B is unlocked by something else
+        # - then both project A and B will be available
+        for ef in effs:
+            if ef['type'] == 'LocksProject':
+                other = items_by_type['Project'][ef['entity'][0]]
+                project_lockers[p['id']] = other['id']
+
         project = {
             'name': p['name'],
             'image': {
@@ -1017,7 +1031,7 @@ if __name__ == '__main__':
                 'attribution': attribution,
             },
             'description': p.get('description', ''),
-            'effects': [parse_effect(e) for e in p.get('effects', [])],
+            'effects': effs,
             'upgrades': [{
                 'cost': u['cost'],
                 'effects': [{
@@ -1050,6 +1064,9 @@ if __name__ == '__main__':
         projects.append(project)
     with open('assets/content/projects.json', 'w') as f:
         json.dump(projects, f)
+
+    with open('assets/content/project_lockers.json', 'w') as f:
+        json.dump(project_lockers, f)
 
     processes = []
     # Check process allocations are correct
