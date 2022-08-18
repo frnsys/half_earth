@@ -4,8 +4,8 @@
   <div class="dialogue--speech">
     <div class="dialogue--speaker" v-if="line.speaker !== '[GAME]'">
       <img
-        :src="`/assets/characters/${line.speaker}.webp`"
-        @error="fallbackPortrait" />
+        :src="image"
+        @error="onImageError" />
     </div>
     <div class="dialogue--body" @click="advance">
       <div class="dialogue--speaker-name" v-if="line.speaker !== '[GAME]'">
@@ -114,6 +114,7 @@ export default {
   },
   data() {
     return {
+      imageErr: false,
       current: this.dialogue.root,
       revealed: false,
     }
@@ -142,6 +143,13 @@ export default {
     }
   },
   computed: {
+    image() {
+      if (this.imageErr) {
+        return `/assets/characters/${this.line.speaker}.png`;
+      } else {
+        return `/assets/characters/${this.line.speaker}.webp`;
+      }
+    },
     line() {
       let line = this.dialogue.lines[this.current];
 
@@ -160,8 +168,15 @@ export default {
 
   },
   methods: {
-    fallbackPortrait(e) {
-      e.target.src ='/assets/characters/' + this.line.speaker + '.png'
+    onImageError(e) {
+      if (!this.imageErr) {
+        Sentry.setContext("image", {
+          line: this.line,
+          image: this.image
+        });
+        throw new Error('Image did not load');
+      }
+      this.imageErr = true;
     },
     onKeydown(e){
       if (VERSION === 'dev' && e.key === 'Escape') {
