@@ -803,6 +803,11 @@ if __name__ == '__main__':
                 missing_images.append(fname)
 
     # Fetch images
+    passman = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+    passman.add_password(None, 'http://half-earth-editor.frnsys.com', os.environ['EDITOR_USER'], os.environ['EDITOR_PASS'])
+    authhandler = urllib.request.HTTPBasicAuthHandler(passman)
+    opener = urllib.request.build_opener(authhandler)
+    urllib.request.install_opener(opener)
     if missing_images:
         print('Downloading missing images...')
         for fname in missing_images:
