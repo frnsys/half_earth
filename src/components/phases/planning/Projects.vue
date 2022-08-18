@@ -140,8 +140,9 @@ export default {
             // Filter out projects that are mutually exclusive
             // with active projects
             && (PROJECT_LOCKERS[p.id] === undefined ||
-              (state.gameState.projects[PROJECT_LOCKERS[p.id]].status == 'Active' ||
-              state.gameState.projects[PROJECT_LOCKERS[p.id]].status == 'Finished'))
+              (state.gameState.projects[PROJECT_LOCKERS[p.id]].status !== 'Building' &&
+              state.gameState.projects[PROJECT_LOCKERS[p.id]].status !== 'Active' &&
+              state.gameState.projects[PROJECT_LOCKERS[p.id]].status !== 'Finished'))
 
             // Filter out finished projects
             && p.status !== 'Finished'
