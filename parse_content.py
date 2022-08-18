@@ -1027,7 +1027,7 @@ if __name__ == '__main__':
         for ef in effs:
             if ef['type'] == 'LocksProject':
                 other = items_by_type['Project'][ef['entity'][0]]
-                project_lockers[p['id']] = other['id']
+                project_lockers[other['id']] = p['id']
 
         project = {
             'name': p['name'],
