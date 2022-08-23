@@ -104,6 +104,10 @@ function revealChars(parentEl, chars, {speed, onReveal, onStart}) {
 
 // Parse special entities out of text
 function parseText(text, context) {
+    Sentry.setContext("text_parse", {
+      text,
+      context,
+    });
   return display.fillIcons(display.fillVars(text, context));
 }
 
@@ -154,7 +158,8 @@ export default {
       let line = this.dialogue.lines[this.current];
 
       Sentry.setContext("line", {
-        line
+        line,
+        text: line.text
       });
 
       return {
@@ -171,7 +176,6 @@ export default {
     onImageError(e) {
       if (!this.imageErr) {
         Sentry.setContext("image", {
-          line: this.line,
           image: this.image
         });
         throw new Error('Image did not load');
