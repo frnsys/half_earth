@@ -424,7 +424,7 @@ function render(e) {
         }),
         card: {
           type: 'Processes',
-          data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+          data: state.gameState.processes.filter((p) => !p.locked && p.features.includes(e.subtype))
         }
       };
       return {
@@ -469,7 +469,7 @@ function render(e) {
         }),
         card: {
           type: 'Processes',
-          data: state.gameState.processes.filter((p) => p.features.includes(e.subtype))
+          data: state.gameState.processes.filter((p) => !p.locked && p.features.includes(e.subtype))
         }
       };
       return {
