@@ -175,9 +175,6 @@ export default {
   methods: {
     onImageError(e) {
       if (!this.imageErr) {
-        Sentry.setContext("image", {
-          image: this.image
-        });
         throw new Error('Image did not load');
       }
       this.imageErr = true;
