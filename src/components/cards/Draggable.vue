@@ -134,7 +134,9 @@ export default {
       let dx = (ev.clientX !== undefined ? ev.clientX : ev.touches[0].clientX) - this.pos.x;
       let dy = (ev.clientY !== undefined ? ev.clientY : ev.touches[0].clientY) - this.pos.y;
 
-      let [minY, maxY] = this.yBounds();
+      let yBounds = this.yBounds();
+      if (yBounds == null) return;
+      let [minY, maxY] = yBounds;
 
       if (Math.abs(dy) > Math.abs(dx)) {
         this.dragging = true;

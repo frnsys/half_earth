@@ -245,10 +245,14 @@ export default {
       }
     },
     yBounds() {
-      return [
-        this.$refs.addScanner.botY - 10,
-        this.$refs.removeScanner.topY + 10 - this.cardHeight,
-      ];
+      if (this.$refs.addScanner && this.$refs.removeScanner) {
+        return [
+          this.$refs.addScanner.botY - 10,
+          this.$refs.removeScanner.topY + 10 - this.cardHeight,
+        ];
+      } else {
+        return null;
+      }
     },
     items(idx) {
       return this.processes[idx];
