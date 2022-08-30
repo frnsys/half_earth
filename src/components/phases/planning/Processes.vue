@@ -219,6 +219,9 @@ export default {
           change = (after[k] - before[k])/before[k];
         }
         change = Math.round(change * 100);
+        if (before[k] < 0) {
+          change *= -1;
+        }
         if (change > 0.0) {
           let s = t('increase {k} by {warn}{change}%', {k, warn: change > 100 ? '⚠️' : '', change: fmtPercent(change)});
           return `<span class="change-increase"><strong>${s}</strong></span>`;
