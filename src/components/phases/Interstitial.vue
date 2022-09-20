@@ -142,7 +142,7 @@ export default {
       } else if (n == 3) {
         ext = 'rd';
       }
-      return t(`The {n}{ext} Planning Session`, {n, ext});
+      return t(`The {n}{ext} Planning Session`, {n, ext: t(ext)});
     },
     locale() {
       let idx = this.number - 1 % LOCALES.length;

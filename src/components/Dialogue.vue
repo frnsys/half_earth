@@ -164,7 +164,7 @@ export default {
 
       return {
         ...line,
-        text: this.dialogue.context ? parseText(line.text, this.dialogue.context) : line.text,
+        text: this.dialogue.context ? parseText(t(line.text), this.dialogue.context) : t(line.text),
       };
     },
     isLastLine() {
@@ -195,7 +195,7 @@ export default {
       if (this.$refs.text) {
         this.$refs.text.innerHTML = '';
         let el = document.createElement('div');
-        el.innerHTML = t(this.line.text);
+        el.innerHTML = this.line.text;
         if (this.line.text.length > 0) {
           if (this.revealAnim) clearInterval(this.revealAnim);
           revealChars(this.$refs.text, extractChars(el), {
