@@ -445,7 +445,7 @@ def define_field(k, v, item):
     if k == 'year':
         return 'year: {}'.format(v)
     elif k == 'name' or k == 'text':
-        v = '"{}"'.format(v)
+        v = '"{}"'.format(v.strip())
     elif k == 'type' and item['_type'] == 'Project':
         if v:
             return 'kind: ProjectType::{}'.format(v)
@@ -1086,7 +1086,7 @@ if __name__ == '__main__':
                 'fname': (fname.replace('.png', '.jpg') if fname is not None else None) if USE_JPGS else fname,
                 'attribution': attribution,
             },
-            'description': p.get('description', ''),
+            'description': p.get('description', '').strip(),
         }
         if fname:
             frm = 'editor/uploads/{}'.format(fname)
@@ -1158,8 +1158,8 @@ if __name__ == '__main__':
     for p in items_by_type['NPC']:
         id = p['id']
         npc = {
-            'name': p['name'],
-            'description': p.get('description', ''),
+            'name': p['name'].strip(),
+            'description': p.get('description', '').strip(),
             'effects': p.get('effects', ''),
             'likes': p.get('likes', ''),
             'dislikes': p.get('dislikes', ''),

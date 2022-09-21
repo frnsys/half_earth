@@ -59,6 +59,13 @@
     <li>Kira Simon-Kennedy</li>
     <li>Nicholas Carter</li>
   </ul>
+  <h2>{{t('Translation')}}</h2>
+  <ul>
+    <li>Leo "Fujoneko" B.</li>
+    <li>Marco Mangan</li>
+    <!--<li>Francisco Jota-Pérez</li>
+    <li>Víctor Anadón Vega</li>-->
+  </ul>
   <h3 v-if="PLATFORM == 'STEAM'">{{t('Based on the book')}} <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
   <h3 v-else>{{t('Based on the book')}} <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
   <h2>{{t('Thank you for playing!')}}</h2>

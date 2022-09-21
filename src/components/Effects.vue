@@ -326,7 +326,7 @@ function render(e) {
       }
       let text = t(`{changeDir} maximum output for {process} by <strong>{amount}</strong>`, {
         amount: p,
-        process: process.name,
+        process: t(process.name),
         changeDir: changeDir(e.param, e),
       });
       return {
@@ -358,14 +358,14 @@ function render(e) {
           percent: format.sign(percent),
           amount: Math.abs(amount),
           icon: icons[k],
-          name: display.enumDisplay(k),
+          name: t(display.enumDisplay(k)),
           changeDir: changeDir(e.param, e),
       });
       return {
         tip: factors.tips[k](text),
         text: t(`[{icon}] {changeDir} {name} supply by [{icon}]{amount}.`, {
           amount: Math.abs(amount),
-          name: display.enumDisplay(k),
+          name: t(display.enumDisplay(k)),
           changeDir: changeDir(e.param, e),
           icon: k,
         }),
@@ -382,12 +382,12 @@ function render(e) {
             changed: changed,
             base: base,
             icon: icons[k],
-            name: display.displayName(e.subtype),
+            name: t(display.displayName(e.subtype)),
           })
         },
         text: t(`[{icon}] {changeDir} all {name} production by <strong>{percent}%.</strong>`, {
           percent: (Math.abs(e.param)*100).toFixed(0),
-          name: display.displayName(e.subtype),
+          name: t(display.displayName(e.subtype)),
           changeDir: changeDir(e.param, e),
           icon: e.subtype.toLowerCase(),
         }),
@@ -405,7 +405,7 @@ function render(e) {
           data: process,
         }
       };
-      let tag = display.cardTag(process.name, process.output.toLowerCase());
+      let tag = display.cardTag(t(process.name), process.output.toLowerCase());
       return {
         tip: tip,
         text: t(`[{icon}] {changeDir} {tag} output by <strong>{percent}%.</strong>`, {
@@ -431,7 +431,7 @@ function render(e) {
         tip,
         text: t(`{changeDir} output for <span><img class="effect-feature" src="{icon}" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>`, {
           percent: (e.param*100).toFixed(0),
-          feature: display.describeFeature(e.subtype),
+          feature: t(display.describeFeature(e.subtype)),
           icon: icons[e.subtype],
           changeDir: changeDir(e.param, e),
         })
@@ -455,7 +455,7 @@ function render(e) {
         tip,
         text: t(`{changeDir} CO2 emissions for <span><img class="effect-feature" src="{icon}" />{feature}</span> by <strong>{percent}%.</strong>`, {
           percent: label,
-          feature: display.describeFeature(e.subtype),
+          feature: t(display.describeFeature(e.subtype)),
           icon: icons[e.subtype],
           changeDir: changeDir(e.param, e),
         })
@@ -476,7 +476,7 @@ function render(e) {
         tip,
         text: t(`{changeDir} biodiversity pressure for <span><img class="effect-feature" src="{icon}" />{feature}</span> by <strong>{amount}.</strong>`, {
           amount: e.param,
-          feature: display.describeFeature(e.subtype),
+          feature: t(display.describeFeature(e.subtype)),
           icon: icons[e.subtype],
           changeDir: changeDir(e.param, e),
         })
@@ -494,12 +494,12 @@ function render(e) {
             afterDemand: Math.round(afterDemand),
             currentDemand: currentDemand,
             icon: icons[k],
-            name: name,
+            name: t(name),
           })
         },
         text: t(`[{icon}] {changeDir} demand for {name} by <strong>{percent}%</strong>.`, {
           percent: (Math.abs(e.param)*100).toFixed(0),
-          name: display.displayName(e.subtype),
+          name: t(display.displayName(e.subtype)),
           changeDir: changeDir(e.param, e),
           icon: e.subtype.toLowerCase(),
         }),
@@ -525,13 +525,13 @@ function render(e) {
             afterDemand: afterDemand,
             currentDemand: currentDemand,
             icon: icons[k],
-            name: name,
+            name: t(name),
           })
         },
         text: t(`[{type}] {changeDir} demand for {name} by <img src="{icon}">{amount}.`, {
           amount: Math.abs(val),
           icon: icons[k],
-          name: display.displayName(e.subtype),
+          name: t(display.displayName(e.subtype)),
           changeDir: changeDir(e.param, e),
           type: e.subtype.toLowerCase(),
         }),
@@ -547,7 +547,7 @@ function render(e) {
           data: project
         }
       };
-      let tag = display.cardTag(project.name, project.kind.toLowerCase());
+      let tag = display.cardTag(t(project.name), project.kind.toLowerCase());
       return {
         tip: tip,
         text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock the {tag} project.`, {tag})}` : t('<strong>Unlocks</strong> the {tag} project.', {tag})}`,
@@ -563,7 +563,7 @@ function render(e) {
           data: process
         }
       };
-      let tag = display.cardTag(process.name, display.enumKey(process.output));
+      let tag = display.cardTag(t(process.name), display.enumKey(process.output));
       return {
         tip: tip,
         text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock the {tag} process.`, {tag})}` : t('<strong>Unlocks</strong> the {tag} process.', {tag})}`,
@@ -581,7 +581,7 @@ function render(e) {
       };
       return {
         tip: tip,
-        text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock {name}.`, {name: npc.name})}` : t('<strong>Unlocks</strong> {name}.', {name: npc.name})}`,
+        text: `[unlocks] ${e.random ? `[chance] ${t(`${e.probability} unlock {name}.`, {name: t(npc.name)})}` : t('<strong>Unlocks</strong> {name}.', {name: t(npc.name)})}`,
       }
     }
     case 'ProjectCostModifier': {
@@ -591,7 +591,7 @@ function render(e) {
       let icon = project.kind == 'Policy' ? '[political_capital]' : '';
       let tipIcon = project.kind == 'Policy' ? `<img src="${icons.political_capital}">` : '';
       let unit = project.kind == 'Policy' ? '' : ' years';
-      let tag = display.cardTag(project.name, project.kind.toLowerCase());
+      let tag = display.cardTag(t(project.name), project.kind.toLowerCase());
       let kind = t('cost');
       if (project.kind == 'Research') {
         kind = t('research time');
@@ -642,7 +642,7 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[ban] ${t('I request that you stop {name}.', {name: project.name})} (+${e.param}PC)`,
+          text: `[ban] ${t('I request that you stop {name}.', {name: t(project.name)})} (+${e.param}PC)`,
         }
       } else {
         let tip = {
@@ -655,7 +655,7 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[implement] ${t('I request that you implement {name}.', {name: project.name})} (+${e.param}PC)`,
+          text: `[implement] ${t('I request that you implement {name}.', {name: t(project.name)})} (+${e.param}PC)`,
         }
       }
     }
@@ -672,7 +672,7 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[ban] ${t('I request that you stop {name}.', {name: process.name})} (+${e.param}PC)`,
+          text: `[ban] ${t('I request that you stop {name}.', {name: t(process.name)})} (+${e.param}PC)`,
         }
       } else {
         let tip = {
@@ -685,7 +685,7 @@ function render(e) {
         };
         return {
           tip: tip,
-          text: `[implement] ${t('I request that you implement {name}.', {name: process.name})} (+${e.param}PC)`,
+          text: `[implement] ${t('I request that you implement {name}.', {name: t(process.name)})} (+${e.param}PC)`,
         }
       }
     }
@@ -702,17 +702,17 @@ function render(e) {
       let tip = {
         icon: 'demand',
         text: e.param == '?' ?
-          t(`Changes demand for {name} by an unknown amount.`, {name: industry.name})
+          t(`Changes demand for {name} by an unknown amount.`, {name: t(industry.name)})
           : t(`Changes demand for {name} by <strong>{percent}%.</strong>`, {
             percent: p.toFixed(0),
-            name: industry.name,
+            name: t(industry.name),
           }),
         card: {
           type: 'Industry',
           data: industry,
         }
       };
-      let tag = display.cardTag(industry.name);
+      let tag = display.cardTag(t(industry.name));
       return {
         tip: tip,
         text: t(`{changeDir} demand for {tag} by {amount}.`, {
@@ -734,29 +734,29 @@ function render(e) {
         icon: k,
         text: e.param == '?' ?
           t(`This will change {resource} demand for {name} by some unknown amount.`, {
-            name: industry.name,
-            resource: resource,
+            name: t(industry.name),
+            resource: t(resource),
           })
           : t(`This will change {resource} demand for {name} from <img src="{icon}">{demandBefore} to <img src="{icon}">{demandAfter}. This is a {percent}% change of all {resource} demand.`, {
               percent: demandChange.toFixed(0),
               demandAfter: demandAfter < 1 ? '<1' : demandAfter.toFixed(0),
               demandBefore: demandBefore,
               icon: icons[k],
-              name: industry.name,
-              resource: resource,
+              name: t(industry.name),
+              resource: t(resource),
           }),
         card: {
           type: 'Industry',
           data: industry,
         }
       };
-      let tag = display.cardTag(industry.name);
+      let tag = display.cardTag(t(industry.name));
       return {
         tip: tip,
         text: t(`[{icon}] {changeDir} {resource} demand for {tag} by {amount}.`, {
           amount: e.param == '?' ? formatParam(e.param) : `<strong>${p.toFixed(0)}%</strong>`,
           tag: tag,
-          resource: resource.toLowerCase(),
+          resource: t(resource.toLowerCase()),
           changeDir: changeDir(e.param, e),
           icon: e.subtype.toLowerCase(),
         }),
@@ -773,29 +773,29 @@ function render(e) {
         icon: k,
         text: e.param == '?' ?
           t(`This will change {resource} demand for {name} by some unknown amount.`, {
-            name: industry.name,
-            resource: resource,
+            name: t(industry.name),
+            resource: t(resource),
           })
           : t(`This will change {resource} demand for {name} from <img src="{icon}">{demandBefore} to <img src="{icon}">{demandAfter}. This is a {percent}% change of all {resource} demand.`, {
             percent: demandChange.toFixed(0),
             demandAfter: demandAfter < 1 ? '<1' : demandAfter.toFixed(0),
             demandBefore: demandBefore,
             icon: icons[k],
-            name: industry.name,
-            resource: resource,
+            name: t(industry.name),
+            resource: t(resource),
           }),
         card: {
           type: 'Industry',
           data: industry,
         }
       };
-      let tag = display.cardTag(industry.name);
+      let tag = display.cardTag(t(industry.name));
       return {
         tip: tip,
         text: t(`[{icon}] {changeDir} {resource} demand for {tag} by {amount}.`, {
           amount: e.param == '?' ? formatParam(e.param) : `${Math.abs(demandAfter - demandBefore)}`,
           tag: tag,
-          resource: resource.toLowerCase(),
+          resource: t(resource.toLowerCase()),
           changeDir: changeDir(e.param, e),
           icon: e.subtype.toLowerCase(),
         }),
@@ -827,27 +827,27 @@ function render(e) {
         icon: icon,
         text: e.param == '?' ?
           t(`Changes {label} for {name} by an unknown amount.`, {
-            name: process.name,
+            name: t(process.name),
             label: label,
           })
           : t(`This will change {short} for {name} from <img src="{icon}">{change}`, {
             change: change,
             icon: icons[icon],
-            name: process.name,
-            short: short,
+            name: t(process.name),
+            short: t(short),
           }),
         card: {
           type: 'Process',
           data: process,
         }
       };
-      let tag = display.cardTag(process.name);
+      let tag = display.cardTag(t(process.name));
       return {
         tip: tip,
         text: t(`[{icon}] {changeDir} {label} for {tag} by <strong>{percent}</strong>.`, {
           percent: e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`,
           tag: tag,
-          label: label,
+          label: t(label),
           changeDir: changeDir(e.param, e),
           icon: icon,
         }),
@@ -864,10 +864,10 @@ function render(e) {
         icon: 'emissions',
         text: e.param == '?' ?
           t(`Changes emissions for {name} by an unknown amount.`, {
-            name: industry.name,
+            name: t(industry.name),
           })
           : t(`This will change emissions for {name} from <img src="{icon}">{emissionsBefore} to <img src="{icon}">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.`, {
-            name: industry.name,
+            name: t(industry.name),
             icon: icons.emissions,
             emissionsChange: emissionsChange > 0 && emissionsChange < 1 ? '<1' : emissionsChange.toFixed(1),
             emissionsAfter: emissionsAfter > 0 && emissionsAfter < 1 ? '<1' : emissionsAfter.toFixed(1),
@@ -878,7 +878,7 @@ function render(e) {
           data: industry,
         }
       };
-      let tag = display.cardTag(industry.name);
+      let tag = display.cardTag(t(industry.name));
       return {
         tip: tip,
         text: t(`[emissions] {changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.`, {
@@ -898,7 +898,7 @@ function render(e) {
           icon: 'contentedness',
           subicon: k,
           text: t(`This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class="type-total">/{maxAmount}</span>.`, {
-            name: display.displayName(e.subtype),
+            name: t(display.displayName(e.subtype)),
             maxAmount: consts.maxValues['contentedness'],
             amount: Math.round(state.gameState.world.contentedness),
           }),
@@ -987,7 +987,7 @@ function render(e) {
         },
         text: t(`[{icon}] {changeDir} {name} supply by <strong>{percent}%.</strong>`, {
           icon: k,
-          name: name,
+          name: t(name),
           percent: e.param*100,
           changeDir: changeDir(e.param, e),
         }),
@@ -995,12 +995,12 @@ function render(e) {
     }
     case 'LocksProject': {
       let project = state.gameState.projects[e.entity];
-      let tag = display.cardTag(project.name, project.kind.toLowerCase());
+      let tag = display.cardTag(t(project.name), project.kind.toLowerCase());
       return {
         tip: {
           icon: 'alert',
           text: t(`{name} will be unavailable while this project is active.`, {
-            name: project.name,
+            name: t(project.name),
           }),
           card: {
             type: 'Project',
