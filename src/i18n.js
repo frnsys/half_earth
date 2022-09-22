@@ -1,8 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 
 const defaultLanguage = 'en';
-// const availableLanguages = ['en', 'es'];
-const availableLanguages = ['en']; // while we're just testing, use only English
+const availableLanguages = ['en', 'pt', 'pt-br'];
 
 function getPreferredLanguages() {
   if (navigator.languages && navigator.languages.length) {
@@ -17,7 +16,9 @@ function getPreferredLanguages() {
 // Get specified language, if one is
 // Get most preferred language that is supported
 // Fallback to 'en' if lang is undefined
-let lang = params.get('lang') || getPreferredLanguages().filter(l => availableLanguages.includes(l))[0] || defaultLanguage;
+// let lang = params.get('lang') || getPreferredLanguages().filter(l => availableLanguages.includes(l))[0] || defaultLanguage;
+// Just default to en unless another language is explicitly chosen.
+let lang = params.get('lang') || defaultLanguage;
 if (!availableLanguages.includes(lang)) {
   lang = defaultLanguage;
 }
@@ -41,7 +42,7 @@ function t(key, data) {
   data = data || {};
   let tmpl = phrases[key] || key;
   return Object.keys(data).reduce((acc, k) => {
-    return acc.replace(`{${k}}`, data[k]);
+    return acc.replaceAll(`{${k}}`, data[k]);
   }, tmpl);
 }
 

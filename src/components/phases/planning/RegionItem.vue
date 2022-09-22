@@ -38,7 +38,7 @@
       resource="wealth" :intensity="incomeLevel" :invert="true" />
     <IntensityIcon
       v-for="v, k in demand"
-      v-tip="{text: t(`This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.`, {output: display.enumDisplay(k), demand: demand[k] < 1 ? '<1' : demand[k], percent: demandPercent(k), icon: icons[k]}), icon: k}"
+      v-tip="{text: t(`This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.`, {output: t(display.enumDisplay(k)), demand: demand[k] < 1 ? '<1' : demand[k], percent: demandPercent(k), icon: icons[k]}), icon: k}"
       :resource="k" :intensity="demandIntensity(k)" />
   </div>
 </div>
