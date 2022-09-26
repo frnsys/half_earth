@@ -154,7 +154,7 @@ const FLAG_TIPS = {
 
 function changeDir(change, ev) {
   if (change == '?') {
-    return 'Changes';
+    return t('Changes');
   } else if (ev.random) {
     return t(`${change < 0 ? `${ev.probability} reduce` : `${ev.probability} increase`}`);
   } else {
@@ -308,7 +308,7 @@ function render(e) {
               text: t('Research points: Allocate them to research projects!')
             },
             text: `[research] ${t('{random}+{amount} research points.', {
-              random: e.random ? 'Possible ' : '',
+              random: e.random ? `${t('Possible')} ` : '',
               amount: formatParam(e.param)
             })}`,
           }
@@ -590,7 +590,7 @@ function render(e) {
       let amount = e.param * project.cost;
       let icon = project.kind == 'Policy' ? '[political_capital]' : '';
       let tipIcon = project.kind == 'Policy' ? `<img src="${icons.political_capital}">` : '';
-      let unit = project.kind == 'Policy' ? '' : ' years';
+      let unit = project.kind == 'Policy' ? '' : ` ${t('years')}`;
       let tag = display.cardTag(t(project.name), project.kind.toLowerCase());
       let kind = t('cost');
       if (project.kind == 'Research') {

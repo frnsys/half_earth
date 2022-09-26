@@ -234,8 +234,7 @@ Develop improved and scalable algae biofuel production processes.,Desenvolver pr
 "Conduct research into nuclear fusion. Odds of success are low and fusion still has many of the drawback of fission (radioactive waste, water-use for coolant, reliant on rare resources), though improved. Still, a possible source of low-carbon plentiful energy.","Realizar pesquisas sobre fusão nuclear. As chances de sucesso são baixas e a fusão ainda
 tem muitas das desvantagens da fissão (resíduos radioativos, uso de água para resfriamento, dependente de recursos raros), embora aprimorada.
 Ainda assim, uma possível fonte de energia abundante menor emissão de carbono.",,,,,
-"Install co-generation systems in eligible structures and power facilities to generate electricity and heat at the same time, making use of otherwise wasted heat.","Instalar sistemas de cogeração em estruturas elegíveis e instalações elétricas para gerar eletricidade e calor ao mesmo tempo, aproveitando o calor que seria desperdiçado.
-",,,,,
+"Install co-generation systems in eligible structures and power facilities to generate electricity and heat at the same time, making use of otherwise wasted heat.","Instalar sistemas de cogeração em estruturas elegíveis e instalações elétricas para gerar eletricidade e calor ao mesmo tempo, aproveitando o calor que seria desperdiçado.",,,,,
 "Biodiversity has been plummeting, and people fear that most of earth's species will be lost forever. This project is an effort to collect and store DNA samples of Earth's remaining biodiversity in case the worst should come to pass.","A biodiversidade está despencando e as pessoas temem que a maioria das espécies
 da Terra se perca para sempre. Este projeto é um esforço para coletar e armazenar amostras de ADN da biodiversidade remanescente da Terra, caso o pior aconteça.",,,,,
 "Reducing speed of freighters by 10% increases fuel efficiency by a third. Improvements in ship design, cleaner fuels, and sails can reduce emissions further up to 55%. ","Reduzir a velocidade dos cargueiros em 10% aumenta a eficiência de combustível em um terço. Melhorias no design do navio, combustíveis mais limpos e velas podem reduzir ainda
@@ -256,8 +255,7 @@ Begin global program to destroy weapons and scale down military and police budge
 armados. Sua política de atirar para matar contra caçadores furtivos tornou o
 conservadorismo impopular, especialmente no Sul Global.",,,,,
 Mandate the use of biochar (basically a baked biomass) in agriculture to improve soil health and sequester more carbon.,"Obrigar o uso de biocarvão (basicamente uma biomassa cozida) na
-agricultura para melhorar a saúde do solo e sequestrar mais carbono.
-",,,,,
+agricultura para melhorar a saúde do solo e sequestrar mais carbono.",,,,,
 A global effort to develop new comprehensive public transit networks and upgrade ailing existing networks.,Um esforço global para desenvolver novas redes abrangentes de transporte público e atualizar as redes existentes.,,,,,
 Establish off-world colonies.,Estabeleça colônias fora do planeta.,,,,,
 "Animals in zoos suffer high mortality, depression, stress, and injuries from patrons. Veterinarians speak of 'zoochosis', where animals pace or sway repetitively. This policy will release animals back into the wild when possible, and place others in sanctuaries. ","Animais em zoológicos sofrem alta mortalidade, depressão, estresse e lesões de clientes. Os veterinários falam de 'zoocose', onde os animais andam ou balançam repetidamente. Esta política liberará animais de volta à natureza quando possível e colocará outros em santuários.",,,,,
@@ -2319,6 +2317,7 @@ biodiversity,biodiversidade,,,,,
 Menu,Opções,,,,,
 Now,Agora,,,,,
 Under current plan,No plano atual,,,,,
+years,anos,,,,,
 Tips,0,,0,0,,Y
 This industry's demand for {output}. This makes up {percent} of total demand for {output}.,A demanda desta atividade por {output}. Esta demanda contribui com {percent} da demanda total de {output}.,,,,,
 This industry's non-energy CO2eq emissions.,As emissões não energéticas de CO₂eq desta indústria.,,,,,
