@@ -27,6 +27,7 @@
     <li>Drew Pendergrass</li>
     <li>Son La Pham</li>
     <li>Spencer Roberts</li>
+    <li>Justin Saint-Loubert-Bie</li>
     <li>Francis Tseng</li>
     <li>Troy Vettese</li>
   </ul>
@@ -61,7 +62,8 @@
   </ul>
   <h2>{{t('Translation')}}</h2>
   <ul>
-    <li>Leo "Fujoneko" B.</li>
+    <li>Leo "Fujoneko" Belo</li>
+    <li>Eduardo Eloy</li>
     <li>Marco Mangan</li>
     <!--<li>Francisco Jota-Pérez</li>
     <li>Víctor Anadón Vega</li>-->

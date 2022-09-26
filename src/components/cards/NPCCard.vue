@@ -4,7 +4,7 @@
     <div>{{t('Parliament')}}</div>
     <div v-tip="{
       icon: 'relationship',
-      text: t(`Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.`, {name}),
+      text: t(`Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.`, {name: t(name)}),
     }">
       <template v-for="i in consts.maxRelationship" >
         <img :src="icons.relationship" v-if="i <= npc.relationship" />
@@ -23,7 +23,7 @@
   </template>
   <template v-slot:body>
     <p v-if="isAlly" class="npc-effect active" v-html="effectsHtml"></p>
-    <p v-else class="npc-effect inactive" v-tip="{text: t(`Improve your relationship with {name} to activate this ability.`, {name}), icon: 'relationship'}" v-html="effectsHtml"></p>
+    <p v-else class="npc-effect inactive" v-tip="{text: t(`Improve your relationship with {name} to activate this ability.`, {name: t(name)}), icon: 'relationship'}" v-html="effectsHtml"></p>
   </template>
   <template v-slot:top-back>
     <img

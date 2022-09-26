@@ -5254,7 +5254,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 78,
             ref_id: "b38f3042-0608-4b81-9904-f960774f5746",
-            name: "Passive Building Mandate & Retrofit ",
+            name: "Passive Building Mandate & Retrofit",
             cost: 0,
             base_cost: Cost::Fixed(30),
             progress: 0.0,
@@ -5298,7 +5298,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 79,
             ref_id: "b5629cb1-4389-41d3-8868-e4e63e7c56d9",
-            name: "Indigenous Sovereignty ",
+            name: "Indigenous Sovereignty",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
@@ -6605,7 +6605,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 106,
             ref_id: "ec454270-4b62-427c-838a-0e449dac2586",
-            name: "Ecosocialist Video Game ",
+            name: "Ecosocialist Video Game",
             cost: 0,
             base_cost: Cost::Fixed(5),
             progress: 0.0,
