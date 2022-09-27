@@ -808,7 +808,7 @@ function render(e) {
       let emissionsBefore = format.co2eq(process.byproducts) * state.gameState.produced_by_process[e.entity] * 1e-15;
       let emissionsAfter = emissionsBefore * (1 + e.param);
       let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions * 100;
-      let label = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t(`{type} emissions`, {type: e.subtype});
+      let label = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t(`{type} emissions`, {type: t(e.subtype)});
       let short = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t('emissions');
       let icon = e.subtype == 'Biodiversity' ? 'biodiversity' : 'emissions';
       let change = e.subtype == 'Biodiversity' ?
@@ -884,7 +884,7 @@ function render(e) {
         text: t(`[emissions] {changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.`, {
           percent: e.param == '?' ? formatParam(e.param) : `${p.toFixed(0)}%`,
           tag: tag,
-          type: e.subtype,
+          type: t(e.subtype),
           changeDir: changeDir(e.param, e),
         }),
       }

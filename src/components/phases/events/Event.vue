@@ -6,7 +6,7 @@
     <div class="event--factors">
       <img class="event--factor" v-for="factor in event.factors" :src="icons[factorIcon(factor)]" v-tip="{icon: factorIcon(factor), text: describeFactor(factor)}"/>
     </div>
-    <div class="image-attribution">Image: {{event.image ? event.image.attribution : ''}}</div>
+    <div class="image-attribution">{{t('Image:')}} {{event.image ? event.image.attribution : ''}}</div>
     <div class="event--name">{{t(event.name)}}</div>
     <div class="event--effects" v-if="hasVisibleEffects">
       <Effects :effects="event.effects" />

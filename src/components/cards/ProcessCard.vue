@@ -12,10 +12,10 @@
       v-tip="{icon: 'alert', text: t('Because of resource availability this process can only make up to {maxPercent}% of production. {suggestion}', {maxPercent: maxShare * 5, suggestion: process.mix_share > maxShare || changedMixShare > maxShare ? t('You should reallocate its points to other processes.') : ''})}"><img :src="icons.alert" /></div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
-      <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you ban it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you ban it, your relationship will improve by +<img src='{icon}' />.`, {name: t(npc.name), icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
     <div class="supporters" v-if="supportersDetailed.length > 0">
-      <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: t(npc.name), icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
   </template>
   <template v-slot:name>
@@ -69,7 +69,7 @@
         <img v-if="feedstockEstimate && feedstockEstimate == 0" :src="icons.halted" class="alert-icon" />
         <img v-else-if="feedstockEstimate && feedstockEstimate < 20" :src="icons.alert" class="alert-icon" />
         <img v-if="feedstockName != 'other'"
-          v-tip="{text: t(`This process uses {feedstockName}. {feedstockEstimateDesc}`, {feedstockName, feedstockEstimateDesc}), icon: feedstockIcon}"
+          v-tip="{text: t(`This process uses {feedstockName}. {feedstockEstimateDesc}`, {feedstockName: t(feedstockName), feedstockEstimateDesc}), icon: feedstockIcon}"
           class="process-feedstock" :src="icons[feedstockIcon]">
         <div class="feedstock-remaining" v-if="feedstockName != 'other' && feedstockName != 'soil'">
           <div :class="`feedstock-remaining-fill feedstock-remaining-fill--${feedstockLevel}`"></div>
@@ -81,7 +81,7 @@
     </div>
     <div class="card-spacer"></div>
     <div class="card-image-attribution">
-      Image: {{image.attribution}}
+      {{t('Image:')}} {{image.attribution}}
     </div>
   </template>
 
@@ -164,7 +164,7 @@ export default {
     outputTip() {
       return {
         icon: this.output,
-        text: t(`This process currently produces {amount}<img src='{outputIcon}'> and {emissions}<img src='{emissionsIcon}'> per year.`, {emissionsIcon: icons.emissions, outputIcon: icons[this.output], emissions: this.produced.emissions, amount: this.producedAmount})
+        text: t(`This process currently produces {amount}<img src='{outputIcon}'> and {emissions}<img src='{emissionsIcon}'> per year.`, {emissionsIcon: icons.emissions, outputIcon: icons[this.output], emissions: this.produced.emissions, amount: this.produced.amount})
       }
     },
     changeTip() {

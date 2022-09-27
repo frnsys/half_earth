@@ -71,11 +71,11 @@ function rngForYear(year) {
 }
 
 function scaleText(el, minSize) {
-  if (el.scrollHeight > el.clientHeight) {
+  if (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth) {
     let intv = setInterval(() => {
       let fontSize = parseFloat(getComputedStyle(el).fontSize);
       fontSize = Math.round(fontSize);
-      while (el.scrollHeight > el.clientHeight && fontSize > minSize) {
+      while ((el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth) && fontSize > minSize) {
         fontSize--;
         el.style.fontSize = `${fontSize}px`;
       }

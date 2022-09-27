@@ -709,8 +709,8 @@
   "fuel": "combust\u00edvel",
   "animal calories": "calorias animais",
   "plant calories": "calorias vegetais",
-  "Crops": "Cultivos",
-  "Livestock": "Gado",
+  "Crops": "Colheitas",
+  "Livestock": "Rebanhos",
   "Poetry, stained glass, sci-fi, lost causes, sentimentality": "Poesia, vitrais, fic\u00e7\u00e3o cient\u00edfica, causas perdidas e sentimentalismo.",
   "Ugly architecture, industrial wastelands, practicality, shoddy goods": "Arquitetura\nmed\u00edocre, terrenos baldios,\npraticidade, produtos de baixa qualidade",
   "Drum 'n' bass, Wal-Mart [socialist], fragment on machines, asteroid mining": "Bateria e baixo, grandes redes de supermercados [socialista], Fragmento sobre M\u00e1quinas (Grundrisse), minera\u00e7\u00e3o de aster\u00f3ides",
@@ -720,8 +720,8 @@
   "Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats": "Jardins de inf\u00e2ncia, William Godwin, bobagem espacial, pessoas tentando entrar em seus botes salva-vidas ",
   "Racism, authoritarianism, colonial Manichaenism": "Racismo, autoritarismo, Manique\u00edsmo colonial ",
   "Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx": "Bebidas energ\u00e9ticas, sacolas pl\u00e1sticas, quadriciclos, gatos ao ar livre, Karl Marx",
-  "Luxury cruises, straws, Black Friday, the TV show 'Friends'": "Cruzeiros de luxo, canudos, descontos e promo\u00e7\u00f5es, s\u00e9ries de televis\u00e3o",
-  "Bureaucracy, being called 'Trotskyites'": "Burocracia, sendo chamado de 'trotskistas'",
+  "Luxury cruises, straws, Black Friday, the TV show 'Friends'": "Cruzeiros de luxo, canudos, promo\u00e7\u00f5es da 'Black Friday', o seriado 'Friends'",
+  "Bureaucracy, being called 'Trotskyites'": "Burocracia, sendo chamado de 'Trotskyites'",
   "Patriarchy, mechanistic worldviews, reply guys, Francis Bacon": "Patriarcado, vis\u00f5es de mundo mecanicistas, antagonismos verbais, Francis Bacon ",
   "UFOs, dolphins, water-birthing, telekinesis": "OVNIs, golfinhos, parto na \u00e1gua, telecinese",
   "Lifeboats, nature, borders, famines": "Botes salva-vidas, natureza, fronteiras, fomes",
@@ -730,7 +730,7 @@
   "Freedom, dissent, improvisational jazz": "Liberdade, dissid\u00eancia, m\u00fasica espont\u00e2nea",
   "Lichen, composting, Ursula Le Guin, tardigrades": "L\u00edquen, compostagem, Ursula Le Guin, tard\u00edgrados ",
   "Psychoanalysis, internationalism, poetry, revolution": "Psican\u00e1lise, internacionalismo, poesia, revolu\u00e7\u00e3o",
-  "Bicycle lanes, vegans, the greater good": "Ciclovias, veganos, o Bem Comun",
+  "Bicycle lanes, vegans, the greater good": "Ciclovias, veganos, o bem comum",
   "You won't lose if contentedness dips below 0.": "N\u00e3o perder\u00e1 se a aprova\u00e7\u00e3o ficar abaixo de 0.",
   "Food, Agriculture, and Protection projects are cheaper.": "Projetos de Alimenta\u00e7\u00e3o, Agricultura e Prote\u00e7\u00e3o ficam mais baratos.",
   "[research] Research points cost less [political_capital] political capital.": "[research] Pontos de Investiga\u00e7\u00e3o custam menos [political_capital] capital pol\u00edtico.",
@@ -2350,5 +2350,5 @@
   "th": "\u1d43",
   "st": "\u1d43",
   "nd": "\u1d43",
-  "rd": "\u1d43"
+  "rd": "\u00aa"
 }

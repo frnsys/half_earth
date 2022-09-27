@@ -14,7 +14,7 @@
     <div>{{t('You have {yearsLeft} years left in your tenure.', {yearsLeft})}}</div>
   </div>
   <Dialogue v-if="hasDialogue" v-bind="event" @done="nextEvent" />
-  <div class="interstitial--image-credit">Image: {{locale.credit}}</div>
+  <div class="interstitial--image-credit">{{t('Image:')}} {{locale.credit}}</div>
   <div class="interstitial--next" v-if="ready">
     <button class="btn" @click="nextPhase">{{t('Continue')}}</button>
   </div>

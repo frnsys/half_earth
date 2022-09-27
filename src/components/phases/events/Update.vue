@@ -3,7 +3,7 @@
   <div class="event--body">
     <template v-if="update.type == 'Project' || update.type == 'Policy'">
       <div class="arc">{{ update.type == 'Project' ? t('Project Completed') : t('Policy Outcome') }}</div>
-      <div class="image-attribution">Image: {{obj.image ? obj.image.attribution : ''}}</div>
+      <div class="image-attribution">{{t('Image:')}} {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{t(obj.name)}}</div>
       <div class="event--effects">
         <Effects :effects="obj.activeEffects" />
@@ -11,7 +11,7 @@
     </template>
     <template v-else-if="update.type == 'Region:Up'" >
       <div class="arc">{{t('Region Developed')}}</div>
-      <div class="image-attribution">Image: {{obj.image ? obj.image.attribution : ''}}</div>
+      <div class="image-attribution">{{t('Image:')}} {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{t(obj.name)}}</div>
       <div class="event--outcome" v-html="t(`This region's income level has increased to <strong>{income}</strong>. Demand for <img :src='icons.electricity'>electricity, <img :src='icons.fuel'>fuel, <img :src='icons.plant_calories'>plant and <img :src='icons.animal_calories'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true)})"></div>
       <div class="event--icon-changes">

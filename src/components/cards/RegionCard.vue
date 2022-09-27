@@ -36,7 +36,7 @@
   </template>
   <template v-slot:back>
     <div class="card-image-attribution">
-      Image: {{image.attribution}}
+      {{t('Image:')}} {{image.attribution}}
     </div>
   </template>
   <template v-slot:footer>

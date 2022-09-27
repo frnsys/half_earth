@@ -28,7 +28,7 @@
       <img
         v-for="i in consts.maxPoints"
         class="pip"
-        v-tip="{text: t(`{points} {kind} points are allocated to this project`, {points: project.points, kind: project.kind}), icon: type}"
+        v-tip="{text: t(`{points} {kind} points are allocated to this project`, {points: project.points, kind: t(project.kind)}), icon: type}"
         :class="{'empty-point': i > project.points}"
         :src="icons[type]">
     </div>
@@ -93,7 +93,7 @@
     </div>
     <div v-else class="card-spacer"></div>
     <div class="card-image-attribution">
-      Image: {{info.image.attribution}}
+      {{t('Image:')}} {{info.image.attribution}}
     </div>
   </template>
 </Card>
@@ -290,7 +290,7 @@ export default {
         return {
           icon: this.type,
           text: t(`This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.`, {
-            remainingCost: this.remainingCost, kind: this.project.kind})
+            remainingCost: this.remainingCost, kind: t(this.project.kind)})
         }
       }
     },
