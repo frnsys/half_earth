@@ -34,10 +34,10 @@
     </div>
 
     <div class="opposers" v-if="opposersDetailed.length > 0">
-      <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.`, {name: t(npc.name), icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
     <div class="supporters" v-if="supportersDetailed.length > 0">
-      <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
+      <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: t(npc.name), icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
     </div>
   </template>
   <template v-slot:name>
@@ -80,13 +80,13 @@
         <div class="political-effects-opposers" v-if="opposersDetailed.length > 0">
           <div class="political-effects-label">{{t('Nay')}}</div>
           <div class="political-effects-portraits">
-            <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
+            <img v-for="npc in opposersDetailed" v-tip="{text: t(`{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.`, {name: t(npc.name), icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
           </div>
         </div>
         <div class="political-effects-supporters" v-if="supportersDetailed.length > 0">
           <div class="political-effects-label">{{t('Yea')}}</div>
           <div class="political-effects-portraits">
-            <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: npc.name, icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
+            <img v-for="npc in supportersDetailed" v-tip="{text: t(`{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.`, {name: t(npc.name), icon: icons.relationship}), icon: npc.name}" :src="icons[npc.name]">
           </div>
         </div>
       </div>
