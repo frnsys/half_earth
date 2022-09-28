@@ -15,7 +15,7 @@
         {{t('This industry is not yet significant.')}}
       </template>
       <template v-else>
-        <div v-for="v, k in totalResources" v-tip="{text: t(`This industry's demand for {output}. This makes up {percent} of total demand for {output}.`, {output: k, percent: demandPercent(k)}), icon: k}">
+        <div v-for="v, k in totalResources" v-tip="{text: t(`This industry's demand for {output}. This makes up {percent} of total demand for {output}.`, {output: t(k), percent: demandPercent(k)}), icon: k}">
           <div class="card-icon">
             <img :src="icons[k]"/>
             {{totalResources[k]}}
