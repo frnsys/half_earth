@@ -123,6 +123,7 @@ const FEATURE_DESCS = {
   'IsCombustion': 'This process involves combustion.',
   'IsFossil': 'This process uses fossil fuels.',
   'IsCCS': 'This process captures and stores carbon.',
+  'UsesOil': 'This process uses oil.',
   'UsesLivestock': 'This process uses livestock.',
   'UsesPesticides': 'This process use pesticides.',
   'UsesSynFertilizer': 'This process uses synthetic fertilizers.',

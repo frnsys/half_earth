@@ -55,7 +55,7 @@ function waterUsePercent(l) {
 }
 
 function demandPercent(demand, totalDemand, k, round) {
-  return percent(demand[k]/totalDemand[k], round);
+  return percent(demand[k]/(totalDemand[k] || 1), round);
 }
 
 function percent(p, round) {

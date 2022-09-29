@@ -63,7 +63,9 @@ export default {
   },
   methods: {
     demandPercent(k) {
-      return format.demandPercent(this.totalResources, state.gameState.output_demand, k);
+      let demand = k in state.gameState.output_demand ?
+        state.gameState.output_demand : state.gameState.resources_demand;
+      return format.demandPercent(this.totalResources, demand, k);
     }
   },
   computed: {

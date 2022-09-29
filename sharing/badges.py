@@ -32,7 +32,7 @@ BADGES = {
     },
     'nuclear': {
         'fn': lambda s: sum(p['mix_share'] for p in s['processes'] if ('CanMeltdown' in p['features'] or 'MakesNuclearWaste' in p['features'])) >= 10,
-        'desc': 'Nuclear was your preferred form of energy',
+        'desc': 'Nuclear was your preferred form of energy.',
     },
     'renewables': {
         'fn': lambda s: sum(p['mix_share'] for p in s['processes'] if 'IsIntermittent' in p['features']) >= 10,
@@ -48,5 +48,3 @@ BADGES = {
         'desc': 'Global diets shifted towards vegan.',
     },
 }
-
-
