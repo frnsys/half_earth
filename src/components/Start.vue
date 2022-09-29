@@ -3,13 +3,10 @@
   <div id="start-bg"></div>
   <div id="start-screen">
     <div id="lang-select">
-      <select @change="selectLang" :style="{display: 'none'}">
+      <select @change="selectLang">
         <option value="en" :selected="lang == 'en'">EN</option>
-        <option value="es" :selected="lang == 'es'">ES</option>
+        <option value="pt-br" :selected="lang == 'pt-br'">PT-BR</option>
       </select>
-    </div>
-    <div id="lang-note" v-if="lang == 'es'">
-      Esta traducción aún no está terminada. Si ve un error o falta una traducción, o si desea ser voluntario, envíe un mensaje directo a @frnsys en Twitter. ¡Gracias!
     </div>
     <template v-if="showCredits">
       <Credits @click="showCredits = false" />
@@ -232,6 +229,13 @@ export default {
   right: 1em;
   top: 1em;
   z-index: 2;
+}
+#lang-select select {
+  background: #ecc1dc;
+  color: #000;
+  border: 1px solid #d4a5d8;
+  padding: 0.2em;
+  border-radius: 2px;
 }
 
 #lang-note {
