@@ -64,7 +64,7 @@
         </tr>
 
         <tr v-for="project in state.cycleStartState.completedProjects">
-          <td colspan="4" v-tip="{icon: 'project', text: t('This project was completed.'), card: {type: 'Project', data: state.gameState.projects[project]}}">{{state.gameState.projects[project].name}}</td>
+          <td colspan="4" v-tip="{icon: 'project', text: t('This project was completed.'), card: {type: 'Project', data: state.gameState.projects[project]}}">{{t(state.gameState.projects[project].name)}}</td>
           <td><strong>{{format.sign(consts.pcPerCompletedProject)}}</strong></td>
         </tr>
         <tr class="report-spacer" v-if="state.cycleStartState.completedProjects.length != 0"></tr>

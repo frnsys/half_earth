@@ -181,9 +181,9 @@ export default {
       let keys = Object.keys(problems);
       if (keys.length > 0) {
         if (keys.length > 1) {
-          return `There are multiple production shortages: ${lf.format(keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${problems[k]})</b>`))}`;
+          return `${t('There are multiple production shortages:')} ${lf.format(keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${t(problems[k])})</b>`))}`;
         } else {
-          return `There is a <b class="shortage-${problems[keys[0]]}">${problems[keys[0]]} ${display.enumDisplay(keys[0])}</b> production shortage`;
+          return `${t(`There is a ${problems[keys[0]]} production shortage`)}: <b class="shortage-${problems[keys[0]]}">${display.enumDisplay(keys[0])}</b>`;
         }
       } else {
         return;
