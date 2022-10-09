@@ -13,7 +13,7 @@
       <div class="arc">{{t('Region Developed')}}</div>
       <div class="image-attribution">{{t('Image:')}} {{obj.image ? obj.image.attribution : ''}}</div>
       <div class="event--name">{{t(obj.name)}}</div>
-      <div class="event--outcome" v-html="t(`This region's income level has increased to <strong>{income}</strong>. Demand for <img :src='icons.electricity'>electricity, <img :src='icons.fuel'>fuel, <img :src='icons.plant_calories'>plant and <img :src='icons.animal_calories'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true)})"></div>
+      <div class="event--outcome" v-html="t(`This region's income level has increased to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true), iconFuel: icons.fuel, iconElec: icons.electricity, iconPCals: icons.plant_calories, iconACals: icons.animal_calories})"></div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
@@ -40,7 +40,7 @@
     <template v-else-if="update.type == 'Region:Down'">
       <div class="arc">{{t('Region Contracted')}}</div>
       <div class="event--name">{{t(obj.name)}}</div>
-      <div class="event--outcome" v-html="t(`This region's income level has contracted to <strong>{income}</strong>. Demand for <img :src='icons.electricity'>electricity, <img :src='icons.fuel'>fuel, <img :src='icons.plant_calories'>plant and <img :src='icons.animal_calories'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true)})"></div>
+      <div class="event--outcome" v-html="t(`This region's income level has contracted to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.`, {income: display.enumDisplay(obj.income, true), iconFuel: icons.fuel, iconElec: icons.electricity, iconPCals: icons.plant_calories, iconACals: icons.animal_calories})"></div>
       <div class="event--icon-changes">
         <div class="event--icon-change">
           <IntensityIcon
