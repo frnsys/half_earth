@@ -1,5 +1,3 @@
-const params = new URLSearchParams(window.location.search);
-
 const defaultLanguage = 'en';
 const availableLanguages = ['en', 'pt', 'pt-br'];
 
@@ -13,12 +11,8 @@ function getPreferredLanguages() {
   }
 }
 
-// Get specified language, if one is
-// Get most preferred language that is supported
-// Fallback to 'en' if lang is undefined
-// let lang = params.get('lang') || getPreferredLanguages().filter(l => availableLanguages.includes(l))[0] || defaultLanguage;
 // Just default to en unless another language is explicitly chosen.
-let lang = params.get('lang') || defaultLanguage;
+let lang = localStorage.getItem('lang') || defaultLanguage;
 if (!availableLanguages.includes(lang)) {
   lang = defaultLanguage;
 }

@@ -78,7 +78,8 @@ export default {
     },
     selectLang(ev) {
       let lang = ev.target.value;
-      window.location.search = `?lang=${lang}`;
+      localStorage.setItem('lang', lang);
+      window.location.reload();
     }
   },
 }
