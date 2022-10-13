@@ -235,7 +235,7 @@ export default {
       return state.gameState.processes.filter((p) => p.mix_share > 0).filter((p) => {
         let maxShare = game.processMaxShare(p);
         return p.mix_share > maxShare;
-      }).map((p) => p.name);
+      }).map((p) => t(p.name));
     },
     activeProjects() {
       return state.gameState.projects.filter((p) => p.status == 'Active' || p.status == 'Finished' || p.status == 'Building');
