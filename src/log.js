@@ -37,17 +37,17 @@ function post(endpoint, data) {
 }
 
 function startSession() {
-  post('/session', {
-    session_id: sessionId,
-    version: VERSION
-  });
+  // post('/session', {
+  //   session_id: sessionId,
+  //   version: VERSION
+  // });
 }
 
 function sendSnapshot(snapshot) {
-  post('/snapshot', {
-    session_id: sessionId,
-    snapshot
-  });
+  // post('/snapshot', {
+  //   session_id: sessionId,
+  //   snapshot
+  // });
 }
 
 export {sessionId, startSession, sendSnapshot};
