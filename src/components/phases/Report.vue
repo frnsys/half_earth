@@ -166,10 +166,10 @@ export default {
         let text;
         if (kind == 'Project') {
           let project = state.gameState.projects[id];
-          text = `Completed Request: ${active ? 'Implement' : 'Stop'} ${project.name}`;
+          text = t(`Completed Request: ${active ? 'Implement' : 'Stop'} {name}`, {name: project.name});
         } else if (kind == 'Process') {
           let process = state.gameState.processes[id];
-          text = `Completed Request: ${active ? 'Unban' : 'Ban'} ${process.name}`;
+          text = t(`Completed Request: ${active ? 'Unban' : 'Ban'} {name}`, {name: process.name});
         }
         this.pcChange += bounty;
         return {text, bounty};

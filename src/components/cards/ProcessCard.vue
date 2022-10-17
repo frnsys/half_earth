@@ -171,7 +171,10 @@ export default {
     changeTip() {
       return {
         icon: 'mix_token',
-        text: t(`This process currently makes up {mixPercent}% of {output} production.`, {output: this.output, mixPercent: this.process.mix_share*5})
+        text: t(`This process currently makes up {mixPercent}% of {output} production.`, {
+          output: t(display.enumDisplay(this.output)),
+          mixPercent: this.process.mix_share*5
+        })
       };
     },
     featureIcons() {
