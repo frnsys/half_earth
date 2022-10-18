@@ -141,7 +141,7 @@ export default {
         let shortage = state.gameState.required_resources[k] - state.gameState.resources[k];
         if (shortage > 0) {
           resourceShortages[k] = shortage;
-          keys.push(k);
+          keys.push(t(k));
         }
       });
       let feedstockShortages = {};
@@ -149,7 +149,7 @@ export default {
         let shortage = state.gameState.required_feedstocks[k] - state.gameState.feedstocks[k];
         if (shortage > 0 && k !== 'other' && k !== 'soil') {
           feedstockShortages[k] = shortage;
-          keys.push(k);
+          keys.push(t(k));
         }
       });
 
