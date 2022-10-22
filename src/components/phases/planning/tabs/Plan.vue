@@ -77,8 +77,8 @@ import MiniProject from 'components/cards/mini/MiniProject.vue';
 import historicalLandUse from '/assets/historical/land_use.json';
 import historicalEmissions from '/assets/historical/emissions.json';
 import tutorial from '/src/tutorial';
+import { formatter } from '/src/i18n';
 
-const lf = new Intl.ListFormat('en');
 const addTip = t('Add some cards to get started');
 
 const charts = {
@@ -155,7 +155,7 @@ export default {
 
       if (keys.length > 0) {
         return t(`There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.`, {
-          resources: lf.format(keys)});
+          resources: formatter.list.format(keys)});
       } else {
         return '';
       }
@@ -181,7 +181,7 @@ export default {
       let keys = Object.keys(problems);
       if (keys.length > 0) {
         if (keys.length > 1) {
-          return `${t('There are multiple production shortages:')} ${lf.format(keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${t(problems[k])})</b>`))}`;
+          return `${t('There are multiple production shortages:')} ${formatter.list.format(keys.map((k) => `<b class="shortage-${problems[k]}">${display.enumDisplay(k)} (${t(problems[k])})</b>`))}`;
         } else {
           return `${t(`There is a ${problems[keys[0]]} production shortage`)}: <b class="shortage-${problems[keys[0]]}">${display.enumDisplay(keys[0])}</b>`;
         }

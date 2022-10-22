@@ -27,6 +27,7 @@ function loadLanguage(cb) {
       .then(response => response.json())
       .then(json => {
         phrases = json;
+        setupFormatter(lang);
         cb();
       });
   }
@@ -40,22 +41,17 @@ function t(key, data) {
   }, tmpl);
 }
 
-const formatter = {
-  number: new Intl.NumberFormat('en-US'),
-  percent: new Intl.NumberFormat('en-US', {
+const formatter = {};
+function setupFormatter(lang) {
+  formatter.number = new Intl.NumberFormat(lang);
+  formatter.percent = new Intl.NumberFormat(lang, {
     style: 'percent',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })
-};
-if (lang == 'es') {
-  formatter.number = new Intl.NumberFormat('es')
-  formatter.percent = new Intl.NumberFormat('es', {
-    style: 'percent',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
+  formatter.list = new Intl.ListFormat(lang);
 }
+setupFormatter('en-US');
 
 export { loadLanguage, formatter, lang };
 export default t;
