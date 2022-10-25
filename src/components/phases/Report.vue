@@ -238,20 +238,20 @@ export default {
     warmingTip() {
       return {
         icon: 'warming',
-        text: `The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class="tip-goal">Your goal is to get this below 1°C.</b>`
+        text: t(`The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class="tip-goal">Your goal is to get this below 1°C.</b>`)
       };
     },
     biodiversityTip() {
       return factors.tips.biodiversity(
-        `The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital. <b class="tip-goal">Your goal is to get this to below 20.</b>`);
+        t(`The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital. <b class="tip-goal">Your goal is to get this to below 20.</b>`));
     },
     contentednessTip() {
       return factors.tips.contentedness(
-        `How people around the world feel about the state of things. <strong>Increasing or maintaining contentedness</strong> will gain you political capital. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>`);
+        t(`How people around the world feel about the state of things. <strong>Increasing or maintaining contentedness</strong> will gain you political capital. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>`));
     },
     emissionsTip() {
       return factors.tips.emissions(
-        `Current annual emissions, in gigatonnes of CO2 equivalent. <strong>Reducing emissions</strong> will gain you political capital. <b class="tip-goal">Your goal is to get this to below 0.</b>`);
+        t(`Current annual emissions, in gigatonnes of CO2 equivalent. <strong>Reducing emissions</strong> will gain you political capital. <b class="tip-goal">Your goal is to get this to below 0.</b>`));
     }
   },
   methods: {
