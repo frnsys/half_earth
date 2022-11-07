@@ -28,7 +28,7 @@
       <img
         v-for="i in consts.maxPoints"
         class="pip"
-        v-tip="{text: t(`{points} {kind} points are allocated to this project`, {points: project.points, kind: t(project.kind)}), icon: type}"
+        v-tip="{text: t(`{points} {kind} points are allocated to this project`, {points: project.points, kind: t(project.kind === 'Initiative' ? 'Infrastructure' : project.kind)}), icon: type}"
         :class="{'empty-point': i > project.points}"
         :src="icons[type]">
     </div>
@@ -287,10 +287,14 @@ export default {
             remainingCost: this.remainingCost})
         }
       } else {
+        let kind = this.project.kind;
+        if (this.project.kind === 'Initiative') {
+          kind = 'Infrastructure';
+        }
         return {
           icon: this.type,
           text: t(`This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.`, {
-            remainingCost: this.remainingCost, kind: t(this.project.kind)})
+            remainingCost: this.remainingCost, kind: t(kind)})
         }
       }
     },
