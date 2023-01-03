@@ -6,6 +6,7 @@
       <select @change="selectLang">
         <option value="en" :selected="lang == 'en'">EN</option>
         <option value="pt-br" :selected="lang == 'pt-br'">PT-BR</option>
+        <option value="pt-pt" :selected="lang == 'pt-pt'">PT-PT</option>
         <option value="es" :selected="lang == 'es'">ES</option>
       </select>
     </div>

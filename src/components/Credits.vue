@@ -65,8 +65,8 @@
     <li>Leo "Fujoneko" Belo</li>
     <li>Eduardo Eloy</li>
     <li>Marco Mangan</li>
-    <!--<li>Francisco Jota-Pérez</li>
-    <li>Víctor Anadón Vega</li>-->
+    <li>Francisco Jota-Pérez</li>
+    <li>Víctor Anadón Vega</li>
   </ul>
   <h3 v-if="PLATFORM == 'STEAM'">{{t('Based on the book')}} <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
   <h3 v-else>{{t('Based on the book')}} <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
