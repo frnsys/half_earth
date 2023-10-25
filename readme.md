@@ -16,8 +16,13 @@ You can play it at:
 ## Setup
 
 ```
+# Clone half-earth repository
+git clone https://github.com/frnsys/half_earth.git
+cd half_earth
+
 # Install JS dependencies
 npm install -d
+cd ..
 
 # Install hector-rs
 git clone https://github.com/frnsys/hector-rs.git hector/hector-rs
@@ -106,4 +111,3 @@ server {
 
     // ...
 }
-
