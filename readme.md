@@ -1,3 +1,9 @@
+This is the repository for the game Half-Earth Socialism.
+You can play it at:
+* [half.earth](https://play.half.earth/) (web)
+* [Steam](https://store.steampowered.com/app/2071530/HalfEarth_Socialism/) (Windows/macOS/Linux) (Account needed)
+* [Itch.io](https://frnsys.itch.io/half-earth-socialism) (Windows/macOS/Linux)
+  
 ## Notes
 
 - Heavy-lifting code implemented in Rust (in `engine/`), provided to the frontend via WebAssembly (wasm), which is managed via a web worker.
@@ -100,3 +106,4 @@ server {
 
     // ...
 }
+
