@@ -23,6 +23,12 @@ update:
     # # cd engine; cargo test; cd ..
     npm run build-wasm
 
+# Update using local editor data
+update_local:
+    python3 parse_content.py
+    # # cd engine; cargo test; cd ..
+    npm run build-wasm
+
 # Build the Rust code
 build_rust:
     npm run build-wasm

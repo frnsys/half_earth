@@ -17,11 +17,12 @@ Most tasks are handled via `just`:
 
 ```
 Available recipes:
-    run        # Run the development server
-    test       # Run tests
-    setup      # Setup dev environment
-    update     # Update editor data
-    build_rust # Build the Rust code
+    run          # Run the development server
+    test         # Run tests
+    setup        # Setup dev environment
+    update       # Update editor data
+    update_local # Update using local editor data
+    build_rust   # Build the Rust code
 ```
 
 If you modify the Rust code, run `just build_rust`.
@@ -34,7 +35,7 @@ EDITOR_PASS=pass
 EDITOR_URL=https://my.editor.url
 ```
 
-The editor for the live game is private so you will need to setup your own, or you can directly edit `editor/data.json`.
+The editor for the live game is private so you will need to setup your own, or you can directly edit `editor/data.json`, or you can run a local copy of the editor (see the `editor` folder). If you do the latter two you should instead just run `just update_local` to use your local editor data.
 
 ---
 
