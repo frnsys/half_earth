@@ -1,7 +1,15 @@
+*.db
 node_modules
 dist
 
-editor/uploads/*
 editor/data.json
+editor/strings
 assets/content/images/*
 out/
+data/src
+assets/src/images
+assets/src/audio
+assets/fonts/Synt
+*/uploads
+hector/hector-rs
+sharing/*.json
