@@ -10561,7 +10561,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2080.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2060.0),
                         Condition::ProjectStatus(74, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Outlook, Comparator::GreaterEqual, 20.0),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::LessEqual, 2.0),
@@ -10571,7 +10571,7 @@ pub fn events() -> Vec<Event> {
                 Probability {
                     likelihood: Likelihood::Random,
                     conditions: vec![
-                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2080.0),
+                        Condition::WorldVariable(WorldVariable::Year, Comparator::GreaterEqual, 2060.0),
                         Condition::ProjectStatus(85, ProjectStatus::Active),
                         Condition::WorldVariable(WorldVariable::Outlook, Comparator::GreaterEqual, 20.0),
                         Condition::WorldVariable(WorldVariable::Temperature, Comparator::LessEqual, 2.0),
