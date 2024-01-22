@@ -1,9 +1,11 @@
 This is the repository for the game Half-Earth Socialism.
+
 You can play it at:
 * [half.earth](https://play.half.earth/) (web)
 * [Steam](https://store.steampowered.com/app/2071530/HalfEarth_Socialism/) (Windows/macOS/Linux) (Account needed)
+  - _Note_: The build process for the Steam version is more complicated so it's less likely to be up-to-date.
 * [Itch.io](https://frnsys.itch.io/half-earth-socialism) (Windows/macOS/Linux)
-  
+
 ## Notes
 
 - Heavy-lifting code implemented in Rust (in `engine/`), provided to the frontend via WebAssembly (wasm), which is managed via a web worker.
@@ -11,49 +13,30 @@ You can play it at:
 - Main libraries used for the UI are three.js and Vue.
 - Some of the assets are generated programmatically; look in `assets/src/` for the scripts.
 
-1. Use the editor in `editor/` to update game content, then run `parse_content.py` to parse the editor data into Rust code and JSON assets. See `update_content.sh`
-
-## Setup
+Most tasks are handled via `just`:
 
 ```
-# Clone half-earth repository
-git clone https://github.com/frnsys/half_earth.git
-cd half_earth
-
-# Install JS dependencies
-npm install -d
-cd ..
-
-# Install hector-rs
-git clone https://github.com/frnsys/hector-rs.git hector/hector-rs
-cd hector/hector-rs
-bash setup.sh
-cd ../../
-
-# Fetch and parse latest content
-# Requires `pip3 install pillow`
-bash update_content.sh
+Available recipes:
+    run        # Run the development server
+    test       # Run tests
+    setup      # Setup dev environment
+    update     # Update editor data
+    build_rust # Build the Rust code
 ```
 
-## Usage
+If you modify the Rust code, run `just build_rust`.
 
-Run the development server with:
-
-```
-npm start
-```
-
-If you modify the Rust code, run `npm run build-wasm`.
-
-If changes are made in the editor, run `bash update_content.sh`.
-
-## Tests
-
-Run Cargo and WASM tests with:
+If changes are made in the editor, run `just update`. Note that for this to work you need a `.env` file with:
 
 ```
-npm run test
+EDITOR_USER=username
+EDITOR_PASS=pass
+EDITOR_URL=https://my.editor.url
 ```
+
+The editor for the live game is private so you will need to setup your own, or you can directly edit `editor/data.json`.
+
+---
 
 ## Calibration
 
