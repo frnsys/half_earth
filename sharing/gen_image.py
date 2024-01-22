@@ -115,4 +115,4 @@ def gen_image(year, summary, outpath):
     draw.text(((size[0] - w) / 2, size[1] - h - 16), text,
             font=sm_font, fill='#FEC007', stroke_width=2, stroke_fill='#000')
 
-    img.save(outpath, quality=95)
+    img.save(outpath, quality=15)
