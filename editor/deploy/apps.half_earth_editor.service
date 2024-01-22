@@ -8,8 +8,8 @@ Type=notify
 User=www-data
 Group=www-data
 RuntimeDirectory=gunicorn
-WorkingDirectory=/srv/half_earth_editor
-ExecStart=/srv/half_earth_editor/env/bin/gunicorn server:app --workers 1 --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker --bind unix:/run/half_earth_editor.sock --log-level=info --capture-output --enable-stdio-inheritance
+WorkingDirectory=/srv/projects/half_earth/editor
+ExecStart=/srv/projects/half_earth/editor/env/bin/gunicorn server:app --workers 1 --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker --bind unix:/run/half_earth_editor.sock --log-level=info --capture-output --enable-stdio-inheritance
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
