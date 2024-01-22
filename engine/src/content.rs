@@ -451,8 +451,8 @@ pub fn industries() -> Vec<Industry> {
             id: 3,
             name: "Iron and Steel",
             resources: resources!(
-                electricity: 0.0,
-                fuel: 101.26,
+                electricity: 58.662,
+                fuel: 267.36,
                 land: 0.0,
                 water: 0.0
             ),
@@ -471,7 +471,7 @@ pub fn industries() -> Vec<Industry> {
             name: "Chemical",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 22.34,
+                fuel: 29372.97,
                 land: 0.0,
                 water: 0.0
             ),
@@ -489,10 +489,10 @@ pub fn industries() -> Vec<Industry> {
             id: 5,
             name: "Other Industry",
             resources: resources!(
-                electricity: 266.8,
-                fuel: 666.58,
+                electricity: 249.418,
+                fuel: 535.04,
                 land: 0.0,
-                water: 10975.989104986089
+                water: 20489.19
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
@@ -508,8 +508,8 @@ pub fn industries() -> Vec<Industry> {
             id: 6,
             name: "Road Transport",
             resources: resources!(
-                electricity: 0.0,
-                fuel: 619.08,
+                electricity: 11.26,
+                fuel: 686.59,
                 land: 0.0,
                 water: 0.0
             ),
@@ -534,7 +534,7 @@ pub fn industries() -> Vec<Industry> {
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 0.0,
-                co2: 39.72,
+                co2: 39720.0,
                 n2o: 0.0
             ),
             resource_modifiers: resources!(),
@@ -576,13 +576,13 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.0114,
+                land: 0.0173,
                 water: 0.557
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 0.0,
-                co2: 40.0,
+                co2: 49.9,
                 n2o: 0.0
             ),
             locked: false,
@@ -602,12 +602,12 @@ pub fn processes() -> Vec<Process> {
             limit: None,
             ref_id: "1af360c3-5f08-4fae-9ea1-8264d4c1fc5a",
             mix_share: 2,
-            feedstock: (Feedstock::Uranium, 0.0009),
+            feedstock: (Feedstock::Uranium, 0.023),
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.000119,
-                water: 2.13666
+                land: 0.0003,
+                water: 1.77914
             ),
             byproducts: byproducts!(
                 biodiversity: 1.0,
@@ -642,7 +642,7 @@ pub fn processes() -> Vec<Process> {
             byproducts: byproducts!(
                 biodiversity: 5.0,
                 ch4: 0.0,
-                co2: 122.0,
+                co2: 83.7,
                 n2o: 0.0
             ),
             locked: false,
@@ -669,7 +669,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.1085
             ),
             byproducts: byproducts!(
-                biodiversity: 0.0,
+                biodiversity: -0.5,
                 ch4: 0.0,
                 co2: 0.17454714961005954,
                 n2o: 0.0
@@ -699,7 +699,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.18
             ),
             byproducts: byproducts!(
-                biodiversity: 1.0,
+                biodiversity: 3.0,
                 ch4: 0.0,
                 co2: -1166.67,
                 n2o: 0.06337
@@ -731,7 +731,7 @@ pub fn processes() -> Vec<Process> {
             byproducts: byproducts!(
                 biodiversity: 1.0,
                 ch4: 0.0,
-                co2: 115.0,
+                co2: 1.92,
                 n2o: 0.0
             ),
             locked: true,
@@ -788,8 +788,8 @@ pub fn processes() -> Vec<Process> {
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
-                ch4: 1.07,
-                co2: 45.85,
+                ch4: 3.852,
+                co2: 164.52,
                 n2o: 0.0
             ),
             locked: false,
@@ -817,7 +817,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1530.5
             ),
             byproducts: byproducts!(
-                biodiversity: 3.0,
+                biodiversity: 5.0,
                 ch4: 0.0,
                 co2: 9.0,
                 n2o: 0.0
@@ -846,7 +846,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.34
             ),
             byproducts: byproducts!(
-                biodiversity: 2.0,
+                biodiversity: 3.0,
                 ch4: 0.0,
                 co2: 0.21120205102817205,
                 n2o: 0.0004035833376284048
@@ -879,7 +879,7 @@ pub fn processes() -> Vec<Process> {
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 0.0,
-                co2: 10.0,
+                co2: 34.1,
                 n2o: 0.0
             ),
             locked: false,
@@ -902,7 +902,7 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.000119,
+                land: 0.0003,
                 water: 2.1367
             ),
             byproducts: byproducts!(
@@ -930,14 +930,14 @@ pub fn processes() -> Vec<Process> {
             feedstock: (Feedstock::NaturalGas, 0.1018),
             resources: resources!(
                 electricity: 0.009,
-                fuel: 4.0,
+                fuel: 0.3,
                 land: 0.005289,
                 water: 0.27
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
-                ch4: 0.912,
-                co2: 75.6,
+                ch4: 2.736,
+                co2: 272.16,
                 n2o: 0.0
             ),
             locked: false,
@@ -960,12 +960,12 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.000114,
+                land: 0.00017,
                 water: 0.00392
             ),
             byproducts: byproducts!(
-                biodiversity: 0.0,
-                ch4: 0.57829,
+                biodiversity: 1.0,
+                ch4: 2.0,
                 co2: 970.0,
                 n2o: 0.0
             ),
@@ -1019,12 +1019,12 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.000114,
+                land: 0.00017,
                 water: 0.00392
             ),
             byproducts: byproducts!(
-                biodiversity: 0.0,
-                ch4: 0.57829,
+                biodiversity: 1.0,
+                ch4: 2.0,
                 co2: 353.81,
                 n2o: 0.0
             ),
@@ -1048,13 +1048,13 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 2.54e-05,
+                land: 11416.0,
                 water: 2.3688
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 2.7,
-                co2: 412.7691,
+                co2: 460.0,
                 n2o: 0.0
             ),
             locked: false,
@@ -1082,7 +1082,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.489
             ),
             byproducts: byproducts!(
-                biodiversity: 2.0,
+                biodiversity: 3.0,
                 ch4: 0.026329682345600774,
                 co2: 1.7600170919014337,
                 n2o: 0.0033631944802367066
@@ -1109,8 +1109,8 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.000119,
-                water: 9.28e-05
+                land: 0.0003,
+                water: 0.00016
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
@@ -1120,7 +1120,6 @@ pub fn processes() -> Vec<Process> {
             ),
             locked: true,
             features: vec![
-                ProcessFeature::CanMeltdown,
                 ProcessFeature::MakesNuclearWaste
             ],
             output_modifier: 0.0,
@@ -1145,7 +1144,7 @@ pub fn processes() -> Vec<Process> {
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 0.0,
-                co2: 10.0,
+                co2: 34.1,
                 n2o: 0.0
             ),
             locked: true,
@@ -1166,10 +1165,10 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0,
             feedstock: (Feedstock::Other, 0.27),
             resources: resources!(
-                electricity: 3.0,
+                electricity: 1.39,
                 fuel: 0.0,
                 land: 0.0529,
-                water: 0.27
+                water: 0.47
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
@@ -1201,7 +1200,7 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                biodiversity: 1.0,
+                biodiversity: 2.0,
                 ch4: 0.6191,
                 co2: 1005.0,
                 n2o: 0.0
@@ -1232,7 +1231,7 @@ pub fn processes() -> Vec<Process> {
                 water: 0.29
             ),
             byproducts: byproducts!(
-                biodiversity: 1.0,
+                biodiversity: 3.0,
                 ch4: 0.0,
                 co2: 174.86,
                 n2o: 0.06337
@@ -1291,13 +1290,14 @@ pub fn processes() -> Vec<Process> {
                 water: 3.68
             ),
             byproducts: byproducts!(
-                biodiversity: 1.0,
+                biodiversity: 2.0,
                 ch4: 0.6191,
                 co2: 247.03,
                 n2o: 0.0
             ),
             locked: false,
             features: vec![
+                ProcessFeature::IsCombustion,
                 ProcessFeature::IsFossil,
                 ProcessFeature::UsesOil
             ],
@@ -1310,20 +1310,20 @@ pub fn processes() -> Vec<Process> {
             id: 25,
             name: "Concentrated Solar Power",
             output: Output::Electricity,
-            limit: Some(1000000000000.0),
+            limit: Some(130000000000000.0),
             ref_id: "d505cd5e-fa05-44f2-a80e-8c777bc06929",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.0057,
-                water: 0.00414
+                land: 0.0118,
+                water: 4.0
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 0.0,
-                co2: 31.2,
+                co2: 22.5,
                 n2o: 0.0
             ),
             locked: true,
@@ -1351,7 +1351,7 @@ pub fn processes() -> Vec<Process> {
                 water: 2.03
             ),
             byproducts: byproducts!(
-                biodiversity: 1.0,
+                biodiversity: 0.5,
                 ch4: 0.0,
                 co2: 0.3200031076184425,
                 n2o: 0.0
@@ -1374,10 +1374,10 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 7.5583333,
+                electricity: 0.54,
                 fuel: 0.0,
-                land: 0.072,
-                water: 2.03
+                land: 0.09,
+                water: 90.0
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
@@ -1404,10 +1404,10 @@ pub fn processes() -> Vec<Process> {
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
             resources: resources!(
-                electricity: 0.0167,
+                electricity: 0.1,
                 fuel: 0.0,
                 land: 7.35e-05,
-                water: 0.0073529
+                water: 0.148
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
@@ -1440,7 +1440,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::OutputForProcess(0, 4.0)
+                Effect::OutputForProcess(0, 3.0)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -1482,9 +1482,10 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Demand(Output::Electricity, 0.2),
-                Effect::Demand(Output::Fuel, 0.2),
-                Effect::ProjectRequest(44, true, 20)
+                Effect::Demand(Output::Electricity, 1.0),
+                Effect::Demand(Output::Fuel, 1.0),
+                Effect::ProjectRequest(44, true, 20),
+                Effect::WorldVariable(WorldVariable::Outlook, 20.0)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -1692,7 +1693,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::Demand(Output::Electricity, 0.01),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0),
                 Effect::RegionHabitability(Latitude::Tropic, 2.0),
                 Effect::Output(Output::PlantCalories, 0.05)
             ],
@@ -1781,7 +1782,6 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ProtectLand(30.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::UnlocksProject(105),
                 Effect::UnlocksProject(62)
             ],
@@ -1811,7 +1811,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![0, 1, 8],
-            opposers: vec![7],
+            opposers: vec![2, 4, 7],
             active_outcome: None
         },
         Project {
@@ -2051,7 +2051,8 @@ pub fn projects() -> Vec<Project> {
                 Effect::NPCRelationship(2, 1.0),
                 Effect::UnlocksProject(24),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
-                Effect::UnlocksProject(118)
+                Effect::UnlocksProject(118),
+                Effect::Demand(Output::Electricity, 0.002)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -2404,7 +2405,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Feedstock(Feedstock::Lithium, 2.0)
+                Effect::Feedstock(Feedstock::Lithium, 2.0),
+                Effect::NPCRelationship(2, 1.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -2535,9 +2537,9 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::DemandAmount(Output::Electricity, 1000000000000.0),
-                Effect::DemandAmount(Output::Fuel, 1000000000000.0),
-                Effect::UnlocksProject(1)
+                Effect::UnlocksProject(1),
+                Effect::Demand(Output::Electricity, 0.1),
+                Effect::Demand(Output::Fuel, 0.1)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -2622,7 +2624,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -1.5),
-                Effect::DemandAmount(Output::Electricity, 3500000000000.0)
+                Effect::DemandAmount(Output::Electricity, 4700000000000.0)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -2652,7 +2654,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -3.0),
-                        Effect::DemandAmount(Output::Electricity, 7000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 9400000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2660,7 +2662,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -4.5),
-                        Effect::DemandAmount(Output::Electricity, 10500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 14100000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2668,7 +2670,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -6.0),
-                        Effect::DemandAmount(Output::Electricity, 14000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 18800000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2676,7 +2678,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -7.5),
-                        Effect::DemandAmount(Output::Electricity, 17500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 23500000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2684,7 +2686,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -9.0),
-                        Effect::DemandAmount(Output::Electricity, 21000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 28200000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2692,7 +2694,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -11.5),
-                        Effect::DemandAmount(Output::Electricity, 24500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 32900000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2700,7 +2702,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -13.0),
-                        Effect::DemandAmount(Output::Electricity, 28000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 37600000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2708,7 +2710,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -14.5),
-                        Effect::DemandAmount(Output::Electricity, 31500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 42300000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2716,7 +2718,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -16.0),
-                        Effect::DemandAmount(Output::Electricity, 35000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 47000000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2724,7 +2726,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -17.5),
-                        Effect::DemandAmount(Output::Electricity, 38500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 51700000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2732,7 +2734,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -19.0),
-                        Effect::DemandAmount(Output::Electricity, 42000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 56400000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2740,7 +2742,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -20.5),
-                        Effect::DemandAmount(Output::Electricity, 45500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 61100000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2748,7 +2750,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -22.0),
-                        Effect::DemandAmount(Output::Electricity, 49000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 65800000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2756,7 +2758,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -23.5),
-                        Effect::DemandAmount(Output::Electricity, 52500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 70500000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2764,7 +2766,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -25.0),
-                        Effect::DemandAmount(Output::Electricity, 56000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 75200000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2772,7 +2774,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -26.5),
-                        Effect::DemandAmount(Output::Electricity, 59500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 79900000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2780,7 +2782,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -28.0),
-                        Effect::DemandAmount(Output::Electricity, 63000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 84600000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2788,7 +2790,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -29.5),
-                        Effect::DemandAmount(Output::Electricity, 66500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 89300000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2796,7 +2798,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -31.0),
-                        Effect::DemandAmount(Output::Electricity, 70000000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 94000000000000.0)
                     ]
                 },
                 Upgrade {
@@ -2804,7 +2806,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -32.5),
-                        Effect::DemandAmount(Output::Electricity, 73500000000000.0)
+                        Effect::DemandAmount(Output::Electricity, 98700000000000.0)
                     ]
                 }
             ],
@@ -2959,8 +2961,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
-                Effect::Demand(Output::Electricity, -0.05)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
+                Effect::Demand(Output::Electricity, -0.02)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -3047,8 +3049,12 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 10.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0)
+                Effect::WorldVariable(WorldVariable::Outlook, 2.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0),
+                Effect::ModifyIndustryResources(3, Resource::Fuel, -0.25),
+                Effect::ModifyIndustryResources(3, Resource::Electricity, -0.25),
+                Effect::ModifyIndustryResources(5, Resource::Fuel, -0.25),
+                Effect::ModifyIndustryResources(5, Resource::Electricity, -0.25)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -3090,11 +3096,15 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
                 Effect::ProjectCostModifier(117, -0.3),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0),
                 Effect::UnlocksProject(34),
-                Effect::NPCRelationship(9, 1.0)
+                Effect::NPCRelationship(9, 1.0),
+                Effect::ProjectCostModifier(7, 0.05),
+                Effect::ProjectCostModifier(105, 0.05),
+                Effect::ProjectCostModifier(111, 0.05),
+                Effect::ProjectCostModifier(117, 0.05)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -3130,7 +3140,7 @@ pub fn projects() -> Vec<Project> {
             ref_id: "4a9d6df6-fc90-4a0f-ac18-498e0ec1bc69",
             name: "Eliminate Natural Predation",
             cost: 0,
-            base_cost: Cost::Fixed(40),
+            base_cost: Cost::Fixed(30),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
@@ -3139,7 +3149,8 @@ pub fn projects() -> Vec<Project> {
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
                 Effect::WorldVariable(WorldVariable::Emissions, 1.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 5.0),
-                Effect::LocksProject(58)
+                Effect::LocksProject(58),
+                Effect::NPCRelationship(9, 2.0)
             ],
             kind: ProjectType::Research,
             locked: true,
@@ -3226,7 +3237,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 3.0),
-                Effect::ModifyIndustryResources(6, Resource::Fuel, -0.4),
+                Effect::ModifyIndustryResources(6, Resource::Fuel, -0.25),
                 Effect::UnlocksProject(77)
             ],
             kind: ProjectType::Initiative,
@@ -3424,7 +3435,7 @@ pub fn projects() -> Vec<Project> {
                 Outcome {
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Emissions, -1.0),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 7.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Random,
@@ -3435,8 +3446,8 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Emissions, -2.0),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
+                        Effect::WorldVariable(WorldVariable::Emissions, -3.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Unlikely,
@@ -3551,7 +3562,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![6],
-            opposers: vec![],
+            opposers: vec![1],
             active_outcome: None
         },
         Project {
@@ -3565,7 +3576,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Outlook, 5.0)
+                Effect::WorldVariable(WorldVariable::Outlook, 2.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -3743,13 +3754,13 @@ pub fn projects() -> Vec<Project> {
             ref_id: "5e69fb2f-1fa5-4e70-a723-58944141964c",
             name: "Restrict Air Travel",
             cost: 0,
-            base_cost: Cost::Fixed(25),
+            base_cost: Cost::Fixed(15),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(1, Resource::Fuel, -0.5),
+                Effect::ModifyIndustryResources(1, Resource::Fuel, -0.3),
                 Effect::IncomeOutlookChange(-1.0)
             ],
             kind: ProjectType::Policy,
@@ -3794,7 +3805,8 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::TriggerEvent(47, 6),
                 Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0),
-                Effect::RegionHabitability(Latitude::Tropic, -1.0)
+                Effect::RegionHabitability(Latitude::Tropic, -1.0),
+                Effect::LocksProject(79)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -3880,7 +3892,8 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::DemandOutlookChange(Output::Electricity, -1.0),
                 Effect::Demand(Output::Electricity, -0.2),
-                Effect::UnlocksProject(45)
+                Effect::UnlocksProject(45),
+                Effect::LocksProject(99)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -3939,7 +3952,9 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::AddFlag(Flag::MoreLabor),
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::LocksProject(74)
+                Effect::LocksProject(74),
+                Effect::Demand(Output::Electricity, 0.05),
+                Effect::Demand(Output::Fuel, 0.05)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -3973,7 +3988,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 52,
             ref_id: "69654c23-965e-40b3-bd05-3cd32550a871",
-            name: "De-Extinction Research",
+            name: "De-Extinction Program",
             cost: 0,
             base_cost: Cost::Fixed(15),
             progress: 0.0,
@@ -4088,7 +4103,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryByproducts(4, Byproduct::Co2, -0.3)
+                Effect::ModifyIndustryByproducts(4, Byproduct::Co2, -0.5)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -4130,8 +4145,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -0.1),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5),
+                Effect::WorldVariable(WorldVariable::Emissions, -0.0179),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0),
                 Effect::UnlocksProject(57)
             ],
             kind: ProjectType::Policy,
@@ -4219,9 +4234,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -13.0),
-                Effect::WorldVariable(WorldVariable::Emissions, -3.6),
-                Effect::Demand(Output::AnimalCalories, -0.15)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::Emissions, -0.15),
+                Effect::Demand(Output::AnimalCalories, -0.1)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4287,7 +4302,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -2.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
                 Effect::LocksProject(34),
                 Effect::TriggerEvent(56, 5)
             ],
@@ -4375,7 +4390,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::Output(Output::AnimalCalories, 0.05),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 3.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4462,9 +4477,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
                 Effect::ProtectLand(7.0),
-                Effect::WorldVariable(WorldVariable::Emissions, -0.04)
+                Effect::WorldVariable(WorldVariable::Emissions, -0.05)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -4564,11 +4579,12 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Demand(Output::AnimalCalories, -0.1),
+                Effect::Demand(Output::AnimalCalories, -0.14),
                 Effect::UnlocksProject(88),
                 Effect::UnlocksProject(65),
                 Effect::UnlocksProject(33),
-                Effect::UnlocksProject(55)
+                Effect::UnlocksProject(55),
+                Effect::Demand(Output::PlantCalories, 0.14)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -4743,7 +4759,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5),
                 Effect::UnlocksProject(108),
                 Effect::UnlocksProject(96)
             ],
@@ -4876,7 +4892,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -9.0)
+                Effect::WorldVariable(WorldVariable::Emissions, -0.367),
+                Effect::ModifyIndustryDemand(3, -0.45)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -5074,7 +5091,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 3.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Likely,
@@ -5106,7 +5123,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Temperature, -1.0),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
                         Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                         Effect::Migration,
                         Effect::TriggerEvent(123, 2)
@@ -5117,7 +5134,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Temperature, -1.5),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 8.0),
                         Effect::RegionHabitability(Latitude::Tropic, -1.0),
                         Effect::WorldVariable(WorldVariable::Outlook, -3.0)
                     ]
@@ -5127,7 +5144,7 @@ pub fn projects() -> Vec<Project> {
                     cost: 5,
                     effects: vec![
                         Effect::WorldVariable(WorldVariable::Temperature, -2.0),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 6.0),
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 12.0),
                         Effect::Output(Output::PlantCalories, -0.1)
                     ]
                 },
@@ -5141,7 +5158,7 @@ pub fn projects() -> Vec<Project> {
                         Effect::RegionHabitability(Latitude::Temperate, -1.0),
                         Effect::RegionHabitability(Latitude::Frigid, -1.0),
                         Effect::WorldVariable(WorldVariable::Outlook, -4.0),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 8.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 16.0)
                     ]
                 },
                 Upgrade {
@@ -5155,7 +5172,7 @@ pub fn projects() -> Vec<Project> {
                         Effect::RegionHabitability(Latitude::Temperate, -1.0),
                         Effect::RegionHabitability(Latitude::Frigid, -1.0),
                         Effect::WorldVariable(WorldVariable::Outlook, -5.0),
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 20.0)
                     ]
                 }
             ],
@@ -5175,7 +5192,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::DeepSeaMining),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
             ],
             kind: ProjectType::Policy,
             locked: false,
@@ -5217,10 +5234,12 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(6, Resource::Fuel, -0.4),
+                Effect::ModifyIndustryResources(6, Resource::Fuel, -0.45),
                 Effect::ModifyIndustryDemand(3, -0.12),
                 Effect::WorldVariable(WorldVariable::Outlook, -4.0),
-                Effect::AddEvent(98)
+                Effect::AddEvent(98),
+                Effect::LocksProject(95),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -5307,8 +5326,9 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::ModifyEventProbability(64, -0.25),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
-                Effect::UnlocksProject(58)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0),
+                Effect::UnlocksProject(58),
+                Effect::LocksProject(48)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -5319,7 +5339,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Emissions, -0.43)
+                        Effect::WorldVariable(WorldVariable::Emissions, -0.35)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -5457,7 +5477,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -54.0),
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0),
+                Effect::WorldVariable(WorldVariable::Outlook, -10.0),
                 Effect::UnlocksProject(69)
             ],
             kind: ProjectType::Policy,
@@ -5948,7 +5968,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0)
+                        Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -6026,7 +6046,7 @@ pub fn projects() -> Vec<Project> {
             effects: vec![
                 Effect::Feedstock(Feedstock::Oil, 2.0),
                 Effect::CO2ForFeature(ProcessFeature::UsesOil, 0.2),
-                Effect::BiodiversityPressureForFeature(ProcessFeature::UsesOil, 0.5)
+                Effect::BiodiversityPressureForFeature(ProcessFeature::UsesOil, 2.0)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -6068,7 +6088,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(6, Resource::Fuel, -0.1),
+                Effect::ModifyIndustryResources(6, Resource::Fuel, -0.03),
                 Effect::Demand(Output::AnimalCalories, -0.1),
                 Effect::UnlocksProject(77)
             ],
@@ -6112,8 +6132,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResourcesAmount(6, Resource::Electricity, 154.77),
-                Effect::ModifyIndustryResources(6, Resource::Fuel, -1.0)
+                Effect::ModifyIndustryResourcesAmount(6, Resource::Electricity, 171.6475),
+                Effect::ModifyIndustryResources(6, Resource::Fuel, -1.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -6155,7 +6176,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
                 Effect::ModifyEventProbability(129, -0.5),
                 Effect::ModifyEventProbability(163, -0.5),
                 Effect::NPCRelationship(4, -1.0)
@@ -6186,7 +6207,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![1, 8, 9],
-            opposers: vec![2],
+            opposers: vec![2, 4],
             active_outcome: None
         },
         Project {
@@ -6200,8 +6221,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(7, Resource::Land, 1.5),
-                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.5)
+                Effect::ModifyIndustryByproducts(7, Byproduct::Co2, -0.5),
+                Effect::ModifyIndustryResourcesAmount(7, Resource::Land, 124.0)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -6282,13 +6303,13 @@ pub fn projects() -> Vec<Project> {
             ref_id: "db25b922-3610-4f6c-b06b-e6f68cb512ba",
             name: "Energy Conservation Campaign",
             cost: 0,
-            base_cost: Cost::Fixed(30),
+            base_cost: Cost::Fixed(5),
             progress: 0.0,
             level: 0,
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Demand(Output::Electricity, -0.25),
+                Effect::Demand(Output::Electricity, -0.1),
                 Effect::UnlocksProject(50)
             ],
             kind: ProjectType::Initiative,
@@ -6331,7 +6352,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(8, Resource::Electricity, -0.04)
+                Effect::ModifyIndustryResources(8, Resource::Electricity, -0.056)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -6463,7 +6484,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::PopulationGrowth, -20.0),
-                Effect::WorldVariable(WorldVariable::Outlook, -2.0)
+                Effect::WorldVariable(WorldVariable::Outlook, -4.0)
             ],
             kind: ProjectType::Policy,
             locked: true,
@@ -6497,7 +6518,7 @@ pub fn projects() -> Vec<Project> {
         Project {
             id: 104,
             ref_id: "e5d8d6cc-2ed6-4493-8052-e679d861deeb",
-            name: "De-Extinction Program",
+            name: "De-Extinction Research",
             cost: 0,
             base_cost: Cost::Fixed(15),
             progress: 0.0,
@@ -6558,9 +6579,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0),
                 Effect::ModifyEventProbability(205, -0.05),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0)
             ],
             kind: ProjectType::Initiative,
             locked: true,
@@ -6571,7 +6591,7 @@ pub fn projects() -> Vec<Project> {
             outcomes: vec![
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Temperature, 0.1)
+                        Effect::WorldVariable(WorldVariable::Temperature, 0.25)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Likely,
@@ -6582,7 +6602,7 @@ pub fn projects() -> Vec<Project> {
                 },
                 Outcome {
                     effects: vec![
-                        Effect::WorldVariable(WorldVariable::Temperature, 0.05)
+                        Effect::WorldVariable(WorldVariable::Temperature, 0.15)
                     ],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -6656,7 +6676,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::Emissions, -0.08),
+                Effect::WorldVariable(WorldVariable::Emissions, -0.042),
                 Effect::Output(Output::PlantCalories, 0.05),
                 Effect::UnlocksProject(27),
                 Effect::UnlocksProject(73)
@@ -6701,7 +6721,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -10.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
                 Effect::TriggerEvent(56, 3),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
@@ -6787,7 +6807,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::ModifyIndustryResources(2, Resource::Fuel, -0.66)
+                Effect::ModifyIndustryResources(2, Resource::Fuel, -0.66),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -6829,9 +6850,9 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -1.2),
-                Effect::Demand(Output::AnimalCalories, -0.05),
+                Effect::Demand(Output::AnimalCalories, -0.033),
                 Effect::UnlocksProject(55)
             ],
             kind: ProjectType::Policy,
@@ -6875,7 +6896,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::UnlocksProject(77),
-                Effect::WorldVariable(WorldVariable::Emissions, -0.35)
+                Effect::WorldVariable(WorldVariable::Emissions, -0.23)
             ],
             kind: ProjectType::Initiative,
             locked: false,
@@ -6918,7 +6939,7 @@ pub fn projects() -> Vec<Project> {
             completed_at: 0,
             effects: vec![
                 Effect::AddFlag(Flag::EcosystemModeling),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5),
                 Effect::UnlocksProject(58),
                 Effect::UnlocksProject(104)
             ],
@@ -6993,7 +7014,7 @@ pub fn projects() -> Vec<Project> {
 
             ],
             supporters: vec![7],
-            opposers: vec![],
+            opposers: vec![1],
             active_outcome: None
         },
         Project {
@@ -7116,7 +7137,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -2.0),
                 Effect::ProtectLand(10.0)
             ],
@@ -7186,8 +7207,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::CO2ForFeature(ProcessFeature::UsesLivestock, -0.0005),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 0.5),
+                Effect::CO2ForFeature(ProcessFeature::UsesLivestock, -0.05),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
                 Effect::UnlocksProject(15)
             ],
             kind: ProjectType::Research,
@@ -7294,7 +7315,7 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::DemandAmount(Output::Electricity, 3750000000000.0),
+                Effect::DemandAmount(Output::Electricity, 750000000000.0),
                 Effect::ModifyEventProbability(205, -0.05),
                 Effect::Resource(Resource::Water, 250000000000000.0)
             ],
@@ -7325,7 +7346,7 @@ pub fn projects() -> Vec<Project> {
                     active: false,
                     cost: 10,
                     effects: vec![
-                        Effect::DemandAmount(Output::Electricity, 3750000000000.0),
+                        Effect::DemandAmount(Output::Electricity, 750000000000.0),
                         Effect::ModifyEventProbability(205, -0.1),
                         Effect::Resource(Resource::Water, 500000000000000.0)
                     ]
@@ -7334,7 +7355,7 @@ pub fn projects() -> Vec<Project> {
                     active: false,
                     cost: 10,
                     effects: vec![
-                        Effect::DemandAmount(Output::Electricity, 11250000000000.0),
+                        Effect::DemandAmount(Output::Electricity, 1500000000000.0),
                         Effect::ModifyEventProbability(205, -0.15),
                         Effect::Resource(Resource::Water, 750000000000000.0)
                     ]
@@ -7343,7 +7364,7 @@ pub fn projects() -> Vec<Project> {
                     active: false,
                     cost: 10,
                     effects: vec![
-                        Effect::DemandAmount(Output::Electricity, 15000000000000.0),
+                        Effect::DemandAmount(Output::Electricity, 2250000000000.0),
                         Effect::ModifyEventProbability(205, -0.2),
                         Effect::Resource(Resource::Water, 1000000000000000.0)
                     ]
@@ -7352,7 +7373,7 @@ pub fn projects() -> Vec<Project> {
                     active: false,
                     cost: 10,
                     effects: vec![
-                        Effect::DemandAmount(Output::Electricity, 18750000000000.0),
+                        Effect::DemandAmount(Output::Electricity, 3000000000000.0),
                         Effect::ModifyEventProbability(205, -0.25),
                         Effect::Resource(Resource::Water, 1250000000000000.0)
                     ]
@@ -7361,7 +7382,7 @@ pub fn projects() -> Vec<Project> {
                     active: false,
                     cost: 10,
                     effects: vec![
-                        Effect::DemandAmount(Output::Electricity, 22500000000000.0),
+                        Effect::DemandAmount(Output::Electricity, 3750000000000.0),
                         Effect::ModifyEventProbability(205, -0.3),
                         Effect::Resource(Resource::Water, 1500000000000000.0)
                     ]
@@ -7425,7 +7446,8 @@ pub fn projects() -> Vec<Project> {
             required_majority: 0.0,
             completed_at: 0,
             effects: vec![
-                Effect::Output(Output::PlantCalories, 0.1)
+                Effect::ModifyEventProbability(205, -0.2),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5)
             ],
             kind: ProjectType::Research,
             locked: false,
@@ -7495,7 +7517,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -3.0),
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0)
             ],
             probabilities: vec![
@@ -7804,7 +7826,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::Demand(Output::PlantCalories, -0.1),
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -8210,7 +8232,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::AddEvent(173),
                 Effect::AddEvent(212),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 7.0)
             ],
             probabilities: vec![
                 Probability {
@@ -8283,7 +8305,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 27,
             ref_id: "1d4d880b-c638-4169-a60d-787fe8a3d33a",
-            name: "NIMBYs ",
+            name: "NIMBYs",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
@@ -8970,7 +8992,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 10.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 10.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 12.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -5.0),
                 Effect::WorldVariable(WorldVariable::Precipitation, -67.0)
             ],
@@ -10130,7 +10152,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 86,
             ref_id: "6dd4ddb6-2f75-4558-869c-f82ed024b1fa",
-            name: "Wheat Rust Destroys Harvest ",
+            name: "Wheat Rust Destroys Harvest",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
@@ -10229,7 +10251,7 @@ pub fn events() -> Vec<Event> {
             regional: true,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0)
             ],
             probabilities: vec![
                 Probability {
@@ -10280,7 +10302,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 2.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5)
             ],
             probabilities: vec![
                 Probability {
@@ -11213,14 +11235,14 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 123,
             ref_id: "8f82e197-7be6-4472-9850-b3b50253b797",
-            name: "Acid Rain ",
+            name: "Acid Rain",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 3.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
             ],
             probabilities: vec![
                 Probability {
@@ -11480,7 +11502,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -4.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
                 Effect::WorldVariable(WorldVariable::Emissions, -0.8),
                 Effect::ModifyEventProbability(52, 0.5),
                 Effect::ModifyEventProbability(26, -0.25)
@@ -12165,7 +12187,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 155,
             ref_id: "aac2ac1f-05d6-4559-a370-91e9968109d3",
-            name: "Environmental Injustice - Unconventional Oil ",
+            name: "Environmental Injustice - Unconventional Oil",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
@@ -12306,7 +12328,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0),
                 Effect::NPCRelationship(8, -1.0)
             ],
@@ -12690,13 +12712,13 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 173,
             ref_id: "bf57890d-6628-4de0-919a-c886ca029773",
-            name: "Fish Populations Collapse ",
+            name: "Fish Populations Collapse",
             phase: Phase::WorldMain,
             locked: true,
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 7.0),
                 Effect::UnlocksProject(60),
                 Effect::Output(Output::AnimalCalories, -0.1)
             ],
@@ -12723,7 +12745,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 174,
             ref_id: "bf7af2b4-303c-4672-8bbb-6825dff0de7b",
-            name: "Global Equality ",
+            name: "Global Equality",
             phase: Phase::WorldMain,
             locked: true,
             occurred: false,
@@ -13051,7 +13073,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 6.0),
                 Effect::LocksProject(77),
                 Effect::ModifyEventProbability(26, 0.25)
             ],
@@ -13236,7 +13258,7 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 192,
             ref_id: "d18017f1-b554-4b0c-b46e-335e945c1605",
-            name: "Volcanic Eruption ",
+            name: "Volcanic Eruption",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
@@ -13421,7 +13443,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, -0.5),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
             ],
             probabilities: vec![
                 Probability {
@@ -13530,7 +13552,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.1),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0)
             ],
             probabilities: vec![
                 Probability {
@@ -13650,7 +13672,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Outlook, 1.0),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -1.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5)
             ],
             probabilities: vec![
                 Probability {
@@ -13736,7 +13758,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0)
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, -0.5)
             ],
             probabilities: vec![
                 Probability {
@@ -14118,7 +14140,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 6.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
             probabilities: vec![
@@ -14169,13 +14191,13 @@ pub fn events() -> Vec<Event> {
         Event {
             id: 225,
             ref_id: "f42d019f-fca0-4326-9c8d-fec2b5966350",
-            name: "More and More Mega-Dams ",
+            name: "More and More Mega-Dams",
             phase: Phase::WorldMain,
             locked: false,
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -2.0)
             ],
             probabilities: vec![
@@ -14304,7 +14326,7 @@ pub fn events() -> Vec<Event> {
             regional: false,
             effects: vec![
                 Effect::WorldVariable(WorldVariable::Emissions, 0.2),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 4.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 5.0),
                 Effect::ModifyEventProbability(26, 0.25)
             ],
             probabilities: vec![
@@ -14375,7 +14397,7 @@ pub fn events() -> Vec<Event> {
             occurred: false,
             regional: false,
             effects: vec![
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, -2.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
                 Effect::NPCRelationship(8, -1.0),
                 Effect::WorldVariable(WorldVariable::Outlook, -1.0)
             ],
@@ -14518,7 +14540,7 @@ pub fn events() -> Vec<Event> {
             effects: vec![
                 Effect::Output(Output::PlantCalories, -0.05),
                 Effect::TriggerEvent(178, 6),
-                Effect::WorldVariable(WorldVariable::ExtinctionRate, 1.0),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, 2.0),
                 Effect::RegionHabitability(Latitude::Tropic, -3.0)
             ],
             probabilities: vec![
