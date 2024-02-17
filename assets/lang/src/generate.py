@@ -10,7 +10,7 @@ for csv in glob('*.csv'):
     df = pd.read_csv(csv)
     for i, row in df.iterrows():
         # Skip section headers
-        if row['Section'] == 'Y': continue
+        if row.get('Section') == 'Y': continue
 
         en = row['English']
         tr = row['Translation']

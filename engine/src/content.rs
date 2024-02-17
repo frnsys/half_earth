@@ -629,7 +629,7 @@ pub fn processes() -> Vec<Process> {
             id: 2,
             name: "Geothermal",
             output: Output::Electricity,
-            limit: Some(1576800000000.0),
+            limit: Some(157680000000.0),
             ref_id: "1dd7a323-1342-46f1-8035-d63385e57475",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
@@ -696,12 +696,12 @@ pub fn processes() -> Vec<Process> {
                 electricity: 0.0,
                 fuel: 0.0,
                 land: 0.1268,
-                water: 0.18
+                water: 180.0
             ),
             byproducts: byproducts!(
                 biodiversity: 3.0,
-                ch4: 0.0,
-                co2: -1166.67,
+                ch4: 9.65,
+                co2: -500.0,
                 n2o: 0.06337
             ),
             locked: true,
@@ -813,8 +813,8 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.0065,
-                water: 1530.5
+                land: 0.286,
+                water: 250.0
             ),
             byproducts: byproducts!(
                 biodiversity: 5.0,
@@ -898,7 +898,7 @@ pub fn processes() -> Vec<Process> {
             limit: None,
             ref_id: "82f54fbe-7f34-4e90-a01c-1ea6d5035e23",
             mix_share: 0,
-            feedstock: (Feedstock::Thorium, 0.00125),
+            feedstock: (Feedstock::Thorium, 0.000114),
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
@@ -908,7 +908,7 @@ pub fn processes() -> Vec<Process> {
             byproducts: byproducts!(
                 biodiversity: 1.0,
                 ch4: 0.0,
-                co2: 11.5,
+                co2: 115.0,
                 n2o: 0.0
             ),
             locked: true,
@@ -1020,7 +1020,7 @@ pub fn processes() -> Vec<Process> {
                 electricity: 0.0,
                 fuel: 0.0,
                 land: 0.00017,
-                water: 0.00392
+                water: 3.0
             ),
             byproducts: byproducts!(
                 biodiversity: 1.0,
@@ -1048,7 +1048,7 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 11416.0,
+                land: 0.00011416,
                 water: 2.3688
             ),
             byproducts: byproducts!(
@@ -1228,11 +1228,11 @@ pub fn processes() -> Vec<Process> {
                 electricity: 0.0,
                 fuel: 0.0,
                 land: 0.1268,
-                water: 0.29
+                water: 360.0
             ),
             byproducts: byproducts!(
                 biodiversity: 3.0,
-                ch4: 0.0,
+                ch4: 9.65,
                 co2: 174.86,
                 n2o: 0.06337
             ),
@@ -1257,13 +1257,13 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 2.54e-05,
+                land: 0.00011416,
                 water: 2.3688
             ),
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 2.7,
-                co2: 180.54,
+                co2: 200.0,
                 n2o: 0.0
             ),
             locked: false,
@@ -1286,7 +1286,7 @@ pub fn processes() -> Vec<Process> {
             resources: resources!(
                 electricity: 0.0,
                 fuel: 0.0,
-                land: 0.00017562346,
+                land: 0.0005866,
                 water: 3.68
             ),
             byproducts: byproducts!(

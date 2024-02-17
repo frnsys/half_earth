@@ -8,8 +8,9 @@
         <option value="pt-br" :selected="lang == 'pt-br'">PT-BR</option>
         <option value="pt-pt" :selected="lang == 'pt-pt'">PT-PT</option>
         <option value="es" :selected="lang == 'es'">ES</option>
-        <option value="de-de" :selected="lang == 'de-de'">DE-DE</option>
-        <option value="jp" :selected="lang == 'jp'">JP</option>
+        <option value="de-de" :selected="lang == 'de-de'">DE-DE (beta)</option>
+        <option value="jp" :selected="lang == 'jp'">JP (beta)</option>
+        <option value="fr" :selected="lang == 'fr-fr'">FR-FR (beta)</option>
       </select>
     </div>
     <template v-if="showCredits">
