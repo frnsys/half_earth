@@ -10,7 +10,7 @@
         <option value="es" :selected="lang == 'es'">ES</option>
         <option value="de-de" :selected="lang == 'de-de'">DE-DE (beta)</option>
         <option value="jp" :selected="lang == 'jp'">JP (beta)</option>
-        <option value="fr" :selected="lang == 'fr-fr'">FR-FR (beta)</option>
+        <option value="fr-fr" :selected="lang == 'fr-fr'">FR-FR (beta)</option>
       </select>
     </div>
     <template v-if="showCredits">

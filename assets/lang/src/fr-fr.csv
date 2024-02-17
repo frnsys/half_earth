@@ -1300,7 +1300,7 @@ Hold on!,Attendez!
 But they can only help you this one time...,Mais elles ne peuvent vous aider qu'une seule fois...
 Wow.,Waouh.
 If they're vouching for you then you'll have a bit more political capital to work with.,"S'ils se portent garants pour vous, alors vous aurez un peu plus de capital politique avec lequel travailler."
-I'll vouch for you. My word matters a lot to this generation. (+50[political_capital]),Je me porterai garante pour vous. Ma parole compte beaucoup pour cette génération. (+50[capital_politique])
+I'll vouch for you. My word matters a lot to this generation. (+50[political_capital]),Je me porterai garante pour vous. Ma parole compte beaucoup pour cette génération. (+50[political_capital])
 That was an important hero from the revolution.,C'était une héroïne importante de la révolution.
 Your enemies will see this as an opportunity to push you out of government.,Vos ennemis verront cela comme une opportunité pour vous évincer du gouvernement.
 "You know Edvard Munch's painting 'The Scream'? Well, its surreal sunset was caused by the eruption of Krakatau in 1883.","Vous connaissez le tableau 'Le Cri' d'Edvard Munch? Eh bien, son coucher de soleil surréaliste a été causé par l'éruption du Krakatau en 1883."
@@ -1340,7 +1340,7 @@ My party will commit its seats to our shared vision and join your coalition.,Mon
 """Go back again, now you have seen us, and your outward eyes have learned that in spite of all the infallible maxims of your day there is yet a time of rest in store for the world, when mastery has changed into fellowship.""","""Revenez encore, maintenant que vous nous avez vu, et que vos yeux extérieurs ont appris que malgré toutes les maximes infaillibles de votre époque, il y a encore un temps de repos en réserve pour le monde, quand la maîtrise s'est transformée en camaraderie."""
 "Before I go, let me leave you a favorite quote from William Morris:","Avant de partir, laissez-moi vous laisser une citation préférée de William Morris :"
 I look forward to working together.,J'ai hâte de travailler ensemble.
-"The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.","L'Utopienne est maintenant une [alliée] alliée. Les projets de Limites, de Protection et de Restauration sont moins chers."
+"The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.","L'Utopienne est maintenant une [ally] alliée. Les projets de Limites, de Protection et de Restauration sont moins chers."
 "Clathrates frozen for eons in cenozic bogs are thawing, releasing billions of tons of methane all at once.","Des clathrates gelés pendant des éons dans les marécages cénozoïques sont en train de dégeler, libérant des milliards de tonnes de méthane d'un seul coup."
 ...but this is still a huge disaster,...mais c'est toujours un énorme désastre
 Microbes are digesting much of the methane and emitting less-intense carbon dioxide instead,Les microbes digèrent une grande partie du méthane et émettent à la place du dioxyde de carbone moins intense.
@@ -1462,9 +1462,9 @@ Extreme wildfires are now a regular occurrence.,Les feux de forêt extrêmes son
 These fires can consume swaths of land in what feels like a blink of an eye...,Ces incendies peuvent dévorer des étendues de terre en ce qui semble être un clin d'œil...
 In 2022 a socialist revolution swept the globe.,"En 2022, une révolution socialiste a balayé le globe."
 "It's a sunny day in Havana, where the first planning session will take place...","C'est une journée ensoleillée à La Havane, où aura lieu la première session de planification..."
-You have been elected as [gosplant]'s first lead planner.,Vous avez été élue première responsable de la planification de {gosplant}.
-"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","Et vous devez le faire sans laisser votre [capital_politique]<em class=""lose-con"">capital politique tomber en dessous de 0</em>..."
-"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Vous devez le faire sans laisser la [satisfaction]<em class=""lose-con"">satisfaction des gens descendre en dessous de 0</em>..."
+You have been elected as [gosplant]'s first lead planner.,Vous avez été élue première responsable de la planification de [gosplant].
+"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","Et vous devez le faire sans laisser votre [political_capital]<em class=""lose-con"">capital politique tomber en dessous de 0</em>..."
+"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Vous devez le faire sans laisser la [contentedness]<em class=""lose-con"">satisfaction des gens descendre en dessous de 0</em>..."
 "The regions of the world united to establish [gosplant], a global planning authority.","Les régions du monde se sont unies pour établir [gosplant], une autorité mondiale de planification."
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] a été chargée de réparer les innombrables dommages que des siècles de capitalisme ont infligés à la planète et à ses habitants.
 Otherwise your adversaries may take the opportunity to replace you.,"Sinon, vos adversaires peuvent saisir l'occasion pour vous remplacer."
@@ -1576,7 +1576,7 @@ We're seeing signs of ozone depletion at a worrying rate.,Nous constatons des si
 I suspect this may have to do with solar radiation management...,Je soupçonne que cela puisse être lié à la gestion du rayonnement solaire...
 You get it! I can see it!,Vous l'avez compris! Je peux le voir!
 "There are too many! A lot of people are scared of that reality, but I can see that you aren't.","Il y en a trop ! Beaucoup de gens ont peur de cette réalité, mais je peux voir que vous ne l'êtes pas."
-The Malthusian is now an [ally] ally. Population projects are substantially cheaper.,Le Malthusien est désormais un [allié] allié. Les projets de population sont nettement moins chers.
+The Malthusian is now an [ally] ally. Population projects are substantially cheaper.,Le Malthusien est désormais un [ally] allié. Les projets de population sont nettement moins chers.
 My party will join your coalition.,Mon parti va rejoindre votre coalition.
 We need more planners like you to do what needs to be done.,Nous avons besoin de plus de planificatrices comme vous pour faire ce qui doit être fait.
 "We can chase all the new technologies we want, or try to live in peace with nature...","Nous pouvons poursuivre toutes les nouvelles technologies que nous voulons, ou essayer de vivre en paix avec la nature..."
@@ -1608,13 +1608,13 @@ The Environmentalist is now an [ally] ally. Restoration projects are substantial
 We gotta find a way to live ~harmoniously~ with nature.,Nous devons trouver un moyen de vivre ~harmonieusement~ avec la nature.
 Uh oh--it looks like there are some production shortages.,Oh là là--il semble qu'il y ait quelques pénuries de production.
 You may need to change your production mixes to compensate for resource limitations.,Vous devrez peut-être modifier vos combinaisons de production pour compenser les limites de ressources.
-You can tap the pulsing [alert] alert icon for more information.,Vous pouvez appuyer sur l'icône d'[alert] alerte qui pulse pour plus d'informations.
+You can tap the pulsing [alert] alert icon for more information.,Vous pouvez appuyer sur l'icône [alert] d'alerte qui pulse pour plus d'informations.
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.","Les pins de Wollemi existent depuis 200 millions d'années, mais la dernière forêt naturelle a été récemment détruite dans un incendie de forêt."
 We gave you a nice warning about banning meat and you've ignored us.,Nous vous avons donné un bel avertissement concernant l'interdiction de la viande et vous nous avez ignorés.
 Maybe you'll listen now?,Peut-être que vous écouterez maintenant ?
 "I'm sorry, planner, but your access rights to the Gosplant planning interface have been revoked.","Je suis désolée, planificatrice, mais vos droits d'accès à l'interface de planification de Gosplant ont été révoqués."
 They are replacing you with someone else.,Ils vous remplacent par quelqu'un d'autre.
-You've run out of [political_capital] political capital...and lost the backing of members of parliament.,Vous avez épuisé votre [capital_politique] capital politique...et perdu le soutien des membres du parlement.
+You've run out of [political_capital] political capital...and lost the backing of members of parliament.,Vous avez épuisé votre [political_capital] capital politique...et perdu le soutien des membres du parlement.
 The benefits of rewilding reduces the likelihood of more zoonotic disease.,Les avantages de la réintroduction d'espèces sauvages réduisent la probabilité d'apparition de davantage de maladies zoonotiques.
 Clearing of otherwise undisturbed land to make room for things like industrial farming opens up opportunities for the transmission of pathogens from animals to humans.,Le défrichement de terres par ailleurs non perturbées pour faire place à des choses comme l'agriculture industrielle ouvre des opportunités pour la transmission de pathogènes des animaux aux humains.
 "Well, the emergence of zoonotic diseases is closely related to ecological disturbance. ","Eh bien, l'émergence de maladies zoonotiques est étroitement liée à la perturbation écologique."
@@ -1648,9 +1648,9 @@ The mortality rate could be as high as 50%. We have estimates of one billion dea
 We have a wide array of processes to produce two critical resources: [food] food and [energy] energy.,Nous avons un large éventail de processus pour produire deux ressources essentielles : [food] la nourriture et [energy] l'énergie.
 Why don't you try changing some process mixes now?,Pourquoi n'essayez-vous pas de changer quelques mélanges de processus maintenant ?
 Different processes have different benefits and drawbacks.,Différents processus ont des avantages et des inconvénients différents.
-"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Et certaines nécessitent certaines matières premières, comme [l'huile] l'huile ou [l'uranium] l'uranium, qui pourraient se dégrader. Alors gardez un œil sur ceux-ci."
+"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Et certaines nécessitent certaines matières premières, comme [oil] l'huile ou [uranium] l'uranium, qui pourraient se dégrader. Alors gardez un œil sur ceux-ci."
 "If you need any more information about a process, just tap on it to flip it.","Si vous avez besoin de plus d'informations sur un processus, il suffit de le toucher pour le retourner."
-"Some may require much more [land] land or more [energy] energy, for example.","Certaines peuvent nécessiter beaucoup plus de [terre] land ou plus d'[énergie] energy, par exemple."
+"Some may require much more [land] land or more [energy] energy, for example.","Certaines peuvent nécessiter beaucoup plus de [land] land ou plus [energy] d'énergie, par exemple."
 "Of course, it will take time to make all of these changes.","Bien sûr, il faudra du temps pour apporter toutes ces modifications."
 Here you can change the [mix_token] production mix for each of these resources.,"Ici, vous pouvez modifier le [mix_token] mélange de production pour chacune de ces ressources."
 Wildfires are growing in frequency and severity.,Les feux de forêt augmentent en fréquence et en gravité.
@@ -1682,18 +1682,18 @@ Your plans will benefit from having others on board.,Vos plans bénéficieront d
 "Yes, exactly!","Oui, exactement !"
 nothing so drastic is necessary...we finally can unleash technology from the yoke of capitalism...,rien d'aussi drastique n'est nécessaire...nous pouvons finalement libérer la technologie du joug du capitalisme...
 Some projects will require a majority coalition in parliament to implement.,Certains projets nécessiteront une majorité de coalition au parlement pour être mis en œuvre.
-Hm.,"Bien sûr, je suis là pour vous aider. Vous pouvez commencer à me donner des phrases en anglais à traduire en français."
+Hm.,Hm.
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
 Tap on a party to learn more.,Touchez une fête pour en savoir plus.
 That means taking the hard route that others might frown upon. Don't you agree?,Cela signifie prendre la voie difficile que d'autres pourraient désapprouver. N'êtes-vous pas d'accord?
 We have a unique opportunity to reshape our relationship with nature and each other.,Nous avons une occasion unique de remodeler notre relation avec la nature et entre nous.
-Hm.,"Bien sûr, je suis là pour vous aider. Vous pouvez commencer à me donner des phrases en anglais à traduire en français."
+Hm.,Hm.
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
 Hello planner! What an exciting time.,Bonjour planificateur ! Quelle période excitante.
 Some parties have special abilities that can help as well.,Certaines parties ont également des capacités spéciales qui peuvent aider.
 "Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","D'autres parties (indiquées ici) peuvent rejoindre votre coalition en tant qu'alliées [ally], selon ce que vous ajoutez à votre plan."
-Hm.,"Bien sûr, je suis là pour vous aider. Vous pouvez commencer à me donner des phrases en anglais à traduire en français."
+Hm.,Hm.
 "Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Stats""."
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
 "Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Stats""."
@@ -2089,7 +2089,7 @@ Your coalition has {coalitionSeats}/{totalSeats} seats.,Votre coalition a {coali
 Add,Ajouter
 View All,Voir tout
 Change Production,Changer de Production
-Ready,Je suis prêt à commencer. Que souhaitez-vous traduire ?
+Ready,Prêt
 Back,Retour
 Plan,Planifiez
 Govt,Gouv
@@ -2181,7 +2181,7 @@ Development,Développement
 Research and Writing,Recherche et Rédaction
 Music,Musique
 Playtesting,Test de jeu
-Translation,"Of course, but I'll need you to provide the English text that you want translated to French first. Please note that I may need clarity if there are complex terms or phrases."
+Translation,Traduction
 Loading,Chargement
 Loading saved data,Chargement des données enregistrées
 Booting Up,Démarrage en cours
@@ -2195,8 +2195,8 @@ A Planetary Crisis Planning Game,Un Jeu de Planification de Crise Planétaire
 New Game,Nouveau Jeu
 Sound,Son
 Read the book,Lisez le livre
-On,Sur
-Off,Hors
+On,Activé
+Off,Désactivé
 Are you sure you want to start over?,Êtes-vous sûr de vouloir recommencer ?
 Undo,Annuler
 Withdraw,Retirer
@@ -2475,22 +2475,22 @@ emissions,émissions
 [{icon}] {changeDir} {label} for {tag} by <strong>{percent}</strong>.,[{icon}] Changer {changeDir} {label} pour {tag} par <strong>{percent}</strong>.
 Changes emissions for {name} by an unknown amount.,Change les émissions pour {name} d'un montant inconnu.
 "This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","Cela modifiera les émissions de {name} de <img src=""{icon}"">{emissionsBefore} à <img src=""{icon}"">{emissionsAfter}. C'est une modification de {emissionsChange}% de toutes les émissions."
-[emissions] {changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.,[émissions] Les émissions de {type} pour {tag} ont {changeDir} de <strong>{percent}</strong>.
-[contentedness] [{icon}] {changeDir} world contentedness by <strong>{amount}</strong>.,[contentement] [{icon}] Le contentement mondial change de <strong>{amount}</strong> {changeDir}.
+[emissions] {changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.,[emissions] Les émissions de {type} pour {tag} ont {changeDir} de <strong>{percent}</strong>.
+[contentedness] [{icon}] {changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}] Le contentement mondial change de <strong>{amount}</strong> {changeDir}.
 [contentedness] {changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] la satisfaction augmente de <strong>{amount}</strong>.
 "{changeDir} the chance of ""{event}"" by {percent}%","Changez la chance de ""{event}"" par {percent}%"
 [{icon}] {changeDir} {name} supply by <strong>{percent}%.</strong>,[{icon}] Augmentez la fourniture de {name} par <strong>{percent}%.</strong> {changeDir}
-[locks] <strong>Locks</strong> {tag},[serrures] <strong>Serrures</strong> {tag}
+[locks] <strong>Locks</strong> {tag},[locks] <strong>Serrures</strong> {tag}
 "This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class=""type-total"">/{maxAmount}</span>.","Ceci change le contentement régional en fonction de la demande pour {name}. Le contentement mondial actuel est de {amount}<span class=""type-total"">/{maxAmount}</span>."
 "This changes regional contentedness by {amount} per income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Cela change le contentement régional de {amount} par niveau de revenu (les régions plus riches le ressentiront davantage). Le contentement mondial actuel est de {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
 This will limit the amount of land that processes can use.,Cela limitera la quantité de terre que les processus peuvent utiliser.
-[land] Place <strong>{percent}%</strong> of land under protection.,[terre] Mettre <strong>{percent}%</strong> de territoire sous protection.
+[land] Place <strong>{percent}%</strong> of land under protection.,[land] Mettre <strong>{percent}%</strong> de territoire sous protection.
 We aren't tracking this feedstock.,Nous ne suivons pas ce flux d'informations.
 This feedstock has been depleted.,Cette matière première a été épuisée.
 At current usage rates the estimated supply is expected to last {estimate} years.,"Selon les taux d'utilisation actuels, la réserve estimée devrait durer {estimate} années."
 At current usage rates the estimated supply is expected to last indefinitely.,"Au rythme d'utilisation actuel, on estime que l'approvisionnement devrait durer indéfiniment."
 {name} will be unavailable while this project is active.,{name} sera indisponible pendant que ce projet est actif.
-[warming] {changeDir} the global temperature by {amount}<strong>°c</strong>.,[réchauffement] augmente la température mondiale de {amount} <strong>°C</strong>.
+[warming] {changeDir} the global temperature by {amount}<strong>°c</strong>.,[warming] {changeDir} la température mondiale de {amount} <strong>°C</strong>.
 This will directly change the global temperature anomaly by {amount}<strong>°c</strong>.,Cela changera directement l'anomalie de la température globale de <strong>{amount}°c</strong>.
 th,eme
 st,eme
