@@ -70,6 +70,8 @@
     <li>Christoph Rupprecht</li>
     <li>Thomas Helmis</li>
     <li>Merlin B.</li>
+    <li>Chayangoon Thamma-Un, Thai translator</li>
+    <li>เนติวิทย์ โชติภัทร์ไพศาล / Netiwit Chotiphatphaisal, Sam Yan Press</li>
   </ul>
   <h3 v-if="PLATFORM == 'STEAM'">{{t('Based on the book')}} <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
   <h3 v-else>{{t('Based on the book')}} <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>

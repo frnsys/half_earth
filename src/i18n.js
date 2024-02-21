@@ -1,5 +1,5 @@
 const defaultLanguage = 'en';
-const availableLanguages = ['en', 'pt', 'pt-br', 'pt-pt', 'es', 'de-de', 'jp', 'fr-fr'];
+const availableLanguages = ['en', 'pt', 'pt-br', 'pt-pt', 'es', 'de-de', 'jp', 'fr-fr', 'th'];
 
 function getPreferredLanguages() {
   if (navigator.languages && navigator.languages.length) {
