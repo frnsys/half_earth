@@ -471,7 +471,7 @@ pub fn industries() -> Vec<Industry> {
             name: "Chemical",
             resources: resources!(
                 electricity: 0.0,
-                fuel: 29372.97,
+                fuel: 29.37297,
                 land: 0.0,
                 water: 0.0
             ),
@@ -534,7 +534,7 @@ pub fn industries() -> Vec<Industry> {
             byproducts: byproducts!(
                 biodiversity: 0.0,
                 ch4: 0.0,
-                co2: 39720.0,
+                co2: 39.72,
                 n2o: 0.0
             ),
             resource_modifiers: resources!(),
