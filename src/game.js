@@ -1,12 +1,12 @@
 import state from './state';
 import debug from './debug';
 import consts from '/src/consts';
-import {initState} from './state';
+import { initState } from './state';
 import factors from '/src/display/factors';
 import display from '/src/display/display';
-import {GameInterface, Phase, Difficulty} from 'half-earth-engine';
+import { GameInterface, Phase, Difficulty } from 'half-earth-engine';
 import tutorial from '/src/tutorial';
-import {sendSnapshot} from '/src/log';
+import { sendSnapshot } from '/src/log';
 
 // Version timestamp must be >= this value
 const EXPIRED_TIMESTAMP = 1649864144;
@@ -88,7 +88,7 @@ function newRun(reset) {
 
 function saveGame() {
   // Don't need to copy the entire gameState
-  let {gameState, ...substate} = state;
+  let { gameState, ...substate } = state;
   let s = {
     state: substate,
     version: VERSION,
@@ -185,7 +185,7 @@ function applyEvent(eventId, regionId) {
 }
 
 function applyEvents(events) {
-  events.forEach(({eventId, regionId}) => {
+  events.forEach(({ eventId, regionId }) => {
     game.apply_event(eventId, regionId);
   });
   updateState();
@@ -193,7 +193,7 @@ function applyEvents(events) {
 }
 
 function applyIconEvents(events) {
-  events.forEach(({eventId, regionId}) => {
+  events.forEach(({ eventId, regionId }) => {
     game.apply_event(eventId, regionId);
   });
   updateState();
@@ -330,7 +330,8 @@ function processMaxShare(process) {
 
   // Hard-coded limit
   if (process.limit) {
-    max_share = Math.min(process.limit/demand, 1);
+    max_share = Math.min(process.limit / demand, 1);
+    // console.log(`Hardcoded limit: ${process.name} => ${max_share}`);
   }
 
   // Limit based on feedstock supply
@@ -338,12 +339,14 @@ function processMaxShare(process) {
     let feedstock = display.enumKey(process.feedstock[0]);
     if (feedstock !== 'other' && feedstock !== 'soil') {
       let per_output = process.feedstock[1];
-      let feedstockLimit = state.gameState.feedstocks[feedstock]/per_output;
-      let feedstockMaxShare = Math.min(feedstockLimit/demand, 1);
+      let feedstockLimit = state.gameState.feedstocks[feedstock] / per_output;
+      let feedstockMaxShare = Math.min(feedstockLimit / demand, 1);
       max_share = Math.min(max_share, feedstockMaxShare);
+      // console.log(`Feedstock limit: ${process.name} => ${max_share}`);
     }
   }
-  return Math.floor(max_share * 100/5);
+
+  return Math.floor(max_share * 100 / 5);
 }
 
 function gameWon() {
@@ -369,4 +372,5 @@ export default {
   applyBranchEffects, evalBranchConditions,
   playerSeats, isAlly, gameWon,
   updateProduction, updateFactors,
-  nextPointCost, processMaxShare};
+  nextPointCost, processMaxShare
+};

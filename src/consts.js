@@ -12,11 +12,11 @@ export default {
 
   msPerYear: debug.fastYears ? 500 : 4000,
 
-// Set an upper cap to the amount of emissions we pass to hector,
-// because very large numbers end up breaking it.
+  // Set an upper cap to the amount of emissions we pass to hector,
+  // because very large numbers end up breaking it.
   maxEmissions: 200, // GtCO2eq
 
-  parliamentSeats: [2,3,4,5,5,5,4,3,2],
+  parliamentSeats: [2, 3, 4, 5, 5, 5, 4, 3, 2],
   maxRelationship: 6,
   processPointsPerCycle: 5,
 

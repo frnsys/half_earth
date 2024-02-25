@@ -629,7 +629,7 @@ pub fn processes() -> Vec<Process> {
             id: 2,
             name: "Geothermal",
             output: Output::Electricity,
-            limit: Some(157680000000.0),
+            limit: Some(1576800000000.0),
             ref_id: "1dd7a323-1342-46f1-8035-d63385e57475",
             mix_share: 0,
             feedstock: (Feedstock::Other, 1.0),
@@ -669,7 +669,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.1085
             ),
             byproducts: byproducts!(
-                biodiversity: -0.5,
+                biodiversity: -1.0,
                 ch4: 0.0,
                 co2: 0.17454714961005954,
                 n2o: 0.0
@@ -846,7 +846,7 @@ pub fn processes() -> Vec<Process> {
                 water: 1.34
             ),
             byproducts: byproducts!(
-                biodiversity: 3.0,
+                biodiversity: 2.0,
                 ch4: 0.0,
                 co2: 0.21120205102817205,
                 n2o: 0.0004035833376284048
