@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="production--demand planning--demand">
-      <div class="demand-unit" v-for="v, k in demand" v-tip="factors.tips[k](t('Global demand for {output}.', {demand: display.enumDisplay(k)}))">
+      <div class="demand-unit" v-for="v, k in demand" v-tip="factors.tips[k](t('Global demand for {output}.', {output: display.enumDisplay(k)}))">
         <span>{{demand[k]}}</span><img class="demand-icon" :src="icons[k]"/>
       </div>
       <div class="demand-unit" v-tip="factors.tips.emissions(t('Current annual emissions, in gigatonnes of CO2 equivalent.'))"><span>{{emissions}}</span><img class="demand-icon" :src="icons.emissions"></div>

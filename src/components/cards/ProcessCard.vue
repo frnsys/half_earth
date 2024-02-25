@@ -307,7 +307,7 @@ export default {
         case 'biodiversity': {
           let amount = state.gameState.world.extinction_rate;
           return factors.tips.biodiversity(
-            t(`Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.`, {amount}),
+            t(`Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.`, {amount: amount.toFixed(1)}),
             this.process);
         }
       }
