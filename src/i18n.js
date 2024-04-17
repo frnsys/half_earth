@@ -11,8 +11,12 @@ function getPreferredLanguages() {
   }
 }
 
-// Just default to en unless another language is explicitly chosen.
-let lang = localStorage.getItem('lang') || defaultLanguage;
+const urlParams = new URLSearchParams(window.location.search);
+
+// Use the explicitly chosen languaged if provided,
+// otherwise use the saved language preference,
+// otherwise uust default to en.
+let lang = urlParams.get('lang') || localStorage.getItem('lang') || defaultLanguage;
 if (!availableLanguages.includes(lang)) {
   lang = defaultLanguage;
 }
