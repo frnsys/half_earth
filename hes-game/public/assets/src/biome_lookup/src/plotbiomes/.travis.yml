@@ -1,0 +1,33 @@
+# Travis configuration guide for R language:
+#   https://docs.travis-ci.com/user/languages/r/
+#   https://github.com/craigcitro/r-travis/wiki/Porting-to-native-R-support-in-Travis
+
+language: r
+
+r:
+  - oldrel
+  - release
+  - devel
+
+sudo: required
+cache: packages
+
+# use Trusty archive for package installation
+dist: trusty
+
+# If needed mention newer/different versions of packages other than those on Trusty archive.
+# Try to fix errors related to:
+# - udunits2, ref https://stackoverflow.com/a/42387825/5193830
+# - "gdal-config not found or not executable", ref https://stackoverflow.com/a/12143411/5193830
+# - SCL: Attempting to use sf package's travis.yml as template:
+# https://github.com/travis-ci/travis-ci/issues/5852 and
+# https://github.com/r-spatial/sf/blob/master/.travis.yml
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install --yes libudunits2-dev
+  - sudo apt-get install --yes libproj-dev libgeos-dev libgdal-dev
+
+# Turn off email notifications entirely
+notifications:
+  email: false

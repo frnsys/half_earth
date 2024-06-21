@@ -1,0 +1,309 @@
+---
+title: "Whittaker biomes - examples"
+author: "Valentin Stefan"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    fig_caption: true
+---
+
+**This vignette presents some examples of Whittaker biomes plots using the [`plotbiomes`](https://github.com/valentinitnelav/plotbiomes) package.**
+
+# Minimal example
+
+We will build on top of this minimal plot.
+
+```{r message = FALSE, fig.align = 'center', out.width = '70%', fig.cap = 'Simple example of Whittaker biome polygons with ggplot'}
+
+library(plotbiomes)
+library(ggplot2)
+
+plot_1 <- ggplot() +
+  # add biome polygons
+  geom_polygon(data = Whittaker_biomes,
+               aes(x    = temp_c,
+                   y    = precp_cm,
+                   fill = biome),
+               # adjust polygon borders
+               colour = "gray98",
+               size   = 1) +
+  theme_bw()
+plot_1
+```
+
+# Add color
+
+## Suggested colors
+
+`Ricklefs_colors` is a predefined vector of colors that comes with `plotbiomes` package. These are  the exact colors from Figure 5.5 in *Ricklefs, R. E. (2008), The economy of nature. W. H. Freeman and Company.* (Chapter 5, Biological Communities, The biome concept)
+``` {r}
+Ricklefs_colors
+```
+
+```{r fig.align = 'center', out.width = '70%', fig.cap = 'Whittaker biomes - colors as in in Ricklefs (2008)'}
+
+plot_2 <- plot_1 +
+  # fill the polygons with predefined colors
+  scale_fill_manual(name   = "Whittaker biomes",
+                    breaks = names(Ricklefs_colors),
+                    labels = names(Ricklefs_colors),
+                    values = Ricklefs_colors)
+plot_2
+```
+
+The same can be achieved with a simple function call (author: [Sam Levin](https://github.com/levisc8)):
+```{r eval = FALSE}
+whittaker_base_plot() + theme_bw()
+```
+
+## Define colors
+
+Of course, if you feel creative, a color palette can be defined with [`RColorBrewer`](https://cran.r-project.org/web/packages/RColorBrewer/index.html) or `grDevices` packages. Try also the [`colorspace`](https://cran.r-project.org/web/packages/colorspace/index.html) package. Or simply pick your favorite 9 colors.
+
+```{r echo = TRUE, message = FALSE, fig.show = 'hold', fig.align = 'center', out.width = '45%', fig.cap = 'Try custom palette'}
+
+library(RColorBrewer)
+
+# the main rule - create 9 colors for the 9 biomes
+
+# failed trial with RColorBrewer :)
+my_palette_1 <- rev(brewer.pal(n = 9, name = "BrBG"))
+whittaker_base_plot(color_palette = my_palette_1)
+
+# this seems a better approach - interpolate 9 colors from given main 3  
+my_palette_2 <- colorRampPalette(colors = c("#F5F5F5",  "#01665E", "#8C510A"))(9)
+whittaker_base_plot(color_palette = my_palette_2)
+```
+
+The above is just a shorter way of this:
+```{r eval=FALSE}
+
+names(my_palette_2) <- names(Ricklefs_colors)
+
+ggplot() +
+  # add biome polygons
+  geom_polygon(data = Whittaker_biomes,
+               aes(x    = temp_c,
+                   y    = precp_cm,
+                   fill = biome),
+               # adjust polygon border
+               colour = "gray98",
+               size   = 1) +
+  # fill the polygons with desired colors
+  scale_fill_manual(name   = "Whittaker biomes",
+                    breaks = names(Ricklefs_colors),
+                    labels = names(Ricklefs_colors),
+                    values = my_palette_2)
+```
+
+# Add data points
+
+## Example with random locations
+
+### - Generate data
+
+Generate random locations and extract temperature and precipitation from WorldClim data. You will have already a table of coordinates, so better check directly `?raster::extract()`.
+
+```{r, echo = TRUE, message = FALSE}
+
+library(raster)
+library(maptools)
+
+# ===== Prepare raster stack
+# Read temperature and precipitation as raster stack.
+# Low resolution raster datasets come with 'plotbiomes' package.
+path <- system.file("extdata", "temp_pp.tif", package = "plotbiomes")
+temp_pp <- raster::stack(path)
+names(temp_pp) <- c("temperature", "precipitation")
+
+# ===== Generate random locations
+data(wrld_simpl) # load world polygons from maptools
+# Eliminate Antarctica - it is not represented in the raster datasets.
+wrld_simpl <- wrld_simpl[wrld_simpl$NAME != "Antarctica", ]
+# Create random locations within world's polygons.
+set.seed(66) # random number generator
+points <- sp::spsample(x = wrld_simpl, n = 50, type = "random")
+
+# ===== Extract from raster stack
+# Extract temperature and precipitation values from the raster datasets
+extractions <- raster::extract(temp_pp, points, df = TRUE)
+# Adjust temperature values to normal scale because WorldClim temperature data
+# has a scale factor of 10 (integer storage for saving space).
+extractions$temperature <- extractions$temperature/10
+# Convert precipitation from mm to cm
+extractions$precipitation <- extractions$precipitation/10
+```
+
+### - Plot data
+
+Plot the random locations. Note that any points outside of rasters coverage will receive NA-s. Also they will be dropped by ggplot.
+
+```{r, echo = TRUE, message = FALSE, fig.show = 'hold', out.width = '45%', fig.align = 'center', fig.cap = 'Extract temperature and precipitation values at random locations'}
+
+plot(temp_pp[[1]]/10); points(points)
+plot(temp_pp[[2]]); points(points)
+```
+
+Example of plot incorporating extraction data corresponding to the locations.
+
+```{r, echo = TRUE, message = FALSE, out.width = '70%', fig.align = 'center', fig.cap = 'Example of Whittaker plot with superimposed temperature - precipitation data points extracted from WorldClim'}
+
+whittaker_base_plot() +
+  # add the temperature - precipitation data points
+  geom_point(data = extractions, 
+             aes(x = temperature, 
+                 y = precipitation), 
+             size   = 3,
+             shape  = 21,
+             colour = "gray95", 
+             fill   = "black",
+             stroke = 1,
+             alpha  = 0.5) +
+  theme_bw()
+```
+
+# Color points
+
+## Minimal example
+
+When coloring the points by a certain factor (categorical variable), then a simple thing to do is to map (assign) the variable to the `color` aesthetic in `geom_point`:
+
+```{r, echo = TRUE, message = FALSE, out.width = '70%', fig.align = 'center'}
+
+# Color the outliers - use category names like "out" & "in"
+my_outliers <- get_outliers(tp = extractions[, 2:3])
+extractions$status <- ifelse(extractions$ID %in% my_outliers$row_idx, "out", "in")
+
+whittaker_base_plot() +
+  geom_point(data = extractions,
+             aes(x = temperature,
+                 y = precipitation,
+                 colour = status), # map `status` variable to colour
+             shape = 16,
+             size  = 3) +
+  theme_bw()
+```
+
+## Color & fill
+
+To have both border `color` and background `fill` aesthetics for the points is a bit tricky/creative since `fill` is already in use for the biome polygones and `ggplot2` currently allows only [one scale per aesthetic](https://stackoverflow.com/a/11752870/5193830). So, we cannot use two different `fill` mappings. Nevertheless, here are some approaches:
+
+### - two `geom_point` calls
+
+A solution is to have two calls to `geom_point` (see 6.4.1 Layers and Legends in [ggplot2: Elegant Graphics for Data Analysis][egda]). With one call setting the points' boundary line and with the second coloring the points.
+
+[egda]: https://github.com/hadley/ggplot2-book/blob/a47bb08c41a0e0428979940cc9cf47ba4bc3d5de/scales.rmd#layers-and-legends-sub-layers-legends
+
+```{r, echo = TRUE, message = FALSE, out.width = '70%', fig.align = 'center'}
+
+plot_3 <- whittaker_base_plot() +
+  geom_point(data = extractions,
+             aes(x = temperature,
+                 y = precipitation),
+             shape  = 21,
+             stroke = 1, # acts as the thickness of the boundary line
+             colour = "gray95", # acts as the color of the boundary line
+             size   = 3.5) +
+  geom_point(data = extractions,
+             aes(x = temperature,
+                 y = precipitation,
+                 color = status),
+             shape = 16,
+             size  = 3,
+             alpha = 0.5) +
+  scale_color_manual(name   = "Status",
+                     breaks = c("in", "out"),
+                     values = c("in"  = "black",
+                                "out" = "red"),
+                     labels = c("in"  = "inside",
+                                "out" = "outlier"))
+plot_3 + theme_bw()
+```
+
+### - `fill` vector outside `aes()`
+
+Another approach is to assign a vector of colors to `fill` (or `bg`) argument for points of shape 21-25 (only these shapes are affected by the fill color). The `fill` argument needs to be outside the `aes` declaration. This is done in single `geom_point` call, but loses the legend for point fill aesthetic. Anyhow, not always a legend is needed and we can always give details in the figure caption.
+
+```{r, echo = TRUE, message = FALSE, out.width = '70%', fig.align = 'center'}
+
+# Color the outliers - use color names
+extractions$status <- ifelse(extractions$ID %in% my_outliers$row_idx, "red", "black")
+
+whittaker_base_plot() +
+  geom_point(data = extractions,
+             aes(x = temperature,
+                 y = precipitation),
+             size   = 3,
+             shape  = 21,
+             colour = "gray95", # the color of the boundary line
+             # the fill color, use a vector of colors (names or hexadecimal codes):
+             fill   = extractions$status, 
+             stroke = 1,
+             alpha  = 0.5) +
+  theme_bw()
+```
+
+## A more complex example
+
+One can play with the `ggplot` settings like `scale_` and `theme` to enhance the graph. Here is one trial (builds on top of `plot_3` - see above):
+
+```{r, echo = TRUE, out.width = '70%', fig.align = 'center'}
+
+my_plot <- plot_3 +
+  # Optional - Overwrite axis ranges (the scale warning is expected):
+  # - set range on OY axes and adjust the distance (gap) from OX axes
+  scale_y_continuous(name = 'Precipitation (cm)',
+                     limits = c(min = -5, max = ceiling(max(460, extractions$precipitation)/10)*10) ,
+                     expand = c(0, 0)) +
+  # - set range on OX axes and adjust the distance (gap) from OY axes
+  scale_x_continuous(name = expression("Temperature " ( degree*C)),
+                     limits = c(min = floor(min(-20, extractions$temperature)/5)*5, max = 30.5),
+                     expand = c(0, 0)) +
+  coord_fixed(ratio = 1/10) + # aspect ratio, expressed as y / x
+  theme_bw() +
+  theme(
+    legend.justification = c(0, 1), # pick the upper left corner of the legend box and
+    legend.position = c(0, 1), # adjust the position of the corner as relative to axis
+    legend.background = element_rect(fill = NA), # transparent legend background
+    legend.box = "horizontal", # horizontal arrangement of multiple legends
+    legend.spacing.x = unit(0.5, units = "cm"), # horizontal spacing between legends
+    panel.grid = element_blank() # eliminate grids
+  )
+
+my_plot
+```
+
+# Interactive plot
+
+The `plotly` package can take a `ggplot` graph and make it interactive. Note that one cannot use `expression` in labels or titles with `plotly`, so our `whittaker_base_plot()` function will not work smoothly here. Check [this SO link](https://stackoverflow.com/questions/43800648/ggplotly-error-in-rmarkdown#45702065) for further details. Perhaps in the future this issue will be fixed, or check [alternatives with `MathJaX`](https://github.com/ropensci/plotly/issues/1091). 
+
+```{r message = FALSE, fig.align = 'center', fig.cap = 'Interactive biome plot with `plotly`'}
+library(plotly)
+
+plot_3 <- plot_2 + # check plot_2 above
+  # add the temperature - precipitation points
+  geom_point(data = extractions,
+             aes(
+               x = temperature,
+               y = precipitation,
+               # Text aesthetic will be ignored in `ggplot`,
+               # but will be used for mouse hovering in `ggplotly`.
+               text = paste0('row index: ', 1:nrow(extractions))
+             ),
+             size   = 3,
+             shape  = 21,
+             colour = "gray95",
+             fill   = "black",
+             stroke = 1,
+             alpha  = 0.5)
+
+ggplotly(plot_3)
+```
+
+Use the hover property to identify points.
+
+**Warning**: Hovering will not catch overlapping points if they are not jittered and when they are jittered, it displays the jittered coordinates. This is misleading and is better to check the displayed point IDs/indices.

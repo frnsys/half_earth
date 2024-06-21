@@ -1,4 +1,5 @@
 *.db
+target
 node_modules
 dist
 
@@ -13,3 +14,4 @@ assets/fonts/Synt
 */uploads
 hector/hector-rs
 sharing/*.json
+deploy.sh
