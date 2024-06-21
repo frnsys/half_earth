@@ -1100,7 +1100,7 @@ class MapControls extends OrbitControls {
 
 }
 
-THREE.MapControls = MapControls;
-THREE.OrbitControls = OrbitControls;
+// THREE.MapControls = MapControls;
+// THREE.OrbitControls = OrbitControls;
 
 export default OrbitControls;

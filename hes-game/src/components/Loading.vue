@@ -54,6 +54,7 @@ export default {
       let img = new Image();
       img.onload = () => {
         this.loaded++;
+          console.log(`loaded: ${src}`);
         if (this.loaded >= preload.length) {
           this.$emit('loaded');
         }
