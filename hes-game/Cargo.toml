@@ -1,0 +1,28 @@
+[package]
+name = "hes-game-ui"
+version = "0.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+leptos = { version = "0.6", features = ["csr"] }
+leptos_meta = { version = "0.6" }
+leptos_router = { version = "0.6", features = ["csr"] }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+console_error_panic_hook = "0.1.7"
+leptos-use = { version = "0.10.10", features = ["serde"] }
+gloo-net = { version = "0.5.0", features = ["json"] }
+anyhow = "1.0.86"
+leptos_i18n = "0.3.3"
+hes-engine = { path = "../hes-engine" }
+
+[workspace]
+members = ["src-tauri"]
+
+[package.metadata.leptos-i18n]
+default = "en"
+locales = ["en", "fr-fr", "de-de", "es", "jp", "pt-br", "pt-pt", "pt", "th"]
