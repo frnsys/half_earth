@@ -25,7 +25,7 @@
       </div>
       <div v-tip="emissionsTip">
         <img :src="icons.hud_emissions">
-        <span class="emissions-up" v-if="state.gameState.world.emissions >= 0">↑</span>
+        <span class="emissions-up" v-if="state.gameState.world.emissions_gt() >= 0">↑</span>
         <span class="emissions-down" v-else>↓</span>
       </div>
     </div>
@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     contentedness() {
-      return intensity.scale(state.gameState.world.contentedness, 'world_outlook');
+      return intensity.scale(state.gameState.world.outlook(), 'world_outlook');
     },
     extinction() {
       return intensity.scale(state.gameState.world.extinction_rate, 'extinction');
@@ -87,7 +87,7 @@ export default {
     },
     emissionsTip() {
       return factors.tips.emissions(
-        t(`Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>`, {emissions: state.gameState.world.emissions.toFixed(1)}));
+        t(`Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>`, {emissions: state.gameState.world.emissions_gt().toFixed(1)}));
     }
   }
 };

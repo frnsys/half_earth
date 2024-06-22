@@ -48,7 +48,7 @@
           <td><img :src="icons.emissions"> {{t('Emissions')}}</td>
           <td>{{state.cycleStartState.emissions.toFixed(1)}}</td>
           <th><small><img :src="icons.arrow_right"></small></th>
-          <td>{{state.gameState.world.emissions.toFixed(1)}}</td>
+          <td>{{state.gameState.world.emissions_gt().toFixed(1)}}</td>
           <td><strong>{{format.sign(pc.emissions)}}</strong></td>
         </tr>
         <tr class="report--primary-change" v-if="honeymoonPc">
@@ -177,7 +177,7 @@ export default {
     },
     contentedness() {
       let start = intensity.scale(state.cycleStartState.contentedness, 'world_outlook');
-      let end = intensity.scale(state.gameState.world.contentedness, 'world_outlook');
+      let end = intensity.scale(state.gameState.world.outlook(), 'world_outlook');
       return {
         start,
         end,
@@ -264,7 +264,7 @@ export default {
       let temperatureChange = parseFloat(state.gameState.world.temperature.toFixed(1)) - parseFloat(state.cycleStartState.temperature.toFixed(1));
       let contentednessChange = consts.contentednessPc[this.contentedness.end] || consts.contentednessPc[consts.contentednessPc.length - 1];
       let extinctionRateChange = consts.extinctionPc[this.extinction.end] || consts.extinctionPc[consts.extinctionPc.length - 1];
-      let emissionsChange = state.gameState.world.emissions - state.cycleStartState.emissions;
+      let emissionsChange = state.gameState.world.emissions_gt() - state.cycleStartState.emissions;
 
       // Double temp change score for every degree above 1C
       let tempChangeMultiplier = Math.max(1, Math.max(0, Math.round(state.gameState.world.temperature) - 1) * 2);

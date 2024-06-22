@@ -184,7 +184,7 @@ function render(e) {
             tip: {
               icon: 'contentedness',
               text: t(`Current world contentedness is {contentedness}<span class="type-total">/{maxContentedness}</span>.`, {
-                contentedness: Math.round(state.gameState.world.contentedness),
+                contentedness: Math.round(state.gameState.world.outlook()),
                 maxContentedness: consts.maxValues['contentedness']
               }),
             },
@@ -200,7 +200,7 @@ function render(e) {
               icon: 'emissions',
               text: t(`This will directly change annual emissions by {amount}.{percent}`, {
                 amount: e.param == '?' ? t('an unknown amount') : format.sign(e.param),
-                percent: e.param !== '?' ? ` ${t("That's a {percent}% change.", {percent: (e.param/state.gameState.world.emissions * 100).toFixed(1)})}` : ''
+                percent: e.param !== '?' ? ` ${t("That's a {percent}% change.", {percent: (e.param/state.gameState.world.emissions_gt() * 100).toFixed(1)})}` : ''
               })
             },
             text: `[emissions] ${t('{changeDir} emissions by {amount}.', {
@@ -807,7 +807,7 @@ function render(e) {
       let p = Math.abs(e.param * 100);
       let emissionsBefore = format.co2eq(process.byproducts) * state.gameState.produced_by_process[e.entity] * 1e-15;
       let emissionsAfter = emissionsBefore * (1 + e.param);
-      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions * 100;
+      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions_gt() * 100;
       let label = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t(`{type} emissions`, {type: t(e.subtype)});
       let short = e.subtype == 'Biodiversity' ? t('biodiversity pressure') : t('emissions');
       let icon = e.subtype == 'Biodiversity' ? 'biodiversity' : 'emissions';
@@ -859,7 +859,7 @@ function render(e) {
       let p = Math.abs(e.param * 100);
       let emissionsBefore = format.co2eq(industry.byproducts) * industry.demand * 1e-15;
       let emissionsAfter = emissionsBefore * (1 + e.param);
-      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions * 100;
+      let emissionsChange = (emissionsAfter - emissionsBefore)/state.gameState.world.emissions_gt() * 100;
       let tip = {
         icon: 'emissions',
         text: e.param == '?' ?
@@ -900,7 +900,7 @@ function render(e) {
           text: t(`This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class="type-total">/{maxAmount}</span>.`, {
             name: t(display.displayName(e.subtype)),
             maxAmount: consts.maxValues['contentedness'],
-            amount: Math.round(state.gameState.world.contentedness),
+            amount: Math.round(state.gameState.world.outlook()),
           }),
         },
         text: t(`[contentedness] [{icon}] {changeDir} world contentedness by <strong>{amount}</strong>.`, {
@@ -919,7 +919,7 @@ function render(e) {
           subicon: 'wealth',
           text: t(`This changes regional contentedness by {amount} per income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class="type-total">/{maxContentedness}</span>.`, {
             maxContentedness: consts.maxValues['contentedness'],
-            contentedness: Math.round(state.gameState.world.contentedness),
+            contentedness: Math.round(state.gameState.world.outlook()),
             amount: e.param,
           }),
         },

@@ -109,7 +109,7 @@ export default {
       this.startYear();
     },
     start() {
-      if (state.gameState.world.temperature <= 1 || state.gameState.world.extinction_rate <= 20 || state.gameState.world.emissions <= 0) {
+      if (state.gameState.world.temperature <= 1 || state.gameState.world.extinction_rate <= 20 || state.gameState.world.emissions_gt() <= 0) {
         window.audioManager.startSoundtrack('/assets/music/report_good.mp3', true);
       } else {
         window.audioManager.startSoundtrack('/assets/music/report_bad.mp3', true);
@@ -131,9 +131,9 @@ export default {
       state.cycleStartState = {
         year: this._startYear,
         extinctionRate: state.gameState.world.extinction_rate,
-        contentedness: state.gameState.world.contentedness,
+        contentedness: state.gameState.world.outlook(),
         temperature: state.gameState.world.temperature,
-        emissions: state.gameState.world.emissions,
+        emissions: state.gameState.world.emissions_gt(),
         completedProjects: [],
         regionIncomes: state.gameState.world.regions.map((r) => r.income),
         parliament: state.gameState.npcs.map((npc) => npc.seats),
@@ -188,7 +188,7 @@ export default {
               }
 
               // Add to historical data
-              state.history.emissions.push(state.gameState.world.emissions);
+              state.history.emissions.push(state.gameState.world.emissions_gt());
               state.history.land_use.push(state.gameState.resources_demand.land);
 
               if (iconEvents.length > 0) {
@@ -273,8 +273,8 @@ export default {
       // Set an upper cap to the amount of emissions we pass to hector,
       // because very large numbers end up breaking it.
       let emissions_factor = 1.0;
-      if (state.gameState.world.emissions !== 0) {
-        emissions_factor = Math.min(1.0, consts.maxEmissions/Math.abs(state.gameState.world.emissions));
+      if (state.gameState.world.emissions_gt() !== 0) {
+        emissions_factor = Math.min(1.0, consts.maxEmissions/Math.abs(state.gameState.world.emissions_gt()));
       }
 
       let emissions = {

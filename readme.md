@@ -1,3 +1,19 @@
+- `cd hes-game`
+  - `npm run dev` - browser version
+  - `npm run tauri dev` - desktop version
+- `cd hes-editor`
+  - `trunk serve` - browser version
+  - `cargo tauri dev` - desktop version
+
+# Dependencies
+
+```bash
+cargo install tauri-cli
+cargo install trunk
+```
+
+---
+
 This is the repository for the game Half-Earth Socialism.
 
 You can play it at:

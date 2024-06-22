@@ -1,10 +1,12 @@
-use serde::Deserialize;
-use rand::{SeedableRng, rngs::SmallRng};
-use hector_rs::{run_hector, emissions::get_emissions};
 use half_earth_engine::{
-    game::{Game, Difficulty}, events::Phase,
-    projects::Status as ProjectStatus};
-use std::{env, fs::File, io::BufReader, collections::HashMap};
+    events::Phase,
+    game::{Difficulty, Game},
+    projects::Status as ProjectStatus,
+};
+use hector_rs::{emissions::get_emissions, run_hector};
+use rand::{rngs::SmallRng, SeedableRng};
+use serde::Deserialize;
+use std::{collections::HashMap, env, fs::File, io::BufReader};
 
 #[derive(Deserialize)]
 struct PlaybackScript {
@@ -20,15 +22,30 @@ impl PlaybackScript {
 }
 
 fn find_project_id(game: &Game, ref_id: &String) -> usize {
-    game.state.projects.iter().find(|p| p.ref_id == ref_id).expect(format!("No project with ref_id: {}", ref_id).as_str()).id
+    game.state
+        .projects
+        .iter()
+        .find(|p| p.ref_id == ref_id)
+        .expect(format!("No project with ref_id: {}", ref_id).as_str())
+        .id
 }
 
 fn find_process_id(game: &Game, ref_id: &String) -> usize {
-    game.state.processes.iter().find(|p| p.ref_id == ref_id).expect(format!("No process with ref_id: {}", ref_id).as_str()).id
+    game.state
+        .processes
+        .iter()
+        .find(|p| p.ref_id == ref_id)
+        .expect(format!("No process with ref_id: {}", ref_id).as_str())
+        .id
 }
 
 fn find_event_id(game: &Game, ref_id: &String) -> usize {
-    game.event_pool.events.iter().find(|e| e.ref_id == ref_id).expect(format!("No event with ref_id: {}", ref_id).as_str()).id
+    game.event_pool
+        .events
+        .iter()
+        .find(|e| e.ref_id == ref_id)
+        .expect(format!("No event with ref_id: {}", ref_id).as_str())
+        .id
 }
 
 fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
@@ -56,11 +73,11 @@ fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
                 match status {
                     ProjectStatus::Building => {
                         game.start_project(project_id, rng);
-                    },
+                    }
                     ProjectStatus::Inactive => {
                         game.stop_project(project_id);
                     }
-                    _ => ()
+                    _ => (),
                 }
             }
 
@@ -71,7 +88,10 @@ fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
                 game.downgrade_project(project_id);
             }
 
-            println!("  Project Change: {:?} -> {:?} / {:?} / {:?}", game.state.projects[project_id].name, status, points, level);
+            println!(
+                "  Project Change: {:?} -> {:?} / {:?} / {:?}",
+                game.state.projects[project_id].name, status, points, level
+            );
         }
 
         let process_mix_changes = &script.processes[i];
@@ -92,12 +112,25 @@ fn playback(rng: &mut SmallRng, script: &PlaybackScript) {
         // 'ffi_emissions': world.co2_emissions * 12/44 * 1e-15, // Pg C/y
         // 'CH4_emissions': world.ch4_emissions * 1e-12, // Tg/y
         // 'N2O_emissions': world.n2o_emissions * 1e-12, // Tg/y
-        emissions.get_mut("simpleNbox").unwrap().get_mut("ffi_emissions").unwrap().push((game.state.world.co2_emissions * 12./44. * 1e-15) as f64);
-        emissions.get_mut("CH4").unwrap().get_mut("CH4_emissions").unwrap().push((game.state.world.ch4_emissions * 1e-12) as f64);
-        emissions.get_mut("N2O").unwrap().get_mut("N2O_emissions").unwrap().push((game.state.world.n2o_emissions * 1e-12) as f64);
-        let tgav = unsafe {
-            run_hector(game.state.world.year, &emissions) as f32
-        };
+        emissions
+            .get_mut("simpleNbox")
+            .unwrap()
+            .get_mut("ffi_emissions")
+            .unwrap()
+            .push((game.state.world.co2_emissions * 12. / 44. * 1e-15) as f64);
+        emissions
+            .get_mut("CH4")
+            .unwrap()
+            .get_mut("CH4_emissions")
+            .unwrap()
+            .push((game.state.world.ch4_emissions * 1e-12) as f64);
+        emissions
+            .get_mut("N2O")
+            .unwrap()
+            .get_mut("N2O_emissions")
+            .unwrap()
+            .push((game.state.world.n2o_emissions * 1e-12) as f64);
+        let tgav = unsafe { run_hector(game.state.world.year, &emissions) as f32 };
         println!("  Tgav: {:?}", tgav);
         if tgav > 0. {
             game.state.set_tgav(tgav);
@@ -126,4 +159,3 @@ fn main() {
     let mut rng: SmallRng = SeedableRng::from_entropy();
     playback(&mut rng, &script);
 }
-

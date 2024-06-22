@@ -165,9 +165,9 @@ export default {
     },
     world() {
       let idx = intensity.scale(state.gameState.world.temperature, 'warming');
-      if (state.gameState.world.emissions > 0) {
+      if (state.gameState.world.emissions_gt() > 0) {
         return 'still warming';
-      } else if (state.gameState.world.emissions <= 0) {
+      } else if (state.gameState.world.emissions_gt() <= 0) {
         return 'recovering';
       } else if (state.gameState.world.temperature >= 2) {
         return 'becoming unbearable';
@@ -189,7 +189,7 @@ export default {
       return descs[idx];
     },
     contentedness() {
-      let idx = intensity.scale(state.gameState.world.contentedness, 'world_outlook') - 1;
+      let idx = intensity.scale(state.gameState.world.outlook(), 'world_outlook') - 1;
       const descs = [
         'furious',
         'upset',

@@ -1,8 +1,6 @@
 use crate::projects::Project;
-use serde::ser::{Serialize, Serializer, SerializeStruct};
-use serde::Serialize as Ser;
-use crate::save::{Saveable, coerce};
-use serde_json::{json, Value};
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::wasm_bindgen;
 
 pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Vec<NPC>) {
     let mut supporters: Vec<usize> = vec![];
@@ -21,7 +19,7 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
     }
 
     let total = supporters.len() + opposers.len();
-    let change = outlook_change/total as f32;
+    let change = outlook_change / total as f32;
     for id in supporters {
         npcs[id].support += change;
     }
@@ -39,22 +37,39 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
 
     for npc in &mut *npcs {
         if !npc.locked {
-            npc.seats = npc.support/total_support;
+            npc.seats = npc.support / total_support;
         }
     }
 }
 
-#[derive(Clone)]
+#[wasm_bindgen]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct NPC {
     pub id: usize,
-    pub name: &'static str,
     pub relationship: f32,
     pub locked: bool,
     pub support: f32,
     pub seats: f32,
+
+    #[wasm_bindgen(skip)]
+    pub name: String,
 }
 
+#[wasm_bindgen]
 impl NPC {
+    #[wasm_bindgen(getter)]
+    pub fn name(&self) -> String {
+        self.name.clone()
+    }
+}
+
+#[wasm_bindgen]
+impl NPC {
+    #[wasm_bindgen]
+    pub fn is_ally(&self) -> bool {
+        self.relation() == NPCRelation::Ally
+    }
+
     pub fn relation(&self) -> NPCRelation {
         if self.relationship >= 5. {
             NPCRelation::Ally
@@ -66,45 +81,28 @@ impl NPC {
     }
 }
 
-#[derive(Ser, Debug, Clone, PartialEq)]
+#[wasm_bindgen]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum NPCRelation {
     Neutral,
     Nemesis,
-    Ally
+    Ally,
 }
 
-impl Serialize for NPC {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut seq = serializer.serialize_struct("NPC", 7)?;
-        seq.serialize_field("id", &self.id)?;
-        seq.serialize_field("name", &self.name)?;
-        seq.serialize_field("relationship", &self.relationship)?;
-        seq.serialize_field("locked", &self.locked)?;
-        seq.serialize_field("support", &self.support)?;
-        seq.serialize_field("seats", &self.seats)?;
-        seq.serialize_field("is_ally", &(self.relation() == NPCRelation::Ally))?;
-        seq.end()
-    }
-}
-
-
-impl Saveable for NPC {
-    fn save(&self) -> Value {
-        json!({
-            "relationship": self.relationship,
-            "locked": self.locked,
-            "support": self.support,
-            "seats": self.seats,
-        })
-    }
-
-    fn load(&mut self, state: Value) {
-        self.relationship = coerce(&state["relationship"]);
-        self.locked = coerce(&state["locked"]);
-        self.support = coerce(&state["support"]);
-        self.seats = coerce(&state["seats"]);
-    }
-}
+// impl Serialize for NPC {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         let mut seq = serializer.serialize_struct("NPC", 7)?;
+//         seq.serialize_field("id", &self.id)?;
+//         seq.serialize_field("name", &self.name)?;
+//         seq.serialize_field("relationship", &self.relationship)?;
+//         seq.serialize_field("locked", &self.locked)?;
+//         seq.serialize_field("support", &self.support)?;
+//         seq.serialize_field("seats", &self.seats)?;
+//         seq.serialize_field("is_ally", &())?; // TODO derived
+//                                                                                   // fields
+//         seq.end()
+//     }
+// }

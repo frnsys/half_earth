@@ -1,6 +1,7 @@
 use paste::paste;
-use serde::{Serialize, Deserialize};
-use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, Index, IndexMut};
+use serde::{Deserialize, Serialize};
+use std::ops::{Add, AddAssign, Div, Index, IndexMut, Mul, MulAssign, Sub, SubAssign};
+use wasm_bindgen::prelude::*;
 
 macro_rules! count {
     () => (0usize);
@@ -21,14 +22,15 @@ macro_rules! define_enum_map {
 
         paste! {
             // Define map
+            #[wasm_bindgen]
             #[derive(Default, Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
-            pub struct [<$name Map>]<T> {
+            pub struct [<$name Map>] {
                 $(
-                    pub [<$field:snake>]: T,
+                    pub [<$field:snake>]: f32,
                 )*
             }
 
-            impl<T> [<$name Map>]<T> {
+            impl [<$name Map>] {
                 pub fn keys(&self) -> [$name; count!($($field)*)] {
                     [$(
                         $name::$field,
@@ -36,20 +38,20 @@ macro_rules! define_enum_map {
                 }
             }
 
-            impl<T> [<$name Map>]<T> {
-                pub fn items(&self) -> [($name, &T); count!($($field)*)] {
+            impl [<$name Map>] {
+                pub fn items(&self) -> [($name, f32); count!($($field)*)] {
                     [$(
-                        ($name::$field, &self.[<$field:snake>]),
+                        ($name::$field, self.[<$field:snake>]),
                     )*]
                 }
 
-                pub fn values(&self) -> [&T; count!($($field)*)] {
+                pub fn values(&self) -> [f32; count!($($field)*)] {
                     [$(
-                        &self.[<$field:snake>],
+                        self.[<$field:snake>],
                     )*]
                 }
 
-                pub fn items_mut(&mut self) -> [($name, &mut T); count!($($field)*)] {
+                pub fn items_mut(&mut self) -> [($name, &mut f32); count!($($field)*)] {
                     [$(
                         ($name::$field, &mut self.[<$field:snake>]),
                     )*]
@@ -57,8 +59,8 @@ macro_rules! define_enum_map {
             }
 
             // Indexing by enum variants
-            impl<T> Index<$name> for [<$name Map>]<T> {
-                type Output = T;
+            impl Index<$name> for [<$name Map>] {
+                type Output = f32;
 
                 fn index(&self, key: $name) -> &Self::Output {
                     match key {
@@ -69,7 +71,7 @@ macro_rules! define_enum_map {
                 }
             }
 
-            impl<T> IndexMut<$name> for [<$name Map>]<T> {
+            impl IndexMut<$name> for [<$name Map>] {
                 fn index_mut(&mut self, key: $name) -> &mut Self::Output {
                     match key {
                         $(
@@ -80,7 +82,7 @@ macro_rules! define_enum_map {
             }
 
             // Map<f32> + Map<f32>
-            impl Add for [<$name Map>]<f32> {
+            impl Add for [<$name Map>] {
                 type Output = Self;
 
                 fn add(self, rhs: Self) -> Self {
@@ -93,7 +95,7 @@ macro_rules! define_enum_map {
             }
 
             // Map<f32> += Map<f32>
-            impl AddAssign for [<$name Map>]<f32> {
+            impl AddAssign for [<$name Map>] {
                 fn add_assign(&mut self, rhs: Self) {
                     $(
                         self.[<$field:snake>] += rhs.[<$field:snake>];
@@ -102,7 +104,7 @@ macro_rules! define_enum_map {
             }
 
             // Map<f32> - Map<f32>
-            impl Sub for [<$name Map>]<f32> {
+            impl Sub for [<$name Map>] {
                 type Output = Self;
 
                 fn sub(self, rhs: Self) -> Self {
@@ -115,7 +117,7 @@ macro_rules! define_enum_map {
             }
 
             // Map<f32> -= Map<f32>
-            impl SubAssign for [<$name Map>]<f32> {
+            impl SubAssign for [<$name Map>] {
                 fn sub_assign(&mut self, rhs: Self) {
                     $(
                         self.[<$field:snake>] -= rhs.[<$field:snake>];
@@ -124,7 +126,7 @@ macro_rules! define_enum_map {
             }
 
             // Map<f32> + f32
-            impl Add<f32> for [<$name Map>]<f32> {
+            impl Add<f32> for [<$name Map>] {
                 type Output = Self;
 
                 fn add(self, rhs: f32) -> Self {
@@ -137,7 +139,7 @@ macro_rules! define_enum_map {
             }
 
             // Map * f32
-            impl Mul<f32> for [<$name Map>]<f32> {
+            impl Mul<f32> for [<$name Map>] {
                 type Output = Self;
 
                 fn mul(self, rhs: f32) -> Self {
@@ -150,7 +152,7 @@ macro_rules! define_enum_map {
             }
 
             // Map * Map
-            impl Mul for [<$name Map>]<f32> {
+            impl Mul for [<$name Map>] {
                 type Output = Self;
 
                 fn mul(self, rhs: Self) -> Self {
@@ -163,7 +165,7 @@ macro_rules! define_enum_map {
             }
 
             // Map<f32> *= Map<f32>
-            impl MulAssign for [<$name Map>]<f32> {
+            impl MulAssign for [<$name Map>] {
                 fn mul_assign(&mut self, rhs: Self) {
                     $(
                         self.[<$field:snake>] *= rhs.[<$field:snake>];
@@ -172,7 +174,7 @@ macro_rules! define_enum_map {
             }
 
             // Map / f32
-            impl Div<f32> for [<$name Map>]<f32> {
+            impl Div<f32> for [<$name Map>] {
                 type Output = Self;
 
                 fn div(self, rhs: f32) -> Self {
@@ -184,7 +186,7 @@ macro_rules! define_enum_map {
                 }
             }
 
-            impl Div<[<$name Map>]<f32>> for [<$name Map>]<f32> {
+            impl Div<[<$name Map>]> for [<$name Map>] {
                 type Output = Self;
 
                 fn div(self, rhs: Self) -> Self {

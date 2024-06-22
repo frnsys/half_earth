@@ -287,7 +287,7 @@ export default {
             this.process);
         }
         case 'emissions': {
-          let amount = state.gameState.world.emissions;
+          let amount = state.gameState.world.emissions_gt();
           return factors.tips.emissions(
             t(`Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.`, {amount: amount.toFixed(1)}),
             this.process);

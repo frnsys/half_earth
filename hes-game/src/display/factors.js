@@ -229,12 +229,12 @@ function rank() {
         rankings.push({
           type: 'Event',
           name: 'Sea Level Rise',
-          amount: Math.round(state.gameState.world.slr_extinction_rate)
+          amount: Math.round(state.gameState.world.slr_extinction_rate())
         });
         rankings.push({
           type: 'Event',
           name: 'Temperature Change',
-          amount: Math.round(state.gameState.world.tgav_extinction_rate)
+          amount: Math.round(state.gameState.world.tgav_extinction_rate())
         });
     }
 
@@ -263,7 +263,7 @@ const tips = {
         data: {
           icon: 'emissions',
           type: 'emissions',
-          total: `${state.gameState.world.emissions.toFixed(1)}Gt`,
+          total: `${state.gameState.world.emissions_gt().toFixed(1)}Gt`,
           current,
         }
       }
@@ -339,7 +339,7 @@ const tips = {
         data: {
           icon: 'contentedness',
           type: 'contentedness',
-          total: Math.round(state.gameState.world.contentedness),
+          total: Math.round(state.gameState.world.outlook()),
           current,
         }
       }

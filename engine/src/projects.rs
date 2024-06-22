@@ -1,14 +1,13 @@
-use crate::npcs::{NPC, NPCRelation};
-use crate::state::State;
-use crate::kinds::{Output, OutputMap};
 use crate::events::{Effect, Probability};
-use rand::{Rng, rngs::SmallRng};
-use serde::{Serialize, Deserialize};
-use crate::save::{Saveable, coerce};
-use serde_json::{json, Value};
+use crate::kinds::{Output, OutputMap};
+use crate::npcs::{NPCRelation, NPC};
+use crate::state::State;
+use rand::{rngs::SmallRng, Rng};
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Default)]
 pub enum Status {
+    #[default]
     Inactive,
     Building,
     Active,
@@ -17,73 +16,55 @@ pub enum Status {
     Finished,
 }
 
-impl Default for Status {
-    fn default() -> Self {
-        Status::Inactive
-    }
-}
-
-#[derive(Serialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Default)]
 pub enum Group {
-  Other,
-  Space,
-  Nuclear,
-  Restoration,
-  Agriculture,
-  Food,
-  Geoengineering,
-  Population,
-  Control,
-  Protection,
-  Electrification,
-  Behavior,
-  Limits,
-  Energy,
-  Materials,
-  Buildings,
-  Cities,
+    #[default]
+    Other,
+    Space,
+    Nuclear,
+    Restoration,
+    Agriculture,
+    Food,
+    Geoengineering,
+    Population,
+    Control,
+    Protection,
+    Electrification,
+    Behavior,
+    Limits,
+    Energy,
+    Materials,
+    Buildings,
+    Cities,
 }
 
-impl Default for Group {
-    fn default() -> Self {
-        Group::Other
-    }
-}
-
-
-#[derive(Serialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Default)]
 pub enum Type {
+    #[default]
     Policy,
     Research,
-    Initiative
+    Initiative,
 }
 
-impl Default for Type {
-    fn default() -> Self {
-        Type::Policy
-    }
-}
-
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub enum Cost {
     Fixed(usize),
     Dynamic(f32, Factor),
 }
-
-#[derive(Serialize, Copy, Clone)]
-pub enum Factor {
-    Time,
-    Income,
-    Output(Output),
-}
-
 impl Default for Cost {
     fn default() -> Self {
         Cost::Fixed(0)
     }
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
+pub enum Factor {
+    Time,
+    Income,
+    Output(Output),
+}
+
+#[derive(Deserialize, Serialize, Clone)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
 
@@ -91,18 +72,18 @@ pub struct Outcome {
     pub probability: Probability,
 }
 
-#[derive(Serialize, Default, Clone)]
+#[derive(Deserialize, Serialize, Default, Clone)]
 pub struct Upgrade {
     pub cost: usize,
     pub effects: Vec<Effect>,
     pub active: bool,
 }
 
-#[derive(Serialize, Default, Clone)]
+#[derive(Deserialize, Serialize, Default, Clone)]
 pub struct Project {
     pub id: usize,
-    pub ref_id: &'static str,
-    pub name: &'static str,
+    pub ref_id: String,
+    pub name: String,
     pub kind: Type,
     pub group: Group,
     pub ongoing: bool,
@@ -140,7 +121,9 @@ pub struct Project {
 /// for the given amount of points.
 /// Has to be at least 1
 pub fn years_for_points(points: usize, cost: usize) -> f32 {
-    (cost as f32/(points as f32).powf(1./2.75)).round().max(1.)
+    (cost as f32 / (points as f32).powf(1. / 2.75))
+        .round()
+        .max(1.)
 }
 
 impl Project {
@@ -148,19 +131,19 @@ impl Project {
     pub fn build(&mut self) -> bool {
         match &mut self.status {
             Status::Building => {
-                self.progress += 1./years_for_points(self.points, self.cost);
+                self.progress += 1. / years_for_points(self.points, self.cost);
                 if self.progress >= 1. {
-                    if self.ongoing {
-                        self.status = Status::Active;
+                    self.status = if self.ongoing {
+                        Status::Active
                     } else {
-                        self.status = Status::Finished;
-                    }
+                        Status::Finished
+                    };
                     true
                 } else {
                     false
                 }
-            },
-            _ => false
+            }
+            _ => false,
         }
     }
 
@@ -180,8 +163,8 @@ impl Project {
                         outcome = Some((o, i));
                         break;
                     }
-                },
-                None => ()
+                }
+                None => (),
             }
         }
         if outcome.is_none() {
@@ -190,7 +173,13 @@ impl Project {
         outcome
     }
 
-    pub fn update_cost(&mut self, year: usize, income_level: f32, demand: &OutputMap<f32>, modifier: f32) {
+    pub fn update_cost(
+        &mut self,
+        year: usize,
+        income_level: f32,
+        demand: &OutputMap,
+        modifier: f32,
+    ) {
         let cost = match self.base_cost {
             Cost::Fixed(c) => c,
             Cost::Dynamic(m, factor) => {
@@ -198,7 +187,7 @@ impl Project {
                     // Kind of arbitrarily choose 1980 as the starting point
                     Factor::Time => m * (year - 1980) as f32,
                     Factor::Income => m * (1. + income_level),
-                    Factor::Output(output) => m * demand[output]
+                    Factor::Output(output) => m * demand[output],
                 };
                 c.round() as usize
             }
@@ -233,53 +222,25 @@ impl Project {
     }
 
     pub fn update_required_majority(&mut self, npcs: &Vec<NPC>) {
-        let opposers = self.opposers.iter().filter(|id| !npcs[**id].locked && npcs[**id].relation() != NPCRelation::Ally).count();
-        let supporters = self.supporters.iter().filter(|id| !npcs[**id].locked).count();
-        self.required_majority = if opposers > supporters {
-            0.5
-        } else {
-            0.
-        };
-    }
-}
-
-impl Saveable for Project {
-    fn save(&self) -> Value {
-        json!({
-            "locked": self.locked,
-            "cost": self.cost,
-            "cost_modifier": self.cost_modifier,
-            "progress": self.progress,
-            "points": self.points,
-            "estimate": self.estimate,
-            "status": self.status,
-            "level": self.level,
-            "completed_at": self.completed_at,
-            "required_majority": self.required_majority,
-            "active_outcome": self.active_outcome,
-        })
-    }
-
-    fn load(&mut self, state: Value) {
-        self.locked = coerce(&state["locked"]);
-        self.cost = coerce(&state["cost"]);
-        self.cost_modifier = coerce(&state["cost_modifier"]);
-        self.progress = coerce(&state["progress"]);
-        self.points = coerce(&state["points"]);
-        self.estimate = coerce(&state["estimate"]);
-        self.status = coerce(&state["status"]);
-        self.level = coerce(&state["level"]);
-        self.completed_at = coerce(&state["completed_at"]);
-        self.required_majority = coerce(&state["required_majority"]);
-        self.active_outcome = coerce(&state["active_outcome"]);
+        let opposers = self
+            .opposers
+            .iter()
+            .filter(|id| !npcs[**id].locked && npcs[**id].relation() != NPCRelation::Ally)
+            .count();
+        let supporters = self
+            .supporters
+            .iter()
+            .filter(|id| !npcs[**id].locked)
+            .count();
+        self.required_majority = if opposers > supporters { 0.5 } else { 0. };
     }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::events::{Comparator, Condition, Likelihood, WorldVariable};
     use rand::SeedableRng;
-    use crate::events::{Likelihood, Condition, Comparator, WorldVariable};
 
     #[test]
     fn test_build_project() {
@@ -308,8 +269,8 @@ mod test {
                 effects: vec![],
                 probability: Probability {
                     likelihood: Likelihood::Guaranteed,
-                    conditions: vec![]
-                }
+                    conditions: vec![],
+                },
             }],
             active_outcome: None,
             opposers: vec![],
@@ -357,8 +318,8 @@ mod test {
                 effects: vec![],
                 probability: Probability {
                     likelihood: Likelihood::Guaranteed,
-                    conditions: vec![]
-                }
+                    conditions: vec![],
+                },
             }],
             active_outcome: None,
             opposers: vec![],
@@ -397,22 +358,26 @@ mod test {
             completed_at: 0,
             effects: vec![],
             upgrades: vec![],
-            outcomes: vec![Outcome {
-                effects: vec![],
-                probability: Probability {
-                    likelihood: Likelihood::Guaranteed,
-                    conditions: vec![
-                        Condition::WorldVariable(
+            outcomes: vec![
+                Outcome {
+                    effects: vec![],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![Condition::WorldVariable(
                             WorldVariable::Year,
-                            Comparator::Equal, 10.)]
-                }
-            }, Outcome {
-                effects: vec![],
-                probability: Probability {
-                    likelihood: Likelihood::Guaranteed,
-                    conditions: vec![]
-                }
-            }],
+                            Comparator::Equal,
+                            10.,
+                        )],
+                    },
+                },
+                Outcome {
+                    effects: vec![],
+                    probability: Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![],
+                    },
+                },
+            ],
             active_outcome: None,
             opposers: vec![],
             supporters: vec![],

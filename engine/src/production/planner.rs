@@ -1,7 +1,10 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    ops::{Index, IndexMut},
+};
 
 use super::processes::Process;
-use crate::kinds::{ByproductMap, Feedstock, FeedstockMap, OutputMap, ResourceMap};
+use crate::kinds::{ByproductMap, Feedstock, FeedstockMap, Output, ResourceMap};
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -12,10 +15,10 @@ pub struct ProductionOrder<'a> {
 fn rank_orders(
     orders: &[ProductionOrder],
     indices: &mut [usize],
-    resources: &ResourceMap<f32>,
-    feedstocks: &FeedstockMap<f32>,
+    resources: &ResourceMap,
+    feedstocks: &FeedstockMap,
 ) {
-    let mut byproduct_maxs: ByproductMap<f32> = byproducts!();
+    let mut byproduct_maxs: ByproductMap = byproducts!();
     let mut resource_scores = vec![];
     let mut feedstock_scores = vec![];
     let mut scores: HashMap<usize, (f32, f32)> = HashMap::default();
@@ -64,15 +67,15 @@ fn rank_orders(
         let score = feedstock_score + resource_score + byproduct_score;
 
         // Hacky
-        ((score * 100000.).round() as isize)
+        (score * 100000.).round() as isize
     });
 }
 
 fn produce_amount(
     order: &ProductionOrder,
-    available_resources: &mut ResourceMap<f32>,
-    available_feedstocks: &mut FeedstockMap<f32>,
-    produced_byproducts: &mut ByproductMap<f32>,
+    available_resources: &mut ResourceMap,
+    available_feedstocks: &mut FeedstockMap,
+    produced_byproducts: &mut ByproductMap,
 ) -> f32 {
     let byproducts = order.process.adj_byproducts();
     let feedstock = order.process.feedstock.0;
@@ -102,22 +105,65 @@ fn produce_amount(
     amount_produced
 }
 
+#[derive(Default)]
+struct Outputs {
+    fuel: Vec<usize>,
+    electricity: Vec<usize>,
+    plant_calories: Vec<usize>,
+    animal_calories: Vec<usize>,
+}
+impl Outputs {
+    pub fn values(&self) -> [&[usize]; 4] {
+        [
+            &self.fuel,
+            &self.electricity,
+            &self.plant_calories,
+            &self.animal_calories,
+        ]
+    }
+
+    pub fn items_mut(&mut self) -> [(Output, &mut Vec<usize>); 4] {
+        [
+            (Output::Fuel, &mut self.fuel),
+            (Output::Electricity, &mut self.electricity),
+            (Output::PlantCalories, &mut self.plant_calories),
+            (Output::AnimalCalories, &mut self.animal_calories),
+        ]
+    }
+}
+impl Index<Output> for Outputs {
+    type Output = Vec<usize>;
+    fn index(&self, index: Output) -> &Self::Output {
+        match index {
+            Output::Fuel => &self.fuel,
+            Output::Electricity => &self.electricity,
+            Output::PlantCalories => &self.plant_calories,
+            Output::AnimalCalories => &self.animal_calories,
+        }
+    }
+}
+impl IndexMut<Output> for Outputs {
+    fn index_mut(&mut self, index: Output) -> &mut Self::Output {
+        match index {
+            Output::Fuel => &mut self.fuel,
+            Output::Electricity => &mut self.electricity,
+            Output::PlantCalories => &mut self.plant_calories,
+            Output::AnimalCalories => &mut self.animal_calories,
+        }
+    }
+}
+
 pub fn calculate_production(
     orders: &[ProductionOrder],
-    starting_resources: &ResourceMap<f32>,
-    starting_feedstocks: &FeedstockMap<f32>,
-) -> (
-    Vec<f32>,
-    ResourceMap<f32>,
-    FeedstockMap<f32>,
-    ByproductMap<f32>,
-) {
+    starting_resources: &ResourceMap,
+    starting_feedstocks: &FeedstockMap,
+) -> (Vec<f32>, ResourceMap, FeedstockMap, ByproductMap) {
     let mut resources = starting_resources.clone();
     let mut feedstocks = starting_feedstocks.clone();
-    let mut produced_byproducts: ByproductMap<f32> = byproducts!();
+    let mut produced_byproducts: ByproductMap = byproducts!();
     let mut produced = vec![0.; orders.len()];
 
-    let mut orders_by_output: OutputMap<Vec<usize>> = outputs!();
+    let mut orders_by_output: Outputs = Outputs::default();
     for (i, order) in orders.iter().enumerate() {
         orders_by_output[order.process.output].push(i);
     }
@@ -156,7 +202,7 @@ pub fn calculate_production(
 
 /// Calculate the total required resources to completely
 /// meet the demand of the provided production orders.
-pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap<f32>, FeedstockMap<f32>) {
+pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap, FeedstockMap) {
     let mut resources = resources!();
     let mut feedstocks = feedstocks!();
     for order in orders {

@@ -155,7 +155,7 @@ export default {
     estimatedChanges() {
       // Total demand for each of these
       let before = {
-        'emissions': state.gameState.world.emissions/1e-15, // convert from gtco2eq to g co2eq
+        'emissions': state.gameState.world.emissions_gt()/1e-15, // convert from gtco2eq to g co2eq
         'energy use': state.gameState.output_demand.fuel + state.gameState.output_demand.electricity,
         'land use': state.gameState.resources_demand.land,
         'water use': state.gameState.resources_demand.water,

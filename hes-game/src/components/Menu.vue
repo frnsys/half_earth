@@ -22,7 +22,7 @@
         </div>
         <div class="dropdown-menu-stat">
           <img :src="icons.emissions" />
-          <div class="dropdown-menu-stat-value">{{`${state.gameState.world.emissions.toFixed(1)}Gt`}}</div>
+          <div class="dropdown-menu-stat-value">{{`${state.gameState.world.emissions_gt().toFixed(1)}Gt`}}</div>
         </div>
         <div class="dropdown-menu-stat">
           <img :src="icons.warming" />
@@ -86,7 +86,7 @@ export default {
   },
   computed: {
     contentedness() {
-      return intensity.scale(state.gameState.world.contentedness, 'world_outlook');
+      return intensity.scale(state.gameState.world.outlook(), 'world_outlook');
     },
     extinction() {
       return intensity.scale(state.gameState.world.extinction_rate, 'extinction');

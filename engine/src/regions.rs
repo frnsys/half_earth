@@ -1,22 +1,25 @@
-use crate::consts;
 use crate::kinds::{Output, OutputMap};
-use serde::ser::{Serialize, Serializer, SerializeStruct};
-use crate::save::{Saveable, coerce};
-use serde_json::{json, Value};
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::wasm_bindgen;
 
 // 40 years per level
-const DEVELOP_SPEED: f32 = 1./40.;
+const DEVELOP_SPEED: f32 = 1. / 40.;
 
-#[derive(Clone)]
+#[wasm_bindgen]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Region {
     pub id: usize,
 
-    pub name: &'static str,
+    #[wasm_bindgen(skip)]
+    pub name: String,
+
     pub population: f32,
     pub seceded: bool,
 
     pub income: Income,
     pub development: f32,
+
+    #[wasm_bindgen(skip)]
     pub flags: Vec<String>,
 
     /// How hopeful are people in the region about the future?
@@ -35,7 +38,16 @@ pub struct Region {
     pub precip_hi: f32,
     pub latitude: Latitude,
 
+    #[wasm_bindgen(skip)]
     pub pattern_idxs: Vec<usize>,
+}
+
+#[wasm_bindgen]
+impl Region {
+    #[wasm_bindgen(getter)]
+    pub fn name(&self) -> String {
+        self.name.clone()
+    }
 }
 
 impl Region {
@@ -62,25 +74,38 @@ impl Region {
         income + self.development
     }
 
-    pub fn demand_level(&self, output: &Output) -> usize {
-        let demand = self.demand()/self.population;
-        if let Some(idx) = consts::OUTPUT_DEMAND.iter().position(|m| m[*output] >= demand[*output]) {
+    pub fn demand_level(&self, output: &Output, output_demand: &[OutputMap; 4]) -> usize {
+        let demand = self.demand(output_demand) / self.population;
+        if let Some(idx) = output_demand
+            .iter()
+            .position(|m| m[*output] >= demand[*output])
+        {
             idx + 1
         } else {
-            consts::OUTPUT_DEMAND.len() + 1
+            output_demand.len() + 1
         }
     }
 
-    pub fn demand_levels(&self) -> OutputMap<usize> {
-        let mut demand_levels: OutputMap<usize> = outputs!();
+    pub fn demand_levels(&self, output_demand: &[OutputMap; 4]) -> OutputMap {
+        let mut demand_levels: OutputMap = outputs!();
         for k in demand_levels.keys() {
-            demand_levels[k] = self.demand_level(&k);
+            demand_levels[k] = self.demand_level(&k, output_demand) as f32;
         }
         demand_levels
     }
 
-    pub fn update_pop(&mut self, year: f32, modifier: f32) {
-        self.population *= 1. + (consts::income_pop_change(year, &self.income) * modifier);
+    pub fn update_pop(&mut self, year: f32, modifier: f32, income_pop_coefs: &[[f32; 4]; 4]) {
+        let coefs = match &self.income {
+            Income::Low => income_pop_coefs[0],
+            Income::LowerMiddle => income_pop_coefs[1],
+            Income::UpperMiddle => income_pop_coefs[2],
+            Income::High => income_pop_coefs[3],
+        };
+        let change = coefs[0]
+            + (coefs[1] * year)
+            + (coefs[2] * year.powf(2.0))
+            + (coefs[3] * year.powf(3.0));
+        self.population *= 1. + (change * modifier);
     }
 
     // Outlook slowly rebounds over time
@@ -91,11 +116,7 @@ impl Region {
             Income::UpperMiddle => consumerist_ally,
             Income::High => consumerist_ally,
         };
-        self.outlook += if buffed {
-            0.3
-        } else {
-            0.1
-        };
+        self.outlook += if buffed { 0.3 } else { 0.1 };
         self.outlook = f32::min(10., self.outlook);
     }
 
@@ -122,18 +143,18 @@ impl Region {
         }
     }
 
-    pub fn demand(&self) -> OutputMap<f32> {
+    pub fn demand(&self, output_demand: &[OutputMap; 4]) -> OutputMap {
         let mut demand = outputs!();
         let idx = self.income_level();
         if idx < 3 {
-            let upper_demand = consts::OUTPUT_DEMAND[idx+1];
-            for (k, v_a) in consts::OUTPUT_DEMAND[idx].items() {
+            let upper_demand = output_demand[idx + 1];
+            for (k, v_a) in output_demand[idx].items() {
                 let v_b = upper_demand[k];
                 let v = (v_b - v_a) * self.development + v_a;
                 demand[k] = v * self.population;
             }
         } else {
-            for (k, v) in consts::OUTPUT_DEMAND[idx].items() {
+            for (k, v) in output_demand[idx].items() {
                 demand[k] = v * self.population;
             }
         }
@@ -144,7 +165,7 @@ impl Region {
     /// i.e. equivalent population with the same
     /// aggregate consumption but each individual
     /// consumes at a low-income level
-    pub fn lic_population(&self) -> f32 {
+    pub fn lic_population(&self, materials_by_income: &[f32; 4]) -> f32 {
         let idx = match self.income {
             Income::Low => 0,
             Income::LowerMiddle => 1,
@@ -152,85 +173,55 @@ impl Region {
             Income::High => 3,
         };
         let per_capita_demand = if idx < 3 {
-            let upper_demand = consts::MATERIALS_BY_INCOME[idx+1];
-            let demand = consts::MATERIALS_BY_INCOME[idx];
+            let upper_demand = materials_by_income[idx + 1];
+            let demand = materials_by_income[idx];
             (upper_demand - demand) * self.development + demand
         } else {
-            consts::MATERIALS_BY_INCOME[idx]
+            materials_by_income[idx]
         };
-        self.population * per_capita_demand/consts::MATERIALS_BY_INCOME[0]
+        self.population * per_capita_demand / materials_by_income[0]
     }
 }
 
-impl Serialize for Region {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut seq = serializer.serialize_struct("Region", 15)?;
-        seq.serialize_field("id", &self.id)?;
-        seq.serialize_field("name", &self.name)?;
-        seq.serialize_field("population", &self.population)?;
-        seq.serialize_field("seceded", &self.seceded)?;
-        seq.serialize_field("outlook", &self.outlook)?;
-        seq.serialize_field("income", &self.income)?;
-        seq.serialize_field("income_level", &self.income_level())?;
-        seq.serialize_field("development", &self.development)?;
-        seq.serialize_field("habitability", &self.habitability())?;
-        seq.serialize_field("demand", &self.demand())?;
-        seq.serialize_field("demand_levels", &self.demand_levels())?;
-        seq.serialize_field("temp_lo", &self.temp_lo)?;
-        seq.serialize_field("temp_hi", &self.temp_hi)?;
-        seq.serialize_field("precip_lo", &self.precip_lo)?;
-        seq.serialize_field("precip_hi", &self.precip_hi)?;
-        seq.end()
-    }
-}
+// impl Serialize for Region {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         let mut seq = serializer.serialize_struct("Region", 15)?; // TODO derived fields
+//         seq.serialize_field("id", &self.id)?;
+//         seq.serialize_field("name", &self.name)?;
+//         seq.serialize_field("population", &self.population)?;
+//         seq.serialize_field("seceded", &self.seceded)?;
+//         seq.serialize_field("outlook", &self.outlook)?;
+//         seq.serialize_field("income", &self.income)?;
+//         seq.serialize_field("income_level", &self.income_level())?;
+//         seq.serialize_field("development", &self.development)?;
+//         seq.serialize_field("habitability", &self.habitability())?;
+//         seq.serialize_field("demand", &self.demand())?;
+//         seq.serialize_field("demand_levels", &self.demand_levels())?;
+//         seq.serialize_field("temp_lo", &self.temp_lo)?;
+//         seq.serialize_field("temp_hi", &self.temp_hi)?;
+//         seq.serialize_field("precip_lo", &self.precip_lo)?;
+//         seq.serialize_field("precip_hi", &self.precip_hi)?;
+//         seq.end()
+//     }
+// }
 
-#[derive(PartialEq, serde::Serialize, serde::Deserialize, Clone)]
+#[wasm_bindgen]
+#[derive(PartialEq, Serialize, Deserialize, Clone, Copy)]
 pub enum Income {
     Low,
     LowerMiddle,
     UpperMiddle,
-    High
+    High,
 }
 
-#[derive(PartialEq, serde::Serialize, Clone, Debug)]
+#[wasm_bindgen]
+#[derive(PartialEq, Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum Latitude {
     Tropic,
     Subtropic,
     Temperate,
-    Frigid
-}
-
-impl Saveable for Region {
-    fn save(&self) -> Value {
-        json!({
-            "population": self.population,
-            "seceded": self.seceded,
-            "income": self.income,
-            "development": self.development,
-            "flags": self.flags,
-            "outlook": self.outlook,
-            "base_habitability": self.base_habitability,
-            "temp_lo": self.temp_lo,
-            "temp_hi": self.temp_hi,
-            "precip_lo": self.precip_lo,
-            "precip_hi": self.precip_hi,
-        })
-    }
-
-    fn load(&mut self, state: Value) {
-        self.population = coerce(&state["population"]);
-        self.seceded = coerce(&state["seceded"]);
-        self.income = coerce(&state["income"]);
-        self.development = coerce(&state["development"]);
-        self.flags = coerce(&state["flags"]);
-        self.outlook = coerce(&state["outlook"]);
-        self.base_habitability = coerce(&state["base_habitability"]);
-        self.temp_lo = coerce(&state["temp_lo"]);
-        self.temp_hi = coerce(&state["temp_hi"]);
-        self.precip_lo = coerce(&state["precip_lo"]);
-        self.precip_hi = coerce(&state["precip_hi"]);
-    }
+    Frigid,
 }

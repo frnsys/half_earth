@@ -1,9 +1,11 @@
-use crate::state::State;
+use serde::{Deserialize, Serialize};
+
+use super::{Flag, LocalVariable, PlayerVariable, WorldVariable};
+use crate::kinds::{Feedstock, Output, Resource};
 use crate::npcs::NPCRelation;
-use crate::kinds::{Resource, Output, Feedstock};
 use crate::production::ProcessFeature;
-use crate::projects::{Status as ProjectStatus, Group};
-use super::{WorldVariable, LocalVariable, PlayerVariable, Flag};
+use crate::projects::{Group, Status as ProjectStatus};
+use crate::state::State;
 
 const HEAVY_PROJECTS: [Group; 4] = [
     Group::Space,
@@ -12,7 +14,7 @@ const HEAVY_PROJECTS: [Group; 4] = [
     Group::Electrification,
 ];
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Condition {
     LocalVariable(LocalVariable, Comparator, f32),
     WorldVariable(WorldVariable, Comparator, f32),
@@ -36,7 +38,6 @@ pub enum Condition {
     ProtectLand(Comparator, f32),
 }
 
-
 impl Condition {
     pub fn eval(&self, state: &State, region_id: Option<usize>) -> bool {
         match self {
@@ -52,7 +53,7 @@ impl Condition {
                 } else {
                     false
                 }
-            },
+            }
             Condition::WorldVariable(var, comp, other_val) => {
                 let val = match var {
                     WorldVariable::Year => state.world.year as f32,
@@ -68,78 +69,80 @@ impl Condition {
                     WorldVariable::Precipitation => state.world.precipitation,
                 };
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::PlayerVariable(var, comp, other_val) => {
                 let val = match var {
                     PlayerVariable::PoliticalCapital => state.political_capital as f32,
                     PlayerVariable::ResearchPoints => state.research_points as f32,
-                    PlayerVariable::YearsToDeath => state.death_year as f32 - state.world.year as f32,
+                    PlayerVariable::YearsToDeath => {
+                        state.death_year as f32 - state.world.year as f32
+                    }
                 };
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::ProcessOutput(id, comp, other_val) => {
                 let val = state.produced_by_process[*id];
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::ProcessMixShare(id, comp, other_val) => {
                 let val = state.processes[*id].mix_percent();
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::ProcessMixShareFeature(feat, comp, other_val) => {
-                let val = state.processes.iter().filter(|p| p.features.contains(feat)).map(|p| p.mix_percent()).sum();
+                let val = state
+                    .processes
+                    .iter()
+                    .filter(|p| p.features.contains(feat))
+                    .map(|p| p.mix_percent())
+                    .sum();
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::ResourcePressure(resource, comp, other_val) => {
-                let val = state.resources[*resource]/state.resources_demand[*resource];
+                let val = state.resources[*resource] / state.resources_demand[*resource];
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::ResourceDemandGap(resource, comp, other_val) => {
                 let available = state.resources[*resource];
                 let demand = state.resources_demand[*resource];
-                let val = (available - demand)/demand;
+                let val = (available - demand) / demand;
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::OutputDemandGap(output, comp, other_val) => {
                 let available = state.produced[*output];
                 let demand = state.output_demand[*output];
-                let val = 1. - (available/demand).min(1.);
+                let val = 1. - (available / demand).min(1.);
                 comp.eval(val, *other_val)
-            },
+            }
             Condition::Demand(output, comp, other_val) => {
                 // Apply conversion to OUTPUT_UNITS
                 let factor = match output {
-                    Output::Fuel => 1e-9/1e3, // per 1000 TWh
-                    Output::Electricity => 1e-9/1e3, // per 1000 TWh
-                    Output::PlantCalories => 1e-9/2e4, // per 20000 Tcals
-                    Output::AnimalCalories => 1e-9/2e4, // per 20000 Tcals
+                    Output::Fuel => 1e-9 / 1e3,           // per 1000 TWh
+                    Output::Electricity => 1e-9 / 1e3,    // per 1000 TWh
+                    Output::PlantCalories => 1e-9 / 2e4,  // per 20000 Tcals
+                    Output::AnimalCalories => 1e-9 / 2e4, // per 20000 Tcals
                 };
                 let demand = state.output_demand[*output] * factor;
                 comp.eval(demand, *other_val)
-            },
-            Condition::FeedstockYears(feedstock, comp, other_val) => {
-                comp.eval(state.feedstocks[*feedstock]/state.consumed_feedstocks[*feedstock], *other_val)
-            },
-            Condition::RunsPlayed(comp, runs) => {
-                comp.eval(state.runs as f32, *runs as f32)
-            },
-            Condition::ProjectStatus(id, status) => {
-                match status {
-                    ProjectStatus::Active | ProjectStatus::Finished => {
-                        match state.projects[*id].status {
-                            ProjectStatus::Active => true,
-                            ProjectStatus::Finished => true,
-                            _ => false,
-                        }
-                    },
-                    _ => state.projects[*id].status == *status
+            }
+            Condition::FeedstockYears(feedstock, comp, other_val) => comp.eval(
+                state.feedstocks[*feedstock] / state.consumed_feedstocks[*feedstock],
+                *other_val,
+            ),
+            Condition::RunsPlayed(comp, runs) => comp.eval(state.runs as f32, *runs as f32),
+            Condition::ProjectStatus(id, status) => match status {
+                ProjectStatus::Active | ProjectStatus::Finished => {
+                    match state.projects[*id].status {
+                        ProjectStatus::Active => true,
+                        ProjectStatus::Finished => true,
+                        _ => false,
+                    }
                 }
+                _ => state.projects[*id].status == *status,
             },
             Condition::ActiveProjectUpgrades(id, comp, upgrades) => {
                 comp.eval(state.projects[*id].level as f32, *upgrades as f32)
-            },
-            Condition::NPCRelationship(id, relation) => {
-                state.npcs[*id].relation() == *relation
-            },
+            }
+            Condition::NPCRelationship(id, relation) => state.npcs[*id].relation() == *relation,
             Condition::RegionFlag(flag) => {
                 if let Some(id) = region_id {
                     let region = &state.world.regions[id];
@@ -147,33 +150,32 @@ impl Condition {
                 } else {
                     false
                 }
-            },
-            Condition::HasFlag(flag) => {
-                state.flags.contains(flag)
-            },
-            Condition::WithoutFlag(flag) => {
-                !state.flags.contains(flag)
-            },
+            }
+            Condition::HasFlag(flag) => state.flags.contains(flag),
+            Condition::WithoutFlag(flag) => !state.flags.contains(flag),
             Condition::HeavyProjects(comp, n) => {
-                let heavy_projects = state.projects.iter()
-                    .filter(|p| p.status == ProjectStatus::Finished && HEAVY_PROJECTS.contains(&p.group)).count();
+                let heavy_projects = state
+                    .projects
+                    .iter()
+                    .filter(|p| {
+                        p.status == ProjectStatus::Finished && HEAVY_PROJECTS.contains(&p.group)
+                    })
+                    .count();
                 comp.eval(heavy_projects as f32, *n as f32)
             }
-            Condition::ProtectLand(comp, n) => {
-                comp.eval(state.protected_land, *n)
-            }
+            Condition::ProtectLand(comp, n) => comp.eval(state.protected_land, *n),
         }
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum Comparator {
     Less,
     LessEqual,
     Equal,
     NotEqual,
     GreaterEqual,
-    Greater
+    Greater,
 }
 
 impl Comparator {

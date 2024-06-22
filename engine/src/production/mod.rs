@@ -7,12 +7,12 @@ pub use self::processes::{Process, ProcessFeature};
 pub use self::planner::{ProductionOrder, calculate_required};
 
 
-pub fn produce(orders: &[ProductionOrder], resources: &ResourceMap<f32>, feedstocks: &FeedstockMap<f32>) -> (Vec<f32>, OutputMap<f32>, ResourceMap<f32>, FeedstockMap<f32>, ByproductMap<f32>) {
+pub fn produce(orders: &[ProductionOrder], resources: &ResourceMap, feedstocks: &FeedstockMap) -> (Vec<f32>, OutputMap, ResourceMap, FeedstockMap, ByproductMap) {
     // Calculate the output
     let (produced, consumed_r, consumed_f, byproducts) = planner::calculate_production(&orders, &resources, &feedstocks);
 
     // Calculate production per output type
-    let mut produced_by_type: OutputMap<f32> = OutputMap::default();
+    let mut produced_by_type: OutputMap = OutputMap::default();
     for (amount, order) in produced.iter().zip(orders) {
         produced_by_type[order.process.output] += amount;
     }

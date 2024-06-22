@@ -1,18 +1,17 @@
-use crate::content;
-use crate::state::State;
+use crate::events::{Effect, EventPool, Phase};
 use crate::projects::Status;
-use crate::events::{EventPool, Effect, Phase};
-use rand::{SeedableRng, rngs::SmallRng};
-use serde::Serialize;
+use crate::state::State;
 use crate::utils;
+use crate::world::World;
+use rand::{rngs::SmallRng, SeedableRng};
+use serde::Serialize;
 use wasm_bindgen::prelude::*;
-use crate::save::Saveable;
 
 #[wasm_bindgen]
 pub enum Difficulty {
     Easy,
     Normal,
-    Hard
+    Hard,
 }
 
 #[wasm_bindgen]
@@ -23,24 +22,25 @@ pub struct GameInterface {
 
 #[wasm_bindgen]
 impl GameInterface {
-    pub fn new(difficulty: Difficulty) -> GameInterface {
+    pub fn new(difficulty: Difficulty, world: World) -> GameInterface {
         // So we get tracebacks in the console
         utils::set_panic_hook();
 
         GameInterface {
             rng: SmallRng::from_entropy(),
-            game: Game::new(difficulty),
+            game: Game::new(difficulty, world),
         }
     }
 
     pub fn step(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.step(&mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(
+            &self.game.step(&mut self.rng),
+        )?)
     }
 
     pub fn step_cycle(&mut self) {
         self.game.step_cycle();
     }
-
 
     pub fn update_production(&mut self) {
         self.game.update_production();
@@ -51,23 +51,21 @@ impl GameInterface {
     }
 
     pub fn get_save_state(&self) -> String {
-        self.game.state.save().to_string()
+        serde_json::to_string(&self.game.state).unwrap()
     }
 
     pub fn get_save_event_pool(&self) -> String {
-        self.game.event_pool.save().to_string()
+        serde_json::to_string(&self.game.event_pool).unwrap()
     }
 
     pub fn load_state(&mut self, value: JsValue) {
         let value_str: String = serde_wasm_bindgen::from_value(value).unwrap();
-        let value = serde_json::from_str(&value_str).unwrap();
-        self.game.state.load(value);
+        self.game.state = serde_json::from_str(&value_str).unwrap();
     }
 
     pub fn load_event_pool(&mut self, value: JsValue) {
         let value_str: String = serde_wasm_bindgen::from_value(value).unwrap();
-        let value = serde_json::from_str(&value_str).unwrap();
-        self.game.event_pool.load(value);
+        self.game.event_pool = serde_json::from_str(&value_str).unwrap();
     }
 
     pub fn set_runs_played(&mut self, n: usize) {
@@ -113,7 +111,9 @@ impl GameInterface {
     }
 
     pub fn roll_new_policy_outcomes(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_new_policy_outcomes(&mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(
+            &self.game.roll_new_policy_outcomes(&mut self.rng),
+        )?)
     }
 
     pub fn change_process_mix_share(&mut self, process_id: usize, change: isize) {
@@ -121,14 +121,21 @@ impl GameInterface {
     }
 
     pub fn roll_events(&mut self, phase: Phase, limit: Option<usize>) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.roll_events_for_phase(phase, limit, &mut self.rng))?)
+        Ok(serde_wasm_bindgen::to_value(
+            &self.game.roll_events_for_phase(phase, limit, &mut self.rng),
+        )?)
     }
 
     pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
         self.game.apply_event(event_id, region_id);
     }
 
-    pub fn eval_branch_conditions(&mut self, event_id: usize, region_id: Option<usize>, branch_id: usize) -> bool {
+    pub fn eval_branch_conditions(
+        &mut self,
+        event_id: usize,
+        region_id: Option<usize>,
+        branch_id: usize,
+    ) -> bool {
         let event = &self.game.event_pool.events[event_id];
         if branch_id < event.branches.len() {
             let (_effects, conds) = &event.branches[branch_id];
@@ -138,7 +145,12 @@ impl GameInterface {
         }
     }
 
-    pub fn apply_branch_effects(&mut self, event_id: usize, region_id: Option<usize>, branch_id: usize)  {
+    pub fn apply_branch_effects(
+        &mut self,
+        event_id: usize,
+        region_id: Option<usize>,
+        branch_id: usize,
+    ) {
         let mut effects = vec![];
         let (efs, _conds) = &self.game.event_pool.events[event_id].branches[branch_id];
         for ef in efs {
@@ -150,7 +162,9 @@ impl GameInterface {
     }
 
     pub fn check_requests(&mut self) -> Result<JsValue, JsValue> {
-        Ok(serde_wasm_bindgen::to_value(&self.game.state.check_requests())?)
+        Ok(serde_wasm_bindgen::to_value(
+            &self.game.state.check_requests(),
+        )?)
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {
@@ -158,21 +172,37 @@ impl GameInterface {
     }
 
     pub fn active_autoclickers(&self) -> Result<JsValue, JsValue> {
-        let projects = self.game.state.projects.iter().filter(|p| p.status == Status::Active || p.status == Status::Finished);
-        let autoclicks: Vec<&Effect> = projects.flat_map(|p| p.active_effects().iter().filter(|e| match e {
-            Effect::AutoClick(_, _) => true,
-            _ => false
-        })).collect();
+        let projects = self
+            .game
+            .state
+            .projects
+            .iter()
+            .filter(|p| p.status == Status::Active || p.status == Status::Finished);
+        let autoclicks: Vec<&Effect> = projects
+            .flat_map(|p| {
+                p.active_effects().iter().filter(|e| match e {
+                    Effect::AutoClick(_, _) => true,
+                    _ => false,
+                })
+            })
+            .collect();
         Ok(serde_wasm_bindgen::to_value(&autoclicks)?)
     }
 
     pub fn industry_demand(&self, industry_id: usize) -> f32 {
         let ind = &self.game.state.industries[industry_id];
-        ind.demand_modifier * self.game.state.world.lic_population()
+        ind.demand_modifier
+            * self
+                .game
+                .state
+                .world
+                .lic_population(&self.game.state.world_start.materials_by_income)
     }
 
-    pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue>  {
-        Ok(serde_wasm_bindgen::to_value(&self.game.simulate(&mut self.rng, years))?)
+    pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue> {
+        Ok(serde_wasm_bindgen::to_value(
+            &self.game.simulate(&mut self.rng, years),
+        )?)
     }
 }
 
@@ -184,9 +214,9 @@ pub struct Game {
 impl Game {
     /// Create a new instance of game with
     /// all the content loaded in
-    pub fn new(difficulty: Difficulty) -> Game {
+    pub fn new(difficulty: Difficulty, world: World) -> Game {
         Game {
-            state: State::new(difficulty),
+            state: State::new(difficulty, world),
             event_pool: EventPool::new(content::events()),
         }
     }
@@ -242,17 +272,27 @@ impl Game {
                 land: state.resources_demand.land,
                 emissions: state.world.emissions(),
                 energy: state.output_demand.electricity + state.output_demand.fuel,
-                population: state.world.population()
+                population: state.world.population(),
             });
         }
 
         snapshots
     }
 
-    pub fn roll_events_for_phase(&mut self, phase: Phase, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(usize, Option<usize>)> {
+    pub fn roll_events_for_phase(
+        &mut self,
+        phase: Phase,
+        limit: Option<usize>,
+        rng: &mut SmallRng,
+    ) -> Vec<(usize, Option<usize>)> {
         // Roll for events and collect effects
-        let events = self.event_pool.roll_for_phase(phase, &self.state, limit, rng);
-        events.iter().map(|(ev, region_id)| (ev.id, *region_id)).collect()
+        let events = self
+            .event_pool
+            .roll_for_phase(phase, &self.state, limit, rng);
+        events
+            .iter()
+            .map(|(ev, region_id)| (ev.id, *region_id))
+            .collect()
     }
 
     pub fn apply_event(&mut self, event_id: usize, region_id: Option<usize>) {
@@ -310,7 +350,6 @@ impl Game {
         self.state.update_demand();
         ids
     }
-
 }
 
 #[derive(Serialize)]

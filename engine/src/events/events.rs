@@ -1,13 +1,11 @@
+use super::{Condition, Effect, Likelihood, Probability};
 use crate::state::State;
+use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use rand::{Rng, rngs::SmallRng, seq::SliceRandom};
-use super::{Effect, Condition, Probability, Likelihood};
-use serde_json::{json, Value};
-use crate::save::{Saveable, coerce};
-use serde::{Serialize, Deserialize};
 use wasm_bindgen::prelude::*;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct EventPool {
     pub events: Vec<Event>,
 
@@ -30,18 +28,31 @@ impl EventPool {
         self.queue.push((phase, id, region_id, years));
     }
 
-    pub fn roll_for_phase<'a>(&'a mut self, phase: Phase, state: &State, limit: Option<usize>, rng: &mut SmallRng) -> Vec<(&'a Event, Option<usize>)> {
+    pub fn roll_for_phase<'a>(
+        &'a mut self,
+        phase: Phase,
+        state: &State,
+        limit: Option<usize>,
+        rng: &mut SmallRng,
+    ) -> Vec<(&'a Event, Option<usize>)> {
         // Prevent duplicate events
         let mut existing: HashSet<usize> = HashSet::new();
         for (_, ev_id, _, _) in &self.queue {
             existing.insert(*ev_id);
         }
-        for (_, ev_id, _, ) in &self.triggered {
+        for (_, ev_id, _) in &self.triggered {
             existing.insert(*ev_id);
         }
 
         // Candidate event pool
-        let mut valid_ids: Vec<usize> = self.events.iter().filter(|ev| ev.phase == phase && !ev.occurred && !ev.locked && !existing.contains(&ev.id)).map(|ev| ev.id).collect();
+        let mut valid_ids: Vec<usize> = self
+            .events
+            .iter()
+            .filter(|ev| {
+                ev.phase == phase && !ev.occurred && !ev.locked && !existing.contains(&ev.id)
+            })
+            .map(|ev| ev.id)
+            .collect();
         valid_ids.shuffle(rng);
 
         // Tick queued countdowns
@@ -156,9 +167,9 @@ pub enum Phase {
     CutsceneIntro,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Event {
-    pub name: &'static str,
+    pub name: String,
 
     /// If this event requires
     /// something else to enable it.
@@ -171,7 +182,7 @@ pub struct Event {
     /// to user-facing details
     /// (e.g. event text, etc).
     pub id: usize,
-    pub ref_id: &'static str,
+    pub ref_id: String,
 
     /// This phase this event can occur in
     pub phase: Phase,
@@ -204,7 +215,10 @@ impl Event {
     /// the likelihood of the first probability that has
     /// all its conditions satisfied.
     fn eval(&self, state: &State, region_id: Option<usize>) -> Option<&Likelihood> {
-        let res = self.probabilities.iter().find_map(|p| p.eval(state, region_id));
+        let res = self
+            .probabilities
+            .iter()
+            .find_map(|p| p.eval(state, region_id));
         res
     }
 
@@ -214,102 +228,66 @@ impl Event {
             Some(likelihood) => {
                 let prob = likelihood.p();
                 rng.gen::<f32>() <= (prob * self.prob_modifier)
-            },
-            None => false
+            }
+            None => false,
         }
     }
 }
-
-#[derive(Serialize, Deserialize)]
-struct EventSpec {
-    ref_id: String,
-    locked: bool,
-    occurred: bool,
-    prob_modifier: f32,
-}
-
-impl Saveable for EventPool {
-    fn save(&self) -> Value {
-        let ev_specs: Vec<EventSpec> = self.events.iter().map(|ev| {
-            EventSpec {
-                ref_id: ev.ref_id.to_string(),
-                locked: ev.locked,
-                occurred: ev.occurred,
-                prob_modifier: ev.prob_modifier,
-            }
-        }).collect();
-        json!({
-            "events": ev_specs,
-            "queue": self.queue,
-            "triggered": self.triggered,
-        })
-    }
-
-    fn load(&mut self, state: Value) {
-        let ev_specs: Vec<EventSpec> = coerce(&state["events"]);
-        for spec in ev_specs {
-            if let Some(ev) = self.events.iter_mut().find(|ev| ev.ref_id == spec.ref_id) {
-                ev.locked = spec.locked;
-                ev.occurred = spec.occurred;
-                ev.prob_modifier = spec.prob_modifier;
-            }
-        }
-        self.queue = coerce(&state["queue"]);
-        self.triggered = coerce(&state["triggered"]);
-    }
-}
-
-
 
 #[cfg(test)]
 mod test {
+    use super::super::{Comparator, LocalVariable, WorldVariable};
     use super::*;
+    use crate::regions::{Income, Latitude, Region};
     use rand::SeedableRng;
-    use crate::regions::{Region, Income, Latitude};
-    use super::super::{WorldVariable, LocalVariable, Comparator};
 
     fn gen_events() -> Vec<Event> {
-        vec![Event {
-            id: 0,
-            ref_id: "test_event_a",
-            name: "Test Event A",
-            phase: Phase::WorldMain,
-            locked: false,
-            occurred: false,
-            regional: false,
-            prob_modifier: 1.,
-            intensity: 0,
-            effects: vec![],
-            branches: vec![],
-            probabilities: vec![Probability {
-                likelihood: Likelihood::Guaranteed,
-                conditions: vec![
-                    Condition::WorldVariable(
-                        WorldVariable::Year,
-                        Comparator::Equal, 10.)
-                ]
-            }, Probability {
-                likelihood: Likelihood::Impossible,
-                conditions: vec![
-                ]
-            }]
-        }, Event {
-            id: 1,
-            ref_id: "test_event_b",
-            name: "Test Event B",
-            phase: Phase::WorldMain,
-            locked: false,
-            occurred: false,
-            regional: false,
-            prob_modifier: 1.,
-            intensity: 0,
-            effects: vec![],
-            branches: vec![],
-            probabilities: vec![Probability {
-                likelihood: Likelihood:: Guaranteed,
-                conditions: vec![]
-            }]
-        }]
+        vec![
+            Event {
+                id: 0,
+                ref_id: "test_event_a",
+                name: "Test Event A",
+                phase: Phase::WorldMain,
+                locked: false,
+                occurred: false,
+                regional: false,
+                prob_modifier: 1.,
+                intensity: 0,
+                effects: vec![],
+                branches: vec![],
+                probabilities: vec![
+                    Probability {
+                        likelihood: Likelihood::Guaranteed,
+                        conditions: vec![Condition::WorldVariable(
+                            WorldVariable::Year,
+                            Comparator::Equal,
+                            10.,
+                        )],
+                    },
+                    Probability {
+                        likelihood: Likelihood::Impossible,
+                        conditions: vec![],
+                    },
+                ],
+            },
+            Event {
+                id: 1,
+                ref_id: "test_event_b",
+                name: "Test Event B",
+                phase: Phase::WorldMain,
+                locked: false,
+                occurred: false,
+                regional: false,
+                prob_modifier: 1.,
+                intensity: 0,
+                effects: vec![],
+                branches: vec![],
+                probabilities: vec![Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![],
+                }],
+            },
+        ]
     }
 
     #[test]
@@ -353,18 +331,20 @@ mod test {
 
             effects: vec![],
             branches: vec![],
-            probabilities: vec![Probability {
-                likelihood: Likelihood::Guaranteed,
-                conditions: vec![
-                    Condition::LocalVariable(
+            probabilities: vec![
+                Probability {
+                    likelihood: Likelihood::Guaranteed,
+                    conditions: vec![Condition::LocalVariable(
                         LocalVariable::Population,
-                        Comparator::Equal, 10.)
-                ]
-            }, Probability {
-                likelihood: Likelihood::Impossible,
-                conditions: vec![
-                ]
-            }]
+                        Comparator::Equal,
+                        10.,
+                    )],
+                },
+                Probability {
+                    likelihood: Likelihood::Impossible,
+                    conditions: vec![],
+                },
+            ],
         }];
         let mut pool = EventPool {
             events,
@@ -373,39 +353,42 @@ mod test {
         };
 
         let mut state = State::default();
-        state.world.regions = vec![Region {
-            id: 0,
-            name: "Test Region A",
-            population: 0.,
-            development: 0.,
-            seceded: false,
-            income: Income::Low,
-            outlook: 0.,
-            base_habitability: 0.,
-            latitude: Latitude::Tropic,
-            flags: vec![],
-            temp_lo: 0.,
-            temp_hi: 0.,
-            precip_lo: 0.,
-            precip_hi: 0.,
-            pattern_idxs: vec![],
-        }, Region {
-            id: 1,
-            name: "Test Region B",
-            population: 0.,
-            development: 0.,
-            seceded: false,
-            income: Income::Low,
-            outlook: 0.,
-            base_habitability: 0.,
-            latitude: Latitude::Tropic,
-            flags: vec![],
-            temp_lo: 0.,
-            temp_hi: 0.,
-            precip_lo: 0.,
-            precip_hi: 0.,
-            pattern_idxs: vec![],
-        }];
+        state.world.regions = vec![
+            Region {
+                id: 0,
+                name: "Test Region A",
+                population: 0.,
+                development: 0.,
+                seceded: false,
+                income: Income::Low,
+                outlook: 0.,
+                base_habitability: 0.,
+                latitude: Latitude::Tropic,
+                flags: vec![],
+                temp_lo: 0.,
+                temp_hi: 0.,
+                precip_lo: 0.,
+                precip_hi: 0.,
+                pattern_idxs: vec![],
+            },
+            Region {
+                id: 1,
+                name: "Test Region B",
+                population: 0.,
+                development: 0.,
+                seceded: false,
+                income: Income::Low,
+                outlook: 0.,
+                base_habitability: 0.,
+                latitude: Latitude::Tropic,
+                flags: vec![],
+                temp_lo: 0.,
+                temp_hi: 0.,
+                precip_lo: 0.,
+                precip_hi: 0.,
+                pattern_idxs: vec![],
+            },
+        ];
         let events = pool.roll_for_phase(Phase::Icon, &state, None, &mut rng);
 
         // No events should happen
@@ -439,8 +422,8 @@ mod test {
             branches: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
-                conditions: vec![]
-            }]
+                conditions: vec![],
+            }],
         }];
         let mut pool = EventPool {
             events,
@@ -477,8 +460,8 @@ mod test {
                 branches: vec![],
                 probabilities: vec![Probability {
                     likelihood: Likelihood::Guaranteed,
-                    conditions: vec![]
-                }]
+                    conditions: vec![],
+                }],
             }],
             queue: vec![],
             triggered: vec![
@@ -503,4 +486,3 @@ mod test {
         }
     }
 }
-

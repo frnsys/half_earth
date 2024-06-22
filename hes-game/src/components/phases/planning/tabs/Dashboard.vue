@@ -17,11 +17,11 @@
     </div>
     <div class="dashboard--item" v-tip="factors.tips.emissions(t('Current annual emissions, in gigatonnes of CO2 equivalent.'))">
       <div class="minicard">
-        <span>{{`${state.gameState.world.emissions.toFixed(1)}Gt`}}</span>
+        <span>{{`${state.gameState.world.emissions_gt().toFixed(1)}Gt`}}</span>
         <div class="dashboard--change" v-if="changes.emissions != 0" v-tip="{icon: 'emissions', text: t('The estimated value after production changes have finished.')}">
           <img :src="icons.down_arrow_small" />
           <span class="dashboard--change-value">
-            {{`${((changes.emissions * 1e-15) + state.gameState.world.emissions).toFixed(1)}Gt`}}
+            {{`${((changes.emissions * 1e-15) + state.gameState.world.emissions_gt()).toFixed(1)}Gt`}}
           </span>
         </div>
       </div>
@@ -67,7 +67,7 @@
       <img :src="icons.water" />
       <div class="dashboard--item-name">{{t('Water Stress')}}</div>
     </div>
-    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: t(`Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.`, {rise: state.gameState.world.sea_level_rise.toFixed(2), rate: (state.gameState.world.sea_level_rise_rate * 1000).toFixed(1)})}">
+    <div class="dashboard--item" v-tip="{icon: 'sea_level_rise', text: t(`Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.`, {rise: state.gameState.world.sea_level_rise.toFixed(2), rate: (state.gameState.world.sea_level_rise_rate() * 1000).toFixed(1)})}">
       <div class="minicard">
         <span>{{state.gameState.world.sea_level_rise.toFixed(2)}}m</span>
       </div>
@@ -89,7 +89,7 @@
     </div>
     <div class="dashboard--item">
       <div class="minicard">
-        <span>{{format.formatNumber(state.gameState.world.population)}}</span>
+        <span>{{format.formatNumber(state.gameState.world.population())}}</span>
       </div>
       <img :src="icons.population" />
       <div class="dashboard--item-name">{{t('Population')}}</div>

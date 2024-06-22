@@ -1,15 +1,17 @@
+use serde::{Deserialize, Serialize};
+
 use super::Condition;
 use crate::state::State;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum Likelihood {
-  Impossible,
-  Improbable,
-  Rare,
-  Unlikely,
-  Random,
-  Likely,
-  Guaranteed
+    Impossible,
+    Improbable,
+    Rare,
+    Unlikely,
+    Random,
+    Likely,
+    Guaranteed,
 }
 
 impl Likelihood {
@@ -17,20 +19,19 @@ impl Likelihood {
         match self {
             Likelihood::Impossible => 0.,
             Likelihood::Improbable => 0.0005,
-            Likelihood::Rare       => 0.005,
-            Likelihood::Unlikely   => 0.05,
-            Likelihood::Random     => 0.25,
-            Likelihood::Likely     => 0.5,
+            Likelihood::Rare => 0.005,
+            Likelihood::Unlikely => 0.05,
+            Likelihood::Random => 0.25,
+            Likelihood::Likely => 0.5,
             Likelihood::Guaranteed => 1.,
         }
     }
 }
 
-
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Probability {
     pub likelihood: Likelihood,
-    pub conditions: Vec<Condition>
+    pub conditions: Vec<Condition>,
 }
 
 impl Probability {

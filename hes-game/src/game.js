@@ -242,7 +242,7 @@ function checkRequests() {
 }
 
 function isAlly(name) {
-  return state.gameState.npcs.find((npc) => npc.name == name).is_ally;
+  return state.gameState.npcs.find((npc) => npc.name == name).is_ally();
 }
 
 function _roll(phase, subphase, limit) {
@@ -350,7 +350,7 @@ function processMaxShare(process) {
 }
 
 function gameWon() {
-  return state.gameState.world.emissions <= consts.winState.emissions
+  return state.gameState.world.emissions_gt() <= consts.winState.emissions
     && state.gameState.world.extinction_rate <= consts.winState.extinction
     && state.gameState.world.temperature <= consts.winState.temperature;
 }
