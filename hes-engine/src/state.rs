@@ -1,13 +1,11 @@
-use crate::content;
 use crate::events::{Effect, Flag, Request};
-use crate::game::Difficulty;
-use crate::industries::Industry;
+use crate::game::{Update, UpdateType};
 use crate::kinds::{ByproductMap, FeedstockMap, OutputMap, ResourceMap};
 use crate::npcs::{update_seats, NPCRelation, NPC};
 use crate::production::{calculate_required, produce, Process, ProductionOrder};
 use crate::projects::{Group, Project, Status, Type as ProjectType};
 use crate::surface;
-use crate::world::{World, WorldState};
+use crate::world::World;
 use rand::rngs::SmallRng;
 use serde::{Deserialize, Serialize};
 
@@ -15,14 +13,11 @@ const LIFESPAN: usize = 60;
 const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
 const PRODUCTION_SHORTAGE_PENALTY: f32 = 60.;
 
-#[derive(Default, Serialize, Deserialize, Clone)]
+/// Represents the game state.
+#[derive(Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct State {
-    pub world: WorldState,
-    pub world_start: World,
+    pub world: World,
     pub runs: usize,
-    pub industries: Vec<Industry>,
-    pub projects: Vec<Project>,
-    pub processes: Vec<Process>,
 
     pub game_over: bool,
     pub death_year: usize,
@@ -66,29 +61,32 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(difficulty: Difficulty, world_start: World) -> State {
-        let world = content::world(difficulty);
+    pub fn new(world: World) -> State {
         let starting_outlook = world.outlook();
-        let mut npcs = content::npcs();
+
+        // NPCs are hardcoded cause it's a bit more complicated
+        // to make them editable.
+        let mut npcs: Vec<NPC> = serde_json::from_str(include_str!("../assets/npcs.json")).unwrap();
+
         let n_npcs = npcs.iter().filter(|npc| !npc.locked).count() as f32;
         for npc in &mut npcs {
             if !npc.locked {
                 npc.seats = 1. / n_npcs;
             }
         }
+
+        let death_year = world.year + LIFESPAN;
+        let resources = world.starting_resources.clone();
+        let feedstocks = world.feedstock_reserves.clone();
+
         let mut state = State {
-            world_start: world_start.clone(),
+            world,
             political_capital: 100,
             research_points: 0,
             flags: Vec::new(),
             game_over: false,
-            death_year: world.year + LIFESPAN,
-
-            world,
+            death_year,
             npcs,
-            projects: content::projects(),
-            processes: content::processes(),
-            industries: content::industries(),
 
             runs: 0,
             requests: Vec::new(),
@@ -109,8 +107,8 @@ impl State {
             ),
             output_demand_extras: outputs!(),
             resources_demand: resources!(),
-            resources: world_start.starting_resources,
-            feedstocks: world_start.feedstock_reserves,
+            resources,
+            feedstocks,
             byproducts: byproducts!(),
             produced: outputs!(),
             produced_by_process: Vec::new(),
@@ -125,6 +123,7 @@ impl State {
 
         let (output_demand, _) = state.calculate_demand();
         let orders: Vec<ProductionOrder> = state
+            .world
             .processes
             .iter()
             .map(|p| p.production_order(&output_demand))
@@ -139,10 +138,11 @@ impl State {
         state.step_production();
 
         let modifier = 1.;
-        for project in &mut state.projects {
+        let income_level = state.world.income_level();
+        for project in &mut state.world.projects {
             project.update_cost(
                 state.world.year,
-                state.world.income_level(),
+                income_level,
                 &state.output_demand,
                 modifier,
             );
@@ -159,15 +159,13 @@ impl State {
         let mut output_demand = outputs!();
 
         // Ignore electric/fuel, captured by everything else
-        let world_demand = self.world.demand(&self.world_start.output_demand);
+        let world_demand = self.world.demand();
         output_demand.animal_calories += world_demand.animal_calories;
         output_demand.plant_calories += world_demand.plant_calories;
 
         // Demand and impacts from non-modeled industries
-        let lic_pop = self
-            .world
-            .lic_population(&self.world_start.materials_by_income);
-        let industry_demand = self.industries.iter().fold(resources!(), |acc, ind| {
+        let lic_pop = self.world.lic_population();
+        let industry_demand = self.world.industries.iter().fold(resources!(), |acc, ind| {
             acc + ind.adj_resources() * ind.demand_modifier
         }) * lic_pop;
         output_demand.fuel += industry_demand.fuel;
@@ -201,7 +199,7 @@ impl State {
 
         // Advance projects
         let mut completed_projects = Vec::new();
-        for project in self.projects.iter_mut().filter(|p| match p.status {
+        for project in self.world.projects.iter_mut().filter(|p| match p.status {
             Status::Building => true,
             _ => false,
         }) {
@@ -236,7 +234,7 @@ impl State {
         // Ugh hacky
         let mut outcomes: Vec<(usize, usize)> = Vec::new();
         for id in &completed_projects {
-            let project = &self.projects[*id];
+            let project = &self.world.projects[*id];
             match project.roll_outcome(self, rng) {
                 Some((outcome, i)) => {
                     for effect in &outcome.effects {
@@ -249,7 +247,7 @@ impl State {
         }
 
         for (id, i) in outcomes {
-            self.projects[id].active_outcome = Some(i);
+            self.world.projects[id].active_outcome = Some(i);
         }
 
         let mut modifier = if self.flags.contains(&Flag::MetalsShortage)
@@ -281,7 +279,9 @@ impl State {
         let environ_ally = self.is_ally("The Environmentalist");
         let ecofem_ally = self.is_ally("The Ecofeminist");
         let malthus_ally = self.is_ally("The Malthusian");
-        for project in &mut self.projects {
+
+        let income_level = self.world.income_level();
+        for project in &mut self.world.projects {
             let mut group_modifier = 1.0;
             if posadist_ally && project.group == Group::Nuclear {
                 group_modifier *= 0.5;
@@ -315,7 +315,7 @@ impl State {
             }
             project.update_cost(
                 self.world.year,
-                self.world.income_level(),
+                income_level,
                 &self.output_demand,
                 if project.kind == ProjectType::Policy {
                     1.0
@@ -336,12 +336,15 @@ impl State {
         self.resources_demand = resources_demand;
         self.byproducts = byproducts!();
 
-        let lic_pop = self
+        let lic_pop = self.world.lic_population();
+        self.byproducts += self
             .world
-            .lic_population(&self.world_start.materials_by_income);
-        self.byproducts += self.industries.iter().fold(byproducts!(), |acc, ind| {
-            acc + ind.adj_byproducts() * ind.demand_modifier
-        }) * lic_pop;
+            .industries
+            .iter()
+            .fold(byproducts!(), |acc, ind| {
+                acc + ind.adj_byproducts() * ind.demand_modifier
+            })
+            * lic_pop;
 
         if self.flags.contains(&Flag::Electrified) {
             let electrified = self.output_demand.fuel * 0.8;
@@ -361,6 +364,7 @@ impl State {
 
         // Generate production orders based on current process mixes and demand
         let orders: Vec<ProductionOrder> = self
+            .world
             .processes
             .iter()
             .map(|p| p.production_order(&self.output_demand))
@@ -375,13 +379,14 @@ impl State {
 
         // Now re-calculate orders
         let orders: Vec<ProductionOrder> = self
+            .world
             .processes
             .iter()
             .map(|p| p.production_order(&self.output_demand))
             .collect();
 
         // Apply land protection
-        self.resources.land = self.world_start.starting_resources.land * (1. - self.protected_land);
+        self.resources.land = self.world.starting_resources.land * (1. - self.protected_land);
 
         // Run production function
         let (
@@ -404,29 +409,17 @@ impl State {
     pub fn update_production(&mut self) {
         self.update_demand();
 
-        let lic_pop = self
-            .world
-            .lic_population(&self.world_start.materials_by_income);
         self.world.co2_emissions = self.byproducts.co2 + self.world.byproduct_mods.co2;
         self.world.ch4_emissions = self.byproducts.ch4 + self.world.byproduct_mods.ch4;
         self.world.n2o_emissions = self.byproducts.n2o + self.world.byproduct_mods.n2o;
-        self.world.extinction_rate =
-            self.processes
-                .iter()
-                .zip(&self.produced_by_process)
-                .fold(0., |acc, (p, amount)| {
-                    acc + (p.extinction_rate(self.world_start.starting_resources.land) * *amount)
-                })
-                + self.industries.iter().fold(0., |acc, ind| {
-                    acc + ind.extinction_rate(self.world_start.starting_resources.land) * lic_pop
-                })
-                + self.world.base_extinction_rate();
+        self.world.update_extinction_rate(&self.produced_by_process);
     }
 
     pub fn step_production(&mut self) {
         self.update_production();
 
         let orders: Vec<ProductionOrder> = self
+            .world
             .processes
             .iter()
             .map(|p| p.production_order(&self.output_demand))
@@ -473,9 +466,9 @@ impl State {
                 / 4.);
     }
 
-    pub fn step_world(&mut self) -> (Vec<usize>, Vec<usize>) {
+    pub fn step_world(&mut self) -> Vec<Update> {
         self.world.year += 1;
-        self.world.update_pop(&self.world_start.income_pop_coefs);
+        self.world.update_pop();
 
         if self.world.year >= self.death_year {
             self.game_over = true;
@@ -484,17 +477,28 @@ impl State {
         let stop = self.flags.contains(&Flag::StopDevelopment);
         let fast = self.flags.contains(&Flag::FastDevelopment);
         let degrow = self.flags.contains(&Flag::Degrowth);
-        let changes = self.world.develop_regions(stop, fast, degrow);
+        let (regions_up, regions_down) = self.world.develop_regions(stop, fast, degrow);
         let wretched_ally = self.is_ally("The Fanonist");
         let consumerist_ally = self.is_ally("The Consumerist");
         self.world.update_outlook(wretched_ally, consumerist_ally);
-        changes
+        regions_up
+            .into_iter()
+            .map(|id| Update {
+                id,
+                kind: UpdateType::RegionUp,
+            })
+            .chain(regions_down.into_iter().map(|id| Update {
+                id,
+                kind: UpdateType::RegionDown,
+            }))
+            .collect()
     }
 
     // Every planning cycle
     pub fn step_cycle(&mut self) {
         let outlook_change = self.world.outlook() - self.last_outlook;
         let recent_projects: Vec<&Project> = self
+            .world
             .projects
             .iter()
             .filter(|p| {
@@ -517,7 +521,7 @@ impl State {
             let (kind, id, active, bounty) = self.requests[i].clone();
             let complete = match kind {
                 Request::Project => {
-                    let project = &self.projects[id];
+                    let project = &self.world.projects[id];
                     (active
                         && (project.status == Status::Active || project.status == Status::Finished))
                         || (!active
@@ -525,7 +529,7 @@ impl State {
                                 || project.status == Status::Halted))
                 }
                 Request::Process => {
-                    let process = &self.processes[id];
+                    let process = &self.world.processes[id];
                     (active && process.is_promoted()) || (!active && process.is_banned())
                 }
             };
@@ -541,18 +545,18 @@ impl State {
 
     pub fn start_project(&mut self, project_id: usize, rng: &mut SmallRng) {
         // Ugh hacky
-        let project = &self.projects[project_id];
+        let project = &self.world.projects[project_id];
         if project.kind == ProjectType::Policy {
             self.new_policies.push(project.id);
         }
 
-        let project = &mut self.projects[project_id];
+        let project = &mut self.world.projects[project_id];
         project.status = Status::Building;
     }
 
     pub fn stop_project(&mut self, project_id: usize) -> Vec<Effect> {
         let mut effects: Vec<Effect> = Vec::new();
-        let project = &mut self.projects[project_id];
+        let project = &mut self.world.projects[project_id];
 
         if project.status == Status::Active || project.status == Status::Finished {
             for effect in project.active_effects() {
@@ -591,7 +595,7 @@ impl State {
         let ids: Vec<usize> = self.new_policies.drain(..).collect();
         for id in &ids {
             let mut active_outcome = None;
-            match self.projects[*id].roll_outcome(self, rng) {
+            match self.world.projects[*id].roll_outcome(self, rng) {
                 Some((outcome, i)) => {
                     for effect in &outcome.effects {
                         effects.push(effect.clone());
@@ -600,9 +604,9 @@ impl State {
                 }
                 None => (),
             }
-            self.projects[*id].active_outcome = active_outcome;
-            self.projects[*id].status = Status::Active;
-            for effect in &self.projects[*id].effects {
+            self.world.projects[*id].active_outcome = active_outcome;
+            self.world.projects[*id].status = Status::Active;
+            for effect in &self.world.projects[*id].effects {
                 effects.push(effect.clone());
             }
         }
@@ -614,7 +618,7 @@ impl State {
         let mut remove_effects = Vec::new();
         let mut add_effects = Vec::new();
 
-        let project = &mut self.projects[project_id];
+        let project = &mut self.world.projects[project_id];
         for effect in project.active_effects() {
             remove_effects.push(effect.clone());
         }
@@ -635,7 +639,7 @@ impl State {
         let mut remove_effects = Vec::new();
         let mut add_effects = Vec::new();
 
-        let project = &mut self.projects[project_id];
+        let project = &mut self.world.projects[project_id];
         for effect in project.active_effects() {
             remove_effects.push(effect.clone());
         }
@@ -653,7 +657,7 @@ impl State {
     }
 
     pub fn change_mix_share(&mut self, process_id: usize, change: isize) {
-        let process = &mut self.processes[process_id];
+        let process = &mut self.world.processes[process_id];
         let was_banned = process.is_banned();
         let was_promoted = process.is_promoted();
         if change < 0 {
@@ -685,7 +689,7 @@ impl State {
         }
     }
 
-    pub fn is_ally(&mut self, name: &'static str) -> bool {
+    pub fn is_ally(&self, name: &'static str) -> bool {
         let npc = self.npcs.iter().find(|n| n.name == name);
         if let Some(npc) = npc {
             npc.is_ally()

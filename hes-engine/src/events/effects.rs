@@ -9,7 +9,7 @@ use std::ops::Mul;
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
 const CLOSED_BORDERS_MULTILPIER: f32 = 0.5;
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub enum Request {
     Project,
     Process,
@@ -168,6 +168,7 @@ impl Effect {
             }
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in state
+                    .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
@@ -176,11 +177,12 @@ impl Effect {
                 }
             }
             Effect::OutputForProcess(id, pct_change) => {
-                let process = &mut state.processes[*id];
+                let process = &mut state.world.processes[*id];
                 process.output_modifier += pct_change;
             }
             Effect::CO2ForFeature(feat, pct_change) => {
                 for process in state
+                    .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
@@ -190,6 +192,7 @@ impl Effect {
             }
             Effect::BiodiversityPressureForFeature(feat, pct_change) => {
                 for process in state
+                    .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
@@ -198,7 +201,7 @@ impl Effect {
                 }
             }
             Effect::ProcessLimit(id, change) => {
-                let process = &mut state.processes[*id];
+                let process = &mut state.world.processes[*id];
                 if let Some(limit) = process.limit {
                     process.limit = Some(limit + change);
                 }
@@ -213,13 +216,13 @@ impl Effect {
                 event_pool.queue_event(*id, region_id, *years);
             }
             Effect::LocksProject(id) => {
-                state.projects[*id].locked = true;
+                state.world.projects[*id].locked = true;
             }
             Effect::UnlocksProject(id) => {
-                state.projects[*id].locked = false;
+                state.world.projects[*id].locked = false;
             }
             Effect::UnlocksProcess(id) => {
-                state.processes[*id].locked = false;
+                state.world.processes[*id].locked = false;
             }
             Effect::UnlocksNPC(id) => {
                 state.npcs[*id].locked = false;
@@ -277,27 +280,27 @@ impl Effect {
             }
 
             Effect::ModifyProcessByproducts(id, byproduct, change) => {
-                state.processes[*id].byproduct_modifiers[*byproduct] += change;
+                state.world.processes[*id].byproduct_modifiers[*byproduct] += change;
             }
             Effect::ModifyIndustryByproducts(id, byproduct, change) => {
-                state.industries[*id].byproduct_modifiers[*byproduct] += change;
+                state.world.industries[*id].byproduct_modifiers[*byproduct] += change;
             }
             Effect::ModifyIndustryResources(id, resource, change) => {
-                state.industries[*id].resource_modifiers[*resource] += change;
+                state.world.industries[*id].resource_modifiers[*resource] += change;
             }
             Effect::ModifyIndustryResourcesAmount(id, resource, change) => {
-                state.industries[*id].resources[*resource] += change;
+                state.world.industries[*id].resources[*resource] += change;
             }
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier += change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
-                state.industries[*id].demand_modifier += change;
+                state.world.industries[*id].demand_modifier += change;
             }
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut state.world.regions {
                     region.outlook += (mult
-                        * region.demand_level(output, &state.world_start.output_demand) as f32)
+                        * region.demand_level(output, &state.world.output_demand) as f32)
                         .floor();
                 }
                 check_game_over(state);
@@ -309,7 +312,7 @@ impl Effect {
                 check_game_over(state);
             }
             Effect::ProjectCostModifier(id, change) => {
-                state.projects[*id].cost_modifier += change;
+                state.world.projects[*id].cost_modifier += change;
             }
             Effect::ProtectLand(percent) => {
                 state.protected_land += percent / 100.;
@@ -375,6 +378,7 @@ impl Effect {
             }
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in state
+                    .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
@@ -383,11 +387,12 @@ impl Effect {
                 }
             }
             Effect::OutputForProcess(id, pct_change) => {
-                let process = &mut state.processes[*id];
+                let process = &mut state.world.processes[*id];
                 process.output_modifier -= pct_change;
             }
             Effect::CO2ForFeature(feat, pct_change) => {
                 for process in state
+                    .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
@@ -397,6 +402,7 @@ impl Effect {
             }
             Effect::BiodiversityPressureForFeature(feat, pct_change) => {
                 for process in state
+                    .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
@@ -405,7 +411,7 @@ impl Effect {
                 }
             }
             Effect::ProcessLimit(id, change) => {
-                let process = &mut state.processes[*id];
+                let process = &mut state.world.processes[*id];
                 if let Some(limit) = process.limit {
                     process.limit = Some(limit - change);
                 }
@@ -417,27 +423,27 @@ impl Effect {
                 state.npcs[*id].relationship -= change;
             }
             Effect::ModifyProcessByproducts(id, byproduct, change) => {
-                state.processes[*id].byproduct_modifiers[*byproduct] -= change;
+                state.world.processes[*id].byproduct_modifiers[*byproduct] -= change;
             }
             Effect::ModifyIndustryByproducts(id, byproduct, change) => {
-                state.industries[*id].byproduct_modifiers[*byproduct] -= change;
+                state.world.industries[*id].byproduct_modifiers[*byproduct] -= change;
             }
             Effect::ModifyIndustryResources(id, resource, change) => {
-                state.industries[*id].resource_modifiers[*resource] -= change;
+                state.world.industries[*id].resource_modifiers[*resource] -= change;
             }
             Effect::ModifyIndustryResourcesAmount(id, resource, change) => {
-                state.industries[*id].resources[*resource] -= change;
+                state.world.industries[*id].resources[*resource] -= change;
             }
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier -= change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
-                state.industries[*id].demand_modifier -= change;
+                state.world.industries[*id].demand_modifier -= change;
             }
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut state.world.regions {
                     region.outlook -= (mult
-                        * region.demand_level(output, &state.world_start.output_demand) as f32)
+                        * region.demand_level(output, &state.world.output_demand) as f32)
                         .floor();
                 }
             }
@@ -447,10 +453,11 @@ impl Effect {
                 }
             }
             Effect::ProjectCostModifier(id, change) => {
-                state.projects[*id].cost_modifier -= change;
+                state.world.projects[*id].cost_modifier -= change;
             }
             Effect::TerminationShock => {
                 let p = state
+                    .world
                     .projects
                     .iter()
                     .find(|p| p.name == "Solar Radiation Management")
@@ -477,13 +484,13 @@ impl Effect {
                 }
             }
             Effect::LocksProject(id) => {
-                state.projects[*id].locked = false;
+                state.world.projects[*id].locked = false;
             }
             Effect::UnlocksProject(id) => {
-                state.projects[*id].locked = true;
+                state.world.projects[*id].locked = true;
             }
             Effect::UnlocksProcess(id) => {
-                state.processes[*id].locked = true;
+                state.world.processes[*id].locked = true;
             }
             Effect::UnlocksNPC(id) => {
                 state.npcs[*id].locked = true;

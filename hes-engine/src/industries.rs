@@ -1,7 +1,7 @@
 use crate::kinds::{ByproductMap, ResourceMap};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Industry {
     pub id: usize,
     pub name: String,

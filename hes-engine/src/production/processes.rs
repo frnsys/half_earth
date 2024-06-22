@@ -18,7 +18,7 @@ pub enum ProcessFeature {
     IsLaborIntensive,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Process {
     pub id: usize,
     pub ref_id: String,

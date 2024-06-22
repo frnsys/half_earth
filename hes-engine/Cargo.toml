@@ -1,5 +1,5 @@
 [package]
-name = "half-earth-engine"
+name = "hes-engine"
 version = "1.0.0"
 authors = ["Francis Tseng"]
 edition = "2018"

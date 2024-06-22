@@ -15,6 +15,9 @@ pub mod world;
 use projects::years_for_points;
 use wasm_bindgen::prelude::*;
 
+pub use game::Game;
+pub use projects::Type as ProjectType;
+
 // When the `wee_alloc` feature is enabled,
 // use `wee_alloc` as the global allocator.
 #[cfg(feature = "wee_alloc")]

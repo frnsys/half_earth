@@ -14,7 +14,7 @@ const HEAVY_PROJECTS: [Group; 4] = [
     Group::Electrification,
 ];
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum Condition {
     LocalVariable(LocalVariable, Comparator, f32),
     WorldVariable(WorldVariable, Comparator, f32),
@@ -85,11 +85,12 @@ impl Condition {
                 comp.eval(val, *other_val)
             }
             Condition::ProcessMixShare(id, comp, other_val) => {
-                let val = state.processes[*id].mix_percent();
+                let val = state.world.processes[*id].mix_percent();
                 comp.eval(val, *other_val)
             }
             Condition::ProcessMixShareFeature(feat, comp, other_val) => {
                 let val = state
+                    .world
                     .processes
                     .iter()
                     .filter(|p| p.features.contains(feat))
@@ -131,16 +132,16 @@ impl Condition {
             Condition::RunsPlayed(comp, runs) => comp.eval(state.runs as f32, *runs as f32),
             Condition::ProjectStatus(id, status) => match status {
                 ProjectStatus::Active | ProjectStatus::Finished => {
-                    match state.projects[*id].status {
+                    match state.world.projects[*id].status {
                         ProjectStatus::Active => true,
                         ProjectStatus::Finished => true,
                         _ => false,
                     }
                 }
-                _ => state.projects[*id].status == *status,
+                _ => state.world.projects[*id].status == *status,
             },
             Condition::ActiveProjectUpgrades(id, comp, upgrades) => {
-                comp.eval(state.projects[*id].level as f32, *upgrades as f32)
+                comp.eval(state.world.projects[*id].level as f32, *upgrades as f32)
             }
             Condition::NPCRelationship(id, relation) => state.npcs[*id].relation() == *relation,
             Condition::RegionFlag(flag) => {
@@ -155,6 +156,7 @@ impl Condition {
             Condition::WithoutFlag(flag) => !state.flags.contains(flag),
             Condition::HeavyProjects(comp, n) => {
                 let heavy_projects = state
+                    .world
                     .projects
                     .iter()
                     .filter(|p| {
@@ -168,7 +170,7 @@ impl Condition {
     }
 }
 
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq)]
 pub enum Comparator {
     Less,
     LessEqual,

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use super::Condition;
 use crate::state::State;
 
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq)]
 pub enum Likelihood {
     Impossible,
     Improbable,
@@ -28,7 +28,7 @@ impl Likelihood {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Probability {
     pub likelihood: Likelihood,
     pub conditions: Vec<Condition>,

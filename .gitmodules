@@ -1,6 +1,6 @@
 [submodule "hector/wasm"]
 	path = hector/wasm
 	url = https://github.com/frnsys/hector-wasm.git
-[submodule "assets/src/biomes/plotbiomes"]
-	path = assets/src/biome_lookup/src/plotbiomes
+[submodule "hes-engine/assets/biome_lookup/src/plotbiomes"]
+    path = hes-engine/assets/biome_lookup/src/plotbiomes
 	url = https://github.com/valentinitnelav/plotbiomes.git

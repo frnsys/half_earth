@@ -6,7 +6,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 const DEVELOP_SPEED: f32 = 1. / 40.;
 
 #[wasm_bindgen]
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct Region {
     pub id: usize,
 

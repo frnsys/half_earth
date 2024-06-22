@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use wasm_bindgen::prelude::*;
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct EventPool {
     pub events: Vec<Event>,
 
@@ -167,7 +167,7 @@ pub enum Phase {
     CutsceneIntro,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Event {
     pub name: String,
 

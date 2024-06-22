@@ -2,7 +2,7 @@ use crate::projects::Project;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::wasm_bindgen;
 
-pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Vec<NPC>) {
+pub fn update_seats(outlook_change: f32, projects: &[&Project], npcs: &mut Vec<NPC>) {
     let mut supporters: Vec<usize> = vec![];
     let mut opposers: Vec<usize> = vec![];
     for project in projects {
@@ -43,7 +43,7 @@ pub fn update_seats(outlook_change: f32, projects: &Vec<&Project>, npcs: &mut Ve
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Default, Clone, Serialize, Deserialize, PartialEq)]
 pub struct NPC {
     pub id: usize,
     pub relationship: f32,

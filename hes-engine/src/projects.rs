@@ -46,7 +46,7 @@ pub enum Type {
     Initiative,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum Cost {
     Fixed(usize),
     Dynamic(f32, Factor),
@@ -57,14 +57,14 @@ impl Default for Cost {
     }
 }
 
-#[derive(Serialize, Deserialize, Copy, Clone)]
+#[derive(Serialize, Deserialize, Copy, Clone, PartialEq, Debug)]
 pub enum Factor {
     Time,
     Income,
     Output(Output),
 }
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
 
@@ -72,14 +72,14 @@ pub struct Outcome {
     pub probability: Probability,
 }
 
-#[derive(Deserialize, Serialize, Default, Clone)]
+#[derive(Debug, Deserialize, Serialize, Default, Clone, PartialEq)]
 pub struct Upgrade {
     pub cost: usize,
     pub effects: Vec<Effect>,
     pub active: bool,
 }
 
-#[derive(Deserialize, Serialize, Default, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Project {
     pub id: usize,
     pub ref_id: String,
