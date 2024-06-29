@@ -1,6 +1,10 @@
+use enum_map::Enum;
 use paste::paste;
 use serde::{Deserialize, Serialize};
-use std::ops::{Add, AddAssign, Div, Index, IndexMut, Mul, MulAssign, Sub, SubAssign};
+use std::ops::{
+    Add, AddAssign, Div, Index, IndexMut, Mul, MulAssign, Sub,
+    SubAssign,
+};
 use wasm_bindgen::prelude::*;
 
 macro_rules! count {
@@ -13,7 +17,7 @@ macro_rules! count {
 /// those enum variants.
 macro_rules! define_enum_map {
     ($name:ident { $($field:ident),* }) => {
-        #[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+        #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Enum)]
         pub enum $name {
             $(
                 $field,
@@ -36,9 +40,7 @@ macro_rules! define_enum_map {
                         $name::$field,
                     )*]
                 }
-            }
 
-            impl [<$name Map>] {
                 pub fn items(&self) -> [($name, f32); count!($($field)*)] {
                     [$(
                         ($name::$field, self.[<$field:snake>]),
@@ -55,6 +57,12 @@ macro_rules! define_enum_map {
                     [$(
                         ($name::$field, &mut self.[<$field:snake>]),
                     )*]
+                }
+
+                pub fn sum(&self) -> f32 {
+                    0. $(
+                        + self.[<$field:snake>]
+                    )*
                 }
             }
 
@@ -315,4 +323,26 @@ macro_rules! feedstocks {
             map
         }
     };
+}
+
+impl ByproductMap {
+    pub fn co2eq(&self) -> f32 {
+        self.co2 + self.ch4 * 36. + self.n2o * 298.
+    }
+
+    pub fn gtco2eq(&self) -> f32 {
+        self.co2eq() * 1e-15
+    }
+}
+
+impl OutputMap {
+    pub fn energy(&self) -> f32 {
+        self.electricity + self.fuel
+    }
+}
+
+impl ResourceMap {
+    pub fn energy(&self) -> f32 {
+        self.electricity + self.fuel
+    }
 }

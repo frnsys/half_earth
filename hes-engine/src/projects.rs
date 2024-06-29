@@ -127,6 +127,14 @@ pub fn years_for_points(points: usize, cost: usize) -> f32 {
 }
 
 impl Project {
+    pub fn is_active(&self) -> bool {
+        self.status == Status::Active
+    }
+
+    pub fn is_finished(&self) -> bool {
+        self.status == Status::Finished
+    }
+
     /// Advance this project's implementation
     pub fn build(&mut self) -> bool {
         match &mut self.status {
@@ -219,6 +227,38 @@ impl Project {
         } else {
             &self.upgrades[self.level - 1].effects
         }
+    }
+
+    // TODO
+    // I think what this needs to do is
+    // figure out the effects that have the same type and subtype,
+    // and if there are more than one consider the effect result to be unknown (i.e. "?")
+    fn outcome_effects(&self) -> Vec<&Effect> {
+        // self.outcomes.iter().map(|outcome| {
+        //     outcome.effects.iter().map(|effect| {
+        //         // effect.probability
+        //     })
+        // })
+        todo!()
+    }
+
+    pub fn active_effects_outcomes(&self) -> Vec<&Effect> {
+        let mut effects = vec![];
+
+        if self.kind == Type::Policy && !self.is_active() {
+            // Project outcome effects are secret and delayed
+            effects.extend(self.effects.iter());
+        } else if self.status == Status::Inactive || self.status == Status::Building {
+            effects.extend(self.effects.iter());
+            effects.extend(self.outcome_effects().iter());
+        } else {
+            effects.extend(self.active_effects().iter());
+            if let Some(id) = self.active_outcome {
+                effects.extend(self.outcomes[id].effects.iter());
+            }
+        }
+
+        effects
     }
 
     pub fn update_required_majority(&mut self, npcs: &Vec<NPC>) {

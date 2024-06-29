@@ -183,7 +183,11 @@ class HexSphere {
     this.setMouse(ev);
     raycaster.setFromCamera(this.mouse, this.scene.camera);
 
-    let intersects = raycaster.intersectObjects(this.selectables.filter(s => s.visible));
+    let intersects = raycaster.intersectObjects(this.selectables.filter(s => s.visible))
+      .map((intersect) => {
+          // Return region indices.
+          intersect.object.userData.idx
+      });
     // if (intersects.length > 0) {
       // Rotate orbital controls camera to center on this point
       // const pos = mesh.position;

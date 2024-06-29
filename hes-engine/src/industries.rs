@@ -13,6 +13,10 @@ pub struct Industry {
 }
 
 impl Industry {
+    pub fn demand(&self, lic_pop: f32) -> f32 {
+        self.demand_modifier * lic_pop
+    }
+
     pub fn adj_resources(&self) -> ResourceMap {
         self.resources * (self.resource_modifiers + 1.)
     }

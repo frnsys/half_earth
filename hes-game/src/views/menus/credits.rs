@@ -1,8 +1,10 @@
-use crate::{state::Settings, t};
+use crate::t;
 use leptos::*;
 
 #[component]
-pub fn Credits(set_show_credits: WriteSignal<bool>, show_book_link: bool) -> impl IntoView {
+pub fn Credits(set_show_credits: WriteSignal<bool>) -> impl IntoView {
+    let show_book_link = std::env!("PLATFORM") != "STEAM";
+
     view! {
         <div class="credits">
             <div class="credits--inner">
@@ -76,21 +78,40 @@ pub fn Credits(set_show_credits: WriteSignal<bool>, show_book_link: bool) -> imp
                     <li>Thomas Helmis</li>
                     <li>Merlin B.</li>
                     <li>Chayangoon Thamma-Un, Thai translator</li>
-                    <li>เนติวิทย์ โชติภัทร์ไพศาล / Netiwit Chotiphatphaisal, Sam Yan Press</li>
+                    <li>
+                        เนติวิทย์ โชติภัทร์ไพศาล / Netiwit Chotiphatphaisal, Sam Yan Press
+                    </li>
                 </ul>
                 <Show
                     when=move || { show_book_link }
-                    fallback=|| view! {
-                        <h3>{t!("Based on the book")} <em>Half-Earth Socialism</em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
-                    }>
-                    <h3>{t!("Based on the book")} <em><a href="https://www.versobooks.com/books/3818-half-earth-socialism">Half-Earth Socialism</a></em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).</h3>
+                    fallback=|| {
+                        view! {
+                            <h3>
+                                {t!("Based on the book")} <em>Half-Earth Socialism</em>
+                                (Drew Pendergrass &amp; Troy Vettese, Verso 2022).
+                            </h3>
+                        }
+                    }
+                >
+                    <h3>
+                        {t!("Based on the book")} <em>
+                            <a href="https://www.versobooks.com/books/3818-half-earth-socialism">
+                                Half-Earth Socialism
+                            </a>
+                        </em> (Drew Pendergrass &amp; Troy Vettese, Verso 2022).
+                    </h3>
                 </Show>
                 <h2>{t!("Thank you for playing!")}</h2>
 
-                <button class="btn" on:click=move |_| {
-                    set_show_credits.set(false);
-                }>{t!("Back")}</button>
+                <button
+                    class="btn"
+                    on:click=move |_| {
+                        set_show_credits.set(false);
+                    }
+                >
+                    {t!("Back")}
+                </button>
             </div>
-            </div>
+        </div>
     }
 }

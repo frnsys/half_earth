@@ -1,6 +1,6 @@
-use crate::events::{Effect, Flag, Request};
+use crate::events::{Effect, Event, Flag, Request};
 use crate::game::{Update, UpdateType};
-use crate::kinds::{ByproductMap, FeedstockMap, OutputMap, ResourceMap};
+use crate::kinds::{ByproductMap, Feedstock, FeedstockMap, OutputMap, ResourceMap};
 use crate::npcs::{update_seats, NPCRelation, NPC};
 use crate::production::{calculate_required, produce, Process, ProductionOrder};
 use crate::projects::{Group, Project, Status, Type as ProjectType};
@@ -58,6 +58,9 @@ pub struct State {
     pub protected_land: f32,
 
     last_outlook: f32,
+
+    // TODO track what events have occurred
+    pub events: Vec<Event>,
 }
 
 impl State {
@@ -91,6 +94,7 @@ impl State {
             runs: 0,
             requests: Vec::new(),
             new_policies: Vec::new(),
+            events: vec![],
 
             output_modifier: outputs!(
                 fuel: 1.,
@@ -696,6 +700,28 @@ impl State {
         } else {
             false
         }
+    }
+
+    pub fn process_max_share(&self, process: &Process) -> usize {
+        let mut max_share = 1.;
+        let demand = self.output_demand[process.output];
+
+        // Hard-coded limit
+        if let Some(limit) = process.limit {
+            max_share = (limit / demand).min(1.);
+        }
+
+        let (kind, per_output) = process.feedstock;
+        match kind {
+            Feedstock::Soil | Feedstock::Other => {}
+            _ => {
+                let limit = self.feedstocks[kind] / per_output;
+                let supply_max_share = (limit / demand).min(1.);
+                max_share = max_share.min(supply_max_share);
+            }
+        }
+
+        ((max_share * 100.) / 5.).floor() as usize
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {

@@ -1,6 +1,6 @@
 use crate::events::Event;
 use crate::industries::Industry;
-use crate::kinds::{ByproductMap, FeedstockMap, OutputMap, ResourceMap};
+use crate::kinds::{ByproductMap, FeedstockMap, Output, OutputMap, ResourceMap};
 use crate::production::Process;
 use crate::projects::Project;
 use crate::regions::{Income, Region};
@@ -51,7 +51,7 @@ impl World {
         self.base_outlook - self.shortages_outlook + region_outlook
     }
 
-    pub fn total_emissions_gt(&self) -> f32 {
+    pub fn emissions_gt(&self) -> f32 {
         self.emissions() * 1e-15
     }
 
@@ -166,6 +166,15 @@ impl World {
             acc += region.demand(&self.output_demand);
             acc
         })
+    }
+
+    pub fn demand_by_income_levels(&self, output: Output) -> [f32; 4] {
+        self.output_demand
+            .iter()
+            .map(|demand| demand[output])
+            .collect::<Vec<_>>()
+            .try_into()
+            .expect("Mapping from same size arrays")
     }
 
     pub fn change_population(&mut self, amount: f32) {

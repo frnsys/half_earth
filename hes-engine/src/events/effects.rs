@@ -91,6 +91,11 @@ pub enum Effect {
     BailOut(usize),
     GameOver,
 }
+impl AsRef<Effect> for Effect {
+    fn as_ref(&self) -> &Effect {
+        self
+    }
+}
 
 fn check_game_over(state: &mut State) {
     if !state.is_ally("The Authoritarian") && state.world.outlook() < 0. {
@@ -539,4 +544,26 @@ impl Mul<f32> for Effect {
             _ => self,
         }
     }
+}
+
+pub fn mean_income_outlook_change(mult: f32, state: &State) -> f32 {
+    state
+        .world
+        .regions
+        .iter()
+        .map(|region| (mult * region.income_level() as f32).floor())
+        .sum::<f32>()
+        / state.world.regions.len() as f32
+}
+
+pub fn mean_demand_outlook_change(mult: f32, output: &Output, state: &State) -> f32 {
+    state
+        .world
+        .regions
+        .iter()
+        .map(|region| {
+            (mult * region.demand_level(output, &state.world.output_demand) as f32).floor()
+        })
+        .sum::<f32>()
+        / state.world.regions.len() as f32
 }

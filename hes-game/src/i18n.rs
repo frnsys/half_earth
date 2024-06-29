@@ -45,8 +45,7 @@ impl Language {
 #[macro_export]
 macro_rules! t {
     ($text:expr) => {{
-        use crate::i18n::t;
-        move || t($text)
+        crate::i18n::t($text)
     }};
     ($text:expr, $($key:ident = $val:expr),* $(,)?) => {{
         use crate::i18n::t;
@@ -55,7 +54,7 @@ macro_rules! t {
             let pattern = concat!("{", stringify!($key), "}");
             result = result.replace(pattern, &$val.to_string());
         )*
-        move || result
+        result
     }};
 }
 

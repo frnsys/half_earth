@@ -57,7 +57,8 @@ impl Region {
         // - [ ] precip TODO
         // - [ ] sea_level_rise TODO
         // - [X] number of negative events
-        self.base_habitability - (f32::max(0., self.temp_hi - 35.).powf(2.) * 10.)
+        self.base_habitability
+            - (f32::max(0., self.temp_hi - 35.).powf(2.) * 10.)
     }
 
     pub fn income_level(&self) -> usize {
@@ -74,8 +75,13 @@ impl Region {
         income + self.development
     }
 
-    pub fn demand_level(&self, output: &Output, output_demand: &[OutputMap; 4]) -> usize {
-        let demand = self.demand(output_demand) / self.population;
+    pub fn demand_level(
+        &self,
+        output: &Output,
+        output_demand: &[OutputMap; 4],
+    ) -> usize {
+        let demand =
+            self.demand(output_demand) / self.population;
         if let Some(idx) = output_demand
             .iter()
             .position(|m| m[*output] >= demand[*output])
@@ -86,15 +92,24 @@ impl Region {
         }
     }
 
-    pub fn demand_levels(&self, output_demand: &[OutputMap; 4]) -> OutputMap {
+    pub fn demand_levels(
+        &self,
+        output_demand: &[OutputMap; 4],
+    ) -> OutputMap {
         let mut demand_levels: OutputMap = outputs!();
         for k in demand_levels.keys() {
-            demand_levels[k] = self.demand_level(&k, output_demand) as f32;
+            demand_levels[k] =
+                self.demand_level(&k, output_demand) as f32;
         }
         demand_levels
     }
 
-    pub fn update_pop(&mut self, year: f32, modifier: f32, income_pop_coefs: &[[f32; 4]; 4]) {
+    pub fn update_pop(
+        &mut self,
+        year: f32,
+        modifier: f32,
+        income_pop_coefs: &[[f32; 4]; 4],
+    ) {
         let coefs = match &self.income {
             Income::Low => income_pop_coefs[0],
             Income::LowerMiddle => income_pop_coefs[1],
@@ -109,7 +124,11 @@ impl Region {
     }
 
     // Outlook slowly rebounds over time
-    pub fn update_outlook(&mut self, wretched_ally: bool, consumerist_ally: bool) {
+    pub fn update_outlook(
+        &mut self,
+        wretched_ally: bool,
+        consumerist_ally: bool,
+    ) {
         let buffed = match self.income {
             Income::Low => wretched_ally,
             Income::LowerMiddle => wretched_ally,
@@ -143,7 +162,10 @@ impl Region {
         }
     }
 
-    pub fn demand(&self, output_demand: &[OutputMap; 4]) -> OutputMap {
+    pub fn demand(
+        &self,
+        output_demand: &[OutputMap; 4],
+    ) -> OutputMap {
         let mut demand = outputs!();
         let idx = self.income_level();
         if idx < 3 {
@@ -165,7 +187,10 @@ impl Region {
     /// i.e. equivalent population with the same
     /// aggregate consumption but each individual
     /// consumes at a low-income level
-    pub fn lic_population(&self, materials_by_income: &[f32; 4]) -> f32 {
+    pub fn lic_population(
+        &self,
+        materials_by_income: &[f32; 4],
+    ) -> f32 {
         let idx = match self.income {
             Income::Low => 0,
             Income::LowerMiddle => 1,
@@ -179,7 +204,28 @@ impl Region {
         } else {
             materials_by_income[idx]
         };
-        self.population * per_capita_demand / materials_by_income[0]
+        self.population * per_capita_demand
+            / materials_by_income[0]
+    }
+
+    pub fn temp_range(&self) -> String {
+        format!(
+            "{}-{}°C",
+            self.temp_lo.round(),
+            self.temp_hi.round()
+        )
+    }
+
+    pub fn precip_range(&self) -> String {
+        format!(
+            "{}-{}cm/yr",
+            self.precip_lo.round(),
+            self.precip_hi.round()
+        )
+    }
+
+    pub fn is_max_income(&self) -> bool {
+        self.income == Income::High
     }
 }
 
@@ -218,7 +264,9 @@ pub enum Income {
 }
 
 #[wasm_bindgen]
-#[derive(PartialEq, Serialize, Deserialize, Clone, Copy, Debug)]
+#[derive(
+    PartialEq, Serialize, Deserialize, Clone, Copy, Debug,
+)]
 pub enum Latitude {
     Tropic,
     Subtropic,

@@ -19,6 +19,13 @@ gloo-net = { version = "0.5.0", features = ["json"] }
 anyhow = "1.0.86"
 leptos_i18n = "0.3.3"
 hes-engine = { path = "../hes-engine" }
+list_files_macro = "0.1.0"
+leptos_animation = "0.5.2"
+strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
+enum-map = { version = "2.7.3", features = ["serde"] }
+enum-iterator = "2.1.0"
+gloo-utils = { version = "0.2.0", features = ["serde"] }
+extend = "1.2.0"
 
 [workspace]
 members = ["src-tauri"]
@@ -26,3 +33,7 @@ members = ["src-tauri"]
 [package.metadata.leptos-i18n]
 default = "en"
 locales = ["en", "fr-fr", "de-de", "es", "jp", "pt-br", "pt-pt", "pt", "th"]
+
+[dependencies.web-sys]
+version = "0.3"
+features = ["Performance"]
