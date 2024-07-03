@@ -45,3 +45,6 @@ pub const PROJECT_CARD_WITHDRAW_TIME: f32 = 1.4;
 pub const PROCESS_CARD_SCAN_TIME: f32 = 0.5;
 pub const PROCESS_CARD_WITHDRAW_TIME: f32 = 0.4;
 
+pub const MS_PER_YEAR: usize = 4000;
+
+pub const PARLIAMENT_SEATS: &[usize] = &[2, 3, 4, 5, 5, 5, 4, 3, 2];

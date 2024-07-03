@@ -1,5 +1,5 @@
 use super::parts::IntensityBar;
-use crate::{display::intensity, state, t};
+use crate::{display::intensity, icons, state, t};
 use leptos::*;
 use std::time::Duration;
 
@@ -10,11 +10,10 @@ pub fn Hud() -> impl IntoView {
     let year = state!(|game, _| game.world.year);
     let pc_danger = state!(|game, _| game.political_capital <= 20);
     let pc = state!(|game, _| game.political_capital.max(0));
-    let unhappy = state!(|game, _| game.world.outlook() < 0.);
-    let emissions_up = state!(|game, _| game.world.emissions() >= 0.);
-    let contentedness = state!(|game, _| {
-        intensity::scale(game.world.outlook(), intensity::Variable::WorldOutlook)
-    });
+    let unhappy = state!(|game, _| game.outlook() < 0.);
+    let emissions_up = state!(|game, _| game.emissions() >= 0.);
+    let contentedness =
+        state!(|game, _| { intensity::scale(game.outlook(), intensity::Variable::WorldOutlook) });
     let extinction = state!(|game, _| {
         intensity::scale(game.world.extinction_rate, intensity::Variable::Extinction)
     });
@@ -64,26 +63,26 @@ pub fn Hud() -> impl IntoView {
             </div>
             <div class="hud-bars">
                 <div v-tip="pcTip" class:warnPc=pc_danger>
-                    <img src="/public/assets/icons/hud/political_capital.svg"/>
+                    <img src=icons::HUD_POLITICAL_CAPITAL/>
                     {pc}
                 </div>
                 <div v-tip="biodiversityTip">
-                    <img src="/public/assets/icons/hud/extinction.svg"/>
+                    <img src=icons::HUD_EXTINCTION_RATE/>
                     <IntensityBar intensity=extinction.into_signal()/>
                 </div>
                 <div class:bad=unhappy v-tip="contentednessTip">
-                    <img src="/public/assets/icons/hud/contentedness.svg"/>
+                    <img src=icons::HUD_CONTENTEDNESS/>
                     <IntensityBar
                         intensity=contentedness.into_signal()
                         invert=true
                     />
                 </div>
                 <div v-tip="warmingTip">
-                    <img src="/public/assets/icons/hud/warming.svg"/>
+                    <img src=icons::HUD_WARMING/>
                     <IntensityBar intensity=warming.into_signal()/>
                 </div>
                 <div v-tip="emissionsTip">
-                    <img src="/public/assets/icons/hud/emissions.svg"/>
+                    <img src=icons::HUD_EMISSIONS/>
                     <Show
                         when=emissions_up
                         fallback=move || {
@@ -99,7 +98,7 @@ pub fn Hud() -> impl IntoView {
                 class="hud-settings"
                 on:click=move |_| { set_show_menu.set(true) }
             >
-                <img src="/public/assets/icons/settings.svg"/>
+                <img src=icons::SETTINGS/>
                 <span>{t!("Menu")}</span>
             </div>
         </div>

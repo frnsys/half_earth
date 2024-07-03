@@ -40,9 +40,10 @@ impl Clone for ThaGlobe {
 #[component]
 pub fn Globe(
     id: &'static str,
-    class: &'static str,
+    #[prop(optional)] class: &'static str,
     #[prop(into)] on_ready: Callback<ThaGlobe>,
-    #[prop(into)] on_click: Callback<usize>,
+    #[prop(into, optional)] on_click: Option<Callback<usize>>,
+    #[prop(into, optional)] bg_color: Signal<String>,
 ) -> impl IntoView {
     let (loading, set_loading) = create_signal(true);
     let globe_ref = create_node_ref::<html::Div>();
@@ -66,10 +67,12 @@ pub fn Globe(
         on_ready.forget();
 
         let on_click = Closure::wrap(Box::new(move |region_idxs: &JsValue| {
-            let region_idxs: Vec<usize> = region_idxs.into_serde().unwrap();
+            if let Some(on_click) = on_click {
+                let region_idxs: Vec<usize> = region_idxs.into_serde().unwrap();
 
-            if !region_idxs.is_empty() {
-                on_click.call(region_idxs[0]);
+                if !region_idxs.is_empty() {
+                    on_click.call(region_idxs[0]);
+                }
             }
         }) as Box<dyn FnMut(&JsValue)>);
         // globe._onClick = []; // TODO this was in the original code, is this necessary?
@@ -95,7 +98,12 @@ pub fn Globe(
     // }
 
     view! {
-        <div id=format!("globe {}", id) class=class ref=globe_ref>
+        <div
+            id=format!("globe {}", id)
+            class=class
+            ref=globe_ref
+            style:background-color=bg_color
+        >
             <Show when=move || loading.get()>
                 <div class="globe-loading loading-text">
                     {t!("Loading")}

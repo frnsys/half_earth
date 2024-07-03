@@ -3,7 +3,6 @@ use leptos::*;
 use crate::{
     i18n, icons, t,
     views::{
-        dialogue::Event,
         phases::cutscene::Events,
         tips::{tip, HasTip},
     },

@@ -88,6 +88,17 @@ pub fn percent(p: f32, round: bool) -> String {
     }
 }
 
+pub fn signed_percent(p: f32, round: bool) -> String {
+    let percent = p * 100.;
+    if percent < 1. && percent > 0. {
+        "<1%".to_string()
+    } else if round {
+        format!("{:.0}%", percent.round())
+    } else {
+        format!("{:.1}%", percent)
+    }
+}
+
 pub fn format_impact(impact: Impact, val: f32) -> String {
     match impact {
         Impact::Land => percent(land_use_percent(val) / 100., true),

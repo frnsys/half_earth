@@ -1,6 +1,12 @@
+mod active_plan;
+mod processes;
 mod projects;
 mod region_item;
 mod tabs;
+
+pub use active_plan::ActivePlan;
+pub use processes::Processes;
+pub use projects::{ProjectScanner, Projects};
 
 use crate::{
     state,
@@ -52,7 +58,7 @@ pub fn Planning() -> impl IntoView {
     // let events = game.roll.planning('Start');
     // events = events.concat(game.roll.planning('Plan'));
 
-    let has_changes = state!(|_, ui| ui.has_process_mix_changes());
+    let has_changes = state!(|_, ui| ui.has_any_process_mix_changes());
 
     let (page, set_page) = create_signal(Page::Plan);
     let select_page = move |page: Page| {
@@ -76,9 +82,7 @@ pub fn Planning() -> impl IntoView {
                         select_page(p);
                         if active {
                             write_state!(|_, ui| {
-                                if let Some(next) = ui.tutorial.next() {
-                                    ui.tutorial = next;
-                                }
+                                ui.tutorial.advance();
                             });
                         }
                     }>

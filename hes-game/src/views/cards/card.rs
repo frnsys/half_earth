@@ -48,17 +48,19 @@ pub struct ProcessMix {
 #[component]
 pub fn Card(
     body: Body,
-    #[prop(optional, default = "#fff")] color: &'static str,
-    #[prop(optional, default = "#222")] background: &'static str,
+    #[prop(into, optional, default = "#fff".into())] color: MaybeSignal<&'static str>,
+    #[prop(into, optional, default = "#222".into())] background: MaybeSignal<&'static str>,
     #[prop(optional)] top_back: Option<TopBack>,
     #[prop(optional)] bottom_back: Option<BottomBack>,
     #[prop(optional)] name: Option<Name>,
     #[prop(optional)] header: Option<Header>,
     #[prop(optional)] figure: Option<Figure>,
     #[prop(optional)] process_mix: Option<ProcessMix>,
-    #[prop(optional, into)] class: MaybeSignal<&'static str>,
+    #[prop(optional, into)] class: MaybeSignal<String>,
 ) -> impl IntoView {
     let (flipped, set_flipped) = create_signal(false);
+    let color = move || color.get();
+    let background = move || background.get();
 
     let flippable = top_back.is_some() || bottom_back.is_some();
     let flip = move |_| {

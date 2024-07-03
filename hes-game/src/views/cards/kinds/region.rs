@@ -15,29 +15,17 @@ use crate::{
 use hes_engine::regions::Region;
 use leptos::*;
 
-#[derive(Clone)]
-struct Card {
-    region: Region,
-    description: String,
-}
-
 #[component]
-pub fn RegionCard(card: Signal<Card>) -> impl IntoView {
-    // TODO card-image
-    let image = Image {
-        path: "foo".into(),
-        attribution: "foo".into(),
-    };
-
+pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
     let contentedness = move || {
-        let outlook = card.with(|c| c.region.outlook);
+        let outlook = region.with(|region| region.outlook);
         intensity::scale(outlook, Variable::Outlook)
     };
-    let demand = state_with!(|state, ui, card| {
+    let demand = state_with!(|state, ui, region| {
         let total_demand = state.output_demand;
         let per_capita_demand = state.world.output_demand;
-        let demand = card.region.demand(&per_capita_demand);
-        let pop = card.region.population;
+        let demand = region.demand(&per_capita_demand);
+        let pop = region.population;
         demand.items().map(|(output, demand)| {
             let region_per_capita_demand = demand / pop;
             let intensity = intensity::output_intensity(region_per_capita_demand, output);
@@ -47,25 +35,29 @@ pub fn RegionCard(card: Signal<Card>) -> impl IntoView {
         })
     });
     let habitability = move || {
-        let habitability = card.with(|c| c.region.habitability());
+        let habitability = region.with(|region| region.habitability());
         intensity::scale(habitability, Variable::Habitability)
     };
     let income_name = move || {
-        let income = card.with(|c| c.region.income.lower());
+        let income = region.with(|region| region.income.lower());
         t!(income)
     };
-    let income_level = move || card.with(|c| c.region.income_level() + 1);
+    let income_level = move || region.with(|region| region.income_level() + 1);
     let name = move || {
-        let name = card.with(|c| c.region.name.clone());
+        let name = region.with(|region| region.name.clone());
         t!(&name)
     };
     let population = move || {
-        let pop = card.with(|c| c.region.population);
+        let pop = region.with(|region| region.population);
         i18n::num_fmt()(pop)
     };
-    let seceded = move || card.with(|c| c.region.seceded);
-    let temp_range = move || card.with(|c| c.region.temp_range());
-    let precip_range = move || card.with(|c| c.region.precip_range());
+    let seceded = move || region.with(|region| region.seceded);
+    let temp_range = move || region.with(|region| region.temp_range());
+    let precip_range = move || region.with(|region| region.precip_range());
+
+    let image = move || {
+        region.with(|region| format!("/public/assets/content/{}", region.flavor.image.fname))
+    };
 
     view! {
         <Card class="region">
@@ -75,7 +67,7 @@ pub fn RegionCard(card: Signal<Card>) -> impl IntoView {
             </Header>
 
             <Figure slot>
-                <img class="card-image" src=&image.path/>
+                <img class="card-image" src=image/>
                 <div class="card-tack-ur">
                     <HasTip tip=tip(
                         icons::WARMING,
@@ -88,14 +80,14 @@ pub fn RegionCard(card: Signal<Card>) -> impl IntoView {
                     </HasTip>
                     <br/>
                     <HasTip tip=tip(
-                        icons::PRECIPTATION,
+                        icons::PRECIPITATION,
                         t!("This region's current precipitation range."),
                     )>
                         <div
                             class="region-stat"
                             v-tip="{icon: 'precipitation', text: ''}"
                         >
-                            <img src=icons::PRECIPTATION/>
+                            <img src=icons::PRECIPITATION/>
                             {precip_range}
                         </div>
                     </HasTip>
@@ -111,7 +103,7 @@ pub fn RegionCard(card: Signal<Card>) -> impl IntoView {
                         icons::WEALTH,
                         t!(
                             "This region has {incomeName} living standards. Higher living standards mean higher material footprints.",
-                            incomeName = income_name(),
+                            incomeName : income_name(),
                         ),
                     )>
                         <IntensityIcon
@@ -148,7 +140,7 @@ pub fn RegionCard(card: Signal<Card>) -> impl IntoView {
                                 output.icon(),
                                 t!(
                                     "This region's per-capita demand level for {output}. The total regions's demand is {demand}. This makes up {demandPercent} of total demand for {output}.",
-                                    output = output.lower(), demand = demand, demandPercent =
+                                    output : output.lower(), demand : demand, demandPercent :
                                     percent,
                                 ),
                             );

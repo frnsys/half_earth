@@ -1,10 +1,14 @@
 use std::fmt::Display;
 
 use hes_engine::{
-    kinds::{Feedstock, Output, Resource},
+    events::Flag,
+    kinds::{Byproduct, Feedstock, Output, Resource},
     production::ProcessFeature,
-    regions::Income,
+    regions::{Income, Latitude},
+    ProjectType,
 };
+
+use super::Var;
 
 pub trait AsText {
     fn lower(&self) -> &'static str;
@@ -131,6 +135,96 @@ impl AsText for ProcessFeature {
             ProcessFeature::UsesLivestock => "processes that use livestock",
             ProcessFeature::UsesPesticides => "processes that use pesticides",
             ProcessFeature::UsesSynFertilizer => "processes that use synthetic fertilizers",
+        }
+    }
+}
+
+impl AsText for Latitude {
+    fn lower(&self) -> &'static str {
+        match self {
+            Latitude::Tropic => "tropic",
+            Latitude::Subtropic => "subtropic",
+            Latitude::Temperate => "temperate",
+            Latitude::Frigid => "frigid",
+        }
+    }
+
+    fn title(&self) -> &'static str {
+        match self {
+            Latitude::Tropic => "Tropic",
+            Latitude::Subtropic => "Subtropic",
+            Latitude::Temperate => "Temperate",
+            Latitude::Frigid => "Frigid",
+        }
+    }
+}
+
+impl AsText for Byproduct {
+    fn lower(&self) -> &'static str {
+        match self {
+            Byproduct::Co2 => "CO2",
+            Byproduct::Ch4 => "CH4",
+            Byproduct::N2o => "N2O",
+            Byproduct::Biodiversity => "biodiversity",
+        }
+    }
+
+    fn title(&self) -> &'static str {
+        match self {
+            Byproduct::Co2 => "CO2",
+            Byproduct::Ch4 => "CH4",
+            Byproduct::N2o => "N2O",
+            Byproduct::Biodiversity => "Biodiversity",
+        }
+    }
+}
+
+impl AsText for ProjectType {
+    fn lower(&self) -> &'static str {
+        match self {
+            ProjectType::Policy => "policy",
+            ProjectType::Research => "research",
+            ProjectType::Initiative => "infrastructure",
+        }
+    }
+
+    fn title(&self) -> &'static str {
+        match self {
+            ProjectType::Policy => "Policy",
+            ProjectType::Research => "Research",
+            ProjectType::Initiative => "Infrastructure",
+        }
+    }
+}
+
+impl AsText for Var {
+    fn title(&self) -> &'static str {
+        match self {
+            Var::Land => "Land",
+            Var::Water => "Water",
+            Var::Energy => "Energy",
+            Var::Emissions => "Emissions",
+            Var::Biodiversity => "Biodiversity",
+            Var::Contentedness => "Contentedness",
+            Var::Fuel => "Fuel",
+            Var::Electricity => "Electricity",
+            Var::PlantCalories => "Plant Calories",
+            Var::AnimalCalories => "Animal Calories",
+        }
+    }
+
+    fn lower(&self) -> &'static str {
+        match self {
+            Var::Land => "land",
+            Var::Water => "water",
+            Var::Energy => "energy",
+            Var::Emissions => "emissions",
+            Var::Biodiversity => "biodiversity",
+            Var::Contentedness => "contentedness",
+            Var::Fuel => "fuel",
+            Var::Electricity => "electricity",
+            Var::PlantCalories => "plant calories",
+            Var::AnimalCalories => "animal calories",
         }
     }
 }

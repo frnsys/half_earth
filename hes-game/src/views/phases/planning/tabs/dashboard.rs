@@ -2,15 +2,17 @@ use std::collections::HashMap;
 
 use gloo_utils::format::JsValueSerdeExt;
 use leptos::*;
+use strum::IntoEnumIterator;
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    display::{format, intensity, Var},
-    icons, state,
+    display::{factors::factors_card, format, intensity, text::AsText, Var},
+    icons::{self, HasIcon},
+    state,
     state::GameExt,
     state_with, t,
     util::to_ws_el,
-    views::{tip, HasTip, Tip},
+    views::{parts::FactorsList, tip, HasTip, Tip},
 };
 
 #[wasm_bindgen(module = "/public/js/pie.js")]
@@ -25,7 +27,7 @@ extern "C" {
 }
 
 impl Var {
-    pub fn color(&self) -> [i32; 2] {
+    pub fn color(&self) -> [u32; 2] {
         match self {
             Var::Land => [0xB7FF7A, 0x0E681F],
             Var::Water => [0x7DE1EF, 0x4560FF],
@@ -64,6 +66,7 @@ pub fn Dashboard() -> impl IntoView {
             let unused = state.world.starting_resources.land - total;
             data.insert(name, unused);
         }
+        data
     });
     let choose_breakdown = move |choice: Var| {
         set_show_breakdown_menu.set(false);
@@ -120,7 +123,7 @@ pub fn Dashboard() -> impl IntoView {
             .collect::<Vec<_>>() // TODO ideally don't have to collect
     });
 
-    let extinction_change = state!(|state, ui| {
+    let extinction_change = state!(move |state, ui| {
         let starting_land = state.world.starting_resources.land;
         process_multipliers()
             .into_iter()
@@ -128,9 +131,10 @@ pub fn Dashboard() -> impl IntoView {
             .sum::<f32>()
             .round()
     });
-    let current_extinction = state!(|state, ui| { extinction(state.world.extinction_rate) });
-    let after_extinction =
-        state!(|state, ui| { extinction(state.world.extinction_rate + extinction_change()) });
+    let current_extinction = state!(move |state, ui| { extinction(state.world.extinction_rate) });
+    let after_extinction = state!(move |state, ui| {
+        extinction(state.world.extinction_rate + extinction_change()).label
+    });
 
     let land_change = move || {
         process_multipliers()
@@ -165,9 +169,11 @@ pub fn Dashboard() -> impl IntoView {
             .round()
     };
 
-    let current_water_stress = state!(|state, ui| { water_stress(state.resources_demand.water) });
-    let after_water_stress =
-        state!(|state, ui| { water_stress(water_change() + state.resources_demand.water) });
+    let current_water_stress =
+        state!(move |state, ui| { water_stress(state.resources_demand.water) });
+    let after_water_stress = state!(move |state, ui| {
+        water_stress(water_change() + state.resources_demand.water).label
+    });
 
     let temp_view = state!(|state, ui| {
         let temp = state.temp_anomaly();
@@ -184,10 +190,14 @@ pub fn Dashboard() -> impl IntoView {
     let emissions_view = state!(move |state, ui| {
         // let tip = factors.tips
         let tip_text = t!("Current annual emissions, in gigatonnes of CO2 equivalent.");
-        let tip: Tip = crate::views::tip(icons::EMISSIONS, tip_text); // TODO .card(todo!());
+        let tip: Tip = crate::views::tip(icons::EMISSIONS, tip_text).card(factors_card(
+            None,
+            Var::Emissions,
+            state,
+        ));
         let value = state.emissions_gt();
         let changed_value = state!(move |state, ui| {
-            format::emissions(emissions_change() + state.world.emissions_gt())
+            format::emissions(emissions_change() + state.state.emissions_gt())
         });
         view! {
             <DashboardItem
@@ -203,7 +213,8 @@ pub fn Dashboard() -> impl IntoView {
     let land_view = state!(move |state, ui| {
         // let tip = factors.tips
         let tip_text = t!("Current land use.");
-        let tip: Tip = crate::views::tip(icons::LAND, tip_text); // TODO .card(todo!());
+        let tip: Tip =
+            crate::views::tip(icons::LAND, tip_text).card(factors_card(None, Var::Land, state));
         let value = state.land_use_percent();
         let changed_value = state!(move |state, ui| {
             format!(
@@ -222,10 +233,12 @@ pub fn Dashboard() -> impl IntoView {
                 />
         }
     });
+
     let energy_view = state!(move |state, ui| {
         // let tip = factors.tips
         let tip_text = t!("Current energy use.");
-        let tip: Tip = crate::views::tip(icons::ENERGY, tip_text); // TODO .card(todo!());
+        let tip: Tip =
+            crate::views::tip(icons::ENERGY, tip_text).card(factors_card(None, Var::Energy, state));
         let value = state.energy_pwh();
         let changed_value = state!(move |state, ui| {
             format!(
@@ -245,9 +258,167 @@ pub fn Dashboard() -> impl IntoView {
         }
     });
 
+    let water_view = state!(move |state, ui| {
+        let tip_text = t!("Current water demand.");
+        let tip: Tip =
+            crate::views::tip(icons::WATER, tip_text).card(factors_card(None, Var::Water, state));
+        let current = current_water_stress();
+
+        view! {
+            <DashboardItem
+                tip
+                label=t!("Water Stress")
+                color=current.color
+                display_value=current.label
+                display_changed_value=after_water_stress
+                change=water_change
+                icon=icons::WATER
+                />
+        }
+    });
+
+    let biodiversity_view = state!(move |state, ui| {
+        let tip_text = t!("The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.");
+        let tip: Tip = crate::views::tip(icons::EXTINCTION_RATE, tip_text).card(factors_card(
+            None,
+            Var::Biodiversity,
+            state,
+        ));
+        let current = current_extinction();
+
+        view! {
+            <DashboardItem
+                tip
+                label=t!("Extinction Rate")
+                color=current.color
+                display_value=current.label
+                display_changed_value=after_extinction
+                change=extinction_change
+                icon=icons::EXTINCTION_RATE
+                />
+        }
+    });
+
+    let sea_level_rise_view = state!(|state, ui| {
+        let rise = format!("{:.2}", state.world.sea_level_rise);
+        let tip_text = t!("Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.",
+            rise: rise,
+            rate: format!("{:.1}", state.sea_level_rise_rate() * 1000.));
+        let tip: Tip = crate::views::tip(icons::SEA_LEVEL_RISE, tip_text);
+        view! {
+            <HasTip tip>
+                <div class="dashboard--item">
+                <div class="minicard">
+                <span>{rise}m</span>
+                </div>
+                <img src=icons::SEA_LEVEL_RISE />
+                <div class="dashboard--item-name">{t!("Sea Level Rise")}</div>
+
+                </div>
+            </HasTip>
+        }
+    });
+
+    let population_view = state!(|state, ui| {
+        let population = state.world.population();
+        view! {
+         <div class="dashboard--item">
+              <div class="minicard">
+                <span>{population}</span>
+              </div>
+              <img src=icons::POPULATION />
+              <div class="dashboard--item-name">{t!("Population")}</div>
+            </div>
+        }
+    });
+
+    let income_view = move || {
+        let income = avg_income_level();
+        view! {
+            <div class="dashboard--item">
+                <div class="minicard">
+                    <span style:color=income.color>{t!(& income.label)}</span>
+                </div>
+                <img src=icons::WEALTH/>
+                <div class="dashboard--item-name">
+                    {t!("Avg. Living Standards")}
+                </div>
+            </div>
+        }
+    };
+
+    let habitability_view = move || {
+        let habitability = avg_habitability();
+        view! {
+            <div class="dashboard--item">
+                <div class="minicard">
+                    <span style:color=habitability
+                        .color>{t!(& habitability.label)}</span>
+                </div>
+                <img src=icons::HABITABILITY/>
+                <div class="dashboard--item-name">
+                    {t!("Avg. Habitability")}
+                </div>
+            </div>
+        }
+    };
+
+    let table_data = state!(move |state, ui| { factors_card(None, breakdown_factor.get(), state) });
+    let icon = move || breakdown_factor.get().icon();
+    let name = move || t!(breakdown_factor.get().title());
+
+    let menu = move || {
+        view! {
+            <Show when=move || show_breakdown_menu.get()>
+                <div class="dashboard-breakdown-menu-overlay">
+                    <div class="dashboard-breakdown-menu">
+                        {move || {
+                            Var::iter()
+                                .map(|var| {
+                                    view! {
+                                        <div on:click=move |_| set_breakdown_factor.set(var)>
+                                            <img class="pip-icon" src=var.icon()/>
+                                            {t!(var.title())}
+                                        </div>
+                                    }
+                                })
+                                .collect::<Vec<_>>()
+                        }}
+
+                    </div>
+                </div>
+            </Show>
+        }
+    };
+
     view! {
-        <div class="planning--dashboard">
-            {temp_view} {emissions_view} {land_view} {energy_view}
+        <div class="planning--page planning--page--dashboard">
+            <div class="planning--dashboard">
+                {temp_view} {emissions_view} {land_view} {energy_view}
+                {water_view} {biodiversity_view} {sea_level_rise_view}
+                {population_view} {income_view} {habitability_view}
+            </div>
+
+            <div class="dashboard-breakdown">
+                <div
+                    class="dashboard-breakdown-select btn"
+                    on:click=move |_| set_show_breakdown_menu.set(true)
+                >
+                    <img class="pip-icon" src=icon/>
+                    {name}
+                    "▼"
+                </div>
+                <PieChart
+                    dataset=dataset
+                    colors=move || breakdown_factor.get().color()
+                />
+                <div class="dashboard--factors">
+                    <FactorsList factors=table_data/>
+                </div>
+                <div class="dashboard-breakdown-note">
+                    {t!("Only direct impacts are shown.")}
+                </div>
+            </div>
         </div>
     }
 }
@@ -260,6 +431,7 @@ fn DashboardItem(
     #[prop(into)] tip: MaybeSignal<Tip>,
     #[prop(into)] change: Signal<f32>,
     #[prop(into)] icon: MaybeSignal<&'static str>,
+    #[prop(into, optional)] color: Option<String>,
 ) -> impl IntoView {
     let change_tip = move || {
         crate::views::tip(
@@ -271,7 +443,7 @@ fn DashboardItem(
         <HasTip tip>
             <div class="dashboard--item">
                 <div class="minicard">
-                    <span>{display_value}</span>
+                    <span style:color=color>{display_value}</span>
                     <Show when=move || change.get() != 0.>
                         <HasTip tip=change_tip.into_signal()>
                             <div class="dashboard--change">

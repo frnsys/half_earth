@@ -7,49 +7,42 @@ use rand::{rngs::SmallRng, SeedableRng};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
-pub struct Update {
-    pub id: usize,
-
-    #[wasm_bindgen(skip)]
-    pub kind: UpdateType,
+pub enum Update {
+    Region {
+        id: usize,
+        up: bool, // or down
+    },
+    Policy {
+        id: usize,
+    },
+    Project {
+        id: usize,
+    },
 }
 
-#[derive(Clone, PartialEq, Serialize, Deserialize)]
-pub enum UpdateType {
-    RegionUp,
-    RegionDown,
-    Policy,
-    Project,
-}
-
-#[wasm_bindgen]
 impl Update {
-    fn is_region(&self) -> bool {
+    pub fn is_region(&self) -> bool {
+        matches!(self, Update::Region { .. })
+    }
+
+    pub fn is_region_up(&self) -> bool {
+        matches!(self, Update::Region { up: true, .. })
+    }
+
+    pub fn is_region_down(&self) -> bool {
+        matches!(self, Update::Region { up: false, .. })
+    }
+
+    pub fn is_project(&self) -> bool {
         matches!(
-            &self.kind,
-            UpdateType::RegionUp | UpdateType::RegionDown
+            self,
+            Update::Project { .. } | Update::Policy { .. }
         )
     }
 
-    fn is_region_up(&self) -> bool {
-        matches!(&self.kind, UpdateType::RegionUp)
-    }
-
-    fn is_region_down(&self) -> bool {
-        matches!(&self.kind, UpdateType::RegionDown)
-    }
-
-    fn is_project(&self) -> bool {
-        matches!(
-            &self.kind,
-            UpdateType::Project | UpdateType::Policy
-        )
-    }
-
-    fn is_policy(&self) -> bool {
-        matches!(&self.kind, UpdateType::Policy)
+    pub fn is_policy(&self) -> bool {
+        matches!(self, Update::Policy { .. })
     }
 }
 
@@ -75,20 +68,6 @@ impl Update {
 //         )?)
 //     }
 //
-//     pub fn eval_branch_conditions(
-//         &mut self,
-//         event_id: usize,
-//         region_id: Option<usize>,
-//         branch_id: usize,
-//     ) -> bool {
-//         let event = &self.game.event_pool.events[event_id];
-//         if branch_id < event.branches.len() {
-//             let (_effects, conds) = &event.branches[branch_id];
-//             conds.iter().all(|c| c.eval(&self.game.state, region_id))
-//         } else {
-//             true
-//         }
-//     }
 //
 //     pub fn check_requests(&mut self) -> Result<JsValue, JsValue> {
 //         Ok(serde_wasm_bindgen::to_value(
@@ -124,7 +103,11 @@ impl std::ops::DerefMut for Game {
 }
 
 impl Game {
-    pub fn from_world_string(&self, value: String) -> Self {
+    pub fn from_world(world: World) -> Self {
+        Game::new(world)
+    }
+
+    pub fn from_world_string(value: String) -> Self {
         let world: World =
             serde_json::from_str(&value).unwrap();
         Game::new(world)
@@ -134,7 +117,7 @@ impl Game {
         serde_json::to_string(self).unwrap()
     }
 
-    pub fn from_string(&self, value: String) -> Self {
+    pub fn from_string(value: String) -> Self {
         serde_json::from_str(&value).unwrap()
     }
 
@@ -158,12 +141,11 @@ impl Game {
         self.state.step_production();
         let mut changes = self.state.step_world();
 
-        changes.extend(completed_projects.into_iter().map(
-            |id| Update {
-                id,
-                kind: UpdateType::Project,
-            },
-        ));
+        changes.extend(
+            completed_projects
+                .into_iter()
+                .map(|id| Update::Project { id }),
+        );
         changes
     }
 
@@ -264,6 +246,21 @@ impl Game {
         }
     }
 
+    pub fn eval_branch_conditions(
+        &self,
+        event_id: usize,
+        region_id: Option<usize>,
+        branch_id: usize,
+    ) -> bool {
+        let event = &self.event_pool.events[event_id];
+        if branch_id < event.branches.len() {
+            let (_effects, conds) = &event.branches[branch_id];
+            conds.iter().all(|c| c.eval(&self.state, region_id))
+        } else {
+            true
+        }
+    }
+
     pub fn roll_new_policy_outcomes(&mut self) -> Vec<Update> {
         let (ids, effects) =
             self.state.roll_new_policy_outcomes(&mut self.rng);
@@ -276,10 +273,7 @@ impl Game {
         }
         self.state.update_demand();
         ids.into_iter()
-            .map(|id| Update {
-                id,
-                kind: UpdateType::Policy,
-            })
+            .map(|id| Update::Policy { id })
             .collect()
     }
 
@@ -322,7 +316,7 @@ impl Game {
             state.step_world();
             snapshots.push(Snapshot {
                 land: state.resources_demand.land,
-                emissions: state.world.emissions(),
+                emissions: state.emissions(),
                 energy: state.output_demand.electricity
                     + state.output_demand.fuel,
                 population: state.world.population(),
@@ -397,14 +391,13 @@ impl Game {
         &mut self,
         phase: Phase,
         limit: Option<usize>,
-        rng: &mut SmallRng,
     ) -> Vec<(usize, Option<usize>)> {
         // Roll for events and collect effects
         let events = self.event_pool.roll_for_phase(
             phase,
             &self.state,
             limit,
-            rng,
+            &mut self.rng,
         );
         events
             .iter()
@@ -412,12 +405,8 @@ impl Game {
             .collect()
     }
 
-    pub fn start_project(
-        &mut self,
-        project_id: usize,
-        rng: &mut SmallRng,
-    ) {
-        self.state.start_project(project_id, rng);
+    pub fn start_project(&mut self, project_id: usize) {
+        self.state.start_project(project_id, &mut self.rng);
         self.state.update_demand();
     }
 
@@ -436,7 +425,11 @@ impl Game {
 
 impl Default for Game {
     fn default() -> Self {
-        todo!()
+        let world: World = serde_json::from_str(include_str!(
+            "../assets/DEFAULT.world"
+        ))
+        .unwrap();
+        Self::from_world(world)
     }
 }
 

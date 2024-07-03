@@ -1,7 +1,4 @@
-use super::{
-    parts::{IntensityBar},
-    Credits,
-};
+use super::{parts::IntensityBar, Credits};
 use crate::{display::intensity, icons, state, state::Settings, t};
 use js_sys::Date;
 use leptos::*;
@@ -38,10 +35,9 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
     let year = state!(|game, _| game.world.year);
     let pc = state!(|game, _| game.political_capital.max(0));
     let temp = state!(|game, _| format!("{:+.1}C", game.world.temperature));
-    let emissions = state!(|game, _| format!("{:.1}Gt", game.world.emissions_gt()));
-    let contentedness = state!(|game, _| {
-        intensity::scale(game.world.outlook(), intensity::Variable::WorldOutlook)
-    });
+    let emissions = state!(|game, _| format!("{:.1}Gt", game.emissions_gt()));
+    let contentedness =
+        state!(|game, _| { intensity::scale(game.outlook(), intensity::Variable::WorldOutlook) });
     let extinction = state!(|game, _| {
         intensity::scale(game.world.extinction_rate, intensity::Variable::Extinction)
     });

@@ -1,8 +1,22 @@
 use super::ProductionOrder;
-use crate::kinds::{ByproductMap, Feedstock, Output, OutputMap, ResourceMap};
+use crate::{
+    flavor::ProcessFlavor,
+    kinds::{
+        ByproductMap, Feedstock, Output, OutputMap, ResourceMap,
+    },
+};
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    IntoStaticStr,
+)]
 pub enum ProcessFeature {
     UsesPesticides,
     UsesSynFertilizer,
@@ -41,15 +55,20 @@ pub struct Process {
 
     pub supporters: Vec<usize>,
     pub opposers: Vec<usize>,
+    pub flavor: ProcessFlavor,
 }
 
 impl Process {
     /// Generates production orders based on the provided demand
     /// and this sector's process mix.
-    pub fn production_order(&self, demand: &OutputMap) -> ProductionOrder {
+    pub fn production_order(
+        &self,
+        demand: &OutputMap,
+    ) -> ProductionOrder {
         // Production order amount can't be more than the process's limit,
         // if there is one.
-        let mut amount = demand[self.output] * self.mix_percent() as f32;
+        let mut amount =
+            demand[self.output] * self.mix_percent() as f32;
         if let Some(limit) = self.limit {
             amount = f32::min(amount, limit);
         }
@@ -76,7 +95,8 @@ impl Process {
     }
 
     pub fn adj_byproducts(&self) -> ByproductMap {
-        (self.byproducts * (self.byproduct_modifiers + 1.)) / (1. + self.output_modifier)
+        (self.byproducts * (self.byproduct_modifiers + 1.))
+            / (1. + self.output_modifier)
     }
 
     pub fn adj_feedstock_amount(&self) -> f32 {

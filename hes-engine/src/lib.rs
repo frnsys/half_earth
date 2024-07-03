@@ -12,6 +12,8 @@ pub mod surface;
 mod utils;
 pub mod world;
 
+pub mod flavor;
+
 use projects::years_for_points;
 use wasm_bindgen::prelude::*;
 
@@ -25,7 +27,11 @@ pub use projects::Type as ProjectType;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-pub fn years_remaining(progress: f32, points: usize, cost: usize) -> usize {
+pub fn years_remaining(
+    progress: f32,
+    points: usize,
+    cost: usize,
+) -> usize {
     let remaining = 1. - progress;
     let progress_per_year = 1. / years_for_points(points, cost);
     (remaining / progress_per_year).round() as usize

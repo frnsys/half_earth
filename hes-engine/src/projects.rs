@@ -1,11 +1,21 @@
 use crate::events::{Effect, Probability};
+use crate::flavor::ProjectFlavor;
 use crate::kinds::{Output, OutputMap};
 use crate::npcs::{NPCRelation, NPC};
 use crate::state::State;
 use rand::{rngs::SmallRng, Rng};
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Default)]
+#[derive(
+    Serialize,
+    Deserialize,
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Default,
+)]
 pub enum Status {
     #[default]
     Inactive,
@@ -16,7 +26,16 @@ pub enum Status {
     Finished,
 }
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Default)]
+#[derive(
+    Serialize,
+    Deserialize,
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Default,
+    IntoStaticStr,
+)]
 pub enum Group {
     #[default]
     Other,
@@ -38,7 +57,15 @@ pub enum Group {
     Cities,
 }
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Default)]
+#[derive(
+    Serialize,
+    Deserialize,
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Default,
+)]
 pub enum Type {
     #[default]
     Policy,
@@ -57,7 +84,9 @@ impl Default for Cost {
     }
 }
 
-#[derive(Serialize, Deserialize, Copy, Clone, PartialEq, Debug)]
+#[derive(
+    Serialize, Deserialize, Copy, Clone, PartialEq, Debug,
+)]
 pub enum Factor {
     Time,
     Income,
@@ -67,12 +96,12 @@ pub enum Factor {
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
-
-    #[serde(skip_serializing)]
     pub probability: Probability,
 }
 
-#[derive(Debug, Deserialize, Serialize, Default, Clone, PartialEq)]
+#[derive(
+    Debug, Deserialize, Serialize, Default, Clone, PartialEq,
+)]
 pub struct Upgrade {
     pub cost: usize,
     pub effects: Vec<Effect>,
@@ -102,19 +131,15 @@ pub struct Project {
     pub level: usize,
     pub completed_at: usize,
     pub required_majority: f32,
-
-    #[serde(skip_serializing)]
     pub effects: Vec<Effect>,
-
-    #[serde(skip_serializing)]
     pub outcomes: Vec<Outcome>,
-
-    #[serde(skip_serializing)]
     pub upgrades: Vec<Upgrade>,
     pub active_outcome: Option<usize>,
 
     pub supporters: Vec<usize>,
     pub opposers: Vec<usize>,
+
+    pub flavor: ProjectFlavor,
 }
 
 /// How many years a project takes to complete
@@ -135,11 +160,29 @@ impl Project {
         self.status == Status::Finished
     }
 
+    pub fn is_online(&self) -> bool {
+        self.is_active() || self.is_finished()
+    }
+
+    pub fn is_building(&self) -> bool {
+        self.status == Status::Building
+    }
+
+    pub fn is_haltable(&self) -> bool {
+        self.is_online()
+            && (self.kind == Type::Policy || self.ongoing)
+    }
+
+    pub fn can_downgrade(&self) -> bool {
+        self.kind == Type::Policy && self.level > 0
+    }
+
     /// Advance this project's implementation
     pub fn build(&mut self) -> bool {
         match &mut self.status {
             Status::Building => {
-                self.progress += 1. / years_for_points(self.points, self.cost);
+                self.progress += 1.
+                    / years_for_points(self.points, self.cost);
                 if self.progress >= 1. {
                     self.status = if self.ongoing {
                         Status::Active
@@ -157,11 +200,16 @@ impl Project {
 
     pub fn set_points(&mut self, points: usize) {
         self.points = points;
-        self.estimate = years_for_points(self.points, self.cost) as usize;
+        self.estimate =
+            years_for_points(self.points, self.cost) as usize;
     }
 
     /// Roll to see the outcome of this project
-    pub fn roll_outcome(&self, state: &State, rng: &mut SmallRng) -> Option<(&Outcome, usize)> {
+    pub fn roll_outcome(
+        &self,
+        state: &State,
+        rng: &mut SmallRng,
+    ) -> Option<(&Outcome, usize)> {
         let mut outcome = None;
         for (i, o) in self.outcomes.iter().enumerate() {
             match o.probability.eval(state, None) {
@@ -195,12 +243,16 @@ impl Project {
                     // Kind of arbitrarily choose 1980 as the starting point
                     Factor::Time => m * (year - 1980) as f32,
                     Factor::Income => m * (1. + income_level),
-                    Factor::Output(output) => m * demand[output],
+                    Factor::Output(output) => {
+                        m * demand[output]
+                    }
                 };
                 c.round() as usize
             }
         };
-        self.cost = (cost as f32 * self.cost_modifier * modifier).round() as usize;
+        self.cost =
+            (cost as f32 * self.cost_modifier * modifier)
+                .round() as usize;
     }
 
     pub fn upgrade(&mut self) -> bool {
@@ -221,6 +273,18 @@ impl Project {
         }
     }
 
+    pub fn next_upgrade(&self) -> Option<&Upgrade> {
+        self.upgrades.get(self.level)
+    }
+
+    pub fn prev_upgrade(&self) -> Option<&Upgrade> {
+        if self.level > 0 {
+            self.upgrades.get(self.level - 1)
+        } else {
+            None
+        }
+    }
+
     pub fn active_effects(&self) -> &Vec<Effect> {
         if self.level == 0 {
             &self.effects
@@ -229,57 +293,47 @@ impl Project {
         }
     }
 
-    // TODO
-    // I think what this needs to do is
-    // figure out the effects that have the same type and subtype,
-    // and if there are more than one consider the effect result to be unknown (i.e. "?")
-    fn outcome_effects(&self) -> Vec<&Effect> {
-        // self.outcomes.iter().map(|outcome| {
-        //     outcome.effects.iter().map(|effect| {
-        //         // effect.probability
-        //     })
-        // })
-        todo!()
-    }
-
-    pub fn active_effects_outcomes(&self) -> Vec<&Effect> {
+    pub fn active_effects_with_outcomes(&self) -> Vec<&Effect> {
         let mut effects = vec![];
-
-        if self.kind == Type::Policy && !self.is_active() {
-            // Project outcome effects are secret and delayed
-            effects.extend(self.effects.iter());
-        } else if self.status == Status::Inactive || self.status == Status::Building {
-            effects.extend(self.effects.iter());
-            effects.extend(self.outcome_effects().iter());
-        } else {
+        if self.is_online() {
             effects.extend(self.active_effects().iter());
             if let Some(id) = self.active_outcome {
-                effects.extend(self.outcomes[id].effects.iter());
+                effects
+                    .extend(self.outcomes[id].effects.iter());
             }
         }
-
         effects
     }
 
-    pub fn update_required_majority(&mut self, npcs: &Vec<NPC>) {
+    pub fn update_required_majority(
+        &mut self,
+        npcs: &Vec<NPC>,
+    ) {
         let opposers = self
             .opposers
             .iter()
-            .filter(|id| !npcs[**id].locked && npcs[**id].relation() != NPCRelation::Ally)
+            .filter(|id| {
+                !npcs[**id].locked
+                    && npcs[**id].relation()
+                        != NPCRelation::Ally
+            })
             .count();
         let supporters = self
             .supporters
             .iter()
             .filter(|id| !npcs[**id].locked)
             .count();
-        self.required_majority = if opposers > supporters { 0.5 } else { 0. };
+        self.required_majority =
+            if opposers > supporters { 0.5 } else { 0. };
     }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::events::{Comparator, Condition, Likelihood, WorldVariable};
+    use crate::events::{
+        Comparator, Condition, Likelihood, WorldVariable,
+    };
     use rand::SeedableRng;
 
     #[test]
@@ -403,11 +457,13 @@ mod test {
                     effects: vec![],
                     probability: Probability {
                         likelihood: Likelihood::Guaranteed,
-                        conditions: vec![Condition::WorldVariable(
-                            WorldVariable::Year,
-                            Comparator::Equal,
-                            10.,
-                        )],
+                        conditions: vec![
+                            Condition::WorldVariable(
+                                WorldVariable::Year,
+                                Comparator::Equal,
+                                10.,
+                            ),
+                        ],
                     },
                 },
                 Outcome {

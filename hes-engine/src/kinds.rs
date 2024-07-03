@@ -5,6 +5,7 @@ use std::ops::{
     Add, AddAssign, Div, Index, IndexMut, Mul, MulAssign, Sub,
     SubAssign,
 };
+use strum::{IntoStaticStr, EnumIter};
 use wasm_bindgen::prelude::*;
 
 macro_rules! count {
@@ -17,7 +18,7 @@ macro_rules! count {
 /// those enum variants.
 macro_rules! define_enum_map {
     ($name:ident { $($field:ident),* }) => {
-        #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Enum)]
+        #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Enum, EnumIter, IntoStaticStr)]
         pub enum $name {
             $(
                 $field,

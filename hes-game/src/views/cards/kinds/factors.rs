@@ -1,4 +1,4 @@
-use super::super::{card::*, FactorsCard, *, *};
+use super::super::{card::*, FactorsCard};
 use crate::{t, views::parts::FactorsList};
 use leptos::*;
 
@@ -10,6 +10,8 @@ pub fn FactorsCard(factors: Signal<FactorsCard>) -> impl IntoView {
                 <FactorsList factors/>
             </Body>
         </Card>
-        <div class="factors-note">{t!("Only direct impacts are shown.")}</div>
+        <div class="factors-note">
+            {t!("Only direct impacts are shown.")}
+        </div>
     }
 }

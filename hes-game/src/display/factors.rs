@@ -165,7 +165,7 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
         .iter()
         .filter(|p| p.is_active() || p.is_finished())
         .map(|p| {
-            let effects = p.active_effects_outcomes();
+            let effects = p.active_effects_with_outcomes();
             let amount = effects_factor(var, &effects, state);
 
             let display = if var.is_demand_var() {
@@ -359,17 +359,17 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
         // Additional factors
         match var {
             Var::Contentedness => {
-                if state.world.temp_outlook != 0. {
+                if state.temp_outlook != 0. {
                     rankings.push(Factor::Event {
                         name: "Temperature Change".into(),
-                        amount: state.world.temp_outlook.round(),
+                        amount: state.temp_outlook.round(),
                         display: None,
                     })
                 }
-                if state.world.shortages_outlook != 0. {
+                if state.shortages_outlook != 0. {
                     rankings.push(Factor::Event {
                         name: "Production Shortages".into(),
-                        amount: state.world.shortages_outlook.round(),
+                        amount: state.shortages_outlook.round(),
                         display: None,
                     })
                 }
@@ -418,20 +418,14 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
     factors
 }
 
-pub fn factors_card(
-    text: &str,
-    current_name: Option<String>,
-    var: Var,
-    state: &State,
-) -> FactorsCard {
+pub fn factors_card(current_name: Option<String>, var: Var, state: &State) -> FactorsCard {
     FactorsCard {
-        text: text.to_string(),
         icon: var.icon(),
         kind: var,
         current: current_name,
         total: match var {
             // TODO total: `${state.gameState.world.emissions_gt().toFixed(1)}Gt`,
-            Var::Emissions => state.world.emissions_gt(),
+            Var::Emissions => state.emissions_gt(),
             Var::Biodiversity => state.world.extinction_rate.round().max(0.),
 
             // TODO total: `${Math.round(format.landUsePercent(state.gameState.resources_demand.land))}%`,
@@ -446,7 +440,7 @@ pub fn factors_card(
                 format::resource(state.resources_demand.water, Resource::Water)
                     / format::resource(state.resources.water, Resource::Water)
             }
-            Var::Contentedness => state.world.outlook().round(),
+            Var::Contentedness => state.outlook().round(),
             Var::Electricity => {
                 format::resource(state.output_demand.electricity, Resource::Electricity)
             }

@@ -51,7 +51,8 @@ pub fn IndustryCard(card: Signal<Card>) -> impl IntoView {
                             key.icon(),
                             t!(
                                 "This industry's demand for {output}. This makes up {percent} of total demand for {output}.",
-                                output = key.lower(), percent = percent,
+                                output: key.lower(),
+                                percent: percent,
                             ),
                         );
                         view! {

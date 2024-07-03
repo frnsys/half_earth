@@ -1,8 +1,12 @@
-use crate::projects::Project;
+use crate::{flavor::NPCFlavor, projects::Project};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::wasm_bindgen;
 
-pub fn update_seats(outlook_change: f32, projects: &[&Project], npcs: &mut Vec<NPC>) {
+pub fn update_seats(
+    outlook_change: f32,
+    projects: &[&Project],
+    npcs: &mut Vec<NPC>,
+) {
     let mut supporters: Vec<usize> = vec![];
     let mut opposers: Vec<usize> = vec![];
     for project in projects {
@@ -42,30 +46,19 @@ pub fn update_seats(outlook_change: f32, projects: &[&Project], npcs: &mut Vec<N
     }
 }
 
-#[wasm_bindgen]
-#[derive(Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct NPC {
     pub id: usize,
     pub relationship: f32,
     pub locked: bool,
     pub support: f32,
     pub seats: f32,
-
-    #[wasm_bindgen(skip)]
+    pub flavor: NPCFlavor,
     pub name: String,
+    pub extra_seats: usize,
 }
 
-#[wasm_bindgen]
 impl NPC {
-    #[wasm_bindgen(getter)]
-    pub fn name(&self) -> String {
-        self.name.clone()
-    }
-}
-
-#[wasm_bindgen]
-impl NPC {
-    #[wasm_bindgen]
     pub fn is_ally(&self) -> bool {
         self.relation() == NPCRelation::Ally
     }
@@ -79,6 +72,18 @@ impl NPC {
             NPCRelation::Neutral
         }
     }
+
+    pub fn relationship_name(&self) -> &'static str {
+        if self.relationship >= 5. {
+            "Ally"
+        } else if self.relationship >= 4. {
+            "Friendly"
+        } else if self.relationship <= 1. {
+            "Nemesis"
+        } else {
+            "Neutral"
+        }
+    }
 }
 
 #[wasm_bindgen]
@@ -87,6 +92,19 @@ pub enum NPCRelation {
     Neutral,
     Nemesis,
     Ally,
+}
+impl std::fmt::Display for NPCRelation {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        let term = match self {
+            Self::Neutral => "neutral",
+            Self::Nemesis => "nemesis",
+            Self::Ally => "ally",
+        };
+        write!(f, "{}", term)
+    }
 }
 
 // impl Serialize for NPC {

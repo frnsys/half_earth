@@ -1,4 +1,7 @@
-use crate::kinds::{ByproductMap, ResourceMap};
+use crate::{
+    flavor::IndustryFlavor,
+    kinds::{ByproductMap, ResourceMap},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -10,6 +13,7 @@ pub struct Industry {
     pub resource_modifiers: ResourceMap,
     pub byproduct_modifiers: ByproductMap,
     pub demand_modifier: f32,
+    pub flavor: IndustryFlavor,
 }
 
 impl Industry {

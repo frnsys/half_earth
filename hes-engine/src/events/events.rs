@@ -1,11 +1,13 @@
 use super::{Condition, Effect, Likelihood, Probability};
-use crate::state::State;
+use crate::{flavor::EventFlavor, state::State};
 use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use wasm_bindgen::prelude::*;
 
-#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+#[derive(
+    Clone, Debug, Default, Serialize, Deserialize, PartialEq,
+)]
 pub struct EventPool {
     pub events: Vec<Event>,
 
@@ -23,7 +25,12 @@ impl EventPool {
         }
     }
 
-    pub fn queue_event(&mut self, id: usize, region_id: Option<usize>, years: usize) {
+    pub fn queue_event(
+        &mut self,
+        id: usize,
+        region_id: Option<usize>,
+        years: usize,
+    ) {
         let phase = self.events[id].phase;
         self.queue.push((phase, id, region_id, years));
     }
@@ -49,7 +56,10 @@ impl EventPool {
             .events
             .iter()
             .filter(|ev| {
-                ev.phase == phase && !ev.occurred && !ev.locked && !existing.contains(&ev.id)
+                ev.phase == phase
+                    && !ev.occurred
+                    && !ev.locked
+                    && !existing.contains(&ev.id)
             })
             .map(|ev| ev.id)
             .collect();
@@ -59,7 +69,8 @@ impl EventPool {
         let mut i = 0;
         while i < self.queue.len() {
             let try_trigger = {
-                let (_, ev_id, _, countdown) = &mut self.queue[i];
+                let (_, ev_id, _, countdown) =
+                    &mut self.queue[i];
                 if self.events[*ev_id].phase == phase {
                     *countdown -= 1;
                     *countdown <= 0
@@ -71,7 +82,8 @@ impl EventPool {
                 let (_, ev_id, region_id, _) = self.queue[i];
                 let ev = &mut self.events[ev_id];
                 if ev.roll(state, region_id, rng) {
-                    self.triggered.push((ev.phase, ev_id, region_id));
+                    self.triggered
+                        .push((ev.phase, ev_id, region_id));
                 }
                 self.queue.remove(i);
             } else {
@@ -88,18 +100,28 @@ impl EventPool {
             if ev.phase == Phase::Icon {
                 for region in &state.world.regions {
                     if ev.roll(state, Some(region.id), rng) {
-                        self.triggered.push((ev.phase, ev_id, Some(region.id)));
+                        self.triggered.push((
+                            ev.phase,
+                            ev_id,
+                            Some(region.id),
+                        ));
                     }
                 }
             } else {
                 if ev.regional {
                     for region in &state.world.regions {
-                        if ev.roll(state, Some(region.id), rng) {
-                            self.triggered.push((ev.phase, ev_id, Some(region.id)));
+                        if ev.roll(state, Some(region.id), rng)
+                        {
+                            self.triggered.push((
+                                ev.phase,
+                                ev_id,
+                                Some(region.id),
+                            ));
                         }
                     }
                 } else if ev.roll(state, None, rng) {
-                    self.triggered.push((ev.phase, ev_id, None));
+                    self.triggered
+                        .push((ev.phase, ev_id, None));
                 }
             }
         }
@@ -141,7 +163,9 @@ impl EventPool {
 }
 
 #[wasm_bindgen]
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Copy, Clone, PartialEq, Serialize, Deserialize,
+)]
 pub enum Phase {
     WorldMain,
     WorldStart,
@@ -207,6 +231,8 @@ pub struct Event {
 
     /// Icon event intensity
     pub intensity: usize,
+
+    pub flavor: EventFlavor,
 }
 
 impl Event {
@@ -214,7 +240,11 @@ impl Event {
     /// If there are multiple probabilities, it returns
     /// the likelihood of the first probability that has
     /// all its conditions satisfied.
-    fn eval(&self, state: &State, region_id: Option<usize>) -> Option<&Likelihood> {
+    fn eval(
+        &self,
+        state: &State,
+        region_id: Option<usize>,
+    ) -> Option<&Likelihood> {
         let res = self
             .probabilities
             .iter()
@@ -223,7 +253,12 @@ impl Event {
     }
 
     /// Roll to see if the event occurs.
-    fn roll(&self, state: &State, region_id: Option<usize>, rng: &mut SmallRng) -> bool {
+    fn roll(
+        &self,
+        state: &State,
+        region_id: Option<usize>,
+        rng: &mut SmallRng,
+    ) -> bool {
         match self.eval(state, region_id) {
             Some(likelihood) => {
                 let prob = likelihood.p();
@@ -236,7 +271,9 @@ impl Event {
 
 #[cfg(test)]
 mod test {
-    use super::super::{Comparator, LocalVariable, WorldVariable};
+    use super::super::{
+        Comparator, LocalVariable, WorldVariable,
+    };
     use super::*;
     use crate::regions::{Income, Latitude, Region};
     use rand::SeedableRng;
@@ -258,11 +295,13 @@ mod test {
                 probabilities: vec![
                     Probability {
                         likelihood: Likelihood::Guaranteed,
-                        conditions: vec![Condition::WorldVariable(
-                            WorldVariable::Year,
-                            Comparator::Equal,
-                            10.,
-                        )],
+                        conditions: vec![
+                            Condition::WorldVariable(
+                                WorldVariable::Year,
+                                Comparator::Equal,
+                                10.,
+                            ),
+                        ],
                     },
                     Probability {
                         likelihood: Likelihood::Impossible,
@@ -301,7 +340,12 @@ mod test {
         };
 
         let mut state = State::default();
-        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::WorldMain,
+            &state,
+            None,
+            &mut rng,
+        );
 
         // Only event B should happen
         assert_eq!(events.len(), 1);
@@ -310,7 +354,12 @@ mod test {
         // But if we set it so that event A's first condition
         // is met, it should happen
         state.world.year = 10;
-        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::WorldMain,
+            &state,
+            None,
+            &mut rng,
+        );
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
     }
@@ -389,14 +438,24 @@ mod test {
                 pattern_idxs: vec![],
             },
         ];
-        let events = pool.roll_for_phase(Phase::Icon, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::Icon,
+            &state,
+            None,
+            &mut rng,
+        );
 
         // No events should happen
         assert_eq!(events.len(), 0);
 
         // Set one region to satisfy conditions
         state.world.regions[1].population = 10.;
-        let events = pool.roll_for_phase(Phase::Icon, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::Icon,
+            &state,
+            None,
+            &mut rng,
+        );
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[0].1, Some(1));
@@ -434,11 +493,21 @@ mod test {
         let state = State::default();
 
         // No events should happen
-        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::WorldMain,
+            &state,
+            None,
+            &mut rng,
+        );
         assert_eq!(events.len(), 0);
 
         // Countdown finished
-        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::WorldMain,
+            &state,
+            None,
+            &mut rng,
+        );
         assert_eq!(events.len(), 1);
     }
 
@@ -474,14 +543,24 @@ mod test {
         };
 
         let state = State::default();
-        let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
+        let events = pool.roll_for_phase(
+            Phase::WorldMain,
+            &state,
+            None,
+            &mut rng,
+        );
 
         // Only 1 event should happen
         assert_eq!(events.len(), 1);
 
         // Shouldn't happen again, even though they're pre-triggered
         for _ in 0..4 {
-            let events = pool.roll_for_phase(Phase::WorldMain, &state, None, &mut rng);
+            let events = pool.roll_for_phase(
+                Phase::WorldMain,
+                &state,
+                None,
+                &mut rng,
+            );
             assert_eq!(events.len(), 0);
         }
     }

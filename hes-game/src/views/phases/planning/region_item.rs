@@ -16,7 +16,7 @@ fn temp_tip() -> Tip {
 
 fn precip_tip() -> Tip {
     tip(
-        icons::PRECIPTATION,
+        icons::PRECIPITATION,
         t!("This region's current precipitation range."),
     )
 }
@@ -40,9 +40,10 @@ fn hab_tip() -> Tip {
 }
 
 fn inc_tip(income: &str) -> Tip {
-    tip(icons::WEALTH,
-        t!("This region has {incomeName} living standards. Higher living standards mean higher material footprints.", incomeName = income)
-        )
+    tip(
+        icons::WEALTH,
+        t!("This region has {incomeName} living standards. Higher living standards mean higher material footprints.", incomeName: income),
+    )
 }
 
 fn demand_tip(output: &Output, demand: f32, percent: String) -> Tip {
@@ -52,7 +53,11 @@ fn demand_tip(output: &Output, demand: f32, percent: String) -> Tip {
         demand.to_string()
     };
     let icon = output.icon();
-    let msg = t!("This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.", output = t!(output.lower()), icon = icon, demand = demand, percent = percent);
+    let msg = t!("This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.",
+        output: t!(output.lower()),
+        icon: icon,
+        demand: demand,
+        percent: percent);
     tip(icon, msg)
 }
 
@@ -158,7 +163,7 @@ pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
                     </HasTip>
                     <HasTip tip=precip_tip.into_signal()>
                         <div class="region-stat">
-                            <img src=icons::PRECIPTATION/>
+                            <img src=icons::PRECIPITATION/>
                             {precip_range}
                         </div>
                     </HasTip>

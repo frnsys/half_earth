@@ -4,15 +4,10 @@ use crate::{
     icons, state,
     state::Phase,
     t,
-    views::{
-        dialogue::Event, hud::Hud, parts::IntensityBar, phases::cutscene::Events, tip, HasTip, Tip,
-    },
+    views::{hud::Hud, parts::IntensityBar, phases::cutscene::Events, tip, HasTip, Tip},
     write_state,
 };
-use hes_engine::{
-    game::{Update, UpdateType},
-    kinds::Output,
-};
+use hes_engine::{game::Update, kinds::Output};
 use leptos::*;
 
 pub struct Request {
@@ -33,7 +28,7 @@ pub fn Report() -> impl IntoView {
             ui.cycle_start_state.contentedness,
             intensity::Variable::WorldOutlook,
         );
-        let end = intensity::scale(game.world.outlook(), intensity::Variable::WorldOutlook);
+        let end = intensity::scale(game.outlook(), intensity::Variable::WorldOutlook);
         (start, end)
     });
     let extinction = state!(|game, ui| {
@@ -206,7 +201,7 @@ pub fn Report() -> impl IntoView {
             .unwrap_or_else(|| consts::EXTINCTION_PC.last().unwrap())
     };
     let ghg_pc_change = state!(|game, ui| {
-        let emissions_change = game.world.emissions_gt() - ui.cycle_start_state.emissions;
+        let emissions_change = game.emissions_gt() - ui.cycle_start_state.emissions;
         (emissions_change * 2.).round() as isize * -(consts::EMISSIONS_PC as isize)
     });
 
@@ -222,8 +217,8 @@ pub fn Report() -> impl IntoView {
         ui.cycle_start_state
             .completed_projects
             .iter()
-            .filter_map(|update| match update.kind {
-                UpdateType::Project => Some(game.world.projects[update.id].clone()),
+            .filter_map(|update| match update {
+                Update::Project { id } => Some(game.world.projects[*id].clone()),
                 _ => None,
             })
             .collect::<Vec<_>>()
@@ -236,7 +231,7 @@ pub fn Report() -> impl IntoView {
         // update_processes() // TODO
 
         upgrade_projects();
-        ui.refundable_research_points = 0;
+        ui.points.refundable_research = 0;
         ui.phase = Phase::Interstitial;
 
         // Reset session plan changes
@@ -300,7 +295,7 @@ pub fn Report() -> impl IntoView {
     });
     let ghg_row = state!(move |game, ui| {
         let start = format!("{:+.1}", ui.cycle_start_state.emissions);
-        let end = format!("{:+.1}", game.world.emissions_gt());
+        let end = format!("{:+.1}", game.emissions_gt());
         let pc_change = format!("{:+}", ghg_pc_change());
         view! {
             <HasTip tip=emissions_tip.into_signal()>
@@ -486,8 +481,8 @@ pub fn Report() -> impl IntoView {
                                             <tr>
                                                 <td colspan="4">
                                                     {t!(
-                                                        "{region} is now {income} income.", region = t!(& name),
-                                                        income = t!(inc.lower())
+                                                        "{region} is now {income} income.", region : t!(& name),
+                                                        income : t!(inc.lower())
                                                     )}
 
                                                 </td>

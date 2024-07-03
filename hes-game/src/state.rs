@@ -8,6 +8,7 @@ use hes_engine::{
     game::Update,
     kinds::{Feedstock, Output},
     production::Process,
+    projects::{Project, Status, Upgrade},
     regions::Income,
     world::World,
     Game, ProjectType,
@@ -17,7 +18,7 @@ use leptos_use::{storage::use_local_storage, utils::JsonCodec};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    consts::{POINT_COST, WIN_EMISSIONS, WIN_EXTINCTION, WIN_TEMPERATURE},
+    consts::{self, POINT_COST, WIN_EMISSIONS, WIN_EXTINCTION, WIN_TEMPERATURE},
     display::{factors, format, Var},
 };
 
@@ -53,7 +54,7 @@ impl GameState {
 
     /// If we won the game.
     pub fn won(&self) -> bool {
-        self.game.state.world.emissions_gt() <= WIN_EMISSIONS
+        self.game.state.emissions_gt() <= WIN_EMISSIONS
             && self.game.state.world.extinction_rate <= WIN_EXTINCTION
             && self.game.state.world.temperature <= WIN_TEMPERATURE
     }
@@ -201,6 +202,13 @@ pub enum Tutorial {
     Plan,
     Ready,
 }
+impl Tutorial {
+    pub fn advance(&mut self) {
+        if let Some(next) = self.next() {
+            *self = next;
+        }
+    }
+}
 
 #[derive(Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CycleStart {
@@ -218,11 +226,11 @@ pub struct CycleStart {
 
 #[derive(Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PlanChange {
-    points: usize,
-    upgrades: usize,
-    downgrades: usize,
-    withdrawn: bool,
-    passed: bool,
+    pub points: usize,
+    pub upgrades: usize,
+    pub downgrades: usize,
+    pub withdrawn: bool,
+    pub passed: bool,
 }
 
 // TODO
@@ -231,6 +239,13 @@ pub struct IconEvent {
     pub name: String,
     pub icon: String,
     pub intensity: usize,
+}
+
+#[derive(Default, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Points {
+    pub research: isize,
+    pub initiative: isize,
+    pub refundable_research: usize,
 }
 
 /// Transient UI-state that is not preserved b/w sessions.
@@ -262,24 +277,16 @@ pub struct UIState {
     // Compare beginning and end
     pub cycle_start_state: CycleStart,
 
-    pub research_points : isize,
-    pub initiative_points: isize,
-    pub refundable_research_points: usize,
+    pub points: Points,
 
     // history: {
     //   emissions: [],
     //   land_use: [],
     // },
     //
-    // points: {
-    //   research: 0,
-    //   initiative: 0,
-    // },
     /// Viewed project and process ids,
     /// so we can keep track of which ones are new
     pub viewed: Vec<String>,
-    // // Kind of hacky
-    // extraSeats: {}
 }
 
 // TODO load settings
@@ -299,13 +306,20 @@ pub enum Phase {
 #[ext]
 pub impl Game {
     fn emissions_gt(&self) -> String {
-        format::emissions(self.state.world.emissions_gt())
+        format::emissions(self.state.emissions_gt())
     }
 
     fn land_use_percent(&self) -> String {
         let usage = self.state.resources_demand.land;
         let total_land = self.state.world.starting_resources.land;
-        let percent = usage / total_land * 100.;
+        let percent = usage / total_land;
+        format::percent(percent, true)
+    }
+
+    fn water_use_percent(&self) -> String {
+        let usage = self.state.resources_demand.water;
+        let total_water = self.state.resources.water;
+        let percent = usage / total_water;
         format::percent(percent, true)
     }
 
@@ -316,6 +330,11 @@ pub impl Game {
     fn energy_pwh(&self) -> String {
         let energy = self.state.output_demand.energy();
         format!("{}PWh", (format::twh(energy) / 1e3).round())
+    }
+
+    fn energy_twh(&self) -> String {
+        let energy = self.state.output_demand.energy();
+        format!("{}TWh", format::twh(energy).round())
     }
 
     fn avg_income_level(&self) -> usize {
@@ -340,7 +359,7 @@ pub impl Game {
 
     /// Cost for the next point for a project, taking into
     /// account discounts.
-    fn next_point_cost(&self, kind: &ProjectType) -> u8 {
+    fn next_point_cost(&self, kind: &ProjectType) -> usize {
         let mut discount = 0;
         if *kind == ProjectType::Research {
             if self.state.flags.contains(&Flag::HyperResearch) {
@@ -350,14 +369,170 @@ pub impl Game {
                 discount += 1;
             }
         }
-        0.max(POINT_COST - discount)
+        0.max(POINT_COST - discount) as usize
+    }
+
+    fn player_seats(&self) -> f32 {
+        self.state
+            .npcs
+            .iter()
+            .filter(|npc| npc.is_ally())
+            .map(|npc| npc.seats)
+            .sum()
+    }
+
+    fn buy_point(&mut self, project: &Project, points: &mut Points) -> bool {
+        let is_research = project.kind == ProjectType::Research;
+        if project.points >= consts::MAX_POINTS {
+            false
+        } else if is_research && points.research > 0 {
+            true
+        } else {
+            let cost = self.next_point_cost(&project.kind) as isize;
+            if cost <= self.state.political_capital {
+                self.change_political_capital(-cost);
+                match project.kind {
+                    ProjectType::Research => points.research += 1,
+                    ProjectType::Initiative => points.initiative += 1,
+                    _ => (),
+                }
+                if is_research {
+                    points.refundable_research += 1;
+                }
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    fn pay_points(&mut self, project: &Project) -> bool {
+        // Only policies have points paid all at once,
+        // rather than assigned.
+        let available = self.state.political_capital;
+        if project.status == Status::Inactive && available >= project.cost as isize {
+            self.change_political_capital(-(project.cost as isize));
+            true
+        } else {
+            false
+        }
+    }
+
+    fn assign_point(&mut self, project: &Project, points: &mut Points) {
+        let points = match project.kind {
+            ProjectType::Research => &mut points.research,
+            ProjectType::Initiative => &mut points.initiative,
+            ProjectType::Policy => return,
+        };
+        if *points > 0 && project.points < consts::MAX_POINTS {
+            self.set_project_points(project.id, project.points + 1);
+            if project.status != Status::Building {
+                self.start_project(project.id);
+            }
+            *points -= 1;
+        }
+    }
+
+    fn unassign_points(&mut self, project: &Project, points: usize) {
+        let new_points = project.points - points;
+        self.set_project_points(project.id, new_points);
+        if project.status == Status::Building && new_points == 0 {
+            self.stop_project(project.id);
+        }
+    }
+
+    fn pass_policy(&mut self, project: &Project) {
+        if project.kind == ProjectType::Policy {
+            self.start_project(project.id);
+        }
+    }
+
+    fn stop_policy(&mut self, project: &Project) {
+        if project.kind == ProjectType::Policy {
+            self.change_political_capital(project.cost as isize);
+            self.stop_project(project.id);
+        }
+    }
+
+    fn upgrade_project_x(
+        &mut self,
+        project: &Project,
+        is_free: bool,
+        queued_upgrades: &mut HashMap<usize, bool>,
+    ) -> bool {
+        if let Some(upgrade) = project.next_upgrade() {
+            let available = self.state.political_capital;
+            if is_free || available >= upgrade.cost as isize {
+                if !is_free {
+                    self.change_political_capital(-(upgrade.cost as isize));
+                }
+            }
+
+            match project.kind {
+                // Policies upgraded instantly
+                ProjectType::Policy => {
+                    self.upgrade_project(project.id);
+                }
+                _ => {
+                    queued_upgrades.insert(project.id, true);
+                }
+            }
+            true
+        } else {
+            false
+        }
+    }
+
+    fn downgrade_project_x(
+        &mut self,
+        project: &Project,
+        queued_upgrades: &mut HashMap<usize, bool>,
+    ) {
+        if let Some(upgrade) = project.prev_upgrade() {
+            self.change_political_capital(upgrade.cost as isize);
+            if (project.kind == ProjectType::Policy) {
+                self.downgrade_project(project.id);
+            } else {
+                queued_upgrades.insert(project.id, false);
+            }
+        }
     }
 }
 
 impl UIState {
-    pub fn has_process_mix_changes(&self) -> bool {
+    pub fn has_any_process_mix_changes(&self) -> bool {
         self.process_mix_changes
             .iter()
             .any(|(_, changes)| changes.iter().any(|(_, change)| *change != 0))
+    }
+
+    pub fn has_process_mix_changes(&self, output: Output) -> bool {
+        self.process_mix_changes[output]
+            .iter()
+            .any(|(_, change)| *change != 0)
+    }
+
+    pub fn remove_point(&mut self, points: &mut isize, process: &Process) {
+        let change = self.process_mix_changes[process.output]
+            .entry(process.id)
+            .or_default();
+        if process.mix_share as isize + *change > 0 {
+            *points += 1;
+            *change -= 1;
+            // this.allowBack = false;
+        }
+    }
+
+    // Returns the point change.
+    pub fn add_point(&mut self, points: &mut isize, process: &Process, max_share: usize) {
+        if *points > 0 {
+            let change = self.process_mix_changes[process.output]
+                .entry(process.id)
+                .or_default();
+            if *change + 1 <= max_share as isize {
+                *points -= 1;
+                *change += 1;
+            }
+        }
     }
 }

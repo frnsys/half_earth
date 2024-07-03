@@ -1,16 +1,18 @@
-use crate::kinds::{Output, OutputMap};
+use crate::{
+    flavor::RegionFlavor,
+    kinds::{Output, OutputMap},
+};
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1. / 40.;
 
-#[wasm_bindgen]
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct Region {
     pub id: usize,
 
-    #[wasm_bindgen(skip)]
     pub name: String,
 
     pub population: f32,
@@ -19,7 +21,6 @@ pub struct Region {
     pub income: Income,
     pub development: f32,
 
-    #[wasm_bindgen(skip)]
     pub flags: Vec<String>,
 
     /// How hopeful are people in the region about the future?
@@ -38,16 +39,8 @@ pub struct Region {
     pub precip_hi: f32,
     pub latitude: Latitude,
 
-    #[wasm_bindgen(skip)]
+    pub flavor: RegionFlavor,
     pub pattern_idxs: Vec<usize>,
-}
-
-#[wasm_bindgen]
-impl Region {
-    #[wasm_bindgen(getter)]
-    pub fn name(&self) -> String {
-        self.name.clone()
-    }
 }
 
 impl Region {
@@ -68,6 +61,15 @@ impl Region {
             Income::UpperMiddle => 2,
             Income::High => 3,
         }
+    }
+
+    pub fn set_income_level(&mut self, level: usize) {
+        self.income = match level {
+            0 => Income::Low,
+            1 => Income::LowerMiddle,
+            2 => Income::UpperMiddle,
+            _ => Income::High,
+        };
     }
 
     pub fn adjusted_income(&self) -> f32 {
@@ -265,7 +267,13 @@ pub enum Income {
 
 #[wasm_bindgen]
 #[derive(
-    PartialEq, Serialize, Deserialize, Clone, Copy, Debug,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    Clone,
+    Copy,
+    Debug,
+    IntoStaticStr,
 )]
 pub enum Latitude {
     Tropic,

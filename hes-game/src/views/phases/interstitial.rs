@@ -9,7 +9,6 @@ use crate::{
     state::Phase,
     t,
     views::{
-        dialogue::Event,
         phases::cutscene::Events,
         tips::{HasTip, Tip},
     },
@@ -177,7 +176,7 @@ pub fn Interstitial() -> impl IntoView {
             3 => "rd",
             _ => "th",
         };
-        t!("The {n}{ext} Planning Session", n = n, ext = t!(ext))
+        t!("The {n}{ext} Planning Session", n: n, ext: t!(ext))
     };
     let locale = move || {
         let idx = (number() - 1) % LOCALES.len();
@@ -197,7 +196,7 @@ pub fn Interstitial() -> impl IntoView {
     });
     let world = state!(|game, ui| {
         let temp = game.world.temperature;
-        let emissions = game.world.emissions_gt();
+        let emissions = game.emissions_gt();
         describe_warming(emissions, temp)
     });
     let biodiversity = state!(|game, ui| {
@@ -205,14 +204,14 @@ pub fn Interstitial() -> impl IntoView {
         describe_extinction(er)
     });
     let contentedness = state!(|game, ui| {
-        let outlook = game.world.outlook();
+        let outlook = game.outlook();
         describe_outlook(outlook)
     });
     let years_left = state!(|game, ui| {
         let years_left = (game.death_year - game.world.year).max(0);
         t!(
             "You have {yearsLeft} years left in your tenure.",
-            yearsLeft = years_left
+            yearsLeft: years_left
         )
     });
 

@@ -1,6 +1,15 @@
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    IntoStaticStr,
+)]
 pub enum WorldVariable {
     Year,
     Population,
@@ -15,14 +24,30 @@ pub enum WorldVariable {
     PopulationGrowth,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    IntoStaticStr,
+)]
 pub enum LocalVariable {
     Population,
     Outlook,
     Habitability,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    IntoStaticStr,
+)]
 pub enum PlayerVariable {
     PoliticalCapital,
     ResearchPoints,

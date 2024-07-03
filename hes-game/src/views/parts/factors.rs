@@ -10,7 +10,7 @@ use crate::{
 use leptos::*;
 
 #[component]
-pub fn FactorsList(factors: Signal<FactorsCard>) -> impl IntoView {
+pub fn FactorsList(#[prop(into)] factors: Signal<FactorsCard>) -> impl IntoView {
     let relation = move || {
         factors.with(|factors| {
             let relation = match factors.kind {
@@ -34,9 +34,9 @@ pub fn FactorsList(factors: Signal<FactorsCard>) -> impl IntoView {
             if let Some(max_value) = max_value {
                 view! {
                     <div>
-                    {total} <span class="type-total">/ {max_value}</span>
-                    <img src=icon/>
-                        </div>
+                        {total} <span class="type-total">/ {max_value}</span>
+                        <img src=icon/>
+                    </div>
                 }
             } else {
                 view! { <div>{total} <img src=icon/></div> }

@@ -1,5 +1,6 @@
+use crate::audio::init_audio;
 use crate::i18n::{get_preferred_language, load_language};
-use crate::views::{Cutscene, End, Interstitial, Loading, Start, Tip, ToolTip};
+use crate::views::{Cutscene, End, Interstitial, Loading, Planning, Report, Start, Tip, ToolTip};
 use crate::{
     state,
     state::{GameState, Phase},
@@ -26,6 +27,7 @@ pub fn App() -> impl IntoView {
     AnimationContext::provide();
     provide_context(create_rw_signal::<Option<Tip>>(None));
     provide_context(create_signal::<GameState>(GameState::load()));
+    init_audio();
 
     let (started, set_started) = create_signal(false);
     let (loaded, set_loaded) = create_signal(false);
@@ -45,8 +47,8 @@ pub fn App() -> impl IntoView {
                 Phase::Interstitial => view! { <Interstitial/> }.into_view(),
                 Phase::GameOver => view! { <End lose=true/> }.into_view(),
                 Phase::GameWin => view! { <End lose=false/> }.into_view(),
-                Phase::Planning => todo!(),
-                Phase::Report => todo!(),
+                Phase::Planning => view! { <Planning /> }.into_view(),
+                Phase::Report => view! { <Report /> }.into_view(),
                 Phase::Events => todo!(),
             }
         });

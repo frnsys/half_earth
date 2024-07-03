@@ -7,47 +7,7 @@ use crate::{
     util::{card_scale, to_ws_el},
 };
 
-#[component]
-pub fn RemoveScanner() -> impl IntoView {
-    todo!()
-}
-
-#[component]
-pub fn AddScanner() -> impl IntoView {
-    let progress_ref = create_node_ref::<html::Div>();
-    let target_ref = create_node_ref::<html::Div>();
-
-    const REVEAL_TARGET: f64 = 65.;
-
-    let get_edges = move || {
-        if let Some(target) = target_ref.get() {
-            let rect = to_ws_el(target).get_bounding_client_rect();
-            let top_y = rect.y() + REVEAL_TARGET;
-            let bot_y = top_y + rect.height();
-        }
-    };
-
-    // TODO
-    // window.addEventListener('resize', this.getEdges);
-    // beforeUnmount() {
-    //   window.removeEventListener('resize', this.getEdges);
-    // },
-
-    view! {
-        <div class="scanbar-wrapper" ref=target_ref>
-            <div class="mini-scanbar">
-                <div class="scanbar-base">
-                    <div class="scan-progress-bar" ref=progress_ref></div>
-                </div>
-                <div class="scanbar-led scanbar-led-ok"></div>
-                <div class="scanbar-led scanbar-led-bad"></div>
-                <div class="card-scan-target"></div>
-            </div>
-        </div>
-    }
-}
-
-fn shake_screen() {
+pub fn shake_screen() {
     document().body().map(|body| {
         // TODO
         // window.audioManager.playOneShot('/assets/sounds/impact.mp3');
@@ -61,7 +21,7 @@ fn shake_screen() {
     });
 }
 
-fn shake_progress(elem: web_sys::HtmlElement) {
+pub fn shake_progress(elem: web_sys::HtmlElement) {
     if let Some(elem) = elem.parent_element() {
         elem.class_list().add_2("scan-error", "shake");
         set_timeout(
@@ -73,7 +33,7 @@ fn shake_progress(elem: web_sys::HtmlElement) {
     }
 }
 
-fn pulse_card() {
+pub fn pulse_card() {
     if let Some(elem) = document().query_selector(".draggable.active").unwrap() {
         let from = card_scale();
         let to = from * 1.05;
@@ -90,7 +50,7 @@ fn pulse_card() {
     }
 }
 
-fn shrink_pulse_card() {
+pub fn shrink_pulse_card() {
     if let Some(elem) = document().query_selector(".draggable.active").unwrap() {
         let from = card_scale();
         let to = from * 0.95;
@@ -100,6 +60,22 @@ fn shrink_pulse_card() {
         // }, () => {
         //   animate(consts.cardScale*0.95, consts.cardScale, 100, (val) => {
         //     updateTransform(el, {scale: val});
+        //   });
+        // });
+    }
+}
+
+pub fn pulse_level() {
+    if let Some(elem) = document()
+        .query_selector(".draggable.active .project-cost")
+        .unwrap()
+    {
+        // TODO
+        // animate(1, 1.2, 200, (val) => {
+        //   el.style.transform = `scale(${val})`;
+        // }, () => {
+        //   animate(1.2, 1, 200, (val) => {
+        //     el.style.transform = `scale(${val})`;
         //   });
         // });
     }

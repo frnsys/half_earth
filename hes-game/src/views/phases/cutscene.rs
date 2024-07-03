@@ -1,15 +1,7 @@
 use std::{collections::HashMap, time::Duration};
 
-use crate::{
-    anim::fade_out,
-    state::Phase,
-    t,
-    views::{
-        dialogue::{DialogueData, Event},
-        Dialogue,
-    },
-    write_state,
-};
+use crate::{anim::fade_out, state::Phase, t, views::Dialogue, write_state};
+use hes_engine::flavor;
 use leptos::*;
 
 #[component]
@@ -53,7 +45,7 @@ pub fn Cutscene() -> impl IntoView {
     };
 
     // Wait a beat before showing the event
-    let (events, set_events) = create_signal::<Vec<Event>>(vec![]);
+    let (events, set_events) = create_signal::<Vec<flavor::EventFlavor>>(vec![]);
     set_timeout(
         || {
             // let events = game.roll.cutscene("Intro")// TODO
@@ -86,11 +78,11 @@ pub fn Cutscene() -> impl IntoView {
 pub fn Events(
     #[prop(into)] on_advance: Callback<()>,
     #[prop(into)] on_done: Callback<()>,
-    #[prop(into)] events: MaybeSignal<Vec<Event>>,
+    #[prop(into)] events: MaybeSignal<Vec<flavor::EventFlavor>>,
 ) -> impl IntoView {
     let (idx, set_idx) = create_signal(0);
     let (ctx, set_ctx) = create_signal::<HashMap<String, String>>(HashMap::default());
-    let (dialogue, set_dialogue) = create_signal::<Option<DialogueData>>(None);
+    let (dialogue, set_dialogue) = create_signal::<Option<flavor::Dialogue>>(None);
     let next_event = move |_| {
         // TODO apply game effects when rolling?
         events.with(|events| {
@@ -114,15 +106,20 @@ pub fn Events(
             });
         });
     };
-    view! {
-        <Show when=move || dialogue.with(|d| d.is_some())>
-            <Dialogue
-                dialogue=dialogue.with(|d| d.clone().unwrap())
-                context=ctx
-                on_advance=on_advance
-                on_done=next_event.clone()
-            />
 
-        </Show>
-    }
+    let view = move || {
+        dialogue.get().map(|dialogue| {
+            let (dialogue, _) = create_signal(dialogue);
+            view! {
+                <Dialogue
+                    dialogue=dialogue
+                    context=ctx
+                    on_advance=on_advance
+                    on_done=next_event.clone()
+                />
+            }
+        })
+    };
+
+    view! { {view} }
 }

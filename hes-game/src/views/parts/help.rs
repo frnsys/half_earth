@@ -11,12 +11,27 @@ pub fn Help(text: String, x: f32, y: f32, center: bool) -> impl IntoView {
         !settings.hide_help && settings.read_help.contains(&text.get_value())
     };
 
+    let left = move || {
+        if x < 1. {
+            format!("{}%", x * 100.)
+        } else {
+            format!("{x}px")
+        }
+    };
+    let top = move || {
+        if y < 1. {
+            format!("{}%", y * 100.)
+        } else {
+            format!("{y}px")
+        }
+    };
+
     view! {
         <Show when=show>
             <div
                 class="help-tip--outer"
-                style:left=format!("{x}px")
-                style:top=format!("{y}px")
+                style:left=left
+                style:top=top
                 on:click=move |_| {
                     set_settings
                         .update(|settings| {
@@ -24,6 +39,7 @@ pub fn Help(text: String, x: f32, y: f32, center: bool) -> impl IntoView {
                         });
                 }
             >
+
                 <div class="help-tip--inner" class:center=center>
                     <img src="/public/assets/icons/help.svg"/>
                     {t!(& text.get_value())}

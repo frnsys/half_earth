@@ -1,6 +1,8 @@
 use crate::events::Event;
 use crate::industries::Industry;
-use crate::kinds::{ByproductMap, FeedstockMap, Output, OutputMap, ResourceMap};
+use crate::kinds::{
+    ByproductMap, FeedstockMap, Output, OutputMap, ResourceMap,
+};
 use crate::production::Process;
 use crate::projects::Project;
 use crate::regions::{Income, Region};
@@ -13,20 +15,9 @@ use serde::{Deserialize, Serialize};
 pub struct World {
     pub year: usize,
     pub base_outlook: f32,
-    pub temp_outlook: f32,
-    pub shortages_outlook: f32,
     pub extinction_rate: f32,
-    pub temperature: f32,    // global temp anomaly, C
-    pub precipitation: f32,  // global precip avg
+    pub temperature: f32, // global temp anomaly, C
     pub sea_level_rise: f32, // meters
-    pub water_stress: f32,   // 0-100%
-    pub co2_emissions: f32,
-    pub ch4_emissions: f32,
-    pub n2o_emissions: f32,
-    pub temperature_modifier: f32,
-    pub byproduct_mods: ByproductMap,
-    pub population_growth_modifier: f32,
-    pub sea_level_rise_modifier: f32, // meters
     pub regions: Vec<Region>,
     pub events: Vec<Event>,
     pub industries: Vec<Industry>,
@@ -45,22 +36,6 @@ impl World {
         self.regions.iter().map(|r| r.population).sum()
     }
 
-    pub fn outlook(&self) -> f32 {
-        let region_outlook =
-            self.regions.iter().map(|r| r.outlook).sum::<f32>() / self.regions.len() as f32;
-        self.base_outlook - self.shortages_outlook + region_outlook
-    }
-
-    pub fn emissions_gt(&self) -> f32 {
-        self.emissions() * 1e-15
-    }
-
-    pub fn sea_level_rise_rate(&self) -> f32 {
-        // Meters
-        // Chosen to roughly hit 1.4m-1.6m rise by 2100 in the BAU scenario
-        (0.0025 * self.temperature.powf(1.5)) + self.sea_level_rise_modifier
-    }
-
     /// Contribution to extinction rate from the tgav
     pub fn tgav_extinction_rate(&self) -> f32 {
         self.temperature.powf(2.)
@@ -71,36 +46,13 @@ impl World {
         self.sea_level_rise.powf(2.)
     }
 
-    pub fn update_extinction_rate(&mut self, produced_by_process: &[f32]) {
-        let lic_pop = self.lic_population();
-        self.extinction_rate = self
-            .processes
-            .iter()
-            .zip(produced_by_process)
-            .fold(0., |acc, (p, amount)| {
-                acc + (p.extinction_rate(self.starting_resources.land) * *amount)
-            })
-            + self.industries.iter().fold(0., |acc, ind| {
-                acc + ind.extinction_rate(self.starting_resources.land) * lic_pop
-            })
-            + self.base_extinction_rate();
-    }
-
     pub fn lic_population(&self) -> f32 {
         self.regions
             .iter()
-            .map(|r| r.lic_population(&self.materials_by_income))
+            .map(|r| {
+                r.lic_population(&self.materials_by_income)
+            })
             .sum()
-    }
-
-    pub fn update_pop(&mut self) {
-        for region in &mut self.regions {
-            region.update_pop(
-                self.year as f32,
-                1. + self.population_growth_modifier,
-                &self.income_pop_coefs,
-            );
-        }
     }
 
     /// Returns a vec of ids of regions that "leveled up"
@@ -120,7 +72,9 @@ impl World {
             if degrow && region.income == Income::High {
                 region.develop(-1.);
             } else if !stop && region.income != Income::High {
-                if !(degrow && region.income == Income::UpperMiddle) {
+                if !(degrow
+                    && region.income == Income::UpperMiddle)
+                {
                     region.develop(speed);
                 }
             }
@@ -134,41 +88,41 @@ impl World {
         (up, down)
     }
 
-    pub fn update_outlook(&mut self, wretched_ally: bool, consumerist_ally: bool) {
+    pub fn update_outlook(
+        &mut self,
+        wretched_ally: bool,
+        consumerist_ally: bool,
+    ) {
         for region in &mut self.regions {
-            region.update_outlook(wretched_ally, consumerist_ally);
+            region.update_outlook(
+                wretched_ally,
+                consumerist_ally,
+            );
         }
-    }
-
-    pub fn update_temp_outlook(&mut self, temp_change: f32) {
-        let outlook_change = temp_change * 6. * self.temperature.powf(2.);
-        self.temp_outlook += outlook_change;
-        self.base_outlook += outlook_change;
-        for region in &mut self.regions {
-            region.outlook += outlook_change * 0.4;
-        }
-    }
-
-    pub fn update_tgav(&mut self, tgav: f32) {
-        self.temperature = tgav + self.temperature_modifier;
     }
 
     pub fn habitability(&self) -> f32 {
-        self.regions.iter().map(|r| r.habitability()).sum::<f32>() / self.regions.len() as f32
-    }
-
-    pub fn emissions(&self) -> f32 {
-        self.co2_emissions + (self.n2o_emissions * 298.) + (self.ch4_emissions * 36.)
+        self.regions
+            .iter()
+            .map(|r| r.habitability())
+            .sum::<f32>()
+            / self.regions.len() as f32
     }
 
     pub fn demand(&self) -> OutputMap {
-        self.regions.iter().fold(outputs!(), |mut acc, region| {
-            acc += region.demand(&self.output_demand);
-            acc
-        })
+        self.regions.iter().fold(
+            outputs!(),
+            |mut acc, region| {
+                acc += region.demand(&self.output_demand);
+                acc
+            },
+        )
     }
 
-    pub fn demand_by_income_levels(&self, output: Output) -> [f32; 4] {
+    pub fn demand_by_income_levels(
+        &self,
+        output: Output,
+    ) -> [f32; 4] {
         self.output_demand
             .iter()
             .map(|demand| demand[output])
@@ -178,18 +132,11 @@ impl World {
     }
 
     pub fn change_population(&mut self, amount: f32) {
-        let amount_per_region = amount / self.regions.len() as f32;
+        let amount_per_region =
+            amount / self.regions.len() as f32;
         for region in &mut self.regions {
             region.population += amount_per_region;
         }
-    }
-
-    pub fn update_sea_level_rise(&mut self) {
-        self.sea_level_rise += self.sea_level_rise_rate();
-    }
-
-    pub fn base_extinction_rate(&self) -> f32 {
-        self.tgav_extinction_rate() + self.slr_extinction_rate() - self.byproduct_mods.biodiversity
     }
 
     pub fn income_level(&self) -> f32 {
@@ -201,84 +148,3 @@ impl World {
         } + r.development).sum::<f32>()/self.regions.len() as f32
     }
 }
-
-// #[derive(Default, Clone, Serialize, Deserialize)]
-// pub struct World {
-// }
-//
-// impl World {
-//     pub fn data() -> Self {
-//         World {
-//             feedstock_reserves: FeedstockMap {
-//                 oil: 824182962000000.0,
-//                 coal: 1274000000000000000.0,
-//                 uranium: 7988600000000.0,
-//                 lithium: 80000000.0,
-//                 natural_gas: 719100000000000000.0,
-//                 soil: 100000000000000000000.0,
-//                 other: 0.0,
-//                 thorium: 5805982300000.0,
-//             },
-//             starting_resources: ResourceMap {
-//                 fuel: 141397300000000.0,
-//                 electricity: 26936000000000.0,
-//                 land: 104000000000000.0,
-//                 water: 45500000000000000.0,
-//             },
-//             output_demand: [
-//                 OutputMap {
-//                     fuel: 84.823,
-//                     electricity: 12.647,
-//                     animal_calories: 62258.01225379132,
-//                     plant_calories: 781214.6569453699,
-//                 },
-//                 OutputMap {
-//                     fuel: 478.748,
-//                     electricity: 80.881867,
-//                     animal_calories: 101446.22307270509,
-//                     plant_calories: 835119.0398573277,
-//                 },
-//                 OutputMap {
-//                     fuel: 1842.78168,
-//                     electricity: 368.96432,
-//                     animal_calories: 235324.57700012674,
-//                     plant_calories: 883168.4828934266,
-//                 },
-//                 OutputMap {
-//                     fuel: 4111.4561,
-//                     electricity: 750.5439,
-//                     animal_calories: 320351.0835388199,
-//                     plant_calories: 900747.3812494389,
-//                 },
-//             ],
-//             water_by_income: [2040.4095, 4552.624175, 5839.79276, 11648.18348],
-//             materials_by_income: [2.253141687346895, 4.3768, 15.430, 25.9541],
-//             income_pop_coefs: [
-//                 [
-//                     -137.09104615549052,
-//                     0.20175900568502633,
-//                     -9.881496778856683e-05,
-//                     1.6107860430297862e-08,
-//                 ],
-//                 [
-//                     -31.645089275035065,
-//                     0.049053282850800455,
-//                     -2.5144480355319464e-05,
-//                     4.267315072570761e-09,
-//                 ],
-//                 [
-//                     -73.97073712590549,
-//                     0.110304344757395,
-//                     -5.471537682118361e-05,
-//                     9.02938905851344e-09,
-//                 ],
-//                 [
-//                     193.7774375120351,
-//                     -0.27776781135845113,
-//                     0.00013271413986610546,
-//                     -2.113553227448261e-08,
-//                 ],
-//             ],
-//         }
-//     }
-// }

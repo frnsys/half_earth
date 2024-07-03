@@ -7,16 +7,16 @@ mod kinds;
 use crate::display::{Impact, Var};
 
 use super::parts::IntensityBar;
-pub use cards::Cards;
 pub use card_focus_area::CardFocusArea;
-pub use draggable::{Draggable, DragRect};
+pub use cards::Cards;
+pub use draggable::{DragRect, Draggable};
+pub use kinds::*;
 
 // pub trait Card {
 // }
 
 #[derive(Clone)]
 pub struct FactorsCard {
-    pub text: String,
     pub icon: &'static str,
     pub kind: Var,
     pub total: f32,

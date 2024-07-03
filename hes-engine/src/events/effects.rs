@@ -5,6 +5,7 @@ use crate::regions::{Latitude, Region};
 use crate::state::State;
 use serde::{Deserialize, Serialize};
 use std::ops::Mul;
+use strum::{EnumDiscriminants, IntoStaticStr};
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
 const CLOSED_BORDERS_MULTILPIER: f32 = 0.5;
@@ -15,7 +16,9 @@ pub enum Request {
     Process,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
+#[derive(
+    Serialize, Deserialize, PartialEq, Debug, Clone, Copy,
+)]
 pub enum Flag {
     RepeatTutorial,
     SkipTutorial,
@@ -39,8 +42,47 @@ pub enum Flag {
     AlienEncounter,
     BailedOut,
 }
+impl std::fmt::Display for Flag {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        let desc = match self {
+          Self::HyperResearch => "Research points are cheaper.",
+          Self::ClosedBorders => "Limits cross-region migration.",
+          Self::AlienEncounter => "Encountered extraterrestrials",
+          Self::ParliamentSuspended => "A parliamentary majority is no longer required for any project.",
+          Self::Electrified => "80% of fuel demand becomes electricity demand.",
+          Self::Vegan => "90% of animal calorie demand is met with plant calories.",
+          Self::BailedOut => "You've been bailed out once",
+          Self::FastDevelopment => "Underdeveloped regions develop more quickly.",
+          Self::Degrowth => "Wealthy regions income levels and consumption will decline.",
+          Self::MetalsShortage => "Infrastructure projects take 20% longer to finish.",
+          Self::MoreLabor => "Projects take less time to complete.",
+          Self::LaborResistance => "Projects take longer to complete.",
+          Self::MoreLeisure => "Projects take more time to complete.",
+          Self::DeepSeaMining => "Stops or prevents metals shortages.",
+          Self::MoreAutomation => "Projects take less time to complete.",
+          Self::Vegetarian => "75% of animal calorie demand is met with plant calories.",
+          Self::StopDevelopment => "Stops regional development throughout the world.",
+          Self::LaborSabotage => "Projects take longer to complete.",
+          Self::EcosystemModeling => "Restoration projects take less time to complete.",
+          Self::RepeatTutorial => "Repeat the tutorial.",
+          Self::SkipTutorial => "Skip the tutorial.",
+        };
+        write!(f, "{}", desc)
+    }
+}
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Debug,
+    Clone,
+    EnumDiscriminants,
+)]
+#[strum_discriminants(derive(IntoStaticStr))]
 pub enum Effect {
     WorldVariable(WorldVariable, f32),
     PlayerVariable(PlayerVariable, f32),
@@ -98,13 +140,57 @@ impl AsRef<Effect> for Effect {
 }
 
 fn check_game_over(state: &mut State) {
-    if !state.is_ally("The Authoritarian") && state.world.outlook() < 0. {
+    if !state.is_ally("The Authoritarian")
+        && state.outlook() < 0.
+    {
         state.game_over = true;
     }
 }
 
 impl Effect {
-    pub fn apply(&self, state: &mut State, event_pool: &mut EventPool, region_id: Option<usize>) {
+    /// For comparing if two effects are of the same "type"
+    /// and thus may be alternatives to one another.
+    pub fn fingerprint(&self) -> String {
+        let discrim: EffectDiscriminants = self.into();
+        let discrim: &'static str = discrim.into();
+        let subkind: &'static str = match self {
+            Self::WorldVariable(var, _) => var.into(),
+            Self::PlayerVariable(var, _) => var.into(),
+            Self::RegionHabitability(lat, _) => lat.into(),
+            Self::Resource(res, _) => res.into(),
+            Self::Demand(out, _) => out.into(),
+            Self::Output(out, _) => out.into(),
+            Self::DemandAmount(out, _) => out.into(),
+            Self::OutputForFeature(feat, _) => feat.into(),
+            Self::CO2ForFeature(feat, _) => feat.into(),
+            Self::BiodiversityPressureForFeature(feat, _) => {
+                feat.into()
+            }
+            Self::Feedstock(fs, _) => fs.into(),
+            Self::ModifyProcessByproducts(_, byp, _) => {
+                byp.into()
+            }
+            Self::ModifyIndustryByproducts(_, byp, _) => {
+                byp.into()
+            }
+            Self::ModifyIndustryResources(_, res, _) => {
+                res.into()
+            }
+            Self::ModifyIndustryResourcesAmount(_, res, _) => {
+                res.into()
+            }
+            Self::DemandOutlookChange(out, _) => out.into(),
+            _ => "",
+        };
+        format!("{discrim}:{subkind}")
+    }
+
+    pub fn apply(
+        &self,
+        state: &mut State,
+        event_pool: &mut EventPool,
+        region_id: Option<usize>,
+    ) {
         match self {
             Effect::GameOver => {
                 state.game_over = true;
@@ -117,35 +203,56 @@ impl Effect {
             }
             Effect::WorldVariable(var, change) => {
                 match var {
-                    WorldVariable::Year => state.world.year += *change as usize,
-                    WorldVariable::Population => state.world.change_population(*change),
+                    WorldVariable::Year => {
+                        state.world.year += *change as usize
+                    }
+                    WorldVariable::Population => {
+                        state.world.change_population(*change)
+                    }
                     WorldVariable::PopulationGrowth => {
-                        state.world.population_growth_modifier += *change / 100.
+                        state.population_growth_modifier +=
+                            *change / 100.
                     }
                     WorldVariable::Emissions => {
-                        state.world.byproduct_mods.co2 += *change * 1e15; // effect in Gt
-                        state.world.co2_emissions += *change * 1e15; // Apply immediately
+                        state.byproduct_mods.co2 +=
+                            *change * 1e15; // effect in Gt
+                        state.co2_emissions += *change * 1e15; // Apply immediately
                     }
                     WorldVariable::ExtinctionRate => {
-                        state.world.byproduct_mods.biodiversity -= *change
+                        state.byproduct_mods.biodiversity -=
+                            *change
                     }
                     WorldVariable::Outlook => {
                         state.world.base_outlook += *change;
                         check_game_over(state);
                     }
-                    WorldVariable::Temperature => state.world.temperature_modifier += *change,
-                    WorldVariable::WaterStress => state.world.water_stress += *change,
-                    WorldVariable::SeaLevelRise => state.world.sea_level_rise += *change,
-                    WorldVariable::SeaLevelRiseRate => {
-                        state.world.sea_level_rise_modifier += *change
+                    WorldVariable::Temperature => {
+                        state.temperature_modifier += *change
                     }
-                    WorldVariable::Precipitation => state.world.precipitation += *change,
+                    WorldVariable::WaterStress => {
+                        state.water_stress += *change
+                    }
+                    WorldVariable::SeaLevelRise => {
+                        state.world.sea_level_rise += *change
+                    }
+                    WorldVariable::SeaLevelRiseRate => {
+                        state.sea_level_rise_modifier += *change
+                    }
+                    WorldVariable::Precipitation => {
+                        state.precipitation += *change
+                    }
                 }
             }
             Effect::PlayerVariable(var, change) => {
                 match var {
-                    PlayerVariable::PoliticalCapital => state.political_capital += *change as isize,
-                    PlayerVariable::ResearchPoints => state.research_points += *change as isize, // TODO need to use the rust state for points then
+                    PlayerVariable::PoliticalCapital => {
+                        state.political_capital +=
+                            *change as isize
+                    }
+                    PlayerVariable::ResearchPoints => {
+                        state.research_points +=
+                            *change as isize
+                    } // TODO need to use the rust state for points then
                     _ => (),
                 }
             }
@@ -163,7 +270,8 @@ impl Effect {
                 state.resources[*resource] += amount;
             }
             Effect::Demand(output, pct_change) => {
-                state.output_demand_modifier[*output] += pct_change;
+                state.output_demand_modifier[*output] +=
+                    pct_change;
             }
             Effect::DemandAmount(output, amount) => {
                 state.output_demand_extras[*output] += amount;
@@ -192,17 +300,22 @@ impl Effect {
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
                 {
-                    process.byproduct_modifiers.co2 += pct_change;
+                    process.byproduct_modifiers.co2 +=
+                        pct_change;
                 }
             }
-            Effect::BiodiversityPressureForFeature(feat, pct_change) => {
+            Effect::BiodiversityPressureForFeature(
+                feat,
+                pct_change,
+            ) => {
                 for process in state
                     .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
                 {
-                    process.byproduct_modifiers.biodiversity += pct_change;
+                    process.byproduct_modifiers.biodiversity +=
+                        pct_change;
                 }
             }
             Effect::ProcessLimit(id, change) => {
@@ -233,35 +346,54 @@ impl Effect {
                 state.npcs[*id].locked = false;
             }
             Effect::ProjectRequest(id, active, bounty) => {
-                state
-                    .requests
-                    .push((Request::Project, *id, *active, *bounty));
+                state.requests.push((
+                    Request::Project,
+                    *id,
+                    *active,
+                    *bounty,
+                ));
             }
             Effect::ProcessRequest(id, active, bounty) => {
-                state
-                    .requests
-                    .push((Request::Process, *id, *active, *bounty));
+                state.requests.push((
+                    Request::Process,
+                    *id,
+                    *active,
+                    *bounty,
+                ));
             }
             Effect::Migration => {
                 if let Some(id) = region_id {
-                    let modifier = if state.flags.contains(&Flag::ClosedBorders) {
+                    let modifier = if state
+                        .flags
+                        .contains(&Flag::ClosedBorders)
+                    {
                         CLOSED_BORDERS_MULTILPIER
                     } else {
                         1.
                     };
-                    let leave_pop =
-                        state.world.regions[id].population * MIGRATION_WAVE_PERCENT_POP * modifier;
-                    state.world.regions[id].population -= leave_pop;
+                    let leave_pop = state.world.regions[id]
+                        .population
+                        * MIGRATION_WAVE_PERCENT_POP
+                        * modifier;
+                    state.world.regions[id].population -=
+                        leave_pop;
 
                     // Find the most habitable regions
-                    let mean_habitability: f32 = state.world.habitability();
-                    let target_regions: Vec<&mut Region> = state
-                        .world
-                        .regions
-                        .iter_mut()
-                        .filter(|r| r.id != id && r.habitability() > mean_habitability)
-                        .collect();
-                    let per_region = leave_pop / target_regions.len() as f32;
+                    let mean_habitability: f32 =
+                        state.world.habitability();
+                    let target_regions: Vec<&mut Region> =
+                        state
+                            .world
+                            .regions
+                            .iter_mut()
+                            .filter(|r| {
+                                r.id != id
+                                    && r.habitability()
+                                        > mean_habitability
+                            })
+                            .collect();
+                    let per_region =
+                        leave_pop / target_regions.len() as f32;
                     for region in target_regions {
                         region.population += per_region;
                     }
@@ -274,7 +406,9 @@ impl Effect {
             }
             Effect::AddRegionFlag(flag) => {
                 if let Some(id) = region_id {
-                    state.world.regions[id].flags.push(flag.to_string());
+                    state.world.regions[id]
+                        .flags
+                        .push(flag.to_string());
                 }
             }
             Effect::AddFlag(flag) => {
@@ -284,40 +418,67 @@ impl Effect {
                 state.npcs[*id].relationship += change;
             }
 
-            Effect::ModifyProcessByproducts(id, byproduct, change) => {
-                state.world.processes[*id].byproduct_modifiers[*byproduct] += change;
+            Effect::ModifyProcessByproducts(
+                id,
+                byproduct,
+                change,
+            ) => {
+                state.world.processes[*id]
+                    .byproduct_modifiers[*byproduct] += change;
             }
-            Effect::ModifyIndustryByproducts(id, byproduct, change) => {
-                state.world.industries[*id].byproduct_modifiers[*byproduct] += change;
+            Effect::ModifyIndustryByproducts(
+                id,
+                byproduct,
+                change,
+            ) => {
+                state.world.industries[*id]
+                    .byproduct_modifiers[*byproduct] += change;
             }
-            Effect::ModifyIndustryResources(id, resource, change) => {
-                state.world.industries[*id].resource_modifiers[*resource] += change;
+            Effect::ModifyIndustryResources(
+                id,
+                resource,
+                change,
+            ) => {
+                state.world.industries[*id]
+                    .resource_modifiers[*resource] += change;
             }
-            Effect::ModifyIndustryResourcesAmount(id, resource, change) => {
-                state.world.industries[*id].resources[*resource] += change;
+            Effect::ModifyIndustryResourcesAmount(
+                id,
+                resource,
+                change,
+            ) => {
+                state.world.industries[*id].resources
+                    [*resource] += change;
             }
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier += change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
-                state.world.industries[*id].demand_modifier += change;
+                state.world.industries[*id].demand_modifier +=
+                    change;
             }
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut state.world.regions {
                     region.outlook += (mult
-                        * region.demand_level(output, &state.world.output_demand) as f32)
+                        * region.demand_level(
+                            output,
+                            &state.world.output_demand,
+                        ) as f32)
                         .floor();
                 }
                 check_game_over(state);
             }
             Effect::IncomeOutlookChange(mult) => {
                 for region in &mut state.world.regions {
-                    region.outlook += (mult * region.income_level() as f32).floor();
+                    region.outlook += (mult
+                        * region.income_level() as f32)
+                        .floor();
                 }
                 check_game_over(state);
             }
             Effect::ProjectCostModifier(id, change) => {
-                state.world.projects[*id].cost_modifier += change;
+                state.world.projects[*id].cost_modifier +=
+                    change;
             }
             Effect::ProtectLand(percent) => {
                 state.protected_land += percent / 100.;
@@ -328,35 +489,61 @@ impl Effect {
         }
     }
 
-    pub fn unapply(&self, state: &mut State, event_pool: &mut EventPool, region_id: Option<usize>) {
+    pub fn unapply(
+        &self,
+        state: &mut State,
+        event_pool: &mut EventPool,
+        region_id: Option<usize>,
+    ) {
         match self {
             Effect::WorldVariable(var, change) => {
                 match var {
-                    WorldVariable::Year => state.world.year -= *change as usize,
-                    WorldVariable::Population => state.world.change_population(-*change),
+                    WorldVariable::Year => {
+                        state.world.year -= *change as usize
+                    }
+                    WorldVariable::Population => {
+                        state.world.change_population(-*change)
+                    }
                     WorldVariable::PopulationGrowth => {
-                        state.world.population_growth_modifier -= *change / 100.
+                        state.population_growth_modifier -=
+                            *change / 100.
                     }
                     WorldVariable::Emissions => {
-                        state.world.byproduct_mods.co2 -= *change * 1e15;
-                        state.world.co2_emissions -= *change * 1e15; // Apply immediately
+                        state.byproduct_mods.co2 -=
+                            *change * 1e15;
+                        state.co2_emissions -= *change * 1e15; // Apply immediately
                     }
                     WorldVariable::ExtinctionRate => {
-                        state.world.byproduct_mods.biodiversity += *change
+                        state.byproduct_mods.biodiversity +=
+                            *change
                     }
-                    WorldVariable::Outlook => state.world.base_outlook -= *change,
-                    WorldVariable::Temperature => state.world.temperature_modifier -= *change,
-                    WorldVariable::WaterStress => state.world.water_stress -= *change,
-                    WorldVariable::SeaLevelRise => state.world.sea_level_rise -= *change,
+                    WorldVariable::Outlook => {
+                        state.world.base_outlook -= *change
+                    }
+                    WorldVariable::Temperature => {
+                        state.temperature_modifier -= *change
+                    }
+                    WorldVariable::WaterStress => {
+                        state.water_stress -= *change
+                    }
+                    WorldVariable::SeaLevelRise => {
+                        state.world.sea_level_rise -= *change
+                    }
                     WorldVariable::SeaLevelRiseRate => {
-                        state.world.sea_level_rise_modifier -= *change
+                        state.sea_level_rise_modifier -= *change
                     }
-                    WorldVariable::Precipitation => state.world.precipitation -= *change,
+                    WorldVariable::Precipitation => {
+                        state.precipitation -= *change
+                    }
                 }
             }
             Effect::PlayerVariable(var, change) => match var {
-                PlayerVariable::PoliticalCapital => state.political_capital -= *change as isize,
-                PlayerVariable::ResearchPoints => state.research_points -= *change as isize,
+                PlayerVariable::PoliticalCapital => {
+                    state.political_capital -= *change as isize
+                }
+                PlayerVariable::ResearchPoints => {
+                    state.research_points -= *change as isize
+                }
                 _ => (),
             },
             Effect::RegionHabitability(latitude, change) => {
@@ -373,7 +560,8 @@ impl Effect {
                 state.resources[*resource] -= amount;
             }
             Effect::Demand(output, pct_change) => {
-                state.output_demand_modifier[*output] -= pct_change;
+                state.output_demand_modifier[*output] -=
+                    pct_change;
             }
             Effect::DemandAmount(output, amount) => {
                 state.output_demand_extras[*output] -= amount;
@@ -402,17 +590,22 @@ impl Effect {
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
                 {
-                    process.byproduct_modifiers.co2 -= pct_change;
+                    process.byproduct_modifiers.co2 -=
+                        pct_change;
                 }
             }
-            Effect::BiodiversityPressureForFeature(feat, pct_change) => {
+            Effect::BiodiversityPressureForFeature(
+                feat,
+                pct_change,
+            ) => {
                 for process in state
                     .world
                     .processes
                     .iter_mut()
                     .filter(|p| p.features.contains(feat))
                 {
-                    process.byproduct_modifiers.biodiversity -= pct_change;
+                    process.byproduct_modifiers.biodiversity -=
+                        pct_change;
                 }
             }
             Effect::ProcessLimit(id, change) => {
@@ -427,64 +620,99 @@ impl Effect {
             Effect::NPCRelationship(id, change) => {
                 state.npcs[*id].relationship -= change;
             }
-            Effect::ModifyProcessByproducts(id, byproduct, change) => {
-                state.world.processes[*id].byproduct_modifiers[*byproduct] -= change;
+            Effect::ModifyProcessByproducts(
+                id,
+                byproduct,
+                change,
+            ) => {
+                state.world.processes[*id]
+                    .byproduct_modifiers[*byproduct] -= change;
             }
-            Effect::ModifyIndustryByproducts(id, byproduct, change) => {
-                state.world.industries[*id].byproduct_modifiers[*byproduct] -= change;
+            Effect::ModifyIndustryByproducts(
+                id,
+                byproduct,
+                change,
+            ) => {
+                state.world.industries[*id]
+                    .byproduct_modifiers[*byproduct] -= change;
             }
-            Effect::ModifyIndustryResources(id, resource, change) => {
-                state.world.industries[*id].resource_modifiers[*resource] -= change;
+            Effect::ModifyIndustryResources(
+                id,
+                resource,
+                change,
+            ) => {
+                state.world.industries[*id]
+                    .resource_modifiers[*resource] -= change;
             }
-            Effect::ModifyIndustryResourcesAmount(id, resource, change) => {
-                state.world.industries[*id].resources[*resource] -= change;
+            Effect::ModifyIndustryResourcesAmount(
+                id,
+                resource,
+                change,
+            ) => {
+                state.world.industries[*id].resources
+                    [*resource] -= change;
             }
             Effect::ModifyEventProbability(id, change) => {
                 event_pool.events[*id].prob_modifier -= change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
-                state.world.industries[*id].demand_modifier -= change;
+                state.world.industries[*id].demand_modifier -=
+                    change;
             }
             Effect::DemandOutlookChange(output, mult) => {
                 for region in &mut state.world.regions {
                     region.outlook -= (mult
-                        * region.demand_level(output, &state.world.output_demand) as f32)
+                        * region.demand_level(
+                            output,
+                            &state.world.output_demand,
+                        ) as f32)
                         .floor();
                 }
             }
             Effect::IncomeOutlookChange(mult) => {
                 for region in &mut state.world.regions {
-                    region.outlook -= (mult * region.income_level() as f32).floor();
+                    region.outlook -= (mult
+                        * region.income_level() as f32)
+                        .floor();
                 }
             }
             Effect::ProjectCostModifier(id, change) => {
-                state.world.projects[*id].cost_modifier -= change;
+                state.world.projects[*id].cost_modifier -=
+                    change;
             }
             Effect::TerminationShock => {
                 let p = state
                     .world
                     .projects
                     .iter()
-                    .find(|p| p.name == "Solar Radiation Management")
+                    .find(|p| {
+                        p.name == "Solar Radiation Management"
+                    })
                     .unwrap();
                 let effects = p.active_effects();
                 let mut temp = 0.;
                 for eff in effects {
                     match eff {
-                        Effect::WorldVariable(typ, val) => match typ {
-                            WorldVariable::Temperature => temp += val,
-                            _ => (),
-                        },
+                        Effect::WorldVariable(typ, val) => {
+                            match typ {
+                                WorldVariable::Temperature => {
+                                    temp += val
+                                }
+                                _ => (),
+                            }
+                        }
                         _ => (),
                     };
                 }
-                state.world.temperature_modifier -= temp;
+                state.temperature_modifier -= temp;
             }
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent / 100.;
             }
             Effect::AddFlag(flag) => {
-                if let Some(idx) = state.flags.iter().position(|x| x == flag) {
+                if let Some(idx) =
+                    state.flags.iter().position(|x| x == flag)
+                {
                     state.flags.remove(idx);
                 }
             }
@@ -513,56 +741,114 @@ impl Mul<f32> for Effect {
 
     fn mul(self, rhs: f32) -> Self {
         match self {
-            Effect::WorldVariable(var, val) => Effect::WorldVariable(var, val * rhs),
-            Effect::PlayerVariable(var, val) => Effect::PlayerVariable(var, val * rhs),
-            Effect::Resource(resource, val) => Effect::Resource(resource, val * rhs),
-            Effect::Demand(output, val) => Effect::Demand(output, val * rhs),
-            Effect::Output(output, val) => Effect::Output(output, val * rhs),
-            Effect::DemandAmount(output, val) => Effect::DemandAmount(output, val * rhs),
-            Effect::OutputForFeature(feat, val) => Effect::OutputForFeature(feat, val * rhs),
-            Effect::OutputForProcess(id, val) => Effect::OutputForProcess(id, val * rhs),
-            Effect::Feedstock(feedstock, val) => Effect::Feedstock(feedstock, val * rhs),
-            Effect::ModifyIndustryByproducts(id, byproduct, val) => {
-                Effect::ModifyIndustryByproducts(id, byproduct, val * rhs)
+            Effect::WorldVariable(var, val) => {
+                Effect::WorldVariable(var, val * rhs)
             }
-            Effect::ModifyIndustryResources(id, resource, val) => {
-                Effect::ModifyIndustryResources(id, resource, val * rhs)
+            Effect::PlayerVariable(var, val) => {
+                Effect::PlayerVariable(var, val * rhs)
             }
-            Effect::ModifyIndustryResourcesAmount(id, resource, val) => {
-                Effect::ModifyIndustryResources(id, resource, val * rhs)
+            Effect::Resource(resource, val) => {
+                Effect::Resource(resource, val * rhs)
             }
-            Effect::ModifyIndustryDemand(id, val) => Effect::ModifyIndustryDemand(id, val * rhs),
+            Effect::Demand(output, val) => {
+                Effect::Demand(output, val * rhs)
+            }
+            Effect::Output(output, val) => {
+                Effect::Output(output, val * rhs)
+            }
+            Effect::DemandAmount(output, val) => {
+                Effect::DemandAmount(output, val * rhs)
+            }
+            Effect::OutputForFeature(feat, val) => {
+                Effect::OutputForFeature(feat, val * rhs)
+            }
+            Effect::OutputForProcess(id, val) => {
+                Effect::OutputForProcess(id, val * rhs)
+            }
+            Effect::Feedstock(feedstock, val) => {
+                Effect::Feedstock(feedstock, val * rhs)
+            }
+            Effect::ModifyIndustryByproducts(
+                id,
+                byproduct,
+                val,
+            ) => Effect::ModifyIndustryByproducts(
+                id,
+                byproduct,
+                val * rhs,
+            ),
+            Effect::ModifyIndustryResources(
+                id,
+                resource,
+                val,
+            ) => Effect::ModifyIndustryResources(
+                id,
+                resource,
+                val * rhs,
+            ),
+            Effect::ModifyIndustryResourcesAmount(
+                id,
+                resource,
+                val,
+            ) => Effect::ModifyIndustryResources(
+                id,
+                resource,
+                val * rhs,
+            ),
+            Effect::ModifyIndustryDemand(id, val) => {
+                Effect::ModifyIndustryDemand(id, val * rhs)
+            }
             Effect::ModifyEventProbability(id, val) => {
                 Effect::ModifyEventProbability(id, val * rhs)
             }
             Effect::DemandOutlookChange(output, val) => {
                 Effect::DemandOutlookChange(output, val * rhs)
             }
-            Effect::IncomeOutlookChange(val) => Effect::IncomeOutlookChange(val * rhs),
-            Effect::ProjectCostModifier(id, val) => Effect::ProjectCostModifier(id, val * rhs),
-            Effect::ProtectLand(val) => Effect::ProtectLand(val * rhs),
+            Effect::IncomeOutlookChange(val) => {
+                Effect::IncomeOutlookChange(val * rhs)
+            }
+            Effect::ProjectCostModifier(id, val) => {
+                Effect::ProjectCostModifier(id, val * rhs)
+            }
+            Effect::ProtectLand(val) => {
+                Effect::ProtectLand(val * rhs)
+            }
             _ => self,
         }
     }
 }
 
-pub fn mean_income_outlook_change(mult: f32, state: &State) -> f32 {
-    state
-        .world
-        .regions
-        .iter()
-        .map(|region| (mult * region.income_level() as f32).floor())
-        .sum::<f32>()
-        / state.world.regions.len() as f32
-}
-
-pub fn mean_demand_outlook_change(mult: f32, output: &Output, state: &State) -> f32 {
+pub fn mean_income_outlook_change(
+    mult: f32,
+    state: &State,
+) -> f32 {
     state
         .world
         .regions
         .iter()
         .map(|region| {
-            (mult * region.demand_level(output, &state.world.output_demand) as f32).floor()
+            (mult * region.income_level() as f32).floor()
+        })
+        .sum::<f32>()
+        / state.world.regions.len() as f32
+}
+
+pub fn mean_demand_outlook_change(
+    mult: f32,
+    output: &Output,
+    state: &State,
+) -> f32 {
+    state
+        .world
+        .regions
+        .iter()
+        .map(|region| {
+            (mult
+                * region.demand_level(
+                    output,
+                    &state.world.output_demand,
+                ) as f32)
+                .floor()
         })
         .sum::<f32>()
         / state.world.regions.len() as f32

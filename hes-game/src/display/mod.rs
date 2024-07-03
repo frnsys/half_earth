@@ -99,6 +99,26 @@ pub enum Var {
     PlantCalories,
     AnimalCalories,
 }
+impl From<Resource> for Var {
+    fn from(value: Resource) -> Self {
+        match value {
+            Resource::Land => Var::Land,
+            Resource::Water => Var::Water,
+            Resource::Fuel => Var::Fuel,
+            Resource::Electricity => Var::Electricity,
+        }
+    }
+}
+impl From<Output> for Var {
+    fn from(value: Output) -> Self {
+        match value {
+            Output::Fuel => Var::Fuel,
+            Output::Electricity => Var::Electricity,
+            Output::PlantCalories => Var::PlantCalories,
+            Output::AnimalCalories => Var::AnimalCalories,
+        }
+    }
+}
 impl Var {
     pub fn is_demand_var(&self) -> bool {
         match self {

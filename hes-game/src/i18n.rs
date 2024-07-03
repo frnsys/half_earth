@@ -47,7 +47,7 @@ macro_rules! t {
     ($text:expr) => {{
         crate::i18n::t($text)
     }};
-    ($text:expr, $($key:ident = $val:expr),* $(,)?) => {{
+    ($text:expr, $($key:ident: $val:expr),* $(,)?) => {{
         use crate::i18n::t;
         let mut result = t($text);
         $(
