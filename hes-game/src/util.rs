@@ -1,9 +1,6 @@
-use std::ops::Deref;
-
-use html::{AnyElement, ElementDescriptor};
-use leptos::wasm_bindgen::JsCast;
-use leptos::*;
-use leptos_use::{use_timeout_fn, use_window, UseTimeoutFnReturn};
+use html::ElementDescriptor;
+use leptos::{wasm_bindgen::JsCast, *};
+use leptos_use::use_window;
 use web_sys::HtmlCollection;
 
 /// Iteratively scale text (by decreasing the font size) until it fits
@@ -16,8 +13,10 @@ pub fn scale_text(elem: web_sys::HtmlElement, min_size: u32) {
             && font_size > min_size
         {
             let next_size = font_size - 1;
-            elem.style()
-                .set_property("font-size", &format!("{next_size}px"));
+            elem.style().set_property(
+                "font-size",
+                &format!("{next_size}px"),
+            );
             font_size = next_size;
         }
     }
@@ -45,7 +44,8 @@ pub fn is_safari() -> bool {
         .navigator()
         .map(|navigator| {
             if let Ok(agent) = navigator.user_agent() {
-                agent.contains("Safari") && !agent.contains("Chrome")
+                agent.contains("Safari")
+                    && !agent.contains("Chrome")
             } else {
                 false
             }
@@ -81,30 +81,42 @@ pub fn detect_center_element(
     closest
 }
 
-pub fn nodelist_to_elements(nodelist: web_sys::NodeList) -> Vec<web_sys::HtmlElement> {
+/// Convert a `NodeList` to a vec of elements.
+pub fn nodelist_to_elements(
+    nodelist: web_sys::NodeList,
+) -> Vec<web_sys::HtmlElement> {
     (0..nodelist.length())
         .filter_map(|i| nodelist.item(i))
-        .filter_map(|node| node.dyn_into::<web_sys::HtmlElement>().ok())
+        .filter_map(|node| {
+            node.dyn_into::<web_sys::HtmlElement>().ok()
+        })
         .collect()
 }
 
-// Not sure if there's a better way?
-pub fn to_ws_el<T: ElementDescriptor + 'static>(el: HtmlElement<T>) -> web_sys::HtmlElement {
-    let el = el.into_any();
-    let el: &web_sys::HtmlElement = el.as_ref();
-    el.clone()
-}
-
-pub fn to_children_vec(collection: HtmlCollection) -> Vec<web_sys::HtmlElement> {
+/// Convert an `HtmlCollection` to a vec of elements.
+pub fn collection_to_elements(
+    collection: HtmlCollection,
+) -> Vec<web_sys::HtmlElement> {
     let mut elements = Vec::new();
     for i in 0..collection.length() {
         if let Some(element) = collection.item(i) {
-            if let Ok(html_element) = element.dyn_into::<web_sys::HtmlElement>() {
+            if let Ok(html_element) =
+                element.dyn_into::<web_sys::HtmlElement>()
+            {
                 elements.push(html_element);
             }
         }
     }
     elements
+}
+
+/// Convert from a `leptos::HtmlElement` to a `web_sys::HtmlElement`.
+pub fn to_ws_el<T: ElementDescriptor + 'static>(
+    el: HtmlElement<T>,
+) -> web_sys::HtmlElement {
+    let el = el.into_any();
+    let el: &web_sys::HtmlElement = el.as_ref();
+    el.clone()
 }
 
 /// Adjust card scale depending on the screen height.

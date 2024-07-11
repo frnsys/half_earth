@@ -1,13 +1,8 @@
-use std::{rc::Rc, time::Duration};
+use std::time::Duration;
 
-use crate::{
-    anim::{animation, Anim},
-    util::card_scale,
-};
+use crate::util::card_scale;
 use leptos::*;
 use leptos_use::{
-    use_debounce_fn,
-    use_debounce_fn_with_arg,
     use_document,
     use_event_listener,
     use_intersection_observer,

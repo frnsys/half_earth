@@ -7,12 +7,8 @@ use crate::{
     t,
     ui,
     views::cards::ProjectCard,
-    with_state,
-    write_state,
 };
-use enum_map::EnumMap;
 use hes_engine::{
-    kinds::Output,
     projects::{Project, Status, Type},
     state::State,
 };

@@ -3,25 +3,14 @@ use std::time::Duration;
 use leptos::*;
 
 use crate::{
-    anim::fade_out,
-    i18n,
-    icons,
     state,
     state::Phase,
-    state_rw,
     t,
     ui,
     ui_rw,
-    views::{
-        events::Events,
-        intensity,
-        tips::{HasTip, Tip},
-    },
+    views::{events::Events, intensity},
 };
-use hes_engine::{
-    events::Phase as EventPhase,
-    game::ResolvedEvent,
-};
+use hes_engine::events::Phase as EventPhase;
 
 struct Locale {
     name: &'static str,
@@ -260,20 +249,32 @@ pub fn Interstitial() -> impl IntoView {
     // window.audioManager.startAtmosphere(`/assets/environments/ambience/${this.locale.ambience}`, true)
 
     let (_, set_phase) = ui_rw!(phase);
-    let (anim, opacity) = fade_out(1000., move || {
-        // state.game.save_meta(); // TODO
-        if game_over() {
-            set_phase.set(Phase::GameOver);
-        } else if game_win() {
-            set_phase.set(Phase::GameWin);
-        } else {
-            set_phase.set(Phase::Planning);
+
+    let main_ref = create_node_ref::<html::Div>();
+    let fade_out = move || {
+        if let Some(elem) = main_ref.get() {
+            elem.style(
+                "animation",
+                "1s fade-out ease-out forwards",
+            );
+            set_timeout(
+                move || {
+                    if game_over() {
+                        set_phase.set(Phase::GameOver);
+                    } else if game_win() {
+                        set_phase.set(Phase::GameWin);
+                    } else {
+                        set_phase.set(Phase::Planning);
+                    }
+                },
+                Duration::from_secs(1),
+            );
         }
-    });
+    };
 
     let next_phase = Callback::from(move |_| {
         if game_over() || game_win() || ready.get() {
-            anim.start();
+            fade_out();
         } else {
             set_ready.set(true);
         }
@@ -297,8 +298,8 @@ pub fn Interstitial() -> impl IntoView {
 
     view! {
         <div
+            ref=main_ref
             class="interstitial"
-            style:opacity=opacity
             style:background-image=background
         >
             <div class="interstitial--inner">

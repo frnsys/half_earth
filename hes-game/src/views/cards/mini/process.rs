@@ -1,9 +1,4 @@
-use crate::{
-    consts,
-    icons::{self, HasIcon},
-    t,
-    util::{scale_text, to_ws_el},
-};
+use crate::{icons::HasIcon, t};
 
 use super::{
     super::{kinds::ProcessCard, *},

@@ -1,19 +1,18 @@
 use std::{
     collections::HashMap,
-    sync::{LazyLock, OnceLock, RwLock},
+    sync::{LazyLock, RwLock},
 };
 
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use extend::ext;
 use hes_engine::{
-    events::{Event, Flag},
+    events::Flag,
     game::Update,
     kinds::{Feedstock, Output, OutputMap},
     production::Process,
-    projects::{Project, Status, Upgrade},
+    projects::{Project, Status},
     regions::Income,
-    world::World,
     Game,
     ProjectType,
 };
@@ -660,7 +659,7 @@ pub impl Game {
             self.change_political_capital(
                 upgrade.cost as isize,
             );
-            if (project.kind == ProjectType::Policy) {
+            if project.kind == ProjectType::Policy {
                 self.downgrade_project(project.id);
             } else {
                 queued_upgrades.insert(project.id, false);

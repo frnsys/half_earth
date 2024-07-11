@@ -1,16 +1,15 @@
 use super::super::card::*;
 use crate::{
     display::{self, AsText},
-    i18n,
     icons::{self, HasIcon},
     state,
-    state::{GameExt, GameState},
+    state::GameExt,
     t,
     ui,
     vars::*,
     views::{
         factors::factors_card,
-        intensity::{self, IntensityIcon, Variable},
+        intensity::{self, IntensityIcon},
         tip,
         HasTip,
     },
@@ -349,18 +348,24 @@ pub fn ProcessCard(
         process.with(|process| {
             (0..20)
                 .map(|i| {
+                    let disabled = i > max_share;
+                    let active = i <= process.mix_share;
+                    let grow = i > process.mix_share
+                        && (i as isize <= changed_mix_share);
+                    let shrink = i <= process.mix_share
+                        && (i as isize > changed_mix_share);
+                    let excess = (i <= process.mix_share
+                        || (i as isize <= changed_mix_share))
+                        && i > max_share;
                     view! {
                         <div
                             class="process-mix-cell"
-                            class:active=i <= process.mix_share
+                            class:active=active
                             class:depleted=depleted
-                            class:shrink=(i <= process.mix_share
-                                && (i as isize > changed_mix_share))
-                            class:grow=(i > process.mix_share
-                                && (i as isize <= changed_mix_share))
-                            class:excess=((i <= process.mix_share
-                                || (i as isize <= changed_mix_share)) && i > max_share)
-                            class:disabled=(i > max_share)
+                            class:shrink=shrink
+                            class:grow=grow
+                            class:excess=excess
+                            class:disabled=disabled
                         ></div>
                     }
                 })

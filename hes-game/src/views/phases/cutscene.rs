@@ -1,15 +1,13 @@
-use std::{collections::HashMap, time::Duration};
+use std::time::Duration;
 
 use crate::{
-    anim::fade_out,
     state::Phase,
     t,
     views::events::Events,
     write_state,
 };
 use hes_engine::{
-    events::{Event, Phase as EventPhase},
-    flavor,
+    events::Phase as EventPhase,
     game::ResolvedEvent,
 };
 use leptos::*;
@@ -38,12 +36,23 @@ pub fn Cutscene() -> impl IntoView {
         format!("url('/public/assets/cutscenes/out/{image}')")
     };
 
-    let (anim, opacity) = fade_out(
-        1000.,
-        write_state!(move |_, ui| {
-            ui.phase = Phase::Interstitial;
-        }),
-    );
+    let main_ref = create_node_ref::<html::Div>();
+    let fade_out = move || {
+        if let Some(elem) = main_ref.get() {
+            elem.style(
+                "animation",
+                "1s fade-out ease-out forwards",
+            );
+            set_timeout(
+                move || {
+                    write_state!(move |_, ui| {
+                        ui.phase = Phase::Interstitial;
+                    });
+                },
+                Duration::from_secs(1),
+            );
+        }
+    };
 
     let advance = move |_| {
         set_image_idx.update(|idx| *idx += 1);
@@ -51,7 +60,7 @@ pub fn Cutscene() -> impl IntoView {
     let next_phase = move |_| {
         // TODO
         // window.audioManager.stopSoundtrack(true);
-        anim.start();
+        fade_out();
     };
 
     // Wait a beat before showing the event
@@ -78,9 +87,9 @@ pub fn Cutscene() -> impl IntoView {
 
     view! {
         <div
+            ref=main_ref
             class="cutscene"
             style:background-image=background
-            style:opacity=opacity
         >
             <Events
                 on_advance=advance

@@ -2,7 +2,6 @@ use crate::audio::init_audio;
 use crate::i18n::{get_preferred_language, load_language};
 use crate::views::{Cutscene, End, Interstitial, Loading, Planning, Report, Start, Tip, ToolTip};
 use crate::{
-    state,
     state::{GameState, Phase},
 };
 use leptos::*;

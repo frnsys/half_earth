@@ -1,12 +1,10 @@
 use crate::vars::Var;
 use hes_engine::{
-    events::Flag,
     kinds::{Byproduct, Feedstock, Output, Resource},
     production::ProcessFeature,
     regions::{Income, Latitude},
     ProjectType,
 };
-use std::fmt::Display;
 
 pub trait AsText {
     fn lower(&self) -> &'static str;

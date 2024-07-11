@@ -1,9 +1,9 @@
 use std::time::Duration;
 
 use crate::util::{
+    collection_to_elements,
     detect_center_element,
     is_safari,
-    to_children_vec,
     to_ws_el,
 };
 use leptos::*;
@@ -154,8 +154,9 @@ pub fn Cards(
         move || {
             if !scrolling.get() {
                 if let Some(scroller) = scroller_ref.get() {
-                    let children =
-                        to_children_vec(scroller.children());
+                    let children = collection_to_elements(
+                        scroller.children(),
+                    );
                     let idx = detect_center_element(
                         to_ws_el(scroller),
                         &children,
@@ -180,8 +181,9 @@ pub fn Cards(
                 // (i.e. the scroll left position hasn't changed),
                 // we're done scrolling.
                 if scrolling.get() && last.get() == next_last {
-                    let children =
-                        to_children_vec(scroller.children());
+                    let children = collection_to_elements(
+                        scroller.children(),
+                    );
                     let idx = detect_center_element(
                         to_ws_el(scroller),
                         &children,

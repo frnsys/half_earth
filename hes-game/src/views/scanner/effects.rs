@@ -2,10 +2,7 @@ use std::time::Duration;
 
 use leptos::*;
 
-use crate::{
-    anim::animation,
-    util::{card_scale, to_ws_el},
-};
+use crate::util::card_scale;
 
 pub fn shake_screen() {
     document().body().map(|body| {
@@ -26,7 +23,9 @@ pub fn shake_progress(elem: web_sys::HtmlElement) {
         elem.class_list().add_2("scan-error", "shake");
         set_timeout(
             move || {
-                elem.class_list().remove_2("scan-error", "shake").unwrap();
+                elem.class_list()
+                    .remove_2("scan-error", "shake")
+                    .unwrap();
             },
             Duration::from_millis(350),
         );
@@ -34,7 +33,9 @@ pub fn shake_progress(elem: web_sys::HtmlElement) {
 }
 
 pub fn pulse_card() {
-    if let Some(elem) = document().query_selector(".draggable.active").unwrap() {
+    if let Some(elem) =
+        document().query_selector(".draggable.active").unwrap()
+    {
         let from = card_scale();
         let to = from * 1.05;
         // animation([from],[to], 100., Some(||))
@@ -51,7 +52,9 @@ pub fn pulse_card() {
 }
 
 pub fn shrink_pulse_card() {
-    if let Some(elem) = document().query_selector(".draggable.active").unwrap() {
+    if let Some(elem) =
+        document().query_selector(".draggable.active").unwrap()
+    {
         let from = card_scale();
         let to = from * 0.95;
         // TODO

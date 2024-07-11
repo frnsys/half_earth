@@ -3,9 +3,7 @@ use crate::{
     display::{self, AsText},
     i18n,
     icons::{self, HasIcon},
-    state::GameState,
     t,
-    vars::*,
     views::{
         intensity::{self, IntensityIcon, Variable},
         tip,

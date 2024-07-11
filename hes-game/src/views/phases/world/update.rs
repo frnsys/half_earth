@@ -14,11 +14,7 @@ use crate::{
     },
     with_state,
 };
-use hes_engine::{
-    flavor::{ProjectFlavor, RegionFlavor},
-    game::Update as EngineUpdate,
-    state::State,
-};
+use hes_engine::game::Update as EngineUpdate;
 
 #[component]
 pub fn Update(

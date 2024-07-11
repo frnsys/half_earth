@@ -1,7 +1,6 @@
 use crate::{t, util::to_ws_el};
 use gloo_utils::format::JsValueSerdeExt;
 use leptos::*;
-use serde::{Deserialize, Serialize};
 use std::{cell::RefCell, rc::Rc};
 
 use wasm_bindgen::prelude::*;
@@ -62,21 +61,30 @@ pub fn Globe(
         let on_ready = Closure::wrap(Box::new(move || {
             set_loading.set(false);
             on_ready.call(g2.clone());
-        }) as Box<dyn FnMut()>);
-        g.inner.borrow().on_ready(on_ready.as_ref().unchecked_ref());
+        })
+            as Box<dyn FnMut()>);
+        g.inner
+            .borrow()
+            .on_ready(on_ready.as_ref().unchecked_ref());
         on_ready.forget();
 
-        let on_click = Closure::wrap(Box::new(move |region_idxs: &JsValue| {
-            if let Some(on_click) = on_click {
-                let region_idxs: Vec<usize> = region_idxs.into_serde().unwrap();
+        let on_click = Closure::wrap(Box::new(
+            move |region_idxs: &JsValue| {
+                if let Some(on_click) = on_click {
+                    let region_idxs: Vec<usize> =
+                        region_idxs.into_serde().unwrap();
 
-                if !region_idxs.is_empty() {
-                    on_click.call(region_idxs[0]);
+                    if !region_idxs.is_empty() {
+                        on_click.call(region_idxs[0]);
+                    }
                 }
-            }
-        }) as Box<dyn FnMut(&JsValue)>);
+            },
+        )
+            as Box<dyn FnMut(&JsValue)>);
         // globe._onClick = []; // TODO this was in the original code, is this necessary?
-        g.inner.borrow().on_click(on_click.as_ref().unchecked_ref());
+        g.inner
+            .borrow()
+            .on_click(on_click.as_ref().unchecked_ref());
         on_click.forget();
 
         // TODO

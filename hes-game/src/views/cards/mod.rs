@@ -3,7 +3,7 @@ mod cards;
 mod kinds;
 mod mini;
 
-use crate::vars::{Impact, Var};
+use crate::vars::Var;
 
 pub use cards::{CardFocusArea, Cards};
 pub use kinds::*;

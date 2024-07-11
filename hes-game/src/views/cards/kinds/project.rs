@@ -16,7 +16,6 @@ use crate::{
 };
 use hes_engine::{
     events::Flag,
-    flavor::Image,
     projects::{Group, Project},
     years_remaining,
     ProjectType,

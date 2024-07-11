@@ -5,13 +5,9 @@ use crate::{
     t,
     views::{effects::DisplayEffect, Effects},
 };
-use ev::{KeyboardEvent, MouseEvent};
-use hes_engine::{
-    events::{Effect, Phase},
-    flavor::{self, Branch, DialogueNext},
-};
+use ev::MouseEvent;
+use hes_engine::flavor::{self, Branch, DialogueNext};
 use leptos::*;
-use leptos_dom::helpers::IntervalHandle;
 use leptos_use::{use_document, use_event_listener};
 use wasm_bindgen::prelude::*;
 

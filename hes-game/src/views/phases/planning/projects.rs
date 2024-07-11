@@ -1,25 +1,14 @@
 use crate::{
-    consts,
     icons::{self, HasIcon},
     state,
     state::{GameExt, Tutorial},
     t,
     ui,
-    util::to_ws_el,
-    views::{
-        cards::{CardFocusArea, ProjectCard},
-        scanner::*,
-        Help,
-    },
+    views::{scanner::*, Help},
     with_state,
-    write_state,
 };
-use hes_engine::{
-    projects::{Project, Status, Type},
-    state::State,
-};
+use hes_engine::projects::{Status, Type};
 use leptos::*;
-use std::collections::HashMap;
 
 #[component]
 pub fn Projects(

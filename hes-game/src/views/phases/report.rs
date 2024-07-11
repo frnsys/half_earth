@@ -9,7 +9,7 @@ use crate::{
     views::{
         events::Events,
         hud::Hud,
-        intensity::{self, IntensityBar, Variable},
+        intensity::{self, IntensityBar},
         tip,
         HasTip,
         Tip,
@@ -17,11 +17,7 @@ use crate::{
     with_state,
     write_state,
 };
-use hes_engine::{
-    events::Phase as EventPhase,
-    game::{ResolvedEvent, Update},
-    kinds::Output,
-};
+use hes_engine::{events::Phase as EventPhase, game::Update};
 use leptos::*;
 
 pub struct Request {

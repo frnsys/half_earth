@@ -18,7 +18,6 @@ use crate::{
     views::{
         factors::{factors_card, FactorsList},
         intensity,
-        tip,
         HasTip,
         Tip,
     },

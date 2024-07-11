@@ -3,7 +3,7 @@ mod update;
 
 use crate::{
     consts,
-    display::{self, AsText},
+    display,
     state,
     state::Phase,
     t,
@@ -18,7 +18,7 @@ use crate::{
 };
 use hes_engine::{
     events::Phase as EventPhase,
-    game::{ResolvedEvent, Update as EngineUpdate},
+    game::Update as EngineUpdate,
 };
 use leptos::*;
 use std::collections::VecDeque;

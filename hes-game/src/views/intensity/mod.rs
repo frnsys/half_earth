@@ -1,6 +1,6 @@
 mod calculate;
 
-use crate::{vars::Var, views::intensity};
+use crate::views::intensity;
 use calculate::N_PIPS;
 use leptos::*;
 

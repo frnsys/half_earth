@@ -9,6 +9,7 @@ use hes_engine::{
 use paste::paste;
 use regex_lite::Regex;
 
+/// Fill icon references in a text, e.g. `"[political_capital]"`.
 pub fn fill_icons(text: &str) -> String {
     let re = Regex::new(r"\[([a-z_]+)\]").unwrap();
     let mut result = text.to_string();

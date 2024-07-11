@@ -3,7 +3,6 @@ use crate::{
     display::{self, AsText},
     icons::{self, HasIcon},
     state,
-    state::GameState,
     t,
     vars::Impact,
     views::{tip, HasTip},

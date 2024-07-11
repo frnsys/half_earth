@@ -1,8 +1,4 @@
-use crate::{
-    i18n,
-    state::{GameState, Settings},
-    t,
-};
+use crate::{state::GameState, t};
 use leptos::*;
 use list_files_macro::list_files;
 
@@ -21,28 +17,50 @@ fn preload_assets() -> Vec<String> {
     ];
 
     let mut preload = Vec::from(PRELOAD);
-    preload.extend(list_files!("../../../public/assets/content/images/*.png"));
-    preload.extend(list_files!("../../../public/assets/characters/*.png"));
-    preload.extend(list_files!("../../../public/assets/icons/*.png"));
-    preload.extend(list_files!("../../../public/assets/icons/*.svg"));
-    preload.extend(list_files!("../../../public/assets/icons/feedstocks/*.png"));
-    preload.extend(list_files!("../../../public/assets/icons/features/*.png"));
-    preload.extend(list_files!("../../../public/assets/icons/pips/*.png"));
-    preload.extend(list_files!("../../../public/assets/icons/industries/*.png"));
-    preload.extend(list_files!("../../../public/assets/icons/npcs/*.svg"));
-    preload.extend(list_files!("../../../public/assets/icons/hud/*.svg"));
+    preload.extend(list_files!(
+        "../../../public/assets/content/images/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/characters/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/*.svg"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/feedstocks/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/features/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/pips/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/industries/*.png"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/npcs/*.svg"
+    ));
+    preload.extend(list_files!(
+        "../../../public/assets/icons/hud/*.svg"
+    ));
 
     // A little hacky (ideally we do this at compile time)
     // but turn the file paths into the proper urls.
     preload
         .into_iter()
-        .map(|path| path.replace(env!("CARGO_MANIFEST_DIR"), "").to_string())
+        .map(|path| {
+            path.replace(env!("CARGO_MANIFEST_DIR"), "")
+                .to_string()
+        })
         .collect()
 }
 
 #[component]
 pub fn Loading(set_loaded: WriteSignal<bool>) -> impl IntoView {
-
     // TODO
     // window.audioManager.startSoundtrack('/assets/music/143208__klerrp__maxtor-diamondmax-d540x-5400rpm-bb.mp3');
 

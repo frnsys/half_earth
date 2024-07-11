@@ -3,34 +3,20 @@ mod describe;
 use std::collections::{HashMap, HashSet};
 
 use crate::{
-    consts,
-    icons::{self, fill_icons, HasIcon},
-    t,
-    views::factors::factors_card,
+    icons::{self, fill_icons},
     with_state,
 };
 pub use describe::DisplayEffect;
 use hes_engine::{
     events::*,
-    kinds::{
-        Byproduct,
-        Feedstock,
-        Output,
-        OutputMap,
-        Resource,
-    },
     projects::{Project, Status, Type},
-    state::State,
 };
 use leptos::{
     component,
     expect_context,
     view,
-    with,
     For,
-    IntoSignal,
     IntoView,
-    MaybeSignal,
     RwSignal,
     Signal,
     SignalWith,

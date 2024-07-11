@@ -1,7 +1,10 @@
 use crate::{
-    consts, icons, state, t,
+    consts,
+    icons,
+    state,
+    t,
     views::{cards::MiniNPC, tip, HasTip},
-    with_state, write_state,
+    with_state,
 };
 use hes_engine::events::Flag;
 use leptos::*;
@@ -9,8 +12,10 @@ use std::{collections::HashMap, sync::OnceLock};
 
 #[component]
 pub fn Parliament() -> impl IntoView {
-    let total_seats = consts::PARLIAMENT_SEATS.iter().sum::<usize>();
-    let suspended = state!(flags.contains(&Flag::ParliamentSuspended));
+    let total_seats =
+        consts::PARLIAMENT_SEATS.iter().sum::<usize>();
+    let suspended =
+        state!(flags.contains(&Flag::ParliamentSuspended));
     let npcs = with_state!(|state, ui| {
         state
             .npcs
@@ -21,8 +26,12 @@ pub fn Parliament() -> impl IntoView {
             .collect::<Vec<_>>()
     });
 
-    let (extra_seats, set_extra_seats) = create_signal::<HashMap<usize, usize>>(HashMap::default());
-    let (coalition_seats, set_coalition_seats) = create_signal(0);
+    let (extra_seats, set_extra_seats) =
+        create_signal::<HashMap<usize, usize>>(
+            HashMap::default(),
+        );
+    let (coalition_seats, set_coalition_seats) =
+        create_signal(0);
 
     struct Seat {
         name: String,
@@ -43,7 +52,9 @@ pub fn Parliament() -> impl IntoView {
             .into_iter()
             .map(|npc| {
                 let npc = npc.get();
-                let seats = (npc.seats * total_seats as f32).floor() as usize;
+                let seats = (npc.seats * total_seats as f32)
+                    .floor()
+                    as usize;
                 used_seats += seats;
                 Seats {
                     id: npc.id,
@@ -66,7 +77,8 @@ pub fn Parliament() -> impl IntoView {
         set_extra_seats.update(|extras| {
             extras.clear();
             while extra_seats > 0 {
-                let idx = (rng() * seats.len() as f64).floor() as usize;
+                let idx = (rng() * seats.len() as f64).floor()
+                    as usize;
                 let s = &mut seats[idx];
                 s.seats += 1;
                 let e = extras.entry(s.id).or_default();
@@ -83,16 +95,22 @@ pub fn Parliament() -> impl IntoView {
         }
         set_coalition_seats.set(coalition_seats);
 
-        let mut individual_seats = seats.into_iter().flat_map(|seats| {
-            (0..seats.seats).map(move |_| Seat {
-                name: seats.name.clone(),
-                color: seats.color.clone(),
-                is_ally: seats.is_ally,
-            })
-        });
+        let mut individual_seats =
+            seats.into_iter().flat_map(|seats| {
+                (0..seats.seats).map(move |_| Seat {
+                    name: seats.name.clone(),
+                    color: seats.color.clone(),
+                    is_ally: seats.is_ally,
+                })
+            });
         consts::PARLIAMENT_SEATS
             .iter()
-            .map(|n_seats| individual_seats.by_ref().take(*n_seats).collect::<Vec<_>>())
+            .map(|n_seats| {
+                individual_seats
+                    .by_ref()
+                    .take(*n_seats)
+                    .collect::<Vec<_>>()
+            })
             .collect::<Vec<_>>()
     });
 
@@ -169,8 +187,10 @@ pub fn Parliament() -> impl IntoView {
 fn mulberry32(seed: u16) -> impl FnMut() -> f64 {
     // Different seed for each game.
     static GAME_SEED: OnceLock<u16> = OnceLock::new();
-    let game_seed: &u16 =
-        GAME_SEED.get_or_init(|| (js_sys::Math::random() * u16::MAX as f64).floor() as u16);
+    let game_seed: &u16 = GAME_SEED.get_or_init(|| {
+        (js_sys::Math::random() * u16::MAX as f64).floor()
+            as u16
+    });
 
     // Combine the game seed with the provided seed.
     let mut state: u32 = seed as u32 * (*game_seed as u32);
@@ -179,7 +199,9 @@ fn mulberry32(seed: u16) -> impl FnMut() -> f64 {
         let mut t = state;
         t = t.wrapping_mul(t ^ (t >> 15));
         t = t.wrapping_mul(t | 1);
-        t ^= t.wrapping_add(t.wrapping_mul(t ^ (t >> 7)).wrapping_mul(t | 61));
+        t ^= t.wrapping_add(
+            t.wrapping_mul(t ^ (t >> 7)).wrapping_mul(t | 61),
+        );
         ((t ^ (t >> 14)) as f64) / 4294967296.0
     }
 }

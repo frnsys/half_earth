@@ -2,25 +2,16 @@ use crate::{
     consts,
     display::{self, AsText},
     icons::{self, HasIcon},
-    state::{self, GameExt, Tutorial, UIState},
+    state::{Tutorial, UIState},
     t,
     ui,
-    util::to_ws_el,
     vars::Var,
-    views::{
-        cards::{CardFocusArea, ProcessCard},
-        factors::factors_card,
-        scanner::*,
-        tip,
-        HasTip,
-    },
+    views::{factors::factors_card, scanner::*, tip, HasTip},
     with_state,
-    write_state,
 };
 use hes_engine::{
     kinds::Output,
     production::Process,
-    projects::{Project, Status, Type},
     state::State,
 };
 use leptos::*;

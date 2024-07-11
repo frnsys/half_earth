@@ -1,7 +1,6 @@
 use crate::{
     display::{self, AsText},
     icons::{self, HasIcon},
-    state,
     t,
     views::{
         intensity::{self, IntensityIcon},

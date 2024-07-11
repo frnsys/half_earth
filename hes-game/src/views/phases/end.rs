@@ -6,12 +6,8 @@ use crate::{
     state::GameState,
     t,
     views::{tip, Events, HasTip},
-    with_state,
 };
-use hes_engine::{
-    events::Phase as EventPhase,
-    game::ResolvedEvent,
-};
+use hes_engine::events::Phase as EventPhase;
 
 #[component]
 pub fn End(lose: bool) -> impl IntoView {

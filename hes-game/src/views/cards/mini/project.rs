@@ -1,19 +1,13 @@
 use crate::{
-    consts,
     icons::{self, HasIcon},
-    t,
-    util::{scale_text, to_ws_el},
     views::scanner::{ProjectScanner, ScannerCards},
 };
 
 use super::{
-    super::{
-        kinds::{project_color, ProjectCard},
-        *,
-    },
+    super::{kinds::project_color, *},
     MiniCard,
 };
-use hes_engine::{kinds::Output, projects::Project};
+use hes_engine::projects::Project;
 use leptos::*;
 
 #[component]

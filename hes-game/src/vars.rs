@@ -3,6 +3,7 @@ use hes_engine::kinds::*;
 use serde::{Deserialize, Serialize};
 use strum::EnumIter;
 
+/// Impact-related variables.
 #[derive(Debug, Clone, Copy)]
 pub enum Impact {
     Land,

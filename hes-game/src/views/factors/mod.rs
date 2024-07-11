@@ -3,7 +3,6 @@ mod calculate;
 use crate::{
     consts,
     icons::{self, HasIcon},
-    state::GameState,
     t,
     vars::Var,
     views::{cards::FactorsCard, intensity::IntensityIcon},

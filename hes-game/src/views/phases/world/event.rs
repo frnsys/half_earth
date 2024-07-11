@@ -1,6 +1,5 @@
 use crate::{
     icons::HasIcon,
-    state,
     t,
     views::{
         effects::DisplayEffect,

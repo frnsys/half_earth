@@ -1,9 +1,4 @@
-use crate::{
-    consts,
-    icons,
-    t,
-    util::{scale_text, to_ws_el},
-};
+use crate::t;
 
 use super::{
     super::{kinds::RegionCard, *},

@@ -1,5 +1,4 @@
 use hes_engine::kinds::Output;
-use leptos::*;
 
 use crate::{
     state::demand_by_income_levels,

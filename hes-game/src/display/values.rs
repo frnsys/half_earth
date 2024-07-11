@@ -5,11 +5,11 @@ use crate::{
 use hes_engine::kinds::*;
 
 pub fn format_number(val: f32) -> String {
-    if (val >= 1e9) {
+    if val >= 1e9 {
         format!("{:.1}b", val / 1e9)
-    } else if (val >= 1e6) {
+    } else if val >= 1e6 {
         format!("{:.1}m", val / 1e6)
-    } else if (val >= 1e3) {
+    } else if val >= 1e3 {
         format!("{:.1}k", val / 1e3)
     } else {
         format!("{:.1}", val)

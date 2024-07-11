@@ -1,6 +1,5 @@
 use super::{
     AddScanner,
-    CardScanProps,
     DragRect,
     Draggable,
     RemoveScanner,
@@ -8,20 +7,12 @@ use super::{
     ScannerSpec,
 };
 use crate::{
-    anim::{animation, Anim},
-    state,
-    util::{
-        detect_center_element,
-        nodelist_to_elements,
-        to_ws_el,
-    },
+    util::{detect_center_element, nodelist_to_elements},
     views::cards::{CardFocusArea, Cards},
     write_state,
 };
-use hes_engine::state::State;
 use leptos::*;
 use leptos_use::use_interval_fn;
-use std::{rc::Rc, time::Duration};
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, PartialEq)]

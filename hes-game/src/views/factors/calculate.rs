@@ -11,13 +11,11 @@ use hes_engine::{
     production::Process,
     state::State,
 };
-use leptos::*;
 use serde::{Deserialize, Serialize};
-use strum::{EnumIter, IntoEnumIterator};
+use strum::IntoEnumIterator;
 
 use crate::{
     display,
-    icons,
     icons::HasIcon,
     vars::*,
     views::{intensity, FactorsCard},

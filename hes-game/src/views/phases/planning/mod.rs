@@ -11,15 +11,13 @@ pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
 
 use crate::{
-    state::{self, Tutorial},
+    state::Tutorial,
     t,
     ui,
     ui_rw,
     views::{hud::Hud, Events},
-    with_state,
     write_state,
 };
-use enum_iterator::Sequence;
 use leptos::*;
 
 #[derive(Clone, Copy, PartialEq)]
