@@ -3,17 +3,23 @@ mod update;
 
 use crate::{
     consts,
-    display::format,
+    display::{self, AsText},
     state,
     state::Phase,
     t,
+    ui,
+    ui_rw,
     views::{
-        globe::Globe, hud::Hud, phases::cutscene::Events as InnerEvents,
-        phases::events::update::Update,
+        events::Events,
+        globe::Globe,
+        hud::Hud,
+        phases::world::update::Update,
     },
-    write_state,
 };
-use hes_engine::game::Update as EngineUpdate;
+use hes_engine::{
+    events::Phase as EventPhase,
+    game::{ResolvedEvent, Update as EngineUpdate},
+};
 use leptos::*;
 use std::collections::VecDeque;
 
@@ -47,22 +53,32 @@ fn warming_colour(mut temp: f32) -> String {
 }
 
 #[component]
-pub fn Events() -> impl IntoView {
-    // TODO
-    // let events = game.roll.world('Start');
-    let events = vec![];
+pub fn WorldEvents() -> impl IntoView {
+    let (events, set_events) = create_signal(vec![]);
+    create_effect(move |_| {
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
+        state.update(|state| {
+            let events = state.game.roll_events_for_phase(
+                EventPhase::WorldStart,
+                None,
+            );
+            set_events.set(events);
+        });
+    });
 
-    let (updates, set_updates) = create_signal::<VecDeque<EngineUpdate>>(VecDeque::new());
+    let (updates, set_updates) = create_signal::<
+        VecDeque<EngineUpdate>,
+    >(VecDeque::new());
 
-    let year = state!(|state, ui| state.world.year);
+    let year = state!(world.year);
+    let start_temp = ui!(cycle_start_state.temperature);
 
     let (skipping, set_skipping) = create_signal(false);
     let skip = move |_| set_skipping.set(true);
 
-    let bg_color = state!(|state, ui| {
-        let temp = ui.cycle_start_state.temperature;
-        warming_colour(temp)
-    });
+    let bg_color = move || warming_colour(start_temp.get());
     let ms_per_year = move || {
         if skipping.get() {
             10
@@ -73,7 +89,7 @@ pub fn Events() -> impl IntoView {
     let (time, set_time) = create_signal(0.);
     let progress = move || {
         let progress = time.get() / ms_per_year() as f32;
-        format::percent(progress, false)
+        display::percent(progress, false)
     };
 
     // TODO
@@ -81,24 +97,30 @@ pub fn Events() -> impl IntoView {
     //     globe.clear();
     // };
 
+    let (_, set_phase) = ui_rw!(phase);
     let (done, set_done) = create_signal(false);
     let (stopped, set_stopped) = create_signal(false);
-    let show_update = move || !updates.with(|u| u.is_empty()) && !skipping.get();
-    let next_update = move || updates.with(|u| u.front().cloned());
-    let dismiss_update = write_state!(move |state, ui| {
+    let show_update = move || {
+        !updates.with(|u| u.is_empty()) && !skipping.get()
+    };
+    let next_update =
+        move || updates.with(|u| u.front().cloned());
+    let dismiss_update = move || {
         set_updates.update(|updates| {
             updates.pop_front();
             let no_updates = updates.is_empty();
             if no_updates && done.get() {
-                ui.phase = Phase::Report;
+                set_phase.set(Phase::Report);
             } else {
                 set_stopped.set(!no_updates);
             }
         });
-    });
+    };
 
-    let (toasts, set_toasts) = create_signal::<Vec<Toast>>(vec![]);
-    let n_toasts = move || toasts.with(|toasts| toasts.len() as f32);
+    let (toasts, set_toasts) =
+        create_signal::<Vec<Toast>>(vec![]);
+    let n_toasts =
+        move || toasts.with(|toasts| toasts.len() as f32);
 
     // TODO
     let (globe, set_globe) = create_signal(None);
@@ -131,7 +153,7 @@ pub fn Events() -> impl IntoView {
             </div>
             <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
             {update}
-            <InnerEvents events on_advance=|_| {} on_done=|_| {}/>
+            <Events events on_advance=|_| {} on_done=|_| {}/>
             <div id="event-stream--toasts">
                 <For
                     each=move || {

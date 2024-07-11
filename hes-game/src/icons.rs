@@ -1,3 +1,4 @@
+use crate::vars::Var;
 use hes_engine::{
     events::{Condition, LocalVariable, WorldVariable},
     kinds::{Byproduct, Feedstock, Output, Resource},
@@ -5,18 +6,50 @@ use hes_engine::{
     production::ProcessFeature,
     projects::Type,
 };
+use paste::paste;
+use regex_lite::Regex;
 
-use crate::display::Var;
+pub fn fill_icons(text: &str) -> String {
+    let re = Regex::new(r"\[([a-z_]+)\]").unwrap();
+    let mut result = text.to_string();
+
+    for cap in re.captures_iter(text) {
+        let full_match = &cap[0];
+        let icon_key = &cap[1];
+        if let Some(icon_url) = icon_from_name(icon_key) {
+            let replacement =
+                format!("<img src=\"{}\">", icon_url);
+            result = result.replace(full_match, &replacement);
+        }
+    }
+
+    result
+}
 
 macro_rules! icons {
     ($($name:ident: $path:literal),* $(,)?) => {
         $(
             pub const $name: &'static str = concat!("/public/assets", $path);
         )*
+
+        paste! {
+            pub fn icon_from_name(name: &str) -> Option<&'static str> {
+                match name {
+                    $(
+                        stringify!([<$name:lower>]) => Some($name),
+                    )*
+                        _ => {
+                            leptos::logging::warn!("No icon defined for: {name}.");
+                            None
+                        }
+                }
+            }
+        }
     }
 }
 
 icons! {
+    GOSPLANT: "/gosplant_inverse.svg",
     CLOSE: "/icons/close.svg",
     POLITICAL_CAPITAL: "/icons/pips/political_capital.png",
     EMISSIONS: "/icons/emissions.png",
@@ -55,6 +88,7 @@ icons! {
     BIODIVERSITY: "/icons/extinction.png",
     SEA_LEVEL_RISE: "/icons/sea_level_rise.png",
     UNLOCKS: "/icons/unlocks.png",
+    LOCKS: "/icons/locks.png",
     PROTECT: "/icons/protect.png",
     CHANCE: "/icons/chance.png",
     COST: "/icons/cost.png",
@@ -62,6 +96,7 @@ icons! {
     IMPLEMENT: "/icons/implement.png",
     BAN: "/icons/ban.png",
     DEMAND: "/icons/demand.png",
+    OUTPUT: "/icons/output.png",
     ADD: "/icons/add.svg",
     CHECK: "/icons/check.png",
     CHECK_BLK: "/icons/check_blk.png",
@@ -93,6 +128,16 @@ icons! {
     OTHER_INDUSTRY: "/icons/industries/other_industry.png",
     ROAD_TRANSPORT: "/icons/industries/road_transport.png",
     SHIPPING: "/icons/industries/shipping.png",
+
+    // Feedstocks
+    COAL: "/icons/feedstocks/coal.png",
+    LITHIUM: "/icons/feedstocks/lithium.png",
+    NATURAL_GAS: "/icons/feedstocks/natural_gas.png",
+    OIL: "/icons/feedstocks/oil.png",
+    URANIUM: "/icons/feedstocks/uranium.png",
+    THORIUM: "/icons/feedstocks/thorium.png",
+    SOIL: "/icons/feedstocks/soil.png",
+    OTHER: "/icons/feedstocks/other.png",
 
     // Characters
     THE_AUTHORITARIAN: "/characters/The Authoritarian.png",
@@ -175,14 +220,14 @@ impl HasIcon for Resource {
 impl HasIcon for Feedstock {
     fn icon(&self) -> &'static str {
         match self {
-            Feedstock::Coal => "/icons/feedstocks/coal.png",
-            Feedstock::Lithium => "/icons/feedstocks/lithium.png",
-            Feedstock::NaturalGas => "/icons/feedstocks/naturtl_gas.png",
-            Feedstock::Oil => "/icons/feedstocks/oil.png",
-            Feedstock::Uranium => "/icons/feedstocks/uranium.png",
-            Feedstock::Thorium => "/icons/feedstocks/thorium.png",
-            Feedstock::Soil => "/icons/feedstocks/soil.png",
-            Feedstock::Other => "/icons/feedstocks/other.png",
+            Feedstock::Coal => COAL,
+            Feedstock::Lithium => LITHIUM,
+            Feedstock::NaturalGas => NATURAL_GAS,
+            Feedstock::Oil => OIL,
+            Feedstock::Uranium => URANIUM,
+            Feedstock::Thorium => THORIUM,
+            Feedstock::Soil => SOIL,
+            Feedstock::Other => OTHER,
         }
     }
 }
@@ -201,17 +246,23 @@ impl HasIcon for ProcessFeature {
     fn icon(&self) -> &'static str {
         match self {
             ProcessFeature::UsesPesticides => USES_PESTICIDES,
-            ProcessFeature::UsesSynFertilizer => USES_SYN_FERTILIZER,
+            ProcessFeature::UsesSynFertilizer => {
+                USES_SYN_FERTILIZER
+            }
             ProcessFeature::UsesLivestock => USES_LIVESTOCK,
             ProcessFeature::UsesOil => USES_OIL,
             ProcessFeature::IsIntermittent => IS_INTERMITTENT,
             ProcessFeature::CanMeltdown => CAN_MELTDOWN,
-            ProcessFeature::MakesNuclearWaste => MAKES_NUCLEAR_WASTE,
+            ProcessFeature::MakesNuclearWaste => {
+                MAKES_NUCLEAR_WASTE
+            }
             ProcessFeature::IsSolar => IS_SOLAR,
             ProcessFeature::IsCCS => IS_CSS,
             ProcessFeature::IsCombustion => IS_COMBUSTION,
             ProcessFeature::IsFossil => IS_FOSSIL,
-            ProcessFeature::IsLaborIntensive => IS_LABOR_INTENSIVE,
+            ProcessFeature::IsLaborIntensive => {
+                IS_LABOR_INTENSIVE
+            }
         }
     }
 }
@@ -241,7 +292,9 @@ impl HasIcon for NPC {
             "The Consumerist" => THE_CONSUMERIST,
             "The Utopian" => THE_UTOPIAN,
             "The Accelerationist" => THE_ACCELERATIONIST,
-            "The Animal Liberationist" => THE_ANIMAL_LIBERATIONIST,
+            "The Animal Liberationist" => {
+                THE_ANIMAL_LIBERATIONIST
+            }
             "The Farmer" => THE_FARMER,
             "The Ecofeminist" => THE_ECOFEMINIST,
             "The Fanonist" => THE_FANONIST,
@@ -254,11 +307,21 @@ impl HasIcon for Condition {
     fn icon(&self) -> &'static str {
         match self {
             Condition::Demand(output, ..) => output.icon(),
-            Condition::OutputDemandGap(output, ..) => output.icon(),
-            Condition::ResourceDemandGap(resource, ..) => resource.icon(),
-            Condition::ResourcePressure(resource, ..) => resource.icon(),
-            Condition::ProcessMixShareFeature(feat, ..) => feat.icon(),
-            Condition::FeedstockYears(feedstock, ..) => feedstock.icon(),
+            Condition::OutputDemandGap(output, ..) => {
+                output.icon()
+            }
+            Condition::ResourceDemandGap(resource, ..) => {
+                resource.icon()
+            }
+            Condition::ResourcePressure(resource, ..) => {
+                resource.icon()
+            }
+            Condition::ProcessMixShareFeature(feat, ..) => {
+                feat.icon()
+            }
+            Condition::FeedstockYears(feedstock, ..) => {
+                feedstock.icon()
+            }
             Condition::LocalVariable(var, ..) => match var {
                 LocalVariable::Outlook => CONTENTEDNESS,
                 LocalVariable::Habitability => HABITABILITY,
@@ -267,14 +330,18 @@ impl HasIcon for Condition {
             Condition::WorldVariable(var, ..) => match var {
                 WorldVariable::Temperature => WARMING,
                 WorldVariable::SeaLevelRise => SEA_LEVEL_RISE,
-                WorldVariable::SeaLevelRiseRate => SEA_LEVEL_RISE,
+                WorldVariable::SeaLevelRiseRate => {
+                    SEA_LEVEL_RISE
+                }
                 WorldVariable::Outlook => CONTENTEDNESS,
                 WorldVariable::Emissions => EMISSIONS,
                 WorldVariable::WaterStress => WATER,
                 WorldVariable::Precipitation => PRECIPITATION,
                 WorldVariable::Population => POPULATION,
                 WorldVariable::PopulationGrowth => POPULATION,
-                WorldVariable::ExtinctionRate => EXTINCTION_RATE,
+                WorldVariable::ExtinctionRate => {
+                    EXTINCTION_RATE
+                }
                 _ => HELP,
             },
             Condition::ProtectLand(..) => PROTECT,

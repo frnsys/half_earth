@@ -1,6 +1,7 @@
 use leptos::*;
 use leptos_dom::helpers::AnimationFrameRequestHandle;
-use leptos_use::{use_raf_fn, utils::Pausable};
+use leptos_use::{use_raf_fn, use_raf_fn_with_options, utils::Pausable, UseRafFnOptions};
+use std::rc::Rc;
 
 /// Ease-in-out quadratic function
 /// <https://gist.github.com/andjosh/6764939>
@@ -13,6 +14,39 @@ fn ease_in_out_quad(t: f32, b: f32, c: f32, d: f32) -> f32 {
     -c / 2.0 * (t * (t - 2.0) - 1.0) + b
 }
 
+#[derive(Clone)]
+pub struct Anim {
+    frame: Rc<dyn Fn() + 'static>,
+    handle: RwSignal<Option<AnimationFrameRequestHandle>>,
+    stopped: RwSignal<bool>,
+}
+impl Anim {
+    pub fn start(&self) {
+        self.call();
+    }
+
+    pub fn stop(&self) {
+        if let Some(Some(handle)) = self.handle.try_get() {
+            handle.cancel();
+            self.stopped.set(true);
+        }
+    }
+
+    pub fn call(&self) {
+        let stopped = self.stopped.try_get();
+        if stopped.is_none() || stopped == Some(true) {
+            return;
+        }
+        let copy = self.clone();
+        let handle = request_animation_frame_with_handle(move || {
+            (copy.frame)();
+            copy.call();
+        })
+        .unwrap();
+        self.handle.set(Some(handle));
+    }
+}
+
 /// Takes an array of start values and an array of end values,
 /// then animates between the values.
 /// When the animation is finished the optional callback is called.
@@ -23,7 +57,7 @@ pub fn animation<const N: usize, CB: Fn() + 'static>(
     duration: f32,
     callback: CB,
     linear: bool,
-) -> (impl Fn() + Clone, impl Fn() + Clone, ReadSignal<[f32; N]>) {
+) -> (Anim, ReadSignal<[f32; N]>) {
     #[derive(Default, Clone, Copy)]
     struct Value {
         start: f32,
@@ -61,29 +95,44 @@ pub fn animation<const N: usize, CB: Fn() + 'static>(
 
     let start_time = window().performance().unwrap().now();
     let (vals, set_vals) = create_signal(start);
-    let Pausable {
-        pause,
-        resume,
-        is_active,
-    } = use_raf_fn(move |args| {
-        let elapsed = (args.timestamp - start_time) as f32;
-        if elapsed < duration {
-            let new_vals = lerp(elapsed);
-            set_vals.update(|vals| *vals = new_vals);
-        } else {
-            set_vals.update(|vals| *vals = end);
+    let (is_done, set_is_done) = create_signal(false);
+
+    let anim = Anim {
+        frame: Rc::new(move || {
+            let timestamp = window().performance().unwrap().now();
+            let elapsed = (timestamp - start_time) as f32;
+            if elapsed < duration {
+                let new_vals = lerp(elapsed);
+                set_vals.update(|vals| *vals = new_vals);
+            } else {
+                set_vals.update(|vals| *vals = end);
+                set_is_done.set(true);
+            }
+        }),
+        handle: create_rw_signal(None),
+        stopped: create_rw_signal(false),
+    };
+
+    // Note: Calling the callback
+    // within the request animation frame function
+    // doesn't work because it doesn't let us access
+    // context signals, so we set up the `is_done`
+    // signal and effect instead.
+    // let pause_ = pause.clone();
+    let anim_ = anim.clone();
+    create_effect(move |_| {
+        if is_done.get() {
+            anim_.stop();
             callback();
         }
     });
-    (resume, pause, vals)
+
+    (anim, vals)
 }
 
 /// Convenience function to animate from 1.0 to 0.0.
-pub fn fade_out<CB: Fn() + 'static>(
-    duration: f32,
-    callback: CB,
-) -> (impl Fn() + Clone, Signal<f32>) {
-    let (start_anim, _, anim_vals) = animation([1.0], [0.0], duration, callback, false);
+pub fn fade_out<CB: Fn() + 'static>(duration: f32, callback: CB) -> (Anim, Signal<f32>) {
+    let (anim, anim_vals) = animation([1.0], [0.0], duration, callback, false);
     let opacity = move || anim_vals.with(|vals| vals[0]);
-    (start_anim, opacity.into_signal())
+    (anim, opacity.into_signal())
 }

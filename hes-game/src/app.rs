@@ -11,6 +11,7 @@ use leptos_router::*;
 
 #[component]
 pub fn Root() -> impl IntoView {
+    // TODO
     view! {
         <Router fallback=|| {
             view! { <div>TODO</div> }.into_view()
@@ -26,7 +27,7 @@ pub fn Root() -> impl IntoView {
 pub fn App() -> impl IntoView {
     AnimationContext::provide();
     provide_context(create_rw_signal::<Option<Tip>>(None));
-    provide_context(create_signal::<GameState>(GameState::load()));
+    provide_context(create_rw_signal::<GameState>(GameState::load()));
     init_audio();
 
     let (started, set_started) = create_signal(false);
@@ -40,18 +41,24 @@ pub fn App() -> impl IntoView {
         },
     );
 
-    let phase = move || {
-        state!(|state, ui| {
-            match ui.phase {
+    // TODO create a macro rule that makes this easier
+    let phase = {
+        let cur_phase = create_memo(|_| {
+            let state = expect_context::<RwSignal<crate::state::GameState>>();
+            state.with(|state| state.ui.phase)
+        });
+        move || {
+            logging::log!("CHOOSING PHASE");
+            match cur_phase.get() {
                 Phase::Intro => view! { <Cutscene/> }.into_view(),
                 Phase::Interstitial => view! { <Interstitial/> }.into_view(),
                 Phase::GameOver => view! { <End lose=true/> }.into_view(),
                 Phase::GameWin => view! { <End lose=false/> }.into_view(),
-                Phase::Planning => view! { <Planning /> }.into_view(),
-                Phase::Report => view! { <Report /> }.into_view(),
+                Phase::Planning => view! { <Planning/> }.into_view(),
+                Phase::Report => view! { <Report/> }.into_view(),
                 Phase::Events => todo!(),
             }
-        });
+        }
     };
 
     view! {

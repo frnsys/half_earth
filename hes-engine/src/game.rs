@@ -1,4 +1,6 @@
-use crate::events::{Effect, EventPool, Phase};
+use std::ops::Deref;
+
+use crate::events::{Effect, Event, EventPool, Phase};
 use crate::projects::Status;
 use crate::state::State;
 use crate::utils;
@@ -85,7 +87,6 @@ impl Update {
 #[derive(PartialEq, Clone, Serialize, Deserialize)]
 pub struct Game {
     pub state: State,
-    event_pool: EventPool,
 
     #[serde(skip, default = "SmallRng::from_entropy")]
     rng: SmallRng,
@@ -125,18 +126,10 @@ impl Game {
         let (completed_projects, remove_effects, add_effects) =
             self.state.step_projects(&mut self.rng);
         for (effect, region_id) in remove_effects {
-            effect.unapply(
-                &mut self.state,
-                &mut self.event_pool,
-                region_id,
-            );
+            effect.unapply(&mut self.state, region_id);
         }
         for (effect, region_id) in add_effects {
-            effect.apply(
-                &mut self.state,
-                &mut self.event_pool,
-                region_id,
-            );
+            effect.apply(&mut self.state, region_id);
         }
         self.state.step_production();
         let mut changes = self.state.step_world();
@@ -169,18 +162,10 @@ impl Game {
         let (remove_effects, add_effects) =
             self.state.upgrade_project(project_id);
         for effect in remove_effects {
-            effect.unapply(
-                &mut self.state,
-                &mut self.event_pool,
-                None,
-            );
+            effect.unapply(&mut self.state, None);
         }
         for effect in add_effects {
-            effect.apply(
-                &mut self.state,
-                &mut self.event_pool,
-                None,
-            );
+            effect.apply(&mut self.state, None);
         }
         self.state.update_demand();
     }
@@ -189,18 +174,10 @@ impl Game {
         let (remove_effects, add_effects) =
             self.state.downgrade_project(project_id);
         for effect in remove_effects {
-            effect.unapply(
-                &mut self.state,
-                &mut self.event_pool,
-                None,
-            );
+            effect.unapply(&mut self.state, None);
         }
         for effect in add_effects {
-            effect.apply(
-                &mut self.state,
-                &mut self.event_pool,
-                None,
-            );
+            effect.apply(&mut self.state, None);
         }
         self.state.update_demand();
     }
@@ -217,11 +194,7 @@ impl Game {
         }
 
         for (effect, region_id) in effects {
-            effect.apply(
-                &mut self.state,
-                &mut self.event_pool,
-                region_id,
-            );
+            effect.apply(&mut self.state, region_id);
         }
     }
 
@@ -238,11 +211,7 @@ impl Game {
             effects.push(ef.clone());
         }
         for effect in effects {
-            effect.apply(
-                &mut self.state,
-                &mut self.event_pool,
-                region_id,
-            );
+            effect.apply(&mut self.state, region_id);
         }
     }
 
@@ -265,65 +234,12 @@ impl Game {
         let (ids, effects) =
             self.state.roll_new_policy_outcomes(&mut self.rng);
         for effect in effects {
-            effect.apply(
-                &mut self.state,
-                &mut self.event_pool,
-                None,
-            );
+            effect.apply(&mut self.state, None);
         }
         self.state.update_demand();
         ids.into_iter()
             .map(|id| Update::Policy { id })
             .collect()
-    }
-
-    /// Generate a projection
-    pub fn simulate(&mut self, years: usize) -> Vec<Snapshot> {
-        let mut snapshots: Vec<Snapshot> = Vec::new();
-        let mut state = self.state.clone();
-
-        // Hacky, but ignore all feedstock constraints
-        // otherwise projections are weird
-        // because the simulation can't react to events
-        state.feedstocks.oil *= 10000.;
-        state.feedstocks.coal *= 10000.;
-        state.feedstocks.natural_gas *= 10000.;
-        state.feedstocks.uranium *= 10000.;
-
-        // Dummy event pool
-        let mut event_pool = self.event_pool.clone();
-        for _ in 0..years {
-            let (
-                _completed_projects,
-                remove_effects,
-                add_effects,
-            ) = state.step_projects(&mut self.rng);
-            for (effect, region_id) in remove_effects {
-                effect.unapply(
-                    &mut state,
-                    &mut event_pool,
-                    region_id,
-                );
-            }
-            for (effect, region_id) in add_effects {
-                effect.apply(
-                    &mut state,
-                    &mut event_pool,
-                    region_id,
-                );
-            }
-            state.step_production();
-            state.step_world();
-            snapshots.push(Snapshot {
-                land: state.resources_demand.land,
-                emissions: state.emissions(),
-                energy: state.output_demand.electricity
-                    + state.output_demand.fuel,
-                population: state.world.population(),
-            });
-        }
-
-        snapshots
     }
 
     pub fn set_runs_played(&mut self, n: usize) {
@@ -372,6 +288,18 @@ impl Game {
     }
 }
 
+#[derive(Clone)]
+pub struct ResolvedEvent {
+    pub event: Event,
+    pub region: Option<String>,
+}
+impl Deref for ResolvedEvent {
+    type Target = Event;
+    fn deref(&self) -> &Self::Target {
+        &self.event
+    }
+}
+
 impl Game {
     /// Create a new instance of game with
     /// all the content loaded in
@@ -379,10 +307,8 @@ impl Game {
         // So we get tracebacks in the console
         utils::set_panic_hook();
 
-        let pool = EventPool::new(world.events.clone());
         Game {
             state: State::new(world),
-            event_pool: pool,
             rng: SmallRng::from_entropy(),
         }
     }
@@ -391,17 +317,23 @@ impl Game {
         &mut self,
         phase: Phase,
         limit: Option<usize>,
-    ) -> Vec<(usize, Option<usize>)> {
+    ) -> Vec<ResolvedEvent> {
         // Roll for events and collect effects
-        let events = self.event_pool.roll_for_phase(
+        let events = self.state.roll_for_phase(
             phase,
-            &self.state,
             limit,
             &mut self.rng,
         );
         events
-            .iter()
-            .map(|(ev, region_id)| (ev.id, *region_id))
+            .into_iter()
+            .map(|(ev, region_id)| ResolvedEvent {
+                event: ev,
+                region: region_id.map(|id| {
+                    self.state.world.regions[id]
+                        .name
+                        .to_string()
+                }),
+            })
             .collect()
     }
 
@@ -413,11 +345,7 @@ impl Game {
     pub fn stop_project(&mut self, project_id: usize) {
         let effects = self.state.stop_project(project_id);
         for effect in effects {
-            effect.unapply(
-                &mut self.state,
-                &mut self.event_pool,
-                None,
-            );
+            effect.unapply(&mut self.state, None);
         }
         self.state.update_demand();
     }

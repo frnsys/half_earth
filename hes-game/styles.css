@@ -292,6 +292,22 @@ strong{
   }
 }
 
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.test-fill-bar {
+  animation-duration: 5.35s;
+  animation-name: fill-bar;
+  animation-iteration-count: infinite;
+  animation-direction: forwards;
+}
 
 .mini-scanbar {
   height: 60px;
@@ -391,7 +407,6 @@ strong{
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-
 
 .card-withdraw-target {
   position: absolute;
@@ -545,8 +560,19 @@ strong{
   transform: translate(0, -100%);
 }
 
+.bounce-in-400 {
+  animation: 400ms bounce-in forwards;
+}
+.bounce-out-400 {
+  animation: 400ms bounce-out forwards;
+}
 
-
+.fade-in-180 {
+  animation: 180ms fade-in cubic-bezier(.31,.57,.62,1.01) forwards;
+}
+.fade-out-180 {
+  animation: 180ms fade-out cubic-bezier(.31,.57,.62,1.01) forwards;
+}
 
 .appear-bounceup-enter-active {
   animation: bounce-in 0.4s ease-out;
@@ -567,6 +593,18 @@ strong{
   }
 }
 
+@keyframes bounce-out {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5%);
+  }
+  100% {
+    transform: translateY(60%);
+  }
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0.0;
@@ -575,6 +613,16 @@ strong{
     opacity: 1.0;
   }
 }
+
+@keyframes fade-out {
+  0% {
+    opacity: 1.0;
+  }
+  100% {
+    opacity: 0.0;
+  }
+}
+
 
 #version-tag {
   position: fixed;
@@ -701,6 +749,43 @@ strong{
   background: #111;
   z-index: 10;
   overflow-y: auto;
+}
+
+.credits {
+  text-align: center;
+  flex: 1;
+  padding: 1em;
+  color: #fff;
+
+
+}
+.credits h2 {
+  font-weight: normal;
+}
+
+.credits--inner{
+  border-radius: 2em;
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.1);
+
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #888;
+  border-right: 1px solid #888;
+}
+
+.credits h3 {
+  font-weight: normal;
+}
+.credits h3 a {
+  color: #fff;
+}
+
+@media only screen and (min-width: 481px) {
+  .credits li{
+    font-size: 1.2em;
+    line-height: 1.5;
+  }
 }
 
 .book-line {
@@ -877,6 +962,7 @@ strong{
   box-shadow: 0 1px 4px rgb(0 0 0 / 60%);
   height: 29px;
   min-height: 29px;
+  position: relative;
 }
 .hud > div {
   padding: 0 0.25em;
@@ -988,7 +1074,7 @@ strong{
   border-right: none;
 }
 
-.tip-wrapper {
+.tip-layer, .tip-wrapper {
   position: fixed;
   top: 0;
   right: 0;
@@ -1066,7 +1152,7 @@ strong{
   padding: 0 1em;
 }
 
-*[data-tip]:hover {
+.has-tip:hover {
   opacity: 0.8;
   cursor: pointer;
 }
@@ -1690,6 +1776,10 @@ header .dropdown-menu-inset {
   position: absolute;
 }
 
+.cards.is-dragging .card {
+  pointer-events: none;
+}
+
 .unlock-scroll {
   scroll-snap-type: none;
   scroll-snap-stop: none;
@@ -1756,7 +1846,7 @@ to be centered */
 }
 .card-focus-area .inner{
   background-color: rgba(0,0,0,0.1);
-  /* background-image: url('/assets/backgrounds/screen-door.png'); */
+  /* background-image: url('/public/assets/backgrounds/screen-door.png'); */
   width: 350px;
   pointer-events: none;
   border-radius: 1em;
@@ -2336,7 +2426,7 @@ color: #63FF96;
 
 
 .report {
-  background-image: url('/assets/backgrounds/report.png');
+  background-image: url('/public/assets/backgrounds/report.png');
   background-colour: #FFF7D9;
   color: #000;
   flex: 1;
@@ -2368,7 +2458,7 @@ color: #63FF96;
   max-width: 360px;
   margin: 0 auto;
   border-radius: 1rem;
-  background-image: url('/assets/watermark.png');
+  background-image: url('/public/assets/watermark.png');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 200px;
@@ -2682,7 +2772,7 @@ color: #63FF96;
 }
 
 .planning--page--regions {
-  background: url('/assets/backgrounds/regions.png');
+  background: url('/public/assets/backgrounds/regions.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2776,7 +2866,7 @@ color: #63FF96;
 }
 
 .planning--page--dashboard {
-  background: url('/assets/backgrounds/dashboard.png');
+  background: url('/public/assets/backgrounds/dashboard.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2914,7 +3004,7 @@ color: #63FF96;
 }
 
 .plan {
-  background: url('/assets/backgrounds/plan.png');
+  background: url('/public/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3060,7 +3150,7 @@ color: #63FF96;
   border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 .plan--charts .chart {
-  background: url('/assets/grid.png') #F0D4CC;
+  background: url('/public/assets/grid.png') #F0D4CC;
   background-size: 60px;
   border-radius: 0.4em 0.4em 0 0;
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
@@ -3202,7 +3292,7 @@ color: #63FF96;
   flex-direction: column;
   justify-content: space-between;
   padding: 28px 0 0 0 !important;
-  background: url('/assets/backgrounds/plan.png');
+  background: url('/public/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: cetner center;
@@ -3293,7 +3383,7 @@ color: #63FF96;
   right: 1em;
   left: 1em;
   border-radius: 0.3em;
-  background: url(/assets/backgrounds/production.jpg);
+  background: url(/public/assets/backgrounds/production.jpg);
   mix-blend-mode: multiply;
   background-size: cover;
   background-position: center;
@@ -3738,7 +3828,7 @@ color: #63FF96;
   bottom: 0;
   /* background: #fadbae; */
 
-  background-image: url('/assets/backgrounds/globe.png');
+  background-image: url('/public/assets/backgrounds/globe.png');
   background-blend-mode: multiply;
   background-size: cover;
   background-repeat: no-repeat;
@@ -3864,7 +3954,7 @@ color: #63FF96;
   bottom: 0;
   left: 0;
   z-index: 2;
-  background: url('/assets/backgrounds/plan.png');
+  background: url('/public/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3921,7 +4011,7 @@ color: #63FF96;
 }
 
 .parliament {
-  background: url('/assets/backgrounds/parliament.png');
+  background: url('/public/assets/backgrounds/parliament.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4329,7 +4419,7 @@ color: #63FF96;
   left: 0;
 
   background-color: rgba(0,0,0,0.2);
-  background-image: url('/assets/backgrounds/screen-door.png');
+  background-image: url('/public/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   display: flex;
@@ -4481,7 +4571,7 @@ color: #63FF96;
   top: 0;
   padding: 1em;
 
-  background-image: url('/assets/backgrounds/screen-door.png');
+  background-image: url('/public/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   display: flex;
@@ -4620,7 +4710,7 @@ color: #63FF96;
   top: 0;
   /* background: rgba(0,0,0,0.75); */
 
-  background-image: url('/assets/backgrounds/screen-door.png');
+  background-image: url('/public/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   padding: 8vh 1em;

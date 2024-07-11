@@ -1,6 +1,9 @@
-use crate::t;
+use crate::{t, util::to_ws_el, views::cards::*};
 use hes_engine::{industries::Industry, npcs::NPC, production::Process, projects::Project};
 use leptos::*;
+use leptos_use::{use_document, use_event_listener};
+use std::time::Duration;
+use wasm_bindgen::JsCast;
 
 use super::FactorsCard;
 
@@ -88,36 +91,183 @@ impl From<FactorsCard> for TipCard {
     }
 }
 
+fn has_parent_with_class(element: web_sys::HtmlElement, class_name: &str) -> bool {
+    let mut current: Option<web_sys::Element> = Some(element.unchecked_into());
+    while let Some(el) = current {
+        if el.class_list().contains(class_name) {
+            return true;
+        }
+        current = el.parent_element();
+    }
+    false
+}
+
 #[component]
 pub fn ToolTip() -> impl IntoView {
     let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
-    let view = move || {
-        if let Some(tip) = tip_rw.get() {
-            Some(view! { {tip.text} })
-        } else {
-            None
+    let has_tip = move || tip_rw.with(|tip| tip.is_some());
+    let has_card =
+        move || tip_rw.with(|tip| tip.as_ref().and_then(|tip| tip.card.as_ref()).is_some());
+
+    let tip_ref = create_node_ref::<html::Div>();
+    let overlay_ref = create_node_ref::<html::Div>();
+
+    let (should_show, set_should_show) = create_signal(false);
+    create_effect(move |_| {
+        let tip = tip_rw.get();
+        if tip.is_some() {
+            set_should_show.set(true);
         }
+    });
+
+    use_event_listener(use_document(), ev::click, move |ev| {
+        if !has_tip() || !should_show.get() {
+            return;
+        }
+
+        let target: web_sys::HtmlElement = event_target(&ev);
+        if has_card() {
+            ev.stop_immediate_propagation();
+            if !has_parent_with_class(target, "tip") {
+                set_should_show.set(false);
+                // tip_rw.set(None);
+            }
+        } else {
+            ev.stop_immediate_propagation();
+            set_should_show.set(false);
+            // tip_rw.set(None);
+        }
+    });
+
+    let tip_view = move || {
+        tip_rw.get().map(|tip| {
+            let sub_icon = move || {
+                tip.subicon.map(|icon| {
+                    view! { <img src=icon class="tip--subicon"/> }
+                })
+            };
+            let sup_icon = move || {
+                tip.supicon.map(|icon| {
+                    view! { <img src=icon class="tip--supicon"/> }
+                })
+            };
+
+            view! {
+                <div class="tip--icon">
+                    <img src=tip.icon/>
+                    {sub_icon}
+                    {sup_icon}
+                </div>
+                <div class="tip--body" inner_html=tip.text></div>
+            }
+        })
+    };
+
+    let card_view = move || {
+        tip_rw
+            .get()
+            .and_then(|tip| tip.card)
+            .map(|card| match card {
+                TipCard::Project(project) => {
+                    let project = create_rw_signal(project);
+                    view! { <ProjectCard project/> }
+                }
+                TipCard::Process(process) => {
+                    let process = create_rw_signal(process);
+                    view! { <ProcessCard process/> }
+                }
+                TipCard::Processes(processes) => {
+                    view! {
+                        <Cards
+                            enabled=move || true
+                            on_focus=move |_| {}
+                            on_scroll_start=move |_| {}
+                            on_scroll_end=move |_| {}
+                        >
+                            <For
+                                each=move || processes.clone().into_iter()
+                                key=|item| item.id
+                                children=move |process| {
+                                    let process = create_rw_signal(process);
+                                    view! { <ProcessCard process/> }
+                                }
+                            />
+
+                        </Cards>
+                    }
+                }
+                TipCard::Industry(industry) => {
+                    let industry = create_rw_signal(industry);
+                    view! { <IndustryCard industry/> }
+                }
+                TipCard::Factors(factors) => {
+                    let factors = create_rw_signal(factors);
+                    view! { <FactorsCard factors/> }
+                }
+                TipCard::NPC(npc) => {
+                    let npc = create_rw_signal(npc);
+                    view! { <NPCCard npc/> }
+                }
+            })
     };
 
     // TODO
-    view! { {view} }
+    view! {
+        <div class="tip-layer">
+            <AnimatedShow
+                when=should_show
+                show_class="fade-in-180"
+                hide_class="fade-out-180"
+                hide_delay=Duration::from_millis(180)
+            >
+                <div
+                    class="tip-wrapper"
+                    class:overlay=move || should_show.get() && has_card()
+                    ref=overlay_ref
+                >
+                    <div class="tip" ref=tip_ref>
+                        {tip_view}
+                    </div>
+                    <AnimatedShow
+                        when=MaybeSignal::derive(has_card)
+                        show_class="bounce-in-400"
+                        hide_class="bounce-out-400"
+                        hide_delay=Duration::from_millis(400)
+                    >
+                        <div class="tip--card">{card_view}</div>
+
+                    </AnimatedShow>
+                </div>
+            </AnimatedShow>
+        </div>
+    }
 }
 
 #[component(transparent)]
 pub fn HasTip(children: Children, #[prop(into)] tip: MaybeSignal<Tip>) -> impl IntoView {
+    let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
     let children = children()
         .nodes
         .into_iter()
         .map(|child| {
-            child.on(ev::click, {
-                let value = tip.clone();
-                move |_| {
-                    let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
-                    tip_rw.set(Some(value.get()))
-                }
-            })
+            child
+                .on(ev::click, {
+                    let value = tip.clone();
+                    move |ev| {
+                        ev.stop_immediate_propagation();
+                        tip_rw.set(Some(value.get()))
+                    }
+                })
+                // Hacky way to get tip class onto the element.
+                .on(ev::pointerenter, |ev| {
+                    if let Some(target) = ev.current_target() {
+                        let target: web_sys::HtmlElement =
+                            target.dyn_into().expect("Is an HTML element");
+                        target.class_list().add_1("has-tip").unwrap();
+                    }
+                })
         })
         .collect_view();
 
-    view! { children }
+    view! { {children} }
 }

@@ -6,16 +6,16 @@ pub fn ActivePlan(
     #[prop(into)] close: Callback<()>,
     #[prop(into)] add: Callback<()>,
 ) -> impl IntoView {
-    let active_projects = state!(|state, ui| {
-        state
-            .world
-            .projects
+    let projects = state!(world.projects.clone());
+    let active_projects = move || {
+        projects
+            .get()
             .iter()
             .filter(|p| p.is_online() || p.is_building())
             .cloned()
             .map(create_rw_signal)
             .collect::<Vec<_>>()
-    });
+    };
 
     view! {
         <div class="planning--page active-plan">

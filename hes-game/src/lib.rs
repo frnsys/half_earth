@@ -9,6 +9,7 @@ mod i18n;
 mod icons;
 mod state;
 mod util;
+mod vars;
 mod views;
 
 pub use app::Root;

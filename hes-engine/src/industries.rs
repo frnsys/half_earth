@@ -35,18 +35,3 @@ impl Industry {
         (pressure / 1e4 + land / starting_land) * 100.
     }
 }
-
-// impl Serialize for Industry {
-//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//     where
-//         S: Serializer,
-//     {
-//         let mut seq = serializer.serialize_struct("Industry", 5)?; // TODO derived fields
-//         seq.serialize_field("id", &self.id)?;
-//         seq.serialize_field("name", &self.name)?;
-//         seq.serialize_field("resources", &self.adj_resources())?;
-//         seq.serialize_field("byproducts", &self.adj_byproducts())?;
-//         seq.serialize_field("extinction_rate", &self.extinction_rate())?;
-//         seq.end()
-//     }
-// }

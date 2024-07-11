@@ -3,32 +3,58 @@ use crate::{
     icons::{self, HasIcon},
     t,
     util::{scale_text, to_ws_el},
-    views::cards::kinds::project::card_color,
-    views::phases::ProjectScanner,
+    views::scanner::{ProjectScanner, ScannerCards},
 };
 
-use super::super::project::ProjectCard;
-use super::*;
+use super::{
+    super::{
+        kinds::{project_color, ProjectCard},
+        *,
+    },
+    MiniCard,
+};
 use hes_engine::{kinds::Output, projects::Project};
 use leptos::*;
 
 #[component]
-pub fn MiniProject(#[prop(into)] project: Signal<Project>) -> impl IntoView {
+pub fn MiniProject(
+    #[prop(into)] project: Signal<Project>,
+) -> impl IntoView {
     let image = move || {
-        project
-            .with(|project| format!("url(/public/assets/content/{})", project.flavor.image.fname))
+        project.with(|project| {
+            format!(
+                "url(/public/assets/content/{})",
+                project.flavor.image.fname
+            )
+        })
     };
-    let icon = move || project.with(|project| project.kind.icon());
-    let is_building = move || project.with(|project| project.is_building());
-    let is_finished = move || project.with(|project| project.is_active());
-    let progress = move || project.with(|project| format!("{}%", project.progress * 100.));
+    let icon =
+        move || project.with(|project| project.kind.icon());
+    let is_building =
+        move || project.with(|project| project.is_building());
+    let is_finished =
+        move || project.with(|project| project.is_active());
+    let progress = move || {
+        project.with(|project| {
+            format!("{}%", project.progress * 100.)
+        })
+    };
     let border = move || {
         project.with(|project| {
-            let (bg, _) = card_color(&project.group);
+            let (bg, _) = project_color(&project.group);
             format!("5px solid {bg}")
         })
     };
     let projects = move || vec![project.get()];
+    let scanner_cards = move || {
+        let scanner = ProjectScanner::new((|_| {}).into());
+        view! {
+            <ScannerCards
+                spec=scanner
+                items=projects.into_signal()
+            />
+        }
+    };
 
     view! {
         <MiniCard class="label" border=border.into_signal()>
@@ -53,13 +79,9 @@ pub fn MiniProject(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                         </div>
                     </Show>
                 </div>
-
             </Body>
             <Expanded slot>
-                <ProjectScanner
-                    projects=projects.into_signal()
-                    on_change=|_| {}
-                />
+                {scanner_cards}
             </Expanded>
         </MiniCard>
     }

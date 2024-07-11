@@ -1,19 +1,23 @@
 mod cards;
-mod dialogue;
 mod effects;
+mod events;
+mod factors;
 mod game;
 mod globe;
+mod help;
 mod hud;
+mod intensity;
 mod menu;
-mod menus;
-mod parts;
 mod phases;
 mod scanner;
+mod splash;
 mod tips;
 
 pub use cards::FactorsCard;
-pub use dialogue::Dialogue;
 pub use effects::Effects;
-pub use menus::*;
+pub use events::*;
+pub use factors::{rank as rank_factors, Factor};
+pub use help::*;
 pub use phases::*;
+pub use splash::*;
 pub use tips::*;

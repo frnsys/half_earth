@@ -1,8 +1,15 @@
 use crate::{
-    display::{format, intensity, text::AsText},
+    display::{self, AsText},
     icons::{self, HasIcon},
-    state, state_with, t,
-    views::{cards::Image, parts::IntensityIcon, tip, HasTip, Tip},
+    state,
+    t,
+    views::{
+        intensity::{self, IntensityIcon},
+        tip,
+        HasTip,
+        Tip,
+    },
+    with_state,
 };
 use hes_engine::{kinds::Output, regions::Region};
 use leptos::*;
@@ -29,7 +36,10 @@ fn devel_tip() -> Tip {
 }
 
 fn cont_tip() -> Tip {
-    tip(icons::CONTENTEDNESS, t!("This region's contentedness."))
+    tip(
+        icons::CONTENTEDNESS,
+        t!("This region's contentedness."),
+    )
 }
 
 fn hab_tip() -> Tip {
@@ -46,7 +56,11 @@ fn inc_tip(income: &str) -> Tip {
     )
 }
 
-fn demand_tip(output: &Output, demand: f32, percent: String) -> Tip {
+fn demand_tip(
+    output: &Output,
+    demand: f32,
+    percent: String,
+) -> Tip {
     let demand = if demand < 1. {
         "<1".to_string()
     } else {
@@ -62,16 +76,27 @@ fn demand_tip(output: &Output, demand: f32, percent: String) -> Tip {
 }
 
 #[component]
-pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
-    let events =
-        state_with!(|state, ui, region| { ui.annual_region_events.get(&region.id).cloned() });
+pub fn RegionItem(
+    #[prop(into)] region: Signal<Region>,
+) -> impl IntoView {
+    let events = with_state!(|state, ui, region| {
+        ui.annual_region_events.get(&region.id).cloned()
+    });
 
     let contentedness = move || {
-        region.with(|region| intensity::scale(region.outlook, intensity::Variable::Outlook))
+        region.with(|region| {
+            intensity::scale(
+                region.outlook,
+                intensity::Variable::Outlook,
+            )
+        })
     };
     let habitability = move || {
         region.with(|region| {
-            intensity::scale(region.habitability(), intensity::Variable::Habitability)
+            intensity::scale(
+                region.habitability(),
+                intensity::Variable::Habitability,
+            )
         })
     };
     let income_tip = move || {
@@ -80,10 +105,13 @@ pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
             inc_tip(&name)
         })
     };
-    let income_level = move || region.with(|region| region.income_level() + 1);
+    let income_level =
+        move || region.with(|region| region.income_level() + 1);
     let seceded = move || region.with(|region| region.seceded);
-    let temp_range = move || region.with(|region| region.temp_range());
-    let precip_range = move || region.with(|region| region.precip_range());
+    let temp_range =
+        move || region.with(|region| region.temp_range());
+    let precip_range =
+        move || region.with(|region| region.precip_range());
     let devel_bar = move || {
         region.with(move |region| {
             let is_max_level = region.is_max_income();
@@ -105,7 +133,7 @@ pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
                     <Show
                         when=move || !is_max_level
                         fallback=move || {
-                            view! { <span>({t!("Max Level")})</span> }
+                            view! { <span>{t!("Max Level")}</span> }
                         }
                     >
 
@@ -118,12 +146,6 @@ pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
         })
     };
 
-    // TODO
-    let image = Image {
-        path: "foo".into(),
-        attribution: "foo".into(),
-    };
-
     let events_display = move || {
         events()
             .unwrap_or_default()
@@ -134,23 +156,57 @@ pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
             })
             .collect::<Vec<_>>()
     };
-    let demand_display = state_with!(|state, ui, region| {
-        region
-            .demand(&state.world.output_demand)
-            .items()
-            .map(|(k, demand)| {
-                let per_capita_demand = demand / region.population;
-                let int = intensity::output_intensity(per_capita_demand, k);
-                let per = format::demand_percent(demand, state.output_demand[k], true);
-                let amount = format::output(demand, k);
+    let demand_display = with_state!(|state, ui, region| {
+        region.demand(&state.world.output_demand).items().map(
+            |(k, demand)| {
+                let per_capita_demand =
+                    demand / region.population;
+                let int = intensity::output_intensity(
+                    per_capita_demand,
+                    k,
+                );
+                let per = display::demand_percent(
+                    demand,
+                    state.output_demand[k],
+                    true,
+                );
+                let amount = display::output(demand, k);
                 (k, int, per, amount)
-            })
+            },
+        )
     });
+
+    let image = move || {
+        region.with(|region| {
+            format!(
+                "/public/assets/content/images/{}",
+                region.flavor.image.fname
+            )
+        })
+    };
+
+    let demand_bars = move || {
+        demand_display()
+            .into_iter()
+            .map(|(key, int, per, amount)| {
+                let tip = demand_tip(&key, amount, per);
+                view! {
+                    <HasTip tip>
+                        <IntensityIcon
+                            icon=key.icon()
+                            intensity=move || int
+                            max_pips=4
+                        />
+                    </HasTip>
+                }
+            })
+            .collect::<Vec<_>>()
+    };
 
     view! {
         <div class="region-item">
             <div class="region-item--info cell">
-                <img src=image.path/>
+                <img src=image/>
                 <Show when=seceded>
                     <div class="seceded-label">{t!("Seceded")}</div>
                 </Show>
@@ -180,38 +236,29 @@ pub fn RegionItem(region: Signal<Region>) -> impl IntoView {
                 <HasTip tip=hab_tip.into_signal()>
                     <IntensityIcon
                         icon=icons::HABITABILITY
-                        intensity=habitability.into_signal()
+                        intensity=habitability
                         invert=true
+                        max_pips=4
                     />
                 </HasTip>
                 <HasTip tip=cont_tip.into_signal()>
                     <IntensityIcon
                         icon=icons::CONTENTEDNESS
-                        intensity=contentedness.into_signal()
+                        intensity=contentedness
                         invert=true
+                        max_pips=4
                     />
 
                 </HasTip>
                 <HasTip tip=income_tip.into_signal()>
                     <IntensityIcon
                         icon=icons::WEALTH
-                        intensity=income_level.into_signal()
+                        intensity=income_level
                         invert=true
+                        max_pips=4
                     />
                 </HasTip>
-                <For
-                    each=move || demand_display()
-                    key=move |(key, _, _, _)| key.clone()
-                    children=move |(key, int, per, amount)| {
-                        let tip = demand_tip(&key, amount, per);
-                        view! {
-                            <HasTip tip>
-                                <IntensityIcon icon=key.icon() intensity=int/>
-                            </HasTip>
-                        }
-                    }
-                />
-
+                {demand_bars}
             </div>
         </div>
     }

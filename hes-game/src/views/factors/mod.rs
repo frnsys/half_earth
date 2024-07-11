@@ -1,16 +1,23 @@
-use super::IntensityIcon;
+mod calculate;
+
 use crate::{
     consts,
-    display::{factors::Factor, Var},
     icons::{self, HasIcon},
-    state::{self, GameState},
-    state_with, t,
-    views::cards::FactorsCard,
+    state::GameState,
+    t,
+    vars::Var,
+    views::{cards::FactorsCard, intensity::IntensityIcon},
+    with_state,
 };
+pub use calculate::{rank, Factor};
 use leptos::*;
 
+pub use calculate::factors_card;
+
 #[component]
-pub fn FactorsList(#[prop(into)] factors: Signal<FactorsCard>) -> impl IntoView {
+pub fn FactorsList(
+    #[prop(into)] factors: Signal<FactorsCard>,
+) -> impl IntoView {
     let relation = move || {
         factors.with(|factors| {
             let relation = match factors.kind {
@@ -22,7 +29,8 @@ pub fn FactorsList(#[prop(into)] factors: Signal<FactorsCard>) -> impl IntoView 
         })
     };
     let icon = move || factors.with(|facs| facs.icon);
-    let cur_name = move || factors.with(|facs| facs.current.clone());
+    let cur_name =
+        move || factors.with(|facs| facs.current.clone());
     let total_label = move || {
         factors.with(|factors| {
             let max_value = match factors.kind {
@@ -44,11 +52,12 @@ pub fn FactorsList(#[prop(into)] factors: Signal<FactorsCard>) -> impl IntoView 
         })
     };
 
-    let relevant_factors = state_with!(|state, ui, factors| {
+    let relevant_factors = with_state!(|state, ui, factors| {
         ui.factors[factors.kind]
             .iter()
             .filter(|user| match user {
-                Factor::Industry { produced, .. } | Factor::Process { produced, .. } => {
+                Factor::Industry { produced, .. }
+                | Factor::Process { produced, .. } => {
                     *produced != 0.
                 }
                 _ => true,
@@ -100,7 +109,11 @@ fn FactorLine(
         Factor::Region {
             intensity, display, ..
         } => view! {
-            <IntensityIcon icon=icons::WEALTH intensity=intensity/>
+            <IntensityIcon
+                icon=icons::WEALTH
+                intensity=move || intensity
+                max_pips=4
+            />
             <div class="factors--usage">{display} <img src=icon/></div>
         }
         .into_view(),
@@ -130,7 +143,11 @@ fn FactorLine(
             output,
             ..
         } => view! {
-            <IntensityIcon icon=icon intensity=intensity/>
+            <IntensityIcon
+                icon=icon
+                intensity=move || intensity
+                max_pips=4
+            />
             <div class="factors--usage">
                 {display_produced} <img src=output.icon()/>
                 <span class="factor-relation">{relation}</span> {display}
@@ -141,7 +158,11 @@ fn FactorLine(
         Factor::Industry {
             intensity, display, ..
         } => view! {
-            <IntensityIcon icon=icon intensity=intensity/>
+            <IntensityIcon
+                icon=icon
+                intensity=move || intensity
+                max_pips=4
+            />
             <div class="factors--usage">{display} <img src=icon/></div>
         }
         .into_view(),

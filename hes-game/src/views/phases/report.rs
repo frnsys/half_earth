@@ -1,13 +1,27 @@
 use crate::{
     consts,
-    display::{intensity, text::AsText},
-    icons, state,
+    display::*,
+    icons,
+    state,
     state::Phase,
     t,
-    views::{hud::Hud, parts::IntensityBar, phases::cutscene::Events, tip, HasTip, Tip},
+    ui,
+    views::{
+        events::Events,
+        hud::Hud,
+        intensity::{self, IntensityBar, Variable},
+        tip,
+        HasTip,
+        Tip,
+    },
+    with_state,
     write_state,
 };
-use hes_engine::{game::Update, kinds::Output};
+use hes_engine::{
+    events::Phase as EventPhase,
+    game::{ResolvedEvent, Update},
+    kinds::Output,
+};
 use leptos::*;
 
 pub struct Request {
@@ -17,29 +31,54 @@ pub struct Request {
 
 #[component]
 pub fn Report() -> impl IntoView {
-    // TODO
-    // let events = game.roll.report('Start');
-    let events = vec![];
+    let (events, set_events) = create_signal(vec![]);
+    create_effect(move |_| {
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
+        state.update(|state| {
+            let events = state.game.roll_events_for_phase(
+                EventPhase::ReportStart,
+                None,
+            );
+            set_events.set(events);
+        });
+    });
 
-    let year = state!(|game, _| game.world.year);
-    let start_year = state!(|_, ui| ui.cycle_start_state.year);
-    let contentedness = state!(|game, ui| {
-        let start = intensity::scale(
-            ui.cycle_start_state.contentedness,
+    let year = state!(world.year);
+    let start_year = ui!(cycle_start_state.year);
+
+    let outlook = state!(outlook());
+    let start_outlook = ui!(cycle_start_state.contentedness);
+    let start_cont_int = move || {
+        intensity::scale(
+            start_outlook.get(),
             intensity::Variable::WorldOutlook,
-        );
-        let end = intensity::scale(game.outlook(), intensity::Variable::WorldOutlook);
-        (start, end)
-    });
-    let extinction = state!(|game, ui| {
-        let start = intensity::scale(
-            ui.cycle_start_state.extinction_rate,
+        )
+    };
+    let end_cont_int = move || {
+        intensity::scale(
+            outlook.get(),
+            intensity::Variable::WorldOutlook,
+        )
+    };
+
+    let exr = state!(world.extinction_rate);
+    let start_exr = ui!(cycle_start_state.extinction_rate);
+    let start_exr_int = move || {
+        intensity::scale(
+            start_exr.get(),
             intensity::Variable::Extinction,
-        );
-        let end = intensity::scale(game.world.extinction_rate, intensity::Variable::Extinction);
-        (start, end)
-    });
-    let region_income_changes = state!(|game, ui| {
+        )
+    };
+    let end_exr_int = move || {
+        intensity::scale(
+            exr.get(),
+            intensity::Variable::Extinction,
+        )
+    };
+
+    let region_income_changes = with_state!(|game, ui| {
         game.world
             .regions
             .iter()
@@ -48,7 +87,7 @@ pub fn Report() -> impl IntoView {
             .map(|(reg, _)| (reg.name.clone(), reg.income))
             .collect::<Vec<_>>()
     });
-    let region_disasters = state!(|game, ui| {
+    let region_disasters = with_state!(|game, ui| {
         ui.annual_region_events
             .iter()
             .map(|(idx, events)| {
@@ -57,7 +96,7 @@ pub fn Report() -> impl IntoView {
             })
             .collect::<Vec<_>>()
     });
-    let world_events = state!(|game, ui| {
+    let world_events = with_state!(|game, ui| {
         // TODO
         // import EVENTS from 'content/events.json';
         // ui.world_events
@@ -77,7 +116,7 @@ pub fn Report() -> impl IntoView {
         // });
         Vec::<(String, Tip)>::new()
     });
-    let seat_changes = state!(|game, ui| {
+    let seat_changes = with_state!(|game, ui| {
         ui.cycle_start_state
             .parliament
             .iter()
@@ -90,14 +129,16 @@ pub fn Report() -> impl IntoView {
             .filter(|(_, _, change)| *change != 0.)
             .collect::<Vec<_>>()
     });
-    let honeymoon_pc = state!(|game, ui| {
-        if game.world.year < ui.start_year + consts::HONEYMOON_YEARS {
+    let honeymoon_pc = with_state!(|game, ui| {
+        if game.world.year
+            < ui.start_year + consts::HONEYMOON_YEARS
+        {
             consts::HONEYMOON_PC as isize
         } else {
             0
         }
     });
-    let requests_fulfilled = state!(|game, ui| {
+    let requests_fulfilled = with_state!(|game, ui| {
         // TODO
         // return game.checkRequests().map(([kind, id, active, bounty]) => {
         //   let text;
@@ -177,48 +218,62 @@ pub fn Report() -> impl IntoView {
         warming_tip()
     };
 
-    let temp_pc_change = state!(|game, ui| {
-        let temp_change = game.world.temperature - ui.cycle_start_state.temperature;
+    let temp_pc_change = with_state!(|game, ui| {
+        let temp_change = game.world.temperature
+            - ui.cycle_start_state.temperature;
 
         // Double temp change score for every degree above 1C
-        let temp_change_multiplier = ((game.world.temperature.round() - 1.).max(0.) * 2.).max(1.);
+        let temp_change_multiplier =
+            ((game.world.temperature.round() - 1.).max(0.)
+                * 2.)
+                .max(1.);
 
         // Temp scored for every 0.1C change
-        let change =
-            (temp_change * 10.).round() * -(consts::TEMPERATURE_PC as f32) * temp_change_multiplier;
+        let change = (temp_change * 10.).round()
+            * -(consts::TEMPERATURE_PC as f32)
+            * temp_change_multiplier;
         change as isize
     });
     let cont_pc_change = move || {
-        let (start, end) = contentedness();
-        consts::CONTENTEDNESS_PC
-            .get(end)
-            .unwrap_or_else(|| consts::CONTENTEDNESS_PC.last().unwrap())
+        let end = end_cont_int();
+        consts::CONTENTEDNESS_PC.get(end).unwrap_or_else(|| {
+            consts::CONTENTEDNESS_PC.last().unwrap()
+        })
     };
     let ext_pc_change = move || {
-        let (start, end) = extinction();
-        consts::EXTINCTION_PC
-            .get(end)
-            .unwrap_or_else(|| consts::EXTINCTION_PC.last().unwrap())
+        let end = end_exr_int();
+        consts::EXTINCTION_PC.get(end).unwrap_or_else(|| {
+            consts::EXTINCTION_PC.last().unwrap()
+        })
     };
-    let ghg_pc_change = state!(|game, ui| {
-        let emissions_change = game.emissions_gt() - ui.cycle_start_state.emissions;
-        (emissions_change * 2.).round() as isize * -(consts::EMISSIONS_PC as isize)
+    let ghg_pc_change = with_state!(|game, ui| {
+        let emissions_change = game.emissions_gt()
+            - ui.cycle_start_state.emissions;
+        (emissions_change * 2.).round() as isize
+            * -(consts::EMISSIONS_PC as isize)
     });
 
-    let pc_change = state!(move |game, ui| {
-        let mut pc_change = temp_pc_change() + cont_pc_change() + ext_pc_change() + ghg_pc_change();
-        pc_change += (ui.cycle_start_state.completed_projects.len()
-            * consts::PC_PER_COMPLETED_PROJECT) as isize;
+    let pc_change = with_state!(|game, ui| {
+        let mut pc_change = temp_pc_change()
+            + cont_pc_change()
+            + ext_pc_change()
+            + ghg_pc_change();
+        pc_change +=
+            (ui.cycle_start_state.completed_projects.len()
+                * consts::PC_PER_COMPLETED_PROJECT)
+                as isize;
         pc_change += honeymoon_pc();
         pc_change
     });
 
-    let completed_projects = state!(|game, ui| {
+    let completed_projects = with_state!(|game, ui| {
         ui.cycle_start_state
             .completed_projects
             .iter()
             .filter_map(|update| match update {
-                Update::Project { id } => Some(game.world.projects[*id].clone()),
+                Update::Project { id } => {
+                    Some(game.world.projects[*id].clone())
+                }
                 _ => None,
             })
             .collect::<Vec<_>>()
@@ -238,8 +293,11 @@ pub fn Report() -> impl IntoView {
         ui.plan_changes.clear();
     });
 
-    let temp_row = state!(move |game, ui| {
-        let start = format!("{:+.1}°C", ui.cycle_start_state.temperature);
+    let temp_row = with_state!(|game, ui| {
+        let start = format!(
+            "{:+.1}°C",
+            ui.cycle_start_state.temperature
+        );
         let end = format!("{:+.1}°C", game.world.temperature);
         let pc_change = format!("{:+}", temp_pc_change());
 
@@ -255,46 +313,45 @@ pub fn Report() -> impl IntoView {
             </HasTip>
         }
     });
-    let cont_row = state!(move |game, ui| {
-        let (start, end) = contentedness();
+    let cont_row = with_state!(|game, ui| {
         let pc_change = format!("{:+}", cont_pc_change());
         view! {
             <HasTip tip=contentedness_tip.into_signal()>
                 <tr class="report--primary-change">
                     <td><img src=icons::CONTENTEDNESS /> {t!("Contentedness")}</td>
                     <td>
-                        <IntensityBar intensity=start invert={true} />
+                        <IntensityBar intensity=start_cont_int invert={true} />
                     </td>
                     <td><small><img src=icons::ARROW_RIGHT /></small></td>
                     <td>
-                        <IntensityBar intensity=end invert={true} />
+                        <IntensityBar intensity=end_cont_int invert={true} />
                     </td>
                     <td><strong>{pc_change}</strong></td>
                 </tr>
             </HasTip>
         }
     });
-    let ext_row = state!(move |game, ui| {
-        let (start, end) = extinction();
+    let ext_row = with_state!(|game, ui| {
         let pc_change = format!("{:+}", ext_pc_change());
         view! {
             <HasTip tip=biodiversity_tip.into_signal()>
                 <tr class="report--primary-change">
                     <td><img src=icons::EXTINCTION_RATE /> {t!("Extinction Rate")}</td>
                     <td>
-                        <IntensityBar intensity=start />
+                        <IntensityBar intensity=start_exr_int />
                     </td>
                     <td><small><img src=icons::ARROW_RIGHT /></small></td>
                     <td>
-                        <IntensityBar intensity=end />
+                        <IntensityBar intensity=end_exr_int />
                     </td>
                     <td><strong>{pc_change}</strong></td>
                 </tr>
             </HasTip>
         }
     });
-    let ghg_row = state!(move |game, ui| {
-        let start = format!("{:+.1}", ui.cycle_start_state.emissions);
+    let ghg_row = with_state!(|game, ui| {
+        let start =
+            format!("{:+.1}", ui.cycle_start_state.emissions);
         let end = format!("{:+.1}", game.emissions_gt());
         let pc_change = format!("{:+}", ghg_pc_change());
         view! {

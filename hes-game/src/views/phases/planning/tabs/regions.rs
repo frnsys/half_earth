@@ -12,10 +12,10 @@ pub fn Regions() -> impl IntoView {
     // import regionsToTiles from 'assets/surface/regions_to_tiles.json';
     // import tilesToRegions from 'assets/surface/tiles_to_regions.json';
 
-    let regions = state!(|state, ui| { state.world.regions.clone() });
+    let regions = state!(world.regions.clone());
     let (selected_region, set_selected_region) = create_signal(0);
-    let region_name = move || regions()[selected_region.get()].name.clone();
-    let region = move || regions()[selected_region.get()].clone();
+    let region_name = move || regions.get()[selected_region.get()].name.clone();
+    let region = move || regions.get()[selected_region.get()].clone();
 
     let region_name_ref = create_node_ref::<html::Div>();
     let fit_region_name = move || {
@@ -48,7 +48,7 @@ pub fn Regions() -> impl IntoView {
 
     let next_region = move |_| {
         set_selected_region.update(|idx| {
-            let regions = regions();
+            let regions = regions.get();
             *idx += 1;
             if *idx >= regions.len() {
                 *idx = 0;
@@ -58,7 +58,7 @@ pub fn Regions() -> impl IntoView {
     };
     let prev_region = move |_| {
         set_selected_region.update(|idx| {
-            let regions = regions();
+            let regions = regions.get();
             if *idx <= 0 {
                 *idx = regions.len() - 1;
             } else {
@@ -124,7 +124,7 @@ pub fn Regions() -> impl IntoView {
                 </div>
             </div>
             <div class="regions-region">
-                <RegionItem region=region.into_signal()/>
+                <RegionItem region/>
             </div>
         </div>
     }

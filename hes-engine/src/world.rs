@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::events::Event;
 use crate::industries::Industry;
 use crate::kinds::{
@@ -23,6 +25,7 @@ pub struct World {
     pub industries: Vec<Industry>,
     pub projects: Vec<Project>,
     pub processes: Vec<Process>,
+    pub project_lockers: HashMap<usize, usize>,
     pub feedstock_reserves: FeedstockMap,
     pub starting_resources: ResourceMap,
     pub output_demand: [OutputMap; 4],

@@ -1,16 +1,23 @@
 use crate::{
-    consts, icons, t,
+    consts,
+    icons,
+    t,
     util::{scale_text, to_ws_el},
 };
 
-use super::super::npc::NPCCard;
-use super::*;
+use super::{
+    super::{kinds::NPCCard, *},
+    MiniCard,
+};
 use hes_engine::npcs::NPC;
 use leptos::*;
 
 #[component]
-pub fn MiniNPC(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
-    let total_seats = consts::PARLIAMENT_SEATS.iter().sum::<usize>();
+pub fn MiniNPC(
+    #[prop(into)] npc: Signal<NPC>,
+) -> impl IntoView {
+    let total_seats =
+        consts::PARLIAMENT_SEATS.iter().sum::<usize>();
 
     let name_ref = create_node_ref::<html::Div>();
     let fit_text = move || {
@@ -24,7 +31,14 @@ pub fn MiniNPC(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
         fit_text();
     });
 
-    let portrait = move || npc.with(|npc| format!("/public/assets/characters/{}.webp", npc.name));
+    let portrait = move || {
+        npc.with(|npc| {
+            format!(
+                "/public/assets/characters/{}.webp",
+                npc.name
+            )
+        })
+    };
     let name = move || npc.with(|npc| t!(&npc.name));
     let faction_seats = move || {
         npc.with(|npc| {

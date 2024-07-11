@@ -1,16 +1,17 @@
 use super::super::card::*;
 use crate::{
-    display::{
-        format,
-        intensity::{self, Variable},
-        text::AsText,
-        Impact, OutputKind, Var,
-    },
+    display::{self, AsText},
     i18n,
     icons::{self, HasIcon},
     state::GameState,
-    state_with, t,
-    views::{cards::Image, parts::IntensityIcon, tip, HasTip},
+    t,
+    vars::*,
+    views::{
+        intensity::{self, IntensityIcon, Variable},
+        tip,
+        HasTip,
+    },
+    with_state,
 };
 use hes_engine::regions::Region;
 use leptos::*;
@@ -21,28 +22,38 @@ pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
         let outlook = region.with(|region| region.outlook);
         intensity::scale(outlook, Variable::Outlook)
     };
-    let demand = state_with!(|state, ui, region| {
+    let demand = with_state!(|state, ui, region| {
         let total_demand = state.output_demand;
         let per_capita_demand = state.world.output_demand;
         let demand = region.demand(&per_capita_demand);
         let pop = region.population;
         demand.items().map(|(output, demand)| {
             let region_per_capita_demand = demand / pop;
-            let intensity = intensity::output_intensity(region_per_capita_demand, output);
-            let percent = format::demand_percent(demand, total_demand[output], false);
-            let fmted = format::output(demand, output);
+            let intensity = intensity::output_intensity(
+                region_per_capita_demand,
+                output,
+            );
+            let percent = display::demand_percent(
+                demand,
+                total_demand[output],
+                false,
+            );
+            let fmted = display::output(demand, output);
             (output, fmted, percent, intensity)
         })
     });
     let habitability = move || {
-        let habitability = region.with(|region| region.habitability());
+        let habitability =
+            region.with(|region| region.habitability());
         intensity::scale(habitability, Variable::Habitability)
     };
     let income_name = move || {
-        let income = region.with(|region| region.income.lower());
+        let income =
+            region.with(|region| region.income.lower());
         t!(income)
     };
-    let income_level = move || region.with(|region| region.income_level() + 1);
+    let income_level =
+        move || region.with(|region| region.income_level() + 1);
     let name = move || {
         let name = region.with(|region| region.name.clone());
         t!(&name)
@@ -52,11 +63,18 @@ pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
         i18n::num_fmt()(pop)
     };
     let seceded = move || region.with(|region| region.seceded);
-    let temp_range = move || region.with(|region| region.temp_range());
-    let precip_range = move || region.with(|region| region.precip_range());
+    let temp_range =
+        move || region.with(|region| region.temp_range());
+    let precip_range =
+        move || region.with(|region| region.precip_range());
 
     let image = move || {
-        region.with(|region| format!("/public/assets/content/{}", region.flavor.image.fname))
+        region.with(|region| {
+            format!(
+                "/public/assets/content/{}",
+                region.flavor.image.fname
+            )
+        })
     };
 
     view! {
@@ -144,9 +162,10 @@ pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
                                     percent,
                                 ),
                             );
+                            let (int, _) = create_signal(intensity);
                             view! {
                                 <HasTip tip>
-                                    <IntensityIcon icon=output.icon() intensity=intensity/>
+                                    <IntensityIcon icon=output.icon() intensity=int/>
                                 </HasTip>
                             }
                         }

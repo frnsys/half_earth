@@ -5,18 +5,27 @@ use crate::{
     util::{scale_text, to_ws_el},
 };
 
-use super::super::process::ProcessCard;
-use super::*;
+use super::{
+    super::{kinds::ProcessCard, *},
+    MiniCard,
+};
 use hes_engine::{kinds::Output, production::Process};
 use leptos::*;
 
 #[component]
-pub fn MiniProcess(#[prop(into)] process: Signal<Process>) -> impl IntoView {
+pub fn MiniProcess(
+    #[prop(into)] process: Signal<Process>,
+) -> impl IntoView {
     let image = move || {
-        process
-            .with(|process| format!("url(/public/assets/content/{})", process.flavor.image.fname))
+        process.with(|process| {
+            format!(
+                "url(/public/assets/content/images/{})",
+                process.flavor.image.fname
+            )
+        })
     };
-    let icon = move || process.with(|process| process.output.icon());
+    let icon =
+        move || process.with(|process| process.output.icon());
     let label = move || {
         process.with(|process| match process.output {
             Output::Electricity => t!("electricity"),

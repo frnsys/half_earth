@@ -7,9 +7,6 @@ use leptos_use::{
 };
 use std::collections::HashMap;
 
-// TODO
-// leptos_i18n::load_locales!()
-
 const DEFAULT_LANGUAGE: &str = "en";
 pub const AVAILABLE_LANGUAGES: &[&str] = &[
     "en", "pt", "pt-br", "pt-pt", "es", "de-de", "jp", "fr-fr", "th",
@@ -36,8 +33,6 @@ impl Language {
                     .minimum_fraction_digits(2)
                     .maximum_fraction_digits(2),
             ),
-            // TODO list format?
-            // formatter.list = new Intl.ListFormat(lang);
         }
     }
 }

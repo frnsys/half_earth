@@ -5,14 +5,18 @@ mod region_item;
 mod tabs;
 
 pub use active_plan::ActivePlan;
+use hes_engine::events::Phase as EventPhase;
 pub use processes::Processes;
-pub use projects::{ProjectScanner, Projects};
+pub use projects::Projects;
+use tabs::{Dashboard, Parliament, Plan, Regions};
 
 use crate::{
-    state,
-    state::Tutorial,
+    state::{self, Tutorial},
     t,
-    views::{hud::Hud, phases::cutscene::Events},
+    ui,
+    ui_rw,
+    views::{hud::Hud, Events},
+    with_state,
     write_state,
 };
 use enum_iterator::Sequence;
@@ -26,7 +30,10 @@ enum Page {
     Regions,
 }
 impl std::fmt::Display for Page {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
         write!(
             f,
             "{}",
@@ -53,12 +60,25 @@ pub fn Planning() -> impl IntoView {
         // window.audioManager.stopSoundtrack(true);
     });
 
-    // TODO
-    let events = vec![];
-    // let events = game.roll.planning('Start');
-    // events = events.concat(game.roll.planning('Plan'));
+    let (events, set_events) = create_signal(vec![]);
+    create_effect(move |_| {
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
+        state.update(|state| {
+            let mut events = state.game.roll_events_for_phase(
+                EventPhase::PlanningStart,
+                None,
+            );
+            events.extend(state.game.roll_events_for_phase(
+                EventPhase::PlanningPlan,
+                None,
+            ));
+            set_events.set(events);
+        });
+    });
 
-    let has_changes = state!(|_, ui| ui.has_any_process_mix_changes());
+    let has_changes = ui!(has_any_process_mix_changes());
 
     let (page, set_page) = create_signal(Page::Plan);
     let select_page = move |page: Page| {
@@ -68,46 +88,49 @@ pub fn Planning() -> impl IntoView {
         // set_events.set(game.roll.planning(this.page));
     };
 
-    let tab = move |label: &'static str, p: Page, tutorial: Tutorial| {
-        state!(move |state, ui| {
-            let active = page.get() == p;
-            let highlight = ui.tutorial == tutorial;
-            let disabled = ui.tutorial < tutorial;
-            view! {
-                <div class="planning--tab"
-                    class:active=active
-                    class:highlight=highlight
-                    class:disabled=disabled
-                    on:click=move |_| {
-                        select_page(p);
-                        if active {
-                            write_state!(|_, ui| {
-                                ui.tutorial.advance();
-                            });
-                        }
-                    }>
-                    {t!(label)}
-                </div>
-            }
-        })
+    let (cur_tutorial, set_tutorial) = ui_rw!(tutorial);
+    let tab = move |label: &'static str,
+                    p: Page,
+                    tutorial: Tutorial| {
+        let active = page.get() == p;
+        let highlight = cur_tutorial.get() == tutorial;
+        let disabled = cur_tutorial.get() < tutorial;
+        view! {
+            <div
+                class="planning--tab"
+                class:active=active
+                class:highlight=highlight
+                class:disabled=disabled
+                on:click=move |_| {
+                    select_page(p);
+                    if active {
+                        write_state!(| _, ui | { ui.tutorial.advance(); });
+                    }
+                }
+            >
+
+                {t!(label)}
+            </div>
+        }
     };
 
+    // TODO
     let page_view = move || {
         match page.get() {
-            Page::Plan => (),
-            Page::Parliament => (),
-            Page::Dashboard => (),
-            Page::Regions => (),
+            Page::Plan => view! { <Plan/> },
+            Page::Parliament => view! { <Parliament/> },
+            Page::Dashboard => view! { <Dashboard/> },
+            Page::Regions => view! { <Regions/> },
         }
 
-        let on_plan_change = || {
-            // TODO
-            // this.events = game.roll.planning('PlanChange');
-        };
-        let on_plan_subpage = || {
-            // TODO
-            // this.events = game.roll.planning(p);
-        };
+        // let on_plan_change = || {
+        //     // TODO
+        //     // this.events = game.roll.planning('PlanChange');
+        // };
+        // let on_plan_subpage = || {
+        //     // TODO
+        //     // this.events = game.roll.planning(p);
+        // };
         // TODO
         // <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
         // <Parliament v-else-if="page == PAGES.PARLIAMENT" />
@@ -130,7 +153,11 @@ pub fn Planning() -> impl IntoView {
 
     view! {
         <Hud/>
-        <Events events on_advance=|_| {} on_done=|_| {}/>
+        <Events
+            events
+            on_advance=|_| {}
+            on_done=move |_| { set_events.set(vec![]) }
+        />
         <div class="planning">
             <header>
                 {move || tab("Plan", Page::Plan, Tutorial::Plan)}

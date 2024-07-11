@@ -35,13 +35,13 @@ impl EventPool {
         self.queue.push((phase, id, region_id, years));
     }
 
-    pub fn roll_for_phase<'a>(
-        &'a mut self,
+    pub fn roll_for_phase(
+        &mut self,
         phase: Phase,
         state: &State,
         limit: Option<usize>,
         rng: &mut SmallRng,
-    ) -> Vec<(&'a Event, Option<usize>)> {
+    ) -> Vec<(Event, Option<usize>)> {
         // Prevent duplicate events
         let mut existing: HashSet<usize> = HashSet::new();
         for (_, ev_id, _, _) in &self.queue {
@@ -156,7 +156,8 @@ impl EventPool {
 
         let mut results = vec![];
         for (ev_id, region_id) in happening {
-            results.push((&self.events[ev_id], region_id));
+            results
+                .push((self.events[ev_id].clone(), region_id));
         }
         results
     }

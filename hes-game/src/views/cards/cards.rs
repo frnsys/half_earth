@@ -1,6 +1,11 @@
 use std::time::Duration;
 
-use crate::util::{detect_center_element, is_safari, to_children_vec, to_ws_el};
+use crate::util::{
+    detect_center_element,
+    is_safari,
+    to_children_vec,
+    to_ws_el,
+};
 use leptos::*;
 
 /// Renders child elements side-by-side with drag-to-scroll.
@@ -8,7 +13,7 @@ use leptos::*;
 #[component]
 pub fn Cards(
     children: Children,
-    #[prop(into)] disabled: Signal<bool>,
+    #[prop(into)] enabled: Signal<bool>,
     #[prop(into)] on_focus: Callback<Option<usize>>,
     #[prop(into)] on_scroll_start: Callback<()>,
     #[prop(into)] on_scroll_end: Callback<()>,
@@ -20,7 +25,8 @@ pub fn Cards(
     let (pos, set_pos) = create_signal((0, 0));
     let (down, set_down) = create_signal(false);
     let (dragging, set_dragging) = create_signal(false);
-    let (countdown, set_countdown) = create_signal(SCROLL_COUNTDOWN);
+    let (countdown, set_countdown) =
+        create_signal(SCROLL_COUNTDOWN);
 
     // We use this to determine if the scrolling
     // (and its momentum) have stopped
@@ -51,10 +57,17 @@ pub fn Cards(
     };
 
     // Drag to scroll horizontally on desktop
-    let drag_start = move |ev: ev::MouseEvent| {
-        if disabled.get() {
+    let drag_start = move |ev: ev::PointerEvent| {
+        // if let Some(elem) = scroller_ref.get() {
+        //     elem.set_pointer_capture(ev.pointer_id());
+        // }
+
+        // TODO
+        if !enabled.get() {
+            logging::log!("[CARDS] DRAG START (DISABLED)");
             return;
         }
+        // logging::log!("[CARDS] DRAG START");
         set_down.set(true);
 
         if let Some(scroller) = scroller_ref.get() {
@@ -63,10 +76,36 @@ pub fn Cards(
             set_pos.set((left, x));
         }
     };
-    let drag = move |ev: ev::MouseEvent| {
-        if disabled.get() {
+    let drag_stop = move |ev: ev::PointerEvent| {
+        // if let Some(elem) = scroller_ref.get() {
+        //     elem.release_pointer_capture(ev.pointer_id());
+        // }
+
+        if dragging.get() {
+            // logging::log!("[CARDS] DRAG STOP");
+
+            // Necessary for firefox to snap to the nearest card
+            if let Some(scroller) = scroller_ref.get() {
+                scroller.scroll();
+            }
+
+            ev.prevent_default();
+            // ev.stop_immediate_propagation();
+        }
+        set_down.set(false);
+        set_dragging.set(false);
+    };
+    let drag = move |ev: ev::PointerEvent| {
+        if !enabled.get() {
             return;
         }
+
+        // Button no longer pressed
+        if ev.pressure() < 0.5 {
+            drag_stop(ev);
+            return;
+        }
+
         let (left, x) = pos.get();
         let dx = ev.client_x() - x;
         if down.get() && dx.abs() > 10 {
@@ -75,19 +114,6 @@ pub fn Cards(
                 scroller.set_scroll_left(left - dx);
             }
         }
-    };
-    let drag_stop = move |ev: ev::MouseEvent| {
-        if dragging.get() {
-            // Necessary for firefox to snap to the nearest card
-            if let Some(scroller) = scroller_ref.get() {
-                scroller.scroll();
-            }
-
-            ev.prevent_default();
-            ev.stop_immediate_propagation();
-        }
-        set_down.set(false);
-        set_dragging.set(false);
     };
 
     // Calculate scroll bar height so we can accommodate it
@@ -101,17 +127,17 @@ pub fn Cards(
     };
 
     let overflow_x = move || {
-        if disabled.get() {
-            "hidden"
-        } else {
+        if enabled.get() {
             "visible"
+        } else {
+            "hidden"
         }
     };
     let padding_bottom = move || {
-        if disabled.get() {
-            format!("{}px", scrollbar_height())
-        } else {
+        if enabled.get() {
             "0px".to_string()
+        } else {
+            format!("{}px", scrollbar_height())
         }
     };
 
@@ -128,8 +154,12 @@ pub fn Cards(
         move || {
             if !scrolling.get() {
                 if let Some(scroller) = scroller_ref.get() {
-                    let children = to_children_vec(scroller.children());
-                    let idx = detect_center_element(to_ws_el(scroller), &children);
+                    let children =
+                        to_children_vec(scroller.children());
+                    let idx = detect_center_element(
+                        to_ws_el(scroller),
+                        &children,
+                    );
                     on_focus.call(idx);
                 }
             }
@@ -143,13 +173,26 @@ pub fn Cards(
     let timeout_handle = set_interval_with_handle(
         move || {
             if let Some(scroller) = scroller_ref.get() {
-                let nextLast = scroller.scroll_left();
-                let children = to_children_vec(scroller.children());
-                let idx = detect_center_element(to_ws_el(scroller), &children);
-                on_focus.call(idx);
-                on_scroll_end.call(());
-                set_scrolling.set(false);
-                set_countdown.set(SCROLL_COUNTDOWN);
+                let next_last = scroller.scroll_left();
+
+                // If we are still within a scroll action and
+                // momentum/snapping has finished
+                // (i.e. the scroll left position hasn't changed),
+                // we're done scrolling.
+                if scrolling.get() && last.get() == next_last {
+                    let children =
+                        to_children_vec(scroller.children());
+                    let idx = detect_center_element(
+                        to_ws_el(scroller),
+                        &children,
+                    );
+                    on_focus.call(idx);
+                    on_scroll_end.call(());
+                    set_scrolling.set(false);
+                    set_countdown.set(SCROLL_COUNTDOWN);
+                } else {
+                    set_last.set(next_last);
+                }
             }
         },
         Duration::from_millis(16),
@@ -169,15 +212,28 @@ pub fn Cards(
             class="cards"
             ref=scroller_ref
             class:unlock-scroll=dragging
+            class:is-dragging=dragging
             on:scroll=on_scroll
-            on:mousedown=drag_start
-            on:mousemove=drag
-            on:click=drag_stop
+            on:pointerdown=drag_start
+            on:pointermove=drag
+            on:pointerup=drag_stop
         >
             {children()}
             <Show when=|| is_safari()>
                 <div class="safari-scroll-margin"></div>
             </Show>
+        </div>
+    }
+}
+
+#[component]
+pub fn CardFocusArea() -> impl IntoView {
+    view! {
+        <div class="card-focus-area wrapper">
+            <div class="inner">
+                <small class="helper top">"▲"</small>
+                <small class="helper bottom">"▼"</small>
+            </div>
         </div>
     }
 }

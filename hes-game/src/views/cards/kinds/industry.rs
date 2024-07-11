@@ -1,58 +1,55 @@
 use super::super::card::*;
 use crate::{
-    display::{format, text::AsText, Impact},
+    display::{self, AsText},
     icons::{self, HasIcon},
     state,
     state::GameState,
-    state_with, t,
-    views::{cards::Image, tip, HasTip},
+    t,
+    vars::Impact,
+    views::{tip, HasTip},
 };
 use hes_engine::industries::Industry;
 use leptos::*;
 
-#[derive(Clone)]
-struct Card {
-    industry: Industry,
-    description: String,
-}
-
 #[component]
-pub fn IndustryCard(card: Signal<Card>) -> impl IntoView {
-    // TODO card-image
-    let image = Image {
-        path: "foo".into(),
-        attribution: "foo".into(),
+pub fn IndustryCard(
+    #[prop(into)] industry: Signal<Industry>,
+) -> impl IntoView {
+    let lic_pop = state!(world.lic_population());
+    let demand = move || {
+        industry.with(move |ind| ind.demand(lic_pop.get()))
     };
-
-    let demand = state_with!(|state, ui, card| {
-        let lic_pop = state.world.lic_population();
-        card.industry.demand(lic_pop)
-    });
-    let name = move || card.with(|c| t!(&c.industry.name));
-    let total_resources = move || card.with(|c| c.industry.adj_resources() * demand());
+    let name = move || industry.with(|c| t!(&c.name));
+    let total_resources = move || {
+        industry.with(|ind| ind.adj_resources() * demand())
+    };
     let empty = move || total_resources().sum() == 0.;
-    let emissions = move || card.with(|c| (c.industry.adj_byproducts() * demand()).co2eq());
-    let body_view = state!(|state, ui| {
-        let demand = state.resources_demand;
+    let emissions = move || {
+        industry.with(|ind| {
+            (ind.adj_byproducts() * demand()).co2eq()
+        })
+    };
+    let resources_demand = state!(resources_demand);
+    let body_view = move || {
         if empty() {
-            t!("This industry is not yet significant.").into_view()
+            t!("This industry is not yet significant.")
+                .into_view()
         } else {
             view! {
                 <For
                     each=move || total_resources().items()
                     key=|(key, _)| key.clone()
                     children=move |(key, val)| {
-                        let percent = format::demand_percent(
+                        let percent = display::demand_percent(
                             val,
-                            demand[key],
+                            resources_demand.get()[key],
                             false,
                         );
                         let tip = tip(
                             key.icon(),
                             t!(
                                 "This industry's demand for {output}. This makes up {percent} of total demand for {output}.",
-                                output: key.lower(),
-                                percent: percent,
+                                output : key.lower(), percent : percent,
                             ),
                         );
                         view! {
@@ -80,7 +77,7 @@ pub fn IndustryCard(card: Signal<Card>) -> impl IntoView {
                                 if e < 1. {
                                     "<1".to_string()
                                 } else {
-                                    format::format_impact(Impact::Emissions, e)
+                                    display::format_impact(Impact::Emissions, e)
                                 }
                             }}
 
@@ -89,9 +86,24 @@ pub fn IndustryCard(card: Signal<Card>) -> impl IntoView {
                 </Show>
             }.into_view()
         }
-    });
+    };
 
-    let description = move || card.with(|card| t!(&card.description));
+    let image_url = move || {
+        industry.with(|ind| {
+            format!(
+                "/public/assets/content/images/{}",
+                ind.flavor.image.fname
+            )
+        })
+    };
+    let image_attrib = move || {
+        industry
+            .with(|ind| ind.flavor.image.attribution.clone())
+    };
+
+    // TODO?
+    // let description = move || industry.with(|ind| t!(&ind.flavor.description));
+    let description = "";
 
     view! {
         <Card
@@ -103,7 +115,7 @@ pub fn IndustryCard(card: Signal<Card>) -> impl IntoView {
                 <div>{t!("Sector")}</div>
             </Header>
             <Figure slot>
-                <img class="card-image" src=&image.path/>
+                <img class="card-image" src=image_url/>
             </Figure>
             <Name slot>
                 <div>{name}</div>
@@ -113,7 +125,7 @@ pub fn IndustryCard(card: Signal<Card>) -> impl IntoView {
             </TopBack>
             <BottomBack slot>
                 <div class="card-image-attribution">
-                    {t!("Image:")} {&image.attribution}
+                    {t!("Image:")} {image_attrib}
                 </div>
             </BottomBack>
             <Body slot>

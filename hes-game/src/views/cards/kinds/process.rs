@@ -1,17 +1,20 @@
 use super::super::card::*;
 use crate::{
-    display::{
-        factors::factors_card,
-        format,
-        intensity::{self, Variable},
-        text::AsText,
-        Impact, OutputKind, Var,
-    },
+    display::{self, AsText},
     i18n,
     icons::{self, HasIcon},
-    state::{self, GameExt, GameState},
-    state_with, t,
-    views::{cards::Image, parts::IntensityIcon, tip, HasTip},
+    state,
+    state::{GameExt, GameState},
+    t,
+    ui,
+    vars::*,
+    views::{
+        factors::factors_card,
+        intensity::{self, IntensityIcon, Variable},
+        tip,
+        HasTip,
+    },
+    with_state,
 };
 use hes_engine::{kinds::Feedstock, production::Process};
 use leptos::*;
@@ -39,55 +42,81 @@ fn describe_stocks(estimate: f32) -> &'static str {
 }
 
 #[component]
-pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
+pub fn ProcessCard(
+    #[prop(into)] process: Signal<Process>,
+) -> impl IntoView {
     let is_new = move || {
         // return !state.viewed.includes(this.ref_id);
         false
     };
-    let name = move || process.with(|process| t!(&process.name));
-    let description = move || process.with(|process| t!(&process.flavor.description));
-    let output_icon = move || process.with(|process| process.output.icon());
-    let output_name = move || process.with(|process| t!(&process.output.title()));
-    let feedstock_name = move || process.with(|process| t!(&process.feedstock.0.title()));
+    let name =
+        move || process.with(|process| t!(&process.name));
+    let description = move || {
+        process.with(|process| t!(&process.flavor.description))
+    };
+    let output_icon =
+        move || process.with(|process| process.output.icon());
+    let output_name = move || {
+        process.with(|process| t!(&process.output.title()))
+    };
+    let feedstock_name = move || {
+        process.with(|process| t!(&process.feedstock.0.title()))
+    };
 
-    let feedstock_estimate = state_with!(|state, ui, process| {
-        let feedstock = process.feedstock.0;
-        match feedstock {
-            Feedstock::Soil | Feedstock::Other => None,
-            _ => {
-                let estimate = state.feedstocks[feedstock] / state.consumed_feedstocks[feedstock];
-                Some(estimate.round())
+    let feedstocks = state!(feedstocks);
+    let consumed_feedstocks = state!(consumed_feedstocks);
+    let feedstock_estimate = move || {
+        process.with(|process| {
+            let feedstock = process.feedstock.0;
+            match feedstock {
+                Feedstock::Soil | Feedstock::Other => None,
+                _ => {
+                    let estimate = feedstocks.get()[feedstock]
+                        / consumed_feedstocks.get()[feedstock];
+                    Some(estimate.round())
+                }
             }
-        }
-    });
+        })
+    };
     let feedstock_estimate_desc = move || {
         let estimate = feedstock_estimate();
         estimate.map(describe_estimate).unwrap_or_default()
     };
-    let output_icon = move || process.with(|process| process.output.icon());
-    let feedstock_icon = move || process.with(|process| process.feedstock.0.icon());
+    let output_icon =
+        move || process.with(|process| process.output.icon());
+    let feedstock_icon = move || {
+        process.with(|process| process.feedstock.0.icon())
+    };
 
     let feedstock_level = move || {
         let estimate = feedstock_estimate();
         estimate.map(describe_stocks).unwrap_or("high")
     };
-    let has_feedstock = move || process.with(|process| process.feedstock.0 != Feedstock::Other);
+    let has_feedstock = move || {
+        process.with(|process| {
+            process.feedstock.0 != Feedstock::Other
+        })
+    };
 
-    let max_share = state_with!(|state, ui, process| { state.process_max_share(process) });
-
-    let produced = state_with!(|state, ui, process| {
-        let base_amount = state.produced_by_process[process.id];
-        let mut amount = format::output(base_amount, process.output);
-        if amount > 0. {
-            amount = amount.max(1.);
-        }
-        let gtco2eq = process.byproducts.gtco2eq();
-        let mut emissions = gtco2eq * base_amount;
-        if emissions > 0. {
-            emissions = emissions.max(1.);
-        }
-        (amount, emissions)
-    });
+    let produced_by_process =
+        state!(produced_by_process.clone());
+    let produced = move || {
+        process.with(|process| {
+            let base_amount =
+                produced_by_process.get()[process.id];
+            let mut amount =
+                display::output(base_amount, process.output);
+            if amount > 0. {
+                amount = amount.max(1.);
+            }
+            let gtco2eq = process.byproducts.gtco2eq();
+            let mut emissions = gtco2eq * base_amount;
+            if emissions > 0. {
+                emissions = emissions.max(1.);
+            }
+            (amount, emissions)
+        })
+    };
     let output_tip = move || {
         process.with(|process| {
             let output = process.output;
@@ -123,16 +152,30 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
         }
     };
 
-    let changed_mix_share = 1000; // TODO
+    let process_mix_changes = ui!(process_mix_changes.clone());
+    let changed_mix_share = move || {
+        process.with(|process| {
+            if let Some(change) = process_mix_changes.get()
+                [process.output]
+                .get(&process.id)
+            {
+                process.mix_share as isize + change
+            } else {
+                process.mix_share as isize
+            }
+        })
+    };
+
+    let max_share = state!(process_max_share(&process.get()));
     let alert_tip = move || {
         process.with(|process| {
             let mix_share = process.mix_share;
-            let max_share = max_share();
+            let max_share = max_share.get();
             tip(
                 icons::ALERT,
                 t!("Because of resource availability this process can only make up to {maxPercent}% of production. {suggestion}",
                     maxPercent: max_share * 5,
-                    suggestion: if mix_share > max_share || changed_mix_share > max_share {
+                    suggestion: if mix_share > max_share || changed_mix_share() > max_share as isize {
                         t!("You should reallocate its points to other processes.")
                     } else {
                         "".into()
@@ -141,27 +184,34 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
         })
     };
 
-    let has_opposers = state_with!(|state, ui, process| {
-        process
-            .opposers
-            .iter()
-            .map(|id| &state.npcs[*id])
-            .filter(|npc| !npc.locked)
-            .next()
-            .is_some()
-    });
-    let has_supporters = state_with!(|state, ui, process| {
-        process
-            .supporters
-            .iter()
-            .map(|id| &state.npcs[*id])
-            .filter(|npc| !npc.locked)
-            .next()
-            .is_some()
-    });
+    let npcs = state!(npcs.clone());
+    let has_opposers = move || {
+        let npcs = npcs.get();
+        process.with(|process| {
+            process
+                .opposers
+                .iter()
+                .map(|id| &npcs[*id])
+                .filter(|npc| !npc.locked)
+                .next()
+                .is_some()
+        })
+    };
+    let has_supporters = move || {
+        let npcs = npcs.get();
+        process.with(|process| {
+            process
+                .supporters
+                .iter()
+                .map(|id| &npcs[*id])
+                .filter(|npc| !npc.locked)
+                .next()
+                .is_some()
+        })
+    };
 
     // TODO redundant w/ that in project card
-    let opposers = state_with!(|state, ui, process| {
+    let opposers = with_state!(|state, ui, process| {
         process.opposers.iter().map(|id| &state.npcs[*id])
             .filter(|npc| !npc.locked)
             .cloned()
@@ -177,7 +227,7 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
                 }
         }).collect::<Vec<_>>()
     });
-    let supporters = state_with!(|state, ui, process| {
+    let supporters = with_state!(|state, ui, process| {
         process.supporters.iter().map(|id| &state.npcs[*id])
             .filter(|npc| !npc.locked)
             .cloned()
@@ -203,40 +253,50 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
         })
     };
 
-    let changed_mix_share = state_with!(|state, ui, process| {
-        if let Some(change) = ui.process_mix_changes[process.output].get(&process.id) {
-            process.mix_share as isize + change
-        } else {
-            process.mix_share as isize
-        }
-    });
-    let max_share = state_with!(|state, ui, process| { state.process_max_share(process) });
     let process_excess = move || {
         process.with(|process| {
-            let max = max_share();
-            process.mix_share > max || changed_mix_share() > max as isize
+            let max = max_share.get();
+            process.mix_share > max
+                || changed_mix_share() > max as isize
         })
     };
     let excess_tip = move || {
         tip(icons::ALERT, t!("This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes."))
     };
 
-    let change = state_with!(|state, ui, process| {
-        if let Some(change) = ui.process_mix_changes[process.output].get(&process.id) {
-            *change
-        } else {
-            0
-        }
-    });
+    let change = move || {
+        process.with(|process| {
+            if let Some(change) = process_mix_changes.get()
+                [process.output]
+                .get(&process.id)
+            {
+                *change
+            } else {
+                0
+            }
+        })
+    };
     let has_change = move || change() != 0;
-    let mix_share_percent = move || process.with(|process| process.mix_share * 5);
-    let is_shrink =
-        move || process.with(|process| (process.mix_share as isize) > changed_mix_share());
-    let is_grow =
-        move || process.with(|process| (process.mix_share as isize) < changed_mix_share());
-    let changed_mix_share_percent = move || changed_mix_share() * 5;
-    let is_halted = move || feedstock_estimate().is_some_and(|est| est == 0.);
-    let almost_halted = move || feedstock_estimate().is_some_and(|est| est < 0.);
+    let mix_share_percent =
+        move || process.with(|process| process.mix_share * 5);
+    let is_shrink = move || {
+        process.with(|process| {
+            (process.mix_share as isize) > changed_mix_share()
+        })
+    };
+    let is_grow = move || {
+        process.with(|process| {
+            (process.mix_share as isize) < changed_mix_share()
+        })
+    };
+    let changed_mix_share_percent =
+        move || changed_mix_share() * 5;
+    let is_halted = move || {
+        feedstock_estimate().is_some_and(|est| est == 0.)
+    };
+    let almost_halted = move || {
+        feedstock_estimate().is_some_and(|est| est < 0.)
+    };
 
     let feedstock_tip = move || {
         process.with(|process| {
@@ -266,9 +326,13 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
                 .collect::<Vec<_>>()
         })
     };
-    let image_attrib = move || process.with(|process| process.flavor.image.attribution.clone());
+    let image_attrib = move || {
+        process.with(|process| {
+            process.flavor.image.attribution.clone()
+        })
+    };
     let process_mix_tip = move || {
-        let max_share = max_share();
+        let max_share = max_share.get();
         tip(
             icons::MIX_TOKEN,
             if max_share < 20 {
@@ -280,7 +344,7 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
     };
     let mix_cells = move || {
         let depleted = feedstock_estimate() == Some(0.);
-        let max_share = max_share();
+        let max_share = max_share.get();
         let changed_mix_share = changed_mix_share();
         process.with(|process| {
             (0..20)
@@ -304,66 +368,97 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
         })
     };
 
-    let land_intensity = state_with!(|state, ui, process| {
+    let land_intensity = with_state!(|state, ui, process| {
         let usage = process.adj_resources().land;
-        let int = intensity::impact_intensity(usage, Impact::Land, process.output.into());
+        let int = intensity::impact_intensity(
+            usage,
+            Impact::Land,
+            process.output.into(),
+        );
         let percent = state.land_use_percent();
         let tip = tip(icons::LAND, t!("Land: They're not making anymore of it. You're using {percent}% of land.", percent: percent))
             .card(factors_card(Some(process.name.clone()), Var::Land, state));
+        let (sig, _) = create_signal(int);
         view! {
             <HasTip tip>
-                <IntensityIcon icon=icons::LAND intensity=int />
+                <IntensityIcon icon=icons::LAND intensity=sig />
             </HasTip>
         }
     });
-    let water_intensity = state_with!(|state, ui, process| {
+    let water_intensity = with_state!(|state, ui, process| {
         let usage = process.adj_resources().water;
-        let int = intensity::impact_intensity(usage, Impact::Water, process.output.into());
+        let int = intensity::impact_intensity(
+            usage,
+            Impact::Water,
+            process.output.into(),
+        );
         let percent = state.water_use_percent();
         let tip = tip(icons::WATER, t!("Water: The giver of life. You're using {percent}% of water resources.", percent: percent))
         .card(factors_card(Some(process.name.clone()), Var::Water, state));
+        let (sig, _) = create_signal(int);
         view! {
             <HasTip tip>
-                <IntensityIcon icon=icons::WATER intensity=int />
+                <IntensityIcon icon=icons::WATER intensity=sig />
             </HasTip>
         }
     });
-    let energy_intensity = state_with!(|state, ui, process| {
+    let energy_intensity = with_state!(|state, ui, process| {
         let usage = process.adj_resources().energy();
-        let int = intensity::impact_intensity(usage, Impact::Energy, process.output.into());
+        let int = intensity::impact_intensity(
+            usage,
+            Impact::Energy,
+            process.output.into(),
+        );
         let amount = state.energy_twh();
         let tip = tip(icons::ENERGY, t!("Energy: The fundamental mover. You're using {amount}TWh of energy.", amount: amount))
-        .card(factors_card(Some(process.name.clone()), Var::Energy, state));
+            .card(factors_card(Some(process.name.clone()), Var::Energy, state));
+        let (sig, _) = create_signal(int);
         view! {
             <HasTip tip>
-                <IntensityIcon icon=icons::ENERGY intensity=int />
+                <IntensityIcon icon=icons::ENERGY intensity=sig />
             </HasTip>
         }
     });
-    let emissions_intensity = state_with!(|state, ui, process| {
-        let usage = process.adj_byproducts().co2eq();
-        let int = intensity::impact_intensity(usage, Impact::Emissions, process.output.into());
-        let amount = state.emissions_gt();
-        let tip = tip(icons::EMISSIONS, t!("Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.", amount: amount))
-        .card(factors_card(Some(process.name.clone()), Var::Emissions, state));
-        view! {
-            <HasTip tip>
-                <IntensityIcon icon=icons::EMISSIONS intensity=int />
-            </HasTip>
+    let emissions_intensity = with_state!(
+        |state, ui, process| {
+            let usage = process.adj_byproducts().co2eq();
+            let int = intensity::impact_intensity(
+                usage,
+                Impact::Emissions,
+                process.output.into(),
+            );
+            let amount = state.emissions_gt();
+            let tip = tip(icons::EMISSIONS, t!("Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.", amount: amount))
+            .card(factors_card(Some(process.name.clone()), Var::Emissions, state));
+            let (sig, _) = create_signal(int);
+            view! {
+                <HasTip tip>
+                    <IntensityIcon icon=icons::EMISSIONS intensity=sig />
+                </HasTip>
+            }
         }
-    });
-    let biodiversity_intensity = state_with!(|state, ui, process| {
-        let usage = process.extinction_rate(state.world.starting_resources.land);
-        let int = intensity::impact_intensity(usage, Impact::Biodiversity, process.output.into());
-        let amount = state.world.extinction_rate;
-        let tip = tip(icons::EXTINCTION_RATE, t!("Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.", amount: amount))
+    );
+    let biodiversity_intensity = with_state!(
+        |state, ui, process| {
+            let usage = process.extinction_rate(
+                state.world.starting_resources.land,
+            );
+            let int = intensity::impact_intensity(
+                usage,
+                Impact::Biodiversity,
+                process.output.into(),
+            );
+            let amount = state.world.extinction_rate;
+            let tip = tip(icons::EXTINCTION_RATE, t!("Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.", amount: amount))
         .card(factors_card(Some(process.name.clone()), Var::Biodiversity, state));
-        view! {
-            <HasTip tip>
-                <IntensityIcon icon=icons::EXTINCTION_RATE intensity=int />
-            </HasTip>
+            let (sig, _) = create_signal(int);
+            view! {
+                <HasTip tip>
+                    <IntensityIcon icon=icons::EXTINCTION_RATE intensity=sig />
+                </HasTip>
+            }
         }
-    });
+    );
 
     view! {
         <Card color="#ffffff" class=class.into_signal()>
@@ -384,7 +479,7 @@ pub fn ProcessCard(#[prop(into)] process: Signal<Process>) -> impl IntoView {
 
             <Figure slot>
                 <img class="card-image" src=image/>
-                <Show when=move || max_share() < 20>
+                <Show when=move || max_share.get() < 20>
                     <HasTip tip=alert_tip.into_signal()>
                         <div class="process-limit-alert">
                             <img src=icons::ALERT/>

@@ -59,8 +59,6 @@ pub fn Card(
     #[prop(optional, into)] class: MaybeSignal<String>,
 ) -> impl IntoView {
     let (flipped, set_flipped) = create_signal(false);
-    let color = move || color.get();
-    let background = move || background.get();
 
     let flippable = top_back.is_some() || bottom_back.is_some();
     let flip = move |_| {

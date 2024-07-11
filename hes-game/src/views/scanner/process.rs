@@ -1,0 +1,162 @@
+use std::collections::HashMap;
+
+use crate::{
+    consts,
+    state::Tutorial,
+    t,
+    views::cards::ProcessCard,
+    with_state,
+    write_state,
+};
+use enum_map::EnumMap;
+use hes_engine::{
+    kinds::Output,
+    production::Process,
+    state::State,
+};
+use leptos::*;
+
+use super::{
+    CardScanProps,
+    Scannable,
+    ScannerControls,
+    ScannerSpec,
+};
+
+impl Scannable for Process {
+    fn id(&self) -> usize {
+        self.id
+    }
+
+    fn get_from_state(id: usize, state: &State) -> Self {
+        state.world.processes[id].clone()
+    }
+
+    fn as_card(process: Signal<Self>) -> View {
+        view! { <ProcessCard process/> }.into_view()
+    }
+}
+
+pub struct ProcessScanner {
+    pub points: RwSignal<isize>,
+    pub on_change: Callback<()>,
+    pub mix_changes:
+        Memo<EnumMap<Output, HashMap<usize, isize>>>,
+}
+
+impl ScannerSpec for ProcessScanner {
+    type Item = Process;
+
+    fn add_props(
+        &self,
+        process: RwSignal<Option<Self::Item>>,
+    ) -> CardScanProps {
+        let points = self.points.clone();
+        let on_change = self.on_change.clone();
+
+        let addable = with_state!(|state, ui| {
+            if let Some(process) = process.get() {
+                let max_share =
+                    state.process_max_share(&process);
+                let change = ui.process_mix_changes
+                    [process.output]
+                    .get(&process.id)
+                    .unwrap_or(&0);
+                points.get() != 0
+                    && (*change + 1) < max_share as isize
+            } else {
+                false
+            }
+        });
+
+        let add_point = write_state!(move |state, ui| {
+            if let Some(process) = process.get() {
+                let max_share =
+                    state.process_max_share(&process);
+                points.update(|points| {
+                    ui.add_point(points, &process, max_share);
+
+                    // Consider the process mix 'changed'
+                    // when all points have been assigned
+                    if *points == 0 {
+                        on_change.call(());
+                    }
+                });
+            }
+        });
+
+        let on_finish_scan =
+            move |controls: ScannerControls| {
+                if addable() {
+                    let state = expect_context::<
+                        RwSignal<crate::state::GameState>,
+                    >();
+                    state.try_update(|state| {
+                        let ui = &mut state.ui;
+                        if ui.tutorial == Tutorial::Processes {
+                            ui.tutorial.advance();
+                        }
+                        add_point();
+                        controls.pulse_card();
+                    });
+                    true
+                } else {
+                    controls.reject_scan();
+                    false
+                }
+            };
+
+        CardScanProps {
+            label: None,
+            should_show: addable.into_signal(),
+            scan_allowed: addable.into_signal(),
+            scan_time: consts::PROCESS_CARD_SCAN_TIME,
+            on_finish_scan: on_finish_scan.into(),
+        }
+    }
+
+    fn rem_props(
+        &self,
+        process: RwSignal<Option<Self::Item>>,
+    ) -> CardScanProps {
+        let points = self.points.clone();
+        let mix_changes = self.mix_changes.clone();
+
+        let remove_point = write_state!(move |state, ui| {
+            if let Some(process) = process.get() {
+                points.update(|points| {
+                    ui.remove_point(points, &process);
+                });
+            }
+        });
+
+        let subtractable = move || {
+            if let Some(process) = process.get() {
+                let changes = mix_changes.get();
+                let change = changes[process.output]
+                    .get(&process.id)
+                    .unwrap_or(&0);
+                process.mix_share as isize + *change != 0
+            } else {
+                false
+            }
+        };
+
+        let on_finish_scan =
+            move |controls: ScannerControls| {
+                remove_point();
+                // If still subtractable, continue scanning
+                subtractable()
+            };
+
+        CardScanProps {
+            label: Some(
+                (move || t!("Remove points")).into_signal(),
+            ),
+            should_show: subtractable.into_signal(),
+            scan_allowed: subtractable.into_signal(),
+            scan_time: consts::PROCESS_CARD_WITHDRAW_TIME,
+            on_finish_scan: on_finish_scan.into(),
+        }
+    }
+}

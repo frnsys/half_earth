@@ -1,12 +1,11 @@
 import RPC from './rpc';
 import HexSphere from './hex';
-import Scene from '../3d/scene';
+import Scene from './3d/scene';
 import globeVert from './shaders/globe/vertex.glsl';
 import globeFrag from './shaders/globe/fragment.glsl';
 import cloudsVert from './shaders/clouds/vertex.glsl';
 import cloudsFrag from './shaders/clouds/fragment.glsl';
 import * as THREE from 'three';
-import state from '/src/state';
 
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const isSafari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
@@ -19,24 +18,6 @@ const Temperature = RPC.initialize(
 const texLoader = new THREE.TextureLoader();
 const objLoader = new THREE.ObjectLoader();
 
-function loadObjects(that){
-
-  const colonyActive = (project) => project.name == "Space Colony" && project.status == 'Active' || project.name == "Space Colony" && project.status == 'Finished'
-
-  if(state.gameState.projects.some(colonyActive)){
-    objLoader.load('./assets/models/colony.json',
-    function ( obj ) {
-      // Add the loaded object to the scene
-      that.orbital = obj;
-      that.sphere.add( that.orbital );
-    },
-    // onError callback
-    function ( err ) {
-      console.error( 'An error happened', err );
-    }
-    );
-  }
-}
 
 class Globe {
   constructor(el) {
@@ -96,8 +77,7 @@ class Globe {
     this._onClick.push(fn);
   }
 
-  async init() {
-    let startYear = state.gameState.world.year;
+  async init(startYear) {
     this.temperature = await new Temperature(startYear);
     await this.temperature.init();
 
@@ -143,8 +123,6 @@ class Globe {
       this.material
     );
     this.scene.add(this.sphere);
-
-    loadObjects(this);
 
     // Create the clouds layer
     this.cloudsMaterial = new THREE.ShaderMaterial({
@@ -292,4 +270,4 @@ class Globe {
   }
 }
 
-export default Globe;
+export { Globe };

@@ -177,4 +177,4 @@ class PieChart {
   }
 }
 
-export default PieChart;
+export { PieChart };

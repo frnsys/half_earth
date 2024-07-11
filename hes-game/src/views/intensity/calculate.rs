@@ -1,8 +1,10 @@
-use crate::{state, state::GameState};
 use hes_engine::kinds::Output;
 use leptos::*;
 
-use super::{Impact, OutputKind};
+use crate::{
+    state::demand_by_income_levels,
+    vars::{Impact, OutputKind},
+};
 
 const BASE_WORLD_OUTLOOK: f32 = 20.;
 const BASE_REGIONAL_OUTLOOK: f32 = 10.;
@@ -24,7 +26,9 @@ fn impact_stops(key: Impact, kind: OutputKind) -> [f32; 4] {
         },
         Impact::Energy => match kind {
             OutputKind::Energy => [0., 0.001, 0.01, 0.1], // TODO EROI
-            OutputKind::Calories => [0., 0.00015, 0.0005, 0.001],
+            OutputKind::Calories => {
+                [0., 0.00015, 0.0005, 0.001]
+            }
         },
         Impact::Water => match kind {
             OutputKind::Energy => [0., 1., 2., 5.],
@@ -38,36 +42,49 @@ fn impact_stops(key: Impact, kind: OutputKind) -> [f32; 4] {
             OutputKind::Energy => [0., 1e-15, 1e-14, 1.5e-14],
             OutputKind::Calories => [0., 1e-16, 1e-15, 1e-14],
         },
-        Impact::Electricity | Impact::Fuel => state!(|state, ui| {
-            let output = key.as_output().expect("Checked they're valid outputs");
-            state.world.demand_by_income_levels(output)
-        })(),
+        Impact::Electricity | Impact::Fuel => {
+            let output = key
+                .as_output()
+                .expect("Checked they're valid outputs");
+            demand_by_income_levels(output)
+        }
     }
 }
 
-pub fn impact_intensity(val: f32, key: Impact, kind: OutputKind) -> usize {
+pub fn impact_intensity(
+    val: f32,
+    key: Impact,
+    kind: OutputKind,
+) -> usize {
     let stops = impact_stops(key, kind);
     stops
         .windows(2)
-        .filter(|stops| val >= stops[0] && val < stops[1])
-        .count()
+        .enumerate()
+        .find(|(_, stops)| val >= stops[0] && val < stops[1])
+        .map(|(i, _)| i + 1)
+        .unwrap_or(stops.len())
 }
 
 fn output_stops(key: Output) -> [f32; 4] {
-    state!(|state, ui| state.world.demand_by_income_levels(key))()
+    demand_by_income_levels(key)
 }
 
 pub fn output_intensity(val: f32, key: Output) -> usize {
     let stops = output_stops(key);
     stops
         .windows(2)
-        .filter(|stops| val >= stops[0] && val < stops[1])
-        .count()
+        .enumerate()
+        .find(|(_, stops)| val >= stops[0] && val < stops[1])
+        .map(|(i, _)| i + 1)
+        .unwrap_or(stops.len())
 }
 
 pub const N_PIPS: usize = 5;
 
-pub fn color(mut intensity: usize, invert: bool) -> &'static str {
+pub fn color(
+    mut intensity: usize,
+    invert: bool,
+) -> &'static str {
     if invert {
         intensity = N_PIPS - intensity;
     }
@@ -94,10 +111,20 @@ pub fn describe(intensity: usize) -> &'static str {
 
 pub fn scale(val: f32, key: Variable) -> usize {
     let val = match key {
-        Variable::Outlook => (val / BASE_REGIONAL_OUTLOOK * 4.).round().max(1.),
-        Variable::Extinction => (val / 100. * 4.).round().max(0.),
-        Variable::Habitability => (val / BASE_REGIONAL_HABITABILITY * 4.).round().max(0.),
-        Variable::WorldOutlook => (val / (BASE_REGIONAL_OUTLOOK + BASE_WORLD_OUTLOOK) * 4.)
+        Variable::Outlook => {
+            (val / BASE_REGIONAL_OUTLOOK * 4.).round().max(1.)
+        }
+        Variable::Extinction => {
+            (val / 100. * 4.).round().max(0.)
+        }
+        Variable::Habitability => {
+            (val / BASE_REGIONAL_HABITABILITY * 4.)
+                .round()
+                .max(0.)
+        }
+        Variable::WorldOutlook => (val
+            / (BASE_REGIONAL_OUTLOOK + BASE_WORLD_OUTLOOK)
+            * 4.)
             .round()
             .max(1.),
         Variable::Warming => val.floor() + 1.,

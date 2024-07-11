@@ -1,7 +1,17 @@
 use std::{collections::HashMap, time::Duration};
 
-use crate::{anim::fade_out, state::Phase, t, views::Dialogue, write_state};
-use hes_engine::flavor;
+use crate::{
+    anim::fade_out,
+    state::Phase,
+    t,
+    views::events::Events,
+    write_state,
+};
+use hes_engine::{
+    events::{Event, Phase as EventPhase},
+    flavor,
+    game::ResolvedEvent,
+};
 use leptos::*;
 
 #[component]
@@ -25,10 +35,10 @@ pub fn Cutscene() -> impl IntoView {
     let (image_idx, set_image_idx) = create_signal(0);
     let background = move || {
         let image = IMAGES[image_idx.get()];
-        format!("url('/assets/cutscenes/out/{image}')")
+        format!("url('/public/assets/cutscenes/out/{image}')")
     };
 
-    let (start_anim, opacity) = fade_out(
+    let (anim, opacity) = fade_out(
         1000.,
         write_state!(move |_, ui| {
             ui.phase = Phase::Interstitial;
@@ -41,17 +51,30 @@ pub fn Cutscene() -> impl IntoView {
     let next_phase = move |_| {
         // TODO
         // window.audioManager.stopSoundtrack(true);
-        start_anim();
+        anim.start();
     };
 
     // Wait a beat before showing the event
-    let (events, set_events) = create_signal::<Vec<flavor::EventFlavor>>(vec![]);
+    let (events, set_events) =
+        create_signal::<Vec<ResolvedEvent>>(vec![]);
+    let (do_it, set_do_it) = create_signal(false);
     set_timeout(
-        || {
-            // let events = game.roll.cutscene("Intro")// TODO
+        move || {
+            set_do_it.set(true);
         },
         Duration::from_millis(1500),
     );
+    create_effect(move |_| {
+        if do_it.get() {
+            write_state!(move |state, ui| {
+                let events = state.roll_events_for_phase(
+                    EventPhase::CutsceneIntro,
+                    None,
+                );
+                set_events.set(events);
+            })();
+        }
+    });
 
     view! {
         <div
@@ -72,54 +95,4 @@ pub fn Cutscene() -> impl IntoView {
             </button>
         </div>
     }
-}
-
-#[component]
-pub fn Events(
-    #[prop(into)] on_advance: Callback<()>,
-    #[prop(into)] on_done: Callback<()>,
-    #[prop(into)] events: MaybeSignal<Vec<flavor::EventFlavor>>,
-) -> impl IntoView {
-    let (idx, set_idx) = create_signal(0);
-    let (ctx, set_ctx) = create_signal::<HashMap<String, String>>(HashMap::default());
-    let (dialogue, set_dialogue) = create_signal::<Option<flavor::Dialogue>>(None);
-    let next_event = move |_| {
-        // TODO apply game effects when rolling?
-        events.with(|events| {
-            update!(|set_idx, set_ctx, set_dialogue| {
-                *set_idx += 1;
-
-                if *set_idx < events.len() {
-                    let event = &events[*set_idx];
-                    *set_dialogue = Some(event.dialogue.clone());
-
-                    // TODO
-                    // if let Some(region_id) =
-                    // if (regionId !== undefined) {
-                    //   ctx['region'] = regions[regionId].name;
-                    // };
-                    let mut ctx = HashMap::default();
-                    *set_ctx = ctx;
-                } else {
-                    on_done.call(());
-                }
-            });
-        });
-    };
-
-    let view = move || {
-        dialogue.get().map(|dialogue| {
-            let (dialogue, _) = create_signal(dialogue);
-            view! {
-                <Dialogue
-                    dialogue=dialogue
-                    context=ctx
-                    on_advance=on_advance
-                    on_done=next_event.clone()
-                />
-            }
-        })
-    };
-
-    view! { {view} }
 }

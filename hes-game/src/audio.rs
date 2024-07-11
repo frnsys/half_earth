@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use leptos::{provide_context, SignalGet};
+use leptos::{provide_context, SignalGet, SignalGetUntracked};
 use wasm_bindgen::prelude::*;
 
 use crate::state::Settings;
@@ -37,7 +37,7 @@ extern "C" {
 pub fn init_audio() {
     let manager = AudioManager::new();
     let (settings, _) = Settings::get();
-    if settings.get().sound {
+    if settings.get_untracked().sound {
         manager.mute();
     }
     provide_context(Rc::new(manager));

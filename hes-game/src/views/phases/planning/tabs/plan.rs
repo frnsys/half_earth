@@ -1,15 +1,25 @@
-use crate::views::cards::{MiniProcess, MiniProject};
-use crate::views::phases::planning::{ActivePlan, Processes, Projects};
-use crate::views::{parts::Help, tip, HasTip};
 use crate::{
-    display::text::AsText,
-    icons, state,
+    display::*,
+    icons,
+    state,
     state::{Phase, Tutorial},
-    t, write_state,
+    t,
+    ui,
+    views::{
+        cards::{MiniProcess, MiniProject},
+        phases::planning::{ActivePlan, Processes, Projects},
+        tip,
+        HasTip,
+        Help,
+    },
+    with_state,
+    write_state,
 };
 use enum_map::EnumMap;
-use hes_engine::kinds::{Feedstock, Output};
-use hes_engine::ProjectType;
+use hes_engine::{
+    kinds::{Feedstock, Output},
+    ProjectType,
+};
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
 use strum::IntoEnumIterator;
@@ -22,6 +32,18 @@ enum Page {
     All,
 }
 
+fn calc_slots() -> usize {
+    let width =
+        window().inner_width().unwrap().as_f64().unwrap();
+    if width > 680. {
+        9
+    } else if width > 560. {
+        7
+    } else {
+        5
+    }
+}
+
 #[component]
 pub fn Plan() -> impl IntoView {
     let save = write_state!(|state, ui| {
@@ -29,7 +51,7 @@ pub fn Plan() -> impl IntoView {
         // state.save();
     });
 
-    let (slots, set_slots) = create_signal(5);
+    let (slots, set_slots) = create_signal(calc_slots());
     let max_width = move || match slots.get() {
         5 => "s",
         7 => "m",
@@ -37,23 +59,19 @@ pub fn Plan() -> impl IntoView {
         _ => "l",
     };
     use_event_listener(use_document(), ev::resize, move |ev| {
-        let width = window().inner_width().unwrap().as_f64().unwrap();
-        if width > 680. {
-            set_slots.set(9);
-        } else if width > 560. {
-            set_slots.set(7);
-        } else {
-            set_slots.set(5);
-        }
+        set_slots.set(calc_slots());
     });
 
-    let processes_disabled = state!(|state, ui| ui.tutorial < Tutorial::Processes);
-    let processes_highlighted = state!(|state, ui| ui.tutorial == Tutorial::Processes);
-    let ready_disabled = state!(|state, ui| ui.tutorial < Tutorial::Ready);
-    let ready_highlighted = state!(|state, ui| ui.tutorial == Tutorial::Ready);
-    let projects_highlighted = state!(|state, ui| ui.tutorial == Tutorial::Projects);
+    let processes_disabled =
+        ui!(tutorial.lt(&Tutorial::Processes));
+    let processes_highlighted =
+        ui!(tutorial.eq(&Tutorial::Processes));
+    let ready_disabled = ui!(tutorial.lt(&Tutorial::Ready));
+    let ready_highlighted = ui!(tutorial.eq(&Tutorial::Ready));
+    let projects_highlighted =
+        ui!(tutorial.eq(&Tutorial::Projects));
 
-    let active_projects = state!(move |state, ui| {
+    let active_projects = with_state!(|state, ui| {
         state
             .world
             .projects
@@ -71,8 +89,9 @@ pub fn Plan() -> impl IntoView {
             projs.len()
         }
     };
-    let placeholders = move || (slots.get() - active_projects().len()).max(0);
-    let any_new_projects = state!(|state, ui| {
+    let placeholders =
+        move || (slots.get() - active_projects().len()).max(0);
+    let any_new_projects = with_state!(|state, ui| {
         state
             .world
             .projects
@@ -80,7 +99,7 @@ pub fn Plan() -> impl IntoView {
             .filter(|p| !p.locked)
             .any(|p| !ui.viewed.contains(&p.ref_id))
     });
-    let any_new_processes = state!(|state, ui| {
+    let any_new_processes = with_state!(|state, ui| {
         state
             .world
             .processes
@@ -89,7 +108,9 @@ pub fn Plan() -> impl IntoView {
             .any(|p| !ui.viewed.contains(&p.ref_id))
     });
     let max_for_output = move |output: Output| {
-        let state = expect_context::<RwSignal<crate::state::GameState>>();
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
         state
             .get()
             .game
@@ -109,20 +130,28 @@ pub fn Plan() -> impl IntoView {
             max_for_output(Output::AnimalCalories),
         ]
     };
-    let processes_over_limit = state!(|state, ui| {
+    let processes_over_limit = with_state!(|state, ui| {
         state
             .world
             .processes
             .iter()
-            .filter(|p| p.mix_share > 0 && p.mix_share > state.process_max_share(p))
+            .filter(|p| {
+                p.mix_share > 0
+                    && p.mix_share > state.process_max_share(p)
+            })
             .map(|p| t!(&p.name))
             .collect::<Vec<_>>()
     });
-    let production_shortages = state!(|state, ui| {
+
+    let produced = state!(produced);
+    let output_demand = state!(output_demand);
+    let production_shortages = move || {
         let mut total = 0;
-        let mut problems: EnumMap<Output, f32> = EnumMap::from_array([1.; 4]);
+        let mut problems: EnumMap<Output, f32> =
+            EnumMap::from_array([1.; 4]);
         for output in Output::iter() {
-            let met = state.produced[output] / state.output_demand[output];
+            let met = produced.get()[output]
+                / output_demand.get()[output];
             if met >= 0.99 {
                 continue;
             } else {
@@ -157,16 +186,16 @@ pub fn Plan() -> impl IntoView {
                 let (output, severity) = &problems[0];
                 let class = format!("shortage-{severity}");
                 Some(view! {
-                {t!(&format!("There is a {severity} production shortage"))}: <b class=class>output.title()</b>
+                    {t!(& format!("There is a {severity} production shortage"))}
+                    :
+                    <b class=class>output.title()</b>
                 })
             } else {
                 let list: Vec<_> = problems
                     .into_iter()
                     .map(|(output, severity)| {
                         let class = format!("shortage-{severity}");
-                        view! {
-                            <b class=class>output.title() ({t!(&severity)})</b>
-                        }
+                        view! { <b class=class>output.title() ({t!(&severity)})</b> }
                     })
                     .collect();
                 Some(view! {
@@ -175,21 +204,33 @@ pub fn Plan() -> impl IntoView {
                 })
             }
         }
-    });
+    };
 
-    let input_shortages = state!(|state, ui| {
-        let resources: Vec<_> = hes_engine::kinds::Resource::iter()
-            .filter(|res| {
-                let shortage = state.required_resources[*res] - state.resources[*res];
-                shortage > 0.
-            })
-            .collect();
-        let feedstock: Vec<_> = hes_engine::kinds::Feedstock::iter()
-            .filter(|res| {
-                let shortage = state.required_feedstocks[*res] - state.feedstocks[*res];
-                shortage > 0. && *res != Feedstock::Other && *res != Feedstock::Soil
-            })
-            .collect();
+    let resources = state!(resources);
+    let required_resources = state!(required_resources);
+    let feedstocks = state!(feedstocks);
+    let required_feedstocks = state!(required_feedstocks);
+    let input_shortages = move || {
+        let resources: Vec<_> =
+            hes_engine::kinds::Resource::iter()
+                .filter(|res| {
+                    let shortage = required_resources.get()
+                        [*res]
+                        - resources.get()[*res];
+                    shortage > 0.
+                })
+                .collect();
+        let feedstock: Vec<_> =
+            hes_engine::kinds::Feedstock::iter()
+                .filter(|res| {
+                    let shortage = required_feedstocks.get()
+                        [*res]
+                        - feedstocks.get()[*res];
+                    shortage > 0.
+                        && *res != Feedstock::Other
+                        && *res != Feedstock::Soil
+                })
+                .collect();
         let shortages = resources
             .into_iter()
             .map(|r| t!(r.title()))
@@ -202,7 +243,7 @@ pub fn Plan() -> impl IntoView {
                 t!("There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.", resources: shortages.join(", "))
             })
         }
-    });
+    };
 
     let enter_world = write_state!(|state, ui| {
         if ui.tutorial == Tutorial::Ready {
@@ -213,17 +254,26 @@ pub fn Plan() -> impl IntoView {
         ui.phase = Phase::Events;
     });
 
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     let (page, set_page) = create_signal(Page::Overview);
-    let close = write_state!(move |state, ui| {
-        let page = page.get();
-        if page == Page::Projects && ui.tutorial == Tutorial::ProjectsBack {
-            ui.tutorial.advance();
-        } else if page == Page::Processes && ui.tutorial == Tutorial::ProcessesBack {
-            ui.tutorial.advance();
-        }
+    let close = move || {
+        state.update(|state| {
+            let ui = &mut state.ui;
+            let page = page.get();
+            if page == Page::Projects
+                && ui.tutorial == Tutorial::ProjectsBack
+            {
+                ui.tutorial.advance();
+            } else if page == Page::Processes
+                && ui.tutorial == Tutorial::ProcessesBack
+            {
+                ui.tutorial.advance();
+            }
+            // this.$emit('page', 'Plan');
+        });
         set_page.set(Page::Overview);
-        // this.$emit('page', 'Plan');
-    });
+    };
     let select_page = move |page| {
         set_page.set(page);
         // this.$emit('page', page);
@@ -251,6 +301,18 @@ pub fn Plan() -> impl IntoView {
     let on_kind_change = move |kind: ProjectType| {};
     let on_change = move |_| {};
 
+    let card_slots = move || {
+        (0..placeholders())
+            .map(|i| {
+                view! {
+                    <div class="plan--change">
+                        <div class="plan--change-placeholder"></div>
+                    </div>
+                }
+            })
+            .collect::<Vec<_>>()
+    };
+
     view! {
         <div class="planning--page plan">
             <Show when=move || page.get() == Page::Projects>
@@ -266,7 +328,7 @@ pub fn Plan() -> impl IntoView {
                 />
             </Show>
             <Show when=move || page.get() == Page::Overview>
-                <div class="plan--changes" class=max_width>
+                <div class=format!("plan--changes {}", max_width())>
                     <Help
                         text=t!("Add some cards to get started")
                         x=0.5
@@ -307,20 +369,19 @@ pub fn Plan() -> impl IntoView {
                         }
                     />
 
-                    <div class="plan--change" v-for="i in placeholders">
-                        <div class="plan--change-placeholder"></div>
-                    </div>
-                    <div
-                        class="plan--change"
-                        v-if="activeProjects.length > this.slots"
-                    >
-                        <div
-                            class="plan--change-view-all btn"
-                            on:click=move |_| select_page(Page::All)
-                        >
-                            {t!("View All")}
+                    {card_slots}
+                    <Show when=move || {
+                        active_projects().len() > slots.get()
+                    }>
+                        <div class="plan--change">
+                            <div
+                                class="plan--change-view-all btn"
+                                on:click=move |_| select_page(Page::All)
+                            >
+                                {t!("View All")}
+                            </div>
                         </div>
-                    </div>
+                    </Show>
                 </div>
                 <div class="plan--production">
                     <div class="plan--production-icons">
@@ -338,16 +399,18 @@ pub fn Plan() -> impl IntoView {
                             </HasTip>
                         </Show>
                     </div>
-                    <For
-                        each=move || max_processes()
-                        key=|proc| proc.id
-                        children=move |process| {
-                            let (process, _) = create_signal(process);
-                            view! { <MiniProcess process/> }
-                        }
-                    />
 
-                    <div class="plan--production--processes"></div>
+                    <div class="plan--production--processes">
+                        <For
+                            each=move || max_processes()
+                            key=|proc| proc.id
+                            children=move |process| {
+                                let (process, _) = create_signal(process);
+                                view! { <MiniProcess process/> }
+                            }
+                        />
+
+                    </div>
                     <div
                         class="plan--production-button btn"
                         class:disabled=processes_disabled

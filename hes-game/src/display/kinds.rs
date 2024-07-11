@@ -1,5 +1,4 @@
-use std::fmt::Display;
-
+use crate::vars::Var;
 use hes_engine::{
     events::Flag,
     kinds::{Byproduct, Feedstock, Output, Resource},
@@ -7,8 +6,7 @@ use hes_engine::{
     regions::{Income, Latitude},
     ProjectType,
 };
-
-use super::Var;
+use std::fmt::Display;
 
 pub trait AsText {
     fn lower(&self) -> &'static str;
@@ -106,35 +104,73 @@ impl AsText for Feedstock {
 impl AsText for ProcessFeature {
     fn title(&self) -> &'static str {
         match self {
-            ProcessFeature::UsesPesticides => "This process use pesticides.",
-            ProcessFeature::UsesSynFertilizer => "This process uses synthetic fertilizers.",
-            ProcessFeature::UsesLivestock => "This process uses livestock.",
+            ProcessFeature::UsesPesticides => {
+                "This process use pesticides."
+            }
+            ProcessFeature::UsesSynFertilizer => {
+                "This process uses synthetic fertilizers."
+            }
+            ProcessFeature::UsesLivestock => {
+                "This process uses livestock."
+            }
             ProcessFeature::UsesOil => "This process uses oil.",
-            ProcessFeature::IsIntermittent => "This process is intermittent.",
-            ProcessFeature::CanMeltdown => "This process can meltdown.",
-            ProcessFeature::MakesNuclearWaste => "This process produces nuclear waste.",
-            ProcessFeature::IsSolar => "This process relies on the sun.",
-            ProcessFeature::IsCCS => "This process captures and stores carbon.",
-            ProcessFeature::IsCombustion => "This process involves combustion.",
-            ProcessFeature::IsFossil => "This process uses fossil fuels.",
-            ProcessFeature::IsLaborIntensive => "This process is especially labor-intensive.",
+            ProcessFeature::IsIntermittent => {
+                "This process is intermittent."
+            }
+            ProcessFeature::CanMeltdown => {
+                "This process can meltdown."
+            }
+            ProcessFeature::MakesNuclearWaste => {
+                "This process produces nuclear waste."
+            }
+            ProcessFeature::IsSolar => {
+                "This process relies on the sun."
+            }
+            ProcessFeature::IsCCS => {
+                "This process captures and stores carbon."
+            }
+            ProcessFeature::IsCombustion => {
+                "This process involves combustion."
+            }
+            ProcessFeature::IsFossil => {
+                "This process uses fossil fuels."
+            }
+            ProcessFeature::IsLaborIntensive => {
+                "This process is especially labor-intensive."
+            }
         }
     }
 
     fn lower(&self) -> &'static str {
         match self {
             ProcessFeature::IsSolar => "solar processes",
-            ProcessFeature::IsIntermittent => "intermittent processes",
-            ProcessFeature::CanMeltdown => "processes that may meltdown",
-            ProcessFeature::MakesNuclearWaste => "processes that produce nuclear waste",
-            ProcessFeature::IsLaborIntensive => "especially labor-intensive processes",
-            ProcessFeature::IsCombustion => "combustion processes",
+            ProcessFeature::IsIntermittent => {
+                "intermittent processes"
+            }
+            ProcessFeature::CanMeltdown => {
+                "processes that may meltdown"
+            }
+            ProcessFeature::MakesNuclearWaste => {
+                "processes that produce nuclear waste"
+            }
+            ProcessFeature::IsLaborIntensive => {
+                "especially labor-intensive processes"
+            }
+            ProcessFeature::IsCombustion => {
+                "combustion processes"
+            }
             ProcessFeature::IsFossil => "fossil fuel processes",
             ProcessFeature::UsesOil => "oil processes",
             ProcessFeature::IsCCS => "carbon capture processes",
-            ProcessFeature::UsesLivestock => "processes that use livestock",
-            ProcessFeature::UsesPesticides => "processes that use pesticides",
-            ProcessFeature::UsesSynFertilizer => "processes that use synthetic fertilizers",
+            ProcessFeature::UsesLivestock => {
+                "processes that use livestock"
+            }
+            ProcessFeature::UsesPesticides => {
+                "processes that use pesticides"
+            }
+            ProcessFeature::UsesSynFertilizer => {
+                "processes that use synthetic fertilizers"
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 use crate::{
     consts, icons, state, t,
     views::{cards::MiniNPC, tip, HasTip},
-    write_state,
+    with_state, write_state,
 };
 use hes_engine::events::Flag;
 use leptos::*;
@@ -10,8 +10,8 @@ use std::{collections::HashMap, sync::OnceLock};
 #[component]
 pub fn Parliament() -> impl IntoView {
     let total_seats = consts::PARLIAMENT_SEATS.iter().sum::<usize>();
-    let suspended = state!(|state, ui| { state.flags.contains(&Flag::ParliamentSuspended) });
-    let npcs = state!(|state, ui| {
+    let suspended = state!(flags.contains(&Flag::ParliamentSuspended));
+    let npcs = with_state!(|state, ui| {
         state
             .npcs
             .iter()
@@ -29,7 +29,7 @@ pub fn Parliament() -> impl IntoView {
         color: String,
         is_ally: bool,
     }
-    let seats = state!(move |state, ui| {
+    let seats = with_state!(|state, ui| {
         struct Seats {
             id: usize,
             name: String,
@@ -62,7 +62,7 @@ pub fn Parliament() -> impl IntoView {
         // We generate the assignment based on the current year
         // so that it's consistent
         let mut extra_seats = total_seats - used_seats;
-        let mut rng = mulberry32(state.world.year as u32);
+        let mut rng = mulberry32(state.world.year as u16);
         set_extra_seats.update(|extras| {
             extras.clear();
             while extra_seats > 0 {
@@ -126,7 +126,7 @@ pub fn Parliament() -> impl IntoView {
 
     view! {
         <div class="planning--page parliament">
-            <Show when=suspended>
+            <Show when=move || suspended.get()>
                 <div class="parliament-suspended">
                     {t!("Parliament Suspended")}
                 </div>
@@ -166,14 +166,14 @@ pub fn Parliament() -> impl IntoView {
 
 // Seedable RNG.
 // https://stackoverflow.com/a/47593316/1097920
-fn mulberry32(seed: u32) -> impl FnMut() -> f64 {
+fn mulberry32(seed: u16) -> impl FnMut() -> f64 {
     // Different seed for each game.
-    static GAME_SEED: OnceLock<u32> = OnceLock::new();
-    let game_seed: &u32 =
-        GAME_SEED.get_or_init(|| (js_sys::Math::random() * u32::MAX as f64).floor() as u32);
+    static GAME_SEED: OnceLock<u16> = OnceLock::new();
+    let game_seed: &u16 =
+        GAME_SEED.get_or_init(|| (js_sys::Math::random() * u16::MAX as f64).floor() as u16);
 
     // Combine the game seed with the provided seed.
-    let mut state = seed * game_seed;
+    let mut state: u32 = seed as u32 * (*game_seed as u32);
     move || {
         state = state.wrapping_add(0x6D2B79F5);
         let mut t = state;

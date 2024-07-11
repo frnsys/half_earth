@@ -1,25 +1,40 @@
 use leptos::*;
 
 use crate::{
-    i18n, icons, t,
-    views::{
-        phases::cutscene::Events,
-        tips::{tip, HasTip},
-    },
+    i18n,
+    icons,
+    state::GameState,
+    t,
+    views::{tip, Events, HasTip},
+    with_state,
+};
+use hes_engine::{
+    events::Phase as EventPhase,
+    game::ResolvedEvent,
 };
 
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
-    // TODO
-    let events = {
-        if lose {
-            vec![]
-            // game.roll.break("Start")
-        } else {
-            vec![]
-            // game.roll.end("Start")
-        }
-    };
+    let (events, set_events) = create_signal(vec![]);
+    create_effect(move |_| {
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
+        state.update(|state: &mut GameState| {
+            let events = if lose {
+                state.game.roll_events_for_phase(
+                    EventPhase::BreakStart,
+                    None,
+                )
+            } else {
+                state.game.roll_events_for_phase(
+                    EventPhase::EndStart,
+                    None,
+                )
+            };
+            set_events.set(events);
+        });
+    });
 
     let message = if lose {
         "This is not the end..."
@@ -51,9 +66,12 @@ pub fn End(lose: bool) -> impl IntoView {
         }
     }
 
-    let (show_start, set_show_start) = create_signal(events.is_empty());
-    let (badges, set_badges) = create_signal::<Vec<Badge>>(vec![]);
-    let (share_img_url, set_share_img_url) = create_signal::<Option<String>>(None);
+    // let (show_start, set_show_start) = create_signal(events.is_empty()); // TODO?
+    let (show_start, set_show_start) = create_signal(false);
+    let (badges, set_badges) =
+        create_signal::<Vec<Badge>>(vec![]);
+    let (share_img_url, set_share_img_url) =
+        create_signal::<Option<String>>(None);
 
     let start_run = move |_| {
         // TODO game.clearSave();

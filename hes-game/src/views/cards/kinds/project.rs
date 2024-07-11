@@ -1,31 +1,44 @@
 use super::super::card::*;
-use crate::views::effects::EffectThing;
 use crate::{
     consts,
-    display::text::AsText,
+    display::AsText,
     icons::{self, HasIcon},
     state,
     state::GameExt,
-    state_with, t,
-    views::{effects::active_effects, tip, Effects, HasTip},
+    t,
+    ui,
+    views::{
+        effects::{active_effects, DisplayEffect},
+        tip,
+        Effects,
+        HasTip,
+    },
 };
 use hes_engine::{
     events::Flag,
     flavor::Image,
     projects::{Group, Project},
-    years_remaining, ProjectType,
+    years_remaining,
+    ProjectType,
 };
 use leptos::*;
 
 #[component]
-pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
+pub fn ProjectCard(
+    #[prop(into)] project: Signal<Project>,
+) -> impl IntoView {
     let is_new = move || {
+        // TODO
         // return !state.viewed.includes(this.ref_id);
         false
     };
 
-    let card_bg = move || project.with(|project| card_color(&project.group).0);
-    let card_fg = move || project.with(|project| card_color(&project.group).1);
+    let card_bg = move || {
+        project.with(|project| card_color(&project.group).0)
+    };
+    let card_fg = move || {
+        project.with(|project| card_color(&project.group).1)
+    };
 
     let class = move || {
         project.with(|project| {
@@ -41,22 +54,38 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
         })
     };
 
-    let name = move || project.with(|project| t!(&project.name));
-    let group = move || project.with(|project| t!(project.group.into()));
-    let description = move || project.with(|project| t!(&project.flavor.description));
-    let implemented = move || project.with(|project| project.is_online());
-    let has_levels = move || project.with(|project| !project.upgrades.is_empty());
-    let level = move || project.with(|project| project.level + 1);
+    let name =
+        move || project.with(|project| t!(&project.name));
+    let group = move || {
+        project.with(|project| t!(project.group.into()))
+    };
+    let description = move || {
+        project.with(|project| t!(&project.flavor.description))
+    };
+    let implemented =
+        move || project.with(|project| project.is_online());
+    let has_levels = move || {
+        project.with(|project| !project.upgrades.is_empty())
+    };
+    let level =
+        move || project.with(|project| project.level + 1);
 
-    let remaining_cost = state!(move |state, ui| {
+    let plan_changes = ui!(plan_changes.clone());
+    let remaining_cost = move || {
         project.with(|project| {
             if implemented() {
                 0.to_string()
             } else if project.is_building() {
                 match project.kind {
-                    ProjectType::Policy => t!("1 planning cycle left"),
+                    ProjectType::Policy => {
+                        t!("1 planning cycle left")
+                    }
                     _ => {
-                        let years = years_remaining(project.progress, project.points, project.cost);
+                        let years = years_remaining(
+                            project.progress,
+                            project.points,
+                            project.cost,
+                        );
                         t!("{years} yrs left", years: years)
                     }
                 }
@@ -68,7 +97,9 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                 };
                 match project.kind {
                     ProjectType::Policy => {
-                        if let Some(changes) = ui.plan_changes.get(&project.id) {
+                        if let Some(changes) =
+                            plan_changes.get().get(&project.id)
+                        {
                             if changes.withdrawn {
                                 0.to_string()
                             } else {
@@ -84,7 +115,7 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                 }
             }
         })
-    });
+    };
     let cost_tip = move || {
         project.with(|project| {
             match project.kind {
@@ -97,24 +128,39 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
         })
     };
     let is_countdown = move || {
-        project.with(|project| project.kind != ProjectType::Policy || project.is_building())
+        project.with(|project| {
+            project.kind != ProjectType::Policy
+                || project.is_building()
+        })
     };
     let show_pc_icon = move || {
-        project.with(|project| project.kind == ProjectType::Policy || !project.is_building())
+        project.with(|project| {
+            project.kind == ProjectType::Policy
+                || !project.is_building()
+        })
     };
-    let is_building = move || project.with(|project| project.is_building());
-    let majority_satisfied = state!(move |state, ui| {
-        if state.flags.contains(&Flag::ParliamentSuspended) {
+    let is_building =
+        move || project.with(|project| project.is_building());
+
+    let parliament_suspended =
+        state!(flags.contains(&Flag::ParliamentSuspended));
+    let player_seats = state!(player_seats());
+    let majority_satisfied = move || {
+        if parliament_suspended.get() {
             true
         } else {
             project.with(|project| {
-                let player_seats = state.player_seats() as f32;
+                let player_seats = player_seats.get() as f32;
                 player_seats > project.required_majority
             })
         }
-    });
-    let warn_majority =
-        move || project.with(|project| project.required_majority > 0. && !majority_satisfied());
+    };
+    let warn_majority = move || {
+        project.with(|project| {
+            project.required_majority > 0.
+                && !majority_satisfied()
+        })
+    };
     let image = move || {
         project.with(|project| {
             format!(
@@ -124,8 +170,13 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
         })
     };
     let has_points = move || {
-        project.with(|project| project.kind != ProjectType::Policy && project.is_building())
+        project.with(|project| {
+            project.kind != ProjectType::Policy
+                && project.is_building()
+        })
     };
+    let proj_points_test =
+        move || project.with(|project| project.points);
     let points_display = move || {
         project.with(move |project| {
             (0..consts::MAX_POINTS).map(|i| {
@@ -134,40 +185,41 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                 let icon = project.kind.icon();
                 view! {
                     <HasTip tip>
-                        <img
-                            class="pip"
-                            class:empty-point=empty
-                            src=icon
-                        />
+                        <img class="pip" class:empty-point=empty src=icon/>
                     </HasTip>
                 }
             }).collect::<Vec<_>>()
         })
     };
 
-    let has_opposers = state_with!(|state, ui, project| {
-        project
-            .opposers
-            .iter()
-            .map(|id| &state.npcs[*id])
-            .filter(|npc| !npc.locked)
-            .next()
-            .is_some()
-    });
-    let has_supporters = state_with!(|state, ui, project| {
-        project
-            .supporters
-            .iter()
-            .map(|id| &state.npcs[*id])
-            .filter(|npc| !npc.locked)
-            .next()
-            .is_some()
-    });
-
-    let opposers = state_with!(|state, ui, project| {
-        project.opposers.iter().map(|id| &state.npcs[*id])
-            .filter(|npc| !npc.locked)
-            .cloned()
+    let npcs = state!(npcs.clone());
+    let opposers = move || {
+        let npcs = npcs.get();
+        project.with(|project| {
+            project
+                .opposers
+                .iter()
+                .map(|id| npcs[*id].clone())
+                .filter(|npc| !npc.locked)
+                .collect::<Vec<_>>()
+        })
+    };
+    let supporters = move || {
+        let npcs = npcs.get();
+        project.with(|project| {
+            project
+                .supporters
+                .iter()
+                .map(|id| npcs[*id].clone())
+                .filter(|npc| !npc.locked)
+                .collect::<Vec<_>>()
+        })
+    };
+    let has_opposers = move || !opposers().is_empty();
+    let has_supporters = move || !supporters().is_empty();
+    let opposers_views = move || {
+        opposers()
+            .into_iter()
             .map(|npc| {
                 let tip = tip(npc.icon(), t!("{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.",
                         name: t!(&npc.name),
@@ -175,15 +227,14 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                         ));
                 view! {
                     <HasTip tip>
-                        <img src=npc.icon() />
+                        <img src=npc.icon()/>
                     </HasTip>
                 }
         }).collect::<Vec<_>>()
-    });
-    let supporters = state_with!(|state, ui, project| {
-        project.supporters.iter().map(|id| &state.npcs[*id])
-            .filter(|npc| !npc.locked)
-            .cloned()
+    };
+    let supporters_views = move || {
+        supporters()
+            .into_iter()
             .map(|npc| {
                 let img = format!("/public/assets/characters/{}.png", npc.name);
                 let tip = tip(npc.icon(), t!("{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.",
@@ -192,51 +243,92 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                         ));
                 view! {
                     <HasTip tip>
-                        <img src=npc.icon() />
+                        <img src=npc.icon()/>
                     </HasTip>
                 }
         }).collect::<Vec<_>>()
-    });
-    let passed =
-        move || project.with(|project| project.kind == ProjectType::Policy && project.is_online());
-    let effects = move || project.with(|project| active_effects(project));
-    let upgrade_queued =
-        state_with!(|state, ui, project| { ui.queued_upgrades.get(&project.id) == Some(&true) });
-    let next_upgrade = state_with!(|state, ui, project| {
-        if project.upgrades.is_empty() {
-            None
-        } else {
-            let idx = project.level;
-            if idx >= project.upgrades.len() {
+    };
+    let passed = move || {
+        project.with(|project| {
+            project.kind == ProjectType::Policy
+                && project.is_online()
+        })
+    };
+    let effects =
+        move || project.with(|project| active_effects(project));
+
+    let queued_upgrades = ui!(queued_upgrades.clone());
+    let upgrade_queued = move || {
+        project.with(|project| {
+            queued_upgrades.get().get(&project.id)
+                == Some(&true)
+        })
+    };
+    let next_upgrade = move || {
+        project.with(|project| {
+            if project.upgrades.is_empty() {
                 None
             } else {
-                let upgrade = &project.upgrades[idx];
-                let mut cost = upgrade.cost;
-                if let Some(changes) = ui.plan_changes.get(&project.id) {
-                    if changes.downgrades > 0 {
-                        cost = 0;
+                let idx = project.level;
+                if idx >= project.upgrades.len() {
+                    None
+                } else {
+                    let upgrade = &project.upgrades[idx];
+                    let mut cost = upgrade.cost;
+                    if let Some(changes) =
+                        plan_changes.get().get(&project.id)
+                    {
+                        if changes.downgrades > 0 {
+                            cost = 0;
+                        }
                     }
+                    let effects: Vec<DisplayEffect> = upgrade
+                        .effects
+                        .iter()
+                        .map(|e| e.into())
+                        .collect();
+                    Some((cost, effects))
                 }
-                let effects: Vec<EffectThing> = upgrade.effects.iter().map(|e| e.into()).collect();
-                Some((cost, effects))
             }
-        }
-    });
-    let has_upgrade =
-        move || project.with(|project| project.is_active() && next_upgrade().is_some());
-    let can_downgrade =
-        move || project.with(|project| project.kind == ProjectType::Policy && project.level > 0);
-    let has_downgrade = move || project.with(|project| project.is_active() && can_downgrade());
+        })
+    };
+    let has_upgrade = move || {
+        project.with(|project| {
+            project.is_active() && next_upgrade().is_some()
+        })
+    };
+    let can_downgrade = move || {
+        project.with(|project| {
+            project.kind == ProjectType::Policy
+                && project.level > 0
+        })
+    };
+    let has_downgrade = move || {
+        project.with(|project| {
+            project.is_active() && can_downgrade()
+        })
+    };
     let prev_upgrade = move || {
         if can_downgrade() {
             project.with(|project| {
                 let idx = project.level as isize - 2;
                 if idx < 0 {
-                    let effects: Vec<EffectThing> = project.effects.iter().map(EffectThing::from).collect();
+                    let effects: Vec<DisplayEffect> = project
+                        .effects
+                        .iter()
+                        .map(DisplayEffect::from)
+                        .collect();
                     Some((0, effects))
                 } else {
-                    if let Some(upgrade) = project.upgrades.get(idx as usize) {
-                        let effects: Vec<EffectThing> = upgrade.effects.iter().map(EffectThing::from).collect();
+                    if let Some(upgrade) =
+                        project.upgrades.get(idx as usize)
+                    {
+                        let effects: Vec<DisplayEffect> =
+                            upgrade
+                                .effects
+                                .iter()
+                                .map(DisplayEffect::from)
+                                .collect();
                         Some((upgrade.cost, effects))
                     } else {
                         None
@@ -254,7 +346,11 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
             ProjectType::Policy => t!("Passing"),
         })
     };
-    let image_attrib = move || project.with(|project| project.flavor.image.attribution.clone());
+    let image_attrib = move || {
+        project.with(|project| {
+            project.flavor.image.attribution.clone()
+        })
+    };
 
     view! {
         <Card
@@ -263,7 +359,7 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
             class=class.into_signal()
         >
             <Header slot>
-                <div>{group}</div>
+                <div>{group} {proj_points_test}</div>
                 <Show when=is_new>
                     <img class="new-card-icon" src="/public/assets/new.svg"/>
                 </Show>
@@ -322,10 +418,10 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                     </div>
                 </Show>
                 <Show when=has_opposers>
-                    <div class="opposers">{opposers}</div>
+                    <div class="opposers">{opposers_views}</div>
                 </Show>
                 <Show when=has_supporters>
-                    <div class="supporters">{supporters}</div>
+                    <div class="supporters">{supporters_views}</div>
                 </Show>
             </Figure>
 
@@ -378,7 +474,9 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
             </Body>
 
             <Name slot>{name}</Name>
-            <TopBack slot>{description}</TopBack>
+            <TopBack slot>
+                <p class="card-desc">{description}</p>
+            </TopBack>
             <BottomBack slot>
                 <Show
                     when=move || has_opposers() || has_supporters()
@@ -395,13 +493,17 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
                             <Show when=has_opposers>
                                 <div class="political-effects-opposers">
                                     <div class="political-effects-label">{t!("Nay")}</div>
-                                    <div class="political-effects-portraits">{opposers}</div>
+                                    <div class="political-effects-portraits">
+                                        {opposers_views}
+                                    </div>
                                 </div>
                             </Show>
                             <Show when=has_supporters>
                                 <div class="political-effects-supporters">
                                     <div class="political-effects-label">{t!("Yea")}</div>
-                                    <div class="political-effects-portraits">{supporters}</div>
+                                    <div class="political-effects-portraits">
+                                        {supporters_views}
+                                    </div>
                                 </div>
                             </Show>
                         </div>
@@ -416,21 +518,23 @@ pub fn ProjectCard(#[prop(into)] project: Signal<Project>) -> impl IntoView {
     }
 }
 
-pub fn card_color(group: &Group) -> (&'static str, &'static str) {
+pub fn card_color(
+    group: &Group,
+) -> (&'static str, &'static str) {
     match group {
         Group::Restoration => ("#247f24", "#000000"),
         Group::Protection => ("#53a553", "#000000"),
         Group::Nuclear => ("orange", "#000000"),
         Group::Agriculture => ("wheat", "#000000"),
-        Group::Control => ("#d83535'", "#000000"),
-        Group::Population => ("#6b6bec'", "#000000"),
-        Group::Food => ("#f3ff56'", "#000000"),
+        Group::Control => ("#d83535", "#000000"),
+        Group::Population => ("#6b6bec", "#000000"),
+        Group::Food => ("#f3ff56", "#000000"),
         Group::Space => ("#250441", "#d0c0e4"),
-        Group::Geoengineering => ("#61688b'", "#000000"),
-        Group::Electrification => ("#fcba03'", "#000000"),
-        Group::Behavior => ("#b8ad91'", "#000000"),
+        Group::Geoengineering => ("#61688b", "#000000"),
+        Group::Electrification => ("#fcba03", "#000000"),
+        Group::Behavior => ("#b8ad91", "#000000"),
         Group::Limits => ("#4B5A85", "#ffffff"),
-        Group::Energy => ("#fee94a'", "#000000"),
+        Group::Energy => ("#fee94a", "#000000"),
         Group::Materials => ("#5f2929", "#ffffff"),
         Group::Buildings => ("#8f7ea9", "#000000"),
         Group::Cities => ("#566b6a", "#ffffff"),

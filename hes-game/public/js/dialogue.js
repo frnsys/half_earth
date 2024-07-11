@@ -51,21 +51,23 @@ function revealChars(parentEl, chars, {onStart}) {
         resolve();
       }
     }, 100/speed);
-    if (onStart) onStart(revealAnim);
+    if (onStart) onStart(() => {
+      clearInterval(revealAnim);
+    });
   });
 }
 
-function playText(textEl, text, onStart, onFinish) {
+export function playText(textEl, text, onStart, onFinish) {
   textEl.innerHTML = '';
   let el = document.createElement('div');
   el.innerHTML = text;
-  if text.length > 0 {
+  if (text.length > 0) {
     revealChars(textEl, extractChars(el), {
       onStart
     }).then(() => {
       onFinish();
     });
-  } {
+  } else {
     onFinish();
   }
 }

@@ -1,30 +1,53 @@
 import * as THREE from 'three';
 import Hexasphere from 'hexasphere.js';
-import ICONS from '/src/components/icons';
-import iconNames from 'content/icons.json';
-import debug from '../debug';
 
-import tileHeights from '/assets/surface/tile_heights.json';
-import tilesToRegions from '/assets/surface/tiles_to_regions.json';
+const ICONS = {
+  "political_capital": "/public/assets/icons/pips/political_capital.png",
+  "content": "/public/assets/icons/pips/content.png",
+  "discontent": "/public/assets/icons/pips/discontent.png",
+  "heatwave__3": "/public/assets/icons/pips/heatwave__3.png",
+  "wildfires": "/public/assets/icons/pips/wildfires.png",
+  "famine": "/public/assets/icons/pips/famine.png",
+  "resistance__2": "/public/assets/icons/pips/resistance__2.png",
+  "co2_leak": "/public/assets/icons/pips/co2_leak.png",
+  "flood__2": "/public/assets/icons/pips/flood__2.png",
+  "power": "/public/assets/icons/pips/power.png",
+  "flood": "/public/assets/icons/pips/flood.png",
+  "hurricane": "/public/assets/icons/pips/hurricane.png",
+  "crop_failure": "/public/assets/icons/pips/crop_failure.png",
+  "disease": "/public/assets/icons/pips/disease.png",
+  "attacks": "/public/assets/icons/pips/attacks.png",
+  "wildfires__3": "/public/assets/icons/pips/wildfires__3.png",
+  "wildfires__2": "/public/assets/icons/pips/wildfires__2.png",
+  "power__2": "/public/assets/icons/pips/power__2.png",
+  "resistance": "/public/assets/icons/pips/resistance.png",
+  "heatwave": "/public/assets/icons/pips/heatwave.png",
+  "flood__3": "/public/assets/icons/pips/flood__3.png",
+  "resistance__3": "/public/assets/icons/pips/resistance__3.png",
+  "heatwave__2": "/public/assets/icons/pips/heatwave__2.png",
+};
+
+import tileHeights from '../../assets/surface/tile_heights.json';
+import tilesToRegions from '../..//assets/surface/tiles_to_regions.json';
 
 const raycaster = new THREE.Raycaster();
 const vertAxis = new THREE.Vector3(0,1,0);
 
 // For showing tile indices
-const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true, opacity: debug.showTiles ? 0.5 : 0.0});
+const hexMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee, transparent: true, opacity: 0.0});
 const highlightedHexMaterial= new THREE.MeshBasicMaterial({color: 0xfc4903, transparent: true, opacity: 0.5});
 
 // For displaying text
 const loader = new THREE.FontLoader();
 let threeFont;
-loader.load('/assets/fonts/helvetiker_bold.typeface.json', (font) => {
+loader.load('/public/assets/fonts/helvetiker_bold.typeface.json', (font) => {
   threeFont = font;
 });
 const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: true});
 
 // Load icons
 const texLoader = new THREE.TextureLoader();
-const icons = iconNames.concat(['political_capital', 'discontent', 'content']).reduce((acc, name) => {
+const icons = Object.keys(ICONS).reduce((acc, name) => {
   const map = texLoader.load(ICONS[name]);
   const iconMat = new THREE.SpriteMaterial({map});
   acc[name] = iconMat;
@@ -101,9 +124,9 @@ class HexSphere {
           tile.mesh.position.add(tile.normal.multiplyScalar(height));
         }
 
-        if (debug.showTiles) {
-          this.showText(`${idx}`, idx, {dist: 2.0});
-        }
+        // if (debug.showTiles) {
+        //   this.showText(`${idx}`, idx, {dist: 2.0});
+        // }
         this.selectables.push(tile.mesh);
       }
     });

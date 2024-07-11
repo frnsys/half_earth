@@ -1,5 +1,14 @@
-use super::{parts::IntensityBar, Credits};
-use crate::{display::intensity, icons, state, state::Settings, t};
+use crate::{
+    icons,
+    state,
+    state::Settings,
+    t,
+    ui,
+    views::{
+        intensity::{self, IntensityBar},
+        splash::Credits,
+    },
+};
 use js_sys::Date;
 use leptos::*;
 use leptos_use::{use_interval_fn, utils::Pausable};
@@ -32,22 +41,36 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
         settings.hide_help
     };
 
-    let year = state!(|game, _| game.world.year);
-    let pc = state!(|game, _| game.political_capital.max(0));
-    let temp = state!(|game, _| format!("{:+.1}C", game.world.temperature));
-    let emissions = state!(|game, _| format!("{:.1}Gt", game.emissions_gt()));
-    let contentedness =
-        state!(|game, _| { intensity::scale(game.outlook(), intensity::Variable::WorldOutlook) });
-    let extinction = state!(|game, _| {
-        intensity::scale(game.world.extinction_rate, intensity::Variable::Extinction)
-    });
-    let locale = state!(|game, ui| {
-        let start_year = ui.start_year;
-        let year = game.world.year;
-        let idx = ((year - start_year) as f32 / 5.).round() as usize % LOCALES.len();
+    let year = state!(world.year);
+    let pc = state!(political_capital.max(0));
+    let outlook = state!(outlook());
+    let emissions = state!(emissions_gt());
+    let extinction = state!(world.extinction_rate);
+    let temperature = state!(world.temperature);
+    let start_year = ui!(start_year);
+
+    let temp = move || format!("{:+.1}C", temperature.get());
+    let emissions = move || format!("{:.1}Gt", emissions.get());
+    let contentedness = move || {
+        intensity::scale(
+            outlook.get(),
+            intensity::Variable::WorldOutlook,
+        )
+    };
+    let extinction = move || {
+        intensity::scale(
+            extinction.get(),
+            intensity::Variable::Extinction,
+        )
+    };
+    let locale = move || {
+        let elapsed = year.get() - start_year.get();
+        let idx = (elapsed as f32 / 5.).round() as usize
+            % LOCALES.len();
         &LOCALES[idx]
-    });
-    let time_place = move || format!("{}, {}", locale(), year());
+    };
+    let time_place =
+        move || format!("{}, {}", locale(), year.get());
 
     let (show_credits, set_show_credits) = create_signal(false);
 
@@ -194,7 +217,11 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
 #[component]
 fn Clock() -> impl IntoView {
     let now = Date::new_0();
-    let (time, set_time) = create_signal((now.get_seconds(), now.get_minutes(), now.get_hours()));
+    let (time, set_time) = create_signal((
+        now.get_seconds(),
+        now.get_minutes(),
+        now.get_hours(),
+    ));
 
     let Pausable {
         pause,
@@ -203,7 +230,11 @@ fn Clock() -> impl IntoView {
     } = use_interval_fn(
         move || {
             let now = Date::new_0();
-            let now = (now.get_seconds(), now.get_minutes(), now.get_hours());
+            let now = (
+                now.get_seconds(),
+                now.get_minutes(),
+                now.get_hours(),
+            );
             set_time.set(now);
         },
         1000,
@@ -220,8 +251,9 @@ fn Clock() -> impl IntoView {
         format!("rotate({}deg)", deg)
     };
     let hours_rotate = move || {
-        let (hours, mins, _) = time.get();
-        let deg = (hours as f32 / 12. * 360.) + (mins as f32 / 60. * 360. + 90.);
+        let (_, mins, hours) = time.get();
+        let deg = (hours as f32 / 12. * 360.)
+            + (mins as f32 / 60. * 360. + 90.);
         format!("rotate({}deg)", deg)
     };
 

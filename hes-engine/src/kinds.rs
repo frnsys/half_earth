@@ -234,6 +234,16 @@ define_enum_map!(Resource {
     Fuel
 });
 
+impl Resource {
+    pub fn as_output(&self) -> Option<Output> {
+        match self {
+            Resource::Electricity => Some(Output::Electricity),
+            Resource::Fuel => Some(Output::Fuel),
+            _ => None,
+        }
+    }
+}
+
 define_enum_map!(Byproduct {
     Co2,
     Ch4,

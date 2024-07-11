@@ -1,10 +1,18 @@
 use leptos::*;
 
 use crate::{
-    display::{intensity, text::AsText},
+    display::*,
     icons::{self, HasIcon},
-    state_with, t,
-    views::{effects::active_effects, parts::IntensityIcon, tip, Dialogue, Effects, HasTip},
+    t,
+    views::{
+        effects::active_effects,
+        events::Dialogue,
+        intensity::{self, IntensityIcon},
+        tip,
+        Effects,
+        HasTip,
+    },
+    with_state,
 };
 use hes_engine::{
     flavor::{ProjectFlavor, RegionFlavor},
@@ -17,23 +25,33 @@ pub fn Update(
     #[prop(into)] update: Signal<EngineUpdate>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
-    let init_can_close = update.with(|update| update.is_region());
-    let (can_close, set_can_close) = create_signal(init_can_close);
+    let init_can_close =
+        update.with(|update| update.is_region());
+    let (can_close, set_can_close) =
+        create_signal(init_can_close);
 
-    let is_region = move || update.with(|update| update.is_region());
+    let is_region =
+        move || update.with(|update| update.is_region());
 
     let title = move || {
         update.with(|update| match update {
-            EngineUpdate::Project { .. } => t!("Project Completed"),
+            EngineUpdate::Project { .. } => {
+                t!("Project Completed")
+            }
             EngineUpdate::Policy { .. } => t!("Policy Outcome"),
-            EngineUpdate::Region { up: true, .. } => t!("Region Developed"),
-            EngineUpdate::Region { up: false, .. } => t!("Region Contracted"),
+            EngineUpdate::Region { up: true, .. } => {
+                t!("Region Developed")
+            }
+            EngineUpdate::Region { up: false, .. } => {
+                t!("Region Contracted")
+            }
         })
     };
 
-    let image_url = state_with!(|state, ui, update| {
+    let image_url = with_state!(|state, ui, update| {
         let fname = match update {
-            EngineUpdate::Project { id } | EngineUpdate::Policy { id } => {
+            EngineUpdate::Project { id }
+            | EngineUpdate::Policy { id } => {
                 let proj = &state.world.projects[*id];
                 &proj.flavor.image.fname
             }
@@ -45,9 +63,10 @@ pub fn Update(
         format!("url(/public/assets/content/images/{}", fname)
     });
 
-    let image_attrib = state_with!(|state, ui, update| {
+    let image_attrib = with_state!(|state, ui, update| {
         match update {
-            EngineUpdate::Project { id } | EngineUpdate::Policy { id } => {
+            EngineUpdate::Project { id }
+            | EngineUpdate::Policy { id } => {
                 let proj = &state.world.projects[*id];
                 proj.flavor.image.attribution.clone()
             }
@@ -58,9 +77,10 @@ pub fn Update(
         }
     });
 
-    let name = state_with!(|state, ui, update| {
+    let name = with_state!(|state, ui, update| {
         match update {
-            EngineUpdate::Project { id } | EngineUpdate::Policy { id } => {
+            EngineUpdate::Project { id }
+            | EngineUpdate::Policy { id } => {
                 let proj = &state.world.projects[*id];
                 t!(&proj.name)
             }
@@ -71,9 +91,10 @@ pub fn Update(
         }
     });
 
-    let outcomes = state_with!(|state, ui, update| {
+    let outcomes = with_state!(|state, ui, update| {
         match update {
-            EngineUpdate::Project { id } | EngineUpdate::Policy { id } => {
+            EngineUpdate::Project { id }
+            | EngineUpdate::Policy { id } => {
                 let proj = &state.world.projects[*id];
 
                 let effects = active_effects(proj);
@@ -112,22 +133,34 @@ pub fn Update(
                 };
 
                 // Ugh
-                let change = if *up { "increased" } else { "contracted" };
+                let change = if *up {
+                    "increased"
+                } else {
+                    "contracted"
+                };
                 let html = t!(&format!("This region's income level has {change} to <strong>{{income}}</strong>. Demand for <img src='{{iconElec}}'>electricity, <img src='{{iconFuel}}'>fuel, <img src='{{iconPCals}}'>plant and <img src='{{iconACals}}'>animal-based food has been updated."),
                     income: region.income.lower(),
                     iconFuel: icons::FUEL,
                     iconElec: icons::ELECTRICITY,
                     iconPCals: icons::PLANT_CALORIES,
                     iconACals: icons::ANIMAL_CALORIES);
-                let prev_tip = tip(icons::WEALTH, t!("This region's previous income level."));
-                let next_tip = tip(icons::WEALTH, t!("This region's new income level."));
+                let prev_tip = tip(
+                    icons::WEALTH,
+                    t!("This region's previous income level."),
+                );
+                let next_tip = tip(
+                    icons::WEALTH,
+                    t!("This region's new income level."),
+                );
 
                 let mut prev_region = region.clone();
                 prev_region.set_income_level(prev_income);
 
-                let per_capita_demand = state.world.output_demand;
+                let per_capita_demand =
+                    state.world.output_demand;
                 let demand = region.demand(&per_capita_demand);
-                let prev_demand = prev_region.demand(&per_capita_demand);
+                let prev_demand =
+                    prev_region.demand(&per_capita_demand);
                 let pop = region.population;
                 let demand_changes = demand.items().map(|(output, demand)| {
                     let region_per_capita_demand = demand / pop;
@@ -142,12 +175,12 @@ pub fn Update(
                         <div class="event--icon-change">
                             <HasTip tip=prev_tip>
                               <IntensityIcon
-                                icon=output.icon() intensity=prev_intensity />
+                                icon=output.icon() intensity=move || prev_intensity />
                             </HasTip>
                           <img src=icons::ARROW_RIGHT_LIGHT />
                           <HasTip tip=next_tip>
                               <IntensityIcon
-                                icon=output.icon() intensity=intensity />
+                                icon=output.icon() intensity=move || intensity />
                             </HasTip>
                         </div>
 
@@ -155,13 +188,13 @@ pub fn Update(
                 }).to_vec();
 
                 view! {
-                    <div class="event--outcome" inner-html=html />
+                    <div class="event--outcome" inner_html=html />
                     <div class="event--icon-changes">
                         <div class="event--icon-change">
                             <HasTip tip=prev_tip>
                                 <IntensityIcon
                                     icon=icons::WEALTH
-                                    intensity=prev_income + 1
+                                    intensity=move || prev_income + 1
                                     invert=true
                                 />
                             </HasTip>
@@ -169,7 +202,7 @@ pub fn Update(
                             <HasTip tip=next_tip>
                                 <IntensityIcon
                                     icon=icons::WEALTH
-                                    intensity=next_income + 1
+                                    intensity=move || next_income + 1
                                     invert=true
                                 />
                             </HasTip>

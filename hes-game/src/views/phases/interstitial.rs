@@ -4,15 +4,23 @@ use leptos::*;
 
 use crate::{
     anim::fade_out,
-    display::intensity,
-    i18n, icons, state,
+    i18n,
+    icons,
+    state,
     state::Phase,
+    state_rw,
     t,
+    ui,
+    ui_rw,
     views::{
-        phases::cutscene::Events,
+        events::Events,
+        intensity,
         tips::{HasTip, Tip},
     },
-    write_state,
+};
+use hes_engine::{
+    events::Phase as EventPhase,
+    game::ResolvedEvent,
 };
 
 struct Locale {
@@ -104,7 +112,7 @@ fn describe_parliament(pc: isize) -> String {
     } else {
         "trusts you completely"
     };
-    let text = format!("Parliament {}", desc);
+    let text = format!("Parliament {}.", desc);
     t!(&text)
 }
 
@@ -120,12 +128,15 @@ fn describe_warming(emissions: f32, temp: f32) -> String {
     } else {
         ""
     };
-    let text = format!("The world is {}", desc);
+    let text = format!("The world is {}.", desc);
     t!(&text)
 }
 
 fn describe_extinction(extinction_rate: f32) -> String {
-    let idx = intensity::scale(extinction_rate, intensity::Variable::Extinction);
+    let idx = intensity::scale(
+        extinction_rate,
+        intensity::Variable::Extinction,
+    );
     const DESCS: &[&str] = &[
         "flourishing",
         "recovering",
@@ -135,17 +146,21 @@ fn describe_extinction(extinction_rate: f32) -> String {
         "plummeting",
     ];
     let idx = idx.min(DESCS.len() - 1).max(0);
-    let text = format!("Biodiversity is {}", DESCS[idx]);
+    let text = format!("Biodiversity is {}.", DESCS[idx]);
     t!(&text)
 }
 
 fn describe_outlook(outlook: f32) -> String {
-    let idx = intensity::scale(outlook, intensity::Variable::WorldOutlook);
+    let idx = intensity::scale(
+        outlook,
+        intensity::Variable::WorldOutlook,
+    );
     const DESCS: &[&str] = &[
-        "furious", "upset", "unhappy", "content", "happy", "ecstatic",
+        "furious", "upset", "unhappy", "content", "happy",
+        "ecstatic",
     ];
     let idx = idx.min(DESCS.len() - 1).max(0);
-    let text = format!("People are {}", DESCS[idx]);
+    let text = format!("People are {}.", DESCS[idx]);
     t!(&text)
 }
 
@@ -156,18 +171,46 @@ pub fn Interstitial() -> impl IntoView {
         // window.audioManager.stopAtmosphere(true);
     });
 
-    // TODO
-    // let events = game.roll.interstitial("Start");
-    // if (game.gameWon()) {
-    //     events = events.concat(game.roll.interstitial("Win"));
-    // }
-    let events = vec![];
+    let (events, set_events) = create_signal(vec![]);
+
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
+    state.update(|state| state.initialize_year());
+    create_effect(move |_| {
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
+        state.update(|state| {
+            let events = if state.won() {
+                state.game.roll_events_for_phase(
+                    EventPhase::InterstitialWin,
+                    None,
+                )
+            } else {
+                state.game.roll_events_for_phase(
+                    EventPhase::InterstitialStart,
+                    None,
+                )
+            };
+            set_events.set(events);
+        });
+    });
 
     let (ready, set_ready) = create_signal(false);
 
-    let number = state!(|game, ui| {
-        ((game.world.year - ui.start_year) as f32 / 5. + 1.).round() as usize
-    });
+    let year = state!(world.year);
+    let pc = state!(political_capital.max(0));
+    let outlook = state!(outlook());
+    let emissions = state!(emissions_gt());
+    let extinction = state!(world.extinction_rate);
+    let temperature = state!(world.temperature);
+    let start_year = ui!(start_year);
+    let death_year = state!(death_year);
+
+    let number = move || {
+        ((year.get() - start_year.get()) as f32 / 5. + 1.)
+            .round() as usize
+    };
     let title = move || {
         let n = number();
         let ext = match n {
@@ -190,30 +233,20 @@ pub fn Interstitial() -> impl IntoView {
         // TODO
         false
     };
-    let parliament = state!(|game, ui| {
-        let pc = game.political_capital;
-        describe_parliament(pc)
-    });
-    let world = state!(|game, ui| {
-        let temp = game.world.temperature;
-        let emissions = game.emissions_gt();
-        describe_warming(emissions, temp)
-    });
-    let biodiversity = state!(|game, ui| {
-        let er = game.world.extinction_rate;
-        describe_extinction(er)
-    });
-    let contentedness = state!(|game, ui| {
-        let outlook = game.outlook();
-        describe_outlook(outlook)
-    });
-    let years_left = state!(|game, ui| {
-        let years_left = (game.death_year - game.world.year).max(0);
+    let parliament = move || describe_parliament(pc.get());
+    let world = move || {
+        describe_warming(emissions.get(), temperature.get())
+    };
+    let biodiversity =
+        move || describe_extinction(extinction.get());
+    let contentedness = move || describe_outlook(outlook.get());
+    let years_left = move || {
+        let years_left = (death_year.get() - year.get()).max(0);
         t!(
             "You have {yearsLeft} years left in your tenure.",
             yearsLeft: years_left
         )
-    });
+    };
 
     // Wait a beat before showing the event
     set_timeout(
@@ -226,23 +259,21 @@ pub fn Interstitial() -> impl IntoView {
     // window.audioManager.stopSoundtrack(true);
     // window.audioManager.startAtmosphere(`/assets/environments/ambience/${this.locale.ambience}`, true)
 
-    let (start_anim, opacity) = fade_out(
-        1000.,
-        write_state!(move |game, ui| {
-            // state.game.save_meta(); // TODO
-            if game_over() {
-                ui.phase = Phase::GameOver;
-            } else if game_win() {
-                ui.phase = Phase::GameWin;
-            } else {
-                ui.phase = Phase::Planning;
-            }
-        }),
-    );
+    let (_, set_phase) = ui_rw!(phase);
+    let (anim, opacity) = fade_out(1000., move || {
+        // state.game.save_meta(); // TODO
+        if game_over() {
+            set_phase.set(Phase::GameOver);
+        } else if game_win() {
+            set_phase.set(Phase::GameWin);
+        } else {
+            set_phase.set(Phase::Planning);
+        }
+    });
 
     let next_phase = Callback::from(move |_| {
         if game_over() || game_win() || ready.get() {
-            start_anim();
+            anim.start();
         } else {
             set_ready.set(true);
         }
@@ -250,7 +281,10 @@ pub fn Interstitial() -> impl IntoView {
 
     let background = move || {
         let locale = locale();
-        format!("url('/assets/environments/out/{}')", locale.background)
+        format!(
+            "url('/public/assets/environments/out/{}')",
+            locale.background
+        )
     };
     let name = move || {
         let locale = locale();
@@ -260,8 +294,6 @@ pub fn Interstitial() -> impl IntoView {
         let locale = locale();
         locale.credit
     };
-
-    let year = state!(|game, _| game.world.year);
 
     view! {
         <div

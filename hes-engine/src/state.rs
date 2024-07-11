@@ -1,4 +1,6 @@
-use crate::events::{Effect, Event, Flag, Request};
+use crate::events::{
+    Effect, Event, EventPool, Flag, Phase, Request,
+};
 use crate::game::Update;
 use crate::kinds::{
     ByproductMap, Feedstock, FeedstockMap, OutputMap,
@@ -80,6 +82,8 @@ pub struct State {
 
     // TODO track what events have occurred
     pub events: Vec<Event>,
+
+    pub event_pool: EventPool,
 }
 
 impl State {
@@ -100,6 +104,7 @@ impl State {
             }
         }
 
+        let events = world.events.clone();
         let death_year = world.year + LIFESPAN;
         let resources = world.starting_resources.clone();
         let feedstocks = world.feedstock_reserves.clone();
@@ -157,6 +162,8 @@ impl State {
             population_growth_modifier: 0.,
             sea_level_rise_modifier: 0.,
             last_outlook: 0.,
+
+            event_pool: EventPool::new(events),
         };
         state.last_outlook = state.outlook();
 
@@ -1006,6 +1013,20 @@ impl State {
             region.precip_hi *= 31536000. / 10.;
             // region.temp = region.pattern_idxs.iter().map(|idx| &temps[*idx]).sum::<f32>()/region.pattern_idxs.len() as f32;
         }
+    }
+
+    pub fn roll_for_phase<'a>(
+        &'a mut self,
+        phase: Phase,
+        limit: Option<usize>,
+        rng: &mut SmallRng,
+    ) -> Vec<(Event, Option<usize>)> {
+        // TODO hacky
+        let mut pool = self.event_pool.clone();
+        let events =
+            pool.roll_for_phase(phase, &self, limit, rng);
+        self.event_pool = pool;
+        events
     }
 }
 

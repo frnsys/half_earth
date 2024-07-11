@@ -32,10 +32,10 @@ pub fn MiniCard(
     #[prop(optional, into)] class: MaybeSignal<String>,
     #[prop(optional, into)] border: MaybeSignal<String>,
 ) -> impl IntoView {
-    let (expanded, set_expanded) = create_signal(false);
+    let (is_expanded, set_is_expanded) = create_signal(false);
     let overlay_ref = create_node_ref::<html::Div>();
     let expand = move |_| {
-        set_expanded.set(true);
+        set_is_expanded.set(true);
     };
     let collapse = move |ev: MouseEvent| {
         if let Some(target) = ev.target() {
@@ -43,7 +43,7 @@ pub fn MiniCard(
                 if let Some(overlay) = overlay_ref.get() {
                     if let Some(overlay_elem) = overlay.dyn_ref::<HtmlDivElement>() {
                         if elem == overlay_elem {
-                            set_expanded.set(false);
+                            set_is_expanded.set(false);
                         }
                     }
                 }
@@ -51,17 +51,19 @@ pub fn MiniCard(
         }
     };
 
+    // So we can copy the children.
+    let expanded = store_value(expanded);
+
     view! {
         <div
-            class="minicard"
+            class=format!("minicard {}", class.get())
             style:border=border
-            class=class
             on:click=expand
         >
-            (body.children)().into_view()
+            {(body.children)().into_view()}
         </div>
         <AnimatedShow
-            when=expanded
+            when=is_expanded
             show_class="opacityfade-enter-active"
             hide_class="opacityfade-leave-to"
             hide_delay=Duration::from_millis(1000)
@@ -72,12 +74,12 @@ pub fn MiniCard(
                 ref=overlay_ref
             >
                 <AnimatedShow
-                    when=expanded
+                    when=is_expanded
                     show_class="appear-bounceup-enter-active"
                     hide_class="appear-bounceup-leave-active"
                     hide_delay=Duration::from_millis(1000)
                 >
-                    <div>(expanded.children)().into_view()</div>
+                    <div>{(expanded.get_value().children)().into_view()}</div>
                 </AnimatedShow>
             </div>
         </AnimatedShow>

@@ -1,9 +1,14 @@
-use super::super::{card::*, FactorsCard};
-use crate::{t, views::parts::FactorsList};
+use super::super::{
+    card::{Body, Card},
+    FactorsCard as FactorsCardData,
+};
+use crate::{t, views::factors::FactorsList};
 use leptos::*;
 
 #[component]
-pub fn FactorsCard(factors: Signal<FactorsCard>) -> impl IntoView {
+pub fn FactorsCard(
+    #[prop(into)] factors: Signal<FactorsCardData>,
+) -> impl IntoView {
     view! {
         <Card class="factors">
             <Body slot>

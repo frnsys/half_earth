@@ -44,12 +44,12 @@ pub fn NPCCard(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
         npc.with(|npc| {
             let effects = t!(&npc.flavor.effects);
             if npc.is_ally() {
-                view! { <p class="npc-effect active" inner-html=effects></p> }.into_view()
+                view! { <p class="npc-effect active" inner_html=effects></p> }.into_view()
             } else {
                 let tip = tip(icons::RELATIONSHIP, t!("Improve your relationship with {name} to activate this ability.", name: t!(&npc.name)));
                 view! {
                     <HasTip tip>
-                        <p class="npc-effect inactive" inner-html=effects></p>
+                        <p class="npc-effect inactive" inner_html=effects></p>
                     </HasTip>
                 }.into_view()
             }

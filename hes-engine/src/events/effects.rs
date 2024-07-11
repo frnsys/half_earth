@@ -188,7 +188,6 @@ impl Effect {
     pub fn apply(
         &self,
         state: &mut State,
-        event_pool: &mut EventPool,
         region_id: Option<usize>,
     ) {
         match self {
@@ -328,10 +327,12 @@ impl Effect {
                 state.feedstocks[*feedstock] *= 1. + pct_change;
             }
             Effect::AddEvent(id) => {
-                event_pool.events[*id].locked = false;
+                state.event_pool.events[*id].locked = false;
             }
             Effect::TriggerEvent(id, years) => {
-                event_pool.queue_event(*id, region_id, *years);
+                state
+                    .event_pool
+                    .queue_event(*id, region_id, *years);
             }
             Effect::LocksProject(id) => {
                 state.world.projects[*id].locked = true;
@@ -451,7 +452,8 @@ impl Effect {
                     [*resource] += change;
             }
             Effect::ModifyEventProbability(id, change) => {
-                event_pool.events[*id].prob_modifier += change;
+                state.event_pool.events[*id].prob_modifier +=
+                    change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
                 state.world.industries[*id].demand_modifier +=
@@ -492,7 +494,6 @@ impl Effect {
     pub fn unapply(
         &self,
         state: &mut State,
-        event_pool: &mut EventPool,
         region_id: Option<usize>,
     ) {
         match self {
@@ -653,7 +654,8 @@ impl Effect {
                     [*resource] -= change;
             }
             Effect::ModifyEventProbability(id, change) => {
-                event_pool.events[*id].prob_modifier -= change;
+                state.event_pool.events[*id].prob_modifier -=
+                    change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
                 state.world.industries[*id].demand_modifier -=

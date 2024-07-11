@@ -1,17 +1,28 @@
 use crate::{
-    consts, icons, t,
+    consts,
+    icons,
+    t,
     util::{scale_text, to_ws_el},
 };
 
-use super::super::region::RegionCard;
-use super::*;
+use super::{
+    super::{kinds::RegionCard, *},
+    MiniCard,
+};
 use hes_engine::regions::Region;
 use leptos::*;
 
 #[component]
-pub fn MiniRegion(#[prop(into)] region: Signal<Region>) -> impl IntoView {
+pub fn MiniRegion(
+    #[prop(into)] region: Signal<Region>,
+) -> impl IntoView {
     let image = move || {
-        region.with(|region| format!("url(/public/assets/content/{})", region.flavor.image.fname))
+        region.with(|region| {
+            format!(
+                "url(/public/assets/content/{})",
+                region.flavor.image.fname
+            )
+        })
     };
     let seceded = move || region.with(|region| region.seceded);
 

@@ -10,20 +10,16 @@ use web_sys::HtmlCollection;
 /// or reaches the `min_size`.
 pub fn scale_text(elem: web_sys::HtmlElement, min_size: u32) {
     if let Some(initial_font_size) = get_font_size(&elem) {
-        let (font_size, set_font_size) = create_signal(initial_font_size);
-        create_effect(move |_| {
-            if elem.scroll_height() > elem.client_height()
-                || elem.scroll_width() > elem.client_width()
-            {
-                let next_size = font_size.get() - 1;
-                elem.style()
-                    .set_property("font-size", &format!("{next_size}px"));
-
-                if next_size > min_size as i32 {
-                    set_font_size.set(next_size);
-                }
-            }
-        });
+        let mut font_size = initial_font_size as u32;
+        while (elem.scroll_height() > elem.client_height()
+            || elem.scroll_width() > elem.client_width())
+            && font_size > min_size
+        {
+            let next_size = font_size - 1;
+            elem.style()
+                .set_property("font-size", &format!("{next_size}px"));
+            font_size = next_size;
+        }
     }
 }
 
@@ -34,6 +30,7 @@ fn get_font_size(elem: &web_sys::HtmlElement) -> Option<i32> {
             style
                 .get_property_value("font-size")
                 .unwrap()
+                .replace("px", "")
                 .parse::<f32>()
                 .unwrap()
                 .round() as i32

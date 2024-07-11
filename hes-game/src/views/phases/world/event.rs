@@ -1,12 +1,23 @@
 use crate::{
     icons::HasIcon,
-    state, t,
+    state,
+    t,
     views::{
-        effects::EffectThing, parts::Help, phases::cutscene::Events, tip, Dialogue, Effects, HasTip,
+        effects::DisplayEffect,
+        tip,
+        Effects,
+        Events,
+        HasTip,
+        Help,
     },
 };
 use hes_engine::{
-    events::{Condition, Effect as HesEffect, LocalVariable, WorldVariable},
+    events::{
+        Condition,
+        Effect as HesEffect,
+        LocalVariable,
+        WorldVariable,
+    },
     kinds::Output,
     production::ProcessFeature,
     projects::Status,
@@ -14,7 +25,10 @@ use hes_engine::{
 };
 use leptos::*;
 
-fn describe_condition(condition: &Condition, state: &State) -> Option<String> {
+fn describe_condition(
+    condition: &Condition,
+    state: &State,
+) -> Option<String> {
     match condition {
         Condition::ProjectStatus(id, status) => {
             let name = &state.world.projects[*id].name;
@@ -94,14 +108,16 @@ fn describe_condition(condition: &Condition, state: &State) -> Option<String> {
 
 #[component]
 pub fn Event(
-    #[prop(into)] event: Signal<hes_engine::events::Event>,
+    #[prop(into)] event: Signal<
+        hes_engine::game::ResolvedEvent,
+    >,
     #[prop(into, optional)] as_card: Signal<bool>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
     let effect_image_url = move || {
         event.with(|event| {
             format!(
-                "url(/public/assets/content/images/{}",
+                "url(/public/assets/content/images/{})",
                 event.flavor.image.fname
             )
         })
@@ -111,36 +127,47 @@ pub fn Event(
             if event.effects.is_empty() {
                 false
             } else {
-                event.effects.iter().any(|effect| match effect {
-                    HesEffect::AddEvent(..) | HesEffect::TriggerEvent(..) => false,
-                    _ => true,
-                })
+                event.effects.iter().any(
+                    |effect| match effect {
+                        HesEffect::AddEvent(..)
+                        | HesEffect::TriggerEvent(..) => false,
+                        _ => true,
+                    },
+                )
             }
         })
     };
-    let factors = state!(move |state, ui| {
-        event.with(|event| {
+
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
+    let factors = move || {
+        with!(move |event, state| {
             event
                 .probabilities
                 .iter()
                 .flat_map(|prob| {
                     prob.conditions.iter().filter_map(|cond| {
-                        describe_condition(cond, state).map(|desc| (cond.icon(), desc))
+                        describe_condition(cond, &state.game)
+                            .map(|desc| (cond.icon(), desc))
                     })
                 })
                 .collect::<Vec<_>>()
         })
-    });
+    };
     let effects = move || {
         event.with(|event| {
             event
                 .effects
                 .iter()
-                .map(EffectThing::from)
+                .map(DisplayEffect::from)
                 .collect::<Vec<_>>()
         })
     };
-    let image_attrib = move || event.with(|event| event.flavor.image.attribution.clone());
+    let image_attrib = move || {
+        event.with(|event| {
+            event.flavor.image.attribution.clone()
+        })
+    };
 
     let factor_tip = t!("The factors behind this event.↓");
     on_cleanup(|| {
@@ -163,7 +190,7 @@ pub fn Event(
             })
             .collect::<Vec<_>>()
     };
-    let events = move || vec![event.get().flavor];
+    let events = move || vec![event.get()];
 
     view! {
         <div class="event">
