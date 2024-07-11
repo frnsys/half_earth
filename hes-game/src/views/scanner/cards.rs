@@ -12,7 +12,11 @@ use crate::{
     write_state,
 };
 use leptos::*;
-use leptos_use::use_interval_fn;
+use leptos_use::{
+    use_document,
+    use_event_listener,
+    use_interval_fn,
+};
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, PartialEq)]
@@ -93,6 +97,46 @@ pub fn ScannerCards<S: ScannerSpec>(
         }
     };
 
+    let scroll_to_next = move || {
+        if let Some(scroller) =
+            document().query_selector(".cards").unwrap()
+        {
+            let els = document()
+                .query_selector_all(".draggable")
+                .unwrap();
+            if els.length() > 0 {
+                let els = nodelist_to_elements(els);
+                if let Some(idx) = detect_center_element(
+                    scroller
+                        .dyn_into::<web_sys::HtmlElement>()
+                        .expect("Is an html element"),
+                    &els,
+                ) {
+                    if idx < els.len() - 1 {
+                        els[idx + 1].scroll_to();
+                    }
+                }
+            }
+        }
+    };
+    use_event_listener(
+        use_document(),
+        ev::wheel,
+        move |ev: ev::WheelEvent| {
+            if let Some(scroller) =
+                document().query_selector(".cards").unwrap()
+            {
+                let scroller = scroller
+                    .dyn_into::<web_sys::HtmlElement>()
+                    .expect("Is an html element");
+                let s = scroller.scroll_left();
+                scroller.set_scroll_left(
+                    s + ev.delta_y().round() as i32,
+                );
+            }
+        },
+    );
+
     use_interval_fn(
         move || {
             // TODO perhaps more efficient way to do this?
@@ -121,7 +165,6 @@ pub fn ScannerCards<S: ScannerSpec>(
         move || [top_y_bound.get(), bot_y_bound.get()];
 
     let on_focus = move |idx: Option<usize>| {
-        logging::log!("ON FOCUS CALLED");
         write_state!(|state, ui| {
             let item = idx
                 .map(|idx| {

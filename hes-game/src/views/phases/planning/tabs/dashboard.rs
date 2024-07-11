@@ -67,7 +67,6 @@ pub fn Dashboard() -> impl IntoView {
         create_signal(Var::Land);
     let (show_breakdown_menu, set_show_breakdown_menu) =
         create_signal(false);
-    let color = move || breakdown_factor.get().color();
 
     let factors = ui!(factors.clone());
     let starting_land = state!(world.starting_resources.land);
@@ -235,7 +234,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let emissions_tip = with_state!(|state, ui| {
+    let emissions_tip = with_state!(|state, _ui| {
         let tip_text = t!("Current annual emissions, in gigatonnes of CO2 equivalent.");
         crate::views::tip(icons::EMISSIONS, tip_text)
             .card(factors_card(None, Var::Emissions, state))
@@ -260,7 +259,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let land_tip = with_state!(|state, ui| {
+    let land_tip = with_state!(|state, _ui| {
         crate::views::tip(icons::LAND, t!("Current land use."))
             .card(factors_card(None, Var::Land, state))
     });
@@ -287,7 +286,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let energy_tip = with_state!(|state, ui| {
+    let energy_tip = with_state!(|state, _ui| {
         crate::views::tip(
             icons::ENERGY,
             t!("Current energy use."),
@@ -318,7 +317,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let water_tip = with_state!(|state, ui| {
+    let water_tip = with_state!(|state, _ui| {
         crate::views::tip(
             icons::WATER,
             t!("Current water demand."),
@@ -341,7 +340,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let biodiversity_tip = with_state!(|state, ui| {
+    let biodiversity_tip = with_state!(|state, _ui| {
         let tip_text = t!("The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.");
         crate::views::tip(icons::EXTINCTION_RATE, tip_text)
             .card(factors_card(None, Var::Biodiversity, state))
@@ -391,7 +390,7 @@ pub fn Dashboard() -> impl IntoView {
         let mut f = Formatter::default()
             .scales(Scales::short())
             .precision(Precision::Decimals(1));
-        f.fmt(population.get() as f64).to_string()
+        f.fmt2(population.get() as f64).to_string()
     };
     let population_view = move || {
         view! {
@@ -436,7 +435,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let table_data = with_state!(|state, ui| {
+    let table_data = with_state!(|state, _ui| {
         factors_card(None, breakdown_factor.get(), state)
     });
     let icon = move || breakdown_factor.get().icon();
@@ -546,7 +545,7 @@ fn PieChart(
     #[prop(into)] colors: Signal<[u32; 2]>,
 ) -> impl IntoView {
     let stage_ref = create_node_ref::<html::Div>();
-    let (chart, set_chart) = create_signal(None);
+    let (_, set_chart) = create_signal(None);
 
     create_effect(move |_| {
         set_chart.update(|chart| {

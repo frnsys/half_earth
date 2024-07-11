@@ -13,33 +13,29 @@ use js_sys::Date;
 use leptos::*;
 use leptos_use::{use_interval_fn, utils::Pausable};
 
+const LOCALES: &[&str] = &[
+    "Havana",
+    "Ouagadougou",
+    "Port-au-Prince",
+    "San Cristóbal de las Casas",
+    "Paris",
+    "Bandung",
+    "Seattle",
+    "Hanoi",
+    "Dar es Salaam",
+    "Ayn Issa",
+    "Algiers",
+    "Managua",
+    "Prague",
+];
+
 #[component]
 pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
-    const LOCALES: &[&str] = &[
-        "Havana",
-        "Ouagadougou",
-        "Port-au-Prince",
-        "San Cristóbal de las Casas",
-        "Paris",
-        "Bandung",
-        "Seattle",
-        "Hanoi",
-        "Dar es Salaam",
-        "Ayn Issa",
-        "Algiers",
-        "Managua",
-        "Prague",
-    ];
-
     let (settings, set_settings) = Settings::get();
-    let sound = move || {
-        let settings = settings.get();
-        settings.sound
-    };
-    let hide_help = move || {
-        let settings = settings.get();
-        settings.hide_help
-    };
+    let sound = move || settings.with(|s| s.sound);
+    let hide_help = move || settings.with(|s| s.hide_help);
+
+    let (show_credits, set_show_credits) = create_signal(false);
 
     let year = state!(world.year);
     let pc = state!(political_capital.max(0));
@@ -72,8 +68,6 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
     let time_place =
         move || format!("{}, {}", locale(), year.get());
 
-    let (show_credits, set_show_credits) = create_signal(false);
-
     view! {
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
@@ -83,7 +77,6 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                         set_open.set(false);
                     }
                 >
-
                     <img src=icons::CLOSE/>
                 </div>
                 <header>

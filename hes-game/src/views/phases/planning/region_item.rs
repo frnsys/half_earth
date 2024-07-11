@@ -78,7 +78,7 @@ fn demand_tip(
 pub fn RegionItem(
     #[prop(into)] region: Signal<Region>,
 ) -> impl IntoView {
-    let events = with_state!(|state, ui, region| {
+    let events = with_state!(|_state, ui, region| {
         ui.annual_region_events.get(&region.id).cloned()
     });
 
@@ -155,7 +155,7 @@ pub fn RegionItem(
             })
             .collect::<Vec<_>>()
     };
-    let demand_display = with_state!(|state, ui, region| {
+    let demand_display = with_state!(|state, _ui, region| {
         region.demand(&state.world.output_demand).items().map(
             |(k, demand)| {
                 let per_capita_demand =

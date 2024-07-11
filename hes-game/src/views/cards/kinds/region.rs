@@ -20,7 +20,7 @@ pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
         let outlook = region.with(|region| region.outlook);
         intensity::scale(outlook, Variable::Outlook)
     };
-    let demand = with_state!(|state, ui, region| {
+    let demand = with_state!(|state, _ui, region| {
         let total_demand = state.output_demand;
         let per_capita_demand = state.world.output_demand;
         let demand = region.demand(&per_capita_demand);

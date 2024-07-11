@@ -201,6 +201,7 @@ impl Settings {
     }
 }
 
+/// Extract a single property from the game state.
 #[macro_export]
 macro_rules! state {
     ($($path:ident).+) => {
@@ -217,6 +218,7 @@ macro_rules! state {
     };
 }
 
+/// Extract a single property from the UI state.
 #[macro_export]
 macro_rules! ui {
     ($($path:ident).+) => {
@@ -233,6 +235,7 @@ macro_rules! ui {
     };
 }
 
+/// Write access to the game state.
 #[macro_export]
 macro_rules! state_rw {
     ($($path:ident).+) => {
@@ -243,6 +246,7 @@ macro_rules! state_rw {
     };
 }
 
+/// Write access to the UI state.
 #[macro_export]
 macro_rules! ui_rw {
     ($($path:ident).+) => {
@@ -253,12 +257,13 @@ macro_rules! ui_rw {
     };
 }
 
+/// Access the game state, optionally with other signals.
 #[macro_export]
 macro_rules! with_state {
     (|$state:ident, $ui:ident $(, $args:ident)*| $body:block) => {{
         let state = expect_context::<RwSignal<crate::state::GameState>>();
         move || {
-            state.with(|crate::state::GameState { game: $state, $ui }| {
+            state.with(|crate::state::GameState { game: $state, ui: $ui }| {
                 with_state!(@recurse [$body] $($args),*)
             })
         }

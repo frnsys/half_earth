@@ -48,26 +48,6 @@ impl Impact {
 }
 
 #[derive(Clone, Copy)]
-pub enum Commodity {
-    Energy,
-    Electricity,
-    Fuel,
-    PlantCalories,
-    AnimalCalories,
-}
-impl Into<Var> for Commodity {
-    fn into(self) -> Var {
-        match self {
-            Self::Electricity => Var::Electricity,
-            Self::Fuel => Var::Fuel,
-            Self::Energy => Var::Energy,
-            Self::PlantCalories => Var::PlantCalories,
-            Self::AnimalCalories => Var::AnimalCalories,
-        }
-    }
-}
-
-#[derive(Clone, Copy)]
 pub enum OutputKind {
     Energy,
     Calories,
@@ -170,13 +150,4 @@ impl Var {
             _ => None,
         }
     }
-}
-
-#[derive(Clone, Copy)]
-pub enum Metric {
-    Outlook,
-    Extinction,
-    Habitability,
-    WorldOutlook,
-    Warming,
 }

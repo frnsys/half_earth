@@ -1,5 +1,10 @@
-use crate::{t, util::to_ws_el, views::cards::*};
-use hes_engine::{industries::Industry, npcs::NPC, production::Process, projects::Project};
+use crate::views::cards::*;
+use hes_engine::{
+    industries::Industry,
+    npcs::NPC,
+    production::Process,
+    projects::Project,
+};
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
 use std::time::Duration;
@@ -41,6 +46,8 @@ impl Tip {
         self
     }
 }
+
+/// Define a tooltip.
 pub fn tip(icon: &'static str, text: String) -> Tip {
     Tip {
         icon,
@@ -91,8 +98,13 @@ impl From<FactorsCard> for TipCard {
     }
 }
 
-fn has_parent_with_class(element: web_sys::HtmlElement, class_name: &str) -> bool {
-    let mut current: Option<web_sys::Element> = Some(element.unchecked_into());
+/// Check if this element has any ancestor with the specified class.
+fn has_ancestor_with_class(
+    element: web_sys::HtmlElement,
+    class_name: &str,
+) -> bool {
+    let mut current: Option<web_sys::Element> =
+        Some(element.unchecked_into());
     while let Some(el) = current {
         if el.class_list().contains(class_name) {
             return true;
@@ -106,12 +118,18 @@ fn has_parent_with_class(element: web_sys::HtmlElement, class_name: &str) -> boo
 pub fn ToolTip() -> impl IntoView {
     let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
     let has_tip = move || tip_rw.with(|tip| tip.is_some());
-    let has_card =
-        move || tip_rw.with(|tip| tip.as_ref().and_then(|tip| tip.card.as_ref()).is_some());
+    let has_card = move || {
+        tip_rw.with(|tip| {
+            tip.as_ref()
+                .and_then(|tip| tip.card.as_ref())
+                .is_some()
+        })
+    };
 
     let tip_ref = create_node_ref::<html::Div>();
     let overlay_ref = create_node_ref::<html::Div>();
 
+    // Show the tooltip when one is set.
     let (should_show, set_should_show) = create_signal(false);
     create_effect(move |_| {
         let tip = tip_rw.get();
@@ -120,22 +138,27 @@ pub fn ToolTip() -> impl IntoView {
         }
     });
 
+    // Dismiss the tooltip on click.
     use_event_listener(use_document(), ev::click, move |ev| {
         if !has_tip() || !should_show.get() {
             return;
         }
 
         let target: web_sys::HtmlElement = event_target(&ev);
-        if has_card() {
-            ev.stop_immediate_propagation();
-            if !has_parent_with_class(target, "tip") {
-                set_should_show.set(false);
-                // tip_rw.set(None);
-            }
-        } else {
-            ev.stop_immediate_propagation();
+        ev.stop_immediate_propagation();
+
+        // If there's a card, make sure clicking
+        // within the card does *not* dismiss the tooltip.
+        // Otherwise clicking anywhere should remove the tooltip.
+        let should_remove = !has_card()
+            || (has_card()
+                && !has_ancestor_with_class(target, "tip"));
+
+        // We don't actually remove the tooltip (i.e.
+        // do `tip_rw.set(None)`) because this causes the tooltip
+        // to immediately empty, whereas we want it to transition out.
+        if should_remove {
             set_should_show.set(false);
-            // tip_rw.set(None);
         }
     });
 
@@ -211,7 +234,6 @@ pub fn ToolTip() -> impl IntoView {
             })
     };
 
-    // TODO
     view! {
         <div class="tip-layer">
             <AnimatedShow
@@ -243,8 +265,12 @@ pub fn ToolTip() -> impl IntoView {
     }
 }
 
+/// Use this component to wrap elements that should show a tooltip on hover.
 #[component(transparent)]
-pub fn HasTip(children: Children, #[prop(into)] tip: MaybeSignal<Tip>) -> impl IntoView {
+pub fn HasTip(
+    children: Children,
+    #[prop(into)] tip: MaybeSignal<Tip>,
+) -> impl IntoView {
     let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
     let children = children()
         .nodes
@@ -262,8 +288,13 @@ pub fn HasTip(children: Children, #[prop(into)] tip: MaybeSignal<Tip>) -> impl I
                 .on(ev::pointerenter, |ev| {
                     if let Some(target) = ev.current_target() {
                         let target: web_sys::HtmlElement =
-                            target.dyn_into().expect("Is an HTML element");
-                        target.class_list().add_1("has-tip").unwrap();
+                            target
+                                .dyn_into()
+                                .expect("Is an HTML element");
+                        target
+                            .class_list()
+                            .add_1("has-tip")
+                            .unwrap();
                     }
                 })
         })

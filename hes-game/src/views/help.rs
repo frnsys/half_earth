@@ -3,12 +3,19 @@ use leptos::*;
 
 /// A tutorial help tip.
 #[component]
-pub fn Help(text: String, x: f32, y: f32, center: bool) -> impl IntoView {
-    let text = store_value(text);
+pub fn Help(
+    text: String,
+    x: f32,
+    y: f32,
+    center: bool,
+) -> impl IntoView {
     let (settings, set_settings) = Settings::get();
+    let text = store_value(text);
     let show = move || {
-        let settings = settings.get();
-        !settings.hide_help && settings.read_help.contains(&text.get_value())
+        settings.with(|s| {
+            !s.hide_help
+                && s.read_help.contains(&text.get_value())
+        })
     };
 
     let left = move || {

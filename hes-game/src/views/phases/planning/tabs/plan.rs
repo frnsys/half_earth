@@ -71,7 +71,7 @@ pub fn Plan() -> impl IntoView {
     let projects_highlighted =
         ui!(tutorial.eq(&Tutorial::Projects));
 
-    let active_projects = with_state!(|state, ui| {
+    let active_projects = with_state!(|state, _ui| {
         state
             .world
             .projects
@@ -130,7 +130,7 @@ pub fn Plan() -> impl IntoView {
             max_for_output(Output::AnimalCalories),
         ]
     };
-    let processes_over_limit = with_state!(|state, ui| {
+    let processes_over_limit = with_state!(|state, _ui| {
         state
             .world
             .processes

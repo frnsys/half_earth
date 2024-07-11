@@ -125,7 +125,7 @@ pub fn Effects(
     #[prop(into)] effects: Signal<Vec<DisplayEffect>>,
     #[prop(optional)] class: &'static str,
 ) -> impl IntoView {
-    let items = with_state!(|state, ui, effects| {
+    let items = with_state!(|state, _ui, effects| {
         effects
             .iter()
             .filter(|effect| !effect.is_hidden)

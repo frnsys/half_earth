@@ -205,7 +205,7 @@ pub fn Draggable(
             on:pointermove=drag
             on:pointerup=move |ev| {
                 if let Some(elem) = el_ref.get() {
-                    elem.release_pointer_capture(ev.pointer_id());
+                    let _ = elem.release_pointer_capture(ev.pointer_id());
                 }
                 stop_drag();
             }

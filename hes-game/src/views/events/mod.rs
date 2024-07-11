@@ -1,6 +1,6 @@
 mod dialogue;
 
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Duration};
 
 pub use dialogue::Dialogue;
 use hes_engine::game::ResolvedEvent;
@@ -11,7 +11,9 @@ pub fn Events(
     #[prop(into)] on_advance: Callback<()>,
     #[prop(into)] on_done: Callback<()>,
     #[prop(into)] events: Signal<Vec<ResolvedEvent>>,
+    #[prop(optional, default = 0)] delay: u64,
 ) -> impl IntoView {
+    let (ready, set_ready) = create_signal(delay == 0);
     let (idx, set_idx) = create_signal(0);
     let (ctx, set_ctx) = create_signal::<HashMap<String, String>>(
         HashMap::default(),
@@ -50,13 +52,21 @@ pub fn Events(
     };
 
     create_effect(move |_| {
-        if !has_event() {
+        if delay > 0 && !ready.get() {
+            set_timeout(
+                move || {
+                    set_ready.set(true);
+                },
+                Duration::from_millis(delay),
+            );
+        }
+        if ready.get() && !has_event() {
             on_done.call(());
         }
     });
 
     let view = move || {
-        if has_event() {
+        if has_event() && ready.get() {
             Some(view! {
                 <Dialogue
                     dialogue=dialogue

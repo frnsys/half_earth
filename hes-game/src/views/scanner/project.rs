@@ -63,6 +63,7 @@ impl ScannerSpec for ProjectScanner {
         let player_seats = self.player_seats.clone();
         let queued_upgrades = self.queued_upgrades.clone();
 
+        // Does this project already have an upgrade queued/under construction?
         let upgrade_queued = move || {
             project.with(|project| {
                 project.as_ref().is_some_and(|p| {
@@ -72,6 +73,11 @@ impl ScannerSpec for ProjectScanner {
             })
         };
 
+        // Points can be added to a project if:
+        // - The player has enough of a majority, if required.
+        // - No upgrade is queued for the project.
+        // - An upgrade exists for the project.
+        // - If the project is a policy, only if it's not already implemented.
         let addable = move || {
             project.with(|p| {
                 if let Some(p) = p {
@@ -281,11 +287,11 @@ impl ScannerSpec for ProjectScanner {
             }) || refundable()
         };
 
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
         let on_finish_scan =
             move |controls: ScannerControls| {
-                let state = expect_context::<
-                    RwSignal<crate::state::GameState>,
-                >();
                 state
                 .try_update(|state| {
                     let ui = &mut state.ui;
@@ -314,7 +320,7 @@ impl ScannerSpec for ProjectScanner {
                                         let excess_points =
                                             points.saturating_sub(ui.points.refundable_research);
                                         let refund =
-                                            state.next_point_cost(&p.kind) * (points - excess_points);
+                                            state.next_point_cost(&p.kind) * (points - excess_points); // TODO why is this unused
                                         ui.points.refundable_research =
                                             ui.points.refundable_research.saturating_sub(points);
                                         ui.points.research += excess_points as isize;

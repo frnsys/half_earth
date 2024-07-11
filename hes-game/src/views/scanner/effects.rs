@@ -8,10 +8,10 @@ pub fn shake_screen() {
     document().body().map(|body| {
         // TODO
         // window.audioManager.playOneShot('/assets/sounds/impact.mp3');
-        body.class_list().add_1("shake").unwrap();
+        let _ = body.class_list().add_1("shake");
         set_timeout(
             move || {
-                body.class_list().remove_1("shake").unwrap();
+                let _ = body.class_list().remove_1("shake");
             },
             Duration::from_millis(500),
         );
@@ -20,12 +20,12 @@ pub fn shake_screen() {
 
 pub fn shake_progress(elem: web_sys::HtmlElement) {
     if let Some(elem) = elem.parent_element() {
-        elem.class_list().add_2("scan-error", "shake");
+        let _ = elem.class_list().add_2("scan-error", "shake");
         set_timeout(
             move || {
-                elem.class_list()
-                    .remove_2("scan-error", "shake")
-                    .unwrap();
+                let _ = elem
+                    .class_list()
+                    .remove_2("scan-error", "shake");
             },
             Duration::from_millis(350),
         );

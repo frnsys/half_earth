@@ -12,10 +12,9 @@ use hes_engine::events::Phase as EventPhase;
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
     let (events, set_events) = create_signal(vec![]);
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     create_effect(move |_| {
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
         state.update(|state: &mut GameState| {
             let events = if lose {
                 state.game.roll_events_for_phase(

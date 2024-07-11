@@ -33,7 +33,7 @@ pub fn Projects(
     // TODO problem here is we can't write to these projects
     // because they're clones, so any changes don't actually propagate to the underlying state.
     let projects = with_state!(|state, ui, kind| {
-        logging::log!("!!!!!!!!!!!!!!! PROJECTS UPDATED");
+        // logging::log!("!!!!!!!!!!!!!!! PROJECTS UPDATED");
         state
             .world
             .projects

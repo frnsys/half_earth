@@ -1,8 +1,19 @@
-use crate::audio::init_audio;
-use crate::i18n::{get_preferred_language, load_language};
-use crate::views::{Cutscene, End, Interstitial, Loading, Planning, Report, Start, Tip, ToolTip};
 use crate::{
+    audio::init_audio,
+    i18n::{get_preferred_language, load_language},
     state::{GameState, Phase},
+    ui,
+    views::{
+        Cutscene,
+        End,
+        Interstitial,
+        Loading,
+        Planning,
+        Report,
+        Start,
+        Tip,
+        ToolTip,
+    },
 };
 use leptos::*;
 use leptos_animation::*;
@@ -10,10 +21,9 @@ use leptos_router::*;
 
 #[component]
 pub fn Root() -> impl IntoView {
-    // TODO
     view! {
         <Router fallback=|| {
-            view! { <div>TODO</div> }.into_view()
+            view! { <div>not found</div> }.into_view()
         }>
             <Routes>
                 <Route path="" view=App/>
@@ -26,7 +36,9 @@ pub fn Root() -> impl IntoView {
 pub fn App() -> impl IntoView {
     AnimationContext::provide();
     provide_context(create_rw_signal::<Option<Tip>>(None));
-    provide_context(create_rw_signal::<GameState>(GameState::load()));
+    provide_context(create_rw_signal::<GameState>(
+        GameState::load(),
+    ));
     init_audio();
 
     let (started, set_started) = create_signal(false);
@@ -40,25 +52,7 @@ pub fn App() -> impl IntoView {
         },
     );
 
-    // TODO create a macro rule that makes this easier
-    let phase = {
-        let cur_phase = create_memo(|_| {
-            let state = expect_context::<RwSignal<crate::state::GameState>>();
-            state.with(|state| state.ui.phase)
-        });
-        move || {
-            logging::log!("CHOOSING PHASE");
-            match cur_phase.get() {
-                Phase::Intro => view! { <Cutscene/> }.into_view(),
-                Phase::Interstitial => view! { <Interstitial/> }.into_view(),
-                Phase::GameOver => view! { <End lose=true/> }.into_view(),
-                Phase::GameWin => view! { <End lose=false/> }.into_view(),
-                Phase::Planning => view! { <Planning/> }.into_view(),
-                Phase::Report => view! { <Report/> }.into_view(),
-                Phase::Events => todo!(),
-            }
-        }
-    };
+    let cur_phase = ui!(phase);
 
     view! {
         <Show when=move || lang.get().is_some()>
@@ -70,7 +64,26 @@ pub fn App() -> impl IntoView {
             </Show>
             <Show when=move || started.get() && loaded.get()>
                 <ToolTip/>
-                {phase}
+                {move || {
+                         match cur_phase.get() {
+                             Phase::Intro => view! { <Cutscene/> }.into_view(),
+                             Phase::Interstitial => {
+                                 view! { <Interstitial/> }.into_view()
+                             }
+                             Phase::GameOver => {
+                                 view! { <End lose=true/> }.into_view()
+                             }
+                             Phase::GameWin => {
+                                 view! { <End lose=false/> }.into_view()
+                             }
+                             Phase::Planning => {
+                                 view! { <Planning/> }.into_view()
+                             }
+                             Phase::Report => view! { <Report/> }.into_view(),
+                             Phase::Events => todo!(),
+                         }
+                    }
+                }
             </Show>
         </Show>
     }

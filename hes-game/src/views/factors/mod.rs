@@ -51,19 +51,20 @@ pub fn FactorsList(
         })
     };
 
-    let relevant_factors = with_state!(|state, ui, factors| {
-        ui.factors[factors.kind]
-            .iter()
-            .filter(|user| match user {
-                Factor::Industry { produced, .. }
-                | Factor::Process { produced, .. } => {
-                    *produced != 0.
-                }
-                _ => true,
-            })
-            .cloned()
-            .collect::<Vec<_>>()
-    });
+    let relevant_factors =
+        with_state!(|_state, ui, factors| {
+            ui.factors[factors.kind]
+                .iter()
+                .filter(|user| match user {
+                    Factor::Industry { produced, .. }
+                    | Factor::Process { produced, .. } => {
+                        *produced != 0.
+                    }
+                    _ => true,
+                })
+                .cloned()
+                .collect::<Vec<_>>()
+        });
 
     view! {
         <div class="factors--users">

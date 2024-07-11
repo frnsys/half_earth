@@ -17,7 +17,7 @@ pub fn fill_icons(text: &str) -> String {
     for cap in re.captures_iter(text) {
         let full_match = &cap[0];
         let icon_key = &cap[1];
-        if let Some(icon_url) = icon_from_name(icon_key) {
+        if let Some(icon_url) = icon_from_slug(icon_key) {
             let replacement =
                 format!("<img src=\"{}\">", icon_url);
             result = result.replace(full_match, &replacement);
@@ -34,13 +34,14 @@ macro_rules! icons {
         )*
 
         paste! {
-            pub fn icon_from_name(name: &str) -> Option<&'static str> {
-                match name {
+            /// Get an icon path from its slug.
+            pub fn icon_from_slug(slug: &str) -> Option<&'static str> {
+                match slug {
                     $(
                         stringify!([<$name:lower>]) => Some($name),
                     )*
                         _ => {
-                            leptos::logging::warn!("No icon defined for: {name}.");
+                            leptos::logging::warn!("No icon defined for: {slug}.");
                             None
                         }
                 }

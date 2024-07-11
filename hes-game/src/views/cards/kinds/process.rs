@@ -210,7 +210,7 @@ pub fn ProcessCard(
     };
 
     // TODO redundant w/ that in project card
-    let opposers = with_state!(|state, ui, process| {
+    let opposers = with_state!(|state, _ui, process| {
         process.opposers.iter().map(|id| &state.npcs[*id])
             .filter(|npc| !npc.locked)
             .cloned()
@@ -226,7 +226,7 @@ pub fn ProcessCard(
                 }
         }).collect::<Vec<_>>()
     });
-    let supporters = with_state!(|state, ui, process| {
+    let supporters = with_state!(|state, _ui, process| {
         process.supporters.iter().map(|id| &state.npcs[*id])
             .filter(|npc| !npc.locked)
             .cloned()
@@ -373,7 +373,7 @@ pub fn ProcessCard(
         })
     };
 
-    let land_intensity = with_state!(|state, ui, process| {
+    let land_intensity = with_state!(|state, _ui, process| {
         let usage = process.adj_resources().land;
         let int = intensity::impact_intensity(
             usage,
@@ -390,7 +390,7 @@ pub fn ProcessCard(
             </HasTip>
         }
     });
-    let water_intensity = with_state!(|state, ui, process| {
+    let water_intensity = with_state!(|state, _ui, process| {
         let usage = process.adj_resources().water;
         let int = intensity::impact_intensity(
             usage,
@@ -407,25 +407,27 @@ pub fn ProcessCard(
             </HasTip>
         }
     });
-    let energy_intensity = with_state!(|state, ui, process| {
-        let usage = process.adj_resources().energy();
-        let int = intensity::impact_intensity(
-            usage,
-            Impact::Energy,
-            process.output.into(),
-        );
-        let amount = state.energy_twh();
-        let tip = tip(icons::ENERGY, t!("Energy: The fundamental mover. You're using {amount}TWh of energy.", amount: amount))
+    let energy_intensity = with_state!(
+        |state, _ui, process| {
+            let usage = process.adj_resources().energy();
+            let int = intensity::impact_intensity(
+                usage,
+                Impact::Energy,
+                process.output.into(),
+            );
+            let amount = state.energy_twh();
+            let tip = tip(icons::ENERGY, t!("Energy: The fundamental mover. You're using {amount}TWh of energy.", amount: amount))
             .card(factors_card(Some(process.name.clone()), Var::Energy, state));
-        let (sig, _) = create_signal(int);
-        view! {
-            <HasTip tip>
-                <IntensityIcon icon=icons::ENERGY intensity=sig />
-            </HasTip>
+            let (sig, _) = create_signal(int);
+            view! {
+                <HasTip tip>
+                    <IntensityIcon icon=icons::ENERGY intensity=sig />
+                </HasTip>
+            }
         }
-    });
+    );
     let emissions_intensity = with_state!(
-        |state, ui, process| {
+        |state, _ui, process| {
             let usage = process.adj_byproducts().co2eq();
             let int = intensity::impact_intensity(
                 usage,
@@ -444,7 +446,7 @@ pub fn ProcessCard(
         }
     );
     let biodiversity_intensity = with_state!(
-        |state, ui, process| {
+        |state, _ui, process| {
             let usage = process.extinction_rate(
                 state.world.starting_resources.land,
             );

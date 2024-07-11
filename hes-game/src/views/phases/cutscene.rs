@@ -3,6 +3,8 @@ use std::time::Duration;
 use crate::{
     state::Phase,
     t,
+    ui_rw,
+    util::to_ws_el,
     views::events::Events,
     write_state,
 };
@@ -36,18 +38,23 @@ pub fn Cutscene() -> impl IntoView {
         format!("url('/public/assets/cutscenes/out/{image}')")
     };
 
+    let (_, set_phase) = ui_rw!(phase);
     let main_ref = create_node_ref::<html::Div>();
     let fade_out = move || {
         if let Some(elem) = main_ref.get() {
-            elem.style(
+            logging::log!("FADING OUT");
+            let elem = elem.style(
                 "animation",
                 "1s fade-out ease-out forwards",
             );
             set_timeout(
                 move || {
-                    write_state!(move |_, ui| {
-                        ui.phase = Phase::Interstitial;
-                    });
+                    logging::log!("CHANGING PHASE");
+                    set_phase.set(Phase::Interstitial);
+
+                    // TODO no idea why but leptos will not clean
+                    // up this view, so do it manually I guess
+                    to_ws_el(elem).remove();
                 },
                 Duration::from_secs(1),
             );
@@ -57,6 +64,7 @@ pub fn Cutscene() -> impl IntoView {
     let advance = move |_| {
         set_image_idx.update(|idx| *idx += 1);
     };
+
     let next_phase = move |_| {
         // TODO
         // window.audioManager.stopSoundtrack(true);
@@ -66,23 +74,14 @@ pub fn Cutscene() -> impl IntoView {
     // Wait a beat before showing the event
     let (events, set_events) =
         create_signal::<Vec<ResolvedEvent>>(vec![]);
-    let (do_it, set_do_it) = create_signal(false);
-    set_timeout(
-        move || {
-            set_do_it.set(true);
-        },
-        Duration::from_millis(1500),
-    );
     create_effect(move |_| {
-        if do_it.get() {
-            write_state!(move |state, ui| {
-                let events = state.roll_events_for_phase(
-                    EventPhase::CutsceneIntro,
-                    None,
-                );
-                set_events.set(events);
-            })();
-        }
+        write_state!(move |state, _ui| {
+            let events = state.roll_events_for_phase(
+                EventPhase::CutsceneIntro,
+                None,
+            );
+            set_events.set(events);
+        })();
     });
 
     view! {
@@ -92,10 +91,12 @@ pub fn Cutscene() -> impl IntoView {
             style:background-image=background
         >
             <Events
+                delay=1500
                 on_advance=advance
                 on_done=next_phase.clone()
                 events=events
             />
+
             <button
                 class="cutscene--skip btn"
                 on:click=move |_| next_phase(())

@@ -33,7 +33,7 @@ pub fn Processes(
     let points = create_rw_signal(0);
     let allow_back = move || points.get() == 0;
 
-    let processes = with_state!(|state, ui| {
+    let processes = with_state!(|state, _ui| {
         let output = output.get();
         let mut processes = state
             .world
@@ -102,7 +102,7 @@ pub fn Processes(
         t!("These changes will take {changesTime} planning cycle{ext} to take effect.", changesTime: changes_time, ext: ext)
     };
 
-    let output_demands = with_state!(|state, ui| {
+    let output_demands = with_state!(|state, _ui| {
         display::outputs(&state.output_demand)
             .items()
             .map(|(output, demand)| {
@@ -121,7 +121,7 @@ pub fn Processes(
             })
             .to_vec()
     });
-    let emissions = with_state!(|state, ui| {
+    let emissions = with_state!(|state, _ui| {
         let emissions = state.byproducts.gtco2eq();
         let tip = tip(
             icons::EMISSIONS,

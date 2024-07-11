@@ -235,7 +235,6 @@ pub fn ProjectCard(
         supporters()
             .into_iter()
             .map(|npc| {
-                let img = format!("/public/assets/characters/{}.png", npc.name);
                 let tip = tip(npc.icon(), t!("{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.",
                         name: t!(&npc.name),
                         icon: icons::RELATIONSHIP,

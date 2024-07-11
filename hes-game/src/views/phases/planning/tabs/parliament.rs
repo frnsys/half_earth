@@ -16,7 +16,7 @@ pub fn Parliament() -> impl IntoView {
         consts::PARLIAMENT_SEATS.iter().sum::<usize>();
     let suspended =
         state!(flags.contains(&Flag::ParliamentSuspended));
-    let npcs = with_state!(|state, ui| {
+    let npcs = with_state!(|state, _ui| {
         state
             .npcs
             .iter()
@@ -38,7 +38,7 @@ pub fn Parliament() -> impl IntoView {
         color: String,
         is_ally: bool,
     }
-    let seats = with_state!(|state, ui| {
+    let seats = with_state!(|state, _ui| {
         struct Seats {
             id: usize,
             name: String,
