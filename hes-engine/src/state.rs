@@ -1,20 +1,24 @@
-use crate::events::{
-    Effect, Event, EventPool, Flag, Phase, Request,
+use crate::{
+    events::{Effect, Event, EventPool, Flag, Phase, Request},
+    game::Update,
+    kinds::{
+        ByproductMap,
+        Feedstock,
+        FeedstockMap,
+        OutputMap,
+        ResourceMap,
+    },
+    npcs::{update_seats, NPC},
+    production::{
+        calculate_required,
+        produce,
+        Process,
+        ProductionOrder,
+    },
+    projects::{Group, Project, Status, Type as ProjectType},
+    surface,
+    world::World,
 };
-use crate::game::Update;
-use crate::kinds::{
-    ByproductMap, Feedstock, FeedstockMap, OutputMap,
-    ResourceMap,
-};
-use crate::npcs::{update_seats, NPCRelation, NPC};
-use crate::production::{
-    calculate_required, produce, Process, ProductionOrder,
-};
-use crate::projects::{
-    Group, Project, Status, Type as ProjectType,
-};
-use crate::surface;
-use crate::world::World;
 use rand::rngs::SmallRng;
 use serde::{Deserialize, Serialize};
 
@@ -686,11 +690,7 @@ impl State {
         completed
     }
 
-    pub fn start_project(
-        &mut self,
-        project_id: usize,
-        rng: &mut SmallRng,
-    ) {
+    pub fn start_project(&mut self, project_id: usize) {
         // Ugh hacky
         let project = &self.world.projects[project_id];
         if project.kind == ProjectType::Policy {
@@ -1118,7 +1118,7 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Inactive);
 
         // Start
-        state.start_project(id, &mut rng);
+        state.start_project(id);
         assert_eq!(state.projects[id].status, Status::Building);
 
         // Build until the project is completed
@@ -1177,7 +1177,7 @@ mod test {
         assert_eq!(state.projects[id].status, Status::Inactive);
 
         // Start
-        state.start_project(id, &mut rng);
+        state.start_project(id);
         assert_eq!(state.projects[id].status, Status::Building);
 
         // Build until the project is completed
@@ -1218,7 +1218,7 @@ mod test {
         }
 
         // Start again
-        state.start_project(id, &mut rng);
+        state.start_project(id);
         assert_eq!(state.projects[id].status, Status::Building);
 
         state.projects[id].set_points(10);
@@ -1248,7 +1248,7 @@ mod test {
             p.id
         };
 
-        state.start_project(id, &mut rng);
+        state.start_project(id);
 
         let mut effects = vec![];
         loop {
@@ -1289,7 +1289,7 @@ mod test {
             p.id
         };
 
-        state.start_project(id, &mut rng);
+        state.start_project(id);
 
         let mut effects = vec![];
         loop {
@@ -1322,7 +1322,7 @@ mod test {
         let completed = state.check_requests();
         assert_eq!(completed.len(), 0);
 
-        state.start_project(0, &mut rng);
+        state.start_project(0);
         let completed = state.check_requests();
         assert_eq!(completed.len(), 0); // Project not yet finished
 

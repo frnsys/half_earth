@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use crate::events::Event;
-use crate::industries::Industry;
-use crate::kinds::{
-    ByproductMap, FeedstockMap, Output, OutputMap, ResourceMap,
+use crate::{
+    events::Event,
+    industries::Industry,
+    kinds::{FeedstockMap, Output, OutputMap, ResourceMap},
+    production::Process,
+    projects::Project,
+    regions::{Income, Region},
 };
-use crate::production::Process;
-use crate::projects::Project;
-use crate::regions::{Income, Region};
 use serde::{Deserialize, Serialize};
 
 /// The `World` represents a game configuration,

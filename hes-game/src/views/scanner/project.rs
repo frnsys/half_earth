@@ -126,16 +126,13 @@ impl ScannerSpec for ProjectScanner {
                                     && p.next_upgrade()
                                         .is_some()
                                 {
-                                    logging::log!(
-                                        "IN BRANCH A"
-                                    );
                                     let free =
                                         changes.downgrades > 0;
                                     if free {
                                         changes.downgrades -= 1;
                                     }
                                     if state.upgrade_project_x(
-                                        p,
+                                        p.id,
                                         free,
                                         &mut ui.queued_upgrades,
                                     ) {
@@ -154,63 +151,42 @@ impl ScannerSpec for ProjectScanner {
                                     // Adding points to Research/Infrastructure
                                 } else if p.kind != Type::Policy
                                     && state.buy_point(
-                                        p,
+                                        p.id,
                                         &mut ui.points,
                                     )
                                 {
-                                    logging::log!(
-                                        "IN BRANCH B"
-                                    );
                                     if ui.tutorial
                                         == Tutorial::Projects
                                     {
                                         ui.tutorial.advance();
                                     }
-                                    logging::log!(
-                                        "  ADVANCED TUTORIAL"
-                                    );
                                     state.assign_point(
                                         p.id,
                                         &mut ui.points,
                                     );
 
-                                    logging::log!(
-                                        "  ASSIGNED POINTS"
-                                    );
                                     on_change.call(());
 
-                                    logging::log!(
-                                        "  HOOK CALLED"
-                                    );
                                     controls.pulse_card();
 
-                                    logging::log!(
-                                        "  CARD PULSED"
-                                    );
                                     keep_scanning = true;
 
                                     // Refundable points
                                     changes.points += 1;
 
-                                    logging::log!(
-                                        "  POINT RECORDED"
-                                    );
-
                                     // Passing Policies
                                     // Free if withdrawn in this same session (i.e. undo the withdraw)
                                 } else if p.kind == Type::Policy
                                     && (changes.withdrawn
-                                        || state.pay_points(p))
+                                        || state
+                                            .pay_points(p.id))
                                 {
-                                    logging::log!(
-                                        "IN BRANCH C"
-                                    );
                                     if ui.tutorial
                                         == Tutorial::Projects
                                     {
                                         ui.tutorial.advance();
                                     }
-                                    state.pass_policy(p);
+                                    state.pass_policy(p.id);
                                     on_change.call(());
 
                                     controls.pulse_card();
@@ -232,16 +208,10 @@ impl ScannerSpec for ProjectScanner {
 
                                     // If not enough PC
                                 } else {
-                                    logging::log!(
-                                        "IN BRANCH D"
-                                    );
                                     controls.reject_scan();
                                     keep_scanning = false;
                                 }
                             }
-                            logging::log!(
-                                "RETURNING KEEP SCANNING"
-                            );
                             keep_scanning
                         })
                     })
@@ -304,11 +274,11 @@ impl ScannerSpec for ProjectScanner {
                             let changes = ui.plan_changes.entry(p.id).or_default();
                             if refundable() {
                                 if changes.upgrades > 0 {
-                                    state.downgrade_project_x(p, &mut ui.queued_upgrades);
+                                    state.downgrade_project_x(p.id, &mut ui.queued_upgrades);
                                     changes.upgrades -= 1;
                                     keep_withdrawing = changes.upgrades > 0 || changes.passed;
                                 } else if changes.passed {
-                                    state.stop_policy(p);
+                                    state.stop_policy(p.id);
                                     changes.passed = false;
                                 } else {
                                     let points = changes.points;
@@ -325,7 +295,7 @@ impl ScannerSpec for ProjectScanner {
                                             ui.points.refundable_research.saturating_sub(points);
                                         ui.points.research += excess_points as isize;
                                     }
-                                    state.unassign_points(p, points);
+                                    state.unassign_points(p.id, points);
                                     state.change_political_capital(refund as isize);
                                     changes.points = 0;
                                 }

@@ -1,13 +1,13 @@
 use std::ops::Deref;
 
-use crate::events::{Effect, Event, EventPool, Phase};
-use crate::projects::Status;
-use crate::state::State;
-use crate::utils;
-use crate::world::World;
+use crate::{
+    events::{Event, Phase},
+    state::State,
+    utils,
+    world::World,
+};
 use rand::{rngs::SmallRng, SeedableRng};
 use serde::{Deserialize, Serialize};
-use wasm_bindgen::prelude::*;
 
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub enum Update {
@@ -338,7 +338,7 @@ impl Game {
     }
 
     pub fn start_project(&mut self, project_id: usize) {
-        self.state.start_project(project_id, &mut self.rng);
+        self.state.start_project(project_id);
         self.state.update_demand();
     }
 
@@ -359,12 +359,4 @@ impl Default for Game {
         .unwrap();
         Self::from_world(world)
     }
-}
-
-#[wasm_bindgen]
-pub struct Snapshot {
-    land: f32,
-    emissions: f32,
-    energy: f32,
-    population: f32,
 }

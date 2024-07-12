@@ -1,8 +1,10 @@
-use super::{EventPool, PlayerVariable, WorldVariable};
-use crate::kinds::{Byproduct, Feedstock, Output, Resource};
-use crate::production::ProcessFeature;
-use crate::regions::{Latitude, Region};
-use crate::state::State;
+use super::{PlayerVariable, WorldVariable};
+use crate::{
+    kinds::{Byproduct, Feedstock, Output, Resource},
+    production::ProcessFeature,
+    regions::{Latitude, Region},
+    state::State,
+};
 use serde::{Deserialize, Serialize};
 use std::ops::Mul;
 use strum::{EnumDiscriminants, IntoStaticStr};

@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use leptos::{provide_context, SignalGet, SignalGetUntracked};
+use leptos::{provide_context, SignalGetUntracked};
 use wasm_bindgen::prelude::*;
 
 use crate::state::Settings;
@@ -13,13 +13,21 @@ extern "C" {
     fn new() -> AudioManager;
 
     #[wasm_bindgen(method)]
-    fn start_soundtrack(this: &AudioManager, file: &str, fade: bool);
+    fn start_soundtrack(
+        this: &AudioManager,
+        file: &str,
+        fade: bool,
+    );
 
     #[wasm_bindgen(method)]
     fn stop_soundtrack(this: &AudioManager, fade: bool);
 
     #[wasm_bindgen(method)]
-    fn start_atmosphere(this: &AudioManager, file: &str, fade: bool);
+    fn start_atmosphere(
+        this: &AudioManager,
+        file: &str,
+        fade: bool,
+    );
 
     #[wasm_bindgen(method)]
     fn stop_atmosphere(this: &AudioManager, fade: bool);
@@ -36,7 +44,7 @@ extern "C" {
 
 pub fn init_audio() {
     let manager = AudioManager::new();
-    let (settings, _) = Settings::get();
+    let (settings, _) = Settings::rw();
     if settings.get_untracked().sound {
         manager.mute();
     }

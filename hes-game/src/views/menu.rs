@@ -31,7 +31,7 @@ const LOCALES: &[&str] = &[
 
 #[component]
 pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
-    let (settings, set_settings) = Settings::get();
+    let (settings, set_settings) = Settings::rw();
     let sound = move || settings.with(|s| s.sound);
     let hide_help = move || settings.with(|s| s.hide_help);
 

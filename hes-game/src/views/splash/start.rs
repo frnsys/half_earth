@@ -10,12 +10,16 @@ use leptos::*;
 #[component]
 pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
     let lang = expect_context::<RwSignal<i18n::Language>>();
-    let (cur_lang, _) = create_slice(lang, |lang| lang.locale.to_string(), |lang, n: String| {});
+    let (cur_lang, _) = create_slice(
+        lang,
+        |lang| lang.locale.to_string(),
+        |lang, n: String| {},
+    );
 
     let show_book_link = is_steam();
     let (show_credits, set_show_credits) = create_signal(false);
 
-    let (settings, set_settings) = Settings::get();
+    let (settings, set_settings) = Settings::rw();
     let sound = move || {
         let settings = settings.get();
         settings.sound

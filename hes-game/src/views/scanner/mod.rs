@@ -163,26 +163,16 @@ pub fn Scanner(
                             );
                             let keep_scanning = on_finish_scan
                                 .call(controls.clone());
-                            logging::log!(
-                                "KEEP SCANNING: {}",
-                                keep_scanning
-                            );
                             // let progress = progress.style("animation", "");
                             if keep_scanning {
                                 // set_timeout(move || {
-                                logging::log!(
-                                    "UPDATING MULTIPLIER"
-                                );
-                                logging::log!(
-                                    "SCAN TIME BASE: {}",
-                                    scan_time
-                                );
-                                let multiplier =
-                                    (scan_time_multiplier
-                                        .get_untracked()
-                                        * 4.
-                                        / 5.)
-                                        .max(0.2);
+                                let multiplier = 1.;
+                                // let multiplier =
+                                //     (scan_time_multiplier
+                                //         .get_untracked()
+                                //         * 4.
+                                //         / 5.)
+                                //         .max(0.2);
                                 // TODO this triggers way too quickly in the middle
                                 if multiplier
                                     != scan_time_multiplier
@@ -200,10 +190,6 @@ pub fn Scanner(
                                             multiplier,
                                         );
                                 }
-                                logging::log!(
-                                    "MULTIPLIER UPDATED: {:?}",
-                                    multiplier
-                                );
                                 // }, Duration::from_millis(16));
                             } else {
                                 stop_scanning_card(());
@@ -291,7 +277,7 @@ pub fn Scanner(
         }
     });
 
-    view! { {children()} }
+    children()
 }
 
 #[component]

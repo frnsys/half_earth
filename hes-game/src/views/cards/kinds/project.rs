@@ -180,7 +180,7 @@ pub fn ProjectCard(
         project.with(move |project| {
             (0..consts::MAX_POINTS).map(|i| {
                 let tip = tip(project.kind.icon(), t!("{points} {kind} points are allocated to this project", points: project.points, kind: project.kind.lower()));
-                let empty = i > project.points;
+                let empty = i >= project.points;
                 let icon = project.kind.icon();
                 view! {
                     <HasTip tip>
@@ -357,7 +357,7 @@ pub fn ProjectCard(
             class=class.into_signal()
         >
             <Header slot>
-                <div>{group} {proj_points_test}</div>
+                <div>{group}</div>
                 <Show when=is_new>
                     <img class="new-card-icon" src="/public/assets/new.svg"/>
                 </Show>

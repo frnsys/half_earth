@@ -9,7 +9,7 @@ pub fn Help(
     y: f32,
     center: bool,
 ) -> impl IntoView {
-    let (settings, set_settings) = Settings::get();
+    let (settings, set_settings) = Settings::rw();
     let text = store_value(text);
     let show = move || {
         settings.with(|s| {
