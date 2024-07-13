@@ -1,6 +1,5 @@
 use crate::{flavor::NPCFlavor, projects::Project};
 use serde::{Deserialize, Serialize};
-use wasm_bindgen::prelude::wasm_bindgen;
 
 pub fn update_seats(
     outlook_change: f32,
@@ -86,7 +85,6 @@ impl NPC {
     }
 }
 
-#[wasm_bindgen]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum NPCRelation {
     Neutral,
@@ -106,21 +104,3 @@ impl std::fmt::Display for NPCRelation {
         write!(f, "{}", term)
     }
 }
-
-// impl Serialize for NPC {
-//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//     where
-//         S: Serializer,
-//     {
-//         let mut seq = serializer.serialize_struct("NPC", 7)?;
-//         seq.serialize_field("id", &self.id)?;
-//         seq.serialize_field("name", &self.name)?;
-//         seq.serialize_field("relationship", &self.relationship)?;
-//         seq.serialize_field("locked", &self.locked)?;
-//         seq.serialize_field("support", &self.support)?;
-//         seq.serialize_field("seats", &self.seats)?;
-//         seq.serialize_field("is_ally", &())?; // TODO derived
-//                                                                                   // fields
-//         seq.end()
-//     }
-// }

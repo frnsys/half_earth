@@ -15,7 +15,6 @@ pub mod world;
 pub mod flavor;
 
 use projects::years_for_points;
-use wasm_bindgen::prelude::*;
 
 pub use game::Game;
 pub use projects::Type as ProjectType;
@@ -26,7 +25,6 @@ pub use projects::Type as ProjectType;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[wasm_bindgen]
 pub fn years_remaining(
     progress: f32,
     points: usize,

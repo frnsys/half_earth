@@ -4,7 +4,6 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use strum::IntoStaticStr;
-use wasm_bindgen::prelude::wasm_bindgen;
 
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1. / 40.;
@@ -231,32 +230,6 @@ impl Region {
     }
 }
 
-// impl Serialize for Region {
-//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//     where
-//         S: Serializer,
-//     {
-//         let mut seq = serializer.serialize_struct("Region", 15)?; // TODO derived fields
-//         seq.serialize_field("id", &self.id)?;
-//         seq.serialize_field("name", &self.name)?;
-//         seq.serialize_field("population", &self.population)?;
-//         seq.serialize_field("seceded", &self.seceded)?;
-//         seq.serialize_field("outlook", &self.outlook)?;
-//         seq.serialize_field("income", &self.income)?;
-//         seq.serialize_field("income_level", &self.income_level())?;
-//         seq.serialize_field("development", &self.development)?;
-//         seq.serialize_field("habitability", &self.habitability())?;
-//         seq.serialize_field("demand", &self.demand())?;
-//         seq.serialize_field("demand_levels", &self.demand_levels())?;
-//         seq.serialize_field("temp_lo", &self.temp_lo)?;
-//         seq.serialize_field("temp_hi", &self.temp_hi)?;
-//         seq.serialize_field("precip_lo", &self.precip_lo)?;
-//         seq.serialize_field("precip_hi", &self.precip_hi)?;
-//         seq.end()
-//     }
-// }
-
-#[wasm_bindgen]
 #[derive(PartialEq, Serialize, Deserialize, Clone, Copy)]
 pub enum Income {
     Low,
@@ -265,7 +238,6 @@ pub enum Income {
     High,
 }
 
-#[wasm_bindgen]
 #[derive(
     PartialEq,
     Serialize,

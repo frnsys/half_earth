@@ -3,7 +3,6 @@ use crate::{flavor::EventFlavor, state::State};
 use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use wasm_bindgen::prelude::*;
 
 #[derive(
     Clone, Debug, Default, Serialize, Deserialize, PartialEq,
@@ -163,7 +162,6 @@ impl EventPool {
     }
 }
 
-#[wasm_bindgen]
 #[derive(
     Debug, Copy, Clone, PartialEq, Serialize, Deserialize,
 )]
@@ -272,10 +270,10 @@ impl Event {
 
 #[cfg(test)]
 mod test {
-    use super::super::{
-        Comparator, LocalVariable, WorldVariable,
+    use super::{
+        super::{Comparator, LocalVariable, WorldVariable},
+        *,
     };
-    use super::*;
     use crate::regions::{Income, Latitude, Region};
     use rand::SeedableRng;
 

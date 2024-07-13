@@ -2,11 +2,17 @@ use enum_map::Enum;
 use paste::paste;
 use serde::{Deserialize, Serialize};
 use std::ops::{
-    Add, AddAssign, Div, Index, IndexMut, Mul, MulAssign, Sub,
+    Add,
+    AddAssign,
+    Div,
+    Index,
+    IndexMut,
+    Mul,
+    MulAssign,
+    Sub,
     SubAssign,
 };
-use strum::{IntoStaticStr, EnumIter};
-use wasm_bindgen::prelude::*;
+use strum::{EnumIter, IntoStaticStr};
 
 macro_rules! count {
     () => (0usize);
@@ -27,7 +33,6 @@ macro_rules! define_enum_map {
 
         paste! {
             // Define map
-            #[wasm_bindgen]
             #[derive(Default, Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
             pub struct [<$name Map>] {
                 $(
