@@ -7,6 +7,8 @@ mod project;
 use hes_engine::state::State;
 use leptos::*;
 use std::{rc::Rc, time::Duration};
+use wasm_bindgen::prelude::*;
+use web_sys::Animation;
 
 use crate::util::to_ws_el;
 use draggable::{DragRect, Draggable};
@@ -14,10 +16,6 @@ use draggable::{DragRect, Draggable};
 pub use cards::ScannerCards;
 pub use process::ProcessScanner;
 pub use project::ProjectScanner;
-
-fn adding_animation(scan_speed: f32) -> String {
-    format!("scanning 0.35s ease-in-out infinite alternate, fill-bar {scan_speed}s linear infinite forwards")
-}
 
 #[derive(Clone)]
 pub struct ScannerControls {
@@ -41,7 +39,7 @@ impl ScannerControls {
     }
 
     pub fn shrink_pulse_card(&self) {
-        effects::pulse_card();
+        effects::shrink_pulse_card();
     }
 
     pub fn shake_screen(&self) {
@@ -66,8 +64,6 @@ pub fn Scanner(
     #[prop(into)] progress_ref: NodeRef<html::Div>,
     #[prop(into)] set_y_bound: Callback<(f32, f32)>,
 ) -> impl IntoView {
-    let (scan_time_multiplier, set_scan_time_multiplier) =
-        create_signal(1.);
     let (is_scanning, set_is_scanning) = create_signal(false);
 
     let (top_y, set_top_y) = create_signal(0.);
@@ -90,6 +86,8 @@ pub fn Scanner(
     //   window.removeEventListener('resize', this.getEdges);
     // },
 
+    let (scanning_anim, set_scanning_anim) =
+        create_signal(None::<Animation>);
     let stop_scanning_card = move |_| {
         set_is_scanning.set(false);
         if let Some(target) = target_ref.get() {
@@ -108,8 +106,8 @@ pub fn Scanner(
             elem.class_list().remove_1("scan-reject");
         }
 
-        if let Some(progress) = progress_ref.get() {
-            progress.style("animation", "");
+        if let Some(fill_anim) = scanning_anim.get() {
+            fill_anim.cancel();
         }
     };
 
@@ -134,74 +132,6 @@ pub fn Scanner(
         }
     };
 
-    let (scan_time_multiplier, set_scan_time_multiplier) =
-        create_signal::<f32>(1.);
-    create_effect(move |_| {
-        if let Some(progress) = progress_ref.get() {
-            let controls = ScannerControls {
-                reject_scan: Rc::new(reject_scan),
-                progress_elem: progress.clone(),
-            };
-            progress.on(
-                ev::animationiteration,
-                move |ev: ev::AnimationEvent| {
-                    if ev.animation_name() == "fill-bar" {
-                        logging::log!(
-                            "ELAPSED TIME: {}",
-                            ev.elapsed_time()
-                        );
-                        if let Some(progress) =
-                            progress_ref.get()
-                        {
-                            // TODO needs work
-                            // basically what seems to happen is changing the animation property
-                            // immediately triggers another animationiteration event;
-                            // if you look at two subsequent ev.elapsed_time() they'll be almost
-                            // identical
-                            logging::log!(
-                                "CALLING ON FINISH SCAN"
-                            );
-                            let keep_scanning = on_finish_scan
-                                .call(controls.clone());
-                            // let progress = progress.style("animation", "");
-                            if keep_scanning {
-                                // set_timeout(move || {
-                                let multiplier = 1.;
-                                // let multiplier =
-                                //     (scan_time_multiplier
-                                //         .get_untracked()
-                                //         * 4.
-                                //         / 5.)
-                                //         .max(0.2);
-                                // TODO this triggers way too quickly in the middle
-                                if multiplier
-                                    != scan_time_multiplier
-                                        .get_untracked()
-                                {
-                                    progress.style(
-                                        "animation",
-                                        adding_animation(
-                                            scan_time
-                                                * multiplier,
-                                        ),
-                                    );
-                                    set_scan_time_multiplier
-                                        .set_untracked(
-                                            multiplier,
-                                        );
-                                }
-                                // }, Duration::from_millis(16));
-                            } else {
-                                stop_scanning_card(());
-                                progress.style("animation", "");
-                            }
-                        }
-                    }
-                },
-            );
-        }
-    });
-
     create_effect(move |_| {
         get_edges();
 
@@ -215,10 +145,42 @@ pub fn Scanner(
 
     let scan_card = move || {
         if let Some(progress) = progress_ref.get() {
-            let progress = progress.style(
-                "animation",
-                adding_animation(scan_time),
-            );
+            let anim =
+                effects::fill_bar(&progress, scan_time as f64);
+
+            let controls = ScannerControls {
+                reject_scan: Rc::new(reject_scan),
+                progress_elem: progress.clone(),
+            };
+
+            let on_finish = Closure::wrap(Box::new(move |_| {
+                let keep_scanning =
+                    on_finish_scan.call(controls.clone());
+                if keep_scanning {
+                    set_scanning_anim.update(|anims| {
+                        if let Some(anim) = anims {
+                            let playback_rate =
+                                anim.playback_rate();
+                            let multiplier = (playback_rate
+                                * (5. / 4.))
+                                .min(2.0);
+                            anim.set_playback_rate(multiplier);
+                            anim.play();
+                        }
+                    });
+                } else {
+                    stop_scanning_card(());
+                }
+            })
+                as Box<dyn FnMut(JsValue)>);
+
+            anim.set_onfinish(Some(
+                on_finish.as_ref().unchecked_ref(),
+            ));
+            set_scanning_anim.set(Some(anim));
+
+            // Keep the closure alive
+            on_finish.forget();
         }
     };
 
@@ -242,7 +204,6 @@ pub fn Scanner(
                         ),
                     );
 
-                // logging::log!("INTERSECT CHECK: {:?} [bot: {} top: {}]", drag_rect, bot_y.get(), top_y.get());
                 let intersects = drag_rect.top_y < bot_y.get()
                     && drag_rect.bot_y > top_y.get();
                 if intersects {
@@ -254,10 +215,6 @@ pub fn Scanner(
                         {
                             elem.class_list().add_1("scan-ok");
                         }
-                        // target.class_list().add_1("scanning");
-                        logging::log!(
-                            "SCAN TRIGGERED FOR {id}"
-                        );
                         scan_card();
                     } else {
                         reject_scan();

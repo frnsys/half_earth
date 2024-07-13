@@ -39,4 +39,4 @@ members = ["src-tauri"]
 
 [dependencies.web-sys]
 version = "0.3"
-features = ["Performance"]
+features = ["Performance", "Animation", "KeyframeEffect", "KeyframeEffectOptions"]

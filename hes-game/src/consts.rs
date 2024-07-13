@@ -39,12 +39,13 @@ pub const CONTENTEDNESS_PC: [isize; 6] = [0, 0, 5, 10, 20, 30];
 /// PC earned per intensity level of extinction.
 pub const EXTINCTION_PC: [isize; 6] = [20, 10, 0, -5, -5, -10];
 
-/// In seconds
-pub const PROJECT_CARD_SCAN_TIME: f32 = 0.7;
-pub const PROJECT_CARD_WITHDRAW_TIME: f32 = 1.4;
-pub const PROCESS_CARD_SCAN_TIME: f32 = 0.5;
-pub const PROCESS_CARD_WITHDRAW_TIME: f32 = 0.4;
+/// In milliseconds
+pub const PROJECT_CARD_SCAN_TIME: f32 = 0.7 * 1000.;
+pub const PROJECT_CARD_WITHDRAW_TIME: f32 = 1.4 * 1000.;
+pub const PROCESS_CARD_SCAN_TIME: f32 = 0.5 * 1000.;
+pub const PROCESS_CARD_WITHDRAW_TIME: f32 = 0.4 * 1000.;
 
 pub const MS_PER_YEAR: usize = 4000;
 
-pub const PARLIAMENT_SEATS: &[usize] = &[2, 3, 4, 5, 5, 5, 4, 3, 2];
+pub const PARLIAMENT_SEATS: &[usize] =
+    &[2, 3, 4, 5, 5, 5, 4, 3, 2];

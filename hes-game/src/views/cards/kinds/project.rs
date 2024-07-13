@@ -246,10 +246,12 @@ pub fn ProjectCard(
                 }
         }).collect::<Vec<_>>()
     };
+
     let passed = move || {
         project.with(|project| {
             project.kind == ProjectType::Policy
-                && project.is_online()
+                && (project.is_building()
+                    || project.is_online())
         })
     };
     let effects =

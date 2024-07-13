@@ -279,7 +279,8 @@ strong{
   box-shadow: 0px 0px 7px red !important;
 }
 .no-scan .mini-scanbar {
-  box-shadow: 0px 0px 7px red !important;
+  box-shadow: 0px 2px 7px red !important;
+  border-radius: 0 0 0.8em 0.8em;
 }
 
 @keyframes scanning {
@@ -453,37 +454,6 @@ strong{
 
   to {
     box-shadow: 0 0 24px #EB3941;
-  }
-}
-
-.shake {
-  animation-duration: 0.35s;
-  animation-name: shake;
-}
-
-@keyframes shake {
-  from {
-    transform: translate(0, 0);
-  }
-
-  25% {
-    transform: translate(-2px, -1px);
-  }
-
-  35% {
-    transform: translate(1px, 2px);
-  }
-
-  55% {
-    transform: translate(3px, 1px);
-  }
-
-  75% {
-    transform: translate(-1px, 2px);
-  }
-
-  to {
-    transform: translate(0, 0);
   }
 }
 
