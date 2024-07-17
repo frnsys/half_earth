@@ -4,24 +4,16 @@ version = "1.0.0"
 authors = ["Francis Tseng"]
 edition = "2021"
 
-[lib]
-bench = false
-crate-type = ["cdylib", "rlib"]
-
 [dependencies]
 paste = "1.0"
 rand = { version = "0.8", features = ["small_rng"] }
-wasm-bindgen = "0.2"
 serde_json = "1.0"
-serde-wasm-bindgen = "0.3.1"
 serde = { version = "1.0", features = ["derive"] }
-getrandom = { version = "0.2", features = ["js"] }
 enum-map = { version = "2.7.3", features = ["serde"] }
 strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
 
 [dev-dependencies]
 float-cmp = "0.9"
-wasm-bindgen-test = "0.3.13"
 criterion = "0.3"
 image = "0.23.14" # for reading pngs in tests/benchmarks
 

@@ -71,6 +71,12 @@ server = [
 	"leptos_router/ssr",
 ]
 
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1
+
 [package.metadata.leptos]
 bin-features = ["server"]
 bin-default-features = false
@@ -88,3 +94,4 @@ style-file = "styles.css"
 # Assets source dir. All files found here will be copied and synchronized to site-root.
 # The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
 assets-dir = "public"
+
