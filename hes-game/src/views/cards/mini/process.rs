@@ -14,7 +14,7 @@ pub fn MiniProcess(
     let image = move || {
         process.with(|process| {
             format!(
-                "url(/public/assets/content/images/{})",
+                "url(/assets/content/images/{})",
                 process.flavor.image.fname
             )
         })

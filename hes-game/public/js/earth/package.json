@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "hexasphere.js": "^0.2.2",
+    "hexasphere.js": "frnsys/hexasphere.js",
     "three": "^0.129.0"
   },
   "devDependencies": {

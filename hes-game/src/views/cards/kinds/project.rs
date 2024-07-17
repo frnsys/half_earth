@@ -163,7 +163,7 @@ pub fn ProjectCard(
     let image = move || {
         project.with(|project| {
             format!(
-                "/public/assets/content/images/{}",
+                "/assets/content/images/{}",
                 project.flavor.image.fname
             )
         })
@@ -361,7 +361,7 @@ pub fn ProjectCard(
             <Header slot>
                 <div>{group}</div>
                 <Show when=is_new>
-                    <img class="new-card-icon" src="/public/assets/new.svg"/>
+                    <img class="new-card-icon" src="/assets/new.svg"/>
                 </Show>
                 <div class="project-cost">
                     <Show
@@ -396,7 +396,7 @@ pub fn ProjectCard(
                         </Show>
                     </Show>
                 </div>
-                <img class="barcode" src="/public/assets/barcode.png"/>
+                <img class="barcode" src="/assets/barcode.png"/>
             </Header>
 
             <Figure slot>
@@ -428,7 +428,7 @@ pub fn ProjectCard(
             <Body slot>
                 <Show when=passed>
                     <div class="passed-stamp">
-                        <img src="/public/assets/stamp.svg"/>
+                        <img src="/assets/stamp.svg"/>
                     </div>
                 </Show>
                 <Effects

@@ -1,10 +1,16 @@
-# Half-Earth SOcialism
+# Half-Earth Socialism
+
+## Setup
+
+```bash
+git submodule init
+git submodule update
+```
 
 ## Dependencies
 
 ```bash
 cargo install tauri-cli
-cargo install trunk
 ```
 
 ## Running
@@ -17,6 +23,7 @@ Available recipes:
     run-app # Run the application
     test    # Run tests
 ```
+
 
 ---
 

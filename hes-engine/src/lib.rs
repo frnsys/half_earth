@@ -9,7 +9,6 @@ pub mod projects;
 pub mod regions;
 pub mod state;
 pub mod surface;
-mod utils;
 pub mod world;
 
 pub mod flavor;
@@ -18,12 +17,6 @@ use projects::years_for_points;
 
 pub use game::Game;
 pub use projects::Type as ProjectType;
-
-// When the `wee_alloc` feature is enabled,
-// use `wee_alloc` as the global allocator.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 pub fn years_remaining(
     progress: f32,

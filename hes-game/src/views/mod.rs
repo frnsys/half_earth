@@ -17,6 +17,7 @@ pub use cards::FactorsCard;
 pub use effects::Effects;
 pub use events::*;
 pub use factors::{rank as rank_factors, Factor};
+pub use globe::CalcSurface;
 pub use help::*;
 pub use phases::*;
 pub use splash::*;

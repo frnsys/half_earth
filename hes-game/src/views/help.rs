@@ -48,7 +48,7 @@ pub fn Help(
             >
 
                 <div class="help-tip--inner" class:center=center>
-                    <img src="/public/assets/icons/help.svg"/>
+                    <img src="/assets/icons/help.svg"/>
                     {t!(& text.get_value())}
                 </div>
             </div>

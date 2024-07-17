@@ -34,7 +34,7 @@ pub fn MiniNPC(
     let portrait = move || {
         npc.with(|npc| {
             format!(
-                "/public/assets/characters/{}.webp",
+                "/assets/characters/{}.webp",
                 npc.name
             )
         })

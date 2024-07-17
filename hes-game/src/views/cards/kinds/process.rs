@@ -246,7 +246,7 @@ pub fn ProcessCard(
     let image = move || {
         process.with(|process| {
             format!(
-                "/public/assets/content/images/{}",
+                "/assets/content/images/{}",
                 process.flavor.image.fname
             )
         })
@@ -472,7 +472,7 @@ pub fn ProcessCard(
             <Header slot>
                 <div>{output_name}</div>
                 <Show when=is_new>
-                    <img class="new-card-icon" src="/public/assets/new.svg"/>
+                    <img class="new-card-icon" src="/assets/new.svg"/>
                 </Show>
                 <HasTip tip=output_tip.into_signal()>
                     <div>

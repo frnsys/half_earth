@@ -139,9 +139,9 @@ var require_tile = __commonJS({
       };
     }
     function calculateSurfaceNormal2(p1, p2, p3) {
-      U = vector2(p1, p2);
-      V = vector2(p1, p3);
-      N = {
+      let U = vector2(p1, p2);
+      let V = vector2(p1, p3);
+      let N = {
         x: U.y * V.z - U.z * V.y,
         y: U.z * V.x - U.x * V.z,
         z: U.x * V.y - U.y * V.x
@@ -413,152 +413,6 @@ var require_hexasphere = __commonJS({
     module.exports = Hexasphere2;
   }
 });
-
-// rpc.js
-var TYPE = Object.freeze({
-  READY: 1,
-  NEW: 2,
-  GET: 3,
-  SET: 4,
-  CALL: 5
-});
-var nextReqId = 0;
-function requestResponse(worker, data) {
-  let thisReqId = nextReqId;
-  worker.postMessage({
-    reqId: thisReqId,
-    ...data
-  });
-  nextReqId++;
-  return new Promise((resolve, reject) => {
-    let handler = ({ data: data2 }) => {
-      let { reqId, resp } = data2;
-      if (reqId == thisReqId) {
-        resolve(resp);
-        worker.removeEventListener("message", handler);
-      }
-    };
-    worker.addEventListener("message", handler);
-  });
-}
-function createProxy(worker, id, methods) {
-  return new Proxy({}, {
-    get(_target2, key, _receiver) {
-      if (key == "then") return;
-      if (methods.has(key)) {
-        return function() {
-          return requestResponse(worker, {
-            id,
-            key,
-            args: [...arguments],
-            type: TYPE.CALL
-          });
-        };
-      } else {
-        return requestResponse(worker, {
-          id,
-          key,
-          type: TYPE.GET
-        });
-      }
-    },
-    // Setting is weird, you can't use `then` afaik.
-    // But you can do `await (proxy.foo = 'bar')`
-    set(_target2, key, val) {
-      return requestResponse(worker, {
-        id,
-        val,
-        key,
-        type: TYPE.SET
-      });
-    }
-  });
-}
-function waitReady(worker) {
-  return new Promise((resolve, reject) => {
-    if (worker.ready) {
-      resolve();
-    } else {
-      const handler = ({ data }) => {
-        if (data.ready) {
-          worker.ready = true;
-          worker.removeEventListener("message", handler);
-          clearInterval(poll);
-          resolve();
-        }
-      };
-      worker.addEventListener("message", handler);
-      let poll = setInterval(() => {
-        worker.postMessage({
-          type: TYPE.READY
-        });
-      }, 10);
-    }
-  });
-}
-var P = class {
-};
-function initialize(worker) {
-  return new Proxy(P, {
-    construct(_target2, args) {
-      return waitReady(worker).then(() => {
-        return requestResponse(worker, {
-          type: TYPE.NEW,
-          args
-        });
-      }).then(({ id, methods }) => {
-        return createProxy(worker, id, methods);
-      });
-    }
-  });
-}
-function prepare(cls) {
-  let nextId = 0;
-  const instances = {};
-  let methods = new Set(Object.getOwnPropertyNames(cls.prototype));
-  addEventListener("message", (msg) => {
-    const { reqId, type, ...data } = msg.data;
-    switch (type) {
-      case TYPE.READY:
-        {
-          postMessage({ ready: true });
-        }
-        break;
-      case TYPE.NEW:
-        {
-          let { args } = data;
-          instances[nextId] = new cls(...args);
-          postMessage({ reqId, resp: { id: nextId, methods } });
-          nextId++;
-        }
-        break;
-      case TYPE.GET:
-        {
-          const { id, key } = data;
-          let val = instances[id][key];
-          postMessage({ reqId, resp: val });
-        }
-        break;
-      case TYPE.SET:
-        {
-          const { id, key, val } = data;
-          instances[id][key] = val;
-          postMessage({ reqId, resp: val });
-        }
-        break;
-      case TYPE.CALL:
-        {
-          const { id, key, args } = data;
-          let ret = instances[id][key](...args);
-          Promise.resolve(ret).then((ret2) => {
-            postMessage({ reqId, resp: ret2 });
-          });
-        }
-        break;
-    }
-  });
-}
-var rpc_default = { initialize, prepare };
 
 // node_modules/three/build/three.module.js
 var REVISION = "129";
@@ -18488,24 +18342,24 @@ var TorusKnotGeometry = class extends BufferGeometry {
     const P2 = new Vector3();
     const B = new Vector3();
     const T = new Vector3();
-    const N2 = new Vector3();
+    const N = new Vector3();
     for (let i = 0; i <= tubularSegments; ++i) {
       const u = i / tubularSegments * p * Math.PI * 2;
       calculatePositionOnCurve(u, p, q, radius, P1);
       calculatePositionOnCurve(u + 0.01, p, q, radius, P2);
       T.subVectors(P2, P1);
-      N2.addVectors(P2, P1);
-      B.crossVectors(T, N2);
-      N2.crossVectors(B, T);
+      N.addVectors(P2, P1);
+      B.crossVectors(T, N);
+      N.crossVectors(B, T);
       B.normalize();
-      N2.normalize();
+      N.normalize();
       for (let j = 0; j <= radialSegments; ++j) {
         const v = j / radialSegments * Math.PI * 2;
         const cx = -tube * Math.cos(v);
         const cy = tube * Math.sin(v);
-        vertex.x = P1.x + (cx * N2.x + cy * B.x);
-        vertex.y = P1.y + (cx * N2.y + cy * B.y);
-        vertex.z = P1.z + (cx * N2.z + cy * B.z);
+        vertex.x = P1.x + (cx * N.x + cy * B.x);
+        vertex.y = P1.y + (cx * N.y + cy * B.y);
+        vertex.z = P1.z + (cx * N.z + cy * B.z);
         vertices.push(vertex.x, vertex.y, vertex.z);
         normal.subVectors(vertex, P1).normalize();
         normals.push(normal.x, normal.y, normal.z);
@@ -18556,7 +18410,7 @@ var TubeGeometry = class extends BufferGeometry {
     const vertex = new Vector3();
     const normal = new Vector3();
     const uv = new Vector2();
-    let P2 = new Vector3();
+    let P = new Vector3();
     const vertices = [];
     const normals = [];
     const uvs = [];
@@ -18575,21 +18429,21 @@ var TubeGeometry = class extends BufferGeometry {
       generateIndices();
     }
     function generateSegment(i) {
-      P2 = path.getPointAt(i / tubularSegments, P2);
-      const N2 = frames.normals[i];
+      P = path.getPointAt(i / tubularSegments, P);
+      const N = frames.normals[i];
       const B = frames.binormals[i];
       for (let j = 0; j <= radialSegments; j++) {
         const v = j / radialSegments * Math.PI * 2;
         const sin = Math.sin(v);
         const cos = -Math.cos(v);
-        normal.x = cos * N2.x + sin * B.x;
-        normal.y = cos * N2.y + sin * B.y;
-        normal.z = cos * N2.z + sin * B.z;
+        normal.x = cos * N.x + sin * B.x;
+        normal.y = cos * N.y + sin * B.y;
+        normal.z = cos * N.z + sin * B.z;
         normal.normalize();
         normals.push(normal.x, normal.y, normal.z);
-        vertex.x = P2.x + radius * normal.x;
-        vertex.y = P2.y + radius * normal.y;
-        vertex.z = P2.z + radius * normal.z;
+        vertex.x = P.x + radius * normal.x;
+        vertex.y = P.y + radius * normal.y;
+        vertex.z = P.z + radius * normal.z;
         vertices.push(vertex.x, vertex.y, vertex.z);
       }
     }
@@ -26677,29 +26531,29 @@ var tiles_to_regions_default = { "569": 12, "568": 12, "562": 12, "557": 12, "57
 
 // hex.js
 var ICONS = {
-  "political_capital": "/public/assets/icons/pips/political_capital.png",
-  "content": "/public/assets/icons/pips/content.png",
-  "discontent": "/public/assets/icons/pips/discontent.png",
-  "heatwave__3": "/public/assets/icons/pips/heatwave__3.png",
-  "wildfires": "/public/assets/icons/pips/wildfires.png",
-  "famine": "/public/assets/icons/pips/famine.png",
-  "resistance__2": "/public/assets/icons/pips/resistance__2.png",
-  "co2_leak": "/public/assets/icons/pips/co2_leak.png",
-  "flood__2": "/public/assets/icons/pips/flood__2.png",
-  "power": "/public/assets/icons/pips/power.png",
-  "flood": "/public/assets/icons/pips/flood.png",
-  "hurricane": "/public/assets/icons/pips/hurricane.png",
-  "crop_failure": "/public/assets/icons/pips/crop_failure.png",
-  "disease": "/public/assets/icons/pips/disease.png",
-  "attacks": "/public/assets/icons/pips/attacks.png",
-  "wildfires__3": "/public/assets/icons/pips/wildfires__3.png",
-  "wildfires__2": "/public/assets/icons/pips/wildfires__2.png",
-  "power__2": "/public/assets/icons/pips/power__2.png",
-  "resistance": "/public/assets/icons/pips/resistance.png",
-  "heatwave": "/public/assets/icons/pips/heatwave.png",
-  "flood__3": "/public/assets/icons/pips/flood__3.png",
-  "resistance__3": "/public/assets/icons/pips/resistance__3.png",
-  "heatwave__2": "/public/assets/icons/pips/heatwave__2.png"
+  "political_capital": "/assets/icons/pips/political_capital.png",
+  "content": "/assets/icons/pips/content.png",
+  "discontent": "/assets/icons/pips/discontent.png",
+  "heatwave__3": "/assets/icons/pips/heatwave__3.png",
+  "wildfires": "/assets/icons/pips/wildfires.png",
+  "famine": "/assets/icons/pips/famine.png",
+  "resistance__2": "/assets/icons/pips/resistance__2.png",
+  "co2_leak": "/assets/icons/pips/co2_leak.png",
+  "flood__2": "/assets/icons/pips/flood__2.png",
+  "power": "/assets/icons/pips/power.png",
+  "flood": "/assets/icons/pips/flood.png",
+  "hurricane": "/assets/icons/pips/hurricane.png",
+  "crop_failure": "/assets/icons/pips/crop_failure.png",
+  "disease": "/assets/icons/pips/disease.png",
+  "attacks": "/assets/icons/pips/attacks.png",
+  "wildfires__3": "/assets/icons/pips/wildfires__3.png",
+  "wildfires__2": "/assets/icons/pips/wildfires__2.png",
+  "power__2": "/assets/icons/pips/power__2.png",
+  "resistance": "/assets/icons/pips/resistance.png",
+  "heatwave": "/assets/icons/pips/heatwave.png",
+  "flood__3": "/assets/icons/pips/flood__3.png",
+  "resistance__3": "/assets/icons/pips/resistance__3.png",
+  "heatwave__2": "/assets/icons/pips/heatwave__2.png"
 };
 var raycaster = new Raycaster();
 var vertAxis = new Vector3(0, 1, 0);
@@ -26707,7 +26561,7 @@ var hexMaterial = new MeshBasicMaterial({ color: 15658734, transparent: true, op
 var highlightedHexMaterial = new MeshBasicMaterial({ color: 16533763, transparent: true, opacity: 0.5 });
 var loader = new FontLoader();
 var threeFont;
-loader.load("/public/assets/fonts/helvetiker_bold.typeface.json", (font) => {
+loader.load("/assets/fonts/helvetiker_bold.typeface.json", (font) => {
   threeFont = font;
 });
 var textMaterial = new MeshBasicMaterial({ color: 15336970, transparent: true });
@@ -26726,9 +26580,9 @@ function vector(p1, p2) {
   };
 }
 function calculateSurfaceNormal(p1, p2, p3) {
-  U = vector(p1, p2);
-  V = vector(p1, p3);
-  N = {
+  let U = vector(p1, p2);
+  let V = vector(p1, p3);
+  let N = {
     x: U.y * V.z - U.z * V.y,
     y: U.z * V.x - U.x * V.z,
     z: U.x * V.y - U.y * V.x
@@ -27632,16 +27486,11 @@ var fragment_default2 = "uniform float time;varying vec3 vertexNormal;varying ve
 // globe.js
 var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 var isSafari = navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") <= -1;
-var Surface = rpc_default.initialize(
-  new Worker(new URL("./surface.worker.js", import.meta.url))
-);
-var Temperature = rpc_default.initialize(
-  new Worker(new URL("./temp.worker.js", import.meta.url))
-);
 var texLoader2 = new TextureLoader();
 var objLoader = new ObjectLoader();
 var Globe = class {
   constructor(el) {
+    console.log("GLOBE CONSTURCTOR");
     let width = el.clientWidth;
     let height = el.clientHeight;
     this.scene = new scene_default({
@@ -27688,31 +27537,20 @@ var Globe = class {
   onClick(fn) {
     this._onClick.push(fn);
   }
-  async init(startYear) {
-    this.temperature = await new Temperature(startYear);
-    await this.temperature.init();
-    if (!isMobile && !isSafari) {
-      this.surface = await new Surface();
-      await this.surface.init();
-      let pixelsBuf = await this.surface.pixelsBuf;
-      let width = await this.surface.width;
-      let height = await this.surface.height;
-      let pixels = new Uint8Array(pixelsBuf);
-      this.surfaceTexture = new DataTexture(pixels, width, height, RGBFormat);
-    } else {
-      this.surfaceTexture = texLoader2.load("./assets/surface/static_surface.png");
-    }
+  init(width, height, pixels) {
+    console.log("INITING");
+    this.surfaceTexture = new DataTexture(pixels, width, height, RGBFormat);
     this.surfaceTexture.flipY = true;
     this.material = new ShaderMaterial({
       uniforms: {
         heightmap: {
-          value: texLoader2.load("./assets/surface/heightmap.png")
+          value: texLoader2.load("/assets/surface/heightmap.png")
         },
         shadows: {
-          value: texLoader2.load("./assets/surface/shadows.png")
+          value: texLoader2.load("/assets/surface/shadows.png")
         },
         satTexture: {
-          value: texLoader2.load("./assets/surface/satellite.bw.jpg")
+          value: texLoader2.load("/assets/surface/satellite.bw.jpg")
         },
         biomesTexture: {
           value: this.surfaceTexture
@@ -27752,29 +27590,11 @@ var Globe = class {
     const canvas = this.scene.renderer.domElement;
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
     this._onReady.forEach((fn) => fn(this));
-    await this.updateSurface();
   }
-  async updateSurface() {
-    if (this.surface) {
-      await this.surface.updateTexture();
-      let newPixelsBuf = await this.surface.pixelsBuf;
-      let newPixels = new Uint8Array(newPixelsBuf);
-      this.surfaceTexture.image.data.set(newPixels);
-      this.surfaceTexture.needsUpdate = true;
-    }
-  }
-  // Calculate new temperature anomaly
-  // and update surface biomes/coloring accordingly.
-  // See comments for Surface.addEmissions
-  // for what `emissions` should look like.
-  async addEmissionsThenUpdate(emissions) {
-    await this.temperature.addEmissions(emissions);
-    let tgav = await this.temperature.updateTemperature();
-    if (this.surface) {
-      await this.surface.updateBiomes(tgav);
-      await this.updateSurface();
-    }
-    return tgav;
+  updateSurface(pixels) {
+    console.log(this.surfaceTexture);
+    this.surfaceTexture.image.data.set(pixels);
+    this.surfaceTexture.needsUpdate = true;
   }
   // Show/ping an icon and/or text
   // at the specified hex

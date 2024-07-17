@@ -4,16 +4,16 @@ use list_files_macro::list_files;
 
 fn preload_assets() -> Vec<String> {
     const PRELOAD: &[&str] = &[
-        "/public/assets/stamp.svg",
-        "/public/assets/backgrounds/menu.jpg",
-        "/public/assets/backgrounds/dashboard.png",
-        "/public/assets/backgrounds/parliament.png",
-        "/public/assets/backgrounds/plan.png",
-        "/public/assets/backgrounds/regions.png",
-        "/public/assets/backgrounds/report.png",
-        "/public/assets/gosplant.svg",
-        "/public/assets/clock.png",
-        "/public/assets/motto.png",
+        "/assets/stamp.svg",
+        "/assets/backgrounds/menu.jpg",
+        "/assets/backgrounds/dashboard.png",
+        "/assets/backgrounds/parliament.png",
+        "/assets/backgrounds/plan.png",
+        "/assets/backgrounds/regions.png",
+        "/assets/backgrounds/report.png",
+        "/assets/gosplant.svg",
+        "/assets/clock.png",
+        "/assets/motto.png",
     ];
 
     let mut preload = Vec::from(PRELOAD);
@@ -50,12 +50,10 @@ fn preload_assets() -> Vec<String> {
 
     // A little hacky (ideally we do this at compile time)
     // but turn the file paths into the proper urls.
+    let root = format!("{}/public", env!("CARGO_MANIFEST_DIR"));
     preload
         .into_iter()
-        .map(|path| {
-            path.replace(env!("CARGO_MANIFEST_DIR"), "")
-                .to_string()
-        })
+        .map(|path| path.replace(&root, "").to_string())
         .collect()
 }
 
@@ -86,7 +84,7 @@ pub fn Loading(set_loaded: WriteSignal<bool>) -> impl IntoView {
     view! {
         <div id="loading">
             <div>
-                <img src="/public/assets/gosplant.svg"/>
+                <img src="/assets/gosplant.svg"/>
                 <div class="loading-text">
                     {if GameState::has_save() {
                         t!("Loading saved data")

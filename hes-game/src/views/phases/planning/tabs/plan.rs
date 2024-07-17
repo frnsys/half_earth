@@ -338,7 +338,7 @@ pub fn Plan() -> impl IntoView {
                     <Show when=any_new_projects>
                         <img
                             class="plan-new-icon plan-new-projects-icon"
-                            src="/public/assets/new.svg"
+                            src="/assets/new.svg"
                         />
                     </Show>
                     <div class="plan--change">
@@ -386,7 +386,7 @@ pub fn Plan() -> impl IntoView {
                 <div class="plan--production">
                     <div class="plan--production-icons">
                         <Show when=any_new_processes>
-                            <img class="plan-new-icon" src="/public/assets/new.svg"/>
+                            <img class="plan-new-icon" src="/assets/new.svg"/>
                         </Show>
                         <Show when=move || !processes_over_limit().is_empty()>
                             <HasTip tip=process_over_limit_tip.into_signal()>

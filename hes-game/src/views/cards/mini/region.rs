@@ -14,7 +14,7 @@ pub fn MiniRegion(
     let image = move || {
         region.with(|region| {
             format!(
-                "url(/public/assets/content/{})",
+                "url(/assets/content/{})",
                 region.flavor.image.fname
             )
         })

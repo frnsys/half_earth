@@ -28,7 +28,7 @@ pub fn NPCCard(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
             tip(icons::RELATIONSHIP, t!("Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.", name: t!(&npc.name)))
         })
     };
-    let portrait = move || npc.with(|npc| format!("/public/assets/characters/{}.webp", npc.name));
+    let portrait = move || npc.with(|npc| format!("/assets/characters/{}.webp", npc.name));
     let rel_icon = move || {
         npc.with(|npc| match npc.relationship_name() {
             "Ally" => icons::ALLY,

@@ -1,6 +1,3 @@
-use crate::utils;
-use wasm_bindgen::prelude::*;
-
 // The scale patterns take up a fair amount of space; any way to reduce this?
 include!("../assets/scaling_patterns/out/scale_patterns.in");
 include!("../assets/biome_lookup/out/biome_lookup.in");
@@ -37,18 +34,17 @@ const COLORS: [Color; 11] = [
     (26, 176, 59),   // Tropical rain forest
 ];
 
-#[wasm_bindgen]
+#[derive(Clone)]
 pub struct EarthSurface {
     width: usize,
     height: usize,
     scale: usize,
     biomes: Vec<BiomeLabel>,
     biome_lookup: Vec<BiomeLabel>,
-    pixels: Vec<u8>,
     intensities: Vec<(BigColor, usize)>,
+    pub pixels: Vec<u8>,
 }
 
-#[wasm_bindgen]
 impl EarthSurface {
     pub fn new(
         biomes: Vec<BiomeLabel>,
@@ -57,11 +53,12 @@ impl EarthSurface {
         scale: usize,
         lookup: Vec<BiomeLabel>,
     ) -> EarthSurface {
-        utils::set_panic_hook();
-
         let mut pixels: Vec<u8> = biomes_to_pixels(&biomes);
-        pixels = nearest_neighbor_scale(&pixels, width, height, scale);
-        let intensities = compute_intensities(&pixels).collect();
+        pixels = nearest_neighbor_scale(
+            &pixels, width, height, scale,
+        );
+        let intensities =
+            compute_intensities(&pixels).collect();
 
         // Assert they have the same number of values
         // (assumes they are the same aspect ratio)
@@ -90,13 +87,12 @@ impl EarthSurface {
     }
 
     pub fn update_surface(&mut self) {
-        oil_paint_effect(&mut self.pixels, &self.intensities, self.width, self.height);
-    }
-
-    // JS will access surface pixel data directly
-    // from WASM memory to avoid copying
-    pub fn surface(&self) -> *const u8 {
-        self.pixels.as_ptr()
+        oil_paint_effect(
+            &mut self.pixels,
+            &self.intensities,
+            self.width,
+            self.height,
+        );
     }
 
     pub fn update_biomes(&mut self, tgav: f32) {
@@ -104,24 +100,32 @@ impl EarthSurface {
         // so no scaling necessary.
         // Add 15 to tgav to get actual temperature (this is what `hectorui` does).
         let global_temp = BASE_TEMP + tgav;
-        for (idx, ((temp, precip), biome)) in
-            apply_pscl(&TEMP_PATTERN_W, &TEMP_PATTERN_B, global_temp)
-                .zip(apply_pscl(
-                    &PRECIP_PATTERN_W,
-                    &PRECIP_PATTERN_B,
-                    global_temp,
-                ))
-                .zip(self.biomes.iter_mut())
-                .enumerate()
+        for (idx, ((temp, precip), biome)) in apply_pscl(
+            &TEMP_PATTERN_W,
+            &TEMP_PATTERN_B,
+            global_temp,
+        )
+        .zip(apply_pscl(
+            &PRECIP_PATTERN_W,
+            &PRECIP_PATTERN_B,
+            global_temp,
+        ))
+        .zip(self.biomes.iter_mut())
+        .enumerate()
         {
             // In kg/m2/s, convert to cm/year
             // 1 kg/m2/s = 1 mm/s
             // 31536000 seconds per year, which yields mm/year
             let precip_cm_year = precip * 31536000. / 10.;
-            let label = biome_for_temp(biome, temp, precip_cm_year, &self.biome_lookup);
+            let label = biome_for_temp(
+                biome,
+                temp,
+                precip_cm_year,
+                &self.biome_lookup,
+            );
             if *biome != label {
                 *biome = label;
-                let color = color_for_biome(label as usize);
+                let color = color_for_biome(label);
                 let r = color.0 as usize;
                 let g = color.1 as usize;
                 let b = color.2 as usize;
@@ -129,8 +133,13 @@ impl EarthSurface {
                 // Update intensities
                 // Then you can run `update_surface()` to update the surface pixels
                 let intensity = compute_intensity(r, g, b);
-                for i in scaled_px_indices(idx, self.width / self.scale, self.scale) {
-                    self.intensities[i..i + self.scale].fill(((r, g, b), intensity));
+                for i in scaled_px_indices(
+                    idx,
+                    self.width / self.scale,
+                    self.scale,
+                ) {
+                    self.intensities[i..i + self.scale]
+                        .fill(((r, g, b), intensity));
                 }
             }
         }
@@ -149,11 +158,16 @@ fn biome_for_temp(
         1 => 1, // Cropland,
         _ => {
             // Clamp to known range
-            let temp_ = temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);
-            let precip_ = precip.clamp(BIOME_PRECIP_MIN, BIOME_PRECIP_MAX);
+            let temp_ =
+                temp.clamp(BIOME_TEMP_MIN, BIOME_TEMP_MAX);
+            let precip_ = precip
+                .clamp(BIOME_PRECIP_MIN, BIOME_PRECIP_MAX);
 
-            let x = ((temp_ - BIOME_TEMP_MIN) / BIOME_TEMP_STEP).floor() as usize;
-            let y = ((precip_ - BIOME_PRECIP_MIN) / BIOME_PRECIP_STEP).floor() as usize;
+            let x = ((temp_ - BIOME_TEMP_MIN) / BIOME_TEMP_STEP)
+                .floor() as usize;
+            let y = ((precip_ - BIOME_PRECIP_MIN)
+                / BIOME_PRECIP_STEP)
+                .floor() as usize;
             let idx = y * BIOME_SIZE + x;
             lookup[idx]
         }
@@ -167,20 +181,25 @@ fn scale_idx(idx: usize, width: usize, scale: usize) -> usize {
     (y * scaled_width) + x
 }
 
-fn scaled_px_indices(idx: usize, width: usize, scale: usize) -> impl Iterator<Item = usize> {
+fn scaled_px_indices(
+    idx: usize,
+    width: usize,
+    scale: usize,
+) -> impl Iterator<Item = usize> {
     let scaled_idx = scale_idx(idx, width, scale);
     (0..scale).map(move |i| scaled_idx + (i * width * scale))
 }
 
-fn color_for_biome(label: usize) -> Color {
-    COLORS[label]
+fn color_for_biome(label: u8) -> Color {
+    COLORS[label as usize]
 }
 
 // Convert biome labels to RGB
 fn biomes_to_pixels(biomes: &[u8]) -> Vec<u8> {
-    let mut pixels: Vec<u8> = Vec::with_capacity(biomes.len() * STRIDE);
+    let mut pixels: Vec<u8> =
+        Vec::with_capacity(biomes.len() * STRIDE);
     for label in biomes {
-        let (r, g, b) = color_for_biome(*label as usize);
+        let (r, g, b) = color_for_biome(*label);
         pixels.push(r);
         pixels.push(g);
         pixels.push(b);
@@ -188,10 +207,16 @@ fn biomes_to_pixels(biomes: &[u8]) -> Vec<u8> {
     pixels
 }
 
-fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize) -> Vec<u8> {
+fn nearest_neighbor_scale(
+    img: &[u8],
+    width: usize,
+    height: usize,
+    scale: usize,
+) -> Vec<u8> {
     let new_width = width * scale;
     let new_height = height * scale;
-    let mut result: Vec<u8> = Vec::with_capacity(new_width * new_height * STRIDE);
+    let mut result: Vec<u8> =
+        Vec::with_capacity(new_width * new_height * STRIDE);
 
     for i in 0..new_height {
         let i_ = i / scale;
@@ -207,7 +232,9 @@ fn nearest_neighbor_scale(img: &[u8], width: usize, height: usize, scale: usize)
 }
 
 // Compute pixel intensities, for applying the oil paint effect
-pub fn compute_intensities<'a>(img: &'a [u8]) -> impl Iterator<Item = (BigColor, usize)> + 'a {
+pub fn compute_intensities<'a>(
+    img: &'a [u8],
+) -> impl Iterator<Item = (BigColor, usize)> + 'a {
     img.chunks_exact(3).map(|rgb| {
         let r = rgb[0] as usize;
         let g = rgb[1] as usize;
@@ -246,8 +273,11 @@ pub fn oil_paint_effect(
 
         for i in 0..y_span {
             let midpoint = start_idx + i * width;
-            for (rgb, intensity_val) in &intensities[midpoint - left_span..midpoint + right_span] {
-                let mut count = &mut pixel_intensity_count[*intensity_val];
+            for (rgb, intensity_val) in &intensities
+                [midpoint - left_span..midpoint + right_span]
+            {
+                let mut count =
+                    &mut pixel_intensity_count[*intensity_val];
 
                 count.0 += 1;
                 count.1 .0 += rgb.0;
@@ -257,18 +287,16 @@ pub fn oil_paint_effect(
         }
 
         // Max intensity value
-        let top = pixel_intensity_count
-            .iter()
-            .fold(
-                (0, (0, 0, 0)),
-                |acc, count| {
-                    if count.0 > acc.0 {
-                        *count
-                    } else {
-                        acc
-                    }
-                },
-            );
+        let top = pixel_intensity_count.iter().fold(
+            (0, (0, 0, 0)),
+            |acc, count| {
+                if count.0 > acc.0 {
+                    *count
+                } else {
+                    acc
+                }
+            },
+        );
 
         let i = idx * STRIDE;
         pixels[i] = !!(top.1 .0 / top.0) as u8; // r
@@ -319,31 +347,40 @@ mod test {
         let pscl_b: [f32; 6] = [-1., 1., 0., 0., 0.5, 0.5];
         let tgav = 8.;
         let expected = vec![-1., 9., 0., 4., 8.5, 0.5];
-        let map: Vec<f32> = apply_pscl(&pscl_w, &pscl_b, tgav).collect();
+        let map: Vec<f32> =
+            apply_pscl(&pscl_w, &pscl_b, tgav).collect();
 
         assert!(map.len() == expected.len());
-        assert!(map
-            .iter()
-            .zip(expected)
-            .all(|(x1, x2)| approx_eq!(f32, *x1, x2, epsilon = 1e-8)))
+        assert!(map.iter().zip(expected).all(
+            |(x1, x2)| approx_eq!(f32, *x1, x2, epsilon = 1e-8)
+        ))
     }
 
     #[test]
     fn test_nearest_neighbor_scale() {
-        let img: [u8; 18] = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5];
+        let img: [u8; 18] = [
+            0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5,
+            5,
+        ];
         let width = 3;
         let height = 2;
         let scale = 2;
         let expected: [u8; 72] = [
-            0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-            1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3,
-            3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5,
+            0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
+            2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
+            2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5,
+            5, 5, 5, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5,
+            5, 5, 5, 5,
         ];
-        let scaled = nearest_neighbor_scale(&img, width, height, scale);
+        let scaled =
+            nearest_neighbor_scale(&img, width, height, scale);
         // println!("{:?}", scaled);
 
         assert!(scaled.len() == expected.len());
-        assert!(scaled.iter().zip(expected).all(|(x1, x2)| *x1 == x2));
+        assert!(scaled
+            .iter()
+            .zip(expected)
+            .all(|(x1, x2)| *x1 == x2));
     }
 
     #[test]
@@ -370,8 +407,10 @@ mod test {
         let scale = 3;
         let width = 2;
         let mut scaled_image = vec![
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1,
-            1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1,
+            1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0,
         ];
 
         let idx = 3;
@@ -381,8 +420,10 @@ mod test {
         }
 
         let expected_image = vec![
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2,
-            2, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2,
+            2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0,
         ];
         assert!(expected_image == scaled_image);
     }

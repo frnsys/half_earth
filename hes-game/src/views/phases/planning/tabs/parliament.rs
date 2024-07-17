@@ -123,7 +123,7 @@ pub fn Parliament() -> impl IntoView {
                 let seats: Vec<_> = col
                     .into_iter()
                     .map(|seat| {
-                        let img = format!("/public/assets/characters/{}.png", seat.name);
+                        let img = format!("/assets/characters/{}.png", seat.name);
                         view! {
                             <div class:coalitionSeat=seat.is_ally>
                                 <img src=img/>

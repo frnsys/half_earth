@@ -69,7 +69,7 @@ pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
     let image = move || {
         region.with(|region| {
             format!(
-                "/public/assets/content/{}",
+                "/assets/content/{}",
                 region.flavor.image.fname
             )
         })

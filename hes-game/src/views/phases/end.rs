@@ -57,7 +57,7 @@ pub fn End(lose: bool) -> impl IntoView {
     }
     impl Badge {
         pub fn image_url(&self) -> String {
-            format!("/public/assets/badges/{}.png", self.name)
+            format!("/assets/badges/{}.png", self.name)
         }
     }
 

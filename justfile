@@ -1,6 +1,6 @@
 # Run the development server
 run:
-    cd hes-game && trunk serve
+    cd hes-game && cargo leptos watch
 
 # Run the application
 run-app:

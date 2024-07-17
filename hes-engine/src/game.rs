@@ -3,7 +3,6 @@ use std::ops::Deref;
 use crate::{
     events::{Event, Phase},
     state::State,
-    utils,
     world::World,
 };
 use rand::{rngs::SmallRng, SeedableRng};
@@ -304,9 +303,6 @@ impl Game {
     /// Create a new instance of game with
     /// all the content loaded in
     pub fn new(world: World) -> Game {
-        // So we get tracebacks in the console
-        utils::set_panic_hook();
-
         Game {
             state: State::new(world),
             rng: SmallRng::from_entropy(),

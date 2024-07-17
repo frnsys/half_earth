@@ -1,9 +1,9 @@
 {
   "build": {
-    "beforeDevCommand": "trunk serve",
-    "beforeBuildCommand": "trunk build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
+    "beforeDevCommand": "cargo leptos watch",
+    "beforeBuildCommand": "cargo leptos build",
+    "devPath": "http://localhost:3000",
+    "distDir": "../target/site/pkg",
     "withGlobalTauri": true
   },
   "package": {

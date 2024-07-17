@@ -90,7 +90,7 @@ pub fn IndustryCard(
     let image_url = move || {
         industry.with(|ind| {
             format!(
-                "/public/assets/content/images/{}",
+                "/assets/content/images/{}",
                 ind.flavor.image.fname
             )
         })

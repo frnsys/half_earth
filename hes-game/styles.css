@@ -2,8 +2,8 @@
 
 @font-face {
   font-family: 'Times Ten';
-  src: url('/public/assets/fonts/TimesTen/TimesTen.woff2') format('woff2'),
-      url('/public/assets/fonts/TimesTen/TimesTen.woff') format('woff');
+  src: url('/assets/fonts/TimesTen/TimesTen.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,8 +11,8 @@
 
 @font-face {
   font-family: 'Times Ten';
-  src: url('/public/assets/fonts/TimesTen/TimesTen-BoldItalic.woff2') format('woff2'),
-      url('/public/assets/fonts/TimesTen/TimesTen-BoldItalic.woff') format('woff');
+  src: url('/assets/fonts/TimesTen/TimesTen-BoldItalic.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen-BoldItalic.woff') format('woff');
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -20,8 +20,8 @@
 
 @font-face {
   font-family: 'Times Ten';
-  src: url('/public/assets/fonts/TimesTen/TimesTen-Bold.woff2') format('woff2'),
-      url('/public/assets/fonts/TimesTen/TimesTen-Bold.woff') format('woff');
+  src: url('/assets/fonts/TimesTen/TimesTen-Bold.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -29,8 +29,8 @@
 
 @font-face {
   font-family: 'Times Ten';
-  src: url('/public/assets/fonts/TimesTen/TimesTen-Italic.woff2') format('woff2'),
-      url('/public/assets/fonts/TimesTen/TimesTen-Italic.woff') format('woff');
+  src: url('/assets/fonts/TimesTen/TimesTen-Italic.woff2') format('woff2'),
+      url('/assets/fonts/TimesTen/TimesTen-Italic.woff') format('woff');
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -38,8 +38,8 @@
 
 @font-face {
   font-family: 'W95FA';
-  src: url('/public/assets/fonts/W95FA/w95fa.woff2') format('woff2'),
-      url('/public/assets/fonts/W95FA/w95fa.woff') format('woff');
+  src: url('/assets/fonts/W95FA/w95fa.woff2') format('woff2'),
+      url('/assets/fonts/W95FA/w95fa.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -638,7 +638,7 @@ strong{
   right: 0;
   bottom: 0;
   top: 0;
-  background-image: url(/public/assets/backgrounds/start.png);
+  background-image: url(/assets/backgrounds/start.png);
   background-size: cover;
   background-position: center center;
   image-rendering: pixelated;
@@ -1123,7 +1123,7 @@ strong{
 
 .dropdown-menu {
   background-color: #1A1615;
-  background-image: url('/public/assets/backgrounds/menu.jpg');
+  background-image: url('/assets/backgrounds/menu.jpg');
   background-size: cover;
   background-position: center;
   position: absolute;
@@ -1344,7 +1344,7 @@ header .dropdown-menu-inset {
 }
 
 .clock--outer{
-  background-image: url('/public/assets/clock.png');
+  background-image: url('/assets/clock.png');
   image-rendering: auto;
   background-size: cover;
 }
@@ -1810,7 +1810,7 @@ to be centered */
 }
 .card-focus-area .inner{
   background-color: rgba(0,0,0,0.1);
-  /* background-image: url('/public/assets/backgrounds/screen-door.png'); */
+  /* background-image: url('/assets/backgrounds/screen-door.png'); */
   width: 350px;
   pointer-events: none;
   border-radius: 1em;
@@ -2390,7 +2390,7 @@ color: #63FF96;
 
 
 .report {
-  background-image: url('/public/assets/backgrounds/report.png');
+  background-image: url('/assets/backgrounds/report.png');
   background-colour: #FFF7D9;
   color: #000;
   flex: 1;
@@ -2422,7 +2422,7 @@ color: #63FF96;
   max-width: 360px;
   margin: 0 auto;
   border-radius: 1rem;
-  background-image: url('/public/assets/watermark.png');
+  background-image: url('/assets/watermark.png');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 200px;
@@ -2736,7 +2736,7 @@ color: #63FF96;
 }
 
 .planning--page--regions {
-  background: url('/public/assets/backgrounds/regions.png');
+  background: url('/assets/backgrounds/regions.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2830,7 +2830,7 @@ color: #63FF96;
 }
 
 .planning--page--dashboard {
-  background: url('/public/assets/backgrounds/dashboard.png');
+  background: url('/assets/backgrounds/dashboard.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2968,7 +2968,7 @@ color: #63FF96;
 }
 
 .plan {
-  background: url('/public/assets/backgrounds/plan.png');
+  background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3114,7 +3114,7 @@ color: #63FF96;
   border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 .plan--charts .chart {
-  background: url('/public/assets/grid.png') #F0D4CC;
+  background: url('/assets/grid.png') #F0D4CC;
   background-size: 60px;
   border-radius: 0.4em 0.4em 0 0;
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
@@ -3256,7 +3256,7 @@ color: #63FF96;
   flex-direction: column;
   justify-content: space-between;
   padding: 28px 0 0 0 !important;
-  background: url('/public/assets/backgrounds/plan.png');
+  background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: cetner center;
@@ -3347,7 +3347,7 @@ color: #63FF96;
   right: 1em;
   left: 1em;
   border-radius: 0.3em;
-  background: url(/public/assets/backgrounds/production.jpg);
+  background: url(/assets/backgrounds/production.jpg);
   mix-blend-mode: multiply;
   background-size: cover;
   background-position: center;
@@ -3792,7 +3792,7 @@ color: #63FF96;
   bottom: 0;
   /* background: #fadbae; */
 
-  background-image: url('/public/assets/backgrounds/globe.png');
+  background-image: url('/assets/backgrounds/globe.png');
   background-blend-mode: multiply;
   background-size: cover;
   background-repeat: no-repeat;
@@ -3918,7 +3918,7 @@ color: #63FF96;
   bottom: 0;
   left: 0;
   z-index: 2;
-  background: url('/public/assets/backgrounds/plan.png');
+  background: url('/assets/backgrounds/plan.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3975,7 +3975,7 @@ color: #63FF96;
 }
 
 .parliament {
-  background: url('/public/assets/backgrounds/parliament.png');
+  background: url('/assets/backgrounds/parliament.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4383,7 +4383,7 @@ color: #63FF96;
   left: 0;
 
   background-color: rgba(0,0,0,0.2);
-  background-image: url('/public/assets/backgrounds/screen-door.png');
+  background-image: url('/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   display: flex;
@@ -4535,7 +4535,7 @@ color: #63FF96;
   top: 0;
   padding: 1em;
 
-  background-image: url('/public/assets/backgrounds/screen-door.png');
+  background-image: url('/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   display: flex;
@@ -4674,7 +4674,7 @@ color: #63FF96;
   top: 0;
   /* background: rgba(0,0,0,0.75); */
 
-  background-image: url('/public/assets/backgrounds/screen-door.png');
+  background-image: url('/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
 
   padding: 8vh 1em;

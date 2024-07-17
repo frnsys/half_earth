@@ -1,4 +1,3 @@
-import RPC from './rpc';
 import HexSphere from './hex';
 import Scene from './3d/scene';
 import globeVert from './shaders/globe/vertex.glsl';
@@ -9,18 +8,13 @@ import * as THREE from 'three';
 
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const isSafari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
-const Surface = RPC.initialize(
-  new Worker(new URL('./surface.worker.js', import.meta.url))
-);
-const Temperature = RPC.initialize(
-  new Worker(new URL('./temp.worker.js', import.meta.url))
-);
 const texLoader = new THREE.TextureLoader();
 const objLoader = new THREE.ObjectLoader();
 
 
 class Globe {
   constructor(el) {
+    console.log("GLOBE CONSTURCTOR");
     let width = el.clientWidth;
     let height = el.clientHeight;
     this.scene = new Scene({
@@ -77,34 +71,21 @@ class Globe {
     this._onClick.push(fn);
   }
 
-  async init(startYear) {
-    this.temperature = await new Temperature(startYear);
-    await this.temperature.init();
-
-    if (!isMobile && !isSafari) {
-      this.surface = await new Surface();
-      await this.surface.init();
-
-      let pixelsBuf = await this.surface.pixelsBuf;
-      let width = await this.surface.width;
-      let height = await this.surface.height;
-      let pixels = new Uint8Array(pixelsBuf);
-      this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
-    } else {
-      this.surfaceTexture = texLoader.load('./assets/surface/static_surface.png');
-    }
+  init(width, height, pixels) {
+    console.log("INITING");
+    this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
     this.surfaceTexture.flipY = true;
 
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         heightmap: {
-          value: texLoader.load('./assets/surface/heightmap.png')
+          value: texLoader.load('/assets/surface/heightmap.png')
         },
         shadows: {
-          value: texLoader.load('./assets/surface/shadows.png')
+          value: texLoader.load('/assets/surface/shadows.png')
         },
         satTexture: {
-          value: texLoader.load('./assets/surface/satellite.bw.jpg')
+          value: texLoader.load('/assets/surface/satellite.bw.jpg')
         },
         biomesTexture: {
           value: this.surfaceTexture
@@ -153,41 +134,12 @@ class Globe {
     this.material.uniforms.screenRes.value.set(canvas.width, canvas.height, 1);
 
     this._onReady.forEach((fn) => fn(this));
-
-    await this.updateSurface();
   }
 
-  async updateSurface() {
-    if (this.surface) {
-      await this.surface.updateTexture();
-
-      // Since SharedArrayBuffer support is lacking
-      // in some mobile browsers, do this instead.
-      // await this.surface.updateTexture();
-      let newPixelsBuf = await this.surface.pixelsBuf;
-      let newPixels = new Uint8Array(newPixelsBuf);
-
-      this.surfaceTexture.image.data.set(newPixels);
-      this.surfaceTexture.needsUpdate = true;
-
-      // With SharedArrayBuffer we'd only need to do:
-      // await this.surface.updateTexture();
-      // this.surfaceTexture.needsUpdate = true;
-    }
-  }
-
-  // Calculate new temperature anomaly
-  // and update surface biomes/coloring accordingly.
-  // See comments for Surface.addEmissions
-  // for what `emissions` should look like.
-  async addEmissionsThenUpdate(emissions) {
-    await this.temperature.addEmissions(emissions);
-    let tgav = await this.temperature.updateTemperature();
-    if (this.surface) {
-      await this.surface.updateBiomes(tgav);
-      await this.updateSurface();
-    }
-    return tgav;
+  updateSurface(pixels) {
+    console.log(this.surfaceTexture);
+    this.surfaceTexture.image.data.set(pixels);
+    this.surfaceTexture.needsUpdate = true;
   }
 
   // Show/ping an icon and/or text

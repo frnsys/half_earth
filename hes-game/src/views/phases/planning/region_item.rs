@@ -178,7 +178,7 @@ pub fn RegionItem(
     let image = move || {
         region.with(|region| {
             format!(
-                "/public/assets/content/images/{}",
+                "/assets/content/images/{}",
                 region.flavor.image.fname
             )
         })

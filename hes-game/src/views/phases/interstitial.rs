@@ -283,7 +283,7 @@ pub fn Interstitial() -> impl IntoView {
     let background = move || {
         let locale = locale();
         format!(
-            "url('/public/assets/environments/out/{}')",
+            "url('/assets/environments/out/{}')",
             locale.background
         )
     };

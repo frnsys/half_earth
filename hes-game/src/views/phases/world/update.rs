@@ -56,7 +56,7 @@ pub fn Update(
                 &region.flavor.image.fname
             }
         };
-        format!("url(/public/assets/content/images/{}", fname)
+        format!("url(/assets/content/images/{}", fname)
     });
 
     let image_attrib = with_state!(|state, ui, update| {

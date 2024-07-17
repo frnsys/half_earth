@@ -60,7 +60,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                 </Show>
                 <div id="start-screen-inset">
                     <div id="start-inner">
-                        <img src="/public/assets/intro.svg"/>
+                        <img src="/assets/intro.svg"/>
                         <div class="start-subtitle">{t!("A Planetary Crisis Planning Game")}</div>
                         <Show when=|| GameState::has_save()>
                             <button

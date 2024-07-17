@@ -113,7 +113,7 @@ pub async fn load_language(mut lang: &str) -> anyhow::Result<()> {
     let phrases = if lang == DEFAULT_LANGUAGE {
         None
     } else {
-        let url = format!("/public/assets/lang/{lang}.json");
+        let url = format!("/assets/lang/{lang}.json");
         let resp = Request::get(&url).send().await?;
         let phrases: HashMap<String, String> = resp.json().await?;
         Some(phrases)

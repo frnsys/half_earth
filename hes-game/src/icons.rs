@@ -30,7 +30,7 @@ pub fn fill_icons(text: &str) -> String {
 macro_rules! icons {
     ($($name:ident: $path:literal),* $(,)?) => {
         $(
-            pub const $name: &'static str = concat!("/public/assets", $path);
+            pub const $name: &'static str = concat!("/assets", $path);
         )*
 
         paste! {

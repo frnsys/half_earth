@@ -116,7 +116,7 @@ pub fn Event(
     let effect_image_url = move || {
         event.with(|event| {
             format!(
-                "url(/public/assets/content/images/{})",
+                "url(/assets/content/images/{})",
                 event.flavor.image.fname
             )
         })

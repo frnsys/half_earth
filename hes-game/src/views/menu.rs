@@ -81,7 +81,7 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                 </div>
                 <header>
                     <div class="dropdown-menu-inset">
-                        <img src="/public/assets/gosplant.svg"/>
+                        <img src="/assets/gosplant.svg"/>
                     </div>
                 </header>
                 <Show
@@ -150,7 +150,7 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                             {t!("Contentedness")}
                         </div>
                     </div>
-                    <img class="motto" src="/public/assets/motto.png"/>
+                    <img class="motto" src="/assets/motto.png"/>
                     <div class="dropdown-menu-buttons">
                         <div
                             class="dropdown-menu-button"

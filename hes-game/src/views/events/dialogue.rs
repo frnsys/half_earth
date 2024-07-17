@@ -111,7 +111,7 @@ pub fn Dialogue(
 
     let profile = move || {
         format!(
-            "/public/assets/characters/{}.webp",
+            "/assets/characters/{}.webp",
             line.get().speaker
         )
     };

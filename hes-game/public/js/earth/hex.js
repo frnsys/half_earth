@@ -2,29 +2,29 @@ import * as THREE from 'three';
 import Hexasphere from 'hexasphere.js';
 
 const ICONS = {
-  "political_capital": "/public/assets/icons/pips/political_capital.png",
-  "content": "/public/assets/icons/pips/content.png",
-  "discontent": "/public/assets/icons/pips/discontent.png",
-  "heatwave__3": "/public/assets/icons/pips/heatwave__3.png",
-  "wildfires": "/public/assets/icons/pips/wildfires.png",
-  "famine": "/public/assets/icons/pips/famine.png",
-  "resistance__2": "/public/assets/icons/pips/resistance__2.png",
-  "co2_leak": "/public/assets/icons/pips/co2_leak.png",
-  "flood__2": "/public/assets/icons/pips/flood__2.png",
-  "power": "/public/assets/icons/pips/power.png",
-  "flood": "/public/assets/icons/pips/flood.png",
-  "hurricane": "/public/assets/icons/pips/hurricane.png",
-  "crop_failure": "/public/assets/icons/pips/crop_failure.png",
-  "disease": "/public/assets/icons/pips/disease.png",
-  "attacks": "/public/assets/icons/pips/attacks.png",
-  "wildfires__3": "/public/assets/icons/pips/wildfires__3.png",
-  "wildfires__2": "/public/assets/icons/pips/wildfires__2.png",
-  "power__2": "/public/assets/icons/pips/power__2.png",
-  "resistance": "/public/assets/icons/pips/resistance.png",
-  "heatwave": "/public/assets/icons/pips/heatwave.png",
-  "flood__3": "/public/assets/icons/pips/flood__3.png",
-  "resistance__3": "/public/assets/icons/pips/resistance__3.png",
-  "heatwave__2": "/public/assets/icons/pips/heatwave__2.png",
+  "political_capital": "/assets/icons/pips/political_capital.png",
+  "content": "/assets/icons/pips/content.png",
+  "discontent": "/assets/icons/pips/discontent.png",
+  "heatwave__3": "/assets/icons/pips/heatwave__3.png",
+  "wildfires": "/assets/icons/pips/wildfires.png",
+  "famine": "/assets/icons/pips/famine.png",
+  "resistance__2": "/assets/icons/pips/resistance__2.png",
+  "co2_leak": "/assets/icons/pips/co2_leak.png",
+  "flood__2": "/assets/icons/pips/flood__2.png",
+  "power": "/assets/icons/pips/power.png",
+  "flood": "/assets/icons/pips/flood.png",
+  "hurricane": "/assets/icons/pips/hurricane.png",
+  "crop_failure": "/assets/icons/pips/crop_failure.png",
+  "disease": "/assets/icons/pips/disease.png",
+  "attacks": "/assets/icons/pips/attacks.png",
+  "wildfires__3": "/assets/icons/pips/wildfires__3.png",
+  "wildfires__2": "/assets/icons/pips/wildfires__2.png",
+  "power__2": "/assets/icons/pips/power__2.png",
+  "resistance": "/assets/icons/pips/resistance.png",
+  "heatwave": "/assets/icons/pips/heatwave.png",
+  "flood__3": "/assets/icons/pips/flood__3.png",
+  "resistance__3": "/assets/icons/pips/resistance__3.png",
+  "heatwave__2": "/assets/icons/pips/heatwave__2.png",
 };
 
 import tileHeights from '../../assets/surface/tile_heights.json';
@@ -40,7 +40,7 @@ const highlightedHexMaterial= new THREE.MeshBasicMaterial({color: 0xfc4903, tran
 // For displaying text
 const loader = new THREE.FontLoader();
 let threeFont;
-loader.load('/public/assets/fonts/helvetiker_bold.typeface.json', (font) => {
+loader.load('/assets/fonts/helvetiker_bold.typeface.json', (font) => {
   threeFont = font;
 });
 const textMaterial = new THREE.MeshBasicMaterial({color: 0xEA060A, transparent: true});
@@ -63,9 +63,9 @@ function vector(p1, p2) {
 }
 
 function calculateSurfaceNormal(p1, p2, p3) {
-  U = vector(p1, p2)
-  V = vector(p1, p3)
-  N = {
+  let U = vector(p1, p2)
+  let V = vector(p1, p3)
+  let N = {
     x: U.y * V.z - U.z * V.y,
     y: U.z * V.x - U.x * V.z,
     z: U.x * V.y - U.y * V.x

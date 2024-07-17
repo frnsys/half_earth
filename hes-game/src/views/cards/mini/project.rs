@@ -17,7 +17,7 @@ pub fn MiniProject(
     let image = move || {
         project.with(|project| {
             format!(
-                "url(/public/assets/content/{})",
+                "url(/assets/content/{})",
                 project.flavor.image.fname
             )
         })

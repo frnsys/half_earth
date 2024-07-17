@@ -8,9 +8,6 @@ edition = "2021"
 bench = false
 crate-type = ["cdylib", "rlib"]
 
-[features]
-default = ["console_error_panic_hook"]
-
 [dependencies]
 paste = "1.0"
 rand = { version = "0.8", features = ["small_rng"] }
@@ -22,19 +19,6 @@ getrandom = { version = "0.2", features = ["js"] }
 enum-map = { version = "2.7.3", features = ["serde"] }
 strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
 
-# The `console_error_panic_hook` crate provides better debugging of panics by
-# logging them with `console.error`. This is great for development, but requires
-# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
-# code size when deploying.
-console_error_panic_hook = { version = "0.1.6", optional = true }
-
-# `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
-# compared to the default allocator's ~10K. It is slower than the default
-# allocator, however.
-#
-# Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
-wee_alloc = { version = "0.4.5", optional = true }
-
 [dev-dependencies]
 float-cmp = "0.9"
 wasm-bindgen-test = "0.3.13"
@@ -42,7 +26,6 @@ criterion = "0.3"
 image = "0.23.14" # for reading pngs in tests/benchmarks
 
 [profile.release]
-# Tell `rustc` to optimize for small code size.
 opt-level = "s"
 lto = "fat"
 codegen-units = 1

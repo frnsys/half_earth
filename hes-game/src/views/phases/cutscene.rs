@@ -35,7 +35,7 @@ pub fn Cutscene() -> impl IntoView {
     let (image_idx, set_image_idx) = create_signal(0);
     let background = move || {
         let image = IMAGES[image_idx.get()];
-        format!("url('/public/assets/cutscenes/out/{image}')")
+        format!("url('/assets/cutscenes/out/{image}')")
     };
 
     let (_, set_phase) = ui_rw!(phase);
