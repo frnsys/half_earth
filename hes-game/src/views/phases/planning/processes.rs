@@ -379,7 +379,7 @@ fn display_changes(
         .into_view()
     } else {
         view! {
-            {t!("This output's production will")}: {descs}
+            {t!("This output's production will")}:" "{descs}
         }
         .into_view()
     }

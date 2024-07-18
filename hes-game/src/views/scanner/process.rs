@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     consts,
-    state::Tutorial,
+    state::{Tutorial, UIState},
     t,
     views::cards::ProcessCard,
     with_state,
@@ -69,36 +69,59 @@ impl ScannerSpec for ProcessScanner {
             }
         });
 
-        let add_point = write_state!(move |state, ui| {
-            if let Some(process) = process.get() {
-                let max_share =
-                    state.process_max_share(&process);
-                points.update(|points| {
-                    ui.add_point(points, &process, max_share);
+        let add_point =
+            move |state: &State, ui: &mut UIState| {
+                if let Some(process) = process.get() {
+                    let max_share =
+                        state.process_max_share(&process);
+                    points.update(|points| {
+                        ui.add_point(
+                            points, &process, max_share,
+                        );
 
-                    // Consider the process mix 'changed'
-                    // when all points have been assigned
-                    if *points == 0 {
-                        on_change.call(());
-                    }
-                });
-            }
-        });
+                        // Consider the process mix 'changed'
+                        // when all points have been assigned
+                        if *points == 0 {
+                            on_change.call(());
+                        }
+                    });
+                }
+            };
 
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
         let on_finish_scan =
             move |controls: ScannerControls| {
                 if addable() {
-                    let state = expect_context::<
-                        RwSignal<crate::state::GameState>,
-                    >();
-                    state.try_update(|state| {
+                    state.update(|state| {
                         let ui = &mut state.ui;
                         if ui.tutorial == Tutorial::Processes {
                             ui.tutorial.advance();
                         }
-                        add_point();
-                        controls.pulse_card();
                     });
+
+                    let mut available_points = points.get();
+                    if let Some(process) = process.get() {
+                        state.update(|state| {
+                            let max_share = state
+                                .process_max_share(&process);
+                            state.ui.add_point(
+                                &mut available_points,
+                                &process,
+                                max_share,
+                            );
+                        });
+
+                        // Consider the process mix 'changed'
+                        // when all points have been assigned
+                        if available_points == 0 {
+                            on_change.call(());
+                        }
+
+                        points.set(available_points);
+                    }
+                    controls.pulse_card();
                     true
                 } else {
                     controls.reject_scan();
@@ -122,14 +145,6 @@ impl ScannerSpec for ProcessScanner {
         let points = self.points.clone();
         let mix_changes = self.mix_changes.clone();
 
-        let remove_point = write_state!(move |state, ui| {
-            if let Some(process) = process.get() {
-                points.update(|points| {
-                    ui.remove_point(points, &process);
-                });
-            }
-        });
-
         let subtractable = move || {
             if let Some(process) = process.get() {
                 let changes = mix_changes.get();
@@ -142,9 +157,22 @@ impl ScannerSpec for ProcessScanner {
             }
         };
 
+        let state = expect_context::<
+            RwSignal<crate::state::GameState>,
+        >();
         let on_finish_scan =
             move |controls: ScannerControls| {
-                remove_point();
+                let mut available_points = points.get();
+                if let Some(process) = process.get() {
+                    state.update(|state| {
+                        state.ui.remove_point(
+                            &mut available_points,
+                            &process,
+                        );
+                    });
+                    points.set(available_points);
+                }
+
                 // If still subtractable, continue scanning
                 subtractable()
             };
