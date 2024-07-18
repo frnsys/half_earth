@@ -29,6 +29,7 @@ const ICONS = {
 
 import tileHeights from '../../assets/surface/tile_heights.json';
 import tilesToRegions from '../..//assets/surface/tiles_to_regions.json';
+import regionsToTiles from '../..//assets/surface/regions_to_tiles.json';
 
 const raycaster = new THREE.Raycaster();
 const vertAxis = new THREE.Vector3(0,1,0);
@@ -105,11 +106,11 @@ class HexSphere {
     this.scene = scene;
     this.parent = parent;
     this.hexasphere = new Hexasphere(radius, subdivisions, tileWidth);
-    let regionTiles = Object.keys(tilesToRegions).map((idx) => parseInt(idx));
     this.hexasphere.tiles.forEach((tile, idx) => {
-      if (regionTiles.includes(idx)) {
+      let regionId = tilesToRegions[idx];
+      if (regionId !== undefined) {
         tile.mesh = generateTileMesh(tile);
-        tile.mesh.userData.idx = idx;
+        tile.mesh.userData.idx = regionId;
         parent.add(tile.mesh);
 
         let bnd = tile.boundary;
@@ -209,7 +210,7 @@ class HexSphere {
     let intersects = raycaster.intersectObjects(this.selectables.filter(s => s.visible))
       .map((intersect) => {
           // Return region indices.
-          intersect.object.userData.idx
+          return intersect.object.userData.idx;
       });
     // if (intersects.length > 0) {
       // Rotate orbital controls camera to center on this point
@@ -236,12 +237,32 @@ class HexSphere {
 
   highlightIdx(idx) {
     let tile = this.hexasphere.tiles[idx];
-    tile.mesh.material = highlightedHexMaterial;
+    if (tile.mesh) {
+      tile.mesh.material = highlightedHexMaterial;
+    }
   }
 
   unhighlightIdx(idx) {
     let tile = this.hexasphere.tiles[idx];
-    tile.mesh.material = hexMaterial;
+    if (tile.mesh) {
+      tile.mesh.material = hexMaterial;
+    }
+  }
+
+  clearHighlights() {
+    Object.keys(tilesToRegions).forEach((idx) => {
+      this.unhighlightIdx(idx);
+    });
+  }
+
+  highlightRegion(regionName) {
+    this.clearHighlights();
+    let tiles = regionsToTiles[regionName];
+    let allTiles = tiles['inland'].concat(tiles['coasts']);
+    allTiles.forEach((idx) => {
+      this.highlightIdx(idx);
+    });
+    this.centerOnIndex(allTiles[0]);
   }
 
   onTouchStart(ev) {

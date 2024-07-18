@@ -14,7 +14,6 @@ const objLoader = new THREE.ObjectLoader();
 
 class Globe {
   constructor(el) {
-    console.log("GLOBE CONSTURCTOR");
     let width = el.clientWidth;
     let height = el.clientHeight;
     this.scene = new Scene({
@@ -71,8 +70,24 @@ class Globe {
     this._onClick.push(fn);
   }
 
+  stopRotation() {
+    this.rotate = false;
+  }
+
+  hideClouds() {
+    this.clouds.visible = false;
+  }
+
+  setZoom(zoom) {
+    this.scene.camera.zoom = zoom;
+    this.scene.camera.updateProjectionMatrix();
+  }
+
+  highlightRegion(regionName) {
+    this.hexsphere.highlightRegion(regionName);
+  }
+
   init(width, height, pixels) {
-    console.log("INITING");
     this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
     this.surfaceTexture.flipY = true;
 
@@ -137,7 +152,6 @@ class Globe {
   }
 
   updateSurface(pixels) {
-    console.log(this.surfaceTexture);
     this.surfaceTexture.image.data.set(pixels);
     this.surfaceTexture.needsUpdate = true;
   }

@@ -25,6 +25,21 @@ extern "C" {
     );
 
     #[wasm_bindgen(method)]
+    fn clear(this: &Globe);
+
+    #[wasm_bindgen(method, js_name = hideClouds)]
+    fn hide_clouds(this: &Globe);
+
+    #[wasm_bindgen(method, js_name = stopRotation)]
+    fn stop_rotation(this: &Globe);
+
+    #[wasm_bindgen(method, js_name = setZoom)]
+    fn set_zoom(this: &Globe, zoom: f32);
+
+    #[wasm_bindgen(method, js_name = highlightRegion)]
+    fn highlight_region(this: &Globe, region_name: &str);
+
+    #[wasm_bindgen(method)]
     fn update_surface(this: &Globe, pixels: Uint8Array);
 
     #[wasm_bindgen(method, js_name = onReady)]
@@ -34,22 +49,43 @@ extern "C" {
     fn on_click(this: &Globe, cb: &js_sys::Function);
 }
 
-pub struct ThaGlobe {
+pub struct GlobeRef {
     inner: Rc<RefCell<Globe>>,
 }
-impl Clone for ThaGlobe {
+impl Clone for GlobeRef {
     fn clone(&self) -> Self {
         Self {
             inner: self.inner.clone(),
         }
     }
 }
+impl GlobeRef {
+    pub fn clear(&self) {
+        self.inner.borrow().clear();
+    }
+
+    pub fn stop_rotation(&self) {
+        self.inner.borrow().stop_rotation();
+    }
+
+    pub fn hide_clouds(&self) {
+        self.inner.borrow().hide_clouds();
+    }
+
+    pub fn set_zoom(&self, zoom: f32) {
+        self.inner.borrow().set_zoom(zoom);
+    }
+
+    pub fn highlight_region(&self, region_name: &str) {
+        self.inner.borrow().highlight_region(region_name);
+    }
+}
 
 #[component]
 pub fn Globe(
-    id: &'static str,
+    #[prop(optional, default = "globe")] id: &'static str,
     #[prop(optional)] class: &'static str,
-    #[prop(into)] on_ready: Callback<ThaGlobe>,
+    #[prop(into)] on_ready: Callback<GlobeRef>,
     #[prop(into, optional)] on_click: Option<Callback<usize>>,
     #[prop(into, optional)] bg_color: Signal<String>,
 ) -> impl IntoView {
@@ -60,14 +96,6 @@ pub fn Globe(
 
     create_effect(move |_| {
         let g = globe_ref.get().unwrap();
-
-        // let g2 = g.clone();
-        let on_ready = Closure::wrap(Box::new(move || {
-            logging::log!("GLOBE READY");
-            set_loading.set(false);
-            // on_ready.call(g2.clone());
-        })
-            as Box<dyn FnMut()>);
 
         let on_click = Closure::wrap(Box::new(
             move |region_idxs: &JsValue| {
@@ -87,35 +115,49 @@ pub fn Globe(
         logging::log!("RUST CALING GLOBE");
         let globe = Globe::new(&to_ws_el(g));
 
+        let g = GlobeRef {
+            inner: Rc::new(RefCell::new(globe)),
+        };
+
+        let g_copy = g.clone();
+        let on_ready = Closure::wrap(Box::new(move || {
+            logging::log!("GLOBE READY");
+            set_loading.set(false);
+            on_ready.call(g_copy.clone());
+        })
+            as Box<dyn FnMut()>);
+
+        g.inner
+            .borrow()
+            .on_ready(on_ready.as_ref().unchecked_ref());
+        g.inner
+            .borrow()
+            .on_click(on_click.as_ref().unchecked_ref());
+
         spawn_local(async move {
             let (width, height, pixels) =
                 calc_surface(tgav.get()).await.unwrap();
             logging::log!("GLOBE INITED");
-            globe.init(width, height, pixels.as_slice().into());
+            g.inner.borrow().init(
+                width,
+                height,
+                pixels.as_slice().into(),
+            );
             logging::log!("GLOBE RENDERING");
-            globe.render();
+            g.inner.borrow().render();
         });
 
-        // let g = ThaGlobe {
-        //     inner: Rc::new(RefCell::new(globe)),
-        // };
-        // g.inner
-        //     .borrow()
-        //     .on_ready(on_ready.as_ref().unchecked_ref());
-        // g.inner
-        //     .borrow()
-        //     .on_click(on_click.as_ref().unchecked_ref());
-        // on_ready.forget();
-        // on_click.forget();
+        on_ready.forget();
+        on_click.forget();
 
         // TODO
         // globe.scene.resize();
         // globe.resetCamera();
     });
 
-    on_cleanup(|| {
-        // this.globe.active = false;
-    });
+    // on_cleanup(|| {
+    // this.globe.active = false;
+    // });
 
     // If using a cached globe instance:
     // globe.setEl(this.$el);
@@ -128,7 +170,7 @@ pub fn Globe(
 
     view! {
         <div
-            id=format!("globe {}", id)
+            id=id
             class=class
             ref=globe_ref
             style:background-color=bg_color

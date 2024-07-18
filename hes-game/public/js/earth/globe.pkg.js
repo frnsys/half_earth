@@ -26529,6 +26529,90 @@ var tile_heights_default = {
 // ../../assets/surface/tiles_to_regions.json
 var tiles_to_regions_default = { "569": 12, "568": 12, "562": 12, "557": 12, "576": 12, "575": 12, "570": 12, "574": 12, "567": 12, "561": 12, "554": 12, "558": 12, "563": 12, "564": 12, "566": 12, "490": 12, "482": 12, "384": 16, "379": 16, "87": 14, "88": 14, "96": 14, "90": 14, "385": 14, "98": 14, "97": 14, "80": 14, "603": 6, "606": 6, "442": 6, "443": 6, "601": 6, "444": 6, "521": 11, "522": 11, "235": 11, "251": 11, "258": 11, "257": 11, "10": 11, "277": 11, "540": 11, "545": 11, "246": 11, "252": 11, "242": 11, "233": 11, "474": 17, "479": 17, "415": 17, "478": 17, "416": 17, "417": 17, "445": 17, "458": 17, "480": 17, "459": 17, "457": 17, "469": 17, "473": 17, "472": 17, "468": 17, "467": 17, "471": 17, "435": 2, "441": 2, "610": 2, "436": 2, "431": 2, "432": 2, "437": 2, "427": 2, "414": 2, "477": 2, "413": 2, "423": 2, "426": 2, "430": 2, "360": 15, "361": 15, "305": 15, "304": 15, "298": 15, "297": 15, "303": 15, "355": 15, "354": 15, "620": 4, "276": 4, "292": 4, "287": 4, "275": 4, "619": 4, "618": 4, "274": 4, "283": 4, "282": 4, "285": 4, "286": 4, "281": 4, "284": 4, "81": 18, "50": 18, "52": 18, "53": 18, "25": 18, "24": 18, "23": 18, "40": 18, "46": 18, "51": 18, "44": 18, "43": 18, "42": 18, "39": 18, "35": 18, "45": 18, "75": 18, "4": 18, "327": 18, "321": 18, "316": 18, "312": 18, "22": 18, "74": 18, "70": 18, "49": 18, "48": 18, "41": 18, "264": 5, "0": 5, "439": 5, "433": 5, "440": 5, "434": 5, "572": 10, "487": 10, "579": 10, "573": 10, "500": 10, "594": 7, "595": 7, "596": 7, "591": 7, "590": 7, "587": 7, "592": 7, "586": 7, "583": 7, "582": 7, "456": 7, "589": 7, "259": 0, "359": 0, "260": 0, "253": 0, "376": 9, "373": 9, "371": 9, "363": 9, "391": 9, "393": 9, "364": 9, "374": 9, "377": 9, "381": 9, "382": 9, "378": 9, "365": 9, "366": 9, "396": 9, "400": 9, "401": 9, "406": 9, "226": 9, "380": 9, "372": 9, "370": 9, "369": 9, "362": 9, "390": 9, "394": 9, "397": 9, "227": 9, "405": 9, "367": 9, "383": 9, "387": 9, "530": 8, "523": 8, "516": 8, "517": 8, "602": 8, "6": 8, "604": 8, "605": 8, "518": 8, "531": 8, "534": 8, "532": 8, "272": 1, "273": 1, "617": 3, "616": 1, "290": 19, "291": 19, "296": 19, "295": 19, "289": 19, "294": 19, "288": 19, "613": 3, "612": 3, "608": 3, "609": 3, "607": 3, "519": 3, "520": 3, "614": 3, "278": 13, "279": 13, "271": 13, "615": 13 };
 
+// ../../assets/surface/regions_to_tiles.json
+var regions_to_tiles_default = {
+  Australasia: {
+    inland: [569, 568, 562, 557],
+    coasts: [576, 575, 570, 574, 567, 561, 557, 554, 558, 563, 564, 566, 490, 482]
+  },
+  Caribbean: {
+    inland: [],
+    coasts: [384, 379]
+  },
+  "Central America": {
+    inland: [87],
+    coasts: [88, 96, 90, 385, 98, 97, 80]
+  },
+  "Central Asia": {
+    inland: [603, 606, 442, 443, 601, 444],
+    coasts: []
+  },
+  "Eastern Africa": {
+    inland: [521, 522, 235, 251, 258, 257, 10, 277],
+    coasts: [540, 545, 235, 246, 252, 242, 233]
+  },
+  "Eastern Asia": {
+    inland: [474, 479, 415, 478, 416, 417, 445, 458, 480, 459],
+    coasts: [457, 469, 473, 472, 468, 467, 471]
+  },
+  "Eastern Europe": {
+    inland: [435, 441, 610, 435, 436, 431, 432, 437, 427, 414, 477, 413, 423, 426, 430, 435],
+    coasts: []
+  },
+  "Central Africa": {
+    inland: [360, 361, 305, 304, 298, 297],
+    coasts: [303, 355, 354]
+  },
+  "Northern Africa": {
+    inland: [620, 276, 292, 287, 275, 619, 618, 274, 283, 282, 285, 286],
+    coasts: [281, 284]
+  },
+  "Northern America": {
+    inland: [81, 50, 52, 53, 25, 24, 23, 40, 46, 51, 44, 43, 42, 39, 35, 45, 75],
+    coasts: [4, 327, 321, 316, 312, 22, 74, 70, 49, 48, 41]
+  },
+  "Northern Europe": {
+    inland: [264, 0, 439, 433, 440, 434],
+    coasts: []
+  },
+  Oceania: {
+    inland: [],
+    coasts: [572, 487, 579, 573, 500]
+  },
+  "South-eastern Asia": {
+    inland: [594],
+    coasts: [594, 595, 596, 591, 590, 587, 592, 586, 583, 582, 456, 589]
+  },
+  "Southern Africa": {
+    inland: [259],
+    coasts: [359, 260, 253]
+  },
+  "Southern America": {
+    inland: [376, 373, 371, 363, 391, 393, 364, 374, 377, 381, 382, 378, 365, 366, 396, 400, 401, 406, 226],
+    coasts: [380, 372, 370, 369, 362, 390, 391, 394, 397, 401, 226, 227, 405, 367, 383, 387]
+  },
+  "Southern Asia": {
+    inland: [530, 523, 516, 517, 602, 6, 604],
+    coasts: [605, 518, 531, 534, 532, 530, 523]
+  },
+  "Southern Europe": {
+    inland: [272, 273, 617, 616],
+    coasts: []
+  },
+  "Western Africa": {
+    inland: [290, 291, 296, 295, 289],
+    coasts: [296, 295, 294, 288]
+  },
+  "Western Asia": {
+    inland: [613, 612, 608, 609, 607, 617],
+    coasts: [519, 520, 614]
+  },
+  "Western Europe": {
+    inland: [278, 279, 271, 615],
+    coasts: []
+  }
+};
+
 // hex.js
 var ICONS = {
   "political_capital": "/assets/icons/pips/political_capital.png",
@@ -26631,11 +26715,11 @@ var HexSphere = class {
     this.scene = scene;
     this.parent = parent;
     this.hexasphere = new import_hexasphere.default(radius, subdivisions, tileWidth);
-    let regionTiles = Object.keys(tiles_to_regions_default).map((idx) => parseInt(idx));
     this.hexasphere.tiles.forEach((tile, idx) => {
-      if (regionTiles.includes(idx)) {
+      let regionId = tiles_to_regions_default[idx];
+      if (regionId !== void 0) {
         tile.mesh = generateTileMesh(tile);
-        tile.mesh.userData.idx = idx;
+        tile.mesh.userData.idx = regionId;
         parent.add(tile.mesh);
         let bnd = tile.boundary;
         let normal = calculateSurfaceNormal(bnd[1], bnd[2], bnd[3]);
@@ -26716,7 +26800,7 @@ var HexSphere = class {
     this.setMouse(ev);
     raycaster.setFromCamera(this.mouse, this.scene.camera);
     let intersects2 = raycaster.intersectObjects(this.selectables.filter((s) => s.visible)).map((intersect) => {
-      intersect.object.userData.idx;
+      return intersect.object.userData.idx;
     });
     this._onClick.forEach((fn) => fn(intersects2));
   }
@@ -26734,11 +26818,29 @@ var HexSphere = class {
   }
   highlightIdx(idx) {
     let tile = this.hexasphere.tiles[idx];
-    tile.mesh.material = highlightedHexMaterial;
+    if (tile.mesh) {
+      tile.mesh.material = highlightedHexMaterial;
+    }
   }
   unhighlightIdx(idx) {
     let tile = this.hexasphere.tiles[idx];
-    tile.mesh.material = hexMaterial;
+    if (tile.mesh) {
+      tile.mesh.material = hexMaterial;
+    }
+  }
+  clearHighlights() {
+    Object.keys(tiles_to_regions_default).forEach((idx) => {
+      this.unhighlightIdx(idx);
+    });
+  }
+  highlightRegion(regionName) {
+    this.clearHighlights();
+    let tiles = regions_to_tiles_default[regionName];
+    let allTiles = tiles["inland"].concat(tiles["coasts"]);
+    allTiles.forEach((idx) => {
+      this.highlightIdx(idx);
+    });
+    this.centerOnIndex(allTiles[0]);
   }
   onTouchStart(ev) {
     ev.preventDefault();
@@ -27490,7 +27592,6 @@ var texLoader2 = new TextureLoader();
 var objLoader = new ObjectLoader();
 var Globe = class {
   constructor(el) {
-    console.log("GLOBE CONSTURCTOR");
     let width = el.clientWidth;
     let height = el.clientHeight;
     this.scene = new scene_default({
@@ -27537,8 +27638,20 @@ var Globe = class {
   onClick(fn) {
     this._onClick.push(fn);
   }
+  stopRotation() {
+    this.rotate = false;
+  }
+  hideClouds() {
+    this.clouds.visible = false;
+  }
+  setZoom(zoom) {
+    this.scene.camera.zoom = zoom;
+    this.scene.camera.updateProjectionMatrix();
+  }
+  highlightRegion(regionName) {
+    this.hexsphere.highlightRegion(regionName);
+  }
   init(width, height, pixels) {
-    console.log("INITING");
     this.surfaceTexture = new DataTexture(pixels, width, height, RGBFormat);
     this.surfaceTexture.flipY = true;
     this.material = new ShaderMaterial({
@@ -27592,7 +27705,6 @@ var Globe = class {
     this._onReady.forEach((fn) => fn(this));
   }
   updateSurface(pixels) {
-    console.log(this.surfaceTexture);
     this.surfaceTexture.image.data.set(pixels);
     this.surfaceTexture.needsUpdate = true;
   }

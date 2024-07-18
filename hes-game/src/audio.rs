@@ -17,27 +17,27 @@ extern "C" {
     #[wasm_bindgen(constructor)]
     fn new() -> AudioManager;
 
-    #[wasm_bindgen(method)]
+    #[wasm_bindgen(method, js_name = startSoundtrack)]
     fn start_soundtrack(
         this: &AudioManager,
         file: &str,
         fade: bool,
     );
 
-    #[wasm_bindgen(method)]
+    #[wasm_bindgen(method, js_name = stopSoundtrack)]
     fn stop_soundtrack(this: &AudioManager, fade: bool);
 
-    #[wasm_bindgen(method)]
+    #[wasm_bindgen(method, js_name = startAtmosphere)]
     fn start_atmosphere(
         this: &AudioManager,
         file: &str,
         fade: bool,
     );
 
-    #[wasm_bindgen(method)]
+    #[wasm_bindgen(method, js_name = stopAtmosphere)]
     fn stop_atmosphere(this: &AudioManager, fade: bool);
 
-    #[wasm_bindgen(method)]
+    #[wasm_bindgen(method, js_name = playOneShot)]
     fn play_one_shot(this: &AudioManager, file: &str);
 
     #[wasm_bindgen(method)]

@@ -128,7 +128,7 @@ pub fn RegionItem(
 
             view! {
                 <div class:max-level=is_max_level>
-                    <span>{t!("Development Progress")} :</span>
+                    <span>{t!("Development Progress")}: </span>
                     <Show
                         when=move || !is_max_level
                         fallback=move || {

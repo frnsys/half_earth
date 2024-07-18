@@ -93,7 +93,7 @@ pub fn WorldEvents() -> impl IntoView {
     };
 
     // TODO
-    // let on_globe_ready = move |globe: ThaGlobe| {
+    // let on_globe_ready = move |globe: GlobeRef| {
     //     globe.clear();
     // };
 

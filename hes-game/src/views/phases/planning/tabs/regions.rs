@@ -1,21 +1,25 @@
 use super::super::region_item::RegionItem;
 use crate::{
-    icons, state, t,
+    icons,
+    state,
+    t,
     util::{scale_text, to_ws_el},
-    views::globe::Globe,
+    views::globe::{Globe, GlobeRef},
 };
 use leptos::*;
 
 #[component]
 pub fn Regions() -> impl IntoView {
-    // TODO
-    // import regionsToTiles from 'assets/surface/regions_to_tiles.json';
-    // import tilesToRegions from 'assets/surface/tiles_to_regions.json';
-
+    let (globe, set_globe) =
+        create_signal::<Option<GlobeRef>>(None);
     let regions = state!(world.regions.clone());
-    let (selected_region, set_selected_region) = create_signal(0);
-    let region_name = move || regions.get()[selected_region.get()].name.clone();
-    let region = move || regions.get()[selected_region.get()].clone();
+    let (selected_region, set_selected_region) =
+        create_signal(0);
+    let region_name = move || {
+        regions.get()[selected_region.get()].name.clone()
+    };
+    let region =
+        move || regions.get()[selected_region.get()].clone();
 
     let region_name_ref = create_node_ref::<html::Div>();
     let fit_region_name = move || {
@@ -23,27 +27,12 @@ pub fn Regions() -> impl IntoView {
             scale_text(to_ws_el(region_name_ref), 18);
         }
     };
-    create_effect(move |_| {
-        // Subscribe to selected region change.
-        let _ = selected_region.get();
-        fit_region_name();
-    });
 
     let center_on_region = move || {
-        let idx = selected_region.get();
-
-        // Reset highlights
-        // Object.keys(tilesToRegions).forEach((idx) => {
-        //   this.globe.hexsphere.unhighlightIdx(idx);
-        // });
-        //
-        // let tiles = this.regionTiles(regionId);
-        // this.globe.hexsphere.centerOnIndex(tiles[0]);
-        //
-        // // Highlight region
-        // tiles.forEach((idx) => {
-        //   this.globe.hexsphere.highlightIdx(idx);
-        // });
+        if let Some(globe) = globe.get() {
+            let name = region_name();
+            globe.highlight_region(&name);
+        }
     };
 
     let next_region = move |_| {
@@ -68,39 +57,23 @@ pub fn Regions() -> impl IntoView {
         center_on_region();
     };
 
-    on_cleanup(|| {
-        // TODO this could probably be moved into the globe view?
-        // just unhighlight all?
-        // Object.keys(tilesToRegions).forEach((idx) => {
-        //   this.globe.hexsphere.unhighlightIdx(idx);
-        // });
+    create_effect(move |_| {
+        // Subscribe to selected region change.
+        let _ = selected_region.get();
+        fit_region_name();
+        center_on_region();
     });
 
-    // TODO
-    // let region_tiles = move |region_id| {
-    //     // TODO
-    //     // let name = state.gameState.world.regions[regionId].name;
-    //     // let tiles = regionsToTiles[name];
-    //     // return tiles['inland'].concat(tiles['coasts']);
-    // };
-
     let on_globe_click = move |region_idx| {
-        // TODO
-        // let obj = intersects[0].object;
-        // let regionId = tilesToRegions[obj.userData.idx];
-        // if (regionId !== undefined) {
-        //   this.selectedRegion = regionId;
-        //   this.centerOnRegion(regionId);
-        // }
+        set_selected_region.set(region_idx);
     };
 
-    let on_globe_ready = move |globe| {
-        // globe.clear();
-        // globe.rotate = false;
-        // globe.scene.camera.zoom = 0.15;
-        // globe.scene.camera.updateProjectionMatrix();
-        // globe.clouds.visible = false;
-        // this.globe = globe;
+    let on_globe_ready = move |globe: GlobeRef| {
+        globe.clear();
+        globe.stop_rotation();
+        globe.set_zoom(0.15);
+        globe.hide_clouds();
+        set_globe.set(Some(globe));
         center_on_region();
     };
 
