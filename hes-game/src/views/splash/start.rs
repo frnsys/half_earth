@@ -1,5 +1,6 @@
 use super::credits::Credits;
 use crate::{
+    audio,
     i18n,
     state::{GameState, Settings},
     t,
@@ -89,6 +90,9 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                     set_settings
                                         .update(|settings| {
                                             settings.sound = !settings.sound;
+                                            if settings.sound {
+                                                audio::play_one_shot("/assets/sounds/notification.wav");
+                                            }
                                         });
                                 }
                             >

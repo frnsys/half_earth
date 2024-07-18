@@ -1,6 +1,11 @@
 use std::rc::Rc;
 
-use leptos::{provide_context, SignalGetUntracked};
+use leptos::{
+    expect_context,
+    on_cleanup,
+    provide_context,
+    SignalGetUntracked,
+};
 use wasm_bindgen::prelude::*;
 
 use crate::state::Settings;
@@ -33,7 +38,7 @@ extern "C" {
     fn stop_atmosphere(this: &AudioManager, fade: bool);
 
     #[wasm_bindgen(method)]
-    fn play_one_shot(this: &AudioManager);
+    fn play_one_shot(this: &AudioManager, file: &str);
 
     #[wasm_bindgen(method)]
     fn mute(this: &AudioManager);
@@ -49,4 +54,25 @@ pub fn init_audio() {
         manager.mute();
     }
     provide_context(Rc::new(manager));
+}
+
+pub fn play_phase_music(fname: &str, fade: bool) {
+    let manager = expect_context::<Rc<AudioManager>>();
+    manager.start_soundtrack(fname, fade);
+    on_cleanup(|| {
+        manager.stop_soundtrack(fade);
+    });
+}
+
+pub fn play_one_shot(fname: &str) {
+    let manager = expect_context::<Rc<AudioManager>>();
+    manager.play_one_shot(fname);
+}
+
+pub fn play_atmosphere(fname: &str) {
+    let manager = expect_context::<Rc<AudioManager>>();
+    manager.start_atmosphere(fname, true);
+    on_cleanup(|| {
+        manager.stop_atmosphere(true);
+    });
 }

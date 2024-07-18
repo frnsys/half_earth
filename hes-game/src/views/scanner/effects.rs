@@ -12,7 +12,7 @@ use web_sys::{
     KeyframeEffectOptions,
 };
 
-use crate::util::card_scale;
+use crate::{audio, util::card_scale};
 
 #[derive(Serialize)]
 struct KeyframeOpts {
@@ -145,8 +145,7 @@ pub fn glow(elem: &Element, duration_ms: f64) -> Animation {
 
 pub fn shake_screen() {
     document().body().map(|body| {
-        // TODO
-        // window.audioManager.playOneShot('/assets/sounds/impact.mp3');
+        audio::play_one_shot("/assets/sounds/impact.mp3");
         shake(&body.into(), 350.0);
     });
 }

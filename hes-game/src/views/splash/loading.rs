@@ -1,4 +1,4 @@
-use crate::{state::GameState, t};
+use crate::{audio, state::GameState, t};
 use leptos::*;
 use list_files_macro::list_files;
 
@@ -59,13 +59,7 @@ fn preload_assets() -> Vec<String> {
 
 #[component]
 pub fn Loading(set_loaded: WriteSignal<bool>) -> impl IntoView {
-    // TODO
-    // window.audioManager.startSoundtrack('/assets/music/143208__klerrp__maxtor-diamondmax-d540x-5400rpm-bb.mp3');
-
-    on_cleanup(|| {
-        // TODO
-        // window.audioManager.stopSoundtrack();
-    });
+    audio::play_phase_music("/assets/music/143208__klerrp__maxtor-diamondmax-d540x-5400rpm-bb.mp3", false);
 
     let preload = preload_assets();
     let n_images = preload.len();

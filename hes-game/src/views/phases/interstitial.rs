@@ -3,8 +3,8 @@ use std::time::Duration;
 use leptos::*;
 
 use crate::{
-    state,
-    state::Phase,
+    audio,
+    state::{self, Phase},
     t,
     ui,
     ui_rw,
@@ -155,11 +155,6 @@ fn describe_outlook(outlook: f32) -> String {
 
 #[component]
 pub fn Interstitial() -> impl IntoView {
-    on_cleanup(|| {
-        // TODO
-        // window.audioManager.stopAtmosphere(true);
-    });
-
     let (events, set_events) = create_signal(vec![]);
 
     let state =
@@ -245,8 +240,10 @@ pub fn Interstitial() -> impl IntoView {
         Duration::from_millis(1200),
     );
 
-    // window.audioManager.stopSoundtrack(true);
-    // window.audioManager.startAtmosphere(`/assets/environments/ambience/${this.locale.ambience}`, true)
+    let ambient = locale().ambience;
+    audio::play_atmosphere(format!(
+        "/assets/environments/ambience/{ambience}"
+    ));
 
     let (_, set_phase) = ui_rw!(phase);
 

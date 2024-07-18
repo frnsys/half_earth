@@ -108,6 +108,3 @@ pub fn App() -> impl IntoView {
         </Show>
     }
 }
-
-// #[server(prefix = "/engine", endpoint = "tgav")]
-// pub async fn calc_tgav() -> Result<f32, ServerFnError> {}

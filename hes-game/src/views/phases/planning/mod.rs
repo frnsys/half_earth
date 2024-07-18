@@ -11,6 +11,7 @@ pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
 
 use crate::{
+    audio,
     state::Tutorial,
     t,
     ui,
@@ -51,12 +52,7 @@ pub fn Planning() -> impl IntoView {
     // game.updateProduction();
     // game.updateFactors();
 
-    // TODO
-    // window.audioManager.startSoundtrack('/assets/music/planning.mp3', true);
-    on_cleanup(|| {
-        // TODO
-        // window.audioManager.stopSoundtrack(true);
-    });
+    audio::play_phase_music("/assets/music/planning.mp3", true);
 
     let (events, set_events) = create_signal(vec![]);
     create_effect(move |_| {

@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use crate::{
+    audio,
     state::Phase,
     t,
     ui_rw,
@@ -30,7 +31,7 @@ pub fn Cutscene() -> impl IntoView {
         "kelly-sikkema-VpcSDucAYjw-unsplash.jpg",
     ];
 
-    // window.audioManager.startSoundtrack('/assets/music/intro.mp3', false);
+    audio::play_phase_music("/assets/music/intro.mp3", false);
 
     let (image_idx, set_image_idx) = create_signal(0);
     let background = move || {
@@ -67,7 +68,6 @@ pub fn Cutscene() -> impl IntoView {
 
     let next_phase = move |_| {
         // TODO
-        // window.audioManager.stopSoundtrack(true);
         fade_out();
     };
 
