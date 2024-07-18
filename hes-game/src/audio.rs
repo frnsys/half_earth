@@ -59,7 +59,7 @@ pub fn init_audio() {
 pub fn play_phase_music(fname: &str, fade: bool) {
     let manager = expect_context::<Rc<AudioManager>>();
     manager.start_soundtrack(fname, fade);
-    on_cleanup(|| {
+    on_cleanup(move || {
         manager.stop_soundtrack(fade);
     });
 }
@@ -72,7 +72,7 @@ pub fn play_one_shot(fname: &str) {
 pub fn play_atmosphere(fname: &str) {
     let manager = expect_context::<Rc<AudioManager>>();
     manager.start_atmosphere(fname, true);
-    on_cleanup(|| {
+    on_cleanup(move || {
         manager.stop_atmosphere(true);
     });
 }

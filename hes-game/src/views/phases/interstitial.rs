@@ -4,7 +4,8 @@ use leptos::*;
 
 use crate::{
     audio,
-    state::{self, Phase},
+    state,
+    state::Phase,
     t,
     ui,
     ui_rw,
@@ -240,8 +241,8 @@ pub fn Interstitial() -> impl IntoView {
         Duration::from_millis(1200),
     );
 
-    let ambient = locale().ambience;
-    audio::play_atmosphere(format!(
+    let ambience = locale().ambience;
+    audio::play_atmosphere(&format!(
         "/assets/environments/ambience/{ambience}"
     ));
 

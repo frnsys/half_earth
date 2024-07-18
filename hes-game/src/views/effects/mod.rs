@@ -126,7 +126,7 @@ pub fn Effects(
     #[prop(optional)] class: &'static str,
 ) -> impl IntoView {
     let items = with_state!(|state, _ui, effects| {
-        effects
+        let mut effects = effects
             .iter()
             .filter(|effect| !effect.is_hidden)
             .filter_map(|effect| {
@@ -141,7 +141,9 @@ pub fn Effects(
                 })
             })
             // TODO dedupe?
-            .collect::<Vec<_>>()
+            .collect::<Vec<_>>();
+        effects.sort_by_key(|effect| effect.text.clone());
+        effects
     });
     let class = format!("effects {}", class);
 
