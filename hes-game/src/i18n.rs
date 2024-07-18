@@ -2,29 +2,39 @@ use gloo_net::http::Request;
 use leptos::*;
 use leptos_router::*;
 use leptos_use::{
-    storage::use_local_storage, use_intl_number_format, use_window, utils::FromToStringCodec,
-    NumberStyle, UseIntlNumberFormatOptions, UseIntlNumberFormatReturn,
+    storage::use_local_storage,
+    use_intl_number_format,
+    use_window,
+    utils::FromToStringCodec,
+    NumberStyle,
+    UseIntlNumberFormatOptions,
+    UseIntlNumberFormatReturn,
 };
-use std::collections::HashMap;
+use std::{collections::HashMap, rc::Rc};
 
 const DEFAULT_LANGUAGE: &str = "en";
 pub const AVAILABLE_LANGUAGES: &[&str] = &[
-    "en", "pt", "pt-br", "pt-pt", "es", "de-de", "jp", "fr-fr", "th",
+    "en", "pt", "pt-br", "pt-pt", "es", "de-de", "jp", "fr-fr",
+    "th",
 ];
 
 pub struct Language {
-    pub locale: String,
+    pub locale: &'static str,
     phrases: Option<HashMap<String, String>>,
     number_fmt: UseIntlNumberFormatReturn,
     percent_fmt: UseIntlNumberFormatReturn,
 }
 impl Language {
-    fn new(phrases: Option<HashMap<String, String>>, locale: &str) -> Self {
+    fn new(
+        phrases: Option<HashMap<String, String>>,
+        locale: &'static str,
+    ) -> Self {
         Language {
-            locale: locale.to_string(),
+            locale,
             phrases,
             number_fmt: use_intl_number_format(
-                UseIntlNumberFormatOptions::default().locale(locale),
+                UseIntlNumberFormatOptions::default()
+                    .locale(locale),
             ),
             percent_fmt: use_intl_number_format(
                 UseIntlNumberFormatOptions::default()
@@ -54,23 +64,23 @@ macro_rules! t {
 }
 
 pub fn t(s: &str) -> String {
-    let lang = expect_context::<RwSignal<Language>>();
-    lang.with(|lang| match &lang.phrases {
+    let lang = expect_context::<Rc<Language>>();
+    match &lang.phrases {
         None => s.to_string(),
         Some(phrases) => phrases
             .get(s)
             .map(|s| s.to_string())
             .unwrap_or(s.to_string()),
-    })
+    }
 }
 pub fn num_fmt() -> impl Fn(f32) -> String {
-    let lang = expect_context::<RwSignal<Language>>();
-    move |v: f32| lang.with(|lang| lang.number_fmt.format(v)).get()
+    let lang = expect_context::<Rc<Language>>();
+    move |v: f32| lang.number_fmt.format(v).get_untracked()
 }
 
 pub fn per_fmt() -> impl Fn(f32) -> String {
-    let lang = expect_context::<RwSignal<Language>>();
-    move |v: f32| lang.with(|lang| lang.percent_fmt.format(v)).get()
+    let lang = expect_context::<Rc<Language>>();
+    move |v: f32| lang.percent_fmt.format(v).get_untracked()
 }
 
 #[derive(Clone, Params, PartialEq)]
@@ -78,34 +88,58 @@ struct QueryParams {
     lang: Option<String>,
 }
 
+/// First check for exact match,
+/// otherwise search for matches at start of the string.
+fn get_language_match(target: &str) -> &'static str {
+    let exact_match = AVAILABLE_LANGUAGES
+        .iter()
+        .find(|lang| *lang == &target);
+
+    if let Some(lang) = exact_match {
+        lang
+    } else {
+        AVAILABLE_LANGUAGES
+            .iter()
+            .find(|lang| lang.starts_with(target))
+            .unwrap_or(&"en")
+    }
+}
+
 /// In order of priority:
 /// - Url search/query param
 /// - Local storage
 /// - Navigator language
 /// - Default
-pub fn get_preferred_language() -> String {
+pub fn get_preferred_language() -> &'static str {
     let params = use_query::<QueryParams>();
-    if let Some(lang) = params.with_untracked(|params| params.clone().ok().and_then(|q| q.lang)) {
-        return lang;
+    if let Some(lang) = params.with_untracked(|params| {
+        params.clone().ok().and_then(|q| q.lang)
+    }) {
+        return get_language_match(&lang);
     }
 
-    let (storage, _, _) = use_local_storage::<String, FromToStringCodec>("hes.language");
+    let (storage, _, _) = use_local_storage::<
+        String,
+        FromToStringCodec,
+    >("hes.language");
     let lang = storage.get_untracked();
     if !lang.is_empty() {
-        return lang;
+        return get_language_match(&lang);
     }
 
     let window = use_window();
     if let Some(navigator) = window.navigator() {
         if let Some(lang) = navigator.language() {
-            return lang;
+            return get_language_match(&lang);
         }
     }
 
-    DEFAULT_LANGUAGE.to_string()
+    DEFAULT_LANGUAGE
 }
 
-pub async fn load_language(mut lang: &str) -> anyhow::Result<()> {
+pub async fn load_language(
+    mut lang: &'static str,
+) -> anyhow::Result<()> {
     if !AVAILABLE_LANGUAGES.contains(&lang) {
         lang = DEFAULT_LANGUAGE;
     }
@@ -115,15 +149,12 @@ pub async fn load_language(mut lang: &str) -> anyhow::Result<()> {
     } else {
         let url = format!("/assets/lang/{lang}.json");
         let resp = Request::get(&url).send().await?;
-        let phrases: HashMap<String, String> = resp.json().await?;
+        let phrases: HashMap<String, String> =
+            resp.json().await?;
         Some(phrases)
     };
 
     let language = Language::new(phrases, &lang);
-    if let Some(ctx) = use_context::<RwSignal<Language>>() {
-        ctx.set(language);
-    } else {
-        provide_context(create_rw_signal(language));
-    }
+    provide_context(Rc::new(language));
     Ok(())
 }

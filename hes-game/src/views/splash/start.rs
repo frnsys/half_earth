@@ -7,15 +7,12 @@ use crate::{
     util::is_steam,
 };
 use leptos::*;
+use std::rc::Rc;
 
 #[component]
 pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
-    let lang = expect_context::<RwSignal<i18n::Language>>();
-    let (cur_lang, _) = create_slice(
-        lang,
-        |lang| lang.locale.to_string(),
-        |lang, n: String| {},
-    );
+    let lang = expect_context::<Rc<i18n::Language>>();
+    let cur_lang = lang.locale;
 
     let show_book_link = is_steam();
     let (show_credits, set_show_credits) = create_signal(false);
@@ -34,7 +31,8 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                     <select on:change=move |ev| {
                         let lang = event_target_value(&ev);
                         spawn_local(async move {
-                            i18n::load_language(&lang).await.unwrap();
+                            let query = format!("?lang={}", lang);
+                            window().location().set_search(&query);
                         });
                     }>
                         <For
@@ -43,7 +41,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                             children=move |s: &&str| {
                                 let label = s.to_uppercase();
                                 view! {
-                                    <option value=*s selected=move || &cur_lang.get().as_str() == s>
+                                    <option value=*s selected=move || &cur_lang == s>
                                         {&label}
                                     </option>
                                 }
