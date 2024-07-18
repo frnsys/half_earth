@@ -37,6 +37,7 @@ pub struct RegionFlavor {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct IndustryFlavor {
     pub image: Image,
+    pub description: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
