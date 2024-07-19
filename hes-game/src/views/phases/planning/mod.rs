@@ -12,6 +12,7 @@ use tabs::{Dashboard, Parliament, Plan, Regions};
 
 use crate::{
     audio,
+    debug::get_debug_opts,
     state::Tutorial,
     t,
     ui,
@@ -68,6 +69,11 @@ pub fn Planning() -> impl IntoView {
                 EventPhase::PlanningPlan,
                 None,
             ));
+
+            if get_debug_opts().skip_to_planning {
+                events.retain(|ev| ev.name != "Planning Intro");
+            }
+
             set_events.set(events);
         });
     });
