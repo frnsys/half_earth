@@ -121,6 +121,10 @@ impl GameState {
         if get_debug_opts().skip_tutorial {
             self.ui.tutorial = Tutorial::Ready;
         }
+
+        if get_debug_opts().skip_to_planning {
+            self.ui.phase = Phase::Planning;
+        }
     }
 
     pub fn save(&self) {

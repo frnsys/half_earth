@@ -12,6 +12,7 @@ pub struct DebugOpts {
     pub show_all_projects: bool,
     pub show_all_processes: bool,
     pub fast_years: bool,
+    pub skip_to_planning: bool,
 }
 
 pub fn get_debug_opts() -> DebugOpts {
@@ -29,6 +30,9 @@ pub fn get_debug_opts() -> DebugOpts {
             show_all_projects: opts.contains(&"all-projects")
                 || debug_all,
             show_all_processes: opts.contains(&"all-processes")
+                || debug_all,
+            skip_to_planning: opts
+                .contains(&"skip-to-planning")
                 || debug_all,
         }
     } else {

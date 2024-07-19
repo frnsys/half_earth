@@ -86,6 +86,7 @@ fn warming_colour(mut temp: f32) -> String {
     // return '#fadbae';
 }
 
+#[derive(Debug)]
 struct Disaster {
     event_id: usize,
     region: Option<(usize, String)>,
@@ -105,6 +106,15 @@ impl DisasterStream {
     }
 
     fn roll_events(&mut self, game: &mut Game) {
+        logging::log!(
+            "ALL EVENTS: {:?}",
+            game.state.event_pool.events
+        );
+        for ev in &game.state.event_pool.events {
+            if ev.phase == EventPhase::Icon {
+                logging::log!("{:?}", ev);
+            }
+        }
         self.events.clear();
         self.events.extend(
             game.roll_events_for_phase(EventPhase::Icon, None)
@@ -115,6 +125,7 @@ impl DisasterStream {
                     when: js_sys::Math::random() as f32,
                 }),
         );
+        logging::log!("rolled events: {:?}", self.events);
     }
 
     fn trigger_events(
@@ -122,6 +133,7 @@ impl DisasterStream {
         globe: Option<GlobeRef>,
         time: f32,
     ) -> Vec<(&IconEvent, usize, usize, String)> {
+        logging::log!("{:?}", self.events);
         let mut events = vec![];
         for ev_meta in self.pop_for_time(time) {
             if let Disaster {
@@ -164,7 +176,7 @@ pub fn WorldEvents() -> impl IntoView {
     let toasts = create_rw_signal::<Vec<Toast>>(vec![]);
     let (globe, set_globe) =
         create_signal::<Option<GlobeRef>>(None);
-    let (time_controls, set_time_controls) = create_signal::<
+    let time_controls = create_rw_signal::<
         Option<(Callback<()>, Callback<()>)>,
     >(None);
     let ready_to_advance = store_value(false);
@@ -194,14 +206,6 @@ pub fn WorldEvents() -> impl IntoView {
         });
     });
 
-    create_effect(move |_| {
-        with!(|events, updates| {
-            if events.is_empty() && updates.is_empty() {
-                logging::log!("CAN START YEAR");
-            }
-        });
-    });
-
     let year = state!(world.year);
     let temp = state!(world.temperature);
     let cycle_start_year = ui!(cycle_start_state.year);
@@ -223,6 +227,18 @@ pub fn WorldEvents() -> impl IntoView {
         }
     };
 
+    create_effect(move |_| {
+        with!(|events, updates, globe| {
+            if events.is_empty()
+                && updates.is_empty()
+                && globe.is_some()
+            {
+                begin_year();
+                logging::log!("CAN START YEAR");
+            }
+        });
+    });
+
     let roll_event = move || {
         let cur_year = year.get();
         if cur_year > cycle_start_year.get()
@@ -234,17 +250,22 @@ pub fn WorldEvents() -> impl IntoView {
                 || skipping.get()
             {
                 state.update(|state| {
+                    if let Some((pause, resume)) =
+                        time_controls.get()
+                    {
+                        pause.call(());
+                    }
                     state.game.finish_cycle();
                     state.ui.phase = Phase::Report;
                 });
-                return;
             }
-
+        } else {
             state.update(|GameState { game, ui }| {
                 let events = game.roll_events_for_phase(
                     EventPhase::WorldMain,
                     None,
                 );
+                println!("rolled world events: {:?}", events);
                 for event in &events {
                     ui.world_events.push(event.id);
                     // ui.events.push(event.id, region_id, ev["ref_id"]); // TODO
@@ -296,7 +317,7 @@ pub fn WorldEvents() -> impl IntoView {
 
                 // If no updates or we're skipping we can
                 // immediately start the next year.
-                if updates.is_empty() || skipping.get() {
+                if skipping.get() {
                     // TODO
                     resume.call(());
                 }
@@ -317,7 +338,6 @@ pub fn WorldEvents() -> impl IntoView {
             for (ev, event_id, region_id, region_name) in events
             {
                 state.apply_disaster(ev, event_id, region_id);
-
                 toasts.push(Toast::new(ev, &region_name));
             }
         });
@@ -327,6 +347,11 @@ pub fn WorldEvents() -> impl IntoView {
     let on_updates_finished = move |_| {
         update!(|state| {
             if ready_to_advance.get_value() {
+                if let Some((pause, resume)) =
+                    time_controls.get()
+                {
+                    pause.call(());
+                }
                 state.ui.phase = Phase::Report;
             }
         });
@@ -334,6 +359,7 @@ pub fn WorldEvents() -> impl IntoView {
 
     // When all events have been dismissed.
     let on_events_finished = move |_| {
+        logging::log!("EVENTS FINISHED");
         // TODO
     };
 
@@ -342,7 +368,6 @@ pub fn WorldEvents() -> impl IntoView {
         globe.rotate(true);
         globe.clouds(true);
         set_globe.set(Some(globe));
-        begin_year();
     };
 
     view! {
@@ -350,7 +375,7 @@ pub fn WorldEvents() -> impl IntoView {
         <div id="event-stream">
             <div id="event-stream--year">
                 {year}
-                <YearProgress skipping on_tick on_year_end set_controls=set_time_controls />
+                <YearProgress skipping on_tick on_year_end controls=time_controls />
             </div>
             <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
             <Updates updates on_done=on_updates_finished />
@@ -405,11 +430,11 @@ fn YearProgress(
     #[prop(into)] skipping: Signal<bool>,
     #[prop(into)] on_tick: Callback<f32>,
     #[prop(into)] on_year_end: Callback<()>,
-    #[prop(into)] set_controls: WriteSignal<
+    #[prop(into)] controls: RwSignal<
         Option<(Callback<()>, Callback<()>)>,
     >,
 ) -> impl IntoView {
-    let (time, set_time) = create_signal(0.);
+    let time = create_rw_signal(0.);
     let ms_per_year = move || {
         if skipping.get() {
             10.
@@ -424,28 +449,28 @@ fn YearProgress(
         display::percent(progress, false)
     };
 
-    let controls = use_raf_fn_with_options(
+    let raf = use_raf_fn_with_options(
         move |args: UseRafFnCallbackArgs| {
-            let time = time.get() + args.delta as f32;
-            let progress = time / ms_per_year();
-            on_tick.call(progress);
+            time.try_update(|time| {
+                *time += args.delta as f32;
+                let progress = *time / ms_per_year();
+                on_tick.call(progress);
 
-            if time >= ms_per_year() {
-                on_year_end.call(());
-                set_time.set(0.);
-            } else {
-                set_time.set(time);
-            }
+                if *time >= ms_per_year() {
+                    on_year_end.call(());
+                    *time = 0.;
+                }
+            });
         },
         UseRafFnOptions::default().immediate(false),
     );
     let pause = move |_| {
-        (controls.pause)();
+        (raf.pause)();
     };
     let resume = move |_| {
-        (controls.resume)();
+        (raf.resume)();
     };
-    set_controls.set(Some((pause.into(), resume.into())));
+    controls.set(Some((pause.into(), resume.into())));
 
     view! {
         <div

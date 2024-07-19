@@ -47,10 +47,17 @@ pub fn compute_tgav(
     nbox.get_mut("ffi_emissions")
         .unwrap()
         .splice(idx.., ffi_arr);
-    nbox.get_mut("CH4_emissions")
+
+    emissions
+        .get_mut("CH4")
+        .unwrap()
+        .get_mut("CH4_emissions")
         .unwrap()
         .splice(idx.., ch4_arr);
-    nbox.get_mut("N2O_emissions")
+    emissions
+        .get_mut("N2O")
+        .unwrap()
+        .get_mut("N2O_emissions")
         .unwrap()
         .splice(idx.., n2o_arr);
 
