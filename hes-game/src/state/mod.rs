@@ -10,6 +10,8 @@ pub use ui::{Phase, PlanChange, Tutorial, UIState};
 use std::sync::{LazyLock, RwLock};
 
 use hes_engine::{
+    events::IconEvent,
+    game::Update,
     kinds::{Feedstock, Output, OutputMap},
     production::Process,
     Game,
@@ -189,6 +191,54 @@ impl GameState {
         }
 
         (max_share * 100. / 5.).floor() as usize
+    }
+
+    pub fn apply_disaster(
+        &mut self,
+        event: &IconEvent,
+        event_id: usize,
+        region_id: usize,
+    ) {
+        let region_events = self
+            .ui
+            .annual_region_events
+            .entry(region_id)
+            .or_default();
+        region_events.push(event.clone());
+
+        let effect = event.intensity as f32
+            * consts::EVENT_INTENSITY_TO_CONTENTEDNESS;
+
+        self.game.change_habitability(
+            -effect.round() as isize,
+            region_id,
+        );
+        self.game.apply_event(event_id, Some(region_id));
+    }
+
+    pub fn step_year(&mut self) -> Vec<Update> {
+        let mut updates = self.game.step();
+        if self.is_planning_year() {
+            let mut outcomes =
+                self.game.roll_new_policy_outcomes();
+            updates.append(&mut outcomes);
+        }
+
+        let completed_projects =
+            updates.iter().filter_map(|update| match update {
+                Update::Project { id } => Some(id),
+                _ => None,
+            });
+        self.ui
+            .cycle_start_state
+            .completed_projects
+            .extend(completed_projects);
+
+        updates
+    }
+
+    fn is_planning_year(&self) -> bool {
+        self.game.world.year + 1 % 5 == 0
     }
 }
 

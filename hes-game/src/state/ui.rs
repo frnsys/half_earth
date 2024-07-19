@@ -150,4 +150,16 @@ impl UIState {
             state.npcs.iter().map(|npc| npc.seats).collect();
         self.cycle_start_state.completed_projects.clear();
     }
+
+    pub fn record_emissions(
+        &mut self,
+        state: &State,
+    ) -> Vec<(f64, f64, f64)> {
+        self.past_emissions.push((
+            state.co2_emissions as f64,
+            state.ch4_emissions as f64,
+            state.n2o_emissions as f64,
+        ));
+        self.past_emissions.clone()
+    }
 }

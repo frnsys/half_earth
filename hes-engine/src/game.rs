@@ -141,8 +141,8 @@ impl Game {
         changes
     }
 
-    pub fn step_cycle(&mut self) {
-        self.state.step_cycle();
+    pub fn finish_cycle(&mut self) {
+        self.state.finish_cycle();
     }
 
     pub fn update_production(&mut self) {

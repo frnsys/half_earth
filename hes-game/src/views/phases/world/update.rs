@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use leptos::*;
 
 use crate::{
@@ -17,7 +19,30 @@ use crate::{
 use hes_engine::game::Update as EngineUpdate;
 
 #[component]
-pub fn Update(
+pub fn Updates(
+    updates: RwSignal<VecDeque<EngineUpdate>>,
+    #[prop(into)] on_done: Callback<()>,
+) -> impl IntoView {
+    let has_update =
+        move || with!(|updates| !updates.is_empty());
+    let next_update = move || {
+        update!(|updates| {
+            if updates.pop_front().is_none() {
+                on_done.call(());
+            }
+        });
+    };
+    let update = move || with!(|updates| updates[0].clone());
+
+    view! {
+        <Show when=has_update>
+            <Update update on_done=move |_| next_update()/>
+        </Show>
+    }
+}
+
+#[component]
+fn Update(
     #[prop(into)] update: Signal<EngineUpdate>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {

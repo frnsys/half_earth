@@ -11,6 +11,12 @@ use std::collections::HashMap;
 
 #[ext]
 pub impl Game {
+    fn things_are_good(&self) -> bool {
+        self.world.temperature <= 1.
+            || self.world.extinction_rate <= 20.
+            || self.state.emissions_gt() <= 0.
+    }
+
     fn emissions_gt(&self) -> String {
         display::emissions(self.state.emissions_gt())
     }

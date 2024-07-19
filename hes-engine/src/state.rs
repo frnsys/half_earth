@@ -628,7 +628,7 @@ impl State {
     }
 
     // Every planning cycle
-    pub fn step_cycle(&mut self) {
+    pub fn finish_cycle(&mut self) {
         let outlook_change = self.outlook() - self.last_outlook;
         let recent_projects: Vec<&Project> = self
             .world
