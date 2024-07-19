@@ -53,37 +53,80 @@ pub struct GameState {
     pub ui: UIState,
 }
 impl GameState {
-    pub fn load() -> GameState {
-        // TODO
-        // let (read, _, _) = use_local_storage::<GameState, JsonCodec>("hes.state");
-        // read.get()
+    pub fn new() -> GameState {
+        let mut game = Game::default();
+        let mut ui_state = UIState::default();
 
-        let game = Game::default();
+        let (settings, _) = Settings::rw();
+
+        let runs = settings.with_untracked(|s| s.runs_played);
+        ui_state.start_year = game.world.year;
+        ui_state.tutorial =
+            settings.with_untracked(|s| s.tutorial);
+
+        game.set_runs_played(runs);
+
+        // Set all starting projects/processes as "viewed"
+        ui_state.viewed = game
+            .state
+            .world
+            .projects
+            .iter()
+            .filter(|p| !p.locked)
+            .map(|p| p.ref_id.clone())
+            .chain(
+                game.state
+                    .world
+                    .processes
+                    .iter()
+                    .filter(|p| !p.locked)
+                    .map(|p| p.ref_id.clone()),
+            )
+            .collect();
+
+        let mut state = Self { game, ui: ui_state };
+        state.init();
+        state
+    }
+
+    pub fn load() -> GameState {
+        let (read, _, _) = use_local_storage::<
+            Option<GameState>,
+            JsonCodec,
+        >(SAVE_KEY);
+        if let Some(mut state) = read.get_untracked() {
+            state.init();
+            state
+        } else {
+            Self::new()
+        }
+    }
+
+    pub fn init(&mut self) {
         *STARTING_WATER
             .write()
             .expect("Can write to shared value") =
-            game.world.starting_resources.water;
+            self.game.world.starting_resources.water;
         *STARTING_LAND
             .write()
             .expect("Can write to shared value") =
-            game.world.starting_resources.land;
+            self.game.world.starting_resources.land;
         *BASE_OUTPUT_DEMAND
             .write()
             .expect("Can write to shared value") =
-            game.world.output_demand;
-
-        let mut gs = GameState::new(Game::default());
+            self.game.world.output_demand;
 
         if get_debug_opts().skip_tutorial {
-            gs.ui.tutorial = Tutorial::Ready;
+            self.ui.tutorial = Tutorial::Ready;
         }
-
-        gs
     }
 
-    pub fn resume() {
-        // TODO
-        // todo!();
+    pub fn save(&self) {
+        let (_, write, _) = use_local_storage::<
+            Option<GameState>,
+            JsonCodec,
+        >(SAVE_KEY);
+        write.set(Some(self.clone()));
     }
 
     pub fn clear_save() {
@@ -94,22 +137,18 @@ impl GameState {
         clear();
     }
 
-    pub fn restart() {
-        // window().location().reload();
-    }
-
-    // TODO this needs to be called at the start of each year
-    // i.e. end of each report.
-    pub fn initialize_year(&mut self) {
-        self.ui.factors = rank_factors(&self.game.state);
-    }
-
     pub fn has_save() -> bool {
         let (state, _, _) = use_local_storage::<
             Option<GameState>,
             JsonCodec,
         >(SAVE_KEY);
         state.get().is_some()
+    }
+
+    // TODO this needs to be called at the start of each year
+    // i.e. end of each report.
+    pub fn initialize_year(&mut self) {
+        self.ui.factors = rank_factors(&self.game.state);
     }
 
     /// If we won the game.
@@ -150,39 +189,6 @@ impl GameState {
         }
 
         (max_share * 100. / 5.).floor() as usize
-    }
-
-    fn new(mut game: Game) -> Self {
-        let mut ui_state = UIState::default();
-
-        let (settings, _) = Settings::rw();
-
-        let runs = settings.with_untracked(|s| s.runs_played);
-        ui_state.start_year = game.world.year;
-        ui_state.tutorial =
-            settings.with_untracked(|s| s.tutorial);
-
-        game.set_runs_played(runs);
-
-        // Set all starting projects/processes as "viewed"
-        ui_state.viewed = game
-            .state
-            .world
-            .projects
-            .iter()
-            .filter(|p| !p.locked)
-            .map(|p| p.ref_id.clone())
-            .chain(
-                game.state
-                    .world
-                    .processes
-                    .iter()
-                    .filter(|p| !p.locked)
-                    .map(|p| p.ref_id.clone()),
-            )
-            .collect();
-
-        Self { game, ui: ui_state }
     }
 }
 

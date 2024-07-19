@@ -23,6 +23,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
         settings.sound
     };
 
+    let state = expect_context::<RwSignal<GameState>>();
     view! {
         <div>
             <div id="start-bg"></div>
@@ -65,7 +66,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                             <button
                                 class="start-button"
                                 on:click=move |_| {
-                                    GameState::resume();
+                                    state.set(GameState::load());
                                     set_started.set(true);
                                 }
                             >
@@ -75,7 +76,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                         <button
                             class="start-button"
                             on:click=move |_| {
-                                GameState::restart();
+                                state.set(GameState::new());
                                 set_started.set(true);
                             }
                         >

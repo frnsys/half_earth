@@ -57,7 +57,7 @@ pub fn App() -> impl IntoView {
     AnimationContext::provide();
     provide_context(create_rw_signal::<Option<Tip>>(None));
     provide_context(create_rw_signal::<GameState>(
-        GameState::load(),
+        GameState::new(),
     ));
     init_audio();
 
