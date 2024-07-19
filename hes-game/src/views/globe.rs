@@ -110,7 +110,6 @@ pub fn Globe(
             },
         )
             as Box<dyn FnMut(&JsValue)>);
-        // globe._onClick = []; // TODO this was in the original code, is this necessary?
 
         logging::log!("RUST CALING GLOBE");
         let globe = Globe::new(&to_ws_el(g));

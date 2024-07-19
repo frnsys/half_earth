@@ -3,6 +3,7 @@
 mod app;
 mod audio;
 mod consts;
+mod debug;
 mod display;
 mod i18n;
 mod icons;

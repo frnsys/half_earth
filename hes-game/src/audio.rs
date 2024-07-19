@@ -46,7 +46,7 @@ extern "C" {
 
 pub fn init_audio() {
     let (settings, _) = Settings::rw();
-    if settings.get_untracked().sound {
+    if !settings.get_untracked().sound {
         get_audio_manager().mute();
     }
 }

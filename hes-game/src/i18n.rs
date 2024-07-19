@@ -12,6 +12,8 @@ use leptos_use::{
 };
 use std::{collections::HashMap, rc::Rc};
 
+use crate::state::Settings;
+
 const DEFAULT_LANGUAGE: &str = "en";
 pub const AVAILABLE_LANGUAGES: &[&str] = &[
     "en", "pt", "pt-br", "pt-pt", "es", "de-de", "jp", "fr-fr",
@@ -113,18 +115,15 @@ fn get_language_match(target: &str) -> &'static str {
 pub fn get_preferred_language() -> &'static str {
     let params = use_query::<QueryParams>();
     if let Some(lang) = params.with_untracked(|params| {
-        params.clone().ok().and_then(|q| q.lang)
+        params.as_ref().ok().and_then(|q| q.lang.clone())
     }) {
         return get_language_match(&lang);
     }
 
-    let (storage, _, _) = use_local_storage::<
-        String,
-        FromToStringCodec,
-    >("hes.language");
-    let lang = storage.get_untracked();
-    if !lang.is_empty() {
-        return get_language_match(&lang);
+    let (settings, _) = Settings::rw();
+    let settings = settings.get_untracked();
+    if !settings.language.is_empty() {
+        return get_language_match(&settings.language);
     }
 
     let window = use_window();

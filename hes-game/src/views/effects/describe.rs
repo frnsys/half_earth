@@ -846,6 +846,11 @@ impl DisplayEffect {
                     )
                 };
 
+                let icon = match project.kind {
+                    Type::Policy => "[political_capital]",
+                    _ => "",
+                };
+
                 (
                         tip! {
                             icons::COST,
@@ -861,7 +866,7 @@ impl DisplayEffect {
                             changeDir: self.change_dir(*amount),
                             kind: kind,
                             tag: tag,
-                            icon: project.kind.as_key(),
+                            icon: icon,
                             unit: unit,
                             amount: self.fmt_param(amount.abs().ceil())
                         },

@@ -1,5 +1,6 @@
 use crate::{
     consts,
+    debug::get_debug_opts,
     display::{self, AsText},
     icons::{self, HasIcon},
     state::{Tutorial, UIState},
@@ -33,13 +34,17 @@ pub fn Processes(
     let points = create_rw_signal(0);
     let allow_back = move || points.get() == 0;
 
+    let debug = get_debug_opts();
     let processes = with_state!(|state, _ui| {
         let output = output.get();
         let mut processes = state
             .world
             .processes
             .iter()
-            .filter(|p| !p.locked && p.output == output)
+            .filter(|p| {
+                (!p.locked || debug.show_all_processes)
+                    && p.output == output
+            })
             .cloned()
             .collect::<Vec<_>>();
         processes.sort_by(|a, b| {

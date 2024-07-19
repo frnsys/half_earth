@@ -16,6 +16,7 @@ pub struct Settings {
     pub sound: bool,
     pub runs_played: usize,
     pub tutorial: Tutorial,
+    pub language: String,
 }
 impl Settings {
     pub fn rw() -> (Signal<Settings>, WriteSignal<Settings>) {

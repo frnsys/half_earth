@@ -21,7 +21,11 @@ use leptos_use::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{consts, views::rank_factors};
+use crate::{
+    consts,
+    debug::get_debug_opts,
+    views::rank_factors,
+};
 
 const SAVE_KEY: &str = "hes.save";
 pub static STARTING_WATER: LazyLock<RwLock<f32>> =
@@ -69,7 +73,10 @@ impl GameState {
             game.world.output_demand;
 
         let mut gs = GameState::new(Game::default());
-        gs.ui.tutorial = Tutorial::Ready; // TODO testing
+
+        if get_debug_opts().skip_tutorial {
+            gs.ui.tutorial = Tutorial::Ready;
+        }
 
         gs
     }

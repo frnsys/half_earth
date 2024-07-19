@@ -67,8 +67,6 @@ pub fn ScannerCards<S: ScannerSpec>(
 
     let update_focused = move || {
         // Figure out what the focused card is
-        // TODO next_tick?
-        // TODO use refs?
         if let Some(scroller) =
             document().query_selector(".cards").unwrap()
         {
@@ -260,18 +258,3 @@ pub fn ScannerCards<S: ScannerSpec>(
         <CardFocusArea/>
     }
 }
-
-// TODO
-// <ProjectCard
-//   :project="projects[i]"
-//   @change="$emit('change')" />
-
-// onScrollStarted() {
-//   state.help[scrollTip] = true;
-//   this.onScrollStart();
-// },
-// onDragStarted(rect) {
-//   state.help[scanTip] = true;
-//   this.onDrag(rect);
-// },
-//
