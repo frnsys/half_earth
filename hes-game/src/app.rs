@@ -13,6 +13,7 @@ use crate::{
         Start,
         Tip,
         ToolTip,
+        WorldEvents,
     },
 };
 use leptos::*;
@@ -100,7 +101,7 @@ pub fn App() -> impl IntoView {
                                  view! { <Planning/> }.into_view()
                              }
                              Phase::Report => view! { <Report/> }.into_view(),
-                             Phase::Events => todo!(),
+                             Phase::Events => view! { <WorldEvents /> }.into_view()
                          }
                     }
                 }

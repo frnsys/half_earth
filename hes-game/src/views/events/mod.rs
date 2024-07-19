@@ -36,7 +36,7 @@ pub fn Events(
             events.with(|events| {
                 let event = &events[next_idx];
                 let mut ctx = HashMap::default();
-                if let Some(name) = &event.region {
+                if let Some((_, name)) = &event.region {
                     ctx.insert(
                         "region".to_string(),
                         name.to_string(),

@@ -287,10 +287,10 @@ impl Game {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct ResolvedEvent {
     pub event: Event,
-    pub region: Option<String>,
+    pub region: Option<(usize, String)>,
 }
 impl Deref for ResolvedEvent {
     type Target = Event;
@@ -325,9 +325,12 @@ impl Game {
             .map(|(ev, region_id)| ResolvedEvent {
                 event: ev,
                 region: region_id.map(|id| {
-                    self.state.world.regions[id]
-                        .name
-                        .to_string()
+                    (
+                        id,
+                        self.state.world.regions[id]
+                            .name
+                            .to_string(),
+                    )
                 }),
             })
             .collect()

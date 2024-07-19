@@ -245,17 +245,19 @@ pub fn Plan() -> impl IntoView {
         }
     };
 
-    let enter_world = write_state!(|state, ui| {
-        if ui.tutorial == Tutorial::Ready {
-            ui.tutorial.advance();
-        }
-        // TODO
-        // state.save();
-        ui.phase = Phase::Events;
-    });
-
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
+    let enter_world = move || {
+        state.update(|state| {
+            if state.ui.tutorial == Tutorial::Ready {
+                state.ui.tutorial.advance();
+            }
+            // TODO
+            // state.save();
+            state.ui.phase = Phase::Events;
+        });
+    };
+
     let (page, set_page) = create_signal(Page::Overview);
     let close = move || {
         state.update(|state| {

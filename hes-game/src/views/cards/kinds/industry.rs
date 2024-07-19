@@ -124,7 +124,7 @@ pub fn IndustryCard(
             </TopBack>
             <BottomBack slot>
                 <div class="card-image-attribution">
-                    {t!("Image:")} {image_attrib}
+                    {t!("Image:")}" "{image_attrib}
                 </div>
             </BottomBack>
             <Body slot>

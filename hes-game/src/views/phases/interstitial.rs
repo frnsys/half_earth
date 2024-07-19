@@ -318,7 +318,7 @@ pub fn Interstitial() -> impl IntoView {
             </div>
             <Events events on_advance=|_| {} on_done=next_phase/>
             <div class="interstitial--image-credit">
-                {t!("Image:")} {image_credit}
+                {t!("Image:")}" "{image_credit}
             </div>
             <Show when=move || ready.get()>
                 <div class="interstitial--next">

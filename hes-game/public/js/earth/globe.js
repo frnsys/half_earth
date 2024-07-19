@@ -70,12 +70,12 @@ class Globe {
     this._onClick.push(fn);
   }
 
-  stopRotation() {
-    this.rotate = false;
+  setRotation(rotate) {
+    this.rotate = rotate;
   }
 
-  hideClouds() {
-    this.clouds.visible = false;
+  setClouds(visible) {
+    this.clouds.visible = visible;
   }
 
   setZoom(zoom) {
@@ -174,6 +174,34 @@ class Globe {
       if (iconMesh) this.icons.push(iconMesh);
     }
     return {textMesh, iconMesh};
+  }
+
+  showIconEvent(regionName, includeCoasts, icon, intensity) {
+    let hexIdx = this.hexsphere.randomTileForRegion(regionName, includeCoasts);
+    this.show({
+      icon,
+      hexIdx
+    });
+
+    // Also show discontent icon.
+    let args = {
+      icon: 'discontent',
+      hexIdx,
+      ping: true,
+      iconSize: 0.35
+    };
+    this.show(args);
+
+    if (intensity > 1) {
+      let outlookInterval = setInterval(() => {
+        if (intensity <= 0) {
+          clearInterval(outlookInterval);
+        } else {
+          intensity--;
+          this.show(args);
+        }
+      }, 250);
+    }
   }
 
   tickPings() {

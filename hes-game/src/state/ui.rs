@@ -2,9 +2,11 @@ use crate::{vars::Var, views::Factor};
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use hes_engine::{
+    events::IconEvent,
     game::Update,
     kinds::Output,
     regions::Income,
+    state::State,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -22,15 +24,7 @@ pub struct CycleStart {
 
     // Seats in parliament for each NPC faction
     pub parliament: Vec<f32>,
-    pub completed_projects: Vec<Update>,
-}
-
-// TODO
-#[derive(Default, Clone, PartialEq, Serialize, Deserialize)]
-pub struct IconEvent {
-    pub name: String,
-    pub icon: String,
-    pub intensity: usize,
+    pub completed_projects: Vec<usize>,
 }
 
 /// Currently staged plan changes.
@@ -109,10 +103,12 @@ pub struct UIState {
     pub annual_region_events: HashMap<usize, Vec<IconEvent>>,
     pub world_events: Vec<usize>,
 
-    // Track which events have occurred
-    // events: [],
-    //
-    //
+    /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
+    pub past_emissions: Vec<(f64, f64, f64)>,
+
+    // Track which events have occurred TODO
+    // pub events: Vec<>,
+
     // // Track planned process mix changes
     pub process_mix_changes:
         EnumMap<Output, HashMap<usize, isize>>,
@@ -131,4 +127,27 @@ pub struct UIState {
     /// Viewed project and process ids,
     /// so we can keep track of which ones are new
     pub viewed: Vec<String>,
+}
+impl UIState {
+    pub fn cycle_start_snapshot(&mut self, state: &State) {
+        self.annual_region_events.clear();
+        self.world_events.clear();
+
+        self.cycle_start_state.year = state.world.year;
+        self.cycle_start_state.extinction_rate =
+            state.world.extinction_rate;
+        self.cycle_start_state.contentedness = state.outlook();
+        self.cycle_start_state.temperature =
+            state.world.temperature;
+        self.cycle_start_state.emissions = state.emissions_gt();
+        self.cycle_start_state.region_incomes = state
+            .world
+            .regions
+            .iter()
+            .map(|r| r.income)
+            .collect();
+        self.cycle_start_state.parliament =
+            state.npcs.iter().map(|npc| npc.seats).collect();
+        self.cycle_start_state.completed_projects.clear();
+    }
 }

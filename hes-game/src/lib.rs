@@ -1,4 +1,5 @@
 #![feature(let_chains)]
+#![feature(extract_if)]
 
 mod app;
 mod audio;
@@ -15,7 +16,7 @@ mod views;
 pub use views::CalcSurface;
 
 #[cfg(feature = "server")]
-pub mod globe;
+mod server;
 
 use app::Root;
 

@@ -572,7 +572,7 @@ pub fn ProcessCard(
                     <div>{feature_icons}</div>
                     <div class="card-spacer"></div>
                     <div class="card-image-attribution">
-                        {t!("Image:")} {image_attrib}
+                        {t!("Image:")}" "{image_attrib}
                     </div>
 
                 </div>

@@ -27,17 +27,26 @@ extern "C" {
     #[wasm_bindgen(method)]
     fn clear(this: &Globe);
 
-    #[wasm_bindgen(method, js_name = hideClouds)]
-    fn hide_clouds(this: &Globe);
+    #[wasm_bindgen(method, js_name = setClouds)]
+    fn set_clouds(this: &Globe, visible: bool);
 
-    #[wasm_bindgen(method, js_name = stopRotation)]
-    fn stop_rotation(this: &Globe);
+    #[wasm_bindgen(method, js_name = setRotation)]
+    fn set_rotation(this: &Globe, rotate: bool);
 
     #[wasm_bindgen(method, js_name = setZoom)]
     fn set_zoom(this: &Globe, zoom: f32);
 
     #[wasm_bindgen(method, js_name = highlightRegion)]
     fn highlight_region(this: &Globe, region_name: &str);
+
+    #[wasm_bindgen(method, js_name = showIconEvent)]
+    fn show_icon_event(
+        this: &Globe,
+        region_name: &str,
+        include_coasts: bool,
+        icon: &str,
+        intensity: usize,
+    );
 
     #[wasm_bindgen(method)]
     fn update_surface(this: &Globe, pixels: Uint8Array);
@@ -64,12 +73,12 @@ impl GlobeRef {
         self.inner.borrow().clear();
     }
 
-    pub fn stop_rotation(&self) {
-        self.inner.borrow().stop_rotation();
+    pub fn rotate(&self, rotate: bool) {
+        self.inner.borrow().set_rotation(rotate);
     }
 
-    pub fn hide_clouds(&self) {
-        self.inner.borrow().hide_clouds();
+    pub fn clouds(&self, visible: bool) {
+        self.inner.borrow().set_clouds(visible);
     }
 
     pub fn set_zoom(&self, zoom: f32) {
@@ -78,6 +87,21 @@ impl GlobeRef {
 
     pub fn highlight_region(&self, region_name: &str) {
         self.inner.borrow().highlight_region(region_name);
+    }
+
+    pub fn show_icon_event(
+        &self,
+        region_name: &str,
+        include_coasts: bool,
+        icon: &str,
+        intensity: usize,
+    ) {
+        self.inner.borrow().show_icon_event(
+            region_name,
+            include_coasts,
+            icon,
+            intensity,
+        );
     }
 }
 
@@ -187,7 +211,7 @@ pub fn Globe(
 pub async fn calc_surface(
     tgav: f32,
 ) -> Result<(usize, usize, Vec<u8>), ServerFnError> {
-    let mut surface = crate::globe::STARTING_SURFACE.clone();
+    let mut surface = crate::server::STARTING_SURFACE.clone();
     let width = surface.width();
     let height = surface.height();
 

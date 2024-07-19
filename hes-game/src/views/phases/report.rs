@@ -266,11 +266,8 @@ pub fn Report() -> impl IntoView {
         ui.cycle_start_state
             .completed_projects
             .iter()
-            .filter_map(|update| match update {
-                Update::Project { id } => {
-                    Some(game.world.projects[*id].clone())
-                }
-                _ => None,
+            .map(|project_id| {
+                game.world.projects[*project_id].clone()
             })
             .collect::<Vec<_>>()
     });

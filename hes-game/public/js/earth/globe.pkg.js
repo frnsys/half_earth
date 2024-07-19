@@ -26709,6 +26709,9 @@ function generateTileMesh(tile) {
   }
   return new Mesh(geometry, hexMaterial);
 }
+function randChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 var HexSphere = class {
   constructor(scene, parent, radius, subdivisions, tileWidth) {
     this.selectables = [];
@@ -26841,6 +26844,11 @@ var HexSphere = class {
       this.highlightIdx(idx);
     });
     this.centerOnIndex(allTiles[0]);
+  }
+  randomTileForRegion(regionName, includeCoasts) {
+    let tiles = regions_to_tiles_default[regionName];
+    let allTiles = includeCoasts ? tiles["inland"].concat(tiles["coasts"]) : tiles["inland"];
+    randChoice(allTiles);
   }
   onTouchStart(ev) {
     ev.preventDefault();
@@ -27638,11 +27646,11 @@ var Globe = class {
   onClick(fn) {
     this._onClick.push(fn);
   }
-  stopRotation() {
-    this.rotate = false;
+  setRotation(rotate) {
+    this.rotate = rotate;
   }
-  hideClouds() {
-    this.clouds.visible = false;
+  setClouds(visible) {
+    this.clouds.visible = visible;
   }
   setZoom(zoom) {
     this.scene.camera.zoom = zoom;
@@ -27726,6 +27734,30 @@ var Globe = class {
       if (iconMesh) this.icons.push(iconMesh);
     }
     return { textMesh, iconMesh };
+  }
+  showIconEvent(regionName, includeCoasts, icon, intensity) {
+    let hexIdx = this.hexsphere.randomTileForRegion(regionName, includeCoasts);
+    this.show({
+      icon,
+      hexIdx
+    });
+    let args = {
+      icon: "discontent",
+      hexIdx,
+      ping: true,
+      iconSize: 0.35
+    };
+    this.show(args);
+    if (intensity > 1) {
+      let outlookInterval = setInterval(() => {
+        if (intensity <= 0) {
+          clearInterval(outlookInterval);
+        } else {
+          intensity--;
+          this.show(args);
+        }
+      }, 250);
+    }
   }
   tickPings() {
     this.pings = this.pings.filter((mesh) => {

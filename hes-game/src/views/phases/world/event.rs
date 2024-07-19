@@ -201,7 +201,7 @@ pub fn Event(
                 <div class="arc">{arc}</div>
                 <div class="event--factors">{factors_list}</div>
                 <div class="image-attribution">
-                    {t!("Image:")} {image_attrib}
+                    {t!("Image:")}" "{image_attrib}
                 </div>
                 <div class="event--name">{name}</div>
                 <Show when=has_visible_effects>

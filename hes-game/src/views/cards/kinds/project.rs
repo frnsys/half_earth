@@ -511,7 +511,7 @@ pub fn ProjectCard(
                     </div>
                 </Show>
                 <div class="card-image-attribution">
-                    {t!("Image:")} {image_attrib}
+                    {t!("Image:")}" "{image_attrib}
                 </div>
             </BottomBack>
         </Card>

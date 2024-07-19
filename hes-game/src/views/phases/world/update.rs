@@ -230,7 +230,7 @@ pub fn Update(
             <div class="event--body">
                 <div class="arc">{title}</div>
                 <div class="image-attribution">
-                    {t!("Image:")} {image_attrib}
+                    {t!("Image:")}" "{image_attrib}
                 </div>
                 <div class="event--name">{name}</div>
                 {outcomes}

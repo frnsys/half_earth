@@ -100,6 +100,10 @@ function generateTileMesh(tile) {
   return new THREE.Mesh(geometry, hexMaterial);
 }
 
+function randChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 class HexSphere {
   constructor(scene, parent, radius, subdivisions, tileWidth) {
     this.selectables = [];
@@ -263,6 +267,12 @@ class HexSphere {
       this.highlightIdx(idx);
     });
     this.centerOnIndex(allTiles[0]);
+  }
+
+  randomTileForRegion(regionName, includeCoasts) {
+    let tiles = regionsToTiles[regionName];
+    let allTiles = includeCoasts ? tiles['inland'].concat(tiles['coasts']) : tiles['inland'];
+    randChoice(allTiles)
   }
 
   onTouchStart(ev) {
