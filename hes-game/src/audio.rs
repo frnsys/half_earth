@@ -1,11 +1,9 @@
-use std::rc::Rc;
-
-use leptos::{
-    expect_context,
-    on_cleanup,
-    provide_context,
-    SignalGetUntracked,
+use std::{
+    rc::Rc,
+    sync::{Arc, LazyLock, Mutex},
 };
+
+use leptos::{on_cleanup, SignalGetUntracked};
 use wasm_bindgen::prelude::*;
 
 use crate::state::Settings;
@@ -14,8 +12,7 @@ use crate::state::Settings;
 extern "C" {
     type AudioManager;
 
-    #[wasm_bindgen(constructor)]
-    fn new() -> AudioManager;
+    fn get_audio_manager() -> AudioManager;
 
     #[wasm_bindgen(method, js_name = startSoundtrack)]
     fn start_soundtrack(
@@ -48,16 +45,14 @@ extern "C" {
 }
 
 pub fn init_audio() {
-    let manager = AudioManager::new();
     let (settings, _) = Settings::rw();
     if settings.get_untracked().sound {
-        manager.mute();
+        get_audio_manager().mute();
     }
-    provide_context(Rc::new(manager));
 }
 
 pub fn play_phase_music(fname: &str, fade: bool) {
-    let manager = expect_context::<Rc<AudioManager>>();
+    let manager = get_audio_manager();
     manager.start_soundtrack(fname, fade);
     on_cleanup(move || {
         manager.stop_soundtrack(fade);
@@ -65,14 +60,21 @@ pub fn play_phase_music(fname: &str, fade: bool) {
 }
 
 pub fn play_one_shot(fname: &str) {
-    let manager = expect_context::<Rc<AudioManager>>();
-    manager.play_one_shot(fname);
+    get_audio_manager().play_one_shot(fname);
 }
 
 pub fn play_atmosphere(fname: &str) {
-    let manager = expect_context::<Rc<AudioManager>>();
+    let manager = get_audio_manager();
     manager.start_atmosphere(fname, true);
     on_cleanup(move || {
         manager.stop_atmosphere(true);
     });
+}
+
+pub fn mute() {
+    get_audio_manager().mute();
+}
+
+pub fn unmute() {
+    get_audio_manager().unmute();
 }

@@ -100,9 +100,9 @@ pub fn IndustryCard(
             .with(|ind| ind.flavor.image.attribution.clone())
     };
 
-    // TODO?
-    // let description = move || industry.with(|ind| t!(&ind.flavor.description));
-    let description = "";
+    let description = move || {
+        industry.with(|ind| t!(&ind.flavor.description))
+    };
 
     view! {
         <Card

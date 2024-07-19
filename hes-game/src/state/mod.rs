@@ -23,6 +23,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{consts, views::rank_factors};
 
+const SAVE_KEY: &str = "hes.save";
 pub static STARTING_WATER: LazyLock<RwLock<f32>> =
     LazyLock::new(|| RwLock::new(0.));
 pub static STARTING_LAND: LazyLock<RwLock<f32>> =
@@ -78,9 +79,16 @@ impl GameState {
         // todo!();
     }
 
+    pub fn clear_save() {
+        let (_, _, clear) = use_local_storage::<
+            Option<GameState>,
+            JsonCodec,
+        >(SAVE_KEY);
+        clear();
+    }
+
     pub fn restart() {
-        // TODO
-        // todo!();
+        // window().location().reload();
     }
 
     // TODO this needs to be called at the start of each year
@@ -93,7 +101,7 @@ impl GameState {
         let (state, _, _) = use_local_storage::<
             Option<GameState>,
             JsonCodec,
-        >("hes.save");
+        >(SAVE_KEY);
         state.get().is_some()
     }
 

@@ -348,4 +348,11 @@ function animate(start, end, duration, updateFn, cb, linear) {
   return anim;
 }
 
-export {AudioManager};
+// Easier if we manage a global instance on the JS side,
+// and give access as needed in Rust.
+const AUDIO_MANAGER = new AudioManager();
+function get_audio_manager() {
+  return AUDIO_MANAGER;
+}
+
+export {get_audio_manager, AudioManager};

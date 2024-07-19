@@ -1,4 +1,5 @@
 use crate::{
+    audio,
     icons,
     state,
     state::Settings,
@@ -159,6 +160,11 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                                 set_settings
                                     .update(|settings| {
                                         settings.sound = !settings.sound;
+                                        if !settings.sound {
+                                            audio::mute();
+                                        } else {
+                                            audio::unmute();
+                                        }
                                     });
                             }
                         >

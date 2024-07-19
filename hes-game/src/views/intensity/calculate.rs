@@ -24,7 +24,8 @@ fn impact_stops(key: Impact, kind: OutputKind) -> [f32; 4] {
             OutputKind::Calories => [0., 0.001, 0.002, 0.01],
         },
         Impact::Energy => match kind {
-            OutputKind::Energy => [0., 0.001, 0.01, 0.1], // TODO EROI
+            // Enhancement: Take into account EROI
+            OutputKind::Energy => [0., 0.001, 0.01, 0.1],
             OutputKind::Calories => {
                 [0., 0.00015, 0.0005, 0.001]
             }

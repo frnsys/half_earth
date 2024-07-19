@@ -68,8 +68,8 @@ pub fn End(lose: bool) -> impl IntoView {
     let (share_img_url, set_share_img_url) =
         create_signal::<Option<String>>(None);
 
-    let start_run = move |_| {
-        // TODO game.clearSave();
+    let start_new_run = move |_| {
+        GameState::clear_save();
         window().location().reload();
     };
 
@@ -105,7 +105,7 @@ pub fn End(lose: bool) -> impl IntoView {
             <Show when=move || show_start.get()>
                 <div class="break--actions">
                     <h2>{t!(message)}</h2>
-                    <button class="try-again-button" on:click=start_run>
+                    <button class="try-again-button" on:click=start_new_run>
                         {t!("Try Again?")}
                     </button>
                 </div>
