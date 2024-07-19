@@ -346,7 +346,7 @@ pub fn ProcessCard(
         let max_share = max_share.get();
         let changed_mix_share = changed_mix_share();
         process.with(|process| {
-            (0..20)
+            (1..=20)
                 .map(|i| {
                     let disabled = i > max_share;
                     let active = i <= process.mix_share;
@@ -580,7 +580,7 @@ pub fn ProcessCard(
 
             <ProcessMix slot>
                 <HasTip tip=process_mix_tip.into_signal()>
-                    <div class="process-mix-cells"></div>
+                    <div class="process-mix-cells">{mix_cells}</div>
                 </HasTip>
             </ProcessMix>
         </Card>
