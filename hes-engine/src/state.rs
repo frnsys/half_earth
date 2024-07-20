@@ -536,9 +536,7 @@ impl State {
         self.n2o_emissions =
             self.byproducts.n2o + self.byproduct_mods.n2o;
         self.world.extinction_rate = self
-            .compute_extinction_rate(
-                self.produced_by_process.values(),
-            );
+            .compute_extinction_rate(&self.produced_by_process);
     }
 
     pub fn step_production(&mut self) {
@@ -954,27 +952,23 @@ impl State {
 
     pub fn compute_extinction_rate<'a>(
         &self,
-        produced_by_process: impl Iterator<Item = &'a f32>,
+        produced_by_process: &HashMap<Id, f32>,
     ) -> f32 {
         let lic_pop = self.world.lic_population();
-        self.world
-            .processes
-            .iter()
-            .zip(produced_by_process)
-            .fold(0., |acc, (p, amount)| {
-                acc + (p.extinction_rate(
+        self.world.processes.iter().fold(0., |acc, p| {
+            let amount =
+                produced_by_process.get(&p.id).unwrap_or(&0.);
+            acc + (p.extinction_rate(
+                self.world.starting_resources.land,
+            ) * amount)
+        }) + self.world.industries.iter().fold(
+            0.,
+            |acc, ind| {
+                acc + ind.extinction_rate(
                     self.world.starting_resources.land,
-                ) * *amount)
-            })
-            + self.world.industries.iter().fold(
-                0.,
-                |acc, ind| {
-                    acc + ind.extinction_rate(
-                        self.world.starting_resources.land,
-                    ) * lic_pop
-                },
-            )
-            + self.base_extinction_rate()
+                ) * lic_pop
+            },
+        ) + self.base_extinction_rate()
     }
 
     pub fn set_tgav(&mut self, tgav: f32) {
