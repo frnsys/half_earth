@@ -3,6 +3,7 @@ use std::{collections::HashMap, ops::Deref};
 use super::{Dialogue, DisplayEvent};
 use crate::{
     t,
+    util::ImageExt,
     views::{tip, Effects, Events, HasTip, Help},
 };
 use leptos::*;
@@ -21,14 +22,10 @@ pub fn Event(
     let event_card = move || {
         let image_info = with!(|event| {
             event.flavor.image.as_ref().map(move |image| {
-                let image_url = format!(
-                    "url(/assets/content/images/{})",
-                    image.fname
-                );
-                (image_url, image.attribution.clone())
+                (image.src(), image.attribution.clone())
             })
         });
-        image_info.map(|(url, attrib)| {
+        image_info.map(|(image, attrib)| {
             let factor_tip = t!("The factors behind this event.↓");
             let (arc, name, factors_list) = with!(|event| {
                 let arc = t!(&event.flavor.arc);
@@ -52,7 +49,7 @@ pub fn Event(
             view! {
                 <div
                     class="event--body"
-                    style:background-image=url
+                    style:background-image=image
                 >
                     <Help text=factor_tip x=0.55 y=-18.0 center=false/>
                     <div class="arc">{arc}</div>

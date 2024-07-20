@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 /// The `World` represents a game configuration,
 /// defining the world's parameters as well
 /// as the projects, processes, regions, and industries.
-#[derive(Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct World {
     pub year: usize,
     pub base_outlook: f32,
@@ -32,6 +32,15 @@ pub struct World {
     pub water_by_income: [f32; 4],
     pub materials_by_income: [f32; 4],
     pub income_pop_coefs: [[f32; 4]; 4],
+}
+
+impl Default for World {
+    fn default() -> Self {
+        serde_json::from_str(include_str!(
+            "../assets/DEFAULT.world"
+        ))
+        .unwrap()
+    }
 }
 
 impl World {

@@ -1,3 +1,6 @@
+use base64::prelude::*;
+use extend::ext;
+use hes_engine::flavor::{Image, ImageData};
 use html::ElementDescriptor;
 use leptos::{wasm_bindgen::JsCast, *};
 use leptos_use::use_window;
@@ -130,5 +133,20 @@ pub fn card_scale() -> f32 {
         0.9
     } else {
         1.0
+    }
+}
+
+#[ext]
+pub impl Image {
+    fn src(&self) -> String {
+        match &self.data {
+            ImageData::File(fname) => {
+                format!("/assets/content/images/{fname}",)
+            }
+            ImageData::Data { bytes, mime } => format!(
+                "data:{mime};charset=utf-8;base64,{}",
+                BASE64_STANDARD.encode(bytes)
+            ),
+        }
     }
 }

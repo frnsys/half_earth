@@ -6,6 +6,7 @@ use crate::{
     display::*,
     icons::{self, HasIcon},
     t,
+    util::ImageExt,
     views::{
         effects::active_effects,
         events::Dialogue,
@@ -69,19 +70,18 @@ fn Update(
         })
     };
 
-    let image_url = with_state!(|state, ui, update| {
-        let fname = match update {
+    let image = with_state!(|state, ui, update| {
+        match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
                 let proj = &state.world.projects[*id];
-                &proj.flavor.image.fname
+                proj.flavor.image.src()
             }
             EngineUpdate::Region { id, .. } => {
                 let region = &state.world.regions[*id];
-                &region.flavor.image.fname
+                region.flavor.image.src()
             }
-        };
-        format!("url(/assets/content/images/{}", fname)
+        }
     });
 
     let image_attrib = with_state!(|state, ui, update| {
@@ -248,7 +248,7 @@ fn Update(
     view! {
         <div
             class="event project-completed"
-            style:background-image=image_url
+            style:background-image=image
             on:click=try_done
             class:regionup=is_region
         >

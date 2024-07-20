@@ -1,4 +1,4 @@
-use crate::{icons::HasIcon, t};
+use crate::{icons::HasIcon, t, util::ImageExt};
 
 use super::{
     super::{kinds::ProcessCard, *},
@@ -11,14 +11,8 @@ use leptos::*;
 pub fn MiniProcess(
     #[prop(into)] process: Signal<Process>,
 ) -> impl IntoView {
-    let image = move || {
-        process.with(|process| {
-            format!(
-                "url(/assets/content/images/{})",
-                process.flavor.image.fname
-            )
-        })
-    };
+    let image =
+        move || with!(|process| process.flavor.image.src());
     let icon =
         move || process.with(|process| process.output.icon());
     let label = move || {

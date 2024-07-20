@@ -1,11 +1,19 @@
-use crate::events::{Effect, Probability};
-use crate::flavor::ProjectFlavor;
-use crate::kinds::{Output, OutputMap};
-use crate::npcs::{NPCRelation, NPC};
-use crate::state::State;
+use crate::{
+    events::{Effect, Probability},
+    flavor::ProjectFlavor,
+    kinds::{Output, OutputMap},
+    npcs::{NPCRelation, NPC},
+    state::State,
+};
 use rand::{rngs::SmallRng, Rng};
 use serde::{Deserialize, Serialize};
-use strum::IntoStaticStr;
+use strum::{
+    Display,
+    EnumDiscriminants,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+};
 
 #[derive(
     Serialize,
@@ -35,6 +43,9 @@ pub enum Status {
     PartialEq,
     Default,
     IntoStaticStr,
+    EnumIter,
+    EnumString,
+    Display,
 )]
 pub enum Group {
     #[default]
@@ -65,6 +76,10 @@ pub enum Group {
     Clone,
     PartialEq,
     Default,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+    Display,
 )]
 pub enum Type {
     #[default]
@@ -85,12 +100,30 @@ impl Default for Cost {
 }
 
 #[derive(
-    Serialize, Deserialize, Copy, Clone, PartialEq, Debug,
+    Serialize,
+    Deserialize,
+    Copy,
+    Clone,
+    PartialEq,
+    Debug,
+    EnumDiscriminants,
 )]
+#[strum_discriminants(derive(EnumIter, EnumString, IntoStaticStr, Display))]
+#[strum_discriminants(name(FactorKind))]
 pub enum Factor {
     Time,
     Income,
     Output(Output),
+}
+
+impl From<FactorKind> for Factor {
+    fn from(kind: FactorKind) -> Self {
+        match kind {
+            FactorKind::Time => Factor::Time,
+            FactorKind::Income => Factor::Income,
+            FactorKind::Output => Factor::Output(Output::default()),
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
@@ -332,7 +365,10 @@ impl Project {
 mod test {
     use super::*;
     use crate::events::{
-        Comparator, Condition, Likelihood, WorldVariable,
+        Comparator,
+        Condition,
+        Likelihood,
+        WorldVariable,
     };
     use rand::SeedableRng;
 

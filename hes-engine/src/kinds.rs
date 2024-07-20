@@ -1,18 +1,21 @@
 use enum_map::Enum;
 use paste::paste;
 use serde::{Deserialize, Serialize};
-use std::ops::{
-    Add,
-    AddAssign,
-    Div,
-    Index,
-    IndexMut,
-    Mul,
-    MulAssign,
-    Sub,
-    SubAssign,
+use std::{
+    fmt::Display,
+    ops::{
+        Add,
+        AddAssign,
+        Div,
+        Index,
+        IndexMut,
+        Mul,
+        MulAssign,
+        Sub,
+        SubAssign,
+    },
 };
-use strum::{EnumIter, IntoStaticStr};
+use strum::{EnumIter, EnumString, IntoStaticStr};
 
 macro_rules! count {
     () => (0usize);
@@ -24,7 +27,7 @@ macro_rules! count {
 /// those enum variants.
 macro_rules! define_enum_map {
     ($name:ident { $($field:ident),* }) => {
-        #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Enum, EnumIter, IntoStaticStr)]
+        #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Enum, EnumIter, EnumString, IntoStaticStr)]
         pub enum $name {
             $(
                 $field,
@@ -360,5 +363,50 @@ impl OutputMap {
 impl ResourceMap {
     pub fn energy(&self) -> f32 {
         self.electricity + self.fuel
+    }
+}
+
+impl Display for Output {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Fuel => "Fuel",
+                Self::Electricity => "Electricity",
+                Self::PlantCalories => "Plant Calories",
+                Self::AnimalCalories => "Animal Calories",
+            }
+        )
+    }
+}
+impl Default for Output {
+    fn default() -> Self {
+        Self::Fuel
+    }
+}
+
+impl Display for Feedstock {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Feedstock::Coal => "Coal",
+                Feedstock::Lithium => "Lithium",
+                Feedstock::NaturalGas => "Natural Gas",
+                Feedstock::Oil => "Oil",
+                Feedstock::Uranium => "Uranium",
+                Feedstock::Thorium => "Thorium",
+                Feedstock::Soil => "Soil",
+                Feedstock::Other => "Other",
+            }
+        )
     }
 }

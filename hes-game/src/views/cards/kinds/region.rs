@@ -4,6 +4,7 @@ use crate::{
     i18n,
     icons::{self, HasIcon},
     t,
+    util::ImageExt,
     views::{
         intensity::{self, IntensityIcon, Variable},
         tip,
@@ -66,14 +67,8 @@ pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
     let precip_range =
         move || region.with(|region| region.precip_range());
 
-    let image = move || {
-        region.with(|region| {
-            format!(
-                "/assets/content/{}",
-                region.flavor.image.fname
-            )
-        })
-    };
+    let image =
+        move || with!(|region| region.flavor.image.src());
 
     view! {
         <Card class="region">

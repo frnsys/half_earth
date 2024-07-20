@@ -8,7 +8,7 @@ use crate::{
 use rand::{rngs::SmallRng, SeedableRng};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Update {
     Region {
         id: usize,
@@ -352,10 +352,6 @@ impl Game {
 
 impl Default for Game {
     fn default() -> Self {
-        let world: World = serde_json::from_str(include_str!(
-            "../assets/DEFAULT.world"
-        ))
-        .unwrap();
-        Self::from_world(world)
+        Self::from_world(World::default())
     }
 }

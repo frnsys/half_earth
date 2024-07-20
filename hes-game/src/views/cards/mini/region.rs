@@ -1,4 +1,4 @@
-use crate::t;
+use crate::{t, util::ImageExt};
 
 use super::{
     super::{kinds::RegionCard, *},
@@ -11,15 +11,9 @@ use leptos::*;
 pub fn MiniRegion(
     #[prop(into)] region: Signal<Region>,
 ) -> impl IntoView {
-    let image = move || {
-        region.with(|region| {
-            format!(
-                "url(/assets/content/{})",
-                region.flavor.image.fname
-            )
-        })
-    };
-    let seceded = move || region.with(|region| region.seceded);
+    let image =
+        move || with!(|region| region.flavor.image.src());
+    let seceded = move || with!(|region| region.seceded);
 
     view! {
         <MiniCard>

@@ -1,13 +1,29 @@
 use serde::{Deserialize, Serialize};
+use serde_bytes;
 use std::collections::HashMap;
 
 pub type ProjectLockers = HashMap<usize, usize>;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ImageData {
+    File(String),
+    Data {
+        #[serde(with = "serde_bytes")]
+        bytes: Vec<u8>,
+        mime: String,
+    },
+}
+impl Default for ImageData {
+    fn default() -> Self {
+        ImageData::File("DEFAULT.jpg".into())
+    }
+}
 
 #[derive(
     Debug, Clone, PartialEq, Serialize, Deserialize, Default,
 )]
 pub struct Image {
-    pub fname: String,
+    pub data: ImageData,
     pub attribution: String,
 }
 
@@ -24,7 +40,7 @@ pub struct ProjectFlavor {
 pub struct EventFlavor {
     pub arc: String,
     pub dialogue: Dialogue,
-    pub image: Image,
+    pub image: Option<Image>,
 }
 
 #[derive(

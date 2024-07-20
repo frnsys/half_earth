@@ -1,9 +1,11 @@
+use std::fmt::Display;
+
 use crate::{
     flavor::RegionFlavor,
     kinds::{Output, OutputMap},
 };
 use serde::{Deserialize, Serialize};
-use strum::IntoStaticStr;
+use strum::{EnumIter, EnumString, IntoStaticStr};
 
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1. / 40.;
@@ -230,12 +232,39 @@ impl Region {
     }
 }
 
-#[derive(PartialEq, Serialize, Deserialize, Clone, Copy)]
+#[derive(
+    PartialEq,
+    Serialize,
+    Deserialize,
+    Clone,
+    Copy,
+    EnumIter,
+    Debug,
+    EnumString,
+    IntoStaticStr,
+)]
 pub enum Income {
     Low,
     LowerMiddle,
     UpperMiddle,
     High,
+}
+impl Display for Income {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Income::Low => "Low",
+                Income::High => "High",
+                Income::LowerMiddle => "Lower-Middle",
+                Income::UpperMiddle => "Upper-Middle",
+            }
+        )
+    }
 }
 
 #[derive(

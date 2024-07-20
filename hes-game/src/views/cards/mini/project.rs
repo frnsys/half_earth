@@ -1,5 +1,6 @@
 use crate::{
     icons::{self, HasIcon},
+    util::ImageExt,
     views::scanner::{ProjectScanner, ScannerCards},
 };
 
@@ -14,27 +15,20 @@ use leptos::*;
 pub fn MiniProject(
     #[prop(into)] project: Signal<Project>,
 ) -> impl IntoView {
-    let image = move || {
-        project.with(|project| {
-            format!(
-                "url(/assets/content/{})",
-                project.flavor.image.fname
-            )
-        })
-    };
-    let icon =
-        move || project.with(|project| project.kind.icon());
+    let image =
+        move || with!(|project| project.flavor.image.src());
+    let icon = move || with!(|project| project.kind.icon());
     let is_building =
-        move || project.with(|project| project.is_building());
+        move || with!(|project| project.is_building());
     let is_finished =
-        move || project.with(|project| project.is_active());
+        move || with!(|project| project.is_active());
     let progress = move || {
-        project.with(|project| {
+        with!(|project| {
             format!("{}%", project.progress * 100.)
         })
     };
     let border = move || {
-        project.with(|project| {
+        with!(|project| {
             let (bg, _) = project_color(&project.group);
             format!("5px solid {bg}")
         })

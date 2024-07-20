@@ -2,6 +2,7 @@ use crate::{
     display::{self, AsText},
     icons::{self, HasIcon},
     t,
+    util::ImageExt,
     views::{
         intensity::{self, IntensityIcon},
         tip,
@@ -175,14 +176,8 @@ pub fn RegionItem(
         )
     });
 
-    let image = move || {
-        region.with(|region| {
-            format!(
-                "/assets/content/images/{}",
-                region.flavor.image.fname
-            )
-        })
-    };
+    let image =
+        move || with!(|region| region.flavor.image.src());
 
     let demand_bars = move || {
         demand_display()

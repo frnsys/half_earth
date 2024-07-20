@@ -4,6 +4,7 @@ use crate::{
     icons::{self, HasIcon},
     state,
     t,
+    util::ImageExt,
     vars::Impact,
     views::{tip, HasTip},
 };
@@ -87,14 +88,8 @@ pub fn IndustryCard(
         }
     };
 
-    let image_url = move || {
-        industry.with(|ind| {
-            format!(
-                "/assets/content/images/{}",
-                ind.flavor.image.fname
-            )
-        })
-    };
+    let image_url =
+        move || with!(|industry| industry.flavor.image.src());
     let image_attrib = move || {
         industry
             .with(|ind| ind.flavor.image.attribution.clone())

@@ -7,6 +7,7 @@ use crate::{
     state::GameExt,
     t,
     ui,
+    util::ImageExt,
     views::{
         effects::{active_effects, DisplayEffect},
         tip,
@@ -160,14 +161,8 @@ pub fn ProjectCard(
                 && !majority_satisfied()
         })
     };
-    let image = move || {
-        project.with(|project| {
-            format!(
-                "/assets/content/images/{}",
-                project.flavor.image.fname
-            )
-        })
-    };
+    let image =
+        move || with!(|project| project.flavor.image.src());
     let has_points = move || {
         project.with(|project| {
             project.kind != ProjectType::Policy

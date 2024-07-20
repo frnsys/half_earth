@@ -1,12 +1,18 @@
+use std::fmt::Display;
+
 use super::ProductionOrder;
 use crate::{
     flavor::ProcessFlavor,
     kinds::{
-        ByproductMap, Feedstock, Output, OutputMap, ResourceMap,
+        ByproductMap,
+        Feedstock,
+        Output,
+        OutputMap,
+        ResourceMap,
     },
 };
 use serde::{Deserialize, Serialize};
-use strum::IntoStaticStr;
+use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 #[derive(
     Debug,
@@ -16,6 +22,9 @@ use strum::IntoStaticStr;
     Serialize,
     Deserialize,
     IntoStaticStr,
+    EnumIter,
+    EnumString,
+    Display,
 )]
 pub enum ProcessFeature {
     UsesPesticides,
@@ -109,34 +118,6 @@ impl Process {
         (pressure / 3e16 + land / starting_land) * 100.
     }
 }
-
-// impl Serialize for Process {
-//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-//     where
-//         S: Serializer,
-//     {
-//         let mut seq = serializer.serialize_struct("Process", 14)?; // TODO need to have the derived
-//                                                                    // fields serialized
-//         seq.serialize_field("id", &self.id)?;
-//         seq.serialize_field("ref_id", &self.ref_id)?;
-//         seq.serialize_field("name", &self.name)?;
-//         seq.serialize_field("output", &self.output)?;
-//         seq.serialize_field("limit", &self.limit)?;
-//         seq.serialize_field("mix_share", &self.mix_share)?;
-//         seq.serialize_field("resources", &self.adj_resources())?;
-//         seq.serialize_field("byproducts", &self.adj_byproducts())?;
-//         seq.serialize_field(
-//             "feedstock",
-//             &(self.feedstock.0, self.adj_feedstock_amount()),
-//         )?;
-//         seq.serialize_field("features", &self.features)?;
-//         seq.serialize_field("locked", &self.locked)?;
-//         seq.serialize_field("supporters", &self.supporters)?;
-//         seq.serialize_field("opposers", &self.opposers)?;
-//         seq.serialize_field("extinction_rate", &self.extinction_rate())?;
-//         seq.end()
-//     }
-// }
 
 #[cfg(test)]
 mod test {

@@ -6,6 +6,7 @@ use crate::{
     state::GameExt,
     t,
     ui,
+    util::ImageExt,
     vars::*,
     views::{
         factors::factors_card,
@@ -243,14 +244,8 @@ pub fn ProcessCard(
         }).collect::<Vec<_>>()
     });
 
-    let image = move || {
-        process.with(|process| {
-            format!(
-                "/assets/content/images/{}",
-                process.flavor.image.fname
-            )
-        })
-    };
+    let image =
+        move || with!(|process| process.flavor.image.src());
 
     let process_excess = move || {
         process.with(|process| {
