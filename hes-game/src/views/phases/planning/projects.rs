@@ -55,7 +55,7 @@ pub fn Projects(
                 && state.world.project_lockers.get(&p.id)
                 .map(|locker_id| {
                     // Is the locker satisfied?
-                    match state.world.projects[*locker_id].status {
+                    match state.world.projects[locker_id].status {
                         Status::Building | Status::Active | Status::Finished => false,
                         _=> true
                     }

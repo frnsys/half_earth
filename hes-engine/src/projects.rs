@@ -3,9 +3,10 @@ use crate::{
     flavor::ProjectFlavor,
     kinds::{Output, OutputMap},
     npcs::{NPCRelation, NPC},
-    state::State,
+    Collection,
+    HasId,
+    Id,
 };
-use rand::{rngs::SmallRng, Rng};
 use serde::{Deserialize, Serialize};
 use strum::{
     Display,
@@ -108,7 +109,12 @@ impl Default for Cost {
     Debug,
     EnumDiscriminants,
 )]
-#[strum_discriminants(derive(EnumIter, EnumString, IntoStaticStr, Display))]
+#[strum_discriminants(derive(
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+    Display
+))]
 #[strum_discriminants(name(FactorKind))]
 pub enum Factor {
     Time,
@@ -121,7 +127,9 @@ impl From<FactorKind> for Factor {
         match kind {
             FactorKind::Time => Factor::Time,
             FactorKind::Income => Factor::Income,
-            FactorKind::Output => Factor::Output(Output::default()),
+            FactorKind::Output => {
+                Factor::Output(Output::default())
+            }
         }
     }
 }
@@ -143,8 +151,7 @@ pub struct Upgrade {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Project {
-    pub id: usize,
-    pub ref_id: String,
+    pub id: Id,
     pub name: String,
     pub kind: Type,
     pub group: Group,
@@ -169,10 +176,16 @@ pub struct Project {
     pub upgrades: Vec<Upgrade>,
     pub active_outcome: Option<usize>,
 
-    pub supporters: Vec<usize>,
-    pub opposers: Vec<usize>,
+    pub supporters: Vec<Id>,
+    pub opposers: Vec<Id>,
 
     pub flavor: ProjectFlavor,
+}
+
+impl HasId for Project {
+    fn id(&self) -> &Id {
+        &self.id
+    }
 }
 
 /// How many years a project takes to complete
@@ -235,31 +248,6 @@ impl Project {
         self.points = points;
         self.estimate =
             years_for_points(self.points, self.cost) as usize;
-    }
-
-    /// Roll to see the outcome of this project
-    pub fn roll_outcome(
-        &self,
-        state: &State,
-        rng: &mut SmallRng,
-    ) -> Option<(&Outcome, usize)> {
-        let mut outcome = None;
-        for (i, o) in self.outcomes.iter().enumerate() {
-            match o.probability.eval(state, None) {
-                Some(likelihood) => {
-                    let prob = likelihood.p();
-                    if rng.gen::<f32>() <= prob {
-                        outcome = Some((o, i));
-                        break;
-                    }
-                }
-                None => (),
-            }
-        }
-        if outcome.is_none() {
-            outcome = Some((&self.outcomes[0], 0));
-        }
-        outcome
     }
 
     pub fn update_cost(
@@ -340,21 +328,20 @@ impl Project {
 
     pub fn update_required_majority(
         &mut self,
-        npcs: &Vec<NPC>,
+        npcs: &Collection<NPC>,
     ) {
         let opposers = self
             .opposers
             .iter()
             .filter(|id| {
-                !npcs[**id].locked
-                    && npcs[**id].relation()
-                        != NPCRelation::Ally
+                !npcs[*id].locked
+                    && npcs[*id].relation() != NPCRelation::Ally
             })
             .count();
         let supporters = self
             .supporters
             .iter()
-            .filter(|id| !npcs[**id].locked)
+            .filter(|id| !npcs[*id].locked)
             .count();
         self.required_majority =
             if opposers > supporters { 0.5 } else { 0. };
@@ -375,8 +362,7 @@ mod test {
     #[test]
     fn test_build_project() {
         let mut p = Project {
-            id: 0,
-            ref_id: "test_project",
+            id: "test_project",
             name: "Test Project",
             cost: 1,
             base_cost: Cost::Fixed(1),
@@ -424,8 +410,7 @@ mod test {
     #[test]
     fn test_project_estimate() {
         let mut p = Project {
-            id: 0,
-            ref_id: "test_project",
+            id: "test_project",
             name: "Test Project",
             cost: 10,
             base_cost: Cost::Fixed(10),
@@ -468,8 +453,7 @@ mod test {
     fn test_project_outcomes() {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let p = Project {
-            id: 0,
-            ref_id: "test_project",
+            id: "test_project",
             name: "Test Project",
             cost: 1,
             base_cost: Cost::Fixed(1),

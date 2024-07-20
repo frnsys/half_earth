@@ -16,10 +16,16 @@ pub fn Regions() -> impl IntoView {
     let (selected_region, set_selected_region) =
         create_signal(0);
     let region_name = move || {
-        regions.get()[selected_region.get()].name.clone()
+        with!(|regions| regions
+            .by_idx(selected_region.get())
+            .name
+            .clone())
     };
-    let region =
-        move || regions.get()[selected_region.get()].clone();
+    let region = move || {
+        with!(|regions| regions
+            .by_idx(selected_region.get())
+            .clone())
+    };
 
     let region_name_ref = create_node_ref::<html::Div>();
     let fit_region_name = move || {

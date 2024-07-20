@@ -1,12 +1,14 @@
 use crate::{
     flavor::IndustryFlavor,
     kinds::{ByproductMap, ResourceMap},
+    HasId,
+    Id,
 };
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Industry {
-    pub id: usize,
+    pub id: Id,
     pub name: String,
     pub resources: ResourceMap,
     pub byproducts: ByproductMap,
@@ -14,6 +16,12 @@ pub struct Industry {
     pub byproduct_modifiers: ByproductMap,
     pub demand_modifier: f32,
     pub flavor: IndustryFlavor,
+}
+
+impl HasId for Industry {
+    fn id(&self) -> &Id {
+        &self.id
+    }
 }
 
 impl Industry {

@@ -193,7 +193,7 @@ pub fn ProjectCard(
             project
                 .opposers
                 .iter()
-                .map(|id| npcs[*id].clone())
+                .map(|id| npcs[id].clone())
                 .filter(|npc| !npc.locked)
                 .collect::<Vec<_>>()
         })
@@ -204,7 +204,7 @@ pub fn ProjectCard(
             project
                 .supporters
                 .iter()
-                .map(|id| npcs[*id].clone())
+                .map(|id| npcs[id].clone())
                 .filter(|npc| !npc.locked)
                 .collect::<Vec<_>>()
         })

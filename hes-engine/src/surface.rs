@@ -276,7 +276,7 @@ pub fn oil_paint_effect(
             for (rgb, intensity_val) in &intensities
                 [midpoint - left_span..midpoint + right_span]
             {
-                let mut count =
+                let count =
                     &mut pixel_intensity_count[*intensity_val];
 
                 count.0 += 1;

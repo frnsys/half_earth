@@ -13,6 +13,7 @@ use hes_engine::{
     kinds::Output,
     production::Process,
     state::State,
+    Id,
 };
 use leptos::*;
 
@@ -24,11 +25,11 @@ use super::{
 };
 
 impl Scannable for Process {
-    fn id(&self) -> usize {
-        self.id
+    fn id(&self) -> &Id {
+        &self.id
     }
 
-    fn get_from_state(id: usize, state: &State) -> Self {
+    fn get_from_state(id: &Id, state: &State) -> Self {
         state.world.processes[id].clone()
     }
 
@@ -40,8 +41,7 @@ impl Scannable for Process {
 pub struct ProcessScanner {
     pub points: RwSignal<isize>,
     pub on_change: Callback<()>,
-    pub mix_changes:
-        Memo<EnumMap<Output, HashMap<usize, isize>>>,
+    pub mix_changes: Memo<EnumMap<Output, HashMap<Id, isize>>>,
 }
 
 impl ScannerSpec for ProcessScanner {

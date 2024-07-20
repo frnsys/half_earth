@@ -7,6 +7,8 @@ use crate::{
     production::Process,
     projects::Project,
     regions::{Income, Region},
+    Collection,
+    Id,
 };
 use serde::{Deserialize, Serialize};
 
@@ -20,12 +22,12 @@ pub struct World {
     pub extinction_rate: f32,
     pub temperature: f32, // global temp anomaly, C
     pub sea_level_rise: f32, // meters
-    pub regions: Vec<Region>,
-    pub events: Vec<Event>,
-    pub industries: Vec<Industry>,
-    pub projects: Vec<Project>,
-    pub processes: Vec<Process>,
-    pub project_lockers: HashMap<usize, usize>,
+    pub regions: Collection<Region>,
+    pub events: Collection<Event>,
+    pub industries: Collection<Industry>,
+    pub projects: Collection<Project>,
+    pub processes: Collection<Process>,
+    pub project_lockers: HashMap<Id, Id>,
     pub feedstock_reserves: FeedstockMap,
     pub starting_resources: ResourceMap,
     pub output_demand: [OutputMap; 4],
@@ -74,12 +76,12 @@ impl World {
         stop: bool,
         fast: bool,
         degrow: bool,
-    ) -> (Vec<usize>, Vec<usize>) {
+    ) -> (Vec<Id>, Vec<Id>) {
         let mut up = vec![];
         let mut down = vec![];
 
         let speed = if fast { 1.25 } else { 1. };
-        for region in &mut self.regions {
+        for region in self.regions.iter_mut() {
             let start = region.income_level();
             if degrow && region.income == Income::High {
                 region.develop(-1.);
@@ -105,7 +107,7 @@ impl World {
         wretched_ally: bool,
         consumerist_ally: bool,
     ) {
-        for region in &mut self.regions {
+        for region in self.regions.iter_mut() {
             region.update_outlook(
                 wretched_ally,
                 consumerist_ally,
@@ -146,7 +148,7 @@ impl World {
     pub fn change_population(&mut self, amount: f32) {
         let amount_per_region =
             amount / self.regions.len() as f32;
-        for region in &mut self.regions {
+        for region in self.regions.iter_mut() {
             region.population += amount_per_region;
         }
     }

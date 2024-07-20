@@ -4,7 +4,13 @@ use std::{
 };
 
 use super::processes::Process;
-use crate::kinds::{ByproductMap, Feedstock, FeedstockMap, Output, ResourceMap};
+use crate::kinds::{
+    ByproductMap,
+    Feedstock,
+    FeedstockMap,
+    Output,
+    ResourceMap,
+};
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -21,7 +27,8 @@ fn rank_orders(
     let mut byproduct_maxs: ByproductMap = byproducts!();
     let mut resource_scores = vec![];
     let mut feedstock_scores = vec![];
-    let mut scores: HashMap<usize, (f32, f32)> = HashMap::default();
+    let mut scores: HashMap<usize, (f32, f32)> =
+        HashMap::default();
 
     for i in indices.iter() {
         let process = orders[*i].process;
@@ -39,7 +46,8 @@ fn rank_orders(
         resource_scores.push(resource_score);
 
         let f = process.adj_feedstock_amount();
-        let feedstock_score = f / (feedstocks[process.feedstock.0] + 1.);
+        let feedstock_score =
+            f / (feedstocks[process.feedstock.0] + 1.);
         feedstock_scores.push(feedstock_score);
 
         scores.insert(*i, (resource_score, feedstock_score));
@@ -64,7 +72,8 @@ fn rank_orders(
             .iter()
             .map(|(k, v)| *v / (byproduct_maxs[*k] + 1.))
             .sum();
-        let score = feedstock_score + resource_score + byproduct_score;
+        let score =
+            feedstock_score + resource_score + byproduct_score;
 
         // Hacky
         (score * 100000.).round() as isize
@@ -92,15 +101,21 @@ fn produce_amount(
         .iter()
         .fold(f32::INFINITY, |a, &b| a.min(b));
 
-    let amount_produced = order.amount.min(feedstock_max.min(resource_max)).max(0.);
+    let amount_produced = order
+        .amount
+        .min(feedstock_max.min(resource_max))
+        .max(0.);
 
     for (k, v) in resources.items() {
-        available_resources[k] = (available_resources[k] - v * amount_produced).max(0.);
+        available_resources[k] = (available_resources[k]
+            - v * amount_produced)
+            .max(0.);
     }
     for (k, v) in byproducts.items() {
         produced_byproducts[k] += v * amount_produced;
     }
-    available_feedstocks[feedstock] -= feedstock_amount * amount_produced;
+    available_feedstocks[feedstock] -=
+        feedstock_amount * amount_produced;
 
     amount_produced
 }
@@ -122,7 +137,9 @@ impl Outputs {
         ]
     }
 
-    pub fn items_mut(&mut self) -> [(Output, &mut Vec<usize>); 4] {
+    pub fn items_mut(
+        &mut self,
+    ) -> [(Output, &mut Vec<usize>); 4] {
         [
             (Output::Fuel, &mut self.fuel),
             (Output::Electricity, &mut self.electricity),
@@ -143,7 +160,10 @@ impl Index<Output> for Outputs {
     }
 }
 impl IndexMut<Output> for Outputs {
-    fn index_mut(&mut self, index: Output) -> &mut Self::Output {
+    fn index_mut(
+        &mut self,
+        index: Output,
+    ) -> &mut Self::Output {
         match index {
             Output::Fuel => &mut self.fuel,
             Output::Electricity => &mut self.electricity,
@@ -175,7 +195,12 @@ pub fn calculate_production(
                 continue;
             }
 
-            rank_orders(orders, order_idxs, &resources, &feedstocks);
+            rank_orders(
+                orders,
+                order_idxs,
+                &resources,
+                &feedstocks,
+            );
 
             // Ok to unwrap b/c we check if `orders` is empty
             let order_idx = order_idxs.pop().unwrap();
@@ -187,7 +212,10 @@ pub fn calculate_production(
             );
             produced[order_idx] = amount;
         }
-        continue_production = !orders_by_output.values().iter().all(|idxs| idxs.is_empty());
+        continue_production = !orders_by_output
+            .values()
+            .iter()
+            .all(|idxs| idxs.is_empty());
     }
 
     let consumed_resources = *starting_resources - resources;
@@ -202,7 +230,9 @@ pub fn calculate_production(
 
 /// Calculate the total required resources to completely
 /// meet the demand of the provided production orders.
-pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap, FeedstockMap) {
+pub fn calculate_required(
+    orders: &[ProductionOrder],
+) -> (ResourceMap, FeedstockMap) {
     let mut resources = resources!();
     let mut feedstocks = feedstocks!();
     for order in orders {
@@ -226,8 +256,7 @@ mod test {
     fn gen_processes() -> Vec<Process> {
         vec![
             Process {
-                id: 0,
-                ref_id: "test_process_a",
+                id: "test_process_a",
                 name: "Test Process A",
                 limit: None,
                 mix_share: 10,
@@ -243,8 +272,7 @@ mod test {
                 supporters: vec![],
             },
             Process {
-                id: 1,
-                ref_id: "test_process_b",
+                id: "test_process_b",
                 name: "Test Process B",
                 limit: None,
                 mix_share: 10,
@@ -260,8 +288,7 @@ mod test {
                 supporters: vec![],
             },
             Process {
-                id: 2,
-                ref_id: "test_process_c",
+                id: "test_process_c",
                 name: "Test Process C",
                 limit: None,
                 mix_share: 20,
@@ -291,11 +318,16 @@ mod test {
         let resources = resources!(water: 80.);
         let feedstocks = feedstocks!(oil: 100., coal: 100.);
         let (produced, consumed_r, consumed_f, _byproducts) =
-            calculate_production(&orders, &resources, &feedstocks);
+            calculate_production(
+                &orders,
+                &resources,
+                &feedstocks,
+            );
 
         let expected = [0., 50., 30.];
 
-        let (required_r, required_f) = calculate_required(&orders);
+        let (required_r, required_f) =
+            calculate_required(&orders);
         // println!("Required Resources: {:?}", required_r);
         // println!("Required Feedstocks: {:?}", required_f);
         // for order in &orders {
@@ -305,12 +337,9 @@ mod test {
         // println!("Consumed Resources: {:?}", consumed_r);
         // println!("Consumed Feedstocks: {:?}", feedstocks);
         assert!(produced.len() == expected.len());
-        assert!(produced.iter().zip(expected).all(|(x1, x2)| approx_eq!(
-            f32,
-            *x1,
-            x2,
-            epsilon = 1e-2
-        )));
+        assert!(produced.iter().zip(expected).all(
+            |(x1, x2)| approx_eq!(f32, *x1, x2, epsilon = 1e-2)
+        ));
 
         let expected = resources!(
             water: 80.
@@ -336,7 +365,8 @@ mod test {
             .map(|p| p.production_order(&demand))
             .collect();
 
-        let (required_r, required_f) = calculate_required(&orders);
+        let (required_r, required_f) =
+            calculate_required(&orders);
         let expected = resources!(
             water: 200.
         );

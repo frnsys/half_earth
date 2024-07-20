@@ -11,6 +11,7 @@ use crate::{
 use hes_engine::{
     projects::{Project, Status, Type},
     state::State,
+    Id,
 };
 use leptos::*;
 
@@ -22,11 +23,11 @@ use super::{
 };
 
 impl Scannable for Project {
-    fn id(&self) -> usize {
-        self.id
+    fn id(&self) -> &Id {
+        &self.id
     }
 
-    fn get_from_state(id: usize, state: &State) -> Self {
+    fn get_from_state(id: &Id, state: &State) -> Self {
         state.world.projects[id].clone()
     }
 
@@ -38,8 +39,8 @@ impl Scannable for Project {
 pub struct ProjectScanner {
     on_change: Callback<()>,
     player_seats: Memo<f32>,
-    plan_changes: Memo<HashMap<usize, PlanChange>>,
-    queued_upgrades: Memo<HashMap<usize, bool>>,
+    plan_changes: Memo<HashMap<Id, PlanChange>>,
+    queued_upgrades: Memo<HashMap<Id, bool>>,
 }
 impl ProjectScanner {
     pub fn new(on_change: Callback<()>) -> Self {
@@ -132,7 +133,7 @@ impl ScannerSpec for ProjectScanner {
                                         changes.downgrades -= 1;
                                     }
                                     if state.upgrade_project_x(
-                                        p.id,
+                                        &p.id,
                                         free,
                                         &mut ui.queued_upgrades,
                                     ) {
@@ -151,7 +152,7 @@ impl ScannerSpec for ProjectScanner {
                                     // Adding points to Research/Infrastructure
                                 } else if p.kind != Type::Policy
                                     && state.buy_point(
-                                        p.id,
+                                        &p.id,
                                         &mut ui.points,
                                     )
                                 {
@@ -161,7 +162,7 @@ impl ScannerSpec for ProjectScanner {
                                         ui.tutorial.advance();
                                     }
                                     state.assign_point(
-                                        p.id,
+                                        &p.id,
                                         &mut ui.points,
                                     );
 
@@ -179,14 +180,14 @@ impl ScannerSpec for ProjectScanner {
                                 } else if p.kind == Type::Policy
                                     && (changes.withdrawn
                                         || state
-                                            .pay_points(p.id))
+                                            .pay_points(&p.id))
                                 {
                                     if ui.tutorial
                                         == Tutorial::Projects
                                     {
                                         ui.tutorial.advance();
                                     }
-                                    state.pass_policy(p.id);
+                                    state.pass_policy(&p.id);
                                     on_change.call(());
 
                                     controls.pulse_card();
@@ -274,11 +275,11 @@ impl ScannerSpec for ProjectScanner {
                             let changes = ui.plan_changes.entry(p.id).or_default();
                             if refundable() {
                                 if changes.upgrades > 0 {
-                                    state.downgrade_project_x(p.id, &mut ui.queued_upgrades);
+                                    state.downgrade_project_x(&p.id, &mut ui.queued_upgrades);
                                     changes.upgrades -= 1;
                                     keep_withdrawing = changes.upgrades > 0 || changes.passed;
                                 } else if changes.passed {
-                                    state.stop_policy(p.id);
+                                    state.stop_policy(&p.id);
                                     changes.passed = false;
                                 } else {
                                     let points = changes.points;
@@ -295,16 +296,16 @@ impl ScannerSpec for ProjectScanner {
                                             ui.points.refundable_research.saturating_sub(points);
                                         ui.points.research += excess_points as isize;
                                     }
-                                    state.unassign_points(p.id, points);
+                                    state.unassign_points(&p.id, points);
                                     state.change_political_capital(refund as isize);
                                     changes.points = 0;
                                 }
                             } else if p.can_downgrade() {
-                                state.downgrade_project(p.id);
+                                state.downgrade_project(&p.id);
                                 keep_withdrawing = p.level > 0;
                                 changes.downgrades += 1;
                             } else {
-                                state.stop_project(p.id);
+                                state.stop_project(&p.id);
                                 changes.withdrawn = true;
                             }
                             on_change.call(());

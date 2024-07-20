@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     events::{Effect, Event, EventPool, Flag, Phase, Request},
     game::Update,
@@ -15,11 +17,19 @@ use crate::{
         Process,
         ProductionOrder,
     },
-    projects::{Group, Project, Status, Type as ProjectType},
+    projects::{
+        Group,
+        Outcome,
+        Project,
+        Status,
+        Type as ProjectType,
+    },
     surface,
     world::World,
+    Collection,
+    Id,
 };
-use rand::rngs::SmallRng;
+use rand::{rngs::SmallRng, Rng};
 use serde::{Deserialize, Serialize};
 
 const LIFESPAN: usize = 60;
@@ -37,7 +47,7 @@ pub struct State {
 
     pub political_capital: isize,
     pub research_points: isize,
-    pub npcs: Vec<NPC>,
+    pub npcs: Collection<NPC>,
 
     // Requests: (
     //  request type,
@@ -45,12 +55,12 @@ pub struct State {
     //  state (active: true/false),
     //  political capital bounty
     // )
-    pub requests: Vec<(Request, usize, bool, usize)>,
+    pub requests: Vec<(Request, Id, bool, usize)>,
     pub flags: Vec<Flag>,
 
     // Keep track of what policies
     // need to have rolled outcomes
-    pub new_policies: Vec<usize>,
+    pub new_policies: Vec<Id>,
 
     // Modifiers should start as all 1.
     pub output_modifier: OutputMap,
@@ -62,7 +72,7 @@ pub struct State {
     pub resources: ResourceMap,
     pub feedstocks: FeedstockMap,
     pub produced: OutputMap,
-    pub produced_by_process: Vec<f32>,
+    pub produced_by_process: HashMap<Id, f32>,
     pub consumed_resources: ResourceMap,
     pub consumed_feedstocks: FeedstockMap,
     pub required_resources: ResourceMap,
@@ -94,7 +104,7 @@ impl State {
     pub fn new(world: World) -> State {
         // NPCs are hardcoded cause it's a bit more complicated
         // to make them editable.
-        let mut npcs: Vec<NPC> = serde_json::from_str(
+        let mut npcs: Collection<NPC> = serde_json::from_str(
             include_str!("../assets/npcs.json"),
         )
         .unwrap();
@@ -102,7 +112,7 @@ impl State {
         let n_npcs =
             npcs.iter().filter(|npc| !npc.locked).count()
                 as f32;
-        for npc in &mut npcs {
+        for npc in npcs.iter_mut() {
             if !npc.locked {
                 npc.seats = 1. / n_npcs;
             }
@@ -146,7 +156,7 @@ impl State {
             feedstocks,
             byproducts: byproducts!(),
             produced: outputs!(),
-            produced_by_process: Vec::new(),
+            produced_by_process: HashMap::default(),
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
             required_resources: resources!(),
@@ -191,7 +201,7 @@ impl State {
 
         let modifier = 1.;
         let income_level = state.world.income_level();
-        for project in &mut state.world.projects {
+        for project in state.world.projects.iter_mut() {
             project.update_cost(
                 state.world.year,
                 income_level,
@@ -257,7 +267,7 @@ impl State {
     }
 
     pub fn update_pop(&mut self) {
-        for region in &mut self.world.regions {
+        for region in self.world.regions.iter_mut() {
             region.update_pop(
                 self.world.year as f32,
                 1. + self.population_growth_modifier,
@@ -270,16 +280,16 @@ impl State {
         &mut self,
         rng: &mut SmallRng,
     ) -> (
-        Vec<usize>,
-        Vec<(Effect, Option<usize>)>,
-        Vec<(Effect, Option<usize>)>,
+        Vec<Id>,
+        Vec<(Effect, Option<Id>)>,
+        Vec<(Effect, Option<Id>)>,
     ) {
         // New effects to apply are gathered here.
         // (Mostly to avoid borrowing conflicts)
         // (Effect, Option<RegionId>)
-        let mut remove_effects: Vec<(Effect, Option<usize>)> =
+        let mut remove_effects: Vec<(Effect, Option<Id>)> =
             Vec::new();
-        let mut add_effects: Vec<(Effect, Option<usize>)> =
+        let mut add_effects: Vec<(Effect, Option<Id>)> =
             Vec::new();
 
         // Advance projects
@@ -309,11 +319,11 @@ impl State {
                 }
 
                 for npc_id in &project.supporters {
-                    self.npcs[*npc_id].relationship +=
+                    self.npcs[npc_id].relationship +=
                         RELATIONSHIP_CHANGE_AMOUNT;
                 }
                 for npc_id in &project.opposers {
-                    self.npcs[*npc_id].relationship -=
+                    self.npcs[npc_id].relationship -=
                         RELATIONSHIP_CHANGE_AMOUNT;
                 }
 
@@ -328,17 +338,16 @@ impl State {
             }
         }
 
-        // Ugh hacky
-        let mut outcomes: Vec<(usize, usize)> = Vec::new();
+        let mut outcomes: Vec<(&Id, usize)> = Vec::new();
         for id in &completed_projects {
-            let project = &self.world.projects[*id];
-            match project.roll_outcome(self, rng) {
+            let project = &self.world.projects[id];
+            match self.roll_project_outcome(project, rng) {
                 Some((outcome, i)) => {
                     for effect in &outcome.effects {
                         add_effects
                             .push((effect.clone(), None));
                     }
-                    outcomes.push((*id, i));
+                    outcomes.push((id, i));
                 }
                 None => (),
             }
@@ -381,7 +390,7 @@ impl State {
         let malthus_ally = self.is_ally("The Malthusian");
 
         let income_level = self.world.income_level();
-        for project in &mut self.world.projects {
+        for project in self.world.projects.iter_mut() {
             let mut group_modifier = 1.0;
             if posadist_ally && project.group == Group::Nuclear
             {
@@ -527,7 +536,9 @@ impl State {
         self.n2o_emissions =
             self.byproducts.n2o + self.byproduct_mods.n2o;
         self.world.extinction_rate = self
-            .compute_extinction_rate(&self.produced_by_process);
+            .compute_extinction_rate(
+                self.produced_by_process.values(),
+            );
     }
 
     pub fn step_production(&mut self) {
@@ -655,7 +666,7 @@ impl State {
 
     pub fn check_requests(
         &mut self,
-    ) -> Vec<(Request, usize, bool, usize)> {
+    ) -> Vec<(Request, Id, bool, usize)> {
         let mut i = 0;
         let mut completed = Vec::new();
         while i < self.requests.len() {
@@ -663,7 +674,7 @@ impl State {
                 self.requests[i].clone();
             let complete = match kind {
                 Request::Project => {
-                    let project = &self.world.projects[id];
+                    let project = &self.world.projects[&id];
                     (active
                         && (project.status == Status::Active
                             || project.status
@@ -675,7 +686,7 @@ impl State {
                                     == Status::Halted))
                 }
                 Request::Process => {
-                    let process = &self.world.processes[id];
+                    let process = &self.world.processes[&id];
                     (active && process.is_promoted())
                         || (!active && process.is_banned())
                 }
@@ -690,7 +701,7 @@ impl State {
         completed
     }
 
-    pub fn start_project(&mut self, project_id: usize) {
+    pub fn start_project(&mut self, project_id: &Id) {
         // Ugh hacky
         let project = &self.world.projects[project_id];
         if project.kind == ProjectType::Policy {
@@ -703,7 +714,7 @@ impl State {
 
     pub fn stop_project(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
     ) -> Vec<Effect> {
         let mut effects: Vec<Effect> = Vec::new();
         let project = &mut self.world.projects[project_id];
@@ -724,11 +735,11 @@ impl State {
             }
 
             for npc_id in &project.supporters {
-                self.npcs[*npc_id].relationship -=
+                self.npcs[npc_id].relationship -=
                     RELATIONSHIP_CHANGE_AMOUNT;
             }
             for npc_id in &project.opposers {
-                self.npcs[*npc_id].relationship +=
+                self.npcs[npc_id].relationship +=
                     RELATIONSHIP_CHANGE_AMOUNT;
             }
         }
@@ -746,18 +757,42 @@ impl State {
         effects
     }
 
+    /// Roll to see the outcome of this project
+    pub fn roll_project_outcome<'a>(
+        &self,
+        project: &'a Project,
+        rng: &mut SmallRng,
+    ) -> Option<(&'a Outcome, usize)> {
+        let mut outcome = None;
+        for (i, o) in project.outcomes.iter().enumerate() {
+            match o.probability.eval(self, None) {
+                Some(likelihood) => {
+                    let prob = likelihood.p();
+                    if rng.gen::<f32>() <= prob {
+                        outcome = Some((o, i));
+                        break;
+                    }
+                }
+                None => (),
+            }
+        }
+        if outcome.is_none() {
+            outcome = Some((&project.outcomes[0], 0));
+        }
+        outcome
+    }
+
     pub fn roll_new_policy_outcomes(
         &mut self,
         rng: &mut SmallRng,
-    ) -> (Vec<usize>, Vec<Effect>) {
+    ) -> (Vec<Id>, Vec<Effect>) {
         let mut effects: Vec<Effect> = Vec::new();
-        let ids: Vec<usize> =
+        let ids: Vec<Id> =
             self.new_policies.drain(..).collect();
         for id in &ids {
             let mut active_outcome = None;
-            match self.world.projects[*id]
-                .roll_outcome(self, rng)
-            {
+            let proj = &self.world.projects[id];
+            match self.roll_project_outcome(proj, rng) {
                 Some((outcome, i)) => {
                     for effect in &outcome.effects {
                         effects.push(effect.clone());
@@ -766,10 +801,10 @@ impl State {
                 }
                 None => (),
             }
-            self.world.projects[*id].active_outcome =
-                active_outcome;
-            self.world.projects[*id].status = Status::Active;
-            for effect in &self.world.projects[*id].effects {
+            let proj = &mut self.world.projects[id];
+            proj.active_outcome = active_outcome;
+            proj.status = Status::Active;
+            for effect in &proj.effects {
                 effects.push(effect.clone());
             }
         }
@@ -779,7 +814,7 @@ impl State {
 
     pub fn upgrade_project(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
     ) -> (Vec<Effect>, Vec<Effect>) {
         let mut remove_effects = Vec::new();
         let mut add_effects = Vec::new();
@@ -803,7 +838,7 @@ impl State {
 
     pub fn downgrade_project(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
     ) -> (Vec<Effect>, Vec<Effect>) {
         let mut remove_effects = Vec::new();
         let mut add_effects = Vec::new();
@@ -827,7 +862,7 @@ impl State {
 
     pub fn change_mix_share(
         &mut self,
-        process_id: usize,
+        process_id: &Id,
         change: isize,
     ) {
         let process = &mut self.world.processes[process_id];
@@ -858,11 +893,11 @@ impl State {
                 (0., 0.)
             };
         for npc_id in &process.supporters {
-            self.npcs[*npc_id].relationship +=
+            self.npcs[npc_id].relationship +=
                 support_change * RELATIONSHIP_CHANGE_AMOUNT;
         }
         for npc_id in &process.opposers {
-            self.npcs[*npc_id].relationship +=
+            self.npcs[npc_id].relationship +=
                 oppose_change * RELATIONSHIP_CHANGE_AMOUNT;
         }
     }
@@ -917,9 +952,9 @@ impl State {
             - self.byproduct_mods.biodiversity
     }
 
-    pub fn compute_extinction_rate(
+    pub fn compute_extinction_rate<'a>(
         &self,
-        produced_by_process: &[f32],
+        produced_by_process: impl Iterator<Item = &'a f32>,
     ) -> f32 {
         let lic_pop = self.world.lic_population();
         self.world
@@ -960,7 +995,7 @@ impl State {
         let outlook_change =
             temp_change * 6. * self.world.temperature.powf(2.);
         self.world.base_outlook += outlook_change;
-        for region in &mut self.world.regions {
+        for region in self.world.regions.iter_mut() {
             region.outlook += outlook_change * 0.4;
         }
         outlook_change
@@ -979,7 +1014,7 @@ impl State {
             surface::BASE_TEMP + self.world.temperature,
         )
         .collect();
-        for region in &mut self.world.regions {
+        for region in self.world.regions.iter_mut() {
             // We assert when generating the pattern idxs that they are not empty
             let local_temps: Vec<f32> = region
                 .pattern_idxs
@@ -1020,7 +1055,7 @@ impl State {
         phase: Phase,
         limit: Option<usize>,
         rng: &mut SmallRng,
-    ) -> Vec<(Event, Option<usize>)> {
+    ) -> Vec<(Event, Option<Id>)> {
         // TODO hacky
         let mut pool = self.event_pool.clone();
         let events =

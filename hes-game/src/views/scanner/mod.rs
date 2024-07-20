@@ -4,7 +4,7 @@ mod effects;
 mod process;
 mod project;
 
-use hes_engine::state::State;
+use hes_engine::{state::State, Id};
 use leptos::*;
 use std::{rc::Rc, time::Duration};
 use wasm_bindgen::prelude::*;
@@ -319,9 +319,9 @@ pub fn RemoveScanner(
 pub trait Scannable:
     std::fmt::Debug + Clone + PartialEq + 'static
 {
-    fn id(&self) -> usize;
+    fn id(&self) -> &Id;
     fn as_card(item: Signal<Self>) -> View;
-    fn get_from_state(id: usize, state: &State) -> Self;
+    fn get_from_state(id: &Id, state: &State) -> Self;
 }
 
 pub trait ScannerSpec {

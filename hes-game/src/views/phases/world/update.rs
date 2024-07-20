@@ -74,11 +74,11 @@ fn Update(
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[*id];
+                let proj = &state.world.projects[id];
                 proj.flavor.image.src()
             }
             EngineUpdate::Region { id, .. } => {
-                let region = &state.world.regions[*id];
+                let region = &state.world.regions[id];
                 region.flavor.image.src()
             }
         }
@@ -88,11 +88,11 @@ fn Update(
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[*id];
+                let proj = &state.world.projects[id];
                 proj.flavor.image.attribution.clone()
             }
             EngineUpdate::Region { id, .. } => {
-                let region = &state.world.regions[*id];
+                let region = &state.world.regions[id];
                 region.flavor.image.attribution.clone()
             }
         }
@@ -102,11 +102,11 @@ fn Update(
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[*id];
+                let proj = &state.world.projects[id];
                 t!(&proj.name)
             }
             EngineUpdate::Region { id, .. } => {
-                let region = &state.world.regions[*id];
+                let region = &state.world.regions[id];
                 t!(&region.name)
             }
         }
@@ -116,7 +116,7 @@ fn Update(
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[*id];
+                let proj = &state.world.projects[id];
 
                 let effects = active_effects(proj);
                 let outcome_dialogue = proj.active_outcome.map(|id| {
@@ -141,7 +141,7 @@ fn Update(
                 .into_view()
             }
             EngineUpdate::Region { id, up } => {
-                let region = &state.world.regions[*id];
+                let region = &state.world.regions[id];
 
                 let (prev_income, next_income) = if *up {
                     let next = region.income_level();

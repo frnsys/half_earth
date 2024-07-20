@@ -6,7 +6,7 @@ use crate::{
     views::{cards::MiniNPC, tip, HasTip},
     with_state,
 };
-use hes_engine::events::Flag;
+use hes_engine::{events::Flag, Id};
 use leptos::*;
 use std::{collections::HashMap, sync::OnceLock};
 
@@ -27,9 +27,7 @@ pub fn Parliament() -> impl IntoView {
     });
 
     let (extra_seats, set_extra_seats) =
-        create_signal::<HashMap<usize, usize>>(
-            HashMap::default(),
-        );
+        create_signal::<HashMap<Id, usize>>(HashMap::default());
     let (coalition_seats, set_coalition_seats) =
         create_signal(0);
 
@@ -40,7 +38,7 @@ pub fn Parliament() -> impl IntoView {
     }
     let seats = with_state!(|state, _ui| {
         struct Seats {
-            id: usize,
+            id: Id,
             name: String,
             color: String,
             is_ally: bool,

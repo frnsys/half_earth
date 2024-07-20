@@ -1,5 +1,11 @@
 use super::{Condition, Effect, Likelihood, Probability};
-use crate::{flavor::EventFlavor, state::State};
+use crate::{
+    flavor::EventFlavor,
+    state::State,
+    Collection,
+    HasId,
+    Id,
+};
 use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -8,15 +14,15 @@ use std::collections::HashSet;
     Clone, Debug, Default, Serialize, Deserialize, PartialEq,
 )]
 pub struct EventPool {
-    pub events: Vec<Event>,
+    pub events: Collection<Event>,
 
     // (phase, event id, region id, countdown)
-    pub queue: Vec<(Phase, usize, Option<usize>, usize)>,
-    pub triggered: Vec<(Phase, usize, Option<usize>)>,
+    pub queue: Vec<(Phase, Id, Option<Id>, usize)>,
+    pub triggered: Vec<(Phase, Id, Option<Id>)>,
 }
 
 impl EventPool {
-    pub fn new(events: Vec<Event>) -> EventPool {
+    pub fn new(events: Collection<Event>) -> EventPool {
         EventPool {
             events,
             queue: Vec::new(),
@@ -26,11 +32,11 @@ impl EventPool {
 
     pub fn queue_event(
         &mut self,
-        id: usize,
-        region_id: Option<usize>,
+        id: Id,
+        region_id: Option<Id>,
         years: usize,
     ) {
-        let phase = self.events[id].phase;
+        let phase = self.events[&id].phase;
         self.queue.push((phase, id, region_id, years));
     }
 
@@ -40,18 +46,18 @@ impl EventPool {
         state: &State,
         limit: Option<usize>,
         rng: &mut SmallRng,
-    ) -> Vec<(Event, Option<usize>)> {
+    ) -> Vec<(Event, Option<Id>)> {
         // Prevent duplicate events
-        let mut existing: HashSet<usize> = HashSet::new();
+        let mut existing: HashSet<&Id> = HashSet::new();
         for (_, ev_id, _, _) in &self.queue {
-            existing.insert(*ev_id);
+            existing.insert(ev_id);
         }
         for (_, ev_id, _) in &self.triggered {
-            existing.insert(*ev_id);
+            existing.insert(ev_id);
         }
 
         // Candidate event pool
-        let mut valid_ids: Vec<usize> = self
+        let mut valid_ids: Vec<Id> = self
             .events
             .iter()
             .filter(|ev| {
@@ -70,7 +76,7 @@ impl EventPool {
             let try_trigger = {
                 let (_, ev_id, _, countdown) =
                     &mut self.queue[i];
-                if self.events[*ev_id].phase == phase {
+                if self.events[&*ev_id].phase == phase {
                     *countdown -= 1;
                     *countdown <= 0
                 } else {
@@ -79,7 +85,7 @@ impl EventPool {
             };
             if try_trigger {
                 let (_, ev_id, region_id, _) = self.queue[i];
-                let ev = &mut self.events[ev_id];
+                let ev = &mut self.events[&ev_id];
                 if ev.roll(state, region_id, rng) {
                     self.triggered
                         .push((ev.phase, ev_id, region_id));
@@ -94,10 +100,10 @@ impl EventPool {
         // These events start with countdown 0;
         // i.e. we immediately trigger them if possible.
         for ev_id in valid_ids {
-            let ev = &mut self.events[ev_id];
+            let ev = &mut self.events[&ev_id];
             // Icon-type events are always local
             if ev.phase == Phase::Icon {
-                for region in &state.world.regions {
+                for region in state.world.regions.iter() {
                     if ev.roll(state, Some(region.id), rng) {
                         self.triggered.push((
                             ev.phase,
@@ -108,7 +114,7 @@ impl EventPool {
                 }
             } else {
                 if ev.regional {
-                    for region in &state.world.regions {
+                    for region in state.world.regions.iter() {
                         if ev.roll(state, Some(region.id), rng)
                         {
                             self.triggered.push((
@@ -133,7 +139,7 @@ impl EventPool {
         while i < self.triggered.len() {
             let (p, ev_id, region_id) = self.triggered[i];
             if p == phase {
-                let mut ev = &mut self.events[ev_id];
+                let ev = &mut self.events[&ev_id];
                 if !ev.occurred {
                     happening.push((ev_id, region_id));
                     // All events except
@@ -156,7 +162,7 @@ impl EventPool {
         let mut results = vec![];
         for (ev_id, region_id) in happening {
             results
-                .push((self.events[ev_id].clone(), region_id));
+                .push((self.events[&ev_id].clone(), region_id));
         }
         results
     }
@@ -192,6 +198,7 @@ pub enum Phase {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Event {
+    pub id: Id,
     pub name: String,
 
     /// If this event requires
@@ -200,12 +207,6 @@ pub struct Event {
 
     /// If this event has occurred already
     pub occurred: bool,
-
-    /// An id linking this event
-    /// to user-facing details
-    /// (e.g. event text, etc).
-    pub id: usize,
-    pub ref_id: String,
 
     /// This phase this event can occur in
     pub phase: Phase,
@@ -234,6 +235,12 @@ pub struct Event {
     pub flavor: EventFlavor,
 }
 
+impl HasId for Event {
+    fn id(&self) -> &Id {
+        &self.id
+    }
+}
+
 impl Event {
     /// Gets the likelihood of this event occurring.
     /// If there are multiple probabilities, it returns
@@ -242,7 +249,7 @@ impl Event {
     fn eval(
         &self,
         state: &State,
-        region_id: Option<usize>,
+        region_id: Option<Id>,
     ) -> Option<&Likelihood> {
         let res = self
             .probabilities
@@ -255,7 +262,7 @@ impl Event {
     fn roll(
         &self,
         state: &State,
-        region_id: Option<usize>,
+        region_id: Option<Id>,
         rng: &mut SmallRng,
     ) -> bool {
         match self.eval(state, region_id) {
@@ -280,8 +287,7 @@ mod test {
     fn gen_events() -> Vec<Event> {
         vec![
             Event {
-                id: 0,
-                ref_id: "test_event_a",
+                id: "test_event_a",
                 name: "Test Event A",
                 phase: Phase::WorldMain,
                 locked: false,
@@ -309,8 +315,7 @@ mod test {
                 ],
             },
             Event {
-                id: 1,
-                ref_id: "test_event_b",
+                id: "test_event_b",
                 name: "Test Event B",
                 phase: Phase::WorldMain,
                 locked: false,
@@ -367,9 +372,8 @@ mod test {
     fn test_event_pool_local() {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = vec![Event {
-            id: 0,
+            id: "test_event_a",
             name: "Test Event A",
-            ref_id: "test_event_a",
             phase: Phase::Icon,
             locked: false,
             occurred: false,
@@ -464,8 +468,7 @@ mod test {
     fn test_event_pool_countdown() {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = vec![Event {
-            id: 0,
-            ref_id: "test_event_a",
+            id: "test_event_a",
             name: "Test Event A",
             phase: Phase::WorldMain,
             prob_modifier: 1.,
@@ -515,8 +518,7 @@ mod test {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let mut pool = EventPool {
             events: vec![Event {
-                id: 0,
-                ref_id: "test_event_a",
+                id: "test_event_a",
                 name: "Test Event A",
                 phase: Phase::WorldMain,
                 prob_modifier: 1.,

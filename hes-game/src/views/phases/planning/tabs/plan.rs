@@ -97,7 +97,7 @@ pub fn Plan() -> impl IntoView {
             .projects
             .iter()
             .filter(|p| !p.locked)
-            .any(|p| !ui.viewed.contains(&p.ref_id))
+            .any(|p| !ui.viewed.contains(&p.id))
     });
     let any_new_processes = with_state!(|state, ui| {
         state
@@ -105,7 +105,7 @@ pub fn Plan() -> impl IntoView {
             .processes
             .iter()
             .filter(|p| !p.locked)
-            .any(|p| !ui.viewed.contains(&p.ref_id))
+            .any(|p| !ui.viewed.contains(&p.id))
     });
     let max_for_output = move |output: Output| {
         let state = expect_context::<

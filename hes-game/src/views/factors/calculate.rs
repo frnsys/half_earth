@@ -287,7 +287,7 @@ impl HasImpacts for Process {
     }
 
     fn demand(&self, state: &State) -> f32 {
-        state.produced_by_process[self.id]
+        *state.produced_by_process.get(&self.id).unwrap_or(&0.)
     }
 }
 

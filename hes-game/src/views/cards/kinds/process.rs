@@ -45,9 +45,13 @@ fn describe_stocks(estimate: f32) -> &'static str {
 pub fn ProcessCard(
     #[prop(into)] process: Signal<Process>,
 ) -> impl IntoView {
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     let is_new = move || {
-        // return !state.viewed.includes(this.ref_id);
-        false
+        with!(|state| !state
+            .ui
+            .viewed
+            .contains(&process.get().id))
     };
     let name =
         move || process.with(|process| t!(&process.name));
@@ -98,14 +102,15 @@ pub fn ProcessCard(
         })
     };
 
-    let produced_by_process =
-        state!(produced_by_process.clone());
     let produced = move || {
-        process.with(|process| {
-            let base_amount =
-                produced_by_process.get()[process.id];
+        with!(|state, process| {
+            let base_amount = state
+                .game
+                .produced_by_process
+                .get(&process.id)
+                .unwrap_or(&0.);
             let mut amount =
-                display::output(base_amount, process.output);
+                display::output(*base_amount, process.output);
             if amount > 0. {
                 amount = amount.max(1.);
             }
@@ -191,7 +196,7 @@ pub fn ProcessCard(
             process
                 .opposers
                 .iter()
-                .map(|id| &npcs[*id])
+                .map(|id| &npcs[id])
                 .filter(|npc| !npc.locked)
                 .next()
                 .is_some()
@@ -203,7 +208,7 @@ pub fn ProcessCard(
             process
                 .supporters
                 .iter()
-                .map(|id| &npcs[*id])
+                .map(|id| &npcs[id])
                 .filter(|npc| !npc.locked)
                 .next()
                 .is_some()
@@ -212,7 +217,7 @@ pub fn ProcessCard(
 
     // TODO redundant w/ that in project card
     let opposers = with_state!(|state, _ui, process| {
-        process.opposers.iter().map(|id| &state.npcs[*id])
+        process.opposers.iter().map(|id| &state.npcs[id])
             .filter(|npc| !npc.locked)
             .cloned()
             .map(|npc| {
@@ -228,7 +233,7 @@ pub fn ProcessCard(
         }).collect::<Vec<_>>()
     });
     let supporters = with_state!(|state, _ui, process| {
-        process.supporters.iter().map(|id| &state.npcs[*id])
+        process.supporters.iter().map(|id| &state.npcs[id])
             .filter(|npc| !npc.locked)
             .cloned()
             .map(|npc| {

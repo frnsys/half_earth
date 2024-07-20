@@ -495,7 +495,7 @@ impl DisplayEffect {
                 PlayerVariable::YearsToDeath => return Err(()),
             },
             Effect::ProcessLimit(id, amount) => {
-                let process = &state.world.processes[*id];
+                let process = &state.world.processes[id];
                 let change = if let Some(limit) = process.limit
                 {
                     let p = (amount / limit).abs();
@@ -574,7 +574,7 @@ impl DisplayEffect {
                 )
             }
             Effect::OutputForProcess(id, amount) => {
-                let process = &state.world.processes[*id];
+                let process = &state.world.processes[id];
                 (tip! {
                         process.output.icon(),
                         "Changes the output for this process by {percent}% with no change in impacts.",
@@ -717,7 +717,7 @@ impl DisplayEffect {
                 )
             }
             Effect::UnlocksProject(id) => {
-                let project = &state.world.projects[*id];
+                let project = &state.world.projects[id];
                 let prob = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
@@ -753,7 +753,7 @@ impl DisplayEffect {
                 )
             }
             Effect::UnlocksProcess(id) => {
-                let process = &state.world.processes[*id];
+                let process = &state.world.processes[id];
                 let prob = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
@@ -789,7 +789,7 @@ impl DisplayEffect {
                 )
             }
             Effect::UnlocksNPC(id) => {
-                let npc = &state.npcs[*id];
+                let npc = &state.npcs[id];
                 let text = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
@@ -811,7 +811,7 @@ impl DisplayEffect {
                     )
             }
             Effect::ProjectCostModifier(id, amount) => {
-                let project = &state.world.projects[*id];
+                let project = &state.world.projects[id];
                 let abs_amount = project.cost as f32 * amount;
                 let tag = icon_card_tag(
                     &t!(&project.name),
@@ -873,7 +873,7 @@ impl DisplayEffect {
                     )
             }
             Effect::ProjectRequest(id, active, bounty) => {
-                let project = &state.world.projects[*id];
+                let project = &state.world.projects[id];
                 if *active {
                     (
                             tip! {
@@ -905,7 +905,7 @@ impl DisplayEffect {
                 }
             }
             Effect::ProcessRequest(id, active, bounty) => {
-                let process = &state.world.processes[*id];
+                let process = &state.world.processes[id];
                 if *active {
                     (
                             tip! {
@@ -937,7 +937,7 @@ impl DisplayEffect {
                 }
             }
             Effect::ModifyIndustryDemand(id, amount) => {
-                let industry = &state.world.industries[*id];
+                let industry = &state.world.industries[id];
                 let tag = card_tag(&t!(&industry.name));
                 let tip_text = if self.is_unknown {
                     t!("Changes demand for {name} by an unknown amount.",
@@ -972,7 +972,7 @@ impl DisplayEffect {
                 resource,
                 amount,
             ) => {
-                let industry = &state.world.industries[*id];
+                let industry = &state.world.industries[id];
                 let lic_pop = state.world.lic_population();
                 let current_demand = display::resource(
                     industry.resources[*resource]
@@ -1029,7 +1029,7 @@ impl DisplayEffect {
                 resource,
                 amount,
             ) => {
-                let industry = &state.world.industries[*id];
+                let industry = &state.world.industries[id];
                 let lic_pop = state.world.lic_population();
                 let demand = industry.demand(lic_pop);
                 let current_demand = display::resource(
@@ -1089,7 +1089,7 @@ impl DisplayEffect {
                 byproduct,
                 amount,
             ) => {
-                let industry = &state.world.industries[*id];
+                let industry = &state.world.industries[id];
                 let lic_pop = state.world.lic_population();
                 let demand = industry.demand(lic_pop);
                 let current =
@@ -1137,7 +1137,7 @@ impl DisplayEffect {
                 byproduct,
                 amount,
             ) => {
-                let process = &state.world.processes[*id];
+                let process = &state.world.processes[id];
                 let label = match byproduct {
                     Byproduct::Biodiversity => {
                         t!("biodiversity pressure")
@@ -1170,8 +1170,10 @@ impl DisplayEffect {
                         _ => {
                             let current =
                                 process.byproducts.gtco2eq()
-                                    * state.produced_by_process
-                                        [*id];
+                                    * state
+                                        .produced_by_process
+                                        .get(id)
+                                        .unwrap_or(&0.);
                             let after = current * (1. + amount);
                             let change = (after - current)
                                 / state.emissions_gt();
@@ -1253,7 +1255,7 @@ impl DisplayEffect {
                     })
             }
             Effect::ModifyEventProbability(id, amount) => {
-                let event = &state.event_pool.events[*id];
+                let event = &state.event_pool.events[id];
                 let percent = if self.is_unknown {
                     self.fmt_param(*amount)
                 } else {
@@ -1337,7 +1339,7 @@ impl DisplayEffect {
                 )
             }
             Effect::LocksProject(id) => {
-                let project = &state.world.projects[*id];
+                let project = &state.world.projects[id];
                 let tag = icon_card_tag(
                     &t!(&project.name),
                     project.kind.icon(),

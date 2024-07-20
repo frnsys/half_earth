@@ -7,6 +7,7 @@ use hes_engine::{
     kinds::Output,
     regions::Income,
     state::State,
+    Id,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -24,7 +25,7 @@ pub struct CycleStart {
 
     // Seats in parliament for each NPC faction
     pub parliament: Vec<f32>,
-    pub completed_projects: Vec<usize>,
+    pub completed_projects: Vec<Id>,
 }
 
 /// Currently staged plan changes.
@@ -100,8 +101,8 @@ pub struct UIState {
     pub tutorial: Tutorial,
     pub factors: EnumMap<Var, Vec<Factor>>,
 
-    pub annual_region_events: HashMap<usize, Vec<IconEvent>>,
-    pub world_events: Vec<usize>,
+    pub annual_region_events: HashMap<Id, Vec<IconEvent>>,
+    pub world_events: Vec<Id>,
 
     /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
     pub past_emissions: Vec<(f64, f64, f64)>,
@@ -111,13 +112,13 @@ pub struct UIState {
 
     // // Track planned process mix changes
     pub process_mix_changes:
-        EnumMap<Output, HashMap<usize, isize>>,
+        EnumMap<Output, HashMap<Id, isize>>,
 
     // // Track changes made to the plan
     // // in a given session, so they can
     // // be reversed/refunded
-    pub plan_changes: HashMap<usize, PlanChange>,
-    pub queued_upgrades: HashMap<usize, bool>,
+    pub plan_changes: HashMap<Id, PlanChange>,
+    pub queued_upgrades: HashMap<Id, bool>,
     //
     // Compare beginning and end
     pub cycle_start_state: CycleStart,
@@ -126,7 +127,7 @@ pub struct UIState {
 
     /// Viewed project and process ids,
     /// so we can keep track of which ones are new
-    pub viewed: Vec<String>,
+    pub viewed: Vec<Id>,
 }
 impl UIState {
     pub fn cycle_start_snapshot(&mut self, state: &State) {
