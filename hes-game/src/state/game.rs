@@ -5,6 +5,7 @@ use hes_engine::{
     events::{Flag, Phase},
     projects::{Project, Status},
     Game,
+    Id,
     ProjectType,
 };
 use std::collections::HashMap;
@@ -52,7 +53,7 @@ pub impl Game {
 
     fn avg_income_level(&self) -> usize {
         let mut total = 0.;
-        for region in &self.state.world.regions {
+        for region in self.state.world.regions.iter() {
             let income = region.income_level() as f32
                 + 1.
                 + region.development;
@@ -65,7 +66,7 @@ pub impl Game {
 
     fn avg_habitability(&self) -> f32 {
         let mut total = 0.;
-        for region in &self.state.world.regions {
+        for region in self.state.world.regions.iter() {
             total += region.habitability();
         }
         let n_regions = self.state.world.regions.len();
@@ -98,7 +99,7 @@ pub impl Game {
 
     fn buy_point(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
         points: &mut Points,
     ) -> bool {
         let (kind, proj_points) = {
@@ -133,7 +134,7 @@ pub impl Game {
         }
     }
 
-    fn pay_points(&mut self, project_id: usize) -> bool {
+    fn pay_points(&mut self, project_id: &Id) -> bool {
         // Only policies have points paid all at once,
         // rather than assigned.
         let project = &self.world.projects[project_id];
@@ -152,7 +153,7 @@ pub impl Game {
 
     fn assign_point(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
         points: &mut Points,
     ) {
         let (kind, cur_points, status) = {
@@ -175,7 +176,7 @@ pub impl Game {
 
     fn unassign_points(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
         points: usize,
     ) {
         let (current_points, status) = {
@@ -189,7 +190,7 @@ pub impl Game {
         }
     }
 
-    fn pass_policy(&mut self, project_id: usize) {
+    fn pass_policy(&mut self, project_id: &Id) {
         let kind = {
             let project = &self.world.projects[project_id];
             project.kind
@@ -199,7 +200,7 @@ pub impl Game {
         }
     }
 
-    fn stop_policy(&mut self, project_id: usize) {
+    fn stop_policy(&mut self, project_id: &Id) {
         let (kind, cost) = {
             let project = &self.world.projects[project_id];
             (project.kind, project.cost)
@@ -213,9 +214,9 @@ pub impl Game {
 
     fn upgrade_project_x(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
         is_free: bool,
-        queued_upgrades: &mut HashMap<usize, bool>,
+        queued_upgrades: &mut HashMap<Id, bool>,
     ) -> bool {
         let (kind, upgrade) = {
             let project = &self.world.projects[project_id];
@@ -237,7 +238,7 @@ pub impl Game {
                     self.upgrade_project(project_id);
                 }
                 _ => {
-                    queued_upgrades.insert(project_id, true);
+                    queued_upgrades.insert(*project_id, true);
                 }
             }
             true
@@ -248,8 +249,8 @@ pub impl Game {
 
     fn downgrade_project_x(
         &mut self,
-        project_id: usize,
-        queued_upgrades: &mut HashMap<usize, bool>,
+        project_id: &Id,
+        queued_upgrades: &mut HashMap<Id, bool>,
     ) {
         let (kind, prev_upgrade) = {
             let project = &self.world.projects[project_id];
@@ -263,7 +264,7 @@ pub impl Game {
             if kind == ProjectType::Policy {
                 self.downgrade_project(project_id);
             } else {
-                queued_upgrades.insert(project_id, false);
+                queued_upgrades.insert(*project_id, false);
             }
         }
     }

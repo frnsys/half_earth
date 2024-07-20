@@ -1,13 +1,19 @@
 use serde::{Deserialize, Serialize};
 
 use super::{
-    Flag, LocalVariable, PlayerVariable, WorldVariable,
+    Flag,
+    LocalVariable,
+    PlayerVariable,
+    WorldVariable,
 };
-use crate::kinds::{Feedstock, Output, Resource};
-use crate::npcs::NPCRelation;
-use crate::production::ProcessFeature;
-use crate::projects::{Group, Status as ProjectStatus};
-use crate::state::State;
+use crate::{
+    kinds::{Feedstock, Output, Resource},
+    npcs::NPCRelation,
+    production::ProcessFeature,
+    projects::{Group, Status as ProjectStatus},
+    state::State,
+    Id,
+};
 
 const HEAVY_PROJECTS: [Group; 4] = [
     Group::Space,
@@ -21,18 +27,18 @@ pub enum Condition {
     LocalVariable(LocalVariable, Comparator, f32),
     WorldVariable(WorldVariable, Comparator, f32),
     PlayerVariable(PlayerVariable, Comparator, f32),
-    ProcessOutput(usize, Comparator, f32),
-    ProcessMixShare(usize, Comparator, f32),
+    ProcessOutput(Id, Comparator, f32),
+    ProcessMixShare(Id, Comparator, f32),
     ProcessMixShareFeature(ProcessFeature, Comparator, f32),
     ResourcePressure(Resource, Comparator, f32),
     ResourceDemandGap(Resource, Comparator, f32),
     OutputDemandGap(Output, Comparator, f32),
     Demand(Output, Comparator, f32),
-    ProjectStatus(usize, ProjectStatus),
-    ActiveProjectUpgrades(usize, Comparator, usize),
+    ProjectStatus(Id, ProjectStatus),
+    ActiveProjectUpgrades(Id, Comparator, usize),
     RunsPlayed(Comparator, usize),
     RegionFlag(String),
-    NPCRelationship(usize, NPCRelation),
+    NPCRelationship(Id, NPCRelation),
     FeedstockYears(Feedstock, Comparator, f32),
     HasFlag(Flag),
     WithoutFlag(Flag),
@@ -44,11 +50,11 @@ impl Condition {
     pub fn eval(
         &self,
         state: &State,
-        region_id: Option<usize>,
+        region_id: Option<Id>,
     ) -> bool {
         match self {
             Condition::LocalVariable(var, comp, other_val) => {
-                if let Some(id) = region_id {
+                if let Some(id) = &region_id {
                     let region = &state.world.regions[id];
                     let val = match var {
                         LocalVariable::Population => {
@@ -118,12 +124,17 @@ impl Condition {
                 comp.eval(val, *other_val)
             }
             Condition::ProcessOutput(id, comp, other_val) => {
-                let val = state.produced_by_process[*id];
-                comp.eval(val, *other_val)
+                if let Some(val) =
+                    state.produced_by_process.get(id)
+                {
+                    comp.eval(*val, *other_val)
+                } else {
+                    false
+                }
             }
             Condition::ProcessMixShare(id, comp, other_val) => {
                 let val =
-                    state.world.processes[*id].mix_percent();
+                    state.world.processes[id].mix_percent();
                 comp.eval(val, *other_val)
             }
             Condition::ProcessMixShareFeature(
@@ -197,14 +208,14 @@ impl Condition {
                 match status {
                     ProjectStatus::Active
                     | ProjectStatus::Finished => {
-                        match state.world.projects[*id].status {
+                        match state.world.projects[id].status {
                             ProjectStatus::Active => true,
                             ProjectStatus::Finished => true,
                             _ => false,
                         }
                     }
                     _ => {
-                        state.world.projects[*id].status
+                        state.world.projects[id].status
                             == *status
                     }
                 }
@@ -214,14 +225,14 @@ impl Condition {
                 comp,
                 upgrades,
             ) => comp.eval(
-                state.world.projects[*id].level as f32,
+                state.world.projects[id].level as f32,
                 *upgrades as f32,
             ),
             Condition::NPCRelationship(id, relation) => {
-                state.npcs[*id].relation() == *relation
+                state.npcs[id].relation() == *relation
             }
             Condition::RegionFlag(flag) => {
-                if let Some(id) = region_id {
+                if let Some(id) = &region_id {
                     let region = &state.world.regions[id];
                     region.flags.contains(flag)
                 } else {

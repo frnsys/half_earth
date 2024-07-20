@@ -15,6 +15,7 @@ use hes_engine::{
     kinds::{Feedstock, Output, OutputMap},
     production::Process,
     Game,
+    Id,
 };
 use leptos::*;
 use leptos_use::{
@@ -75,14 +76,14 @@ impl GameState {
             .projects
             .iter()
             .filter(|p| !p.locked)
-            .map(|p| p.ref_id.clone())
+            .map(|p| p.id)
             .chain(
                 game.state
                     .world
                     .processes
                     .iter()
                     .filter(|p| !p.locked)
-                    .map(|p| p.ref_id.clone()),
+                    .map(|p| p.id),
             )
             .collect();
 
@@ -200,13 +201,13 @@ impl GameState {
     pub fn apply_disaster(
         &mut self,
         event: &IconEvent,
-        event_id: usize,
-        region_id: usize,
+        event_id: &Id,
+        region_id: &Id,
     ) {
         let region_events = self
             .ui
             .annual_region_events
-            .entry(region_id)
+            .entry(*region_id)
             .or_default();
         region_events.push(event.clone());
 
@@ -217,7 +218,7 @@ impl GameState {
             -effect.round() as isize,
             region_id,
         );
-        self.game.apply_event(event_id, Some(region_id));
+        self.game.apply_event(*event_id, Some(*region_id));
     }
 
     pub fn step_year(&mut self) -> Vec<Update> {

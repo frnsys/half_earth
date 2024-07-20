@@ -6,7 +6,10 @@ use crate::{
     views::{effects::DisplayEffect, Effects},
 };
 use ev::MouseEvent;
-use hes_engine::flavor::{self, Branch, DialogueNext};
+use hes_engine::{
+    flavor::{self, Branch, DialogueNext},
+    Id,
+};
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
 use wasm_bindgen::prelude::*;
@@ -36,8 +39,8 @@ pub fn Dialogue(
     #[prop(into, optional)] effects: Signal<
         Option<Vec<DisplayEffect>>,
     >,
-    #[prop(into, optional)] event_id: Signal<Option<usize>>,
-    #[prop(into, optional)] region_id: Signal<Option<usize>>,
+    #[prop(into, optional)] event_id: Signal<Option<Id>>,
+    #[prop(into, optional)] region_id: Signal<Option<Id>>,
 ) -> impl IntoView {
     let (revealed, set_revealed) = create_signal(false);
     let (stop_anim, set_stop_anim) =

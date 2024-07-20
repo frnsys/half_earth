@@ -21,6 +21,7 @@ use hes_engine::{
     game::Update as EngineUpdate,
     state::State,
     Game,
+    Id,
 };
 use leptos::*;
 use leptos_use::{
@@ -85,8 +86,8 @@ fn warming_colour(mut temp: f32) -> String {
 
 #[derive(Debug)]
 struct Disaster {
-    event_id: usize,
-    region: Option<(usize, String)>,
+    event_id: Id,
+    region: Option<(Id, String)>,
 
     /// When in the year the event occurs.
     when: f32,
@@ -119,7 +120,7 @@ impl DisasterStream {
         &mut self,
         globe: Option<GlobeRef>,
         time: f32,
-    ) -> Vec<(&IconEvent, usize, usize, String)> {
+    ) -> Vec<(&IconEvent, Id, Id, String)> {
         let mut events = vec![];
         for ev_meta in self.pop_for_time(time) {
             if let Disaster {
@@ -329,7 +330,7 @@ pub fn WorldEvents() -> impl IntoView {
 
             for (ev, event_id, region_id, region_name) in events
             {
-                state.apply_disaster(ev, event_id, region_id);
+                state.apply_disaster(ev, &event_id, &region_id);
                 toasts.push(Toast::new(ev, &region_name));
             }
         });

@@ -4,6 +4,7 @@ use crate::{
     events::{Event, Phase},
     state::State,
     world::World,
+    Id,
 };
 use rand::{rngs::SmallRng, SeedableRng};
 use serde::{Deserialize, Serialize};
@@ -11,14 +12,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Update {
     Region {
-        id: usize,
+        id: Id,
         up: bool, // or down
     },
     Policy {
-        id: usize,
+        id: Id,
     },
     Project {
-        id: usize,
+        id: Id,
     },
 }
 
@@ -46,42 +47,6 @@ impl Update {
         matches!(self, Update::Policy { .. })
     }
 }
-
-// #[wasm_bindgen]
-// impl GameInterface {
-//     pub fn step(&mut self) -> Result<JsValue, JsValue> {
-//         Ok(serde_wasm_bindgen::to_value(
-//             &self.game.step(&mut self.rng),
-//         )?)
-//     }
-//
-//     pub fn start_project(&mut self, project_id: usize) {
-//         self.game.start_project(project_id, &mut self.rng);
-//     }
-//
-//     pub fn stop_project(&mut self, project_id: usize) {
-//         self.game.stop_project(project_id);
-//     }
-//
-//     pub fn roll_events(&mut self, phase: Phase, limit: Option<usize>) -> Result<JsValue, JsValue> {
-//         Ok(serde_wasm_bindgen::to_value(
-//             &self.game.roll_events_for_phase(phase, limit, &mut self.rng),
-//         )?)
-//     }
-//
-//
-//     pub fn check_requests(&mut self) -> Result<JsValue, JsValue> {
-//         Ok(serde_wasm_bindgen::to_value(
-//             &self.game.state.check_requests(),
-//         )?)
-//     }
-//
-//     pub fn simulate(&mut self, years: usize) -> Result<JsValue, JsValue> {
-//         Ok(serde_wasm_bindgen::to_value(
-//             &self.game.simulate(&mut self.rng, years),
-//         )?)
-//     }
-// }
 
 #[derive(PartialEq, Clone, Serialize, Deserialize)]
 pub struct Game {
@@ -151,13 +116,13 @@ impl Game {
 
     pub fn change_process_mix_share(
         &mut self,
-        process_id: usize,
+        process_id: &Id,
         change: isize,
     ) {
         self.state.change_mix_share(process_id, change);
     }
 
-    pub fn upgrade_project(&mut self, project_id: usize) {
+    pub fn upgrade_project(&mut self, project_id: &Id) {
         let (remove_effects, add_effects) =
             self.state.upgrade_project(project_id);
         for effect in remove_effects {
@@ -169,7 +134,7 @@ impl Game {
         self.state.update_demand();
     }
 
-    pub fn downgrade_project(&mut self, project_id: usize) {
+    pub fn downgrade_project(&mut self, project_id: &Id) {
         let (remove_effects, add_effects) =
             self.state.downgrade_project(project_id);
         for effect in remove_effects {
@@ -183,11 +148,11 @@ impl Game {
 
     pub fn apply_event(
         &mut self,
-        event_id: usize,
-        region_id: Option<usize>,
+        event_id: Id,
+        region_id: Option<Id>,
     ) {
         let mut effects = vec![];
-        let event = &self.event_pool.events[event_id];
+        let event = &self.event_pool.events[&event_id];
         for effect in &event.effects {
             effects.push((effect.clone(), region_id));
         }
@@ -199,12 +164,12 @@ impl Game {
 
     pub fn apply_branch_effects(
         &mut self,
-        event_id: usize,
-        region_id: Option<usize>,
+        event_id: Id,
+        region_id: Option<Id>,
         branch_id: usize,
     ) {
         let mut effects = vec![];
-        let (efs, _conds) = &self.event_pool.events[event_id]
+        let (efs, _conds) = &self.event_pool.events[&event_id]
             .branches[branch_id];
         for ef in efs {
             effects.push(ef.clone());
@@ -216,11 +181,11 @@ impl Game {
 
     pub fn eval_branch_conditions(
         &self,
-        event_id: usize,
-        region_id: Option<usize>,
+        event_id: Id,
+        region_id: Option<Id>,
         branch_id: usize,
     ) -> bool {
-        let event = &self.event_pool.events[event_id];
+        let event = &self.event_pool.events[&event_id];
         if branch_id < event.branches.len() {
             let (_effects, conds) = &event.branches[branch_id];
             conds.iter().all(|c| c.eval(&self.state, region_id))
@@ -262,7 +227,7 @@ impl Game {
     pub fn change_local_outlook(
         &mut self,
         amount: isize,
-        region_id: usize,
+        region_id: &Id,
     ) {
         self.state.world.regions[region_id].outlook +=
             amount as f32;
@@ -271,7 +236,7 @@ impl Game {
     pub fn change_habitability(
         &mut self,
         amount: isize,
-        region_id: usize,
+        region_id: &Id,
     ) {
         self.state.world.regions[region_id]
             .base_habitability += amount as f32;
@@ -279,7 +244,7 @@ impl Game {
 
     pub fn set_project_points(
         &mut self,
-        project_id: usize,
+        project_id: &Id,
         points: usize,
     ) {
         self.state.world.projects[project_id]
@@ -290,7 +255,7 @@ impl Game {
 #[derive(Debug, Clone)]
 pub struct ResolvedEvent {
     pub event: Event,
-    pub region: Option<(usize, String)>,
+    pub region: Option<(Id, String)>,
 }
 impl Deref for ResolvedEvent {
     type Target = Event;
@@ -327,7 +292,7 @@ impl Game {
                 region: region_id.map(|id| {
                     (
                         id,
-                        self.state.world.regions[id]
+                        self.state.world.regions[&id]
                             .name
                             .to_string(),
                     )
@@ -336,12 +301,12 @@ impl Game {
             .collect()
     }
 
-    pub fn start_project(&mut self, project_id: usize) {
+    pub fn start_project(&mut self, project_id: &Id) {
         self.state.start_project(project_id);
         self.state.update_demand();
     }
 
-    pub fn stop_project(&mut self, project_id: usize) {
+    pub fn stop_project(&mut self, project_id: &Id) {
         let effects = self.state.stop_project(project_id);
         for effect in effects {
             effect.unapply(&mut self.state, None);

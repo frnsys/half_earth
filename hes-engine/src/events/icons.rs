@@ -2,7 +2,9 @@ use std::{collections::HashMap, sync::LazyLock};
 
 use serde::{Deserialize, Serialize};
 
-pub static ICON_EVENTS: LazyLock<HashMap<usize, IconEvent>> =
+use crate::Id;
+
+pub static ICON_EVENTS: LazyLock<HashMap<Id, IconEvent>> =
     LazyLock::new(|| {
         let icon_event_data =
             include_str!("../../assets/icon_events.json");

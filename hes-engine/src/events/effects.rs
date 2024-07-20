@@ -4,6 +4,7 @@ use crate::{
     production::ProcessFeature,
     regions::{Latitude, Region},
     state::State,
+    Id,
 };
 use serde::{Deserialize, Serialize};
 use std::ops::Mul;
@@ -95,21 +96,21 @@ pub enum Effect {
     Output(Output, f32),
     DemandAmount(Output, f32),
     OutputForFeature(ProcessFeature, f32),
-    OutputForProcess(usize, f32),
+    OutputForProcess(Id, f32),
     CO2ForFeature(ProcessFeature, f32),
     BiodiversityPressureForFeature(ProcessFeature, f32),
-    ProcessLimit(usize, f32),
+    ProcessLimit(Id, f32),
     Feedstock(Feedstock, f32),
 
-    AddEvent(usize),
-    TriggerEvent(usize, usize),
-    LocksProject(usize),
-    UnlocksProject(usize),
-    UnlocksProcess(usize),
-    UnlocksNPC(usize),
+    AddEvent(Id),
+    TriggerEvent(Id, usize),
+    LocksProject(Id),
+    UnlocksProject(Id),
+    UnlocksProcess(Id),
+    UnlocksNPC(Id),
 
-    ProjectRequest(usize, bool, usize),
-    ProcessRequest(usize, bool, usize),
+    ProjectRequest(Id, bool, usize),
+    ProcessRequest(Id, bool, usize),
 
     Migration,
     RegionLeave,
@@ -118,17 +119,17 @@ pub enum Effect {
 
     AddFlag(Flag),
     AutoClick(usize, f32),
-    NPCRelationship(usize, f32),
+    NPCRelationship(Id, f32),
 
-    ModifyProcessByproducts(usize, Byproduct, f32),
-    ModifyIndustryByproducts(usize, Byproduct, f32),
-    ModifyIndustryResources(usize, Resource, f32),
-    ModifyIndustryResourcesAmount(usize, Resource, f32),
-    ModifyEventProbability(usize, f32),
-    ModifyIndustryDemand(usize, f32),
+    ModifyProcessByproducts(Id, Byproduct, f32),
+    ModifyIndustryByproducts(Id, Byproduct, f32),
+    ModifyIndustryResources(Id, Resource, f32),
+    ModifyIndustryResourcesAmount(Id, Resource, f32),
+    ModifyEventProbability(Id, f32),
+    ModifyIndustryDemand(Id, f32),
     DemandOutlookChange(Output, f32),
     IncomeOutlookChange(f32),
-    ProjectCostModifier(usize, f32),
+    ProjectCostModifier(Id, f32),
 
     ProtectLand(f32),
 
@@ -190,7 +191,7 @@ impl Effect {
     pub fn apply(
         &self,
         state: &mut State,
-        region_id: Option<usize>,
+        region_id: Option<Id>,
     ) {
         match self {
             Effect::GameOver => {
@@ -291,7 +292,7 @@ impl Effect {
                 }
             }
             Effect::OutputForProcess(id, pct_change) => {
-                let process = &mut state.world.processes[*id];
+                let process = &mut state.world.processes[id];
                 process.output_modifier += pct_change;
             }
             Effect::CO2ForFeature(feat, pct_change) => {
@@ -320,7 +321,7 @@ impl Effect {
                 }
             }
             Effect::ProcessLimit(id, change) => {
-                let process = &mut state.world.processes[*id];
+                let process = &mut state.world.processes[id];
                 if let Some(limit) = process.limit {
                     process.limit = Some(limit + change);
                 }
@@ -329,7 +330,7 @@ impl Effect {
                 state.feedstocks[*feedstock] *= 1. + pct_change;
             }
             Effect::AddEvent(id) => {
-                state.event_pool.events[*id].locked = false;
+                state.event_pool.events[id].locked = false;
             }
             Effect::TriggerEvent(id, years) => {
                 state
@@ -337,16 +338,16 @@ impl Effect {
                     .queue_event(*id, region_id, *years);
             }
             Effect::LocksProject(id) => {
-                state.world.projects[*id].locked = true;
+                state.world.projects[id].locked = true;
             }
             Effect::UnlocksProject(id) => {
-                state.world.projects[*id].locked = false;
+                state.world.projects[id].locked = false;
             }
             Effect::UnlocksProcess(id) => {
-                state.world.processes[*id].locked = false;
+                state.world.processes[id].locked = false;
             }
             Effect::UnlocksNPC(id) => {
-                state.npcs[*id].locked = false;
+                state.npcs[id].locked = false;
             }
             Effect::ProjectRequest(id, active, bounty) => {
                 state.requests.push((
@@ -365,7 +366,7 @@ impl Effect {
                 ));
             }
             Effect::Migration => {
-                if let Some(id) = region_id {
+                if let Some(id) = &region_id {
                     let modifier = if state
                         .flags
                         .contains(&Flag::ClosedBorders)
@@ -390,7 +391,7 @@ impl Effect {
                             .regions
                             .iter_mut()
                             .filter(|r| {
-                                r.id != id
+                                &r.id != id
                                     && r.habitability()
                                         > mean_habitability
                             })
@@ -403,12 +404,12 @@ impl Effect {
                 }
             }
             Effect::RegionLeave => {
-                if let Some(id) = region_id {
+                if let Some(id) = &region_id {
                     state.world.regions[id].seceded = true;
                 }
             }
             Effect::AddRegionFlag(flag) => {
-                if let Some(id) = region_id {
+                if let Some(id) = &region_id {
                     state.world.regions[id]
                         .flags
                         .push(flag.to_string());
@@ -418,7 +419,7 @@ impl Effect {
                 state.flags.push(*flag);
             }
             Effect::NPCRelationship(id, change) => {
-                state.npcs[*id].relationship += change;
+                state.npcs[id].relationship += change;
             }
 
             Effect::ModifyProcessByproducts(
@@ -426,7 +427,7 @@ impl Effect {
                 byproduct,
                 change,
             ) => {
-                state.world.processes[*id]
+                state.world.processes[id]
                     .byproduct_modifiers[*byproduct] += change;
             }
             Effect::ModifyIndustryByproducts(
@@ -434,7 +435,7 @@ impl Effect {
                 byproduct,
                 change,
             ) => {
-                state.world.industries[*id]
+                state.world.industries[id]
                     .byproduct_modifiers[*byproduct] += change;
             }
             Effect::ModifyIndustryResources(
@@ -442,7 +443,7 @@ impl Effect {
                 resource,
                 change,
             ) => {
-                state.world.industries[*id]
+                state.world.industries[id]
                     .resource_modifiers[*resource] += change;
             }
             Effect::ModifyIndustryResourcesAmount(
@@ -450,19 +451,19 @@ impl Effect {
                 resource,
                 change,
             ) => {
-                state.world.industries[*id].resources
+                state.world.industries[id].resources
                     [*resource] += change;
             }
             Effect::ModifyEventProbability(id, change) => {
-                state.event_pool.events[*id].prob_modifier +=
+                state.event_pool.events[id].prob_modifier +=
                     change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
-                state.world.industries[*id].demand_modifier +=
+                state.world.industries[id].demand_modifier +=
                     change;
             }
             Effect::DemandOutlookChange(output, mult) => {
-                for region in &mut state.world.regions {
+                for region in state.world.regions.iter_mut() {
                     region.outlook += (mult
                         * region.demand_level(
                             output,
@@ -473,7 +474,7 @@ impl Effect {
                 check_game_over(state);
             }
             Effect::IncomeOutlookChange(mult) => {
-                for region in &mut state.world.regions {
+                for region in state.world.regions.iter_mut() {
                     region.outlook += (mult
                         * region.income_level() as f32)
                         .floor();
@@ -481,7 +482,7 @@ impl Effect {
                 check_game_over(state);
             }
             Effect::ProjectCostModifier(id, change) => {
-                state.world.projects[*id].cost_modifier +=
+                state.world.projects[id].cost_modifier +=
                     change;
             }
             Effect::ProtectLand(percent) => {
@@ -496,7 +497,7 @@ impl Effect {
     pub fn unapply(
         &self,
         state: &mut State,
-        region_id: Option<usize>,
+        _region_id: Option<Id>,
     ) {
         match self {
             Effect::WorldVariable(var, change) => {
@@ -583,7 +584,7 @@ impl Effect {
                 }
             }
             Effect::OutputForProcess(id, pct_change) => {
-                let process = &mut state.world.processes[*id];
+                let process = &mut state.world.processes[id];
                 process.output_modifier -= pct_change;
             }
             Effect::CO2ForFeature(feat, pct_change) => {
@@ -612,7 +613,7 @@ impl Effect {
                 }
             }
             Effect::ProcessLimit(id, change) => {
-                let process = &mut state.world.processes[*id];
+                let process = &mut state.world.processes[id];
                 if let Some(limit) = process.limit {
                     process.limit = Some(limit - change);
                 }
@@ -621,14 +622,14 @@ impl Effect {
                 state.feedstocks[*feedstock] /= 1. + pct_change;
             }
             Effect::NPCRelationship(id, change) => {
-                state.npcs[*id].relationship -= change;
+                state.npcs[id].relationship -= change;
             }
             Effect::ModifyProcessByproducts(
                 id,
                 byproduct,
                 change,
             ) => {
-                state.world.processes[*id]
+                state.world.processes[id]
                     .byproduct_modifiers[*byproduct] -= change;
             }
             Effect::ModifyIndustryByproducts(
@@ -636,7 +637,7 @@ impl Effect {
                 byproduct,
                 change,
             ) => {
-                state.world.industries[*id]
+                state.world.industries[id]
                     .byproduct_modifiers[*byproduct] -= change;
             }
             Effect::ModifyIndustryResources(
@@ -644,7 +645,7 @@ impl Effect {
                 resource,
                 change,
             ) => {
-                state.world.industries[*id]
+                state.world.industries[id]
                     .resource_modifiers[*resource] -= change;
             }
             Effect::ModifyIndustryResourcesAmount(
@@ -652,19 +653,19 @@ impl Effect {
                 resource,
                 change,
             ) => {
-                state.world.industries[*id].resources
+                state.world.industries[id].resources
                     [*resource] -= change;
             }
             Effect::ModifyEventProbability(id, change) => {
-                state.event_pool.events[*id].prob_modifier -=
+                state.event_pool.events[id].prob_modifier -=
                     change;
             }
             Effect::ModifyIndustryDemand(id, change) => {
-                state.world.industries[*id].demand_modifier -=
+                state.world.industries[id].demand_modifier -=
                     change;
             }
             Effect::DemandOutlookChange(output, mult) => {
-                for region in &mut state.world.regions {
+                for region in state.world.regions.iter_mut() {
                     region.outlook -= (mult
                         * region.demand_level(
                             output,
@@ -674,14 +675,14 @@ impl Effect {
                 }
             }
             Effect::IncomeOutlookChange(mult) => {
-                for region in &mut state.world.regions {
+                for region in state.world.regions.iter_mut() {
                     region.outlook -= (mult
                         * region.income_level() as f32)
                         .floor();
                 }
             }
             Effect::ProjectCostModifier(id, change) => {
-                state.world.projects[*id].cost_modifier -=
+                state.world.projects[id].cost_modifier -=
                     change;
             }
             Effect::TerminationShock => {
@@ -721,16 +722,16 @@ impl Effect {
                 }
             }
             Effect::LocksProject(id) => {
-                state.world.projects[*id].locked = false;
+                state.world.projects[id].locked = false;
             }
             Effect::UnlocksProject(id) => {
-                state.world.projects[*id].locked = true;
+                state.world.projects[id].locked = true;
             }
             Effect::UnlocksProcess(id) => {
-                state.world.processes[*id].locked = true;
+                state.world.processes[id].locked = true;
             }
             Effect::UnlocksNPC(id) => {
-                state.npcs[*id].locked = true;
+                state.npcs[id].locked = true;
             }
 
             // Other effects aren't reversible

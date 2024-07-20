@@ -9,6 +9,7 @@ pub mod projects;
 pub mod regions;
 pub mod state;
 pub mod surface;
+mod util;
 pub mod world;
 
 pub mod flavor;
@@ -17,6 +18,7 @@ use projects::years_for_points;
 
 pub use game::Game;
 pub use projects::Type as ProjectType;
+pub use util::*;
 
 pub fn years_remaining(
     progress: f32,

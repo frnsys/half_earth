@@ -87,7 +87,7 @@ pub fn Report() -> impl IntoView {
         ui.annual_region_events
             .iter()
             .map(|(idx, events)| {
-                let reg = game.world.regions[*idx].name.clone();
+                let reg = game.world.regions[idx].name.clone();
                 (reg, events.clone())
             })
             .collect::<Vec<_>>()
@@ -118,7 +118,7 @@ pub fn Report() -> impl IntoView {
             .iter()
             .enumerate()
             .map(|(i, start_seats)| {
-                let npc = &game.npcs[i];
+                let npc = &game.npcs.by_idx(i);
                 let change = (npc.seats - start_seats).round();
                 (npc.name.clone(), npc.seats, change)
             })
@@ -155,7 +155,7 @@ pub fn Report() -> impl IntoView {
         for (id, queued) in ui.queued_upgrades.iter_mut() {
             if *queued {
                 *queued = false;
-                game.upgrade_project(*id);
+                game.upgrade_project(id);
             }
         }
     });
@@ -267,7 +267,7 @@ pub fn Report() -> impl IntoView {
             .completed_projects
             .iter()
             .map(|project_id| {
-                game.world.projects[*project_id].clone()
+                game.world.projects[project_id].clone()
             })
             .collect::<Vec<_>>()
     });

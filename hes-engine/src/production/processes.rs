@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use super::ProductionOrder;
 use crate::{
     flavor::ProcessFlavor,
@@ -10,6 +8,8 @@ use crate::{
         OutputMap,
         ResourceMap,
     },
+    HasId,
+    Id,
 };
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumIter, EnumString, IntoStaticStr};
@@ -43,8 +43,7 @@ pub enum ProcessFeature {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Process {
-    pub id: usize,
-    pub ref_id: String,
+    pub id: Id,
     pub name: String,
     pub mix_share: usize,
     pub limit: Option<f32>,
@@ -62,9 +61,15 @@ pub struct Process {
     // If the player has unlocked this process.
     pub locked: bool,
 
-    pub supporters: Vec<usize>,
-    pub opposers: Vec<usize>,
+    pub supporters: Vec<Id>,
+    pub opposers: Vec<Id>,
     pub flavor: ProcessFlavor,
+}
+
+impl HasId for Process {
+    fn id(&self) -> &Id {
+        &self.id
+    }
 }
 
 impl Process {
@@ -128,8 +133,7 @@ mod test {
     #[test]
     fn test_output_limit() {
         let mut p = Process {
-            id: 0,
-            ref_id: "test_process_a",
+            id: "test_process_a",
             name: "Test Process A",
             limit: None,
             mix_share: 20, // Full mix share

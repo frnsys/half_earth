@@ -170,9 +170,9 @@ pub fn ScannerCards<S: ScannerSpec>(
                 })
                 .flatten();
             if let Some(item) = &item {
-                let id = item.id().to_string();
-                if ui.viewed.contains(&id) {
-                    ui.viewed.push(id);
+                let id = item.id();
+                if ui.viewed.contains(id) {
+                    ui.viewed.push(*id);
                 }
             }
             focused.set(item);
@@ -182,7 +182,8 @@ pub fn ScannerCards<S: ScannerSpec>(
     let add_props = spec.add_props(focused);
     let rem_props = spec.rem_props(focused);
     let focused_id = move || {
-        focused.with(|item| item.as_ref().map(|item| item.id()))
+        focused
+            .with(|item| item.as_ref().map(|item| *item.id()))
     };
 
     view! {
@@ -219,9 +220,9 @@ pub fn ScannerCards<S: ScannerSpec>(
         >
             <For
                 each=move || items.get().into_iter()
-                key=|item| item.id()
+                key=|item| *item.id()
                 children=move |item| {
-                    let id = item.id();
+                    let id = *item.id();
                     let draggable = move || {
                         can_scan() && focused_id() == Some(id)
                     };
@@ -235,7 +236,7 @@ pub fn ScannerCards<S: ScannerSpec>(
 
                     let state = expect_context::<RwSignal<crate::state::GameState>>();
                     let item = create_memo(move |_| {
-                        state.with(move |state| S::Item::get_from_state(id, &state.game))
+                        state.with(move |state| S::Item::get_from_state(&id, &state.game))
                     });
                     let card = S::Item::as_card(item.into());
 

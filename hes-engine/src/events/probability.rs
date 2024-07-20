@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::Condition;
-use crate::state::State;
+use crate::{state::State, Id};
 
 #[derive(
     Debug, Copy, Clone, Serialize, Deserialize, PartialEq,
@@ -57,7 +57,7 @@ impl Probability {
     pub fn eval(
         &self,
         state: &State,
-        region_id: Option<usize>,
+        region_id: Option<Id>,
     ) -> Option<&Likelihood> {
         if self
             .conditions

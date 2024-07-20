@@ -69,7 +69,7 @@ fn describe_condition(
 ) -> Option<String> {
     match condition {
         Condition::ProjectStatus(id, status) => {
-            let name = &state.world.projects[*id].name;
+            let name = &state.world.projects[id].name;
             let label = match status {
                 Status::Active | Status::Finished => "active",
                 Status::Inactive => "inactive",
@@ -80,15 +80,15 @@ fn describe_condition(
             Some(t!(r#"This event can occur if "{name}" is {label}."#, name: t!(name), label: t!(label)))
         }
         Condition::ProcessOutput(id, _, _) => {
-            let name = &state.world.processes[*id].name;
+            let name = &state.world.processes[id].name;
             Some(t!("This event is influenced by the output of {name}.", name: t!(name)))
         }
         Condition::ProcessMixShare(id, _, _) => {
-            let name = &state.world.processes[*id].name;
+            let name = &state.world.processes[id].name;
             Some(t!("This event is influenced by the mix share of {name}.", name: t!(name)))
         }
         Condition::NPCRelationship(id, rel_type) => {
-            let name = &state.npcs[*id].name;
+            let name = &state.npcs[id].name;
             Some(t!("This event can occur if {name} is your {relType}.", name: t!(name), relType: t!(&rel_type.to_string())))
         }
         Condition::ProcessMixShareFeature(feat, _, _) => {

@@ -3,6 +3,8 @@ use std::fmt::Display;
 use crate::{
     flavor::RegionFlavor,
     kinds::{Output, OutputMap},
+    HasId,
+    Id,
 };
 use serde::{Deserialize, Serialize};
 use strum::{EnumIter, EnumString, IntoStaticStr};
@@ -12,7 +14,7 @@ const DEVELOP_SPEED: f32 = 1. / 40.;
 
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct Region {
-    pub id: usize,
+    pub id: Id,
 
     pub name: String,
 
@@ -42,6 +44,12 @@ pub struct Region {
 
     pub flavor: RegionFlavor,
     pub pattern_idxs: Vec<usize>,
+}
+
+impl HasId for Region {
+    fn id(&self) -> &Id {
+        &self.id
+    }
 }
 
 impl Region {

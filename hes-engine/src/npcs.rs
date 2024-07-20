@@ -1,21 +1,27 @@
-use crate::{flavor::NPCFlavor, projects::Project};
+use crate::{
+    flavor::NPCFlavor,
+    projects::Project,
+    Collection,
+    HasId,
+    Id,
+};
 use serde::{Deserialize, Serialize};
 
 pub fn update_seats(
     outlook_change: f32,
     projects: &[&Project],
-    npcs: &mut Vec<NPC>,
+    npcs: &mut Collection<NPC>,
 ) {
-    let mut supporters: Vec<usize> = vec![];
-    let mut opposers: Vec<usize> = vec![];
+    let mut supporters: Vec<Id> = vec![];
+    let mut opposers: Vec<Id> = vec![];
     for project in projects {
         for id in &project.supporters {
-            if !npcs[*id].locked {
+            if !npcs[id].locked {
                 supporters.push(*id);
             }
         }
         for id in &project.opposers {
-            if !npcs[*id].locked {
+            if !npcs[id].locked {
                 opposers.push(*id);
             }
         }
@@ -23,22 +29,22 @@ pub fn update_seats(
 
     let total = supporters.len() + opposers.len();
     let change = outlook_change / total as f32;
-    for id in supporters {
+    for id in &supporters {
         npcs[id].support += change;
     }
-    for id in opposers {
+    for id in &opposers {
         npcs[id].support -= change;
     }
 
     let mut total_support = 0.;
-    for npc in &mut *npcs {
+    for npc in npcs.iter_mut() {
         if !npc.locked {
             npc.support = f32::max(0., npc.support);
             total_support += npc.support;
         }
     }
 
-    for npc in &mut *npcs {
+    for npc in npcs.iter_mut() {
         if !npc.locked {
             npc.seats = npc.support / total_support;
         }
@@ -47,7 +53,7 @@ pub fn update_seats(
 
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct NPC {
-    pub id: usize,
+    pub id: Id,
     pub relationship: f32,
     pub locked: bool,
     pub support: f32,
@@ -55,6 +61,12 @@ pub struct NPC {
     pub flavor: NPCFlavor,
     pub name: String,
     pub extra_seats: usize,
+}
+
+impl HasId for NPC {
+    fn id(&self) -> &Id {
+        &self.id
+    }
 }
 
 impl NPC {
