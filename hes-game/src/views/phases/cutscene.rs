@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use crate::{
     audio,
-    state::Phase,
+    state::{GameExt, Phase},
     t,
     ui_rw,
     util::to_ws_el,
@@ -72,15 +72,15 @@ pub fn Cutscene() -> impl IntoView {
     };
 
     // Wait a beat before showing the event
-    let (events, set_events) =
-        create_signal::<Vec<ResolvedEvent>>(vec![]);
+    let events = create_rw_signal(vec![]);
     create_effect(move |_| {
         write_state!(move |state, _ui| {
-            let events = state.roll_events_for_phase(
-                EventPhase::CutsceneIntro,
-                None,
+            events.set(
+                state.roll_events(
+                    EventPhase::CutsceneIntro,
+                    None,
+                ),
             );
-            set_events.set(events);
         })();
     });
 

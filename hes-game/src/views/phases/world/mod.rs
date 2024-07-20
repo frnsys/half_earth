@@ -1,4 +1,3 @@
-mod event;
 mod update;
 
 use crate::{
@@ -10,14 +9,12 @@ use crate::{
     state::{GameExt, GameState, Phase},
     t,
     ui,
-    ui_rw,
     views::{
         events::Events,
         globe::{Globe, GlobeRef},
         hud::Hud,
         phases::world::update::Updates,
     },
-    write_state,
 };
 use hes_engine::{
     events::{IconEvent, Phase as EventPhase, ICON_EVENTS},
@@ -106,26 +103,16 @@ impl DisasterStream {
     }
 
     fn roll_events(&mut self, game: &mut Game) {
-        logging::log!(
-            "ALL EVENTS: {:?}",
-            game.state.event_pool.events
-        );
-        for ev in &game.state.event_pool.events {
-            if ev.phase == EventPhase::Icon {
-                logging::log!("{:?}", ev);
-            }
-        }
         self.events.clear();
         self.events.extend(
-            game.roll_events_for_phase(EventPhase::Icon, None)
+            game.roll_events(EventPhase::Icon, None)
                 .into_iter()
                 .map(|ev| Disaster {
                     event_id: ev.id,
-                    region: ev.region,
+                    region: ev.region.clone(),
                     when: js_sys::Math::random() as f32,
                 }),
         );
-        logging::log!("rolled events: {:?}", self.events);
     }
 
     fn trigger_events(
@@ -133,7 +120,6 @@ impl DisasterStream {
         globe: Option<GlobeRef>,
         time: f32,
     ) -> Vec<(&IconEvent, usize, usize, String)> {
-        logging::log!("{:?}", self.events);
         let mut events = vec![];
         for ev_meta in self.pop_for_time(time) {
             if let Disaster {
@@ -169,7 +155,7 @@ pub fn WorldEvents() -> impl IntoView {
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
     let disasters = store_value(DisasterStream::default());
-    let (events, set_events) = create_signal(vec![]);
+    let events = create_rw_signal(vec![]);
     let updates = create_rw_signal::<VecDeque<EngineUpdate>>(
         VecDeque::new(),
     );
@@ -183,11 +169,11 @@ pub fn WorldEvents() -> impl IntoView {
 
     create_effect(move |_| {
         update!(|state| {
-            let events = state.game.roll_events_for_phase(
-                EventPhase::WorldStart,
-                None,
+            events.set(
+                state
+                    .game
+                    .roll_events(EventPhase::WorldStart, None),
             );
-            set_events.set(events);
 
             state.ui.cycle_start_snapshot(&state.game);
 
@@ -218,25 +204,32 @@ pub fn WorldEvents() -> impl IntoView {
         if let Some(globe) = globe.get() {
             globe.rotate(true);
         }
+
+        logging::log!("Disaster rolling");
         update!(move |state, disasters| {
             disasters.roll_events(&mut state.game);
         });
+        logging::log!("Done disaster rolling");
 
         if let Some((_, resume)) = time_controls.get() {
             resume.call(());
         }
     };
-
-    create_effect(move |_| {
+    let try_begin_year = move || {
         with!(|events, updates, globe| {
+            logging::log!("events: {:?}", events);
+            logging::log!("updates: {:?}", updates);
             if events.is_empty()
                 && updates.is_empty()
                 && globe.is_some()
             {
                 begin_year();
-                logging::log!("CAN START YEAR");
             }
         });
+    };
+
+    create_effect(move |_| {
+        try_begin_year();
     });
 
     let roll_event = move || {
@@ -261,12 +254,9 @@ pub fn WorldEvents() -> impl IntoView {
             }
         } else {
             state.update(|GameState { game, ui }| {
-                let events = game.roll_events_for_phase(
-                    EventPhase::WorldMain,
-                    None,
-                );
-                println!("rolled world events: {:?}", events);
-                for event in &events {
+                let evs = game
+                    .roll_events(EventPhase::WorldMain, None);
+                for event in &evs {
                     ui.world_events.push(event.id);
                     // ui.events.push(event.id, region_id, ev["ref_id"]); // TODO
                 }
@@ -286,10 +276,12 @@ pub fn WorldEvents() -> impl IntoView {
 
                 // If skipping, just apply all events.
                 if skipping.get() {
-                    for ev in events {
+                    for ev in evs {
                         game.apply_event(
                             ev.event.id,
-                            ev.region.map(|(id, _)| id),
+                            ev.region
+                                .as_ref()
+                                .map(|(id, _)| *id),
                         );
                     }
                     begin_year();
@@ -297,7 +289,7 @@ pub fn WorldEvents() -> impl IntoView {
                     if let Some(globe) = globe.get() {
                         globe.rotate(false);
                     }
-                    set_events.set(events);
+                    events.set(evs);
                 }
                 // TODO otherwise need to wait until after all events have been shown to start the
                 // year
@@ -345,22 +337,24 @@ pub fn WorldEvents() -> impl IntoView {
 
     // When all updates have been dismissed.
     let on_updates_finished = move |_| {
-        update!(|state| {
-            if ready_to_advance.get_value() {
+        if ready_to_advance.get_value() {
+            update!(|state| {
                 if let Some((pause, resume)) =
                     time_controls.get()
                 {
                     pause.call(());
                 }
                 state.ui.phase = Phase::Report;
-            }
-        });
+            });
+        } else {
+            try_begin_year();
+        }
     };
 
     // When all events have been dismissed.
     let on_events_finished = move |_| {
-        logging::log!("EVENTS FINISHED");
-        // TODO
+        logging::log!("TRYING TO BEGIN YEAR AFTER EVENTS");
+        try_begin_year();
     };
 
     let on_globe_ready = move |globe: GlobeRef| {
@@ -379,7 +373,7 @@ pub fn WorldEvents() -> impl IntoView {
             </div>
             <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
             <Updates updates on_done=on_updates_finished />
-            <Events events on_advance=|_| {} on_done=on_events_finished />
+            <Events events on_done=on_events_finished />
             <Toasts toasts />
             <button class="events--skip btn" on:click=skip>
                 {t!("Skip")}

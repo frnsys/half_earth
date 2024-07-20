@@ -3,7 +3,7 @@ use leptos::*;
 use crate::{
     i18n,
     icons,
-    state::GameState,
+    state::{GameExt, GameState},
     t,
     views::{tip, Events, HasTip},
 };
@@ -11,23 +11,21 @@ use hes_engine::events::Phase as EventPhase;
 
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
-    let (events, set_events) = create_signal(vec![]);
+    let events = create_rw_signal(vec![]);
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
     create_effect(move |_| {
         state.update(|state: &mut GameState| {
-            let events = if lose {
-                state.game.roll_events_for_phase(
-                    EventPhase::BreakStart,
-                    None,
-                )
+            let evs = if lose {
+                state
+                    .game
+                    .roll_events(EventPhase::BreakStart, None)
             } else {
-                state.game.roll_events_for_phase(
-                    EventPhase::EndStart,
-                    None,
-                )
+                state
+                    .game
+                    .roll_events(EventPhase::EndStart, None)
             };
-            set_events.set(events);
+            events.set(evs);
         });
     });
 
@@ -77,7 +75,6 @@ pub fn End(lose: bool) -> impl IntoView {
         <div class="break">
             <Events
                 events
-                on_advance=|_| {}
                 on_done=move |_| set_show_start.set(true)
             />
             <Show when=move || {

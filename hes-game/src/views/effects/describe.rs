@@ -261,7 +261,7 @@ pub fn flag_tip(flag: Flag, demand: &OutputMap) -> Tip {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct DisplayEffect {
     pub effect: Effect,
     pub likelihood: Option<Likelihood>,

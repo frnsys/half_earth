@@ -5,7 +5,7 @@ use leptos::*;
 use crate::{
     audio,
     state,
-    state::Phase,
+    state::{GameExt, Phase},
     t,
     ui,
     ui_rw,
@@ -156,28 +156,25 @@ fn describe_outlook(outlook: f32) -> String {
 
 #[component]
 pub fn Interstitial() -> impl IntoView {
-    let (events, set_events) = create_signal(vec![]);
+    let events = create_rw_signal(vec![]);
 
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
     state.update(|state| state.initialize_year());
     create_effect(move |_| {
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
         state.update(|state| {
-            let events = if state.won() {
-                state.game.roll_events_for_phase(
+            let evs = if state.won() {
+                state.game.roll_events(
                     EventPhase::InterstitialWin,
                     None,
                 )
             } else {
-                state.game.roll_events_for_phase(
+                state.game.roll_events(
                     EventPhase::InterstitialStart,
                     None,
                 )
             };
-            set_events.set(events);
+            events.set(evs);
         });
     });
 
@@ -186,7 +183,7 @@ pub fn Interstitial() -> impl IntoView {
     let year = state!(world.year);
     let pc = state!(political_capital.max(0));
     let outlook = state!(outlook());
-    let emissions = state!(emissions_gt());
+    let emissions = state!(state.emissions_gt());
     let extinction = state!(world.extinction_rate);
     let temperature = state!(world.temperature);
     let start_year = ui!(start_year);
@@ -316,7 +313,7 @@ pub fn Interstitial() -> impl IntoView {
                     <div>{years_left}</div>
                 </div>
             </div>
-            <Events events on_advance=|_| {} on_done=next_phase/>
+            <Events events on_done=next_phase/>
             <div class="interstitial--image-credit">
                 {t!("Image:")}" "{image_credit}
             </div>

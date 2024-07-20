@@ -1,8 +1,8 @@
 use super::Points;
-use crate::{consts, display};
+use crate::{consts, display, views::DisplayEvent};
 use extend::ext;
 use hes_engine::{
-    events::Flag,
+    events::{Flag, Phase},
     projects::{Project, Status},
     Game,
     ProjectType,
@@ -266,5 +266,17 @@ pub impl Game {
                 queued_upgrades.insert(project_id, false);
             }
         }
+    }
+
+    fn roll_events(
+        &mut self,
+        phase: Phase,
+        limit: Option<usize>,
+    ) -> Vec<DisplayEvent> {
+        let events = self.roll_events_for_phase(phase, limit);
+        events
+            .into_iter()
+            .map(|ev| DisplayEvent::new(ev, &self.state))
+            .collect()
     }
 }

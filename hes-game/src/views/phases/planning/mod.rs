@@ -13,7 +13,7 @@ use tabs::{Dashboard, Parliament, Plan, Regions};
 use crate::{
     audio,
     debug::get_debug_opts,
-    state::Tutorial,
+    state::{GameExt, Tutorial},
     t,
     ui,
     ui_rw,
@@ -55,26 +55,26 @@ pub fn Planning() -> impl IntoView {
 
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
-    let (events, set_events) = create_signal(vec![]);
+    let events = create_rw_signal(vec![]);
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     create_effect(move |_| {
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
         state.update(|state| {
-            let mut events = state.game.roll_events_for_phase(
-                EventPhase::PlanningStart,
-                None,
+            let mut evs = state
+                .game
+                .roll_events(EventPhase::PlanningStart, None);
+            evs.extend(
+                state.game.roll_events(
+                    EventPhase::PlanningPlan,
+                    None,
+                ),
             );
-            events.extend(state.game.roll_events_for_phase(
-                EventPhase::PlanningPlan,
-                None,
-            ));
 
             if get_debug_opts().skip_to_planning {
-                events.retain(|ev| ev.name != "Planning Intro");
+                evs.retain(|ev| ev.name != "Planning Intro");
             }
 
-            set_events.set(events);
+            events.set(evs);
         });
     });
 
@@ -153,11 +153,7 @@ pub fn Planning() -> impl IntoView {
 
     view! {
         <Hud/>
-        <Events
-            events
-            on_advance=|_| {}
-            on_done=move |_| { set_events.set(vec![]) }
-        />
+        <Events events />
         <div class="planning">
             <header>
                 {move || tab("Plan", Page::Plan, Tutorial::Plan)}

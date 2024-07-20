@@ -126,6 +126,8 @@ pub fn Dialogue(
         }
     };
 
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     let next_line = move || {
         let line = line.get();
         let mut can_advance = false;
@@ -138,10 +140,7 @@ pub fn Dialogue(
                 }
                 DialogueNext::Branches(branches) => {
                     if let Some(event_id) = event_id.get() {
-                        let state = expect_context::<
-                            RwSignal<crate::state::GameState>,
-                        >();
-                        let branch = state.with(|state| {
+                        let branch = with!(|state| {
                             branches.iter().find(|b| {
                                 state
                                     .game
@@ -194,8 +193,6 @@ pub fn Dialogue(
         }
     };
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
     let select_choice =
         move |ev: MouseEvent, branch: &Branch| {
             ev.stop_immediate_propagation();
@@ -208,7 +205,7 @@ pub fn Dialogue(
             // So we just assume project dialogues won't have branch effects
             // which, at time of writing, none of them do.
             if let Some(event_id) = event_id.get() {
-                state.update(|state| {
+                update!(|state| {
                     state.game.apply_branch_effects(
                         event_id,
                         region_id.get(),

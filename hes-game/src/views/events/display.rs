@@ -1,28 +1,67 @@
-use crate::{
-    icons::HasIcon,
-    t,
-    views::{
-        effects::DisplayEffect,
-        tip,
-        Effects,
-        Events,
-        HasTip,
-        Help,
-    },
-};
+use std::ops::Deref;
+
 use hes_engine::{
-    events::{
-        Condition,
-        Effect as HesEffect,
-        LocalVariable,
-        WorldVariable,
-    },
+    events::{Condition, Effect, LocalVariable, WorldVariable},
+    game::ResolvedEvent,
     kinds::Output,
     production::ProcessFeature,
     projects::Status,
     state::State,
 };
-use leptos::*;
+
+use crate::{icons::HasIcon, t, views::effects::DisplayEffect};
+
+#[derive(Debug, Clone)]
+pub struct DisplayEvent {
+    event: ResolvedEvent,
+    pub factors: Vec<(&'static str, String)>,
+    pub effects: Vec<DisplayEffect>,
+}
+impl Deref for DisplayEvent {
+    type Target = ResolvedEvent;
+    fn deref(&self) -> &Self::Target {
+        &self.event
+    }
+}
+impl DisplayEvent {
+    pub fn new(event: ResolvedEvent, state: &State) -> Self {
+        let factors = event
+            .probabilities
+            .iter()
+            .flat_map(|prob| {
+                prob.conditions.iter().filter_map(|cond| {
+                    describe_condition(cond, state)
+                        .map(|desc| (cond.icon(), desc))
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let effects = event
+            .effects
+            .iter()
+            .map(DisplayEffect::from)
+            .collect::<Vec<_>>();
+
+        DisplayEvent {
+            event,
+            factors,
+            effects,
+        }
+    }
+
+    pub fn has_visible_effects(&self) -> bool {
+        if self.event.effects.is_empty() {
+            false
+        } else {
+            self.event.effects.iter().any(|effect| match effect
+            {
+                Effect::AddEvent(..)
+                | Effect::TriggerEvent(..) => false,
+                _ => true,
+            })
+        }
+    }
+}
 
 fn describe_condition(
     condition: &Condition,
@@ -102,121 +141,5 @@ fn describe_condition(
             }
         }
         _ => None,
-    }
-}
-
-#[component]
-pub fn Event(
-    #[prop(into)] event: Signal<
-        hes_engine::game::ResolvedEvent,
-    >,
-    #[prop(into, optional)] as_card: Signal<bool>,
-    #[prop(into)] on_done: Callback<()>,
-) -> impl IntoView {
-    let effect_image_url = move || {
-        event.with(|event| {
-            format!(
-                "url(/assets/content/images/{})",
-                event.flavor.image.fname
-            )
-        })
-    };
-    let has_visible_effects = move || {
-        event.with(|event| {
-            if event.effects.is_empty() {
-                false
-            } else {
-                event.effects.iter().any(
-                    |effect| match effect {
-                        HesEffect::AddEvent(..)
-                        | HesEffect::TriggerEvent(..) => false,
-                        _ => true,
-                    },
-                )
-            }
-        })
-    };
-
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
-    let factors = move || {
-        with!(move |event, state| {
-            event
-                .probabilities
-                .iter()
-                .flat_map(|prob| {
-                    prob.conditions.iter().filter_map(|cond| {
-                        describe_condition(cond, &state.game)
-                            .map(|desc| (cond.icon(), desc))
-                    })
-                })
-                .collect::<Vec<_>>()
-        })
-    };
-    let effects = move || {
-        event.with(|event| {
-            event
-                .effects
-                .iter()
-                .map(DisplayEffect::from)
-                .collect::<Vec<_>>()
-        })
-    };
-    let image_attrib = move || {
-        event.with(|event| {
-            event.flavor.image.attribution.clone()
-        })
-    };
-
-    let factor_tip = t!("The factors behind this event.↓");
-    on_cleanup(|| {
-        // TODO
-        // settings.hide_help[factor_tip] = true
-    });
-
-    let arc = move || event.with(|event| t!(&event.flavor.arc));
-    let name = move || event.with(|event| t!(&event.name));
-    let factors_list = move || {
-        factors()
-            .into_iter()
-            .map(|(icon, factor)| {
-                let tip = tip(icon, factor);
-                view! {
-                    <HasTip tip>
-                        <img class="event--factor" src=icon/>
-                    </HasTip>
-                }
-            })
-            .collect::<Vec<_>>()
-    };
-    let events = move || vec![event.get()];
-
-    view! {
-        <div class="event">
-            <div
-                class="event--body"
-                style:background-image=effect_image_url
-            >
-                <Help text=factor_tip x=0.55 y=-18.0 center=false/>
-                <div class="arc">{arc}</div>
-                <div class="event--factors">{factors_list}</div>
-                <div class="image-attribution">
-                    {t!("Image:")}" "{image_attrib}
-                </div>
-                <div class="event--name">{name}</div>
-                <Show when=has_visible_effects>
-                    <div class="event--effects">
-                        <Effects effects/>
-                    </div>
-                </Show>
-            </div>
-            <Show when=move || as_card.get()>
-                <Events
-                    on_done
-                    on_advance=|_| {}
-                    events=events.into_signal()
-                />
-            </Show>
-        </div>
     }
 }

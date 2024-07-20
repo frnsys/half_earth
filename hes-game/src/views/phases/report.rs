@@ -3,7 +3,7 @@ use crate::{
     display::*,
     icons,
     state,
-    state::Phase,
+    state::{GameExt, Phase},
     t,
     ui,
     views::{
@@ -27,17 +27,17 @@ pub struct Request {
 
 #[component]
 pub fn Report() -> impl IntoView {
-    let (events, set_events) = create_signal(vec![]);
+    let events = create_rw_signal(vec![]);
     create_effect(move |_| {
         let state = expect_context::<
             RwSignal<crate::state::GameState>,
         >();
         state.update(|state| {
-            let events = state.game.roll_events_for_phase(
-                EventPhase::ReportStart,
-                None,
+            events.set(
+                state
+                    .game
+                    .roll_events(EventPhase::ReportStart, None),
             );
-            set_events.set(events);
         });
     });
 
@@ -243,7 +243,7 @@ pub fn Report() -> impl IntoView {
         })
     };
     let ghg_pc_change = with_state!(|game, ui| {
-        let emissions_change = game.emissions_gt()
+        let emissions_change = game.state.emissions_gt()
             - ui.cycle_start_state.emissions;
         (emissions_change * 2.).round() as isize
             * -(consts::EMISSIONS_PC as isize)
@@ -362,7 +362,7 @@ pub fn Report() -> impl IntoView {
 
     view! {
         <Hud/>
-        <Events events on_advance=|_| {} on_done=|_| {}/>
+        <Events events />
         <div class="report">
             <h2>{t!("Report")}</h2>
             <div class="report--body">

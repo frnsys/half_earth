@@ -1,55 +1,42 @@
 mod dialogue;
+mod display;
+mod event;
 
 use std::{collections::HashMap, time::Duration};
 
 pub use dialogue::Dialogue;
-use hes_engine::game::ResolvedEvent;
+pub use display::DisplayEvent;
+use event::Event;
 use leptos::*;
 
 #[component]
 pub fn Events(
-    #[prop(into)] on_advance: Callback<()>,
-    #[prop(into)] on_done: Callback<()>,
-    #[prop(into)] events: Signal<Vec<ResolvedEvent>>,
+    #[prop(into, optional, default=(|_| {}).into())]
+    on_done: Callback<()>,
+    #[prop(into, optional, default=(|_| {}).into())] on_advance: Callback<()>,
+    #[prop(into)] events: RwSignal<Vec<DisplayEvent>>,
     #[prop(optional, default = 0)] delay: u64,
 ) -> impl IntoView {
     let (ready, set_ready) = create_signal(delay == 0);
     let (idx, set_idx) = create_signal(0);
-    let (ctx, set_ctx) = create_signal::<HashMap<String, String>>(
-        HashMap::default(),
-    );
 
-    let dialogue = move || {
-        let ev = &events.get()[idx.get()];
-        ev.flavor.dialogue.clone()
-    };
     let has_event = move || {
         events
             .try_with(|events| idx.get() < events.len())
             .unwrap_or(false)
     };
 
-    let next_event = move |_| {
+    let advance_event = move |_| {
         let next_idx = idx.get() + 1;
         let n_events = events.with(|events| events.len());
         if next_idx < n_events {
-            events.with(|events| {
-                let event = &events[next_idx];
-                let mut ctx = HashMap::default();
-                if let Some((_, name)) = &event.region {
-                    ctx.insert(
-                        "region".to_string(),
-                        name.to_string(),
-                    );
-                }
-                set_ctx.set(ctx);
-            });
             set_idx.set(next_idx);
         } else {
-            logging::log!("Done dialogue");
+            update!(|events| events.clear());
             on_done.call(());
         }
     };
+    let event = move || events.get()[idx.get()].clone();
 
     create_effect(move |_| {
         if delay > 0 && !ready.get() {
@@ -65,20 +52,13 @@ pub fn Events(
         }
     });
 
-    let view = move || {
+    move || {
         if has_event() && ready.get() {
             Some(view! {
-                <Dialogue
-                    dialogue=dialogue
-                    context=ctx
-                    on_advance=on_advance
-                    on_done=next_event
-                />
+                <Event event on_advance on_done=advance_event />
             })
         } else {
             None
         }
-    };
-
-    view! { {view} }
+    }
 }
