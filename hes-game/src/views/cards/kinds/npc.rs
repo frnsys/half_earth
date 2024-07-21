@@ -1,13 +1,17 @@
 use super::super::card::*;
 use crate::{
-    consts, icons, t,
+    consts,
+    icons,
+    t,
     views::{tip, HasTip},
 };
 use hes_engine::npcs::NPC;
 use leptos::*;
 
 #[component]
-pub fn NPCCard(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
+pub fn NPCCard(
+    #[prop(into)] npc: Signal<NPC>,
+) -> impl IntoView {
     let hearts = move || {
         npc.with(|npc| {
             (0..consts::MAX_RELATIONSHIP)
@@ -28,18 +32,23 @@ pub fn NPCCard(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
             tip(icons::RELATIONSHIP, t!("Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.", name: t!(&npc.name)))
         })
     };
-    let portrait = move || npc.with(|npc| format!("/assets/characters/{}.webp", npc.name));
+    let portrait = move || {
+        npc.with(|npc| {
+            format!("/assets/characters/{}.webp", npc.name)
+        })
+    };
     let rel_icon = move || {
         npc.with(|npc| match npc.relationship_name() {
             "Ally" => icons::ALLY,
             "Friendly" => icons::FRIENDLY,
-            "Nesmsis" => icons::NEMESIS,
+            "Nemesis" => icons::NEMESIS,
             "Neutral" => icons::NEUTRAL,
             _ => unreachable!(),
         })
     };
     let name = move || npc.with(|npc| t!(&npc.name));
-    let rel_name = move || npc.with(|npc| t!(&npc.relationship_name()));
+    let rel_name =
+        move || npc.with(|npc| t!(&npc.relationship_name()));
     let effects = move || {
         npc.with(|npc| {
             let effects = t!(&npc.flavor.effects);
@@ -55,9 +64,11 @@ pub fn NPCCard(#[prop(into)] npc: Signal<NPC>) -> impl IntoView {
             }
         })
     };
-    let description = move || npc.with(|npc| t!(&npc.flavor.description));
+    let description =
+        move || npc.with(|npc| t!(&npc.flavor.description));
     let likes = move || npc.with(|npc| t!(&npc.flavor.likes));
-    let dislikes = move || npc.with(|npc| t!(&npc.flavor.dislikes));
+    let dislikes =
+        move || npc.with(|npc| t!(&npc.flavor.dislikes));
 
     view! {
         <Card class="npc" background="#724680">

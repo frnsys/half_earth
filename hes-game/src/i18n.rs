@@ -10,7 +10,7 @@ use leptos_use::{
     UseIntlNumberFormatOptions,
     UseIntlNumberFormatReturn,
 };
-use std::{collections::HashMap, rc::Rc};
+use std::{collections::BTreeMap, rc::Rc};
 
 use crate::state::Settings;
 
@@ -22,13 +22,13 @@ pub const AVAILABLE_LANGUAGES: &[&str] = &[
 
 pub struct Language {
     pub locale: &'static str,
-    phrases: Option<HashMap<String, String>>,
+    phrases: Option<BTreeMap<String, String>>,
     number_fmt: UseIntlNumberFormatReturn,
     percent_fmt: UseIntlNumberFormatReturn,
 }
 impl Language {
     fn new(
-        phrases: Option<HashMap<String, String>>,
+        phrases: Option<BTreeMap<String, String>>,
         locale: &'static str,
     ) -> Self {
         Language {
@@ -148,7 +148,7 @@ pub async fn load_language(
     } else {
         let url = format!("/assets/lang/{lang}.json");
         let resp = Request::get(&url).send().await?;
-        let phrases: HashMap<String, String> =
+        let phrases: BTreeMap<String, String> =
             resp.json().await?;
         Some(phrases)
     };

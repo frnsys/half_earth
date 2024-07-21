@@ -8,6 +8,7 @@ use crate::{
     Id,
 };
 use serde::{Deserialize, Serialize};
+use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 pub fn update_seats(
     outlook_change: f32,
@@ -117,22 +118,20 @@ impl NPC {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(
+    Serialize,
+    Deserialize,
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Display,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+)]
 pub enum NPCRelation {
     Neutral,
     Nemesis,
     Ally,
-}
-impl std::fmt::Display for NPCRelation {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
-        let term = match self {
-            Self::Neutral => "neutral",
-            Self::Nemesis => "nemesis",
-            Self::Ally => "ally",
-        };
-        write!(f, "{}", term)
-    }
 }

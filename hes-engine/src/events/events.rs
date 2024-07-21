@@ -9,6 +9,7 @@ use crate::{
 use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashSet, fmt::Display};
+use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 #[derive(
     Clone, Debug, Default, Serialize, Deserialize, PartialEq,
@@ -113,7 +114,7 @@ impl EventPool {
                     }
                 }
             } else {
-                if ev.regional {
+                if ev.is_regional() {
                     for region in state.world.regions.iter() {
                         if ev.roll(state, Some(region.id), rng)
                         {
@@ -169,7 +170,16 @@ impl EventPool {
 }
 
 #[derive(
-    Debug, Copy, Clone, PartialEq, Serialize, Deserialize,
+    Debug,
+    Copy,
+    Clone,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    Display,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
 )]
 pub enum Phase {
     WorldMain,
@@ -211,9 +221,6 @@ pub struct Event {
     /// This phase this event can occur in
     pub phase: Phase,
 
-    /// If this event has any regional conditions
-    pub regional: bool,
-
     /// The probabilities that
     /// can trigger this event.
     pub probabilities: Vec<Probability>,
@@ -251,6 +258,11 @@ impl HasId for Event {
 }
 
 impl Event {
+    /// If this event has any regional conditions.
+    pub fn is_regional(&self) -> bool {
+        self.probabilities.iter().any(|prob| prob.is_regional())
+    }
+
     /// Gets the likelihood of this event occurring.
     /// If there are multiple probabilities, it returns
     /// the likelihood of the first probability that has

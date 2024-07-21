@@ -10,7 +10,7 @@ use hes_engine::{
     Id,
 };
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 /// The state at the start of a 5-year cycle,
 /// for generating comparisons for the report.
@@ -101,7 +101,7 @@ pub struct UIState {
     pub tutorial: Tutorial,
     pub factors: EnumMap<Var, Vec<Factor>>,
 
-    pub annual_region_events: HashMap<Id, Vec<IconEvent>>,
+    pub annual_region_events: BTreeMap<Id, Vec<IconEvent>>,
     pub world_events: Vec<Id>,
 
     /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
@@ -112,13 +112,13 @@ pub struct UIState {
 
     // // Track planned process mix changes
     pub process_mix_changes:
-        EnumMap<Output, HashMap<Id, isize>>,
+        EnumMap<Output, BTreeMap<Id, isize>>,
 
     // // Track changes made to the plan
     // // in a given session, so they can
     // // be reversed/refunded
-    pub plan_changes: HashMap<Id, PlanChange>,
-    pub queued_upgrades: HashMap<Id, bool>,
+    pub plan_changes: BTreeMap<Id, PlanChange>,
+    pub queued_upgrades: BTreeMap<Id, bool>,
     //
     // Compare beginning and end
     pub cycle_start_state: CycleStart,

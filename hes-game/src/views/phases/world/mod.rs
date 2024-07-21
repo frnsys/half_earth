@@ -30,10 +30,7 @@ use leptos_use::{
     UseRafFnCallbackArgs,
     UseRafFnOptions,
 };
-use std::{
-    collections::{HashMap, VecDeque},
-    sync::LazyLock,
-};
+use std::{collections::VecDeque, sync::LazyLock};
 
 #[derive(Clone)]
 struct Toast {

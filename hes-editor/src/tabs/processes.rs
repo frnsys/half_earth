@@ -113,7 +113,7 @@ fn Process(
 pub fn Processes(world: RwSignal<World>) -> impl IntoView {
     let n_processes = with!(|world| world.processes.len());
     view! {
-        <div class="processes">
+        <div class="processes scroll-list">
         {move || {
              (0..n_processes).map(|i| {
                  view! {

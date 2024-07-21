@@ -42,7 +42,7 @@ fn Region(
 pub fn Regions(world: RwSignal<World>) -> impl IntoView {
     let n_regions = with!(|world| world.regions.len());
     view! {
-        <div class="regions">
+        <div class="regions scroll-list">
         {move || {
              (0..n_regions).map(|i| {
                  view! {

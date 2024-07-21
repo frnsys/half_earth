@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::{
     events::Event,
@@ -27,7 +27,7 @@ pub struct World {
     pub industries: Collection<Industry>,
     pub projects: Collection<Project>,
     pub processes: Collection<Process>,
-    pub project_lockers: HashMap<Id, Id>,
+    pub project_lockers: BTreeMap<Id, Id>,
     pub feedstock_reserves: FeedstockMap,
     pub starting_resources: ResourceMap,
     pub output_demand: [OutputMap; 4],

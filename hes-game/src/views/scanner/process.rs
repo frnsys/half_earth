@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::{
     consts,
@@ -41,7 +41,7 @@ impl Scannable for Process {
 pub struct ProcessScanner {
     pub points: RwSignal<isize>,
     pub on_change: Callback<()>,
-    pub mix_changes: Memo<EnumMap<Output, HashMap<Id, isize>>>,
+    pub mix_changes: Memo<EnumMap<Output, BTreeMap<Id, isize>>>,
 }
 
 impl ScannerSpec for ProcessScanner {

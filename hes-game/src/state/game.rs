@@ -8,7 +8,7 @@ use hes_engine::{
     Id,
     ProjectType,
 };
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 #[ext]
 pub impl Game {
@@ -216,7 +216,7 @@ pub impl Game {
         &mut self,
         project_id: &Id,
         is_free: bool,
-        queued_upgrades: &mut HashMap<Id, bool>,
+        queued_upgrades: &mut BTreeMap<Id, bool>,
     ) -> bool {
         let (kind, upgrade) = {
             let project = &self.world.projects[project_id];
@@ -250,7 +250,7 @@ pub impl Game {
     fn downgrade_project_x(
         &mut self,
         project_id: &Id,
-        queued_upgrades: &mut HashMap<Id, bool>,
+        queued_upgrades: &mut BTreeMap<Id, bool>,
     ) {
         let (kind, prev_upgrade) = {
             let project = &self.world.projects[project_id];

@@ -1,6 +1,6 @@
 mod describe;
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashSet};
 
 use crate::{
     icons::{self, fill_icons},
@@ -35,8 +35,8 @@ fn outcome_effects(project: &Project) -> Vec<DisplayEffect> {
         count: usize,
         hashes: HashSet<Vec<u8>>,
     }
-    let mut all_effects: HashMap<String, Count> =
-        HashMap::default();
+    let mut all_effects: BTreeMap<String, Count> =
+        BTreeMap::default();
     let n_outcomes = project.outcomes.len();
     for outcome in &project.outcomes {
         for effect in &outcome.effects {

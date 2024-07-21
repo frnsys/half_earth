@@ -219,7 +219,7 @@ fn Cost(project: RwSignal<Project>) -> impl IntoView {
 pub fn Projects(world: RwSignal<World>) -> impl IntoView {
     let n_projects = with!(|world| world.projects.len());
     view! {
-        <div class="projects">
+        <div class="projects scroll-list">
         {move || {
              (0..n_projects).map(|i| {
                  view! {

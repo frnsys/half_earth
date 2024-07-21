@@ -6,7 +6,7 @@ use strum::IntoEnumIterator;
 #[component]
 pub fn World(world: RwSignal<World>) -> impl IntoView {
     view! {
-        <div class="world">
+        <div class="world scroll-list">
             <div class="world-inputs">
                 <div class="world-inputs-global">
                     <NumericInput

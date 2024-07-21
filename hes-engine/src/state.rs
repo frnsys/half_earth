@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::{
     events::{Effect, Event, EventPool, Flag, Phase, Request},
@@ -72,7 +72,7 @@ pub struct State {
     pub resources: ResourceMap,
     pub feedstocks: FeedstockMap,
     pub produced: OutputMap,
-    pub produced_by_process: HashMap<Id, f32>,
+    pub produced_by_process: BTreeMap<Id, f32>,
     pub consumed_resources: ResourceMap,
     pub consumed_feedstocks: FeedstockMap,
     pub required_resources: ResourceMap,
@@ -150,7 +150,7 @@ impl State {
             feedstocks,
             byproducts: byproducts!(),
             produced: outputs!(),
-            produced_by_process: HashMap::default(),
+            produced_by_process: BTreeMap::default(),
             consumed_resources: resources!(),
             consumed_feedstocks: feedstocks!(),
             required_resources: resources!(),
@@ -946,7 +946,7 @@ impl State {
 
     pub fn compute_extinction_rate<'a>(
         &self,
-        produced_by_process: &HashMap<Id, f32>,
+        produced_by_process: &BTreeMap<Id, f32>,
     ) -> f32 {
         let lic_pop = self.world.lic_population();
         self.world.processes.iter().fold(0., |acc, p| {

@@ -15,6 +15,13 @@ use crate::{
     state::State,
     Id,
 };
+use strum::{
+    Display,
+    EnumDiscriminants,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+};
 
 const HEAVY_PROJECTS: [Group; 4] = [
     Group::Space,
@@ -23,7 +30,21 @@ const HEAVY_PROJECTS: [Group; 4] = [
     Group::Electrification,
 ];
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(
+    Debug,
+    Clone,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    EnumDiscriminants,
+)]
+#[strum_discriminants(derive(
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+    Display
+))]
+#[strum_discriminants(name(ConditionKind))]
 pub enum Condition {
     LocalVariable(LocalVariable, Comparator, f32),
     WorldVariable(WorldVariable, Comparator, f32),
@@ -48,6 +69,14 @@ pub enum Condition {
 }
 
 impl Condition {
+    /// If this condition has any regional conditions.
+    pub fn is_regional(&self) -> bool {
+        matches!(
+            self,
+            Self::LocalVariable(..) | Self::RegionFlag(..)
+        )
+    }
+
     pub fn eval(
         &self,
         state: &State,
@@ -266,7 +295,15 @@ impl Condition {
 }
 
 #[derive(
-    Debug, Copy, Clone, Serialize, Deserialize, PartialEq,
+    Debug,
+    Copy,
+    Clone,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
 )]
 pub enum Comparator {
     Less,
@@ -287,5 +324,24 @@ impl Comparator {
             Comparator::GreaterEqual => a >= b,
             Comparator::Greater => a > b,
         }
+    }
+}
+impl std::fmt::Display for Comparator {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Comparator::Less => "<",
+                Comparator::LessEqual => "<=",
+                Comparator::Equal => "==",
+                Comparator::NotEqual => "!=",
+                Comparator::GreaterEqual => ">=",
+                Comparator::Greater => ">",
+            }
+        )
     }
 }

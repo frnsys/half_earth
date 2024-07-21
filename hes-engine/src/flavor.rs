@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 use serde_bytes;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
-pub type ProjectLockers = HashMap<usize, usize>;
+pub type ProjectLockers = BTreeMap<usize, usize>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum ImageData {

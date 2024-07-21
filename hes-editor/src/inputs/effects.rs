@@ -1,4 +1,4 @@
-use crate::inputs::*;
+use crate::{enum_slice, inputs::*};
 use hes_engine::{
     events::{Effect, EffectKind, Event, WorldVariable},
     industries::Industry,
@@ -8,21 +8,22 @@ use hes_engine::{
 };
 use leptos::*;
 
-/// Conveniently create a slice from an enum variant.
-macro_rules! enum_slice {
-    (|$write_signal:ident| $enum:ident::$variant:ident($($before:ident,)* [ $arg:ident ] $(, $after:ident)*)) => {
-        (
-            Signal::derive(move || $arg),
-            SignalSetter::map(move |$arg| $write_signal.set($enum::$variant($($before,)* $arg $(, $after)*)))
-        )
-    };
-}
-
 #[component]
 fn Effect(
     effect: (Signal<Effect>, SignalSetter<Effect>),
 ) -> impl IntoView {
     let (read, write) = effect;
+
+    let processes =
+        expect_context::<Signal<Collection<Ref<Process>>>>();
+    let projects =
+        expect_context::<Signal<Collection<Ref<Project>>>>();
+    let events =
+        expect_context::<Signal<Collection<Ref<Event>>>>();
+    let industries =
+        expect_context::<Signal<Collection<Ref<Industry>>>>();
+    let npcs = expect_context::<Signal<Collection<Ref<NPC>>>>();
+
     let input = move || {
         match read.get() {
             Effect::WorldVariable(var, value) => view! {
@@ -123,7 +124,7 @@ fn Effect(
                 <div class="input-help">"Modify the production efficiency of a single process by a percentage. For example, a value of 10% means 10% more output is produced for the same resources/byproduct as the baseline."</div>
                 <EntityPicker
                     label="Process"
-                    opts={expect_context::<Signal<Collection<Process>>>()}
+                    opts=processes
                     help="Which process is affected."
                     signal=enum_slice!(|write| Effect::OutputForProcess([id], value)) />
                 <PercentInput
@@ -160,7 +161,7 @@ fn Effect(
                 <div class="input-help">"Modify the limit of the specified process by an absolute amount. If no process limit is defined for the process this will do nothing."</div>
                 <EntityPicker
                     label="Process"
-                    opts={expect_context::<Signal<Collection<Process>>>()}
+                    opts=processes
                     help="Which process is affected."
                     signal=enum_slice!(|write| Effect::ProcessLimit([id], value)) />
                 <NumericInput
@@ -182,19 +183,19 @@ fn Effect(
             }.into_view(),
 
             Effect::AddEvent(id) => view! {
-                <div class="input-help">"Add an event to the event pool (i.e. unlock it)."</div>
+                <div class="input-help">"Add an event to the event pool (i.e. unlock it). Note: This effect is always hidden (not displayed to the user)."</div>
                 <EntityPicker
                     label="Event"
-                    opts={expect_context::<Signal<Collection<Event>>>()}
+                    opts=events
                     help="Which event is unlocked."
                     signal=enum_slice!(|write| Effect::AddEvent([id])) />
             }.into_view(),
 
             Effect::TriggerEvent(id, years) => view! {
-                <div class="input-help">"Trigger an event after a specified number of years."</div>
+                <div class="input-help">"Trigger an event after a specified number of years. Note: This effect is always hidden (not displayed to the user)."</div>
                 <EntityPicker
                     label="Event"
-                    opts={expect_context::<Signal<Collection<Event>>>()}
+                    opts=events
                     help="Which event will be triggered."
                     signal=enum_slice!(|write| Effect::TriggerEvent([id], years)) />
                 <NumericInput
@@ -207,7 +208,7 @@ fn Effect(
                 <div class="input-help">"Locks a project (it will no longer be available)."</div>
                 <EntityPicker
                     label="Project"
-                    opts={expect_context::<Signal<Collection<Project>>>()}
+                    opts=projects
                     help="Which project is locked."
                     signal=enum_slice!(|write| Effect::LocksProject([id])) />
             }.into_view(),
@@ -216,7 +217,7 @@ fn Effect(
                 <div class="input-help">"Unlocks a project."</div>
                 <EntityPicker
                     label="Project"
-                    opts={expect_context::<Signal<Collection<Project>>>()}
+                    opts=projects
                     help="Which project is unlocked."
                     signal=enum_slice!(|write| Effect::UnlocksProject([id])) />
             }.into_view(),
@@ -225,7 +226,7 @@ fn Effect(
                 <div class="input-help">"Unlocks a process."</div>
                 <EntityPicker
                     label="Process"
-                    opts={expect_context::<Signal<Collection<Process>>>()}
+                    opts=processes
                     help="Which process is unlocked."
                     signal=enum_slice!(|write| Effect::UnlocksProcess([id])) />
             }.into_view(),
@@ -234,7 +235,7 @@ fn Effect(
                 <div class="input-help">"Unlocks an NPC."</div>
                 <EntityPicker
                     label="NPC"
-                    opts={expect_context::<Signal<Collection<NPC>>>()}
+                    opts=npcs
                     help="Which NPC is unlocked."
                     signal=enum_slice!(|write| Effect::UnlocksNPC([id])) />
             }.into_view(),
@@ -243,7 +244,7 @@ fn Effect(
                 <div class="input-help">"Starts a request for a project."</div>
                 <EntityPicker
                     label="Project"
-                    opts={expect_context::<Signal<Collection<Project>>>()}
+                    opts=projects
                     help="Which project is requested."
                     signal=enum_slice!(|write| Effect::ProjectRequest([id], active, bounty)) />
                 <ToggleInput
@@ -260,7 +261,7 @@ fn Effect(
                 <div class="input-help">"Starts a request for a process."</div>
                 <EntityPicker
                     label="Process"
-                    opts={expect_context::<Signal<Collection<Process>>>()}
+                    opts=processes
                     help="Which process is requested."
                     signal=enum_slice!(|write| Effect::ProcessRequest([id], active, bounty)) />
                 <ToggleInput
@@ -301,7 +302,7 @@ fn Effect(
                 <div class="input-help">"Change the relationship with an NPC."</div>
                 <EntityPicker
                     label="NPC"
-                    opts={expect_context::<Signal<Collection<NPC>>>()}
+                    opts=npcs
                     help="Which NPC's relationship is affected."
                     signal=enum_slice!(|write| Effect::NPCRelationship([id], change)) />
                 <NumericInput
@@ -314,7 +315,7 @@ fn Effect(
                 <div class="input-help">"Modify the amount of a single byproduct for a single process by a percentage."</div>
                 <EntityPicker
                     label="Process"
-                    opts={expect_context::<Signal<Collection<Process>>>()}
+                    opts=processes
                     help="Which process is affected."
                     signal=enum_slice!(|write| Effect::ModifyProcessByproducts([id], byproduct, value)) />
                 <EnumInput
@@ -331,7 +332,7 @@ fn Effect(
                 <div class="input-help">"Modify the amount of a single byproduct for a single industry by a percentage."</div>
                 <EntityPicker
                     label="Industry"
-                    opts={expect_context::<Signal<Collection<Industry>>>()}
+                    opts=industries
                     help="Which industry is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryByproducts([id], byproduct, value)) />
                 <EnumInput
@@ -348,7 +349,7 @@ fn Effect(
                 <div class="input-help">"Modify the amount of a single resource used by a single industry by a percentage."</div>
                 <EntityPicker
                     label="Industry"
-                    opts={expect_context::<Signal<Collection<Industry>>>()}
+                    opts=industries
                     help="Which industry is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryResources([id], resource, value)) />
                 <EnumInput
@@ -365,7 +366,7 @@ fn Effect(
                 <div class="input-help">"Modify the amount of a single resource used by a single industry by an absolute amount."</div>
                 <EntityPicker
                     label="Industry"
-                    opts={expect_context::<Signal<Collection<Industry>>>()}
+                    opts=industries
                     help="Which industry is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryResourcesAmount([id], resource, value)) />
                 <EnumInput
@@ -382,7 +383,7 @@ fn Effect(
                 <div class="input-help">"Modify the demand for a single industry by a percentage."</div>
                 <EntityPicker
                     label="Industry"
-                    opts={expect_context::<Signal<Collection<Industry>>>()}
+                    opts=industries
                     help="Which industry is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryDemand([id], value)) />
                 <PercentInput
@@ -395,7 +396,7 @@ fn Effect(
                 <div class="input-help">"Modify the probability of an event occurring."</div>
                 <EntityPicker
                     label="Event"
-                    opts={expect_context::<Signal<Collection<Event>>>()}
+                    opts=events
                     help="Which event will be affected."
                     signal=enum_slice!(|write| Effect::ModifyEventProbability([id], value)) />
                 <PercentInput
@@ -428,7 +429,7 @@ fn Effect(
                 <div class="input-help">"Modifies the cost a project by a percentage."</div>
                 <EntityPicker
                     label="Project"
-                    opts={expect_context::<Signal<Collection<Project>>>()}
+                    opts=projects
                     help="Which project is affected."
                     signal=enum_slice!(|write| Effect::ProjectCostModifier([id], change)) />
                 <PercentInput

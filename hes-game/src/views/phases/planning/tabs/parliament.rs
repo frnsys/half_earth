@@ -8,7 +8,7 @@ use crate::{
 };
 use hes_engine::{events::Flag, Id};
 use leptos::*;
-use std::{collections::HashMap, sync::OnceLock};
+use std::{collections::BTreeMap, sync::OnceLock};
 
 #[component]
 pub fn Parliament() -> impl IntoView {
@@ -27,7 +27,9 @@ pub fn Parliament() -> impl IntoView {
     });
 
     let (extra_seats, set_extra_seats) =
-        create_signal::<HashMap<Id, usize>>(HashMap::default());
+        create_signal::<BTreeMap<Id, usize>>(
+            BTreeMap::default(),
+        );
     let (coalition_seats, set_coalition_seats) =
         create_signal(0);
 

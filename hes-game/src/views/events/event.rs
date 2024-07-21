@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Deref};
+use std::{collections::BTreeMap, ops::Deref};
 
 use super::{Dialogue, DisplayEvent};
 use crate::{
@@ -70,7 +70,7 @@ pub fn Event(
 
     let ctx = move || {
         with!(|event| {
-            let mut ctx = HashMap::default();
+            let mut ctx = BTreeMap::default();
             if let Some((_, name)) = &event.region {
                 ctx.insert(
                     "region".to_string(),

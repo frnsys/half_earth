@@ -1,6 +1,8 @@
+mod conditions;
 mod effects;
 
 use base64::prelude::*;
+pub use conditions::Conditions;
 pub use effects::Effects;
 use hes_engine::{
     flavor::{Image, ImageData},
@@ -26,6 +28,17 @@ use strum::IntoEnumIterator;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{Blob, File};
+
+/// Conveniently create a slice from an enum variant.
+#[macro_export]
+macro_rules! enum_slice {
+    (|$write_signal:ident| $enum:ident::$variant:ident($($before:ident,)* [ $arg:ident ] $(, $after:ident)*)) => {
+        (
+            Signal::derive(move || $arg),
+            SignalSetter::map(move |$arg| $write_signal.set($enum::$variant($($before,)* $arg $(, $after)*)))
+        )
+    };
+}
 
 #[component]
 pub fn TextInput(
@@ -513,6 +526,31 @@ where
     }
 }
 
+pub struct Ref<T: ?Sized> {
+    id: Id,
+    label: String,
+    marker: std::marker::PhantomData<T>,
+}
+
+impl<T: ?Sized> HasId for Ref<T> {
+    fn id(&self) -> &Id {
+        &self.id
+    }
+}
+
+pub trait AsRef {
+    fn as_ref(&self) -> Ref<Self>;
+}
+impl<T: ?Sized + HasId + Display + 'static> AsRef for T {
+    fn as_ref(&self) -> Ref<T> {
+        Ref {
+            id: *self.id(),
+            label: self.to_string(),
+            marker: std::marker::PhantomData,
+        }
+    }
+}
+
 #[component]
 pub fn MultiEntitySelect<T: HasId + Display + 'static>(
     signal: (Signal<Vec<Id>>, SignalSetter<Vec<Id>>),
@@ -561,9 +599,9 @@ pub fn MultiEntitySelect<T: HasId + Display + 'static>(
 }
 
 #[component]
-pub fn EntityPicker<T: HasId + Display + 'static>(
+pub fn EntityPicker<T: AsRef + 'static>(
     signal: (Signal<Id>, SignalSetter<Id>),
-    opts: Signal<Collection<T>>,
+    opts: Signal<Collection<Ref<T>>>,
     #[prop(into, optional)] label: String,
     #[prop(into, optional)] help: String,
 ) -> impl IntoView {
@@ -573,7 +611,7 @@ pub fn EntityPicker<T: HasId + Display + 'static>(
     // if a matching one exists.
     let initial = opts.with_untracked(|opts| {
         opts.try_get(&read.get_untracked())
-            .map(|v| v.to_string())
+            .map(|v| v.label.clone())
             .unwrap_or_default()
     });
     let filter = create_rw_signal(initial);
@@ -585,7 +623,7 @@ pub fn EntityPicker<T: HasId + Display + 'static>(
     let selected = move || {
         with!(|read, opts| opts
             .try_get(&read)
-            .map(|v| v.to_string())
+            .map(|v| v.label.clone())
             .unwrap_or("(None)".into()))
     };
 
@@ -595,12 +633,12 @@ pub fn EntityPicker<T: HasId + Display + 'static>(
         with!(|filter, opts| opts
             .iter()
             .filter(|opt| opt
-                .to_string()
+                .label
                 .to_lowercase()
                 .contains(&filter.to_lowercase()))
             .map(|opt| {
                 let id = *opt.id();
-                let label = opt.to_string();
+                let label = opt.label.clone();
                 view! {
                     <div class="picker-opt" on:click=move |_| {
                         write.set(id);
@@ -699,6 +737,46 @@ pub fn ImageInput(
                 }
             />
             <div class="input-help">{help}</div>
+        </div>
+    }
+}
+
+#[component]
+pub fn OptionalImageInput(
+    signal: (
+        Signal<Option<Image>>,
+        SignalSetter<Option<Image>>,
+    ),
+) -> impl IntoView {
+    let (read, write) = signal;
+    let maybe_val = create_rw_signal(read.get_untracked());
+    let value = create_rw_signal(
+        read.get_untracked().unwrap_or_else(Image::default),
+    );
+
+    view! {
+        <div class="input-group option-group">
+            <ToggleInput
+                label="Include Image"
+                help=""
+                signal=create_slice(maybe_val,
+                    move |opt| opt.is_some(),
+                    move |opt, val| {
+                        if val {
+                            *opt = Some(value.get());
+                        } else {
+                            *opt = None;
+                        }
+                    }) />
+            <Show when=move || with!(|maybe_val| maybe_val.is_some())>
+                <ImageInput
+                    signal=create_slice(maybe_val,
+                        move |opt| opt.clone().unwrap(),
+                        move |opt, val: Image| {
+                            opt.insert(val.clone());
+                            value.set(val);
+                        }) />
+            </Show>
         </div>
     }
 }

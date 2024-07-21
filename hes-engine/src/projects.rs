@@ -18,6 +18,7 @@ use strum::{
 };
 
 #[derive(
+    Display,
     Serialize,
     Deserialize,
     Debug,
@@ -25,6 +26,9 @@ use strum::{
     Clone,
     PartialEq,
     Default,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
 )]
 pub enum Status {
     #[default]

@@ -43,14 +43,11 @@ select {
   font-family: "Inter", system-ui, sans-serif;
 }
 
-main {
-  padding: 1em;
-}
-
 #tabs {
   display: flex;
   justify-content: center;
-  margin: 0 0 2em 0;
+  padding: 1em;
+  background: #121212;
 }
 .tab {
   cursor: pointer;
@@ -229,4 +226,16 @@ main {
 }
 .picker-selected:hover {
   background: #009B68;
+}
+
+/* Necessary for infinite scroll to work correctly. */
+main {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+}
+.scroll-list {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 1em;
 }

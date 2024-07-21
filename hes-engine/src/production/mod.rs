@@ -2,7 +2,7 @@
 mod planner;
 mod processes;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 pub use self::{
     planner::{calculate_required, ProductionOrder},
@@ -23,7 +23,7 @@ pub fn produce(
     resources: &ResourceMap,
     feedstocks: &FeedstockMap,
 ) -> (
-    HashMap<Id, f32>,
+    BTreeMap<Id, f32>,
     OutputMap,
     ResourceMap,
     FeedstockMap,

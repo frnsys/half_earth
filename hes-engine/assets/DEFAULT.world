@@ -12708,7 +12708,6 @@
             "occurred": false,
             "id": "098b1277-1f05-476e-a69e-7c942b6defcc",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -12801,7 +12800,6 @@
             "occurred": false,
             "id": "b51f6f05-fb22-4836-ad78-9b83d3a5fbca",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -12891,7 +12889,6 @@
             "occurred": false,
             "id": "1857e385-85b4-406f-aeaa-aae19e77a307",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -12978,7 +12975,6 @@
             "occurred": false,
             "id": "74f4e082-7376-49e2-ae51-30efd493ddbb",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -13077,7 +13073,6 @@
             "occurred": false,
             "id": "13bd64cb-3767-40b4-a117-c5f8cb939b0c",
             "phase": "WorldStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -13197,7 +13192,6 @@
             "occurred": false,
             "id": "6880f9ee-5dc0-49ec-8563-1ea9c6289b97",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -13333,7 +13327,6 @@
             "occurred": false,
             "id": "1dcb35ec-e1b6-4998-99e7-6d4c1cd34a41",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -13472,7 +13465,6 @@
             "occurred": false,
             "id": "3caaf7de-9d80-499e-bd26-62dcf8954f90",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -13651,7 +13643,6 @@
             "occurred": false,
             "id": "2db3df05-b506-4a82-a502-f0b5baa84a24",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -13756,7 +13747,6 @@
             "occurred": false,
             "id": "408c8db0-4a40-4068-8a82-b14ce1b17c45",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -13835,7 +13825,6 @@
             "occurred": false,
             "id": "ea8f80a8-7c63-44e7-9dd2-8537d11f9634",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -13990,7 +13979,6 @@
             "occurred": false,
             "id": "c91f4499-ea10-4505-96bf-f5732e308ec4",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -14100,7 +14088,6 @@
             "occurred": false,
             "id": "c603984b-f0aa-4a06-8112-7994471d7843",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -14233,7 +14220,6 @@
             "occurred": false,
             "id": "42588bf4-78a1-4f16-bb74-a621ccc10f46",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -14367,7 +14353,6 @@
             "occurred": false,
             "id": "33b20844-7d8c-486f-bfe8-09d1e9e9bd11",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -14461,7 +14446,6 @@
             "occurred": false,
             "id": "77625b4f-d3d1-4a24-8639-d521048bae77",
             "phase": "PlanningRegions",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -14557,7 +14541,6 @@
             "occurred": false,
             "id": "4dfe2d65-af2b-4ac6-a16b-cb7e10e6a6b7",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -14751,7 +14734,6 @@
             "occurred": false,
             "id": "80d4da01-d7a7-40a4-8322-70a8edf4b3f7",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -14876,7 +14858,6 @@
             "occurred": false,
             "id": "75a6d908-13e4-4402-842e-cadc15fadb66",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -14982,7 +14963,6 @@
             "occurred": false,
             "id": "081e48d4-0696-4f0b-a090-1e1ff899a0ce",
             "phase": "PlanningPlanChange",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -15024,7 +15004,6 @@
             "occurred": false,
             "id": "e7d803e5-0eda-4e6f-a48d-11cac87a72d3",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -15084,7 +15063,6 @@
             "occurred": false,
             "id": "4dfeef4f-41b2-435b-b57e-56d8e9f04e64",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -15155,7 +15133,6 @@
             "occurred": false,
             "id": "bd7f16f8-93f3-4ef5-b7b8-5a44ee10cd4b",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -15225,7 +15202,6 @@
             "occurred": false,
             "id": "cb8664ec-cffc-4a8a-9043-d6027d50d53a",
             "phase": "PlanningPlanChange",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -15267,7 +15243,6 @@
             "occurred": false,
             "id": "79ebaaa3-9afe-4960-9ab9-f02cbbea1e60",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -15414,7 +15389,6 @@
             "occurred": false,
             "id": "ce78ece6-68ce-40ee-a77e-88709c056763",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -15504,7 +15478,6 @@
             "occurred": false,
             "id": "85dd8e47-57f5-4b8e-bab2-abb4cb4eb664",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -15619,7 +15592,6 @@
             "occurred": false,
             "id": "43fedc64-cb42-4e30-920d-e359c2be357b",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -15709,7 +15681,6 @@
             "occurred": false,
             "id": "70b7fa03-7c31-4c9a-9525-435d018c4cc9",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -15786,7 +15757,6 @@
             "occurred": false,
             "id": "f3f2536c-b4dd-44c5-8f95-ab2457383312",
             "phase": "PlanningPlanChange",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -15859,7 +15829,6 @@
             "occurred": false,
             "id": "cbeea913-8cdf-429f-b233-b33db99258ff",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -16049,7 +16018,6 @@
             "occurred": false,
             "id": "bb0beeef-5bd1-48e6-8699-0e7a8f9e6341",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -16140,7 +16108,6 @@
             "occurred": false,
             "id": "e5c3124f-0614-4f18-ab32-938bb8a972da",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -16226,7 +16193,6 @@
             "occurred": false,
             "id": "54908085-31ba-485e-a95a-9abe159b9e10",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -16303,7 +16269,6 @@
             "occurred": false,
             "id": "e47c32c2-fb48-433f-b3ef-9578c29daf25",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -16382,7 +16347,6 @@
             "occurred": false,
             "id": "bf411bb6-5468-4925-8953-2b6bca80bdf3",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -16493,7 +16457,6 @@
             "occurred": false,
             "id": "26cd44c1-a812-4f83-b7ba-a4a489b1517e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -16575,7 +16538,6 @@
             "occurred": false,
             "id": "15689ff4-b96c-4540-862a-38fd626b05b4",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -16720,7 +16682,6 @@
             "occurred": false,
             "id": "ac8c33f3-83a2-4dbc-aeeb-cebb649f82f5",
             "phase": "PlanningStart",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -16801,7 +16762,6 @@
             "occurred": false,
             "id": "94c4a720-e7e6-4279-b039-e4e200d3ffa0",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -17012,7 +16972,6 @@
             "occurred": false,
             "id": "357d0745-256c-4d50-8f6a-5b1ae43e18ec",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -17119,7 +17078,6 @@
             "occurred": false,
             "id": "9f1499b6-7b1e-4ce9-8974-554c271bc7b5",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -17211,7 +17169,6 @@
             "occurred": false,
             "id": "8aea86cc-332b-48dc-8c22-435ec802309c",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -17348,7 +17305,6 @@
             "occurred": false,
             "id": "ad232d03-7f13-4e2c-88a2-26c669a0ec92",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -17479,7 +17435,6 @@
             "occurred": false,
             "id": "18996d94-7a0b-437e-8842-09245dfe22eb",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -17571,7 +17526,6 @@
             "occurred": false,
             "id": "46efd0da-8a34-4bd4-9918-2258072602a6",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -17645,7 +17599,6 @@
             "occurred": false,
             "id": "b46aab33-d6e3-416b-a317-3b2ce6873980",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -17731,7 +17684,6 @@
             "occurred": false,
             "id": "5ba5cadc-5e78-483d-a0b2-bbad08df1d55",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -17825,7 +17777,6 @@
             "occurred": false,
             "id": "d0b90f38-036b-49b5-9e40-32ddb18e5903",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -17912,7 +17863,6 @@
             "occurred": false,
             "id": "9f982627-9354-4658-8ace-e632a129cb36",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -17967,7 +17917,6 @@
             "occurred": false,
             "id": "256ec719-4119-4752-ae0e-6a44b0b5d6bc",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -18085,7 +18034,6 @@
             "occurred": false,
             "id": "14cbe308-4cfb-4507-b61d-beedadd21dd1",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -18168,7 +18116,6 @@
             "occurred": false,
             "id": "ccdd92d2-c2dc-4ab5-8602-49399f069956",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -18223,7 +18170,6 @@
             "occurred": false,
             "id": "73640f8a-d632-459b-8469-a72c6a53c5d2",
             "phase": "Icon",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -18290,7 +18236,6 @@
             "occurred": false,
             "id": "d5139a29-9d43-4ec1-b11c-69b1ca7df6c4",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -18369,7 +18314,6 @@
             "occurred": false,
             "id": "9356d721-aafb-45d0-a876-f4e7553ef994",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -18455,7 +18399,6 @@
             "occurred": false,
             "id": "1dd4209c-6254-4097-8ffe-8ac3a94dece7",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -18558,7 +18501,6 @@
             "occurred": false,
             "id": "51ee721f-05c5-46d5-a4d5-8edd548a6902",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -18632,7 +18574,6 @@
             "occurred": false,
             "id": "e10f5910-abeb-4043-aee5-f3cecc71497b",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -18816,7 +18757,6 @@
             "occurred": false,
             "id": "2386fb2e-2d99-477f-ae3b-82d1ae24e2f2",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -18915,7 +18855,6 @@
             "occurred": false,
             "id": "6b585c8d-8db9-4323-bc7d-6154668bee27",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -19040,7 +18979,6 @@
             "occurred": false,
             "id": "660f1959-fc2f-4d5b-9346-8a13d0412724",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -19116,7 +19054,6 @@
             "occurred": false,
             "id": "b119634a-8473-4eab-b8bd-4dcd30c654a9",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -19247,7 +19184,6 @@
             "occurred": false,
             "id": "bc3fa2bd-d521-4a06-a21c-89e88cab56cd",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -19317,7 +19253,6 @@
             "occurred": false,
             "id": "9cdc23d5-170b-4432-9968-f25b7ad8d0c3",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -19384,7 +19319,6 @@
             "occurred": false,
             "id": "97052ffd-29dc-48e2-8dd8-13f98a63297c",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -19471,7 +19405,6 @@
             "occurred": false,
             "id": "24355471-2967-4697-a13f-254f6755d3b3",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -19570,7 +19503,6 @@
             "occurred": false,
             "id": "6dae3011-7117-49b2-91b3-fe0e70353609",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -19662,7 +19594,6 @@
             "occurred": false,
             "id": "39bb56d1-fb19-47dd-bfcf-187b348666a9",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -19741,7 +19672,6 @@
             "occurred": false,
             "id": "4de68a2f-bb1f-4d20-8ec3-a3dd67dabcf6",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -19817,7 +19747,6 @@
             "occurred": false,
             "id": "4c9925e3-cb5d-4b7f-9105-ef4e8553bac5",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -19903,7 +19832,6 @@
             "occurred": false,
             "id": "8911dec8-cd39-40b9-9c8c-6718e8940c57",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -19997,7 +19925,6 @@
             "occurred": false,
             "id": "b6ff6b53-e3c2-4a75-9765-9e3c1ba3d553",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -20127,7 +20054,6 @@
             "occurred": false,
             "id": "f290da38-6eb5-4de6-82cf-f01d09b8be99",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -20212,7 +20138,6 @@
             "occurred": false,
             "id": "e5ba52e1-103d-4327-8b79-e2057aa65e28",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -20267,7 +20192,6 @@
             "occurred": false,
             "id": "52535f04-87af-4f07-b060-b5263e434b77",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -20368,7 +20292,6 @@
             "occurred": false,
             "id": "9a071e16-712e-4497-89c5-dea1ae121c89",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -20447,7 +20370,6 @@
             "occurred": false,
             "id": "7b7df514-53e5-4b12-900a-cf58762c2fc5",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -20584,7 +20506,6 @@
             "occurred": false,
             "id": "177af2fa-f472-4894-b111-07345846c6fc",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -20691,7 +20612,6 @@
             "occurred": false,
             "id": "422d9a58-8f1f-4912-b31a-fdf0f91108e1",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -20758,7 +20678,6 @@
             "occurred": false,
             "id": "10edf1cb-95a3-4746-baac-5ed881392dd1",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -20844,7 +20763,6 @@
             "occurred": false,
             "id": "11b11f93-d1c6-4f0b-8be1-9e2de4e25438",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -20958,7 +20876,6 @@
             "occurred": false,
             "id": "d2b5a188-b4d4-4422-85ca-ed5066194a84",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -21043,7 +20960,6 @@
             "occurred": false,
             "id": "ad1b5c84-2fa5-49ea-83d2-94002c4555e9",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -21177,7 +21093,6 @@
             "occurred": false,
             "id": "37427010-7ca0-446a-ae79-4c469ce00695",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -21241,7 +21156,6 @@
             "occurred": false,
             "id": "9465cf57-83b7-41b3-9510-d671c41e255c",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -21360,7 +21274,6 @@
             "occurred": false,
             "id": "65437f9b-a4bd-4880-9a2f-c72932805204",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -21459,7 +21372,6 @@
             "occurred": false,
             "id": "b6bea637-20e3-45f4-bcc4-88299c62c641",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -21580,7 +21492,6 @@
             "occurred": false,
             "id": "81b65380-c337-4cbc-bd0a-ac580fb71a2a",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -21705,7 +21616,6 @@
             "occurred": false,
             "id": "0a97f4e5-c7c8-40fa-9ab8-e9cfd8401fca",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -21812,7 +21722,6 @@
             "occurred": false,
             "id": "481522ce-45e3-4486-834d-396c58bf3e75",
             "phase": "Icon",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -21858,7 +21767,6 @@
             "occurred": false,
             "id": "22788128-7da4-4ee3-b5bc-5beb5bb4693e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -21932,7 +21840,6 @@
             "occurred": false,
             "id": "17e937d7-ae7e-4d13-aee7-2f5c1129e879",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -22003,7 +21910,6 @@
             "occurred": false,
             "id": "3c3b8cc1-d0d4-4849-bdac-2d782c0523b3",
             "phase": "PlanningPolicies",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -22101,7 +22007,6 @@
             "occurred": false,
             "id": "6d988b21-c531-4ff0-b336-aff8f5e231e6",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -22166,7 +22071,6 @@
             "occurred": false,
             "id": "be3ea99e-d157-4fe2-adcf-1df28926ecec",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -22245,7 +22149,6 @@
             "occurred": false,
             "id": "93a8e733-5883-443a-abca-e5155f235236",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -22324,7 +22227,6 @@
             "occurred": false,
             "id": "74519ddb-a011-4fe8-b6c7-01c531f95d88",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -22419,7 +22321,6 @@
             "occurred": false,
             "id": "a0445022-d606-4288-847e-50f0820a1282",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -22574,7 +22475,6 @@
             "occurred": false,
             "id": "cda3d23e-b687-4552-8ed6-60b3f296266a",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -22876,7 +22776,6 @@
             "occurred": false,
             "id": "6e410be9-0c8c-4e1e-939b-2c69dbdc4c6e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -22956,7 +22855,6 @@
             "occurred": false,
             "id": "5cfc6e18-a2ca-42c5-9118-7496f39143c5",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -23118,7 +23016,6 @@
             "occurred": false,
             "id": "7deb850f-9c61-4773-a45d-ec00a3d60f20",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -23192,7 +23089,6 @@
             "occurred": false,
             "id": "63a210a3-effd-4699-894b-979a212b3708",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -23327,7 +23223,6 @@
             "occurred": false,
             "id": "33998ed9-800b-47b0-9b69-9c87d41df6aa",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -23434,7 +23329,6 @@
             "occurred": false,
             "id": "ac0c5f31-d7c4-48e0-b81a-0b29f892f390",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -23511,7 +23405,6 @@
             "occurred": false,
             "id": "92addd22-e63b-4de0-9324-903931a3d2a5",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -23666,7 +23559,6 @@
             "occurred": false,
             "id": "acea0691-de42-4fdc-87fa-8e327b71fb3a",
             "phase": "PlanningDashboard",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -23749,7 +23641,6 @@
             "occurred": false,
             "id": "39d9d72b-0340-4073-96ea-944c20b1c654",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -23837,7 +23728,6 @@
             "occurred": false,
             "id": "abe24b17-db08-431b-9e9b-be700c2db669",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -23976,7 +23866,6 @@
             "occurred": false,
             "id": "2221e2ff-15cc-4bcf-b47b-22687ebc9fce",
             "phase": "CutsceneIntro",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -24101,7 +23990,6 @@
             "occurred": false,
             "id": "0b228d79-66c2-4097-a84d-e67a10e27aa8",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -24189,7 +24077,6 @@
             "occurred": false,
             "id": "013b1f4e-eff2-40a4-af25-f080d7f9ce2f",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -24332,7 +24219,6 @@
             "occurred": false,
             "id": "0bb3f839-466c-438e-b5a1-e1eaf77f51a6",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -24408,7 +24294,6 @@
             "occurred": false,
             "id": "066807cc-4e84-4887-98f5-8673a4710d85",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -24485,7 +24370,6 @@
             "occurred": false,
             "id": "904ddf15-f296-496f-b3ef-5056f3f92d33",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -24564,7 +24448,6 @@
             "occurred": false,
             "id": "1ee26c89-e683-489e-aa18-603c4f66002f",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -24743,7 +24626,6 @@
             "occurred": false,
             "id": "fc84a530-5764-4649-87c5-bc351e154d7e",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -24786,7 +24668,6 @@
             "occurred": false,
             "id": "dcdbfe7f-bbd4-4402-9b03-12878e1c93a8",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -24875,7 +24756,6 @@
             "occurred": false,
             "id": "a36a69a3-4a37-4959-9b0a-edeef4113532",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -24960,7 +24840,6 @@
             "occurred": false,
             "id": "3d6e56fc-5980-40f1-b936-ac677b1e182d",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -25071,7 +24950,6 @@
             "occurred": false,
             "id": "61cedaf6-4799-498a-8fac-fc1fac0fb36b",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -25158,7 +25036,6 @@
             "occurred": false,
             "id": "63dc208b-a67b-4b76-86b2-fbb13f0cfb77",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -25294,7 +25171,6 @@
             "occurred": false,
             "id": "58c01dcb-c293-4ee7-bdb3-9ac2e4de4f44",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -25442,7 +25318,6 @@
             "occurred": false,
             "id": "e7f12623-2f47-48ca-a601-3d66da4b0bc0",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -25540,7 +25415,6 @@
             "occurred": false,
             "id": "f282e2ef-85b4-4a76-8f9a-2f4cffba3fa5",
             "phase": "PlanningResearch",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -25599,7 +25473,6 @@
             "occurred": false,
             "id": "4959e7e6-95ce-4eb7-b532-8183086ce8bf",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -25678,7 +25551,6 @@
             "occurred": false,
             "id": "5a77da8d-fd63-4377-a023-612f203dd510",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -25808,7 +25680,6 @@
             "occurred": false,
             "id": "48fef967-f697-445e-ae3f-f050c471bda1",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -25880,7 +25751,6 @@
             "occurred": false,
             "id": "2bd5e69c-36f0-4e9c-aec0-d0d35e7260bf",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -25992,7 +25862,6 @@
             "occurred": false,
             "id": "16bcc5d5-baa4-402f-a1b4-5e982414a16e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -26095,7 +25964,6 @@
             "occurred": false,
             "id": "efdcfb6b-2678-4b03-ac6b-5af43c073060",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -26189,7 +26057,6 @@
             "occurred": false,
             "id": "393d9811-6308-474d-a8b3-5d06b543feca",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -26300,7 +26167,6 @@
             "occurred": false,
             "id": "64c73fcd-f432-4e1f-8969-dba5269093db",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -26375,7 +26241,6 @@
             "occurred": false,
             "id": "3d89be70-7e40-43dc-b6d7-99eb6f877387",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -26468,7 +26333,6 @@
             "occurred": false,
             "id": "2ff77278-608a-43d9-9837-5585bac74779",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -26567,7 +26431,6 @@
             "occurred": false,
             "id": "fae78cd7-f8cb-4db8-ba37-add5744e25a0",
             "phase": "PlanningResearch",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -26670,7 +26533,6 @@
             "occurred": false,
             "id": "f84dbf3b-93e5-446d-9f3d-81524ec2d963",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -26741,7 +26603,6 @@
             "occurred": false,
             "id": "7f03c8a7-cfd5-4f81-b128-195119f48fc2",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -26834,7 +26695,6 @@
             "occurred": false,
             "id": "a297ddc9-a675-4525-8db2-b25b0cfe0f65",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -26901,7 +26761,6 @@
             "occurred": false,
             "id": "a10c4d64-838f-453f-8d49-82c0de4999cc",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -27011,7 +26870,6 @@
             "occurred": false,
             "id": "e1b287c6-3ae1-4ada-a9d4-e148df188ac1",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -27098,7 +26956,6 @@
             "occurred": false,
             "id": "383ae8b7-f607-47e9-a43c-ab599984b859",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -27190,7 +27047,6 @@
             "occurred": false,
             "id": "574f0668-d959-4af8-8402-b91ce22b26d1",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -27342,7 +27198,6 @@
             "occurred": false,
             "id": "d023b6a1-67de-45bf-b79d-d9df7dc8ea65",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -27406,7 +27261,6 @@
             "occurred": false,
             "id": "f60f8562-c1e4-4f93-aba9-b69fc1eb68ea",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -27510,7 +27364,6 @@
             "occurred": false,
             "id": "4441079f-f869-459d-b7e5-d1f59bc6e547",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -27618,7 +27471,6 @@
             "occurred": false,
             "id": "b1287e01-e9ef-4ca7-b978-a3dd902431bc",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -27715,7 +27567,6 @@
             "occurred": false,
             "id": "ee0bd7a0-7f1d-4594-afac-d9f917afe11e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -27840,7 +27691,6 @@
             "occurred": false,
             "id": "1dd1a55c-0fae-4333-8684-d20ee204af61",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -27931,7 +27781,6 @@
             "occurred": false,
             "id": "170adb14-ebab-4595-b31e-8b7749b03106",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -27997,7 +27846,6 @@
             "occurred": false,
             "id": "840c08f5-6087-44de-bcd4-b4b13d2b9fab",
             "phase": "PlanningInitiatives",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -28073,7 +27921,6 @@
             "occurred": false,
             "id": "9e2e55bd-3cf8-44b7-ac56-071880e5e4ae",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -28148,7 +27995,6 @@
             "occurred": false,
             "id": "dbf54144-eb40-491a-804b-f846fc0fb0cf",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -28198,7 +28044,6 @@
             "occurred": false,
             "id": "9b0cbc18-2e3c-4472-bc3d-9a402db7c32a",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -28368,7 +28213,6 @@
             "occurred": false,
             "id": "1a1d1195-0a0c-4abb-a569-b4a5cb6ff265",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -28442,7 +28286,6 @@
             "occurred": false,
             "id": "ab77971c-1a14-4304-9799-4985c7d8a906",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -28523,7 +28366,6 @@
             "occurred": false,
             "id": "13494ce7-488b-4921-843d-ece73bc2875c",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -28608,7 +28450,6 @@
             "occurred": false,
             "id": "ce518334-a6e3-43ad-9f2a-8ea8efa72a9b",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -28700,7 +28541,6 @@
             "occurred": false,
             "id": "90fb50b4-077a-4325-845a-abf2c1bb6f52",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -28755,7 +28595,6 @@
             "occurred": false,
             "id": "05d11dce-3220-49fa-8cb9-122cede67c25",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -28845,7 +28684,6 @@
             "occurred": false,
             "id": "9d110ea1-7da5-45dc-8d0c-a1d807d9cd72",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -28941,7 +28779,6 @@
             "occurred": false,
             "id": "fa800ff1-64b2-4384-87d7-2b0bbea35dc3",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Improbable",
@@ -29014,7 +28851,6 @@
             "occurred": false,
             "id": "5ba6f6c4-8d74-4438-9e33-35cc7727f3f3",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -29128,7 +28964,6 @@
             "occurred": false,
             "id": "dd3b4714-3a84-4721-99ef-c021afb4337c",
             "phase": "PlanningProcesses",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -29251,7 +29086,6 @@
             "occurred": false,
             "id": "abf998f8-ab08-4d1c-91c4-b518ff6a5b9d",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -29409,7 +29243,6 @@
             "occurred": false,
             "id": "2b1a9267-3900-44aa-a8c1-2554e90c4445",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -29592,7 +29425,6 @@
             "occurred": false,
             "id": "c8f801f2-a7fd-49cf-b298-d60067120d3e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -29766,7 +29598,6 @@
             "occurred": false,
             "id": "12ea4cab-32d1-47a7-9184-bbf5164ef92a",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -29883,7 +29714,6 @@
             "occurred": false,
             "id": "8468af50-5ab9-49cc-b344-d154eaa54bc1",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -29967,7 +29797,6 @@
             "occurred": false,
             "id": "5a527fc0-6569-4327-a6b5-0428892ffdf9",
             "phase": "PlanningParliament",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -30327,7 +30156,6 @@
             "occurred": false,
             "id": "075d9942-6a0b-4d9c-818e-8ecf5aa275a3",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -30399,7 +30227,6 @@
             "occurred": false,
             "id": "c7238a98-d8c5-4b29-8323-6b6fd1750348",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -30463,7 +30290,6 @@
             "occurred": false,
             "id": "7005fce2-9879-44bc-8294-72967af961a6",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -30568,7 +30394,6 @@
             "occurred": false,
             "id": "aaf1feb8-fe74-4c48-a560-47f5b238bb77",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -30629,7 +30454,6 @@
             "occurred": false,
             "id": "db6d54f1-9368-4cf0-abaf-f9682327436e",
             "phase": "WorldMain",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -30761,7 +30585,6 @@
             "occurred": false,
             "id": "4a51747a-c8bd-4556-a7bc-bf6a73aaf873",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -30851,7 +30674,6 @@
             "occurred": false,
             "id": "29e503db-e14f-4221-a632-6ad9affceba3",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -30939,7 +30761,6 @@
             "occurred": false,
             "id": "8f123a6c-6f6e-4fcb-a555-81998110a2bf",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -31134,7 +30955,6 @@
             "occurred": false,
             "id": "596359cc-ec5f-45ba-a1ff-ba9ebdd9040f",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -31276,7 +31096,6 @@
             "occurred": false,
             "id": "7e6f9ef3-4c68-41b5-bfbe-d4dcaf2dc4c1",
             "phase": "PlanningPlanChange",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -31318,7 +31137,6 @@
             "occurred": false,
             "id": "dbbbe26d-b629-4890-b320-c2b7cfc50f28",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -31401,7 +31219,6 @@
             "occurred": false,
             "id": "c398c26c-e6ba-49ac-8f6e-f992ca4ccada",
             "phase": "Icon",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -31447,7 +31264,6 @@
             "occurred": false,
             "id": "a6547faa-9d88-4dda-883e-b9b9cf166d99",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -31606,7 +31422,6 @@
             "occurred": false,
             "id": "d87e290a-e46a-459c-9d6d-2b5a5d76be56",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -31802,7 +31617,6 @@
             "occurred": false,
             "id": "3c832111-ef89-42e2-9024-ec670f8febb0",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -31915,7 +31729,6 @@
             "occurred": false,
             "id": "ff68b15b-28ed-48cf-828d-0c071171656f",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -32035,7 +31848,6 @@
             "occurred": false,
             "id": "e4edbcba-71aa-4e7a-886d-5199d9b67227",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -32118,7 +31930,6 @@
             "occurred": false,
             "id": "d2cdbed6-e388-4222-925f-d8e47902a382",
             "phase": "WorldStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -32209,7 +32020,6 @@
             "occurred": false,
             "id": "5bf68190-dbc5-46cc-b673-c312fb2c2c4e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -32286,7 +32096,6 @@
             "occurred": false,
             "id": "d31078d2-27c6-4ab2-8b80-cd93d37457c7",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -32381,7 +32190,6 @@
             "occurred": false,
             "id": "9845b897-6235-4344-a2eb-b9599c5dfdee",
             "phase": "InterstitialWin",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -32459,7 +32267,6 @@
             "occurred": false,
             "id": "d1c26be5-8055-47b7-8895-aafaf9675013",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -32529,7 +32336,6 @@
             "occurred": false,
             "id": "3e95b4f1-3099-45b6-9d2f-ee47760bcfff",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -32642,7 +32448,6 @@
             "occurred": false,
             "id": "2e0e4e55-9344-45d3-8e21-4fb1b0e1b2e3",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -32721,7 +32526,6 @@
             "occurred": false,
             "id": "0e021a9d-3a08-4987-aef5-4374b05f2877",
             "phase": "WorldStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -32816,7 +32620,6 @@
             "occurred": false,
             "id": "a62123fd-7290-4bbf-8665-e9ff5654d25f",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -32950,7 +32753,6 @@
             "occurred": false,
             "id": "54fc4867-c13b-426c-bfa4-7071ed0e8cd1",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -33051,7 +32853,6 @@
             "occurred": false,
             "id": "c1235da3-f915-4953-9690-d2e607928639",
             "phase": "ReportStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -33143,7 +32944,6 @@
             "occurred": false,
             "id": "bc140c6a-fedf-4f59-b7dc-9f824b08f481",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -33246,7 +33046,6 @@
             "occurred": false,
             "id": "f26afb3d-8983-4da6-a972-3463dfff4f64",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -33301,7 +33100,6 @@
             "occurred": false,
             "id": "710308f2-f5dc-4999-9e89-1df6dee811e8",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -33411,7 +33209,6 @@
             "occurred": false,
             "id": "a1fa92a6-199d-4275-8721-1a224c71a862",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -33525,7 +33322,6 @@
             "occurred": false,
             "id": "56343ea3-1762-4b32-819a-dbf481721c5e",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -33618,7 +33414,6 @@
             "occurred": false,
             "id": "902dca67-023d-4312-aa8e-84ba521b52e3",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -33677,7 +33472,6 @@
             "occurred": false,
             "id": "a146d743-cff3-4e72-9b67-d5eb8b18c166",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -33756,7 +33550,6 @@
             "occurred": false,
             "id": "03a66dbb-a6e1-40b1-9fe0-7f49219de606",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -33923,7 +33716,6 @@
             "occurred": false,
             "id": "d7b735b7-9b22-468e-bbb0-21dd87a8513b",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -34040,7 +33832,6 @@
             "occurred": false,
             "id": "04ec7325-a720-4187-98ea-e8e730e7baf3",
             "phase": "Icon",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -34093,7 +33884,6 @@
             "occurred": false,
             "id": "e5cb190d-64ad-48fc-8fb4-bf1495628db4",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -34194,7 +33984,6 @@
             "occurred": false,
             "id": "19712b63-6dcd-4e36-9bf0-dd3d04374493",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -34286,7 +34075,6 @@
             "occurred": false,
             "id": "a9cd6bb5-364e-4250-a3bb-ba8355af3565",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Impossible",
@@ -34413,7 +34201,6 @@
             "occurred": false,
             "id": "c4b0939e-432b-4be6-8d89-93fb7fa3c0d2",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -34494,7 +34281,6 @@
             "occurred": false,
             "id": "b9d37997-30c0-4260-be19-d1b745a97652",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -34561,7 +34347,6 @@
             "occurred": false,
             "id": "19ff8f3a-365a-4b30-ad0f-2a7e70d91de3",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -34681,7 +34466,6 @@
             "occurred": false,
             "id": "ecdd21d1-3e16-4e36-bedc-e7e2ad85d21d",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -34774,7 +34558,6 @@
             "occurred": false,
             "id": "fd137482-c245-42f0-aa75-b1f510edf335",
             "phase": "PlanningInitiatives",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -34854,7 +34637,6 @@
             "occurred": false,
             "id": "bcbd7512-e658-42b5-853d-79af945995fa",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -34987,7 +34769,6 @@
             "occurred": false,
             "id": "b6751dde-b076-4721-b9a1-552c903f3899",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -35117,7 +34898,6 @@
             "occurred": false,
             "id": "dc6e5cc0-588f-4b33-ad5b-1a0e9bae3205",
             "phase": "BreakStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -35201,7 +34981,6 @@
             "occurred": false,
             "id": "94338b4e-5626-401a-ad8f-d7c57d4a8a1a",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",
@@ -35333,7 +35112,6 @@
             "occurred": false,
             "id": "ca1fb183-6aad-4b3e-a5d7-43f388da526f",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -35418,7 +35196,6 @@
             "occurred": false,
             "id": "ee5d4582-8d36-47f7-bae5-17ebe314f11a",
             "phase": "Icon",
-            "regional": true,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -35464,7 +35241,6 @@
             "occurred": false,
             "id": "92a8d7a4-7193-4df7-a3c6-1ed29a6aea97",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -35573,7 +35349,6 @@
             "occurred": false,
             "id": "28382d3a-b7df-4cb1-867e-c57c87923a44",
             "phase": "PlanningStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -35690,7 +35465,6 @@
             "occurred": false,
             "id": "b7029ffa-2f2a-468c-94e8-7e5b58fa7aff",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Likely",
@@ -35830,7 +35604,6 @@
             "occurred": false,
             "id": "ed2247eb-a560-4814-8f88-8635be65bd8d",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -35908,7 +35681,6 @@
             "occurred": false,
             "id": "03a96f55-fa10-4b96-a9fd-fdd9e99fd685",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -35987,7 +35759,6 @@
             "occurred": false,
             "id": "4022863a-5518-4257-8cd2-f04984c483f2",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -36088,7 +35859,6 @@
             "occurred": false,
             "id": "d328dfee-b747-4518-9e74-2869605bceeb",
             "phase": "EndStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -36177,7 +35947,6 @@
             "occurred": false,
             "id": "9c845d45-2746-432a-ae04-18fe1818e641",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -36279,7 +36048,6 @@
             "occurred": false,
             "id": "6f76d18d-3d65-4e38-9fdd-5f0b5805e7dc",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Rare",
@@ -36393,7 +36161,6 @@
             "occurred": false,
             "id": "5f939189-7806-4587-930d-361058e28672",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -36467,7 +36234,6 @@
             "occurred": false,
             "id": "516cd1c8-ab6c-4e62-93c8-d548c0c0e5ea",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Random",
@@ -36548,7 +36314,6 @@
             "occurred": false,
             "id": "24cbf212-6084-4bcb-8dcb-76290c82983f",
             "phase": "PlanningPlan",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -36643,7 +36408,6 @@
             "occurred": false,
             "id": "4c7e5c86-2e33-4629-9945-53a4a48e0dc4",
             "phase": "InterstitialStart",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -36717,7 +36481,6 @@
             "occurred": false,
             "id": "c7e0f5bd-8615-461f-b1aa-bef44f5cc349",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Guaranteed",
@@ -36821,7 +36584,6 @@
             "occurred": false,
             "id": "568a6e98-4b3c-498e-89e9-659fdaec03c4",
             "phase": "WorldMain",
-            "regional": false,
             "probabilities": [
                 {
                     "likelihood": "Unlikely",

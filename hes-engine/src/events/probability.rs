@@ -1,10 +1,19 @@
 use serde::{Deserialize, Serialize};
+use strum::{EnumIter, EnumString, IntoStaticStr};
 
 use super::Condition;
 use crate::{state::State, Id};
 
 #[derive(
-    Debug, Copy, Clone, Serialize, Deserialize, PartialEq,
+    Debug,
+    Copy,
+    Clone,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
 )]
 pub enum Likelihood {
     Impossible,
@@ -54,6 +63,11 @@ pub struct Probability {
 }
 
 impl Probability {
+    /// If this probability has any regional conditions.
+    pub fn is_regional(&self) -> bool {
+        self.conditions.iter().any(|cond| cond.is_regional())
+    }
+
     pub fn eval(
         &self,
         state: &State,

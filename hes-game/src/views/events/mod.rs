@@ -2,7 +2,7 @@ mod dialogue;
 mod display;
 mod event;
 
-use std::{collections::HashMap, time::Duration};
+use std::time::Duration;
 
 pub use dialogue::Dialogue;
 pub use display::DisplayEvent;

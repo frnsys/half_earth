@@ -37,7 +37,7 @@ fn Industry(
 pub fn Industries(world: RwSignal<World>) -> impl IntoView {
     let n_industries = with!(|world| world.industries.len());
     view! {
-        <div class="industries">
+        <div class="industries scroll-list">
         {move || {
              (0..n_industries).map(|i| {
                  view! {

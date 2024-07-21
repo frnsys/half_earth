@@ -1,5 +1,5 @@
 use std::{
-    collections::HashMap,
+    collections::BTreeMap,
     ops::{Index, IndexMut},
 };
 
@@ -27,8 +27,8 @@ fn rank_orders(
     let mut byproduct_maxs: ByproductMap = byproducts!();
     let mut resource_scores = vec![];
     let mut feedstock_scores = vec![];
-    let mut scores: HashMap<usize, (f32, f32)> =
-        HashMap::default();
+    let mut scores: BTreeMap<usize, (f32, f32)> =
+        BTreeMap::default();
 
     for i in indices.iter() {
         let process = orders[*i].process;

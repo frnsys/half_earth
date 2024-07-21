@@ -6,8 +6,10 @@ use hes_engine::{
     npcs::NPC,
     regions::Income,
     world::World,
+    Collection,
     Game,
 };
+use inputs::{AsRef, Ref};
 use leptos::*;
 use paste::paste;
 use serde::{Deserialize, Serialize};
@@ -35,18 +37,40 @@ pub fn App() -> impl IntoView {
     let world = create_rw_signal(World::default());
     let npcs = NPC::load();
 
-    provide_context(Signal::derive(move || npcs.clone()));
     provide_context(Signal::derive(move || {
-        with!(|world| world.processes.clone())
+        npcs.clone()
+            .iter()
+            .map(|item| item.as_ref())
+            .collect::<Collection<Ref<_>>>()
+    }));
+
+    provide_context(Signal::derive(move || {
+        with!(|world| world
+            .processes
+            .iter()
+            .map(|item| item.as_ref())
+            .collect::<Collection<Ref<_>>>())
     }));
     provide_context(Signal::derive(move || {
-        with!(|world| world.events.clone())
+        with!(|world| world
+            .events
+            .iter()
+            .map(|item| item.as_ref())
+            .collect::<Collection<Ref<_>>>())
     }));
     provide_context(Signal::derive(move || {
-        with!(|world| world.projects.clone())
+        with!(|world| world
+            .projects
+            .iter()
+            .map(|item| item.as_ref())
+            .collect::<Collection<Ref<_>>>())
     }));
     provide_context(Signal::derive(move || {
-        with!(|world| world.industries.clone())
+        with!(|world| world
+            .industries
+            .iter()
+            .map(|item| item.as_ref())
+            .collect::<Collection<Ref<_>>>())
     }));
 
     let tabs = move || {
@@ -74,7 +98,7 @@ pub fn App() -> impl IntoView {
                      Tab::Industries => view! { <Industries world / > }.into_view(),
                      Tab::Processes => view! { <Processes world / > }.into_view(),
                      Tab::Projects => view! { <Projects world / > }.into_view(),
-                     _ => view! { "TODO" }.into_view(),
+                     Tab::Events => view! { <Events world / > }.into_view(),
                  }
              }
             }

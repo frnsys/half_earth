@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use gloo_utils::format::JsValueSerdeExt;
 use leptos::*;
@@ -72,7 +72,8 @@ pub fn Dashboard() -> impl IntoView {
     let starting_land = state!(world.starting_resources.land);
     let dataset = move || {
         let mut total = 0.;
-        let mut data: HashMap<String, f32> = HashMap::default();
+        let mut data: BTreeMap<String, f32> =
+            BTreeMap::default();
         let breakdown_factor = breakdown_factor.get();
         for fac in &factors.get()[breakdown_factor] {
             let name = t!(&fac.name());
@@ -541,7 +542,7 @@ fn DashboardItem(
 
 #[component]
 fn PieChart(
-    #[prop(into)] dataset: Signal<HashMap<String, f32>>,
+    #[prop(into)] dataset: Signal<BTreeMap<String, f32>>,
     #[prop(into)] colors: Signal<[u32; 2]>,
 ) -> impl IntoView {
     let stage_ref = create_node_ref::<html::Div>();

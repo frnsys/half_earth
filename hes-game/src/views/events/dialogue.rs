@@ -1,4 +1,4 @@
-use std::{collections::HashMap, rc::Rc};
+use std::{collections::BTreeMap, rc::Rc};
 
 use crate::{
     icons::fill_icons,
@@ -30,7 +30,7 @@ extern "C" {
 pub fn Dialogue(
     #[prop(into)] on_done: Callback<()>,
     #[prop(into, optional)] context: Signal<
-        HashMap<String, String>,
+        BTreeMap<String, String>,
     >,
     #[prop(into)] dialogue: Signal<flavor::Dialogue>,
     #[prop(into, optional, default=(|_| {}).into())] on_advance: Callback<()>,

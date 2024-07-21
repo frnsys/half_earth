@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::{
     consts,
@@ -39,8 +39,8 @@ impl Scannable for Project {
 pub struct ProjectScanner {
     on_change: Callback<()>,
     player_seats: Memo<f32>,
-    plan_changes: Memo<HashMap<Id, PlanChange>>,
-    queued_upgrades: Memo<HashMap<Id, bool>>,
+    plan_changes: Memo<BTreeMap<Id, PlanChange>>,
+    queued_upgrades: Memo<BTreeMap<Id, bool>>,
 }
 impl ProjectScanner {
     pub fn new(on_change: Callback<()>) -> Self {

@@ -1,10 +1,10 @@
-use std::{collections::HashMap, sync::LazyLock};
+use std::{collections::BTreeMap, sync::LazyLock};
 
 use serde::{Deserialize, Serialize};
 
 use crate::Id;
 
-pub static ICON_EVENTS: LazyLock<HashMap<Id, IconEvent>> =
+pub static ICON_EVENTS: LazyLock<BTreeMap<Id, IconEvent>> =
     LazyLock::new(|| {
         let icon_event_data =
             include_str!("../../assets/icon_events.json");
