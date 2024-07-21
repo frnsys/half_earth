@@ -180,8 +180,10 @@ impl EventPool {
     EnumIter,
     EnumString,
     IntoStaticStr,
+    Default,
 )]
 pub enum Phase {
+    #[default]
     WorldMain,
     WorldStart,
     WorldEnd,
@@ -206,7 +208,9 @@ pub enum Phase {
     CutsceneIntro,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
+)]
 pub struct Event {
     pub id: Id,
     pub name: String,
@@ -258,6 +262,14 @@ impl HasId for Event {
 }
 
 impl Event {
+    pub fn new() -> Event {
+        Event {
+            id: Id::new_v4(),
+            name: "New Event".into(),
+            ..Default::default()
+        }
+    }
+
     /// If this event has any regional conditions.
     pub fn is_regional(&self) -> bool {
         self.probabilities.iter().any(|prob| prob.is_regional())

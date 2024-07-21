@@ -36,7 +36,9 @@ pub struct ProjectFlavor {
     pub outcomes: Vec<Dialogue>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Serialize, Deserialize, Default,
+)]
 pub struct EventFlavor {
     pub arc: String,
     pub dialogue: Dialogue,
@@ -50,13 +52,17 @@ pub struct RegionFlavor {
     pub image: Image,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Serialize, Deserialize, Default,
+)]
 pub struct IndustryFlavor {
     pub image: Image,
     pub description: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Serialize, Deserialize, Default,
+)]
 pub struct ProcessFlavor {
     pub image: Image,
     pub description: String,
@@ -71,7 +77,9 @@ pub struct NPCFlavor {
     pub color: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Serialize, Deserialize, Default,
+)]
 pub struct Dialogue {
     pub root: usize,
     pub lines: Vec<DialogueLine>,

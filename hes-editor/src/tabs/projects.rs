@@ -1,4 +1,4 @@
-use crate::inputs::*;
+use crate::{infinite_list, inputs::*};
 use hes_engine::{
     kinds::Output,
     npcs::NPC,
@@ -17,9 +17,9 @@ use leptos::*;
 
 #[component]
 fn Project(
-    project: (Signal<Project>, SignalSetter<Project>),
+    signal: (Signal<Project>, SignalSetter<Project>),
 ) -> impl IntoView {
-    let (read, write) = project;
+    let (read, write) = signal;
     let project = create_rw_signal(read.get_untracked());
 
     // Hacky way to keep the data synchronized.
@@ -27,7 +27,7 @@ fn Project(
         write.set(project.get());
     });
 
-    let npcs = expect_context::<Signal<Collection<NPC>>>();
+    let npcs = expect_context::<Signal<Collection<Ref<NPC>>>>();
 
     view! {
         <div class="project">
@@ -215,22 +215,4 @@ fn Cost(project: RwSignal<Project>) -> impl IntoView {
     }
 }
 
-#[component]
-pub fn Projects(world: RwSignal<World>) -> impl IntoView {
-    let n_projects = with!(|world| world.projects.len());
-    view! {
-        <div class="projects scroll-list">
-        {move || {
-             (0..n_projects).map(|i| {
-                 view! {
-                     <Project
-                         project=create_slice(world,
-                             move |world| world.projects.by_idx(i).clone(),
-                             move |world, val| *world.projects.by_idx_mut(i) = val
-                         ) />
-                 }
-             }).collect::<Vec<_>>()
-         }}
-        </div>
-    }
-}
+infinite_list!(Projects, Project, projects);

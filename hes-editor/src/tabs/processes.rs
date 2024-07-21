@@ -1,4 +1,4 @@
-use crate::inputs::*;
+use crate::{infinite_list, inputs::*};
 use hes_engine::{
     kinds::Feedstock,
     npcs::NPC,
@@ -29,9 +29,9 @@ impl Describe for ProcessFeature {
 
 #[component]
 fn Process(
-    process: (Signal<Process>, SignalSetter<Process>),
+    signal: (Signal<Process>, SignalSetter<Process>),
 ) -> impl IntoView {
-    let (read, write) = process;
+    let (read, write) = signal;
     let process = create_rw_signal(read.get_untracked());
 
     // Hacky way to keep the data synchronized.
@@ -39,7 +39,7 @@ fn Process(
         write.set(process.get());
     });
 
-    let npcs = expect_context::<Signal<Collection<NPC>>>();
+    let npcs = expect_context::<Signal<Collection<Ref<NPC>>>>();
 
     view! {
         <div class="process">
@@ -109,22 +109,4 @@ fn Process(
     }
 }
 
-#[component]
-pub fn Processes(world: RwSignal<World>) -> impl IntoView {
-    let n_processes = with!(|world| world.processes.len());
-    view! {
-        <div class="processes scroll-list">
-        {move || {
-             (0..n_processes).map(|i| {
-                 view! {
-                     <Process
-                         process=create_slice(world,
-                             move |world| world.processes.by_idx(i).clone(),
-                             move |world, val| *world.processes.by_idx_mut(i) = val
-                         ) />
-                 }
-             }).collect::<Vec<_>>()
-         }}
-        </div>
-    }
-}
+infinite_list!(Processes, Process, processes);

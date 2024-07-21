@@ -411,6 +411,12 @@ impl Display for Feedstock {
     }
 }
 
+impl Default for Feedstock {
+    fn default() -> Self {
+        Self::Other
+    }
+}
+
 impl Display for Resource {
     fn fmt(
         &self,

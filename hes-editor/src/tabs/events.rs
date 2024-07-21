@@ -1,4 +1,4 @@
-use crate::inputs::*;
+use crate::{infinite_list, inputs::*};
 use hes_engine::{
     events::{Event, Probability},
     kinds::Output,
@@ -16,16 +16,12 @@ use hes_engine::{
     HasId,
 };
 use leptos::*;
-use leptos_use::{
-    use_infinite_scroll_with_options,
-    UseInfiniteScrollOptions,
-};
 
 #[component]
 fn Event(
-    event: (Signal<Event>, SignalSetter<Event>),
+    signal: (Signal<Event>, SignalSetter<Event>),
 ) -> impl IntoView {
-    let (read, write) = event;
+    let (read, write) = signal;
     let event = create_rw_signal(read.get_untracked());
 
     // Hacky way to keep the data synchronized.
@@ -121,46 +117,4 @@ fn Probabilities(
     }
 }
 
-#[component]
-pub fn Events(world: RwSignal<World>) -> impl IntoView {
-    let max_idx = create_rw_signal(10);
-    let list = move || {
-        with!(|world, max_idx| world
-            .events
-            .iter()
-            .enumerate()
-            .map(|(i, item)| (i, *item.id()))
-            .take(*max_idx)
-            .collect::<Vec<_>>())
-    };
-    let total = move || with!(|world| world.events.len());
-
-    let el = create_node_ref::<html::Div>();
-    let _ = use_infinite_scroll_with_options(
-        el,
-        move |_| async move {
-            logging::log!("LOADING MORE");
-            update!(|max_idx| {
-                *max_idx += 10;
-                *max_idx = (*max_idx).min(total());
-            });
-        },
-        UseInfiniteScrollOptions::default().distance(10.0),
-    );
-
-    view! {
-        <div ref=el class="scroll-list">
-            <For each=list
-                 key=|(_, id)| *id
-                 children=move |(i, _)| {
-                 view! {
-                     <Event
-                         event=create_slice(world,
-                             move |world| world.events.by_idx(i).clone(),
-                             move |world, val| *world.events.by_idx_mut(i) = val
-                         ) />
-                 }
-                 } />
-        </div>
-    }
-}
+infinite_list!(Events, Event, events);

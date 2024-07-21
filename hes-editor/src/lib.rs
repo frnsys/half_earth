@@ -105,3 +105,72 @@ pub fn App() -> impl IntoView {
         </main>
     }
 }
+
+#[macro_export]
+macro_rules! infinite_list {
+    ($name:ident, $single:ident, $field:ident) => {
+        use leptos_use::{
+            use_infinite_scroll_with_options,
+            UseInfiniteScrollOptions,
+        };
+
+        #[component]
+        pub fn $name(world: RwSignal<World>) -> impl IntoView {
+            const PER_PAGE: usize = 20;
+            let max_idx = create_rw_signal(PER_PAGE);
+            let list = move || {
+                with!(|world, max_idx| world
+                    .$field
+                    .iter()
+                    .enumerate()
+                    .map(|(i, item)| (i, item.id))
+                    .take(*max_idx)
+                    .collect::<Vec<_>>())
+            };
+            let total = move || with!(|world| world.$field.len());
+
+            let el = create_node_ref::<html::Div>();
+            let _ = use_infinite_scroll_with_options(
+                el,
+                move |_| async move {
+                    update!(|max_idx| {
+                        *max_idx += PER_PAGE;
+                        *max_idx = (*max_idx).min(total());
+                    });
+                },
+                UseInfiniteScrollOptions::default().distance(50.0),
+            );
+
+            view! {
+                <div ref=el class="scroll-list">
+                    <div class="insert-item" on:click=move |_| {
+                        update!(|world| {
+                            world.$field.push_front($single::new());
+                        });
+                    }>+ New</div>
+                    <For each=list
+                    key=|(_, id)| *id
+                    children=move |(i, id)| {
+                        view! {
+                            <div class="scroll-list-item">
+                                <div class="remove-item" on:click=move |_| {
+                                    let msg = "Are you sure you want to delete this?";
+                                    if window().confirm_with_message(msg).unwrap() {
+                                        update!(|world| {
+                                            world.$field.remove(&id);
+                                        });
+                                    }
+                                }>"🞬 Delete"</div>
+                                <$single
+                                    signal=create_slice(world,
+                                        move |world| world.$field.by_idx(i).clone(),
+                                        move |world, val| *world.$field.by_idx_mut(i) = val
+                                    ) />
+                            </div>
+                        }
+                    } />
+                </div>
+            }
+        }
+    }
+}

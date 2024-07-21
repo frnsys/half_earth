@@ -69,6 +69,11 @@ impl<T: HasId> Collection<T> {
         self.lookup.get(id).map(|idx| &mut self.values[*idx])
     }
 
+    pub fn push_front(&mut self, value: T) {
+        self.values.insert(0, value);
+        self.reindex();
+    }
+
     pub fn push(&mut self, value: T) {
         let id = *value.id();
         self.values.push(value);

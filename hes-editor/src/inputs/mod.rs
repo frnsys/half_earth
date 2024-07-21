@@ -552,9 +552,9 @@ impl<T: ?Sized + HasId + Display + 'static> AsRef for T {
 }
 
 #[component]
-pub fn MultiEntitySelect<T: HasId + Display + 'static>(
+pub fn MultiEntitySelect<T: AsRef + 'static>(
     signal: (Signal<Vec<Id>>, SignalSetter<Vec<Id>>),
-    opts: Signal<Collection<T>>,
+    opts: Signal<Collection<Ref<T>>>,
     #[prop(into, optional)] label: String,
     #[prop(into, optional)] help: String,
 ) -> impl IntoView {
@@ -565,7 +565,7 @@ pub fn MultiEntitySelect<T: HasId + Display + 'static>(
             .iter()
             .map(|opt| {
                 let id = *opt.id();
-                let label = opt.to_string();
+                let label = opt.label.clone();
                 let mut selected = current.clone();
                 view! {
                     <div

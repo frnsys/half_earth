@@ -238,4 +238,39 @@ main {
   flex: 1;
   overflow-y: scroll;
   padding: 1em;
+  position: relative;
 }
+
+.insert-item, .remove-item {
+  cursor: pointer;
+  background: #080808;
+  font-size: 0.9em;
+}
+.insert-item {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  padding: 0.75em 1em;
+}
+.insert-item:hover {
+  background: #DAA509;
+  color: #000;
+}
+.remove-item:hover {
+  background: #E1383A;
+}
+.remove-item {
+  padding: 0.5em 1em;
+  display: none;
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: 1;
+}
+.scroll-list-item {
+  position: relative;
+}
+.scroll-list-item:hover .remove-item {
+  display: block;

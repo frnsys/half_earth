@@ -42,7 +42,9 @@ pub enum ProcessFeature {
     IsLaborIntensive,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
+)]
 pub struct Process {
     pub id: Id,
     pub name: String,
@@ -83,6 +85,14 @@ impl HasId for Process {
 }
 
 impl Process {
+    pub fn new() -> Process {
+        Process {
+            id: Id::new_v4(),
+            name: "New Process".into(),
+            ..Default::default()
+        }
+    }
+
     /// Generates production orders based on the provided demand
     /// and this sector's process mix.
     pub fn production_order(

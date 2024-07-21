@@ -7,7 +7,9 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
+)]
 pub struct Industry {
     pub id: Id,
     pub name: String,
@@ -35,6 +37,14 @@ impl HasId for Industry {
 }
 
 impl Industry {
+    pub fn new() -> Industry {
+        Industry {
+            id: Id::new_v4(),
+            name: "New Industry".into(),
+            ..Default::default()
+        }
+    }
+
     pub fn demand(&self, lic_pop: f32) -> f32 {
         self.demand_modifier * lic_pop
     }

@@ -1,12 +1,12 @@
-use crate::inputs::*;
+use crate::{infinite_list, inputs::*};
 use hes_engine::{industries::Industry, world::World};
 use leptos::*;
 
 #[component]
 fn Industry(
-    industry: (Signal<Industry>, SignalSetter<Industry>),
+    signal: (Signal<Industry>, SignalSetter<Industry>),
 ) -> impl IntoView {
-    let (read, write) = industry;
+    let (read, write) = signal;
     let industry = create_rw_signal(read.get_untracked());
 
     // Hacky way to keep the data synchronized.
@@ -33,22 +33,4 @@ fn Industry(
     }
 }
 
-#[component]
-pub fn Industries(world: RwSignal<World>) -> impl IntoView {
-    let n_industries = with!(|world| world.industries.len());
-    view! {
-        <div class="industries scroll-list">
-        {move || {
-             (0..n_industries).map(|i| {
-                 view! {
-                     <Industry
-                        industry=create_slice(world,
-                            move |world| world.industries.by_idx(i).clone(),
-                            move |world, val| *world.industries.by_idx_mut(i) = val
-                        ) />
-                 }
-             }).collect::<Vec<_>>()
-         }}
-        </div>
-    }
-}
+infinite_list!(Industries, Industry, industries);

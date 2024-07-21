@@ -154,7 +154,9 @@ pub struct Upgrade {
     pub active: bool,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
+)]
 pub struct Project {
     pub id: Id,
     pub name: String,
@@ -212,6 +214,14 @@ pub fn years_for_points(points: usize, cost: usize) -> f32 {
 }
 
 impl Project {
+    pub fn new() -> Project {
+        Project {
+            id: Id::new_v4(),
+            name: "New Project".into(),
+            ..Default::default()
+        }
+    }
+
     pub fn is_active(&self) -> bool {
         self.status == Status::Active
     }
