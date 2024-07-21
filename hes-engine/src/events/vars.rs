@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use strum::IntoStaticStr;
+use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 #[derive(
     Debug,
@@ -9,6 +9,9 @@ use strum::IntoStaticStr;
     Serialize,
     Deserialize,
     IntoStaticStr,
+    EnumIter,
+    EnumString,
+    Display,
 )]
 pub enum WorldVariable {
     Year,
@@ -32,6 +35,9 @@ pub enum WorldVariable {
     Serialize,
     Deserialize,
     IntoStaticStr,
+    EnumIter,
+    EnumString,
+    Display,
 )]
 pub enum LocalVariable {
     Population,
@@ -47,6 +53,9 @@ pub enum LocalVariable {
     Serialize,
     Deserialize,
     IntoStaticStr,
+    EnumIter,
+    EnumString,
+    Display,
 )]
 pub enum PlayerVariable {
     PoliticalCapital,

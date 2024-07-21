@@ -1295,9 +1295,7 @@ impl DisplayEffect {
                 text! {
                     "land",
                     "Place <strong>{percent}%</strong> of land under protection.",
-                    // Already a percent so divide by 100.,
-                    // don't know why I did this.
-                    percent: display::percent(amount/100., true),
+                    percent: display::percent(*amount, true),
                 },
             ),
             Effect::Feedstock(feedstock, amount) => {
@@ -1404,8 +1402,7 @@ impl DisplayEffect {
             | Effect::AddRegionFlag(..)
             | Effect::GameOver
             | Effect::BailOut(..)
-            | Effect::NPCRelationship(..)
-            | Effect::AutoClick(..) => {
+            | Effect::NPCRelationship(..) => {
                 return Err(());
             }
         };

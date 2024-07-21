@@ -1,8 +1,10 @@
 use crate::inputs::*;
 use hes_engine::{
     kinds::Feedstock,
+    npcs::NPC,
     production::{Process, ProcessFeature},
     world::World,
+    Collection,
 };
 use leptos::*;
 
@@ -36,6 +38,8 @@ fn Process(
     create_effect(move |_| {
         write.set(process.get());
     });
+
+    let npcs = expect_context::<Signal<Collection<NPC>>>();
 
     view! {
         <div class="process">
@@ -89,7 +93,18 @@ fn Process(
                 help="(Optional) This process can never produce more than this much output, effectively setting a limit on its mix share. This may be because, for example, of a finite availability, e.g. with geothermal."
                 signal=slice!(process.limit)
                 />
-
+            <MultiEntitySelect
+                label="Supporters"
+                help="NPCs that support this process."
+                signal=slice!(process.supporters)
+                opts=npcs
+                />
+            <MultiEntitySelect
+                label="Opposers"
+                help="NPCs that oppose this process."
+                signal=slice!(process.opposers)
+                opts=npcs
+                />
         </div>
     }
 }
@@ -103,10 +118,10 @@ pub fn Processes(world: RwSignal<World>) -> impl IntoView {
              (0..n_processes).map(|i| {
                  view! {
                      <Process
-                        process=create_slice(world,
-                            move |world| world.processes[i].clone(),
-                            move |world, val| world.processes[i] = val
-                        ) />
+                         process=create_slice(world,
+                             move |world| world.processes.by_idx(i).clone(),
+                             move |world, val| *world.processes.by_idx_mut(i) = val
+                         ) />
                  }
              }).collect::<Vec<_>>()
          }}

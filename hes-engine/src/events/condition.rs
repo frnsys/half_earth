@@ -4,6 +4,7 @@ use super::{
     Flag,
     LocalVariable,
     PlayerVariable,
+    RegionFlag,
     WorldVariable,
 };
 use crate::{
@@ -37,7 +38,7 @@ pub enum Condition {
     ProjectStatus(Id, ProjectStatus),
     ActiveProjectUpgrades(Id, Comparator, usize),
     RunsPlayed(Comparator, usize),
-    RegionFlag(String),
+    RegionFlag(RegionFlag),
     NPCRelationship(Id, NPCRelation),
     FeedstockYears(Feedstock, Comparator, f32),
     HasFlag(Flag),

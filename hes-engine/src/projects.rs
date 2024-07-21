@@ -8,6 +8,7 @@ use crate::{
     Id,
 };
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 use strum::{
     Display,
     EnumDiscriminants,
@@ -180,6 +181,15 @@ pub struct Project {
     pub opposers: Vec<Id>,
 
     pub flavor: ProjectFlavor,
+}
+
+impl Display for Project {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 impl HasId for Project {

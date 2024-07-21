@@ -48,8 +48,8 @@ pub fn Regions(world: RwSignal<World>) -> impl IntoView {
                  view! {
                      <Region
                         region=create_slice(world,
-                            move |world| world.regions[i].clone(),
-                            move |world, val| world.regions[i] = val
+                            move |world| world.regions.by_idx(i).clone(),
+                            move |world, val| *world.regions.by_idx_mut(i) = val
                         ) />
                  }
              }).collect::<Vec<_>>()

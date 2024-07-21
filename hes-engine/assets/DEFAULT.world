@@ -18022,7 +18022,7 @@
                     ]
                 },
                 {
-                    "AddRegionFlag": "revolts"
+                    "AddRegionFlag": "Revolts"
                 },
                 {
                     "AddEvent": "c398c26c-e6ba-49ac-8f6e-f992ca4ccada"
@@ -19578,7 +19578,7 @@
                         {
                             "ProtectLand": [
                                 "GreaterEqual",
-                                50.0
+                                0.5
                             ]
                         },
                         {
@@ -21306,7 +21306,7 @@
                     "AddEvent": "2ff77278-608a-43d9-9837-5585bac74779"
                 },
                 {
-                    "AddRegionFlag": "protests"
+                    "AddRegionFlag": "Protests"
                 },
                 {
                     "AddEvent": "481522ce-45e3-4486-834d-396c58bf3e75"
@@ -26520,7 +26520,7 @@
                     "AddEvent": "256ec719-4119-4752-ae0e-6a44b0b5d6bc"
                 },
                 {
-                    "AddRegionFlag": "riots"
+                    "AddRegionFlag": "Riots"
                 },
                 {
                     "AddEvent": "ee5d4582-8d36-47f7-bae5-17ebe314f11a"
@@ -37678,7 +37678,7 @@
             "required_majority": 0.0,
             "effects": [
                 {
-                    "ProtectLand": 30.0
+                    "ProtectLand": 0.3
                 },
                 {
                     "UnlocksProject": "af9b191a-1b91-483f-bf84-8eff6ce87b80"
@@ -43710,7 +43710,7 @@
                     ]
                 },
                 {
-                    "ProtectLand": 7.0
+                    "ProtectLand": 0.07
                 },
                 {
                     "WorldVariable": [
@@ -49534,7 +49534,7 @@
                     ]
                 },
                 {
-                    "ProtectLand": 10.0
+                    "ProtectLand": 0.10
                 }
             ],
             "outcomes": [
@@ -49563,7 +49563,7 @@
                             ]
                         },
                         {
-                            "ProtectLand": 15.0
+                            "ProtectLand": 0.15
                         }
                     ],
                     "active": false
@@ -49584,7 +49584,7 @@
                             ]
                         },
                         {
-                            "ProtectLand": 20.0
+                            "ProtectLand": 0.20
                         }
                     ],
                     "active": false
@@ -49593,7 +49593,7 @@
                     "cost": 10,
                     "effects": [
                         {
-                            "ProtectLand": 25.0
+                            "ProtectLand": 0.25
                         },
                         {
                             "WorldVariable": [

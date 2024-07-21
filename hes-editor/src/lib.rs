@@ -3,6 +3,7 @@ mod tabs;
 
 use hes_engine::{
     kinds::{FeedstockMap, OutputMap, ResourceMap},
+    npcs::NPC,
     regions::Income,
     world::World,
     Game,
@@ -32,6 +33,21 @@ pub fn App() -> impl IntoView {
     // TODO load provided world
     // TODO list user worlds
     let world = create_rw_signal(World::default());
+    let npcs = NPC::load();
+
+    provide_context(Signal::derive(move || npcs.clone()));
+    provide_context(Signal::derive(move || {
+        with!(|world| world.processes.clone())
+    }));
+    provide_context(Signal::derive(move || {
+        with!(|world| world.events.clone())
+    }));
+    provide_context(Signal::derive(move || {
+        with!(|world| world.projects.clone())
+    }));
+    provide_context(Signal::derive(move || {
+        with!(|world| world.industries.clone())
+    }));
 
     let tabs = move || {
         Tab::iter()

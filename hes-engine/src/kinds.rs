@@ -410,3 +410,40 @@ impl Display for Feedstock {
         )
     }
 }
+
+impl Display for Resource {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Resource::Land => "Land",
+                Resource::Water => "Water",
+                Resource::Fuel => "Fuel",
+                Resource::Electricity => "Electricity",
+            }
+        )
+    }
+}
+
+impl Display for Byproduct {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Byproduct::Co2 => "CO2",
+                Byproduct::N2o => "N2O",
+                Byproduct::Ch4 => "CH4 (Methane)",
+                Byproduct::Biodiversity =>
+                    "Biodiversity Pressure",
+            }
+        )
+    }
+}

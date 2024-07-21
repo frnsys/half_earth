@@ -5,6 +5,7 @@ use crate::{
     Id,
 };
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Industry {
@@ -16,6 +17,15 @@ pub struct Industry {
     pub byproduct_modifiers: ByproductMap,
     pub demand_modifier: f32,
     pub flavor: IndustryFlavor,
+}
+
+impl Display for Industry {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 impl HasId for Industry {

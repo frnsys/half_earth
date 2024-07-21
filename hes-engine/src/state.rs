@@ -102,13 +102,7 @@ pub struct State {
 
 impl State {
     pub fn new(world: World) -> State {
-        // NPCs are hardcoded cause it's a bit more complicated
-        // to make them editable.
-        let mut npcs: Collection<NPC> = serde_json::from_str(
-            include_str!("../assets/npcs.json"),
-        )
-        .unwrap();
-
+        let mut npcs = NPC::load();
         let n_npcs =
             npcs.iter().filter(|npc| !npc.locked).count()
                 as f32;

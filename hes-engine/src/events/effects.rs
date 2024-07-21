@@ -8,7 +8,13 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use std::ops::Mul;
-use strum::{EnumDiscriminants, IntoStaticStr};
+use strum::{
+    Display,
+    EnumDiscriminants,
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+};
 
 const MIGRATION_WAVE_PERCENT_POP: f32 = 0.1;
 const CLOSED_BORDERS_MULTILPIER: f32 = 0.5;
@@ -20,7 +26,15 @@ pub enum Request {
 }
 
 #[derive(
-    Serialize, Deserialize, PartialEq, Debug, Clone, Copy,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Debug,
+    Clone,
+    Copy,
+    EnumIter,
+    IntoStaticStr,
+    EnumString,
 )]
 pub enum Flag {
     RepeatTutorial,
@@ -83,9 +97,33 @@ impl std::fmt::Display for Flag {
     PartialEq,
     Debug,
     Clone,
+    Copy,
+    EnumIter,
+    IntoStaticStr,
+    EnumString,
+    Display,
+)]
+pub enum RegionFlag {
+    Protests,
+    Riots,
+    Revolts,
+}
+
+#[derive(
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Debug,
+    Clone,
     EnumDiscriminants,
 )]
-#[strum_discriminants(derive(IntoStaticStr))]
+#[strum_discriminants(derive(
+    EnumIter,
+    EnumString,
+    IntoStaticStr,
+    Display
+))]
+#[strum_discriminants(name(EffectKind))]
 pub enum Effect {
     WorldVariable(WorldVariable, f32),
     PlayerVariable(PlayerVariable, f32),
@@ -115,10 +153,9 @@ pub enum Effect {
     Migration,
     RegionLeave,
     TerminationShock,
-    AddRegionFlag(String),
+    AddRegionFlag(RegionFlag),
 
     AddFlag(Flag),
-    AutoClick(usize, f32),
     NPCRelationship(Id, f32),
 
     ModifyProcessByproducts(Id, Byproduct, f32),
@@ -154,7 +191,7 @@ impl Effect {
     /// For comparing if two effects are of the same "type"
     /// and thus may be alternatives to one another.
     pub fn fingerprint(&self) -> String {
-        let discrim: EffectDiscriminants = self.into();
+        let discrim: EffectKind = self.into();
         let discrim: &'static str = discrim.into();
         let subkind: &'static str = match self {
             Self::WorldVariable(var, _) => var.into(),
@@ -410,9 +447,7 @@ impl Effect {
             }
             Effect::AddRegionFlag(flag) => {
                 if let Some(id) = &region_id {
-                    state.world.regions[id]
-                        .flags
-                        .push(flag.to_string());
+                    state.world.regions[id].flags.push(*flag);
                 }
             }
             Effect::AddFlag(flag) => {
@@ -469,7 +504,7 @@ impl Effect {
                             output,
                             &state.world.output_demand,
                         ) as f32)
-                        .floor();
+                        .round();
                 }
                 check_game_over(state);
             }
@@ -477,7 +512,7 @@ impl Effect {
                 for region in state.world.regions.iter_mut() {
                     region.outlook += (mult
                         * region.income_level() as f32)
-                        .floor();
+                        .round();
                 }
                 check_game_over(state);
             }
@@ -486,10 +521,8 @@ impl Effect {
                     change;
             }
             Effect::ProtectLand(percent) => {
-                state.protected_land += percent / 100.;
+                state.protected_land += percent;
             }
-
-            // Effects like AutoClick have no impact in the engine side
             _ => (),
         }
     }
@@ -712,7 +745,7 @@ impl Effect {
                 state.temperature_modifier -= temp;
             }
             Effect::ProtectLand(percent) => {
-                state.protected_land -= percent / 100.;
+                state.protected_land -= percent;
             }
             Effect::AddFlag(flag) => {
                 if let Some(idx) =

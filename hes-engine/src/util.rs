@@ -19,6 +19,14 @@ impl<T: HasId> Collection<T> {
     pub fn by_idx(&self, idx: usize) -> &T {
         &self.0[idx]
     }
+
+    pub fn by_idx_mut(&mut self, idx: usize) -> &mut T {
+        &mut self.0[idx]
+    }
+
+    pub fn try_get(&self, id: &Id) -> Option<&T> {
+        self.0.iter().find(|item| item.id() == id)
+    }
 }
 impl<T: HasId> Deref for Collection<T> {
     type Target = Vec<T>;
@@ -39,7 +47,7 @@ impl<T: HasId> DerefMut for Collection<T> {
 impl<T: HasId> Index<&Id> for Collection<T> {
     type Output = T;
     fn index(&self, index: &Id) -> &Self::Output {
-        self.0.iter().find(|item| item.id() == index).unwrap()
+        self.try_get(index).unwrap()
     }
 }
 impl<T: HasId> IndexMut<&Id> for Collection<T> {

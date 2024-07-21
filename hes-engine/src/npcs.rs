@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::{
     flavor::NPCFlavor,
     projects::Project,
@@ -69,7 +71,25 @@ impl HasId for NPC {
     }
 }
 
+impl Display for NPC {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
 impl NPC {
+    // NPCs are hardcoded cause it's a bit more complicated
+    // to make them editable.
+    pub fn load() -> Collection<Self> {
+        serde_json::from_str(include_str!(
+            "../assets/npcs.json"
+        ))
+        .unwrap()
+    }
+
     pub fn is_ally(&self) -> bool {
         self.relation() == NPCRelation::Ally
     }

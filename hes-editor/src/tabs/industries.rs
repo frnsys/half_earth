@@ -43,8 +43,8 @@ pub fn Industries(world: RwSignal<World>) -> impl IntoView {
                  view! {
                      <Industry
                         industry=create_slice(world,
-                            move |world| world.industries[i].clone(),
-                            move |world, val| world.industries[i] = val
+                            move |world| world.industries.by_idx(i).clone(),
+                            move |world, val| *world.industries.by_idx_mut(i) = val
                         ) />
                  }
              }).collect::<Vec<_>>()

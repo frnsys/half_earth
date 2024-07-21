@@ -12,6 +12,7 @@ use crate::{
     Id,
 };
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 #[derive(
@@ -64,6 +65,15 @@ pub struct Process {
     pub supporters: Vec<Id>,
     pub opposers: Vec<Id>,
     pub flavor: ProcessFlavor,
+}
+
+impl Display for Process {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 impl HasId for Process {

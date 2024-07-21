@@ -47,7 +47,7 @@ fn effects_factor<E: AsRef<Effect>>(
             .sum::<f32>(),
         Var::Land => effects
             .filter_map(|e| match e {
-                Effect::ProtectLand(val) => Some(val),
+                Effect::ProtectLand(val) => Some(val * 100.),
                 _ => None,
             })
             .sum::<f32>(),

@@ -1,4 +1,7 @@
+mod effects;
+
 use base64::prelude::*;
+pub use effects::Effects;
 use hes_engine::{
     flavor::{Image, ImageData},
     kinds::{
@@ -7,6 +10,9 @@ use hes_engine::{
         OutputMap,
         ResourceMap,
     },
+    Collection,
+    HasId,
+    Id,
 };
 use js_sys::Uint8Array;
 use leptos::*;
@@ -71,10 +77,42 @@ pub fn NumericInput<
                     let res = event_target_value(&ev).parse::<T>();
                     if let Ok(value) = &res {
                         write.set(*value);
-                        logging::log!("Updated value: {}", value);
                     }
                     maybe_val.set(res);
                 } />
+            <Show when=move || with!(|maybe_val| maybe_val.is_err())>
+                <div class="input-error">Must be a number.</div>
+            </Show>
+            <div class="input-help">{help}</div>
+        </div>
+    }
+}
+
+#[component]
+pub fn PercentInput(
+    signal: (Signal<f32>, SignalSetter<f32>),
+    #[prop(into)] label: String,
+    #[prop(into)] help: String,
+) -> impl IntoView {
+    let (read, write) = signal;
+    let maybe_val = create_rw_signal(Ok(read.get_untracked()));
+
+    view! {
+        <div class="input-group">
+            <label>{label}</label>
+            <div class="input-suffixed">
+                <input
+                    inputmode="decimal"
+                    value=read.get_untracked() * 100.
+                    on:input=move |ev| {
+                        let res = event_target_value(&ev).parse::<f32>();
+                        if let Ok(value) = &res {
+                            write.set(*value/100.);
+                        }
+                        maybe_val.set(res);
+                    } />
+                <div class="input-suffix">%</div>
+            </div>
             <Show when=move || with!(|maybe_val| maybe_val.is_err())>
                 <div class="input-error">Must be a number.</div>
             </Show>
@@ -440,7 +478,7 @@ where
                 view! {
                     <div
                         ref=el
-                        class="enum-opt"
+                        class="multi-select-opt"
                         class:selected={current.contains(&var)}
                         on:click=move |_| {
                             let mut current = read.get();
@@ -465,13 +503,150 @@ where
     };
 
     view! {
-        <div class="input-group multi-enum-group">
+        <div class="input-group multi-select-group">
             <label>{label}</label>
             <div class="input-help">{help}</div>
-            <div class="multi-enum-opts">
+            <div class="multi-select-opts">
                 {opts}
             </div>
       </div>
+    }
+}
+
+#[component]
+pub fn MultiEntitySelect<T: HasId + Display + 'static>(
+    signal: (Signal<Vec<Id>>, SignalSetter<Vec<Id>>),
+    opts: Signal<Collection<T>>,
+    #[prop(into, optional)] label: String,
+    #[prop(into, optional)] help: String,
+) -> impl IntoView {
+    let (current, write) = signal;
+
+    let opts = move || {
+        with!(|current, opts| opts
+            .iter()
+            .map(|opt| {
+                let id = *opt.id();
+                let label = opt.to_string();
+                let mut selected = current.clone();
+                view! {
+                    <div
+                        class="multi-select-opt"
+                        class:selected={current.contains(&id)}
+                        on:click=move |_| {
+                            if selected.contains(&id) {
+                                selected.retain(|v| v != &id);
+                            } else {
+                                selected.push(id);
+                            }
+                            write.set(selected.clone());
+                        }
+                    >
+                        {label}
+                    </div>
+                }
+            })
+            .collect::<Vec<_>>())
+    };
+
+    view! {
+        <div class="input-group multi-select-group">
+            <label>{label}</label>
+            <div class="input-help">{help}</div>
+            <div class="multi-select-opts">
+                {opts}
+            </div>
+      </div>
+    }
+}
+
+#[component]
+pub fn EntityPicker<T: HasId + Display + 'static>(
+    signal: (Signal<Id>, SignalSetter<Id>),
+    opts: Signal<Collection<T>>,
+    #[prop(into, optional)] label: String,
+    #[prop(into, optional)] help: String,
+) -> impl IntoView {
+    let (read, write) = signal;
+
+    // Initialize the filter string to match the selected entity,
+    // if a matching one exists.
+    let initial = opts.with_untracked(|opts| {
+        opts.try_get(&read.get_untracked())
+            .map(|v| v.to_string())
+            .unwrap_or_default()
+    });
+    let filter = create_rw_signal(initial);
+
+    // Does an entity with a matching id exist in the collection?
+    let is_valid = move || {
+        with!(|read, opts| opts.try_get(&read).is_some())
+    };
+    let selected = move || {
+        with!(|read, opts| opts
+            .try_get(&read)
+            .map(|v| v.to_string())
+            .unwrap_or("(None)".into()))
+    };
+
+    // Only show the results when the filter input is focused.
+    let focused = create_rw_signal(false);
+    let results = move || {
+        with!(|filter, opts| opts
+            .iter()
+            .filter(|opt| opt
+                .to_string()
+                .to_lowercase()
+                .contains(&filter.to_lowercase()))
+            .map(|opt| {
+                let id = *opt.id();
+                let label = opt.to_string();
+                view! {
+                    <div class="picker-opt" on:click=move |_| {
+                        write.set(id);
+                    }>{label}</div>
+                }
+            })
+            .collect::<Vec<_>>())
+    };
+
+    let ref_input = create_node_ref::<html::Input>();
+    create_effect(move |_| {
+        if focused.get() {
+            if let Some(ref_input) = ref_input.get() {
+                ref_input.on_mount(|input| {
+                    input.focus();
+                    input.select();
+                });
+            }
+        }
+    });
+
+    view! {
+        <div class="input-group picker-group">
+            <label>{label}</label>
+            <div class="input-help">{help}</div>
+            <div class="picker-selected" on:click=move |_| {
+                focused.set(true);
+            }>{selected}</div>
+            <Show when=move || !is_valid()>
+                <div class="input-error">"The selected entity doesn't exist."</div>
+            </Show>
+            <Show when=move || focused.get()>
+                <div class="picker-filter">
+                    <input type="text"
+                        ref=ref_input
+                        placeholder="Search"
+                        value={filter.get_untracked()}
+                        on:input=move |ev| {
+                            let value = event_target_value(&ev);
+                            filter.set(value);
+                        }
+                    />
+                    {results}
+                </div>
+            </Show>
+        </div>
     }
 }
 

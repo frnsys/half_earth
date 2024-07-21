@@ -1,13 +1,14 @@
 use std::fmt::Display;
 
 use crate::{
+    events::RegionFlag,
     flavor::RegionFlavor,
     kinds::{Output, OutputMap},
     HasId,
     Id,
 };
 use serde::{Deserialize, Serialize};
-use strum::{EnumIter, EnumString, IntoStaticStr};
+use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1. / 40.;
@@ -24,7 +25,7 @@ pub struct Region {
     pub income: Income,
     pub development: f32,
 
-    pub flags: Vec<String>,
+    pub flags: Vec<RegionFlag>,
 
     /// How hopeful are people in the region about the future?
     pub outlook: f32,
@@ -282,7 +283,10 @@ impl Display for Income {
     Clone,
     Copy,
     Debug,
+    EnumIter,
     IntoStaticStr,
+    EnumString,
+    Display,
 )]
 pub enum Latitude {
     Tropic,

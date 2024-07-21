@@ -1,8 +1,17 @@
 use crate::inputs::*;
 use hes_engine::{
     kinds::Output,
-    projects::{Cost, Factor, FactorKind, Group, Project, Type},
+    npcs::NPC,
+    projects::{
+        Cost,
+        Factor,
+        FactorKind,
+        Group,
+        Project,
+        Type,
+    },
     world::World,
+    Collection,
 };
 use leptos::*;
 
@@ -17,6 +26,8 @@ fn Project(
     create_effect(move |_| {
         write.set(project.get());
     });
+
+    let npcs = expect_context::<Signal<Collection<NPC>>>();
 
     view! {
         <div class="project">
@@ -47,6 +58,21 @@ fn Project(
                     signal=slice!(project.gradual) />
             </Show>
             <Cost project />
+            <MultiEntitySelect
+                label="Supporters"
+                help="NPCs that support this project."
+                signal=slice!(project.supporters)
+                opts=npcs
+                />
+            <MultiEntitySelect
+                label="Opposers"
+                help="NPCs that oppose this project."
+                signal=slice!(project.opposers)
+                opts=npcs
+                />
+            <Effects
+                effects=slice!(project.effects) />
+
         </div>
     }
 }
@@ -198,10 +224,10 @@ pub fn Projects(world: RwSignal<World>) -> impl IntoView {
              (0..n_projects).map(|i| {
                  view! {
                      <Project
-                        project=create_slice(world,
-                            move |world| world.projects[i].clone(),
-                            move |world, val| world.projects[i] = val
-                        ) />
+                         project=create_slice(world,
+                             move |world| world.projects.by_idx(i).clone(),
+                             move |world, val| *world.projects.by_idx_mut(i) = val
+                         ) />
                  }
              }).collect::<Vec<_>>()
          }}

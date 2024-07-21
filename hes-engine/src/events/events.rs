@@ -8,7 +8,7 @@ use crate::{
 };
 use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::{collections::HashSet, fmt::Display};
 
 #[derive(
     Clone, Debug, Default, Serialize, Deserialize, PartialEq,
@@ -233,6 +233,15 @@ pub struct Event {
     pub intensity: usize,
 
     pub flavor: EventFlavor,
+}
+
+impl Display for Event {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 impl HasId for Event {

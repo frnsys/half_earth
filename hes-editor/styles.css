@@ -21,7 +21,8 @@ img {
 input {
   font-family: "Inter", system-ui, sans-serif;
   font-weight: 600;
-  background: rgba(255,255,255,0.01);
+  /* background: rgba(255,255,255,0.01); */
+  background: blue;
   border: none;
   color: #fff;
   width: 100%;
@@ -29,6 +30,17 @@ input {
 }
 input:focus {
   outline: none;
+}
+input[type=file] {
+  background: none;
+}
+select {
+  cursor: pointer;
+  background: blue;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 main {
@@ -73,6 +85,16 @@ main {
   margin: 0.5em 0 0.25em 0;
 }
 
+.input-suffixed {
+  position: relative;
+  padding-right: 1em;
+}
+.input-suffix {
+  position: absolute;
+  right: 1em;
+  top: 0;
+}
+
 .map-group {
   border: 1px solid #555;
   border-radius: 3px;
@@ -80,7 +102,8 @@ main {
   margin: 2em 0;
 }
 .map-group label {
-  border-bottom: 1px solid #555;
+  /* border-bottom: 1px solid #555; */
+  margin-bottom: 2px;
 }
 .map-group .map-inputs {
   display: flex;
@@ -124,14 +147,14 @@ main {
   max-width: none;
 }
 
-.multi-enum-group {
+.multi-select-group {
   max-width: none;
 }
-.multi-enum-opts {
+.multi-select-opts {
   display: flex;
   flex-wrap: wrap;
 }
-.enum-opt {
+.multi-select-opt {
   position: relative;
   cursor: pointer;
   background: #151515;
@@ -139,13 +162,13 @@ main {
   border-radius: 3px;
   font-size: 0.8em;
   padding: 0.25em 0.5em;
-  opacity: 0.5;
+  opacity: 0.3;
   margin: 2px;
 }
-.enum-opt:hover {
+.multi-select-opt:hover {
   opacity: 1;
 }
-.enum-opt.selected {
+.multi-select-opt.selected {
   opacity: 1;
   background: #009B68;
   color: #000;
@@ -172,4 +195,38 @@ main {
 .checkbox-group input {
   width: auto;
   margin-left: 0.5em;
+}
+.checkbox-group label {
+  cursor: pointer;
+}
+
+.picker-filter {
+  border: 1px solid #333;
+}
+.picker-filter input,
+.picker-filter .picker-opt {
+  padding: 0.25em;
+}
+.picker-filter input {
+  background: #222;
+}
+.picker-filter .picker-opt {
+  cursor: pointer;
+  font-size: 0.8em;
+  border-bottom: 1px solid #282828;
+}
+.picker-filter .picker-opt:hover {
+  background: blue;
+}
+.picker-filter .picker-opt:last-child {
+  border-bottom: none
+}
+.picker-selected {
+  background: blue;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+.picker-selected:hover {
+  background: #009B68;
 }
