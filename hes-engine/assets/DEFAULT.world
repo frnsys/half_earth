@@ -16733,7 +16733,7 @@
                             ]
                         },
                         {
-                            "RegionFlag": "revolts"
+                            "RegionFlag": "Revolts"
                         }
                     ]
                 }
@@ -17980,7 +17980,7 @@
                             ]
                         },
                         {
-                            "RegionFlag": "riots"
+                            "RegionFlag": "Riots"
                         },
                         {
                             "WorldVariable": [
@@ -18002,7 +18002,7 @@
                             ]
                         },
                         {
-                            "RegionFlag": "riots"
+                            "RegionFlag": "Riots"
                         },
                         {
                             "WorldVariable": [
@@ -21818,7 +21818,7 @@
                     "likelihood": "Random",
                     "conditions": [
                         {
-                            "RegionFlag": "protests"
+                            "RegionFlag": "Protests"
                         },
                         {
                             "LocalVariable": [
@@ -26481,7 +26481,7 @@
                             ]
                         },
                         {
-                            "RegionFlag": "protests"
+                            "RegionFlag": "Protests"
                         },
                         {
                             "WorldVariable": [
@@ -26503,7 +26503,7 @@
                             ]
                         },
                         {
-                            "RegionFlag": "protests"
+                            "RegionFlag": "Protests"
                         },
                         {
                             "WorldVariable": [
@@ -31407,7 +31407,7 @@
                     "likelihood": "Random",
                     "conditions": [
                         {
-                            "RegionFlag": "revolts"
+                            "RegionFlag": "Revolts"
                         },
                         {
                             "LocalVariable": [
@@ -35431,7 +35431,7 @@
                             ]
                         },
                         {
-                            "RegionFlag": "riots"
+                            "RegionFlag": "Riots"
                         }
                     ]
                 }
