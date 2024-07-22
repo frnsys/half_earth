@@ -18,7 +18,7 @@ use hes_engine::{
 };
 use js_sys::Uint8Array;
 use leptos::*;
-use leptos_use::use_element_hover;
+use leptos_use::{on_click_outside, use_element_hover};
 use num::Num;
 use std::{
     fmt::{Debug, Display},
@@ -76,27 +76,39 @@ pub fn NumericInput<
     signal: (Signal<T>, SignalSetter<T>),
     #[prop(into)] label: String,
     #[prop(into)] help: String,
+    #[prop(into, optional)] inline: bool,
 ) -> impl IntoView {
     let (read, write) = signal;
     let maybe_val = create_rw_signal(Ok(read.get_untracked()));
 
+    let help = store_value(help);
+
     view! {
-        <div class="input-group">
-            <label>{label}</label>
-            <input
-                inputmode="decimal"
-                value=read.get_untracked()
-                on:input=move |ev| {
-                    let res = event_target_value(&ev).parse::<T>();
-                    if let Ok(value) = &res {
-                        write.set(*value);
-                    }
-                    maybe_val.set(res);
-                } />
+        <div class="input-group numeric-group tooltip-parent" class:inline={inline}>
+            <div class="numeric-group-inner">
+                <label>{label}</label>
+                <input
+                    class="numeric-input"
+                    inputmode="decimal"
+                    value=read.get_untracked()
+                    on:input=move |ev| {
+                        let res = event_target_value(&ev).parse::<T>();
+                        if let Ok(value) = &res {
+                            write.set(*value);
+                        }
+                        maybe_val.set(res);
+                    } />
+            </div>
             <Show when=move || with!(|maybe_val| maybe_val.is_err())>
                 <div class="input-error">Must be a number.</div>
             </Show>
-            <div class="input-help">{help}</div>
+            {move || {
+                 (!help.get_value().is_empty()).then(|| {
+                     view! {
+                         <div class="tooltip">{help.get_value()}</div>
+                     }
+                 })
+            }}
         </div>
     }
 }
@@ -106,25 +118,29 @@ pub fn PercentInput(
     signal: (Signal<f32>, SignalSetter<f32>),
     #[prop(into)] label: String,
     #[prop(into)] help: String,
+    #[prop(into, optional)] inline: bool,
 ) -> impl IntoView {
     let (read, write) = signal;
     let maybe_val = create_rw_signal(Ok(read.get_untracked()));
 
     view! {
-        <div class="input-group">
-            <label>{label}</label>
-            <div class="input-suffixed">
-                <input
-                    inputmode="decimal"
-                    value=read.get_untracked() * 100.
-                    on:input=move |ev| {
-                        let res = event_target_value(&ev).parse::<f32>();
-                        if let Ok(value) = &res {
-                            write.set(*value/100.);
-                        }
-                        maybe_val.set(res);
-                    } />
-                <div class="input-suffix">%</div>
+        <div class="input-group numeric-group" class:inline={inline}>
+            <div class="numeric-group-inner">
+                <label>{label}</label>
+                <div class="input-suffixed">
+                    <input
+                        class="numeric-input"
+                        inputmode="decimal"
+                        value=read.get_untracked() * 100.
+                        on:input=move |ev| {
+                            let res = event_target_value(&ev).parse::<f32>();
+                            if let Ok(value) = &res {
+                                write.set(*value/100.);
+                            }
+                            maybe_val.set(res);
+                        } />
+                    <div class="input-suffix">%</div>
+                </div>
             </div>
             <Show when=move || with!(|maybe_val| maybe_val.is_err())>
                 <div class="input-error">Must be a number.</div>
@@ -169,18 +185,21 @@ pub fn OptionalNumericInput<
                         } else {
                             *opt = None;
                         }
-                    }) />
-            <Show when=move || with!(|maybe_val| maybe_val.is_some())>
-                <NumericInput
-                    label=""
-                    help=""
-                    signal=create_slice(maybe_val,
-                        move |opt| opt.clone().unwrap(),
-                        move |opt, val| {
-                            opt.insert(val);
-                            value.set(val);
-                        }) />
-            </Show>
+                    })
+                inner=move || {
+                    view! {
+                        <Show when=move || with!(|maybe_val| maybe_val.is_some())>
+                            <NumericInput
+                                label=""
+                                help=""
+                                signal=create_slice(maybe_val,
+                                    move |opt| opt.clone().unwrap(),
+                                    move |opt, val| {
+                                        opt.insert(val);
+                                        value.set(val);
+                                    }) />
+                        </Show>
+                }} />
         </div>
     }
 }
@@ -214,10 +233,20 @@ pub fn MultiNumericInput<const N: usize>(
         })
         .collect();
 
+    let help = store_value(help);
+
     view! {
         <div class="map-group">
-            <h2>{label}</h2>
-            <div class="input-help">{help}</div>
+            <h2 class="tooltip-parent">
+                {label}
+                {move || {
+                     (!help.get_value().is_empty()).then(|| {
+                         view! {
+                             <div class="tooltip">{help.get_value()}</div>
+                         }
+                     })
+                }}
+            </h2>
             <div class="map-inputs">
                 {inputs}
             </div>
@@ -239,10 +268,20 @@ pub fn ResourceMapInput(
         write.set(map.get());
     });
 
+    let help = store_value(help);
+
     view! {
         <div class="map-group resources-group">
-            <h2>{label}</h2>
-            <div class="input-help">{help}</div>
+            <h2 class="tooltip-parent">
+                {label}
+                {move || {
+                     (!help.get_value().is_empty()).then(|| {
+                         view! {
+                             <div class="tooltip">{help.get_value()}</div>
+                         }
+                     })
+                }}
+            </h2>
             <div class="map-inputs">
                 <NumericInput
                     label="Land"
@@ -283,10 +322,20 @@ pub fn ByproductMapInput(
         write.set(map.get());
     });
 
+    let help = store_value(help);
+
     view! {
         <div class="map-group byproducts-group">
-            <h2>{label}</h2>
-            <div class="input-help">{help}</div>
+            <h2 class="tooltip-parent">
+                {label}
+                {move || {
+                     (!help.get_value().is_empty()).then(|| {
+                         view! {
+                             <div class="tooltip">{help.get_value()}</div>
+                         }
+                     })
+                }}
+            </h2>
             <div class="map-inputs">
                 <NumericInput
                     label="CO2"
@@ -327,10 +376,20 @@ pub fn OutputMapInput(
         write.set(map.get());
     });
 
+    let help = store_value(help);
+
     view! {
         <div class="map-group output-group">
-            <h2>{label}</h2>
-            <div class="input-help">{help}</div>
+            <h2 class="tooltip-parent">
+                {label}
+                {move || {
+                     (!help.get_value().is_empty()).then(|| {
+                         view! {
+                             <div class="tooltip">{help.get_value()}</div>
+                         }
+                     })
+                }}
+            </h2>
             <div class="map-inputs">
                 <NumericInput
                     label="Fuel"
@@ -371,10 +430,20 @@ pub fn FeedstockMapInput(
         write.set(map.get());
     });
 
+    let help = store_value(help);
+
     view! {
         <div class="map-group feedstocks-group">
-            <h2>{label}</h2>
-            <div class="input-help">{help}</div>
+            <h2 class="tooltip-parent">
+                {label}
+                {move || {
+                     (!help.get_value().is_empty()).then(|| {
+                         view! {
+                             <div class="tooltip">{help.get_value()}</div>
+                         }
+                     })
+                }}
+            </h2>
             <div class="map-inputs">
                 <NumericInput
                     label="Coal"
@@ -385,6 +454,11 @@ pub fn FeedstockMapInput(
                     label="Oil"
                     help="Oil in liters (L)."
                     signal=slice!(map.oil)
+                    />
+                <NumericInput
+                    label="Natural Gas"
+                    help="Natural Gas in liters (L)"
+                    signal=slice!(map.natural_gas)
                     />
                 <NumericInput
                     label="Thorium"
@@ -421,6 +495,7 @@ pub fn EnumInput<
     signal: (Signal<E>, SignalSetter<E>),
     #[prop(into)] label: String,
     #[prop(into)] help: String,
+    #[prop(into, optional)] tooltip: bool,
 ) -> impl IntoView
 where
     <E as FromStr>::Err: Debug,
@@ -440,17 +515,19 @@ where
     };
 
     view! {
-        <div class="input-group">
-            <label>{label}</label>
-              <select
-                on:change=move |ev| {
-                  let new_value = event_target_value(&ev);
-                  write.set(new_value.parse().unwrap());
-                }
-              >
-                {opts}
-              </select>
-            <div class="input-help">{help}</div>
+        <div class="input-group enum-select tooltip-parent">
+            <div class="enum-select-inner">
+                <label>{label}</label>
+                  <select
+                    on:change=move |ev| {
+                      let new_value = event_target_value(&ev);
+                      write.set(new_value.parse().unwrap());
+                    }
+                  >
+                    {opts}
+                  </select>
+            </div>
+            <div class:input-help=!tooltip class:tooltip=tooltip>{help}</div>
       </div>
     }
 }
@@ -486,12 +563,9 @@ where
         E::iter()
             .map(|var| {
                 let label: &'static str = var.into();
-                let el = create_node_ref::<html::Div>();
-                let is_hovered = use_element_hover(el);
                 view! {
                     <div
-                        ref=el
-                        class="multi-select-opt"
+                        class="multi-select-opt tooltip-parent"
                         class:selected={current.contains(&var)}
                         on:click=move |_| {
                             let mut current = read.get();
@@ -504,11 +578,7 @@ where
                         }
                     >
                         {var.to_string()}
-                        <Show when=move || is_hovered.get()>
-                            <div class="tooltip">
-                                {var.describe()}
-                            </div>
-                        </Show>
+                        <div class="tooltip">{var.describe()}</div>
                     </div>
                 }
             })
@@ -607,6 +677,8 @@ pub fn EntityPicker<T: AsRef + 'static>(
 ) -> impl IntoView {
     let (read, write) = signal;
 
+    let local = create_rw_signal(read.get_untracked());
+
     // Initialize the filter string to match the selected entity,
     // if a matching one exists.
     let initial = opts.with_untracked(|opts| {
@@ -618,11 +690,11 @@ pub fn EntityPicker<T: AsRef + 'static>(
 
     // Does an entity with a matching id exist in the collection?
     let is_valid = move || {
-        with!(|read, opts| opts.try_get(&read).is_some())
+        with!(|local, opts| opts.try_get(&local).is_some())
     };
     let selected = move || {
-        with!(|read, opts| opts
-            .try_get(&read)
+        with!(|local, opts| opts
+            .try_get(&local)
             .map(|v| v.label.clone())
             .unwrap_or("(None)".into()))
     };
@@ -641,7 +713,7 @@ pub fn EntityPicker<T: AsRef + 'static>(
                 let label = opt.label.clone();
                 view! {
                     <div class="picker-opt" on:click=move |_| {
-                        write.set(id);
+                        local.set(id);
                     }>{label}</div>
                 }
             })
@@ -660,13 +732,21 @@ pub fn EntityPicker<T: AsRef + 'static>(
         }
     });
 
+    let target = create_node_ref::<html::Div>();
+    on_click_outside(target, move |_| {
+        focused.set(false);
+        write.set(local.get());
+    });
+
     view! {
-        <div class="input-group picker-group">
-            <label>{label}</label>
+        <div class="input-group picker-group" ref=target>
+            <div class="picker-group-header">
+                <label>{label}</label>
+                <div class="picker-selected" on:click=move |_| {
+                    focused.set(true);
+                }>{selected}</div>
+            </div>
             <div class="input-help">{help}</div>
-            <div class="picker-selected" on:click=move |_| {
-                focused.set(true);
-            }>{selected}</div>
             <Show when=move || !is_valid()>
                 <div class="input-error">"The selected entity doesn't exist."</div>
             </Show>
@@ -681,7 +761,9 @@ pub fn EntityPicker<T: AsRef + 'static>(
                             filter.set(value);
                         }
                     />
-                    {results}
+                    <div class="picker-results">
+                        {results}
+                    </div>
                 </div>
             </Show>
         </div>
@@ -768,7 +850,8 @@ pub fn OptionalImageInput(
                             *opt = None;
                         }
                     }) />
-            <Show when=move || with!(|maybe_val| maybe_val.is_some())>
+            <Show when=move || with!(|maybe_val| maybe_val.is_some())
+                fallback=move || view! { <div class="image-placeholder" /> }>
                 <ImageInput
                     signal=create_slice(maybe_val,
                         move |opt| opt.clone().unwrap(),
@@ -796,23 +879,47 @@ async fn read_file(file: File) -> Vec<u8> {
 #[component]
 pub fn ToggleInput(
     signal: (Signal<bool>, SignalSetter<bool>),
+    #[prop(into, optional)] inner: ViewFn,
     #[prop(into, optional)] label: String,
     #[prop(into, optional)] help: String,
+    #[prop(into, optional)] tooltip: bool,
+    #[prop(into, optional)] icons: Option<(
+        &'static str,
+        &'static str,
+    )>,
 ) -> impl IntoView {
     let (read, write) = signal;
+    let display = move || {
+        let toggled = read.get();
+        icons.map_or_else(
+            || {
+                if toggled {
+                    format!("✓ {label}")
+                } else {
+                    format!("✗ {label}")
+                }
+            },
+            |(on, off)| {
+                if toggled {
+                    on.to_string()
+                } else {
+                    off.to_string()
+                }
+            },
+        )
+    };
 
     view! {
-        <div class="input-group checkbox-group">
-            <label>{label}
-                <input
-                    type="checkbox"
-                    checked=read.get_untracked()
-                    on:change=move |ev| {
-                        let checked = event_target_checked(&ev);
-                        write.set(checked);
-                    } />
-            </label>
-            <div class="input-help">{help}</div>
+        <div class="input-group checkbox-group tooltip-parent">
+            <div class="checkbox-inner">
+                <label on:click=move |_| {
+                    write.set(!read.get());
+                }>
+                    {display}
+                </label>
+                {inner.run()}
+            </div>
+            <div class:input-help=!tooltip class:tooltip=tooltip>{help}</div>
         </div>
     }
 }

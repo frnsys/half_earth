@@ -21,7 +21,6 @@ use wasm_bindgen::prelude::*;
 #[derive(Debug, Clone, Copy, Display, EnumIter, PartialEq)]
 enum Tab {
     World,
-    Regions,
     Industries,
     Processes,
     Projects,
@@ -94,7 +93,6 @@ pub fn App() -> impl IntoView {
             {move || {
                  match tab.get() {
                      Tab::World => view! { <World world / > }.into_view(),
-                     Tab::Regions => view! { <Regions world / > }.into_view(),
                      Tab::Industries => view! { <Industries world / > }.into_view(),
                      Tab::Processes => view! { <Processes world / > }.into_view(),
                      Tab::Projects => view! { <Projects world / > }.into_view(),
@@ -153,14 +151,16 @@ macro_rules! infinite_list {
                     children=move |(i, id)| {
                         view! {
                             <div class="scroll-list-item">
-                                <div class="remove-item" on:click=move |_| {
-                                    let msg = "Are you sure you want to delete this?";
-                                    if window().confirm_with_message(msg).unwrap() {
-                                        update!(|world| {
-                                            world.$field.remove(&id);
-                                        });
-                                    }
-                                }>"🞬 Delete"</div>
+                                <div class="remove-item"
+                                    title="Ctrl-click to remove without confirmation."
+                                    on:click=move |ev| {
+                                        let msg = "Are you sure you want to delete this?";
+                                        if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
+                                            update!(|world| {
+                                                world.$field.remove(&id);
+                                            });
+                                        }
+                                    }>"🞬 Delete"</div>
                                 <$single
                                     signal=create_slice(world,
                                         move |world| world.$field.by_idx(i).clone(),

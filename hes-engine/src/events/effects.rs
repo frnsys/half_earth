@@ -4,6 +4,7 @@ use crate::{
     production::ProcessFeature,
     regions::{Latitude, Region},
     state::State,
+    world::World,
     Id,
 };
 use serde::{Deserialize, Serialize};
@@ -184,6 +185,165 @@ fn check_game_over(state: &mut State) {
         && state.outlook() < 0.
     {
         state.game_over = true;
+    }
+}
+
+impl Effect {
+    pub fn from_kind(
+        kind: EffectKind,
+        default_process: Id,
+        default_project: Id,
+        default_industry: Id,
+        default_event: Id,
+        default_npc: Id,
+    ) -> Self {
+        match kind {
+            EffectKind::WorldVariable => Effect::WorldVariable(
+                WorldVariable::Outlook,
+                0.,
+            ),
+            EffectKind::PlayerVariable => {
+                Effect::PlayerVariable(
+                    PlayerVariable::PoliticalCapital,
+                    0.,
+                )
+            }
+            EffectKind::RegionHabitability => {
+                Effect::RegionHabitability(Latitude::Tropic, 0.)
+            }
+            EffectKind::Resource => {
+                Effect::Resource(Resource::Land, 0.)
+            }
+            EffectKind::Demand => {
+                Effect::Demand(Output::Fuel, 0.)
+            }
+            EffectKind::Output => {
+                Effect::Output(Output::Fuel, 0.)
+            }
+            EffectKind::DemandAmount => {
+                Effect::DemandAmount(Output::Fuel, 0.)
+            }
+            EffectKind::OutputForFeature => {
+                Effect::OutputForFeature(
+                    ProcessFeature::IsCCS,
+                    0.,
+                )
+            }
+            EffectKind::OutputForProcess => {
+                Effect::OutputForProcess(default_process, 0.)
+            }
+            EffectKind::CO2ForFeature => {
+                Effect::CO2ForFeature(ProcessFeature::IsCCS, 0.)
+            }
+            EffectKind::BiodiversityPressureForFeature => {
+                Effect::BiodiversityPressureForFeature(
+                    ProcessFeature::IsCCS,
+                    0.,
+                )
+            }
+            EffectKind::ProcessLimit => {
+                Effect::ProcessLimit(default_process, 0.)
+            }
+            EffectKind::Feedstock => {
+                Effect::Feedstock(Feedstock::Coal, 0.)
+            }
+            EffectKind::AddEvent => {
+                Effect::AddEvent(default_event)
+            }
+            EffectKind::TriggerEvent => {
+                Effect::TriggerEvent(default_event, 5)
+            }
+            EffectKind::LocksProject => {
+                Effect::LocksProject(default_project)
+            }
+            EffectKind::UnlocksProject => {
+                Effect::UnlocksProject(default_project)
+            }
+            EffectKind::UnlocksProcess => {
+                Effect::UnlocksProcess(default_process)
+            }
+            EffectKind::UnlocksNPC => {
+                Effect::UnlocksNPC(default_npc)
+            }
+            EffectKind::ProjectRequest => {
+                Effect::ProjectRequest(
+                    default_project,
+                    true,
+                    20,
+                )
+            }
+            EffectKind::ProcessRequest => {
+                Effect::ProcessRequest(
+                    default_process,
+                    true,
+                    20,
+                )
+            }
+            EffectKind::Migration => Effect::Migration,
+            EffectKind::RegionLeave => Effect::RegionLeave,
+            EffectKind::TerminationShock => {
+                Effect::TerminationShock
+            }
+            EffectKind::AddRegionFlag => {
+                Effect::AddRegionFlag(RegionFlag::Protests)
+            }
+            EffectKind::AddFlag => Effect::AddFlag(Flag::Vegan),
+            EffectKind::NPCRelationship => {
+                Effect::NPCRelationship(default_npc, 0.)
+            }
+            EffectKind::ModifyProcessByproducts => {
+                Effect::ModifyProcessByproducts(
+                    default_process,
+                    Byproduct::Co2,
+                    0.,
+                )
+            }
+            EffectKind::ModifyIndustryByproducts => {
+                Effect::ModifyIndustryByproducts(
+                    default_industry,
+                    Byproduct::Co2,
+                    0.,
+                )
+            }
+            EffectKind::ModifyIndustryResources => {
+                Effect::ModifyIndustryResources(
+                    default_industry,
+                    Resource::Land,
+                    0.,
+                )
+            }
+            EffectKind::ModifyIndustryResourcesAmount => {
+                Effect::ModifyIndustryResourcesAmount(
+                    default_industry,
+                    Resource::Land,
+                    0.,
+                )
+            }
+            EffectKind::ModifyEventProbability => {
+                Effect::ModifyEventProbability(
+                    default_event,
+                    0.,
+                )
+            }
+            EffectKind::ModifyIndustryDemand => {
+                Effect::ModifyIndustryDemand(
+                    default_industry,
+                    0.,
+                )
+            }
+            EffectKind::DemandOutlookChange => {
+                Effect::DemandOutlookChange(Output::Fuel, 0.)
+            }
+            EffectKind::IncomeOutlookChange => {
+                Effect::IncomeOutlookChange(0.)
+            }
+            EffectKind::ProjectCostModifier => {
+                Effect::ProjectCostModifier(default_project, 0.)
+            }
+            EffectKind::ProtectLand => Effect::ProtectLand(0.1),
+            EffectKind::BailOut => Effect::BailOut(20),
+            EffectKind::GameOver => Effect::GameOver,
+        }
     }
 }
 

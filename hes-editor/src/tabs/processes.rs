@@ -41,70 +41,103 @@ fn Process(
 
     let npcs = expect_context::<Signal<Collection<Ref<NPC>>>>();
 
+    let feedstock_units = move || {
+        with!(|process| match process.feedstock.0 {
+            Feedstock::Oil | Feedstock::NaturalGas =>
+                "liters (L)",
+            Feedstock::Thorium
+            | Feedstock::Uranium
+            | Feedstock::Lithium
+            | Feedstock::Coal => "grams (g)",
+            Feedstock::Soil | Feedstock::Other => "(n/a)",
+        })
+    };
+    let feedstock_name = move || {
+        with!(|process| process.feedstock.0.to_string())
+    };
+
     view! {
         <div class="process">
             <div class="name">
                 <TextInput signal=slice!(process.name) />
+                <div class="item-lock">
+                    <ToggleInput
+                        label="Locked"
+                        tooltip=true
+                        icons=("🔒Locked", "🔓Unlocked")
+                        help="If this process is locked at the start."
+                        signal=slice!(process.locked) />
+                </div>
             </div>
-            <ImageInput signal=slice!(process.flavor.image) />
-            <EnumInput
-                label="Output Type"
-                help="What this process produces."
-                signal=slice!(process.output) />
-            <EnumInput
-                label="Feedstock Type"
-                help=r#"What this feedstock this process requires. If no particular feedstock, just set to "Other"."#
-                signal=create_slice(process,
-                    move |process| process.feedstock.0,
-                    move |process, val| process.feedstock.0 = val)
-                />
-            <Show when=move || with!(|process| process.feedstock.0 != Feedstock::Other)>
-                <NumericInput
-                    label="Feedstock Amount"
-                    help="Feedstock required per unit output."
-                    signal=create_slice(process,
-                        move |process| process.feedstock.1,
-                        move |process, val| process.feedstock.1 = val)
-                />
-            </Show>
-            <ByproductMapInput
-                label="Byproducts"
-                help="Byproducts produced, per unit output."
-                signal=slice!(process.byproducts) />
-            <ResourceMapInput
-                label="Resources"
-                help="Resources used, per unit output."
-                signal=slice!(process.resources) />
-            <ToggleInput
-                label="Locked"
-                help="If this process is locked at the start."
-                signal=slice!(process.locked) />
-            <NumericInput
-                label="Mix Share"
-                help="What percent of total output production this process represents at the start. Note that 1 mix share = 5% of total output."
-                signal=slice!(process.mix_share) />
-            <MultiEnumInput
-                label="Features"
-                help="Special properties associated with this process."
-                signal=slice!(process.features)
-                />
-            <OptionalNumericInput
-                label="Output Limit"
-                help="(Optional) This process can never produce more than this much output, effectively setting a limit on its mix share. This may be because, for example, of a finite availability, e.g. with geothermal."
-                signal=slice!(process.limit)
-                />
-            <MultiEntitySelect
-                label="Supporters"
-                help="NPCs that support this process."
-                signal=slice!(process.supporters)
-                opts=npcs
-                />
-            <MultiEntitySelect
-                label="Opposers"
-                help="NPCs that oppose this process."
-                signal=slice!(process.opposers)
-                opts=npcs
-                />
+            <div class="item-form">
+                <div class="input-groups left-main-col">
+                    <ImageInput signal=slice!(process.flavor.image) />
+                    <NumericInput
+                        inline=true
+                        label="Mix Share"
+                        help="What percent of total output production this process represents at the start. Note that 1 mix share = 5% of total output."
+                        signal=slice!(process.mix_share) />
+                    <OptionalNumericInput
+                        label="Output Limit"
+                        help="(Optional) This process can never produce more than this much output, effectively setting a limit on its mix share. This may be because, for example, of a finite availability, e.g. with geothermal."
+                        signal=slice!(process.limit)
+                        />
+                </div>
+                <div class="input-groups">
+                    <EnumInput
+                        label="Output Type"
+                        help="What this process produces."
+                        signal=slice!(process.output) />
+                    <EnumInput
+                        label="Feedstock Type"
+                        help=r#"What this feedstock this process requires. If no particular feedstock, just set to "Other". Note that "Soil" is ignored."#
+                        signal=create_slice(process,
+                            move |process| process.feedstock.0,
+                            move |process, val| process.feedstock.0 = val)
+                        />
+                    <Show when=move || with!(|process| process.feedstock.0 != Feedstock::Other)>
+                        <div class="feedstock-amount">
+                            <NumericInput
+                                inline=true
+                                label="Feedstock"
+                                help=format!("Feedstock required per unit output, in {} of {}.", feedstock_units(), feedstock_name())
+                                signal=create_slice(process,
+                                    move |process| process.feedstock.1,
+                                    move |process, val| process.feedstock.1 = val)
+                            />
+                        </div>
+                    </Show>
+                    <ByproductMapInput
+                        label="Byproducts"
+                        help="Byproducts produced, per unit output."
+                        signal=slice!(process.byproducts) />
+                    <ResourceMapInput
+                        label="Resources"
+                        help="Resources used, per unit output."
+                        signal=slice!(process.resources) />
+                </div>
+            </div>
+            <div class="item-form">
+                <MultiEnumInput
+                    label="Features"
+                    help="Special properties associated with this process."
+                    signal=slice!(process.features)
+                    />
+            </div>
+            <div class="item-form">
+                <MultiEntitySelect
+                    label="Supporters"
+                    help="NPCs that support this process."
+                    signal=slice!(process.supporters)
+                    opts=npcs
+                    />
+                <MultiEntitySelect
+                    label="Opposers"
+                    help="NPCs that oppose this process."
+                    signal=slice!(process.opposers)
+                    opts=npcs
+                    />
+            </div>
         </div>
     }
 }

@@ -19,16 +19,20 @@ fn Industry(
             <div class="name">
                 <TextInput signal=slice!(industry.name) />
             </div>
-            <ImageInput signal=slice!(industry.flavor.image) />
-            <ByproductMapInput
-                label="Byproducts"
-                help="Byproducts produced, per low-income-capita (LIC) per year."
-                signal=slice!(industry.byproducts) />
-            <ResourceMapInput
-                label="Resources"
-                help="Resources used, per low-income-capita (LIC) per year."
-                signal=slice!(industry.resources)
-             />
+            <div class="item-form">
+                <ImageInput signal=slice!(industry.flavor.image) />
+                <div class="input-groups">
+                    <ByproductMapInput
+                        label="Byproducts"
+                        help="Byproducts produced, per low-income-capita (LIC) per year."
+                        signal=slice!(industry.byproducts) />
+                    <ResourceMapInput
+                        label="Resources"
+                        help="Resources used, per low-income-capita (LIC) per year."
+                        signal=slice!(industry.resources)
+                     />
+                 </div>
+             </div>
         </div>
     }
 }

@@ -53,6 +53,10 @@ impl<T: HasId> Collection<T> {
         }
     }
 
+    pub fn first(&self) -> &T {
+        &self.values[0]
+    }
+
     pub fn by_idx(&self, idx: usize) -> &T {
         &self.values[idx]
     }

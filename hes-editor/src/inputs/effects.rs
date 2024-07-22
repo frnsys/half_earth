@@ -9,9 +9,13 @@ use hes_engine::{
 use leptos::*;
 
 #[component]
-fn Effect(
+fn Effect<F>(
     effect: (Signal<Effect>, SignalSetter<Effect>),
-) -> impl IntoView {
+    on_remove: F,
+) -> impl IntoView
+where
+    F: Fn(ev::MouseEvent) + 'static,
+{
     let (read, write) = effect;
 
     let processes =
@@ -32,6 +36,7 @@ fn Effect(
                     help="What variable is changed."
                     signal=enum_slice!(|write| Effect::WorldVariable([var], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The amount to change the variable by."
                     signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
@@ -43,6 +48,7 @@ fn Effect(
                     help="What variable is changed."
                     signal=enum_slice!(|write| Effect::PlayerVariable([var], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The amount to change the variable by."
                     signal=enum_slice!(|write| Effect::PlayerVariable(var, [value])) />
@@ -55,6 +61,7 @@ fn Effect(
                     help="What latitude is affected."
                     signal=enum_slice!(|write| Effect::RegionHabitability([lat], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The amount to change the habitability by."
                     signal=enum_slice!(|write| Effect::RegionHabitability(lat, [value])) />
@@ -67,6 +74,7 @@ fn Effect(
                     help="What resource is affected."
                     signal=enum_slice!(|write| Effect::Resource([resource], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The amount to change the resource reserves by."
                     signal=enum_slice!(|write| Effect::Resource(resource, [value])) />
@@ -79,6 +87,7 @@ fn Effect(
                     help="What output is affected."
                     signal=enum_slice!(|write| Effect::Demand([output], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify this output's demand by."
                     signal=enum_slice!(|write| Effect::Demand(output, [value])) />
@@ -91,6 +100,7 @@ fn Effect(
                     help="What output is affected."
                     signal=enum_slice!(|write| Effect::DemandAmount([output], value)) />
                 <NumericInput
+                    inline=true
                     label="Amount"
                     help="The amount to modify this output's demand by."
                     signal=enum_slice!(|write| Effect::DemandAmount(output, [value])) />
@@ -103,6 +113,7 @@ fn Effect(
                     help="What output is affected."
                     signal=enum_slice!(|write| Effect::Output([output], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify this output's amount by."
                     signal=enum_slice!(|write| Effect::Output(output, [value])) />
@@ -115,6 +126,7 @@ fn Effect(
                     help="What process feature is affected."
                     signal=enum_slice!(|write| Effect::OutputForFeature([feat], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify the output by."
                     signal=enum_slice!(|write| Effect::OutputForFeature(feat, [value])) />
@@ -128,6 +140,7 @@ fn Effect(
                     help="Which process is affected."
                     signal=enum_slice!(|write| Effect::OutputForProcess([id], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify this process's output by."
                     signal=enum_slice!(|write| Effect::OutputForProcess(id, [value])) />
@@ -140,6 +153,7 @@ fn Effect(
                     help="What process feature is affected."
                     signal=enum_slice!(|write| Effect::CO2ForFeature([feat], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify this process's CO2 emissions by."
                     signal=enum_slice!(|write| Effect::CO2ForFeature(feat, [value])) />
@@ -152,6 +166,7 @@ fn Effect(
                     help="What process feature is affected."
                     signal=enum_slice!(|write| Effect::BiodiversityPressureForFeature([feat], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify this process's biodiversity pressure by."
                     signal=enum_slice!(|write| Effect::BiodiversityPressureForFeature(feat, [value])) />
@@ -165,6 +180,7 @@ fn Effect(
                     help="Which process is affected."
                     signal=enum_slice!(|write| Effect::ProcessLimit([id], value)) />
                 <NumericInput
+                    inline=true
                     label="Amount"
                     help="The amount to modify this process's limit by."
                     signal=enum_slice!(|write| Effect::ProcessLimit(id, [value])) />
@@ -177,6 +193,7 @@ fn Effect(
                     help="What feedstock is affected."
                     signal=enum_slice!(|write| Effect::Feedstock([feedstock], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify this feedstock's amount by."
                     signal=enum_slice!(|write| Effect::Feedstock(feedstock, [value])) />
@@ -199,6 +216,7 @@ fn Effect(
                     help="Which event will be triggered."
                     signal=enum_slice!(|write| Effect::TriggerEvent([id], years)) />
                 <NumericInput
+                    inline=true
                     label="Years"
                     help="Years after which the event will be triggered."
                     signal=enum_slice!(|write| Effect::TriggerEvent(id, [years])) />
@@ -252,6 +270,7 @@ fn Effect(
                     help="If the request is for this project to be implemented (active) or stopped (inactive)."
                     signal=enum_slice!(|write| Effect::ProjectRequest(id, [active], bounty)) />
                 <NumericInput
+                    inline=true
                     label="Reward"
                     help="How much political capital is awarded for fulfilling the request."
                     signal=enum_slice!(|write| Effect::ProjectRequest(id, active, [bounty])) />
@@ -269,6 +288,7 @@ fn Effect(
                     help="If the request is for this process to be active (mix share > 0) or stopped (mix share == 0)."
                     signal=enum_slice!(|write| Effect::ProcessRequest(id, [active], bounty)) />
                 <NumericInput
+                    inline=true
                     label="Reward"
                     help="How much political capital is awarded for fulfilling the request."
                     signal=enum_slice!(|write| Effect::ProcessRequest(id, active, [bounty])) />
@@ -306,6 +326,7 @@ fn Effect(
                     help="Which NPC's relationship is affected."
                     signal=enum_slice!(|write| Effect::NPCRelationship([id], change)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The amount to change the relationship by."
                     signal=enum_slice!(|write| Effect::NPCRelationship(id, [change])) />
@@ -323,6 +344,7 @@ fn Effect(
                     help="What byproduct is affected."
                     signal=enum_slice!(|write| Effect::ModifyProcessByproducts(id, [byproduct], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify the byproduct by."
                     signal=enum_slice!(|write| Effect::ModifyProcessByproducts(id, byproduct, [value])) />
@@ -340,6 +362,7 @@ fn Effect(
                     help="What byproduct is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryByproducts(id, [byproduct], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify the byproduct by."
                     signal=enum_slice!(|write| Effect::ModifyIndustryByproducts(id, byproduct, [value])) />
@@ -357,6 +380,7 @@ fn Effect(
                     help="What resource is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryResources(id, [resource], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify the resource by."
                     signal=enum_slice!(|write| Effect::ModifyIndustryResources(id, resource, [value])) />
@@ -374,6 +398,7 @@ fn Effect(
                     help="What resource is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryResourcesAmount(id, [resource], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The amount to change the resource use by."
                     signal=enum_slice!(|write| Effect::ModifyIndustryResources(id, resource, [value])) />
@@ -387,6 +412,7 @@ fn Effect(
                     help="Which industry is affected."
                     signal=enum_slice!(|write| Effect::ModifyIndustryDemand([id], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify the demand by."
                     signal=enum_slice!(|write| Effect::ModifyIndustryDemand(id, [value])) />
@@ -400,6 +426,7 @@ fn Effect(
                     help="Which event will be affected."
                     signal=enum_slice!(|write| Effect::ModifyEventProbability([id], value)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to add to the event's probability."
                     signal=enum_slice!(|write| Effect::ModifyEventProbability(id, [value])) />
@@ -412,6 +439,7 @@ fn Effect(
                     help="What output is affected."
                     signal=enum_slice!(|write| Effect::DemandOutlookChange([output], mult)) />
                 <NumericInput
+                    inline=true
                     label="Factor"
                     help="Factor to scale the demand level by."
                     signal=enum_slice!(|write| Effect::DemandOutlookChange(output, [mult])) />
@@ -420,6 +448,7 @@ fn Effect(
             Effect::IncomeOutlookChange(mult) => view! {
                 <div class="input-help">"Apply a change in contentedness to every region based on its income level, multiplied by the specified factor. Income level ranges from [0, 3], where 0 is the lowest income level and 3 is the highest. For example, with a factor of 0.5 and a region with income level 2, that means `2 * 0.5 = 1` will be added to that region's contentedness. Note that this value is rounded, so if it were `3 * 0.5 = 1.5` this would be rounded to `2.0`."</div>
                 <NumericInput
+                    inline=true
                     label="Factor"
                     help="Factor to scale the demand level by."
                     signal=enum_slice!(|write| Effect::IncomeOutlookChange([mult])) />
@@ -433,6 +462,7 @@ fn Effect(
                     help="Which project is affected."
                     signal=enum_slice!(|write| Effect::ProjectCostModifier([id], change)) />
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to modify the project's cost by."
                     signal=enum_slice!(|write| Effect::ProjectCostModifier(id, [change])) />
@@ -441,6 +471,7 @@ fn Effect(
             Effect::ProtectLand(amount) => view! {
                 <div class="input-help">"Change the amount of land under protection by a percentage."</div>
                 <PercentInput
+                    inline=true
                     label="Percent Change"
                     help="The percent to of land to add to/remove from protection."
                     signal=enum_slice!(|write| Effect::ProtectLand([amount])) />
@@ -449,6 +480,7 @@ fn Effect(
             Effect::BailOut(amount) => view! {
                 <div class="input-help">"Bail the player out by providing some political capital."</div>
                 <NumericInput
+                    inline=true
                     label="Amount"
                     help="How much political capital to provide."
                     signal=enum_slice!(|write| Effect::BailOut([amount])) />
@@ -470,7 +502,10 @@ fn Effect(
 
     view! {
         <div class="effect">
-            <label>{label}</label>
+            <div class="effect-header">
+                <label>{label}</label>
+                <div class="effect-remove" title="Ctrl-click to remove without confirmation." on:click=on_remove>"✗"</div>
+            </div>
             {input}
         </div>
     }
@@ -488,20 +523,83 @@ pub fn Effects(
         write.set(effects.get());
     });
 
-    let n_effects = with!(|effects| effects.len());
+    let (new_effect_kind, set_new_effect_kind) =
+        create_signal(EffectKind::WorldVariable);
+
+    let processes =
+        expect_context::<Signal<Collection<Ref<Process>>>>();
+    let projects =
+        expect_context::<Signal<Collection<Ref<Project>>>>();
+    let events =
+        expect_context::<Signal<Collection<Ref<Event>>>>();
+    let industries =
+        expect_context::<Signal<Collection<Ref<Industry>>>>();
+    let npcs = expect_context::<Signal<Collection<Ref<NPC>>>>();
+
+    let default_process =
+        move || with!(|processes| processes.first().id);
+    let default_project =
+        move || with!(|projects| projects.first().id);
+    let default_industry =
+        move || with!(|industries| industries.first().id);
+    let default_event =
+        move || with!(|events| events.first().id);
+    let default_npc = move || with!(|npcs| npcs.first().id);
+
     view! {
         <div class="effects">
-        {move || {
-             (0..n_effects).map(|i| {
-                 view! {
-                     <Effect
-                         effect=create_slice(effects,
-                             move |effects| effects[i].clone(),
-                             move |effects, val| effects[i] = val
-                         ) />
+            <div class="effects-header">
+                <h2>Effects</h2>
+                <div class="effects-add">
+                    <EnumInput
+                        label="Variable"
+                        help="What variable is changed."
+                        signal=(new_effect_kind.into(), set_new_effect_kind.into()) />
+                    <div class="effects-add-button" on:click=move |_| {
+                        let effect = Effect::from_kind(
+                            new_effect_kind.get(),
+                            default_process(),
+                            default_project(),
+                            default_industry(),
+                            default_event(),
+                            default_npc(),
+                            );
+                        update!(|effects| {
+                            effects.insert(0, effect);
+                        });
+                    }>+ Add</div>
+                </div>
+            </div>
+            {move || {
+                 let no_effects = with!(|effects| effects.is_empty());
+                 if no_effects {
+                     Some(view! {
+                         <div class="empty">No effects defined.</div>
+                     })
+                 } else {
+                     None
                  }
-             }).collect::<Vec<_>>()
-         }}
+            }}
+            {move || {
+                 let n_effects = with!(|effects| effects.len());
+                 (0..n_effects).map(|i| {
+                     view! {
+                         <Effect
+                             on_remove=move |ev: ev::MouseEvent| {
+                                 let msg = "Are you sure you want to remove this effect?";
+                                 if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
+                                     update!(|effects| {
+                                         effects.remove(i);
+                                     });
+                                 }
+                             }
+                             effect=create_slice(effects,
+                                 move |effects| effects[i].clone(),
+                                 move |effects, val| effects[i] = val
+                             ) />
+                     }
+                 }).collect::<Vec<_>>()
+             }}
         </div>
     }
 }

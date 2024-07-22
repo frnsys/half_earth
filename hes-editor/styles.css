@@ -20,9 +20,9 @@ img {
 
 input {
   font-family: "Inter", system-ui, sans-serif;
-  font-weight: 600;
   /* background: rgba(255,255,255,0.01); */
-  background: blue;
+  /* background: blue; */
+  background: #222230;
   border: none;
   color: #fff;
   width: 100%;
@@ -33,6 +33,8 @@ input:focus {
 }
 input[type=file] {
   background: none;
+  font-size: 10px;
+  margin: 0 0 2px 0;
 }
 select {
   cursor: pointer;
@@ -41,6 +43,11 @@ select {
   border: none;
   font-weight: 600;
   font-family: "Inter", system-ui, sans-serif;
+  font-size: 12px;
+}
+
+input.numeric-input {
+  text-align: right;
 }
 
 #tabs {
@@ -64,13 +71,11 @@ select {
   border-bottom: 1px solid #fff;
 }
 
-.input-help {
-  color: #888;
-  font-size: 0.8em;
-}
 .input-group {
-  margin: 1em 0;
-  max-width: 150px;
+  position: relative;
+}
+.input-group:hover input {
+  background: #282838;
 }
 .input-group label {
   display: block;
@@ -84,60 +89,54 @@ select {
 
 .input-suffixed {
   position: relative;
+}
+.input-suffixed input {
   padding-right: 1em;
 }
 .input-suffix {
   position: absolute;
-  right: 1em;
-  top: 0;
+  right: 0;
+  top: 1px;
 }
 
 .map-group {
-  border: 1px solid #555;
-  border-radius: 3px;
-  padding: 1em;
-  margin: 2em 0;
+  border: 1px solid #222;
+  max-width: 280px;
+  margin: 0 0 0.5em 0;
+  align-self: flex-start;
 }
-.map-group label {
-  /* border-bottom: 1px solid #555; */
-  margin-bottom: 2px;
+.map-group .map-inputs label {
+  display: block;
+  min-width: 100px;
+  max-width: 100px;
+  padding: 0 0 0 0.25em;
 }
-.map-group .map-inputs {
+.map-group .map-inputs input {
+  flex: 1;
+}
+.map-group .numeric-group-inner {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.25em;
+  margin: 0;
+  border-top: 1px solid transparent;
 }
 .map-group h2 {
   margin: 0;
-  font-size: 1.2em;
-  border-bottom: 1px solid #555;
+  font-size: 12px;
+  background: #FBBC04;
+  color: #000;
+  font-weight: normal;
+  padding: 0.1em 0.25em;
+  border: none;
+  position: relative;
 }
 
-.world-inputs-global input {
-  font-size: 2em;
+.name {
+  position: relative;
 }
-.world-inputs-global {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.25em;
-}
-
-.pop-growth-inputs label {
-  display: inline;
-  margin-right: 0.5em;
-  border-bottom: none;
-}
-.pop-growth-inputs input {
-  width: auto;
-}
-.pop-growth-inputs .input-group {
-  max-width: 250px;
-}
-
 .name input {
   font-size: 1.5em;
+  padding: 0.05em 0.25em 0.1em;
+  font-weight: 600;
 }
 .name .input-group {
   width: 100%;
@@ -146,6 +145,9 @@ select {
 
 .multi-select-group {
   max-width: none;
+}
+.multi-select-group .input-help {
+  margin-bottom: 0.5em;
 }
 .multi-select-opts {
   display: flex;
@@ -167,34 +169,43 @@ select {
 }
 .multi-select-opt.selected {
   opacity: 1;
-  background: #009B68;
+  background: #10AB78;
   color: #000;
   border-color: #08704E;
 }
 .tooltip {
   position: absolute;
-  left: 0%;
+  right: 0%;
   top: calc(100% + 2px);
   width: 175px;
   font-size: 11px;
-  background: #151515;
+  background: #131313;
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
   color: #fff;
   padding: 0.5em;
   border-radius: 3px;
-  border: 1px solid #fff;
-  z-index: 1;
+  z-index: 3;
+  display: none;
+}
+.tooltip-parent {
+  position: relative;
+}
+.tooltip-parent:hover .tooltip {
+  display: block;
+}
+h2 .tooltip {
+  right: auto;
+  left: 0;
 }
 
 .image-input {
-  max-width: 280px;
+  width: 280px;
+  max-width: 100%;
 }
 
-.checkbox-group input {
-  width: auto;
-  margin-left: 0.5em;
-}
 .checkbox-group label {
   cursor: pointer;
+  user-select: none;
 }
 
 .picker-filter {
@@ -211,6 +222,7 @@ select {
   cursor: pointer;
   font-size: 0.8em;
   border-bottom: 1px solid #282828;
+  background: #181818;
 }
 .picker-filter .picker-opt:hover {
   background: blue;
@@ -223,9 +235,23 @@ select {
   font-family: "Inter", system-ui, sans-serif;
   font-weight: 600;
   cursor: pointer;
+  flex: 1;
+  margin-left: 0.5em;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
 }
 .picker-selected:hover {
-  background: #009B68;
+  background: #10AB78;
+}
+.picker-results {
+  max-height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.picker-group-header {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Necessary for infinite scroll to work correctly. */
@@ -233,6 +259,7 @@ main {
   display: flex;
   flex-direction: column;
   max-height: 100vh;
+  min-height: 100vh;
 }
 .scroll-list {
   flex: 1;
@@ -262,15 +289,288 @@ main {
   background: #E1383A;
 }
 .remove-item {
-  padding: 0.5em 1em;
-  display: none;
+  padding: 0.2em 0.5em 0.1em;
   position: absolute;
-  top: 0.5em;
-  right: 0.5em;
+  top: 0;
+  right: 0;
   z-index: 1;
+  translate: 0 -100%;
+  font-size: 0.75em;
 }
-.scroll-list-item {
-  position: relative;
-}
+
 .scroll-list-item:hover .remove-item {
   display: block;
+}
+
+.map-group-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.map-table {
+  display: flex;
+}
+.input-column {
+  margin-right: 1px;
+}
+.input-column > div,
+.input-column > label {
+  display: block;
+}
+.input-column > label {
+  text-align: right;
+  font-size: 0.9em;
+}
+.label-column > label {
+  text-align: left;
+  font-size: 0.9em;
+  height: 18px;
+}
+.input-column input {
+  height: 18px;
+}
+.input-column .input-group label {
+  display: none;
+}
+.input-column .enum-select {
+  margin-bottom: 0;
+}
+.input-column .enum-select select {
+  height: 18px;
+  margin-top: 1px;
+}
+
+.label-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-left: 2px;
+}
+.label-column div:first-child {
+  visibility: hidden;
+}
+.map-table .label-column {
+  min-width: 100px;
+  max-width: 100px;
+}
+
+.table-group {
+  max-width: 100%;
+}
+
+.scroll-list-item {
+  position: relative;
+  background: #121212;
+  margin: 3em auto 1em;
+  max-width: 560px;
+  border: 1px solid #111;
+}
+.item-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 1em;
+}
+
+.input-help {
+  color: #555;
+  font-size: 0.7em;
+}
+
+.enum-select {
+  margin: 0 0 1em 0;
+}
+.enum-select-inner,
+.checkbox-inner,
+.item-form .numeric-group-inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-form > .input-groups > .input-group {
+  margin-bottom: 1em;
+}
+
+.inline .numeric-input {
+  width: auto;
+}
+
+.left-main-col {
+  max-width: 280px;
+}
+.left-main-col .checkbox-inner label {
+  margin-bottom: 3px;
+}
+.left-main-col .numeric-input,
+.feedstock-amount .numeric-input {
+  max-width: 160px;
+}
+.left-main-col > .input-group {
+  margin: 0.5em 0 0.25em 0;
+}
+.feedstock-amount {
+  margin: -0.5em 0 0.5em;
+}
+
+.item-lock {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  translate: 0 -100%;
+  font-size: 12px;
+  padding: 0.2em 0em 0.1em;
+  line-height: 1.5;
+  user-select: none;
+}
+.item-lock .tooltip {
+  right: auto;
+  left: 0;
+}
+
+.project .image-input img,
+.process .image-input img {
+  width: 280px;
+  height: 187px;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.project-cost-type-toggle {
+  font-size: 13px;
+}
+.project-cost-type-toggle span {
+  color: #333;
+  cursor: pointer;
+  margin-right: 0.5em;
+}
+.project-cost-type-toggle span:hover {
+  color: #777;
+}
+.project-cost-type-toggle span.selected {
+  color: #fff;
+}
+
+.project-cost .checkbox-group {
+  margin-bottom: 0.25em;
+}
+.project-cost .numeric-group label {
+  font-size: 11px;
+  width: 140px;
+}
+.project-cost .enum-select label,
+.project-cost .numeric-group input {
+  font-size: 11px;
+}
+.project-cost .enum-select select {
+  font-size: 10px;
+}
+.project-cost .enum-select {
+  margin-bottom: 0.25em;
+}
+
+.regions .label-column {
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.event .image-placeholder {
+  width: 280px;
+  height: calc(180px + 48px);
+  max-width: 100%;
+  background: #181818;
+}
+.event .image-input img {
+  width: 280px;
+  height: 180px;
+  object-fit: cover;
+  object-position: center center;
+}
+.event-meta {
+  margin-top: 15px;
+}
+.event-meta .enum-select {
+  margin-top: 1em;
+}
+
+.effects {
+  width: 320px;
+  margin-bottom: 2em;
+}
+.effects .empty {
+  color: #555;
+  font-size: 12px;
+}
+.effects-header {
+  margin: 0 0 5px 0;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+.effects-header select {
+  font-size: 10px;
+  background: #2a2a2a;
+}
+.effects-header .enum-select {
+  margin: 0;
+}
+.effects-header .enum-select label,
+.effects-header .enum-select .input-help {
+  display: none;
+}
+.effects-header h2 {
+  font-size: 12px;
+  margin: 0;
+}
+.effect {
+  padding: 0.5em;
+  background: #202020;
+  margin-bottom: 2px;
+  font-size: 13px;
+  width: 100%;
+}
+.effect-header {
+  display: flex;
+  justify-content: space-between;
+}
+.effect-header label:first-child {
+  font-size: 12px;
+  background: #FFBF00;
+  color: #000;
+  padding: 0.1em 0.25em;
+  margin: 0 0 0.1em 0;
+  display: inline-block;
+}
+.effect-header+.input-help {
+  margin-bottom: 1em;
+}
+.effect > .input-group {
+  margin: 0.5em 0;
+}
+.effect select,
+.effect .numeric-input,
+.effect .input-suffix {
+  font-size: 11px;
+}
+.effect-remove {
+  color: #383838;
+  cursor: pointer;
+  font-size: 17px;
+  margin-top: -4px;
+}
+.effect-remove:hover {
+  color: #E1383A;
+}
+.effects-add {
+  display: flex;
+}
+.effects-add-button {
+  font-size: 10px;
+  padding: 0 0.25em;
+  cursor: pointer;
+}
+.effects-add-button:hover {
+  color: #10AB78;
+}

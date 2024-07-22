@@ -33,25 +33,41 @@ fn Event(
         <div class="event">
             <div class="name">
                 <TextInput signal=slice!(event.name) />
+                <div class="item-lock">
+                    <ToggleInput
+                        label="Locked"
+                        tooltip=true
+                        icons=("🔒Locked", "🔓Unlocked")
+                        help="If this event is locked at the start."
+                        signal=slice!(event.locked) />
+                </div>
             </div>
-            <div class="arc">
-                <TextInput signal=slice!(event.flavor.arc) />
+            <div class="item-form">
+                <div class="input-groups">
+                    <OptionalImageInput signal=slice!(event.flavor.image) />
+                </div>
+                <div class="input-groups event-meta">
+                    <div class="arc">
+                        <TextInput signal=slice!(event.flavor.arc) />
+                        <div class="input-help">Optional story arc name.</div>
+                    </div>
+                    <EnumInput
+                        label="Phase"
+                        help="What phase/screen the event can occur on."
+                        signal=slice!(event.phase) />
+                </div>
             </div>
-            <OptionalImageInput signal=slice!(event.flavor.image) />
-            <EnumInput
-                label="Phase"
-                help="What phase/screen the event can occur on."
-                signal=slice!(event.phase) />
-            <ToggleInput
-                label="Locked"
-                help="If this event is locked at the start."
-                signal=slice!(event.locked) />
-            <Effects
-                effects=slice!(event.effects) />
 
-            <div class="input-help">"Probabilities are checked in their defined order, and the first probability with all conditions satisfied is the one that is rolled."</div>
-            <Probabilities
-                probabilities=slice!(event.probabilities) />
+            <div class="item-form effects-form">
+                <Effects
+                    effects=slice!(event.effects) />
+            </div>
+
+            <div class="item-form probabilities-form">
+                <div class="input-help">"Probabilities are checked in their defined order, and the first probability with all conditions satisfied is the one that is rolled."</div>
+                <Probabilities
+                    probabilities=slice!(event.probabilities) />
+            </div>
         </div>
     }
 }
