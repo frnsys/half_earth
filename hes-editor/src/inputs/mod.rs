@@ -101,6 +101,20 @@ pub fn TextInput(
     }
 }
 
+trait NumberError {
+    fn error_desc() -> &'static str;
+}
+impl NumberError for f32 {
+    fn error_desc() -> &'static str {
+        "Must be a valid number."
+    }
+}
+impl NumberError for usize {
+    fn error_desc() -> &'static str {
+        "Must be a valid positive number."
+    }
+}
+
 #[component]
 pub fn NumericInput<
     T: Num
@@ -110,6 +124,7 @@ pub fn NumericInput<
         + std::fmt::Display
         + IntoAttribute
         + IntoView
+        + NumberError
         + 'static,
 >(
     signal: (Signal<T>, SignalSetter<T>),
@@ -130,7 +145,7 @@ pub fn NumericInput<
                     class="numeric-input"
                     inputmode="decimal"
                     value=read.get_untracked()
-                    on:input=move |ev| {
+                    on:change=move |ev| {
                         let res = event_target_value(&ev).parse::<T>();
                         if let Ok(value) = &res {
                             write.set(*value);
@@ -139,7 +154,7 @@ pub fn NumericInput<
                     } />
             </div>
             <Show when=move || with!(|maybe_val| maybe_val.is_err())>
-                <div class="input-error">Must be a number.</div>
+                <div class="input-error">{T::error_desc()}</div>
             </Show>
             {move || {
                  (!help.get_value().is_empty()).then(|| {
@@ -199,6 +214,7 @@ pub fn OptionalNumericInput<
         + std::fmt::Display
         + IntoAttribute
         + IntoView
+        + NumberError
         + 'static,
 >(
     signal: (Signal<Option<T>>, SignalSetter<Option<T>>),

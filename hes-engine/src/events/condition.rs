@@ -169,6 +169,24 @@ impl Condition {
             }
         }
     }
+
+    pub fn process_id(&self) -> Option<Id> {
+        match self {
+            Condition::ProcessOutput(id, ..)
+            | Condition::ProcessMixShare(id, ..) => Some(*id),
+            _ => None,
+        }
+    }
+
+    pub fn project_id(&self) -> Option<Id> {
+        match self {
+            Condition::ProjectStatus(id, ..)
+            | Condition::ActiveProjectUpgrades(id, ..) => {
+                Some(*id)
+            }
+            _ => None,
+        }
+    }
 }
 
 impl Condition {

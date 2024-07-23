@@ -66,6 +66,10 @@ fn Project(
                 </div>
             </div>
 
+            <div class="item-form desc-form">
+                <TextArea label="Description" help="Describe the project." signal=subsignal!(project.flavor.description) />
+            </div>
+
             <div class="item-form">
                 <MultiEntitySelect
                     label="Supporters"

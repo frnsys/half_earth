@@ -75,6 +75,8 @@ select {
   border: none;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 12px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 input.numeric-input {
@@ -756,7 +758,7 @@ main {
 }
 textarea {
   width: 100%;
-  min-height: 100px;
+  min-height: 80px;
   background: #202020;
   color: #fff;
   border: 1px solid #333;
@@ -807,4 +809,32 @@ textarea {
 }
 .scroll-index li {
   margin: 0 0 0.25em 0;
+}
+
+.toast {
+  background: #2A2A2A;
+  padding: 0.5em;
+  box-shadow: 4px 4px rgba(0,0,0,0.1);
+  font-size: 11px;
+}
+.toast h3 {
+  font-size: 1em;
+  margin: 0 0 0.5em 0;
+}
+.toast-header {
+  text-align: right;
+}
+.toast-remove {
+  color: #383838;
+  cursor: pointer;
+  font-size: 17px;
+  margin-top: -4px;
+}
+.toast-remove:hover {
+  color: #E1383A;
+}
+.toast-body {
+  padding: 0em .5em .5em;
+  max-height: 160px;
+  overflow-y: auto;
 }

@@ -28,6 +28,10 @@ fn Industry(
                  </div>
              </div>
 
+             <div class="item-form desc-form">
+                 <TextArea label="Description" help="Describe the industry." signal=subsignal!(industry.flavor.description) />
+             </div>
+
              <div class="item-form notes-form">
                  <TextArea label="Notes" help="Optional notes" signal=subsignal!(industry.notes) />
              </div>

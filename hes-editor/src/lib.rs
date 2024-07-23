@@ -1,5 +1,6 @@
 mod inputs;
 mod tabs;
+mod validate;
 
 use hes_engine::{
     kinds::{FeedstockMap, OutputMap, ResourceMap},
@@ -11,6 +12,7 @@ use hes_engine::{
 };
 use inputs::{AsRef, Ref};
 use leptos::*;
+use leptos_toaster::{Toaster, ToasterPosition};
 use paste::paste;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::to_value;
@@ -89,17 +91,21 @@ pub fn App() -> impl IntoView {
 
     view! {
         <main>
-            <div id="tabs">{tabs}</div>
-            {move || {
-                 match tab.get() {
-                     Tab::World => view! { <World world / > }.into_view(),
-                     Tab::Industries => view! { <Industries world / > }.into_view(),
-                     Tab::Processes => view! { <Processes world / > }.into_view(),
-                     Tab::Projects => view! { <Projects world / > }.into_view(),
-                     Tab::Events => view! { <Events world / > }.into_view(),
+            <Toaster
+                position=ToasterPosition::BottomRight
+            >
+                <div id="tabs">{tabs}</div>
+                {move || {
+                     match tab.get() {
+                         Tab::World => view! { <World world / > }.into_view(),
+                         Tab::Industries => view! { <Industries world / > }.into_view(),
+                         Tab::Processes => view! { <Processes world / > }.into_view(),
+                         Tab::Projects => view! { <Projects world / > }.into_view(),
+                         Tab::Events => view! { <Events world / > }.into_view(),
+                     }
                  }
-             }
-            }
+                }
+            </Toaster>
         </main>
     }
 }
@@ -111,6 +117,7 @@ macro_rules! infinite_list {
             use_infinite_scroll_with_options,
             UseInfiniteScrollOptions,
         };
+        use leptos_toaster::{Toast, Toasts, ToastId, ToastVariant, ToastOptions, dismiss_toast};
 
         fn find_element_with_id(
             nodelist: web_sys::NodeList,
@@ -169,6 +176,36 @@ macro_rules! infinite_list {
                 UseInfiniteScrollOptions::default().distance(50.0),
             );
 
+            let toast_context = expect_context::<Toasts>();
+            let create_toast = move |name: String, refs: Vec<String>| {
+                let toast_id = ToastId::new();
+                toast_context.toast(
+                    view! {
+                        <div class="toast">
+                            <div class="toast-header">
+                                <div class="toast-remove" on:click=move |_| {
+                                    dismiss_toast(&toast_id);
+                                }>"✗"</div>
+                            </div>
+                            <div class="toast-body">
+                                <h3>{name}" can't be deleted as it's referenced by:"</h3>
+                                <div>{move || {
+                                    refs.iter().map(|name| {
+                                        view!{ <div>{name}</div> }
+                                    }).collect::<Vec<_>>()
+                                }}</div>
+                            </div>
+                        </div>
+                    },
+                    Some(toast_id),
+                    Some(ToastOptions {
+                        dismissible: true,
+                        duration: Some(std::time::Duration::MAX),
+                        position: None,
+                    })
+                );
+            };
+
             view! {
                 <div class="scroll-index">
                     <div class="scroll-index-open"
@@ -205,18 +242,25 @@ macro_rules! infinite_list {
                     <For each=list
                         key=|(_, id)| *id
                         children=move |(i, id)| {
-                            view! {
+                           view! {
                                 <div class="scroll-list-item">
-                                    <div class="remove-item"
+                                    <div class="remove-item tooltip-parent"
                                         title="Ctrl-click to remove without confirmation."
                                         on:click=move |ev| {
                                             let msg = "Are you sure you want to delete this?";
-                                            if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
+                                            let name = with!(|world| world.$field.by_idx(i).name.clone());
+                                            logging::log!("Searching references for: {id}");
+                                            let refs = with!(|world| crate::validate::find_references(id, crate::validate::RefKind::$single, world));
+                                            if !refs.is_empty() {
+                                                create_toast(name, refs);
+                                            } else if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
                                                 update!(|world| {
                                                     world.$field.remove(&id);
                                                 });
                                             }
-                                        }>"🞬 Delete"</div>
+                                        }>
+                                            "🞬 Delete"
+                                        </div>
                                     <$single
                                         signal=create_slice(world,
                                             move |world| world.$field.by_idx(i).clone(),

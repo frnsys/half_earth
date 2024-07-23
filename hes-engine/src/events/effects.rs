@@ -345,6 +345,50 @@ impl Effect {
             EffectKind::GameOver => Effect::GameOver,
         }
     }
+
+    pub fn process_id(&self) -> Option<Id> {
+        match self {
+            Effect::OutputForProcess(id, _)
+            | Effect::ProcessLimit(id, _)
+            | Effect::UnlocksProcess(id)
+            | Effect::ProcessRequest(id, ..)
+            | Effect::ModifyProcessByproducts(id, ..) => {
+                Some(*id)
+            }
+            _ => None,
+        }
+    }
+
+    pub fn project_id(&self) -> Option<Id> {
+        match self {
+            Effect::LocksProject(id)
+            | Effect::UnlocksProject(id)
+            | Effect::ProjectRequest(id, ..)
+            | Effect::ProjectCostModifier(id, ..) => Some(*id),
+            _ => None,
+        }
+    }
+
+    pub fn industry_id(&self) -> Option<Id> {
+        match self {
+            Effect::ModifyIndustryByproducts(id, ..)
+            | Effect::ModifyIndustryResources(id, ..)
+            | Effect::ModifyIndustryResourcesAmount(id, ..)
+            | Effect::ModifyIndustryDemand(id, ..) => Some(*id),
+            _ => None,
+        }
+    }
+
+    pub fn event_id(&self) -> Option<Id> {
+        match self {
+            Effect::AddEvent(id)
+            | Effect::TriggerEvent(id, _)
+            | Effect::ModifyEventProbability(id, _) => {
+                Some(*id)
+            }
+            _ => None,
+        }
+    }
 }
 
 impl Effect {

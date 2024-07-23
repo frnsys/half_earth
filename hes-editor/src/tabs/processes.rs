@@ -108,6 +108,11 @@ fn Process(
                         signal=subsignal!(process.resources) />
                 </div>
             </div>
+
+            <div class="item-form desc-form">
+                <TextArea label="Description" help="Describe the process." signal=subsignal!(process.flavor.description) />
+            </div>
+
             <div class="item-form">
                 <MultiEnumInput
                     label="Features"

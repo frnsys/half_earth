@@ -21,3 +21,4 @@ strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
 base64 = "0.22.1"
 num = "0.4.3"
 leptos-use = "0.10.10"
+leptos_toaster = { version = "0.1.7", features = ["csr", "builtin_toast"] }
