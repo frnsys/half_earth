@@ -67,6 +67,7 @@ pub struct Process {
     pub supporters: Vec<Id>,
     pub opposers: Vec<Id>,
     pub flavor: ProcessFlavor,
+    pub notes: String,
 }
 
 impl Display for Process {

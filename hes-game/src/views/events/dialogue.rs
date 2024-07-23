@@ -7,7 +7,13 @@ use crate::{
 };
 use ev::MouseEvent;
 use hes_engine::{
-    flavor::{self, Branch, DialogueNext},
+    flavor::{
+        self,
+        DialogueLine,
+        DialogueNext,
+        Response,
+        Speaker,
+    },
     Id,
 };
 use leptos::*;
@@ -47,9 +53,15 @@ pub fn Dialogue(
         create_signal::<Option<Rc<dyn Fn() + 'static>>>(None);
     let text_ref = create_node_ref::<html::Div>();
 
+    // If no lines in the dialogue,
+    // we'll just present the "Continue" button.
     let start_line = {
         let dialogue = dialogue.get();
-        dialogue.lines[dialogue.root].clone()
+        dialogue
+            .lines
+            .get(dialogue.root)
+            .unwrap_or(&DialogueLine::default())
+            .clone()
     };
     let (line, set_line) = create_signal(start_line);
 
@@ -125,8 +137,8 @@ pub fn Dialogue(
         if let Some(stop_anim) = stop_anim.get() {
             stop_anim();
             set_revealed.set(false);
-            on_done.call(());
         }
+        on_done.call(());
     };
 
     let state =
@@ -141,22 +153,19 @@ pub fn Dialogue(
                     let line = dialogue.lines[id].clone();
                     set_line.set(line);
                 }
-                DialogueNext::Branches(branches) => {
+                DialogueNext::Responses(responses) => {
                     if let Some(event_id) = event_id.get() {
                         let branch = with!(|state| {
-                            branches.iter().find(|b| {
-                                state
-                                    .game
-                                    .eval_branch_conditions(
-                                        event_id,
-                                        region_id.get(),
-                                        b.id,
-                                    )
+                            responses.iter().find(|b| {
+                                state.game.eval_conditions(
+                                    &b.conditions,
+                                    region_id.get(),
+                                )
                             })
                         });
                         if let Some(branch) = branch {
                             if let Some(line_id) =
-                                branch.line_id
+                                branch.next_line
                             {
                                 let dialogue = dialogue.get();
                                 let line = dialogue.lines
@@ -197,7 +206,7 @@ pub fn Dialogue(
     };
 
     let select_choice =
-        move |ev: MouseEvent, branch: &Branch| {
+        move |ev: MouseEvent, response: &Response| {
             ev.stop_immediate_propagation();
 
             // this.eventID will be undefined
@@ -209,15 +218,14 @@ pub fn Dialogue(
             // which, at time of writing, none of them do.
             if let Some(event_id) = event_id.get() {
                 update!(|state| {
-                    state.game.apply_branch_effects(
-                        event_id,
+                    state.game.apply_effects(
+                        &response.effects,
                         region_id.get(),
-                        branch.id,
                     );
                 });
             }
 
-            if let Some(line_id) = branch.line_id {
+            if let Some(line_id) = response.next_line {
                 let dialogue = dialogue.get();
                 let line = dialogue.lines[line_id].clone();
                 set_line.set(line);
@@ -251,10 +259,10 @@ pub fn Dialogue(
                 </div>
             }
             .into_view()
-        } else if let Some(DialogueNext::Branches(branches)) =
+        } else if let Some(DialogueNext::Responses(responses)) =
             line.get().next
         {
-            branches
+            responses
                 .iter()
                 .cloned()
                 .map(|branch| {
@@ -294,15 +302,15 @@ pub fn Dialogue(
         <div class="dialogue">
             <div class="dialogue--inner">
                 <div class="dialogue--speech">
-                    <Show when=move || line.get().speaker != "[GAME]">
+                    <Show when=move || line.get().speaker != Speaker::Game>
                         <div class="dialogue--speaker">
                             <img src=profile/>
                         </div>
                     </Show>
-                    <div class="dialogue--body" on:click=move |_| advance()>
-                        <Show when=move || line.get().speaker != "[GAME]">
+                    <div class="dialogue--body" on:click=move |_| advance() class:hidden=move || line.get().text.is_empty()>
+                        <Show when=move || line.get().speaker != Speaker::Game>
                             <div class="dialogue--speaker-name">
-                                {move || t!(& line.get().speaker)}
+                                {move || t!(& line.get().speaker.to_string())}
                             </div>
                         </Show>
                         <div class="dialogue--text" ref=text_ref></div>

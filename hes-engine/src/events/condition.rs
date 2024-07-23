@@ -69,6 +69,109 @@ pub enum Condition {
 }
 
 impl Condition {
+    pub fn from_kind(
+        kind: ConditionKind,
+        default_process: Id,
+        default_project: Id,
+        default_npc: Id,
+    ) -> Self {
+        let comp = Comparator::GreaterEqual;
+        match kind {
+            ConditionKind::LocalVariable => {
+                Self::LocalVariable(
+                    LocalVariable::Outlook,
+                    comp,
+                    0.,
+                )
+            }
+            ConditionKind::WorldVariable => {
+                Self::WorldVariable(
+                    WorldVariable::Outlook,
+                    comp,
+                    0.,
+                )
+            }
+            ConditionKind::PlayerVariable => {
+                Self::PlayerVariable(
+                    PlayerVariable::PoliticalCapital,
+                    comp,
+                    0.,
+                )
+            }
+            ConditionKind::ProcessOutput => {
+                Self::ProcessOutput(default_process, comp, 0.)
+            }
+            ConditionKind::ProcessMixShare => {
+                Self::ProcessMixShare(default_process, comp, 0.)
+            }
+            ConditionKind::ProcessMixShareFeature => {
+                Self::ProcessMixShareFeature(
+                    ProcessFeature::IsCCS,
+                    comp,
+                    0.,
+                )
+            }
+            ConditionKind::ResourcePressure => {
+                Self::ResourcePressure(Resource::Land, comp, 0.)
+            }
+            ConditionKind::ResourceDemandGap => {
+                Self::ResourceDemandGap(
+                    Resource::Land,
+                    comp,
+                    0.,
+                )
+            }
+            ConditionKind::OutputDemandGap => {
+                Self::OutputDemandGap(Output::Fuel, comp, 0.)
+            }
+            ConditionKind::Demand => {
+                Self::Demand(Output::Fuel, comp, 0.)
+            }
+            ConditionKind::ProjectStatus => {
+                Self::ProjectStatus(
+                    default_project,
+                    ProjectStatus::Active,
+                )
+            }
+            ConditionKind::ActiveProjectUpgrades => {
+                Self::ActiveProjectUpgrades(
+                    default_project,
+                    comp,
+                    1,
+                )
+            }
+            ConditionKind::RunsPlayed => {
+                Self::RunsPlayed(comp, 1)
+            }
+            ConditionKind::RegionFlag => {
+                Self::RegionFlag(RegionFlag::Protests)
+            }
+            ConditionKind::NPCRelationship => {
+                Self::NPCRelationship(
+                    default_npc,
+                    NPCRelation::Ally,
+                )
+            }
+            ConditionKind::FeedstockYears => {
+                Self::FeedstockYears(Feedstock::Coal, comp, 0.)
+            }
+            ConditionKind::HasFlag => {
+                Self::HasFlag(Flag::Vegan)
+            }
+            ConditionKind::WithoutFlag => {
+                Self::WithoutFlag(Flag::Vegan)
+            }
+            ConditionKind::HeavyProjects => {
+                Self::HeavyProjects(comp, 1)
+            }
+            ConditionKind::ProtectLand => {
+                Self::ProtectLand(comp, 0.)
+            }
+        }
+    }
+}
+
+impl Condition {
     /// If this condition has any regional conditions.
     pub fn is_regional(&self) -> bool {
         matches!(

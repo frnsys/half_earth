@@ -101,7 +101,7 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(world: World) -> State {
+    pub fn new(mut world: World) -> State {
         let mut npcs = NPC::load();
         let n_npcs =
             npcs.iter().filter(|npc| !npc.locked).count()
@@ -109,6 +109,13 @@ impl State {
         for npc in npcs.iter_mut() {
             if !npc.locked {
                 npc.seats = 1. / n_npcs;
+            }
+        }
+
+        // Ensure that all projects have at least one outcome.
+        for project in world.projects.iter_mut() {
+            if project.outcomes.is_empty() {
+                project.outcomes.push(Outcome::default());
             }
         }
 

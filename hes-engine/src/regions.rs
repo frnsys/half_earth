@@ -247,8 +247,8 @@ impl Region {
     Deserialize,
     Clone,
     Copy,
-    EnumIter,
     Debug,
+    EnumIter,
     EnumString,
     IntoStaticStr,
 )]

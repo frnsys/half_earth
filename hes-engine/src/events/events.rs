@@ -232,18 +232,13 @@ pub struct Event {
     /// Effects applied when this event occurs.
     pub effects: Vec<Effect>,
 
-    /// Associated effects/conditions
-    /// for dialogue responses/branches;
-    /// position in vec should correspond to
-    /// the branch id.
-    pub branches: Vec<(Vec<Effect>, Vec<Condition>)>,
-
     pub prob_modifier: f32,
 
     /// Icon event intensity
     pub intensity: usize,
 
     pub flavor: EventFlavor,
+    pub notes: String,
 }
 
 impl Display for Event {
@@ -329,7 +324,6 @@ mod test {
                 prob_modifier: 1.,
                 intensity: 0,
                 effects: vec![],
-                branches: vec![],
                 probabilities: vec![
                     Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -357,7 +351,6 @@ mod test {
                 prob_modifier: 1.,
                 intensity: 0,
                 effects: vec![],
-                branches: vec![],
                 probabilities: vec![Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![],
@@ -415,7 +408,6 @@ mod test {
             intensity: 0,
 
             effects: vec![],
-            branches: vec![],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
@@ -513,7 +505,6 @@ mod test {
             occurred: false,
             regional: false,
             effects: vec![],
-            branches: vec![],
             probabilities: vec![Probability {
                 likelihood: Likelihood::Guaranteed,
                 conditions: vec![],
@@ -560,7 +551,6 @@ mod test {
                 occurred: false,
                 regional: false,
                 effects: vec![],
-                branches: vec![],
                 probabilities: vec![Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![],

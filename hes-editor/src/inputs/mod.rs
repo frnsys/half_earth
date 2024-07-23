@@ -29,6 +29,41 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{Blob, File};
 
+/// This provides an easier way to create a slice,
+/// i.e. a tuple of `(Signal<T>, SignalSetter<T>)`
+/// from another slice, without requiring an
+/// intermediary `RwSignal<T>`.
+#[macro_export]
+macro_rules! subsignal {
+    ($signal:ident.$($field:tt).+) => {{
+        let read = $signal.0;
+        let write = $signal.1;
+        let reader = Signal::derive(move || {
+            with!(|read| read.$($field).+.clone())
+        });
+        let writer = SignalSetter::map(move |val| {
+            let mut data = read.get();
+            data.$($field).+ = val;
+            write.set(data);
+        });
+        (reader, writer)
+    }};
+
+    ($signal:ident[$index:tt]) => {{
+        let read = $signal.0;
+        let write = $signal.1;
+        let reader = Signal::derive(move || {
+            with!(|read| read[$index].clone())
+        });
+        let writer = SignalSetter::map(move |val| {
+            let mut data = read.get();
+            data[$index] = val;
+            write.set(data);
+        });
+        (reader, writer)
+    }};
+}
+
 /// Conveniently create a slice from an enum variant.
 #[macro_export]
 macro_rules! enum_slice {
@@ -45,18 +80,22 @@ pub fn TextInput(
     signal: (Signal<String>, SignalSetter<String>),
     #[prop(into, optional)] label: String,
     #[prop(into, optional)] help: String,
+    #[prop(into, optional)] inline: bool,
 ) -> impl IntoView {
     let (read, write) = signal;
 
     view! {
-        <div class="input-group">
-            <label>{label}</label>
-            <input
-                value=read.get_untracked()
-                on:input=move |ev| {
-                    let value = event_target_value(&ev);
-                    write.set(value);
-                } />
+        <div class="input-group" class:inline={inline}>
+            <div class="text-group-inner">
+                <label>{label}</label>
+                <input
+                    class="text-input"
+                    value=read.get_untracked()
+                    on:input=move |ev| {
+                        let value = event_target_value(&ev);
+                        write.set(value);
+                    } />
+            </div>
             <div class="input-help">{help}</div>
         </div>
     }
@@ -211,24 +250,13 @@ pub fn MultiNumericInput<const N: usize>(
     #[prop(into)] label: String,
     #[prop(into)] help: String,
 ) -> impl IntoView {
-    let (read, write) = signal;
-    let arr = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(arr.get());
-    });
-
     let inputs: Vec<_> = (0..N)
         .map(|i| {
             view! {
                 <NumericInput
                     label=sublabels[i]
                     help=""
-                    signal=create_slice(arr,
-                        move |arr| arr[i],
-                        move |arr, val| arr[i] = val
-                    ) />
+                    signal=subsignal!(signal[i]) />
             }
         })
         .collect();
@@ -260,14 +288,7 @@ pub fn ResourceMapInput(
     #[prop(into)] label: String,
     #[prop(into)] help: String,
 ) -> impl IntoView {
-    let (read, write) = signal;
-    let map = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(map.get());
-    });
-
+    let map = signal;
     let help = store_value(help);
 
     view! {
@@ -286,22 +307,22 @@ pub fn ResourceMapInput(
                 <NumericInput
                     label="Land"
                     help="Land in square meters (m2)."
-                    signal=slice!(map.land)
+                    signal=subsignal!(map.land)
                     />
                 <NumericInput
                     label="Water"
                     help="Water in liters (L)."
-                    signal=slice!(map.water)
+                    signal=subsignal!(map.water)
                     />
                 <NumericInput
                     label="Electricity"
                     help="Electricity in kilowatt-hours (kWh)."
-                    signal=slice!(map.electricity)
+                    signal=subsignal!(map.electricity)
                     />
                 <NumericInput
                     label="Fuel"
                     help="Fuel in kilowatt-hours (kWh)."
-                    signal=slice!(map.fuel)
+                    signal=subsignal!(map.fuel)
                     />
             </div>
         </div>
@@ -314,14 +335,7 @@ pub fn ByproductMapInput(
     #[prop(into)] label: String,
     #[prop(into)] help: String,
 ) -> impl IntoView {
-    let (read, write) = signal;
-    let map = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(map.get());
-    });
-
+    let map = signal;
     let help = store_value(help);
 
     view! {
@@ -340,22 +354,22 @@ pub fn ByproductMapInput(
                 <NumericInput
                     label="CO2"
                     help="CO2 in grams."
-                    signal=slice!(map.co2)
+                    signal=subsignal!(map.co2)
                     />
                 <NumericInput
                     label="CH4"
                     help="CH4 (methane) in grams."
-                    signal=slice!(map.ch4)
+                    signal=subsignal!(map.ch4)
                     />
                 <NumericInput
                     label="N2O"
                     help="N2O (nitrous oxide) in grams."
-                    signal=slice!(map.n2o)
+                    signal=subsignal!(map.n2o)
                     />
                 <NumericInput
                     label="Biodiversity"
                     help=r#"Effects on biodiversity, in "pressure"; e.g. -1 pressure means +1 to the extinction rate."#
-                    signal=slice!(map.biodiversity)
+                    signal=subsignal!(map.biodiversity)
                     />
             </div>
         </div>
@@ -368,14 +382,7 @@ pub fn OutputMapInput(
     #[prop(into)] label: String,
     #[prop(into)] help: String,
 ) -> impl IntoView {
-    let (read, write) = signal;
-    let map = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(map.get());
-    });
-
+    let map = signal;
     let help = store_value(help);
 
     view! {
@@ -394,22 +401,22 @@ pub fn OutputMapInput(
                 <NumericInput
                     label="Fuel"
                     help="Fuel in kilowatt-hours (kWh)."
-                    signal=slice!(map.fuel)
+                    signal=subsignal!(map.fuel)
                     />
                 <NumericInput
                     label="Electricity"
                     help="Electricity in kilowatt-hours (kWh)."
-                    signal=slice!(map.electricity)
+                    signal=subsignal!(map.electricity)
                     />
                 <NumericInput
                     label="Plant Calories"
                     help="Plant calories in kilocalories (kcal)."
-                    signal=slice!(map.plant_calories)
+                    signal=subsignal!(map.plant_calories)
                     />
                 <NumericInput
                     label="Animal Calories"
                     help="Animal calories in kilocalories (kcal)."
-                    signal=slice!(map.animal_calories)
+                    signal=subsignal!(map.animal_calories)
                     />
             </div>
         </div>
@@ -422,14 +429,7 @@ pub fn FeedstockMapInput(
     #[prop(into)] label: String,
     #[prop(into)] help: String,
 ) -> impl IntoView {
-    let (read, write) = signal;
-    let map = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(map.get());
-    });
-
+    let map = signal;
     let help = store_value(help);
 
     view! {
@@ -448,32 +448,32 @@ pub fn FeedstockMapInput(
                 <NumericInput
                     label="Coal"
                     help="Coal in grams (g)."
-                    signal=slice!(map.coal)
+                    signal=subsignal!(map.coal)
                     />
                 <NumericInput
                     label="Oil"
                     help="Oil in liters (L)."
-                    signal=slice!(map.oil)
+                    signal=subsignal!(map.oil)
                     />
                 <NumericInput
                     label="Natural Gas"
                     help="Natural Gas in liters (L)"
-                    signal=slice!(map.natural_gas)
+                    signal=subsignal!(map.natural_gas)
                     />
                 <NumericInput
                     label="Thorium"
                     help="Thorium in grams (g)."
-                    signal=slice!(map.thorium)
+                    signal=subsignal!(map.thorium)
                     />
                 <NumericInput
                     label="Uranium"
                     help="Uranium in grams (g)."
-                    signal=slice!(map.uranium)
+                    signal=subsignal!(map.uranium)
                     />
                 <NumericInput
                     label="Lithium"
                     help="Lithium in grams (g)."
-                    signal=slice!(map.lithium)
+                    signal=subsignal!(map.lithium)
                     />
             </div>
         </div>
@@ -734,8 +734,10 @@ pub fn EntityPicker<T: AsRef + 'static>(
 
     let target = create_node_ref::<html::Div>();
     on_click_outside(target, move |_| {
-        focused.set(false);
-        write.set(local.get());
+        if focused.get() {
+            focused.set(false);
+            write.set(local.get());
+        }
     });
 
     view! {
@@ -775,14 +777,6 @@ pub fn ImageInput(
     signal: (Signal<Image>, SignalSetter<Image>),
 ) -> impl IntoView {
     let (read, write) = signal;
-
-    let image = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(image.get());
-    });
-
     let help = "Images will be bundled with your exported world, so it's recommended that you make sure they aren't too big.";
 
     let image_src = move || match read.get().data {
@@ -798,6 +792,9 @@ pub fn ImageInput(
     view! {
         <div class="image-input">
             <img src={image_src} />
+            <TextInput label="Attribution"
+                inline=true
+                signal=subsignal!(signal.attribution) />
             <input
                 type="file"
                 multiple=false
@@ -810,10 +807,12 @@ pub fn ImageInput(
                         let mime = file.type_();
                         spawn_local(async move {
                             let bytes = read_file(file).await;
-                            update!(|image| image.data = ImageData::Data {
+                            let mut image = read.get();
+                            image.data = ImageData::Data {
                                 bytes,
                                 mime,
-                            });
+                            };
+                            write.set(image);
                         })
                     }
                 }
@@ -831,7 +830,6 @@ pub fn OptionalImageInput(
     ),
 ) -> impl IntoView {
     let (read, write) = signal;
-    let maybe_val = create_rw_signal(read.get_untracked());
     let value = create_rw_signal(
         read.get_untracked().unwrap_or_else(Image::default),
     );
@@ -841,24 +839,28 @@ pub fn OptionalImageInput(
             <ToggleInput
                 label="Include Image"
                 help=""
-                signal=create_slice(maybe_val,
-                    move |opt| opt.is_some(),
-                    move |opt, val| {
-                        if val {
-                            *opt = Some(value.get());
+                signal=(
+                    Signal::derive(move || with!(|read| read.is_some())),
+                    SignalSetter::map(move |enable| {
+                        let value = if enable {
+                            Some(value.get())
                         } else {
-                            *opt = None;
-                        }
-                    }) />
-            <Show when=move || with!(|maybe_val| maybe_val.is_some())
+                            None
+                        };
+                        write.set(value);
+                    })) />
+            <Show when=move || with!(|read| read.is_some())
                 fallback=move || view! { <div class="image-placeholder" /> }>
                 <ImageInput
-                    signal=create_slice(maybe_val,
-                        move |opt| opt.clone().unwrap(),
-                        move |opt, val: Image| {
-                            opt.insert(val.clone());
-                            value.set(val);
-                        }) />
+                    signal=(
+                        Signal::derive(move || read.get().unwrap()),
+                        SignalSetter::map(move |image: Image| {
+                            let mut opt = read.get();
+                            opt.insert(image.clone());
+                            value.set(image);
+                            write.set(opt);
+                        })
+                    ) />
             </Show>
         </div>
     }
@@ -920,6 +922,26 @@ pub fn ToggleInput(
                 {inner.run()}
             </div>
             <div class:input-help=!tooltip class:tooltip=tooltip>{help}</div>
+        </div>
+    }
+}
+
+#[component]
+pub fn TextArea(
+    signal: (Signal<String>, SignalSetter<String>),
+    #[prop(into, optional)] label: String,
+    #[prop(into, optional)] help: String,
+) -> impl IntoView {
+    let (read, write) = signal;
+    view! {
+        <div class="input-group text-area-group">
+            <label>{label}</label>
+            <div class="input-help">{help}</div>
+            <textarea
+                on:input=move |ev| {
+                    let value = event_target_value(&ev);
+                    write.set(value);
+                }>{read.get_untracked()}</textarea>
         </div>
     }
 }

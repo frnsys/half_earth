@@ -139,7 +139,9 @@ impl From<FactorKind> for Factor {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
+#[derive(
+    Debug, Deserialize, Serialize, Clone, PartialEq, Default,
+)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
     pub probability: Probability,
@@ -187,6 +189,7 @@ pub struct Project {
     pub opposers: Vec<Id>,
 
     pub flavor: ProjectFlavor,
+    pub notes: String,
 }
 
 impl Display for Project {

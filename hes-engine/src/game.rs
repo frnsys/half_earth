@@ -1,7 +1,7 @@
 use std::ops::Deref;
 
 use crate::{
-    events::{Event, Phase},
+    events::{Condition, Effect, Event, Phase},
     state::State,
     world::World,
     Id,
@@ -162,35 +162,27 @@ impl Game {
         }
     }
 
-    pub fn apply_branch_effects(
+    pub fn apply_effects(
         &mut self,
-        event_id: Id,
+        effects: &[Effect],
         region_id: Option<Id>,
-        branch_id: usize,
     ) {
-        let mut effects = vec![];
-        let (efs, _conds) = &self.event_pool.events[&event_id]
-            .branches[branch_id];
-        for ef in efs {
-            effects.push(ef.clone());
-        }
         for effect in effects {
             effect.apply(&mut self.state, region_id);
         }
     }
 
-    pub fn eval_branch_conditions(
+    pub fn eval_conditions(
         &self,
-        event_id: Id,
+        conditions: &[Condition],
         region_id: Option<Id>,
-        branch_id: usize,
     ) -> bool {
-        let event = &self.event_pool.events[&event_id];
-        if branch_id < event.branches.len() {
-            let (_effects, conds) = &event.branches[branch_id];
-            conds.iter().all(|c| c.eval(&self.state, region_id))
-        } else {
+        if conditions.is_empty() {
             true
+        } else {
+            conditions
+                .iter()
+                .all(|c| c.eval(&self.state, region_id))
         }
     }
 

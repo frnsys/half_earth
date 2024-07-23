@@ -62,6 +62,15 @@ pub struct Probability {
     pub conditions: Vec<Condition>,
 }
 
+impl Default for Probability {
+    fn default() -> Self {
+        Probability {
+            likelihood: Likelihood::Guaranteed,
+            conditions: vec![],
+        }
+    }
+}
+
 impl Probability {
     /// If this probability has any regional conditions.
     pub fn is_regional(&self) -> bool {

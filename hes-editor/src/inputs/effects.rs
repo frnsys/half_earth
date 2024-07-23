@@ -1,4 +1,4 @@
-use crate::{enum_slice, inputs::*};
+use crate::{enum_slice, inputs::*, subsignal};
 use hes_engine::{
     events::{Effect, EffectKind, Event, WorldVariable},
     industries::Industry,
@@ -501,10 +501,10 @@ where
     };
 
     view! {
-        <div class="effect">
-            <div class="effect-header">
+        <div class="effect mutable-list-item">
+            <div class="mutable-list-item-header">
                 <label>{label}</label>
-                <div class="effect-remove" title="Ctrl-click to remove without confirmation." on:click=on_remove>"✗"</div>
+                <div class="mutable-list-item-remove" title="Ctrl-click to remove without confirmation." on:click=on_remove>"✗"</div>
             </div>
             {input}
         </div>
@@ -514,16 +514,10 @@ where
 #[component]
 pub fn Effects(
     effects: (Signal<Vec<Effect>>, SignalSetter<Vec<Effect>>),
+    #[prop(optional)] double_col: bool,
 ) -> impl IntoView {
     let (read, write) = effects;
-    let effects = create_rw_signal(read.get_untracked());
-
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(effects.get());
-    });
-
-    let (new_effect_kind, set_new_effect_kind) =
+    let (new_kind, set_new_kind) =
         create_signal(EffectKind::WorldVariable);
 
     let processes =
@@ -547,31 +541,31 @@ pub fn Effects(
     let default_npc = move || with!(|npcs| npcs.first().id);
 
     view! {
-        <div class="effects">
-            <div class="effects-header">
+        <div class="effects mutable-list" class:mutable-list-double-col={double_col}>
+            <div class="mutable-list-header">
                 <h2>Effects</h2>
-                <div class="effects-add">
+                <div class="mutable-list-add">
                     <EnumInput
-                        label="Variable"
-                        help="What variable is changed."
-                        signal=(new_effect_kind.into(), set_new_effect_kind.into()) />
-                    <div class="effects-add-button" on:click=move |_| {
+                        label="Effect Kind"
+                        help="What kind of effect to create."
+                        signal=(new_kind.into(), set_new_kind.into()) />
+                    <div class="mutable-list-add-button" on:click=move |_| {
                         let effect = Effect::from_kind(
-                            new_effect_kind.get(),
+                            new_kind.get(),
                             default_process(),
                             default_project(),
                             default_industry(),
                             default_event(),
                             default_npc(),
                             );
-                        update!(|effects| {
-                            effects.insert(0, effect);
-                        });
-                    }>+ Add</div>
+                        let mut effects = read.get();
+                        effects.insert(0, effect);
+                        write.set(effects);
+                    }>+Add</div>
                 </div>
             </div>
             {move || {
-                 let no_effects = with!(|effects| effects.is_empty());
+                 let no_effects = with!(|read| read.is_empty());
                  if no_effects {
                      Some(view! {
                          <div class="empty">No effects defined.</div>
@@ -580,26 +574,25 @@ pub fn Effects(
                      None
                  }
             }}
-            {move || {
-                 let n_effects = with!(|effects| effects.len());
-                 (0..n_effects).map(|i| {
-                     view! {
-                         <Effect
-                             on_remove=move |ev: ev::MouseEvent| {
-                                 let msg = "Are you sure you want to remove this effect?";
-                                 if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
-                                     update!(|effects| {
+            <div class="mutable-list-items">
+                {move || {
+                     let n_effects = with!(|read| read.len());
+                     (0..n_effects).map(|i| {
+                         view! {
+                             <Effect
+                                 on_remove=move |ev: ev::MouseEvent| {
+                                     let msg = "Are you sure you want to remove this effect?";
+                                     if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
+                                         let mut effects = read.get();
                                          effects.remove(i);
-                                     });
+                                         write.set(effects);
+                                     }
                                  }
-                             }
-                             effect=create_slice(effects,
-                                 move |effects| effects[i].clone(),
-                                 move |effects, val| effects[i] = val
-                             ) />
-                     }
-                 }).collect::<Vec<_>>()
-             }}
+                                 effect=subsignal!(effects[i]) />
+                         }
+                     }).collect::<Vec<_>>()
+                 }}
+            </div>
         </div>
     }
 }

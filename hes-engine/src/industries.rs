@@ -19,6 +19,7 @@ pub struct Industry {
     pub byproduct_modifiers: ByproductMap,
     pub demand_modifier: f32,
     pub flavor: IndustryFlavor,
+    pub notes: String,
 }
 
 impl Display for Industry {

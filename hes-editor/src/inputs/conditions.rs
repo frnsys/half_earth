@@ -1,4 +1,4 @@
-use crate::{enum_slice, inputs::*};
+use crate::{enum_slice, inputs::*, subsignal};
 use hes_engine::{
     events::{
         Condition,
@@ -14,9 +14,13 @@ use hes_engine::{
 use leptos::*;
 
 #[component]
-fn Condition(
+fn Condition<F>(
     condition: (Signal<Condition>, SignalSetter<Condition>),
-) -> impl IntoView {
+    on_remove: F,
+) -> impl IntoView
+where
+    F: Fn(ev::MouseEvent) + 'static,
+{
     let (read, write) = condition;
 
     let processes =
@@ -38,6 +42,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::WorldVariable(var, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
@@ -54,6 +59,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::LocalVariable(var, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::LocalVariable(var, comp, [value])) />
@@ -70,6 +76,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::PlayerVariable(var, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::PlayerVariable(var, comp, [value])) />
@@ -87,6 +94,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ProcessOutput(id, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Value"
                     help="The output value to compare against."
                     signal=enum_slice!(|write| Condition::ProcessOutput(id, comp, [value])) />
@@ -104,6 +112,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ProcessMixShare(id, [comp], value)) />
                 <PercentInput
+                    inline=true
                     label="Mix Share"
                     help="The mix share to compare against."
                     signal=enum_slice!(|write| Condition::ProcessMixShare(id, comp, [value])) />
@@ -120,6 +129,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ProcessMixShareFeature(feat, [comp], value)) />
                 <PercentInput
+                    inline=true
                     label="Mix Share"
                     help="The mix share to compare against."
                     signal=enum_slice!(|write| Condition::ProcessMixShareFeature(feat, comp, [value])) />
@@ -136,6 +146,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ResourcePressure(resource, [comp], value)) />
                 <PercentInput
+                    inline=true
                     label="Pressure"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::ResourcePressure(resource, comp, [value])) />
@@ -152,6 +163,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ResourceDemandGap(resource, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Gap Size"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::ResourceDemandGap(resource, comp, [value])) />
@@ -168,6 +180,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::OutputDemandGap(output, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Gap Size"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::OutputDemandGap(output, comp, [value])) />
@@ -184,6 +197,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::Demand(output, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Demand Amount"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::Demand(output, comp, [value])) />
@@ -214,6 +228,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ActiveProjectUpgrades(id, [comp], count)) />
                 <NumericInput
+                    inline=true
                     label="Number of Upgrades"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::ActiveProjectUpgrades(id, comp, [count])) />
@@ -226,6 +241,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::RunsPlayed([comp], count)) />
                 <NumericInput
+                    inline=true
                     label="Number of Runs"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::RunsPlayed(comp, [count])) />
@@ -255,6 +271,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::FeedstockYears(feedstock, [comp], value)) />
                 <NumericInput
+                    inline=true
                     label="Years"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::FeedstockYears(feedstock, comp, [value])) />
@@ -291,6 +308,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::HeavyProjects([comp], count)) />
                 <NumericInput
+                    inline=true
                     label="Number of Projects"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::HeavyProjects(comp, [count])) />
@@ -303,6 +321,7 @@ fn Condition(
                     help="The comparison operation."
                     signal=enum_slice!(|write| Condition::ProtectLand([comp], value)) />
                 <PercentInput
+                    inline=true
                     label="Land Under Protection"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::ProtectLand(comp, [value])) />
@@ -315,8 +334,11 @@ fn Condition(
     };
 
     view! {
-        <div class="effect">
-            <label>{label}</label>
+        <div class="condition mutable-list-item">
+            <div class="mutable-list-item-header">
+                <label>{label}</label>
+                <div class="mutable-list-item-remove" title="Ctrl-click to remove without confirmation." on:click=on_remove>"✗"</div>
+            </div>
             {input}
         </div>
     }
@@ -330,27 +352,73 @@ pub fn Conditions(
     ),
 ) -> impl IntoView {
     let (read, write) = conditions;
-    let conditions = create_rw_signal(read.get_untracked());
 
-    // Hacky way to keep the data synchronized.
-    create_effect(move |_| {
-        write.set(conditions.get());
-    });
+    let (new_kind, set_new_kind) =
+        create_signal(ConditionKind::WorldVariable);
 
-    let n_conditions = with!(|conditions| conditions.len());
+    let processes =
+        expect_context::<Signal<Collection<Ref<Process>>>>();
+    let projects =
+        expect_context::<Signal<Collection<Ref<Project>>>>();
+    let npcs = expect_context::<Signal<Collection<Ref<NPC>>>>();
+
+    let default_process =
+        move || with!(|processes| processes.first().id);
+    let default_project =
+        move || with!(|projects| projects.first().id);
+    let default_npc = move || with!(|npcs| npcs.first().id);
+
     view! {
-        <div class="conditions">
-        {move || {
-             (0..n_conditions).map(|i| {
-                 view! {
-                     <Condition
-                         condition=create_slice(conditions,
-                             move |conditions| conditions[i].clone(),
-                             move |conditions, val| conditions[i] = val
-                         ) />
+        <div class="conditions mutable-list">
+            <div class="mutable-list-header">
+                <h2>Conditions</h2>
+                <div class="mutable-list-add">
+                    <EnumInput
+                        label="Condition Kind"
+                        help="What kind of condition to create."
+                        signal=(new_kind.into(), set_new_kind.into()) />
+                    <div class="mutable-list-add-button" on:click=move |_| {
+                        let condition = Condition::from_kind(
+                            new_kind.get(),
+                            default_process(),
+                            default_project(),
+                            default_npc(),
+                            );
+                        let mut conditions = read.get();
+                        conditions.insert(0, condition);
+                        write.set(conditions);
+                    }>+Add</div>
+                </div>
+            </div>
+            {move || {
+                 let empty = with!(|read| read.is_empty());
+                 if empty {
+                     Some(view! {
+                         <div class="empty">No conditions defined.</div>
+                     })
+                 } else {
+                     None
                  }
-             }).collect::<Vec<_>>()
-         }}
+            }}
+            <div class="mutable-list-items">
+                {move || {
+                     let n_conditions = with!(|read| read.len());
+                     (0..n_conditions).map(|i| {
+                         view! {
+                             <Condition
+                                 on_remove=move |ev: ev::MouseEvent| {
+                                     let msg = "Are you sure you want to remove this condition?";
+                                     if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
+                                         let mut conditions = read.get();
+                                         conditions.remove(i);
+                                         write.set(conditions);
+                                     }
+                                 }
+                                 condition=subsignal!(conditions[i]) />
+                         }
+                     }).collect::<Vec<_>>()
+                 }}
+            </div>
         </div>
     }
 }
