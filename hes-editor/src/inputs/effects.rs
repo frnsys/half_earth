@@ -30,18 +30,81 @@ where
 
     let input = move || {
         match read.get() {
-            Effect::WorldVariable(var, value) => view! {
-                <EnumInput
-                    label="Variable"
-                    help="What variable is changed."
-                    signal=enum_slice!(|write| Effect::WorldVariable([var], value)) />
-                <NumericInput
-                    inline=true
-                    label="Value"
-                    help="The amount to change the variable by."
-                    signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
-            }.into_view(),
+            Effect::WorldVariable(var, value) => {
+                let inner = match var {
+                    WorldVariable::Temperature => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The change in global temperatures, in C."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::SeaLevelRise => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount to change the sea level rise by, in meters."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::SeaLevelRiseRate => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The annual change in sea level rise, in meters/year."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::Precipitation => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount to change the precipitation by, in cm/year."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::Emissions => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount to change annual emissions by, in Gt CO2eq."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::PopulationGrowth => {
+                        view! {
+                            <PercentInput
+                                inline=true
+                                label="Value"
+                                help="The change in population growth."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                    _ => {
+                        view !{
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount to change the variable by."
+                                signal=enum_slice!(|write| Effect::WorldVariable(var, [value])) />
+                        }.into_view()
+                    }
+                };
 
+                view! {
+                    <EnumInput
+                        label="Variable"
+                        help="What variable is changed."
+                        signal=enum_slice!(|write| Effect::WorldVariable([var], value)) />
+                    {inner}
+                }.into_view()
+            },
             Effect::PlayerVariable(var, value) => view! {
                 <EnumInput
                     label="Variable"

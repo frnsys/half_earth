@@ -1,13 +1,13 @@
 {
   "build": {
-    "beforeDevCommand": "cargo leptos watch",
-    "beforeBuildCommand": "cargo leptos build",
-    "devPath": "http://localhost:3000",
-    "distDir": "../target/site/pkg",
+    "beforeDevCommand": "trunk serve",
+    "beforeBuildCommand": "trunk build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "hes-game",
+    "productName": "hes-editor",
     "version": "0.0.0"
   },
   "tauri": {
@@ -16,11 +16,19 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "dialog": {
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
+        "open": true,
+        "save": true
       }
     },
     "windows": [
       {
-        "title": "Half-Earth Socialism",
+        "title": "Half-Earth Socialism: Editor",
         "width": 800,
         "height": 600
       }

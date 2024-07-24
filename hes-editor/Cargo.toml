@@ -22,3 +22,8 @@ base64 = "0.22.1"
 num = "0.4.3"
 leptos-use = "0.10.10"
 leptos_toaster = { version = "0.1.7", features = ["csr", "builtin_toast"] }
+tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["tauri", "dialog"] }
+serde_json = { version = "1.0.120", features = ["float_roundtrip"] }
+
+[workspace]
+members = ["src-tauri"]

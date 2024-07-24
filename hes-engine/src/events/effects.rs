@@ -454,7 +454,7 @@ impl Effect {
                     }
                     WorldVariable::PopulationGrowth => {
                         state.population_growth_modifier +=
-                            *change / 100.
+                            *change
                     }
                     WorldVariable::Emissions => {
                         state.byproduct_mods.co2 +=
@@ -471,9 +471,6 @@ impl Effect {
                     }
                     WorldVariable::Temperature => {
                         state.temperature_modifier += *change
-                    }
-                    WorldVariable::WaterStress => {
-                        state.water_stress += *change
                     }
                     WorldVariable::SeaLevelRise => {
                         state.world.sea_level_rise += *change
@@ -747,7 +744,7 @@ impl Effect {
                     }
                     WorldVariable::PopulationGrowth => {
                         state.population_growth_modifier -=
-                            *change / 100.
+                            *change
                     }
                     WorldVariable::Emissions => {
                         state.byproduct_mods.co2 -=
@@ -763,9 +760,6 @@ impl Effect {
                     }
                     WorldVariable::Temperature => {
                         state.temperature_modifier -= *change
-                    }
-                    WorldVariable::WaterStress => {
-                        state.water_stress -= *change
                     }
                     WorldVariable::SeaLevelRise => {
                         state.world.sea_level_rise -= *change

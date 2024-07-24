@@ -31,23 +31,85 @@ where
 
     let input = move || {
         match read.get() {
-            Condition::WorldVariable(var, comp, value) => view! {
-                <div class="input-help">"Compare against a global variable."</div>
-                <EnumInput
-                    label="Variable"
-                    help="The reference variable."
-                    signal=enum_slice!(|write| Condition::WorldVariable([var], comp, value)) />
-                <EnumInput
-                    label="Comparator"
-                    help="The comparison operation."
-                    signal=enum_slice!(|write| Condition::WorldVariable(var, [comp], value)) />
-                <NumericInput
-                    inline=true
-                    label="Value"
-                    help="The value to compare against."
-                    signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
-            }.into_view(),
-
+            Condition::WorldVariable(var, comp, value) => {
+                let inner = match var {
+                    WorldVariable::Temperature => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The global temperature anomaly, in C."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::SeaLevelRise => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount of sea level rise, in meters."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::SeaLevelRiseRate => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The annual change in sea level rise, in meters/year."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::Precipitation => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount of precipitation, in cm/year."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::Emissions => {
+                        view! {
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The amount of annual emissions, in Gt CO2eq."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                    WorldVariable::PopulationGrowth => {
+                        view! {
+                            <PercentInput
+                                inline=true
+                                label="Value"
+                                help="The annual rate of population growth."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                    _ => {
+                        view !{
+                            <NumericInput
+                                inline=true
+                                label="Value"
+                                help="The value to compare against."
+                                signal=enum_slice!(|write| Condition::WorldVariable(var, comp, [value])) />
+                        }.into_view()
+                    }
+                };
+                view! {
+                    <div class="input-help">"Compare against a global variable."</div>
+                        <EnumInput
+                            label="Variable"
+                            help="The reference variable."
+                            signal=enum_slice!(|write| Condition::WorldVariable([var], comp, value)) />
+                        <EnumInput
+                            label="Comparator"
+                            help="The comparison operation."
+                            signal=enum_slice!(|write| Condition::WorldVariable(var, [comp], value)) />
+                        {inner}
+                    }.into_view()
+            }
             Condition::LocalVariable(var, comp, value) => view! {
                 <div class="input-help">"Compare against a local (regional) variable."</div>
                 <EnumInput
@@ -325,6 +387,19 @@ where
                     label="Land Under Protection"
                     help="The value to compare against."
                     signal=enum_slice!(|write| Condition::ProtectLand(comp, [value])) />
+            }.into_view(),
+
+            Condition::WaterStress(comp, value) => view! {
+                <div class="input-help">"Compare against the percentage of water demanded over water availabile."</div>
+                <EnumInput
+                    label="Comparator"
+                    help="The comparison operation."
+                    signal=enum_slice!(|write| Condition::WaterStress([comp], value)) />
+                <PercentInput
+                    inline=true
+                    label="Percent of available water in use."
+                    help="The value to compare against."
+                    signal=enum_slice!(|write| Condition::WaterStress(comp, [value])) />
             }.into_view(),
         }
     };

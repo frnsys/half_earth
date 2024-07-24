@@ -83,7 +83,6 @@ pub struct State {
     pub precipitation: f32, // global precip avg
     pub temp_outlook: f32,
     pub shortages_outlook: f32,
-    pub water_stress: f32, // 0-100%
     pub co2_emissions: f32,
     pub ch4_emissions: f32,
     pub n2o_emissions: f32,
@@ -168,7 +167,6 @@ impl State {
             precipitation: 0.,
             temp_outlook: 0.,
             shortages_outlook: 0.,
-            water_stress: 0.,
             co2_emissions: 0.,
             ch4_emissions: 0.,
             n2o_emissions: 0.,
@@ -275,6 +273,11 @@ impl State {
                 &self.world.income_pop_coefs,
             );
         }
+    }
+
+    pub fn water_stress(&self) -> f32 {
+        self.resources_demand.water
+            / self.world.starting_resources.water
     }
 
     pub fn step_projects(

@@ -190,7 +190,7 @@ pub fn find_references(
     referenced_by.into_iter().collect()
 }
 
-pub fn validate(world: &World) {
+pub fn validate(world: &World) -> Vec<String> {
     let mut errors = vec![];
     let tracker = IdTracker::new(world);
 
@@ -235,4 +235,5 @@ pub fn validate(world: &World) {
             }
         }
     }
+    errors
 }

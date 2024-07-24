@@ -391,7 +391,7 @@ impl DisplayEffect {
                         "population",
                         "{changeDir} global population growth by {amount}<strong>%.</strong>",
                         changeDir: self.change_dir(*amount),
-                        amount: self.fmt_param(*amount)
+                        amount: display::percent(*amount, false)
                     },
                 ),
                 WorldVariable::Population => (
@@ -428,19 +428,6 @@ impl DisplayEffect {
                     text! {
                         "sea_level_rise",
                         "{changeDir} the amount of sea level rise by {amount}mm/year.",
-                        changeDir: self.change_dir(*amount),
-                        amount: self.fmt_param(*amount)
-                    },
-                ),
-                WorldVariable::WaterStress => (
-                    tip! {
-                        icons::WATER,
-                        "The amount of water stress is currently {amount}%.",
-                        amount: state.water_stress.round()
-                    },
-                    text! {
-                        "water",
-                        "{changeDir} the amount of water stress by {amount}%.",
                         changeDir: self.change_dir(*amount),
                         amount: self.fmt_param(*amount)
                     },

@@ -66,6 +66,7 @@ pub enum Condition {
     WithoutFlag(Flag),
     HeavyProjects(Comparator, usize),
     ProtectLand(Comparator, f32),
+    WaterStress(Comparator, f32),
 }
 
 impl Condition {
@@ -167,6 +168,9 @@ impl Condition {
             ConditionKind::ProtectLand => {
                 Self::ProtectLand(comp, 0.)
             }
+            ConditionKind::WaterStress => {
+                Self::WaterStress(comp, 0.)
+            }
         }
     }
 
@@ -243,9 +247,6 @@ impl Condition {
                     WorldVariable::Outlook => state.outlook(),
                     WorldVariable::Temperature => {
                         state.world.temperature
-                    }
-                    WorldVariable::WaterStress => {
-                        state.water_stress
                     }
                     WorldVariable::SeaLevelRise => {
                         state.world.sea_level_rise
@@ -410,6 +411,9 @@ impl Condition {
             }
             Condition::ProtectLand(comp, n) => {
                 comp.eval(state.protected_land, *n)
+            }
+            Condition::WaterStress(comp, n) => {
+                comp.eval(state.water_stress(), *n)
             }
         }
     }

@@ -20,7 +20,6 @@ pub enum WorldVariable {
     ExtinctionRate,
     Outlook,
     Temperature,
-    WaterStress,
     SeaLevelRise,
     SeaLevelRiseRate,
     Precipitation,

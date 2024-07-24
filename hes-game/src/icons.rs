@@ -337,7 +337,6 @@ impl HasIcon for Condition {
                 }
                 WorldVariable::Outlook => CONTENTEDNESS,
                 WorldVariable::Emissions => EMISSIONS,
-                WorldVariable::WaterStress => WATER,
                 WorldVariable::Precipitation => PRECIPITATION,
                 WorldVariable::Population => POPULATION,
                 WorldVariable::PopulationGrowth => POPULATION,

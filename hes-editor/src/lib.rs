@@ -1,6 +1,7 @@
 mod inputs;
 mod tabs;
 mod validate;
+mod worlds;
 
 use hes_engine::{
     kinds::{FeedstockMap, OutputMap, ResourceMap},
@@ -19,6 +20,7 @@ use serde_wasm_bindgen::to_value;
 use strum::{Display, EnumIter, IntoEnumIterator};
 use tabs::*;
 use wasm_bindgen::prelude::*;
+use worlds::{Status, WorldsMenu};
 
 #[derive(Debug, Clone, Copy, Display, EnumIter, PartialEq)]
 enum Tab {
@@ -33,8 +35,7 @@ enum Tab {
 pub fn App() -> impl IntoView {
     let tab = create_rw_signal(Tab::World);
 
-    // TODO load provided world
-    // TODO list user worlds
+    let status = create_rw_signal(Status::None);
     let world = create_rw_signal(World::default());
     let npcs = NPC::load();
 
@@ -89,12 +90,22 @@ pub fn App() -> impl IntoView {
             .collect::<Vec<_>>()
     };
 
-    view! {
-        <main>
-            <Toaster
-                position=ToasterPosition::BottomRight
-            >
-                <div id="tabs">{tabs}</div>
+    let world_loaded =
+        move || with!(|status| status.is_editing());
+    let menu = move || {
+        view! {
+            <div id="tabs">
+                <WorldsMenu world=world status=status />
+                <Show when={world_loaded}>
+                    {tabs}
+                </Show>
+            </div>
+        }
+    };
+
+    let main = move || {
+        if world_loaded() {
+            Some(view! {
                 {move || {
                      match tab.get() {
                          Tab::World => view! { <World world / > }.into_view(),
@@ -105,6 +116,19 @@ pub fn App() -> impl IntoView {
                      }
                  }
                 }
+            })
+        } else {
+            None
+        }
+    };
+
+    view! {
+        <main>
+            <Toaster
+                position=ToasterPosition::BottomRight
+            >
+                {menu}
+                {main}
             </Toaster>
         </main>
     }
@@ -118,6 +142,7 @@ macro_rules! infinite_list {
             UseInfiniteScrollOptions,
         };
         use leptos_toaster::{Toast, Toasts, ToastId, ToastVariant, ToastOptions, dismiss_toast};
+        use tauri_sys::{dialog::MessageDialogBuilder};
 
         fn find_element_with_id(
             nodelist: web_sys::NodeList,
@@ -247,17 +272,19 @@ macro_rules! infinite_list {
                                     <div class="remove-item tooltip-parent"
                                         title="Ctrl-click to remove without confirmation."
                                         on:click=move |ev| {
-                                            let msg = "Are you sure you want to delete this?";
-                                            let name = with!(|world| world.$field.by_idx(i).name.clone());
-                                            logging::log!("Searching references for: {id}");
-                                            let refs = with!(|world| crate::validate::find_references(id, crate::validate::RefKind::$single, world));
-                                            if !refs.is_empty() {
-                                                create_toast(name, refs);
-                                            } else if ev.ctrl_key() || window().confirm_with_message(msg).unwrap() {
-                                                update!(|world| {
-                                                    world.$field.remove(&id);
-                                                });
-                                            }
+                                            spawn_local(async move {
+                                                let msg = "Are you sure you want to delete this?";
+                                                let name = with!(|world| world.$field.by_idx(i).name.clone());
+                                                logging::log!("Searching references for: {id}");
+                                                let refs = with!(|world| crate::validate::find_references(id, crate::validate::RefKind::$single, world));
+                                                if !refs.is_empty() {
+                                                    create_toast(name, refs);
+                                                } else if ev.ctrl_key() || MessageDialogBuilder::new().confirm(msg).await.unwrap() {
+                                                    update!(|world| {
+                                                        world.$field.remove(&id);
+                                                    });
+                                                }
+                                            });
                                         }>
                                             "🞬 Delete"
                                         </div>
