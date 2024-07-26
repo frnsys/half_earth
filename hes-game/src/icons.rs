@@ -46,6 +46,20 @@ macro_rules! icons {
                         }
                 }
             }
+
+            /// Get a static icon &str from a non-static one.
+            pub fn to_static(name: &str) -> Option<&'static str> {
+                match name {
+                    $(
+                        $name => Some($name),
+                    )*
+                        _ => {
+                            leptos::logging::warn!("No icon defined for: {name}.");
+                            None
+                        }
+                }
+            }
+
         }
     }
 }
@@ -348,5 +362,35 @@ impl HasIcon for Condition {
             Condition::ProtectLand(..) => PROTECT,
             _ => HELP,
         }
+    }
+}
+
+pub fn disaster_icon(key: &str) -> &'static str {
+    match key {
+        "heatwave__3" => "/assets/icons/pips/heatwave__3.png",
+        "wildfires" => "/assets/icons/pips/wildfires.png",
+        "famine" => "/assets/icons/pips/famine.png",
+        "resistance__2" => {
+            "/assets/icons/pips/resistance__2.png"
+        }
+        "co2_leak" => "/assets/icons/pips/co2_leak.png",
+        "flood__2" => "/assets/icons/pips/flood__2.png",
+        "power" => "/assets/icons/pips/power.png",
+        "flood" => "/assets/icons/pips/flood.png",
+        "hurricane" => "/assets/icons/pips/hurricane.png",
+        "crop_failure" => "/assets/icons/pips/crop_failure.png",
+        "disease" => "/assets/icons/pips/disease.png",
+        "attacks" => "/assets/icons/pips/attacks.png",
+        "wildfires__3" => "/assets/icons/pips/wildfires__3.png",
+        "wildfires__2" => "/assets/icons/pips/wildfires__2.png",
+        "power__2" => "/assets/icons/pips/power__2.png",
+        "resistance" => "/assets/icons/pips/resistance.png",
+        "heatwave" => "/assets/icons/pips/heatwave.png",
+        "flood__3" => "/assets/icons/pips/flood__3.png",
+        "resistance__3" => {
+            "/assets/icons/pips/resistance__3.png"
+        }
+        "heatwave__2" => "/assets/icons/pips/heatwave__2.png",
+        _ => panic!("Unknown disaster icon: {key}"),
     }
 }

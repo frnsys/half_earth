@@ -1,4 +1,7 @@
-use crate::{vars::Var, views::Factor};
+use crate::{
+    vars::Var,
+    views::{DisplayEvent, Factor},
+};
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use hes_engine::{
@@ -102,7 +105,7 @@ pub struct UIState {
     pub factors: EnumMap<Var, Vec<Factor>>,
 
     pub annual_region_events: BTreeMap<Id, Vec<IconEvent>>,
-    pub world_events: Vec<Id>,
+    pub world_events: Vec<DisplayEvent>,
 
     /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
     pub past_emissions: Vec<(f64, f64, f64)>,

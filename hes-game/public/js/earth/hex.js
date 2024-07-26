@@ -272,7 +272,7 @@ class HexSphere {
   randomTileForRegion(regionName, includeCoasts) {
     let tiles = regionsToTiles[regionName];
     let allTiles = includeCoasts ? tiles['inland'].concat(tiles['coasts']) : tiles['inland'];
-    randChoice(allTiles)
+    return randChoice(allTiles);
   }
 
   onTouchStart(ev) {

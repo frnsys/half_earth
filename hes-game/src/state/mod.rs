@@ -9,6 +9,7 @@ pub use ui::{Phase, PlanChange, Tutorial, UIState};
 
 use std::sync::{LazyLock, RwLock};
 
+use codee::string::JsonSerdeCodec;
 use hes_engine::{
     events::IconEvent,
     game::Update,
@@ -18,10 +19,7 @@ use hes_engine::{
     Id,
 };
 use leptos::*;
-use leptos_use::{
-    storage::use_local_storage,
-    utils::JsonCodec,
-};
+use leptos_use::storage::use_local_storage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -95,7 +93,7 @@ impl GameState {
     pub fn load() -> GameState {
         let (read, _, _) = use_local_storage::<
             Option<GameState>,
-            JsonCodec,
+            JsonSerdeCodec,
         >(SAVE_KEY);
         if let Some(mut state) = read.get_untracked() {
             state.init();
@@ -131,7 +129,7 @@ impl GameState {
     pub fn save(&self) {
         let (_, write, _) = use_local_storage::<
             Option<GameState>,
-            JsonCodec,
+            JsonSerdeCodec,
         >(SAVE_KEY);
         write.set(Some(self.clone()));
     }
@@ -139,7 +137,7 @@ impl GameState {
     pub fn clear_save() {
         let (_, _, clear) = use_local_storage::<
             Option<GameState>,
-            JsonCodec,
+            JsonSerdeCodec,
         >(SAVE_KEY);
         clear();
     }
@@ -147,7 +145,7 @@ impl GameState {
     pub fn has_save() -> bool {
         let (state, _, _) = use_local_storage::<
             Option<GameState>,
-            JsonCodec,
+            JsonSerdeCodec,
         >(SAVE_KEY);
         state.get().is_some()
     }
@@ -196,6 +194,47 @@ impl GameState {
         }
 
         (max_share * 100. / 5.).floor() as usize
+    }
+
+    pub fn upgrade_projects(&mut self) {
+        for (id, queued) in self.ui.queued_upgrades.iter_mut() {
+            if *queued {
+                *queued = false;
+                self.game.upgrade_project(id);
+            }
+        }
+    }
+
+    pub fn update_processes(&mut self) {
+        let mut rem_pts = consts::PROCESS_POINTS_PER_CYCLE;
+        let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
+        let changes = &mut self.ui.process_mix_changes;
+
+        for (output, changes) in changes.iter_mut() {
+            let mut total = changes
+                .values()
+                .map(|val| val.abs())
+                .sum::<isize>();
+            while rem_pts > 0 && add_pts > 0 && total > 0 {
+                for (process_id, change) in changes.iter_mut() {
+                    if *change < 0 && rem_pts > 0 {
+                        rem_pts -= 1;
+                        self.game.change_process_mix_share(
+                            process_id, -1,
+                        );
+                        total -= 1;
+                        *change += 1;
+                    } else if *change > 0 && add_pts > 0 {
+                        add_pts -= 1;
+                        self.game.change_process_mix_share(
+                            process_id, 1,
+                        );
+                        total -= 1;
+                        *change -= 1;
+                    }
+                }
+            }
+        }
     }
 
     pub fn apply_disaster(

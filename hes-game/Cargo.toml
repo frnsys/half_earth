@@ -16,7 +16,7 @@ js-sys = "0.3"
 serde = { version = "1", features = ["derive"] }
 serde-wasm-bindgen = "0.6"
 console_error_panic_hook = "0.1.7"
-leptos-use = { version = "0.10.10", features = ["serde"] }
+leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "*" }
 gloo-net = { version = "0.5.0", features = ["json"] }
 anyhow = "1.0.86"
 leptos_i18n = "0.3.3"
@@ -47,6 +47,7 @@ tower-http = { version = "0.5", features = ["fs"], optional = true }
 tokio = { version = "1", features = ["full"], optional = true }
 http = { version = "1.0" }
 base64 = "0.22.1"
+codee = { version = "0.1.2", features = ["json_serde"] }
 
 [workspace]
 members = ["src-tauri"]

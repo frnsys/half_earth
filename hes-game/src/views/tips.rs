@@ -10,7 +10,21 @@ use leptos_use::{use_document, use_event_listener};
 use std::time::Duration;
 use wasm_bindgen::JsCast;
 
-use super::FactorsCard;
+use super::{DisplayEvent, FactorsCard};
+
+#[derive(Clone)]
+pub struct TipState {
+    tip: Option<Tip>,
+    should_show: bool,
+}
+impl Default for TipState {
+    fn default() -> Self {
+        Self {
+            tip: None,
+            should_show: false,
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct Tip {
@@ -65,6 +79,7 @@ pub enum TipCard {
     Processes(Vec<Process>),
     Industry(Industry),
     Factors(FactorsCard),
+    Event(DisplayEvent),
     NPC(NPC),
 }
 impl From<Project> for TipCard {
@@ -97,6 +112,11 @@ impl From<FactorsCard> for TipCard {
         TipCard::Factors(value)
     }
 }
+impl From<DisplayEvent> for TipCard {
+    fn from(value: DisplayEvent) -> Self {
+        TipCard::Event(value)
+    }
+}
 
 /// Check if this element has any ancestor with the specified class.
 fn has_ancestor_with_class(
@@ -116,11 +136,14 @@ fn has_ancestor_with_class(
 
 #[component]
 pub fn ToolTip() -> impl IntoView {
-    let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
-    let has_tip = move || tip_rw.with(|tip| tip.is_some());
+    let tip_rw = expect_context::<RwSignal<TipState>>();
+    let has_tip =
+        move || tip_rw.with(|state| state.tip.is_some());
     let has_card = move || {
-        tip_rw.with(|tip| {
-            tip.as_ref()
+        tip_rw.with(|state| {
+            state
+                .tip
+                .as_ref()
                 .and_then(|tip| tip.card.as_ref())
                 .is_some()
         })
@@ -128,14 +151,8 @@ pub fn ToolTip() -> impl IntoView {
 
     let tip_ref = create_node_ref::<html::Div>();
     let overlay_ref = create_node_ref::<html::Div>();
-
-    // Show the tooltip when one is set.
-    let (should_show, set_should_show) = create_signal(false);
-    create_effect(move |_| {
-        let tip = tip_rw.get();
-        if tip.is_some() {
-            set_should_show.set(true);
-        }
+    let should_show = Signal::derive(move || {
+        tip_rw.with(|state| state.should_show)
     });
 
     // Dismiss the tooltip on click.
@@ -158,12 +175,12 @@ pub fn ToolTip() -> impl IntoView {
         // do `tip_rw.set(None)`) because this causes the tooltip
         // to immediately empty, whereas we want it to transition out.
         if should_remove {
-            set_should_show.set(false);
+            tip_rw.update(|state| state.should_show = false);
         }
     });
 
     let tip_view = move || {
-        tip_rw.get().map(|tip| {
+        tip_rw.get().tip.map(|tip| {
             let sub_icon = move || {
                 tip.subicon.map(|icon| {
                     view! { <img src=icon class="tip--subicon"/> }
@@ -189,6 +206,7 @@ pub fn ToolTip() -> impl IntoView {
     let card_view = move || {
         tip_rw
             .get()
+            .tip
             .and_then(|tip| tip.card)
             .map(|card| match card {
                 TipCard::Project(project) => {
@@ -226,6 +244,10 @@ pub fn ToolTip() -> impl IntoView {
                 TipCard::Factors(factors) => {
                     let factors = create_rw_signal(factors);
                     view! { <FactorsCard factors/> }
+                }
+                TipCard::Event(event) => {
+                    let event = create_rw_signal(event);
+                    view! { <EventCard event/> }
                 }
                 TipCard::NPC(npc) => {
                     let npc = create_rw_signal(npc);
@@ -271,7 +293,7 @@ pub fn HasTip(
     children: Children,
     #[prop(into)] tip: MaybeSignal<Tip>,
 ) -> impl IntoView {
-    let tip_rw = expect_context::<RwSignal<Option<Tip>>>();
+    let tip_rw = expect_context::<RwSignal<TipState>>();
     let children = children()
         .nodes
         .into_iter()
@@ -281,7 +303,11 @@ pub fn HasTip(
                     let value = tip.clone();
                     move |ev| {
                         ev.stop_immediate_propagation();
-                        tip_rw.set(Some(value.get()))
+                        let tip_value = value.get();
+                        tip_rw.set(TipState {
+                            tip: Some(tip_value),
+                            should_show: true,
+                        });
                     }
                 })
                 // Hacky way to get tip class onto the element.

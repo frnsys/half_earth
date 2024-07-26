@@ -244,7 +244,7 @@ impl Game {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ResolvedEvent {
     pub event: Event,
     pub region: Option<(Id, String)>,

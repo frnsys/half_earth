@@ -1,1 +1,112 @@
-{"26": {"name": "Severe Wildfires", "icon": "wildfires__2", "intensity": 2}, "34": {"name": "Severe Flooding", "icon": "flood__2", "intensity": 2}, "49": {"name": "Brownouts", "icon": "power", "intensity": 1}, "52": {"name": "Flooding", "icon": "flood", "intensity": 1}, "53": {"name": "Border Attacks", "icon": "attacks", "intensity": 1}, "54": {"name": "Extreme Wildfires", "icon": "wildfires__3", "intensity": 3}, "64": {"name": "Wildfires", "icon": "wildfires", "intensity": 1}, "68": {"name": "Extreme Flooding", "icon": "flood__3", "intensity": 3}, "74": {"name": "Blackouts", "icon": "power__2", "intensity": 2}, "76": {"name": "Severe Heatwaves", "icon": "heatwave__2", "intensity": 2}, "79": {"name": "Severe Hurricane", "icon": "hurricane", "intensity": 3}, "90": {"name": "Protests", "icon": "resistance", "intensity": 1}, "102": {"name": "Earth Liberation Front Attacks", "icon": "attacks", "intensity": 1}, "115": {"name": "Large Derecho Storm", "icon": "hurricane", "intensity": 1}, "117": {"name": "Famine", "icon": "famine", "intensity": 5}, "133": {"name": "The Wretched Attack", "icon": "attacks", "intensity": 1}, "159": {"name": "Disease Outbreak", "icon": "disease", "intensity": 1}, "182": {"name": "Revolts", "icon": "resistance__3", "intensity": 3}, "200": {"name": "Heatwaves", "icon": "heatwave", "intensity": 1}, "205": {"name": "Crop Failures", "icon": "crop_failure", "intensity": 1}, "208": {"name": "The Leather Underground Attack", "icon": "attacks", "intensity": 1}, "222": {"name": "Riots", "icon": "resistance__2", "intensity": 2}}
+{
+  "85dd8e47-57f5-4b8e-bab2-abb4cb4eb664": {
+    "name": "Severe Wildfires",
+    "icon": "wildfires__2",
+    "intensity": 2
+  },
+  "e47c32c2-fb48-433f-b3ef-9578c29daf25": {
+    "name": "Severe Flooding",
+    "icon": "flood__2",
+    "intensity": 2
+  },
+  "9f982627-9354-4658-8ace-e632a129cb36": {
+    "name": "Brownouts",
+    "icon": "power",
+    "intensity": 1
+  },
+  "ccdd92d2-c2dc-4ab5-8602-49399f069956": {
+    "name": "Flooding",
+    "icon": "flood",
+    "intensity": 1
+  },
+  "73640f8a-d632-459b-8469-a72c6a53c5d2": {
+    "name": "Border Attacks",
+    "icon": "attacks",
+    "intensity": 1
+  },
+  "d5139a29-9d43-4ec1-b11c-69b1ca7df6c4": {
+    "name": "Extreme Wildfires",
+    "icon": "wildfires__3",
+    "intensity": 3
+  },
+  "9cdc23d5-170b-4432-9968-f25b7ad8d0c3": {
+    "name": "Wildfires",
+    "icon": "wildfires",
+    "intensity": 1
+  },
+  "39bb56d1-fb19-47dd-bfcf-187b348666a9": {
+    "name": "Extreme Flooding",
+    "icon": "flood__3",
+    "intensity": 3
+  },
+  "e5ba52e1-103d-4327-8b79-e2057aa65e28": {
+    "name": "Blackouts",
+    "icon": "power__2",
+    "intensity": 2
+  },
+  "9a071e16-712e-4497-89c5-dea1ae121c89": {
+    "name": "Severe Heatwaves",
+    "icon": "heatwave__2",
+    "intensity": 2
+  },
+  "422d9a58-8f1f-4912-b31a-fdf0f91108e1": {
+    "name": "Severe Hurricane",
+    "icon": "hurricane",
+    "intensity": 3
+  },
+  "481522ce-45e3-4486-834d-396c58bf3e75": {
+    "name": "Protests",
+    "icon": "resistance",
+    "intensity": 1
+  },
+  "7deb850f-9c61-4773-a45d-ec00a3d60f20": {
+    "name": "Earth Liberation Front Attacks",
+    "icon": "attacks",
+    "intensity": 1
+  },
+  "904ddf15-f296-496f-b3ef-5056f3f92d33": {
+    "name": "Large Derecho Storm",
+    "icon": "hurricane",
+    "intensity": 1
+  },
+  "fc84a530-5764-4649-87c5-bc351e154d7e": {
+    "name": "Famine",
+    "icon": "famine",
+    "intensity": 5
+  },
+  "64c73fcd-f432-4e1f-8969-dba5269093db": {
+    "name": "The Wretched Attack",
+    "icon": "attacks",
+    "intensity": 1
+  },
+  "90fb50b4-077a-4325-845a-abf2c1bb6f52": {
+    "name": "Disease Outbreak",
+    "icon": "disease",
+    "intensity": 1
+  },
+  "c398c26c-e6ba-49ac-8f6e-f992ca4ccada": {
+    "name": "Revolts",
+    "icon": "resistance__3",
+    "intensity": 3
+  },
+  "f26afb3d-8983-4da6-a972-3463dfff4f64": {
+    "name": "Heatwaves",
+    "icon": "heatwave",
+    "intensity": 1
+  },
+  "a146d743-cff3-4e72-9b67-d5eb8b18c166": {
+    "name": "Crop Failures",
+    "icon": "crop_failure",
+    "intensity": 1
+  },
+  "04ec7325-a720-4187-98ea-e8e730e7baf3": {
+    "name": "The Leather Underground Attack",
+    "icon": "attacks",
+    "intensity": 1
+  },
+  "ee5d4582-8d36-47f7-bae5-17ebe314f11a": {
+    "name": "Riots",
+    "icon": "resistance__2",
+    "intensity": 2
+  }
+}

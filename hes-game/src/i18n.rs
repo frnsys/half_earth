@@ -5,7 +5,6 @@ use leptos_use::{
     storage::use_local_storage,
     use_intl_number_format,
     use_window,
-    utils::FromToStringCodec,
     NumberStyle,
     UseIntlNumberFormatOptions,
     UseIntlNumberFormatReturn,

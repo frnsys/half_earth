@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 use leptos::*;
 
 use crate::{
@@ -21,19 +19,24 @@ use hes_engine::game::Update as EngineUpdate;
 
 #[component]
 pub fn Updates(
-    updates: RwSignal<VecDeque<EngineUpdate>>,
+    updates: RwSignal<Vec<EngineUpdate>>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
+    let idx = create_rw_signal(0);
     let has_update =
-        move || with!(|updates| !updates.is_empty());
+        move || with!(|idx, updates| *idx < updates.len());
+    let n_updates = move || with!(|updates| updates.len());
     let next_update = move || {
-        update!(|updates| {
-            if updates.pop_front().is_none() {
-                on_done.call(());
-            }
-        });
+        logging::log!("CALLING NEXT UPDATE");
+        if idx.get() + 1 < n_updates() {
+            update!(|idx| *idx += 1);
+        } else {
+            logging::log!("READY TO CALL ON DONE IN UPDATES!");
+            on_done.call(());
+        }
     };
-    let update = move || with!(|updates| updates[0].clone());
+    let update =
+        move || with!(|idx, updates| updates[*idx].clone());
 
     view! {
         <Show when=has_update>
@@ -240,7 +243,13 @@ fn Update(
     });
 
     let try_done = move |_| {
+        logging::log!("++++++++TRYING DONE UPDATE");
+        logging::log!(
+            "++++++++CAN CLOSE: {:?}",
+            can_close.get()
+        );
         if can_close.get() {
+            logging::log!("Calling ON DONE");
             on_done.call(());
         }
     };

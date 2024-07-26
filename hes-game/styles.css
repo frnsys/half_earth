@@ -2401,6 +2401,7 @@ color: #63FF96;
   background-repeat: no-repeat;
   background-position: center center;
   image-rendering: pixelated;
+  height: 100vh;
 }
 .report h2 {
   font-weight: normal;
@@ -2477,6 +2478,7 @@ color: #63FF96;
 .report--body {
   flex: 1;
   position: relative;
+  margin-bottom: 3em;
 }
 
 .report-empty {
@@ -2528,14 +2530,11 @@ color: #63FF96;
 @media only screen and (min-width: 481px) {
   .report--body{
     display: flex;
-    align-items: center;
+    align-items: top;
     flex-direction: row;
   }
   .report--inner{
     max-width: 430px;
-  }
-  .report table {
-    font-size: 0.9rem;
   }
 }
 
@@ -4669,13 +4668,14 @@ color: #63FF96;
 
 .event {
   position: absolute;
-  z-index: 10;
+  z-index: 11;
   bottom: 0;
   top: 0;
   /* background: rgba(0,0,0,0.75); */
 
   background-image: url('/assets/backgrounds/screen-door.png');
   background-repeat: repeat;
+  background-size: auto;
 
   padding: 8vh 1em;
   width: 100%;
@@ -4704,7 +4704,7 @@ color: #63FF96;
     width:481px;
   }
 }
-.event .arc {
+.event--body .arc {
   text-transform: uppercase;
   text-align: center;
   font-size: 0.75em;
@@ -4715,7 +4715,7 @@ color: #63FF96;
   border-radius: 0.35em;
   width: 180px;
 }
-.event .image-attribution {
+.event--body .image-attribution {
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -4737,8 +4737,10 @@ color: #63FF96;
 }
 
 .event .dialogue {
-  position: relative;
   background: none;
+}
+.event--body + .dialogue {
+  position: relative;
 }
 
 .event--factors {

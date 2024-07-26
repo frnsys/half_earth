@@ -1,9 +1,7 @@
 use super::Tutorial;
+use codee::string::JsonSerdeCodec;
 use leptos::*;
-use leptos_use::{
-    storage::use_local_storage,
-    utils::JsonCodec,
-};
+use leptos_use::storage::use_local_storage;
 use serde::{Deserialize, Serialize};
 
 const SETTINGS_KEY: &str = "hes.settings";
@@ -22,7 +20,7 @@ impl Settings {
     pub fn rw() -> (Signal<Settings>, WriteSignal<Settings>) {
         let (read, write, _) = use_local_storage::<
             Settings,
-            JsonCodec,
+            JsonSerdeCodec,
         >(SETTINGS_KEY);
         (read, write)
     }

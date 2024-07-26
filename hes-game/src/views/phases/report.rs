@@ -6,8 +6,10 @@ use crate::{
     state::{GameExt, Phase},
     t,
     ui,
+    vars::Var,
     views::{
         events::Events,
+        factors::factors_card,
         hud::Hud,
         intensity::{self, IntensityBar},
         tip,
@@ -15,9 +17,11 @@ use crate::{
         Tip,
     },
     with_state,
-    write_state,
 };
-use hes_engine::{events::Phase as EventPhase, game::Update};
+use hes_engine::{
+    events::{Phase as EventPhase, Request as EngineRequest},
+    game::Update,
+};
 use leptos::*;
 
 pub struct Request {
@@ -27,22 +31,26 @@ pub struct Request {
 
 #[component]
 pub fn Report() -> impl IntoView {
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
+
     let events = create_rw_signal(vec![]);
-    create_effect(move |_| {
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
-        state.update(|state| {
-            events.set(
-                state
-                    .game
-                    .roll_events(EventPhase::ReportStart, None),
-            );
-        });
+    state.update_untracked(|state| {
+        events.set(
+            state
+                .game
+                .roll_events(EventPhase::ReportStart, None),
+        );
     });
 
     let year = state!(world.year);
     let start_year = ui!(cycle_start_state.year);
+
+    let finished_requests = store_value(vec![]);
+    state.update_untracked(|state| {
+        finished_requests
+            .set_value(state.game.check_requests());
+    });
 
     let outlook = state!(outlook());
     let start_outlook = ui!(cycle_start_state.contentedness);
@@ -93,24 +101,15 @@ pub fn Report() -> impl IntoView {
             .collect::<Vec<_>>()
     });
     let world_events = with_state!(|game, ui| {
-        // TODO
-        // import EVENTS from 'content/events.json';
-        // ui.world_events
-        // return state.worldEvents.map((ev_id) => {
-        //     let ev = EVENTS[ev_id];
-        //     return {
-        //         name: ev.name,
-        //         tip: {
-        //             icon: 'chance',
-        //             text: t('This event occurred during this planning cycle.'),
-        //             card: {
-        //                 type: 'Event',
-        //                 data: ev
-        //             }
-        //         }
-        //     }
-        // });
-        Vec::<(String, Tip)>::new()
+        ui.world_events.iter().map(|ev| {
+            (
+                ev.name.clone(),
+                tip(
+                    icons::CHANCE,
+                    t!("This event occurred during this planning cycle.")
+                ).card(ev.clone())
+            )
+        }).collect::<Vec<_>>()
     });
     let seat_changes = with_state!(|game, ui| {
         ui.cycle_start_state
@@ -135,58 +134,32 @@ pub fn Report() -> impl IntoView {
         }
     });
     let requests_fulfilled = with_state!(|game, ui| {
-        // TODO
-        // return game.checkRequests().map(([kind, id, active, bounty]) => {
-        //   let text;
-        //   if (kind == 'Project') {
-        //     let project = state.gameState.projects[id];
-        //     text = t(`Completed Request: ${active ? 'Implement' : 'Stop'} {name}`, {name: t(project.name)});
-        //   } else if (kind == 'Process') {
-        //     let process = state.gameState.processes[id];
-        //     text = t(`Completed Request: ${active ? 'Unban' : 'Ban'} {name}`, {name: t(process.name)});
-        //   }
-        //   this.pcChange += bounty;
-        //   return {text, bounty};
-        // });
-        Vec::<Request>::new()
-    });
-
-    let upgrade_projects = write_state!(|game, ui| {
-        for (id, queued) in ui.queued_upgrades.iter_mut() {
-            if *queued {
-                *queued = false;
-                game.upgrade_project(id);
+        finished_requests.get_value().into_iter().map(|(kind, id, active, bounty)| {
+            match kind {
+                EngineRequest::Project => {
+                    let project = &game.world.projects[&id];
+                    Request {
+                        bounty: bounty as isize,
+                        text: if active {
+                            t!("Completed Request: Implement {name}", name: t!(&project.name))
+                        } else {
+                            t!("Completed Request: Stop {name}", name: t!(&project.name))
+                        }
+                    }
+                }
+                EngineRequest::Process => {
+                    let process = &game.world.processes[&id];
+                    Request {
+                        bounty: bounty as isize,
+                        text: if active {
+                            t!("Completed Request: Unban {name}", name: t!(&process.name))
+                        } else {
+                            t!("Completed Request: Ban {name}", name: t!(&process.name))
+                        }
+                    }
+                }
             }
-        }
-    });
-
-    let update_processes = write_state!(|game, ui| {
-        let mut rem_pts = consts::PROCESS_POINTS_PER_CYCLE;
-        let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
-
-        // TODO for each output in processmixchanges...
-        // let removePoints = consts.processPointsPerCycle;
-        // let addPoints = consts.processPointsPerCycle;
-        // let changes = state.processMixChanges[output];
-        // let totalChanges = Object.values(state.processMixChanges[output]).reduce((acc, change) => {
-        //   return acc + Math.abs(change);
-        // }, 0);
-        // while (removePoints > 0 && addPoints > 0 && totalChanges > 0) {
-        //   Object.keys(changes).forEach((processId) => {
-        //     let change = changes[processId]
-        //     if (change < 0 && removePoints > 0) {
-        //       changes[processId] += 1;
-        //       removePoints -= 1;
-        //       game.changeProcessMixShare(processId, -1);
-        //       totalChanges--;
-        //     } else if (change > 0 && addPoints > 0) {
-        //       addPoints -= 1;
-        //       changes[processId] -= 1;
-        //       game.changeProcessMixShare(processId, 1);
-        //       totalChanges--;
-        //     }
-        //   });
-        //
+        }).collect::<Vec<_>>()
     });
 
     let warming_tip = || {
@@ -196,40 +169,61 @@ pub fn Report() -> impl IntoView {
         )
     };
     let biodiversity_tip = move || {
-        // TODO
-        // return factors.tips.biodiversity(
-        //   t(`The current biodiversity pressure. <strong>Increased biodiversity pressure</strong> will cost you political capital. <b class="tip-goal">Your goal is to get this to below 20.</b>`));
-        warming_tip()
+        let tip_text = t!(
+            r#"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>"#
+        );
+        crate::views::tip(icons::EXTINCTION_RATE, tip_text)
+            .card(with!(|state| factors_card(
+                None,
+                Var::Biodiversity,
+                &state.game,
+            )))
     };
-    let contentedness_tip = move || {
-        // TODO
-        // return factors.tips.contentedness(
-        //   t(`How people around the world feel about the state of things. <strong>Increasing or maintaining contentedness</strong> will gain you political capital. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>`));
-        warming_tip()
-    };
+
+    let emissions_gt = state!(emissions_gt());
     let emissions_tip = move || {
-        // TODO
-        // return factors.tips.emissions(
-        //   t(`Current annual emissions, in gigatonnes of CO2 equivalent. <strong>Reducing emissions</strong> will gain you political capital. <b class="tip-goal">Your goal is to get this to below 0.</b>`));
-        warming_tip()
+        let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get());
+        crate::views::tip(icons::EMISSIONS, tip_text).card(
+            with!(|state| factors_card(
+                None,
+                Var::Emissions,
+                &state.game,
+            )),
+        )
     };
 
-    let temp_pc_change = with_state!(|game, ui| {
-        let temp_change = game.world.temperature
-            - ui.cycle_start_state.temperature;
+    let contentedness_tip = move || {
+        let tip_text = t!(
+            r#"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>"#
+        );
+        crate::views::tip(icons::CONTENTEDNESS, tip_text).card(
+            with!(|state| factors_card(
+                None,
+                Var::Contentedness,
+                &state.game,
+            )),
+        )
+    };
 
-        // Double temp change score for every degree above 1C
-        let temp_change_multiplier =
-            ((game.world.temperature.round() - 1.).max(0.)
-                * 2.)
-                .max(1.);
+    let temp_pc_change = move || {
+        with!(|state| {
+            let temp_change = state.game.world.temperature
+                - state.ui.cycle_start_state.temperature;
 
-        // Temp scored for every 0.1C change
-        let change = (temp_change * 10.).round()
-            * -(consts::TEMPERATURE_PC as f32)
-            * temp_change_multiplier;
-        change as isize
-    });
+            // Double temp change score for every degree above 1C
+            let temp_change_multiplier =
+                ((state.game.world.temperature.round() - 1.)
+                    .max(0.)
+                    * 2.)
+                    .max(1.);
+
+            // Temp scored for every 0.1C change
+            let change = (temp_change * 10.).round()
+                * -(consts::TEMPERATURE_PC as f32)
+                * temp_change_multiplier;
+            change as isize
+        })
+    };
     let cont_pc_change = move || {
         let end = end_cont_int();
         consts::CONTENTEDNESS_PC.get(end).unwrap_or_else(|| {
@@ -242,25 +236,40 @@ pub fn Report() -> impl IntoView {
             consts::EXTINCTION_PC.last().unwrap()
         })
     };
-    let ghg_pc_change = with_state!(|game, ui| {
-        let emissions_change = game.state.emissions_gt()
-            - ui.cycle_start_state.emissions;
-        (emissions_change * 2.).round() as isize
-            * -(consts::EMISSIONS_PC as isize)
-    });
-
-    let pc_change = with_state!(|game, ui| {
-        let mut pc_change = temp_pc_change()
-            + cont_pc_change()
-            + ext_pc_change()
-            + ghg_pc_change();
-        pc_change +=
-            (ui.cycle_start_state.completed_projects.len()
+    let ghg_pc_change = move || {
+        with!(|state| {
+            let emissions_change =
+                state.game.state.emissions_gt()
+                    - state.ui.cycle_start_state.emissions;
+            (emissions_change * 2.).round() as isize
+                * -(consts::EMISSIONS_PC as isize)
+        })
+    };
+    let req_pc_change = move || {
+        finished_requests
+            .get_value()
+            .into_iter()
+            .map(|(_, _, _, bounty)| bounty)
+            .sum::<usize>() as isize
+    };
+    let pc_change = move || {
+        with!(|state| {
+            let mut pc_change = temp_pc_change()
+                + cont_pc_change()
+                + ext_pc_change()
+                + ghg_pc_change()
+                + req_pc_change();
+            pc_change += (state
+                .ui
+                .cycle_start_state
+                .completed_projects
+                .len()
                 * consts::PC_PER_COMPLETED_PROJECT)
                 as isize;
-        pc_change += honeymoon_pc();
-        pc_change
-    });
+            pc_change += honeymoon_pc();
+            pc_change
+        })
+    };
 
     let completed_projects = with_state!(|game, ui| {
         ui.cycle_start_state
@@ -272,19 +281,23 @@ pub fn Report() -> impl IntoView {
             .collect::<Vec<_>>()
     });
 
-    let next_phase = write_state!(move |game, ui| {
-        game.change_political_capital(pc_change());
+    let next_phase = move || {
+        update!(|state| {
+            // state.game.change_political_capital(pc_change());
+            state.game.change_political_capital(200); // TODO
 
-        // Apply process mix changes
-        // update_processes() // TODO
+            // Apply process mix changes
+            // and project upgrades.
+            state.update_processes();
+            state.upgrade_projects();
 
-        upgrade_projects();
-        ui.points.refundable_research = 0;
-        ui.phase = Phase::Interstitial;
+            // Reset session plan changes
+            state.ui.plan_changes.clear();
 
-        // Reset session plan changes
-        ui.plan_changes.clear();
-    });
+            state.ui.points.refundable_research = 0;
+            state.ui.phase = Phase::Interstitial;
+        });
+    };
 
     let temp_row = with_state!(|game, ui| {
         let start = format!(
@@ -563,7 +576,7 @@ pub fn Report() -> impl IntoView {
                                                     {evs
                                                         .iter()
                                                         .map(|ev| {
-                                                            view! { <img src=&ev.icon/> }
+                                                            view! { <img src={icons::disaster_icon(&ev.icon)} /> }
                                                         })
                                                         .collect::<Vec<_>>()}
                                                 </td>

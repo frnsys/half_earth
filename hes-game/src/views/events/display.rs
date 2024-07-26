@@ -8,13 +8,14 @@ use hes_engine::{
     projects::Status,
     state::State,
 };
+use serde::{Deserialize, Serialize};
 
 use crate::{icons::HasIcon, t, views::effects::DisplayEffect};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DisplayEvent {
     event: ResolvedEvent,
-    pub factors: Vec<(&'static str, String)>,
+    pub factors: Vec<(String, String)>,
     pub effects: Vec<DisplayEffect>,
 }
 impl Deref for DisplayEvent {
@@ -25,16 +26,20 @@ impl Deref for DisplayEvent {
 }
 impl DisplayEvent {
     pub fn new(event: ResolvedEvent, state: &State) -> Self {
-        let factors = event
+        let mut factors = event
             .probabilities
             .iter()
             .flat_map(|prob| {
                 prob.conditions.iter().filter_map(|cond| {
-                    describe_condition(cond, state)
-                        .map(|desc| (cond.icon(), desc))
+                    describe_condition(cond, state).map(
+                        |desc| (cond.icon().to_string(), desc),
+                    )
                 })
             })
             .collect::<Vec<_>>();
+
+        factors.sort();
+        factors.dedup();
 
         let effects = event
             .effects

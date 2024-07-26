@@ -18,6 +18,7 @@ use hes_engine::{
     projects::Type,
     state::State,
 };
+use serde::{Deserialize, Serialize};
 
 // TODO ideally can get rid of this, just using for icons below
 trait AsKey {
@@ -261,7 +262,7 @@ pub fn flag_tip(flag: Flag, demand: &OutputMap) -> Tip {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DisplayEffect {
     pub effect: Effect,
     pub likelihood: Option<Likelihood>,

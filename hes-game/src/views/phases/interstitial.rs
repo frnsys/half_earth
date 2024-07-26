@@ -160,22 +160,19 @@ pub fn Interstitial() -> impl IntoView {
 
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
-    state.update(|state| state.initialize_year());
-    create_effect(move |_| {
-        state.update(|state| {
-            let evs = if state.won() {
-                state.game.roll_events(
-                    EventPhase::InterstitialWin,
-                    None,
-                )
-            } else {
-                state.game.roll_events(
-                    EventPhase::InterstitialStart,
-                    None,
-                )
-            };
-            events.set(evs);
-        });
+    state.update_untracked(|state| state.initialize_year());
+    state.update_untracked(|state| {
+        let evs = if state.won() {
+            state
+                .game
+                .roll_events(EventPhase::InterstitialWin, None)
+        } else {
+            state.game.roll_events(
+                EventPhase::InterstitialStart,
+                None,
+            )
+        };
+        events.set(evs);
     });
 
     let (ready, set_ready) = create_signal(false);

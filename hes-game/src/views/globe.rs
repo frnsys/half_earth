@@ -159,7 +159,9 @@ pub fn Globe(
 
         spawn_local(async move {
             let (width, height, pixels) =
-                calc_surface(tgav.get()).await.unwrap();
+                calc_surface(tgav.get_untracked())
+                    .await
+                    .unwrap();
             logging::log!("GLOBE INITED");
             g.inner.borrow().init(
                 width,

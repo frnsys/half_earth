@@ -33,10 +33,10 @@ pub fn Events(
             set_idx.set(next_idx);
         } else {
             update!(|events| events.clear());
+            set_idx.set(0);
             on_done.call(());
         }
     };
-    let event = move || events.get()[idx.get()].clone();
 
     create_effect(move |_| {
         if delay > 0 && !ready.get() {
@@ -48,17 +48,25 @@ pub fn Events(
             );
         }
         if ready.get() && !has_event() {
+            set_idx.set(0);
             on_done.call(());
         }
     });
 
-    move || {
-        if has_event() && ready.get() {
-            Some(view! {
-                <Event event on_advance on_done=advance_event />
-            })
-        } else {
-            None
-        }
+    view! {
+        {move || {
+            if has_event() && ready.get() {
+                // No idea why this needs to be untracked
+                // but otherwise Leptos gives a warning about this counting
+                // as access outside a reactive context?
+                let event =
+                    move || events.with_untracked(|events| events[idx.get_untracked()].clone());
+                Some(view! {
+                    <Event event on_advance on_done=advance_event />
+                })
+            } else {
+                None
+            }
+        }}
     }
 }

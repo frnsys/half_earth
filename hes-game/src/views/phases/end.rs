@@ -14,19 +14,13 @@ pub fn End(lose: bool) -> impl IntoView {
     let events = create_rw_signal(vec![]);
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
-    create_effect(move |_| {
-        state.update(|state: &mut GameState| {
-            let evs = if lose {
-                state
-                    .game
-                    .roll_events(EventPhase::BreakStart, None)
-            } else {
-                state
-                    .game
-                    .roll_events(EventPhase::EndStart, None)
-            };
-            events.set(evs);
-        });
+    state.update_untracked(|state: &mut GameState| {
+        let evs = if lose {
+            state.game.roll_events(EventPhase::BreakStart, None)
+        } else {
+            state.game.roll_events(EventPhase::EndStart, None)
+        };
+        events.set(evs);
     });
 
     let message = if lose {

@@ -12,6 +12,7 @@ use crate::{
         Report,
         Start,
         Tip,
+        TipState,
         ToolTip,
         WorldEvents,
     },
@@ -56,7 +57,9 @@ pub fn Root() -> impl IntoView {
 #[component]
 pub fn App() -> impl IntoView {
     AnimationContext::provide();
-    provide_context(create_rw_signal::<Option<Tip>>(None));
+    provide_context(create_rw_signal::<TipState>(
+        TipState::default(),
+    ));
     provide_context(create_rw_signal::<GameState>(
         GameState::new(),
     ));
@@ -86,25 +89,24 @@ pub fn App() -> impl IntoView {
             <Show when=move || started.get() && loaded.get()>
                 <ToolTip/>
                 {move || {
-                         match cur_phase.get() {
-                             Phase::Intro => view! { <Cutscene/> }.into_view(),
-                             Phase::Interstitial => {
-                                 view! { <Interstitial/> }.into_view()
-                             }
-                             Phase::GameOver => {
-                                 view! { <End lose=true/> }.into_view()
-                             }
-                             Phase::GameWin => {
-                                 view! { <End lose=false/> }.into_view()
-                             }
-                             Phase::Planning => {
-                                 view! { <Planning/> }.into_view()
-                             }
-                             Phase::Report => view! { <Report/> }.into_view(),
-                             Phase::Events => view! { <WorldEvents /> }.into_view()
+                     match cur_phase.get() {
+                         Phase::Intro => view! { <Cutscene/> }.into_view(),
+                         Phase::Interstitial => {
+                             view! { <Interstitial/> }.into_view()
                          }
-                    }
-                }
+                         Phase::GameOver => {
+                             view! { <End lose=true/> }.into_view()
+                         }
+                         Phase::GameWin => {
+                             view! { <End lose=false/> }.into_view()
+                         }
+                         Phase::Planning => {
+                             view! { <Planning/> }.into_view()
+                         }
+                         Phase::Report => view! { <Report/> }.into_view(),
+                         Phase::Events => view! { <WorldEvents /> }.into_view()
+                     }
+                }}
             </Show>
         </Show>
     }

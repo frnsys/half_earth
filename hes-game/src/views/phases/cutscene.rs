@@ -50,12 +50,7 @@ pub fn Cutscene() -> impl IntoView {
             );
             set_timeout(
                 move || {
-                    logging::log!("CHANGING PHASE");
                     set_phase.set(Phase::Interstitial);
-
-                    // TODO no idea why but leptos will not clean
-                    // up this view, so do it manually I guess
-                    to_ws_el(elem).remove();
                 },
                 Duration::from_secs(1),
             );

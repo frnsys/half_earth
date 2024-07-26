@@ -70,22 +70,22 @@ pub fn Hud() -> impl IntoView {
             r#"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>"#
         );
         crate::views::tip(icons::EXTINCTION_RATE, tip_text)
-            .card(factors_card(
+            .card(with!(|state| factors_card(
                 None,
                 Var::Biodiversity,
-                &state.with(|state| state.game.clone()),
-            ))
+                &state.game,
+            )))
     };
 
     let emissions_gt = state!(emissions_gt());
     let emissions_tip = move || {
         let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get());
         crate::views::tip(icons::EMISSIONS, tip_text).card(
-            factors_card(
+            with!(|state| factors_card(
                 None,
                 Var::Emissions,
-                &state.with(|state| state.game.clone()),
-            ),
+                &state.game,
+            )),
         )
     };
 
@@ -94,11 +94,11 @@ pub fn Hud() -> impl IntoView {
             r#"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>"#
         );
         crate::views::tip(icons::CONTENTEDNESS, tip_text).card(
-            factors_card(
+            with!(|state| factors_card(
                 None,
                 Var::Contentedness,
-                &state.with(|state| state.game.clone()),
-            ),
+                &state.game,
+            )),
         )
     };
 

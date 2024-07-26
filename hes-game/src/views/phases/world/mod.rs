@@ -5,6 +5,7 @@ use crate::{
     consts,
     debug::get_debug_opts,
     display,
+    icons,
     state,
     state::{GameExt, GameState, Phase},
     t,
@@ -30,12 +31,12 @@ use leptos_use::{
     UseRafFnCallbackArgs,
     UseRafFnOptions,
 };
-use std::{collections::VecDeque, sync::LazyLock};
+use std::sync::LazyLock;
 
 #[derive(Clone)]
 struct Toast {
     id: usize,
-    icon: String,
+    icon: &'static str,
     desc: String,
 }
 impl Toast {
@@ -44,7 +45,7 @@ impl Toast {
             (js_sys::Math::random() * 1e10).round() as usize;
         Toast {
             id,
-            icon: ev.icon.clone(),
+            icon: icons::disaster_icon(&ev.icon),
             desc: t!("{disaster} in {region}", disaster: t!(&ev.name), region: t!(region_name)),
         }
     }
@@ -90,271 +91,24 @@ struct Disaster {
     when: f32,
 }
 
-#[derive(Default)]
-struct DisasterStream {
-    events: Vec<Disaster>,
-}
-impl DisasterStream {
-    /// Get events scheduled for at or earlier than the provided time.
-    fn pop_for_time(&mut self, time: f32) -> Vec<Disaster> {
-        self.events.extract_if(|ev| ev.when <= time).collect()
-    }
-
-    fn roll_events(&mut self, game: &mut Game) {
-        self.events.clear();
-        self.events.extend(
-            game.roll_events(EventPhase::Icon, None)
-                .into_iter()
-                .map(|ev| Disaster {
-                    event_id: ev.id,
-                    region: ev.region.clone(),
-                    when: js_sys::Math::random() as f32,
-                }),
-        );
-    }
-
-    fn trigger_events(
-        &mut self,
-        globe: Option<GlobeRef>,
-        time: f32,
-    ) -> Vec<(&IconEvent, Id, Id, String)> {
-        let mut events = vec![];
-        for ev_meta in self.pop_for_time(time) {
-            if let Disaster {
-                event_id,
-                region: Some((region_id, region_name)),
-                ..
-            } = ev_meta
-            {
-                if let Some(ev) = ICON_EVENTS.get(&event_id) {
-                    if let Some(globe) = &globe {
-                        globe.show_icon_event(
-                            &region_name,
-                            ev.is_over_water(),
-                            &ev.icon,
-                            ev.intensity,
-                        );
-                    }
-                    events.push((
-                        ev,
-                        event_id,
-                        region_id,
-                        region_name,
-                    ));
-                }
-            }
-        }
-        events
-    }
-}
-
 #[component]
-pub fn WorldEvents() -> impl IntoView {
+pub fn Disasters(
+    phase: RwSignal<Subphase>,
+    events: RwSignal<Vec<Disaster>>,
+    #[prop(into)] skipping: Signal<bool>,
+    #[prop(into)] on_done: Callback<()>,
+) -> impl IntoView {
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
-    let disasters = store_value(DisasterStream::default());
-    let events = create_rw_signal(vec![]);
-    let updates = create_rw_signal::<VecDeque<EngineUpdate>>(
-        VecDeque::new(),
-    );
     let toasts = create_rw_signal::<Vec<Toast>>(vec![]);
+
     let (globe, set_globe) =
         create_signal::<Option<GlobeRef>>(None);
-    let time_controls = create_rw_signal::<
-        Option<(Callback<()>, Callback<()>)>,
-    >(None);
-    let ready_to_advance = store_value(false);
-
-    create_effect(move |_| {
-        update!(|state| {
-            events.set(
-                state
-                    .game
-                    .roll_events(EventPhase::WorldStart, None),
-            );
-
-            state.ui.cycle_start_snapshot(&state.game);
-
-            let good = state.game.things_are_good();
-            if good {
-                audio::play_phase_music(
-                    "/assets/music/report_good.mp3",
-                    true,
-                );
-            } else {
-                audio::play_phase_music(
-                    "/assets/music/report_bad.mp3",
-                    true,
-                );
-            }
-        });
-    });
-
-    let year = state!(world.year);
-    let temp = state!(world.temperature);
-    let cycle_start_year = ui!(cycle_start_state.year);
-
-    let skipping = create_rw_signal(false);
-    let skip = move |_| skipping.set(true);
-    let bg_color = move || warming_colour(temp.get());
-
-    let begin_year = move || {
-        if let Some(globe) = globe.get() {
-            globe.rotate(true);
-        }
-
-        logging::log!("Disaster rolling");
-        update!(move |state, disasters| {
-            disasters.roll_events(&mut state.game);
-        });
-        logging::log!("Done disaster rolling");
-
-        if let Some((_, resume)) = time_controls.get() {
-            resume.call(());
-        }
+    let bg_color = move || {
+        with!(|state| warming_colour(
+            state.game.world.temperature
+        ))
     };
-    let try_begin_year = move || {
-        with!(|events, updates, globe| {
-            logging::log!("events: {:?}", events);
-            logging::log!("updates: {:?}", updates);
-            if events.is_empty()
-                && updates.is_empty()
-                && globe.is_some()
-            {
-                begin_year();
-            }
-        });
-    };
-
-    create_effect(move |_| {
-        try_begin_year();
-    });
-
-    let roll_event = move || {
-        let cur_year = year.get();
-        if cur_year > cycle_start_year.get()
-            && cur_year % 5 == 0
-        {
-            ready_to_advance.set_value(true);
-
-            if updates.with(|updates| updates.is_empty())
-                || skipping.get()
-            {
-                state.update(|state| {
-                    if let Some((pause, resume)) =
-                        time_controls.get()
-                    {
-                        pause.call(());
-                    }
-                    state.game.finish_cycle();
-                    state.ui.phase = Phase::Report;
-                });
-            }
-        } else {
-            state.update(|GameState { game, ui }| {
-                let evs = game
-                    .roll_events(EventPhase::WorldMain, None);
-                for event in &evs {
-                    ui.world_events.push(event.id);
-                    // ui.events.push(event.id, region_id, ev["ref_id"]); // TODO
-                }
-
-                // TODO globe update surface?
-                // or pass tgav to globe component as a signal so it automatically updates
-                let past_emissions = ui.record_emissions(&game);
-                spawn_local(async move {
-                    let tgav =
-                        calc_tgav(year.get(), past_emissions)
-                            .await
-                            .unwrap();
-                    state.update(|state| {
-                        state.game.set_tgav(tgav);
-                    });
-                });
-
-                // If skipping, just apply all events.
-                if skipping.get() {
-                    for ev in evs {
-                        game.apply_event(
-                            ev.event.id,
-                            ev.region
-                                .as_ref()
-                                .map(|(id, _)| *id),
-                        );
-                    }
-                    begin_year();
-                } else {
-                    if let Some(globe) = globe.get() {
-                        globe.rotate(false);
-                    }
-                    events.set(evs);
-                }
-                // TODO otherwise need to wait until after all events have been shown to start the
-                // year
-            });
-        }
-    };
-
-    // At the end of the year,
-    // advance the game engine and
-    // check for any updates, then
-    // roll for new events.
-    let on_year_end = move |_| {
-        if let Some((pause, resume)) = time_controls.get() {
-            pause.call(());
-            state.update(|state| {
-                let updates = state.step_year();
-
-                // If no updates or we're skipping we can
-                // immediately start the next year.
-                if skipping.get() {
-                    // TODO
-                    resume.call(());
-                }
-            });
-        }
-        roll_event();
-    };
-
-    // Called for each tick in the year.
-    let on_tick = move |progress| {
-        update!(|state, disasters, toasts| {
-            // Trigger any scheduled disasters.
-            let events = disasters.trigger_events(
-                globe.get_untracked(),
-                progress,
-            );
-
-            for (ev, event_id, region_id, region_name) in events
-            {
-                state.apply_disaster(ev, &event_id, &region_id);
-                toasts.push(Toast::new(ev, &region_name));
-            }
-        });
-    };
-
-    // When all updates have been dismissed.
-    let on_updates_finished = move |_| {
-        if ready_to_advance.get_value() {
-            update!(|state| {
-                if let Some((pause, resume)) =
-                    time_controls.get()
-                {
-                    pause.call(());
-                }
-                state.ui.phase = Phase::Report;
-            });
-        } else {
-            try_begin_year();
-        }
-    };
-
-    // When all events have been dismissed.
-    let on_events_finished = move |_| {
-        logging::log!("TRYING TO BEGIN YEAR AFTER EVENTS");
-        try_begin_year();
-    };
-
     let on_globe_ready = move |globe: GlobeRef| {
         globe.clear();
         globe.rotate(true);
@@ -362,17 +116,273 @@ pub fn WorldEvents() -> impl IntoView {
         set_globe.set(Some(globe));
     };
 
+    // Called for each tick in the year.
+    let on_tick = move |progress| {
+        update!(|state, events, toasts| {
+            // Trigger any scheduled disasters.
+            // Get events scheduled for at or earlier than the provided time.
+            let popped: Vec<_> = events
+                .extract_if(|ev| ev.when <= progress)
+                .collect();
+
+            let mut occurring = vec![];
+            for ev_meta in popped {
+                if let Disaster {
+                    event_id,
+                    region: Some((region_id, region_name)),
+                    ..
+                } = ev_meta
+                {
+                    if let Some(ev) = ICON_EVENTS.get(&event_id)
+                    {
+                        if let Some(globe) =
+                            &globe.get_untracked()
+                        {
+                            globe.show_icon_event(
+                                &region_name,
+                                ev.is_over_water(),
+                                &ev.icon,
+                                ev.intensity,
+                            );
+                        }
+                        occurring.push((
+                            ev,
+                            event_id,
+                            region_id,
+                            region_name,
+                        ));
+                    }
+                }
+            }
+
+            for (ev, event_id, region_id, region_name) in
+                occurring
+            {
+                state.apply_disaster(ev, &event_id, &region_id);
+                toasts.push(Toast::new(ev, &region_name));
+            }
+        });
+    };
+
+    let time_controls = create_rw_signal::<
+        Option<(Callback<()>, Callback<()>)>,
+    >(None);
+
+    create_effect(move |prev| {
+        if phase.get() == Subphase::Disasters {
+            logging::log!("STARTING DISASTERS");
+            if let Some(globe) = globe.get() {
+                globe.rotate(true);
+            }
+            if let Some((_, resume)) = time_controls.get() {
+                logging::log!(">>>>>> CALLING RESUME");
+                resume.call(());
+                logging::log!("<<<<<< DONE CALLING RESUME");
+            }
+        }
+    });
+
+    let on_year_end = move |_| {
+        if let Some(globe) = globe.get() {
+            globe.rotate(false);
+        }
+        if let Some((pause, resume)) = time_controls.get() {
+            logging::log!(">>>>>> CALLING PAUSE");
+            pause.call(());
+            logging::log!("<<<<<< DONE CALLING PAUSE");
+        }
+
+        logging::log!("CALLING DISASTER DONE");
+        on_done.call(());
+    };
+
+    let year = state!(world.year);
+
+    view! {
+        <div id="event-stream--year">
+            {year}
+            <YearProgress skipping on_tick on_year_end controls=time_controls />
+        </div>
+        <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
+        <Toasts toasts />
+    }
+}
+
+#[derive(Clone, Copy, PartialEq)]
+enum Subphase {
+    Events,
+    Disasters,
+    Updates,
+    Done,
+}
+
+#[component]
+pub fn WorldEvents() -> impl IntoView {
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
+    let phase = create_rw_signal(Subphase::Events);
+
+    let disasters = create_rw_signal::<Vec<Disaster>>(vec![]);
+    let updates = create_rw_signal::<Vec<EngineUpdate>>(vec![]);
+    let events = create_rw_signal(vec![]);
+
+    state.update_untracked(|state| {
+        state.ui.cycle_start_snapshot(&state.game);
+
+        let good = state.game.things_are_good();
+        if good {
+            audio::play_phase_music(
+                "/assets/music/report_good.mp3",
+                true,
+            );
+        } else {
+            audio::play_phase_music(
+                "/assets/music/report_bad.mp3",
+                true,
+            );
+        }
+    });
+    state.update_untracked(|state| {
+        events.set(
+            state
+                .game
+                .roll_events(EventPhase::WorldStart, None),
+        );
+    });
+
+    let skipping = create_rw_signal(false);
+    let skip = move |_| skipping.set(true);
+
+    let year = state!(world.year);
+    let cycle_start_year = ui!(cycle_start_state.year);
+    // create_effect(move |_| {
+    //     let cur_year = year.get();
+    //     if cur_year > cycle_start_year.get()
+    //         && cur_year % 5 == 0
+    //     {
+    //         update!(|state| {
+    //             state.game.finish_cycle();
+    //             state.ui.phase = Phase::Report;
+    //         });
+    //     }
+    // });
+
+    let next_phase = move || {
+        let mut next = match phase.get() {
+            Subphase::Disasters => Subphase::Updates,
+            Subphase::Updates => Subphase::Events,
+            Subphase::Events => Subphase::Disasters,
+            Subphase::Done => Subphase::Done,
+        };
+
+        if next == Subphase::Updates {
+            state.update(|game| {
+                logging::log!(">>>>>>>>>>> NEXT YEAR");
+                let step_updates = game.step_year();
+                logging::log!("{}", game.game.world.year);
+                if step_updates.is_empty() || skipping.get() {
+                    logging::log!("> No updates, continuing");
+                    // Skip to next phase.
+                    next = Subphase::Events;
+                } else {
+                    updates.set(step_updates.into());
+                }
+
+                // TODO globe update surface?
+                // or pass tgav to globe component as a signal so it automatically updates
+                let year = game.game.world.year;
+                let past_emissions =
+                    game.ui.record_emissions(&game.game);
+                spawn_local(async move {
+                    let tgav = calc_tgav(year, past_emissions)
+                        .await
+                        .unwrap();
+                    state.update(|state| {
+                        state.game.set_tgav(tgav);
+                    });
+                });
+            });
+        }
+
+        if next == Subphase::Events {
+            state.update(|GameState { game, ui }| {
+                let evs = game
+                    .roll_events(EventPhase::WorldMain, None);
+                logging::log!("ROLLED EVENTS");
+                for event in &evs {
+                    logging::log!("EVENT {:?}", event);
+                    ui.world_events.push(event.clone());
+                    game.apply_event(
+                        event.event.id,
+                        event
+                            .region
+                            .as_ref()
+                            .map(|(id, _)| *id),
+                    );
+                }
+
+                // If skipping, just apply all events.
+                if evs.is_empty() || skipping.get() {
+                    logging::log!("> No events, continuing");
+                    next = Subphase::Disasters;
+                } else {
+                    events.set(evs);
+                }
+            });
+        }
+
+        // This phase is never skipped.
+        if next == Subphase::Disasters {
+            let cur_year = year.get();
+            if cur_year > cycle_start_year.get()
+                && cur_year % 5 == 0
+            {
+                update!(|state| {
+                    state.game.finish_cycle();
+                    state.ui.phase = Phase::Report;
+                });
+                next = Subphase::Done;
+            } else {
+                logging::log!("ROLLING DISASTERS");
+                update!(move |state| {
+                    let evs: Vec<_> = state
+                        .game
+                        .roll_events(EventPhase::Icon, None)
+                        .into_iter()
+                        .map(|ev| Disaster {
+                            event_id: ev.id,
+                            region: ev.region.clone(),
+                            when: js_sys::Math::random() as f32,
+                        })
+                        .collect();
+                    logging::log!("GOT DISASTERS: {:?}", evs);
+                    disasters.set(evs);
+                });
+            }
+        }
+
+        phase.set(next);
+    };
+
     view! {
         <Hud/>
         <div id="event-stream">
-            <div id="event-stream--year">
-                {year}
-                <YearProgress skipping on_tick on_year_end controls=time_controls />
-            </div>
-            <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
-            <Updates updates on_done=on_updates_finished />
-            <Events events on_done=on_events_finished />
-            <Toasts toasts />
+            <Disasters phase skipping events=disasters on_done=move |_| {
+                logging::log!("1. DISASTERS DONE");
+                next_phase();
+            } />
+            <Show when=move || phase.get() == Subphase::Updates>
+                <Updates updates on_done=move |_| {
+                    logging::log!("2. UPDATES DONE");
+                    next_phase();
+                } />
+            </Show>
+            <Show when=move || phase.get() == Subphase::Events>
+                <Events events on_done=move |_| {
+                    logging::log!("3. EVENTS DONE");
+                    next_phase();
+                } />
+            </Show>
             <button class="events--skip btn" on:click=skip>
                 {t!("Skip")}
             </button>
@@ -405,10 +415,10 @@ fn Toasts(toasts: RwSignal<Vec<Toast>>) -> impl IntoView {
                 view! {
                     <div class="toast" style:opacity=opacity>
                         <div class="toast--body">
-                        <img src=toast.icon/>
-                        {toast.desc}
-                    </div>
+                            <img src=toast.icon/>
+                            {toast.desc}
                         </div>
+                    </div>
                 }
             }
         />
@@ -446,10 +456,18 @@ fn YearProgress(
             time.try_update(|time| {
                 *time += args.delta as f32;
                 let progress = *time / ms_per_year();
+                logging::log!(">>>>>>>> CALLING ON TICK");
                 on_tick.call(progress);
+                logging::log!("<<<<<<<< DONE CALLING ON TICK");
 
                 if *time >= ms_per_year() {
+                    logging::log!(
+                        ">>>>>>>> CALLING ON YEAR END"
+                    );
                     on_year_end.call(());
+                    logging::log!(
+                        "<<<<<<<< DONE CALLING ON YEAR END"
+                    );
                     *time = 0.;
                 }
             });
@@ -467,7 +485,6 @@ fn YearProgress(
     view! {
         <div
             id="event-stream-timer-fill"
-            style:width=progress
-            ></div>
+            style:width=progress />
     }
 }
