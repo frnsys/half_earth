@@ -99,11 +99,11 @@ pub fn demand_percent(
 pub fn percent(p: f32, round: bool) -> String {
     let percent = p * 100.;
     if percent < 1. && percent > 0. {
-        "<1%".to_string()
+        "<1".to_string()
     } else if round {
-        format!("{:.0}%", percent.round())
+        format!("{:.0}", percent.round())
     } else {
-        format!("{:.1}%", percent)
+        format!("{:.1}", percent)
     }
 }
 

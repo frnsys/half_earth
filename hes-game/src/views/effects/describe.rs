@@ -323,7 +323,7 @@ impl DisplayEffect {
                 WorldVariable::Emissions => (
                     tip! {
                         icons::EMISSIONS,
-                        "This will directly change annual emissions by {amount}.{percent}",
+                        "This will directly change annual emissions by {amount}.",
                         amount: if self.is_unknown {
                             t!("an unknown amount")
                         } else {
@@ -487,7 +487,7 @@ impl DisplayEffect {
                 let change = if let Some(limit) = process.limit
                 {
                     let p = (amount / limit).abs();
-                    display::percent(p, true)
+                    format!("{}%", display::percent(p, true))
                 } else {
                     amount.round().to_string()
                 };
@@ -948,7 +948,7 @@ impl DisplayEffect {
                         amount: if self.is_unknown {
                             self.fmt_param(*amount)
                         } else {
-                            display::percent(amount.abs(), true)
+                            format!("{}%", display::percent(amount.abs(), true))
                         },
                         changeDir: self.change_dir(*amount),
                         tag: tag,
@@ -1006,7 +1006,7 @@ impl DisplayEffect {
                         amount: if self.is_unknown {
                             self.fmt_param(*amount)
                         } else {
-                            display::percent(amount.abs(), true)
+                            format!("{}%", display::percent(amount.abs(), true))
                         },
                         changeDir: self.change_dir(*amount),
                     },
@@ -1106,13 +1106,13 @@ impl DisplayEffect {
                     .card(industry.clone()),
                     text! {
                         "emissions",
-                        "{changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.",
+                        "{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.",
                             tag: tag,
                             type: t!(byproduct.lower()),
-                            percent: if self.is_unknown {
+                            amount: if self.is_unknown {
                                 self.fmt_param(*amount)
                             } else {
-                                display::percent(amount.abs(), true)
+                                format!("{}%", display::percent(amount.abs(), true))
                             },
                             changeDir: self.change_dir(*amount),
 
@@ -1190,14 +1190,14 @@ impl DisplayEffect {
                     },
                     text! {
                         byproduct.as_key(),
-                        "{changeDir} {label} for {tag} by <strong>{percent}</strong>.",
+                        "{changeDir} {label} for {tag} by <strong>{amount}</strong>.",
                         tag: tag,
                         label: label,
                         icon: byproduct.icon(),
-                        percent: if self.is_unknown {
+                        amount: if self.is_unknown {
                             self.fmt_param(*amount)
                         } else {
-                            display::percent(amount.abs(), true)
+                            format!("{}%", display::percent(amount.abs(), true))
                         },
                         changeDir: self.change_dir(*amount),
 
@@ -1244,14 +1244,17 @@ impl DisplayEffect {
             }
             Effect::ModifyEventProbability(id, amount) => {
                 let event = &state.event_pool.events[id];
-                let percent = if self.is_unknown {
+                let amount_label = if self.is_unknown {
                     self.fmt_param(*amount)
                 } else {
-                    display::percent(amount.abs(), true)
+                    format!(
+                        "{}%",
+                        display::percent(amount.abs(), true)
+                    )
                 };
-                let text = t!(r#"{changeDir} the chance of "{event}" by {percent}%"#,
+                let text = t!(r#"{changeDir} the chance of "{event}" by {amount}"#,
                 event: t!(&event.name),
-                percent: percent,
+                amount: amount_label,
                 changeDir: self.change_dir(*amount),
                 );
                 (

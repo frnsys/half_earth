@@ -238,7 +238,7 @@ fn calc_change(
     }
 
     if change > 0.0 {
-        let s = t!("increase {k} by {warn}{change}%", k: t!(key), warn: if change > 100. {
+        let s = t!("increase {k} by {warn}{change}", k: t!(key), warn: if change > 100. {
             "⚠️"
         } else { "" }, change: display::percent(change, true));
         Some(
@@ -250,7 +250,7 @@ fn calc_change(
             .into_view(),
         )
     } else if change < 0.0 {
-        let s = t!("decrease {k} by {change}%", k: t!(key), change: display::percent(change.abs(), true));
+        let s = t!("decrease {k} by {change}", k: t!(key), change: display::percent(change.abs(), true));
         Some(
             view! {
                 <span class="change-decrease">

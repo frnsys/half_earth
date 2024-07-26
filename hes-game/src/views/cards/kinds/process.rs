@@ -381,7 +381,7 @@ pub fn ProcessCard(
             process.output.into(),
         );
         let percent = state.land_use_percent();
-        let tip = tip(icons::LAND, t!("Land: They're not making anymore of it. You're using {percent}% of land.", percent: percent))
+        let tip = tip(icons::LAND, t!("Land: They're not making anymore of it. You're using {percent} of land.", percent: percent))
             .card(factors_card(Some(process.name.clone()), Var::Land, state));
         let (sig, _) = create_signal(int);
         view! {
@@ -398,7 +398,7 @@ pub fn ProcessCard(
             process.output.into(),
         );
         let percent = state.water_use_percent();
-        let tip = tip(icons::WATER, t!("Water: The giver of life. You're using {percent}% of water resources.", percent: percent))
+        let tip = tip(icons::WATER, t!("Water: The giver of life. You're using {percent} of water resources.", percent: percent))
         .card(factors_card(Some(process.name.clone()), Var::Water, state));
         let (sig, _) = create_signal(int);
         view! {

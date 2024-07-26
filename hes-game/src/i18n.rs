@@ -16,7 +16,7 @@ use crate::state::Settings;
 const DEFAULT_LANGUAGE: &str = "en";
 pub const AVAILABLE_LANGUAGES: &[&str] = &[
     "en", "pt", "pt-br", "pt-pt", "es", "de-de", "jp", "fr-fr",
-    "th",
+    "th", "tr-tr",
 ];
 
 pub struct Language {
