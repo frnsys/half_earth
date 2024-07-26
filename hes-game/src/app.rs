@@ -17,6 +17,7 @@ use crate::{
         WorldEvents,
     },
 };
+use hes_engine::world::World;
 use leptos::*;
 use leptos_animation::*;
 use leptos_meta::*;
@@ -61,7 +62,7 @@ pub fn App() -> impl IntoView {
         TipState::default(),
     ));
     provide_context(create_rw_signal::<GameState>(
-        GameState::new(),
+        GameState::new(World::default()),
     ));
     init_audio();
 

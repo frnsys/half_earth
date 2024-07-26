@@ -6,8 +6,25 @@ use crate::{
     t,
     util::is_steam,
 };
+use hes_engine::world::World;
 use leptos::*;
 use std::rc::Rc;
+use wasm_bindgen::{closure::Closure, JsCast};
+
+#[derive(Clone)]
+enum WorldStatus {
+    Default,
+    Custom(World),
+    FailedToParse,
+}
+impl WorldStatus {
+    fn is_custom(&self) -> bool {
+        match self {
+            Self::Custom(_) => true,
+            _ => false,
+        }
+    }
+}
 
 #[component]
 pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
@@ -24,6 +41,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
     };
 
     let state = expect_context::<RwSignal<GameState>>();
+    let world = create_rw_signal(WorldStatus::Default);
     view! {
         <div>
             <div id="start-bg"></div>
@@ -76,11 +94,67 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                         <button
                             class="start-button"
                             on:click=move |_| {
-                                state.set(GameState::new());
+                                let world = match world.get() {
+                                    WorldStatus::Custom(world) => world,
+                                    _ => World::default()
+                                };
+                                state.set(GameState::new(world));
                                 set_started.set(true);
                             }
                         >
                             {t!("New Game")}
+                            <div class="world-picker"
+                                class:world-selected={move || with!(|world| world.is_custom())}
+                                on:click=move |ev: ev::MouseEvent| {
+                                    ev.stop_immediate_propagation();
+                                }>
+                                <label>
+                                   <img src="/assets/world.png"/>
+                                    <input
+                                        type="file"
+                                        multiple=false
+                                        on:input=move |ev| {
+                                            let files = ev.target().unwrap()
+                                                .unchecked_ref::<web_sys::HtmlInputElement>()
+                                                .files().unwrap();
+                                            if let Some(file) = files.get(0) {
+                                                let reader = web_sys::FileReader::new().unwrap();
+                                                let reader_clone = reader.clone();
+                                                let onloadend = Closure::wrap(Box::new(move || {
+                                                    if let Ok(result) = reader_clone.result() {
+                                                        if let Some(text) = result.as_string() {
+                                                            let w = serde_json::from_str::<World>(&text);
+                                                            if let Ok(w) = w {
+                                                                world.set(WorldStatus::Custom(w));
+                                                            } else {
+                                                                world.set(WorldStatus::FailedToParse);
+                                                            }
+                                                        }
+                                                    }
+                                                }) as Box<dyn Fn()>);
+
+                                                reader.set_onloadend(Some(onloadend.as_ref().unchecked_ref()));
+                                                reader.read_as_text(&file).unwrap();
+                                                onloadend.forget();
+                                            }
+                                        }
+                                    />
+                                </label>
+                                <span class="world-status">
+                                    {move || {
+                                        with!(|world| {
+                                            match world {
+                                                WorldStatus::Default => "",
+                                                WorldStatus::Custom(world) => "Custom world ready.",
+                                                WorldStatus::FailedToParse => "Failed to parse provided world.",
+                                            }
+                                        })
+                                    }}
+                                </span>
+                                <div class="world-details">
+                                    Use a custom world.
+                                </div>
+                            </div>
                         </button>
                         <div class="two-buttons">
                             <button

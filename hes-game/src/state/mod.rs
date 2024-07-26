@@ -15,6 +15,7 @@ use hes_engine::{
     game::Update,
     kinds::{Feedstock, Output, OutputMap},
     production::Process,
+    world::World,
     Game,
     Id,
 };
@@ -54,8 +55,8 @@ pub struct GameState {
     pub ui: UIState,
 }
 impl GameState {
-    pub fn new() -> GameState {
-        let mut game = Game::default();
+    pub fn new(world: World) -> GameState {
+        let mut game = Game::from_world(world);
         let mut ui_state = UIState::default();
 
         let (settings, _) = Settings::rw();
@@ -99,7 +100,7 @@ impl GameState {
             state.init();
             state
         } else {
-            Self::new()
+            Self::new(World::default())
         }
     }
 
