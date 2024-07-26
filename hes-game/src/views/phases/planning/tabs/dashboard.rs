@@ -136,7 +136,6 @@ pub fn Dashboard() -> impl IntoView {
     };
 
     let process_multipliers = with_state!(|state, ui| {
-        // TODO just iterate over process_mix_changes
         state
             .world
             .processes
@@ -152,13 +151,12 @@ pub fn Dashboard() -> impl IntoView {
                 if mix_change != 0. {
                     let multiplier = mix_change
                         * state.output_demand[p.output];
-                    // TODO avoid cloning?
                     Some((p.clone(), multiplier))
                 } else {
                     None
                 }
             })
-            .collect::<Vec<_>>() // TODO ideally don't have to collect
+            .collect::<Vec<_>>()
     });
 
     let extinction_change = move || {
@@ -181,7 +179,6 @@ pub fn Dashboard() -> impl IntoView {
     let land_change = move || {
         process_multipliers()
             .into_iter()
-            // TODO check we're using adj_resources where needed
             .map(|(p, mult)| p.adj_resources().land * mult)
             .sum::<f32>()
             .round()

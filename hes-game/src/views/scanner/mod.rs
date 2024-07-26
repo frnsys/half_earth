@@ -6,6 +6,7 @@ mod project;
 
 use hes_engine::{state::State, Id};
 use leptos::*;
+use leptos_use::use_resize_observer;
 use std::{rc::Rc, time::Duration};
 use wasm_bindgen::prelude::*;
 use web_sys::Animation;
@@ -80,11 +81,12 @@ pub fn Scanner(
         }
     };
 
-    // TODO
-    // window.addEventListener('resize', this.getEdges);
-    // beforeUnmount() {
-    //   window.removeEventListener('resize', this.getEdges);
-    // },
+    use_resize_observer(
+        target_ref,
+        move |entries, observer| {
+            get_edges();
+        },
+    );
 
     let (scanning_anim, set_scanning_anim) =
         create_signal(None::<Animation>);

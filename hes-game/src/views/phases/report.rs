@@ -282,9 +282,9 @@ pub fn Report() -> impl IntoView {
     });
 
     let next_phase = move || {
+        let pc_change = pc_change();
         update!(|state| {
-            // state.game.change_political_capital(pc_change());
-            state.game.change_political_capital(200); // TODO
+            state.game.change_political_capital(pc_change);
 
             // Apply process mix changes
             // and project upgrades.

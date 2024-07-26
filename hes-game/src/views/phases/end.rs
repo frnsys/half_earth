@@ -3,7 +3,7 @@ use leptos::*;
 use crate::{
     i18n,
     icons,
-    state::{GameExt, GameState},
+    state::{GameExt, GameState, Settings},
     t,
     views::{tip, Events, HasTip},
 };
@@ -21,6 +21,11 @@ pub fn End(lose: bool) -> impl IntoView {
             state.game.roll_events(EventPhase::EndStart, None)
         };
         events.set(evs);
+    });
+
+    let (settings, set_settings) = Settings::rw();
+    set_settings.update_untracked(|settings| {
+        settings.runs_played += 1;
     });
 
     let message = if lose {
@@ -41,7 +46,6 @@ pub fn End(lose: bool) -> impl IntoView {
     //   });
     // },
 
-    // TODO
     #[derive(Clone)]
     struct Badge {
         name: String,
@@ -61,8 +65,7 @@ pub fn End(lose: bool) -> impl IntoView {
         create_signal::<Option<String>>(None);
 
     let start_new_run = move |_| {
-        GameState::clear_save();
-        window().location().reload();
+        GameState::start_new_run();
     };
 
     view! {

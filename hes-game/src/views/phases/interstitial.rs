@@ -204,14 +204,8 @@ pub fn Interstitial() -> impl IntoView {
         let idx = (number() - 1) % LOCALES.len();
         &LOCALES[idx]
     };
-    let game_over = move || {
-        // TODO
-        false
-    };
-    let game_win = move || {
-        // TODO
-        false
-    };
+    let game_over = move || with!(|state| state.game_over());
+    let game_win = move || with!(|state| state.won());
     let parliament = move || describe_parliament(pc.get());
     let world = move || {
         describe_warming(emissions.get(), temperature.get())
@@ -226,14 +220,6 @@ pub fn Interstitial() -> impl IntoView {
             yearsLeft: years_left
         )
     };
-
-    // Wait a beat before showing the event
-    set_timeout(
-        || {
-            // let events = game.roll.cutscene("Intro")// TODO
-        },
-        Duration::from_millis(1200),
-    );
 
     let ambience = locale().ambience;
     audio::play_atmosphere(&format!(

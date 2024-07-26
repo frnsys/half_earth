@@ -99,8 +99,7 @@ impl Tutorial {
 pub struct UIState {
     pub phase: Phase,
     pub start_year: usize,
-    new_run_count: u32,
-    tutorial_restarted: bool,
+    pub tutorial_restarted: bool,
     pub tutorial: Tutorial,
     pub factors: EnumMap<Var, Vec<Factor>>,
 
@@ -109,9 +108,6 @@ pub struct UIState {
 
     /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
     pub past_emissions: Vec<(f64, f64, f64)>,
-
-    // Track which events have occurred TODO
-    // pub events: Vec<>,
 
     // // Track planned process mix changes
     pub process_mix_changes:
@@ -122,7 +118,7 @@ pub struct UIState {
     // // be reversed/refunded
     pub plan_changes: BTreeMap<Id, PlanChange>,
     pub queued_upgrades: BTreeMap<Id, bool>,
-    //
+
     // Compare beginning and end
     pub cycle_start_state: CycleStart,
 

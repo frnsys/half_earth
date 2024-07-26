@@ -510,19 +510,15 @@ pub fn factors_card(
         kind: var,
         current: current_name,
         total: match var {
-            // TODO total: `${state.gameState.world.emissions_gt().toFixed(1)}Gt`,
             Var::Emissions => state.emissions_gt(),
             Var::Biodiversity => {
                 state.world.extinction_rate.round().max(0.)
             }
-
-            // TODO total: `${Math.round(format.landUsePercent(state.gameState.resources_demand.land))}%`,
             Var::Land => display::land_use_percent(
                 state.resources_demand.land,
             ),
             Var::Energy => {
                 let demand = state.output_demand;
-                // TODO total: `${format.twh(demand.electricity + demand.fuel)}TWh`,
                 display::twh(demand.electricity + demand.fuel)
             }
             Var::Water => {
@@ -536,21 +532,15 @@ pub fn factors_card(
                 )
             }
             Var::Contentedness => state.outlook().round(),
-            Var::Electricity => display::resource(
-                state.output_demand.electricity,
-                Resource::Electricity,
-            ),
-            Var::Fuel => display::resource(
-                state.output_demand.fuel,
-                Resource::Fuel,
-            ),
-            Var::PlantCalories => display::output(
+            Var::Electricity => {
+                display::twh(state.output_demand.electricity)
+            }
+            Var::Fuel => display::twh(state.output_demand.fuel),
+            Var::PlantCalories => display::tcals(
                 state.output_demand.plant_calories,
-                Output::PlantCalories,
             ),
-            Var::AnimalCalories => display::output(
+            Var::AnimalCalories => display::tcals(
                 state.output_demand.animal_calories,
-                Output::AnimalCalories,
             ),
         },
     }

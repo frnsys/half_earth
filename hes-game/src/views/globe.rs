@@ -174,24 +174,7 @@ pub fn Globe(
 
         on_ready.forget();
         on_click.forget();
-
-        // TODO
-        // globe.scene.resize();
-        // globe.resetCamera();
     });
-
-    // on_cleanup(|| {
-    // this.globe.active = false;
-    // });
-
-    // If using a cached globe instance:
-    // globe.setEl(this.$el);
-    // globe.active = true;
-    // globe.render();
-    // this.ready = true;
-    // if (this.onReady) {
-    //     this.onReady(globe);
-    // }
 
     view! {
         <div

@@ -5,7 +5,7 @@ mod region_item;
 mod tabs;
 
 pub use active_plan::ActivePlan;
-use hes_engine::events::Phase as EventPhase;
+use hes_engine::events::{Flag, Phase as EventPhase};
 pub use processes::Processes;
 pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
@@ -49,15 +49,12 @@ impl std::fmt::Display for Page {
 
 #[component]
 pub fn Planning() -> impl IntoView {
-    // TODO
-    // game.updateProduction();
-    // game.updateFactors();
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
 
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
     let events = create_rw_signal(vec![]);
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
     create_effect(move |_| {
         state.update(|state| {
             let mut evs = state
@@ -84,8 +81,15 @@ pub fn Planning() -> impl IntoView {
     let select_page = move |page: Page| {
         set_page.set(page);
 
-        // TODO
-        // set_events.set(game.roll.planning(this.page));
+        let phase = match page {
+            Page::Plan => EventPhase::PlanningPlan,
+            Page::Regions => EventPhase::PlanningRegions,
+            Page::Dashboard => EventPhase::PlanningDashboard,
+            Page::Parliament => EventPhase::PlanningParliament,
+        };
+        state.update(|state| {
+            events.set(state.game.roll_events(phase, None));
+        });
     };
 
     let (cur_tutorial, set_tutorial) = ui_rw!(tutorial);
@@ -114,46 +118,46 @@ pub fn Planning() -> impl IntoView {
         }
     };
 
-    // TODO
-    let page_view = move || {
-        match page.get() {
-            Page::Plan => view! { <Plan/> },
-            Page::Parliament => view! { <Parliament/> },
-            Page::Dashboard => view! { <Dashboard/> },
-            Page::Regions => view! { <Regions/> },
+    let page_view = move || match page.get() {
+        Page::Plan => {
+            view! { <Plan on_plan_change=move |_| {
+                state.update(|state| {
+                    events.set(state.game.roll_events(EventPhase::PlanningPlanChange, None));
+                });
+            } on_page_change=move |phase| {
+                state.update(|state| {
+                    events.set(state.game.roll_events(phase, None));
+                });
+            }/> }
         }
-
-        // let on_plan_change = || {
-        //     // TODO
-        //     // this.events = game.roll.planning('PlanChange');
-        // };
-        // let on_plan_subpage = || {
-        //     // TODO
-        //     // this.events = game.roll.planning(p);
-        // };
-        // TODO
-        // <Plan v-if="page == PAGES.PLAN" @page="pageEvents" @change="planChangeEvents" />
-        // <Parliament v-else-if="page == PAGES.PARLIAMENT" />
-        // <Dashboard v-else-if="page == PAGES.DASHBOARD" />
-        // <Regions v-else-if="page == PAGES.REGIONS" />
+        Page::Parliament => view! { <Parliament/> },
+        Page::Dashboard => view! { <Dashboard/> },
+        Page::Regions => view! { <Regions/> },
     };
 
-    // TODO may no longer be necessary?
-    // let on_done = write_state!(|state, ui| {
-    //   if (state.gameState.flags.includes('SkipTutorial')) {
-    //     state.tutorial = tutorial.READY + 1;
-    //   } else if (state.gameState.flags.includes('RepeatTutorial') && !state.tutorialRestarted) {
-    //     state.tutorialRestarted = true;
-    //     state.tutorial = 0;
-    //     // Re-roll for tutorial start
-    //     this.events = game.roll.planning('Start');
-    //     this.showEvent();
-    //   }
-    // });
+    let on_done = move |_| {
+        update!(|state| {
+            if state.game.flags.contains(&Flag::SkipTutorial) {
+                state.ui.tutorial = Tutorial::Ready;
+            } else if state
+                .game
+                .flags
+                .contains(&Flag::RepeatTutorial)
+                && !state.ui.tutorial_restarted
+            {
+                state.ui.tutorial_restarted = true;
+                state.ui.tutorial = Tutorial::Projects;
+                events.set(state.game.roll_events(
+                    EventPhase::PlanningStart,
+                    None,
+                ));
+            }
+        });
+    };
 
     view! {
         <Hud/>
-        <Events events />
+        <Events events on_done />
         <div class="planning">
             <header>
                 {move || tab("Plan", Page::Plan, Tutorial::Plan)}

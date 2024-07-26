@@ -304,7 +304,7 @@ fn estimate_changes(
     }
 
     // Changed demand for each of these, just for the current set of processes
-    let mut changed = Usage::default(); // TODO is this wrong? I'm not using this?
+    let mut changed = Usage::default();
     for process in processes {
         let mix_share = process.mix_share as f32
             + (*ui.process_mix_changes[process.output]
@@ -312,12 +312,12 @@ fn estimate_changes(
                 .unwrap_or(&0)) as f32;
         let total = mix_share / 20.
             * state.output_demand[process.output];
-        current.land_use += process.resources.land * total;
-        current.water_use += process.resources.water * total;
-        current.energy_use +=
+        changed.land_use += process.resources.land * total;
+        changed.water_use += process.resources.water * total;
+        changed.energy_use +=
             process.resources.energy() * total;
-        current.emissions += process.byproducts.co2eq() * total;
-        current.extinction_rate +=
+        changed.emissions += process.byproducts.co2eq() * total;
+        changed.extinction_rate +=
             process.extinction_rate(starting_land) * total;
     }
 

@@ -62,12 +62,9 @@ pub fn Cards(
         //     elem.set_pointer_capture(ev.pointer_id());
         // }
 
-        // TODO
         if !enabled.get() {
-            logging::log!("[CARDS] DRAG START (DISABLED)");
             return;
         }
-        // logging::log!("[CARDS] DRAG START");
         set_down.set(true);
 
         if let Some(scroller) = scroller_ref.get() {
@@ -82,8 +79,6 @@ pub fn Cards(
         // }
 
         if dragging.get() {
-            // logging::log!("[CARDS] DRAG STOP");
-
             // Necessary for firefox to snap to the nearest card
             if let Some(scroller) = scroller_ref.get() {
                 scroller.scroll();

@@ -17,6 +17,7 @@ use crate::{
 };
 use enum_map::EnumMap;
 use hes_engine::{
+    events::Phase as EventPhase,
     kinds::{Feedstock, Output},
     ProjectType,
 };
@@ -45,11 +46,17 @@ fn calc_slots() -> usize {
 }
 
 #[component]
-pub fn Plan() -> impl IntoView {
-    let save = write_state!(|state, ui| {
-        // TODO
-        // state.save();
-    });
+pub fn Plan(
+    #[prop(into)] on_plan_change: Callback<()>,
+    #[prop(into)] on_page_change: Callback<EventPhase>,
+) -> impl IntoView {
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
+    let save = move || {
+        update!(|state| {
+            state.save();
+        });
+    };
 
     let (slots, set_slots) = create_signal(calc_slots());
     let max_width = move || match slots.get() {
@@ -108,9 +115,6 @@ pub fn Plan() -> impl IntoView {
             .any(|p| !ui.viewed.contains(&p.id))
     });
     let max_for_output = move |output: Output| {
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
         state
             .get()
             .game
@@ -185,23 +189,27 @@ pub fn Plan() -> impl IntoView {
             if problems.len() == 1 {
                 let (output, severity) = &problems[0];
                 let class = format!("shortage-{severity}");
-                Some(view! {
-                    {t!(& format!("There is a {severity} production shortage"))}
-                    :
-                    <b class=class>output.title()</b>
-                })
+                let desc = t!(&format!(
+                    "There is a {severity} production shortage",
+                ));
+                let details = format!(
+                    "<b class=class>{}</b>",
+                    t!(&output.title())
+                );
+                Some(format!("{desc}: {details}"))
             } else {
-                let list: Vec<_> = problems
+                let list = problems
                     .into_iter()
                     .map(|(output, severity)| {
                         let class = format!("shortage-{severity}");
-                        view! { <b class=class>output.title() ({t!(&severity)})</b> }
+                        let severity = t!(&severity);
+                        let title = t!(&output.title());
+                        format!("<b class=class>{title} ({severity})</b>")
                     })
-                    .collect();
-                Some(view! {
-                    {t!("There are multiple production shortages:")}
-                    {list}
-                })
+                    .collect::<Vec<_>>().join("\n");
+                let desc =
+                    "There are multiple production shortages:";
+                Some(format!("{desc} {list}"))
             }
         }
     };
@@ -239,9 +247,9 @@ pub fn Plan() -> impl IntoView {
         if shortages.is_empty() {
             None
         } else {
-            Some(view! {
-                t!("There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.", resources: shortages.join(", "))
-            })
+            Some(
+                t!("There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.", resources: shortages.join(", ")),
+            )
         }
     };
 
@@ -252,8 +260,7 @@ pub fn Plan() -> impl IntoView {
             if state.ui.tutorial == Tutorial::Ready {
                 state.ui.tutorial.advance();
             }
-            // TODO
-            // state.save();
+            state.save();
             state.ui.phase = Phase::Events;
         });
     };
@@ -272,16 +279,34 @@ pub fn Plan() -> impl IntoView {
             {
                 ui.tutorial.advance();
             }
-            // this.$emit('page', 'Plan');
+            on_page_change.call(EventPhase::PlanningPlan);
         });
         set_page.set(Page::Overview);
     };
     let select_page = move |page| {
         set_page.set(page);
-        // this.$emit('page', page);
-        // if page == Page::Projects {
-        // state.help[addTip] = true;
-        // }
+        let phase = match page {
+            Page::Overview => EventPhase::PlanningPlan,
+            Page::Projects => EventPhase::PlanningAdd,
+            Page::Processes => EventPhase::PlanningProcesses,
+            Page::All => EventPhase::PlanningPlan,
+        };
+        on_page_change.call(phase);
+    };
+    let on_kind_change = move |kind: ProjectType| {
+        let phase = match kind {
+            ProjectType::Policy => EventPhase::PlanningPolicies,
+            ProjectType::Research => {
+                EventPhase::PlanningResearch
+            }
+            ProjectType::Initiative => {
+                EventPhase::PlanningInitiatives
+            }
+        };
+        on_page_change.call(phase);
+    };
+    let on_change = move |_| {
+        on_plan_change.call(());
     };
 
     let process_over_limit_tip = move || {
@@ -293,15 +318,13 @@ pub fn Plan() -> impl IntoView {
     let shortages_tip = move || {
         tip(
             icons::ALERT,
-            "TODO".into(),
-            // format!("{}. {}", production_shortages(), input_shortages()), // TODO need to handle
-            // the html here
+            format!(
+                "{}. {}",
+                production_shortages().unwrap_or(String::new()),
+                input_shortages().unwrap_or(String::new())
+            ),
         )
     };
-
-    // TODO
-    let on_kind_change = move |kind: ProjectType| {};
-    let on_change = move |_| {};
 
     let card_slots = move || {
         (0..placeholders())

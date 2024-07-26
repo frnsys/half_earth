@@ -37,7 +37,7 @@ pub fn FactorsList(
                 Var::Contentedness => Some(consts::MAX_CONTENTEDNESS),
                 _ => None,
             };
-            let total = factors.total;
+            let total = factors.total_formatted();
             if let Some(max_value) = max_value {
                 view! {
                     <div>

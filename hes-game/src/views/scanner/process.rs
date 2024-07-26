@@ -69,25 +69,6 @@ impl ScannerSpec for ProcessScanner {
             }
         });
 
-        let add_point =
-            move |state: &State, ui: &mut UIState| {
-                if let Some(process) = process.get() {
-                    let max_share =
-                        state.process_max_share(&process);
-                    points.update(|points| {
-                        ui.add_point(
-                            points, &process, max_share,
-                        );
-
-                        // Consider the process mix 'changed'
-                        // when all points have been assigned
-                        if *points == 0 {
-                            on_change.call(());
-                        }
-                    });
-                }
-            };
-
         let state = expect_context::<
             RwSignal<crate::state::GameState>,
         >();

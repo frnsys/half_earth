@@ -150,9 +150,13 @@ impl GameState {
         state.get().is_some()
     }
 
-    // TODO this needs to be called at the start of each year
-    // i.e. end of each report.
+    pub fn start_new_run() {
+        Self::clear_save();
+        window().location().reload();
+    }
+
     pub fn initialize_year(&mut self) {
+        self.game.update_production();
         self.ui.factors = rank_factors(&self.game.state);
     }
 
@@ -163,6 +167,10 @@ impl GameState {
                 <= consts::WIN_EXTINCTION
             && self.game.state.world.temperature
                 <= consts::WIN_TEMPERATURE
+    }
+
+    pub fn game_over(&self) -> bool {
+        self.game.state.game_over
     }
 
     /// Maximum production share for a process.

@@ -52,6 +52,7 @@ pub fn Parliament() -> impl IntoView {
             .into_iter()
             .map(|npc| {
                 let npc = npc.get();
+                let color = npc.flavor.color.clone();
                 let seats = (npc.seats * total_seats as f32)
                     .floor()
                     as usize;
@@ -59,15 +60,12 @@ pub fn Parliament() -> impl IntoView {
                 Seats {
                     id: npc.id,
                     name: npc.name.clone(),
-                    color: "#000000".into(), // TODO get from NPCFlavor
+                    color,
                     is_ally: npc.is_ally(),
                     seats,
                 }
             })
             .collect::<Vec<_>>();
-
-        // TODO do this at the start of each planning cycle
-        // and store it on the NPC
 
         // Assign extra seats randomly
         // We generate the assignment based on the current year

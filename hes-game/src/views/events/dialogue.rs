@@ -18,6 +18,7 @@ use hes_engine::{
 };
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
+use regex_lite::Regex;
 use wasm_bindgen::prelude::*;
 
 // The dialogue animation functionality is easier
@@ -30,6 +31,24 @@ extern "C" {
         onStart: &js_sys::Function,
         onFinish: &js_sys::Function,
     );
+}
+
+fn fill_vars(
+    text: &str,
+    context: &BTreeMap<String, String>,
+) -> String {
+    let re = Regex::new(r"\{([a-z_]+)\}").unwrap();
+    let mut result = String::from(text);
+    for caps in re.captures_iter(text) {
+        if let Some(var) = caps.get(1) {
+            if let Some(replacement) = context.get(var.as_str())
+            {
+                result = result.replace(&caps[0], replacement);
+            }
+        }
+    }
+
+    result
 }
 
 #[component]
@@ -67,14 +86,13 @@ pub fn Dialogue(
 
     let text = move || {
         let line = line.get();
-        if context.get().is_empty() {
-            fill_icons(&t!(&line.text))
-        } else {
-            // TODO fill in variables and icons
-            // parse_text = return display.fillIcons(display.fillVars(text, context));
-            // parse_text(t!(&line.text), context.get())
-            fill_icons(&t!(&line.text))
-        }
+        with!(|context| {
+            if context.is_empty() {
+                fill_icons(&t!(&line.text))
+            } else {
+                fill_icons(&fill_vars(&t!(&line.text), context))
+            }
+        })
     };
 
     let play = move || {

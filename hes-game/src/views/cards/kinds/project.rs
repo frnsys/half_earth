@@ -27,10 +27,13 @@ use leptos::*;
 pub fn ProjectCard(
     #[prop(into)] project: Signal<Project>,
 ) -> impl IntoView {
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     let is_new = move || {
-        // TODO
-        // return !state.viewed.includes(this.ref_id);
-        false
+        with!(|project, state| state
+            .ui
+            .viewed
+            .contains(&project.id))
     };
 
     let card_bg = move || {

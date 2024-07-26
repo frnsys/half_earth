@@ -24,11 +24,6 @@ use leptos::{
 
 use super::{tip, HasTip, Tip};
 
-// TODO
-// I think what this needs to do is
-// figure out the effects that have the same type and subtype,
-// and if there are more than one consider the effect result to be unknown (i.e. "?")
-// In fact what we should use is the effects.rs Param type for Unknown vs Known
 fn outcome_effects(project: &Project) -> Vec<DisplayEffect> {
     struct Count {
         effect: DisplayEffect,
@@ -130,7 +125,6 @@ pub fn Effects(
             .iter()
             .filter(|effect| !effect.is_hidden)
             .filter_map(|effect| {
-                // TODO Here's where'd we also fill icons in `details.text`
                 effect.tip(state).ok().map(|mut details| {
                     if effect.is_unknown {
                         details.tip.supicon =
@@ -140,14 +134,12 @@ pub fn Effects(
                     details
                 })
             })
-            // TODO dedupe?
             .collect::<Vec<_>>();
         effects.sort_by_key(|effect| effect.text.clone());
         effects
     });
     let class = format!("effects {}", class);
 
-    // TODO sanitize use custom deck fields (project names, process names, etc)
     view! {
         <div class=class>
             <For

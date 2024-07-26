@@ -27,11 +27,9 @@ pub fn Updates(
         move || with!(|idx, updates| *idx < updates.len());
     let n_updates = move || with!(|updates| updates.len());
     let next_update = move || {
-        logging::log!("CALLING NEXT UPDATE");
         if idx.get() + 1 < n_updates() {
             update!(|idx| *idx += 1);
         } else {
-            logging::log!("READY TO CALL ON DONE IN UPDATES!");
             on_done.call(());
         }
     };
@@ -243,13 +241,7 @@ fn Update(
     });
 
     let try_done = move |_| {
-        logging::log!("++++++++TRYING DONE UPDATE");
-        logging::log!(
-            "++++++++CAN CLOSE: {:?}",
-            can_close.get()
-        );
         if can_close.get() {
-            logging::log!("Calling ON DONE");
             on_done.call(());
         }
     };

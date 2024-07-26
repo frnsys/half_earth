@@ -20,7 +20,6 @@ use hes_engine::{
 };
 use serde::{Deserialize, Serialize};
 
-// TODO ideally can get rid of this, just using for icons below
 trait AsKey {
     fn as_key(&self) -> &'static str;
 }

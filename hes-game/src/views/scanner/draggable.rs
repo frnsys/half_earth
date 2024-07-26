@@ -15,7 +15,7 @@ pub struct DragRect {
     pub bot_y: f32,
 }
 
-// NOTE: This is up/down dragging
+// NOTE: This is up/down dragging (i.e. scanning)
 #[component]
 pub fn Draggable(
     children: Children,
@@ -48,33 +48,8 @@ pub fn Draggable(
             let rect = entries[0].bounding_client_rect();
             set_top_y.set(rect.y());
             set_height.set(rect.height());
-            // TODO disconnect?
         },
     );
-
-    // Whether or not dragging is enabled
-    // let (is_enabled, set_is_enabled) = create_signal(false);
-    // let enable = move || {
-    //     if is_enabled.get() {
-    //         return;
-    //     }
-    //     set_is_enabled.set(true);
-    //
-    //     // this.getPosition(); with the observer, is this necessary?
-    // };
-    // let disable = move || {
-    //     if !is_enabled.get() {
-    //         return;
-    //     }
-    //     set_is_enabled.set(false);
-    // };
-
-    // this.getPosition(); with the observer, is this necessary?
-    // let resize_handle = window_event_listener(ev::resize, |ev| getPosition());
-    // on_cleanup(move || {
-    //     // disable();
-    //     // resize_handle.remove();
-    // });
 
     let start_drag = move |ev: ev::PointerEvent| {
         if !draggable.get() {
@@ -175,26 +150,6 @@ pub fn Draggable(
 
         on_drag_stop.call(());
     };
-
-    // create_effect(move |_| {
-    //     if draggable.get() {
-    //         enable();
-    //
-    //         // Hacky...double-check position
-    //         // after animations have finished
-    //         set_timeout(
-    //             move || {
-    //                 // this.getPosition(); with the observer, is this necessary?
-    //             },
-    //             Duration::from_millis(400),
-    //         );
-    //
-    //     // If not draggable, disable dragging events
-    //     } else {
-    //         // disable();
-    //         // stop_drag();
-    //     }
-    // });
 
     view! {
         <div

@@ -48,10 +48,10 @@ pub fn ProcessCard(
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
     let is_new = move || {
-        with!(|state| !state
+        with!(|state, process| !state
             .ui
             .viewed
-            .contains(&process.get().id))
+            .contains(&process.id))
     };
     let name =
         move || process.with(|process| t!(&process.name));
@@ -215,7 +215,6 @@ pub fn ProcessCard(
         })
     };
 
-    // TODO redundant w/ that in project card
     let opposers = with_state!(|state, _ui, process| {
         process.opposers.iter().map(|id| &state.npcs[id])
             .filter(|npc| !npc.locked)

@@ -283,15 +283,15 @@ impl ScannerSpec for ProjectScanner {
                                     changes.passed = false;
                                 } else {
                                     let points = changes.points;
-                                    let refund = state.next_point_cost(&p.kind) * points;
+                                    let mut refund = state.next_point_cost(&p.kind) * points;
 
                                     // Don't allow stored research-only points to be converted into PC,
                                     // instead convert them back into research points
                                     if p.kind == Type::Research {
                                         let excess_points =
                                             points.saturating_sub(ui.points.refundable_research);
-                                        let refund =
-                                            state.next_point_cost(&p.kind) * (points - excess_points); // TODO why is this unused
+                                        refund =
+                                            state.next_point_cost(&p.kind) * (points - excess_points);
                                         ui.points.refundable_research =
                                             ui.points.refundable_research.saturating_sub(points);
                                         ui.points.research += excess_points as isize;

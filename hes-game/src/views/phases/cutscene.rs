@@ -62,7 +62,6 @@ pub fn Cutscene() -> impl IntoView {
     };
 
     let next_phase = move |_| {
-        // TODO
         fade_out();
     };
 

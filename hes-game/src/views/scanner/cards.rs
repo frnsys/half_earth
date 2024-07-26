@@ -186,6 +186,8 @@ pub fn ScannerCards<S: ScannerSpec>(
             .with(|item| item.as_ref().map(|item| *item.id()))
     };
 
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     view! {
         <Show when=move || focused.with(|item| item.is_some())>
             <AddScanner
@@ -226,15 +228,7 @@ pub fn ScannerCards<S: ScannerSpec>(
                     let draggable = move || {
                         can_scan() && focused_id() == Some(id)
                     };
-                    // TODO I think the challenge here is to create the view
-                    // with the project as a signal, but I think it acutally needs to
-                    // be a derived signal, e.g.
-                    // let state = state.get_context(...)
-                    // let project = move || state.world.projects[item.id].clone();
-                    // Then AsCard should be a class method that takes Signal<Project> as an arg
-                    logging::log!("XXXXXXXXXXXXXXX CARDS CHILDREN CALLED");
 
-                    let state = expect_context::<RwSignal<crate::state::GameState>>();
                     let item = create_memo(move |_| {
                         state.with(move |state| S::Item::get_from_state(&id, &state.game))
                     });

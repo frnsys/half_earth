@@ -24,6 +24,10 @@ pub fn twh(amount: f32) -> f32 {
     (amount * 1e-9).round()
 }
 
+pub fn tcals(amount: f32) -> f32 {
+    (amount * 1e-9).round()
+}
+
 pub fn output(amount: f32, output: Output) -> f32 {
     let scale = match output {
         Output::Fuel => 1e-9 / 1e3, // per 1000 TWh

@@ -186,13 +186,11 @@ pub enum Phase {
     #[default]
     WorldMain,
     WorldStart,
-    WorldEnd,
     ReportStart,
     BreakStart,
     EndStart,
     Icon,
     PlanningStart,
-    PlanningEnd,
     PlanningPlan,
     PlanningAdd,
     PlanningResearch,

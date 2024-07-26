@@ -170,14 +170,11 @@ pub fn Disasters(
 
     create_effect(move |prev| {
         if phase.get() == Subphase::Disasters {
-            logging::log!("STARTING DISASTERS");
             if let Some(globe) = globe.get() {
                 globe.rotate(true);
             }
             if let Some((_, resume)) = time_controls.get() {
-                logging::log!(">>>>>> CALLING RESUME");
                 resume.call(());
-                logging::log!("<<<<<< DONE CALLING RESUME");
             }
         }
     });
@@ -187,12 +184,8 @@ pub fn Disasters(
             globe.rotate(false);
         }
         if let Some((pause, resume)) = time_controls.get() {
-            logging::log!(">>>>>> CALLING PAUSE");
             pause.call(());
-            logging::log!("<<<<<< DONE CALLING PAUSE");
         }
-
-        logging::log!("CALLING DISASTER DONE");
         on_done.call(());
     };
 
@@ -277,11 +270,8 @@ pub fn WorldEvents() -> impl IntoView {
 
         if next == Subphase::Updates {
             state.update(|game| {
-                logging::log!(">>>>>>>>>>> NEXT YEAR");
                 let step_updates = game.step_year();
-                logging::log!("{}", game.game.world.year);
                 if step_updates.is_empty() || skipping.get() {
-                    logging::log!("> No updates, continuing");
                     // Skip to next phase.
                     next = Subphase::Events;
                 } else {
@@ -308,9 +298,7 @@ pub fn WorldEvents() -> impl IntoView {
             state.update(|GameState { game, ui }| {
                 let evs = game
                     .roll_events(EventPhase::WorldMain, None);
-                logging::log!("ROLLED EVENTS");
                 for event in &evs {
-                    logging::log!("EVENT {:?}", event);
                     ui.world_events.push(event.clone());
                     game.apply_event(
                         event.event.id,
@@ -323,7 +311,6 @@ pub fn WorldEvents() -> impl IntoView {
 
                 // If skipping, just apply all events.
                 if evs.is_empty() || skipping.get() {
-                    logging::log!("> No events, continuing");
                     next = Subphase::Disasters;
                 } else {
                     events.set(evs);
@@ -343,7 +330,6 @@ pub fn WorldEvents() -> impl IntoView {
                 });
                 next = Subphase::Done;
             } else {
-                logging::log!("ROLLING DISASTERS");
                 update!(move |state| {
                     let evs: Vec<_> = state
                         .game
@@ -355,7 +341,6 @@ pub fn WorldEvents() -> impl IntoView {
                             when: js_sys::Math::random() as f32,
                         })
                         .collect();
-                    logging::log!("GOT DISASTERS: {:?}", evs);
                     disasters.set(evs);
                 });
             }
@@ -368,18 +353,15 @@ pub fn WorldEvents() -> impl IntoView {
         <Hud/>
         <div id="event-stream">
             <Disasters phase skipping events=disasters on_done=move |_| {
-                logging::log!("1. DISASTERS DONE");
                 next_phase();
             } />
             <Show when=move || phase.get() == Subphase::Updates>
                 <Updates updates on_done=move |_| {
-                    logging::log!("2. UPDATES DONE");
                     next_phase();
                 } />
             </Show>
             <Show when=move || phase.get() == Subphase::Events>
                 <Events events on_done=move |_| {
-                    logging::log!("3. EVENTS DONE");
                     next_phase();
                 } />
             </Show>
@@ -456,18 +438,9 @@ fn YearProgress(
             time.try_update(|time| {
                 *time += args.delta as f32;
                 let progress = *time / ms_per_year();
-                logging::log!(">>>>>>>> CALLING ON TICK");
                 on_tick.call(progress);
-                logging::log!("<<<<<<<< DONE CALLING ON TICK");
-
                 if *time >= ms_per_year() {
-                    logging::log!(
-                        ">>>>>>>> CALLING ON YEAR END"
-                    );
                     on_year_end.call(());
-                    logging::log!(
-                        "<<<<<<<< DONE CALLING ON YEAR END"
-                    );
                     *time = 0.;
                 }
             });

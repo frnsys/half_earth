@@ -14,7 +14,7 @@ pub fn Help(
     let show = move || {
         settings.with(|s| {
             !s.hide_help
-                && s.read_help.contains(&text.get_value())
+                && !s.read_help.contains(&text.get_value())
         })
     };
 

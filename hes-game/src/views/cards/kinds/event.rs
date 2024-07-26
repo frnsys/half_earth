@@ -3,6 +3,7 @@ use crate::{
     display::{self, AsText},
     i18n,
     icons::{self, HasIcon},
+    state::Settings,
     t,
     util::ImageExt,
     views::{
@@ -22,9 +23,12 @@ use leptos::*;
 pub fn EventCard(
     #[prop(into)] event: Signal<DisplayEvent>,
 ) -> impl IntoView {
-    on_cleanup(|| {
-        // TODO
-        // settings.hide_help[factor_tip] = true
+    let factor_tip = "The factors behind this event.↓";
+    let (settings, set_settings) = Settings::rw();
+    on_cleanup(move || {
+        set_settings.update(|settings| {
+            settings.read_help.push(factor_tip.to_string());
+        });
     });
 
     let image_info = with!(|event| {
@@ -33,7 +37,6 @@ pub fn EventCard(
         })
     });
     image_info.map(|(image, attrib)| {
-        let factor_tip = t!("The factors behind this event.↓");
         let (arc, name, factors_list) = with!(|event| {
             let arc = t!(&event.flavor.arc);
             let name = t!(&event.name);
@@ -62,7 +65,7 @@ pub fn EventCard(
                 class="event--body"
                 style:background-image={background}
             >
-                <Help text=factor_tip x=0.55 y=-18.0 center=false/>
+                <Help text={t!(factor_tip)} x=0.55 y=-18.0 center=false/>
                 <div class="arc">{arc}</div>
                 <div class="event--factors">{factors_list}</div>
                 <div class="image-attribution">

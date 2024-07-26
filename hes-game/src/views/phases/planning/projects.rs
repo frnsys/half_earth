@@ -31,8 +31,6 @@ pub fn Projects(
     let back_highlighted =
         ui!(tutorial.eq(&Tutorial::ProjectsBack));
 
-    // TODO problem here is we can't write to these projects
-    // because they're clones, so any changes don't actually propagate to the underlying state.
     let debug = get_debug_opts();
     let projects = with_state!(|state, ui, kind| {
         state

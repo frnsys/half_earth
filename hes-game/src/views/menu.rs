@@ -2,7 +2,7 @@ use crate::{
     audio,
     icons,
     state,
-    state::Settings,
+    state::{GameState, Settings},
     t,
     ui,
     views::{
@@ -69,6 +69,8 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
     let time_place =
         move || format!("{}, {}", locale(), year.get());
 
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     view! {
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
@@ -168,7 +170,6 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                                     });
                             }
                         >
-
                             {t!("Sound")}
                             :
                             {move || if sound() { t!("On") } else { t!("Off") }}
@@ -183,7 +184,6 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                                     });
                             }
                         >
-
                             {t!("Tips")}
                             :
                             {move || if !hide_help() { t!("On") } else { t!("Off") }}
@@ -191,10 +191,9 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                         <div
                             class="dropdown-menu-button"
                             on:click=move |_| {
-                                todo!();
+                                GameState::start_new_run();
                             }
                         >
-
                             {t!("Restart Game")}
                         </div>
                         <div
@@ -203,7 +202,6 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                                 set_show_credits.set(true);
                             }
                         >
-
                             {t!("Credits")}
                         </div>
                     </div>
