@@ -1,8 +1,8 @@
 # Get started with a build env with Rust nightly
-FROM rustlang/rust:nightly-alpine as builder
+FROM rustlang/rust:nightly-alpine AS builder
 
 RUN apk update && \
-    apk add --no-cache bash curl npm libc-dev binaryen
+    apk add --no-cache bash curl npm libc-dev binaryen git
     # protoc openssl-dev protobuf-dev gcc git g++ libc-dev make binaryen
 
 RUN npm install -g sass
@@ -20,7 +20,7 @@ WORKDIR /work/hes-game
 
 RUN cargo leptos build --release -vv
 
-FROM rustlang/rust:nightly-alpine as runner
+FROM rustlang/rust:nightly-alpine AS runner
 
 WORKDIR /app
 
