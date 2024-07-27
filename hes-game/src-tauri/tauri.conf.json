@@ -1,7 +1,7 @@
 {
   "build": {
     "beforeDevCommand": "cargo leptos watch",
-    "beforeBuildCommand": "cargo leptos build",
+    "beforeBuildCommand": "cargo leptos build --release",
     "devPath": "http://localhost:3000",
     "distDir": "../target/site/pkg",
     "withGlobalTauri": true
