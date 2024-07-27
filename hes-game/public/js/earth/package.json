@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "hexasphere.js": "frnsys/hexasphere.js",
+    "three": "^0.129.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.23.0",
+    "esbuild-plugin-glsl": "^1.2.2"
+  }
+}

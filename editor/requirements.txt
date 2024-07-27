@@ -1,5 +1,0 @@
-gevent==21.8.0
-gunicorn==20.0.4
-gevent-websocket==0.10.1
-Flask==2.0.2
-Flask-SocketIO==5.1.1

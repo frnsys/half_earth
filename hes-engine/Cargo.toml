@@ -1,0 +1,26 @@
+[package]
+name = "hes-engine"
+version = "1.0.0"
+authors = ["Francis Tseng"]
+edition = "2021"
+
+[dependencies]
+paste = "1.0"
+rand = { version = "0.8", features = ["small_rng"] }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+enum-map = { version = "2.7.3", features = ["serde"] }
+strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
+serde_bytes = "0.11.15"
+uuid = { version = "1.10.0", features = ["v4", "fast-rng", "macro-diagnostics", "serde", "js"] }
+
+[dev-dependencies]
+float-cmp = "0.9"
+criterion = "0.3"
+image = "0.23.14" # for reading pngs in tests/benchmarks
+
+[profile.release]
+opt-level = "s"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
