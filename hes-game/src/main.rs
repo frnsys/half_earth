@@ -4,7 +4,7 @@ use axum::{
     http::{Request, Response, StatusCode, Uri},
     response::{Html, IntoResponse, Response as AxumResponse},
 };
-use hes_game_ui::CalcSurface;
+use hes_game::CalcSurface;
 use leptos::LeptosOptions;
 use leptos_integration_utils::html_parts_separated;
 use tower::ServiceExt;

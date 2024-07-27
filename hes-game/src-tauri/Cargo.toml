@@ -1,5 +1,5 @@
 [package]
-name = "hes-game"
+name = "hes-game-app"
 version = "0.0.0"
 description = "HES Game Tauri Host"
 authors = ["Francis Tseng"]

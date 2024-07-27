@@ -30,7 +30,7 @@ pub fn Root() -> impl IntoView {
     // id=leptos means cargo-leptos will hot-reload this stylesheet
     view! {
         <Title text="Half-Earth Socialism"/>
-        <Stylesheet id="leptos" href="/pkg/hes-game-ui.css"/>
+        <Stylesheet id="leptos" href="/pkg/hes-game.css"/>
         <Link rel="icon" type_="image/png" href="/assets/favicon/16.png" sizes="16x16" />
         <Link rel="icon" type_="image/png" href="/assets/favicon/32.png" sizes="32x32" />
 

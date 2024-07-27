@@ -1,5 +1,5 @@
 [package]
-name = "hes-game-ui"
+name = "hes-game"
 version = "0.1.0"
 edition = "2021"
 
