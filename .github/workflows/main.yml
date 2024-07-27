@@ -55,11 +55,13 @@ jobs:
 
       - uses: JonasKruckenberg/tauri-build@v1
         id: build_game
-        projectPath: hes-game
+        with:
+          projectPath: hes-game
 
       - uses: JonasKruckenberg/tauri-build@v1
         id: build_editor
-        projectPath: hes-editor
+        with:
+          projectPath: hes-editor
 
       - uses: actions/upload-artifact@v3
         with:
