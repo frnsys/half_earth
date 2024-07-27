@@ -1,8 +1,6 @@
-name: 'publish'
+name: 'game'
 
 on: workflow_dispatch
-
-# This workflow will trigger on each push to the `release` branch to create or update a GitHub release, build your app, and upload the artifacts to the release.
 
 jobs:
   publish-tauri:
@@ -57,3 +55,4 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+          projectPath: hes-game
