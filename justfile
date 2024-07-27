@@ -15,7 +15,7 @@ test-engine:
     cd hes-engine && cargo test
 
 # Build the game and editor apps for release.
-build-app:
+build-apps:
     cd hes-game && cargo tauri build
     cd hes-editor && cargo tauri build
 
