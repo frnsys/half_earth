@@ -48,10 +48,6 @@ jobs:
       - name: install wasm target
         run: rustup target add wasm32-unknown-unknown
 
-      - name: install
-        if: matrix.platform.os == 'macos-latest'
-        run: npm install @tauri-apps/cli-darwin-arm64
-
       - name: install dependencies (ubuntu only)
         if: matrix.platform.os == 'ubuntu-latest'
         run: |
@@ -60,13 +56,13 @@ jobs:
         # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
-      - uses: JonasKruckenberg/tauri-build@v1
+      - uses: JonasKruckenberg/tauri-build@tauri-build-v1.5.11
         id: build_game
         with:
           projectPath: hes-game
           target: ${{ matrix.platform.rust_target }}
 
-      - uses: JonasKruckenberg/tauri-build@v1
+      - uses: JonasKruckenberg/tauri-build@tauri-build-v1.5.11
         id: build_editor
         with:
           projectPath: hes-editor
