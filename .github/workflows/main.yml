@@ -9,17 +9,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - os: ubuntu-latest
-            rust_target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            rust_target: x86_64-apple-darwin
-          - os: macos-latest
-            rust_target: aarch64-apple-darwin
-          - os: windows-latest
-            rust_target: x86_64-pc-windows-msvc
+        include:
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
 
-    runs-on: ${{ matrix.platform.os }}
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,7 +35,12 @@ jobs:
           override: true
           profile: minimal
           toolchain: nightly
-          target: ${{ matrix.platform.rust_target }}
+          target: ${{ matrix.platform == 'macos-latest' && 'x86_64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: hes-game
 
       - name: install cargo-leptos
         run: cargo install cargo-leptos
@@ -49,54 +52,36 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
 
       - name: install dependencies (ubuntu only)
-        if: matrix.platform.os == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libboost-all-dev
 
-      - uses: JonasKruckenberg/tauri-build@v1
-        id: build_game
+      - name: Install boost (windows)
+        if: matrix.platform == 'windows-latest'
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost-win
         with:
-          projectPath: hes-game
-          target: ${{ matrix.platform.rust_target }}
+            boost_version: 1.85.0
+            platform_version: 2022
+            toolset: msvc
 
-      - uses: JonasKruckenberg/tauri-build@v1
-        id: build_editor
+      - name: Install boost (mac)
+        if: matrix.platform.os == 'macos-latest'
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost-mac
         with:
-          projectPath: hes-editor
-          target: ${{ matrix.platform.rust_target }}
+            boost_version: 1.85.0
+            platform_version: 11
+            toolset: clang
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: game-artifacts
-          path: "${{ join(fromJSON(steps.build_game.outputs.artifacts), '\n') }}"
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: editor-artifacts
-          path: "${{ join(fromJSON(steps.build_editor.outputs.artifacts), '\n') }}"
-
-  publish:
-    needs: build-binaries
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      # Download the previously uploaded artifacts
-      - uses: actions/download-artifact@v3
-        with:
-          name: game-artifacts
-          path: artifacts/game
-      - uses: actions/download-artifact@v3
-        with:
-          name: editor-artifacts
-          path: artifacts/editor
-      # And create a release with the artifacts attached
-      - name: 'create release'
-        uses: softprops/action-gh-release@master
+      - uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          draft: false
-          files: ./artifacts/**/*
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: 'App v__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

@@ -24,5 +24,5 @@ build-web:
     cd hes-game && cargo leptos build --release
     rm -rf build/web && mkdir -p build/web
     cp hes-game/target/release/hes-game build/web/hes-game
-    cp -r hes-game/target/release/site build/web/site
-    echo "To run: `LEPTOS_SITE_ROOT="site" ./hes-game`"
+    cp -r hes-game/target/site build/web/site
+    echo "To run: LEPTOS_SITE_ROOT="site" ./hes-game"

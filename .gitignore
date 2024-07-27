@@ -16,3 +16,4 @@ assets/fonts/Synt
 hector/hector-rs
 sharing/*.json
 deploy.sh
+build/
