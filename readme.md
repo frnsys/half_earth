@@ -1,5 +1,12 @@
 # Half-Earth Socialism
 
+The project consists of two artifacts:
+
+- The _Half-Earth Socialism_ game (includes web browser and standalone app versions).
+- The _Half-Earth Socialism_ game editor (available only as a standalone app).
+  - Note: The only thing preventing the editor from having a web browser version is that it needs system file access.
+
+
 ## Setup
 
 ```bash
@@ -19,9 +26,10 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 
 ```
 Available recipes:
-    run     # Run the development server
-    run-app # Run the application
-    test    # Run tests
+    run-web     # Run development web game
+    run-app     # Run development app game
+    test-engine # Run engine tests
+    build-app   # Build the app release versions
 ```
 
 
