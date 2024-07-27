@@ -14,7 +14,7 @@ RUN rustup target add wasm32-unknown-unknown
 
 WORKDIR /work
 COPY . .
-RUN git submodule init && git submodule update
+RUN rm -rf /work/hector-rs && git clone https://github.com/frnsys/hector-rs.git /work/hector-rs
 
 WORKDIR /work/hes-game
 
