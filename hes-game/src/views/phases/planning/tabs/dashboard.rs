@@ -150,7 +150,7 @@ pub fn Dashboard() -> impl IntoView {
                     * 0.05;
                 if mix_change != 0. {
                     let multiplier = mix_change
-                        * state.output_demand[p.output];
+                        * state.demand_for_output(&p.output);
                     Some((p.clone(), multiplier))
                 } else {
                     None

@@ -6,6 +6,7 @@ mod audio;
 mod consts;
 mod debug;
 mod display;
+mod eval;
 mod i18n;
 mod icons;
 mod state;

@@ -108,7 +108,7 @@ pub fn Processes(
     };
 
     let output_demands = with_state!(|state, _ui| {
-        display::outputs(&state.output_demand)
+        display::outputs(&state.demand_for_outputs())
             .items()
             .map(|(output, demand)| {
                 let tip = tip(
@@ -281,7 +281,7 @@ fn estimate_changes(
     // Total demand for each of these
     let before = Usage {
         emissions: state.emissions(),
-        energy_use: state.output_demand.energy(),
+        energy_use: state.demand_for_outputs().energy(),
         land_use: state.resources_demand.land,
         water_use: state.resources_demand.water,
         extinction_rate: state.world.extinction_rate,
@@ -293,7 +293,7 @@ fn estimate_changes(
     for process in processes {
         let mix_share = process.mix_share as f32;
         let total = mix_share / 20.
-            * state.output_demand[process.output];
+            * state.demand_for_output(&process.output);
         current.land_use += process.resources.land * total;
         current.water_use += process.resources.water * total;
         current.energy_use +=
@@ -311,7 +311,7 @@ fn estimate_changes(
                 .get(&process.id)
                 .unwrap_or(&0)) as f32;
         let total = mix_share / 20.
-            * state.output_demand[process.output];
+            * state.demand_for_output(&process.output);
         changed.land_use += process.resources.land * total;
         changed.water_use += process.resources.water * total;
         changed.energy_use +=

@@ -207,18 +207,15 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
             let effects = p.active_effects_with_outcomes();
             let amount = effects_factor(var, &effects, state);
 
+            let demand = state.demand_for_outputs();
             let display = if var.is_demand_var() {
                 let demand = match var {
-                    Var::Energy => state.output_demand.energy(),
-                    Var::Electricity => {
-                        state.output_demand.electricity
-                    }
-                    Var::Fuel => state.output_demand.fuel,
-                    Var::PlantCalories => {
-                        state.output_demand.plant_calories
-                    }
+                    Var::Energy => demand.energy(),
+                    Var::Electricity => demand.electricity,
+                    Var::Fuel => demand.fuel,
+                    Var::PlantCalories => demand.plant_calories,
                     Var::AnimalCalories => {
-                        state.output_demand.animal_calories
+                        demand.animal_calories
                     }
                     _ => unreachable!(),
                 };
@@ -241,7 +238,7 @@ fn regional_factors(
     state: &State,
 ) -> Vec<Factor> {
     let per_capita_output_demand = &state.world.output_demand;
-    let output_demand = &state.output_demand;
+    let output_demand = &state.demand_for_outputs();
     state
         .world
         .regions
@@ -348,16 +345,15 @@ fn impact_factor<S: HasImpacts>(
 
     let display = match impact {
         Impact::Energy => {
-            let demand = state.output_demand.electricity
-                + state.output_demand.fuel;
+            let demand = state.demand_for_outputs().energy();
             display::percent(total / demand, true)
         }
         Impact::Electricity => {
-            let demand = state.output_demand.electricity;
+            let demand = state.demand_for_outputs().electricity;
             display::percent(total / demand, true)
         }
         Impact::Fuel => {
-            let demand = state.output_demand.fuel;
+            let demand = state.demand_for_outputs().fuel;
             display::percent(total / demand, true)
         }
         _ => display::format_impact(impact, total),
@@ -518,11 +514,10 @@ pub fn factors_card(
                 state.resources_demand.land,
             ),
             Var::Energy => {
-                let demand = state.output_demand;
+                let demand = state.demand_for_outputs();
                 display::twh(demand.electricity + demand.fuel)
             }
             Var::Water => {
-                // TODO total: `${format.output(state.gameState.resources_demand.water, 'water')}/${format.output(state.gameState.resources.water, 'water')}`,
                 display::resource(
                     state.resources_demand.water,
                     Resource::Water,
@@ -532,15 +527,17 @@ pub fn factors_card(
                 )
             }
             Var::Contentedness => state.outlook().round(),
-            Var::Electricity => {
-                display::twh(state.output_demand.electricity)
+            Var::Electricity => display::twh(
+                state.demand_for_outputs().electricity,
+            ),
+            Var::Fuel => {
+                display::twh(state.demand_for_outputs().fuel)
             }
-            Var::Fuel => display::twh(state.output_demand.fuel),
             Var::PlantCalories => display::tcals(
-                state.output_demand.plant_calories,
+                state.demand_for_outputs().plant_calories,
             ),
             Var::AnimalCalories => display::tcals(
-                state.output_demand.animal_calories,
+                state.demand_for_outputs().animal_calories,
             ),
         },
     }

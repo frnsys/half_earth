@@ -6,7 +6,7 @@ use crate::{
     t,
     util::is_steam,
 };
-use hes_engine::world::World;
+use hes_engine::{state::State, world::World};
 use leptos::*;
 use std::rc::Rc;
 use wasm_bindgen::{closure::Closure, JsCast};

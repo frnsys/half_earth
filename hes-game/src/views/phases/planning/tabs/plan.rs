@@ -148,14 +148,15 @@ pub fn Plan(
     });
 
     let produced = state!(produced);
-    let output_demand = state!(output_demand);
+    let output_demand =
+        move || with!(|state| state.game.demand_for_outputs());
     let production_shortages = move || {
         let mut total = 0;
         let mut problems: EnumMap<Output, f32> =
             EnumMap::from_array([1.; 4]);
         for output in Output::iter() {
             let met = produced.get()[output]
-                / output_demand.get()[output];
+                / output_demand()[output];
             if met >= 0.99 {
                 continue;
             } else {

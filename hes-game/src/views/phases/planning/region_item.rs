@@ -167,7 +167,7 @@ pub fn RegionItem(
                 );
                 let per = display::demand_percent(
                     demand,
-                    state.output_demand[k],
+                    state.demand_for_output(&k),
                     true,
                 );
                 let amount = display::output(demand, k);

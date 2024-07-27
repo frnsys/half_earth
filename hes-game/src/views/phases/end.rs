@@ -1,6 +1,7 @@
 use leptos::*;
 
 use crate::{
+    eval::{summarize, Summary},
     i18n,
     icons,
     state::{GameExt, GameState, Settings},
@@ -8,6 +9,15 @@ use crate::{
     views::{tip, Events, HasTip},
 };
 use hes_engine::events::Phase as EventPhase;
+
+#[server(prefix = "/compute", endpoint = "image")]
+pub async fn generate_image(
+    summary: Summary,
+) -> Result<String, ServerFnError> {
+    let image =
+        crate::server::sharing::generate_image(&summary);
+    Ok(image)
+}
 
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
@@ -34,17 +44,13 @@ pub fn End(lose: bool) -> impl IntoView {
         "Well Played!"
     };
 
-    // TODO get share image
-    // getShareImage() {
-    //   share(!this.lose, (data) => {
-    //     if (data.success) {
-    //       let {badges, url, image} = data;
-    //       this.shareImgUrl = image;
-    //       this.shareUrl = url;
-    //       this.badges = badges;
-    //     }
-    //   });
-    // },
+    let share_image = create_rw_signal(String::new());
+    spawn_local(async move {
+        let state = with!(|state| state.game.clone());
+        let summary = summarize(&state, !lose);
+        let img = generate_image(summary).await.unwrap();
+        share_image.set(img);
+    });
 
     #[derive(Clone)]
     struct Badge {
@@ -53,11 +59,10 @@ pub fn End(lose: bool) -> impl IntoView {
     }
     impl Badge {
         pub fn image_url(&self) -> String {
-            format!("/assets/badges/{}.png", self.name)
+            format!("/public/assets/badges/{}.png", self.name)
         }
     }
 
-    // let (show_start, set_show_start) = create_signal(events.is_empty()); // TODO?
     let (show_start, set_show_start) = create_signal(false);
     let (badges, set_badges) =
         create_signal::<Vec<Badge>>(vec![]);
@@ -103,15 +108,9 @@ pub fn End(lose: bool) -> impl IntoView {
                         {t!("Try Again?")}
                     </button>
                 </div>
-                <Show when=move || share_img_url.with(|u| u.is_some())>
-                    <div>
-                        <img
-                            class="share-image"
-                            crossorigin="anonymous"
-                            src=share_img_url
-                        />
-                    </div>
-                </Show>
+                <div>
+                    <img class="share-image" src={share_image} />
+                </div>
             </Show>
         </div>
     }

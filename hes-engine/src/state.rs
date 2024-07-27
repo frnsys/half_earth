@@ -7,6 +7,7 @@ use crate::{
         ByproductMap,
         Feedstock,
         FeedstockMap,
+        Output,
         OutputMap,
         ResourceMap,
     },
@@ -213,6 +214,17 @@ impl State {
         state.update_region_temps();
 
         state
+    }
+
+    pub fn demand_for_output(&self, output: &Output) -> f32 {
+        (self.output_demand[*output]
+            + self.output_demand_extras[*output])
+            * self.output_demand_modifier[*output]
+    }
+
+    pub fn demand_for_outputs(&self) -> OutputMap {
+        (self.output_demand + self.output_demand_extras)
+            * self.output_demand_modifier
     }
 
     pub fn calculate_demand(&self) -> (OutputMap, ResourceMap) {

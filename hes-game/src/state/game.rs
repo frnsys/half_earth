@@ -42,12 +42,12 @@ pub impl Game {
     }
 
     fn energy_pwh(&self) -> String {
-        let energy = self.state.output_demand.energy();
+        let energy = self.state.demand_for_outputs().energy();
         format!("{}PWh", (display::twh(energy) / 1e3).round())
     }
 
     fn energy_twh(&self) -> String {
-        let energy = self.state.output_demand.energy();
+        let energy = self.state.demand_for_outputs().energy();
         format!("{}TWh", display::twh(energy).round())
     }
 

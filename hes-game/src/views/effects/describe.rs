@@ -651,8 +651,9 @@ impl DisplayEffect {
                     })
             }
             Effect::Demand(output, amount) => {
-                let demand =
-                    display::outputs(&state.output_demand);
+                let demand = display::outputs(
+                    &state.demand_for_outputs(),
+                );
                 let current_demand = demand[*output];
                 let after_demand =
                     demand[*output] * (1. + amount);
@@ -675,8 +676,9 @@ impl DisplayEffect {
                 )
             }
             Effect::DemandAmount(output, amount) => {
-                let demand =
-                    display::outputs(&state.output_demand);
+                let demand = display::outputs(
+                    &state.demand_for_outputs(),
+                );
                 let amount = display::output(*amount, *output);
                 let current_demand = demand[*output];
                 let after_demand = demand[*output] + amount;
@@ -1268,8 +1270,9 @@ impl DisplayEffect {
                 )
             }
             Effect::AddFlag(flag) => {
-                let demand =
-                    display::outputs(&state.output_demand);
+                let demand = display::outputs(
+                    &state.demand_for_outputs(),
+                );
                 let tip = flag_tip(*flag, &demand);
                 let text = format!(
                     "<strong>{}</strong>",

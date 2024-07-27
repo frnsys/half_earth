@@ -181,7 +181,7 @@ impl GameState {
     ) -> usize {
         let mut max_share = 1.;
         let demand =
-            self.game.state.output_demand[process.output];
+            self.game.state.demand_for_output(&process.output);
 
         // Hard-coded limit
         if let Some(limit) = process.limit {

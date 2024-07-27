@@ -1,3 +1,5 @@
+pub mod sharing;
+
 use crate::consts;
 use hes_engine::surface::EarthSurface;
 use leptos::*;
@@ -71,14 +73,14 @@ pub static STARTING_SURFACE: LazyLock<EarthSurface> =
         // A grayscale image where each value
         // indicates the label of that pixel
         let label_data = include_bytes!(
-            "../public/assets/surface/landuse.png"
+            "../../public/assets/surface/landuse.png"
         );
 
         // A grayscale image that maps
         // temp (x-axis) and precip (y-axis)
         // to a biome label.
         let lookup_data = include_bytes!(
-            "../public/assets/surface/biomes.png"
+            "../../public/assets/surface/biomes.png"
         );
 
         // Note that `decode32` always decodes to RGBA,
