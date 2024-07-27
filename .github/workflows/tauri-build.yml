@@ -1,10 +1,6 @@
 name: 'publish'
 
-on:
-  workflow_dispatch
-  push:
-    branches:
-      - release
+on: workflow_dispatch
 
 # This workflow will trigger on each push to the `release` branch to create or update a GitHub release, build your app, and upload the artifacts to the release.
 
