@@ -50,9 +50,25 @@ jobs:
         if: matrix.platform.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libboost-all-dev
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libboost-all-dev
+
+      - name: Install boost (windows)
+        if: matrix.platform.os == 'windows-latest'
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost-win
+        with:
+            boost_version: 1.85.0
+            platform_version: 2022
+            toolset: msvc
+
+      - name: Install boost (mac)
+        if: matrix.platform.os == 'macos-latest'
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost-mac
+        with:
+            boost_version: 1.85.0
+            platform_version: 11
+            toolset: clang
 
       - uses: JonasKruckenberg/tauri-build@tauri-build-v1.5.11
         id: build_game
@@ -81,7 +97,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # Download the previously uploaded artifacts
       - uses: actions/download-artifact@v3
         with:
           name: game-artifacts
@@ -90,7 +105,6 @@ jobs:
         with:
           name: editor-artifacts
           path: artifacts/editor
-      # And create a release with the artifacts attached
       - name: 'create release'
         uses: softprops/action-gh-release@master
         env:
