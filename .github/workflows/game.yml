@@ -3,7 +3,7 @@ name: 'game'
 on: workflow_dispatch
 
 jobs:
-  publish-tauri:
+  build-binaries:
     permissions:
       contents: write
     strategy:
@@ -36,6 +36,15 @@ jobs:
           # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
+      - name: install cargo-leptos
+        run: cargo install cargo-leptos
+
+      - name: install trunk
+        run: cargo install trunk
+
+      - name: install wasm target
+        run: rustup target add wasm32-unknown-unknown
+
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
@@ -44,17 +53,45 @@ jobs:
         # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
-      - name: install frontend dependencies
-        run: yarn install # change this to npm, pnpm or bun depending on which one you use.
+      - uses: JonasKruckenberg/tauri-build@v1
+        id: build_game
+        projectPath: hes-game
 
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: JonasKruckenberg/tauri-build@v1
+        id: build_editor
+        projectPath: hes-editor
+
+      - uses: actions/upload-artifact@v3
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
-          projectPath: hes-game
+          name: game-artifacts
+          path: "${{ join(fromJSON(steps.build_game.outputs.artifacts), '\n') }}"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: editor-artifacts
+          path: "${{ join(fromJSON(steps.build_editor.outputs.artifacts), '\n') }}"
+
+  publish:
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Download the previously uploaded artifacts
+      - uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: game-artifacts
+          path: artifacts/game
+      - uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: editor-artifacts
+          path: artifacts/editor
+      # And create a release with the artifacts attached
+      - name: 'create release'
+        uses: softprops/action-gh-release@master
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          draft: false
+          files: ./artifacts/**/*
