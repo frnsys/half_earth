@@ -2355,7 +2355,7 @@ Restoration projects take less time to complete.,Les projets de restauration pre
 Reduces,Réduit
 Increases,Augmente
 {changeDir} world contentedness by {amount}.,Contenu mondial modifié par {amount}.
-This will directly change annual emissions by {amount}.{percent},Cela changera directement les émissions annuelles de {amount}.{percent}
+This will directly change annual emissions by {amount}.,Cela changera directement les émissions annuelles de {amount}.
 {changeDir} emissions by {amount}.,Réduisez les émissions de {amount}.
 "Current biodiversity pressure is {amount}<span class=""type-total"">/{maxAmount}</span>.","La pression actuelle sur la biodiversité est de {amount}<span class=""type-total"">/{maxAmount}</span>."
 {changeDir} biodiversity pressure by {amount}.,Pression sur la biodiversité {changeDir} par {amount}.
@@ -2472,10 +2472,10 @@ biodiversity pressure,pression sur la biodiversité
 {type} emissions,émissions de {type}
 emissions,émissions
 "{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","De {emissionsBefore} à <img src=""{icon}"">{emissionsAfter}. C'est un changement de {emissionsChange}% de toutes les émissions."
-[{icon}] {changeDir} {label} for {tag} by <strong>{percent}</strong>.,[{icon}] Changer {changeDir} {label} pour {tag} par <strong>{percent}</strong>.
+[{icon}] {changeDir} {label} for {tag} by <strong>{amount}</strong>.,[{icon}] Changer {changeDir} {label} pour {tag} par <strong>{amount}</strong>.
 Changes emissions for {name} by an unknown amount.,Change les émissions pour {name} d'un montant inconnu.
 "This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","Cela modifiera les émissions de {name} de <img src=""{icon}"">{emissionsBefore} à <img src=""{icon}"">{emissionsAfter}. C'est une modification de {emissionsChange}% de toutes les émissions."
-[emissions] {changeDir} {type} emissions for {tag} by <strong>{percent}</strong>.,[emissions] Les émissions de {type} pour {tag} ont {changeDir} de <strong>{percent}</strong>.
+[emissions] {changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,[emissions] Les émissions de {type} pour {tag} ont {changeDir} de <strong>{amount}</strong>.
 [contentedness] [{icon}] {changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}] Le contentement mondial change de <strong>{amount}</strong> {changeDir}.
 [contentedness] {changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] la satisfaction augmente de <strong>{amount}</strong>.
 "{changeDir} the chance of ""{event}"" by {percent}%","Changez la chance de ""{event}"" par {percent}%"
