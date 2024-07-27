@@ -1,15 +1,18 @@
 *.db
+target
 node_modules
 dist
+.env
 
 editor/data.json
 editor/strings
 assets/content/images/*
 out/
-data/src
+design/data/src
 assets/src/images
 assets/src/audio
 assets/fonts/Synt
 */uploads
 hector/hector-rs
 sharing/*.json
+deploy.sh
