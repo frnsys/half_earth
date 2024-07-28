@@ -23,12 +23,12 @@ jobs:
         with:
           submodules: 'true'
 
-      - name: setup node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: 'Setup Rust'
+      - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
           default: true
@@ -37,45 +37,43 @@ jobs:
           toolchain: nightly
           target: ${{ matrix.platform == 'macos-latest' && 'x86_64-apple-darwin' || '' }}
 
-      - name: Rust cache
+      - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: hes-game
 
-      - name: install cargo-leptos
-        run: cargo install cargo-leptos
-
-      - name: install trunk
-        run: cargo install trunk
-
-      - name: install wasm target
-        run: rustup target add wasm32-unknown-unknown
-
-      - name: install dependencies (ubuntu only)
+      - name: Install dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libboost-all-dev
 
-      - name: Install boost (windows)
+      - name: Download Boost (Windows)
         if: matrix.platform == 'windows-latest'
-        uses: MarkusJx/install-boost@v2.4.5
-        id: install-boost-win
-        with:
-            boost_version: 1.85.0
-            platform_version: 2022
-            toolset: msvc
+        run: |
+          curl -L -o boost.zip https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip
+          New-Item -ItemType Directory -Force -Path $Env:GITHUB_WORKSPACE\hector-rs\include\boost
+          tar -xf boost.zip --strip-components=1 -C $Env:GITHUB_WORKSPACE\hector-rs\include
+          echo "BOOST_ROOT=$Env:GITHUB_WORKSPACE\hector-rs\include" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo "BOOST_INCLUDEDIR=$Env:GITHUB_WORKSPACE\hector-rs\include" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo "BOOST_LIBRARYDIR=$Env:GITHUB_WORKSPACE\hector-rs\include\stage\lib" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Install boost (mac)
-        if: matrix.platform.os == 'macos-latest'
-        uses: MarkusJx/install-boost@v2.4.5
-        id: install-boost-mac
-        with:
-            boost_version: 1.85.0
-            platform_version: 11
-            toolset: clang
+      - name: Install Boost (Mac)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          brew install boost@1.85
+          echo "BOOST_ROOT=$(brew --prefix boost)" >> $GITHUB_ENV
+          echo "CXXFLAGS=-I$(brew --prefix boost)/include" >> $GITHUB_ENV
 
-      - name: Build game
+      - name: Install cargo-leptos
+        uses: taiki-e/cache-cargo-install-action@v2.0.1
+        with:
+          tool: cargo-leptos@0.2.17
+
+      - name: Install wasm target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Build Game
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +86,12 @@ jobs:
           args: ${{ matrix.args }}
           projectPath: hes-game
 
-      - name: Build editor
+      - name: Install trunk
+        uses: taiki-e/cache-cargo-install-action@v2.0.1
+        with:
+          tool: trunk@0.20.2
+
+      - name: Build Editor
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
