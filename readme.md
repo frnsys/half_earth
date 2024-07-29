@@ -46,16 +46,17 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 
 ```
 Available recipes:
-    run-web     # Run development web game
-    run-app     # Run development app game
+    run-web     # Run development web game (browser)
+    run-app     # Run development app game (tauri)
     test-engine # Run engine tests
-    build-apps  # Build the app release versions
-    build-web   # Build the web release version
+    build-apps  # Build the app release versions (tauri)
+                # Note: this is just native, for cross-platform see below.
+    build-web   # Build the web release version (browser)
 ```
 
 ## Building & Deploying
 
-- Cross-platform builds are handled by Github Actions.
+- Cross-platform builds are handled by Github Actions (using a `workflow_dispatch, i.e. manual trigger).
 - The web version of the game is built using `just build-web` and then managed as a `systemd` unit:
 
 ```ini

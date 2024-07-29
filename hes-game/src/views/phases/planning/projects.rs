@@ -2,7 +2,7 @@ use crate::{
     debug::get_debug_opts,
     icons::{self, HasIcon},
     state,
-    state::{GameExt, Tutorial},
+    state::{GameExt, GameState, Tutorial},
     t,
     ui,
     views::{scanner::*, Help},
@@ -18,9 +18,10 @@ pub fn Projects(
     #[prop(into)] close: Callback<()>,
 ) -> impl IntoView {
     let (kind, set_kind) = create_signal(Type::Research);
-    create_effect(move |_| {
-        on_kind_change.call(kind.get());
-    });
+    let set_kind = move |kind: Type| {
+        set_kind.set(kind);
+        on_kind_change.call(kind);
+    };
 
     let scan_tip = t!("↑ Swipe this card up and hold to add it to your plan ↑");
     let scroll_tip =
@@ -32,39 +33,39 @@ pub fn Projects(
         ui!(tutorial.eq(&Tutorial::ProjectsBack));
 
     let debug = get_debug_opts();
-    let projects = with_state!(|state, ui, kind| {
-        state
-            .world
-            .projects
-            .iter()
-            .filter(|p| {
-                p.kind == *kind && (!p.locked || debug.show_all_projects)
+    let state = expect_context::<RwSignal<GameState>>();
+    let projects = move || {
+        let mut projects = with!(|state, kind| {
+            state
+                .game
+                .world
+                .projects
+                .iter()
+                .filter(|p| {
+                    p.kind == *kind && (!p.locked || debug.show_all_projects)
 
-            // Filter out finished projects
-            && p.status != Status::Finished
+                // Filter out finished projects
+                && p.status != Status::Finished
 
-            // Filter out finished policies
-            // but only ones added before
-            // this planning session
-            && (p.status != Status::Active || ui.plan_changes.contains_key(&p.id))
+                // Filter out finished policies
+                // but only ones added before
+                // this planning session
+                && (p.status != Status::Active || state.ui.plan_changes.contains_key(&p.id))
 
-            // Filter out projects that are mutually exclusive
-            // with active projects
-                && state.world.project_lockers.get(&p.id)
-                .map(|locker_id| {
-                    // Is the locker satisfied?
-                    match state.world.projects[locker_id].status {
-                        Status::Building | Status::Active | Status::Finished => false,
-                        _=> true
-                    }
-                }).unwrap_or(true)
-            })
-            .cloned()
-            .collect::<Vec<_>>()
-    });
-
-    let project_order = move || {
-        let mut projects = projects();
+                // Filter out projects that are mutually exclusive
+                // with active projects
+                    && state.game.world.project_lockers.get(&p.id)
+                    .map(|locker_id| {
+                        // Is the locker satisfied?
+                        match state.game.world.projects[locker_id].status {
+                            Status::Building | Status::Active | Status::Finished => false,
+                            _=> true
+                        }
+                    }).unwrap_or(true)
+                })
+                .cloned()
+                .collect::<Vec<_>>()
+        });
         projects.sort_by(|a, b| {
             a.name.to_lowercase().cmp(&b.name.to_lowercase())
         });
@@ -81,7 +82,7 @@ pub fn Projects(
             <div class="planning--page-tabs">
                 <div
                     class="planning-sub-tab"
-                    on:click=move |_| set_kind.set(Type::Research)
+                    on:click=move |_| set_kind(Type::Research)
                     class:selected=move || kind.get() == Type::Research
                 >
                     <img src=icons::RESEARCH/>
@@ -89,7 +90,7 @@ pub fn Projects(
                 </div>
                 <div
                     class="planning-sub-tab"
-                    on:click=move |_| set_kind.set(Type::Initiative)
+                    on:click=move |_| set_kind(Type::Initiative)
                     class:selected=move || kind.get() == Type::Initiative
                 >
                     <img src=icons::INITIATIVE/>
@@ -97,7 +98,7 @@ pub fn Projects(
                 </div>
                 <div
                     class="planning-sub-tab"
-                    on:click=move |_| set_kind.set(Type::Policy)
+                    on:click=move |_| set_kind(Type::Policy)
                     class:selected=move || kind.get() == Type::Policy
                 >
                     <img src=icons::POLICY/>
@@ -114,7 +115,7 @@ pub fn Projects(
 
             <ScannerCards
                 spec=scanner
-                items=project_order.into_signal()
+                items=projects
             />
 
             <footer>

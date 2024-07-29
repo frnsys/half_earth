@@ -390,9 +390,10 @@ where
 
 #[macro_export]
 macro_rules! write_state {
-    ($func:expr) => {
+    ($func:expr) => {{
+        tracing::debug!("Writing to state.");
         crate::state::write_state($func)
-    };
+    }};
 }
 
 impl UIState {

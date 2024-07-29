@@ -55,30 +55,28 @@ pub fn Planning() -> impl IntoView {
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
     let events = create_rw_signal(vec![]);
-    create_effect(move |_| {
-        state.update(|state| {
-            let mut evs = state
+    state.update_untracked(|state| {
+        let mut evs = state
+            .game
+            .roll_events(EventPhase::PlanningStart, None);
+        evs.extend(
+            state
                 .game
-                .roll_events(EventPhase::PlanningStart, None);
-            evs.extend(
-                state.game.roll_events(
-                    EventPhase::PlanningPlan,
-                    None,
-                ),
-            );
+                .roll_events(EventPhase::PlanningPlan, None),
+        );
 
-            if get_debug_opts().skip_to_planning {
-                evs.retain(|ev| ev.name != "Planning Intro");
-            }
+        if get_debug_opts().skip_to_planning {
+            evs.retain(|ev| ev.name != "Planning Intro");
+        }
 
-            events.set(evs);
-        });
+        events.set_untracked(evs);
     });
 
     let has_changes = ui!(has_any_process_mix_changes());
 
     let (page, set_page) = create_signal(Page::Plan);
     let select_page = move |page: Page| {
+        tracing::debug!("Selecting planning page.");
         set_page.set(page);
 
         let phase = match page {
@@ -87,7 +85,9 @@ pub fn Planning() -> impl IntoView {
             Page::Dashboard => EventPhase::PlanningDashboard,
             Page::Parliament => EventPhase::PlanningParliament,
         };
+
         state.update(|state| {
+            tracing::debug!("Rolling planning page events.");
             events.set(state.game.roll_events(phase, None));
         });
     };
@@ -121,12 +121,14 @@ pub fn Planning() -> impl IntoView {
     let page_view = move || match page.get() {
         Page::Plan => {
             view! { <Plan on_plan_change=move |_| {
+                tracing::debug!("Plan changed.");
                 state.update(|state| {
                     events.set(state.game.roll_events(EventPhase::PlanningPlanChange, None));
                 });
             } on_page_change=move |phase| {
-                state.update(|state| {
-                    events.set(state.game.roll_events(phase, None));
+                tracing::debug!("Plan page changed.");
+                update!(|state, events| {
+                    events.extend(state.game.roll_events(phase, None));
                 });
             }/> }
         }
@@ -136,8 +138,10 @@ pub fn Planning() -> impl IntoView {
     };
 
     let on_done = move |_| {
+        tracing::debug!("Planning events finished.");
         update!(|state| {
             if state.game.flags.contains(&Flag::SkipTutorial) {
+                tracing::debug!("Skipping tutorial.");
                 state.ui.tutorial = Tutorial::Ready;
             } else if state
                 .game
@@ -145,6 +149,7 @@ pub fn Planning() -> impl IntoView {
                 .contains(&Flag::RepeatTutorial)
                 && !state.ui.tutorial_restarted
             {
+                tracing::debug!("Restarting tutorial.");
                 state.ui.tutorial_restarted = true;
                 state.ui.tutorial = Tutorial::Projects;
                 events.set(state.game.roll_events(

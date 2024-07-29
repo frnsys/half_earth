@@ -268,6 +268,7 @@ pub fn Plan(
 
     let (page, set_page) = create_signal(Page::Overview);
     let close = move || {
+        tracing::debug!("Closing plan page.");
         state.update(|state| {
             let ui = &mut state.ui;
             let page = page.get();
@@ -280,11 +281,12 @@ pub fn Plan(
             {
                 ui.tutorial.advance();
             }
-            on_page_change.call(EventPhase::PlanningPlan);
         });
         set_page.set(Page::Overview);
+        on_page_change.call(EventPhase::PlanningPlan);
     };
     let select_page = move |page| {
+        tracing::debug!("Selecting plan sub-page.");
         set_page.set(page);
         let phase = match page {
             Page::Overview => EventPhase::PlanningPlan,
@@ -295,6 +297,7 @@ pub fn Plan(
         on_page_change.call(phase);
     };
     let on_kind_change = move |kind: ProjectType| {
+        tracing::debug!("Project kind changed.");
         let phase = match kind {
             ProjectType::Policy => EventPhase::PlanningPolicies,
             ProjectType::Research => {
@@ -307,6 +310,7 @@ pub fn Plan(
         on_page_change.call(phase);
     };
     let on_change = move |_| {
+        tracing::debug!("Plan sub-page had a change.");
         on_plan_change.call(());
     };
 

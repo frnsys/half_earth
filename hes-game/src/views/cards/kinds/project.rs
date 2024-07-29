@@ -30,7 +30,7 @@ pub fn ProjectCard(
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
     let is_new = move || {
-        with!(|project, state| state
+        with!(|project, state| !state
             .ui
             .viewed
             .contains(&project.id))

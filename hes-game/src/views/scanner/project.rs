@@ -110,7 +110,8 @@ impl ScannerSpec for ProjectScanner {
         >();
         let on_finish_scan =
             move |controls: ScannerControls| {
-                state
+                let mut changed = false;
+                let keep_scanning = state
                     .try_update(|state| {
                         let ui = &mut state.ui;
                         let state = &mut state.game;
@@ -137,7 +138,7 @@ impl ScannerSpec for ProjectScanner {
                                         free,
                                         &mut ui.queued_upgrades,
                                     ) {
-                                        on_change.call(());
+                                        changed = true;
                                     }
                                     controls.pulse_level();
                                     if p.next_upgrade()
@@ -166,7 +167,7 @@ impl ScannerSpec for ProjectScanner {
                                         &mut ui.points,
                                     );
 
-                                    on_change.call(());
+                                    changed = true;
 
                                     controls.pulse_card();
 
@@ -188,7 +189,7 @@ impl ScannerSpec for ProjectScanner {
                                         ui.tutorial.advance();
                                     }
                                     state.pass_policy(&p.id);
-                                    on_change.call(());
+                                    changed = true;
 
                                     controls.pulse_card();
                                     controls.shake_screen();
@@ -216,7 +217,11 @@ impl ScannerSpec for ProjectScanner {
                             keep_scanning
                         })
                     })
-                    .unwrap_or(false)
+                    .unwrap_or(false);
+                if changed {
+                    on_change.call(());
+                }
+                keep_scanning
             };
 
         CardScanProps {
@@ -263,7 +268,8 @@ impl ScannerSpec for ProjectScanner {
         >();
         let on_finish_scan =
             move |controls: ScannerControls| {
-                state
+                let mut changed = false;
+                let keep_scanning = state
                 .try_update(|state| {
                     let ui = &mut state.ui;
                     let state = &mut state.game;
@@ -308,7 +314,7 @@ impl ScannerSpec for ProjectScanner {
                                 state.stop_project(&p.id);
                                 changes.withdrawn = true;
                             }
-                            on_change.call(());
+                            changed = true;
 
                             if keep_withdrawing {
                                 keep_scanning = true
@@ -321,7 +327,11 @@ impl ScannerSpec for ProjectScanner {
                         keep_scanning
                     })
                 })
-                .unwrap_or(false)
+                .unwrap_or(false);
+                if changed {
+                    on_change.call(());
+                }
+                keep_scanning
             };
 
         let label = move || {

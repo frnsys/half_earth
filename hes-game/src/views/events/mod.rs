@@ -47,11 +47,13 @@ pub fn Events(
                 Duration::from_millis(delay),
             );
         }
-        if ready.get() && !has_event() {
-            set_idx.set(0);
-            on_done.call(());
-        }
     });
+
+    if ready.get_untracked()
+        && events.with_untracked(|events| events.is_empty())
+    {
+        on_done.call(());
+    }
 
     view! {
         {move || {

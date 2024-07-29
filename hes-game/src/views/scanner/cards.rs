@@ -61,6 +61,7 @@ pub fn ScannerCards<S: ScannerSpec>(
 
     let on_drag = move |rect: DragRect| {
         // This triggers the scanner functionalities
+        tracing::debug!("Scanner > Dragging");
         set_drag_rect.set(Some(rect));
         set_mode.set(Mode::Scan);
     };
@@ -138,20 +139,26 @@ pub fn ScannerCards<S: ScannerSpec>(
     use_interval_fn(
         move || {
             // TODO perhaps more efficient way to do this?
+            tracing::debug!(
+                "Scanner > Updating Focused in Interval"
+            );
             update_focused();
         },
         60,
     );
 
     let on_scroll_start = move |_| {
+        tracing::debug!("Scanner > Scroll Started");
         set_mode.set(Mode::Scroll);
     };
     let on_scroll_end = move |_| {
+        tracing::debug!("Scanner > Scroll Ended");
         set_mode.set(Mode::Any);
         update_focused();
     };
 
     let on_drag_stop = move |_| {
+        tracing::debug!("Scanner > Drag Stopped");
         // This stops/cancels the scanner functionalities
         set_mode.set(Mode::Any);
         set_drag_rect.set(None);
@@ -163,6 +170,7 @@ pub fn ScannerCards<S: ScannerSpec>(
         move || [top_y_bound.get(), bot_y_bound.get()];
 
     let on_focus = move |idx: Option<usize>| {
+        tracing::debug!("Scanner > Cards > On Focus");
         write_state!(|state, ui| {
             let item = idx
                 .map(|idx| {
@@ -171,7 +179,7 @@ pub fn ScannerCards<S: ScannerSpec>(
                 .flatten();
             if let Some(item) = &item {
                 let id = item.id();
-                if ui.viewed.contains(id) {
+                if !ui.viewed.contains(id) {
                     ui.viewed.push(*id);
                 }
             }
@@ -233,8 +241,6 @@ pub fn ScannerCards<S: ScannerSpec>(
                         state.with(move |state| S::Item::get_from_state(&id, &state.game))
                     });
                     let card = S::Item::as_card(item.into());
-
-
                     view! {
                         <Draggable
                             on_drag

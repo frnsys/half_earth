@@ -70,6 +70,7 @@ pub fn Scanner(
     let (top_y, set_top_y) = create_signal(0.);
     let (bot_y, set_bot_y) = create_signal(0.);
     let get_edges = move || {
+        tracing::debug!("Scanner > Getting Edges");
         if let Some(target) = target_ref.get() {
             let rect =
                 to_ws_el(target).get_bounding_client_rect();
