@@ -135,7 +135,6 @@ pub fn Globe(
         )
             as Box<dyn FnMut(&JsValue)>);
 
-        logging::log!("RUST CALING GLOBE");
         let globe = Globe::new(&to_ws_el(g));
 
         let g = GlobeRef {
@@ -144,7 +143,6 @@ pub fn Globe(
 
         let g_copy = g.clone();
         let on_ready = Closure::wrap(Box::new(move || {
-            logging::log!("GLOBE READY");
             set_loading.set(false);
             on_ready.call(g_copy.clone());
         })
@@ -162,13 +160,11 @@ pub fn Globe(
                 calc_surface(tgav.get_untracked())
                     .await
                     .unwrap();
-            logging::log!("GLOBE INITED");
             g.inner.borrow().init(
                 width,
                 height,
                 pixels.as_slice().into(),
             );
-            logging::log!("GLOBE RENDERING");
             g.inner.borrow().render();
         });
 

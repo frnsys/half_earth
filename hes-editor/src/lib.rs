@@ -275,7 +275,6 @@ macro_rules! infinite_list {
                                             spawn_local(async move {
                                                 let msg = "Are you sure you want to delete this?";
                                                 let name = with!(|world| world.$field.by_idx(i).name.clone());
-                                                logging::log!("Searching references for: {id}");
                                                 let refs = with!(|world| crate::validate::find_references(id, crate::validate::RefKind::$single, world));
                                                 if !refs.is_empty() {
                                                     create_toast(name, refs);

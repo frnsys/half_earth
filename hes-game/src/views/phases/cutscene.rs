@@ -43,7 +43,6 @@ pub fn Cutscene() -> impl IntoView {
     let main_ref = create_node_ref::<html::Div>();
     let fade_out = move || {
         if let Some(elem) = main_ref.get() {
-            logging::log!("FADING OUT");
             let elem = elem.style(
                 "animation",
                 "1s fade-out ease-out forwards",
