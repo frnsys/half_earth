@@ -53,25 +53,35 @@ impl ScannerSpec for ProcessScanner {
     ) -> CardScanProps {
         let points = self.points.clone();
         let on_change = self.on_change.clone();
-
-        let addable = with_state!(|state, ui| {
-            if let Some(process) = process.get() {
-                let max_share =
-                    state.process_max_share(&process);
-                let change = ui.process_mix_changes
-                    [process.output]
-                    .get(&process.id)
-                    .unwrap_or(&0);
-                points.get() != 0
-                    && (*change + 1) < max_share as isize
-            } else {
-                false
-            }
-        });
-
         let state = expect_context::<
             RwSignal<crate::state::GameState>,
         >();
+
+        let addable = move || {
+            state.with_untracked(
+                |crate::state::GameState {
+                     game: state,
+                     ui,
+                 }| {
+                    if let Some(process) =
+                        process.get_untracked()
+                    {
+                        let max_share =
+                            state.process_max_share(&process);
+                        let change = ui.process_mix_changes
+                            [process.output]
+                            .get(&process.id)
+                            .unwrap_or(&0);
+                        points.get() != 0
+                            && (*change + 1)
+                                < max_share as isize
+                    } else {
+                        false
+                    }
+                },
+            )
+        };
+
         let on_finish_scan =
             move |controls: ScannerControls| {
                 if addable() {

@@ -75,6 +75,7 @@ icons! {
     LAND: "/icons/land.png",
     WATER: "/icons/water.png",
     ENERGY: "/icons/energy.png",
+    FOOD: "/icons/plantcalories.png",
     FUEL: "/icons/fuel.png",
     ELECTRICITY: "/icons/electricity.png",
     PLANT_CALORIES: "/icons/plantcalories.png",

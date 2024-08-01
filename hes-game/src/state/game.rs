@@ -275,6 +275,19 @@ pub impl Game {
         limit: Option<usize>,
     ) -> Vec<DisplayEvent> {
         let events = self.roll_events_for_phase(phase, limit);
+
+        // Icon events, aka disasters,
+        // are handled differently, so we don't
+        // apply their effects immediately here.
+        if phase != Phase::Icon {
+            for ev in &events {
+                self.apply_event(
+                    ev.id,
+                    ev.region.as_ref().map(|(id, _)| *id),
+                );
+            }
+        }
+
         events
             .into_iter()
             .map(|ev| DisplayEvent::new(ev, &self.state))

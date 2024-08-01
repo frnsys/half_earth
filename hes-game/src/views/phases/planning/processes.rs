@@ -1,7 +1,7 @@
 use crate::{
     consts,
     debug::get_debug_opts,
-    display::{self, AsText},
+    display::{self, AsText, FloatExt},
     icons::{self, HasIcon},
     state::{Tutorial, UIState},
     t,
@@ -127,7 +127,7 @@ pub fn Processes(
             .to_vec()
     });
     let emissions = with_state!(|state, _ui| {
-        let emissions = state.byproducts.gtco2eq();
+        let emissions = state.byproducts.gtco2eq().round_to(1);
         let tip = tip(
             icons::EMISSIONS,
             t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
@@ -243,7 +243,7 @@ fn calc_change(
         } else { "" }, change: display::percent(change, true));
         Some(
             view! {
-                <span class="change-increase">
+                <span class="change change-increase">
                     <strong>{s}</strong>
                 </span>
             }
@@ -253,7 +253,7 @@ fn calc_change(
         let s = t!("decrease {k} by {change}", k: t!(key), change: display::percent(change.abs(), true));
         Some(
             view! {
-                <span class="change-decrease">
+                <span class="change change-decrease">
                     <strong>{s}</strong>
                 </span>
             }
@@ -384,7 +384,7 @@ fn display_changes(
         .into_view()
     } else {
         view! {
-            {t!("This output's production will")}:" "{descs}
+            {t!("This output's production will")}:" "{descs}"."
         }
         .into_view()
     }

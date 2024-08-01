@@ -36,6 +36,9 @@ pub fn Event(
 
     let dialogue =
         move || with!(|event| event.flavor.dialogue.clone());
+    let effects =
+        move || with!(|event| Some(event.effects.clone()));
+    let event_id = move || with!(|event| Some(event.id));
 
     view! {
         <div class="event">
@@ -45,6 +48,8 @@ pub fn Event(
                 context=ctx
                 on_advance=on_advance
                 on_done=on_done
+                event_id
+                effects
             />
         </div>
     }

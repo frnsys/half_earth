@@ -1623,6 +1623,10 @@ header .dropdown-menu-inset {
   vertical-align: middle;
   margin-top: -2px;
   margin-left: 1px;
+  margin-right: 4px;
+}
+.card header img:last-child {
+  margin-right: 0;
 }
 .card header > div:first-child {
   font-family: 'W95FA', monospace;
@@ -1942,6 +1946,7 @@ to be centered */
   text-align: center;
   border-radius: 0.2em;
   font-size: 0.8em;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.7);
 }
 
 /* so this doesn't interfere with scrolling */
@@ -3602,6 +3607,12 @@ color: #63FF96;
   opacity: 0.5;
 }
 
+.change::after {
+  content: ", ";
+}
+.change:last-child::after {
+  content: "";
+}
 .change-decrease {
   color: #2FE863;
 }

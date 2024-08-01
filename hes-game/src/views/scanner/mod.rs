@@ -93,7 +93,7 @@ pub fn Scanner(
         create_signal(None::<Animation>);
     let stop_scanning_card = move |_| {
         set_is_scanning.set(false);
-        if let Some(target) = target_ref.get() {
+        if let Some(target) = target_ref.get_untracked() {
             target
                 .class_list()
                 .remove_2("scanning", "no-scan")
@@ -115,7 +115,7 @@ pub fn Scanner(
     };
 
     let reject_scan = move || {
-        if let Some(target) = target_ref.get() {
+        if let Some(target) = target_ref.get_untracked() {
             if let Some(elem) = target.parent_element() {
                 elem.class_list().add_1("scan-fail");
                 set_timeout(
@@ -140,10 +140,10 @@ pub fn Scanner(
 
         // Hacky...double-check position
         // after animations have finished
-        set_timeout(
-            move || get_edges(),
-            Duration::from_millis(500),
-        );
+        // set_timeout(
+        //     move || get_edges(),
+        //     Duration::from_millis(500),
+        // );
     });
 
     let scan_card = move || {

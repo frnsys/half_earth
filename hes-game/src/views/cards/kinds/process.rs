@@ -1,6 +1,6 @@
 use super::super::card::*;
 use crate::{
-    display::{self, AsText},
+    display::{self, AsText, FloatExt},
     icons::{self, HasIcon},
     state,
     state::GameExt,
@@ -119,7 +119,7 @@ pub fn ProcessCard(
             if emissions > 0. {
                 emissions = emissions.max(1.);
             }
-            (amount, emissions)
+            (amount, emissions.round_to(1))
         })
     };
     let output_tip = move || {

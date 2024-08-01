@@ -300,13 +300,6 @@ pub fn WorldEvents() -> impl IntoView {
                     .roll_events(EventPhase::WorldMain, None);
                 for event in &evs {
                     ui.world_events.push(event.clone());
-                    game.apply_event(
-                        event.event.id,
-                        event
-                            .region
-                            .as_ref()
-                            .map(|(id, _)| *id),
-                    );
                 }
 
                 // If skipping, just apply all events.

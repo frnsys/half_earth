@@ -1,4 +1,5 @@
 use crate::{
+    display::FloatExt,
     icons,
     state,
     t,
@@ -79,7 +80,7 @@ pub fn Hud() -> impl IntoView {
 
     let emissions_gt = state!(emissions_gt());
     let emissions_tip = move || {
-        let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get());
+        let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get().round_to(1));
         crate::views::tip(icons::EMISSIONS, tip_text).card(
             with!(|state| factors_card(
                 None,

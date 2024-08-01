@@ -126,3 +126,19 @@ pub fn format_impact(impact: Impact, val: f32) -> String {
         Impact::Electricity => format!("{:.1}TWh", val * 1e-9),
     }
 }
+
+pub trait FloatExt {
+    fn round_to(&self, precision: i32) -> f32;
+}
+impl FloatExt for f32 {
+    fn round_to(&self, precision: i32) -> f32 {
+        let factor = 10_f32.powi(precision);
+        let abs_number = self.abs();
+        let rounded = f32::round(abs_number * factor) / factor;
+        if *self < 0.0 {
+            -rounded
+        } else {
+            rounded
+        }
+    }
+}

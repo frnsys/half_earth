@@ -20,23 +20,15 @@ pub fn MiniNPC(
         consts::PARLIAMENT_SEATS.iter().sum::<usize>();
 
     let name_ref = create_node_ref::<html::Div>();
-    let fit_text = move || {
+    create_effect(move |_| {
         if let Some(name_ref) = name_ref.get() {
             scale_text(to_ws_el(name_ref), 11);
         }
-    };
-    create_effect(move |_| {
-        // Subscribe to selected npc change.
-        let _ = npc.get();
-        fit_text();
     });
 
     let portrait = move || {
         npc.with(|npc| {
-            format!(
-                "/assets/characters/{}.webp",
-                npc.name
-            )
+            format!("/assets/characters/{}.webp", npc.name)
         })
     };
     let name = move || npc.with(|npc| t!(&npc.name));

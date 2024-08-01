@@ -22,6 +22,7 @@ pub fn Projects(
         set_kind.set(kind);
         on_kind_change.call(kind);
     };
+    on_kind_change.call(kind.get_untracked());
 
     let scan_tip = t!("↑ Swipe this card up and hold to add it to your plan ↑");
     let scroll_tip =

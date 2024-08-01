@@ -35,7 +35,7 @@ pub fn Regions() -> impl IntoView {
     };
 
     let center_on_region = move || {
-        if let Some(globe) = globe.get() {
+        if let Some(globe) = globe.get_untracked() {
             let name = region_name();
             globe.highlight_region(&name);
         }

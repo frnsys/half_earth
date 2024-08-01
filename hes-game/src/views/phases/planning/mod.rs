@@ -157,6 +157,24 @@ pub fn Planning() -> impl IntoView {
                     None,
                 ));
             }
+
+            let should_advance = match page.get_untracked() {
+                Page::Parliament => {
+                    state.ui.tutorial == Tutorial::Parliament
+                }
+                Page::Dashboard => {
+                    state.ui.tutorial == Tutorial::Dashboard
+                }
+                Page::Regions => {
+                    state.ui.tutorial == Tutorial::Regions
+                }
+                Page::Plan => {
+                    state.ui.tutorial == Tutorial::Plan
+                }
+            };
+            if should_advance {
+                state.ui.tutorial.advance();
+            }
         });
     };
 

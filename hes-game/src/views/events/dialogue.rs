@@ -226,6 +226,7 @@ pub fn Dialogue(
     let select_choice =
         move |ev: MouseEvent, response: &Response| {
             ev.stop_immediate_propagation();
+            logging::log!("Selecting choice");
 
             // this.eventID will be undefined
             // for project outcome dialogues.
@@ -235,6 +236,13 @@ pub fn Dialogue(
             // So we just assume project dialogues won't have branch effects
             // which, at time of writing, none of them do.
             if let Some(event_id) = event_id.get() {
+                logging::log!(
+                    "Selected choice, applying effects"
+                );
+                logging::log!(
+                    "effects: {:?}",
+                    response.effects
+                );
                 update!(|state| {
                     state.game.apply_effects(
                         &response.effects,
