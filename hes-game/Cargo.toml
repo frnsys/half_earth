@@ -60,7 +60,7 @@ members = ["src-tauri"]
 
 [dependencies.web-sys]
 version = "0.3"
-features = ["Performance", "Animation", "KeyframeEffect", "KeyframeEffectOptions", "HtmlImageElement"]
+features = ["Performance", "Animation", "KeyframeEffect", "KeyframeEffectOptions", "HtmlImageElement", "Storage"]
 
 [features]
 client = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]

@@ -20,7 +20,6 @@ use hes_engine::{
     Id,
 };
 use leptos::*;
-use leptos_use::storage::use_local_storage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -47,6 +46,32 @@ pub fn demand_by_income_levels(output: Output) -> [f32; 4] {
         .collect::<Vec<_>>()
         .try_into()
         .expect("Mapping from same size arrays")
+}
+
+fn read_save() -> Result<Option<GameState>, anyhow::Error> {
+    if let Some(storage) = window().local_storage().unwrap() {
+        storage
+            .get_item(SAVE_KEY)
+            .unwrap()
+            .map(|ser| {
+                Ok(serde_json::from_str::<GameState>(&ser)?)
+            })
+            .transpose()
+    } else {
+        Ok(None)
+    }
+}
+fn write_save(state: &GameState) -> Result<(), anyhow::Error> {
+    if let Some(storage) = window().local_storage().unwrap() {
+        let ser = serde_json::to_string(state)?;
+        storage.set_item(SAVE_KEY, &ser).unwrap();
+    }
+    Ok(())
+}
+fn clear_save() {
+    if let Some(storage) = window().local_storage().unwrap() {
+        storage.clear().unwrap();
+    }
 }
 
 #[derive(Default, Serialize, Deserialize, PartialEq, Clone)]
@@ -92,11 +117,9 @@ impl GameState {
     }
 
     pub fn load() -> GameState {
-        let (read, _, _) = use_local_storage::<
-            Option<GameState>,
-            JsonSerdeCodec,
-        >(SAVE_KEY);
-        if let Some(mut state) = read.get_untracked() {
+        tracing::debug!("Loading saved game...");
+        let save = read_save().unwrap();
+        if let Some(mut state) = save {
             state.init();
             state
         } else {
@@ -128,27 +151,18 @@ impl GameState {
     }
 
     pub fn save(&self) {
-        let (_, write, _) = use_local_storage::<
-            Option<GameState>,
-            JsonSerdeCodec,
-        >(SAVE_KEY);
-        write.set(Some(self.clone()));
+        tracing::debug!("Saving game...");
+        write_save(self).unwrap();
     }
 
     pub fn clear_save() {
-        let (_, _, clear) = use_local_storage::<
-            Option<GameState>,
-            JsonSerdeCodec,
-        >(SAVE_KEY);
-        clear();
+        tracing::debug!("Clearing saved game...");
+        clear_save();
     }
 
     pub fn has_save() -> bool {
-        let (state, _, _) = use_local_storage::<
-            Option<GameState>,
-            JsonSerdeCodec,
-        >(SAVE_KEY);
-        state.get().is_some()
+        tracing::debug!("Checking saved game...");
+        read_save().unwrap().is_some()
     }
 
     pub fn start_new_run() {
