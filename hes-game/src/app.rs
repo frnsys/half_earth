@@ -78,7 +78,7 @@ pub fn App() -> impl IntoView {
 
     let cur_phase = ui!(phase);
 
-    // It feels a little hacky to use `create_memo`
+    // HACK: It feels a little hacky to use `create_memo`
     // here but I ran into a weird bug where at
     // the second planning phase the `cur_phase`
     // signal would trigger twice even though I'm

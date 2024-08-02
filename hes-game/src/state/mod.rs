@@ -120,6 +120,17 @@ impl GameState {
         let save = read_save().unwrap();
         if let Some(mut state) = save {
             state.init();
+
+            // HACK: For some reason when starting with `Phase::Planning`
+            // a `BorrowMutError` occurs when trying to mutably
+            // access the game state signal,
+            // e.g. via `update!(|state| { ... })`.
+            // I can't figure out what's causing the conflict;
+            // there doesn't seem to be anything else in the
+            // hierarchy with mutable access to the state.
+            // Starting in `Phase::Interstitial` *does* work
+            // for some reason.
+            state.ui.phase = Phase::Interstitial;
             state
         } else {
             Self::new(World::default())

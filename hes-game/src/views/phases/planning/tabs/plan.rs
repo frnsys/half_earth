@@ -253,6 +253,7 @@ pub fn Plan(
 
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
+    state.with_untracked(|state| state.save()); // Save when starting the planning session.
     let enter_world = move || {
         tracing::debug!("Preparing to enter world...");
         state.update(|state| {
