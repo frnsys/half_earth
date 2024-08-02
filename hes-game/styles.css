@@ -652,7 +652,7 @@ strong{
 }
 #start-screen button {
   display: block;
-  margin: 0.5em auto;
+  margin: 0.5em auto 0;
   width: 100%;
   max-width: 280px;
   background: none;
@@ -662,7 +662,8 @@ strong{
   color: #fff;
   font-size: 1.2em;
   font-family: 'Times Ten';
-  padding-top: 1em;
+  padding-top: 0.75em;
+  padding-bottom: 0.3em;
 }
 
 #start-screen-inset {
@@ -787,7 +788,8 @@ strong{
 
 
 
-#start-inner .start-button:hover{
+#start-inner .start-button:hover,
+#start-inner .continue-button:hover {
   color:rgba(255,255,255,0.7);
 }
 
@@ -4780,29 +4782,29 @@ color: #63FF96;
 }
 
 #start-screen button.start-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 .world-picker {
-  height: 22px;
   display: flex;
-  align-items: center;
   position: relative;
   font-size: 15px;
+  max-width: 180px;
+  width: 100%;
+  margin: 0 auto 1.5em;
+  justify-content: center;
 }
 .world-picker label {
-  height: 22px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 .world-picker img {
-  height: 22px;
-  width: 22px;
+  height: 16px;
+  width: 16px;
   border-radius: 100em;
   opacity: 0.5;
   cursor: pointer;
-}
-.world-picker {
-  margin-left: 0.5em;
 }
 .world-picker input {
   position: fixed;
@@ -4822,8 +4824,9 @@ color: #63FF96;
   color: #fff;
   padding: 4px 8px;
   top: 100%;
-  left: 100%;
-  width: 140px;
+  left: 50%;
+  translate: -50% 0;
+  width: 180px;
 }
 .world-picker:hover .world-details {
   display: block;

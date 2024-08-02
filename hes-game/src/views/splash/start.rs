@@ -14,13 +14,13 @@ use wasm_bindgen::{closure::Closure, JsCast};
 #[derive(Clone)]
 enum WorldStatus {
     Default,
-    Custom(World),
+    Custom(String, World),
     FailedToParse,
 }
 impl WorldStatus {
     fn is_custom(&self) -> bool {
         match self {
-            Self::Custom(_) => true,
+            Self::Custom(..) => true,
             _ => false,
         }
     }
@@ -82,7 +82,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                         <div class="start-subtitle">{t!("A Planetary Crisis Planning Game")}</div>
                         <Show when=|| GameState::has_save()>
                             <button
-                                class="start-button"
+                                class="continue-button"
                                 on:click=move |_| {
                                     state.set(GameState::load());
                                     set_started.set(true);
@@ -91,23 +91,22 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                 {t!("Continue")}
                             </button>
                         </Show>
-                        <button
-                            class="start-button"
-                            on:click=move |_| {
-                                let world = match world.get() {
-                                    WorldStatus::Custom(world) => world,
-                                    _ => World::default()
-                                };
-                                state.set(GameState::new(world));
-                                set_started.set(true);
-                            }
-                        >
-                            {t!("New Game")}
+                        <div>
+                            <button
+                                class="start-button"
+                                on:click=move |_| {
+                                    let world = match world.get() {
+                                        WorldStatus::Custom(_, world) => world,
+                                        _ => World::default()
+                                    };
+                                    state.set(GameState::new(world));
+                                    set_started.set(true);
+                                }
+                            >
+                                {t!("New Game")}
+                            </button>
                             <div class="world-picker"
-                                class:world-selected={move || with!(|world| world.is_custom())}
-                                on:click=move |ev: ev::MouseEvent| {
-                                    ev.stop_immediate_propagation();
-                                }>
+                                class:world-selected={move || with!(|world| world.is_custom())}>
                                 <label>
                                    <img src="/assets/world.png"/>
                                     <input
@@ -118,6 +117,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                                 .unchecked_ref::<web_sys::HtmlInputElement>()
                                                 .files().unwrap();
                                             if let Some(file) = files.get(0) {
+                                                let name = file.name();
                                                 let reader = web_sys::FileReader::new().unwrap();
                                                 let reader_clone = reader.clone();
                                                 let onloadend = Closure::wrap(Box::new(move || {
@@ -125,7 +125,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                                         if let Some(text) = result.as_string() {
                                                             let w = serde_json::from_str::<World>(&text);
                                                             if let Ok(w) = w {
-                                                                world.set(WorldStatus::Custom(w));
+                                                                world.set(WorldStatus::Custom(name.clone(), w));
                                                             } else {
                                                                 world.set(WorldStatus::FailedToParse);
                                                             }
@@ -139,23 +139,24 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                             }
                                         }
                                     />
+                                    <span class="world-status">
+                                        {move || {
+                                                     with!(|world| {
+                                                         match world {
+                                                             WorldStatus::Default => "Default World".into(),
+                                                             WorldStatus::Custom(name, world) => format!("Custom: {name}"),
+                                                             WorldStatus::FailedToParse => "Failed to parse provided world.".into(),
+                                                         }
+                                                     })
+                                                 }}
+                                    </span>
                                 </label>
-                                <span class="world-status">
-                                    {move || {
-                                        with!(|world| {
-                                            match world {
-                                                WorldStatus::Default => "",
-                                                WorldStatus::Custom(world) => "Custom world ready.",
-                                                WorldStatus::FailedToParse => "Failed to parse provided world.",
-                                            }
-                                        })
-                                    }}
-                                </span>
                                 <div class="world-details">
-                                    Use a custom world.
+                                    Click to load a custom world.<br />
+                                    New worlds can be made using the editor.
                                 </div>
                             </div>
-                        </button>
+                        </div>
                         <div class="two-buttons">
                             <button
                                 class="start-button"
