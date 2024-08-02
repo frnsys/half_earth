@@ -257,6 +257,7 @@ pub fn Plan(
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
     let enter_world = move || {
+        tracing::debug!("Preparing to enter world...");
         state.update(|state| {
             if state.ui.tutorial == Tutorial::Ready {
                 state.ui.tutorial.advance();

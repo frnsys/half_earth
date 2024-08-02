@@ -19,6 +19,8 @@ pub fn compute_tgav(
         run_hector,
     };
 
+    logging::log!("Computing TGAV...");
+
     let mut ffi_arr = vec![];
     let mut ch4_arr = vec![];
     let mut n2o_arr = vec![];
@@ -64,7 +66,10 @@ pub fn compute_tgav(
         .splice(idx.., n2o_arr);
 
     let end_year = START_YEAR + n_years;
+
+    logging::log!("> Running hector...");
     let tgav = unsafe { run_hector(end_year, &emissions) };
+    logging::log!("> TGAV calculated: {tgav}.");
     tgav
 }
 

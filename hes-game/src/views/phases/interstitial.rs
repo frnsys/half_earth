@@ -227,9 +227,8 @@ pub fn Interstitial() -> impl IntoView {
     ));
 
     let (_, set_phase) = ui_rw!(phase);
-
     let main_ref = create_node_ref::<html::Div>();
-    let fade_out = move || {
+    let next_phase = move |_| {
         if let Some(elem) = main_ref.get() {
             elem.style(
                 "animation",
@@ -249,14 +248,6 @@ pub fn Interstitial() -> impl IntoView {
             );
         }
     };
-
-    let next_phase = Callback::from(move |_| {
-        if game_over() || game_win() || ready.get() {
-            fade_out();
-        } else {
-            set_ready.set(true);
-        }
-    });
 
     let background = move || {
         let locale = locale();
@@ -296,13 +287,15 @@ pub fn Interstitial() -> impl IntoView {
                     <div>{years_left}</div>
                 </div>
             </div>
-            <Events events on_done=next_phase/>
+            <Events events on_done=move |_| {
+                set_ready.set(true);
+            } />
             <div class="interstitial--image-credit">
                 {t!("Image:")}" "{image_credit}
             </div>
             <Show when=move || ready.get()>
                 <div class="interstitial--next">
-                    <button class="btn" on:click=move |_| next_phase.call(())>
+                    <button class="btn" on:click=next_phase>
                         {t!("Continue")}
                     </button>
                 </div>

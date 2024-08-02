@@ -22,7 +22,10 @@ pub fn Events(
 
     let has_event = move || {
         events
-            .try_with(|events| idx.get() < events.len())
+            .try_with(|events| events.len())
+            .and_then(|n_events| {
+                idx.try_get().map(|idx| idx < n_events)
+            })
             .unwrap_or(false)
     };
 

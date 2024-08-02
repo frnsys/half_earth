@@ -80,12 +80,7 @@ pub fn Loading(set_loaded: WriteSignal<bool>) -> impl IntoView {
             <div>
                 <img src="/assets/gosplant.svg"/>
                 <div class="loading-text">
-                    {if GameState::has_save() {
-                        t!("Loading saved data")
-                    } else {
-                        t!("Booting Up")
-                    }}
-
+                    {t!("Booting Up")}
                 </div>
                 {loading_bar}
 

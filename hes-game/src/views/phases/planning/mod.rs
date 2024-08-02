@@ -86,7 +86,7 @@ pub fn Planning() -> impl IntoView {
             Page::Parliament => EventPhase::PlanningParliament,
         };
 
-        state.update(|state| {
+        state.update_untracked(|state| {
             tracing::debug!("Rolling planning page events.");
             events.set(state.game.roll_events(phase, None));
         });
@@ -96,6 +96,7 @@ pub fn Planning() -> impl IntoView {
     let tab = move |label: &'static str,
                     p: Page,
                     tutorial: Tutorial| {
+        tracing::debug!("TAB CHECK {label}");
         let active = page.get() == p;
         let highlight = cur_tutorial.get() == tutorial;
         let disabled = cur_tutorial.get() < tutorial;
@@ -122,13 +123,15 @@ pub fn Planning() -> impl IntoView {
         Page::Plan => {
             view! { <Plan on_plan_change=move |_| {
                 tracing::debug!("Plan changed.");
-                state.update(|state| {
+                state.update_untracked(|state| {
                     events.set(state.game.roll_events(EventPhase::PlanningPlanChange, None));
                 });
             } on_page_change=move |phase| {
                 tracing::debug!("Plan page changed.");
-                update!(|state, events| {
-                    events.extend(state.game.roll_events(phase, None));
+                state.update_untracked(|state| {
+                    update!(|events| {
+                        events.extend(state.game.roll_events(phase, None));
+                    });
                 });
             }/> }
         }

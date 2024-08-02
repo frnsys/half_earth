@@ -248,20 +248,8 @@ pub fn WorldEvents() -> impl IntoView {
 
     let year = state!(world.year);
     let cycle_start_year = ui!(cycle_start_state.year);
-    // create_effect(move |_| {
-    //     let cur_year = year.get();
-    //     if cur_year > cycle_start_year.get()
-    //         && cur_year % 5 == 0
-    //     {
-    //         update!(|state| {
-    //             state.game.finish_cycle();
-    //             state.ui.phase = Phase::Report;
-    //         });
-    //     }
-    // });
-
     let next_phase = move || {
-        let mut next = match phase.get() {
+        let mut next = match phase.get_untracked() {
             Subphase::Disasters => Subphase::Updates,
             Subphase::Updates => Subphase::Events,
             Subphase::Events => Subphase::Disasters,
@@ -269,7 +257,7 @@ pub fn WorldEvents() -> impl IntoView {
         };
 
         if next == Subphase::Updates {
-            state.update(|game| {
+            state.update_untracked(|game| {
                 let step_updates = game.step_year();
                 if step_updates.is_empty() || skipping.get() {
                     // Skip to next phase.
@@ -295,14 +283,13 @@ pub fn WorldEvents() -> impl IntoView {
         }
 
         if next == Subphase::Events {
-            state.update(|GameState { game, ui }| {
+            state.update_untracked(|GameState { game, ui }| {
                 let evs = game
                     .roll_events(EventPhase::WorldMain, None);
                 for event in &evs {
                     ui.world_events.push(event.clone());
                 }
 
-                // If skipping, just apply all events.
                 if evs.is_empty() || skipping.get() {
                     next = Subphase::Disasters;
                 } else {
@@ -323,19 +310,21 @@ pub fn WorldEvents() -> impl IntoView {
                 });
                 next = Subphase::Done;
             } else {
-                update!(move |state| {
-                    let evs: Vec<_> = state
-                        .game
-                        .roll_events(EventPhase::Icon, None)
-                        .into_iter()
-                        .map(|ev| Disaster {
-                            event_id: ev.id,
-                            region: ev.region.clone(),
-                            when: js_sys::Math::random() as f32,
-                        })
-                        .collect();
-                    disasters.set(evs);
-                });
+                state.update_untracked(
+                    |GameState { game, ui }| {
+                        let evs: Vec<_> = game
+                            .roll_events(EventPhase::Icon, None)
+                            .into_iter()
+                            .map(|ev| Disaster {
+                                event_id: ev.id,
+                                region: ev.region.clone(),
+                                when: js_sys::Math::random()
+                                    as f32,
+                            })
+                            .collect();
+                        disasters.set(evs);
+                    },
+                );
             }
         }
 

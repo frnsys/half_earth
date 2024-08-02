@@ -51,7 +51,13 @@ pub struct Points {
 
 /// Phase of the game.
 #[derive(
-    Default, Clone, Copy, PartialEq, Serialize, Deserialize,
+    Debug,
+    Default,
+    Clone,
+    Copy,
+    PartialEq,
+    Serialize,
+    Deserialize,
 )]
 pub enum Phase {
     #[default]
