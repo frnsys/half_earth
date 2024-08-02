@@ -27,8 +27,6 @@ pub fn Processes(
     let back_highlighted =
         ui!(tutorial.eq(&Tutorial::ProcessesBack));
 
-    let (process, set_process) =
-        create_signal::<Option<Process>>(None);
     let (output, set_output) =
         create_signal(Output::Electricity);
     let points = create_rw_signal(0);
@@ -221,18 +219,17 @@ fn calc_change(
     before: f32,
     after: f32,
 ) -> Option<View> {
-    let mut change = 0.;
-    if before == 0. {
+    let mut change = if before == 0. {
         if after > 0. {
-            change = 1.;
+            1.
         } else if after < 0. {
-            change = -1.;
+            -1.
         } else {
-            change = 0.;
+            0.
         }
     } else {
-        change = (after - before) / before;
-    }
+        (after - before) / before
+    };
     if before < 0. {
         change *= -1.;
     }
@@ -378,10 +375,7 @@ fn display_changes(
     .collect::<Vec<_>>();
 
     if descs.is_empty() {
-        view! {
-            {t!("They won't have much effect.")}
-        }
-        .into_view()
+        t!("They won't have much effect.").into_view()
     } else {
         view! {
             {t!("This output's production will")}:" "{descs}"."

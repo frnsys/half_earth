@@ -114,27 +114,27 @@ pub fn Cards(
     // Calculate scroll bar height so we can accommodate it
     // when it disappears when overflowX is set to hidden.
     // This prevents the layout from shifting when a card is being dragged.
-    let scrollbar_height = move || {
-        scroller_ref
-            .get()
-            .map(|s| s.offset_height() - s.client_height())
-            .unwrap_or(0)
-    };
-
-    let overflow_x = move || {
-        if enabled.get() {
-            "visible"
-        } else {
-            "hidden"
-        }
-    };
-    let padding_bottom = move || {
-        if enabled.get() {
-            "0px".to_string()
-        } else {
-            format!("{}px", scrollbar_height())
-        }
-    };
+    // let scrollbar_height = move || {
+    //     scroller_ref
+    //         .get()
+    //         .map(|s| s.offset_height() - s.client_height())
+    //         .unwrap_or(0)
+    // };
+    //
+    // let overflow_x = move || {
+    //     if enabled.get() {
+    //         "visible"
+    //     } else {
+    //         "hidden"
+    //     }
+    // };
+    // let padding_bottom = move || {
+    //     if enabled.get() {
+    //         "0px".to_string()
+    //     } else {
+    //         format!("{}px", scrollbar_height())
+    //     }
+    // };
 
     // Hack to start with first card focused
     create_effect(move |_| {

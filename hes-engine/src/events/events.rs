@@ -1,4 +1,4 @@
-use super::{Condition, Effect, Likelihood, Probability};
+use super::{Effect, Likelihood, Probability};
 use crate::{
     flavor::EventFlavor,
     state::State,

@@ -20,18 +20,14 @@ use crate::{
 use hes_engine::{
     events::{IconEvent, Phase as EventPhase, ICON_EVENTS},
     game::Update as EngineUpdate,
-    state::State,
-    Game,
     Id,
 };
 use leptos::*;
 use leptos_use::{
     use_raf_fn_with_options,
-    utils::Pausable,
     UseRafFnCallbackArgs,
     UseRafFnOptions,
 };
-use std::sync::LazyLock;
 
 #[derive(Clone)]
 struct Toast {
@@ -92,7 +88,7 @@ struct Disaster {
 }
 
 #[component]
-pub fn Disasters(
+fn Disasters(
     phase: RwSignal<Subphase>,
     events: RwSignal<Vec<Disaster>>,
     #[prop(into)] skipping: Signal<bool>,
@@ -168,7 +164,7 @@ pub fn Disasters(
         Option<(Callback<()>, Callback<()>)>,
     >(None);
 
-    create_effect(move |prev| {
+    create_effect(move |_| {
         if phase.get() == Subphase::Disasters {
             if let Some(globe) = globe.get() {
                 globe.rotate(true);
@@ -183,7 +179,7 @@ pub fn Disasters(
         if let Some(globe) = globe.get() {
             globe.rotate(false);
         }
-        if let Some((pause, resume)) = time_controls.get() {
+        if let Some((pause, _)) = time_controls.get() {
             pause.call(());
         }
         on_done.call(());
@@ -311,7 +307,7 @@ pub fn WorldEvents() -> impl IntoView {
                 next = Subphase::Done;
             } else {
                 state.update_untracked(
-                    |GameState { game, ui }| {
+                    |GameState { game, .. }| {
                         let evs: Vec<_> = game
                             .roll_events(EventPhase::Icon, None)
                             .into_iter()
@@ -372,8 +368,7 @@ fn Toasts(toasts: RwSignal<Vec<Toast>>) -> impl IntoView {
             each=move || {
                 toasts.get().into_iter().enumerate().collect::<Vec<_>>()
             }
-
-        key=|(i, _)| *i
+            key=|(_, toast)| toast.id
             children=move |(i, toast): (usize, Toast)| {
                 let opacity = (i + 1) as f32 / (n_toasts() + 1) as f32;
                 view! {

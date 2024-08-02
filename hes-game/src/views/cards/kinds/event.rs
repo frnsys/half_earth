@@ -1,22 +1,10 @@
-use super::super::card::*;
 use crate::{
-    display::{self, AsText},
-    i18n,
-    icons::{self, HasIcon},
+    icons,
     state::Settings,
     t,
     util::ImageExt,
-    views::{
-        intensity::{self, IntensityIcon, Variable},
-        tip,
-        DisplayEvent,
-        Effects,
-        HasTip,
-        Help,
-    },
-    with_state,
+    views::{tip, DisplayEvent, Effects, HasTip, Help},
 };
-use hes_engine::events::Event;
 use leptos::*;
 
 #[component]
@@ -24,7 +12,7 @@ pub fn EventCard(
     #[prop(into)] event: Signal<DisplayEvent>,
 ) -> impl IntoView {
     let factor_tip = "The factors behind this event.↓";
-    let (settings, set_settings) = Settings::rw();
+    let (_, set_settings) = Settings::rw();
     on_cleanup(move || {
         set_settings.update(|settings| {
             settings.read_help.push(factor_tip.to_string());

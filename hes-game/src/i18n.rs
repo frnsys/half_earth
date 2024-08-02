@@ -2,7 +2,6 @@ use gloo_net::http::Request;
 use leptos::*;
 use leptos_router::*;
 use leptos_use::{
-    storage::use_local_storage,
     use_intl_number_format,
     use_window,
     NumberStyle,

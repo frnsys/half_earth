@@ -9,7 +9,6 @@ use super::{
 use crate::{
     util::{detect_center_element, nodelist_to_elements},
     views::cards::{CardFocusArea, Cards},
-    write_state,
 };
 use leptos::*;
 use leptos_use::{
@@ -96,29 +95,29 @@ pub fn ScannerCards<S: ScannerSpec>(
         }
     };
 
-    let scroll_to_next = move || {
-        if let Some(scroller) =
-            document().query_selector(".cards").unwrap()
-        {
-            let els = document()
-                .query_selector_all(".draggable")
-                .unwrap();
-            if els.length() > 0 {
-                let els = nodelist_to_elements(els);
-                if let Some(idx) = detect_center_element(
-                    scroller
-                        .dyn_into::<web_sys::HtmlElement>()
-                        .expect("Is an html element"),
-                    &els,
-                ) {
-                    if idx < els.len() - 1 {
-                        els[idx + 1].scroll_to();
-                    }
-                }
-            }
-        }
-    };
-    use_event_listener(
+    // let scroll_to_next = move || {
+    //     if let Some(scroller) =
+    //         document().query_selector(".cards").unwrap()
+    //     {
+    //         let els = document()
+    //             .query_selector_all(".draggable")
+    //             .unwrap();
+    //         if els.length() > 0 {
+    //             let els = nodelist_to_elements(els);
+    //             if let Some(idx) = detect_center_element(
+    //                 scroller
+    //                     .dyn_into::<web_sys::HtmlElement>()
+    //                     .expect("Is an html element"),
+    //                 &els,
+    //             ) {
+    //                 if idx < els.len() - 1 {
+    //                     els[idx + 1].scroll_to();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // };
+    let _ = use_event_listener(
         use_document(),
         ev::wheel,
         move |ev: ev::WheelEvent| {
@@ -169,9 +168,11 @@ pub fn ScannerCards<S: ScannerSpec>(
     let y_bounds =
         move || [top_y_bound.get(), bot_y_bound.get()];
 
+    let state =
+        expect_context::<RwSignal<crate::state::GameState>>();
     let on_focus = move |idx: Option<usize>| {
         tracing::debug!("Scanner > Cards > On Focus");
-        write_state!(|state, ui| {
+        state.update(|state| {
             let item = idx
                 .map(|idx| {
                     items.with(|items| items.get(idx).cloned())
@@ -179,8 +180,8 @@ pub fn ScannerCards<S: ScannerSpec>(
                 .flatten();
             if let Some(item) = &item {
                 let id = item.id();
-                if !ui.viewed.contains(id) {
-                    ui.viewed.push(*id);
+                if !state.ui.viewed.contains(id) {
+                    state.ui.viewed.push(*id);
                 }
             }
             focused.set(item);
@@ -194,8 +195,6 @@ pub fn ScannerCards<S: ScannerSpec>(
             .with(|item| item.as_ref().map(|item| *item.id()))
     };
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
     view! {
         <Show when=move || focused.with(|item| item.is_some())>
             <AddScanner
@@ -204,7 +203,7 @@ pub fn ScannerCards<S: ScannerSpec>(
                 should_show=add_props.should_show
                 scan_allowed=add_props.scan_allowed
                 on_finish_scan=add_props.on_finish_scan
-                set_y_bound=move |(top, bot)| {
+                set_y_bound=move |(_top, bot)| {
                     set_top_y_bound.set(bot - 10.);
                 }
             />
@@ -216,7 +215,7 @@ pub fn ScannerCards<S: ScannerSpec>(
                 should_show=rem_props.should_show
                 scan_allowed=rem_props.scan_allowed
                 on_finish_scan=rem_props.on_finish_scan
-                set_y_bound=move |(top, bot)| {
+                set_y_bound=move |(top, _bot)| {
                     set_bot_y_bound.set(top + 10. - card_height.get() as f32);
                 }
             />

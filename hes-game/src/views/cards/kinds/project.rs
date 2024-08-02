@@ -172,8 +172,6 @@ pub fn ProjectCard(
                 && project.is_building()
         })
     };
-    let proj_points_test =
-        move || project.with(|project| project.points);
     let points_display = move || {
         project.with(move |project| {
             (0..consts::MAX_POINTS).map(|i| {
@@ -441,7 +439,7 @@ pub fn ProjectCard(
                                 when=upgrade_queued
                                 fallback=move || {
                                     next_upgrade()
-                                        .map(|(cost, effects)| {
+                                        .map(|(cost, _effects)| {
                                             view! {
                                                 <div>{t!("Next Level")}</div>
                                                 <div>

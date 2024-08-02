@@ -4,7 +4,6 @@ use crate::{
     production::ProcessFeature,
     regions::{Latitude, Region},
     state::State,
-    world::World,
     Id,
 };
 use serde::{Deserialize, Serialize};

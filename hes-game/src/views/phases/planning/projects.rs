@@ -6,7 +6,6 @@ use crate::{
     t,
     ui,
     views::{scanner::*, Help},
-    with_state,
 };
 use hes_engine::projects::{Status, Type};
 use leptos::*;

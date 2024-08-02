@@ -58,7 +58,7 @@ pub fn Draggable(
 
         ev.prevent_default();
         if let Some(elem) = el_ref.get() {
-            elem.set_pointer_capture(ev.pointer_id());
+            let _ = elem.set_pointer_capture(ev.pointer_id());
         }
 
         let x = ev.client_x();
@@ -67,7 +67,7 @@ pub fn Draggable(
         set_down.set(true);
 
         if let Some(el) = el_ref.get() {
-            el.style("cursor", "grab");
+            let _ = el.style("cursor", "grab");
         }
 
         // Update current mouse position.
@@ -76,14 +76,18 @@ pub fn Draggable(
 
     // Eat click events so they don't trigger other behaviors
     // while dragging, e.g. flipping cards.
-    use_event_listener(use_document(), ev::click, move |ev| {
-        if dragging.get() {
-            ev.stop_immediate_propagation();
-        }
-    });
+    let _ = use_event_listener(
+        use_document(),
+        ev::click,
+        move |ev| {
+            if dragging.get() {
+                ev.stop_immediate_propagation();
+            }
+        },
+    );
 
     // Throttle this so it doesn't run roughly more than once per frame.
-    let mut drag_handle = use_throttle_fn_with_arg(
+    let drag_handle = use_throttle_fn_with_arg(
         move |ev: ev::PointerEvent| {
             if !down.get() {
                 return;
@@ -101,7 +105,7 @@ pub fn Draggable(
                 let max_dy = max_y as f64 - base_y;
                 let dy = max_dy.min(min_dy.max(dy as f64));
                 if let Some(el) = el_ref.get() {
-                    el.style(
+                    let _ = el.style(
                         "transform",
                         format!(
                             "scale({}) translate(0, {dy}px)",
@@ -129,13 +133,15 @@ pub fn Draggable(
 
         // Snap-back animation.
         if let Some(el) = el_ref.get() {
-            el.style("transition", "transform 0.15s").style(
-                "transform",
-                format!(
-                    "scale({}) translate(0, 0)",
-                    card_scale()
-                ),
-            );
+            let _ = el
+                .style("transition", "transform 0.15s")
+                .style(
+                    "transform",
+                    format!(
+                        "scale({}) translate(0, 0)",
+                        card_scale()
+                    ),
+                );
         }
 
         // Set dragging to off after a slight delay,

@@ -12,7 +12,7 @@ use crate::{
 };
 use js_sys::Date;
 use leptos::*;
-use leptos_use::{use_interval_fn, utils::Pausable};
+use leptos_use::use_interval_fn;
 
 const LOCALES: &[&str] = &[
     "Havana",
@@ -69,8 +69,6 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
     let time_place =
         move || format!("{}, {}", locale(), year.get());
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
     view! {
         <div class="dropdown-menu">
             <div class="dropdown-menu-content">
@@ -220,11 +218,7 @@ fn Clock() -> impl IntoView {
         now.get_hours(),
     ));
 
-    let Pausable {
-        pause,
-        resume,
-        is_active,
-    } = use_interval_fn(
+    use_interval_fn(
         move || {
             let now = Date::new_0();
             let now = (

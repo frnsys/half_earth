@@ -2,11 +2,9 @@ use std::collections::BTreeMap;
 
 use crate::{
     consts,
-    state::{Tutorial, UIState},
+    state::Tutorial,
     t,
     views::cards::ProcessCard,
-    with_state,
-    write_state,
 };
 use enum_map::EnumMap;
 use hes_engine::{
@@ -152,7 +150,7 @@ impl ScannerSpec for ProcessScanner {
             RwSignal<crate::state::GameState>,
         >();
         let on_finish_scan =
-            move |controls: ScannerControls| {
+            move |_controls: ScannerControls| {
                 let mut available_points = points.get();
                 if let Some(process) = process.get() {
                     state.update(|state| {

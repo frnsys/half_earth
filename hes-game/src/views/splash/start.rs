@@ -6,7 +6,7 @@ use crate::{
     t,
     util::is_steam,
 };
-use hes_engine::{state::State, world::World};
+use hes_engine::world::World;
 use leptos::*;
 use std::rc::Rc;
 use wasm_bindgen::{closure::Closure, JsCast};
@@ -51,7 +51,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                         let lang = event_target_value(&ev);
                         spawn_local(async move {
                             let query = format!("?lang={}", lang);
-                            window().location().set_search(&query);
+                            let _ = window().location().set_search(&query);
                         });
                     }>
                         <For

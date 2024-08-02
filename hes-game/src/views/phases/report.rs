@@ -14,13 +14,12 @@ use crate::{
         intensity::{self, IntensityBar},
         tip,
         HasTip,
-        Tip,
     },
     with_state,
 };
-use hes_engine::{
-    events::{Phase as EventPhase, Request as EngineRequest},
-    game::Update,
+use hes_engine::events::{
+    Phase as EventPhase,
+    Request as EngineRequest,
 };
 use leptos::*;
 
@@ -100,7 +99,7 @@ pub fn Report() -> impl IntoView {
             })
             .collect::<Vec<_>>()
     });
-    let world_events = with_state!(|game, ui| {
+    let world_events = with_state!(|_game, ui| {
         ui.world_events.iter().map(|ev| {
             (
                 ev.name.clone(),
@@ -133,7 +132,7 @@ pub fn Report() -> impl IntoView {
             0
         }
     });
-    let requests_fulfilled = with_state!(|game, ui| {
+    let requests_fulfilled = with_state!(|game, _ui| {
         finished_requests.get_value().into_iter().map(|(kind, id, active, bounty)| {
             match kind {
                 EngineRequest::Project => {
@@ -319,7 +318,7 @@ pub fn Report() -> impl IntoView {
             </HasTip>
         }
     });
-    let cont_row = with_state!(|game, ui| {
+    let cont_row = move || {
         let pc_change = format!("{:+}", cont_pc_change());
         view! {
             <HasTip tip=contentedness_tip.into_signal()>
@@ -336,8 +335,8 @@ pub fn Report() -> impl IntoView {
                 </tr>
             </HasTip>
         }
-    });
-    let ext_row = with_state!(|game, ui| {
+    };
+    let ext_row = move || {
         let pc_change = format!("{:+}", ext_pc_change());
         view! {
             <HasTip tip=biodiversity_tip.into_signal()>
@@ -354,7 +353,7 @@ pub fn Report() -> impl IntoView {
                 </tr>
             </HasTip>
         }
-    });
+    };
     let ghg_row = with_state!(|game, ui| {
         let start =
             format!("{:+.1}", ui.cycle_start_state.emissions);

@@ -11,7 +11,6 @@ use crate::{
         Planning,
         Report,
         Start,
-        Tip,
         TipState,
         ToolTip,
         WorldEvents,

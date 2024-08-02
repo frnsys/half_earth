@@ -172,7 +172,7 @@ pub fn Dialogue(
                     set_line.set(line);
                 }
                 DialogueNext::Responses(responses) => {
-                    if let Some(event_id) = event_id.get() {
+                    if event_id.get().is_some() {
                         let branch = with!(|state| {
                             responses.iter().find(|b| {
                                 state.game.eval_conditions(
@@ -208,7 +208,7 @@ pub fn Dialogue(
         if let Some(stop_anim) = stop_anim.get() {
             stop_anim();
             if let Some(text_ref) = text_ref.get() {
-                text_ref.inner_html(text());
+                let _ = text_ref.inner_html(text());
                 set_revealed.set(true);
             }
         }
@@ -233,7 +233,7 @@ pub fn Dialogue(
             // fully support project dialogues with branch effects.
             // So we just assume project dialogues won't have branch effects
             // which, at time of writing, none of them do.
-            if let Some(event_id) = event_id.get() {
+            if event_id.get().is_some() {
                 update!(|state| {
                     state.game.apply_effects(
                         &response.effects,
@@ -252,7 +252,7 @@ pub fn Dialogue(
             }
         };
 
-    use_event_listener(
+    let _ = use_event_listener(
         use_document(),
         ev::keydown,
         move |ev| {
@@ -266,7 +266,7 @@ pub fn Dialogue(
         },
     );
 
-    let speaker = move || line.get().speaker;
+    let speaker = move || with!(|line| line.speaker.clone());
 
     let actions = move || {
         if is_last_line() {
@@ -319,15 +319,15 @@ pub fn Dialogue(
         <div class="dialogue">
             <div class="dialogue--inner">
                 <div class="dialogue--speech">
-                    <Show when=move || line.get().speaker != Speaker::Game>
+                    <Show when=move || speaker() != Speaker::Game>
                         <div class="dialogue--speaker">
                             <img src=profile/>
                         </div>
                     </Show>
                     <div class="dialogue--body" on:click=move |_| advance() class:hidden=move || line.get().text.is_empty()>
-                        <Show when=move || line.get().speaker != Speaker::Game>
+                        <Show when=move || speaker() != Speaker::Game>
                             <div class="dialogue--speaker-name">
-                                {move || t!(& line.get().speaker.to_string())}
+                                {move || t!(& speaker().to_string())}
                             </div>
                         </Show>
                         <div class="dialogue--text" ref=text_ref></div>

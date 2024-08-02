@@ -118,7 +118,7 @@ fn FactorLine(
         }
         .into_view(),
         Factor::Project {
-            display, amount, ..
+            display, ..
         } => view! {
             <div class="factors--usage factors--usage-solo">
                 {display} <img src=icon/>

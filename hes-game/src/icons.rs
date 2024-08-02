@@ -49,6 +49,7 @@ macro_rules! icons {
 
             /// Get a static icon &str from a non-static one.
             pub fn to_static(name: &str) -> Option<&'static str> {
+                #[allow(unreachable_patterns)]
                 match name {
                     $(
                         $name => Some($name),

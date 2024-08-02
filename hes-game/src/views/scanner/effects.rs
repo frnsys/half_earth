@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use gloo_utils::format::JsValueSerdeExt;
 use leptos::*;
 use serde::Serialize;
@@ -13,18 +11,6 @@ use web_sys::{
 };
 
 use crate::{audio, util::card_scale};
-
-#[derive(Serialize)]
-struct KeyframeOpts {
-    /// In milliseconds.
-    duration: f32,
-
-    /// "forwards", "backwards", or "none".
-    fill: &'static str,
-
-    /// "linear", "ease-in", etc.
-    easing: &'static str,
-}
 
 fn animate<F: Serialize>(
     elem: &Element,
@@ -41,7 +27,7 @@ fn animate<F: Serialize>(
     let effect = AnimationEffect::from(effect);
     let anim =
         Animation::new_with_effect(Some(&effect)).unwrap();
-    anim.play();
+    let _ = anim.play();
     anim
 }
 
@@ -116,27 +102,6 @@ pub fn fill_bar(elem: &Element, duration_ms: f64) -> Animation {
         },
         WidthKeyframe {
             width: "100%",
-            offset: 1.0,
-        },
-    ];
-    animate(&elem, &frames, duration_ms, true)
-}
-
-pub fn glow(elem: &Element, duration_ms: f64) -> Animation {
-    #[derive(Serialize)]
-    struct BoxShadowKeyframe {
-        box_shadow: &'static str,
-        offset: f32,
-    }
-    let frames = vec![
-        BoxShadowKeyframe {
-            box_shadow:
-                "0 0 2px #6bff66, inset 1px 0px 8px #6bff66",
-            offset: 0.0,
-        },
-        BoxShadowKeyframe {
-            box_shadow:
-                "0 0 24px #6bff66, inset 1px 0px 8px #6bff66",
             offset: 1.0,
         },
     ];

@@ -50,7 +50,6 @@ impl ScannerControls {
 
 #[component(transparent)]
 pub fn Scanner(
-    id: &'static str,
     children: Children,
     scan_time: f32,
     reveal_target: f32,
@@ -84,7 +83,7 @@ pub fn Scanner(
 
     use_resize_observer(
         target_ref,
-        move |entries, observer| {
+        move |_entries, _observer| {
             get_edges();
         },
     );
@@ -99,14 +98,14 @@ pub fn Scanner(
                 .remove_2("scanning", "no-scan")
                 .unwrap();
             if let Some(elem) = target.parent_element() {
-                elem.class_list().remove_1("scan-ok");
+                let _ = elem.class_list().remove_1("scan-ok");
             }
         }
         if let Some(elem) = document()
             .query_selector(".draggable.active")
             .unwrap()
         {
-            elem.class_list().remove_1("scan-reject");
+            let _ = elem.class_list().remove_1("scan-reject");
         }
 
         if let Some(fill_anim) = scanning_anim.get() {
@@ -117,21 +116,23 @@ pub fn Scanner(
     let reject_scan = move || {
         if let Some(target) = target_ref.get_untracked() {
             if let Some(elem) = target.parent_element() {
-                elem.class_list().add_1("scan-fail");
+                let _ = elem.class_list().add_1("scan-fail");
                 set_timeout(
                     move || {
-                        elem.class_list().remove_1("scan-fail");
+                        let _ = elem
+                            .class_list()
+                            .remove_1("scan-fail");
                     },
                     Duration::from_millis(500),
                 );
             }
-            target.class_list().add_1("no-scan");
+            let _ = target.class_list().add_1("no-scan");
         }
         if let Some(elem) = document()
             .query_selector(".draggable.active")
             .unwrap()
         {
-            elem.class_list().add_1("scan-reject");
+            let _ = elem.class_list().add_1("scan-reject");
         }
     };
 
@@ -168,7 +169,7 @@ pub fn Scanner(
                                 * (5. / 4.))
                                 .min(2.0);
                             anim.set_playback_rate(multiplier);
-                            anim.play();
+                            let _ = anim.play();
                         }
                     });
                 } else {
@@ -190,7 +191,8 @@ pub fn Scanner(
     let stop_drag = move || {
         stop_scanning_card(());
         if let Some(target) = target_ref.get() {
-            target.style("transform", "translate(0, 0)");
+            let _ =
+                target.style("transform", "translate(0, 0)");
         }
     };
 
@@ -216,7 +218,9 @@ pub fn Scanner(
                         if let Some(elem) =
                             target.parent_element()
                         {
-                            elem.class_list().add_1("scan-ok");
+                            let _ = elem
+                                .class_list()
+                                .add_1("scan-ok");
                         }
                         scan_card();
                     } else {
@@ -257,7 +261,6 @@ pub fn AddScanner(
 
     view! {
         <Scanner
-            id="add-scanner"
             reveal_target=65.
             scan_time
             should_show
@@ -300,7 +303,6 @@ pub fn RemoveScanner(
 
     view! {
         <Scanner
-            id="remove-scanner"
             reveal_target=-60.
             scan_time
             should_show

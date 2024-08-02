@@ -4,6 +4,7 @@ use hes_engine::{
     npcs::NPC,
     production::Process,
     projects::Project,
+    regions::Region,
 };
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
@@ -76,6 +77,7 @@ pub fn tip(icon: &'static str, text: String) -> Tip {
 pub enum TipCard {
     Project(Project),
     Process(Process),
+    Region(Region),
     Processes(Vec<Process>),
     Industry(Industry),
     Factors(FactorsCard),
@@ -95,6 +97,11 @@ impl From<Process> for TipCard {
 impl From<NPC> for TipCard {
     fn from(value: NPC) -> Self {
         TipCard::NPC(value)
+    }
+}
+impl From<Region> for TipCard {
+    fn from(value: Region) -> Self {
+        TipCard::Region(value)
     }
 }
 impl From<Industry> for TipCard {
@@ -156,28 +163,34 @@ pub fn ToolTip() -> impl IntoView {
     });
 
     // Dismiss the tooltip on click.
-    use_event_listener(use_document(), ev::click, move |ev| {
-        if !has_tip() || !should_show.get() {
-            return;
-        }
+    let _ = use_event_listener(
+        use_document(),
+        ev::click,
+        move |ev| {
+            if !has_tip() || !should_show.get() {
+                return;
+            }
 
-        let target: web_sys::HtmlElement = event_target(&ev);
-        ev.stop_immediate_propagation();
+            let target: web_sys::HtmlElement =
+                event_target(&ev);
+            ev.stop_immediate_propagation();
 
-        // If there's a card, make sure clicking
-        // within the card does *not* dismiss the tooltip.
-        // Otherwise clicking anywhere should remove the tooltip.
-        let should_remove = !has_card()
-            || (has_card()
-                && !has_ancestor_with_class(target, "tip"));
+            // If there's a card, make sure clicking
+            // within the card does *not* dismiss the tooltip.
+            // Otherwise clicking anywhere should remove the tooltip.
+            let should_remove = !has_card()
+                || (has_card()
+                    && !has_ancestor_with_class(target, "tip"));
 
-        // We don't actually remove the tooltip (i.e.
-        // do `tip_rw.set(None)`) because this causes the tooltip
-        // to immediately empty, whereas we want it to transition out.
-        if should_remove {
-            tip_rw.update(|state| state.should_show = false);
-        }
-    });
+            // We don't actually remove the tooltip (i.e.
+            // do `tip_rw.set(None)`) because this causes the tooltip
+            // to immediately empty, whereas we want it to transition out.
+            if should_remove {
+                tip_rw
+                    .update(|state| state.should_show = false);
+            }
+        },
+    );
 
     let tip_view = move || {
         tip_rw.get().tip.map(|tip| {
@@ -240,6 +253,10 @@ pub fn ToolTip() -> impl IntoView {
                 TipCard::Industry(industry) => {
                     let industry = create_rw_signal(industry);
                     view! { <IndustryCard industry/> }
+                }
+                TipCard::Region(region) => {
+                    let region = create_rw_signal(region);
+                    view! { <RegionCard region/> }
                 }
                 TipCard::Factors(factors) => {
                     let factors = create_rw_signal(factors);
@@ -326,5 +343,5 @@ pub fn HasTip(
         })
         .collect_view();
 
-    view! { {children} }
+    children
 }

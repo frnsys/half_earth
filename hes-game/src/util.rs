@@ -16,7 +16,7 @@ pub fn scale_text(elem: web_sys::HtmlElement, min_size: u32) {
             && font_size > min_size
         {
             let next_size = font_size - 1;
-            elem.style().set_property(
+            let _ = elem.style().set_property(
                 "font-size",
                 &format!("{next_size}px"),
             );

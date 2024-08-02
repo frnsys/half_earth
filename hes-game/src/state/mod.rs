@@ -9,7 +9,6 @@ pub use ui::{Phase, PlanChange, Tutorial, UIState};
 
 use std::sync::{LazyLock, RwLock};
 
-use codee::string::JsonSerdeCodec;
 use hes_engine::{
     events::IconEvent,
     game::Update,
@@ -167,7 +166,7 @@ impl GameState {
 
     pub fn start_new_run() {
         Self::clear_save();
-        window().location().reload();
+        let _ = window().location().reload();
     }
 
     pub fn initialize_year(&mut self) {
@@ -233,7 +232,7 @@ impl GameState {
         let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
         let changes = &mut self.ui.process_mix_changes;
 
-        for (output, changes) in changes.iter_mut() {
+        for (_output, changes) in changes.iter_mut() {
             let mut total = changes
                 .values()
                 .map(|val| val.abs())

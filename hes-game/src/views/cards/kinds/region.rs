@@ -16,7 +16,9 @@ use hes_engine::regions::Region;
 use leptos::*;
 
 #[component]
-pub fn RegionCard(region: Signal<Region>) -> impl IntoView {
+pub fn RegionCard(
+    #[prop(into)] region: Signal<Region>,
+) -> impl IntoView {
     let contentedness = move || {
         let outlook = region.with(|region| region.outlook);
         intensity::scale(outlook, Variable::Outlook)

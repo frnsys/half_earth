@@ -13,7 +13,6 @@ use crate::{
         Help,
     },
     with_state,
-    write_state,
 };
 use enum_map::EnumMap;
 use hes_engine::{
@@ -52,11 +51,6 @@ pub fn Plan(
 ) -> impl IntoView {
     let state =
         expect_context::<RwSignal<crate::state::GameState>>();
-    let save = move || {
-        update!(|state| {
-            state.save();
-        });
-    };
 
     let (slots, set_slots) = create_signal(calc_slots());
     let max_width = move || match slots.get() {
@@ -65,9 +59,13 @@ pub fn Plan(
         9 => "l",
         _ => "l",
     };
-    use_event_listener(use_document(), ev::resize, move |ev| {
-        set_slots.set(calc_slots());
-    });
+    let _ = use_event_listener(
+        use_document(),
+        ev::resize,
+        move |_| {
+            set_slots.set(calc_slots());
+        },
+    );
 
     let processes_disabled =
         ui!(tutorial.lt(&Tutorial::Processes));
@@ -151,7 +149,6 @@ pub fn Plan(
     let output_demand =
         move || with!(|state| state.game.demand_for_outputs());
     let production_shortages = move || {
-        let mut total = 0;
         let mut problems: EnumMap<Output, f32> =
             EnumMap::from_array([1.; 4]);
         for output in Output::iter() {
@@ -194,7 +191,7 @@ pub fn Plan(
                     "There is a {severity} production shortage",
                 ));
                 let details = format!(
-                    "<b class=class>{}</b>",
+                    "<b class={class}>{}</b>",
                     t!(&output.title())
                 );
                 Some(format!("{desc}: {details}"))
@@ -205,7 +202,7 @@ pub fn Plan(
                         let class = format!("shortage-{severity}");
                         let severity = t!(&severity);
                         let title = t!(&output.title());
-                        format!("<b class=class>{title} ({severity})</b>")
+                        format!("<b class={class}>{title} ({severity})</b>")
                     })
                     .collect::<Vec<_>>().join("\n");
                 let desc =
@@ -334,7 +331,7 @@ pub fn Plan(
 
     let card_slots = move || {
         (0..placeholders())
-            .map(|i| {
+            .map(|_| {
                 view! {
                     <div class="plan--change">
                         <div class="plan--change-placeholder"></div>

@@ -71,7 +71,7 @@ fn Update(
         })
     };
 
-    let image = with_state!(|state, ui, update| {
+    let image = with_state!(|state, _ui, update| {
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
@@ -85,7 +85,7 @@ fn Update(
         }
     });
 
-    let image_attrib = with_state!(|state, ui, update| {
+    let image_attrib = with_state!(|state, _ui, update| {
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
@@ -99,7 +99,7 @@ fn Update(
         }
     });
 
-    let name = with_state!(|state, ui, update| {
+    let name = with_state!(|state, _ui, update| {
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
@@ -113,7 +113,7 @@ fn Update(
         }
     });
 
-    let outcomes = with_state!(|state, ui, update| {
+    let outcomes = with_state!(|state, _ui, update| {
         match update {
             EngineUpdate::Project { id }
             | EngineUpdate::Policy { id } => {
@@ -136,6 +136,7 @@ fn Update(
 
                 view! {
                     <div class="event--effects">
+                        {outcome_dialogue}
                         <Effects effects=sig />
                     </div>
                 }

@@ -3,7 +3,7 @@ use crate::{consts, display, views::DisplayEvent};
 use extend::ext;
 use hes_engine::{
     events::{Flag, Phase},
-    projects::{Project, Status},
+    projects::Status,
     Game,
     Id,
     ProjectType,

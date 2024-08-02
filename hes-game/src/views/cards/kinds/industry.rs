@@ -123,7 +123,7 @@ pub fn IndustryCard(
                 </div>
             </BottomBack>
             <Body slot>
-                <div class="space-even"></div>
+                <div class="space-even">{body_view}</div>
             </Body>
         </Card>
     }

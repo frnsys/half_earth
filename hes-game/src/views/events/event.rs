@@ -1,18 +1,7 @@
-use std::{collections::BTreeMap, ops::Deref};
+use std::collections::BTreeMap;
 
 use super::{Dialogue, DisplayEvent};
-use crate::{
-    t,
-    util::ImageExt,
-    views::{
-        cards::EventCard,
-        tip,
-        Effects,
-        Events,
-        HasTip,
-        Help,
-    },
-};
+use crate::views::cards::EventCard;
 use leptos::*;
 
 #[component]

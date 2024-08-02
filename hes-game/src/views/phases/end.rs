@@ -1,7 +1,7 @@
 use leptos::*;
 
 use crate::{
-    eval::{summarize, Summary},
+    eval::{eval_badges, summarize, Summary},
     i18n,
     icons,
     state::{GameExt, GameState, Settings},
@@ -33,7 +33,7 @@ pub fn End(lose: bool) -> impl IntoView {
         events.set(evs);
     });
 
-    let (settings, set_settings) = Settings::rw();
+    let (_, set_settings) = Settings::rw();
     set_settings.update_untracked(|settings| {
         settings.runs_played += 1;
     });
@@ -46,28 +46,30 @@ pub fn End(lose: bool) -> impl IntoView {
 
     let share_image = create_rw_signal(String::new());
     spawn_local(async move {
-        let state = with!(|state| state.game.clone());
-        let summary = summarize(&state, !lose);
+        let summary =
+            with!(|state| summarize(&state.game, !lose));
         let img = generate_image(summary).await.unwrap();
         share_image.set(img);
     });
 
-    #[derive(Clone)]
-    struct Badge {
-        name: String,
-        desc: String,
-    }
-    impl Badge {
-        pub fn image_url(&self) -> String {
-            format!("/public/assets/badges/{}.png", self.name)
-        }
-    }
-
     let (show_start, set_show_start) = create_signal(false);
-    let (badges, set_badges) =
-        create_signal::<Vec<Badge>>(vec![]);
-    let (share_img_url, set_share_img_url) =
-        create_signal::<Option<String>>(None);
+
+    let badges_view = move || {
+        let badges = state
+            .with_untracked(|state| eval_badges(&state.game));
+        badges
+            .into_iter()
+            .map(|badge| {
+                let text = i18n::t(&badge.to_string());
+                let tip = tip(icons::HELP, text);
+                view! {
+                    <HasTip tip>
+                        <img src=badge.image_url()/>
+                        </HasTip>
+                }
+            })
+            .collect::<Vec<_>>()
+    };
 
     let start_new_run = move |_| {
         GameState::start_new_run();
@@ -80,24 +82,11 @@ pub fn End(lose: bool) -> impl IntoView {
                 on_done=move |_| set_show_start.set(true)
             />
             <Show when=move || {
-                !badges.with(|b| b.is_empty()) && show_start.get()
+                show_start.get()
             }>
                 <div class="badges-section">
                     <div class="badges">
-                        <For
-                            each=move || badges.get()
-                            key=|badge: &Badge| badge.name.clone()
-                            children=|badge| {
-                                let text = i18n::t(&badge.desc);
-                                let tip = tip(icons::HELP, text);
-                                view! {
-                                    <HasTip tip>
-                                        <img src=badge.image_url()/>
-                                    </HasTip>
-                                }
-                            }
-                        />
-
+                        {badges_view}
                     </div>
                 </div>
             </Show>

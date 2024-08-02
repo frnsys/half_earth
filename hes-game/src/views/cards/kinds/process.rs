@@ -63,9 +63,6 @@ pub fn ProcessCard(
     let output_name = move || {
         process.with(|process| t!(&process.output.title()))
     };
-    let feedstock_name = move || {
-        process.with(|process| t!(&process.feedstock.0.title()))
-    };
 
     let feedstocks = state!(feedstocks);
     let consumed_feedstocks = state!(consumed_feedstocks);
@@ -86,8 +83,6 @@ pub fn ProcessCard(
         let estimate = feedstock_estimate();
         estimate.map(describe_estimate).unwrap_or_default()
     };
-    let output_icon =
-        move || process.with(|process| process.output.icon());
     let feedstock_icon = move || {
         process.with(|process| process.feedstock.0.icon())
     };

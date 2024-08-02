@@ -1,12 +1,10 @@
 mod npc;
 mod process;
 mod project;
-mod region;
 
 pub use npc::MiniNPC;
 pub use process::MiniProcess;
 pub use project::MiniProject;
-pub use region::MiniRegion;
 
 use leptos::{ev::MouseEvent, *};
 use std::time::Duration;
@@ -39,9 +37,13 @@ pub fn MiniCard(
     };
     let collapse = move |ev: MouseEvent| {
         if let Some(target) = ev.target() {
-            if let Some(elem) = target.dyn_ref::<HtmlDivElement>() {
+            if let Some(elem) =
+                target.dyn_ref::<HtmlDivElement>()
+            {
                 if let Some(overlay) = overlay_ref.get() {
-                    if let Some(overlay_elem) = overlay.dyn_ref::<HtmlDivElement>() {
+                    if let Some(overlay_elem) =
+                        overlay.dyn_ref::<HtmlDivElement>()
+                    {
                         if elem == overlay_elem {
                             set_is_expanded.set(false);
                         }

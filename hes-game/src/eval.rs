@@ -125,6 +125,64 @@ impl Badge {
             }
         }
     }
+
+    pub fn image_url(&self) -> String {
+        let name = match self {
+            Self::Seceded => "seceded",
+            Self::Aliens => "aliens",
+            Self::Biodiversity => "biodiversity",
+            Self::Electrification => "electrification",
+            Self::Extinction => "extinction",
+            Self::FossilFuels => "fossil_fuels",
+            Self::Meat => "meat",
+            Self::Nuclear => "nuclear",
+            Self::Renewables => "renewables",
+            Self::Space => "space",
+            Self::Vegan => "vegan",
+        };
+        format!("/public/assets/badges/{}.png", name)
+    }
+}
+impl std::fmt::Display for Badge {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        let desc = match self {
+            Self::Seceded => {
+                "At least one region seceded from Gosplant."
+            }
+            Self::Aliens => {
+                "You had an extraterrestrial encounter."
+            }
+            Self::Biodiversity => {
+                "Planetary life flourished under your tenure."
+            }
+            Self::Electrification => {
+                "You helped electrify the world."
+            }
+            Self::Extinction => {
+                "Planetary life suffered under your tenure."
+            }
+            Self::FossilFuels => {
+                "You kept on using fossil fuels."
+            }
+            Self::Meat => "Carnivorous diets were left intact.",
+            Self::Nuclear => {
+                "Nuclear was your preferred form of energy."
+            }
+            Self::Renewables => {
+                "Renewables dominated energy production."
+            }
+            Self::Space => {
+                "You pushed humanity towards the stars."
+            }
+            Self::Vegan => {
+                "Global diets shifted towards vegan."
+            }
+        };
+        write!(f, "{}", desc)
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -134,10 +192,12 @@ pub struct Summary {
     pub badges: Vec<Badge>,
 }
 
+pub fn eval_badges(state: &State) -> Vec<Badge> {
+    Badge::iter().filter(|badge| badge.applies(state)).collect()
+}
+
 pub fn summarize(state: &State, win: bool) -> Summary {
-    let badges: Vec<_> = Badge::iter()
-        .filter(|badge| badge.applies(state))
-        .collect();
+    let badges = eval_badges(state);
 
     let closest = state
         .npcs

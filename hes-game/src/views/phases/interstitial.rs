@@ -230,7 +230,7 @@ pub fn Interstitial() -> impl IntoView {
     let main_ref = create_node_ref::<html::Div>();
     let next_phase = move |_| {
         if let Some(elem) = main_ref.get() {
-            elem.style(
+            let _ = elem.style(
                 "animation",
                 "1s fade-out ease-out forwards",
             );

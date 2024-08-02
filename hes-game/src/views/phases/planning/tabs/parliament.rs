@@ -6,7 +6,7 @@ use crate::{
     views::{cards::MiniNPC, tip, HasTip},
     with_state,
 };
-use hes_engine::{events::Flag, Id};
+use hes_engine::{events::Flag, npcs::NPC, Id};
 use leptos::*;
 use std::{collections::BTreeMap, sync::OnceLock};
 
@@ -26,10 +26,6 @@ pub fn Parliament() -> impl IntoView {
             .collect::<Vec<_>>()
     });
 
-    let (extra_seats, set_extra_seats) =
-        create_signal::<BTreeMap<Id, usize>>(
-            BTreeMap::default(),
-        );
     let (coalition_seats, set_coalition_seats) =
         create_signal(0);
 
@@ -39,51 +35,16 @@ pub fn Parliament() -> impl IntoView {
         is_ally: bool,
     }
     let seats = with_state!(|state, _ui| {
-        struct Seats {
-            id: Id,
-            name: String,
-            color: String,
-            is_ally: bool,
-            seats: usize,
-        }
-
-        let mut used_seats = 0;
-        let mut seats = npcs()
-            .into_iter()
-            .map(|npc| {
-                let npc = npc.get();
-                let color = npc.flavor.color.clone();
-                let seats = (npc.seats * total_seats as f32)
-                    .floor()
-                    as usize;
-                used_seats += seats;
-                Seats {
-                    id: npc.id,
-                    name: npc.name.clone(),
-                    color,
-                    is_ally: npc.is_ally(),
-                    seats,
-                }
-            })
+        let npcs = state
+            .npcs
+            .iter()
+            .filter(|npc| !npc.locked)
             .collect::<Vec<_>>();
-
-        // Assign extra seats randomly
-        // We generate the assignment based on the current year
-        // so that it's consistent
-        let mut extra_seats = total_seats - used_seats;
-        let mut rng = mulberry32(state.world.year as u16);
-        set_extra_seats.update(|extras| {
-            extras.clear();
-            while extra_seats > 0 {
-                let idx = (rng() * seats.len() as f64).floor()
-                    as usize;
-                let s = &mut seats[idx];
-                s.seats += 1;
-                let e = extras.entry(s.id).or_default();
-                *e += 1;
-                extra_seats -= 1;
-            }
-        });
+        let seats = calculate_seats(
+            state.world.year as u16,
+            npcs,
+            total_seats,
+        );
 
         let mut coalition_seats = 0;
         for seats in &seats {
@@ -178,6 +139,55 @@ pub fn Parliament() -> impl IntoView {
             </div>
         </div>
     }
+}
+
+struct Seats {
+    id: Id,
+    name: String,
+    color: String,
+    is_ally: bool,
+    seats: usize,
+}
+
+fn calculate_seats(
+    year: u16,
+    npcs: Vec<&NPC>,
+    total_seats: usize,
+) -> Vec<Seats> {
+    let mut used_seats = 0;
+    let mut seats = npcs
+        .into_iter()
+        .map(|npc| {
+            let color = npc.flavor.color.clone();
+            let seats = (npc.seats * total_seats as f32).floor()
+                as usize;
+            used_seats += seats;
+            Seats {
+                id: npc.id,
+                name: npc.name.clone(),
+                color,
+                is_ally: npc.is_ally(),
+                seats,
+            }
+        })
+        .collect::<Vec<_>>();
+
+    // Assign extra seats randomly
+    // We generate the assignment based on the current year
+    // so that it's consistent
+    let mut extra_seats = total_seats - used_seats;
+    let mut rng = mulberry32(year);
+    let mut extras: BTreeMap<Id, usize> = BTreeMap::default();
+    while extra_seats > 0 {
+        let idx = (rng() * seats.len() as f64).floor() as usize;
+        let s = &mut seats[idx];
+        s.seats += 1;
+        let e = extras.entry(s.id).or_default();
+        *e += 1;
+        extra_seats -= 1;
+    }
+
+    seats
 }
 
 // Seedable RNG.

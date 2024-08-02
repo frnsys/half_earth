@@ -5,14 +5,10 @@ use crate::{
     state::{GameExt, Phase},
     t,
     ui_rw,
-    util::to_ws_el,
     views::events::Events,
     write_state,
 };
-use hes_engine::{
-    events::Phase as EventPhase,
-    game::ResolvedEvent,
-};
+use hes_engine::events::Phase as EventPhase;
 use leptos::*;
 
 #[component]
@@ -43,7 +39,7 @@ pub fn Cutscene() -> impl IntoView {
     let main_ref = create_node_ref::<html::Div>();
     let fade_out = move || {
         if let Some(elem) = main_ref.get() {
-            let elem = elem.style(
+            let _ = elem.style(
                 "animation",
                 "1s fade-out ease-out forwards",
             );

@@ -1,12 +1,7 @@
 use ab_glyph::{FontRef, PxScale};
 use base64::prelude::*;
-use image::{DynamicImage, ImageBuffer, ImageReader, Rgba};
-use imageproc::drawing::{
-    draw_hollow_rect_mut,
-    draw_text_mut,
-    text_size,
-};
-use strum::{EnumIter, IntoEnumIterator};
+use image::{DynamicImage, ImageBuffer, Rgba};
+use imageproc::drawing::{draw_text_mut, text_size};
 
 use crate::eval::{Badge, Ending, Summary};
 
@@ -88,47 +83,6 @@ const BGS_LOSE: &[&[u8]] = &[
     ),
 ];
 
-impl std::fmt::Display for Badge {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
-        let desc = match self {
-            Self::Seceded => {
-                "At least one region seceded from Gosplant."
-            }
-            Self::Aliens => {
-                "You had an extraterrestrial encounter."
-            }
-            Self::Biodiversity => {
-                "Planetary life flourished under your tenure."
-            }
-            Self::Electrification => {
-                "You helped electrify the world."
-            }
-            Self::Extinction => {
-                "Planetary life suffered under your tenure."
-            }
-            Self::FossilFuels => {
-                "You kept on using fossil fuels."
-            }
-            Self::Meat => "Carnivorous diets were left intact.",
-            Self::Nuclear => {
-                "Nuclear was your preferred form of energy."
-            }
-            Self::Renewables => {
-                "Renewables dominated energy production."
-            }
-            Self::Space => {
-                "You pushed humanity towards the stars."
-            }
-            Self::Vegan => {
-                "Global diets shifted towards vegan."
-            }
-        };
-        write!(f, "{}", desc)
-    }
-}
 impl Badge {
     fn image(&self) -> DynamicImage {
         let data: &[u8] = match self {
@@ -324,7 +278,8 @@ pub fn generate_image(summary: &Summary) -> String {
     img.write_to(
         &mut std::io::Cursor::new(&mut buf),
         image::ImageFormat::Png,
-    );
+    )
+    .unwrap();
     let b64 = BASE64_STANDARD.encode(&buf);
     format!("data:image/png;base64,{}", b64)
 }

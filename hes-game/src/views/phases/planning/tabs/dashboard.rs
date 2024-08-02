@@ -87,10 +87,6 @@ pub fn Dashboard() -> impl IntoView {
         }
         data
     };
-    let choose_breakdown = move |choice: Var| {
-        set_show_breakdown_menu.set(false);
-        set_breakdown_factor.set(choice);
-    };
 
     let income = state!(avg_income_level());
     let avg_income_level = move || {

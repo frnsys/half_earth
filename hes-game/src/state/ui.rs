@@ -6,7 +6,6 @@ use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use hes_engine::{
     events::IconEvent,
-    game::Update,
     kinds::Output,
     regions::Income,
     state::State,

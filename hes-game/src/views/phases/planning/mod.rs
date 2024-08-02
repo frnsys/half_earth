@@ -15,10 +15,8 @@ use crate::{
     debug::get_debug_opts,
     state::{GameExt, Tutorial},
     t,
-    ui,
     ui_rw,
     views::{hud::Hud, Events},
-    write_state,
 };
 use leptos::*;
 
@@ -72,8 +70,6 @@ pub fn Planning() -> impl IntoView {
         events.set_untracked(evs);
     });
 
-    let has_changes = ui!(has_any_process_mix_changes());
-
     let (page, set_page) = create_signal(Page::Plan);
     let select_page = move |page: Page| {
         tracing::debug!("Selecting planning page.");
@@ -92,11 +88,10 @@ pub fn Planning() -> impl IntoView {
         });
     };
 
-    let (cur_tutorial, set_tutorial) = ui_rw!(tutorial);
+    let (cur_tutorial, _) = ui_rw!(tutorial);
     let tab = move |label: &'static str,
                     p: Page,
                     tutorial: Tutorial| {
-        tracing::debug!("TAB CHECK {label}");
         let active = page.get() == p;
         let highlight = cur_tutorial.get() == tutorial;
         let disabled = cur_tutorial.get() < tutorial;
@@ -108,9 +103,6 @@ pub fn Planning() -> impl IntoView {
                 class:disabled=disabled
                 on:click=move |_| {
                     select_page(p);
-                    if active {
-                        write_state!(| _, ui | { ui.tutorial.advance(); });
-                    }
                 }
             >
 
