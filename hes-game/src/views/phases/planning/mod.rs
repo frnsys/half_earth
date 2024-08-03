@@ -5,7 +5,10 @@ mod region_item;
 mod tabs;
 
 pub use active_plan::ActivePlan;
-use hes_engine::events::{Flag, Phase as EventPhase};
+use hes_engine::{
+    events::{Flag, Phase as EventPhase},
+    Game,
+};
 pub use processes::Processes;
 pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
@@ -13,9 +16,9 @@ use tabs::{Dashboard, Parliament, Plan, Regions};
 use crate::{
     audio,
     debug::get_debug_opts,
-    state::{GameExt, Tutorial},
+    memo,
+    state::{GameExt, Tutorial, UIState},
     t,
-    ui_rw,
     views::{hud::Hud, Events},
 };
 use leptos::*;
@@ -47,20 +50,17 @@ impl std::fmt::Display for Page {
 
 #[component]
 pub fn Planning() -> impl IntoView {
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
 
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
     let events = create_rw_signal(vec![]);
-    state.update_untracked(|state| {
-        let mut evs = state
-            .game
-            .roll_events(EventPhase::PlanningStart, None);
+    game.update_untracked(|game| {
+        let mut evs =
+            game.roll_events(EventPhase::PlanningStart, None);
         evs.extend(
-            state
-                .game
-                .roll_events(EventPhase::PlanningPlan, None),
+            game.roll_events(EventPhase::PlanningPlan, None),
         );
 
         if get_debug_opts().skip_to_planning {
@@ -82,16 +82,17 @@ pub fn Planning() -> impl IntoView {
             Page::Parliament => EventPhase::PlanningParliament,
         };
 
-        state.update_untracked(|state| {
+        game.update_untracked(|game| {
             tracing::debug!("Rolling planning page events.");
-            events.set(state.game.roll_events(phase, None));
+            events.set(game.roll_events(phase, None));
         });
     };
 
-    let (cur_tutorial, _) = ui_rw!(tutorial);
+    let cur_tutorial = memo!(ui.tutorial);
     let tab = move |label: &'static str,
                     p: Page,
                     tutorial: Tutorial| {
+        tracing::debug!("Tab: {}", label);
         let active = page.get() == p;
         let highlight = cur_tutorial.get() == tutorial;
         let disabled = cur_tutorial.get() < tutorial;
@@ -115,14 +116,14 @@ pub fn Planning() -> impl IntoView {
         Page::Plan => {
             view! { <Plan on_plan_change=move |_| {
                 tracing::debug!("Plan changed.");
-                state.update_untracked(|state| {
-                    events.set(state.game.roll_events(EventPhase::PlanningPlanChange, None));
+                game.update_untracked(|game| {
+                    events.set(game.roll_events(EventPhase::PlanningPlanChange, None));
                 });
             } on_page_change=move |phase| {
                 tracing::debug!("Plan page changed.");
-                state.update_untracked(|state| {
+                game.update_untracked(|game| {
                     update!(|events| {
-                        events.extend(state.game.roll_events(phase, None));
+                        events.extend(game.roll_events(phase, None));
                     });
                 });
             }/> }
@@ -134,42 +135,40 @@ pub fn Planning() -> impl IntoView {
 
     let on_done = move |_| {
         tracing::debug!("Planning events finished.");
-        update!(|state| {
-            if state.game.flags.contains(&Flag::SkipTutorial) {
+
+        update!(|game, ui| {
+            if game.flags.contains(&Flag::SkipTutorial) {
                 tracing::debug!("Skipping tutorial.");
-                state.ui.tutorial = Tutorial::Ready;
-            } else if state
-                .game
-                .flags
-                .contains(&Flag::RepeatTutorial)
-                && !state.ui.tutorial_restarted
+                ui.tutorial = Tutorial::Ready;
+            } else if game.flags.contains(&Flag::RepeatTutorial)
+                && !ui.tutorial_restarted
             {
                 tracing::debug!("Restarting tutorial.");
-                state.ui.tutorial_restarted = true;
-                state.ui.tutorial = Tutorial::Projects;
-                events.set(state.game.roll_events(
+                ui.tutorial_restarted = true;
+                ui.tutorial = Tutorial::Projects;
+                events.set(game.roll_events(
                     EventPhase::PlanningStart,
                     None,
                 ));
             }
 
+            tracing::debug!("Checking tutorial.");
             let should_advance = match page.get_untracked() {
                 Page::Parliament => {
-                    state.ui.tutorial == Tutorial::Parliament
+                    ui.tutorial == Tutorial::Parliament
                 }
                 Page::Dashboard => {
-                    state.ui.tutorial == Tutorial::Dashboard
+                    ui.tutorial == Tutorial::Dashboard
                 }
                 Page::Regions => {
-                    state.ui.tutorial == Tutorial::Regions
+                    ui.tutorial == Tutorial::Regions
                 }
-                Page::Plan => {
-                    state.ui.tutorial == Tutorial::Plan
-                }
+                Page::Plan => ui.tutorial == Tutorial::Plan,
             };
             if should_advance {
-                state.ui.tutorial.advance();
+                ui.tutorial.advance();
             }
+            tracing::debug!("Done calling on done.");
         });
     };
 

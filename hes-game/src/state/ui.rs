@@ -112,7 +112,7 @@ pub struct UIState {
     pub world_events: Vec<DisplayEvent>,
 
     /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
-    pub past_emissions: Vec<(f64, f64, f64)>,
+    pub past_emissions: Vec<(f32, f32, f32)>,
 
     // // Track planned process mix changes
     pub process_mix_changes:
@@ -159,11 +159,11 @@ impl UIState {
     pub fn record_emissions(
         &mut self,
         state: &State,
-    ) -> Vec<(f64, f64, f64)> {
+    ) -> Vec<(f32, f32, f32)> {
         self.past_emissions.push((
-            state.co2_emissions as f64,
-            state.ch4_emissions as f64,
-            state.n2o_emissions as f64,
+            state.co2_emissions,
+            state.ch4_emissions,
+            state.n2o_emissions,
         ));
         self.past_emissions.clone()
     }

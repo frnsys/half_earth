@@ -2,34 +2,36 @@ use super::super::card::*;
 use crate::{
     display::{self, AsText},
     icons::{self, HasIcon},
-    state,
+    memo,
     t,
     util::ImageExt,
     vars::Impact,
     views::{tip, HasTip},
 };
-use hes_engine::industries::Industry;
+use hes_engine::{industries::Industry, Game};
 use leptos::*;
 
 #[component]
 pub fn IndustryCard(
     #[prop(into)] industry: Signal<Industry>,
 ) -> impl IntoView {
-    let lic_pop = state!(world.lic_population());
+    let game = expect_context::<RwSignal<Game>>();
+
+    let lic_pop = memo!(game.world.lic_population());
     let demand = move || {
-        industry.with(move |ind| ind.demand(lic_pop.get()))
+        with!(|industry| industry.demand(lic_pop.get()))
     };
-    let name = move || industry.with(|c| t!(&c.name));
+    let name = move || with!(|industry| t!(&industry.name));
     let total_resources = move || {
-        industry.with(|ind| ind.adj_resources() * demand())
+        with!(|industry| industry.adj_resources() * demand())
     };
     let empty = move || total_resources().sum() == 0.;
     let emissions = move || {
-        industry.with(|ind| {
-            (ind.adj_byproducts() * demand()).co2eq()
+        with!(|industry| {
+            (industry.adj_byproducts() * demand()).co2eq()
         })
     };
-    let resources_demand = state!(resources_demand);
+    let resources_demand = memo!(game.resources_demand);
     let body_view = move || {
         if empty() {
             t!("This industry is not yet significant.")
@@ -91,12 +93,15 @@ pub fn IndustryCard(
     let image_url =
         move || with!(|industry| industry.flavor.image.src());
     let image_attrib = move || {
-        industry
-            .with(|ind| ind.flavor.image.attribution.clone())
+        with!(|industry| industry
+            .flavor
+            .image
+            .attribution
+            .clone())
     };
 
     let description = move || {
-        industry.with(|ind| t!(&ind.flavor.description))
+        with!(|industry| t!(&industry.flavor.description))
     };
 
     view! {

@@ -3,10 +3,10 @@ mod calculate;
 use crate::{
     consts,
     icons::{self, HasIcon},
+    state::UIState,
     t,
     vars::Var,
     views::{cards::FactorsCard, intensity::IntensityIcon},
-    with_state,
 };
 pub use calculate::{rank, Factor};
 use leptos::*;
@@ -18,7 +18,7 @@ pub fn FactorsList(
     #[prop(into)] factors: Signal<FactorsCard>,
 ) -> impl IntoView {
     let relation = move || {
-        factors.with(|factors| {
+        with!(|factors| {
             let relation = match factors.kind {
                 Var::Emissions => "makes",
                 Var::Biodiversity => "causes",
@@ -27,14 +27,18 @@ pub fn FactorsList(
             t!(relation)
         })
     };
-    let icon = move || factors.with(|facs| facs.icon);
+    let icon = move || with!(|factors| factors.icon);
     let cur_name =
-        move || factors.with(|facs| facs.current.clone());
+        move || with!(|factors| factors.current.clone());
     let total_label = move || {
-        factors.with(|factors| {
+        with!(|factors| {
             let max_value = match factors.kind {
-                Var::Biodiversity => Some(consts::MAX_BIODIVERSITY),
-                Var::Contentedness => Some(consts::MAX_CONTENTEDNESS),
+                Var::Biodiversity => {
+                    Some(consts::MAX_BIODIVERSITY)
+                }
+                Var::Contentedness => {
+                    Some(consts::MAX_CONTENTEDNESS)
+                }
                 _ => None,
             };
             let total = factors.total_formatted();
@@ -51,8 +55,9 @@ pub fn FactorsList(
         })
     };
 
-    let relevant_factors =
-        with_state!(|_state, ui, factors| {
+    let ui = expect_context::<RwSignal<UIState>>();
+    let relevant_factors = move || {
+        with!(|ui, factors| {
             ui.factors[factors.kind]
                 .iter()
                 .filter(|user| match user {
@@ -64,7 +69,8 @@ pub fn FactorsList(
                 })
                 .cloned()
                 .collect::<Vec<_>>()
-        });
+        })
+    };
 
     view! {
         <div class="factors--users">

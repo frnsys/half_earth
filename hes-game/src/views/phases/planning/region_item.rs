@@ -1,6 +1,8 @@
 use crate::{
     display::{self, AsText},
     icons::{self, HasIcon},
+    memo,
+    state::UIState,
     t,
     util::ImageExt,
     views::{
@@ -9,10 +11,11 @@ use crate::{
         HasTip,
         Tip,
     },
-    with_state,
 };
-use hes_engine::{kinds::Output, regions::Region};
+use enum_map::EnumMap;
+use hes_engine::{kinds::Output, regions::Region, Game};
 use leptos::*;
+use strum::IntoEnumIterator;
 
 fn temp_tip() -> Tip {
     tip(
@@ -79,12 +82,18 @@ fn demand_tip(
 pub fn RegionItem(
     #[prop(into)] region: Signal<Region>,
 ) -> impl IntoView {
-    let events = with_state!(|_state, ui, region| {
-        ui.annual_region_events.get(&region.id).cloned()
-    });
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+
+    let region_events = memo!(ui.annual_region_events);
+    let events = move || {
+        with!(|region_events, region| {
+            region_events.get(&region.id).cloned()
+        })
+    };
 
     let contentedness = move || {
-        region.with(|region| {
+        with!(|region| {
             intensity::scale(
                 region.outlook,
                 intensity::Variable::Outlook,
@@ -92,7 +101,7 @@ pub fn RegionItem(
         })
     };
     let habitability = move || {
-        region.with(|region| {
+        with!(|region| {
             intensity::scale(
                 region.habitability(),
                 intensity::Variable::Habitability,
@@ -100,20 +109,20 @@ pub fn RegionItem(
         })
     };
     let income_tip = move || {
-        region.with(|region| {
+        with!(|region| {
             let name = t!(region.income.lower());
             inc_tip(&name)
         })
     };
     let income_level =
-        move || region.with(|region| region.income_level() + 1);
-    let seceded = move || region.with(|region| region.seceded);
+        move || with!(|region| region.income_level() + 1);
+    let seceded = move || with!(|region| region.seceded);
     let temp_range =
-        move || region.with(|region| region.temp_range());
+        move || with!(|region| region.temp_range());
     let precip_range =
-        move || region.with(|region| region.precip_range());
+        move || with!(|region| region.precip_range());
     let devel_bar = move || {
-        region.with(move |region| {
+        with!(move |region| {
             let is_max_level = region.is_max_income();
             let development = region.development;
             let width = move || {
@@ -156,25 +165,39 @@ pub fn RegionItem(
             })
             .collect::<Vec<_>>()
     };
-    let demand_display = with_state!(|state, _ui, region| {
-        region.demand(&state.world.output_demand).items().map(
-            |(k, demand)| {
-                let per_capita_demand =
-                    demand / region.population;
-                let int = intensity::output_intensity(
-                    per_capita_demand,
-                    k,
-                );
-                let per = display::demand_percent(
-                    demand,
-                    state.demand_for_output(&k),
-                    true,
-                );
-                let amount = display::output(demand, k);
-                (k, int, per, amount)
-            },
-        )
+
+    let output_demand = memo!(game.world.output_demand);
+    let demand_for_outputs = create_memo(move |_| {
+        let demands: EnumMap<Output, f32> =
+            with!(|game| Output::iter()
+                .map(|output| (
+                    output,
+                    game.demand_for_output(&output)
+                ))
+                .collect());
+        demands
     });
+    let demand_display = move || {
+        with!(|region, output_demand, demand_for_outputs| {
+            region.demand(output_demand).items().map(
+                |(k, demand)| {
+                    let per_capita_demand =
+                        demand / region.population;
+                    let int = intensity::output_intensity(
+                        per_capita_demand,
+                        k,
+                    );
+                    let per = display::demand_percent(
+                        demand,
+                        demand_for_outputs[k],
+                        true,
+                    );
+                    let amount = display::output(demand, k);
+                    (k, int, per, amount)
+                },
+            )
+        })
+    };
 
     let image =
         move || with!(|region| region.flavor.image.src());

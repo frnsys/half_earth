@@ -1,30 +1,40 @@
 use crate::{
     consts,
     icons,
-    state,
+    memo,
     t,
     views::{cards::MiniNPC, tip, HasTip},
-    with_state,
 };
-use hes_engine::{events::Flag, npcs::NPC, Id};
+use hes_engine::{events::Flag, npcs::NPC, Game, Id};
 use leptos::*;
 use std::{collections::BTreeMap, sync::OnceLock};
 
 #[component]
 pub fn Parliament() -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+
     let total_seats =
         consts::PARLIAMENT_SEATS.iter().sum::<usize>();
     let suspended =
-        state!(flags.contains(&Flag::ParliamentSuspended));
-    let npcs = with_state!(|state, _ui| {
-        state
+        memo!(game.flags.contains(&Flag::ParliamentSuspended));
+
+    let active_npcs = create_memo(move |_| {
+        with!(|game| game
             .npcs
             .iter()
             .filter(|npc| !npc.locked)
             .cloned()
-            .map(create_rw_signal)
-            .collect::<Vec<_>>()
+            .collect::<Vec<_>>())
     });
+    let npcs = move || {
+        with!(|active_npcs| {
+            active_npcs
+                .iter()
+                .cloned()
+                .map(create_rw_signal)
+                .collect::<Vec<_>>()
+        })
+    };
 
     let (coalition_seats, set_coalition_seats) =
         create_signal(0);
@@ -34,44 +44,43 @@ pub fn Parliament() -> impl IntoView {
         color: String,
         is_ally: bool,
     }
-    let seats = with_state!(|state, _ui| {
-        let npcs = state
-            .npcs
-            .iter()
-            .filter(|npc| !npc.locked)
-            .collect::<Vec<_>>();
-        let seats = calculate_seats(
-            state.world.year as u16,
-            npcs,
-            total_seats,
-        );
 
-        let mut coalition_seats = 0;
-        for seats in &seats {
-            if seats.is_ally {
-                coalition_seats += seats.seats;
+    let year = memo!(game.world.year);
+    let seats = move || {
+        with!(|year, active_npcs| {
+            let seats = calculate_seats(
+                *year as u16,
+                active_npcs,
+                total_seats,
+            );
+
+            let mut coalition_seats = 0;
+            for seats in &seats {
+                if seats.is_ally {
+                    coalition_seats += seats.seats;
+                }
             }
-        }
-        set_coalition_seats.set(coalition_seats);
+            set_coalition_seats.set(coalition_seats);
 
-        let mut individual_seats =
-            seats.into_iter().flat_map(|seats| {
-                (0..seats.seats).map(move |_| Seat {
-                    name: seats.name.clone(),
-                    color: seats.color.clone(),
-                    is_ally: seats.is_ally,
+            let mut individual_seats =
+                seats.into_iter().flat_map(|seats| {
+                    (0..seats.seats).map(move |_| Seat {
+                        name: seats.name.clone(),
+                        color: seats.color.clone(),
+                        is_ally: seats.is_ally,
+                    })
+                });
+            consts::PARLIAMENT_SEATS
+                .iter()
+                .map(|n_seats| {
+                    individual_seats
+                        .by_ref()
+                        .take(*n_seats)
+                        .collect::<Vec<_>>()
                 })
-            });
-        consts::PARLIAMENT_SEATS
-            .iter()
-            .map(|n_seats| {
-                individual_seats
-                    .by_ref()
-                    .take(*n_seats)
-                    .collect::<Vec<_>>()
-            })
-            .collect::<Vec<_>>()
-    });
+                .collect::<Vec<_>>()
+        })
+    };
 
     let tip = tip(icons::POLITICAL_CAPITAL, t!("How many seats your coalition has. Draw parties to your coalition by implementing projects they support."));
 
@@ -151,7 +160,7 @@ struct Seats {
 
 fn calculate_seats(
     year: u16,
-    npcs: Vec<&NPC>,
+    npcs: &[NPC],
     total_seats: usize,
 ) -> Vec<Seats> {
     let mut used_seats = 0;

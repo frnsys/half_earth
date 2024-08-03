@@ -2,11 +2,11 @@ use super::credits::Credits;
 use crate::{
     audio,
     i18n,
-    state::{GameState, Settings},
+    state::{Settings, UIState},
     t,
     util::is_steam,
 };
-use hes_engine::world::World;
+use hes_engine::{world::World, Game};
 use leptos::*;
 use std::rc::Rc;
 use wasm_bindgen::{closure::Closure, JsCast};
@@ -40,7 +40,8 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
         settings.sound
     };
 
-    let state = expect_context::<RwSignal<GameState>>();
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
     let world = create_rw_signal(WorldStatus::Default);
     view! {
         <div>
@@ -80,11 +81,13 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                     <div id="start-inner">
                         <img src="/assets/intro.svg"/>
                         <div class="start-subtitle">{t!("A Planetary Crisis Planning Game")}</div>
-                        <Show when=|| GameState::has_save()>
+                        <Show when=|| crate::state::has_save()>
                             <button
                                 class="continue-button"
                                 on:click=move |_| {
-                                    state.set(GameState::load());
+                                    let state = crate::state::load();
+                                    game.set(state.0);
+                                    ui.set(state.1);
                                     set_started.set(true);
                                 }
                             >
@@ -99,7 +102,9 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                         WorldStatus::Custom(_, world) => world,
                                         _ => World::default()
                                     };
-                                    state.set(GameState::new(world));
+                                    let state = crate::state::new_game(world);
+                                    game.set(state.0);
+                                    ui.set(state.1);
                                     set_started.set(true);
                                 }
                             >
@@ -144,7 +149,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                                      with!(|world| {
                                                          match world {
                                                              WorldStatus::Default => "Default World".into(),
-                                                             WorldStatus::Custom(name, world) => format!("Custom: {name}"),
+                                                             WorldStatus::Custom(name, _world) => format!("Custom: {name}"),
                                                              WorldStatus::FailedToParse => "Failed to parse provided world.".into(),
                                                          }
                                                      })

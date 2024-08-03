@@ -2,24 +2,22 @@ mod describe;
 
 use std::collections::{BTreeMap, HashSet};
 
-use crate::{
-    icons::{self, fill_icons},
-    with_state,
-};
+use crate::icons::{self, fill_icons};
 pub use describe::DisplayEffect;
 use hes_engine::{
     events::*,
     projects::{Project, Status, Type},
+    Game,
 };
 use leptos::{
     component,
     expect_context,
     view,
+    with,
     For,
     IntoView,
     RwSignal,
     Signal,
-    SignalWith,
 };
 
 use super::{tip, HasTip, Tip};
@@ -120,24 +118,28 @@ pub fn Effects(
     #[prop(into)] effects: Signal<Vec<DisplayEffect>>,
     #[prop(optional)] class: &'static str,
 ) -> impl IntoView {
-    let items = with_state!(|state, _ui, effects| {
-        let mut effects = effects
-            .iter()
-            .filter(|effect| !effect.is_hidden)
-            .filter_map(|effect| {
-                effect.tip(state).ok().map(|mut details| {
-                    if effect.is_unknown {
-                        details.tip.supicon =
-                            Some(icons::CHANCE);
-                    }
-                    details.text = fill_icons(&details.text);
-                    details
+    let game = expect_context::<RwSignal<Game>>();
+    let items = move || {
+        with!(|game, effects| {
+            let mut effects = effects
+                .iter()
+                .filter(|effect| !effect.is_hidden)
+                .filter_map(|effect| {
+                    effect.tip(game).ok().map(|mut details| {
+                        if effect.is_unknown {
+                            details.tip.supicon =
+                                Some(icons::CHANCE);
+                        }
+                        details.text =
+                            fill_icons(&details.text);
+                        details
+                    })
                 })
-            })
-            .collect::<Vec<_>>();
-        effects.sort_by_key(|effect| effect.text.clone());
-        effects
-    });
+                .collect::<Vec<_>>();
+            effects.sort_by_key(|effect| effect.text.clone());
+            effects
+        })
+    };
     let class = format!("effects {}", class);
 
     view! {

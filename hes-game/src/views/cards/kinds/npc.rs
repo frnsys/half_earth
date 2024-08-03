@@ -13,7 +13,7 @@ pub fn NPCCard(
     #[prop(into)] npc: Signal<NPC>,
 ) -> impl IntoView {
     let hearts = move || {
-        npc.with(|npc| {
+        with!(|npc| {
             (0..consts::MAX_RELATIONSHIP)
                 .map(|i| {
                     let icon = if i as f32 <= npc.relationship {
@@ -28,17 +28,20 @@ pub fn NPCCard(
     };
 
     let rel_tip = move || {
-        npc.with(|npc| {
-            tip(icons::RELATIONSHIP, t!("Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.", name: t!(&npc.name)))
+        with!(|npc| {
+            tip(
+                icons::RELATIONSHIP,
+                t!("Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.", name: t!(&npc.name)),
+            )
         })
     };
     let portrait = move || {
-        npc.with(|npc| {
+        with!(|npc| {
             format!("/assets/characters/{}.webp", npc.name)
         })
     };
     let rel_icon = move || {
-        npc.with(|npc| match npc.relationship_name() {
+        with!(|npc| match npc.relationship_name() {
             "Ally" => icons::ALLY,
             "Friendly" => icons::FRIENDLY,
             "Nemesis" => icons::NEMESIS,
@@ -46,16 +49,19 @@ pub fn NPCCard(
             _ => unreachable!(),
         })
     };
-    let name = move || npc.with(|npc| t!(&npc.name));
+    let name = move || with!(|npc| t!(&npc.name));
     let rel_name =
-        move || npc.with(|npc| t!(&npc.relationship_name()));
+        move || with!(|npc| t!(&npc.relationship_name()));
     let effects = move || {
-        npc.with(|npc| {
+        with!(|npc| {
             let effects = t!(&npc.flavor.effects);
             if npc.is_ally() {
                 view! { <p class="npc-effect active" inner_html=effects></p> }.into_view()
             } else {
-                let tip = tip(icons::RELATIONSHIP, t!("Improve your relationship with {name} to activate this ability.", name: t!(&npc.name)));
+                let tip = tip(
+                    icons::RELATIONSHIP,
+                    t!("Improve your relationship with {name} to activate this ability.", name: t!(&npc.name)),
+                );
                 view! {
                     <HasTip tip>
                         <p class="npc-effect inactive" inner_html=effects></p>
@@ -65,10 +71,10 @@ pub fn NPCCard(
         })
     };
     let description =
-        move || npc.with(|npc| t!(&npc.flavor.description));
-    let likes = move || npc.with(|npc| t!(&npc.flavor.likes));
+        move || with!(|npc| t!(&npc.flavor.description));
+    let likes = move || with!(|npc| t!(&npc.flavor.likes));
     let dislikes =
-        move || npc.with(|npc| t!(&npc.flavor.dislikes));
+        move || with!(|npc| t!(&npc.flavor.dislikes));
 
     view! {
         <Card class="npc" background="#724680">

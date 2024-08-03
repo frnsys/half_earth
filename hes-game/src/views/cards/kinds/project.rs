@@ -3,10 +3,9 @@ use crate::{
     consts,
     display::AsText,
     icons::{self, HasIcon},
-    state,
-    state::GameExt,
+    memo,
+    state::{GameExt, UIState},
     t,
-    ui,
     util::ImageExt,
     views::{
         effects::{active_effects, DisplayEffect},
@@ -19,6 +18,7 @@ use hes_engine::{
     events::Flag,
     projects::{Group, Project},
     years_remaining,
+    Game,
     ProjectType,
 };
 use leptos::*;
@@ -27,24 +27,21 @@ use leptos::*;
 pub fn ProjectCard(
     #[prop(into)] project: Signal<Project>,
 ) -> impl IntoView {
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+
+    let viewed = memo!(ui.viewed);
     let is_new = move || {
-        with!(|project, state| !state
-            .ui
-            .viewed
-            .contains(&project.id))
+        with!(|project, viewed| !viewed.contains(&project.id))
     };
 
-    let card_bg = move || {
-        project.with(|project| card_color(&project.group).0)
-    };
-    let card_fg = move || {
-        project.with(|project| card_color(&project.group).1)
-    };
+    let card_bg =
+        move || with!(|project| card_color(&project.group).0);
+    let card_fg =
+        move || with!(|project| card_color(&project.group).1);
 
     let class = move || {
-        project.with(|project| {
+        with!(|project| {
             format!(
                 "{} {}",
                 if project.is_building() {
@@ -57,25 +54,21 @@ pub fn ProjectCard(
         })
     };
 
-    let name =
-        move || project.with(|project| t!(&project.name));
-    let group = move || {
-        project.with(|project| t!(project.group.into()))
-    };
+    let name = move || with!(|project| t!(&project.name));
+    let group =
+        move || with!(|project| t!(project.group.into()));
     let description = move || {
-        project.with(|project| t!(&project.flavor.description))
+        with!(|project| t!(&project.flavor.description))
     };
     let implemented =
-        move || project.with(|project| project.is_online());
-    let has_levels = move || {
-        project.with(|project| !project.upgrades.is_empty())
-    };
-    let level =
-        move || project.with(|project| project.level + 1);
+        move || with!(|project| project.is_online());
+    let has_levels =
+        move || with!(|project| !project.upgrades.is_empty());
+    let level = move || with!(|project| project.level + 1);
 
-    let plan_changes = ui!(plan_changes.clone());
+    let plan_changes = memo!(ui.plan_changes);
     let remaining_cost = move || {
-        project.with(|project| {
+        with!(|project, plan_changes| {
             if implemented() {
                 0.to_string()
             } else if project.is_building() {
@@ -101,7 +94,7 @@ pub fn ProjectCard(
                 match project.kind {
                     ProjectType::Policy => {
                         if let Some(changes) =
-                            plan_changes.get().get(&project.id)
+                            plan_changes.get(&project.id)
                         {
                             if changes.withdrawn {
                                 0.to_string()
@@ -120,46 +113,55 @@ pub fn ProjectCard(
         })
     };
     let cost_tip = move || {
-        project.with(|project| {
+        with!(|project| {
             match project.kind {
-                ProjectType::Policy => tip(icons::POLITICAL_CAPITAL,
-                    t!("This policy costs {remainingCost} political capital to implement.", remainingCost: remaining_cost())
-                    ),
-                ProjectType::Initiative => tip(icons::INITIATIVE, t!("This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.", remainingCost: remaining_cost(), kind: t!(project.kind.lower()))),
-                ProjectType::Research => tip(icons::RESEARCH, t!("This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.", remainingCost: remaining_cost(), kind: t!(project.kind.lower())))
+                ProjectType::Policy => tip(
+                    icons::POLITICAL_CAPITAL,
+                    t!("This policy costs {remainingCost} political capital to implement.", remainingCost: remaining_cost()),
+                ),
+                ProjectType::Initiative => tip(
+                    icons::INITIATIVE,
+                    t!("This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.", remainingCost: remaining_cost(), kind: t!(project.kind.lower())),
+                ),
+                ProjectType::Research => tip(
+                    icons::RESEARCH,
+                    t!("This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.", remainingCost: remaining_cost(), kind: t!(project.kind.lower())),
+                ),
             }
         })
     };
     let is_countdown = move || {
-        project.with(|project| {
+        with!(|project| {
             project.kind != ProjectType::Policy
                 || project.is_building()
         })
     };
     let show_pc_icon = move || {
-        project.with(|project| {
+        with!(|project| {
             project.kind == ProjectType::Policy
                 || !project.is_building()
         })
     };
     let is_building =
-        move || project.with(|project| project.is_building());
+        move || with!(|project| project.is_building());
 
     let parliament_suspended =
-        state!(flags.contains(&Flag::ParliamentSuspended));
-    let player_seats = state!(player_seats());
+        memo!(game.flags.contains(&Flag::ParliamentSuspended));
+    let player_seats = memo!(game.player_seats());
     let majority_satisfied = move || {
-        if parliament_suspended.get() {
-            true
-        } else {
-            project.with(|project| {
-                let player_seats = player_seats.get() as f32;
-                player_seats > project.required_majority
-            })
-        }
+        with!(|parliament_suspended, player_seats| {
+            if *parliament_suspended {
+                true
+            } else {
+                with!(|project| {
+                    let player_seats = *player_seats as f32;
+                    player_seats > project.required_majority
+                })
+            }
+        })
     };
     let warn_majority = move || {
-        project.with(|project| {
+        with!(|project| {
             project.required_majority > 0.
                 && !majority_satisfied()
         })
@@ -167,13 +169,13 @@ pub fn ProjectCard(
     let image =
         move || with!(|project| project.flavor.image.src());
     let has_points = move || {
-        project.with(|project| {
+        with!(|project| {
             project.kind != ProjectType::Policy
                 && project.is_building()
         })
     };
     let points_display = move || {
-        project.with(move |project| {
+        with!(|project| {
             (0..consts::MAX_POINTS).map(|i| {
                 let tip = tip(project.kind.icon(), t!("{points} {kind} points are allocated to this project", points: project.points, kind: project.kind.lower()));
                 let empty = i >= project.points;
@@ -187,10 +189,9 @@ pub fn ProjectCard(
         })
     };
 
-    let npcs = state!(npcs.clone());
+    let npcs = memo!(game.npcs);
     let opposers = move || {
-        let npcs = npcs.get();
-        project.with(|project| {
+        with!(|npcs, project| {
             project
                 .opposers
                 .iter()
@@ -200,8 +201,7 @@ pub fn ProjectCard(
         })
     };
     let supporters = move || {
-        let npcs = npcs.get();
-        project.with(|project| {
+        with!(|npcs, project| {
             project
                 .supporters
                 .iter()
@@ -244,24 +244,23 @@ pub fn ProjectCard(
     };
 
     let passed = move || {
-        project.with(|project| {
+        with!(|project| {
             project.kind == ProjectType::Policy
                 && (project.is_building()
                     || project.is_online())
         })
     };
     let effects =
-        move || project.with(|project| active_effects(project));
+        move || with!(|project| active_effects(project));
 
-    let queued_upgrades = ui!(queued_upgrades.clone());
+    let queued_upgrades = memo!(ui.queued_upgrades);
     let upgrade_queued = move || {
-        project.with(|project| {
-            queued_upgrades.get().get(&project.id)
-                == Some(&true)
+        with!(|project, queued_upgrades| {
+            queued_upgrades.get(&project.id) == Some(&true)
         })
     };
     let next_upgrade = move || {
-        project.with(|project| {
+        with!(|project, plan_changes| {
             if project.upgrades.is_empty() {
                 None
             } else {
@@ -272,7 +271,7 @@ pub fn ProjectCard(
                     let upgrade = &project.upgrades[idx];
                     let mut cost = upgrade.cost;
                     if let Some(changes) =
-                        plan_changes.get().get(&project.id)
+                        plan_changes.get(&project.id)
                     {
                         if changes.downgrades > 0 {
                             cost = 0;
@@ -289,24 +288,24 @@ pub fn ProjectCard(
         })
     };
     let has_upgrade = move || {
-        project.with(|project| {
+        with!(|project| {
             project.is_active() && next_upgrade().is_some()
         })
     };
     let can_downgrade = move || {
-        project.with(|project| {
+        with!(|project| {
             project.kind == ProjectType::Policy
                 && project.level > 0
         })
     };
     let has_downgrade = move || {
-        project.with(|project| {
+        with!(|project| {
             project.is_active() && can_downgrade()
         })
     };
     let prev_upgrade = move || {
         if can_downgrade() {
-            project.with(|project| {
+            with!(|project| {
                 let idx = project.level as isize - 2;
                 if idx < 0 {
                     let effects: Vec<DisplayEffect> = project
@@ -336,14 +335,14 @@ pub fn ProjectCard(
         }
     };
     let building_term = move || {
-        project.with(|project| match project.kind {
+        with!(|project| match project.kind {
             ProjectType::Research => t!("Researching"),
             ProjectType::Initiative => t!("Building"),
             ProjectType::Policy => t!("Passing"),
         })
     };
     let image_attrib = move || {
-        project.with(|project| {
+        with!(|project| {
             project.flavor.image.attribution.clone()
         })
     };

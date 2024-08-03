@@ -24,21 +24,21 @@ pub fn Draggable(
     #[prop(into)] on_drag: Callback<DragRect>,
     #[prop(into)] on_drag_stop: Callback<()>,
 ) -> impl IntoView {
-    let (dragging, set_dragging) = create_signal(false);
+    let dragging = store_value(false);
 
     // Keep track of the top offset from the element's starting y position;
     // this is updated as the component is dragged
-    let (top, set_top) = create_signal(0.);
+    let top = store_value(0.);
 
     // Whether or not dragging is started,
     // i.e. the component has been clicked or touched
-    let (down, set_down) = create_signal(false);
+    let down = store_value(false);
 
     // Current position of the cursor
-    let (pos, set_pos) = create_signal((0, 0));
+    let pos = store_value((0, 0));
 
-    let (top_y, set_top_y) = create_signal(0.);
-    let (height, set_height) = create_signal(0.);
+    let top_y = store_value(0.);
+    let height = store_value(0.);
 
     let el_ref = create_node_ref::<html::Div>();
 
@@ -46,32 +46,29 @@ pub fn Draggable(
         el_ref,
         move |entries, _observer| {
             let rect = entries[0].bounding_client_rect();
-            set_top_y.set(rect.y());
-            set_height.set(rect.height());
+            top_y.set_value(rect.y());
+            height.set_value(rect.height());
         },
     );
 
     let start_drag = move |ev: ev::PointerEvent| {
-        if !draggable.get() {
+        if !draggable.get_untracked() {
             return;
         }
 
         ev.prevent_default();
-        if let Some(elem) = el_ref.get() {
-            let _ = elem.set_pointer_capture(ev.pointer_id());
+        if let Some(el) = el_ref.get_untracked() {
+            let _ = el.set_pointer_capture(ev.pointer_id());
+            let _ = el.style("cursor", "grab");
         }
 
         let x = ev.client_x();
         let y = ev.client_y();
 
-        set_down.set(true);
-
-        if let Some(el) = el_ref.get() {
-            let _ = el.style("cursor", "grab");
-        }
+        down.set_value(true);
 
         // Update current mouse position.
-        set_pos.set((x, y));
+        pos.set_value((x, y));
     };
 
     // Eat click events so they don't trigger other behaviors
@@ -80,7 +77,7 @@ pub fn Draggable(
         use_document(),
         ev::click,
         move |ev| {
-            if dragging.get() {
+            if dragging.get_value() {
                 ev.stop_immediate_propagation();
             }
         },
@@ -89,18 +86,18 @@ pub fn Draggable(
     // Throttle this so it doesn't run roughly more than once per frame.
     let drag_handle = use_throttle_fn_with_arg(
         move |ev: ev::PointerEvent| {
-            if !down.get() {
+            if !down.get_value() {
                 return;
             }
-            let (x, y) = pos.get();
+            let (x, y) = pos.get_value();
             let dx = ev.client_x() - x;
             let dy = ev.client_y() - y;
-            let [min_y, max_y] = y_bounds.get();
+            let [min_y, max_y] = y_bounds.get_untracked();
             if dy.abs() > dx.abs() {
-                set_dragging.set(true);
-                let top = top.get();
-                let y = top_y.get() + top;
-                let base_y = y - top;
+                dragging.set_value(true);
+                let top_ = top.get_value();
+                let y = top_y.get_value() + top_;
+                let base_y = y - top_;
                 let min_dy = min_y as f64 - base_y;
                 let max_dy = max_y as f64 - base_y;
                 let dy = max_dy.min(min_dy.max(dy as f64));
@@ -113,10 +110,10 @@ pub fn Draggable(
                         ),
                     );
                 }
-                set_top.set(dy);
+                top.set_value(dy);
                 on_drag.call(DragRect {
                     top_y: y as f32,
-                    bot_y: (y + height.get()) as f32,
+                    bot_y: (y + height.get_value()) as f32,
                 });
             }
         },
@@ -126,13 +123,13 @@ pub fn Draggable(
         drag_handle(ev);
     };
     let stop_drag = move || {
-        if !down.get() {
+        if !down.get_value() {
             return;
         }
-        set_down.set(false);
+        down.set_value(false);
 
         // Snap-back animation.
-        if let Some(el) = el_ref.get() {
+        if let Some(el) = el_ref.get_untracked() {
             let _ = el
                 .style("transition", "transform 0.15s")
                 .style(
@@ -149,7 +146,7 @@ pub fn Draggable(
         // the current click from propagating.
         set_timeout(
             move || {
-                set_dragging.set(false);
+                dragging.set_value(false);
             },
             Duration::from_millis(10),
         );
@@ -165,7 +162,7 @@ pub fn Draggable(
             on:pointerdown=start_drag
             on:pointermove=drag
             on:pointerup=move |ev| {
-                if let Some(elem) = el_ref.get() {
+                if let Some(elem) = el_ref.get_untracked() {
                     let _ = elem.release_pointer_capture(ev.pointer_id());
                 }
                 stop_drag();

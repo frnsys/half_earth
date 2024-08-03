@@ -2,10 +2,9 @@ use crate::{
     consts,
     display::*,
     icons,
-    state,
-    state::{GameExt, Phase},
+    memo,
+    state::{GameExt, Phase, UIState},
     t,
-    ui,
     vars::Var,
     views::{
         events::Events,
@@ -15,11 +14,10 @@ use crate::{
         tip,
         HasTip,
     },
-    with_state,
 };
-use hes_engine::events::{
-    Phase as EventPhase,
-    Request as EngineRequest,
+use hes_engine::{
+    events::{Phase as EventPhase, Request as EngineRequest},
+    Game,
 };
 use leptos::*;
 
@@ -30,29 +28,27 @@ pub struct Request {
 
 #[component]
 pub fn Report() -> impl IntoView {
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
 
     let events = create_rw_signal(vec![]);
-    state.update_untracked(|state| {
+    game.update_untracked(|game| {
         events.set(
-            state
-                .game
-                .roll_events(EventPhase::ReportStart, None),
+            game.roll_events(EventPhase::ReportStart, None),
         );
     });
 
-    let year = state!(world.year);
-    let start_year = ui!(cycle_start_state.year);
+    let year = memo!(game.world.year);
+    let start_year = memo!(ui.cycle_start_state.year);
 
     let finished_requests = store_value(vec![]);
-    state.update_untracked(|state| {
-        finished_requests
-            .set_value(state.game.check_requests());
+    game.update_untracked(|game| {
+        finished_requests.set_value(game.check_requests());
     });
 
-    let outlook = state!(outlook());
-    let start_outlook = ui!(cycle_start_state.contentedness);
+    let outlook = memo!(game.outlook());
+    let start_outlook =
+        memo!(ui.cycle_start_state.contentedness);
     let start_cont_int = move || {
         intensity::scale(
             start_outlook.get(),
@@ -66,8 +62,8 @@ pub fn Report() -> impl IntoView {
         )
     };
 
-    let exr = state!(world.extinction_rate);
-    let start_exr = ui!(cycle_start_state.extinction_rate);
+    let exr = memo!(game.world.extinction_rate);
+    let start_exr = memo!(ui.cycle_start_state.extinction_rate);
     let start_exr_int = move || {
         intensity::scale(
             start_exr.get(),
@@ -81,85 +77,108 @@ pub fn Report() -> impl IntoView {
         )
     };
 
-    let region_income_changes = with_state!(|game, ui| {
-        game.world
-            .regions
-            .iter()
-            .zip(ui.cycle_start_state.region_incomes.iter())
-            .filter(|(reg, inc)| reg.income != **inc)
-            .map(|(reg, _)| (reg.name.clone(), reg.income))
-            .collect::<Vec<_>>()
-    });
-    let region_disasters = with_state!(|game, ui| {
-        ui.annual_region_events
-            .iter()
-            .map(|(idx, events)| {
-                let reg = game.world.regions[idx].name.clone();
-                (reg, events.clone())
-            })
-            .collect::<Vec<_>>()
-    });
-    let world_events = with_state!(|_game, ui| {
-        ui.world_events.iter().map(|ev| {
-            (
-                ev.name.clone(),
-                tip(
-                    icons::CHANCE,
-                    t!("This event occurred during this planning cycle.")
-                ).card(ev.clone())
-            )
-        }).collect::<Vec<_>>()
-    });
-    let seat_changes = with_state!(|game, ui| {
-        ui.cycle_start_state
-            .parliament
-            .iter()
-            .enumerate()
-            .map(|(i, start_seats)| {
-                let npc = &game.npcs.by_idx(i);
-                let change = (npc.seats - start_seats).round();
-                (npc.name.clone(), npc.seats, change)
-            })
-            .filter(|(_, _, change)| *change != 0.)
-            .collect::<Vec<_>>()
-    });
-    let honeymoon_pc = with_state!(|game, ui| {
-        if game.world.year
-            < ui.start_year + consts::HONEYMOON_YEARS
-        {
-            consts::HONEYMOON_PC as isize
-        } else {
-            0
-        }
-    });
-    let requests_fulfilled = with_state!(|game, _ui| {
-        finished_requests.get_value().into_iter().map(|(kind, id, active, bounty)| {
-            match kind {
-                EngineRequest::Project => {
-                    let project = &game.world.projects[&id];
-                    Request {
-                        bounty: bounty as isize,
-                        text: if active {
-                            t!("Completed Request: Implement {name}", name: t!(&project.name))
-                        } else {
-                            t!("Completed Request: Stop {name}", name: t!(&project.name))
-                        }
-                    }
-                }
-                EngineRequest::Process => {
-                    let process = &game.world.processes[&id];
-                    Request {
-                        bounty: bounty as isize,
-                        text: if active {
-                            t!("Completed Request: Unban {name}", name: t!(&process.name))
-                        } else {
-                            t!("Completed Request: Ban {name}", name: t!(&process.name))
-                        }
-                    }
-                }
+    let regions = memo!(game.world.regions);
+    let start_region_incomes =
+        memo!(ui.cycle_start_state.region_incomes);
+    let region_income_changes = move || {
+        with!(|regions, start_region_incomes| {
+            regions
+                .iter()
+                .zip(start_region_incomes.iter())
+                .filter(|(reg, inc)| reg.income != **inc)
+                .map(|(reg, _)| (reg.name.clone(), reg.income))
+                .collect::<Vec<_>>()
+        })
+    };
+
+    let region_events = memo!(ui.annual_region_events);
+    let region_disasters = move || {
+        with!(|regions, region_events| {
+            region_events
+                .iter()
+                .map(|(idx, events)| {
+                    let reg = regions[idx].name.clone();
+                    (reg, events.clone())
+                })
+                .collect::<Vec<_>>()
+        })
+    };
+
+    let recent_world_events = memo!(ui.world_events);
+    let world_events = move || {
+        with!(|recent_world_events| {
+            recent_world_events.iter().map(|ev| {
+                (
+                    ev.name.clone(),
+                    tip(
+                        icons::CHANCE,
+                        t!("This event occurred during this planning cycle.")
+                    ).card(ev.clone())
+                )
+            }).collect::<Vec<_>>()
+        })
+    };
+
+    let npcs = memo!(game.npcs);
+    let start_parliament =
+        memo!(ui.cycle_start_state.parliament);
+    let seat_changes = move || {
+        with!(|start_parliament, npcs| {
+            start_parliament
+                .iter()
+                .enumerate()
+                .map(|(i, start_seats)| {
+                    let npc = &npcs.by_idx(i);
+                    let change =
+                        (npc.seats - start_seats).round();
+                    (npc.name.clone(), npc.seats, change)
+                })
+                .filter(|(_, _, change)| *change != 0.)
+                .collect::<Vec<_>>()
+        })
+    };
+    let honeymoon_pc = move || {
+        with!(|year, start_year| {
+            if *year < *start_year + consts::HONEYMOON_YEARS {
+                consts::HONEYMOON_PC as isize
+            } else {
+                0
             }
-        }).collect::<Vec<_>>()
-    });
+        })
+    };
+
+    let projects = memo!(game.world.projects);
+    let processes = memo!(game.world.processes);
+    let requests_fulfilled = move || {
+        with!(|projects, processes| {
+            finished_requests.get_value().into_iter().map(|(kind, id, active, bounty)| {
+                match kind {
+                    EngineRequest::Project => {
+                        let project = &projects[&id];
+                        Request {
+                            bounty: bounty as isize,
+                            text: if active {
+                                t!("Completed Request: Implement {name}", name: t!(&project.name))
+                            } else {
+                                t!("Completed Request: Stop {name}", name: t!(&project.name))
+                            }
+                        }
+                    }
+                    EngineRequest::Process => {
+                        let process = &processes[&id];
+                        Request {
+                            bounty: bounty as isize,
+                            text: if active {
+                                t!("Completed Request: Unban {name}", name: t!(&process.name))
+                            } else {
+                                t!("Completed Request: Ban {name}", name: t!(&process.name))
+                            }
+                        }
+                    }
+                }
+            }).collect::<Vec<_>>()
+        })
+    };
 
     let warming_tip = || {
         tip(
@@ -172,21 +191,21 @@ pub fn Report() -> impl IntoView {
             r#"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>"#
         );
         crate::views::tip(icons::EXTINCTION_RATE, tip_text)
-            .card(with!(|state| factors_card(
+            .card(with!(|game| factors_card(
                 None,
                 Var::Biodiversity,
-                &state.game,
+                &game,
             )))
     };
 
-    let emissions_gt = state!(emissions_gt());
+    let emissions_gt = memo!(game.emissions_gt());
     let emissions_tip = move || {
         let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get());
         crate::views::tip(icons::EMISSIONS, tip_text).card(
-            with!(|state| factors_card(
+            with!(|game| factors_card(
                 None,
                 Var::Emissions,
-                &state.game,
+                &game,
             )),
         )
     };
@@ -196,25 +215,23 @@ pub fn Report() -> impl IntoView {
             r#"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>"#
         );
         crate::views::tip(icons::CONTENTEDNESS, tip_text).card(
-            with!(|state| factors_card(
+            with!(|game| factors_card(
                 None,
                 Var::Contentedness,
-                &state.game,
+                &game,
             )),
         )
     };
 
+    let temp = memo!(game.world.temperature);
+    let start_temp = memo!(ui.cycle_start_state.temperature);
     let temp_pc_change = move || {
-        with!(|state| {
-            let temp_change = state.game.world.temperature
-                - state.ui.cycle_start_state.temperature;
+        with!(|temp, start_temp| {
+            let temp_change = temp - start_temp;
 
             // Double temp change score for every degree above 1C
             let temp_change_multiplier =
-                ((state.game.world.temperature.round() - 1.)
-                    .max(0.)
-                    * 2.)
-                    .max(1.);
+                ((temp.round() - 1.).max(0.) * 2.).max(1.);
 
             // Temp scored for every 0.1C change
             let change = (temp_change * 10.).round()
@@ -235,11 +252,11 @@ pub fn Report() -> impl IntoView {
             consts::EXTINCTION_PC.last().unwrap()
         })
     };
+    let emissions = memo!(game.state.emissions_gt());
+    let start_emissions = memo!(ui.cycle_start_state.emissions);
     let ghg_pc_change = move || {
-        with!(|state| {
-            let emissions_change =
-                state.game.state.emissions_gt()
-                    - state.ui.cycle_start_state.emissions;
+        with!(|emissions, start_emissions| {
+            let emissions_change = emissions - start_emissions;
             (emissions_change * 2.).round() as isize
                 * -(consts::EMISSIONS_PC as isize)
         })
@@ -252,72 +269,69 @@ pub fn Report() -> impl IntoView {
             .sum::<usize>() as isize
     };
     let pc_change = move || {
-        with!(|state| {
+        with!(|ui| {
             let mut pc_change = temp_pc_change()
                 + cont_pc_change()
                 + ext_pc_change()
                 + ghg_pc_change()
                 + req_pc_change();
-            pc_change += (state
-                .ui
-                .cycle_start_state
-                .completed_projects
-                .len()
-                * consts::PC_PER_COMPLETED_PROJECT)
-                as isize;
+            pc_change +=
+                (ui.cycle_start_state.completed_projects.len()
+                    * consts::PC_PER_COMPLETED_PROJECT)
+                    as isize;
             pc_change += honeymoon_pc();
             pc_change
         })
     };
 
-    let completed_projects = with_state!(|game, ui| {
-        ui.cycle_start_state
-            .completed_projects
-            .iter()
-            .map(|project_id| {
-                game.world.projects[project_id].clone()
-            })
-            .collect::<Vec<_>>()
-    });
+    let recent_completed_projects =
+        memo!(ui.cycle_start_state.completed_projects);
+    let completed_projects = move || {
+        with!(|projects, recent_completed_projects| {
+            recent_completed_projects
+                .iter()
+                .map(|project_id| projects[project_id].clone())
+                .collect::<Vec<_>>()
+        })
+    };
 
     let next_phase = move || {
         let pc_change = pc_change();
-        update!(|state| {
-            state.game.change_political_capital(pc_change);
+        update!(|game, ui| {
+            game.change_political_capital(pc_change);
 
             // Apply process mix changes
             // and project upgrades.
-            state.update_processes();
-            state.upgrade_projects();
+            game.update_processes(&mut ui.process_mix_changes);
+            game.upgrade_projects(&mut ui.queued_upgrades);
 
             // Reset session plan changes
-            state.ui.plan_changes.clear();
+            ui.plan_changes.clear();
 
-            state.ui.points.refundable_research = 0;
-            state.ui.phase = Phase::Interstitial;
+            ui.points.refundable_research = 0;
+            ui.phase = Phase::Interstitial;
         });
     };
 
-    let temp_row = with_state!(|game, ui| {
-        let start = format!(
-            "{:+.1}°C",
-            ui.cycle_start_state.temperature
-        );
-        let end = format!("{:+.1}°C", game.world.temperature);
-        let pc_change = format!("{:+}", temp_pc_change());
+    let temp_row = move || {
+        with!(|temp, start_temp| {
+            let start = format!("{:+.1}°C", start_temp);
+            let end = format!("{:+.1}°C", temp);
+            let pc_change = format!("{:+}", temp_pc_change());
 
-        view! {
-            <HasTip tip=warming_tip.into_signal()>
-                <tr class="report--primary-change">
-                    <td><img src=icons::WARMING /> {t!("Temperature")}</td>
-                    <td>{start}</td>
-                    <td><small><img src=icons::ARROW_RIGHT /></small></td>
-                    <td>{end}</td>
-                    <td><strong>{pc_change}</strong></td>
-                </tr>
-            </HasTip>
-        }
-    });
+            view! {
+                <HasTip tip=warming_tip.into_signal()>
+                    <tr class="report--primary-change">
+                        <td><img src=icons::WARMING /> {t!("Temperature")}</td>
+                        <td>{start}</td>
+                        <td><small><img src=icons::ARROW_RIGHT /></small></td>
+                        <td>{end}</td>
+                        <td><strong>{pc_change}</strong></td>
+                    </tr>
+                </HasTip>
+            }
+        })
+    };
     let cont_row = move || {
         let pc_change = format!("{:+}", cont_pc_change());
         view! {
@@ -354,23 +368,24 @@ pub fn Report() -> impl IntoView {
             </HasTip>
         }
     };
-    let ghg_row = with_state!(|game, ui| {
-        let start =
-            format!("{:+.1}", ui.cycle_start_state.emissions);
-        let end = format!("{:+.1}", game.emissions_gt());
-        let pc_change = format!("{:+}", ghg_pc_change());
-        view! {
-            <HasTip tip=emissions_tip.into_signal()>
-                <tr class="report--primary-change">
-                    <td><img src=icons::EMISSIONS /> {t!("Emissions")}</td>
-                    <td>{start}</td>
-                    <td><small><img src=icons::ARROW_RIGHT /></small></td>
-                    <td>{end}</td>
-                    <td><strong>{pc_change}</strong></td>
-                </tr>
-            </HasTip>
-        }
-    });
+    let ghg_row = move || {
+        with!(|emissions, start_emissions| {
+            let start = format!("{:+.1}", start_emissions);
+            let end = format!("{:+.1}", emissions);
+            let pc_change = format!("{:+}", ghg_pc_change());
+            view! {
+                <HasTip tip=emissions_tip.into_signal()>
+                    <tr class="report--primary-change">
+                        <td><img src=icons::EMISSIONS /> {t!("Emissions")}</td>
+                        <td>{start}</td>
+                        <td><small><img src=icons::ARROW_RIGHT /></small></td>
+                        <td>{end}</td>
+                        <td><strong>{pc_change}</strong></td>
+                    </tr>
+                </HasTip>
+            }
+        })
+    };
 
     view! {
         <Hud/>

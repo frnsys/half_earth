@@ -1,15 +1,15 @@
 use crate::{
     audio,
     icons,
-    state,
-    state::{GameState, Settings},
+    memo,
+    state::{start_new_run, Settings, UIState},
     t,
-    ui,
     views::{
         intensity::{self, IntensityBar},
         splash::Credits,
     },
 };
+use hes_engine::Game;
 use js_sys::Date;
 use leptos::*;
 use leptos_use::use_interval_fn;
@@ -33,18 +33,20 @@ const LOCALES: &[&str] = &[
 #[component]
 pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
     let (settings, set_settings) = Settings::rw();
-    let sound = move || settings.with(|s| s.sound);
-    let hide_help = move || settings.with(|s| s.hide_help);
+    let sound = memo!(settings.sound);
+    let hide_help = memo!(settings.hide_help);
 
     let (show_credits, set_show_credits) = create_signal(false);
 
-    let year = state!(world.year);
-    let pc = state!(political_capital.max(0));
-    let outlook = state!(outlook());
-    let emissions = state!(emissions_gt());
-    let extinction = state!(world.extinction_rate);
-    let temperature = state!(world.temperature);
-    let start_year = ui!(start_year);
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+    let year = memo!(game.world.year);
+    let pc = memo!(game.political_capital.max(0));
+    let outlook = memo!(game.outlook());
+    let emissions = memo!(game.emissions_gt());
+    let extinction = memo!(game.world.extinction_rate);
+    let temperature = memo!(game.world.temperature);
+    let start_year = memo!(ui.start_year);
 
     let temp = move || format!("{:+.1}C", temperature.get());
     let emissions = move || format!("{:.1}Gt", emissions.get());
@@ -170,11 +172,11 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                         >
                             {t!("Sound")}
                             :
-                            {move || if sound() { t!("On") } else { t!("Off") }}
+                            {move || if sound.get() { t!("On") } else { t!("Off") }}
                         </div>
                         <div
                             class="dropdown-menu-button"
-                            class:active=move || !hide_help()
+                            class:active=move || !hide_help.get()
                             on:click=move |_| {
                                 set_settings
                                     .update(|settings| {
@@ -184,12 +186,12 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
                         >
                             {t!("Tips")}
                             :
-                            {move || if !hide_help() { t!("On") } else { t!("Off") }}
+                            {move || if !hide_help.get() { t!("On") } else { t!("Off") }}
                         </div>
                         <div
                             class="dropdown-menu-button"
                             on:click=move |_| {
-                                GameState::start_new_run();
+                                start_new_run();
                             }
                         >
                             {t!("Restart Game")}

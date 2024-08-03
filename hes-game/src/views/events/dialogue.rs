@@ -14,6 +14,7 @@ use hes_engine::{
         Response,
         Speaker,
     },
+    Game,
     Id,
 };
 use leptos::*;
@@ -67,6 +68,8 @@ pub fn Dialogue(
     #[prop(into, optional)] event_id: Signal<Option<Id>>,
     #[prop(into, optional)] region_id: Signal<Option<Id>>,
 ) -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+
     let (revealed, set_revealed) = create_signal(false);
     let (stop_anim, set_stop_anim) =
         create_signal::<Option<Rc<dyn Fn() + 'static>>>(None);
@@ -159,8 +162,6 @@ pub fn Dialogue(
         on_done.call(());
     };
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
     let next_line = move || {
         let line = line.get();
         let mut can_advance = false;
@@ -173,14 +174,15 @@ pub fn Dialogue(
                 }
                 DialogueNext::Responses(responses) => {
                     if event_id.get().is_some() {
-                        let branch = with!(|state| {
-                            responses.iter().find(|b| {
-                                state.game.eval_conditions(
-                                    &b.conditions,
-                                    region_id.get(),
-                                )
-                            })
-                        });
+                        let branch =
+                            game.with_untracked(|game| {
+                                responses.iter().find(|b| {
+                                    game.eval_conditions(
+                                        &b.conditions,
+                                        region_id.get(),
+                                    )
+                                })
+                            });
                         if let Some(branch) = branch {
                             if let Some(line_id) =
                                 branch.next_line
@@ -234,8 +236,8 @@ pub fn Dialogue(
             // So we just assume project dialogues won't have branch effects
             // which, at time of writing, none of them do.
             if event_id.get().is_some() {
-                update!(|state| {
-                    state.game.apply_effects(
+                update!(|game| {
+                    game.apply_effects(
                         &response.effects,
                         region_id.get(),
                     );

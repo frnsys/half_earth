@@ -1,6 +1,8 @@
 use std::collections::BTreeMap;
 
+use enum_map::EnumMap;
 use gloo_utils::format::JsValueSerdeExt;
+use hes_engine::{kinds::Output, Game};
 use leptos::*;
 use numfmt::{Formatter, Precision, Scales};
 use strum::IntoEnumIterator;
@@ -9,10 +11,9 @@ use wasm_bindgen::prelude::*;
 use crate::{
     display::{self, AsText},
     icons::{self, HasIcon},
-    state,
-    state::GameExt,
+    memo,
+    state::{GameExt, UIState},
     t,
-    ui,
     util::to_ws_el,
     vars::Var,
     views::{
@@ -21,7 +22,6 @@ use crate::{
         HasTip,
         Tip,
     },
-    with_state,
 };
 
 #[wasm_bindgen(module = "/public/js/pie.js")]
@@ -63,13 +63,17 @@ struct MiniCardData {
 
 #[component]
 pub fn Dashboard() -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+
     let (breakdown_factor, set_breakdown_factor) =
         create_signal(Var::Land);
     let (show_breakdown_menu, set_show_breakdown_menu) =
         create_signal(false);
 
-    let factors = ui!(factors.clone());
-    let starting_land = state!(world.starting_resources.land);
+    let factors = memo!(ui.factors);
+    let starting_land =
+        memo!(game.world.starting_resources.land);
     let dataset = move || {
         let mut total = 0.;
         let mut data: BTreeMap<String, f32> =
@@ -88,7 +92,7 @@ pub fn Dashboard() -> impl IntoView {
         data
     };
 
-    let income = state!(avg_income_level());
+    let income = memo!(game.avg_income_level());
     let avg_income_level = move || {
         let avg = income.get();
         MiniCardData {
@@ -97,7 +101,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let habitability = state!(avg_habitability());
+    let habitability = memo!(game.avg_habitability());
     let avg_habitability = move || {
         let avg = habitability.get();
         let int = intensity::scale(
@@ -131,29 +135,43 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let process_multipliers = with_state!(|state, ui| {
-        state
-            .world
-            .processes
-            .iter()
-            .filter(|p| !p.locked)
-            .filter_map(move |p| {
-                let mix_change = (*ui.process_mix_changes
-                    [p.output]
-                    .get(&p.id)
-                    .unwrap_or(&0))
-                    as f32
-                    * 0.05;
-                if mix_change != 0. {
-                    let multiplier = mix_change
-                        * state.demand_for_output(&p.output);
-                    Some((p.clone(), multiplier))
-                } else {
-                    None
-                }
-            })
-            .collect::<Vec<_>>()
+    let processes = memo!(game.world.processes);
+    let process_mix_changes = memo!(ui.process_mix_changes);
+    let demand_for_outputs = create_memo(move |_| {
+        let demands: EnumMap<Output, f32> =
+            with!(|game| Output::iter()
+                .map(|output| (
+                    output,
+                    game.demand_for_output(&output)
+                ))
+                .collect());
+        demands
     });
+    let process_multipliers = move || {
+        with!(|processes,
+               process_mix_changes,
+               demand_for_outputs| {
+            processes
+                .iter()
+                .filter(|p| !p.locked)
+                .filter_map(move |p| {
+                    let mix_change = (*process_mix_changes
+                        [p.output]
+                        .get(&p.id)
+                        .unwrap_or(&0))
+                        as f32
+                        * 0.05;
+                    if mix_change != 0. {
+                        let multiplier = mix_change
+                            * demand_for_outputs[p.output];
+                        Some((p.clone(), multiplier))
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<_>>()
+        })
+    };
 
     let extinction_change = move || {
         process_multipliers()
@@ -164,7 +182,7 @@ pub fn Dashboard() -> impl IntoView {
             .sum::<f32>()
             .round()
     };
-    let extinction_rate = state!(world.extinction_rate);
+    let extinction_rate = memo!(game.world.extinction_rate);
     let current_extinction =
         move || extinction(extinction_rate.get());
     let after_extinction = move || {
@@ -206,14 +224,14 @@ pub fn Dashboard() -> impl IntoView {
             .round()
     };
 
-    let water_demand = state!(resources_demand.water);
+    let water_demand = memo!(game.resources_demand.water);
     let current_water_stress =
         move || water_stress(water_demand.get());
     let after_water_stress = move || {
         water_stress(water_change() + water_demand.get()).label
     };
 
-    let temp_anomaly = state!(temp_anomaly());
+    let temp_anomaly = memo!(game.temp_anomaly());
     let temp_view = move || {
         view! {
             <div class="dashboard--item">
@@ -228,13 +246,15 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let emissions_tip = with_state!(|state, _ui| {
-        let tip_text = t!("Current annual emissions, in gigatonnes of CO2 equivalent.");
-        crate::views::tip(icons::EMISSIONS, tip_text)
-            .card(factors_card(None, Var::Emissions, state))
-    });
-    let emissions = state!(emissions_gt());
-    let emissions_val = state!(state.emissions_gt());
+    let emissions_tip = move || {
+        with!(|game| {
+            let tip_text = t!("Current annual emissions, in gigatonnes of CO2 equivalent.");
+            crate::views::tip(icons::EMISSIONS, tip_text)
+                .card(factors_card(None, Var::Emissions, game))
+        })
+    };
+    let emissions = memo!(game.emissions_gt());
+    let emissions_val = memo!(game.state.emissions_gt());
     let emissions_changed = move || {
         display::emissions(
             emissions_change() + emissions_val.get(),
@@ -253,12 +273,21 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let land_tip = with_state!(|state, _ui| {
-        crate::views::tip(icons::LAND, t!("Current land use."))
-            .card(factors_card(None, Var::Land, state))
-    });
-    let land_use = state!(land_use_percent());
-    let land_demand = state!(resources_demand.land);
+    let land_tip = move || {
+        with!(|game| {
+            crate::views::tip(
+                icons::LAND,
+                t!("Current land use."),
+            )
+            .card(factors_card(
+                None,
+                Var::Land,
+                game,
+            ))
+        })
+    };
+    let land_use = memo!(game.land_use_percent());
+    let land_demand = memo!(game.resources_demand.land);
     let land_changed = move || {
         format!(
             "{:.0}%",
@@ -280,15 +309,21 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let energy_tip = with_state!(|state, _ui| {
-        crate::views::tip(
-            icons::ENERGY,
-            t!("Current energy use."),
-        )
-        .card(factors_card(None, Var::Energy, state))
-    });
-    let energy_use = state!(energy_pwh());
-    let energy_demand = state!(output_demand.energy());
+    let energy_tip = move || {
+        with!(|game| {
+            crate::views::tip(
+                icons::ENERGY,
+                t!("Current energy use."),
+            )
+            .card(factors_card(
+                None,
+                Var::Energy,
+                game,
+            ))
+        })
+    };
+    let energy_use = memo!(game.energy_pwh());
+    let energy_demand = memo!(game.output_demand.energy());
     let energy_changed = move || {
         format!(
             "{}TWh",
@@ -311,13 +346,19 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let water_tip = with_state!(|state, _ui| {
-        crate::views::tip(
-            icons::WATER,
-            t!("Current water demand."),
-        )
-        .card(factors_card(None, Var::Water, state))
-    });
+    let water_tip = move || {
+        with!(|game| {
+            crate::views::tip(
+                icons::WATER,
+                t!("Current water demand."),
+            )
+            .card(factors_card(
+                None,
+                Var::Water,
+                game,
+            ))
+        })
+    };
     let water_view = move || {
         let current = current_water_stress();
 
@@ -334,11 +375,17 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let biodiversity_tip = with_state!(|state, _ui| {
-        let tip_text = t!("The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.");
-        crate::views::tip(icons::EXTINCTION_RATE, tip_text)
-            .card(factors_card(None, Var::Biodiversity, state))
-    });
+    let biodiversity_tip = move || {
+        with!(|game| {
+            let tip_text = t!("The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.");
+            crate::views::tip(icons::EXTINCTION_RATE, tip_text)
+                .card(factors_card(
+                    None,
+                    Var::Biodiversity,
+                    game,
+                ))
+        })
+    };
     let biodiversity_view = move || {
         let current = current_extinction();
         view! {
@@ -354,8 +401,8 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let sea_level_rise = state!(world.sea_level_rise);
-    let sea_level_rise_rate = state!(sea_level_rise_rate());
+    let sea_level_rise = memo!(game.world.sea_level_rise);
+    let sea_level_rise_rate = memo!(game.sea_level_rise_rate());
     let sea_level_rise_view = move || {
         let rise = format!("{:.2}", sea_level_rise.get());
         let tip_text = t!("Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.",
@@ -379,7 +426,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let population = state!(world.population());
+    let population = memo!(game.world.population());
     let pop_fmted = move || {
         let mut f = Formatter::default()
             .scales(Scales::short())
@@ -429,9 +476,11 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let table_data = with_state!(|state, _ui| {
-        factors_card(None, breakdown_factor.get(), state)
-    });
+    let table_data = move || {
+        with!(|game| {
+            factors_card(None, breakdown_factor.get(), game)
+        })
+    };
     let icon = move || breakdown_factor.get().icon();
     let name = move || t!(breakdown_factor.get().title());
 

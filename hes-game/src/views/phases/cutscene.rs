@@ -2,17 +2,18 @@ use std::time::Duration;
 
 use crate::{
     audio,
-    state::{GameExt, Phase},
+    state::{GameExt, Phase, UIState},
     t,
-    ui_rw,
     views::events::Events,
-    write_state,
 };
-use hes_engine::events::Phase as EventPhase;
+use hes_engine::{events::Phase as EventPhase, Game};
 use leptos::*;
 
 #[component]
 pub fn Cutscene() -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+
     // One per line of dialogue
     const IMAGES: &[&str] = &[
         "pexels-lt-chan-2833366.jpg",
@@ -35,7 +36,7 @@ pub fn Cutscene() -> impl IntoView {
         format!("url('/assets/cutscenes/out/{image}')")
     };
 
-    let (_, set_phase) = ui_rw!(phase);
+    let (_, set_phase) = slice!(ui.phase);
     let main_ref = create_node_ref::<html::Div>();
     let fade_out = move || {
         if let Some(elem) = main_ref.get() {
@@ -63,14 +64,14 @@ pub fn Cutscene() -> impl IntoView {
     // Wait a beat before showing the event
     let events = create_rw_signal(vec![]);
     create_effect(move |_| {
-        write_state!(move |state, _ui| {
+        update!(move |game| {
             events.set(
-                state.roll_events(
+                game.roll_events(
                     EventPhase::CutsceneIntro,
                     None,
                 ),
             );
-        })();
+        });
     });
 
     view! {

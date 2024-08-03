@@ -3,6 +3,7 @@ use crate::{
     display::{self, AsText},
     i18n,
     icons::{self, HasIcon},
+    memo,
     t,
     util::ImageExt,
     views::{
@@ -10,9 +11,8 @@ use crate::{
         tip,
         HasTip,
     },
-    with_state,
 };
-use hes_engine::regions::Region;
+use hes_engine::{regions::Region, Game};
 use leptos::*;
 
 #[component]
@@ -20,54 +20,56 @@ pub fn RegionCard(
     #[prop(into)] region: Signal<Region>,
 ) -> impl IntoView {
     let contentedness = move || {
-        let outlook = region.with(|region| region.outlook);
+        let outlook = with!(|region| region.outlook);
         intensity::scale(outlook, Variable::Outlook)
     };
-    let demand = with_state!(|state, _ui, region| {
-        let total_demand = state.demand_for_outputs();
-        let per_capita_demand = state.world.output_demand;
-        let demand = region.demand(&per_capita_demand);
-        let pop = region.population;
-        demand.items().map(|(output, demand)| {
-            let region_per_capita_demand = demand / pop;
-            let intensity = intensity::output_intensity(
-                region_per_capita_demand,
-                output,
-            );
-            let percent = display::demand_percent(
-                demand,
-                total_demand[output],
-                false,
-            );
-            let fmted = display::output(demand, output);
-            (output, fmted, percent, intensity)
+    let game = expect_context::<RwSignal<Game>>();
+    let total_demand = memo!(game.demand_for_outputs());
+    let per_capita_demand = memo!(game.world.output_demand);
+    let demand = move || {
+        with!(|region, total_demand, per_capita_demand| {
+            let demand = region.demand(per_capita_demand);
+            let pop = region.population;
+            demand.items().map(|(output, demand)| {
+                let region_per_capita_demand = demand / pop;
+                let intensity = intensity::output_intensity(
+                    region_per_capita_demand,
+                    output,
+                );
+                let percent = display::demand_percent(
+                    demand,
+                    total_demand[output],
+                    false,
+                );
+                let fmted = display::output(demand, output);
+                (output, fmted, percent, intensity)
+            })
         })
-    });
+    };
     let habitability = move || {
         let habitability =
-            region.with(|region| region.habitability());
+            with!(|region| region.habitability());
         intensity::scale(habitability, Variable::Habitability)
     };
     let income_name = move || {
-        let income =
-            region.with(|region| region.income.lower());
+        let income = with!(|region| region.income.lower());
         t!(income)
     };
     let income_level =
-        move || region.with(|region| region.income_level() + 1);
+        move || with!(|region| region.income_level() + 1);
     let name = move || {
-        let name = region.with(|region| region.name.clone());
+        let name = with!(|region| region.name.clone());
         t!(&name)
     };
     let population = move || {
-        let pop = region.with(|region| region.population);
+        let pop = with!(|region| region.population);
         i18n::num_fmt()(pop)
     };
-    let seceded = move || region.with(|region| region.seceded);
+    let seceded = move || with!(|region| region.seceded);
     let temp_range =
-        move || region.with(|region| region.temp_range());
+        move || with!(|region| region.temp_range());
     let precip_range =
-        move || region.with(|region| region.precip_range());
+        move || with!(|region| region.precip_range());
 
     let image =
         move || with!(|region| region.flavor.image.src());

@@ -3,6 +3,7 @@ use leptos::*;
 use crate::{
     display::*,
     icons::{self, HasIcon},
+    memo,
     t,
     util::ImageExt,
     views::{
@@ -13,9 +14,8 @@ use crate::{
         Effects,
         HasTip,
     },
-    with_state,
 };
-use hes_engine::game::Update as EngineUpdate;
+use hes_engine::{game::Update as EngineUpdate, Game};
 
 #[component]
 pub fn Updates(
@@ -48,16 +48,16 @@ fn Update(
     #[prop(into)] update: Signal<EngineUpdate>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
-    let init_can_close =
-        update.with(|update| update.is_region());
+    let game = expect_context::<RwSignal<Game>>();
+
+    let init_can_close = with!(|update| update.is_region());
     let (can_close, set_can_close) =
         create_signal(init_can_close);
 
-    let is_region =
-        move || update.with(|update| update.is_region());
+    let is_region = move || with!(|update| update.is_region());
 
     let title = move || {
-        update.with(|update| match update {
+        with!(|update| match update {
             EngineUpdate::Project { .. } => {
                 t!("Project Completed")
             }
@@ -71,56 +71,66 @@ fn Update(
         })
     };
 
-    let image = with_state!(|state, _ui, update| {
-        match update {
-            EngineUpdate::Project { id }
-            | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[id];
-                proj.flavor.image.src()
+    let regions = memo!(game.world.regions);
+    let projects = memo!(game.world.projects);
+    let image = move || {
+        with!(|projects, regions, update| {
+            match update {
+                EngineUpdate::Project { id }
+                | EngineUpdate::Policy { id } => {
+                    let proj = &projects[id];
+                    proj.flavor.image.src()
+                }
+                EngineUpdate::Region { id, .. } => {
+                    let region = &regions[id];
+                    region.flavor.image.src()
+                }
             }
-            EngineUpdate::Region { id, .. } => {
-                let region = &state.world.regions[id];
-                region.flavor.image.src()
-            }
-        }
-    });
+        })
+    };
 
-    let image_attrib = with_state!(|state, _ui, update| {
-        match update {
-            EngineUpdate::Project { id }
-            | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[id];
-                proj.flavor.image.attribution.clone()
+    let image_attrib = move || {
+        with!(|projects, regions, update| {
+            match update {
+                EngineUpdate::Project { id }
+                | EngineUpdate::Policy { id } => {
+                    let proj = &projects[id];
+                    proj.flavor.image.attribution.clone()
+                }
+                EngineUpdate::Region { id, .. } => {
+                    let region = &regions[id];
+                    region.flavor.image.attribution.clone()
+                }
             }
-            EngineUpdate::Region { id, .. } => {
-                let region = &state.world.regions[id];
-                region.flavor.image.attribution.clone()
-            }
-        }
-    });
+        })
+    };
 
-    let name = with_state!(|state, _ui, update| {
-        match update {
-            EngineUpdate::Project { id }
-            | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[id];
-                t!(&proj.name)
+    let name = move || {
+        with!(|projects, regions, update| {
+            match update {
+                EngineUpdate::Project { id }
+                | EngineUpdate::Policy { id } => {
+                    let proj = &projects[id];
+                    t!(&proj.name)
+                }
+                EngineUpdate::Region { id, .. } => {
+                    let region = &regions[id];
+                    t!(&region.name)
+                }
             }
-            EngineUpdate::Region { id, .. } => {
-                let region = &state.world.regions[id];
-                t!(&region.name)
-            }
-        }
-    });
+        })
+    };
 
-    let outcomes = with_state!(|state, _ui, update| {
-        match update {
-            EngineUpdate::Project { id }
-            | EngineUpdate::Policy { id } => {
-                let proj = &state.world.projects[id];
+    let per_capita_demand = memo!(game.world.output_demand);
+    let outcomes = move || {
+        with!(|projects, regions, update, per_capita_demand| {
+            match update {
+                EngineUpdate::Project { id }
+                | EngineUpdate::Policy { id } => {
+                    let proj = &projects[id];
 
-                let effects = active_effects(proj);
-                let outcome_dialogue = proj.active_outcome.map(|id| {
+                    let effects = active_effects(proj);
+                    let outcome_dialogue = proj.active_outcome.map(|id| {
                     let (dialogue, _) = create_signal(proj.flavor.outcomes[id].clone());
                     view! {
                         <Dialogue dialogue on_start=move |_| {
@@ -131,61 +141,60 @@ fn Update(
                     }
                 });
 
-                // TODO this is a hack
-                let (sig, _) = create_signal(effects);
+                    // TODO this is a hack
+                    let (sig, _) = create_signal(effects);
 
-                view! {
-                    <div class="event--effects">
-                        {outcome_dialogue}
-                        <Effects effects=sig />
-                    </div>
+                    view! {
+                        <div class="event--effects">
+                            {outcome_dialogue}
+                            <Effects effects=sig />
+                        </div>
+                    }
+                    .into_view()
                 }
-                .into_view()
-            }
-            EngineUpdate::Region { id, up } => {
-                let region = &state.world.regions[id];
+                EngineUpdate::Region { id, up } => {
+                    let region = &regions[id];
 
-                let (prev_income, next_income) = if *up {
-                    let next = region.income_level();
-                    let prev = next - 1;
-                    (prev, next)
-                } else {
-                    let next = region.income_level();
-                    let prev = next + 1;
-                    (prev, next)
-                };
+                    let (prev_income, next_income) = if *up {
+                        let next = region.income_level();
+                        let prev = next - 1;
+                        (prev, next)
+                    } else {
+                        let next = region.income_level();
+                        let prev = next + 1;
+                        (prev, next)
+                    };
 
-                // Ugh
-                let change = if *up {
-                    "increased"
-                } else {
-                    "contracted"
-                };
-                let html = t!(&format!("This region's income level has {change} to <strong>{{income}}</strong>. Demand for <img src='{{iconElec}}'>electricity, <img src='{{iconFuel}}'>fuel, <img src='{{iconPCals}}'>plant and <img src='{{iconACals}}'>animal-based food has been updated."),
+                    // Ugh
+                    let change = if *up {
+                        "increased"
+                    } else {
+                        "contracted"
+                    };
+                    let html = t!(&format!("This region's income level has {change} to <strong>{{income}}</strong>. Demand for <img src='{{iconElec}}'>electricity, <img src='{{iconFuel}}'>fuel, <img src='{{iconPCals}}'>plant and <img src='{{iconACals}}'>animal-based food has been updated."),
                     income: region.income.lower(),
                     iconFuel: icons::FUEL,
                     iconElec: icons::ELECTRICITY,
                     iconPCals: icons::PLANT_CALORIES,
                     iconACals: icons::ANIMAL_CALORIES);
-                let prev_tip = tip(
+                    let prev_tip = tip(
                     icons::WEALTH,
                     t!("This region's previous income level."),
                 );
-                let next_tip = tip(
-                    icons::WEALTH,
-                    t!("This region's new income level."),
-                );
+                    let next_tip = tip(
+                        icons::WEALTH,
+                        t!("This region's new income level."),
+                    );
 
-                let mut prev_region = region.clone();
-                prev_region.set_income_level(prev_income);
+                    let mut prev_region = region.clone();
+                    prev_region.set_income_level(prev_income);
 
-                let per_capita_demand =
-                    state.world.output_demand;
-                let demand = region.demand(&per_capita_demand);
-                let prev_demand =
-                    prev_region.demand(&per_capita_demand);
-                let pop = region.population;
-                let demand_changes = demand.items().map(|(output, demand)| {
+                    let demand =
+                        region.demand(per_capita_demand);
+                    let prev_demand =
+                        prev_region.demand(per_capita_demand);
+                    let pop = region.population;
+                    let demand_changes = demand.items().map(|(output, demand)| {
                     let region_per_capita_demand = demand / pop;
                     let intensity = intensity::output_intensity(region_per_capita_demand, output);
                     let prev_region_per_capita_demand = prev_demand[output] / pop;
@@ -210,7 +219,7 @@ fn Update(
                     }
                 }).to_vec();
 
-                view! {
+                    view! {
                     <div class="event--outcome" inner_html=html />
                     <div class="event--icon-changes">
                         <div class="event--icon-change">
@@ -237,9 +246,10 @@ fn Update(
 
                 }
                 .into_view()
+                }
             }
-        }
-    });
+        })
+    };
 
     let try_done = move |_| {
         if can_close.get() {

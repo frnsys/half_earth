@@ -7,9 +7,11 @@ use super::{
     ScannerSpec,
 };
 use crate::{
+    state::UIState,
     util::{detect_center_element, nodelist_to_elements},
     views::cards::{CardFocusArea, Cards},
 };
+use hes_engine::Game;
 use leptos::*;
 use leptos_use::{
     use_document,
@@ -135,16 +137,16 @@ pub fn ScannerCards<S: ScannerSpec>(
         },
     );
 
-    use_interval_fn(
-        move || {
-            // TODO perhaps more efficient way to do this?
-            tracing::debug!(
-                "Scanner > Updating Focused in Interval"
-            );
-            update_focused();
-        },
-        60,
-    );
+    // use_interval_fn(
+    //     move || {
+    //         // TODO perhaps more efficient way to do this?
+    //         tracing::debug!(
+    //             "Scanner > Updating Focused in Interval"
+    //         );
+    //         update_focused();
+    //     },
+    //     60,
+    // );
 
     let on_scroll_start = move |_| {
         tracing::debug!("Scanner > Scroll Started");
@@ -168,24 +170,25 @@ pub fn ScannerCards<S: ScannerSpec>(
     let y_bounds =
         move || [top_y_bound.get(), bot_y_bound.get()];
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let ui = expect_context::<RwSignal<UIState>>();
     let on_focus = move |idx: Option<usize>| {
         tracing::debug!("Scanner > Cards > On Focus");
-        state.update(|state| {
-            let item = idx
-                .map(|idx| {
-                    items.with(|items| items.get(idx).cloned())
-                })
-                .flatten();
-            if let Some(item) = &item {
-                let id = item.id();
-                if !state.ui.viewed.contains(id) {
-                    state.ui.viewed.push(*id);
+
+        let item = idx
+            .map(|idx| {
+                items.with(|items| items.get(idx).cloned())
+            })
+            .flatten();
+
+        if let Some(item) = &item {
+            let id = item.id();
+            ui.update(|ui| {
+                if !ui.viewed.contains(id) {
+                    ui.viewed.push(*id);
                 }
-            }
-            focused.set(item);
-        });
+            });
+        }
+        focused.set(item);
     };
 
     let add_props = spec.add_props(focused);
@@ -194,6 +197,8 @@ pub fn ScannerCards<S: ScannerSpec>(
         focused
             .with(|item| item.as_ref().map(|item| *item.id()))
     };
+
+    let game = expect_context::<RwSignal<Game>>();
 
     view! {
         <Show when=move || focused.with(|item| item.is_some())>
@@ -237,7 +242,7 @@ pub fn ScannerCards<S: ScannerSpec>(
                     };
 
                     let item = create_memo(move |_| {
-                        state.with(move |state| S::Item::get_from_state(&id, &state.game))
+                        game.with(move |game| S::Item::get_from_state(&id, &game))
                     });
                     let card = S::Item::as_card(item.into());
                     view! {

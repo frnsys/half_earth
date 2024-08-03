@@ -1,8 +1,8 @@
 use crate::{
     audio::init_audio,
     i18n::{get_preferred_language, load_language},
-    state::{GameState, Phase},
-    ui,
+    memo,
+    state::{Phase, UIState},
     views::{
         Cutscene,
         End,
@@ -16,7 +16,7 @@ use crate::{
         WorldEvents,
     },
 };
-use hes_engine::world::World;
+use hes_engine::{world::World, Game};
 use leptos::*;
 use leptos_animation::*;
 use leptos_meta::*;
@@ -60,9 +60,13 @@ pub fn App() -> impl IntoView {
     provide_context(create_rw_signal::<TipState>(
         TipState::default(),
     ));
-    provide_context(create_rw_signal::<GameState>(
-        GameState::new(World::default()),
-    ));
+
+    let (game, ui) = crate::state::new_game(World::default());
+    provide_context(create_rw_signal::<Game>(game));
+
+    let ui = create_rw_signal::<UIState>(ui);
+    provide_context(ui);
+
     init_audio();
 
     let (started, set_started) = create_signal(false);
@@ -76,7 +80,7 @@ pub fn App() -> impl IntoView {
         },
     );
 
-    let cur_phase = ui!(phase);
+    let cur_phase = memo!(ui.phase);
 
     // HACK: It feels a little hacky to use `create_memo`
     // here but I ran into a weird bug where at

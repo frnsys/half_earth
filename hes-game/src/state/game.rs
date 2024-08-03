@@ -1,8 +1,12 @@
 use super::Points;
 use crate::{consts, display, views::DisplayEvent};
+use enum_map::EnumMap;
 use extend::ext;
 use hes_engine::{
-    events::{Flag, Phase},
+    events::{Flag, IconEvent, Phase},
+    game::Update,
+    kinds::{Feedstock, Output},
+    production::Process,
     projects::Status,
     Game,
     Id,
@@ -292,5 +296,122 @@ pub impl Game {
             .into_iter()
             .map(|ev| DisplayEvent::new(ev, &self.state))
             .collect()
+    }
+
+    /// If we won the game.
+    fn won(&self) -> bool {
+        self.state.emissions_gt() <= consts::WIN_EMISSIONS
+            && self.state.world.extinction_rate
+                <= consts::WIN_EXTINCTION
+            && self.state.world.temperature
+                <= consts::WIN_TEMPERATURE
+    }
+
+    fn game_over(&self) -> bool {
+        self.state.game_over
+    }
+
+    /// Maximum production share for a process.
+    fn process_max_share(&self, process: &Process) -> usize {
+        let mut max_share = 1.;
+        let demand =
+            self.state.demand_for_output(&process.output);
+
+        // Hard-coded limit
+        if let Some(limit) = process.limit {
+            max_share = (limit / demand).min(1.);
+        }
+
+        // Limit based on feedstock supply
+        let (feedstock, per_output) = process.feedstock;
+        match feedstock {
+            Feedstock::Other | Feedstock::Soil => {}
+            _ => {
+                let feedstock_limit = self.state.feedstocks
+                    [feedstock]
+                    / per_output;
+                let feedstock_max_share =
+                    (feedstock_limit / demand).min(1.);
+                max_share = max_share.min(feedstock_max_share);
+            }
+        }
+
+        (max_share * 100. / 5.).floor() as usize
+    }
+
+    fn is_planning_year(&self) -> bool {
+        self.world.year + 1 % 5 == 0
+    }
+
+    fn upgrade_projects(
+        &mut self,
+        upgrades: &mut BTreeMap<Id, bool>,
+    ) {
+        // for (id, queued) in self.ui.queued_upgrades.iter_mut() {
+        for (id, queued) in upgrades.iter_mut() {
+            if *queued {
+                *queued = false;
+                self.upgrade_project(id);
+            }
+        }
+    }
+
+    fn step_year(&mut self) -> Vec<Update> {
+        let mut updates = self.step();
+        if self.is_planning_year() {
+            let mut outcomes = self.roll_new_policy_outcomes();
+            updates.append(&mut outcomes);
+        }
+        updates
+    }
+
+    fn apply_disaster(
+        &mut self,
+        event: &IconEvent,
+        event_id: &Id,
+        region_id: &Id,
+    ) {
+        let effect = event.intensity as f32
+            * consts::EVENT_INTENSITY_TO_CONTENTEDNESS;
+
+        self.change_habitability(
+            -effect.round() as isize,
+            region_id,
+        );
+        self.apply_event(*event_id, Some(*region_id));
+    }
+
+    fn update_processes(
+        &mut self,
+        changes: &mut EnumMap<Output, BTreeMap<Id, isize>>,
+    ) {
+        let mut rem_pts = consts::PROCESS_POINTS_PER_CYCLE;
+        let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
+
+        for (_output, changes) in changes.iter_mut() {
+            let mut total = changes
+                .values()
+                .map(|val| val.abs())
+                .sum::<isize>();
+            while rem_pts > 0 && add_pts > 0 && total > 0 {
+                for (process_id, change) in changes.iter_mut() {
+                    if *change < 0 && rem_pts > 0 {
+                        rem_pts -= 1;
+                        self.change_process_mix_share(
+                            process_id, -1,
+                        );
+                        total -= 1;
+                        *change += 1;
+                    } else if *change > 0 && add_pts > 0 {
+                        add_pts -= 1;
+                        self.change_process_mix_share(
+                            process_id, 1,
+                        );
+                        total -= 1;
+                        *change -= 1;
+                    }
+                }
+            }
+        }
     }
 }

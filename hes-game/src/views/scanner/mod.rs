@@ -70,7 +70,7 @@ pub fn Scanner(
     let (bot_y, set_bot_y) = create_signal(0.);
     let get_edges = move || {
         tracing::debug!("Scanner > Getting Edges");
-        if let Some(target) = target_ref.get() {
+        if let Some(target) = target_ref.get_untracked() {
             let rect =
                 to_ws_el(target).get_bounding_client_rect();
             let top_y = rect.y() as f32 + reveal_target;
@@ -108,7 +108,7 @@ pub fn Scanner(
             let _ = elem.class_list().remove_1("scan-reject");
         }
 
-        if let Some(fill_anim) = scanning_anim.get() {
+        if let Some(fill_anim) = scanning_anim.get_untracked() {
             fill_anim.cancel();
         }
     };
@@ -136,19 +136,20 @@ pub fn Scanner(
         }
     };
 
-    create_effect(move |_| {
-        get_edges();
+    // TODO
+    // create_effect(move |_| {
+    //     get_edges();
 
-        // Hacky...double-check position
-        // after animations have finished
-        // set_timeout(
-        //     move || get_edges(),
-        //     Duration::from_millis(500),
-        // );
-    });
+    // Hacky...double-check position
+    // after animations have finished
+    // set_timeout(
+    //     move || get_edges(),
+    //     Duration::from_millis(500),
+    // );
+    // });
 
     let scan_card = move || {
-        if let Some(progress) = progress_ref.get() {
+        if let Some(progress) = progress_ref.get_untracked() {
             let anim =
                 effects::fill_bar(&progress, scan_time as f64);
 
@@ -190,7 +191,7 @@ pub fn Scanner(
 
     let stop_drag = move || {
         stop_scanning_card(());
-        if let Some(target) = target_ref.get() {
+        if let Some(target) = target_ref.get_untracked() {
             let _ =
                 target.style("transform", "translate(0, 0)");
         }
@@ -199,7 +200,7 @@ pub fn Scanner(
     // Movement handling
     let check_drag = move |drag_rect: DragRect| {
         if should_show.get() {
-            if let Some(target) = target_ref.get() {
+            if let Some(target) = target_ref.get_untracked() {
                 let target = target
                     .style("visibility", "visible")
                     .style(
@@ -209,10 +210,12 @@ pub fn Scanner(
                         ),
                     );
 
-                let intersects = drag_rect.top_y < bot_y.get()
+                let intersects = drag_rect.top_y
+                    < bot_y.get_untracked()
                     && drag_rect.bot_y > top_y.get();
                 if intersects {
-                    if scan_allowed.get() && !is_scanning.get()
+                    if scan_allowed.get_untracked()
+                        && !is_scanning.get_untracked()
                     {
                         set_is_scanning.set(true);
                         if let Some(elem) =

@@ -1,19 +1,23 @@
+use std::collections::BTreeMap;
+
 use crate::{
     consts,
     debug::get_debug_opts,
     display::{self, AsText, FloatExt},
     icons::{self, HasIcon},
+    memo,
     state::{Tutorial, UIState},
     t,
-    ui,
     vars::Var,
     views::{factors::factors_card, scanner::*, tip, HasTip},
-    with_state,
 };
+use enum_map::EnumMap;
 use hes_engine::{
     kinds::Output,
     production::Process,
     state::State,
+    Game,
+    Id,
 };
 use leptos::*;
 
@@ -22,10 +26,13 @@ pub fn Processes(
     #[prop(into)] on_change: Callback<()>,
     #[prop(into)] close: Callback<()>,
 ) -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+
     let back_disabled =
-        ui!(tutorial.lt(&Tutorial::ProcessesBack));
+        memo!(ui.tutorial.lt(&Tutorial::ProcessesBack));
     let back_highlighted =
-        ui!(tutorial.eq(&Tutorial::ProcessesBack));
+        memo!(ui.tutorial.eq(&Tutorial::ProcessesBack));
 
     let (output, set_output) =
         create_signal(Output::Electricity);
@@ -33,27 +40,30 @@ pub fn Processes(
     let allow_back = move || points.get() == 0;
 
     let debug = get_debug_opts();
-    let processes = with_state!(|state, _ui| {
-        let output = output.get();
-        let mut processes = state
-            .world
-            .processes
-            .iter()
-            .filter(|p| {
-                (!p.locked || debug.show_all_processes)
-                    && p.output == output
-            })
-            .cloned()
-            .collect::<Vec<_>>();
-        processes.sort_by(|a, b| {
-            a.name.to_lowercase().cmp(&b.name.to_lowercase())
-        });
-        processes
-    });
+    let processes = memo!(game.world.processes);
+    let processes = move || {
+        with!(|processes| {
+            let output = output.get();
+            let mut processes = processes
+                .iter()
+                .filter(|p| {
+                    (!p.locked || debug.show_all_processes)
+                        && p.output == output
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            processes.sort_by(|a, b| {
+                a.name
+                    .to_lowercase()
+                    .cmp(&b.name.to_lowercase())
+            });
+            processes
+        })
+    };
 
     let has_changes =
-        ui!(has_process_mix_changes(output.get()));
-    let mix_changes = ui!(process_mix_changes.clone());
+        memo!(ui.has_process_mix_changes(output.get()));
+    let mix_changes = memo!(ui.process_mix_changes);
     let changing_points = move || {
         let total = mix_changes.get()[output.get()]
             .values()
@@ -105,15 +115,16 @@ pub fn Processes(
         t!("These changes will take {changesTime} planning cycle{ext} to take effect.", changesTime: changes_time, ext: ext)
     };
 
-    let output_demands = with_state!(|state, _ui| {
-        display::outputs(&state.demand_for_outputs())
+    let output_demands = move || {
+        with!(|game| {
+            display::outputs(&game.demand_for_outputs())
             .items()
             .map(|(output, demand)| {
                 let tip = tip(
                     output.icon(),
                     t!("Global demand for {output}.", output: output.lower()),
                 )
-                .card(factors_card(None, output.into(), state));
+                .card(factors_card(None, output.into(), game));
                 view! {
                     <HasTip tip>
                         <div class="demand-unit">
@@ -123,22 +134,27 @@ pub fn Processes(
                 }
             })
             .to_vec()
-    });
-    let emissions = with_state!(|state, _ui| {
-        let emissions = state.byproducts.gtco2eq().round_to(1);
-        let tip = tip(
+        })
+    };
+
+    let emissions = move || {
+        with!(|game| {
+            let emissions =
+                game.byproducts.gtco2eq().round_to(1);
+            let tip = tip(
             icons::EMISSIONS,
             t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
         )
-        .card(factors_card(None, Var::Emissions, state));
-        view! {
-            <HasTip tip>
-                <div class="demand-unit">
-                <span>{emissions}</span><img class="demand-icon" src=icons::EMISSIONS/>
-                </div>
-                </HasTip>
-        }
-    });
+        .card(factors_card(None, Var::Emissions, game));
+            view! {
+                <HasTip tip>
+                    <div class="demand-unit">
+                    <span>{emissions}</span><img class="demand-icon" src=icons::EMISSIONS/>
+                    </div>
+                    </HasTip>
+            }
+        })
+    };
 
     let scanner = ProcessScanner {
         points,
@@ -146,10 +162,11 @@ pub fn Processes(
         mix_changes,
     };
 
-    let estimated_changes = with_state!(|state, ui| {
-        display_changes(state, ui, &processes())
-    });
-
+    let estimated_changes = move || {
+        with!(|game, mix_changes| {
+            display_changes(game, mix_changes, &processes())
+        });
+    };
     view! {
         <div class="plan-change-select planning--page">
             <div class="planning--page-tabs">
@@ -272,7 +289,7 @@ struct Usage {
 
 fn estimate_changes(
     state: &State,
-    ui: &UIState,
+    mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
     processes: &[Process],
 ) -> (Usage, Usage) {
     // Total demand for each of these
@@ -304,7 +321,7 @@ fn estimate_changes(
     let mut changed = Usage::default();
     for process in processes {
         let mix_share = process.mix_share as f32
-            + (*ui.process_mix_changes[process.output]
+            + (*mix_changes[process.output]
                 .get(&process.id)
                 .unwrap_or(&0)) as f32;
         let total = mix_share / 20.
@@ -338,11 +355,11 @@ fn estimate_changes(
 
 fn display_changes(
     state: &State,
-    ui: &UIState,
+    mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
     processes: &[Process],
 ) -> impl IntoView {
     let (before, after) =
-        estimate_changes(state, ui, processes);
+        estimate_changes(state, mix_changes, processes);
     let descs = [
         calc_change(
             "land use",

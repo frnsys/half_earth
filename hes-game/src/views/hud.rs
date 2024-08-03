@@ -1,7 +1,7 @@
 use crate::{
     display::FloatExt,
     icons,
-    state,
+    memo,
     t,
     vars::Var,
     views::{
@@ -12,19 +12,22 @@ use crate::{
         HasTip,
     },
 };
+use hes_engine::Game;
 use leptos::*;
 use std::time::Duration;
 
 #[component]
 pub fn Hud() -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+
     let (show_menu, set_show_menu) = create_signal(false);
 
-    let year = state!(world.year);
-    let pc = state!(political_capital.max(0));
-    let outlook = state!(outlook());
-    let emissions = state!(emissions());
-    let extinction = state!(world.extinction_rate);
-    let temperature = state!(world.temperature);
+    let year = memo!(game.world.year);
+    let pc = memo!(game.political_capital.max(0));
+    let outlook = memo!(game.outlook());
+    let emissions = memo!(game.emissions());
+    let extinction = memo!(game.world.extinction_rate);
+    let temperature = memo!(game.world.temperature);
 
     let pc_danger = move || pc.get() <= 20;
     let unhappy = move || outlook.get() < 0.;
@@ -36,12 +39,14 @@ pub fn Hud() -> impl IntoView {
         )
     };
     let extinction = move || {
+        tracing::debug!("HUD extinction called");
         intensity::scale(
             extinction.get(),
             intensity::Variable::Extinction,
         )
     };
     let warming = move || {
+        tracing::debug!("HUD warming called");
         intensity::scale(
             temperature.get(),
             intensity::Variable::Warming,
@@ -58,47 +63,49 @@ pub fn Hud() -> impl IntoView {
     };
 
     let warming_tip = move || {
+        tracing::debug!("HUD warming tip called");
         tip(
             icons::WARMING,
             t!(r#"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>"#, anomaly: temperature.get()),
         )
     };
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
     let biodiversity_tip = move || {
+        tracing::debug!("HUD biodiversity tip called");
         let tip_text = t!(
             r#"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>"#
         );
         crate::views::tip(icons::EXTINCTION_RATE, tip_text)
-            .card(with!(|state| factors_card(
+            .card(with!(|game| factors_card(
                 None,
                 Var::Biodiversity,
-                &state.game,
+                &game,
             )))
     };
 
-    let emissions_gt = state!(emissions_gt());
+    let emissions_gt = memo!(game.emissions_gt());
     let emissions_tip = move || {
+        tracing::debug!("HUD emissions tip called");
         let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get().round_to(1));
         crate::views::tip(icons::EMISSIONS, tip_text).card(
-            with!(|state| factors_card(
+            with!(|game| factors_card(
                 None,
                 Var::Emissions,
-                &state.game,
+                &game,
             )),
         )
     };
 
     let contentedness_tip = move || {
+        tracing::debug!("HUD contentedness tip called");
         let tip_text = t!(
             r#"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>"#
         );
         crate::views::tip(icons::CONTENTEDNESS, tip_text).card(
-            with!(|state| factors_card(
+            with!(|game| factors_card(
                 None,
                 Var::Contentedness,
-                &state.game,
+                &game,
             )),
         )
     };

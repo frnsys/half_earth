@@ -1,4 +1,5 @@
-use crate::{icons, state, t, views::cards::MiniProject};
+use crate::{icons, memo, t, views::cards::MiniProject};
+use hes_engine::Game;
 use leptos::*;
 
 #[component]
@@ -6,15 +7,17 @@ pub fn ActivePlan(
     #[prop(into)] close: Callback<()>,
     #[prop(into)] add: Callback<()>,
 ) -> impl IntoView {
-    let projects = state!(world.projects.clone());
+    let game = expect_context::<RwSignal<Game>>();
+    let projects = memo!(game.world.projects);
     let active_projects = move || {
-        projects
-            .get()
-            .iter()
-            .filter(|p| p.is_online() || p.is_building())
-            .cloned()
-            .map(create_rw_signal)
-            .collect::<Vec<_>>()
+        with!(|projects| {
+            projects
+                .iter()
+                .filter(|p| p.is_online() || p.is_building())
+                .cloned()
+                .map(create_rw_signal)
+                .collect::<Vec<_>>()
+        })
     };
 
     view! {

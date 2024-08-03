@@ -4,14 +4,12 @@ use leptos::*;
 
 use crate::{
     audio,
-    state,
-    state::{GameExt, Phase},
+    memo,
+    state::{GameExt, Phase, UIState},
     t,
-    ui,
-    ui_rw,
-    views::{events::Events, intensity},
+    views::{events::Events, intensity, rank_factors},
 };
-use hes_engine::events::Phase as EventPhase;
+use hes_engine::{events::Phase as EventPhase, Game};
 
 struct Locale {
     name: &'static str,
@@ -156,18 +154,22 @@ fn describe_outlook(outlook: f32) -> String {
 
 #[component]
 pub fn Interstitial() -> impl IntoView {
+    let ui = expect_context::<RwSignal<UIState>>();
+    let game = expect_context::<RwSignal<Game>>();
+
     let events = create_rw_signal(vec![]);
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
-    state.update_untracked(|state| state.initialize_year());
-    state.update_untracked(|state| {
-        let evs = if state.won() {
-            state
-                .game
-                .roll_events(EventPhase::InterstitialWin, None)
+    game.update_untracked(|game| {
+        game.update_production();
+        ui.update_untracked(|ui| {
+            ui.factors = rank_factors(&game.state);
+        });
+    });
+    game.update_untracked(|game| {
+        let evs = if game.won() {
+            game.roll_events(EventPhase::InterstitialWin, None)
         } else {
-            state.game.roll_events(
+            game.roll_events(
                 EventPhase::InterstitialStart,
                 None,
             )
@@ -177,14 +179,14 @@ pub fn Interstitial() -> impl IntoView {
 
     let (ready, set_ready) = create_signal(false);
 
-    let year = state!(world.year);
-    let pc = state!(political_capital.max(0));
-    let outlook = state!(outlook());
-    let emissions = state!(state.emissions_gt());
-    let extinction = state!(world.extinction_rate);
-    let temperature = state!(world.temperature);
-    let start_year = ui!(start_year);
-    let death_year = state!(death_year);
+    let year = memo!(game.world.year);
+    let pc = memo!(game.political_capital.max(0));
+    let outlook = memo!(game.outlook());
+    let emissions = memo!(game.state.emissions_gt());
+    let extinction = memo!(game.world.extinction_rate);
+    let temperature = memo!(game.world.temperature);
+    let start_year = memo!(ui.start_year);
+    let death_year = memo!(game.death_year);
 
     let number = move || {
         ((year.get() - start_year.get()) as f32 / 5. + 1.)
@@ -204,8 +206,8 @@ pub fn Interstitial() -> impl IntoView {
         let idx = (number() - 1) % LOCALES.len();
         &LOCALES[idx]
     };
-    let game_over = move || with!(|state| state.game_over());
-    let game_win = move || with!(|state| state.won());
+    let game_over = move || with!(|game| game.game_over());
+    let game_win = move || with!(|game| game.won());
     let parliament = move || describe_parliament(pc.get());
     let world = move || {
         describe_warming(emissions.get(), temperature.get())
@@ -226,7 +228,8 @@ pub fn Interstitial() -> impl IntoView {
         "/assets/environments/ambience/{ambience}"
     ));
 
-    let (_, set_phase) = ui_rw!(phase);
+    let ui = expect_context::<RwSignal<UIState>>();
+    let (_, set_phase) = slice!(ui.phase);
     let main_ref = create_node_ref::<html::Div>();
     let next_phase = move |_| {
         if let Some(elem) = main_ref.get() {

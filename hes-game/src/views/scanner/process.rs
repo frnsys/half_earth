@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     consts,
-    state::Tutorial,
+    state::{Tutorial, UIState},
     t,
     views::cards::ProcessCard,
 };
@@ -11,6 +11,7 @@ use hes_engine::{
     kinds::Output,
     production::Process,
     state::State,
+    Game,
     Id,
 };
 use leptos::*;
@@ -51,51 +52,55 @@ impl ScannerSpec for ProcessScanner {
     ) -> CardScanProps {
         let points = self.points.clone();
         let on_change = self.on_change.clone();
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
+
+        let game = expect_context::<RwSignal<Game>>();
+        let ui = expect_context::<RwSignal<UIState>>();
+
+        let process_max_share = create_memo(move |_| {
+            with!(|game, process| process
+                .as_ref()
+                .map(|process| game.process_max_share(process))
+                .unwrap_or(0))
+        });
 
         let addable = move || {
-            state.with_untracked(
-                |crate::state::GameState {
-                     game: state,
-                     ui,
-                 }| {
-                    if let Some(process) =
-                        process.get_untracked()
-                    {
-                        let max_share =
-                            state.process_max_share(&process);
-                        let change = ui.process_mix_changes
-                            [process.output]
-                            .get(&process.id)
-                            .unwrap_or(&0);
-                        points.get() != 0
-                            && (*change + 1)
-                                < max_share as isize
-                    } else {
-                        false
-                    }
-                },
-            )
+            ui.with_untracked(|ui| {
+                if let Some(process) = process.get_untracked() {
+                    let max_share =
+                        process_max_share.get_untracked();
+                    let change = ui.process_mix_changes
+                        [process.output]
+                        .get(&process.id)
+                        .unwrap_or(&0);
+                    points.get_untracked() != 0
+                        && (*change + 1) < max_share as isize
+                } else {
+                    false
+                }
+            })
         };
 
+        let should_advance = create_memo(move |_| {
+            with!(|ui| ui.tutorial == Tutorial::Processes)
+        });
         let on_finish_scan =
             move |controls: ScannerControls| {
                 if addable() {
-                    state.update(|state| {
-                        let ui = &mut state.ui;
-                        if ui.tutorial == Tutorial::Processes {
+                    if should_advance.get_untracked() {
+                        ui.update(|ui| {
                             ui.tutorial.advance();
-                        }
-                    });
+                        });
+                    }
 
-                    let mut available_points = points.get();
-                    if let Some(process) = process.get() {
-                        state.update(|state| {
-                            let max_share = state
-                                .process_max_share(&process);
-                            state.ui.add_point(
+                    let mut available_points =
+                        points.get_untracked();
+                    if let Some(process) =
+                        process.get_untracked()
+                    {
+                        update!(|ui| {
+                            let max_share = process_max_share
+                                .get_untracked();
+                            ui.add_point(
                                 &mut available_points,
                                 &process,
                                 max_share,
@@ -134,9 +139,11 @@ impl ScannerSpec for ProcessScanner {
         let points = self.points.clone();
         let mix_changes = self.mix_changes.clone();
 
+        let ui = expect_context::<RwSignal<UIState>>();
+
         let subtractable = move || {
-            if let Some(process) = process.get() {
-                let changes = mix_changes.get();
+            if let Some(process) = process.get_untracked() {
+                let changes = mix_changes.get_untracked();
                 let change = changes[process.output]
                     .get(&process.id)
                     .unwrap_or(&0);
@@ -146,15 +153,13 @@ impl ScannerSpec for ProcessScanner {
             }
         };
 
-        let state = expect_context::<
-            RwSignal<crate::state::GameState>,
-        >();
         let on_finish_scan =
             move |_controls: ScannerControls| {
-                let mut available_points = points.get();
-                if let Some(process) = process.get() {
-                    state.update(|state| {
-                        state.ui.remove_point(
+                let mut available_points =
+                    points.get_untracked();
+                if let Some(process) = process.get_untracked() {
+                    ui.update(|ui| {
+                        ui.remove_point(
                             &mut available_points,
                             &process,
                         );

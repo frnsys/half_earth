@@ -10,6 +10,7 @@ mod eval;
 mod i18n;
 mod icons;
 mod state;
+mod tgav;
 mod util;
 mod vars;
 mod views;

@@ -4,11 +4,11 @@ use crate::{
     eval::{eval_badges, summarize, Summary},
     i18n,
     icons,
-    state::{GameExt, GameState, Settings},
+    state::{GameExt, Settings},
     t,
     views::{tip, Events, HasTip},
 };
-use hes_engine::events::Phase as EventPhase;
+use hes_engine::{events::Phase as EventPhase, Game};
 
 #[server(prefix = "/compute", endpoint = "image")]
 pub async fn generate_image(
@@ -22,13 +22,12 @@ pub async fn generate_image(
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
     let events = create_rw_signal(vec![]);
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
-    state.update_untracked(|state: &mut GameState| {
+    let game = expect_context::<RwSignal<Game>>();
+    game.update_untracked(|game: &mut Game| {
         let evs = if lose {
-            state.game.roll_events(EventPhase::BreakStart, None)
+            game.roll_events(EventPhase::BreakStart, None)
         } else {
-            state.game.roll_events(EventPhase::EndStart, None)
+            game.roll_events(EventPhase::EndStart, None)
         };
         events.set(evs);
     });
@@ -46,8 +45,7 @@ pub fn End(lose: bool) -> impl IntoView {
 
     let share_image = create_rw_signal(String::new());
     spawn_local(async move {
-        let summary =
-            with!(|state| summarize(&state.game, !lose));
+        let summary = with!(|game| summarize(&game, !lose));
         let img = generate_image(summary).await.unwrap();
         share_image.set(img);
     });
@@ -55,8 +53,8 @@ pub fn End(lose: bool) -> impl IntoView {
     let (show_start, set_show_start) = create_signal(false);
 
     let badges_view = move || {
-        let badges = state
-            .with_untracked(|state| eval_badges(&state.game));
+        let badges =
+            game.with_untracked(|game| eval_badges(&game));
         badges
             .into_iter()
             .map(|badge| {
@@ -72,7 +70,7 @@ pub fn End(lose: bool) -> impl IntoView {
     };
 
     let start_new_run = move |_| {
-        GameState::start_new_run();
+        crate::state::start_new_run();
     };
 
     view! {

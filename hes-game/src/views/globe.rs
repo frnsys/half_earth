@@ -1,5 +1,6 @@
-use crate::{state, t, util::to_ws_el};
+use crate::{memo, t, util::to_ws_el};
 use gloo_utils::format::JsValueSerdeExt;
+use hes_engine::Game;
 use js_sys::Uint8Array;
 use leptos::*;
 use std::{cell::RefCell, rc::Rc};
@@ -116,7 +117,8 @@ pub fn Globe(
     let (loading, set_loading) = create_signal(true);
     let globe_ref = create_node_ref::<html::Div>();
 
-    let tgav = state!(world.temperature);
+    let game = expect_context::<RwSignal<Game>>();
+    let tgav = memo!(game.world.temperature);
 
     create_effect(move |_| {
         let g = globe_ref.get().unwrap();

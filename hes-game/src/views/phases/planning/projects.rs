@@ -1,13 +1,15 @@
 use crate::{
     debug::get_debug_opts,
     icons::{self, HasIcon},
-    state,
-    state::{GameExt, GameState, Tutorial},
+    memo,
+    state::{GameExt, Tutorial, UIState},
     t,
-    ui,
     views::{scanner::*, Help},
 };
-use hes_engine::projects::{Status, Type};
+use hes_engine::{
+    projects::{Status, Type},
+    Game,
+};
 use leptos::*;
 
 #[component]
@@ -16,6 +18,8 @@ pub fn Projects(
     #[prop(into)] on_change: Callback<()>,
     #[prop(into)] close: Callback<()>,
 ) -> impl IntoView {
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
     let (kind, set_kind) = create_signal(Type::Research);
     let set_kind = move |kind: Type| {
         set_kind.set(kind);
@@ -28,18 +32,18 @@ pub fn Projects(
         t!("⟵ Swipe sideways to see other projects ⟶ ");
 
     let back_disabled =
-        ui!(tutorial.lt(&Tutorial::ProjectsBack));
+        memo!(ui.tutorial.lt(&Tutorial::ProjectsBack));
     let back_highlighted =
-        ui!(tutorial.eq(&Tutorial::ProjectsBack));
+        memo!(ui.tutorial.eq(&Tutorial::ProjectsBack));
 
     let debug = get_debug_opts();
-    let state = expect_context::<RwSignal<GameState>>();
+    let projects = memo!(game.world.projects);
+    let project_lockers = memo!(game.world.project_lockers);
+    let plan_changes = memo!(ui.plan_changes);
     let projects = move || {
-        let mut projects = with!(|state, kind| {
-            state
-                .game
-                .world
-                .projects
+        let mut projects = with!(
+            |projects, project_lockers, plan_changes, kind| {
+                projects
                 .iter()
                 .filter(|p| {
                     p.kind == *kind && (!p.locked || debug.show_all_projects)
@@ -50,14 +54,14 @@ pub fn Projects(
                 // Filter out finished policies
                 // but only ones added before
                 // this planning session
-                && (p.status != Status::Active || state.ui.plan_changes.contains_key(&p.id))
+                && (p.status != Status::Active || plan_changes.contains_key(&p.id))
 
                 // Filter out projects that are mutually exclusive
                 // with active projects
-                    && state.game.world.project_lockers.get(&p.id)
+                    && project_lockers.get(&p.id)
                     .map(|locker_id| {
                         // Is the locker satisfied?
-                        match state.game.world.projects[locker_id].status {
+                        match projects[locker_id].status {
                             Status::Building | Status::Active | Status::Finished => false,
                             _=> true
                         }
@@ -65,7 +69,8 @@ pub fn Projects(
                 })
                 .cloned()
                 .collect::<Vec<_>>()
-        });
+            }
+        );
         projects.sort_by(|a, b| {
             a.name.to_lowercase().cmp(&b.name.to_lowercase())
         });
@@ -127,15 +132,18 @@ pub fn Projects(
 
 #[component]
 fn Points(#[prop(into)] kind: Signal<Type>) -> impl IntoView {
-    let pc_points = state!(political_capital);
-    let init_points = ui!(points.initiative);
-    let research_points = ui!(points.research);
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+    let pc_points = memo!(game.political_capital);
+    let init_points = memo!(ui.points.initiative);
+    let research_points = memo!(ui.points.research);
     let available_points = move || match kind.get() {
         Type::Policy => pc_points.get(),
         Type::Initiative => init_points.get(),
         Type::Research => research_points.get(),
     };
-    let next_point_cost = state!(next_point_cost(&kind.get()));
+    let next_point_cost =
+        memo!(game.next_point_cost(&kind.get()));
     let icon = move || kind.get().icon();
 
     view! {

@@ -1,10 +1,9 @@
 use crate::{
     display::*,
     icons,
-    state,
-    state::{Phase, Tutorial},
+    memo,
+    state::{Phase, Tutorial, UIState},
     t,
-    ui,
     views::{
         cards::{MiniProcess, MiniProject},
         phases::planning::{ActivePlan, Processes, Projects},
@@ -12,12 +11,12 @@ use crate::{
         HasTip,
         Help,
     },
-    with_state,
 };
 use enum_map::EnumMap;
 use hes_engine::{
     events::Phase as EventPhase,
     kinds::{Feedstock, Output},
+    Game,
     ProjectType,
 };
 use leptos::*;
@@ -49,8 +48,8 @@ pub fn Plan(
     #[prop(into)] on_plan_change: Callback<()>,
     #[prop(into)] on_page_change: Callback<EventPhase>,
 ) -> impl IntoView {
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
 
     let (slots, set_slots) = create_signal(calc_slots());
     let max_width = move || match slots.get() {
@@ -68,23 +67,27 @@ pub fn Plan(
     );
 
     let processes_disabled =
-        ui!(tutorial.lt(&Tutorial::Processes));
+        memo!(ui.tutorial.lt(&Tutorial::Processes));
     let processes_highlighted =
-        ui!(tutorial.eq(&Tutorial::Processes));
-    let ready_disabled = ui!(tutorial.lt(&Tutorial::Ready));
-    let ready_highlighted = ui!(tutorial.eq(&Tutorial::Ready));
+        memo!(ui.tutorial.eq(&Tutorial::Processes));
+    let ready_disabled =
+        memo!(ui.tutorial.lt(&Tutorial::Ready));
+    let ready_highlighted =
+        memo!(ui.tutorial.eq(&Tutorial::Ready));
     let projects_highlighted =
-        ui!(tutorial.eq(&Tutorial::Projects));
+        memo!(ui.tutorial.eq(&Tutorial::Projects));
 
-    let active_projects = with_state!(|state, _ui| {
-        state
-            .world
-            .projects
-            .iter()
-            .filter(|p| p.is_online() || p.is_building())
-            .cloned()
-            .collect::<Vec<_>>()
-    });
+    let projects = memo!(game.world.projects);
+    let active_projects = move || {
+        tracing::debug!("Checking Active Projects");
+        with!(|projects| {
+            projects
+                .iter()
+                .filter(|p| p.is_online() || p.is_building())
+                .cloned()
+                .collect::<Vec<_>>()
+        })
+    };
     let n_projects = move || {
         let projs = active_projects();
         if projs.len() > slots.get() {
@@ -96,33 +99,42 @@ pub fn Plan(
     };
     let placeholders =
         move || (slots.get() - active_projects().len()).max(0);
-    let any_new_projects = with_state!(|state, ui| {
-        state
-            .world
-            .projects
-            .iter()
-            .filter(|p| !p.locked)
-            .any(|p| !ui.viewed.contains(&p.id))
-    });
-    let any_new_processes = with_state!(|state, ui| {
-        state
-            .world
-            .processes
-            .iter()
-            .filter(|p| !p.locked)
-            .any(|p| !ui.viewed.contains(&p.id))
-    });
+
+    let viewed = memo!(ui.viewed);
+    let processes = memo!(game.world.processes);
+    let any_new_projects = move || {
+        tracing::debug!("Checking Any New Projects");
+        with!(|projects, viewed| {
+            tracing::debug!(
+                "Checking Any New Projects - INNER"
+            );
+            let res = projects
+                .iter()
+                .filter(|p| !p.locked)
+                .any(|p| !viewed.contains(&p.id));
+            tracing::debug!("Checking Any New Projects - END");
+            res
+        })
+    };
+    let any_new_processes = move || {
+        tracing::debug!("Checking Any New Processes");
+        with!(|processes, viewed| {
+            processes
+                .iter()
+                .filter(|p| !p.locked)
+                .any(|p| !viewed.contains(&p.id))
+        })
+    };
     let max_for_output = move |output: Output| {
-        state
-            .get()
-            .game
-            .world
-            .processes
-            .iter()
-            .filter(|p| p.output == output)
-            .max_by_key(|p| p.mix_share)
-            .cloned()
-            .unwrap()
+        tracing::debug!("Checking Max For Output");
+        with!(|processes| {
+            processes
+                .iter()
+                .filter(|p| p.output == output)
+                .max_by_key(|p| p.mix_share)
+                .cloned()
+                .unwrap()
+        })
     };
     let max_processes = move || {
         [
@@ -132,36 +144,47 @@ pub fn Plan(
             max_for_output(Output::AnimalCalories),
         ]
     };
-    let processes_over_limit = with_state!(|state, _ui| {
-        state
+    let process_max_shares = create_memo(move |_| {
+        with!(|game| game
             .world
             .processes
             .iter()
-            .filter(|p| {
-                p.mix_share > 0
-                    && p.mix_share > state.process_max_share(p)
-            })
-            .map(|p| t!(&p.name))
-            .collect::<Vec<_>>()
+            .map(|p| game.process_max_share(p))
+            .collect::<Vec<_>>())
     });
+    let processes_over_limit = move || {
+        tracing::debug!("Checking Processes Over Limit");
+        with!(|processes, process_max_shares| {
+            processes
+                .iter()
+                .zip(process_max_shares)
+                .filter(|(p, max_share)| {
+                    p.mix_share > 0 && p.mix_share > **max_share
+                })
+                .map(|(p, _)| t!(&p.name))
+                .collect::<Vec<_>>()
+        })
+    };
 
-    let produced = state!(produced);
-    let output_demand =
-        move || with!(|state| state.game.demand_for_outputs());
+    let produced = memo!(game.produced);
+    let output_demand = memo!(game.demand_for_outputs());
     let production_shortages = move || {
-        let mut problems: EnumMap<Output, f32> =
-            EnumMap::from_array([1.; 4]);
-        for output in Output::iter() {
-            let met = produced.get()[output]
-                / output_demand()[output];
-            if met >= 0.99 {
-                continue;
-            } else {
-                if met < problems[output] {
-                    problems[output] = met;
+        let problems = with!(|produced, output_demand| {
+            let mut problems: EnumMap<Output, f32> =
+                EnumMap::from_array([1.; 4]);
+            for output in Output::iter() {
+                let met =
+                    produced[output] / output_demand[output];
+                if met >= 0.99 {
+                    continue;
+                } else {
+                    if met < problems[output] {
+                        problems[output] = met;
+                    }
                 }
             }
-        }
+            problems
+        });
 
         let problems: Vec<_> = problems
             .into_iter()
@@ -212,10 +235,10 @@ pub fn Plan(
         }
     };
 
-    let resources = state!(resources);
-    let required_resources = state!(required_resources);
-    let feedstocks = state!(feedstocks);
-    let required_feedstocks = state!(required_feedstocks);
+    let resources = memo!(game.resources);
+    let required_resources = memo!(game.required_resources);
+    let feedstocks = memo!(game.feedstocks);
+    let required_feedstocks = memo!(game.required_feedstocks);
     let input_shortages = move || {
         let resources: Vec<_> =
             hes_engine::kinds::Resource::iter()
@@ -251,25 +274,27 @@ pub fn Plan(
         }
     };
 
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
-    state.with_untracked(|state| state.save()); // Save when starting the planning session.
+    // Save when starting the planning session.
+    game.with_untracked(move |game| {
+        tracing::debug!("Saving from Plan Page");
+        ui.with_untracked(move |ui| {
+            crate::state::save(game, ui);
+        });
+    });
+
+    let (_, set_phase) = slice!(ui.phase);
     let enter_world = move || {
         tracing::debug!("Preparing to enter world...");
-        state.update(|state| {
-            if state.ui.tutorial == Tutorial::Ready {
-                state.ui.tutorial.advance();
-            }
-            state.save();
-            state.ui.phase = Phase::Events;
+        game.with_untracked(|game| {
+            crate::state::save(game, &ui.get_untracked());
         });
+        set_phase.set(Phase::Events);
     };
 
     let (page, set_page) = create_signal(Page::Overview);
     let close = move || {
         tracing::debug!("Closing plan page.");
-        state.update(|state| {
-            let ui = &mut state.ui;
+        update!(|ui| {
             let page = page.get();
             if page == Page::Projects
                 && ui.tutorial == Tutorial::ProjectsBack

@@ -6,10 +6,10 @@ use crate::{
     debug::get_debug_opts,
     display,
     icons,
-    state,
-    state::{GameExt, GameState, Phase},
+    memo,
+    state::{GameExt, Phase, UIState},
     t,
-    ui,
+    tgav::compute_tgav,
     views::{
         events::Events,
         globe::{Globe, GlobeRef},
@@ -20,6 +20,7 @@ use crate::{
 use hes_engine::{
     events::{IconEvent, Phase as EventPhase, ICON_EVENTS},
     game::Update as EngineUpdate,
+    Game,
     Id,
 };
 use leptos::*;
@@ -45,15 +46,6 @@ impl Toast {
             desc: t!("{disaster} in {region}", disaster: t!(&ev.name), region: t!(region_name)),
         }
     }
-}
-
-#[server(prefix = "/compute", endpoint = "tgav")]
-pub async fn calc_tgav(
-    year: usize,
-    annual_emissions: Vec<(f64, f64, f64)>,
-) -> Result<f32, ServerFnError> {
-    Ok(crate::server::compute_tgav(year, &annual_emissions)
-        as f32)
 }
 
 fn warming_colour(mut temp: f32) -> String {
@@ -94,17 +86,15 @@ fn Disasters(
     #[prop(into)] skipping: Signal<bool>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+    let game = expect_context::<RwSignal<Game>>();
     let toasts = create_rw_signal::<Vec<Toast>>(vec![]);
 
     let (globe, set_globe) =
         create_signal::<Option<GlobeRef>>(None);
-    let bg_color = move || {
-        with!(|state| warming_colour(
-            state.game.world.temperature
-        ))
-    };
+
+    let temp = memo!(game.world.temperature);
+    let bg_color = move || with!(|temp| warming_colour(*temp));
     let on_globe_ready = move |globe: GlobeRef| {
         globe.clear();
         globe.rotate(true);
@@ -114,7 +104,7 @@ fn Disasters(
 
     // Called for each tick in the year.
     let on_tick = move |progress| {
-        update!(|state, events, toasts| {
+        update!(|events, toasts| {
             // Trigger any scheduled disasters.
             // Get events scheduled for at or earlier than the provided time.
             let popped: Vec<_> = events
@@ -154,7 +144,18 @@ fn Disasters(
             for (ev, event_id, region_id, region_name) in
                 occurring
             {
-                state.apply_disaster(ev, &event_id, &region_id);
+                ui.update_untracked(|ui| {
+                    let region_events = ui
+                        .annual_region_events
+                        .entry(region_id)
+                        .or_default();
+                    region_events.push(ev.clone());
+                });
+                game.update(|game| {
+                    game.apply_disaster(
+                        ev, &event_id, &region_id,
+                    );
+                });
                 toasts.push(Toast::new(ev, &region_name));
             }
         });
@@ -176,16 +177,17 @@ fn Disasters(
     });
 
     let on_year_end = move |_| {
-        if let Some(globe) = globe.get() {
+        if let Some(globe) = globe.get_untracked() {
             globe.rotate(false);
         }
-        if let Some((pause, _)) = time_controls.get() {
+        if let Some((pause, _)) = time_controls.get_untracked()
+        {
             pause.call(());
         }
         on_done.call(());
     };
 
-    let year = state!(world.year);
+    let year = memo!(game.world.year);
 
     view! {
         <div id="event-stream--year">
@@ -207,43 +209,45 @@ enum Subphase {
 
 #[component]
 pub fn WorldEvents() -> impl IntoView {
-    let state =
-        expect_context::<RwSignal<crate::state::GameState>>();
+    let game = expect_context::<RwSignal<Game>>();
+    let ui = expect_context::<RwSignal<UIState>>();
+
     let phase = create_rw_signal(Subphase::Events);
 
     let disasters = create_rw_signal::<Vec<Disaster>>(vec![]);
     let updates = create_rw_signal::<Vec<EngineUpdate>>(vec![]);
     let events = create_rw_signal(vec![]);
 
-    state.update_untracked(|state| {
-        state.ui.cycle_start_snapshot(&state.game);
+    game.update_untracked(|game| {
+        ui.update_untracked(|ui| {
+            ui.cycle_start_snapshot(&game);
 
-        let good = state.game.things_are_good();
-        if good {
-            audio::play_phase_music(
-                "/assets/music/report_good.mp3",
-                true,
-            );
-        } else {
-            audio::play_phase_music(
-                "/assets/music/report_bad.mp3",
-                true,
-            );
-        }
+            let good = game.things_are_good();
+            if good {
+                audio::play_phase_music(
+                    "/assets/music/report_good.mp3",
+                    true,
+                );
+            } else {
+                audio::play_phase_music(
+                    "/assets/music/report_bad.mp3",
+                    true,
+                );
+            }
+        });
     });
-    state.update_untracked(|state| {
+    game.update_untracked(|game| {
         events.set(
-            state
-                .game
-                .roll_events(EventPhase::WorldStart, None),
+            game.roll_events(EventPhase::WorldStart, None),
         );
     });
 
     let skipping = create_rw_signal(false);
     let skip = move |_| skipping.set(true);
 
-    let year = state!(world.year);
-    let cycle_start_year = ui!(cycle_start_state.year);
+    let year = memo!(game.world.year);
+    let cycle_start_year = memo!(ui.cycle_start_state.year);
+    let (_, set_game_phase) = slice!(ui.phase);
     let next_phase = move || {
         let mut next = match phase.get_untracked() {
             Subphase::Disasters => Subphase::Updates,
@@ -253,44 +257,56 @@ pub fn WorldEvents() -> impl IntoView {
         };
 
         if next == Subphase::Updates {
-            state.update_untracked(|game| {
-                let step_updates = game.step_year();
-                if step_updates.is_empty() || skipping.get() {
-                    // Skip to next phase.
-                    next = Subphase::Events;
-                } else {
-                    updates.set(step_updates.into());
-                }
+            game.update_untracked(|game| {
+                ui.update_untracked(|ui| {
+                    let step_updates = game.step_year();
+                    let completed_projects = step_updates
+                        .iter()
+                        .filter_map(|update| match update {
+                            EngineUpdate::Project { id } => {
+                                Some(id)
+                            }
+                            _ => None,
+                        });
+                    ui.cycle_start_state
+                        .completed_projects
+                        .extend(completed_projects);
 
-                // TODO globe update surface?
-                // or pass tgav to globe component as a signal so it automatically updates
-                let year = game.game.world.year;
-                let past_emissions =
-                    game.ui.record_emissions(&game.game);
-                spawn_local(async move {
-                    let tgav = calc_tgav(year, past_emissions)
-                        .await
-                        .unwrap();
-                    state.update(|state| {
-                        state.game.set_tgav(tgav);
-                    });
+                    if step_updates.is_empty() || skipping.get()
+                    {
+                        // Skip to next phase.
+                        next = Subphase::Events;
+                    } else {
+                        updates.set(step_updates.into());
+                    }
+
+                    // TODO globe update surface?
+                    // or pass tgav to globe component as a signal so it automatically updates
+                    let past_emissions =
+                        ui.record_emissions(&game);
+                    let tgav = compute_tgav(&past_emissions);
+                    game.set_tgav(tgav);
                 });
             });
         }
 
         if next == Subphase::Events {
-            state.update_untracked(|GameState { game, ui }| {
-                let evs = game
-                    .roll_events(EventPhase::WorldMain, None);
-                for event in &evs {
-                    ui.world_events.push(event.clone());
-                }
+            game.update_untracked(|game| {
+                ui.update_untracked(|ui| {
+                    let evs = game.roll_events(
+                        EventPhase::WorldMain,
+                        None,
+                    );
+                    for event in &evs {
+                        ui.world_events.push(event.clone());
+                    }
 
-                if evs.is_empty() || skipping.get() {
-                    next = Subphase::Disasters;
-                } else {
-                    events.set(evs);
-                }
+                    if evs.is_empty() || skipping.get() {
+                        next = Subphase::Disasters;
+                    } else {
+                        events.set(evs);
+                    }
+                });
             });
         }
 
@@ -300,27 +316,24 @@ pub fn WorldEvents() -> impl IntoView {
             if cur_year > cycle_start_year.get()
                 && cur_year % 5 == 0
             {
-                update!(|state| {
-                    state.game.finish_cycle();
-                    state.ui.phase = Phase::Report;
+                update!(|game| {
+                    game.finish_cycle();
                 });
+                set_game_phase.set(Phase::Report);
                 next = Subphase::Done;
             } else {
-                state.update_untracked(
-                    |GameState { game, .. }| {
-                        let evs: Vec<_> = game
-                            .roll_events(EventPhase::Icon, None)
-                            .into_iter()
-                            .map(|ev| Disaster {
-                                event_id: ev.id,
-                                region: ev.region.clone(),
-                                when: js_sys::Math::random()
-                                    as f32,
-                            })
-                            .collect();
-                        disasters.set(evs);
-                    },
-                );
+                game.update_untracked(|game| {
+                    let evs: Vec<_> = game
+                        .roll_events(EventPhase::Icon, None)
+                        .into_iter()
+                        .map(|ev| Disaster {
+                            event_id: ev.id,
+                            region: ev.region.clone(),
+                            when: js_sys::Math::random() as f32,
+                        })
+                        .collect();
+                    disasters.set(evs);
+                });
             }
         }
 
