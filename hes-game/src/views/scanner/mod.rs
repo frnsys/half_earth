@@ -6,7 +6,6 @@ mod project;
 
 use hes_engine::{state::State, Id};
 use leptos::*;
-use leptos_use::use_resize_observer;
 use std::{rc::Rc, time::Duration};
 use wasm_bindgen::prelude::*;
 use web_sys::Animation;
@@ -53,6 +52,8 @@ pub fn Scanner(
     children: Children,
     scan_time: f32,
     reveal_target: f32,
+    #[prop(into)] top_y: Signal<f32>,
+    #[prop(into)] bot_y: Signal<f32>,
     #[prop(into)] should_show: Signal<bool>,
     #[prop(into)] scan_allowed: Signal<bool>,
     #[prop(into)] drag_rect: Signal<Option<DragRect>>,
@@ -62,31 +63,8 @@ pub fn Scanner(
     >,
     #[prop(into)] target_ref: NodeRef<html::Div>,
     #[prop(into)] progress_ref: NodeRef<html::Div>,
-    #[prop(into)] set_y_bound: Callback<(f32, f32)>,
 ) -> impl IntoView {
     let (is_scanning, set_is_scanning) = create_signal(false);
-
-    let (top_y, set_top_y) = create_signal(0.);
-    let (bot_y, set_bot_y) = create_signal(0.);
-    let get_edges = move || {
-        tracing::debug!("Scanner > Getting Edges");
-        if let Some(target) = target_ref.get_untracked() {
-            let rect =
-                to_ws_el(target).get_bounding_client_rect();
-            let top_y = rect.y() as f32 + reveal_target;
-            let bot_y = top_y + rect.height() as f32;
-            set_top_y.set(top_y);
-            set_bot_y.set(bot_y);
-            set_y_bound.call((bot_y, top_y));
-        }
-    };
-
-    use_resize_observer(
-        target_ref,
-        move |_entries, _observer| {
-            get_edges();
-        },
-    );
 
     let (scanning_anim, set_scanning_anim) =
         create_signal(None::<Animation>);
@@ -135,18 +113,6 @@ pub fn Scanner(
             let _ = elem.class_list().add_1("scan-reject");
         }
     };
-
-    // TODO
-    // create_effect(move |_| {
-    //     get_edges();
-
-    // Hacky...double-check position
-    // after animations have finished
-    // set_timeout(
-    //     move || get_edges(),
-    //     Duration::from_millis(500),
-    // );
-    // });
 
     let scan_card = move || {
         if let Some(progress) = progress_ref.get_untracked() {
@@ -212,7 +178,7 @@ pub fn Scanner(
 
                 let intersects = drag_rect.top_y
                     < bot_y.get_untracked()
-                    && drag_rect.bot_y > top_y.get();
+                    && drag_rect.bot_y > top_y.get_untracked();
                 if intersects {
                     if scan_allowed.get_untracked()
                         && !is_scanning.get_untracked()
@@ -257,7 +223,6 @@ pub fn AddScanner(
         ScannerControls,
         bool,
     >,
-    #[prop(into)] set_y_bound: Callback<(f32, f32)>,
 ) -> impl IntoView {
     let progress_ref = create_node_ref::<html::Div>();
     let target_ref = create_node_ref::<html::Div>();
@@ -265,12 +230,13 @@ pub fn AddScanner(
     view! {
         <Scanner
             reveal_target=65.
+            top_y=move || 45.
+            bot_y=move || 105.
             scan_time
             should_show
             scan_allowed
             drag_rect
             on_finish_scan
-            set_y_bound
             target_ref
             progress_ref
         >
@@ -299,20 +265,26 @@ pub fn RemoveScanner(
         ScannerControls,
         bool,
     >,
-    #[prop(into)] set_y_bound: Callback<(f32, f32)>,
 ) -> impl IntoView {
     let progress_ref = create_node_ref::<html::Div>();
     let target_ref = create_node_ref::<html::Div>();
 
+    let win_height = create_memo(|_| {
+        window().inner_height().unwrap().as_f64().unwrap()
+            as f32
+    });
+    let top_y = move || win_height.get() - 60.;
+
     view! {
         <Scanner
             reveal_target=-60.
+            top_y=top_y
+            bot_y=win_height
             scan_time
             should_show
             scan_allowed
             drag_rect
             on_finish_scan
-            set_y_bound
             target_ref
             progress_ref
         >

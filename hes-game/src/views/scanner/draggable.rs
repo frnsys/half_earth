@@ -20,25 +20,22 @@ pub struct DragRect {
 pub fn Draggable(
     children: Children,
     draggable: Signal<bool>,
-    #[prop(into)] y_bounds: Signal<[f32; 2]>,
     #[prop(into)] on_drag: Callback<DragRect>,
     #[prop(into)] on_drag_stop: Callback<()>,
 ) -> impl IntoView {
     let dragging = store_value(false);
 
-    // Keep track of the top offset from the element's starting y position;
-    // this is updated as the component is dragged
-    let top = store_value(0.);
-
     // Whether or not dragging is started,
-    // i.e. the component has been clicked or touched
+    // i.e. the component has been clicked or touched.
     let down = store_value(false);
 
-    // Current position of the cursor
+    // Starting cursor position when starting dragging.
     let pos = store_value((0, 0));
 
+    // At-rest top-y position.
     let top_y = store_value(0.);
     let height = store_value(0.);
+    let win_height = store_value(0.);
 
     let el_ref = create_node_ref::<html::Div>();
 
@@ -48,6 +45,12 @@ pub fn Draggable(
             let rect = entries[0].bounding_client_rect();
             top_y.set_value(rect.y());
             height.set_value(rect.height());
+            let wh = window()
+                .inner_height()
+                .unwrap()
+                .as_f64()
+                .unwrap();
+            win_height.set_value(wh);
         },
     );
 
@@ -92,32 +95,36 @@ pub fn Draggable(
             let (x, y) = pos.get_value();
             let dx = ev.client_x() - x;
             let dy = ev.client_y() - y;
-            let [min_y, max_y] = y_bounds.get_untracked();
             if dy.abs() > dx.abs() {
                 dragging.set_value(true);
-                let top_ = top.get_value();
-                let y = top_y.get_value() + top_;
-                let base_y = y - top_;
-                let min_dy = min_y as f64 - base_y;
-                let max_dy = max_y as f64 - base_y;
-                let dy = max_dy.min(min_dy.max(dy as f64));
                 if let Some(el) = el_ref.get() {
-                    let _ = el.style(
-                        "transform",
-                        format!(
-                            "scale({}) translate(0, {dy}px)",
-                            card_scale()
-                        ),
-                    );
+                    let new_top_y =
+                        top_y.get_value() + dy as f64;
+                    let new_bot_y = top_y.get_value()
+                        + height.get_value()
+                        + dy as f64;
+                    if new_top_y >= 35.
+                        && new_bot_y
+                            <= win_height.get_value() - 25.
+                    {
+                        let _ = el.style(
+                            "transform",
+                            format!(
+                                "scale({}) translate(0, {dy}px)",
+                                card_scale()
+                            ),
+                        );
+                    }
+
+                    on_drag.call(DragRect {
+                        top_y: new_top_y as f32,
+                        bot_y: (new_top_y + height.get_value())
+                            as f32,
+                    });
                 }
-                top.set_value(dy);
-                on_drag.call(DragRect {
-                    top_y: y as f32,
-                    bot_y: (y + height.get_value()) as f32,
-                });
             }
         },
-        15.,
+        10.,
     );
     let drag = move |ev: ev::PointerEvent| {
         drag_handle(ev);

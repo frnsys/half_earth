@@ -28,6 +28,15 @@ pub fn Cards(
     let (countdown, set_countdown) =
         create_signal(SCROLL_COUNTDOWN);
 
+    // use_interval_fn
+    // create_effect(move |prev| {
+    //     let enabled = enabled.get();
+    //     if !enabled && prev != enabled {
+    //     }
+    //
+    //     enabled
+    // });
+
     // We use this to determine if the scrolling
     // (and its momentum) have stopped
     let (last, set_last) = create_signal(0);
@@ -208,6 +217,7 @@ pub fn Cards(
         <div
             class="cards"
             ref=scroller_ref
+            class:disabled=move || !enabled.get()
             class:unlock-scroll=dragging
             class:is-dragging=dragging
             on:scroll=on_scroll

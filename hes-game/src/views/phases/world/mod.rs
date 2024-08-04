@@ -420,7 +420,8 @@ fn YearProgress(
     };
     let progress = move || {
         let progress = time.get() / ms_per_year() as f32;
-        display::percent(progress, false)
+        let percent = display::percent(progress, false);
+        format!("{percent}%")
     };
 
     let raf = use_raf_fn_with_options(

@@ -7,6 +7,7 @@ use super::{
     ScannerSpec,
 };
 use crate::{
+    memo,
     state::UIState,
     util::{detect_center_element, nodelist_to_elements},
     views::cards::{CardFocusArea, Cards},
@@ -16,7 +17,7 @@ use leptos::*;
 use leptos_use::{
     use_document,
     use_event_listener,
-    use_interval_fn,
+    use_throttle_fn,
 };
 use wasm_bindgen::JsCast;
 
@@ -55,9 +56,12 @@ pub fn ScannerCards<S: ScannerSpec>(
     let focused = create_rw_signal(None);
     let (mode, set_mode) = create_signal(Mode::Any);
     let (drag_rect, set_drag_rect) = create_signal(None);
-    let (card_height, set_card_height) = create_signal(0.);
 
-    let can_scroll = move || mode.get().can_scroll();
+    let can_scroll = move || {
+        let can_scroll = mode.get().can_scroll();
+        tracing::debug!("CAN SCROLL: {can_scroll}");
+        can_scroll
+    };
     let can_scan = move || mode.get().can_scan();
 
     let on_drag = move |rect: DragRect| {
@@ -83,12 +87,6 @@ pub fn ScannerCards<S: ScannerSpec>(
                         .expect("Is an html element"),
                     &els,
                 ) {
-                    set_card_height.set(
-                        els[idx]
-                            .get_bounding_client_rect()
-                            .height(),
-                    );
-
                     let item = items
                         .with(|items| items.get(idx).cloned());
                     focused.set(item);
@@ -97,32 +95,8 @@ pub fn ScannerCards<S: ScannerSpec>(
         }
     };
 
-    // let scroll_to_next = move || {
-    //     if let Some(scroller) =
-    //         document().query_selector(".cards").unwrap()
-    //     {
-    //         let els = document()
-    //             .query_selector_all(".draggable")
-    //             .unwrap();
-    //         if els.length() > 0 {
-    //             let els = nodelist_to_elements(els);
-    //             if let Some(idx) = detect_center_element(
-    //                 scroller
-    //                     .dyn_into::<web_sys::HtmlElement>()
-    //                     .expect("Is an html element"),
-    //                 &els,
-    //             ) {
-    //                 if idx < els.len() - 1 {
-    //                     els[idx + 1].scroll_to();
-    //                 }
-    //             }
-    //         }
-    //     }
-    // };
-    let _ = use_event_listener(
-        use_document(),
-        ev::wheel,
-        move |ev: ev::WheelEvent| {
+    let scroll_next = use_throttle_fn(
+        || {
             if let Some(scroller) =
                 document().query_selector(".cards").unwrap()
             {
@@ -130,23 +104,38 @@ pub fn ScannerCards<S: ScannerSpec>(
                     .dyn_into::<web_sys::HtmlElement>()
                     .expect("Is an html element");
                 let s = scroller.scroll_left();
-                scroller.set_scroll_left(
-                    s + ev.delta_y().round() as i32,
-                );
+                scroller.set_scroll_left(s + 200);
+            }
+        },
+        150.0,
+    );
+    let scroll_prev = use_throttle_fn(
+        || {
+            if let Some(scroller) =
+                document().query_selector(".cards").unwrap()
+            {
+                let scroller = scroller
+                    .dyn_into::<web_sys::HtmlElement>()
+                    .expect("Is an html element");
+                let s = scroller.scroll_left();
+                scroller.set_scroll_left(s - 200);
+            }
+        },
+        150.0,
+    );
+
+    let _ = use_event_listener(
+        use_document(),
+        ev::wheel,
+        move |ev: ev::WheelEvent| {
+            let delta = ev.delta_y();
+            if delta > 15. {
+                scroll_next();
+            } else if delta < -15. {
+                scroll_prev();
             }
         },
     );
-
-    // use_interval_fn(
-    //     move || {
-    //         // TODO perhaps more efficient way to do this?
-    //         tracing::debug!(
-    //             "Scanner > Updating Focused in Interval"
-    //         );
-    //         update_focused();
-    //     },
-    //     60,
-    // );
 
     let on_scroll_start = move |_| {
         tracing::debug!("Scanner > Scroll Started");
@@ -165,12 +154,8 @@ pub fn ScannerCards<S: ScannerSpec>(
         set_drag_rect.set(None);
     };
 
-    let (top_y_bound, set_top_y_bound) = create_signal(0.);
-    let (bot_y_bound, set_bot_y_bound) = create_signal(0.);
-    let y_bounds =
-        move || [top_y_bound.get(), bot_y_bound.get()];
-
     let ui = expect_context::<RwSignal<UIState>>();
+    let viewed = memo!(ui.viewed);
     let on_focus = move |idx: Option<usize>| {
         tracing::debug!("Scanner > Cards > On Focus");
 
@@ -182,11 +167,11 @@ pub fn ScannerCards<S: ScannerSpec>(
 
         if let Some(item) = &item {
             let id = item.id();
-            ui.update(|ui| {
-                if !ui.viewed.contains(id) {
+            if with!(|viewed| !viewed.contains(id)) {
+                ui.update(|ui| {
                     ui.viewed.push(*id);
-                }
-            });
+                });
+            }
         }
         focused.set(item);
     };
@@ -208,9 +193,6 @@ pub fn ScannerCards<S: ScannerSpec>(
                 should_show=add_props.should_show
                 scan_allowed=add_props.scan_allowed
                 on_finish_scan=add_props.on_finish_scan
-                set_y_bound=move |(_top, bot)| {
-                    set_top_y_bound.set(bot - 10.);
-                }
             />
 
             <RemoveScanner
@@ -220,9 +202,6 @@ pub fn ScannerCards<S: ScannerSpec>(
                 should_show=rem_props.should_show
                 scan_allowed=rem_props.scan_allowed
                 on_finish_scan=rem_props.on_finish_scan
-                set_y_bound=move |(top, _bot)| {
-                    set_bot_y_bound.set(top + 10. - card_height.get() as f32);
-                }
             />
 
         </Show>
@@ -249,7 +228,6 @@ pub fn ScannerCards<S: ScannerSpec>(
                         <Draggable
                             on_drag
                             on_drag_stop
-                            y_bounds
                             draggable=draggable.into_signal()
                         >
                             {card}
