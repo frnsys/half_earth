@@ -1,5 +1,7 @@
 mod update;
 
+use std::collections::HashMap;
+
 use crate::{
     audio,
     consts,
@@ -9,7 +11,7 @@ use crate::{
     memo,
     state::{GameExt, Phase, UIState},
     t,
-    tgav::compute_tgav,
+    tgav::HectorRef,
     views::{
         events::Events,
         globe::{Globe, GlobeRef},
@@ -248,6 +250,7 @@ pub fn WorldEvents() -> impl IntoView {
     let year = memo!(game.world.year);
     let cycle_start_year = memo!(ui.cycle_start_state.year);
     let (_, set_game_phase) = slice!(ui.phase);
+    let hector = expect_context::<StoredValue<HectorRef>>();
     let next_phase = move || {
         let mut next = match phase.get_untracked() {
             Subphase::Disasters => Subphase::Updates,
@@ -279,13 +282,53 @@ pub fn WorldEvents() -> impl IntoView {
                     } else {
                         updates.set(step_updates.into());
                     }
+                });
+            });
 
-                    // TODO globe update surface?
-                    // or pass tgav to globe component as a signal so it automatically updates
-                    let past_emissions =
-                        ui.record_emissions(&game);
-                    let tgav = compute_tgav(&past_emissions);
-                    game.set_tgav(tgav);
+            spawn_local(async move {
+                let emissions = game.with_untracked(|game| {
+                    // Set an upper cap to the amount of emissions we pass to hector,
+                    // because very large numbers end up breaking it.
+                    let emissions_factor = if game
+                        .state
+                        .emissions()
+                        != 0.
+                    {
+                        (consts::MAX_EMISSIONS
+                            / game.state.emissions_gt().abs())
+                        .min(1.0)
+                    } else {
+                        1.0
+                    };
+
+                    // Hector separates out FFI and LUC emissions
+                    // but we lump them together
+                    // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
+                    let co2 = game.co2_emissions * 12. / 44.
+                        * 1e-15
+                        * emissions_factor; // Pg C/y
+                    let ch4 = game.ch4_emissions
+                        * 1e-12
+                        * emissions_factor; // Tg/y
+                    let n2o = game.n2o_emissions
+                        * 1e-12
+                        * emissions_factor; // Tg/y
+
+                    let mut emissions = HashMap::default();
+                    emissions
+                        .insert("ffi_emissions", co2 as f64);
+                    emissions
+                        .insert("CH4_emissions", ch4 as f64);
+                    emissions
+                        .insert("N2O_emissions", n2o as f64);
+                    emissions
+                });
+
+                let hector = hector.get_value();
+                hector.add_emissions(emissions);
+                let tgav = hector.calc_tgav().await;
+                update!(|game| {
+                    game.set_tgav(tgav as f32);
                 });
             });
         }

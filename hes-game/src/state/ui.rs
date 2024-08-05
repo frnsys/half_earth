@@ -111,9 +111,6 @@ pub struct UIState {
     pub annual_region_events: BTreeMap<Id, Vec<IconEvent>>,
     pub world_events: Vec<DisplayEvent>,
 
-    /// Emissions are three-tuples of `(CO2, CH4, N2O)`.
-    pub past_emissions: Vec<(f32, f32, f32)>,
-
     // // Track planned process mix changes
     pub process_mix_changes:
         EnumMap<Output, BTreeMap<Id, isize>>,
@@ -154,17 +151,5 @@ impl UIState {
         self.cycle_start_state.parliament =
             state.npcs.iter().map(|npc| npc.seats).collect();
         self.cycle_start_state.completed_projects.clear();
-    }
-
-    pub fn record_emissions(
-        &mut self,
-        state: &State,
-    ) -> Vec<(f32, f32, f32)> {
-        self.past_emissions.push((
-            state.co2_emissions,
-            state.ch4_emissions,
-            state.n2o_emissions,
-        ));
-        self.past_emissions.clone()
     }
 }

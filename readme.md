@@ -11,9 +11,8 @@ The project consists of two artifacts:
 - `hes-engine` defines the model that drives the game.
 - `hes-game` is the game itself, which is mostly a visual layer over the engine.
 - `hes-editor` is an editor to change parts of the game/engine, e.g. what projects are available, their parameters, etc, and is used to build custom `.world` files that can be loaded into new games.
-- `hector-rs` is our adapted version of the [Hector simple climate model](https://jgcri.github.io/hector/).
 
-The original version of the game ran purely in the browser, except for some auxiliary components (share image generation, logging, etc). This newer version relaxes that requirement so that more is handled on the server (e.g. running Hector) but it's bundled together more seamlessly.
+We also include [a version](https://github.com/frnsys/hector-wasm) of the [Hector simple climate model](https://jgcri.github.io/hector/) that we've adapted to run in the browser. The process for building Hector for WASM is complicated so pre-compiled versions are included here.
 
 
 ## Setup
@@ -26,9 +25,6 @@ git submodule update
 ## Dependencies
 
 ```bash
-# C++ and Boost required to compile Hector.
-apt install gcc g++ libboost-all-dev
-
 # Tauri is to wrap the web stack as an application.
 cargo install tauri-cli
 
@@ -39,6 +35,17 @@ cargo install cargo-leptos
 # WASM target is required for frontend code.
 rustup target add wasm32-unknown-unknown
 ```
+
+## Development
+
+There is some functionality which is better kept in JS rather than ported to Rust/WASM. In particular, the rendering of the globe (which depends on three.js), handling of audio, and interfacing with the Hector WASM module. We'd use our [Rust adapter for Hector](https://github.com/frnsys/hector-rs) directly but Rust/WASM doesn't work with C++ FFI, so we have to stick with using JS as a bridge.
+
+The globe and Hector modules need to re-built if any of their files are edited. They can be rebuilt by doing:
+
+1. `cd hes-game/public/js`
+2. If you haven't already, run `just setup`.
+3. Then run `just build`.
+
 
 ## Running
 

@@ -7,7 +7,7 @@ use std::{cell::RefCell, rc::Rc};
 
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen(module = "/public/js/earth/globe.pkg.js")]
+#[wasm_bindgen(module = "/public/js/dist/globe.js")]
 extern "C" {
     type Globe;
 

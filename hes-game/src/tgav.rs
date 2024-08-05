@@ -1,99 +1,54 @@
-use itertools::Itertools;
-use std::sync::LazyLock;
+use js_sys::Promise;
+use leptos::*;
+use serde_wasm_bindgen::to_value;
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
+use wasm_bindgen::prelude::*;
+use wasm_bindgen_futures::JsFuture;
 
-use serde::Deserialize;
+#[wasm_bindgen(module = "/public/js/dist/tgav.js")]
+extern "C" {
+    type Temperature;
 
-#[derive(Deserialize)]
-struct HectorShim {
-    lag: usize,
-    degree: usize,
-    intercept: f32,
-    coefficients: Vec<f32>,
-    co2_hist: Vec<f32>,
-    n2o_hist: Vec<f32>,
-    ch4_hist: Vec<f32>,
+    #[wasm_bindgen(constructor)]
+    fn new(start_year: usize) -> Temperature;
+
+    #[wasm_bindgen(method, js_name = addEmissions)]
+    fn add_emissions(this: &Temperature, emissions: JsValue);
+
+    #[wasm_bindgen(method, js_name = updateTemperature)]
+    fn calc_tgav(this: &Temperature) -> Promise;
 }
 
-static HECTOR: LazyLock<HectorShim> = LazyLock::new(|| {
-    serde_json::from_str(include_str!(
-        "../../hes-hector/params.json"
-    ))
-    .unwrap()
-});
-
-fn take_last(from: &[f32]) -> f32 {
-    from[from.len() - 1]
+pub struct HectorRef {
+    inner: Rc<RefCell<Temperature>>,
 }
-fn take_lagged(from: &[f32], lag: usize) -> f32 {
-    from[from.len() - 1 - lag]
-}
-
-fn polynomial_features(
-    input: &[f32],
-    degree: usize,
-) -> Vec<f32> {
-    let mut features = vec![1.0];
-    for d in 1..=degree {
-        for combination in
-            (0..input.len()).combinations_with_replacement(d)
-        {
-            let mut product = 1.0;
-            for &index in &combination {
-                product *= input[index];
-            }
-            features.push(product);
+impl Clone for HectorRef {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
         }
     }
-    features
 }
-
-/// Calculate new avg global temp.
-/// Emissions are three-tuples of `(CO2, CH4, N2O)`.
-pub fn compute_tgav(
-    annual_emissions: &[(f32, f32, f32)],
-) -> f32 {
-    let lag = HECTOR.lag;
-    let mut co2_hist = HECTOR.co2_hist.clone();
-    let mut n2o_hist = HECTOR.n2o_hist.clone();
-    let mut ch4_hist = HECTOR.ch4_hist.clone();
-
-    co2_hist.extend(annual_emissions.iter().map(
-        |(v, _, _)| {
-            v * 12. / 44. * 1e-15 // Pg C/y
-        },
-    ));
-    n2o_hist.extend(annual_emissions.iter().map(
-        |(_, _, v)| {
-            v * 1e-12 // Tg/y
-        },
-    ));
-    ch4_hist.extend(annual_emissions.iter().map(
-        |(_, v, _)| {
-            v * 1e-12 // Tg/y
-        },
-    ));
-
-    leptos::logging::log!("{:?}", co2_hist);
-    leptos::logging::log!("{:?}", n2o_hist);
-    leptos::logging::log!("{:?}", ch4_hist);
-
-    let input = vec![
-        take_last(&co2_hist),
-        take_last(&n2o_hist),
-        take_last(&ch4_hist),
-        take_lagged(&co2_hist, lag),
-        take_lagged(&n2o_hist, lag),
-        take_lagged(&ch4_hist, lag),
-    ];
-    leptos::logging::log!("{:?}", input);
-    let coefs = &HECTOR.coefficients;
-    let features = polynomial_features(&input, HECTOR.degree);
-    assert_eq!(features.len(), coefs.len());
-
-    let mut tgav = HECTOR.intercept;
-    for i in 0..features.len() {
-        tgav += features[i] * coefs[i];
+impl HectorRef {
+    pub fn new(start_year: usize) -> Self {
+        let hector = Temperature::new(start_year);
+        HectorRef {
+            inner: Rc::new(RefCell::new(hector)),
+        }
     }
-    tracing::debug!("Calculated tgav: {tgav}.");
-    tgav
+
+    pub fn add_emissions(
+        &self,
+        emissions: HashMap<&'static str, f64>,
+    ) {
+        let emissions = to_value(&emissions).unwrap();
+        self.inner.borrow().add_emissions(emissions);
+    }
+
+    pub async fn calc_tgav(&self) -> f64 {
+        let promise = self.inner.borrow().calc_tgav();
+        let future = JsFuture::from(promise);
+        let result = future.await.unwrap();
+        result.as_f64().unwrap()
+    }
 }

@@ -3,6 +3,7 @@ use crate::{
     i18n::{get_preferred_language, load_language},
     memo,
     state::{Phase, UIState},
+    tgav::HectorRef,
     views::{
         Cutscene,
         End,
@@ -62,7 +63,10 @@ pub fn App() -> impl IntoView {
     ));
 
     let (game, ui) = crate::state::new_game(World::default());
+    let year = game.world.year;
+
     provide_context(create_rw_signal::<Game>(game));
+    provide_context(store_value(HectorRef::new(year)));
 
     let ui = create_rw_signal::<UIState>(ui);
     provide_context(ui);
