@@ -1,3 +1,5 @@
+export LEPTOS_WASM_OPT_VERSION := "version_118"
+
 # Run the development web game.
 run-web:
     cd hes-game && cargo leptos watch
