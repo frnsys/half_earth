@@ -1,4 +1,4 @@
-use hes_engine::kinds::Output;
+use hes_engine::Output;
 
 use crate::{
     state::demand_by_income_levels,

@@ -13,6 +13,7 @@ pub struct DebugOpts {
     pub show_all_processes: bool,
     pub fast_years: bool,
     pub skip_to_planning: bool,
+    pub check_events: bool,
 }
 
 pub fn get_debug_opts() -> DebugOpts {
@@ -34,6 +35,7 @@ pub fn get_debug_opts() -> DebugOpts {
             skip_to_planning: opts
                 .contains(&"skip-to-planning")
                 || debug_all,
+            check_events: opts.contains(&"check-events"),
         }
     } else {
         DebugOpts::default()

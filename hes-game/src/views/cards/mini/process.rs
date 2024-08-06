@@ -4,7 +4,7 @@ use super::{
     super::{kinds::ProcessCard, *},
     MiniCard,
 };
-use hes_engine::{kinds::Output, production::Process};
+use hes_engine::{Output, Process};
 use leptos::*;
 
 #[component]

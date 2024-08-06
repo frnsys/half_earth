@@ -1,10 +1,4 @@
-use hes_engine::{
-    events::Flag,
-    kinds::Output,
-    production::ProcessFeature,
-    projects::{Group, Status},
-    state::State,
-};
+use hes_engine::*;
 use serde::{Deserialize, Serialize};
 use strum::{EnumIter, IntoEnumIterator};
 
@@ -71,7 +65,7 @@ impl Badge {
             }
             Self::Meat => {
                 // Animal calories demand at least 80% of starting value
-                state.demand_for_output(&Output::AnimalCalories)
+                state.output_demand.of(Output::AnimalCalories)
                     >= 2e15
             }
             Self::Nuclear => {
@@ -120,7 +114,7 @@ impl Badge {
             }
             Self::Vegan => {
                 // Animal calories demand down to less than 10% of starting val
-                state.demand_for_output(&Output::AnimalCalories)
+                state.output_demand.of(Output::AnimalCalories)
                     < 2e14
             }
         }

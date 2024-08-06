@@ -2,19 +2,14 @@ mod game;
 mod settings;
 mod ui;
 
-pub use game::GameExt;
+pub use game::StateExt;
 pub use settings::Settings;
 use ui::Points;
 pub use ui::{Phase, PlanChange, Tutorial, UIState};
 
 use std::sync::{LazyLock, RwLock};
 
-use hes_engine::{
-    kinds::{Output, OutputMap},
-    production::Process,
-    world::World,
-    Game,
-};
+use hes_engine::{Output, OutputMap, Process, State, World};
 use leptos::*;
 
 use crate::debug::get_debug_opts;
@@ -39,14 +34,14 @@ pub fn demand_by_income_levels(output: Output) -> [f32; 4] {
         .expect("Mapping from same size arrays")
 }
 
-fn read_save() -> Result<Option<(Game, UIState)>, anyhow::Error>
+fn read_save() -> Result<Option<(State, UIState)>, anyhow::Error>
 {
     if let Some(storage) = window().local_storage().unwrap() {
         storage
             .get_item(SAVE_KEY)
             .unwrap()
             .map(|ser| {
-                Ok(serde_json::from_str::<(Game, UIState)>(
+                Ok(serde_json::from_str::<(State, UIState)>(
                     &ser,
                 )?)
             })
@@ -56,7 +51,7 @@ fn read_save() -> Result<Option<(Game, UIState)>, anyhow::Error>
     }
 }
 fn write_save(
-    game: &Game,
+    game: &State,
     ui: &UIState,
 ) -> Result<(), anyhow::Error> {
     if let Some(storage) = window().local_storage().unwrap() {
@@ -71,8 +66,8 @@ pub fn clear_save() {
     }
 }
 
-pub fn new_game(world: World) -> (Game, UIState) {
-    let mut game = Game::from_world(world);
+pub fn new_game(world: World) -> (State, UIState) {
+    let mut game = State::new(world);
     let mut ui_state = UIState::default();
 
     let (settings, _) = Settings::rw();
@@ -81,22 +76,19 @@ pub fn new_game(world: World) -> (Game, UIState) {
     ui_state.start_year = game.world.year;
     ui_state.tutorial = settings.with_untracked(|s| s.tutorial);
 
-    game.set_runs_played(runs);
+    game.runs = runs;
 
     // Set all starting projects/processes as "viewed"
     ui_state.viewed = game
-        .state
         .world
         .projects
-        .iter()
-        .filter(|p| !p.locked)
+        .unlocked()
         .map(|p| p.id)
         .chain(
-            game.state
+            game
                 .world
                 .processes
-                .iter()
-                .filter(|p| !p.locked)
+                .unlocked()
                 .map(|p| p.id),
         )
         .collect();
@@ -114,7 +106,7 @@ pub fn new_game(world: World) -> (Game, UIState) {
     (game, ui_state)
 }
 
-fn init_vars(game: &Game) {
+fn init_vars(game: &State) {
     *STARTING_WATER
         .write()
         .expect("Can write to shared value") =
@@ -129,7 +121,7 @@ fn init_vars(game: &Game) {
         game.world.output_demand;
 }
 
-pub fn load() -> (Game, UIState) {
+pub fn load() -> (State, UIState) {
     tracing::debug!("Loading saved game...");
     let save = read_save().unwrap();
     if let Some((game, mut ui)) = save {
@@ -151,7 +143,7 @@ pub fn load() -> (Game, UIState) {
     }
 }
 
-pub fn save(game: &Game, ui: &UIState) {
+pub fn save(game: &State, ui: &UIState) {
     tracing::debug!("Saving game...");
     write_save(game, ui).unwrap();
 }

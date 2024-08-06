@@ -95,6 +95,10 @@ pub enum NPCRelation {
 }
 
 impl Collection<NPC> {
+    pub fn unlocked(&self) -> impl Iterator<Item = &NPC> {
+        self.iter().filter(|npc| !npc.locked)
+    }
+
     pub fn is_ally(&self, name: &'static str) -> bool {
         let npc = self.iter().find(|n| n.name == name);
         if let Some(npc) = npc {

@@ -3,9 +3,9 @@ use crate::{
     display::{self, AsText, FloatExt},
     icons::{self, HasIcon},
     memo,
-    state::{GameExt, UIState},
+    state::{StateExt, UIState},
     t,
-    util::ImageExt,
+    util::{scale_text, to_ws_el, ImageExt},
     vars::*,
     views::{
         factors::factors_card,
@@ -14,7 +14,8 @@ use crate::{
         HasTip,
     },
 };
-use hes_engine::{kinds::Feedstock, production::Process, Game};
+use hes_engine::{Feedstock, Process, State};
+use html::ToHtmlElement;
 use leptos::*;
 
 fn describe_estimate(estimate: f32) -> String {
@@ -43,7 +44,7 @@ fn describe_stocks(estimate: f32) -> &'static str {
 pub fn ProcessCard(
     #[prop(into)] process: Signal<Process>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let viewed = memo!(ui.viewed);
@@ -60,15 +61,14 @@ pub fn ProcessCard(
         move || with!(|process| t!(&process.output.title()));
 
     let feedstocks = memo!(game.feedstocks);
-    let consumed_feedstocks = memo!(game.consumed_feedstocks);
     let feedstock_estimate = move || {
-        with!(|process, feedstocks, consumed_feedstocks| {
+        with!(|process, feedstocks| {
             let feedstock = process.feedstock.0;
             match feedstock {
                 Feedstock::Soil | Feedstock::Other => None,
                 _ => {
-                    let estimate = feedstocks[feedstock]
-                        / consumed_feedstocks[feedstock];
+                    let estimate =
+                        feedstocks.until_exhaustion(feedstock);
                     Some(estimate.round())
                 }
             }
@@ -94,7 +94,8 @@ pub fn ProcessCard(
     let id = memo!(process.id);
     let produced_by_process = create_memo(move |_| {
         with!(|game| *game
-            .produced_by_process
+            .produced
+            .by_process
             .get(&id.get())
             .unwrap_or(&0.))
     });
@@ -143,6 +144,23 @@ pub fn ProcessCard(
         })
     };
 
+    let name_memo = memo!(process.name);
+    let name_ref = create_node_ref::<html::Div>();
+    create_effect(move |_| {
+        name_memo.track();
+        if let Some(name_ref) = name_ref.get() {
+            scale_text(
+                to_ws_el(
+                    name_ref
+                        .parent_element()
+                        .unwrap()
+                        .to_leptos_element(),
+                ),
+                14,
+            );
+        }
+    });
+
     let class = move || {
         if is_new() {
             "is-new".to_string()
@@ -165,8 +183,8 @@ pub fn ProcessCard(
         })
     };
 
-    let max_share =
-        memo!(game.process_max_share(&process.get()));
+    let id = memo!(process.id);
+    let max_share = memo!(game.process_max_share(&id.get()));
     let alert_tip = move || {
         with!(|max_share, process| {
             let mix_share = process.mix_share;
@@ -437,7 +455,7 @@ pub fn ProcessCard(
                 Impact::Emissions,
                 process.output.into(),
             );
-            let amount = game.emissions_gt();
+            let amount = game.emissions.as_gtco2eq();
             let tip = tip(icons::EMISSIONS, t!("Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.", amount: amount))
             .card(factors_card(Some(process.name.clone()), Var::Emissions, game));
             let (sig, _) = create_signal(int);
@@ -485,7 +503,7 @@ pub fn ProcessCard(
                 </HasTip>
             </Header>
 
-            <Name slot>{name}</Name>
+            <Name slot><div ref=name_ref>{name}</div></Name>
 
             <Figure slot>
                 <img class="card-image" src=image/>

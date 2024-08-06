@@ -3,16 +3,11 @@ use std::collections::BTreeMap;
 use crate::{
     consts,
     memo,
-    state::{GameExt, PlanChange, Tutorial, UIState},
+    state::{PlanChange, StateExt, Tutorial, UIState},
     t,
     views::cards::ProjectCard,
 };
-use hes_engine::{
-    projects::{Project, Status, Type},
-    state::State,
-    Game,
-    Id,
-};
+use hes_engine::{Id, Project, ProjectType, State, Status};
 use leptos::*;
 
 use super::{
@@ -45,12 +40,12 @@ pub struct ProjectScanner {
 impl ProjectScanner {
     pub fn new(on_change: Callback<()>) -> Self {
         let ui = expect_context::<RwSignal<UIState>>();
-        let game = expect_context::<RwSignal<Game>>();
+        let game = expect_context::<RwSignal<State>>();
         Self {
             on_change,
             plan_changes: memo!(ui.plan_changes.clone()),
             queued_upgrades: memo!(ui.queued_upgrades.clone()),
-            player_seats: memo!(game.player_seats()),
+            player_seats: memo!(game.npcs.coalition_seats()),
         }
     }
 }
@@ -94,7 +89,7 @@ impl ScannerSpec for ProjectScanner {
                         false
                     } else if p.next_upgrade().is_some() {
                         true
-                    } else if p.kind == Type::Policy
+                    } else if p.kind == ProjectType::Policy
                         && p.status == Status::Active
                     {
                         false
@@ -107,7 +102,7 @@ impl ScannerSpec for ProjectScanner {
             })
         };
 
-        let game = expect_context::<RwSignal<Game>>();
+        let game = expect_context::<RwSignal<State>>();
         let ui = expect_context::<RwSignal<UIState>>();
 
         let on_finish_scan =
@@ -152,7 +147,7 @@ impl ScannerSpec for ProjectScanner {
                                         changes.upgrades += 1;
 
                                         // Adding points to Research/Infrastructure
-                                    } else if p.kind != Type::Policy
+                                    } else if p.kind != ProjectType::Policy
                                         && game.buy_point(
                                             &p.id,
                                             &mut ui.points,
@@ -179,7 +174,7 @@ impl ScannerSpec for ProjectScanner {
 
                                         // Passing Policies
                                         // Free if withdrawn in this same session (i.e. undo the withdraw)
-                                    } else if p.kind == Type::Policy
+                                    } else if p.kind == ProjectType::Policy
                                         && (changes.withdrawn
                                             || game
                                             .pay_points(&p.id))
@@ -266,7 +261,7 @@ impl ScannerSpec for ProjectScanner {
             }) || refundable()
         };
 
-        let game = expect_context::<RwSignal<Game>>();
+        let game = expect_context::<RwSignal<State>>();
         let ui = expect_context::<RwSignal<UIState>>();
 
         let on_finish_scan =
@@ -295,7 +290,7 @@ impl ScannerSpec for ProjectScanner {
 
                                             // Don't allow stored research-only points to be converted into PC,
                                             // instead convert them back into research points
-                                            if p.kind == Type::Research {
+                                            if p.kind == ProjectType::Research {
                                                 let excess_points =
                                                     points.saturating_sub(ui.points.refundable_research);
                                                 refund =

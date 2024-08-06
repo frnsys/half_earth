@@ -2,79 +2,51 @@ use super::Points;
 use crate::{consts, display, views::DisplayEvent};
 use enum_map::EnumMap;
 use extend::ext;
-use hes_engine::{
-    events::{Flag, IconEvent, Phase},
-    game::Update,
-    kinds::{Feedstock, Output},
-    production::Process,
-    projects::Status,
-    Game,
-    Id,
-    ProjectType,
-};
+use hes_engine::*;
 use std::collections::BTreeMap;
 
 #[ext]
-pub impl Game {
-    fn things_are_good(&self) -> bool {
-        self.world.temperature <= 1.
-            || self.world.extinction_rate <= 20.
-            || self.state.emissions_gt() <= 0.
-    }
-
-    fn emissions_gt(&self) -> String {
-        display::emissions(self.state.emissions_gt())
-    }
-
+pub impl State {
     fn land_use_percent(&self) -> String {
-        let usage = self.state.resources_demand.land;
-        let total_land =
-            self.state.world.starting_resources.land;
+        let usage = self.resource_demand.of(Resource::Land);
+        let total_land = self.resources.available.land;
         let percent = usage / total_land;
         display::percent(percent, true)
     }
 
     fn water_use_percent(&self) -> String {
-        let usage = self.state.resources_demand.water;
-        let total_water = self.state.resources.water;
+        let usage = self.resource_demand.of(Resource::Water);
+        let total_water = self.resources.available.water;
         let percent = usage / total_water;
         display::percent(percent, true)
     }
 
     fn temp_anomaly(&self) -> String {
-        format!("{:+.1}C", self.state.world.temperature)
+        format!("{:+.1}C", self.world.temperature)
     }
 
     fn energy_pwh(&self) -> String {
-        let energy = self.state.demand_for_outputs().energy();
+        let energy = self.output_demand.total().energy();
         format!("{}PWh", (display::twh(energy) / 1e3).round())
     }
 
     fn energy_twh(&self) -> String {
-        let energy = self.state.demand_for_outputs().energy();
+        let energy = self.output_demand.total().energy();
         format!("{}TWh", display::twh(energy).round())
     }
 
+    // TODO redundant with world.income_level? except for the + 1.?
     fn avg_income_level(&self) -> usize {
         let mut total = 0.;
-        for region in self.state.world.regions.iter() {
-            let income = region.income_level() as f32
+        for region in self.world.regions.iter() {
+            let income = region.income.level() as f32
                 + 1.
                 + region.development;
             total += income;
         }
-        let n_regions = self.state.world.regions.len();
+        let n_regions = self.world.regions.len();
         let avg = (total / n_regions as f32).round() as usize;
         avg
-    }
-
-    fn avg_habitability(&self) -> f32 {
-        let mut total = 0.;
-        for region in self.state.world.regions.iter() {
-            total += region.habitability();
-        }
-        let n_regions = self.state.world.regions.len();
-        (total / n_regions as f32).round()
     }
 
     /// Cost for the next point for a project, taking into
@@ -82,23 +54,14 @@ pub impl Game {
     fn next_point_cost(&self, kind: &ProjectType) -> usize {
         let mut discount = 0;
         if *kind == ProjectType::Research {
-            if self.state.flags.contains(&Flag::HyperResearch) {
+            if self.flags.contains(&Flag::HyperResearch) {
                 discount += 1;
             }
-            if self.state.is_ally("The Accelerationist") {
+            if self.npcs.is_ally("The Accelerationist") {
                 discount += 1;
             }
         }
         0.max(consts::POINT_COST - discount) as usize
-    }
-
-    fn player_seats(&self) -> f32 {
-        self.state
-            .npcs
-            .iter()
-            .filter(|npc| npc.is_ally())
-            .map(|npc| npc.seats)
-            .sum()
     }
 
     fn buy_point(
@@ -117,7 +80,7 @@ pub impl Game {
             true
         } else {
             let cost = self.next_point_cost(&kind) as isize;
-            if cost <= self.state.political_capital {
+            if cost <= self.political_capital {
                 self.change_political_capital(-cost);
                 match kind {
                     ProjectType::Research => {
@@ -142,7 +105,7 @@ pub impl Game {
         // Only policies have points paid all at once,
         // rather than assigned.
         let project = &self.world.projects[project_id];
-        let available = self.state.political_capital;
+        let available = self.political_capital;
         if project.status == Status::Inactive
             && available >= project.cost as isize
         {
@@ -227,7 +190,7 @@ pub impl Game {
             (project.kind, project.next_upgrade())
         };
         if let Some(upgrade) = upgrade {
-            let available = self.state.political_capital;
+            let available = self.political_capital;
             if is_free || available >= upgrade.cost as isize {
                 if !is_free {
                     self.change_political_capital(
@@ -275,72 +238,12 @@ pub impl Game {
 
     fn roll_events(
         &mut self,
-        phase: Phase,
-        limit: Option<usize>,
+        phase: EventPhase,
     ) -> Vec<DisplayEvent> {
-        let events = self.roll_events_for_phase(phase, limit);
-
-        // Icon events, aka disasters,
-        // are handled differently, so we don't
-        // apply their effects immediately here.
-        if phase != Phase::Icon {
-            for ev in &events {
-                self.apply_event(
-                    ev.id,
-                    ev.region.as_ref().map(|(id, _)| *id),
-                );
-            }
-        }
-
-        events
+        self.roll_events(phase)
             .into_iter()
-            .map(|ev| DisplayEvent::new(ev, &self.state))
+            .map(|ev| DisplayEvent::new(ev, &self))
             .collect()
-    }
-
-    /// If we won the game.
-    fn won(&self) -> bool {
-        self.state.emissions_gt() <= consts::WIN_EMISSIONS
-            && self.state.world.extinction_rate
-                <= consts::WIN_EXTINCTION
-            && self.state.world.temperature
-                <= consts::WIN_TEMPERATURE
-    }
-
-    fn game_over(&self) -> bool {
-        self.state.game_over
-    }
-
-    /// Maximum production share for a process.
-    fn process_max_share(&self, process: &Process) -> usize {
-        let mut max_share = 1.;
-        let demand =
-            self.state.demand_for_output(&process.output);
-
-        // Hard-coded limit
-        if let Some(limit) = process.limit {
-            max_share = (limit / demand).min(1.);
-        }
-
-        // Limit based on feedstock supply
-        let (feedstock, per_output) = process.feedstock;
-        match feedstock {
-            Feedstock::Other | Feedstock::Soil => {}
-            _ => {
-                let feedstock_limit = self.state.feedstocks
-                    [feedstock]
-                    / per_output;
-                let feedstock_max_share =
-                    (feedstock_limit / demand).min(1.);
-                max_share = max_share.min(feedstock_max_share);
-            }
-        }
-
-        (max_share * 100. / 5.).floor() as usize
-    }
-
-    fn is_planning_year(&self) -> bool {
-        self.world.year + 1 % 5 == 0
     }
 
     fn upgrade_projects(
@@ -356,15 +259,6 @@ pub impl Game {
         }
     }
 
-    fn step_year(&mut self) -> Vec<Update> {
-        let mut updates = self.step();
-        if self.is_planning_year() {
-            let mut outcomes = self.roll_new_policy_outcomes();
-            updates.append(&mut outcomes);
-        }
-        updates
-    }
-
     fn apply_disaster(
         &mut self,
         event: &IconEvent,
@@ -374,7 +268,7 @@ pub impl Game {
         let effect = event.intensity as f32
             * consts::EVENT_INTENSITY_TO_CONTENTEDNESS;
 
-        self.change_habitability(
+        self.apply_disaster(
             -effect.round() as isize,
             region_id,
         );

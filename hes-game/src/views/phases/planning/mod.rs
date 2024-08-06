@@ -5,10 +5,7 @@ mod region_item;
 mod tabs;
 
 pub use active_plan::ActivePlan;
-use hes_engine::{
-    events::{Flag, Phase as EventPhase},
-    Game,
-};
+use hes_engine::{EventPhase, Flag, State};
 pub use processes::Processes;
 pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
@@ -17,7 +14,7 @@ use crate::{
     audio,
     debug::get_debug_opts,
     memo,
-    state::{GameExt, Tutorial, UIState},
+    state::{StateExt, Tutorial, UIState},
     t,
     views::{hud::Hud, Events},
 };
@@ -50,18 +47,24 @@ impl std::fmt::Display for Page {
 
 #[component]
 pub fn Planning() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
     let events = create_rw_signal(vec![]);
     game.update_untracked(|game| {
-        let mut evs =
-            game.roll_events(EventPhase::PlanningStart, None);
-        evs.extend(
-            game.roll_events(EventPhase::PlanningPlan, None),
-        );
+        let mut evs = [
+            StateExt::roll_events(
+                game,
+                EventPhase::PlanningStart,
+            ),
+            StateExt::roll_events(
+                game,
+                EventPhase::PlanningPlan,
+            ),
+        ]
+        .concat();
 
         if get_debug_opts().skip_to_planning {
             evs.retain(|ev| ev.name != "Planning Intro");
@@ -84,7 +87,7 @@ pub fn Planning() -> impl IntoView {
 
         game.update_untracked(|game| {
             tracing::debug!("Rolling planning page events.");
-            events.set(game.roll_events(phase, None));
+            events.set(StateExt::roll_events(game, phase));
         });
     };
 
@@ -117,13 +120,13 @@ pub fn Planning() -> impl IntoView {
             view! { <Plan on_plan_change=move |_| {
                 tracing::debug!("Plan changed.");
                 game.update_untracked(|game| {
-                    events.set(game.roll_events(EventPhase::PlanningPlanChange, None));
+                    events.set(StateExt::roll_events(game, EventPhase::PlanningPlanChange));
                 });
             } on_page_change=move |phase| {
                 tracing::debug!("Plan page changed.");
                 game.update_untracked(|game| {
                     update!(|events| {
-                        events.extend(game.roll_events(phase, None));
+                        events.extend(StateExt::roll_events(game, phase));
                     });
                 });
             }/> }
@@ -146,9 +149,9 @@ pub fn Planning() -> impl IntoView {
                 tracing::debug!("Restarting tutorial.");
                 ui.tutorial_restarted = true;
                 ui.tutorial = Tutorial::Projects;
-                events.set(game.roll_events(
+                events.set(StateExt::roll_events(
+                    game,
                     EventPhase::PlanningStart,
-                    None,
                 ));
             }
 

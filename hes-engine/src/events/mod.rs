@@ -6,12 +6,11 @@ mod probability;
 mod vars;
 
 pub use self::{
-    condition::{Comparator, Condition, ConditionKind},
+    condition::Condition,
     effects::{
         mean_demand_outlook_change,
         mean_income_outlook_change,
         Effect,
-        EffectKind,
         Flag,
         RegionFlag,
         Request,

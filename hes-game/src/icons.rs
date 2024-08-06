@@ -1,10 +1,15 @@
 use crate::vars::Var;
 use hes_engine::{
-    events::{Condition, LocalVariable, WorldVariable},
-    kinds::{Byproduct, Feedstock, Output, Resource},
-    npcs::NPC,
-    production::ProcessFeature,
-    projects::Type,
+    Byproduct,
+    Condition,
+    Feedstock,
+    LocalVariable,
+    Output,
+    ProcessFeature,
+    ProjectType,
+    Resource,
+    WorldVariable,
+    NPC,
 };
 use paste::paste;
 use regex_lite::Regex;
@@ -70,6 +75,9 @@ icons! {
     CLOSE: "/icons/close.svg",
     POLITICAL_CAPITAL: "/icons/pips/political_capital.png",
     EMISSIONS: "/icons/emissions.png",
+    CO2: "/icons/emissions.png",
+    N2O: "/icons/emissions.png",
+    CH4: "/icons/emissions.png",
     WARMING: "/icons/warming.png",
     CONTENTEDNESS: "/icons/contentedness.png",
     EXTINCTION_RATE: "/icons/extinction.png",
@@ -250,12 +258,12 @@ impl HasIcon for Feedstock {
     }
 }
 
-impl HasIcon for Type {
+impl HasIcon for ProjectType {
     fn icon(&self) -> &'static str {
         match self {
-            Type::Research => RESEARCH,
-            Type::Initiative => INITIATIVE,
-            Type::Policy => POLITICAL_CAPITAL,
+            ProjectType::Research => RESEARCH,
+            ProjectType::Initiative => INITIATIVE,
+            ProjectType::Policy => POLITICAL_CAPITAL,
         }
     }
 }

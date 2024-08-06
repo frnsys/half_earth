@@ -13,7 +13,7 @@ use crate::{
     },
 };
 use enum_map::EnumMap;
-use hes_engine::{kinds::Output, regions::Region, Game};
+use hes_engine::{KindMap, Output, Region, State};
 use leptos::*;
 use strum::IntoEnumIterator;
 
@@ -82,7 +82,7 @@ fn demand_tip(
 pub fn RegionItem(
     #[prop(into)] region: Signal<Region>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let region_events = memo!(ui.annual_region_events);
@@ -115,7 +115,7 @@ pub fn RegionItem(
         })
     };
     let income_level =
-        move || with!(|region| region.income_level() + 1);
+        move || with!(|region| region.income.level() + 1);
     let seceded = move || with!(|region| region.seceded);
     let temp_range =
         move || with!(|region| region.temp_range());
@@ -172,7 +172,7 @@ pub fn RegionItem(
             with!(|game| Output::iter()
                 .map(|output| (
                     output,
-                    game.demand_for_output(&output)
+                    game.output_demand.of(output)
                 ))
                 .collect());
         demands

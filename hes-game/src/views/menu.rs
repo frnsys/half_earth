@@ -9,7 +9,7 @@ use crate::{
         splash::Credits,
     },
 };
-use hes_engine::Game;
+use hes_engine::State;
 use js_sys::Date;
 use leptos::*;
 use leptos_use::use_interval_fn;
@@ -38,12 +38,12 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
 
     let (show_credits, set_show_credits) = create_signal(false);
 
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
     let year = memo!(game.world.year);
     let pc = memo!(game.political_capital.max(0));
     let outlook = memo!(game.outlook());
-    let emissions = memo!(game.emissions_gt());
+    let emissions = memo!(game.emissions.as_gtco2eq());
     let extinction = memo!(game.world.extinction_rate);
     let temperature = memo!(game.world.temperature);
     let start_year = memo!(ui.start_year);

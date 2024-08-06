@@ -1,23 +1,11 @@
 use crate::{
     audio::init_audio,
     i18n::{get_preferred_language, load_language},
-    memo,
-    state::{Phase, UIState},
+    state::UIState,
     tgav::HectorRef,
-    views::{
-        Cutscene,
-        End,
-        Interstitial,
-        Loading,
-        Planning,
-        Report,
-        Start,
-        TipState,
-        ToolTip,
-        WorldEvents,
-    },
+    views::{Game, Loading, Start, TipState, ToolTip},
 };
-use hes_engine::{world::World, Game};
+use hes_engine::{State, World};
 use leptos::*;
 use leptos_animation::*;
 use leptos_meta::*;
@@ -65,11 +53,9 @@ pub fn App() -> impl IntoView {
     let (game, ui) = crate::state::new_game(World::default());
     let year = game.world.year;
 
-    provide_context(create_rw_signal::<Game>(game));
+    provide_context(create_rw_signal::<State>(game));
+    provide_context(create_rw_signal::<UIState>(ui));
     provide_context(store_value(HectorRef::new(year)));
-
-    let ui = create_rw_signal::<UIState>(ui);
-    provide_context(ui);
 
     init_audio();
 
@@ -84,42 +70,6 @@ pub fn App() -> impl IntoView {
         },
     );
 
-    let cur_phase = memo!(ui.phase);
-
-    // HACK: It feels a little hacky to use `create_memo`
-    // here but I ran into a weird bug where at
-    // the second planning phase the `cur_phase`
-    // signal would trigger twice even though I'm
-    // only setting the phase once. This double-triggering
-    // would then cause a weird signal disposal bug that
-    // I couldn't figure out. Wrapping this in a memo
-    // ensures that it will only be called when the value changes,
-    // so a double-triggering of the same phase will still
-    // only render once.
-    let game_view = create_memo(move |_| {
-        let phase = cur_phase.get();
-        tracing::debug!("Phase changed to {phase:?}.");
-        match phase {
-            Phase::Intro => view! { <Cutscene/> }.into_view(),
-            Phase::Interstitial => {
-                view! { <Interstitial/> }.into_view()
-            }
-            Phase::GameOver => {
-                view! { <End lose=true/> }.into_view()
-            }
-            Phase::GameWin => {
-                view! { <End lose=false/> }.into_view()
-            }
-            Phase::Planning => {
-                view! { <Planning/> }.into_view()
-            }
-            Phase::Report => view! { <Report/> }.into_view(),
-            Phase::Events => {
-                view! { <WorldEvents /> }.into_view()
-            }
-        }
-    });
-
     view! {
         <Show when=move || lang.get().is_some()>
             <Show when=move || !started.get()>
@@ -130,7 +80,7 @@ pub fn App() -> impl IntoView {
             </Show>
             <Show when=move || started.get() && loaded.get()>
                 <ToolTip/>
-                {move || game_view.get()}
+                <Game />
             </Show>
         </Show>
     }

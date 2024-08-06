@@ -5,13 +5,13 @@ use crate::{
     t,
     views::{cards::MiniNPC, tip, HasTip},
 };
-use hes_engine::{events::Flag, npcs::NPC, Game, Id};
+use hes_engine::{Flag, Id, State, NPC};
 use leptos::*;
 use std::{collections::BTreeMap, sync::OnceLock};
 
 #[component]
 pub fn Parliament() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let total_seats =
         consts::PARLIAMENT_SEATS.iter().sum::<usize>();
@@ -21,8 +21,7 @@ pub fn Parliament() -> impl IntoView {
     let active_npcs = create_memo(move |_| {
         with!(|game| game
             .npcs
-            .iter()
-            .filter(|npc| !npc.locked)
+            .unlocked()
             .cloned()
             .collect::<Vec<_>>())
     });

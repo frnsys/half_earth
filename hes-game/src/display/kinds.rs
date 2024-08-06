@@ -1,10 +1,5 @@
 use crate::vars::Var;
-use hes_engine::{
-    kinds::{Byproduct, Feedstock, Output, Resource},
-    production::ProcessFeature,
-    regions::{Income, Latitude},
-    ProjectType,
-};
+use hes_engine::*;
 
 pub trait AsText {
     fn lower(&self) -> &'static str;

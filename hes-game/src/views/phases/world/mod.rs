@@ -9,7 +9,7 @@ use crate::{
     display,
     icons,
     memo,
-    state::{GameExt, Phase, UIState},
+    state::{Phase, StateExt, UIState},
     t,
     tgav::HectorRef,
     views::{
@@ -20,10 +20,12 @@ use crate::{
     },
 };
 use hes_engine::{
-    events::{IconEvent, Phase as EventPhase, ICON_EVENTS},
-    game::Update as EngineUpdate,
-    Game,
+    EventPhase,
+    IconEvent,
     Id,
+    State,
+    Update as EngineUpdate,
+    ICON_EVENTS,
 };
 use leptos::*;
 use leptos_use::{
@@ -89,7 +91,7 @@ fn Disasters(
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
     let ui = expect_context::<RwSignal<UIState>>();
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let toasts = create_rw_signal::<Vec<Toast>>(vec![]);
 
     let (globe, set_globe) =
@@ -154,8 +156,8 @@ fn Disasters(
                     region_events.push(ev.clone());
                 });
                 game.update(|game| {
-                    game.apply_disaster(
-                        ev, &event_id, &region_id,
+                    StateExt::apply_disaster(
+                        game, ev, &event_id, &region_id,
                     );
                 });
                 toasts.push(Toast::new(ev, &region_name));
@@ -211,7 +213,7 @@ enum Subphase {
 
 #[component]
 pub fn WorldEvents() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let phase = create_rw_signal(Subphase::Events);
@@ -239,9 +241,10 @@ pub fn WorldEvents() -> impl IntoView {
         });
     });
     game.update_untracked(|game| {
-        events.set(
-            game.roll_events(EventPhase::WorldStart, None),
-        );
+        events.set(StateExt::roll_events(
+            game,
+            EventPhase::WorldStart,
+        ));
     });
 
     let skipping = create_rw_signal(false);
@@ -250,7 +253,8 @@ pub fn WorldEvents() -> impl IntoView {
     let year = memo!(game.world.year);
     let cycle_start_year = memo!(ui.cycle_start_state.year);
     let (_, set_game_phase) = slice!(ui.phase);
-    let hector = expect_context::<StoredValue<HectorRef>>();
+
+    let ready_for_next_year = create_rw_signal(false);
     let next_phase = move || {
         let mut next = match phase.get_untracked() {
             Subphase::Disasters => Subphase::Updates,
@@ -260,85 +264,15 @@ pub fn WorldEvents() -> impl IntoView {
         };
 
         if next == Subphase::Updates {
-            game.update_untracked(|game| {
-                ui.update_untracked(|ui| {
-                    let step_updates = game.step_year();
-                    let completed_projects = step_updates
-                        .iter()
-                        .filter_map(|update| match update {
-                            EngineUpdate::Project { id } => {
-                                Some(id)
-                            }
-                            _ => None,
-                        });
-                    ui.cycle_start_state
-                        .completed_projects
-                        .extend(completed_projects);
-
-                    if step_updates.is_empty() || skipping.get()
-                    {
-                        // Skip to next phase.
-                        next = Subphase::Events;
-                    } else {
-                        updates.set(step_updates.into());
-                    }
-                });
-            });
-
-            spawn_local(async move {
-                let emissions = game.with_untracked(|game| {
-                    // Set an upper cap to the amount of emissions we pass to hector,
-                    // because very large numbers end up breaking it.
-                    let emissions_factor = if game
-                        .state
-                        .emissions()
-                        != 0.
-                    {
-                        (consts::MAX_EMISSIONS
-                            / game.state.emissions_gt().abs())
-                        .min(1.0)
-                    } else {
-                        1.0
-                    };
-
-                    // Hector separates out FFI and LUC emissions
-                    // but we lump them together
-                    // Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
-                    let co2 = game.co2_emissions * 12. / 44.
-                        * 1e-15
-                        * emissions_factor; // Pg C/y
-                    let ch4 = game.ch4_emissions
-                        * 1e-12
-                        * emissions_factor; // Tg/y
-                    let n2o = game.n2o_emissions
-                        * 1e-12
-                        * emissions_factor; // Tg/y
-
-                    let mut emissions = HashMap::default();
-                    emissions
-                        .insert("ffi_emissions", co2 as f64);
-                    emissions
-                        .insert("CH4_emissions", ch4 as f64);
-                    emissions
-                        .insert("N2O_emissions", n2o as f64);
-                    emissions
-                });
-
-                let hector = hector.get_value();
-                hector.add_emissions(emissions);
-                let tgav = hector.calc_tgav().await;
-                update!(|game| {
-                    game.set_tgav(tgav as f32);
-                });
-            });
+            ready_for_next_year.set(true);
         }
 
         if next == Subphase::Events {
             game.update_untracked(|game| {
                 ui.update_untracked(|ui| {
-                    let evs = game.roll_events(
+                    let evs = StateExt::roll_events(
+                        game,
                         EventPhase::WorldMain,
-                        None,
                     );
                     for event in &evs {
                         ui.world_events.push(event.clone());
@@ -366,15 +300,17 @@ pub fn WorldEvents() -> impl IntoView {
                 next = Subphase::Done;
             } else {
                 game.update_untracked(|game| {
-                    let evs: Vec<_> = game
-                        .roll_events(EventPhase::Icon, None)
-                        .into_iter()
-                        .map(|ev| Disaster {
-                            event_id: ev.id,
-                            region: ev.region.clone(),
-                            when: js_sys::Math::random() as f32,
-                        })
-                        .collect();
+                    let evs: Vec<_> = StateExt::roll_events(
+                        game,
+                        EventPhase::Icon,
+                    )
+                    .into_iter()
+                    .map(|ev| Disaster {
+                        event_id: ev.id,
+                        region: ev.region.clone(),
+                        when: js_sys::Math::random() as f32,
+                    })
+                    .collect();
                     disasters.set(evs);
                 });
             }
@@ -382,6 +318,80 @@ pub fn WorldEvents() -> impl IntoView {
 
         phase.set(next);
     };
+
+    let hector = expect_context::<StoredValue<HectorRef>>();
+    let tgav_year =
+        create_rw_signal(game.with_untracked(|game| {
+            (game.world.year, game.world.temperature)
+        }));
+
+    create_effect(move |_| {
+        let this_year = year.get();
+        let (y, tgav) = tgav_year.get();
+        if y == this_year && ready_for_next_year.get() {
+            game.update_untracked(|game| {
+                ui.update_untracked(|ui| {
+                    let step_updates = game.step_year(tgav);
+                    let completed_projects = step_updates
+                        .iter()
+                        .filter_map(|update| match update {
+                            EngineUpdate::Project { id } => {
+                                Some(id)
+                            }
+                            _ => None,
+                        });
+                    ui.cycle_start_state
+                        .completed_projects
+                        .extend(completed_projects);
+
+                    if step_updates.is_empty() || skipping.get()
+                    {
+                        // Skip to next phase.
+                        next_phase();
+                    } else {
+                        updates.set(step_updates.into());
+                    }
+                });
+            });
+
+            spawn_local(async move {
+                let emissions = game.with_untracked(|game| {
+                    // Set an upper cap to the amount of emissions we pass to hector,
+                    // because very large numbers end up breaking it.
+                    let emissions_factor =
+                        (consts::MAX_EMISSIONS
+                            / game
+                                .emissions
+                                .as_gtco2eq()
+                                .abs())
+                        .min(1.0);
+
+                    let (co2, ch4, n2o) =
+                        game.emissions.for_hector();
+                    let mut emissions = HashMap::default();
+                    emissions.insert(
+                        "ffi_emissions",
+                        (co2 * emissions_factor) as f64,
+                    );
+                    emissions.insert(
+                        "CH4_emissions",
+                        (ch4 * emissions_factor) as f64,
+                    );
+                    emissions.insert(
+                        "N2O_emissions",
+                        (n2o * emissions_factor) as f64,
+                    );
+                    emissions
+                });
+
+                let hector = hector.get_value();
+                hector.add_emissions(emissions);
+                let next_tgav = hector.calc_tgav().await;
+                tgav_year
+                    .set((this_year + 1, next_tgav as f32));
+            });
+        }
+    });
 
     view! {
         <Hud/>

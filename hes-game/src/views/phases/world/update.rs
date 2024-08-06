@@ -15,7 +15,7 @@ use crate::{
         HasTip,
     },
 };
-use hes_engine::{game::Update as EngineUpdate, Game};
+use hes_engine::{KindMap, State, Update as EngineUpdate};
 
 #[component]
 pub fn Updates(
@@ -48,7 +48,7 @@ fn Update(
     #[prop(into)] update: Signal<EngineUpdate>,
     #[prop(into)] on_done: Callback<()>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let init_can_close = with!(|update| update.is_region());
     let (can_close, set_can_close) =
@@ -156,11 +156,11 @@ fn Update(
                     let region = &regions[id];
 
                     let (prev_income, next_income) = if *up {
-                        let next = region.income_level();
+                        let next = region.income.level();
                         let prev = next - 1;
                         (prev, next)
                     } else {
-                        let next = region.income_level();
+                        let next = region.income.level();
                         let prev = next + 1;
                         (prev, next)
                     };

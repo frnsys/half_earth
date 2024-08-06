@@ -1,11 +1,5 @@
 use crate::views::cards::*;
-use hes_engine::{
-    industries::Industry,
-    npcs::NPC,
-    production::Process,
-    projects::Project,
-    regions::Region,
-};
+use hes_engine::{Industry, Process, Project, Region, NPC};
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
 use std::time::Duration;

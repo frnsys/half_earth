@@ -5,11 +5,11 @@ use leptos::*;
 use crate::{
     audio,
     memo,
-    state::{GameExt, Phase, UIState},
+    state::{Phase, StateExt, UIState},
     t,
     views::{events::Events, intensity, rank_factors},
 };
-use hes_engine::{events::Phase as EventPhase, Game};
+use hes_engine::{EventPhase, State};
 
 struct Locale {
     name: &'static str,
@@ -155,23 +155,25 @@ fn describe_outlook(outlook: f32) -> String {
 #[component]
 pub fn Interstitial() -> impl IntoView {
     let ui = expect_context::<RwSignal<UIState>>();
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let events = create_rw_signal(vec![]);
 
     game.update_untracked(|game| {
-        game.update_production();
         ui.update_untracked(|ui| {
-            ui.factors = rank_factors(&game.state);
+            ui.factors = rank_factors(game);
         });
     });
     game.update_untracked(|game| {
         let evs = if game.won() {
-            game.roll_events(EventPhase::InterstitialWin, None)
+            StateExt::roll_events(
+                game,
+                EventPhase::InterstitialWin,
+            )
         } else {
-            game.roll_events(
+            StateExt::roll_events(
+                game,
                 EventPhase::InterstitialStart,
-                None,
             )
         };
         events.set(evs);
@@ -182,7 +184,7 @@ pub fn Interstitial() -> impl IntoView {
     let year = memo!(game.world.year);
     let pc = memo!(game.political_capital.max(0));
     let outlook = memo!(game.outlook());
-    let emissions = memo!(game.state.emissions_gt());
+    let emissions = memo!(game.emissions.as_gtco2eq());
     let extinction = memo!(game.world.extinction_rate);
     let temperature = memo!(game.world.temperature);
     let start_year = memo!(ui.start_year);
@@ -206,8 +208,8 @@ pub fn Interstitial() -> impl IntoView {
         let idx = (number() - 1) % LOCALES.len();
         &LOCALES[idx]
     };
-    let game_over = move || with!(|game| game.game_over());
-    let game_win = move || with!(|game| game.won());
+    let game_over = memo!(game.game_over);
+    let game_win = memo!(game.won());
     let parliament = move || describe_parliament(pc.get());
     let world = move || {
         describe_warming(emissions.get(), temperature.get())
@@ -239,9 +241,9 @@ pub fn Interstitial() -> impl IntoView {
             );
             set_timeout(
                 move || {
-                    if game_over() {
+                    if game_over.get_untracked() {
                         set_phase.set(Phase::GameOver);
-                    } else if game_win() {
+                    } else if game_win.get_untracked() {
                         set_phase.set(Phase::GameWin);
                     } else {
                         set_phase.set(Phase::Planning);

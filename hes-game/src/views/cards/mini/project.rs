@@ -8,7 +8,7 @@ use super::{
     super::{kinds::project_color, *},
     MiniCard,
 };
-use hes_engine::projects::Project;
+use hes_engine::Project;
 use leptos::*;
 
 #[component]

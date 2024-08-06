@@ -4,11 +4,7 @@ use std::collections::{BTreeMap, HashSet};
 
 use crate::icons::{self, fill_icons};
 pub use describe::DisplayEffect;
-use hes_engine::{
-    events::*,
-    projects::{Project, Status, Type},
-    Game,
-};
+use hes_engine::{Effect, Project, ProjectType, State, Status};
 use leptos::{
     component,
     expect_context,
@@ -81,7 +77,9 @@ impl From<&Effect> for DisplayEffect {
 pub fn active_effects(project: &Project) -> Vec<DisplayEffect> {
     let mut effects = vec![];
 
-    if project.kind == Type::Policy && !project.is_active() {
+    if project.kind == ProjectType::Policy
+        && !project.is_active()
+    {
         // Project outcome effects are secret and delayed
         effects.extend(
             project.effects.iter().map(DisplayEffect::from),
@@ -118,7 +116,7 @@ pub fn Effects(
     #[prop(into)] effects: Signal<Vec<DisplayEffect>>,
     #[prop(optional)] class: &'static str,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let items = move || {
         with!(|game, effects| {
             let mut effects = effects

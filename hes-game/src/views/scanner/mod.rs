@@ -4,7 +4,7 @@ mod effects;
 mod process;
 mod project;
 
-use hes_engine::{state::State, Id};
+use hes_engine::{Id, State};
 use leptos::*;
 use std::{rc::Rc, time::Duration};
 use wasm_bindgen::prelude::*;

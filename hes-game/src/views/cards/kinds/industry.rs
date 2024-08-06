@@ -8,14 +8,14 @@ use crate::{
     vars::Impact,
     views::{tip, HasTip},
 };
-use hes_engine::{industries::Industry, Game};
+use hes_engine::{Industry, KindMap, State};
 use leptos::*;
 
 #[component]
 pub fn IndustryCard(
     #[prop(into)] industry: Signal<Industry>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let lic_pop = memo!(game.world.lic_population());
     let demand = move || {
@@ -31,7 +31,7 @@ pub fn IndustryCard(
             (industry.adj_byproducts() * demand()).co2eq()
         })
     };
-    let resources_demand = memo!(game.resources_demand);
+    let resources_demand = memo!(game.resource_demand.total());
     let body_view = move || {
         if empty() {
             t!("This industry is not yet significant.")
@@ -59,7 +59,7 @@ pub fn IndustryCard(
                                 <div>
                                     <div class="card-icon">
                                         <img src=key.icon()/>
-                                        {total_resources()[key]}
+                                        {val}
                                     </div>
                                 </div>
                             </HasTip>

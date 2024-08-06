@@ -6,12 +6,12 @@ use crate::{
     util::{scale_text, to_ws_el},
     views::globe::{Globe, GlobeRef},
 };
-use hes_engine::Game;
+use hes_engine::State;
 use leptos::*;
 
 #[component]
 pub fn Regions() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let (globe, set_globe) =
         create_signal::<Option<GlobeRef>>(None);

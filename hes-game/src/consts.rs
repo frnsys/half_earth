@@ -1,11 +1,6 @@
 /// PC cost for research/infrastructure points
 pub const POINT_COST: u8 = 3;
 
-/// Have to all be below these values to win
-pub const WIN_EMISSIONS: f32 = 0.0;
-pub const WIN_EXTINCTION: f32 = 20.0;
-pub const WIN_TEMPERATURE: f32 = 1.0;
-
 /// Set an upper cap (in GtCO2eq) to the amount of emissions we pass to hector,
 /// because very large numbers end up breaking it.
 pub const MAX_EMISSIONS: f32 = 200.;

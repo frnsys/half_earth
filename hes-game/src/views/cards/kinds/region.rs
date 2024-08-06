@@ -12,7 +12,7 @@ use crate::{
         HasTip,
     },
 };
-use hes_engine::{regions::Region, Game};
+use hes_engine::{KindMap, Region, State};
 use leptos::*;
 
 #[component]
@@ -23,8 +23,8 @@ pub fn RegionCard(
         let outlook = with!(|region| region.outlook);
         intensity::scale(outlook, Variable::Outlook)
     };
-    let game = expect_context::<RwSignal<Game>>();
-    let total_demand = memo!(game.demand_for_outputs());
+    let game = expect_context::<RwSignal<State>>();
+    let total_demand = memo!(game.output_demand.total());
     let per_capita_demand = memo!(game.world.output_demand);
     let demand = move || {
         with!(|region, total_demand, per_capita_demand| {
@@ -56,7 +56,7 @@ pub fn RegionCard(
         t!(income)
     };
     let income_level =
-        move || with!(|region| region.income_level() + 1);
+        move || with!(|region| region.income.level() + 1);
     let name = move || {
         let name = with!(|region| region.name.clone());
         t!(&name)

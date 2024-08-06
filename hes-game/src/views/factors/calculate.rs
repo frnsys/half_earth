@@ -1,15 +1,16 @@
 use enum_map::EnumMap;
 use hes_engine::{
-    events::{
-        mean_demand_outlook_change,
-        mean_income_outlook_change,
-        Effect,
-        WorldVariable,
-    },
-    industries::Industry,
-    kinds::{ByproductMap, Output, Resource, ResourceMap},
-    production::Process,
-    state::State,
+    mean_demand_outlook_change,
+    mean_income_outlook_change,
+    ByproductMap,
+    Effect,
+    Industry,
+    Output,
+    Process,
+    Resource,
+    ResourceMap,
+    State,
+    WorldVariable,
 };
 use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;
@@ -201,13 +202,12 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
     state
         .world
         .projects
-        .iter()
-        .filter(|p| p.is_active() || p.is_finished())
+        .online()
         .map(|p| {
             let effects = p.active_effects_with_outcomes();
             let amount = effects_factor(var, &effects, state);
 
-            let demand = state.demand_for_outputs();
+            let demand = state.output_demand.total();
             let display = if var.is_demand_var() {
                 let demand = match var {
                     Var::Energy => demand.energy(),
@@ -219,7 +219,10 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
                     }
                     _ => unreachable!(),
                 };
-                display::percent(amount / demand, true)
+                format!(
+                    "{}%",
+                    display::percent(amount / demand, true)
+                )
             } else {
                 amount.to_string()
             };
@@ -238,20 +241,23 @@ fn regional_factors(
     state: &State,
 ) -> Vec<Factor> {
     let per_capita_output_demand = &state.world.output_demand;
-    let output_demand = &state.demand_for_outputs();
+    let output_demand = &state.output_demand.total();
     state
         .world
         .regions
         .iter()
         .map(|region| {
-            let intensity = region.income_level() + 1;
+            let intensity = region.income.level() + 1;
             let amount =
                 region.demand(per_capita_output_demand)[output];
 
             // What percent of total demand this region's demand represents.
-            let display = display::percent(
-                amount / output_demand[output],
-                true,
+            let display = format!(
+                "{}%",
+                display::percent(
+                    amount / output_demand[output],
+                    true,
+                )
             );
             Factor::Region {
                 name: region.name.clone(),
@@ -284,7 +290,7 @@ impl HasImpacts for Process {
     }
 
     fn demand(&self, state: &State) -> f32 {
-        *state.produced_by_process.get(&self.id).unwrap_or(&0.)
+        *state.produced.by_process.get(&self.id).unwrap_or(&0.)
     }
 }
 
@@ -328,33 +334,44 @@ fn impact_factor<S: HasImpacts>(
         }
         Impact::Emissions => source.byproducts().co2eq(),
         Impact::Biodiversity => {
-            let total_land =
-                state.world.starting_resources.land;
+            let total_land = state.resources.available.land;
             source.extinction_rate(total_land)
         }
     };
 
     let demand = source.demand(state);
 
-    let total = base
-        * demand
-        * impact
-            .as_output()
-            .map(|o| state.output_demand_modifier[o])
-            .unwrap_or(1.);
+    // TODO
+    let total = 0.;
+    // let total = base
+    //     * demand
+    //     * impact
+    //         .as_output()
+    //         .map(|o| state.output_demand_modifier[o])
+    //         .unwrap_or(1.);
 
     let display = match impact {
         Impact::Energy => {
-            let demand = state.demand_for_outputs().energy();
-            display::percent(total / demand, true)
+            let demand = state.output_demand.total().energy();
+            format!(
+                "{}%",
+                display::percent(total / demand, true)
+            )
         }
         Impact::Electricity => {
-            let demand = state.demand_for_outputs().electricity;
-            display::percent(total / demand, true)
+            let demand =
+                state.output_demand.of(Output::Electricity);
+            format!(
+                "{}%",
+                display::percent(total / demand, true)
+            )
         }
         Impact::Fuel => {
-            let demand = state.demand_for_outputs().fuel;
-            display::percent(total / demand, true)
+            let demand = state.output_demand.of(Output::Fuel);
+            format!(
+                "{}%",
+                display::percent(total / demand, true)
+            )
         }
         _ => display::format_impact(impact, total),
     };
@@ -377,9 +394,12 @@ fn production_factors(
             let kind: OutputKind = proc.output.into();
             let inten =
                 intensity::impact_intensity(base, impact, kind);
-            let total_demand = state.output_demand[proc.output];
-            let display_produced =
-                display::percent(demand / total_demand, true);
+            let total_demand =
+                state.output_demand.of(proc.output);
+            let display_produced = format!(
+                "{}%",
+                display::percent(demand / total_demand, true)
+            );
             Factor::Process {
                 name: proc.name.to_string(),
                 produced: demand,
@@ -425,10 +445,13 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
         // Additional factors
         match var {
             Var::Contentedness => {
-                if state.temp_outlook != 0. {
+                if state.world.temp_outlook != 0. {
                     rankings.push(Factor::Event {
                         name: "Temperature Change".into(),
-                        amount: state.temp_outlook.round(),
+                        amount: state
+                            .world
+                            .temp_outlook
+                            .round(),
                         display: None,
                     })
                 }
@@ -506,38 +529,39 @@ pub fn factors_card(
         kind: var,
         current: current_name,
         total: match var {
-            Var::Emissions => state.emissions_gt(),
+            Var::Emissions => state.emissions.as_gtco2eq(),
             Var::Biodiversity => {
                 state.world.extinction_rate.round().max(0.)
             }
             Var::Land => display::land_use_percent(
-                state.resources_demand.land,
+                state.resource_demand.of(Resource::Land),
             ),
             Var::Energy => {
-                let demand = state.demand_for_outputs();
-                display::twh(demand.electricity + demand.fuel)
+                let demand =
+                    state.output_demand.total().energy();
+                display::twh(demand)
             }
             Var::Water => {
                 display::resource(
-                    state.resources_demand.water,
+                    state.resource_demand.of(Resource::Water),
                     Resource::Water,
                 ) / display::resource(
-                    state.resources.water,
+                    state.resources.available.water,
                     Resource::Water,
                 )
             }
             Var::Contentedness => state.outlook().round(),
             Var::Electricity => display::twh(
-                state.demand_for_outputs().electricity,
+                state.output_demand.of(Output::Electricity),
             ),
-            Var::Fuel => {
-                display::twh(state.demand_for_outputs().fuel)
-            }
+            Var::Fuel => display::twh(
+                state.output_demand.of(Output::Fuel),
+            ),
             Var::PlantCalories => display::tcals(
-                state.demand_for_outputs().plant_calories,
+                state.output_demand.of(Output::PlantCalories),
             ),
             Var::AnimalCalories => display::tcals(
-                state.demand_for_outputs().animal_calories,
+                state.output_demand.of(Output::AnimalCalories),
             ),
         },
     }

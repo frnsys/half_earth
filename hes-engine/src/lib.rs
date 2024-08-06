@@ -1,16 +1,46 @@
+#![feature(generic_arg_infer)]
 #[macro_use]
-pub mod kinds;
-pub mod events;
+
+mod kinds;
+mod events;
 pub mod flavor;
-pub mod industries;
-pub mod npcs;
-pub mod production;
-pub mod projects;
-pub mod regions;
-pub mod state;
+mod industries;
+mod npcs;
+mod production;
+mod projects;
+mod regions;
+mod state;
 pub mod surface;
 mod util;
-pub mod world;
-pub use projects::Type as ProjectType;
-pub use state::State;
+mod world;
+
+pub use events::{
+    mean_demand_outlook_change,
+    mean_income_outlook_change,
+    Condition,
+    Effect,
+    Flag,
+    IconEvent,
+    Likelihood,
+    LocalVariable,
+    Phase as EventPhase,
+    PlayerVariable,
+    Probability,
+    Request as NPCRequest,
+    WorldVariable,
+    ICON_EVENTS,
+};
+pub use industries::Industry;
+pub use kinds::*;
+pub use npcs::NPC;
+pub use production::{Process, ProcessFeature};
+pub use projects::{
+    Group,
+    Project,
+    Status,
+    Type as ProjectType,
+};
+pub use regions::{Income, Latitude, Region};
+pub use state::{Emissions, ResolvedEvent, State, Update};
 pub use util::*;
+pub use world::World;

@@ -1101,6 +1101,7 @@ strong{
 .tip--card {
   pointer-events: none;
   max-width: 520px;
+  height: 450px;
   margin: 0 auto;
 }
 .tip--card .card {

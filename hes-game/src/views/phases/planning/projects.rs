@@ -2,26 +2,23 @@ use crate::{
     debug::get_debug_opts,
     icons::{self, HasIcon},
     memo,
-    state::{GameExt, Tutorial, UIState},
+    state::{StateExt, Tutorial, UIState},
     t,
     views::{scanner::*, Help},
 };
-use hes_engine::{
-    projects::{Status, Type},
-    Game,
-};
+use hes_engine::{ProjectType, State, Status};
 use leptos::*;
 
 #[component]
 pub fn Projects(
-    #[prop(into)] on_kind_change: Callback<Type>,
+    #[prop(into)] on_kind_change: Callback<ProjectType>,
     #[prop(into)] on_change: Callback<()>,
     #[prop(into)] close: Callback<()>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
-    let (kind, set_kind) = create_signal(Type::Research);
-    let set_kind = move |kind: Type| {
+    let (kind, set_kind) = create_signal(ProjectType::Research);
+    let set_kind = move |kind: ProjectType| {
         set_kind.set(kind);
         on_kind_change.call(kind);
     };
@@ -87,24 +84,24 @@ pub fn Projects(
             <div class="planning--page-tabs">
                 <div
                     class="planning-sub-tab"
-                    on:click=move |_| set_kind(Type::Research)
-                    class:selected=move || kind.get() == Type::Research
+                    on:click=move |_| set_kind(ProjectType::Research)
+                    class:selected=move || kind.get() == ProjectType::Research
                 >
                     <img src=icons::RESEARCH/>
                     <div>{t!("Research")}</div>
                 </div>
                 <div
                     class="planning-sub-tab"
-                    on:click=move |_| set_kind(Type::Initiative)
-                    class:selected=move || kind.get() == Type::Initiative
+                    on:click=move |_| set_kind(ProjectType::Initiative)
+                    class:selected=move || kind.get() == ProjectType::Initiative
                 >
                     <img src=icons::INITIATIVE/>
                     <div>{t!("Infrastructure")}</div>
                 </div>
                 <div
                     class="planning-sub-tab"
-                    on:click=move |_| set_kind(Type::Policy)
-                    class:selected=move || kind.get() == Type::Policy
+                    on:click=move |_| set_kind(ProjectType::Policy)
+                    class:selected=move || kind.get() == ProjectType::Policy
                 >
                     <img src=icons::POLICY/>
                     <div>{t!("Policies")}</div>
@@ -131,16 +128,18 @@ pub fn Projects(
 }
 
 #[component]
-fn Points(#[prop(into)] kind: Signal<Type>) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+fn Points(
+    #[prop(into)] kind: Signal<ProjectType>,
+) -> impl IntoView {
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
     let pc_points = memo!(game.political_capital);
     let init_points = memo!(ui.points.initiative);
     let research_points = memo!(ui.points.research);
     let available_points = move || match kind.get() {
-        Type::Policy => pc_points.get(),
-        Type::Initiative => init_points.get(),
-        Type::Research => research_points.get(),
+        ProjectType::Policy => pc_points.get(),
+        ProjectType::Initiative => init_points.get(),
+        ProjectType::Research => research_points.get(),
     };
     let next_point_cost =
         memo!(game.next_point_cost(&kind.get()));
@@ -151,7 +150,7 @@ fn Points(#[prop(into)] kind: Signal<Type>) -> impl IntoView {
             <div class="pips-group">
                 {pc_points} <img class="pip" src=icons::POLITICAL_CAPITAL/>
             </div>
-            <Show when=move || kind.get() != Type::Policy>
+            <Show when=move || kind.get() != ProjectType::Policy>
                 <div class="pips-group">
                     <Show
                         when=move || { available_points() > 0 }

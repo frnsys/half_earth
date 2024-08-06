@@ -2,7 +2,17 @@ use crate::{
     state::{STARTING_LAND, STARTING_WATER},
     vars::Impact,
 };
-use hes_engine::kinds::*;
+use hes_engine::*;
+
+pub trait DisplayValue {
+    fn display(&self) -> String;
+}
+
+impl DisplayValue for Emissions {
+    fn display(&self) -> String {
+        emissions(self.as_gtco2eq())
+    }
+}
 
 pub fn format_number(val: f32) -> String {
     if val >= 1e9 {
@@ -108,6 +118,15 @@ pub fn percent(p: f32, round: bool) -> String {
         format!("{:.0}", percent.round())
     } else {
         format!("{:.1}", percent)
+    }
+}
+
+pub fn signed_percent(p: f32, round: bool) -> String {
+    let s = percent(p, round);
+    if p >= 0. {
+        format!("+{s}")
+    } else {
+        format!("-{s}")
     }
 }
 

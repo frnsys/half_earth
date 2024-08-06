@@ -9,7 +9,7 @@ use super::{
     super::{kinds::NPCCard, *},
     MiniCard,
 };
-use hes_engine::npcs::NPC;
+use hes_engine::NPC;
 use leptos::*;
 
 #[component]

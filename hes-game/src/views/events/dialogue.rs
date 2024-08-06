@@ -6,17 +6,7 @@ use crate::{
     views::{effects::DisplayEffect, Effects},
 };
 use ev::MouseEvent;
-use hes_engine::{
-    flavor::{
-        self,
-        DialogueLine,
-        DialogueNext,
-        Response,
-        Speaker,
-    },
-    Game,
-    Id,
-};
+use hes_engine::{flavor::*, Id, State};
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
 use regex_lite::Regex;
@@ -58,7 +48,7 @@ pub fn Dialogue(
     #[prop(into, optional)] context: Signal<
         BTreeMap<String, String>,
     >,
-    #[prop(into)] dialogue: Signal<flavor::Dialogue>,
+    #[prop(into)] dialogue: Signal<Dialogue>,
     #[prop(into, optional, default=(|_| {}).into())] on_advance: Callback<()>,
     #[prop(into, optional, default=(|_| {}).into())]
     on_start: Callback<()>,
@@ -68,7 +58,7 @@ pub fn Dialogue(
     #[prop(into, optional)] event_id: Signal<Option<Id>>,
     #[prop(into, optional)] region_id: Signal<Option<Id>>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let (revealed, set_revealed) = create_signal(false);
     let (stop_anim, set_stop_anim) =

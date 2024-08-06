@@ -45,7 +45,6 @@ impl EventPool {
         &mut self,
         phase: Phase,
         state: &State,
-        limit: Option<usize>,
         rng: &mut SmallRng,
     ) -> Vec<(Event, Option<Id>)> {
         // Prevent duplicate events
@@ -150,11 +149,6 @@ impl EventPool {
                     }
                 }
                 self.triggered.remove(i);
-                if let Some(n) = limit {
-                    if happening.len() >= n {
-                        break;
-                    }
-                }
             } else {
                 i += 1;
             }

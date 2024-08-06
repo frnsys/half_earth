@@ -7,13 +7,7 @@ use crate::{
     views::cards::ProcessCard,
 };
 use enum_map::EnumMap;
-use hes_engine::{
-    kinds::Output,
-    production::Process,
-    state::State,
-    Game,
-    Id,
-};
+use hes_engine::{Id, Output, Process, State};
 use leptos::*;
 
 use super::{
@@ -53,13 +47,14 @@ impl ScannerSpec for ProcessScanner {
         let points = self.points.clone();
         let on_change = self.on_change.clone();
 
-        let game = expect_context::<RwSignal<Game>>();
+        let game = expect_context::<RwSignal<State>>();
         let ui = expect_context::<RwSignal<UIState>>();
 
         let process_max_share = create_memo(move |_| {
             with!(|game, process| process
                 .as_ref()
-                .map(|process| game.process_max_share(process))
+                .map(|process| game
+                    .process_max_share(&process.id))
                 .unwrap_or(0))
         });
 

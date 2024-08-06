@@ -4,13 +4,7 @@ use crate::{
 };
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
-use hes_engine::{
-    events::IconEvent,
-    kinds::Output,
-    regions::Income,
-    state::State,
-    Id,
-};
+use hes_engine::{IconEvent, Id, Income, Output, State};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -141,7 +135,8 @@ impl UIState {
         self.cycle_start_state.contentedness = state.outlook();
         self.cycle_start_state.temperature =
             state.world.temperature;
-        self.cycle_start_state.emissions = state.emissions_gt();
+        self.cycle_start_state.emissions =
+            state.emissions.as_gtco2eq();
         self.cycle_start_state.region_incomes = state
             .world
             .regions

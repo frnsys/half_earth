@@ -12,7 +12,7 @@ use crate::{
     util::{detect_center_element, nodelist_to_elements},
     views::cards::{CardFocusArea, Cards},
 };
-use hes_engine::Game;
+use hes_engine::State;
 use leptos::*;
 use leptos_use::{
     use_document,
@@ -183,7 +183,7 @@ pub fn ScannerCards<S: ScannerSpec>(
             .with(|item| item.as_ref().map(|item| *item.id()))
     };
 
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     view! {
         <Show when=move || focused.with(|item| item.is_some())>

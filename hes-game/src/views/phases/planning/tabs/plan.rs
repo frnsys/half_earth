@@ -14,10 +14,12 @@ use crate::{
 };
 use enum_map::EnumMap;
 use hes_engine::{
-    events::Phase as EventPhase,
-    kinds::{Feedstock, Output},
-    Game,
+    EventPhase,
+    Feedstock,
+    Output,
     ProjectType,
+    Resource,
+    State,
 };
 use leptos::*;
 use leptos_use::{use_document, use_event_listener};
@@ -48,7 +50,7 @@ pub fn Plan(
     #[prop(into)] on_plan_change: Callback<()>,
     #[prop(into)] on_page_change: Callback<EventPhase>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let (slots, set_slots) = create_signal(calc_slots());
@@ -81,11 +83,7 @@ pub fn Plan(
     let active_projects = move || {
         tracing::debug!("Checking Active Projects");
         with!(|projects| {
-            projects
-                .iter()
-                .filter(|p| p.is_online() || p.is_building())
-                .cloned()
-                .collect::<Vec<_>>()
+            projects.changeable().cloned().collect::<Vec<_>>()
         })
     };
     let n_projects = move || {
@@ -109,8 +107,7 @@ pub fn Plan(
                 "Checking Any New Projects - INNER"
             );
             let res = projects
-                .iter()
-                .filter(|p| !p.locked)
+                .unlocked()
                 .any(|p| !viewed.contains(&p.id));
             tracing::debug!("Checking Any New Projects - END");
             res
@@ -120,8 +117,7 @@ pub fn Plan(
         tracing::debug!("Checking Any New Processes");
         with!(|processes, viewed| {
             processes
-                .iter()
-                .filter(|p| !p.locked)
+                .unlocked()
                 .any(|p| !viewed.contains(&p.id))
         })
     };
@@ -144,37 +140,28 @@ pub fn Plan(
             max_for_output(Output::AnimalCalories),
         ]
     };
-    let process_max_shares = create_memo(move |_| {
+    let processes_over_limit = move || {
+        tracing::debug!("Checking Processes Over Limit");
         with!(|game| game
             .world
             .processes
-            .iter()
-            .map(|p| game.process_max_share(p))
+            .over_limit(
+                game.output_demand.total(),
+                game.feedstocks.available
+            )
+            .map(|p| t!(&p.name))
             .collect::<Vec<_>>())
-    });
-    let processes_over_limit = move || {
-        tracing::debug!("Checking Processes Over Limit");
-        with!(|processes, process_max_shares| {
-            processes
-                .iter()
-                .zip(process_max_shares)
-                .filter(|(p, max_share)| {
-                    p.mix_share > 0 && p.mix_share > **max_share
-                })
-                .map(|(p, _)| t!(&p.name))
-                .collect::<Vec<_>>()
-        })
     };
 
     let produced = memo!(game.produced);
-    let output_demand = memo!(game.demand_for_outputs());
+    let output_demand = memo!(game.output_demand.total());
     let production_shortages = move || {
         let problems = with!(|produced, output_demand| {
             let mut problems: EnumMap<Output, f32> =
                 EnumMap::from_array([1.; 4]);
             for output in Output::iter() {
                 let met =
-                    produced[output] / output_demand[output];
+                    produced.of(output) / output_demand[output];
                 if met >= 0.99 {
                     continue;
                 } else {
@@ -236,35 +223,25 @@ pub fn Plan(
     };
 
     let resources = memo!(game.resources);
-    let required_resources = memo!(game.required_resources);
     let feedstocks = memo!(game.feedstocks);
-    let required_feedstocks = memo!(game.required_feedstocks);
     let input_shortages = move || {
-        let resources: Vec<_> =
-            hes_engine::kinds::Resource::iter()
+        let resources: Vec<_> = with!(|resources| {
+            Resource::iter()
+                .filter(|res| resources.has_shortage(*res))
+                .map(|r| t!(r.title()))
+                .collect()
+        });
+        let feedstock: Vec<_> = with!(|feedstocks| {
+            Feedstock::iter()
                 .filter(|res| {
-                    let shortage = required_resources.get()
-                        [*res]
-                        - resources.get()[*res];
-                    shortage > 0.
-                })
-                .collect();
-        let feedstock: Vec<_> =
-            hes_engine::kinds::Feedstock::iter()
-                .filter(|res| {
-                    let shortage = required_feedstocks.get()
-                        [*res]
-                        - feedstocks.get()[*res];
-                    shortage > 0.
+                    feedstocks.has_shortage(*res)
                         && *res != Feedstock::Other
                         && *res != Feedstock::Soil
                 })
-                .collect();
-        let shortages = resources
-            .into_iter()
-            .map(|r| t!(r.title()))
-            .chain(feedstock.into_iter().map(|r| t!(r.title())))
-            .collect::<Vec<_>>();
+                .map(|r| t!(r.title()))
+                .collect()
+        });
+        let shortages = [resources, feedstock].concat();
         if shortages.is_empty() {
             None
         } else {

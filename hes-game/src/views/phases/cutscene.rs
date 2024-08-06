@@ -2,16 +2,16 @@ use std::time::Duration;
 
 use crate::{
     audio,
-    state::{GameExt, Phase, UIState},
+    state::{Phase, StateExt, UIState},
     t,
     views::events::Events,
 };
-use hes_engine::{events::Phase as EventPhase, Game};
+use hes_engine::{EventPhase, State};
 use leptos::*;
 
 #[component]
 pub fn Cutscene() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     // One per line of dialogue
@@ -65,12 +65,10 @@ pub fn Cutscene() -> impl IntoView {
     let events = create_rw_signal(vec![]);
     create_effect(move |_| {
         update!(move |game| {
-            events.set(
-                game.roll_events(
-                    EventPhase::CutsceneIntro,
-                    None,
-                ),
-            );
+            events.set(StateExt::roll_events(
+                game,
+                EventPhase::CutsceneIntro,
+            ));
         });
     });
 

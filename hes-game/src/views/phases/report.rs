@@ -3,7 +3,7 @@ use crate::{
     display::*,
     icons,
     memo,
-    state::{GameExt, Phase, UIState},
+    state::{Phase, StateExt, UIState},
     t,
     vars::Var,
     views::{
@@ -12,13 +12,11 @@ use crate::{
         hud::Hud,
         intensity::{self, IntensityBar},
         tip,
+        DisplayEvent,
         HasTip,
     },
 };
-use hes_engine::{
-    events::{Phase as EventPhase, Request as EngineRequest},
-    Game,
-};
+use hes_engine::{EventPhase, NPCRequest, State};
 use leptos::*;
 
 pub struct Request {
@@ -28,14 +26,15 @@ pub struct Request {
 
 #[component]
 pub fn Report() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
-    let events = create_rw_signal(vec![]);
+    let events = create_rw_signal::<Vec<DisplayEvent>>(vec![]);
     game.update_untracked(|game| {
-        events.set(
-            game.roll_events(EventPhase::ReportStart, None),
-        );
+        events.set(StateExt::roll_events(
+            game,
+            EventPhase::ReportStart,
+        ));
     });
 
     let year = memo!(game.world.year);
@@ -153,7 +152,7 @@ pub fn Report() -> impl IntoView {
         with!(|projects, processes| {
             finished_requests.get_value().into_iter().map(|(kind, id, active, bounty)| {
                 match kind {
-                    EngineRequest::Project => {
+                    NPCRequest::Project => {
                         let project = &projects[&id];
                         Request {
                             bounty: bounty as isize,
@@ -164,7 +163,7 @@ pub fn Report() -> impl IntoView {
                             }
                         }
                     }
-                    EngineRequest::Process => {
+                    NPCRequest::Process => {
                         let process = &processes[&id];
                         Request {
                             bounty: bounty as isize,
@@ -198,9 +197,9 @@ pub fn Report() -> impl IntoView {
             )))
     };
 
-    let emissions_gt = memo!(game.emissions_gt());
+    let emissions_gt = memo!(game.emissions.display());
     let emissions_tip = move || {
-        let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get());
+        let tip_text = t!(r#"Current annual emissions are {emissions}. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get());
         crate::views::tip(icons::EMISSIONS, tip_text).card(
             with!(|game| factors_card(
                 None,
@@ -252,7 +251,7 @@ pub fn Report() -> impl IntoView {
             consts::EXTINCTION_PC.last().unwrap()
         })
     };
-    let emissions = memo!(game.state.emissions_gt());
+    let emissions = memo!(game.emissions.as_gtco2eq());
     let start_emissions = memo!(ui.cycle_start_state.emissions);
     let ghg_pc_change = move || {
         with!(|emissions, start_emissions| {

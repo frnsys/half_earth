@@ -1,5 +1,5 @@
 use crate::{icons, memo, t, views::cards::MiniProject};
-use hes_engine::Game;
+use hes_engine::State;
 use leptos::*;
 
 #[component]
@@ -7,7 +7,7 @@ pub fn ActivePlan(
     #[prop(into)] close: Callback<()>,
     #[prop(into)] add: Callback<()>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let projects = memo!(game.world.projects);
     let active_projects = move || {
         with!(|projects| {

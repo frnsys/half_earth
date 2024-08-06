@@ -1,5 +1,5 @@
 use enum_map::Enum;
-use hes_engine::kinds::*;
+use hes_engine::*;
 use serde::{Deserialize, Serialize};
 use strum::EnumIter;
 

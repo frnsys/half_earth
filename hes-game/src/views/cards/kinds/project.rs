@@ -4,9 +4,9 @@ use crate::{
     display::AsText,
     icons::{self, HasIcon},
     memo,
-    state::{GameExt, UIState},
+    state::UIState,
     t,
-    util::ImageExt,
+    util::{scale_text, to_ws_el, ImageExt},
     views::{
         effects::{active_effects, DisplayEffect},
         tip,
@@ -14,20 +14,15 @@ use crate::{
         HasTip,
     },
 };
-use hes_engine::{
-    events::Flag,
-    projects::{Group, Project},
-    years_remaining,
-    Game,
-    ProjectType,
-};
+use hes_engine::{Flag, Group, Project, ProjectType, State};
+use html::ToHtmlElement;
 use leptos::*;
 
 #[component]
 pub fn ProjectCard(
     #[prop(into)] project: Signal<Project>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let viewed = memo!(ui.viewed);
@@ -66,6 +61,23 @@ pub fn ProjectCard(
         move || with!(|project| !project.upgrades.is_empty());
     let level = move || with!(|project| project.level + 1);
 
+    let name_memo = memo!(project.name);
+    let name_ref = create_node_ref::<html::Div>();
+    create_effect(move |_| {
+        name_memo.track();
+        if let Some(name_ref) = name_ref.get() {
+            scale_text(
+                to_ws_el(
+                    name_ref
+                        .parent_element()
+                        .unwrap()
+                        .to_leptos_element(),
+                ),
+                14,
+            );
+        }
+    });
+
     let plan_changes = memo!(ui.plan_changes);
     let remaining_cost = move || {
         with!(|project, plan_changes| {
@@ -77,11 +89,7 @@ pub fn ProjectCard(
                         t!("1 planning cycle left")
                     }
                     _ => {
-                        let years = years_remaining(
-                            project.progress,
-                            project.points,
-                            project.cost,
-                        );
+                        let years = project.years_remaining();
                         t!("{years} yrs left", years: years)
                     }
                 }
@@ -147,7 +155,7 @@ pub fn ProjectCard(
 
     let parliament_suspended =
         memo!(game.flags.contains(&Flag::ParliamentSuspended));
-    let player_seats = memo!(game.player_seats());
+    let player_seats = memo!(game.npcs.coalition_seats());
     let majority_satisfied = move || {
         with!(|parliament_suspended, player_seats| {
             if *parliament_suspended {
@@ -468,7 +476,7 @@ pub fn ProjectCard(
                 </Show>
             </Body>
 
-            <Name slot>{name}</Name>
+            <Name slot><div ref=name_ref>{name}</div></Name>
             <TopBack slot>
                 <p class="card-desc">{description}</p>
             </TopBack>

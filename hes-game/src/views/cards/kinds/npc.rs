@@ -5,7 +5,7 @@ use crate::{
     t,
     views::{tip, HasTip},
 };
-use hes_engine::npcs::NPC;
+use hes_engine::NPC;
 use leptos::*;
 
 #[component]

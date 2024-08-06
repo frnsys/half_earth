@@ -27,16 +27,14 @@ pub fn scale_text(elem: web_sys::HtmlElement, min_size: u32) {
 
 /// Get the font size of a given element.
 fn get_font_size(elem: &web_sys::HtmlElement) -> Option<i32> {
-    use_window().as_ref().and_then(|window| {
-        window.get_computed_style(elem).unwrap().map(|style| {
-            style
-                .get_property_value("font-size")
-                .unwrap()
-                .replace("px", "")
-                .parse::<f32>()
-                .unwrap()
-                .round() as i32
-        })
+    window().get_computed_style(elem).unwrap().map(|style| {
+        style
+            .get_property_value("font-size")
+            .unwrap()
+            .replace("px", "")
+            .parse::<f32>()
+            .unwrap()
+            .round() as i32
     })
 }
 

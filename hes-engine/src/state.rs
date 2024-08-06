@@ -73,11 +73,11 @@ pub struct State {
     pub policy_queue: Vec<Id>,
 
     pub produced: Production,
-    pub resources: Reserve<ResourceMap>,
-    pub feedstocks: Reserve<FeedstockMap>,
-    pub output_demand: Modifiable<OutputMap>,
-    pub resource_demand: Modifiable<ResourceMap>,
-    pub byproducts: Modifiable<ByproductMap>,
+    pub resources: Resources,
+    pub feedstocks: Feedstocks,
+    pub output_demand: OutputDemand,
+    pub resource_demand: ResourceDemand,
+    pub byproducts: Byproducts,
 
     pub protected_land: f32,
 
@@ -143,7 +143,7 @@ impl State {
     }
 
     /// If we won the game.
-    pub fn success(&self) -> bool {
+    pub fn won(&self) -> bool {
         self.emissions.as_gtco2eq() <= WIN_EMISSIONS
             && self.world.extinction_rate <= WIN_EXTINCTION
             && self.world.temperature <= WIN_TEMPERATURE
@@ -521,19 +521,18 @@ impl State {
     //         self.compute_temp_outlook_change(temp_diff);
     // }
 
-    pub fn roll_events_for_phase<'a>(
-        &'a mut self,
+    pub fn roll_events(
+        &mut self,
         phase: Phase,
-        limit: Option<usize>,
     ) -> Vec<ResolvedEvent> {
         // Hacky
         let mut rng = self.rng.clone();
         let mut pool = self.event_pool.clone();
         let events =
-            pool.roll_for_phase(phase, &self, limit, &mut rng);
+            pool.roll_for_phase(phase, &self, &mut rng);
         self.event_pool = pool;
 
-        events
+        let events: Vec<ResolvedEvent> = events
             .into_iter()
             .map(|(ev, region_id)| ResolvedEvent {
                 event: ev,
@@ -546,7 +545,21 @@ impl State {
                     )
                 }),
             })
-            .collect()
+            .collect();
+
+        // Icon events, aka disasters,
+        // are handled differently, so we don't
+        // apply their effects immediately here.
+        if phase != Phase::Icon {
+            for ev in &events {
+                self.apply_event(
+                    ev.id,
+                    ev.region.as_ref().map(|(id, _)| *id),
+                );
+            }
+        }
+
+        events
     }
 }
 
@@ -827,6 +840,22 @@ impl Emissions {
 
     pub fn as_gtco2eq(&self) -> f32 {
         self.as_co2eq() * 1e-15
+    }
+
+    /// Convert to units expected by Hector:
+    /// - CO2: Pg C/y
+    /// - CH4: Tg/y
+    /// - N2O: Tg/y
+    ///
+    /// Note that Hector separates out FFI and LUC emissions
+    /// but we lump them together.
+    ///
+    /// Units: <https://github.com/JGCRI/hector/wiki/Hector-Units>
+    pub fn for_hector(&self) -> (f32, f32, f32) {
+        let co2 = self.co2 * 12. / 44. * 1e-15; // Pg C/y
+        let ch4 = self.ch4 * 1e-12; // Tg/y
+        let n2o = self.n2o * 1e-12; // Tg/y
+        (co2, ch4, n2o)
     }
 }
 

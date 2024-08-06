@@ -223,16 +223,6 @@ pub fn years_for_points(points: usize, cost: usize) -> f32 {
         .max(1.)
 }
 
-pub fn years_remaining(
-    progress: f32,
-    points: usize,
-    cost: usize,
-) -> usize {
-    let remaining = 1. - progress;
-    let progress_per_year = 1. / years_for_points(points, cost);
-    (remaining / progress_per_year).round() as usize
-}
-
 impl Project {
     pub fn new() -> Project {
         Project {
@@ -267,6 +257,13 @@ impl Project {
 
     pub fn can_downgrade(&self) -> bool {
         self.kind == Type::Policy && self.level > 0
+    }
+
+    pub fn years_remaining(&self) -> usize {
+        let remaining = 1. - self.progress;
+        let progress_per_year =
+            1. / years_for_points(self.points, self.cost);
+        (remaining / progress_per_year).round() as usize
     }
 
     /// Advance this project's implementation
@@ -529,6 +526,19 @@ impl Collection<Project> {
     ) -> impl Iterator<Item = &mut Project> {
         self.iter_mut()
             .filter(|p| matches!(p.status, Status::Building))
+    }
+
+    pub fn changeable(&self) -> impl Iterator<Item = &Project> {
+        self.unlocked()
+            .filter(|p| p.is_online() || p.is_building())
+    }
+
+    pub fn online(&self) -> impl Iterator<Item = &Project> {
+        self.unlocked().filter(|p| p.is_online())
+    }
+
+    pub fn unlocked(&self) -> impl Iterator<Item = &Project> {
+        self.iter().filter(|p| !p.locked)
     }
 
     pub fn recent(

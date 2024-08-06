@@ -6,18 +6,7 @@ use crate::{
     t,
     views::factors::factors_card,
 };
-use hes_engine::{
-    events::*,
-    kinds::{
-        Byproduct,
-        Feedstock,
-        Output,
-        OutputMap,
-        Resource,
-    },
-    projects::Type,
-    state::State,
-};
+use hes_engine::*;
 use serde::{Deserialize, Serialize};
 
 trait AsKey {
@@ -67,12 +56,12 @@ impl AsKey for Feedstock {
         }
     }
 }
-impl AsKey for Type {
+impl AsKey for ProjectType {
     fn as_key(&self) -> &'static str {
         match self {
-            Type::Policy => "policy",
-            Type::Research => "research",
-            Type::Initiative => "initiative",
+            ProjectType::Policy => "policy",
+            ProjectType::Research => "research",
+            ProjectType::Initiative => "initiative",
         }
     }
 }
@@ -331,7 +320,7 @@ impl DisplayEffect {
                         percent: if self.is_unknown {
                             "".into()
                         } else {
-                            let percent = (amount/state.emissions_gt() * 100.).round();
+                            let percent = (amount/state.emissions.as_gtco2eq() * 100.).round();
                             format!(" {}", t!("That's a {percent}% change.", percent: percent))
                         }
                     },
@@ -490,7 +479,7 @@ impl DisplayEffect {
                 } else {
                     amount.round().to_string()
                 };
-                let text = t!("{changeDir} maximum output for {process} by <strong>{amount}</strong>",
+                let text = t!("{changeDir} maximum output for {process} by <strong>{amount}</strong>.",
                 amount: change,
                 process: t!(&process.name),
                 changeDir: self.change_dir(*amount),
@@ -652,7 +641,7 @@ impl DisplayEffect {
             }
             Effect::Demand(output, amount) => {
                 let demand = display::outputs(
-                    &state.demand_for_outputs(),
+                    &state.output_demand.total(),
                 );
                 let current_demand = demand[*output];
                 let after_demand =
@@ -677,19 +666,19 @@ impl DisplayEffect {
             }
             Effect::DemandAmount(output, amount) => {
                 let demand = display::outputs(
-                    &state.demand_for_outputs(),
+                    &state.output_demand.total(),
                 );
                 let amount = display::output(*amount, *output);
                 let current_demand = demand[*output];
                 let after_demand = demand[*output] + amount;
                 let demand_change = (after_demand
                     - current_demand)
-                    / state.world.demand()[*output];
+                    / current_demand;
                 (
                     tip! {
                         output.icon(),
                         r#"This changes {name} demand from <img src="{icon}">{currentDemand} to <img src="{icon}">{afterDemand}. This is a {percent}% change of all {name} demand."#,
-                        percent: display::percent(demand_change.abs(), true),
+                        percent: display::signed_percent(demand_change.abs(), true),
                         afterDemand: after_demand,
                         currentDemand: current_demand,
                         icon: output.icon(),
@@ -807,18 +796,20 @@ impl DisplayEffect {
                     project.kind.icon(),
                 );
                 let kind = match project.kind {
-                    Type::Policy => t!("cost"),
-                    Type::Research => t!("research time"),
-                    Type::Initiative => {
+                    ProjectType::Policy => t!("cost"),
+                    ProjectType::Research => {
+                        t!("research time")
+                    }
+                    ProjectType::Initiative => {
                         t!("development time")
                     }
                 };
                 let unit = match project.kind {
-                    Type::Policy => "".into(),
+                    ProjectType::Policy => "".into(),
                     _ => format!(" {}", t!("years")),
                 };
                 let tip_icon = match project.kind {
-                    Type::Policy => format!(
+                    ProjectType::Policy => format!(
                         r#"<img src="{}" />"#,
                         icons::POLITICAL_CAPITAL
                     ),
@@ -827,16 +818,18 @@ impl DisplayEffect {
                 let tip_amount = if self.is_unknown {
                     t!("by an unknown amount")
                 } else {
-                    t!("from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit}.",
-                    newCost: (project.cost as f32 + abs_amount).round(),
-                    unit: unit,
-                    cost: project.cost,
-                    tipIcon: tip_icon,
+                    t!("from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit}",
+                        newCost: (project.cost as f32 + abs_amount).round(),
+                        unit: unit,
+                        cost: project.cost,
+                        tipIcon: tip_icon,
                     )
                 };
 
                 let icon = match project.kind {
-                    Type::Policy => "[political_capital]",
+                    ProjectType::Policy => {
+                        "[political_capital]"
+                    }
                     _ => "",
                 };
 
@@ -963,16 +956,23 @@ impl DisplayEffect {
             ) => {
                 let industry = &state.world.industries[id];
                 let lic_pop = state.world.lic_population();
+                let current_demand = industry
+                    .total_demand_for_resource(
+                        lic_pop, *resource,
+                    );
                 let current_demand = display::resource(
-                    industry.resources[*resource]
-                        * industry.demand(lic_pop),
+                    current_demand,
                     *resource,
                 );
                 let after_demand =
                     current_demand * (1. + amount);
-                let demand_change = (after_demand
-                    - current_demand)
-                    / state.resources_demand[*resource];
+                let total_demand = display::resource(
+                    state.resource_demand.of(*resource),
+                    *resource,
+                );
+                let change = after_demand - current_demand;
+                let demand_change =
+                    (total_demand + change) / total_demand;
                 let tag = card_tag(&t!(&industry.name));
                 let tip = if self.is_unknown {
                     tip! {
@@ -988,7 +988,7 @@ impl DisplayEffect {
                         name: t!(&industry.name),
                         resource: t!(resource.lower()),
                         icon: resource.icon(),
-                        percent: display::percent(demand_change, true),
+                        percent: display::signed_percent(demand_change, true),
                         demandAfter: if after_demand < 1. {
                             "<1".into()
                         } else {
@@ -1030,9 +1030,13 @@ impl DisplayEffect {
                         * demand,
                     *resource,
                 );
-                let demand_change = (after_demand
-                    - current_demand)
-                    / state.resources_demand[*resource];
+                let total_demand = display::resource(
+                    state.resource_demand.of(*resource),
+                    *resource,
+                );
+                let change = after_demand - current_demand;
+                let demand_change =
+                    (total_demand + change) / total_demand;
                 let tag = card_tag(&t!(&industry.name));
                 let tip = if self.is_unknown {
                     tip! {
@@ -1048,7 +1052,7 @@ impl DisplayEffect {
                         name: t!(&industry.name),
                         resource: t!(resource.lower()),
                         icon: resource.icon(),
-                        percent: display::percent(demand_change, true),
+                        percent: display::signed_percent(demand_change, true),
                         demandAfter: if after_demand < 1. {
                             "<1".into()
                         } else {
@@ -1084,8 +1088,8 @@ impl DisplayEffect {
                 let current =
                     industry.byproducts.gtco2eq() * demand;
                 let after = current * (1. + amount);
-                let change =
-                    (after - current) / state.emissions_gt();
+                let change = (after - current)
+                    / state.emissions.as_gtco2eq();
                 let tag = card_tag(&t!(&industry.name));
                 let tip_text = if self.is_unknown {
                     t!("Changes emissions for {name} by an unknown amount.",
@@ -1160,12 +1164,13 @@ impl DisplayEffect {
                             let current =
                                 process.byproducts.gtco2eq()
                                     * state
-                                        .produced_by_process
+                                        .produced
+                                        .by_process
                                         .get(id)
                                         .unwrap_or(&0.);
                             let after = current * (1. + amount);
                             let change = (after - current)
-                                / state.emissions_gt();
+                                / state.emissions.as_gtco2eq();
                             t!(r#"{emissionsBefore} to <img src="{icon}">{emissionsAfter}. This is a {emissionsChange}% change of all emissions."#,
                                 icon: icons::EMISSIONS,
                                 emissionsChange: display::percent(change, true),
@@ -1271,7 +1276,7 @@ impl DisplayEffect {
             }
             Effect::AddFlag(flag) => {
                 let demand = display::outputs(
-                    &state.demand_for_outputs(),
+                    &state.output_demand.total(),
                 );
                 let tip = flag_tip(*flag, &demand);
                 let text = format!(
@@ -1295,8 +1300,9 @@ impl DisplayEffect {
                 let estimate = match feedstock {
                     Feedstock::Other | Feedstock::Soil => None,
                     other => {
-                        let est = state.feedstocks[*other]
-                            / state.consumed_feedstocks[*other];
+                        let est = state
+                            .feedstocks
+                            .until_exhaustion(*other);
                         Some(est.round())
                     }
                 };

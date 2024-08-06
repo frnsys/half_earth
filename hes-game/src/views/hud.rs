@@ -12,20 +12,20 @@ use crate::{
         HasTip,
     },
 };
-use hes_engine::Game;
+use hes_engine::State;
 use leptos::*;
 use std::time::Duration;
 
 #[component]
 pub fn Hud() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
 
     let (show_menu, set_show_menu) = create_signal(false);
 
     let year = memo!(game.world.year);
     let pc = memo!(game.political_capital.max(0));
     let outlook = memo!(game.outlook());
-    let emissions = memo!(game.emissions());
+    let emissions = memo!(game.emissions.as_gtco2eq());
     let extinction = memo!(game.world.extinction_rate);
     let temperature = memo!(game.world.temperature);
 
@@ -83,10 +83,9 @@ pub fn Hud() -> impl IntoView {
             )))
     };
 
-    let emissions_gt = memo!(game.emissions_gt());
     let emissions_tip = move || {
         tracing::debug!("HUD emissions tip called");
-        let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions_gt.get().round_to(1));
+        let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions.get().round_to(1));
         crate::views::tip(icons::EMISSIONS, tip_text).card(
             with!(|game| factors_card(
                 None,

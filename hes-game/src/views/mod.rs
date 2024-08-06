@@ -1,7 +1,9 @@
 mod cards;
+mod debug;
 mod effects;
 mod events;
 mod factors;
+mod game;
 mod globe;
 mod help;
 mod hud;
@@ -16,6 +18,7 @@ pub use cards::FactorsCard;
 pub use effects::Effects;
 pub use events::*;
 pub use factors::{rank as rank_factors, Factor};
+pub use game::Game;
 pub use globe::CalcSurface;
 pub use help::*;
 pub use phases::*;
@@ -31,10 +34,10 @@ macro_rules! memo {
             $base.with(move |value| value.$($path).+.clone())
         })
     };
-    ($base:ident.$($path:ident).+ ($($arg:tt)*)) => {
+    ($base:ident.$($($path:ident).+ ($($arg:tt)*)).+) => {
         create_memo(move |_| {
-            tracing::debug!("Memo called for {}.{}", stringify!($base), stringify!($($path).+($($arg)*)));
-            $base.with(move |value| value.$($path).+($($arg)*))
+            tracing::debug!("Memo called for {}.{}", stringify!($base), stringify!($($($path).+($($arg)*)).+));
+            $base.with(move |value| value.$($($path).+($($arg)*)).+)
         })
     };
 }

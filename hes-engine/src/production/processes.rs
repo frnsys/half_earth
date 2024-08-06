@@ -229,6 +229,10 @@ pub struct ProcessChanges {
 }
 
 impl Collection<Process> {
+    pub fn unlocked(&self) -> impl Iterator<Item = &Process> {
+        self.iter().filter(|p| !p.locked)
+    }
+
     pub fn orders(
         &self,
         demand: &OutputMap,
@@ -236,6 +240,28 @@ impl Collection<Process> {
         self.iter()
             .map(|p| p.production_order(&demand))
             .collect()
+    }
+
+    pub fn max_shares(
+        &self,
+        output_demand: &OutputMap,
+        feedstocks: &FeedstockMap,
+    ) -> Vec<usize> {
+        self.iter()
+            .map(|p| p.max_share(output_demand, feedstocks))
+            .collect::<Vec<_>>()
+    }
+
+    pub fn over_limit(
+        &self,
+        output_demand: OutputMap,
+        feedstocks: FeedstockMap,
+    ) -> impl Iterator<Item = &Process> {
+        self.iter().filter(move |p| {
+            let max_share =
+                p.max_share(&output_demand, &feedstocks);
+            p.mix_share > 0 && p.mix_share > max_share
+        })
     }
 }
 

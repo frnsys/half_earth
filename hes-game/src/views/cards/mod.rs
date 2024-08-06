@@ -22,10 +22,16 @@ impl FactorsCard {
             Var::Emissions => display::emissions(self.total),
             Var::Biodiversity => format!("{:.0}", self.total),
             Var::Land => {
-                display::percent(self.total / 100., true)
+                format!(
+                    "{}%",
+                    display::percent(self.total / 100., true)
+                )
             }
             Var::Water => {
-                display::percent(self.total / 100., true)
+                format!(
+                    "{}%",
+                    display::percent(self.total, true)
+                )
             }
             Var::Energy => format!("{:.1}TWh", self.total),
             Var::Electricity => format!("{:.1}TWh", self.total),

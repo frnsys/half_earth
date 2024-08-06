@@ -14,11 +14,10 @@ use std::{
         Sub,
         SubAssign,
     },
-    slice::Iter,
 };
 use strum::{EnumIter, EnumString, IntoStaticStr};
 
-pub trait KindMap:
+pub trait KindMap<const SIZE: usize>:
     Index<Self::Key, Output = f32>
     + IndexMut<Self::Key>
     + Add<Output = Self>
@@ -30,17 +29,17 @@ pub trait KindMap:
     type Key: Copy;
 
     fn splat(val: f32) -> Self;
-    fn keys(&self) -> Iter<Self::Key>;
-    fn items(&self) -> Vec<(Self::Key, f32)>;
-    fn items_mut(&mut self) -> Vec<(Self::Key, &mut f32)>;
-    fn values_mut(&mut self) -> Vec<&mut f32>;
+    fn keys(&self) -> [Self::Key; SIZE];
+    fn items(&self) -> [(Self::Key, f32); SIZE];
+    fn items_mut(&mut self) -> [(Self::Key, &mut f32); SIZE];
+    fn values_mut(&mut self) -> [&mut f32; SIZE];
 }
 
 /// A consumable, exhaustible supply of something.
 #[derive(
     Serialize, Deserialize, Clone, PartialEq, Default, Debug,
 )]
-pub struct Reserve<M: KindMap> {
+pub struct Reserve<M: KindMap<N>, const N: usize> {
     /// Current un-consumed stock.
     pub available: M,
 
@@ -51,13 +50,15 @@ pub struct Reserve<M: KindMap> {
     /// which may be more than what's available.
     pub required: M,
 }
-impl<M: KindMap> Index<M::Key> for Reserve<M> {
+impl<M: KindMap<N>, const N: usize> Index<M::Key>
+    for Reserve<M, N>
+{
     type Output = f32;
     fn index(&self, index: M::Key) -> &Self::Output {
         &self.available[index]
     }
 }
-impl<M: KindMap> From<M> for Reserve<M> {
+impl<M: KindMap<N>, const N: usize> From<M> for Reserve<M, N> {
     fn from(value: M) -> Self {
         Self {
             available: value,
@@ -65,7 +66,7 @@ impl<M: KindMap> From<M> for Reserve<M> {
         }
     }
 }
-impl<M: KindMap> Reserve<M> {
+impl<M: KindMap<N>, const N: usize> Reserve<M, N> {
     pub fn until_exhaustion(&self, key: M::Key) -> f32 {
         self.available[key] / self.consumed[key]
     }
@@ -94,17 +95,27 @@ impl<M: KindMap> Reserve<M> {
         }
         weights
     }
+
+    pub fn shortage_of(&self, key: M::Key) -> f32 {
+        self.required[key] - self.available[key]
+    }
+
+    pub fn has_shortage(&self, key: M::Key) -> bool {
+        self.shortage_of(key) > 0.
+    }
 }
 
 /// A map that can be modified by factors (multiplication)
 /// and modifiers (addition).
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
-pub struct Modifiable<M: KindMap> {
+pub struct Modifiable<M: KindMap<N>, const N: usize> {
     pub base: M,
     pub factor: M,
     pub modifier: M,
 }
-impl<M: KindMap> Default for Modifiable<M> {
+impl<M: KindMap<N>, const N: usize> Default
+    for Modifiable<M, N>
+{
     fn default() -> Self {
         Self {
             base: M::default(),
@@ -113,7 +124,7 @@ impl<M: KindMap> Default for Modifiable<M> {
         }
     }
 }
-impl<M: KindMap> Modifiable<M> {
+impl<M: KindMap<N>, const N: usize> Modifiable<M, N> {
     pub fn total(&self) -> M {
         (self.base + self.modifier) * self.factor
     }
@@ -149,10 +160,18 @@ macro_rules! define_enum_map {
             }
 
             impl [<$name Map>] {
+                const N: usize = count!($($field)*);
+
                 pub fn values(&self) -> [f32; count!($($field)*)] {
                     [$(
                         self.[<$field:snake>],
                     )*]
+                }
+
+                pub fn sum(&self) -> f32 {
+                    0. $(
+                        + self.[<$field:snake>]
+                    )*
                 }
             }
 
@@ -296,7 +315,7 @@ macro_rules! define_enum_map {
                 }
             }
 
-            impl KindMap for [<$name Map>] {
+            impl KindMap<{count!($($field)*)}> for [<$name Map>] {
                 type Key = $name;
 
                 fn splat(val: f32) -> Self {
@@ -307,26 +326,26 @@ macro_rules! define_enum_map {
                     }
                 }
 
-                fn keys(&self) -> Iter<Self::Key> {
+                fn keys(&self) -> [Self::Key; count!($($field)*)] {
                     [$(
                         $name::$field,
-                    )*].iter()
+                    )*]
                 }
 
-                fn values_mut(&mut self) -> Vec<&mut f32> {
-                    vec![$(
+                fn values_mut(&mut self) -> [&mut f32; count!($($field)*)] {
+                    [$(
                         &mut self.[<$field:snake>],
                     )*]
                 }
 
-                fn items(&self) -> Vec<(Self::Key, f32)> {
-                    vec![$(
+                fn items(&self) -> [(Self::Key, f32); count!($($field)*)] {
+                    [$(
                         ($name::$field, self.[<$field:snake>]),
                     )*]
                 }
 
-                fn items_mut(&mut self) -> Vec<(Self::Key, &mut f32)> {
-                    vec![$(
+                fn items_mut(&mut self) -> [(Self::Key, &mut f32); count!($($field)*)] {
+                    [$(
                         ($name::$field, &mut self.[<$field:snake>]),
                     )*]
                 }
@@ -334,6 +353,17 @@ macro_rules! define_enum_map {
         }
     }
 }
+
+// Hacky to use consts like this, there are nicer ways in theory
+// but the compiler doesn't yet support them.
+pub type Resources = Reserve<ResourceMap, { ResourceMap::N }>;
+pub type Feedstocks =
+    Reserve<FeedstockMap, { FeedstockMap::N }>;
+pub type OutputDemand = Modifiable<OutputMap, { OutputMap::N }>;
+pub type ResourceDemand =
+    Modifiable<ResourceMap, { ResourceMap::N }>;
+pub type Byproducts =
+    Modifiable<ByproductMap, { ByproductMap::N }>;
 
 define_enum_map!(Resource {
     Land,

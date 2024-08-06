@@ -13,11 +13,12 @@ use crate::{
 };
 use enum_map::EnumMap;
 use hes_engine::{
-    kinds::Output,
-    production::Process,
-    state::State,
-    Game,
     Id,
+    KindMap,
+    Output,
+    Process,
+    Resource,
+    State,
 };
 use leptos::*;
 
@@ -26,7 +27,7 @@ pub fn Processes(
     #[prop(into)] on_change: Callback<()>,
     #[prop(into)] close: Callback<()>,
 ) -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let back_disabled =
@@ -117,7 +118,7 @@ pub fn Processes(
 
     let output_demands = move || {
         with!(|game| {
-            display::outputs(&game.demand_for_outputs())
+            display::outputs(&game.output_demand.total())
             .items()
             .map(|(output, demand)| {
                 let tip = tip(
@@ -140,7 +141,7 @@ pub fn Processes(
     let emissions = move || {
         with!(|game| {
             let emissions =
-                game.byproducts.gtco2eq().round_to(1);
+                game.byproducts.total().gtco2eq().round_to(1);
             let tip = tip(
             icons::EMISSIONS,
             t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
@@ -294,27 +295,27 @@ fn estimate_changes(
 ) -> (Usage, Usage) {
     // Total demand for each of these
     let before = Usage {
-        emissions: state.emissions(),
-        energy_use: state.demand_for_outputs().energy(),
-        land_use: state.resources_demand.land,
-        water_use: state.resources_demand.water,
+        emissions: state.emissions.as_gtco2eq(),
+        energy_use: state.output_demand.total().energy(),
+        land_use: state.resource_demand.of(Resource::Land),
+        water_use: state.resource_demand.of(Resource::Water),
         extinction_rate: state.world.extinction_rate,
     };
 
     // Demand for each of these just from the current set of processes
     let mut current = Usage::default();
-    let starting_land = state.world.starting_resources.land;
+    let available_land = state.resources.available.land;
     for process in processes {
         let mix_share = process.mix_share as f32;
         let total = mix_share / 20.
-            * state.demand_for_output(&process.output);
+            * state.output_demand.of(process.output);
         current.land_use += process.resources.land * total;
         current.water_use += process.resources.water * total;
         current.energy_use +=
             process.resources.energy() * total;
         current.emissions += process.byproducts.co2eq() * total;
         current.extinction_rate +=
-            process.extinction_rate(starting_land) * total;
+            process.extinction_rate(available_land) * total;
     }
 
     // Changed demand for each of these, just for the current set of processes
@@ -325,14 +326,14 @@ fn estimate_changes(
                 .get(&process.id)
                 .unwrap_or(&0)) as f32;
         let total = mix_share / 20.
-            * state.demand_for_output(&process.output);
+            * state.output_demand.of(process.output);
         changed.land_use += process.resources.land * total;
         changed.water_use += process.resources.water * total;
         changed.energy_use +=
             process.resources.energy() * total;
         changed.emissions += process.byproducts.co2eq() * total;
         changed.extinction_rate +=
-            process.extinction_rate(starting_land) * total;
+            process.extinction_rate(available_land) * total;
     }
 
     // Changed overall/total/global demand for each of these

@@ -6,7 +6,7 @@ use crate::{
     t,
     util::is_steam,
 };
-use hes_engine::{world::World, Game};
+use hes_engine::{State, World};
 use leptos::*;
 use std::rc::Rc;
 use wasm_bindgen::{closure::Closure, JsCast};
@@ -40,7 +40,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
         settings.sound
     };
 
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
     let world = create_rw_signal(WorldStatus::Default);
     view! {

@@ -2,17 +2,17 @@ use std::collections::BTreeMap;
 
 use enum_map::EnumMap;
 use gloo_utils::format::JsValueSerdeExt;
-use hes_engine::{kinds::Output, Game};
+use hes_engine::{Output, Resource, State};
 use leptos::*;
 use numfmt::{Formatter, Precision, Scales};
 use strum::IntoEnumIterator;
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    display::{self, AsText},
+    display::{self, AsText, DisplayValue},
     icons::{self, HasIcon},
     memo,
-    state::{GameExt, UIState},
+    state::{StateExt, UIState},
     t,
     util::to_ws_el,
     vars::Var,
@@ -63,7 +63,7 @@ struct MiniCardData {
 
 #[component]
 pub fn Dashboard() -> impl IntoView {
-    let game = expect_context::<RwSignal<Game>>();
+    let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
 
     let (breakdown_factor, set_breakdown_factor) =
@@ -101,7 +101,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let habitability = memo!(game.avg_habitability());
+    let habitability = memo!(game.world.regions.habitability());
     let avg_habitability = move || {
         let avg = habitability.get();
         let int = intensity::scale(
@@ -142,7 +142,7 @@ pub fn Dashboard() -> impl IntoView {
             with!(|game| Output::iter()
                 .map(|output| (
                     output,
-                    game.demand_for_output(&output)
+                    game.output_demand.of(output)
                 ))
                 .collect());
         demands
@@ -224,7 +224,8 @@ pub fn Dashboard() -> impl IntoView {
             .round()
     };
 
-    let water_demand = memo!(game.resources_demand.water);
+    let water_demand =
+        memo!(game.resource_demand.of(Resource::Water));
     let current_water_stress =
         move || water_stress(water_demand.get());
     let after_water_stress = move || {
@@ -253,19 +254,17 @@ pub fn Dashboard() -> impl IntoView {
                 .card(factors_card(None, Var::Emissions, game))
         })
     };
-    let emissions = memo!(game.emissions_gt());
-    let emissions_val = memo!(game.state.emissions_gt());
+    let emissions = memo!(game.emissions.as_gtco2eq());
+    let emissions_display = memo!(game.emissions.display());
     let emissions_changed = move || {
-        display::emissions(
-            emissions_change() + emissions_val.get(),
-        )
+        display::emissions(emissions_change() + emissions.get())
     };
     let emissions_view = move || {
         view! {
             <DashboardItem
                 tip=emissions_tip.into_signal()
                 label=t!("Emissions")
-                display_value=emissions
+                display_value=emissions_display
                 display_changed_value=emissions_changed
                 change=emissions_change
                 icon=icons::EMISSIONS
@@ -287,7 +286,8 @@ pub fn Dashboard() -> impl IntoView {
         })
     };
     let land_use = memo!(game.land_use_percent());
-    let land_demand = memo!(game.resources_demand.land);
+    let land_demand =
+        memo!(game.resource_demand.of(Resource::Land));
     let land_changed = move || {
         format!(
             "{:.0}%",
@@ -323,7 +323,8 @@ pub fn Dashboard() -> impl IntoView {
         })
     };
     let energy_use = memo!(game.energy_pwh());
-    let energy_demand = memo!(game.output_demand.energy());
+    let energy_demand =
+        memo!(game.output_demand.total().energy());
     let energy_changed = move || {
         format!(
             "{}TWh",
@@ -402,7 +403,8 @@ pub fn Dashboard() -> impl IntoView {
     };
 
     let sea_level_rise = memo!(game.world.sea_level_rise);
-    let sea_level_rise_rate = memo!(game.sea_level_rise_rate());
+    let sea_level_rise_rate =
+        memo!(game.world.sea_level_rise_rate());
     let sea_level_rise_view = move || {
         let rise = format!("{:.2}", sea_level_rise.get());
         let tip_text = t!("Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.",
@@ -426,7 +428,7 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let population = memo!(game.world.population());
+    let population = memo!(game.world.regions.population());
     let pop_fmted = move || {
         let mut f = Formatter::default()
             .scales(Scales::short())

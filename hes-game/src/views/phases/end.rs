@@ -4,11 +4,11 @@ use crate::{
     eval::{eval_badges, summarize, Summary},
     i18n,
     icons,
-    state::{GameExt, Settings},
+    state::{Settings, StateExt},
     t,
     views::{tip, Events, HasTip},
 };
-use hes_engine::{events::Phase as EventPhase, Game};
+use hes_engine::{EventPhase, State};
 
 #[server(prefix = "/compute", endpoint = "image")]
 pub async fn generate_image(
@@ -22,12 +22,12 @@ pub async fn generate_image(
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
     let events = create_rw_signal(vec![]);
-    let game = expect_context::<RwSignal<Game>>();
-    game.update_untracked(|game: &mut Game| {
+    let game = expect_context::<RwSignal<State>>();
+    game.update_untracked(|game: &mut State| {
         let evs = if lose {
-            game.roll_events(EventPhase::BreakStart, None)
+            StateExt::roll_events(game, EventPhase::BreakStart)
         } else {
-            game.roll_events(EventPhase::EndStart, None)
+            StateExt::roll_events(game, EventPhase::EndStart)
         };
         events.set(evs);
     });
