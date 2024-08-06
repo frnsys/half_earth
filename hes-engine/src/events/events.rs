@@ -375,7 +375,6 @@ mod test {
         let events = pool.roll_for_phase(
             Phase::WorldMain,
             &state,
-            None,
             &mut rng,
         );
 
@@ -389,7 +388,6 @@ mod test {
         let events = pool.roll_for_phase(
             Phase::WorldMain,
             &state,
-            None,
             &mut rng,
         );
         assert_eq!(events.len(), 1);
@@ -440,12 +438,8 @@ mod test {
             },
         ]
         .into();
-        let events = pool.roll_for_phase(
-            Phase::Icon,
-            &state,
-            None,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::Icon, &state, &mut rng);
 
         // No events should happen
         assert_eq!(events.len(), 0);
@@ -454,12 +448,8 @@ mod test {
         let region = state.world.regions.by_idx_mut(1);
         region.population = 10.;
         let id = region.id;
-        let events = pool.roll_for_phase(
-            Phase::Icon,
-            &state,
-            None,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::Icon, &state, &mut rng);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[0].1, Some(id));
@@ -490,7 +480,6 @@ mod test {
         let events = pool.roll_for_phase(
             Phase::WorldMain,
             &state,
-            None,
             &mut rng,
         );
         assert_eq!(events.len(), 0);
@@ -499,7 +488,6 @@ mod test {
         let events = pool.roll_for_phase(
             Phase::WorldMain,
             &state,
-            None,
             &mut rng,
         );
         assert_eq!(events.len(), 1);
@@ -531,7 +519,6 @@ mod test {
         let events = pool.roll_for_phase(
             Phase::WorldMain,
             &state,
-            None,
             &mut rng,
         );
 
@@ -543,7 +530,6 @@ mod test {
             let events = pool.roll_for_phase(
                 Phase::WorldMain,
                 &state,
-                None,
                 &mut rng,
             );
             assert_eq!(events.len(), 0);
