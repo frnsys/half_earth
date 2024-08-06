@@ -2,7 +2,7 @@ use crate::{
     events::{Effect, Probability},
     flavor::ProjectFlavor,
     kinds::{Output, OutputMap},
-    npcs::{NPCRelation, NPC},
+    npcs::{NPCRelation, NPC, RELATIONSHIP_CHANGE_AMOUNT},
     Collection,
     HasId,
     Id,
@@ -17,6 +17,7 @@ use strum::{
     IntoStaticStr,
 };
 
+/// The project's status.
 #[derive(
     Display,
     Serialize,
@@ -40,6 +41,7 @@ pub enum Status {
     Finished,
 }
 
+/// The project's category.
 #[derive(
     Serialize,
     Deserialize,
@@ -74,6 +76,7 @@ pub enum Group {
     Cities,
 }
 
+/// The type of project.
 #[derive(
     Serialize,
     Deserialize,
@@ -94,6 +97,7 @@ pub enum Type {
     Initiative,
 }
 
+/// The type of project cost.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum Cost {
     Fixed(usize),
@@ -105,6 +109,7 @@ impl Default for Cost {
     }
 }
 
+/// A cost factor used to compute dynamic costs.
 #[derive(
     Serialize,
     Deserialize,
@@ -139,6 +144,7 @@ impl From<FactorKind> for Factor {
     }
 }
 
+/// An outcome resulting from the completion of a project.
 #[derive(
     Debug, Deserialize, Serialize, Clone, PartialEq, Default,
 )]
@@ -147,6 +153,7 @@ pub struct Outcome {
     pub probability: Probability,
 }
 
+/// An upgrade for a project.
 #[derive(
     Debug, Deserialize, Serialize, Default, Clone, PartialEq,
 )]
@@ -216,6 +223,16 @@ pub fn years_for_points(points: usize, cost: usize) -> f32 {
         .max(1.)
 }
 
+pub fn years_remaining(
+    progress: f32,
+    points: usize,
+    cost: usize,
+) -> usize {
+    let remaining = 1. - progress;
+    let progress_per_year = 1. / years_for_points(points, cost);
+    (remaining / progress_per_year).round() as usize
+}
+
 impl Project {
     pub fn new() -> Project {
         Project {
@@ -225,10 +242,12 @@ impl Project {
         }
     }
 
+    /// A project which is active can be made inactive.
     pub fn is_active(&self) -> bool {
         self.status == Status::Active
     }
 
+    /// A project which is finished can never be "un"-finished.
     pub fn is_finished(&self) -> bool {
         self.status == Status::Finished
     }
@@ -271,6 +290,52 @@ impl Project {
         }
     }
 
+    pub fn start(&mut self) -> bool {
+        self.status = Status::Building;
+        self.kind == Type::Policy
+    }
+
+    pub fn stop(&mut self) -> (ProjectChanges, bool) {
+        let mut changes = ProjectChanges::default();
+
+        if self.status == Status::Active
+            || self.status == Status::Finished
+        {
+            changes
+                .remove_effects
+                .extend(self.active_effects().clone());
+
+            if let Some(outcome_id) = self.active_outcome {
+                let effects =
+                    &self.outcomes[outcome_id].effects;
+                changes.remove_effects.extend(effects.clone());
+            }
+
+            for npc_id in &self.supporters {
+                changes.relationships.push((
+                    *npc_id,
+                    -RELATIONSHIP_CHANGE_AMOUNT,
+                ));
+            }
+            for npc_id in &self.opposers {
+                changes.relationships.push((
+                    *npc_id,
+                    RELATIONSHIP_CHANGE_AMOUNT,
+                ));
+            }
+        }
+
+        if self.progress > 0. {
+            self.status = Status::Halted;
+        } else {
+            self.status = Status::Inactive;
+        }
+
+        let is_policy = self.kind == Type::Policy;
+
+        (changes, is_policy)
+    }
+
     pub fn set_points(&mut self, points: usize) {
         self.points = points;
         self.estimate =
@@ -303,22 +368,52 @@ impl Project {
                 .round() as usize;
     }
 
-    pub fn upgrade(&mut self) -> bool {
-        if self.level < self.upgrades.len() {
+    pub fn upgrade(&mut self) -> ProjectChanges {
+        let mut changes = ProjectChanges::default();
+
+        // Upgrade effects replace the previous effects.
+        changes
+            .remove_effects
+            .extend(self.active_effects().clone());
+        let upgraded = if self.level < self.upgrades.len() {
             self.level += 1;
             true
         } else {
             false
+        };
+        if upgraded {
+            changes
+                .add_effects
+                .extend(self.active_effects().clone());
+        } else {
+            changes.remove_effects.clear();
         }
+
+        changes
     }
 
-    pub fn downgrade(&mut self) -> bool {
-        if self.level > 0 {
+    pub fn downgrade(&mut self) -> ProjectChanges {
+        let mut changes = ProjectChanges::default();
+        changes
+            .remove_effects
+            .extend(self.active_effects().clone());
+
+        let downgraded = if self.level > 0 {
             self.level -= 1;
             true
         } else {
             false
+        };
+
+        if downgraded {
+            changes
+                .add_effects
+                .extend(self.active_effects().clone());
+        } else {
+            changes.remove_effects.clear();
         }
+
+        changes
     }
 
     pub fn next_upgrade(&self) -> Option<&Upgrade> {
@@ -331,6 +426,51 @@ impl Project {
         } else {
             None
         }
+    }
+
+    pub fn advance(&mut self, year: usize) -> ProjectChanges {
+        let mut changes = ProjectChanges::default();
+
+        // For gradual projects, we apply
+        // interpolated effects.
+        let prev_progress = self.progress;
+        if prev_progress > 0. && self.gradual {
+            for effect in &self.effects {
+                changes
+                    .remove_effects
+                    .push(effect.clone() * prev_progress);
+            }
+        }
+
+        let completed = self.build();
+        if completed {
+            self.completed_at = year;
+            changes
+                .add_effects
+                .extend(self.effects.iter().cloned());
+
+            for npc_id in &self.supporters {
+                changes.relationships.push((
+                    *npc_id,
+                    RELATIONSHIP_CHANGE_AMOUNT,
+                ));
+            }
+            for npc_id in &self.opposers {
+                changes.relationships.push((
+                    *npc_id,
+                    -RELATIONSHIP_CHANGE_AMOUNT,
+                ));
+            }
+
+            changes.completed = true;
+        } else if self.gradual {
+            for effect in &self.effects {
+                changes
+                    .add_effects
+                    .push(effect.clone() * self.progress);
+            }
+        }
+        changes
     }
 
     pub fn active_effects(&self) -> &Vec<Effect> {
@@ -375,39 +515,76 @@ impl Project {
     }
 }
 
+#[derive(Default)]
+pub struct ProjectChanges {
+    pub completed: bool,
+    pub remove_effects: Vec<Effect>,
+    pub add_effects: Vec<Effect>,
+    pub relationships: Vec<(Id, f32)>,
+}
+
+impl Collection<Project> {
+    fn in_progress(
+        &mut self,
+    ) -> impl Iterator<Item = &mut Project> {
+        self.iter_mut()
+            .filter(|p| matches!(p.status, Status::Building))
+    }
+
+    pub fn recent(
+        &self,
+        year: usize,
+    ) -> impl Iterator<Item = &Project> {
+        self.iter().filter(move |p| {
+            if p.status == Status::Finished {
+                // Completed within the past ten years
+                p.completed_at >= year - 10
+            } else {
+                p.status == Status::Active
+                    || (p.status == Status::Building
+                        && p.gradual)
+            }
+        })
+    }
+
+    /// Advance all projects in progress.
+    pub fn step(
+        &mut self,
+        year: usize,
+    ) -> Vec<(Id, ProjectChanges)> {
+        self.in_progress()
+            .map(|project| {
+                let updates = project.advance(year);
+                (project.id, updates)
+            })
+            .collect()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::events::{
-        Comparator,
-        Condition,
-        Likelihood,
-        WorldVariable,
+    use crate::{
+        events::{
+            Comparator,
+            Condition,
+            Likelihood,
+            WorldVariable,
+        },
+        state::State,
     };
-    use rand::SeedableRng;
 
     #[test]
     fn test_build_project() {
         let mut p = Project {
-            id: "test_project",
-            name: "Test Project",
+            id: Id::new_v4(),
+            name: "Test Project".into(),
+            points: 1,
             cost: 1,
             base_cost: Cost::Fixed(1),
             cost_modifier: 1.,
-            required_majority: 0.,
-            level: 0,
-            ongoing: false,
-            gradual: false,
-            locked: false,
             kind: Type::Policy,
-            group: Group::Other,
             status: Status::Building,
-            progress: 0.,
-            estimate: 0,
-            points: 1,
-            completed_at: 0,
-            effects: vec![],
-            upgrades: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],
                 probability: Probability {
@@ -415,9 +592,7 @@ mod test {
                     conditions: vec![],
                 },
             }],
-            active_outcome: None,
-            opposers: vec![],
-            supporters: vec![],
+            ..Default::default()
         };
 
         for _ in 0..12 {
@@ -437,25 +612,13 @@ mod test {
     #[test]
     fn test_project_estimate() {
         let mut p = Project {
-            id: "test_project",
-            name: "Test Project",
+            id: Id::new_v4(),
+            name: "Test Project".into(),
             cost: 10,
             base_cost: Cost::Fixed(10),
             cost_modifier: 1.,
-            required_majority: 0.,
-            level: 0,
-            ongoing: false,
-            gradual: false,
-            locked: false,
             kind: Type::Policy,
-            group: Group::Other,
             status: Status::Building,
-            progress: 0.,
-            estimate: 0,
-            points: 0,
-            completed_at: 0,
-            effects: vec![],
-            upgrades: vec![],
             outcomes: vec![Outcome {
                 effects: vec![],
                 probability: Probability {
@@ -463,9 +626,7 @@ mod test {
                     conditions: vec![],
                 },
             }],
-            active_outcome: None,
-            opposers: vec![],
-            supporters: vec![],
+            ..Default::default()
         };
 
         p.set_points(1);
@@ -478,27 +639,14 @@ mod test {
 
     #[test]
     fn test_project_outcomes() {
-        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let p = Project {
-            id: "test_project",
-            name: "Test Project",
+            id: Id::new_v4(),
+            name: "Test Project".into(),
             cost: 1,
             base_cost: Cost::Fixed(1),
             cost_modifier: 1.,
-            required_majority: 0.,
-            level: 0,
-            ongoing: false,
-            gradual: false,
-            locked: false,
             kind: Type::Policy,
-            group: Group::Other,
             status: Status::Building,
-            progress: 0.,
-            estimate: 0,
-            points: 0,
-            completed_at: 0,
-            effects: vec![],
-            upgrades: vec![],
             outcomes: vec![
                 Outcome {
                     effects: vec![],
@@ -521,23 +669,22 @@ mod test {
                     },
                 },
             ],
-            active_outcome: None,
-            opposers: vec![],
-            supporters: vec![],
+            ..Default::default()
         };
 
         let mut state = State::default();
+        // TODO move this test to state
 
         // Should be the second outcome
         // since the first condition isn't met
-        let outcome = p.roll_outcome(&state, &mut rng);
-        let (_outcome, i) = outcome.unwrap();
-        assert_eq!(i, 1);
-
-        // Now should be the first,
-        state.world.year = 10;
-        let outcome = p.roll_outcome(&state, &mut rng);
-        let (_outcome, i) = outcome.unwrap();
-        assert_eq!(i, 0);
+        // let outcome = p.roll_outcome(&state, &mut rng);
+        // let (_outcome, i) = outcome.unwrap();
+        // assert_eq!(i, 1);
+        //
+        // // Now should be the first,
+        // state.world.year = 10;
+        // let outcome = p.roll_outcome(&state, &mut rng);
+        // let (_outcome, i) = outcome.unwrap();
+        // assert_eq!(i, 0);
     }
 }

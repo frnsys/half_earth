@@ -233,13 +233,13 @@ impl Condition {
                         state.world.year as f32
                     }
                     WorldVariable::Population => {
-                        state.world.population()
+                        state.world.regions.population()
                     }
                     WorldVariable::PopulationGrowth => {
-                        state.population_growth_modifier
+                        state.world.population_growth_modifier
                     }
                     WorldVariable::Emissions => {
-                        state.emissions()
+                        state.emissions.as_co2eq()
                     }
                     WorldVariable::ExtinctionRate => {
                         state.world.extinction_rate
@@ -252,10 +252,10 @@ impl Condition {
                         state.world.sea_level_rise
                     }
                     WorldVariable::SeaLevelRiseRate => {
-                        state.sea_level_rise_rate()
+                        state.world.sea_level_rise_rate()
                     }
                     WorldVariable::Precipitation => {
-                        state.precipitation
+                        state.world.precipitation
                     }
                 };
                 comp.eval(val, *other_val)
@@ -277,7 +277,7 @@ impl Condition {
             }
             Condition::ProcessOutput(id, comp, other_val) => {
                 if let Some(val) =
-                    state.produced_by_process.get(id)
+                    state.produced.by_process.get(id)
                 {
                     comp.eval(*val, *other_val)
                 } else {
@@ -309,7 +309,7 @@ impl Condition {
                 other_val,
             ) => {
                 let val = state.resources[*resource]
-                    / state.resources_demand[*resource];
+                    / state.resource_demand.of(*resource);
                 comp.eval(val, *other_val)
             }
             Condition::ResourceDemandGap(
@@ -318,7 +318,8 @@ impl Condition {
                 other_val,
             ) => {
                 let available = state.resources[*resource];
-                let demand = state.resources_demand[*resource];
+                let demand =
+                    state.resource_demand.of(*resource);
                 let val = (available - demand) / demand;
                 comp.eval(val, *other_val)
             }
@@ -327,8 +328,8 @@ impl Condition {
                 comp,
                 other_val,
             ) => {
-                let available = state.produced[*output];
-                let demand = state.output_demand[*output];
+                let available = state.produced.of(*output);
+                let demand = state.output_demand.of(*output);
                 let val = 1. - (available / demand).min(1.);
                 comp.eval(val, *other_val)
             }
@@ -341,7 +342,7 @@ impl Condition {
                     Output::AnimalCalories => 1e-9 / 2e4, // per 20000 Tcals
                 };
                 let demand =
-                    state.output_demand[*output] * factor;
+                    state.output_demand.of(*output) * factor;
                 comp.eval(demand, *other_val)
             }
             Condition::FeedstockYears(
@@ -349,8 +350,7 @@ impl Condition {
                 comp,
                 other_val,
             ) => comp.eval(
-                state.feedstocks[*feedstock]
-                    / state.consumed_feedstocks[*feedstock],
+                state.feedstocks.until_exhaustion(*feedstock),
                 *other_val,
             ),
             Condition::RunsPlayed(comp, runs) => {
@@ -413,7 +413,10 @@ impl Condition {
                 comp.eval(state.protected_land, *n)
             }
             Condition::WaterStress(comp, n) => {
-                comp.eval(state.water_stress(), *n)
+                let water_stress =
+                    state.resource_demand.of(Resource::Water)
+                        / state.resources.available.water;
+                comp.eval(water_stress, *n)
             }
         }
     }

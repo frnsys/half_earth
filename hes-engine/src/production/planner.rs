@@ -4,13 +4,7 @@ use std::{
 };
 
 use super::processes::Process;
-use crate::kinds::{
-    ByproductMap,
-    Feedstock,
-    FeedstockMap,
-    Output,
-    ResourceMap,
-};
+use crate::kinds::*;
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -40,8 +34,8 @@ fn rank_orders(
         let r = process.adj_resources();
         let resource_score: f32 = r
             .items()
-            .iter()
-            .map(|(k, v)| *v / (resources[*k] + 1.))
+            .into_iter()
+            .map(|(k, v)| v / (resources[k] + 1.))
             .sum();
         resource_scores.push(resource_score);
 
@@ -69,8 +63,8 @@ fn rank_orders(
         let byproducts = orders[*i].process.adj_byproducts();
         let byproduct_score: f32 = byproducts
             .items()
-            .iter()
-            .map(|(k, v)| *v / (byproduct_maxs[*k] + 1.))
+            .into_iter()
+            .map(|(k, v)| v / (byproduct_maxs[k] + 1.))
             .sum();
         let score =
             feedstock_score + resource_score + byproduct_score;
@@ -97,9 +91,9 @@ fn produce_amount(
     };
     let resource_max = resources
         .items()
+        .into_iter()
         .map(|(k, v)| available_resources[k] / v)
-        .iter()
-        .fold(f32::INFINITY, |a, &b| a.min(b));
+        .fold(f32::INFINITY, |a, b| a.min(b));
 
     let amount_produced = order
         .amount
@@ -251,57 +245,39 @@ mod test {
     use float_cmp::approx_eq;
 
     use super::*;
-    use crate::kinds::{Feedstock, Output};
+    use crate::{
+        kinds::{Feedstock, Output},
+        Id,
+    };
 
     fn gen_processes() -> Vec<Process> {
         vec![
             Process {
-                id: "test_process_a",
-                name: "Test Process A",
-                limit: None,
+                id: Id::new_v4(),
+                name: "Test Process A".into(),
                 mix_share: 10,
                 output: Output::Fuel,
-                output_modifier: 0.,
-                byproduct_modifiers: byproducts!(),
                 resources: resources!(water: 1.),
-                byproducts: byproducts!(),
                 feedstock: (Feedstock::Oil, 1.),
-                features: vec![],
-                locked: false,
-                opposers: vec![],
-                supporters: vec![],
+                ..Default::default()
             },
             Process {
-                id: "test_process_b",
-                name: "Test Process B",
-                limit: None,
+                id: Id::new_v4(),
+                name: "Test Process B".into(),
                 mix_share: 10,
                 output: Output::Fuel,
-                output_modifier: 0.,
-                byproduct_modifiers: byproducts!(),
                 resources: resources!(water: 1.),
-                byproducts: byproducts!(),
                 feedstock: (Feedstock::Oil, 1.),
-                features: vec![],
-                locked: false,
-                opposers: vec![],
-                supporters: vec![],
+                ..Default::default()
             },
             Process {
-                id: "test_process_c",
-                name: "Test Process C",
-                limit: None,
+                id: Id::new_v4(),
+                name: "Test Process C".into(),
                 mix_share: 20,
                 output: Output::Electricity,
-                output_modifier: 0.,
-                byproduct_modifiers: byproducts!(),
                 resources: resources!(water: 1.),
-                byproducts: byproducts!(),
                 feedstock: (Feedstock::Coal, 1.),
-                features: vec![],
-                locked: false,
-                opposers: vec![],
-                supporters: vec![],
+                ..Default::default()
             },
         ]
     }
@@ -326,16 +302,6 @@ mod test {
 
         let expected = [0., 50., 30.];
 
-        let (required_r, required_f) =
-            calculate_required(&orders);
-        // println!("Required Resources: {:?}", required_r);
-        // println!("Required Feedstocks: {:?}", required_f);
-        // for order in &orders {
-        //     println!("Order: {:?} -> {:?} {:?}", order.process.name, order.amount, order.process.output);
-        // }
-        // println!("Produced: {:?}", produced);
-        // println!("Consumed Resources: {:?}", consumed_r);
-        // println!("Consumed Feedstocks: {:?}", feedstocks);
         assert!(produced.len() == expected.len());
         assert!(produced.iter().zip(expected).all(
             |(x1, x2)| approx_eq!(f32, *x1, x2, epsilon = 1e-2)

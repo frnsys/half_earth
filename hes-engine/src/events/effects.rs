@@ -180,7 +180,7 @@ impl AsRef<Effect> for Effect {
 }
 
 fn check_game_over(state: &mut State) {
-    if !state.is_ally("The Authoritarian")
+    if !state.npcs.is_ally("The Authoritarian")
         && state.outlook() < 0.
     {
         state.game_over = true;
@@ -448,37 +448,44 @@ impl Effect {
                     WorldVariable::Year => {
                         state.world.year += *change as usize
                     }
-                    WorldVariable::Population => {
-                        state.world.change_population(*change)
-                    }
+                    WorldVariable::Population => state
+                        .world
+                        .regions
+                        .change_population(*change),
                     WorldVariable::PopulationGrowth => {
-                        state.population_growth_modifier +=
+                        state
+                            .world
+                            .population_growth_modifier +=
                             *change
                     }
                     WorldVariable::Emissions => {
-                        state.byproduct_mods.co2 +=
+                        state.byproducts.modifier.co2 +=
                             *change * 1e15; // effect in Gt
-                        state.co2_emissions += *change * 1e15; // Apply immediately
+                        state.emissions.co2 += *change * 1e15; // Apply immediately
                     }
                     WorldVariable::ExtinctionRate => {
-                        state.byproduct_mods.biodiversity -=
-                            *change
+                        state
+                            .byproducts
+                            .modifier
+                            .biodiversity -= *change
                     }
                     WorldVariable::Outlook => {
                         state.world.base_outlook += *change;
                         check_game_over(state);
                     }
                     WorldVariable::Temperature => {
-                        state.temperature_modifier += *change
+                        state.world.temperature_modifier +=
+                            *change
                     }
                     WorldVariable::SeaLevelRise => {
                         state.world.sea_level_rise += *change
                     }
                     WorldVariable::SeaLevelRiseRate => {
-                        state.sea_level_rise_modifier += *change
+                        state.world.sea_level_rise_modifier +=
+                            *change
                     }
                     WorldVariable::Precipitation => {
-                        state.precipitation += *change
+                        state.world.precipitation += *change
                     }
                 }
             }
@@ -506,17 +513,17 @@ impl Effect {
                 }
             }
             Effect::Resource(resource, amount) => {
-                state.resources[*resource] += amount;
+                state.resources.available[*resource] += amount;
             }
             Effect::Demand(output, pct_change) => {
-                state.output_demand_modifier[*output] +=
+                state.output_demand.factor[*output] +=
                     pct_change;
             }
             Effect::DemandAmount(output, amount) => {
-                state.output_demand_extras[*output] += amount;
+                state.output_demand.modifier[*output] += amount;
             }
             Effect::Output(output, pct_change) => {
-                state.output_modifier[*output] += pct_change;
+                state.produced.factor[*output] += pct_change;
             }
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in state
@@ -564,7 +571,8 @@ impl Effect {
                 }
             }
             Effect::Feedstock(feedstock, pct_change) => {
-                state.feedstocks[*feedstock] *= 1. + pct_change;
+                state.feedstocks.available[*feedstock] *=
+                    1. + pct_change;
             }
             Effect::AddEvent(id) => {
                 state.event_pool.events[id].locked = false;
@@ -621,7 +629,7 @@ impl Effect {
 
                     // Find the most habitable regions
                     let mean_habitability: f32 =
-                        state.world.habitability();
+                        state.world.regions.habitability();
                     let target_regions: Vec<&mut Region> =
                         state
                             .world
@@ -711,7 +719,7 @@ impl Effect {
             Effect::IncomeOutlookChange(mult) => {
                 for region in state.world.regions.iter_mut() {
                     region.outlook += (mult
-                        * region.income_level() as f32)
+                        * region.income.level() as f32)
                         .round();
                 }
                 check_game_over(state);
@@ -738,36 +746,43 @@ impl Effect {
                     WorldVariable::Year => {
                         state.world.year -= *change as usize
                     }
-                    WorldVariable::Population => {
-                        state.world.change_population(-*change)
-                    }
+                    WorldVariable::Population => state
+                        .world
+                        .regions
+                        .change_population(-*change),
                     WorldVariable::PopulationGrowth => {
-                        state.population_growth_modifier -=
+                        state
+                            .world
+                            .population_growth_modifier -=
                             *change
                     }
                     WorldVariable::Emissions => {
-                        state.byproduct_mods.co2 -=
+                        state.byproducts.modifier.co2 -=
                             *change * 1e15;
-                        state.co2_emissions -= *change * 1e15; // Apply immediately
+                        state.emissions.co2 -= *change * 1e15; // Apply immediately
                     }
                     WorldVariable::ExtinctionRate => {
-                        state.byproduct_mods.biodiversity +=
-                            *change
+                        state
+                            .byproducts
+                            .modifier
+                            .biodiversity += *change
                     }
                     WorldVariable::Outlook => {
                         state.world.base_outlook -= *change
                     }
                     WorldVariable::Temperature => {
-                        state.temperature_modifier -= *change
+                        state.world.temperature_modifier -=
+                            *change
                     }
                     WorldVariable::SeaLevelRise => {
                         state.world.sea_level_rise -= *change
                     }
                     WorldVariable::SeaLevelRiseRate => {
-                        state.sea_level_rise_modifier -= *change
+                        state.world.sea_level_rise_modifier -=
+                            *change
                     }
                     WorldVariable::Precipitation => {
-                        state.precipitation -= *change
+                        state.world.precipitation -= *change
                     }
                 }
             }
@@ -791,17 +806,17 @@ impl Effect {
                 }
             }
             Effect::Resource(resource, amount) => {
-                state.resources[*resource] -= amount;
+                state.resources.available[*resource] -= amount;
             }
             Effect::Demand(output, pct_change) => {
-                state.output_demand_modifier[*output] -=
+                state.output_demand.factor[*output] -=
                     pct_change;
             }
             Effect::DemandAmount(output, amount) => {
-                state.output_demand_extras[*output] -= amount;
+                state.output_demand.modifier[*output] -= amount;
             }
             Effect::Output(output, pct_change) => {
-                state.output_modifier[*output] -= pct_change;
+                state.produced.factor[*output] -= pct_change;
             }
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in state
@@ -849,7 +864,8 @@ impl Effect {
                 }
             }
             Effect::Feedstock(feedstock, pct_change) => {
-                state.feedstocks[*feedstock] /= 1. + pct_change;
+                state.feedstocks.available[*feedstock] /=
+                    1. + pct_change;
             }
             Effect::NPCRelationship(id, change) => {
                 state.npcs[id].relationship -= change;
@@ -907,7 +923,7 @@ impl Effect {
             Effect::IncomeOutlookChange(mult) => {
                 for region in state.world.regions.iter_mut() {
                     region.outlook -= (mult
-                        * region.income_level() as f32)
+                        * region.income.level() as f32)
                         .floor();
                 }
             }
@@ -939,7 +955,7 @@ impl Effect {
                         _ => (),
                     };
                 }
-                state.temperature_modifier -= temp;
+                state.world.temperature_modifier -= temp;
             }
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent;
@@ -1062,7 +1078,7 @@ pub fn mean_income_outlook_change(
         .regions
         .iter()
         .map(|region| {
-            (mult * region.income_level() as f32).floor()
+            (mult * region.income.level() as f32).floor()
         })
         .sum::<f32>()
         / state.world.regions.len() as f32

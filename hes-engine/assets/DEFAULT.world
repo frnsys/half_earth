@@ -84,6 +84,11 @@
     "temperature": 1.1,
     "sea_level_rise": 0.09,
     "base_outlook": 20.0,
+    "temp_outlook": 0.0,
+    "temperature_modifier": 0.0,
+    "population_growth_modifier": 0.0,
+    "sea_level_rise_modifier": 0.0,
+    "precipitation": 0.0,
     "regions": [
         {
             "id": "a73ac5a8-8c97-404f-a8b0-cd2d321f7cd1",
@@ -39756,7 +39761,7 @@
                         {
                             "ModifyEventProbability": [
                                 "177af2fa-f472-4894-b111-07345846c6fc",
-                                -10.0
+                                -1.0
                             ]
                         }
                     ],

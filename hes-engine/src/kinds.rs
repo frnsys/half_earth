@@ -14,8 +14,114 @@ use std::{
         Sub,
         SubAssign,
     },
+    slice::Iter,
 };
 use strum::{EnumIter, EnumString, IntoStaticStr};
+
+pub trait KindMap:
+    Index<Self::Key, Output = f32>
+    + IndexMut<Self::Key>
+    + Add<Output = Self>
+    + Mul<Output = Self>
+    + SubAssign
+    + Copy
+    + Default
+{
+    type Key: Copy;
+
+    fn splat(val: f32) -> Self;
+    fn keys(&self) -> Iter<Self::Key>;
+    fn items(&self) -> Vec<(Self::Key, f32)>;
+    fn items_mut(&mut self) -> Vec<(Self::Key, &mut f32)>;
+    fn values_mut(&mut self) -> Vec<&mut f32>;
+}
+
+/// A consumable, exhaustible supply of something.
+#[derive(
+    Serialize, Deserialize, Clone, PartialEq, Default, Debug,
+)]
+pub struct Reserve<M: KindMap> {
+    /// Current un-consumed stock.
+    pub available: M,
+
+    /// Actual annual consumption.
+    pub consumed: M,
+
+    /// Total production requirement for the resource,
+    /// which may be more than what's available.
+    pub required: M,
+}
+impl<M: KindMap> Index<M::Key> for Reserve<M> {
+    type Output = f32;
+    fn index(&self, index: M::Key) -> &Self::Output {
+        &self.available[index]
+    }
+}
+impl<M: KindMap> From<M> for Reserve<M> {
+    fn from(value: M) -> Self {
+        Self {
+            available: value,
+            ..Default::default()
+        }
+    }
+}
+impl<M: KindMap> Reserve<M> {
+    pub fn until_exhaustion(&self, key: M::Key) -> f32 {
+        self.available[key] / self.consumed[key]
+    }
+
+    /// Apply annual consumption.
+    pub fn consume(&mut self, consumed: M) {
+        self.consumed = consumed;
+
+        // Float imprecision sometimes causes these values
+        // to be slightly negative, so ensure they aren't
+        self.available -= consumed;
+        for val in self.available.values_mut() {
+            *val = val.max(0.);
+        }
+    }
+
+    /// Weigh resources by scarcity;
+    /// higher weight = higher scarcity.
+    pub fn scarcity(&self) -> M {
+        let mut weights = M::default();
+        for (k, v) in self.required.items() {
+            weights[k] = f32::min(
+                f32::max(v / self.available[k], 0.),
+                1.,
+            );
+        }
+        weights
+    }
+}
+
+/// A map that can be modified by factors (multiplication)
+/// and modifiers (addition).
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
+pub struct Modifiable<M: KindMap> {
+    pub base: M,
+    pub factor: M,
+    pub modifier: M,
+}
+impl<M: KindMap> Default for Modifiable<M> {
+    fn default() -> Self {
+        Self {
+            base: M::default(),
+            factor: M::splat(1.),
+            modifier: M::default(),
+        }
+    }
+}
+impl<M: KindMap> Modifiable<M> {
+    pub fn total(&self) -> M {
+        (self.base + self.modifier) * self.factor
+    }
+
+    pub fn of(&self, key: M::Key) -> f32 {
+        self.total()[key]
+    }
+}
 
 macro_rules! count {
     () => (0usize);
@@ -35,8 +141,7 @@ macro_rules! define_enum_map {
         }
 
         paste! {
-            // Define map
-            #[derive(Default, Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+            #[derive(Default, Clone, Copy, Serialize, Deserialize, PartialEq, Debug)]
             pub struct [<$name Map>] {
                 $(
                     pub [<$field:snake>]: f32,
@@ -44,34 +149,10 @@ macro_rules! define_enum_map {
             }
 
             impl [<$name Map>] {
-                pub fn keys(&self) -> [$name; count!($($field)*)] {
-                    [$(
-                        $name::$field,
-                    )*]
-                }
-
-                pub fn items(&self) -> [($name, f32); count!($($field)*)] {
-                    [$(
-                        ($name::$field, self.[<$field:snake>]),
-                    )*]
-                }
-
                 pub fn values(&self) -> [f32; count!($($field)*)] {
                     [$(
                         self.[<$field:snake>],
                     )*]
-                }
-
-                pub fn items_mut(&mut self) -> [($name, &mut f32); count!($($field)*)] {
-                    [$(
-                        ($name::$field, &mut self.[<$field:snake>]),
-                    )*]
-                }
-
-                pub fn sum(&self) -> f32 {
-                    0. $(
-                        + self.[<$field:snake>]
-                    )*
                 }
             }
 
@@ -215,22 +296,41 @@ macro_rules! define_enum_map {
                 }
             }
 
+            impl KindMap for [<$name Map>] {
+                type Key = $name;
 
-            // See: <https://github.com/rust-lang/rust/issues/35853>
-            // macro_rules! [<$name:snake s>] {
-            //     () => {
-            //         [<$name Map>]::default()
-            //     };
-            //     ($($subfield:ident: $subvalue:expr),*) => {
-            //         {
-            //             let mut map = [<$name Map>]::default();
-            //             $(
-            //                 map.$subfield = $subvalue;
-            //             )*
-            //             map
-            //         }
-            //     };
-            // }
+                fn splat(val: f32) -> Self {
+                    Self {
+                        $(
+                            [<$field:snake>]: val,
+                        )*
+                    }
+                }
+
+                fn keys(&self) -> Iter<Self::Key> {
+                    [$(
+                        $name::$field,
+                    )*].iter()
+                }
+
+                fn values_mut(&mut self) -> Vec<&mut f32> {
+                    vec![$(
+                        &mut self.[<$field:snake>],
+                    )*]
+                }
+
+                fn items(&self) -> Vec<(Self::Key, f32)> {
+                    vec![$(
+                        ($name::$field, self.[<$field:snake>]),
+                    )*]
+                }
+
+                fn items_mut(&mut self) -> Vec<(Self::Key, &mut f32)> {
+                    vec![$(
+                        ($name::$field, &mut self.[<$field:snake>]),
+                    )*]
+                }
+            }
         }
     }
 }
@@ -315,11 +415,11 @@ macro_rules! byproducts {
 #[macro_export]
 macro_rules! outputs {
     () => {
-        OutputMap::default()
+        crate::kinds::OutputMap::default()
     };
     ($($field:ident: $value:expr),*) => {
         {
-            let mut map = OutputMap::default();
+            let mut map = crate::kinds::OutputMap::default();
             $(
                 map.$field = $value;
             )*

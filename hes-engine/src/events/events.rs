@@ -169,6 +169,7 @@ impl EventPool {
     }
 }
 
+/// The game phase in which an event can be rolled.
 #[derive(
     Debug,
     Copy,
@@ -206,9 +207,7 @@ pub enum Phase {
     CutsceneIntro,
 }
 
-#[derive(
-    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
-)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Event {
     pub id: Id,
     pub name: String,
@@ -237,6 +236,26 @@ pub struct Event {
 
     pub flavor: EventFlavor,
     pub notes: String,
+}
+impl Default for Event {
+    fn default() -> Self {
+        Self {
+            id: Id::new_v4(),
+            name: "Default Event".into(),
+            locked: false,
+            occurred: false,
+            phase: Phase::WorldMain,
+            prob_modifier: 1.,
+            intensity: 0,
+            effects: vec![],
+            probabilities: vec![Probability {
+                likelihood: Likelihood::Guaranteed,
+                conditions: vec![],
+            }],
+            flavor: EventFlavor::default(),
+            notes: "".into(),
+        }
+    }
 }
 
 impl Display for Event {
@@ -307,21 +326,15 @@ mod test {
         super::{Comparator, LocalVariable, WorldVariable},
         *,
     };
-    use crate::regions::{Income, Latitude, Region};
+    use crate::{events::Condition, regions::Region};
     use rand::SeedableRng;
 
-    fn gen_events() -> Vec<Event> {
+    fn gen_events() -> Collection<Event> {
         vec![
             Event {
-                id: "test_event_a",
-                name: "Test Event A",
+                id: Id::new_v4(),
+                name: "Test Event A".into(),
                 phase: Phase::WorldMain,
-                locked: false,
-                occurred: false,
-                regional: false,
-                prob_modifier: 1.,
-                intensity: 0,
-                effects: vec![],
                 probabilities: vec![
                     Probability {
                         likelihood: Likelihood::Guaranteed,
@@ -338,23 +351,20 @@ mod test {
                         conditions: vec![],
                     },
                 ],
+                ..Default::default()
             },
             Event {
-                id: "test_event_b",
-                name: "Test Event B",
+                id: Id::new_v4(),
+                name: "Test Event B".into(),
                 phase: Phase::WorldMain,
-                locked: false,
-                occurred: false,
-                regional: false,
-                prob_modifier: 1.,
-                intensity: 0,
-                effects: vec![],
                 probabilities: vec![Probability {
                     likelihood: Likelihood::Guaranteed,
                     conditions: vec![],
                 }],
+                ..Default::default()
             },
         ]
+        .into()
     }
 
     #[test]
@@ -396,16 +406,9 @@ mod test {
     fn test_event_pool_local() {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
         let events = vec![Event {
-            id: "test_event_a",
-            name: "Test Event A",
+            id: Id::new_v4(),
+            name: "Test Event A".into(),
             phase: Phase::Icon,
-            locked: false,
-            occurred: false,
-            regional: false,
-            prob_modifier: 1.,
-            intensity: 0,
-
-            effects: vec![],
             probabilities: vec![
                 Probability {
                     likelihood: Likelihood::Guaranteed,
@@ -420,7 +423,9 @@ mod test {
                     conditions: vec![],
                 },
             ],
-        }];
+            ..Default::default()
+        }]
+        .into();
         let mut pool = EventPool {
             events,
             queue: vec![],
@@ -430,40 +435,17 @@ mod test {
         let mut state = State::default();
         state.world.regions = vec![
             Region {
-                id: 0,
-                name: "Test Region A",
-                population: 0.,
-                development: 0.,
-                seceded: false,
-                income: Income::Low,
-                outlook: 0.,
-                base_habitability: 0.,
-                latitude: Latitude::Tropic,
-                flags: vec![],
-                temp_lo: 0.,
-                temp_hi: 0.,
-                precip_lo: 0.,
-                precip_hi: 0.,
-                pattern_idxs: vec![],
+                id: Id::new_v4(),
+                name: "Test Region A".into(),
+                ..Default::default()
             },
             Region {
-                id: 1,
-                name: "Test Region B",
-                population: 0.,
-                development: 0.,
-                seceded: false,
-                income: Income::Low,
-                outlook: 0.,
-                base_habitability: 0.,
-                latitude: Latitude::Tropic,
-                flags: vec![],
-                temp_lo: 0.,
-                temp_hi: 0.,
-                precip_lo: 0.,
-                precip_hi: 0.,
-                pattern_idxs: vec![],
+                id: Id::new_v4(),
+                name: "Test Region B".into(),
+                ..Default::default()
             },
-        ];
+        ]
+        .into();
         let events = pool.roll_for_phase(
             Phase::Icon,
             &state,
@@ -475,7 +457,9 @@ mod test {
         assert_eq!(events.len(), 0);
 
         // Set one region to satisfy conditions
-        state.world.regions[1].population = 10.;
+        let region = state.world.regions.by_idx_mut(1);
+        region.population = 10.;
+        let id = region.id;
         let events = pool.roll_for_phase(
             Phase::Icon,
             &state,
@@ -484,33 +468,25 @@ mod test {
         );
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
-        assert_eq!(events[0].1, Some(1));
+        assert_eq!(events[0].1, Some(id));
     }
 
     #[test]
     fn test_event_pool_countdown() {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+        let id = Id::new_v4();
         let events = vec![Event {
-            id: "test_event_a",
-            name: "Test Event A",
-            phase: Phase::WorldMain,
-            prob_modifier: 1.,
-            intensity: 0,
+            id,
+            name: "Test Event A".into(),
 
             // Note: locked so it doesn't trigger on its own
             locked: true,
-
-            occurred: false,
-            regional: false,
-            effects: vec![],
-            probabilities: vec![Probability {
-                likelihood: Likelihood::Guaranteed,
-                conditions: vec![],
-            }],
-        }];
+            ..Default::default()
+        }]
+        .into();
         let mut pool = EventPool {
             events,
-            queue: vec![(Phase::WorldMain, 0, None, 2)],
+            queue: vec![(Phase::WorldMain, id, None, 2)],
             triggered: vec![],
         };
 
@@ -538,29 +514,22 @@ mod test {
     #[test]
     fn test_event_pool_no_dupes() {
         let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+        let id = Id::new_v4();
         let mut pool = EventPool {
             events: vec![Event {
-                id: "test_event_a",
-                name: "Test Event A",
+                id,
+                name: "Test Event A".into(),
                 phase: Phase::WorldMain,
-                prob_modifier: 1.,
-                intensity: 0,
-                locked: false,
-                occurred: false,
-                regional: false,
-                effects: vec![],
-                probabilities: vec![Probability {
-                    likelihood: Likelihood::Guaranteed,
-                    conditions: vec![],
-                }],
-            }],
+                ..Default::default()
+            }]
+            .into(),
             queue: vec![],
             triggered: vec![
-                (Phase::WorldMain, 0, None),
-                (Phase::WorldMain, 0, None),
-                (Phase::WorldMain, 0, None),
-                (Phase::WorldMain, 0, None),
-                (Phase::WorldMain, 0, None),
+                (Phase::WorldMain, id, None),
+                (Phase::WorldMain, id, None),
+                (Phase::WorldMain, id, None),
+                (Phase::WorldMain, id, None),
+                (Phase::WorldMain, id, None),
             ],
         };
 

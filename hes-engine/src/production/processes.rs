@@ -4,10 +4,13 @@ use crate::{
     kinds::{
         ByproductMap,
         Feedstock,
+        FeedstockMap,
         Output,
         OutputMap,
         ResourceMap,
     },
+    npcs::RELATIONSHIP_CHANGE_AMOUNT,
+    Collection,
     HasId,
     Id,
 };
@@ -143,31 +146,114 @@ impl Process {
         let land = self.adj_resources().land;
         (pressure / 3e16 + land / starting_land) * 100.
     }
+
+    pub fn max_share(
+        &self,
+        output_demand: &OutputMap,
+        feedstocks: &FeedstockMap,
+    ) -> usize {
+        let mut max_share = 1.;
+        let demand = output_demand[self.output];
+
+        // Hard-coded limit
+        if let Some(limit) = self.limit {
+            max_share = (limit / demand).min(1.);
+        }
+
+        // Limit based on feedstock supply
+        let (kind, per_output) = self.feedstock;
+        match kind {
+            Feedstock::Soil | Feedstock::Other => {}
+            _ => {
+                let limit = feedstocks[kind] / per_output;
+                let supply_max_share = (limit / demand).min(1.);
+                max_share = max_share.min(supply_max_share);
+            }
+        }
+
+        ((max_share * 100.) / 5.).floor() as usize
+    }
+
+    /// Changes this process's mix share by the specified amount.
+    pub fn change_mix_share(
+        &mut self,
+        change: isize,
+    ) -> ProcessChanges {
+        let was_banned = self.is_banned();
+        let was_promoted = self.is_promoted();
+        if change < 0 {
+            self.mix_share = self
+                .mix_share
+                .saturating_sub(change.abs() as usize);
+        } else {
+            self.mix_share += change as usize;
+        }
+
+        let (support_change, oppose_change) =
+            if !was_banned && self.is_banned() {
+                // Ban
+                (-1., 1.)
+            } else if was_banned && !self.is_banned() {
+                // Unban
+                (1., -1.)
+            } else if was_promoted && !self.is_promoted() {
+                // Unpromote
+                (-1., 1.)
+            } else if !was_promoted && self.is_promoted() {
+                // Promote
+                (1., -1.)
+            } else {
+                (0., 0.)
+            };
+
+        let mut changes = ProcessChanges::default();
+        for npc_id in &self.supporters {
+            changes.relationships.push((
+                *npc_id,
+                support_change * RELATIONSHIP_CHANGE_AMOUNT,
+            ));
+        }
+        for npc_id in &self.opposers {
+            changes.relationships.push((
+                *npc_id,
+                oppose_change * RELATIONSHIP_CHANGE_AMOUNT,
+            ));
+        }
+        changes
+    }
+}
+
+#[derive(Default)]
+pub struct ProcessChanges {
+    pub relationships: Vec<(Id, f32)>,
+}
+
+impl Collection<Process> {
+    pub fn orders(
+        &self,
+        demand: &OutputMap,
+    ) -> Vec<ProductionOrder> {
+        self.iter()
+            .map(|p| p.production_order(&demand))
+            .collect()
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::kinds::{Feedstock, Output};
-    use float_cmp::approx_eq;
 
     #[test]
     fn test_output_limit() {
         let mut p = Process {
-            id: "test_process_a",
-            name: "Test Process A",
-            limit: None,
+            id: Id::new_v4(),
+            name: "Test Process A".into(),
             mix_share: 20, // Full mix share
             output: Output::Fuel,
-            output_modifier: 0.,
-            byproduct_modifiers: byproducts!(),
             resources: resources!(water: 1.),
-            byproducts: byproducts!(),
             feedstock: (Feedstock::Oil, 1.),
-            features: vec![],
-            locked: false,
-            opposers: vec![],
-            supporters: vec![],
+            ..Default::default()
         };
 
         let demand = outputs!(

@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 
 pub use self::{
     planner::{calculate_required, ProductionOrder},
-    processes::{Process, ProcessFeature},
+    processes::{Process, ProcessChanges, ProcessFeature},
 };
 use crate::{
     kinds::{

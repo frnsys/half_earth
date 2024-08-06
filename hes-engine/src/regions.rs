@@ -3,7 +3,7 @@ use std::fmt::Display;
 use crate::{
     events::RegionFlag,
     flavor::RegionFlavor,
-    kinds::{Output, OutputMap},
+    kinds::*,
     HasId,
     Id,
 };
@@ -13,7 +13,7 @@ use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1. / 40.;
 
-#[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct Region {
     pub id: Id,
 
@@ -54,6 +54,24 @@ impl HasId for Region {
 }
 
 impl Region {
+    pub fn develop(
+        &mut self,
+        speed: f32,
+        stop: bool,
+        degrow: bool,
+    ) -> (usize, usize) {
+        let start = self.income.level();
+        if degrow && self.income == Income::High {
+            self.develop_by(-1.);
+        } else if !stop && self.income != Income::High {
+            if !(degrow && self.income == Income::UpperMiddle) {
+                self.develop_by(speed);
+            }
+        }
+        let end = self.income.level();
+        (start, end)
+    }
+
     pub fn habitability(&self) -> f32 {
         // Factors:
         // - [X] regional temp
@@ -64,27 +82,12 @@ impl Region {
             - (f32::max(0., self.temp_hi - 35.).powf(2.) * 10.)
     }
 
-    pub fn income_level(&self) -> usize {
-        match self.income {
-            Income::Low => 0,
-            Income::LowerMiddle => 1,
-            Income::UpperMiddle => 2,
-            Income::High => 3,
-        }
-    }
-
     pub fn set_income_level(&mut self, level: usize) {
-        self.income = match level {
-            0 => Income::Low,
-            1 => Income::LowerMiddle,
-            2 => Income::UpperMiddle,
-            _ => Income::High,
-        };
+        self.income = level.into();
     }
 
     pub fn adjusted_income(&self) -> f32 {
-        let income = self.income_level() as f32;
-        income + self.development
+        self.income.level() as f32 + self.development
     }
 
     pub fn demand_level(
@@ -109,9 +112,8 @@ impl Region {
         output_demand: &[OutputMap; 4],
     ) -> OutputMap {
         let mut demand_levels: OutputMap = outputs!();
-        for k in demand_levels.keys() {
-            demand_levels[k] =
-                self.demand_level(&k, output_demand) as f32;
+        for (k, v) in demand_levels.items_mut() {
+            *v = self.demand_level(&k, output_demand) as f32;
         }
         demand_levels
     }
@@ -122,12 +124,7 @@ impl Region {
         modifier: f32,
         income_pop_coefs: &[[f32; 4]; 4],
     ) {
-        let coefs = match &self.income {
-            Income::Low => income_pop_coefs[0],
-            Income::LowerMiddle => income_pop_coefs[1],
-            Income::UpperMiddle => income_pop_coefs[2],
-            Income::High => income_pop_coefs[3],
-        };
+        let coefs = income_pop_coefs[self.income.level()];
         let change = coefs[0]
             + (coefs[1] * year)
             + (coefs[2] * year.powf(2.0))
@@ -151,26 +148,14 @@ impl Region {
         self.outlook = f32::min(10., self.outlook);
     }
 
-    pub fn develop(&mut self, modifier: f32) {
+    fn develop_by(&mut self, modifier: f32) {
         self.development += DEVELOP_SPEED * modifier;
         if self.development >= 1.0 {
-            let next_income = match self.income {
-                Income::Low => Income::LowerMiddle,
-                Income::LowerMiddle => Income::UpperMiddle,
-                Income::UpperMiddle => Income::High,
-                Income::High => Income::High,
-            };
             self.development = 0.;
-            self.income = next_income;
+            self.income = self.income.next();
         } else if self.development < 0. {
-            let next_income = match self.income {
-                Income::Low => Income::Low,
-                Income::LowerMiddle => Income::Low,
-                Income::UpperMiddle => Income::LowerMiddle,
-                Income::High => Income::UpperMiddle,
-            };
             self.development = 1. - self.development;
-            self.income = next_income;
+            self.income = self.income.prev();
         }
     }
 
@@ -179,7 +164,7 @@ impl Region {
         output_demand: &[OutputMap; 4],
     ) -> OutputMap {
         let mut demand = outputs!();
-        let idx = self.income_level();
+        let idx = self.income.level();
         if idx < 3 {
             let upper_demand = output_demand[idx + 1];
             for (k, v_a) in output_demand[idx].items() {
@@ -203,12 +188,7 @@ impl Region {
         &self,
         materials_by_income: &[f32; 4],
     ) -> f32 {
-        let idx = match self.income {
-            Income::Low => 0,
-            Income::LowerMiddle => 1,
-            Income::UpperMiddle => 2,
-            Income::High => 3,
-        };
+        let idx = self.income.level();
         let per_capita_demand = if idx < 3 {
             let upper_demand = materials_by_income[idx + 1];
             let demand = materials_by_income[idx];
@@ -242,6 +222,7 @@ impl Region {
 }
 
 #[derive(
+    Default,
     PartialEq,
     Serialize,
     Deserialize,
@@ -253,6 +234,7 @@ impl Region {
     IntoStaticStr,
 )]
 pub enum Income {
+    #[default]
     Low,
     LowerMiddle,
     UpperMiddle,
@@ -275,8 +257,47 @@ impl Display for Income {
         )
     }
 }
+impl Income {
+    pub fn next(&self) -> Self {
+        match self {
+            Income::Low => Income::LowerMiddle,
+            Income::LowerMiddle => Income::UpperMiddle,
+            Income::UpperMiddle => Income::High,
+            Income::High => Income::High,
+        }
+    }
+
+    pub fn prev(&self) -> Self {
+        match self {
+            Income::Low => Income::Low,
+            Income::LowerMiddle => Income::Low,
+            Income::UpperMiddle => Income::LowerMiddle,
+            Income::High => Income::UpperMiddle,
+        }
+    }
+
+    pub fn level(&self) -> usize {
+        match self {
+            Income::Low => 0,
+            Income::LowerMiddle => 1,
+            Income::UpperMiddle => 2,
+            Income::High => 3,
+        }
+    }
+}
+impl From<usize> for Income {
+    fn from(value: usize) -> Self {
+        match value {
+            0 => Income::Low,
+            1 => Income::LowerMiddle,
+            2 => Income::UpperMiddle,
+            _ => Income::High,
+        }
+    }
+}
 
 #[derive(
+    Default,
     PartialEq,
     Serialize,
     Deserialize,
@@ -289,6 +310,7 @@ impl Display for Income {
     Display,
 )]
 pub enum Latitude {
+    #[default]
     Tropic,
     Subtropic,
     Temperate,

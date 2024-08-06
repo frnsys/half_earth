@@ -10,49 +10,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
-pub fn update_seats(
-    outlook_change: f32,
-    projects: &[&Project],
-    npcs: &mut Collection<NPC>,
-) {
-    let mut supporters: Vec<Id> = vec![];
-    let mut opposers: Vec<Id> = vec![];
-    for project in projects {
-        for id in &project.supporters {
-            if !npcs[id].locked {
-                supporters.push(*id);
-            }
-        }
-        for id in &project.opposers {
-            if !npcs[id].locked {
-                opposers.push(*id);
-            }
-        }
-    }
-
-    let total = supporters.len() + opposers.len();
-    let change = outlook_change / total as f32;
-    for id in &supporters {
-        npcs[id].support += change;
-    }
-    for id in &opposers {
-        npcs[id].support -= change;
-    }
-
-    let mut total_support = 0.;
-    for npc in npcs.iter_mut() {
-        if !npc.locked {
-            npc.support = f32::max(0., npc.support);
-            total_support += npc.support;
-        }
-    }
-
-    for npc in npcs.iter_mut() {
-        if !npc.locked {
-            npc.seats = npc.support / total_support;
-        }
-    }
-}
+pub const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
 
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct NPC {
@@ -134,4 +92,66 @@ pub enum NPCRelation {
     Neutral,
     Nemesis,
     Ally,
+}
+
+impl Collection<NPC> {
+    pub fn is_ally(&self, name: &'static str) -> bool {
+        let npc = self.iter().find(|n| n.name == name);
+        if let Some(npc) = npc {
+            npc.is_ally()
+        } else {
+            false
+        }
+    }
+
+    pub fn update_seats(
+        &mut self,
+        outlook_change: f32,
+        projects: &[&Project],
+    ) {
+        let mut supporters: Vec<Id> = vec![];
+        let mut opposers: Vec<Id> = vec![];
+        for project in projects {
+            for id in &project.supporters {
+                if !self[id].locked {
+                    supporters.push(*id);
+                }
+            }
+            for id in &project.opposers {
+                if !self[id].locked {
+                    opposers.push(*id);
+                }
+            }
+        }
+
+        let total = supporters.len() + opposers.len();
+        let change = outlook_change / total as f32;
+        for id in &supporters {
+            self[id].support += change;
+        }
+        for id in &opposers {
+            self[id].support -= change;
+        }
+
+        let mut total_support = 0.;
+        for npc in self.iter_mut() {
+            if !npc.locked {
+                npc.support = f32::max(0., npc.support);
+                total_support += npc.support;
+            }
+        }
+
+        for npc in self.iter_mut() {
+            if !npc.locked {
+                npc.seats = npc.support / total_support;
+            }
+        }
+    }
+
+    pub fn coalition_seats(&self) -> f32 {
+        self.iter()
+            .filter(|npc| npc.is_ally())
+            .map(|npc| npc.seats)
+            .sum()
+    }
 }
