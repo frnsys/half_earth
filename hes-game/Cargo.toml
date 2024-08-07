@@ -88,7 +88,7 @@ lib-profile-release = "wasm-release"
 
 # The site root folder is where cargo-leptos generate all output.
 # WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
-site-root = "target/site"
+site-root = "target/hes-game"
 
 # The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS.
 style-file = "styles.css"

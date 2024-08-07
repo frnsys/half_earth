@@ -10,7 +10,7 @@ doctest = false
 [dependencies]
 paste = "1.0"
 uuid = { version = "1.10.0", features = ["v4", "serde", "js"] }
-fastrand = { workspace = true }
+fastrand = { workspace = true, features = ["js"] }
 strum = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
