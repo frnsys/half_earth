@@ -1,0 +1,46 @@
+[workspace]
+resolver = "2"
+members = [
+    "hes-game",
+    "hes-game/src-tauri",
+    "hes-engine",
+    "hes-editor",
+    "hes-editor/src-tauri",
+]
+default-members = [
+    "hes-game",
+    "hes-engine",
+    "hes-editor",
+]
+
+[workspace.dependencies]
+leptos = { version = "0.6", features = ["csr", "tracing"] }
+leptos_meta = { version = "0.6" }
+leptos_router = { version = "0.6", features = ["csr"] }
+leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "*" }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+serde-wasm-bindgen = "0.6"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1.0.120", features = ["float_roundtrip"] }
+web-sys = "0.3"
+js-sys = "0.3"
+log = "0.4.22"
+console_log = "1.0.0"
+console_error_panic_hook = "0.1.7"
+numfmt = "1.1.1"
+strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
+enum-map = { version = "2.7.3", features = ["serde"] }
+fastrand = { version = "2.1.0" }
+
+[profile.release]
+debug = 0
+lto = "fat"
+panic = "abort"
+codegen-units = 1
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = "fat"
+codegen-units = 1

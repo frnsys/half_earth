@@ -2,7 +2,7 @@ use crate::{
     memo,
     views::{DisplayEvent, Events, Updates},
 };
-use hes_engine::{ResolvedEvent, State, Update};
+use hes_engine::{ProjectType, ResolvedEvent, State, Update};
 use leptos::*;
 
 #[component]
@@ -40,7 +40,6 @@ pub fn DebugEvents() -> impl IntoView {
     };
 
     let regions = memo!(game.world.regions);
-    let projects = memo!(game.world.projects);
     let region_updates =
         move || {
             regions.get().iter().map(|region| {
@@ -66,11 +65,38 @@ pub fn DebugEvents() -> impl IntoView {
         }).collect::<Vec<_>>()
         };
 
+    let projects = memo!(game.world.projects);
+    let project_updates = move || {
+        projects.get().iter().map(|project| {
+            let id = project.id;
+            let kind = project.kind;
+            view! {
+                <div class="debug-event" on:click=move |_| {
+                    let update = match kind {
+                        ProjectType::Policy => Update::Policy {
+                            id,
+                        },
+                        _ => Update::Project {
+                            id
+                        }
+                    };
+                    update!(|updates| {
+                        updates.push(update);
+                    });
+                }>
+                    {&project.name}
+                </div>
+            }
+        }).collect::<Vec<_>>()
+    };
+
     view! {
         <div class="debug-events">
             {event_views}
             <hr />
             {region_updates}
+            <hr />
+            {project_updates}
         </div>
         <Events events />
         <Updates updates on_done=move |_| {

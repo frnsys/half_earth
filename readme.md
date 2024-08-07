@@ -64,7 +64,7 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 Available recipes:
     run-web     # Run development web game (browser)
     run-app     # Run development app game (tauri)
-    test-engine # Run engine tests
+    test        # Run tests
     build-apps  # Build the app release versions (tauri)
                 # Note: this is just native, for cross-platform see below.
     build-web   # Build the web release version (browser)

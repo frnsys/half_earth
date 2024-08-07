@@ -6,7 +6,6 @@ use crate::{
     HasId,
     Id,
 };
-use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashSet, fmt::Display};
 use strum::{Display, EnumIter, EnumString, IntoStaticStr};
@@ -45,7 +44,6 @@ impl EventPool {
         &mut self,
         phase: Phase,
         state: &State,
-        rng: &mut SmallRng,
     ) -> Vec<(Event, Option<Id>)> {
         // Prevent duplicate events
         let mut existing: HashSet<&Id> = HashSet::new();
@@ -68,7 +66,7 @@ impl EventPool {
             })
             .map(|ev| ev.id)
             .collect();
-        valid_ids.shuffle(rng);
+        fastrand::shuffle(&mut valid_ids);
 
         // Tick queued countdowns
         let mut i = 0;
@@ -86,7 +84,7 @@ impl EventPool {
             if try_trigger {
                 let (_, ev_id, region_id, _) = self.queue[i];
                 let ev = &mut self.events[&ev_id];
-                if ev.roll(state, region_id, rng) {
+                if ev.roll(state, region_id) {
                     self.triggered
                         .push((ev.phase, ev_id, region_id));
                 }
@@ -104,7 +102,7 @@ impl EventPool {
             // Icon-type events are always local
             if ev.phase == Phase::Icon {
                 for region in state.world.regions.iter() {
-                    if ev.roll(state, Some(region.id), rng) {
+                    if ev.roll(state, Some(region.id)) {
                         self.triggered.push((
                             ev.phase,
                             ev_id,
@@ -115,8 +113,7 @@ impl EventPool {
             } else {
                 if ev.is_regional() {
                     for region in state.world.regions.iter() {
-                        if ev.roll(state, Some(region.id), rng)
-                        {
+                        if ev.roll(state, Some(region.id)) {
                             self.triggered.push((
                                 ev.phase,
                                 ev_id,
@@ -124,7 +121,7 @@ impl EventPool {
                             ));
                         }
                     }
-                } else if ev.roll(state, None, rng) {
+                } else if ev.roll(state, None) {
                     self.triggered
                         .push((ev.phase, ev_id, None));
                 }
@@ -133,7 +130,7 @@ impl EventPool {
 
         // Get the first MAX_EVENTS_PER_TURN triggered events
         let mut happening = Vec::new();
-        self.triggered.shuffle(rng);
+        fastrand::shuffle(&mut self.triggered);
 
         let mut i = 0;
         while i < self.triggered.len() {
@@ -302,12 +299,11 @@ impl Event {
         &self,
         state: &State,
         region_id: Option<Id>,
-        rng: &mut SmallRng,
     ) -> bool {
         match self.eval(state, region_id) {
             Some(likelihood) => {
                 let prob = likelihood.p();
-                rng.gen::<f32>() <= (prob * self.prob_modifier)
+                fastrand::f32() <= (prob * self.prob_modifier)
             }
             None => false,
         }
@@ -317,11 +313,14 @@ impl Event {
 #[cfg(test)]
 mod test {
     use super::{
-        super::{Comparator, LocalVariable, WorldVariable},
+        super::{
+            condition::Comparator,
+            LocalVariable,
+            WorldVariable,
+        },
         *,
     };
     use crate::{events::Condition, regions::Region};
-    use rand::SeedableRng;
 
     fn gen_events() -> Collection<Event> {
         vec![
@@ -363,7 +362,7 @@ mod test {
 
     #[test]
     fn test_event_pool() {
-        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+        fastrand::seed(0);
         let events = gen_events();
         let mut pool = EventPool {
             events,
@@ -372,11 +371,8 @@ mod test {
         };
 
         let mut state = State::default();
-        let events = pool.roll_for_phase(
-            Phase::WorldMain,
-            &state,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::WorldMain, &state);
 
         // Only event B should happen
         assert_eq!(events.len(), 1);
@@ -385,18 +381,15 @@ mod test {
         // But if we set it so that event A's first condition
         // is met, it should happen
         state.world.year = 10;
-        let events = pool.roll_for_phase(
-            Phase::WorldMain,
-            &state,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::WorldMain, &state);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
     }
 
     #[test]
     fn test_event_pool_local() {
-        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+        fastrand::seed(0);
         let events = vec![Event {
             id: Id::new_v4(),
             name: "Test Event A".into(),
@@ -438,8 +431,7 @@ mod test {
             },
         ]
         .into();
-        let events =
-            pool.roll_for_phase(Phase::Icon, &state, &mut rng);
+        let events = pool.roll_for_phase(Phase::Icon, &state);
 
         // No events should happen
         assert_eq!(events.len(), 0);
@@ -448,8 +440,7 @@ mod test {
         let region = state.world.regions.by_idx_mut(1);
         region.population = 10.;
         let id = region.id;
-        let events =
-            pool.roll_for_phase(Phase::Icon, &state, &mut rng);
+        let events = pool.roll_for_phase(Phase::Icon, &state);
         assert_eq!(events.len(), 1);
         assert_eq!(events[0].0.name, "Test Event A");
         assert_eq!(events[0].1, Some(id));
@@ -457,7 +448,7 @@ mod test {
 
     #[test]
     fn test_event_pool_countdown() {
-        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+        fastrand::seed(0);
         let id = Id::new_v4();
         let events = vec![Event {
             id,
@@ -477,25 +468,19 @@ mod test {
         let state = State::default();
 
         // No events should happen
-        let events = pool.roll_for_phase(
-            Phase::WorldMain,
-            &state,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::WorldMain, &state);
         assert_eq!(events.len(), 0);
 
         // Countdown finished
-        let events = pool.roll_for_phase(
-            Phase::WorldMain,
-            &state,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::WorldMain, &state);
         assert_eq!(events.len(), 1);
     }
 
     #[test]
     fn test_event_pool_no_dupes() {
-        let mut rng: SmallRng = SeedableRng::seed_from_u64(0);
+        fastrand::seed(0);
         let id = Id::new_v4();
         let mut pool = EventPool {
             events: vec![Event {
@@ -516,22 +501,16 @@ mod test {
         };
 
         let state = State::default();
-        let events = pool.roll_for_phase(
-            Phase::WorldMain,
-            &state,
-            &mut rng,
-        );
+        let events =
+            pool.roll_for_phase(Phase::WorldMain, &state);
 
         // Only 1 event should happen
         assert_eq!(events.len(), 1);
 
         // Shouldn't happen again, even though they're pre-triggered
         for _ in 0..4 {
-            let events = pool.roll_for_phase(
-                Phase::WorldMain,
-                &state,
-                &mut rng,
-            );
+            let events =
+                pool.roll_for_phase(Phase::WorldMain, &state);
             assert_eq!(events.len(), 0);
         }
     }

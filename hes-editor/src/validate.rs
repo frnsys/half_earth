@@ -1,10 +1,11 @@
 use std::collections::HashSet;
 
 use hes_engine::{
-    events::{Condition, Effect},
     flavor::DialogueNext,
-    world::World,
+    Condition,
+    Effect,
     Id,
+    World,
 };
 
 /// Errors:

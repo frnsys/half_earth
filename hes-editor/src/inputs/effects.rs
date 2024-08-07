@@ -1,10 +1,13 @@
 use crate::{enum_slice, inputs::*, subsignal};
 use hes_engine::{
-    events::{Effect, EffectKind, Event, WorldVariable},
-    industries::Industry,
-    npcs::NPC,
-    production::Process,
-    projects::Project,
+    Effect,
+    EffectKind,
+    Event,
+    Industry,
+    Process,
+    Project,
+    WorldVariable,
+    NPC,
 };
 use leptos::*;
 

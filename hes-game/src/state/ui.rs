@@ -155,12 +155,6 @@ impl UIState {
         self.cycle_start_state.completed_projects.clear();
     }
 
-    pub fn has_any_process_mix_changes(&self) -> bool {
-        self.process_mix_changes.iter().any(|(_, changes)| {
-            changes.iter().any(|(_, change)| *change != 0)
-        })
-    }
-
     pub fn has_process_mix_changes(
         &self,
         output: Output,

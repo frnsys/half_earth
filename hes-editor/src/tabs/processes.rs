@@ -1,10 +1,11 @@
 use crate::{infinite_list, inputs::*, subsignal};
 use hes_engine::{
-    kinds::Feedstock,
-    npcs::NPC,
-    production::{Process, ProcessFeature},
-    world::World,
     Collection,
+    Feedstock,
+    Process,
+    ProcessFeature,
+    World,
+    NPC,
 };
 use leptos::*;
 

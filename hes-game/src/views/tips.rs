@@ -30,16 +30,6 @@ pub struct Tip {
     pub supicon: Option<&'static str>,
 }
 impl Tip {
-    pub fn icon(mut self, icon: &'static str) -> Self {
-        self.icon = icon;
-        self
-    }
-
-    pub fn text(mut self, text: String) -> Self {
-        self.text = text;
-        self
-    }
-
     pub fn card(mut self, card: impl Into<TipCard>) -> Self {
         self.card = Some(card.into());
         self
@@ -47,11 +37,6 @@ impl Tip {
 
     pub fn subicon(mut self, icon: &'static str) -> Self {
         self.subicon = Some(icon);
-        self
-    }
-
-    pub fn supicon(mut self, icon: &'static str) -> Self {
-        self.supicon = Some(icon);
         self
     }
 }

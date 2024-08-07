@@ -6,19 +6,17 @@ pub use conditions::Conditions;
 pub use effects::Effects;
 use hes_engine::{
     flavor::{Image, ImageData},
-    kinds::{
-        ByproductMap,
-        FeedstockMap,
-        OutputMap,
-        ResourceMap,
-    },
+    ByproductMap,
     Collection,
+    FeedstockMap,
     HasId,
     Id,
+    OutputMap,
+    ResourceMap,
 };
 use js_sys::Uint8Array;
 use leptos::*;
-use leptos_use::{on_click_outside, use_element_hover};
+use leptos_use::on_click_outside;
 use num::Num;
 use std::{
     fmt::{Debug, Display},
@@ -101,7 +99,7 @@ pub fn TextInput(
     }
 }
 
-trait NumberError {
+pub trait NumberError {
     fn error_desc() -> &'static str;
 }
 impl NumberError for f32 {
@@ -221,7 +219,7 @@ pub fn OptionalNumericInput<
     #[prop(into)] label: String,
     #[prop(into)] help: String,
 ) -> impl IntoView {
-    let (read, write) = signal;
+    let (read, _) = signal;
     let maybe_val = create_rw_signal(read.get_untracked());
     let value = create_rw_signal::<T>(
         read.get_untracked().unwrap_or_else(T::default),
@@ -250,7 +248,7 @@ pub fn OptionalNumericInput<
                                 signal=create_slice(maybe_val,
                                     move |opt| opt.clone().unwrap(),
                                     move |opt, val| {
-                                        opt.insert(val);
+                                        opt.replace(val);
                                         value.set(val);
                                     }) />
                         </Show>
@@ -578,7 +576,6 @@ where
         let current = read.get();
         E::iter()
             .map(|var| {
-                let label: &'static str = var.into();
                 view! {
                     <div
                         class="multi-select-opt tooltip-parent"
@@ -740,8 +737,8 @@ pub fn EntityPicker<T: AsRef + 'static>(
     create_effect(move |_| {
         if focused.get() {
             if let Some(ref_input) = ref_input.get() {
-                ref_input.on_mount(|input| {
-                    input.focus();
+                let _ = ref_input.on_mount(|input| {
+                    let _ = input.focus();
                     input.select();
                 });
             }
@@ -749,7 +746,7 @@ pub fn EntityPicker<T: AsRef + 'static>(
     });
 
     let target = create_node_ref::<html::Div>();
-    on_click_outside(target, move |_| {
+    let _ = on_click_outside(target, move |_| {
         if focused.get() {
             focused.set(false);
             write.set(local.get());
@@ -872,7 +869,7 @@ pub fn OptionalImageInput(
                         Signal::derive(move || read.get().unwrap()),
                         SignalSetter::map(move |image: Image| {
                             let mut opt = read.get();
-                            opt.insert(image.clone());
+                            opt.replace(image.clone());
                             value.set(image);
                             write.set(opt);
                         })

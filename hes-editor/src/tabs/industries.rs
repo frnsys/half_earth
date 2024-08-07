@@ -1,5 +1,5 @@
 use crate::{infinite_list, inputs::*, subsignal};
-use hes_engine::{industries::Industry, world::World};
+use hes_engine::{Industry, World};
 use leptos::*;
 
 #[component]

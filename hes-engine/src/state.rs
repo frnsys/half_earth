@@ -25,7 +25,6 @@ use crate::{
     Collection,
     Id,
 };
-use rand::{rngs::SmallRng, Rng, SeedableRng};
 use serde::{Deserialize, Serialize};
 
 const LIFESPAN: usize = 60;
@@ -39,9 +38,6 @@ const WIN_TEMPERATURE: f32 = 1.0;
 /// Represents the game state.
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 pub struct State {
-    #[serde(skip, default = "SmallRng::from_entropy")]
-    rng: SmallRng,
-
     pub world: World,
     pub runs: usize,
 
@@ -132,7 +128,6 @@ impl State {
 
             events: vec![],
             event_pool: EventPool::new(events),
-            rng: SmallRng::from_entropy(),
 
             runs: 0,
             game_over: false,
@@ -199,7 +194,7 @@ impl State {
 
     pub fn step_year(&mut self, tgav: f32) -> Vec<Update> {
         let mut updates = vec![];
-        let changes = self.step_projects(&mut self.rng.clone());
+        let changes = self.step_projects();
         for (id, changes) in changes {
             if changes.completed {
                 updates.push(Update::Project { id });
@@ -544,11 +539,8 @@ impl State {
         &mut self,
         phase: Phase,
     ) -> Vec<ResolvedEvent> {
-        // Hacky
-        let mut rng = self.rng.clone();
         let mut pool = self.event_pool.clone();
-        let events =
-            pool.roll_for_phase(phase, &self, &mut rng);
+        let events = pool.roll_for_phase(phase, &self);
         self.event_pool = pool;
 
         let events: Vec<ResolvedEvent> = events
@@ -584,17 +576,14 @@ impl State {
 
 // Project related functionality.
 impl State {
-    fn step_projects(
-        &mut self,
-        rng: &mut SmallRng,
-    ) -> Vec<(Id, ProjectChanges)> {
+    fn step_projects(&mut self) -> Vec<(Id, ProjectChanges)> {
         let mut changes =
             self.world.projects.step(self.world.year);
 
         let mut outcomes: Vec<(Id, usize)> = Vec::new();
         for (id, changes) in &mut changes {
             let project = &self.world.projects[&id];
-            match self.roll_project_outcome(project, rng) {
+            match self.roll_project_outcome(project) {
                 Some((outcome, i)) => {
                     for effect in &outcome.effects {
                         changes
@@ -756,14 +745,13 @@ impl State {
     fn roll_project_outcome<'a>(
         &self,
         project: &'a Project,
-        rng: &mut SmallRng,
     ) -> Option<(&'a Outcome, usize)> {
         let mut outcome = None;
         for (i, o) in project.outcomes.iter().enumerate() {
             match o.probability.eval(self, None) {
                 Some(likelihood) => {
                     let prob = likelihood.p();
-                    if rng.gen::<f32>() <= prob {
+                    if fastrand::f32() <= prob {
                         outcome = Some((o, i));
                         break;
                     }
@@ -784,10 +772,7 @@ impl State {
         for id in &ids {
             let mut active_outcome = None;
             let proj = &self.world.projects[id];
-            match self.roll_project_outcome(
-                proj,
-                &mut self.rng.clone(),
-            ) {
+            match self.roll_project_outcome(proj) {
                 Some((outcome, i)) => {
                     for effect in &outcome.effects {
                         effects.push(effect.clone());
@@ -956,7 +941,6 @@ impl Update {
 // #[cfg(test)]
 // mod test {
 //     use super::*;
-//     use rand::SeedableRng;
 //
 //     #[test]
 //     fn test_promote_process() {

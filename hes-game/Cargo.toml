@@ -1,40 +1,40 @@
 [package]
 name = "hes-game"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [lib]
+doctest = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-leptos = { version = "0.6", features = ["csr", "tracing"] }
-leptos_meta = { version = "0.6" }
-leptos_router = { version = "0.6", features = ["csr"] }
-wasm-bindgen = "0.2"
-wasm-bindgen-futures = "0.4"
-js-sys = "0.3"
-serde_json = "1.0"
-serde = { version = "1", features = ["derive"] }
-serde-wasm-bindgen = "0.6"
-console_error_panic_hook = "0.1.7"
-leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "*" }
-gloo-net = { version = "0.5.0", features = ["json"] }
-anyhow = "1.0.86"
-leptos_i18n = "0.3.3"
 hes-engine = { path = "../hes-engine" }
+leptos = { workspace = true }
+leptos_meta = { workspace = true }
+leptos_router = { workspace = true }
+leptos-use = { workspace = true }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+serde-wasm-bindgen = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+js-sys = { workspace = true }
+numfmt = { workspace = true }
+strum = { workspace = true }
+enum-map = { workspace = true }
+log = { workspace = true }
+console_log = { workspace = true }
+console_error_panic_hook = { workspace = true }
+anyhow = "1.0.86"
 list_files_macro = "0.1.0"
 leptos_animation = "0.5.2"
-strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
-enum-map = { version = "2.7.3", features = ["serde"] }
 enum-iterator = "2.1.0"
+gloo-net = { version = "0.5.0", features = ["json"] }
 gloo-utils = { version = "0.2.0", features = ["serde"] }
 extend = "1.2.0"
 bincode = "1.3.3"
 regex-lite = "0.1.6"
 paste = "1.0.15"
-numfmt = "1.1.1"
-console_log = "1.0.0"
-log = "0.4.22"
 tracing = "0.1.40"
 tracing-wasm = "0.2.1"
 lodepng = { version = "3.10.2", optional = true }
@@ -48,18 +48,14 @@ tokio = { version = "1", features = ["full"], optional = true }
 http = { version = "1.0" }
 base64 = "0.22.1"
 codee = { version = "0.1.2", features = ["json_serde"] }
-fastrand = { version = "2.1.0", optional = true }
+fastrand = { workspace = true, optional = true }
 image = { version = "0.25.2", optional = true }
 textwrap = { version = "0.16.1", optional = true }
 imageproc = { version = "0.25.0", optional = true }
 ab_glyph = { version = "0.2.28", optional = true }
-itertools = "0.13.0"
-
-[workspace]
-members = ["src-tauri"]
 
 [dependencies.web-sys]
-version = "0.3"
+workspace = true
 features = ["Performance", "Animation", "KeyframeEffect", "KeyframeEffectOptions", "HtmlImageElement", "Storage"]
 
 [features]
@@ -83,12 +79,6 @@ server = [
 	"leptos_router/ssr",
 ]
 
-[profile.wasm-release]
-inherits = "release"
-opt-level = 'z'
-lto = true
-codegen-units = 1
-
 [package.metadata.leptos]
 bin-features = ["server"]
 bin-default-features = false
@@ -106,4 +96,3 @@ style-file = "styles.css"
 # Assets source dir. All files found here will be copied and synchronized to site-root.
 # The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
 assets-dir = "public"
-

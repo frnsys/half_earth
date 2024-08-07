@@ -1,21 +1,5 @@
 use crate::{infinite_list, inputs::*, subsignal};
-use hes_engine::{
-    events::Probability,
-    kinds::Output,
-    npcs::NPC,
-    projects::{
-        Cost,
-        Factor,
-        FactorKind,
-        Group,
-        Outcome,
-        Project,
-        Type,
-        Upgrade,
-    },
-    world::World,
-    Collection,
-};
+use hes_engine::*;
 use leptos::*;
 
 #[component]
@@ -56,7 +40,7 @@ fn Project(
                         label="Ongoing"
                         help="Is this a one-and-done project, or does it need continued maintenance?"
                         signal=subsignal!(project.ongoing) />
-                    <Show when=move || project.0.with(|project| project.kind == Type::Initiative)>
+                    <Show when=move || project.0.with(|project| project.kind == ProjectType::Initiative)>
                         <ToggleInput
                             label="Gradual"
                             help="Does this project have to be 100% finished before the effects occur, or do they develop as the project is developed?"
@@ -131,9 +115,9 @@ fn Cost(
     let cost_view = move || {
         let base_cost = with!(|read| read.base_cost.clone());
         match base_cost {
-            Cost::Fixed(cost) => {
+            Cost::Fixed(_) => {
                 let label = with!(|read| match read.kind {
-                    Type::Policy => "Political Capital",
+                    ProjectType::Policy => "Political Capital",
                     _ => "Build Years",
                 });
                 view! {
@@ -155,7 +139,7 @@ fn Cost(
                         ) />
                 }.into_view()
             }
-            Cost::Dynamic(multiplier, factor) => {
+            Cost::Dynamic(multiplier, _) => {
                 view! {
                     <EnumInput
                         label="Factor"
@@ -190,7 +174,7 @@ fn Cost(
                                     Cost::Dynamic(multiplier, _) => multiplier,
                                     _ => multiplier_.get()
                                 })),
-                            SignalSetter::map(move |val| {
+                            SignalSetter::map(move |_| {
                                 let mut project = read.get();
                                 let factor = match project.base_cost {
                                     Cost::Dynamic(_, factor) => factor,

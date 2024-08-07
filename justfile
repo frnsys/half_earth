@@ -13,8 +13,8 @@ run-editor:
     cd hes-editor && cargo tauri dev
 
 # Run the engine tests.
-test-engine:
-    cd hes-engine && cargo test
+test:
+    cargo test --all-features
 
 # Build the game and editor apps for release.
 build-apps:

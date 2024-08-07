@@ -18,7 +18,10 @@ pub use events::{
     mean_demand_outlook_change,
     mean_income_outlook_change,
     Condition,
+    ConditionKind,
     Effect,
+    EffectKind,
+    Event,
     Flag,
     IconEvent,
     Likelihood,
@@ -35,10 +38,15 @@ pub use kinds::*;
 pub use npcs::NPC;
 pub use production::{Process, ProcessFeature};
 pub use projects::{
+    Cost,
+    Factor,
+    FactorKind,
     Group,
+    Outcome,
     Project,
     Status,
     Type as ProjectType,
+    Upgrade,
 };
 pub use regions::{Income, Latitude, Region};
 pub use state::{Emissions, ResolvedEvent, State, Update};

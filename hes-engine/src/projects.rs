@@ -574,15 +574,7 @@ impl Collection<Project> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{
-        events::{
-            Comparator,
-            Condition,
-            Likelihood,
-            WorldVariable,
-        },
-        state::State,
-    };
+    use crate::events::Likelihood;
 
     #[test]
     fn test_build_project() {
@@ -649,40 +641,40 @@ mod test {
 
     #[test]
     fn test_project_outcomes() {
-        let p = Project {
-            id: Id::new_v4(),
-            name: "Test Project".into(),
-            cost: 1,
-            base_cost: Cost::Fixed(1),
-            cost_modifier: 1.,
-            kind: Type::Policy,
-            status: Status::Building,
-            outcomes: vec![
-                Outcome {
-                    effects: vec![],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![
-                            Condition::WorldVariable(
-                                WorldVariable::Year,
-                                Comparator::Equal,
-                                10.,
-                            ),
-                        ],
-                    },
-                },
-                Outcome {
-                    effects: vec![],
-                    probability: Probability {
-                        likelihood: Likelihood::Guaranteed,
-                        conditions: vec![],
-                    },
-                },
-            ],
-            ..Default::default()
-        };
+        // let p = Project {
+        //     id: Id::new_v4(),
+        //     name: "Test Project".into(),
+        //     cost: 1,
+        //     base_cost: Cost::Fixed(1),
+        //     cost_modifier: 1.,
+        //     kind: Type::Policy,
+        //     status: Status::Building,
+        //     outcomes: vec![
+        //         Outcome {
+        //             effects: vec![],
+        //             probability: Probability {
+        //                 likelihood: Likelihood::Guaranteed,
+        //                 conditions: vec![
+        //                     Condition::WorldVariable(
+        //                         WorldVariable::Year,
+        //                         Comparator::Equal,
+        //                         10.,
+        //                     ),
+        //                 ],
+        //             },
+        //         },
+        //         Outcome {
+        //             effects: vec![],
+        //             probability: Probability {
+        //                 likelihood: Likelihood::Guaranteed,
+        //                 conditions: vec![],
+        //             },
+        //         },
+        //     ],
+        //     ..Default::default()
+        // };
 
-        let mut state = State::default();
+        // let mut state = State::default();
         // TODO move this test to state
 
         // Should be the second outcome

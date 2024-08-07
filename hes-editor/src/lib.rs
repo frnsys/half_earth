@@ -3,23 +3,12 @@ mod tabs;
 mod validate;
 mod worlds;
 
-use hes_engine::{
-    kinds::{FeedstockMap, OutputMap, ResourceMap},
-    npcs::NPC,
-    regions::Income,
-    world::World,
-    Collection,
-    Game,
-};
+use hes_engine::{Collection, World, NPC};
 use inputs::{AsRef, Ref};
 use leptos::*;
 use leptos_toaster::{Toaster, ToasterPosition};
-use paste::paste;
-use serde::{Deserialize, Serialize};
-use serde_wasm_bindgen::to_value;
 use strum::{Display, EnumIter, IntoEnumIterator};
 use tabs::*;
-use wasm_bindgen::prelude::*;
 use worlds::{Status, WorldsMenu};
 
 #[derive(Debug, Clone, Copy, Display, EnumIter, PartialEq)]
@@ -141,20 +130,8 @@ macro_rules! infinite_list {
             use_infinite_scroll_with_options,
             UseInfiniteScrollOptions,
         };
-        use leptos_toaster::{Toast, Toasts, ToastId, ToastVariant, ToastOptions, dismiss_toast};
+        use leptos_toaster::{Toasts, ToastId, ToastOptions, dismiss_toast};
         use tauri_sys::{dialog::MessageDialogBuilder};
-
-        fn find_element_with_id(
-            nodelist: web_sys::NodeList,
-            id: &str) -> Option<web_sys::HtmlElement> {
-            use wasm_bindgen::JsCast;
-            (0..nodelist.length())
-                .filter_map(|i| nodelist.item(i))
-                .filter_map(|node| {
-                    node.dyn_into::<web_sys::HtmlElement>().ok()
-                })
-                .find(|el| el.id() == id)
-        }
 
         #[component]
         pub fn $name(world: RwSignal<World>) -> impl IntoView {

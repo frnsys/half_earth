@@ -1,4 +1,4 @@
-use hes_engine::world::World;
+use hes_engine::World;
 use leptos::*;
 use leptos_toaster::*;
 use leptos_use::{
@@ -152,7 +152,7 @@ pub fn WorldsMenu(
                  }}
             }
             .into_view(),
-            Error::IO(err) => view! { err }.into_view(),
+            Error::IO(err) => err.into_view(),
         };
 
         toast_context.toast(
@@ -181,7 +181,7 @@ pub fn WorldsMenu(
     let open = create_rw_signal(false);
 
     let target = create_node_ref::<html::Div>();
-    on_click_outside(target, move |_| {
+    let _ = on_click_outside(target, move |_| {
         if open.get() {
             open.set(false);
         }
@@ -193,7 +193,7 @@ pub fn WorldsMenu(
         _ => None,
     };
 
-    use_event_listener(
+    let _ = use_event_listener(
         use_document(),
         ev::keydown,
         move |ev| {

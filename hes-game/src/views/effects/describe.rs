@@ -1879,7 +1879,7 @@ mod tests {
                 0.6,
             ),
         );
-        assert_eq!(text_vals[2], 60.);
+        assert_eq!(text_vals[1], 60.);
         assert_eq!(tip_vals[0], 4.);
         assert_eq!(tip_vals[1], 6.);
         assert_eq!(tip_vals[2], 4.);

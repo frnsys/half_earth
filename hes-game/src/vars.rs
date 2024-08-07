@@ -119,16 +119,6 @@ impl Var {
         }
     }
 
-    pub fn as_resource(&self) -> Resource {
-        match self {
-            Var::Land => Resource::Land,
-            Var::Water => Resource::Water,
-            Var::Electricity => Resource::Electricity,
-            Var::Fuel => Resource::Fuel,
-            _ => unreachable!(),
-        }
-    }
-
     pub fn as_impact(&self) -> Option<Impact> {
         match self {
             Var::Land => Some(Impact::Land),

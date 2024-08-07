@@ -1,9 +1,5 @@
 use crate::inputs::*;
-use hes_engine::{
-    kinds::Output,
-    regions::{Income, Region},
-    world::World,
-};
+use hes_engine::{Income, Output, World};
 use leptos::*;
 use strum::IntoEnumIterator;
 
@@ -60,7 +56,7 @@ pub fn World(world: RwSignal<World>) -> impl IntoView {
                             </div>
                             {move || {
                                  ["β₀", "β₁", "β₂", "β₃"].iter().enumerate().map(|(i, label)| {
-                                     let label = label.clone();
+                                     let label = *label;
                                      view! {
                                          <div class="input-column">
                                              <label>{label}</label>
@@ -99,7 +95,7 @@ pub fn World(world: RwSignal<World>) -> impl IntoView {
                             <label>High</label>
                         </div>
                         {move || {
-                             Output::iter().enumerate().map(|(i, output)| {
+                             Output::iter().map(|output| {
                                  let label: &'static str = output.into();
                                  let units = match output {
                                      Output::Fuel | Output::Electricity => "kWh/month",
