@@ -59,6 +59,10 @@ impl DisplayEvent {
             })
         }
     }
+
+    pub fn show_as_card(&self) -> bool {
+        self.flavor.image.is_some()
+    }
 }
 
 fn describe_condition(

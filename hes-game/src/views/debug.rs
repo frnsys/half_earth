@@ -1,13 +1,14 @@
 use crate::{
     memo,
-    views::{DisplayEvent, Events},
+    views::{DisplayEvent, Events, Updates},
 };
-use hes_engine::{ResolvedEvent, State};
+use hes_engine::{ResolvedEvent, State, Update};
 use leptos::*;
 
 #[component]
 pub fn DebugEvents() -> impl IntoView {
     let events = create_rw_signal(vec![]);
+    let updates = create_rw_signal(vec![]);
     let game = expect_context::<RwSignal<State>>();
 
     let region = game.with_untracked(|game| {
@@ -38,10 +39,42 @@ pub fn DebugEvents() -> impl IntoView {
         }).collect::<Vec<_>>()
     };
 
+    let regions = memo!(game.world.regions);
+    let projects = memo!(game.world.projects);
+    let region_updates =
+        move || {
+            regions.get().iter().map(|region| {
+            let id = region.id;
+            view! {
+                <div class="debug-event" on:click=move |_| {
+                    let up = Update::Region {
+                        id,
+                        up: true,
+                    };
+                    let down = Update::Region {
+                        id,
+                        up: false,
+                    };
+                    update!(|updates| {
+                        updates.push(up);
+                        updates.push(down);
+                    });
+                }>
+                    {&region.name}
+                </div>
+            }
+        }).collect::<Vec<_>>()
+        };
+
     view! {
         <div class="debug-events">
             {event_views}
+            <hr />
+            {region_updates}
         </div>
         <Events events />
+        <Updates updates on_done=move |_| {
+            update!(|updates| updates.clear());
+        }/>
     }
 }

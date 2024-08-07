@@ -1,9 +1,17 @@
 use crate::{
     audio::init_audio,
+    debug::get_debug_opts,
     i18n::{get_preferred_language, load_language},
     state::UIState,
     tgav::HectorRef,
-    views::{Game, Loading, Start, TipState, ToolTip},
+    views::{
+        DebugEvents,
+        Game,
+        Loading,
+        Start,
+        TipState,
+        ToolTip,
+    },
 };
 use hes_engine::{State, World};
 use leptos::*;
@@ -86,22 +94,30 @@ pub fn App() -> impl IntoView {
         },
     );
 
-    view! {
-        <Show when=move || lang.get().is_some()>
-            <Show when=move || phase.get() == Phase::Start>
-                <Start on_ready=move |_| {
-                    update!(|phase| phase.advance());
-                } />
+    if get_debug_opts().check_events {
+        view! {
+            <ToolTip />
+            <DebugEvents />
+        }
+        .into_view()
+    } else {
+        view! {
+            <Show when=move || lang.get().is_some()>
+                <Show when=move || phase.get() == Phase::Start>
+                    <Start on_ready=move |_| {
+                        update!(|phase| phase.advance());
+                    } />
+                </Show>
+                <Show when=move || phase.get() == Phase::Loading>
+                    <Loading on_ready=move |_| {
+                        update!(|phase| phase.advance());
+                    }/>
+                </Show>
+                <Show when=move || phase.get() == Phase::Ready>
+                    <ToolTip/>
+                    <Game />
+                </Show>
             </Show>
-            <Show when=move || phase.get() == Phase::Loading>
-                <Loading on_ready=move |_| {
-                    update!(|phase| phase.advance());
-                }/>
-            </Show>
-            <Show when=move || phase.get() == Phase::Ready>
-                <ToolTip/>
-                <Game />
-            </Show>
-        </Show>
+        }.into_view()
     }
 }

@@ -39,7 +39,7 @@ pub fn Updates(
     view! {
         <Show when=has_update>
             <Update update on_done=move |_| next_update()/>
-        </Show>
+            </Show>
     }
 }
 
@@ -74,7 +74,7 @@ fn Update(
     let regions = memo!(game.world.regions);
     let projects = memo!(game.world.projects);
     let image = move || {
-        with!(|projects, regions, update| {
+        let image = with!(|projects, regions, update| {
             match update {
                 EngineUpdate::Project { id }
                 | EngineUpdate::Policy { id } => {
@@ -86,7 +86,8 @@ fn Update(
                     region.flavor.image.src()
                 }
             }
-        })
+        });
+        format!("url('{image}')",)
     };
 
     let image_attrib = move || {
@@ -131,24 +132,24 @@ fn Update(
 
                     let effects = active_effects(proj);
                     let outcome_dialogue = proj.active_outcome.map(|id| {
-                    let (dialogue, _) = create_signal(proj.flavor.outcomes[id].clone());
-                    view! {
-                        <Dialogue dialogue on_start=move |_| {
-                            set_can_close.set(false)
-                        } on_done=move |_| {
-                            set_can_close.set(true)
-                        } />
-                    }
-                });
+                        let (dialogue, _) = create_signal(proj.flavor.outcomes[id].clone());
+                        view! {
+                            <Dialogue dialogue on_start=move |_| {
+                                set_can_close.set(false)
+                            } on_done=move |_| {
+                                set_can_close.set(true)
+                            } />
+                        }
+                    });
 
                     // TODO this is a hack
                     let (sig, _) = create_signal(effects);
 
                     view! {
                         <div class="event--effects">
-                            {outcome_dialogue}
-                            <Effects effects=sig />
-                        </div>
+                        {outcome_dialogue}
+                        <Effects effects=sig />
+                            </div>
                     }
                     .into_view()
                 }
@@ -178,9 +179,9 @@ fn Update(
                     iconPCals: icons::PLANT_CALORIES,
                     iconACals: icons::ANIMAL_CALORIES);
                     let prev_tip = tip(
-                    icons::WEALTH,
-                    t!("This region's previous income level."),
-                );
+                        icons::WEALTH,
+                        t!("This region's previous income level."),
+                    );
                     let next_tip = tip(
                         icons::WEALTH,
                         t!("This region's new income level."),
@@ -195,57 +196,57 @@ fn Update(
                         prev_region.demand(per_capita_demand);
                     let pop = region.population;
                     let demand_changes = demand.items().map(|(output, demand)| {
-                    let region_per_capita_demand = demand / pop;
-                    let intensity = intensity::output_intensity(region_per_capita_demand, output);
-                    let prev_region_per_capita_demand = prev_demand[output] / pop;
-                    let prev_intensity = intensity::output_intensity(prev_region_per_capita_demand, output);
+                        let region_per_capita_demand = demand / pop;
+                        let intensity = intensity::output_intensity(region_per_capita_demand, output);
+                        let prev_region_per_capita_demand = prev_demand[output] / pop;
+                        let prev_intensity = intensity::output_intensity(prev_region_per_capita_demand, output);
 
-                    let prev_tip = tip(output.icon(), t!("This region's previous demand for {output}.", output: output.lower()));
-                    let next_tip = tip(output.icon(), t!("This region's new demand for {output}.", output: output.lower()));
+                        let prev_tip = tip(output.icon(), t!("This region's previous demand for {output}.", output: output.lower()));
+                        let next_tip = tip(output.icon(), t!("This region's new demand for {output}.", output: output.lower()));
+
+                        view! {
+                            <div class="event--icon-change">
+                                <HasTip tip=prev_tip>
+                                    <IntensityIcon
+                                    icon=output.icon() intensity=move || prev_intensity />
+                                </HasTip>
+                                <img src=icons::ARROW_RIGHT_LIGHT />
+                                <HasTip tip=next_tip>
+                                    <IntensityIcon
+                                icon=output.icon() intensity=move || intensity />
+                                </HasTip>
+                                </div>
+
+                        }
+                    }).to_vec();
 
                     view! {
-                        <div class="event--icon-change">
-                            <HasTip tip=prev_tip>
-                              <IntensityIcon
-                                icon=output.icon() intensity=move || prev_intensity />
-                            </HasTip>
-                          <img src=icons::ARROW_RIGHT_LIGHT />
-                          <HasTip tip=next_tip>
-                              <IntensityIcon
-                                icon=output.icon() intensity=move || intensity />
-                            </HasTip>
+                        <div class="event--outcome" inner_html=html />
+                            <div class="event--icon-changes">
+                                <div class="event--icon-change">
+                                    <HasTip tip=prev_tip>
+                                        <IntensityIcon
+                                            icon=icons::WEALTH
+                                            intensity=move || prev_income + 1
+                                            invert=true
+                                        />
+                                    </HasTip>
+                                    <img src=icons::ARROW_RIGHT_LIGHT/>
+                                    <HasTip tip=next_tip>
+                                        <IntensityIcon
+                                        icon=icons::WEALTH
+                                        intensity=move || next_income + 1
+                                        invert=true
+                                        />
+                                    </HasTip>
+                                </div>
+                            </div>
+                            <div class="event--icon-changes event--icon-changes-group">
+                                {demand_changes}
                         </div>
 
                     }
-                }).to_vec();
-
-                    view! {
-                    <div class="event--outcome" inner_html=html />
-                    <div class="event--icon-changes">
-                        <div class="event--icon-change">
-                            <HasTip tip=prev_tip>
-                                <IntensityIcon
-                                    icon=icons::WEALTH
-                                    intensity=move || prev_income + 1
-                                    invert=true
-                                />
-                            </HasTip>
-                            <img src=icons::ARROW_RIGHT_LIGHT/>
-                            <HasTip tip=next_tip>
-                                <IntensityIcon
-                                    icon=icons::WEALTH
-                                    intensity=move || next_income + 1
-                                    invert=true
-                                />
-                            </HasTip>
-                        </div>
-                    </div>
-                      <div class="event--icon-changes event--icon-changes-group">
-                      {demand_changes}
-                      </div>
-
-                }
-                .into_view()
+                    .into_view()
                 }
             }
         })
@@ -263,15 +264,15 @@ fn Update(
             style:background-image=image
             on:click=try_done
             class:regionup=is_region
-        >
-            <div class="event--body">
-                <div class="arc">{title}</div>
-                <div class="image-attribution">
-                    {t!("Image:")}" "{image_attrib}
-                </div>
-                <div class="event--name">{name}</div>
-                {outcomes}
-            </div>
+                  >
+                  <div class="event--body">
+                  <div class="arc">{title}</div>
+                  <div class="image-attribution">
+                  {t!("Image:")}" "{image_attrib}
         </div>
+            <div class="event--name">{name}</div>
+            {outcomes}
+        </div>
+            </div>
     }
 }

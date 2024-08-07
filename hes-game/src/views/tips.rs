@@ -198,22 +198,6 @@ pub fn ToolTip() -> impl IntoView {
                         "tip--card",
                     ));
 
-            tracing::debug!(
-                "[TIP] Tip clicked: {}",
-                target.clone().class_name()
-            );
-            tracing::debug!("[TIP] Has card: {}", has_card());
-            tracing::debug!(
-                "[TIP] Should remove: {should_remove}"
-            );
-            tracing::debug!(
-                "[TIP] Has ancestor with class: {}",
-                has_ancestor_with_class(
-                    target.clone(),
-                    "tip--card",
-                )
-            );
-
             // We don't actually remove the tooltip (i.e.
             // do `tip_rw.set(None)`) because this causes the tooltip
             // to immediately empty, whereas we want it to transition out.

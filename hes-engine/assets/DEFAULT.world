@@ -28588,12 +28588,6 @@
                 }
             ],
             "effects": [
-                {
-                    "WorldVariable": [
-                        "Emissions",
-                        0.0
-                    ]
-                }
             ],
             "prob_modifier": 1.0,
             "intensity": 0,

@@ -25,9 +25,17 @@ pub fn Event(
 
     let dialogue =
         move || with!(|event| event.flavor.dialogue.clone());
-    let effects =
-        move || with!(|event| Some(event.effects.clone()));
     let event_id = move || with!(|event| Some(event.id));
+
+    // Only show effects in the dialogue if there's
+    // no event card being shown.
+    let dialogue_effects = move || {
+        if with!(|event| event.show_as_card()) {
+            None
+        } else {
+            with!(|event| Some(event.effects.clone()))
+        }
+    };
 
     view! {
         <div class="event">
@@ -38,7 +46,7 @@ pub fn Event(
                 on_advance=on_advance
                 on_done=on_done
                 event_id
-                effects
+                effects=dialogue_effects
             />
         </div>
     }

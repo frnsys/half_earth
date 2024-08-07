@@ -1,6 +1,7 @@
 mod update;
 
 use std::collections::HashMap;
+pub use update::Updates;
 
 use crate::{
     audio,
@@ -16,7 +17,6 @@ use crate::{
         events::Events,
         globe::{Globe, GlobeRef},
         hud::Hud,
-        phases::world::update::Updates,
     },
 };
 use hes_engine::{

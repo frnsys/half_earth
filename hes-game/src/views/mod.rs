@@ -15,6 +15,7 @@ mod splash;
 mod tips;
 
 pub use cards::FactorsCard;
+pub use debug::*;
 pub use effects::Effects;
 pub use events::*;
 pub use factors::{rank as rank_factors, Factor};

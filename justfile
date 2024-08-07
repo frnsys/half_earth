@@ -18,8 +18,8 @@ test-engine:
 
 # Build the game and editor apps for release.
 build-apps:
-    cd hes-game && cargo tauri build
-    cd hes-editor && cargo tauri build
+    cd hes-game && cargo tauri build --releaese
+    cd hes-editor && cargo tauri build --release
 
 # Build the game web version.
 build-web:

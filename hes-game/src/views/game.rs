@@ -1,11 +1,9 @@
 use leptos::*;
 
 use crate::{
-    debug::get_debug_opts,
     memo,
     state::{Phase, UIState},
     views::{
-        debug::DebugEvents,
         Cutscene,
         End,
         Interstitial,
@@ -52,12 +50,5 @@ pub fn Game() -> impl IntoView {
             }
         }
     });
-
-    if get_debug_opts().check_events {
-        view! {
-            <DebugEvents />
-        }
-    } else {
-        game_view.into_view()
-    }
+    game_view
 }

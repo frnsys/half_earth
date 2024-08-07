@@ -55,7 +55,6 @@ pub fn Events(
     if ready.get_untracked()
         && events.with_untracked(|events| events.is_empty())
     {
-        tracing::debug!("No events, calling on_done");
         on_done.call(());
     }
 

@@ -3726,7 +3726,7 @@ color: #63FF96;
   line-height: 110%;
 }
 
-.project-completed {
+.event.project-completed {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -4859,4 +4859,19 @@ color: #63FF96;
 }
 .git-hash:hover {
   opacity: 1.;
+}
+
+.debug-events {
+  padding: 1em;
+  font-family: "Inter", system-ui, sans-serif;
+  height: 100vh;
+  overflow-y: scroll;
+}
+.debug-event {
+  color: #ccc;
+  cursor: pointer;
+  margin: 0.25em 0;
+}
+.debug-event:hover {
+  text-decoration: underline;
 }

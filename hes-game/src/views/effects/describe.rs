@@ -377,7 +377,7 @@ impl DisplayEffect {
                         "population",
                         "{changeDir} global population growth by {amount}<strong>%.</strong>",
                         changeDir: self.change_dir(*amount),
-                        amount: display::percent(*amount, false)
+                        amount: display::percent(amount.abs(), false)
                     },
                 ),
                 WorldVariable::Population => (
@@ -452,7 +452,7 @@ impl DisplayEffect {
                 PlayerVariable::PoliticalCapital => (
                     tip! {
                         icons::POLITICAL_CAPITAL,
-                        r#"How much political capital you have. Political capital is what you spend to implement your plans. <b class="tip-warn">If you run out you\'ll be pushed out of government.</b>"#,
+                        r#"How much political capital you have. Political capital is what you spend to implement your plans. <b class="tip-warn">If you run out you'll be pushed out of government.</b>"#,
                     },
                     text! {
                         "political_capital",
@@ -474,7 +474,7 @@ impl DisplayEffect {
                     let p = (amount / limit).abs();
                     format!("{}%", display::percent(p, true))
                 } else {
-                    amount.round().to_string()
+                    amount.round().abs().to_string()
                 };
                 let text = t!("{changeDir} maximum output for {process} by <strong>{amount}</strong>.",
                 amount: change,
@@ -497,9 +497,16 @@ impl DisplayEffect {
                 },
             ),
             Effect::Resource(resource, amount) => {
-                let fmtted =
-                    display::resource(*amount, *resource, state.resources.available).abs();
-                let fmtted = if matches!(resource, Resource::Water | Resource::Land) {
+                let fmtted = display::resource(
+                    *amount,
+                    *resource,
+                    state.resources.available,
+                )
+                .abs();
+                let fmtted = if matches!(
+                    resource,
+                    Resource::Water | Resource::Land
+                ) {
                     format!("{}%", fmtted.round())
                 } else {
                     fmtted.to_string()
@@ -1365,7 +1372,7 @@ impl DisplayEffect {
                         feedstock.as_key(),
                         "{changeDir} {name} supply by <strong>{percent}%.</strong>",
                         name: t!(feedstock.lower()),
-                        percent: display::percent(*amount, true),
+                        percent: display::percent(amount.abs(), true),
                         changeDir: self.change_dir(*amount),
                     },
                 )

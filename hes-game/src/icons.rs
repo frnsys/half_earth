@@ -97,7 +97,7 @@ icons! {
     DEVELOPMENT: "/icons/development.png",
     MIX_TOKEN: "/icons/mix_allocation.png",
     ALERT: "/icons/alert.png",
-    HELP: "/icons/help.svg",
+    HELP: "/icons/help.png",
     PROJECT: "/icons/implement.png",
     DOWN_ARROW_SMALL: "/icons/down_arrow.svg",
     ARROW_RIGHT: "/icons/arrow_right.svg",

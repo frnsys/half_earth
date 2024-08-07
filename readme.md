@@ -46,6 +46,15 @@ The globe and Hector modules need to re-built if any of their files are edited. 
 2. If you haven't already, run `just setup`.
 3. Then run `just build`.
 
+If debugging the game there are a few options you can pass as URL parameters which can help. These are used a comma-separated following `debug=`, e.g. `http://localhost:3000/?debug=all-projects,all-processes`.
+
+- `check-events`: Show a list of all events and updates and click on them to trigger them.
+- `all-projects`: All projects are unlocked at the start.
+- `all-processes`: All processes are unlocked at the start.
+- `skip-to-planning`: Skip the intro and just go to the planning phase.
+- `skip-tutorial`: Skip the tutorial.
+- `fast-years`: Speed up years in the world events phase.
+
 
 ## Running
 
