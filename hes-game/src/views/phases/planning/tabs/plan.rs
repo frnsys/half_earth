@@ -81,7 +81,6 @@ pub fn Plan(
 
     let projects = memo!(game.world.projects);
     let active_projects = move || {
-        tracing::debug!("Checking Active Projects");
         with!(|projects| {
             projects.changeable().cloned().collect::<Vec<_>>()
         })
@@ -101,20 +100,11 @@ pub fn Plan(
     let viewed = memo!(ui.viewed);
     let processes = memo!(game.world.processes);
     let any_new_projects = move || {
-        tracing::debug!("Checking Any New Projects");
         with!(|projects, viewed| {
-            tracing::debug!(
-                "Checking Any New Projects - INNER"
-            );
-            let res = projects
-                .unlocked()
-                .any(|p| !viewed.contains(&p.id));
-            tracing::debug!("Checking Any New Projects - END");
-            res
+            projects.unlocked().any(|p| !viewed.contains(&p.id))
         })
     };
     let any_new_processes = move || {
-        tracing::debug!("Checking Any New Processes");
         with!(|processes, viewed| {
             processes
                 .unlocked()
@@ -122,7 +112,6 @@ pub fn Plan(
         })
     };
     let max_for_output = move |output: Output| {
-        tracing::debug!("Checking Max For Output");
         with!(|processes| {
             processes
                 .iter()
@@ -141,7 +130,6 @@ pub fn Plan(
         ]
     };
     let processes_over_limit = move || {
-        tracing::debug!("Checking Processes Over Limit");
         with!(|game| game
             .world
             .processes
@@ -253,7 +241,6 @@ pub fn Plan(
 
     // Save when starting the planning session.
     game.with_untracked(move |game| {
-        tracing::debug!("Saving from Plan Page");
         ui.with_untracked(move |ui| {
             crate::state::save(game, ui);
         });
@@ -261,7 +248,6 @@ pub fn Plan(
 
     let (_, set_phase) = slice!(ui.phase);
     let enter_world = move || {
-        tracing::debug!("Preparing to enter world...");
         game.with_untracked(|game| {
             crate::state::save(game, &ui.get_untracked());
         });
@@ -270,7 +256,6 @@ pub fn Plan(
 
     let (page, set_page) = create_signal(Page::Overview);
     let close = move || {
-        tracing::debug!("Closing plan page.");
         update!(|ui| {
             let page = page.get();
             if page == Page::Projects
@@ -287,7 +272,6 @@ pub fn Plan(
         on_page_change.call(EventPhase::PlanningPlan);
     };
     let select_page = move |page| {
-        tracing::debug!("Selecting plan sub-page.");
         set_page.set(page);
         let phase = match page {
             Page::Overview => EventPhase::PlanningPlan,
@@ -298,7 +282,6 @@ pub fn Plan(
         on_page_change.call(phase);
     };
     let on_kind_change = move |kind: ProjectType| {
-        tracing::debug!("Project kind changed.");
         let phase = match kind {
             ProjectType::Policy => EventPhase::PlanningPolicies,
             ProjectType::Research => {
@@ -311,7 +294,6 @@ pub fn Plan(
         on_page_change.call(phase);
     };
     let on_change = move |_| {
-        tracing::debug!("Plan sub-page had a change.");
         on_plan_change.call(());
     };
 

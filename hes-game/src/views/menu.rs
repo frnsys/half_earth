@@ -1,5 +1,6 @@
 use crate::{
     audio,
+    display,
     icons,
     memo,
     state::{start_new_run, Settings, UIState},
@@ -48,8 +49,8 @@ pub fn Menu(set_open: WriteSignal<bool>) -> impl IntoView {
     let temperature = memo!(game.world.temperature);
     let start_year = memo!(ui.start_year);
 
-    let temp = move || format!("{:+.1}C", temperature.get());
-    let emissions = move || format!("{:.1}Gt", emissions.get());
+    let temp = move || display::temp(temperature.get());
+    let emissions = move || display::emissions(emissions.get());
     let contentedness = move || {
         intensity::scale(
             outlook.get(),

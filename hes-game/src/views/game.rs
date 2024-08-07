@@ -32,7 +32,6 @@ pub fn Game() -> impl IntoView {
     // only render once.
     let game_view = create_memo(move |_| {
         let phase = cur_phase.get();
-        tracing::debug!("Phase changed to {phase:?}.");
         match phase {
             Phase::Intro => view! { <Cutscene/> }.into_view(),
             Phase::Interstitial => {

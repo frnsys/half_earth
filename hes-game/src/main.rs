@@ -10,7 +10,7 @@ use leptos_integration_utils::html_parts_separated;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
 
-pub async fn file_or_index_handler(
+async fn file_or_index_handler(
     uri: Uri,
     State(options): State<LeptosOptions>,
 ) -> AxumResponse {

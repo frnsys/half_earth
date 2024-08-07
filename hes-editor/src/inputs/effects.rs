@@ -131,7 +131,7 @@ where
             }.into_view(),
 
             Effect::Resource(resource, value) => view! {
-                <div class="input-help">"Modify the availability of the specified resource by an absolute amount."</div>
+                <div class="input-help">"Modify the availability of the specified resource by an absolute amount. Note that this won't do anything for fuel and electricity as those are dynamically calculated."</div>
                 <EnumInput
                     label="Resource"
                     help="What resource is affected."
@@ -414,7 +414,7 @@ where
             }.into_view(),
 
             Effect::ModifyIndustryByproducts(id, byproduct, value) => view! {
-                <div class="input-help">"Modify the amount of a single byproduct for a single industry by a percentage."</div>
+                <div class="input-help">"Modify the amount of a single byproduct for a single industry by a percentage. Note that the byproducts for many industries aren't inherent to the industry but are rather because of emissions from its energy use. This modifier does *not* affect energy-use emissions, only direct emissions from the industry."</div>
                 <EntityPicker
                     label="Industry"
                     opts=industries

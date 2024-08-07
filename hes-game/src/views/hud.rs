@@ -39,14 +39,12 @@ pub fn Hud() -> impl IntoView {
         )
     };
     let extinction = move || {
-        tracing::debug!("HUD extinction called");
         intensity::scale(
             extinction.get(),
             intensity::Variable::Extinction,
         )
     };
     let warming = move || {
-        tracing::debug!("HUD warming called");
         intensity::scale(
             temperature.get(),
             intensity::Variable::Warming,
@@ -63,7 +61,6 @@ pub fn Hud() -> impl IntoView {
     };
 
     let warming_tip = move || {
-        tracing::debug!("HUD warming tip called");
         tip(
             icons::WARMING,
             t!(r#"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>"#, anomaly: temperature.get()),
@@ -71,7 +68,6 @@ pub fn Hud() -> impl IntoView {
     };
 
     let biodiversity_tip = move || {
-        tracing::debug!("HUD biodiversity tip called");
         let tip_text = t!(
             r#"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class="tip-goal">Your goal is to get this to below 20.</b>"#
         );
@@ -84,7 +80,6 @@ pub fn Hud() -> impl IntoView {
     };
 
     let emissions_tip = move || {
-        tracing::debug!("HUD emissions tip called");
         let tip_text = t!(r#"Current annual emissions are {emissions} gigatonnes. <b class="tip-goal">Your goal is to get this to below 0.</b>"#, emissions: emissions.get().round_to(1));
         crate::views::tip(icons::EMISSIONS, tip_text).card(
             with!(|game| factors_card(
@@ -96,7 +91,6 @@ pub fn Hud() -> impl IntoView {
     };
 
     let contentedness_tip = move || {
-        tracing::debug!("HUD contentedness tip called");
         let tip_text = t!(
             r#"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class="tip-warn">If this goes below 0 you will be removed from power.</b>"#
         );

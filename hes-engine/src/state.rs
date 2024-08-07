@@ -37,16 +37,9 @@ const WIN_EXTINCTION: f32 = 20.0;
 const WIN_TEMPERATURE: f32 = 1.0;
 
 /// Represents the game state.
-#[derive(
-    better_default::Default,
-    Serialize,
-    Deserialize,
-    Clone,
-    PartialEq,
-)]
+#[derive(Serialize, Deserialize, Clone, PartialEq)]
 pub struct State {
     #[serde(skip, default = "SmallRng::from_entropy")]
-    #[default(SmallRng::from_entropy())]
     rng: SmallRng,
 
     pub world: World,
@@ -77,18 +70,27 @@ pub struct State {
     pub feedstocks: Feedstocks,
     pub output_demand: OutputDemand,
     pub resource_demand: ResourceDemand,
+
+    /// Note that the biodiversity values here
+    /// should be ignored, as we do the proper
+    /// scaling in `Process::extinction_rate`.
     pub byproducts: Byproducts,
 
     pub protected_land: f32,
 
     pub shortages_outlook: f32,
     pub emissions: Emissions,
-
     last_outlook: f32,
 
     pub events: Vec<Event>,
 
     pub event_pool: EventPool,
+}
+
+impl Default for State {
+    fn default() -> Self {
+        Self::new(World::default())
+    }
 }
 
 impl State {
@@ -117,29 +119,46 @@ impl State {
         let feedstocks =
             Reserve::from(world.feedstock_reserves);
 
-        let state = State {
+        let mut state = State {
+            npcs,
             world,
             political_capital: 100,
+            research_points: 0,
             death_year,
-            npcs,
             resources,
             feedstocks,
 
             protected_land: 0.1, // Starts at 10%
 
+            events: vec![],
             event_pool: EventPool::new(events),
-            ..Default::default()
+            rng: SmallRng::from_entropy(),
+
+            runs: 0,
+            game_over: false,
+
+            last_outlook: 0.,
+            shortages_outlook: 0.,
+            emissions: Emissions::default(),
+            produced: Production::default(),
+            output_demand: OutputDemand::default(),
+            resource_demand: ResourceDemand::default(),
+            byproducts: Byproducts::default(),
+
+            flags: vec![],
+            requests: vec![],
+            policy_queue: vec![],
         };
-        state.initialize()
+        state.initialize();
+        state
     }
 
-    fn initialize(mut self) -> Self {
+    fn initialize(&mut self) {
         self.last_outlook = self.outlook();
         self.update_demand();
         self.step_production();
         self.update_project_costs();
         self.world.update_climate(self.world.temperature);
-        self
     }
 
     /// If we won the game.
@@ -354,6 +373,8 @@ impl State {
 
         resource_demand.water += consumed_resources.water;
         resource_demand.land += consumed_resources.land;
+        resource_demand.fuel = output_demand.fuel;
+        resource_demand.electricity = output_demand.electricity;
         self.resource_demand.base = resource_demand;
         self.resources.consumed = consumed_resources;
         self.resources.required = required_resources;
@@ -403,10 +424,8 @@ impl State {
                 * PRODUCTION_SHORTAGE_PENALTY
                 / 4.);
 
-        self.world.update_extinction_rate(
-            self.byproducts.total().biodiversity,
-            &self.produced.by_process,
-        );
+        self.world
+            .update_extinction_rate(&self.produced.by_process);
     }
 
     fn step_world(&mut self, tgav: f32) -> Vec<Update> {

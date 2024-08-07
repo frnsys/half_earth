@@ -9,16 +9,12 @@ pub use ui::{Phase, PlanChange, Tutorial, UIState};
 
 use std::sync::{LazyLock, RwLock};
 
-use hes_engine::{Output, OutputMap, Process, State, World};
+use hes_engine::{Output, OutputMap, State, World};
 use leptos::*;
 
 use crate::debug::get_debug_opts;
 
 const SAVE_KEY: &str = "hes.save";
-pub static STARTING_WATER: LazyLock<RwLock<f32>> =
-    LazyLock::new(|| RwLock::new(0.));
-pub static STARTING_LAND: LazyLock<RwLock<f32>> =
-    LazyLock::new(|| RwLock::new(0.));
 pub static BASE_OUTPUT_DEMAND: LazyLock<
     RwLock<[OutputMap; 4]>,
 > = LazyLock::new(|| RwLock::new([OutputMap::default(); 4]));
@@ -69,7 +65,6 @@ pub fn clear_save() {
 pub fn new_game(world: World) -> (State, UIState) {
     let mut game = State::new(world);
     let mut ui_state = UIState::default();
-
     let (settings, _) = Settings::rw();
 
     let runs = settings.with_untracked(|s| s.runs_played);
@@ -84,13 +79,7 @@ pub fn new_game(world: World) -> (State, UIState) {
         .projects
         .unlocked()
         .map(|p| p.id)
-        .chain(
-            game
-                .world
-                .processes
-                .unlocked()
-                .map(|p| p.id),
-        )
+        .chain(game.world.processes.unlocked().map(|p| p.id))
         .collect();
 
     if get_debug_opts().skip_tutorial {
@@ -107,14 +96,6 @@ pub fn new_game(world: World) -> (State, UIState) {
 }
 
 fn init_vars(game: &State) {
-    *STARTING_WATER
-        .write()
-        .expect("Can write to shared value") =
-        game.world.starting_resources.water;
-    *STARTING_LAND
-        .write()
-        .expect("Can write to shared value") =
-        game.world.starting_resources.land;
     *BASE_OUTPUT_DEMAND
         .write()
         .expect("Can write to shared value") =
@@ -150,61 +131,20 @@ pub fn save(game: &State, ui: &UIState) {
 
 pub fn has_save() -> bool {
     tracing::debug!("Checking saved game...");
-    read_save().unwrap().is_some()
+    match read_save() {
+        Ok(Some(_)) => true,
+        Ok(None) => false,
+        Err(_) => {
+            // May mean something about the serialization
+            // structure changed, so clear to avoid a crash.
+            tracing::debug!("Failed to deserialize save, clearing.");
+            clear_save();
+            false
+        }
+    }
 }
 
 pub fn start_new_run() {
     clear_save();
     let _ = window().location().reload();
-}
-
-impl UIState {
-    pub fn has_any_process_mix_changes(&self) -> bool {
-        self.process_mix_changes.iter().any(|(_, changes)| {
-            changes.iter().any(|(_, change)| *change != 0)
-        })
-    }
-
-    pub fn has_process_mix_changes(
-        &self,
-        output: Output,
-    ) -> bool {
-        self.process_mix_changes[output]
-            .iter()
-            .any(|(_, change)| *change != 0)
-    }
-
-    pub fn remove_point(
-        &mut self,
-        points: &mut isize,
-        process: &Process,
-    ) {
-        let change = self.process_mix_changes[process.output]
-            .entry(process.id)
-            .or_default();
-        if process.mix_share as isize + *change > 0 {
-            *points += 1;
-            *change -= 1;
-            // this.allowBack = false;
-        }
-    }
-
-    // Returns the point change.
-    pub fn add_point(
-        &mut self,
-        points: &mut isize,
-        process: &Process,
-        max_share: usize,
-    ) {
-        if *points > 0 {
-            let change = self.process_mix_changes
-                [process.output]
-                .entry(process.id)
-                .or_default();
-            if *change + 1 <= max_share as isize {
-                *points -= 1;
-                *change += 1;
-            }
-        }
-    }
 }

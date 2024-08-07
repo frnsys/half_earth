@@ -59,14 +59,12 @@ pub fn ScannerCards<S: ScannerSpec>(
 
     let can_scroll = move || {
         let can_scroll = mode.get().can_scroll();
-        tracing::debug!("CAN SCROLL: {can_scroll}");
         can_scroll
     };
     let can_scan = move || mode.get().can_scan();
 
     let on_drag = move |rect: DragRect| {
         // This triggers the scanner functionalities
-        tracing::debug!("Scanner > Dragging");
         set_drag_rect.set(Some(rect));
         set_mode.set(Mode::Scan);
     };
@@ -138,17 +136,14 @@ pub fn ScannerCards<S: ScannerSpec>(
     );
 
     let on_scroll_start = move |_| {
-        tracing::debug!("Scanner > Scroll Started");
         set_mode.set(Mode::Scroll);
     };
     let on_scroll_end = move |_| {
-        tracing::debug!("Scanner > Scroll Ended");
         set_mode.set(Mode::Any);
         update_focused();
     };
 
     let on_drag_stop = move |_| {
-        tracing::debug!("Scanner > Drag Stopped");
         // This stops/cancels the scanner functionalities
         set_mode.set(Mode::Any);
         set_drag_rect.set(None);
@@ -157,8 +152,6 @@ pub fn ScannerCards<S: ScannerSpec>(
     let ui = expect_context::<RwSignal<UIState>>();
     let viewed = memo!(ui.viewed);
     let on_focus = move |idx: Option<usize>| {
-        tracing::debug!("Scanner > Cards > On Focus");
-
         let item = idx
             .map(|idx| {
                 items.with(|items| items.get(idx).cloned())

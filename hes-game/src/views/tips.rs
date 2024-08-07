@@ -21,7 +21,7 @@ impl Default for TipState {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub struct Tip {
     pub text: String,
     pub icon: &'static str,
@@ -67,7 +67,7 @@ pub fn tip(icon: &'static str, text: String) -> Tip {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum TipCard {
     Project(Project),
     Process(Process),
@@ -138,13 +138,33 @@ fn has_ancestor_with_class(
 #[component]
 pub fn ToolTip() -> impl IntoView {
     let tip_rw = expect_context::<RwSignal<TipState>>();
-    let has_tip =
-        move || tip_rw.with(|state| state.tip.is_some());
+
+    // The tip should actually be taken from here,
+    // which preserves the current tip card if appropriate.
+    let tip = create_memo(move |prev: Option<&Option<Tip>>| {
+        if tip_rw.with(|state| !state.should_show) {
+            return None;
+        }
+
+        tip_rw.with(|state| state.tip.clone()).map(|mut tip| {
+            if let Some(Some(prev_tip)) = prev {
+                if tip.card.is_some() {
+                    tip
+                } else {
+                    tip.card = prev_tip.card.clone();
+                    tip
+                }
+            } else {
+                tip
+            }
+        })
+    });
+
+    let has_tip = move || tip.with(|tip| tip.is_some());
+
     let has_card = move || {
-        tip_rw.with(|state| {
-            state
-                .tip
-                .as_ref()
+        with!(|tip| {
+            tip.as_ref()
                 .and_then(|tip| tip.card.as_ref())
                 .is_some()
         })
@@ -167,19 +187,47 @@ pub fn ToolTip() -> impl IntoView {
 
             let target: web_sys::HtmlElement =
                 event_target(&ev);
-            ev.stop_immediate_propagation();
 
             // If there's a card, make sure clicking
             // within the card does *not* dismiss the tooltip.
             // Otherwise clicking anywhere should remove the tooltip.
             let should_remove = !has_card()
                 || (has_card()
-                    && !has_ancestor_with_class(target, "tip"));
+                    && !has_ancestor_with_class(
+                        target.clone(),
+                        "tip--card",
+                    ));
+
+            tracing::debug!(
+                "[TIP] Tip clicked: {}",
+                target.clone().class_name()
+            );
+            tracing::debug!("[TIP] Has card: {}", has_card());
+            tracing::debug!(
+                "[TIP] Should remove: {should_remove}"
+            );
+            tracing::debug!(
+                "[TIP] Has ancestor with class: {}",
+                has_ancestor_with_class(
+                    target.clone(),
+                    "tip--card",
+                )
+            );
 
             // We don't actually remove the tooltip (i.e.
             // do `tip_rw.set(None)`) because this causes the tooltip
             // to immediately empty, whereas we want it to transition out.
             if should_remove {
+                // If the clicked item also has a tooltip,
+                // we let the click handler passthrough.
+                // Otherwise we stop the click.
+                let has_tip = has_ancestor_with_class(
+                    target.clone(),
+                    "has-tip",
+                );
+                if !has_tip {
+                    ev.stop_immediate_propagation();
+                }
                 tip_rw
                     .update(|state| state.should_show = false);
             }
@@ -187,7 +235,7 @@ pub fn ToolTip() -> impl IntoView {
     );
 
     let tip_view = move || {
-        tip_rw.get().tip.map(|tip| {
+        tip.get().map(|tip| {
             let sub_icon = move || {
                 tip.subicon.map(|icon| {
                     view! { <img src=icon class="tip--subicon"/> }
@@ -211,9 +259,8 @@ pub fn ToolTip() -> impl IntoView {
     };
 
     let card_view = move || {
-        tip_rw
+        tip
             .get()
-            .tip
             .and_then(|tip| tip.card)
             .map(|card| match card {
                 TipCard::Project(project) => {
@@ -290,7 +337,6 @@ pub fn ToolTip() -> impl IntoView {
                         hide_delay=Duration::from_millis(400)
                     >
                         <div class="tip--card">{card_view}</div>
-
                     </AnimatedShow>
                 </div>
             </AnimatedShow>

@@ -58,7 +58,9 @@ fn preload_assets() -> Vec<String> {
 }
 
 #[component]
-pub fn Loading(set_loaded: WriteSignal<bool>) -> impl IntoView {
+pub fn Loading(
+    #[prop(into)] on_ready: Callback<()>,
+) -> impl IntoView {
     audio::play_phase_music("/assets/music/143208__klerrp__maxtor-diamondmax-d540x-5400rpm-bb.mp3", false);
 
     let preload = preload_assets();
@@ -100,7 +102,7 @@ pub fn Loading(set_loaded: WriteSignal<bool>) -> impl IntoView {
                                 on:load=move |_| {
                                     set_n_loaded.update(|count| *count += 1);
                                     if loaded.get() >= n_images {
-                                        set_loaded.set(true);
+                                        on_ready.call(());
                                     }
                                 }
                             />

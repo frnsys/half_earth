@@ -66,6 +66,7 @@ impl From<Output> for OutputKind {
 }
 
 #[derive(
+    Debug,
     Clone,
     Copy,
     PartialEq,

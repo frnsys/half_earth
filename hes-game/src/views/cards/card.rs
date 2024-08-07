@@ -48,7 +48,8 @@ pub struct ProcessMix {
 #[component]
 pub fn Card(
     body: Body,
-    #[prop(into, optional, default = "#fff".into())] color: MaybeSignal<&'static str>,
+    #[prop(into, optional, default = "#fff".into())]
+    color: MaybeSignal<&'static str>,
     #[prop(into, optional, default = "#222".into())] background: MaybeSignal<&'static str>,
     #[prop(optional)] top_back: Option<TopBack>,
     #[prop(optional)] bottom_back: Option<BottomBack>,
@@ -91,12 +92,15 @@ pub fn Card(
                 let effects = effects
                     .dyn_into::<web_sys::HtmlElement>()
                     .expect("We know this is an HTML element");
-                scale_text(effects, 9);
+                scale_text(effects, 7);
             }
         }
 
         if let Some(card) = card_ref.get() {
-            if let Some(desc) = card.query_selector(".card-desc").expect("Valid selector") {
+            if let Some(desc) = card
+                .query_selector(".card-desc")
+                .expect("Valid selector")
+            {
                 let desc = desc
                     .dyn_into::<web_sys::HtmlElement>()
                     .expect("We know this is an HTML element");

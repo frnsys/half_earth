@@ -99,15 +99,12 @@ impl World {
 
     pub fn update_extinction_rate(
         &mut self,
-        biodiversity_bonus: f32,
         produced_by_process: &BTreeMap<Id, f32>,
     ) {
         let base = self.tgav_extinction_rate()
-            + self.slr_extinction_rate()
-            - biodiversity_bonus;
-
+            + self.slr_extinction_rate();
         let lic_pop = self.lic_population();
-        let rate =
+        let from_processes =
             self.processes.iter().fold(0., |acc, p| {
                 let amount = produced_by_process
                     .get(&p.id)
@@ -115,11 +112,14 @@ impl World {
                 acc + (p.extinction_rate(
                     self.starting_resources.land,
                 ) * amount)
-            }) + self.industries.iter().fold(0., |acc, ind| {
+            });
+        let from_industries =
+            self.industries.iter().fold(0., |acc, ind| {
                 acc + ind.extinction_rate(
                     self.starting_resources.land,
                 ) * lic_pop
-            }) + base;
+            });
+        let rate = base + from_industries + from_processes;
         self.extinction_rate = rate;
     }
 

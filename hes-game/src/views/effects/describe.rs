@@ -75,14 +75,6 @@ fn card_tag(name: &str) -> String {
     format!(r#"<div class="card-tag">{name}</div>"#)
 }
 
-fn lt1(value: f32) -> String {
-    if value > 0. && value < 1. {
-        "<1".into()
-    } else {
-        format!("{:.1}", value)
-    }
-}
-
 macro_rules! tip {
         ($icon:expr, $template:expr $(, $key:ident : $value:expr)* $(,)?) => {
             tip($icon, t!($template $(, $key: $value)*))
@@ -96,46 +88,45 @@ macro_rules! text {
     }
 
 pub fn flag_tip(flag: Flag, demand: &OutputMap) -> Tip {
+    let demand = display::outputs(demand);
     match flag {
         Flag::Electrified => {
-            let changed_demand = (demand.fuel * 0.8).round();
+            let changed_demand = demand.fuel * 0.8;
             tip! {
                 icons::ELECTRICITY,
                 r#"Fuel demand will change from <img src="{iconFuel}">{prevDemandFuel} to <img src="{iconFuel}">{nextDemandFuel} and electricity demand will change from <img src="{iconElec}">{prevDemandElec} to <img src="{iconElec}">{nextDemandElec}."#,
                 iconFuel: icons::FUEL,
                 iconElec: icons::ELECTRICITY,
-                prevDemandFuel: demand.fuel,
-                nextDemandFuel: demand.fuel - changed_demand,
-                prevDemandElec: demand.electricity,
-                nextDemandElec: demand.electricity + changed_demand,
+                prevDemandFuel: display::rounded(demand.fuel),
+                nextDemandFuel: display::rounded(demand.fuel - changed_demand),
+                prevDemandElec: display::rounded(demand.electricity),
+                nextDemandElec: display::rounded(demand.electricity + changed_demand),
             }
         }
         Flag::Vegan => {
-            let changed_demand =
-                (demand.animal_calories * 0.9).round();
+            let changed_demand = demand.animal_calories * 0.9;
             tip! {
                 icons::PLANT_CALORIES,
                 r#"Animal calorie demand will change from <img src="{iconACals}">{prevDemandACals} to <img src="{iconACals}">{nextDemandACals} and plant calorie demand will change from <img src="{iconPCals}">{prevDemandPCals} to <img src="{iconPCals}">{nextDemandPCals}."#,
                 iconACals: icons::ANIMAL_CALORIES,
                 iconPCals: icons::PLANT_CALORIES,
-                prevDemandACals: demand.animal_calories,
-                nextDemandACals: demand.animal_calories - changed_demand,
-                prevDemandPCals: demand.plant_calories,
-                nextDemandPCals: demand.plant_calories + changed_demand,
+                prevDemandACals: display::rounded(demand.animal_calories),
+                nextDemandACals: display::rounded(demand.animal_calories - changed_demand),
+                prevDemandPCals: display::rounded(demand.plant_calories),
+                nextDemandPCals: display::rounded(demand.plant_calories + changed_demand),
             }
         }
         Flag::Vegetarian => {
-            let changed_demand =
-                (demand.animal_calories * 0.75).round();
+            let changed_demand = demand.animal_calories * 0.75;
             tip! {
                 icons::PLANT_CALORIES,
                 r#"Animal calorie demand will change from <img src="{iconACals}">{prevDemandACals} to <img src="{iconACals}">{nextDemandACals} and plant calorie demand will change from <img src="{iconPCals}">{prevDemandPCals} to <img src="{iconPCals}">{nextDemandPCals}."#,
                 iconACals: icons::ANIMAL_CALORIES,
                 iconPCals: icons::PLANT_CALORIES,
-                prevDemandACals: demand.animal_calories,
-                nextDemandACals: demand.animal_calories - changed_demand,
-                prevDemandPCals: demand.plant_calories,
-                nextDemandPCals: demand.plant_calories + changed_demand,
+                prevDemandACals: display::rounded(demand.animal_calories),
+                nextDemandACals: display::rounded(demand.animal_calories - changed_demand),
+                prevDemandPCals: display::rounded(demand.plant_calories),
+                nextDemandPCals: display::rounded(demand.plant_calories + changed_demand),
             }
         }
         Flag::ClosedBorders => {
@@ -250,7 +241,9 @@ pub fn flag_tip(flag: Flag, demand: &OutputMap) -> Tip {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Default, Debug, Clone, PartialEq, Serialize, Deserialize,
+)]
 pub struct DisplayEffect {
     pub effect: Effect,
     pub likelihood: Option<Likelihood>,
@@ -308,29 +301,33 @@ impl DisplayEffect {
                         amount: self.fmt_param(*amount),
                     },
                 ),
-                WorldVariable::Emissions => (
-                    tip! {
-                        icons::EMISSIONS,
-                        "This will directly change annual emissions by {amount}.",
-                        amount: if self.is_unknown {
-                            t!("an unknown amount")
-                        } else {
-                            format!("{:+}", amount)
+                WorldVariable::Emissions => {
+                    let emissions =
+                        state.emissions.as_gtco2eq();
+                    (
+                        tip! {
+                            icons::EMISSIONS,
+                            "This will directly change annual emissions by {amount}.{percent}",
+                            amount: if self.is_unknown {
+                                t!("an unknown amount")
+                            } else {
+                                format!("{:+}", amount)
+                            },
+                            percent: if self.is_unknown || emissions == 0. {
+                                "".into()
+                            } else {
+                                let percent = display::signed_percent(amount / state.emissions.as_gtco2eq(), true);
+                                format!(" {}", t!("That's a {percent}% change.", percent: percent))
+                            }
                         },
-                        percent: if self.is_unknown {
-                            "".into()
-                        } else {
-                            let percent = (amount/state.emissions.as_gtco2eq() * 100.).round();
-                            format!(" {}", t!("That's a {percent}% change.", percent: percent))
-                        }
-                    },
-                    text! {
-                        "emissions",
-                        "{changeDir} emissions by {amount}.",
-                        changeDir: self.change_dir(*amount),
-                        amount: self.fmt_param(*amount)
-                    },
-                ),
+                        text! {
+                            "emissions",
+                            "{changeDir} emissions by {amount}.",
+                            changeDir: self.change_dir(*amount),
+                            amount: self.fmt_param(*amount)
+                        },
+                    )
+                }
                 WorldVariable::ExtinctionRate => (
                     tip! {
                         icons::EXTINCTION_RATE,
@@ -418,7 +415,7 @@ impl DisplayEffect {
                         "sea_level_rise",
                         "{changeDir} the amount of sea level rise by {amount}mm/year.",
                         changeDir: self.change_dir(*amount),
-                        amount: self.fmt_param(*amount)
+                        amount: self.fmt_param(amount * 1000.)
                     },
                 ),
                 WorldVariable::Year => (
@@ -501,16 +498,16 @@ impl DisplayEffect {
             ),
             Effect::Resource(resource, amount) => {
                 let fmtted =
-                    display::resource(*amount, *resource).abs();
-                let percent = display::percent(
-                    amount / state.resources[*resource],
-                    true,
-                );
+                    display::resource(*amount, *resource, state.resources.available).abs();
+                let fmtted = if matches!(resource, Resource::Water | Resource::Land) {
+                    format!("{}%", fmtted.round())
+                } else {
+                    fmtted.to_string()
+                };
                 (
                         tip! {
                             resource.icon(),
-                            r#"{changeDir} {name} supply by <img src="{icon}">{amount} ({percent}% of current supply)."#,
-                            percent: percent,
+                            r#"{changeDir} {name} supply by <img src="{icon}">{amount}."#,
                             amount: fmtted,
                             icon: resource.icon(),
                             name: t!(resource.lower()),
@@ -528,14 +525,17 @@ impl DisplayEffect {
                     )
             }
             Effect::Output(output, amount) => {
-                let base = display::output(*amount, *output);
+                let base = display::output(
+                    state.produced.of(*output),
+                    *output,
+                );
                 let changed = base * (1. + amount);
                 (
                     tip! {
                         output.icon(),
                         r#"Global {name} output will change from <img src="{icon}">{base} to <img src="{icon}">{changed} with no change in impacts."#,
-                        changed: changed,
-                        base: base,
+                        changed: changed.round(),
+                        base: base.round(),
                         icon: output.icon(),
                         name: output.lower(),
                     },
@@ -554,7 +554,7 @@ impl DisplayEffect {
                 (tip! {
                         process.output.icon(),
                         "Changes the output for this process by {percent}% with no change in impacts.",
-                        percent: display::percent(*amount, true),
+                        percent: display::signed_percent(*amount, true),
                     }.card(process.clone()), text!{
                         process.output.as_key(),
                         "{changeDir} {tag} output by <strong>{percent}%.</strong>",
@@ -577,7 +577,7 @@ impl DisplayEffect {
                 (tip! {
                         feat.icon(),
                         "Changes the output for these processes by {percent}% without changing their impacts.",
-                        percent: display::percent(*amount, true),
+                        percent: display::signed_percent(*amount, true),
                     }.card(processes),
                     text! {
                         "output",
@@ -628,8 +628,7 @@ impl DisplayEffect {
                 (tip! {
                         feat.icon(),
                         "Changes the biodiversity pressure for these processes by <strong>{amount}.</strong>",
-                        amount: amount.abs(),
-                        changeDir: self.change_dir(*amount),
+                        amount: format!("{:+}", amount),
                     }.card(processes), text! {
                         "biodiversity",
                         r#"{changeDir} biodiversity pressure for <span><img class="effect-feature" src="{icon}" />{feature}</span> by <strong>{amount}.</strong>"#,
@@ -650,8 +649,8 @@ impl DisplayEffect {
                     tip! {
                             output.icon(),
                             r#"This changes {name} demand from <img src="{icon}">{currentDemand} to <img src="{icon}">{afterDemand}."#,
-                            afterDemand: after_demand,
-                            currentDemand: current_demand,
+                            afterDemand: after_demand.round(),
+                            currentDemand: current_demand.round(),
                             icon: output.icon(),
                             name: t!(output.lower()),
                     },
@@ -790,7 +789,18 @@ impl DisplayEffect {
             }
             Effect::ProjectCostModifier(id, amount) => {
                 let project = &state.world.projects[id];
-                let abs_amount = project.cost as f32 * amount;
+
+                // This is kind of hacky.
+                // First recover the base cost without the modifier,
+                // then apply the new modifier. This may be slightly off
+                // due to rounding.
+                let base_cost =
+                    project.cost as f32 / project.cost_modifier;
+                let after_cost = (base_cost
+                    * (project.cost_modifier + amount))
+                    .round();
+                let change_amount = after_cost - base_cost;
+
                 let tag = icon_card_tag(
                     &t!(&project.name),
                     project.kind.icon(),
@@ -806,7 +816,7 @@ impl DisplayEffect {
                 };
                 let unit = match project.kind {
                     ProjectType::Policy => "".into(),
-                    _ => format!(" {}", t!("years")),
+                    _ => format!(" {}", t!("year(s)")),
                 };
                 let tip_icon = match project.kind {
                     ProjectType::Policy => format!(
@@ -819,7 +829,7 @@ impl DisplayEffect {
                     t!("by an unknown amount")
                 } else {
                     t!("from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit}",
-                        newCost: (project.cost as f32 + abs_amount).round(),
+                        newCost: after_cost,
                         unit: unit,
                         cost: project.cost,
                         tipIcon: tip_icon,
@@ -850,7 +860,7 @@ impl DisplayEffect {
                             tag: tag,
                             icon: icon,
                             unit: unit,
-                            amount: self.fmt_param(amount.abs().ceil())
+                            amount: self.fmt_param(change_amount.abs().ceil())
                         },
                     )
             }
@@ -963,16 +973,18 @@ impl DisplayEffect {
                 let current_demand = display::resource(
                     current_demand,
                     *resource,
+                    state.resources.available,
                 );
                 let after_demand =
                     current_demand * (1. + amount);
                 let total_demand = display::resource(
                     state.resource_demand.of(*resource),
                     *resource,
+                    state.resources.available,
                 );
                 let change = after_demand - current_demand;
                 let demand_change =
-                    (total_demand + change) / total_demand;
+                    (total_demand + change) / total_demand - 1.;
                 let tag = card_tag(&t!(&industry.name));
                 let tip = if self.is_unknown {
                     tip! {
@@ -1024,19 +1036,22 @@ impl DisplayEffect {
                 let current_demand = display::resource(
                     industry.resources[*resource] * demand,
                     *resource,
+                    state.resources.available,
                 );
                 let after_demand = display::resource(
                     (industry.resources[*resource] + amount)
                         * demand,
                     *resource,
+                    state.resources.available,
                 );
                 let total_demand = display::resource(
                     state.resource_demand.of(*resource),
                     *resource,
+                    state.resources.available,
                 );
                 let change = after_demand - current_demand;
                 let demand_change =
-                    (total_demand + change) / total_demand;
+                    (total_demand + change) / total_demand - 1.;
                 let tag = card_tag(&t!(&industry.name));
                 let tip = if self.is_unknown {
                     tip! {
@@ -1084,9 +1099,9 @@ impl DisplayEffect {
             ) => {
                 let industry = &state.world.industries[id];
                 let lic_pop = state.world.lic_population();
-                let demand = industry.demand(lic_pop);
-                let current =
-                    industry.byproducts.gtco2eq() * demand;
+                let current = industry
+                    .total_byproducts(lic_pop)
+                    .gtco2eq();
                 let after = current * (1. + amount);
                 let change = (after - current)
                     / state.emissions.as_gtco2eq();
@@ -1099,8 +1114,8 @@ impl DisplayEffect {
                     name: t!(&industry.name),
                     icon: icons::EMISSIONS,
                     emissionsChange: display::percent(change, true),
-                    emissionsAfter: lt1(after),
-                    emissionsBefore: lt1(current),
+                    emissionsAfter: display::rounded(after),
+                    emissionsBefore: display::rounded(current),
                     )
                 };
                 (
@@ -1124,7 +1139,6 @@ impl DisplayEffect {
                     },
                 )
             }
-
             Effect::ModifyProcessByproducts(
                 id,
                 byproduct,
@@ -1154,28 +1168,40 @@ impl DisplayEffect {
                 } else {
                     let change = match byproduct {
                         Byproduct::Biodiversity => {
+                            let current = process
+                                .adj_byproducts()
+                                .biodiversity;
+                            let mut after_process =
+                                process.clone();
+                            after_process
+                                .byproduct_modifiers
+                                .biodiversity += amount;
+                            let after = after_process
+                                .adj_byproducts()
+                                .biodiversity;
                             t!(r#"{fromAmount} to {toAmount}<img src="{icon}">."#,
                                 icon: byproduct.icon(),
-                                toAmount: amount,
-                                fromAmount: process.byproducts.biodiversity,
+                                toAmount: after,
+                                fromAmount: current,
                             )
                         }
                         _ => {
-                            let current =
-                                process.byproducts.gtco2eq()
-                                    * state
-                                        .produced
-                                        .by_process
-                                        .get(id)
-                                        .unwrap_or(&0.);
+                            let current = process
+                                .adj_byproducts()
+                                .gtco2eq()
+                                * state
+                                    .produced
+                                    .by_process
+                                    .get(id)
+                                    .unwrap_or(&0.);
                             let after = current * (1. + amount);
                             let change = (after - current)
                                 / state.emissions.as_gtco2eq();
                             t!(r#"{emissionsBefore} to <img src="{icon}">{emissionsAfter}. This is a {emissionsChange}% change of all emissions."#,
                                 icon: icons::EMISSIONS,
                                 emissionsChange: display::percent(change, true),
-                                emissionsAfter: lt1(after),
-                                emissionsBefore: lt1(current))
+                                emissionsAfter: display::rounded(after),
+                                emissionsBefore: display::rounded(current))
                         }
                     };
 
@@ -1195,7 +1221,10 @@ impl DisplayEffect {
                         &tip_text,
                     },
                     text! {
-                        byproduct.as_key(),
+                        match byproduct {
+                            Byproduct::Biodiversity => "biodiversity",
+                            _ => "emissions",
+                        },
                         "{changeDir} {label} for {tag} by <strong>{amount}</strong>.",
                         tag: tag,
                         label: label,
@@ -1237,7 +1266,7 @@ impl DisplayEffect {
                         .round();
                 (tip! {
                         icons::CONTENTEDNESS,
-                        r#"This changes regional contentedness by {amount} per income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class="type-total">/{maxContentedness}</span>."#,
+                        r#"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class="type-total">/{maxContentedness}</span>."#,
                         maxContentedness: consts::MAX_CONTENTEDNESS,
                         contentedness: state.outlook().round(),
                         amount: amount,
@@ -1258,7 +1287,7 @@ impl DisplayEffect {
                         display::percent(amount.abs(), true)
                     )
                 };
-                let text = t!(r#"{changeDir} the chance of "{event}" by {amount}"#,
+                let text = t!(r#"{changeDir} the chance of "{event}" by {amount}."#,
                 event: t!(&event.name),
                 amount: amount_label,
                 changeDir: self.change_dir(*amount),
@@ -1275,27 +1304,33 @@ impl DisplayEffect {
                 )
             }
             Effect::AddFlag(flag) => {
-                let demand = display::outputs(
+                let tip = flag_tip(
+                    *flag,
                     &state.output_demand.total(),
                 );
-                let tip = flag_tip(*flag, &demand);
                 let text = format!(
                     "<strong>{}</strong>",
                     t!(&flag.to_string())
                 );
                 (tip, text)
             }
-            Effect::ProtectLand(amount) => (
-                tip! {
-                    icons::LAND,
-                    "This will limit the amount of land that processes can use.",
-                },
-                text! {
-                    "land",
-                    "Place <strong>{percent}%</strong> of land under protection.",
-                    percent: display::percent(*amount, true),
-                },
-            ),
+            Effect::ProtectLand(amount) => {
+                let before = state.protected_land;
+                let after = state.protected_land + amount;
+                (
+                    tip! {
+                        icons::LAND,
+                        "This will limit the amount of land that processes can use. The amount of land under protection will change from {before}% to {after}%.",
+                        before: display::percent(before, true),
+                        after: display::percent(after, true),
+                    },
+                    text! {
+                        "land",
+                        "Change the amount of land under protection by <strong>{percent}%</strong>.",
+                        percent: display::signed_percent(*amount, true),
+                    },
+                )
+            }
             Effect::Feedstock(feedstock, amount) => {
                 let estimate = match feedstock {
                     Feedstock::Other | Feedstock::Soil => None,
@@ -1317,7 +1352,7 @@ impl DisplayEffect {
                         if est.is_infinite() {
                             t!("At current usage rates the estimated supply is expected to last indefinitely.")
                         } else {
-                            t!("At current usage rates the estimated supply is expected to last {estimate} years.", estimate: est)
+                            t!("At current usage rates the estimated supply is expected to last {estimate} year(s).", estimate: est)
                         }
                     }
                 };
@@ -1406,5 +1441,518 @@ impl DisplayEffect {
             }
         };
         Ok(EffectTip { tip, text })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use regex_lite::Regex;
+
+    /// For comparing against floats
+    /// but also "<1" which is what we use to
+    /// indicate a small but non-zero value.
+    #[derive(Debug, PartialEq, Clone, Copy)]
+    enum Value {
+        Small, // <1
+        Exact(f32),
+    }
+    impl PartialEq<f32> for Value {
+        fn eq(&self, other: &f32) -> bool {
+            match self {
+                Self::Small => false,
+                Self::Exact(value) => value == other,
+            }
+        }
+    }
+    const SMALL: Value = Value::Small;
+
+    fn extract_numbers(input: &str) -> Vec<Value> {
+        let re = Regex::new(r"<?-?\d+(\.\d+)?").unwrap();
+        let mut numbers = vec![];
+        for cap in re.captures_iter(input) {
+            if let Some(matched) = cap.get(0) {
+                let s = matched.as_str();
+                if s == "<1" {
+                    numbers.push(Value::Small);
+                } else if let Ok(num) = s.parse::<f32>() {
+                    numbers.push(Value::Exact(num));
+                }
+            }
+        }
+        numbers
+    }
+
+    fn effect_values(
+        state: &State,
+        effect: Effect,
+    ) -> (Vec<Value>, Vec<Value>) {
+        println!("{:?}", effect);
+        let effect = DisplayEffect {
+            effect,
+            is_unknown: false,
+            ..Default::default()
+        };
+        let tip = effect.tip(&state).unwrap();
+        println!("  {}", tip.text);
+        println!("  {}", tip.tip.text);
+        (
+            extract_numbers(&tip.text),
+            extract_numbers(&tip.tip.text),
+        )
+    }
+
+    #[test]
+    fn test_electrified_flag_tip() {
+        // Formatting is in PWh, i.e. 1e12 kWh.
+        let mut demand = OutputMap::default();
+        demand.fuel = 1.5e12;
+        demand.electricity = 2.5e12;
+
+        // Expect 80% of fuel to go to electricity.
+        // let expected_fuel =
+        let tip = flag_tip(Flag::Electrified, &demand);
+        println!("{}", tip.text);
+
+        // Because of rounding these values will be
+        // slightly different.
+        let vals = extract_numbers(&tip.text);
+        let prev_fuel_demand = vals[0];
+        let next_fuel_demand = vals[1];
+        let prev_elec_demand = vals[2];
+        let next_elec_demand = vals[3];
+        assert_eq!(prev_fuel_demand, 2.);
+        assert_eq!(next_fuel_demand, SMALL);
+        assert_eq!(prev_elec_demand, 3.);
+        assert_eq!(next_elec_demand, 4.);
+    }
+
+    #[test]
+    fn test_vegan_flag_tip() {
+        // Formatting is per 20,000 TCals.
+        let mut demand = OutputMap::default();
+        demand.animal_calories = 1.5e9 * 2e4;
+        demand.plant_calories = 2.5e9 * 2e4;
+
+        // Expect 80% of fuel to go to electricity.
+        // let expected_fuel =
+        let tip = flag_tip(Flag::Vegan, &demand);
+        println!("{}", tip.text);
+
+        let vals = extract_numbers(&tip.text);
+        let prev_anim_demand = vals[0];
+        let next_anim_demand = vals[1];
+        let prev_plant_demand = vals[2];
+        let next_plant_demand = vals[3];
+        assert_eq!(prev_anim_demand, 2.);
+        assert_eq!(next_anim_demand, SMALL);
+        assert_eq!(prev_plant_demand, 3.);
+        assert_eq!(next_plant_demand, 4.);
+    }
+
+    #[test]
+    fn test_vegetarian_flag_tip() {
+        // Formatting is per 20,000 TCals.
+        let mut demand = OutputMap::default();
+        demand.animal_calories = 3e9 * 2e4;
+        demand.plant_calories = 5e9 * 2e4;
+
+        // Expect 80% of fuel to go to electricity.
+        // let expected_fuel =
+        let tip = flag_tip(Flag::Vegetarian, &demand);
+        println!("{}", tip.text);
+
+        let vals = extract_numbers(&tip.text);
+        let prev_anim_demand = vals[0];
+        let next_anim_demand = vals[1];
+        let prev_plant_demand = vals[2];
+        let next_plant_demand = vals[3];
+        assert_eq!(prev_anim_demand, 3.);
+        assert_eq!(next_anim_demand, 1.);
+        assert_eq!(prev_plant_demand, 5.);
+        assert_eq!(next_plant_demand, 7.);
+    }
+
+    #[test]
+    fn test_world_variables() {
+        let get_values =
+            move |var: WorldVariable, amount: f32| {
+                let state = State::default();
+                effect_values(
+                    &state,
+                    Effect::WorldVariable(var, amount),
+                )
+            };
+
+        let (text_vals, _) =
+            get_values(WorldVariable::Outlook, 12.);
+        assert_eq!(text_vals[0], 12.);
+
+        let (text_vals, tip_vals) =
+            get_values(WorldVariable::Emissions, 2.5);
+        assert_eq!(text_vals[0], 2.5);
+        assert_eq!(tip_vals[0], 2.5);
+        assert_eq!(tip_vals[1], 5.0);
+
+        let (text_vals, tip_vals) =
+            get_values(WorldVariable::ExtinctionRate, 7.);
+        assert_eq!(text_vals[0], 7.);
+        assert_eq!(tip_vals[0], 90.);
+
+        let (text_vals, tip_vals) =
+            get_values(WorldVariable::Temperature, 1.5);
+        assert_eq!(text_vals[0], 1.5);
+        assert_eq!(tip_vals[0], 1.5);
+
+        let (text_vals, tip_vals) =
+            get_values(WorldVariable::Precipitation, 0.2);
+        assert_eq!(text_vals[0], 0.2);
+        assert_eq!(tip_vals[0], 0.2);
+
+        let (text_vals, _) =
+            get_values(WorldVariable::PopulationGrowth, 0.5);
+        assert_eq!(text_vals[0], 50.);
+
+        let (text_vals, _) =
+            get_values(WorldVariable::Population, 120.);
+        assert_eq!(text_vals[0], 120.);
+
+        let (text_vals, tip_vals) =
+            get_values(WorldVariable::SeaLevelRiseRate, 0.5);
+        assert_eq!(text_vals[0], 500.);
+        assert_eq!(tip_vals[0], 0.09);
+
+        let (text_vals, tip_vals) =
+            get_values(WorldVariable::SeaLevelRise, 0.25);
+        assert_eq!(text_vals[0], 250.);
+        assert_eq!(tip_vals[0], 0.09);
+    }
+
+    #[test]
+    fn test_process_limit() {
+        let state = State::default();
+        let process_id = state.world.processes.by_idx(3).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ProcessLimit(process_id, 1.539e15),
+        );
+        assert_eq!(text_vals[0], 50.);
+        assert_eq!(tip_vals[0], 50.);
+    }
+
+    #[test]
+    fn test_regional_habitability() {
+        let state = State::default();
+        let (text_vals, _) = effect_values(
+            &state,
+            Effect::RegionHabitability(Latitude::Tropic, 3.),
+        );
+        assert_eq!(text_vals[0], 3.);
+    }
+
+    #[test]
+    fn test_resource() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::Resource(Resource::Water, 1e15),
+        );
+        assert_eq!(text_vals[0], 2.);
+        assert_eq!(tip_vals[0], 2.);
+    }
+
+    #[test]
+    fn test_output() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::Output(Output::Fuel, 0.2),
+        );
+        assert_eq!(text_vals[0], 20.);
+        assert_eq!(tip_vals[0], 89.);
+        assert_eq!(tip_vals[1], 106.);
+    }
+
+    #[test]
+    fn test_output_for_process() {
+        let state = State::default();
+        let process_id = state.world.processes.by_idx(7).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::OutputForProcess(process_id, 0.2),
+        );
+        assert_eq!(text_vals[0], 20.);
+        assert_eq!(tip_vals[0], 20.);
+    }
+
+    #[test]
+    fn test_output_for_feature() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::OutputForFeature(
+                ProcessFeature::UsesLivestock,
+                0.25,
+            ),
+        );
+        assert_eq!(text_vals[0], 25.);
+        assert_eq!(tip_vals[0], 25.);
+    }
+
+    #[test]
+    fn test_co2_for_feature() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::CO2ForFeature(
+                ProcessFeature::UsesLivestock,
+                0.15,
+            ),
+        );
+        assert_eq!(text_vals[1], 15.);
+        assert_eq!(tip_vals[1], 15.);
+    }
+
+    #[test]
+    fn test_biodiversity_pressure_for_feature() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::BiodiversityPressureForFeature(
+                ProcessFeature::UsesLivestock,
+                2.,
+            ),
+        );
+        assert_eq!(text_vals[0], 2.);
+        assert_eq!(tip_vals[0], 2.);
+    }
+
+    #[test]
+    fn test_demand() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::Demand(Output::Electricity, 0.25),
+        );
+        assert_eq!(text_vals[0], 25.);
+        assert_eq!(tip_vals[0], 26.);
+        assert_eq!(tip_vals[1], 33.);
+    }
+
+    #[test]
+    fn test_demand_amount() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::DemandAmount(Output::Electricity, 3e12),
+        );
+        assert_eq!(text_vals[0], 3.);
+        assert_eq!(tip_vals[0], 26.);
+        assert_eq!(tip_vals[1], 29.);
+        assert_eq!(tip_vals[2], 12.);
+    }
+
+    #[test]
+    fn test_project_cost_modifier() {
+        let state = State::default();
+
+        let project = state.world.projects.by_idx(7);
+        assert_eq!(project.kind, ProjectType::Initiative);
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ProjectCostModifier(project.id, 5.),
+        );
+        assert_eq!(text_vals[0], 100.);
+        assert_eq!(tip_vals[0], 20.);
+        assert_eq!(tip_vals[1], 120.);
+
+        let project = state.world.projects.by_idx(8);
+        assert_eq!(project.kind, ProjectType::Research);
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ProjectCostModifier(project.id, 5.),
+        );
+        assert_eq!(text_vals[0], 50.);
+        assert_eq!(tip_vals[0], 10.);
+        assert_eq!(tip_vals[1], 60.);
+
+        let project = state.world.projects.by_idx(1);
+        assert_eq!(project.kind, ProjectType::Policy);
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ProjectCostModifier(project.id, 5.),
+        );
+        assert_eq!(text_vals[0], 150.);
+        assert_eq!(tip_vals[0], 30.);
+        assert_eq!(tip_vals[1], 180.);
+    }
+
+    #[test]
+    fn test_modify_industry_demand() {
+        let state = State::default();
+        let industry_id = state.world.industries.by_idx(2).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyIndustryDemand(industry_id, 0.05),
+        );
+        assert_eq!(text_vals[0], 5.);
+        assert_eq!(tip_vals[0], 5.);
+    }
+
+    #[test]
+    fn test_modify_industry_resources() {
+        let state = State::default();
+        let industry_id = state.world.industries.by_idx(2).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyIndustryResources(
+                industry_id,
+                Resource::Fuel,
+                0.2,
+            ),
+        );
+        assert_eq!(text_vals[0], 20.);
+        assert_eq!(tip_vals[0], 4.);
+        assert_eq!(tip_vals[1], 5.);
+        assert_eq!(tip_vals[2], SMALL);
+    }
+
+    #[test]
+    fn test_modify_industry_resources_amount() {
+        let state = State::default();
+        let industry_id = state.world.industries.by_idx(2).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyIndustryResourcesAmount(
+                industry_id,
+                Resource::Fuel,
+                1000.,
+            ),
+        );
+        assert_eq!(text_vals[0], 42.);
+        assert_eq!(tip_vals[0], 4.);
+        assert_eq!(tip_vals[1], 46.);
+        assert_eq!(tip_vals[2], 48.);
+    }
+
+    #[test]
+    fn test_modify_industry_byproducts() {
+        let mut state = State::default();
+
+        // Should be the concrete industry, which has
+        // direct CO2 emissions. But even then we need to
+        // increase direct emissions to have a more noticeable effect.
+        let industry = state.world.industries.by_idx_mut(7);
+        let industry_id = industry.id;
+        industry.byproducts.co2 *= 10000.;
+
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyIndustryByproducts(
+                industry_id,
+                Byproduct::Co2,
+                0.6,
+            ),
+        );
+        assert_eq!(text_vals[1], 60.);
+        assert_eq!(tip_vals[0], 16.);
+        assert_eq!(tip_vals[1], 26.);
+        assert_eq!(tip_vals[2], 19.);
+    }
+
+    #[test]
+    fn test_modify_process_byproducts() {
+        let state = State::default();
+        let process_id = state.world.processes.by_idx(15).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyProcessByproducts(
+                process_id,
+                Byproduct::Co2,
+                0.6,
+            ),
+        );
+        assert_eq!(text_vals[2], 60.);
+        assert_eq!(tip_vals[0], 4.);
+        assert_eq!(tip_vals[1], 6.);
+        assert_eq!(tip_vals[2], 4.);
+
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyProcessByproducts(
+                process_id,
+                Byproduct::Biodiversity,
+                0.6,
+            ),
+        );
+        assert_eq!(text_vals[0], 60.);
+        assert_eq!(tip_vals[0], 1.);
+        assert_eq!(tip_vals[1], 1.6);
+    }
+
+    #[test]
+    fn test_demand_outlook_change() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::DemandOutlookChange(Output::Fuel, 1.),
+        );
+        assert_eq!(text_vals[0], 3.);
+        assert_eq!(tip_vals[0], 30.);
+        assert_eq!(tip_vals[1], 40.);
+    }
+
+    #[test]
+    fn test_income_outlook_change() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::IncomeOutlookChange(3.),
+        );
+        assert_eq!(text_vals[0], 5.);
+        assert_eq!(tip_vals[0], 30.);
+        assert_eq!(tip_vals[1], 40.);
+    }
+
+    #[test]
+    fn test_modify_event_probability() {
+        let state = State::default();
+        let event_id = state.world.events.by_idx(15).id;
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::ModifyEventProbability(event_id, 0.2),
+        );
+        assert_eq!(text_vals[0], 20.);
+        assert_eq!(tip_vals[0], 20.);
+    }
+
+    #[test]
+    fn test_protect_land() {
+        let state = State::default();
+        let (text_vals, tip_vals) =
+            effect_values(&state, Effect::ProtectLand(0.25));
+        assert_eq!(text_vals[0], 25.);
+        assert_eq!(tip_vals[0], 10.);
+        assert_eq!(tip_vals[1], 35.);
+    }
+
+    #[test]
+    fn test_feedstock() {
+        let state = State::default();
+        let (text_vals, tip_vals) = effect_values(
+            &state,
+            Effect::Feedstock(Feedstock::Oil, 0.75),
+        );
+        assert_eq!(text_vals[0], 75.);
+        assert_eq!(tip_vals[0], 54.);
+    }
+
+    #[test]
+    fn test_termination_shock() {
+        let state = State::default();
+        let (text_vals, tip_vals) =
+            effect_values(&state, Effect::TerminationShock);
+        assert_eq!(text_vals[0], 0.5);
+        assert_eq!(tip_vals[0], 0.5);
     }
 }

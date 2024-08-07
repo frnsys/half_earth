@@ -1,6 +1,6 @@
 use crate::{
     consts,
-    display::*,
+    display::{self, *},
     icons,
     memo,
     state::{Phase, StateExt, UIState},
@@ -314,8 +314,8 @@ pub fn Report() -> impl IntoView {
 
     let temp_row = move || {
         with!(|temp, start_temp| {
-            let start = format!("{:+.1}°C", start_temp);
-            let end = format!("{:+.1}°C", temp);
+            let start = display::temp(*start_temp);
+            let end = display::temp(*temp);
             let pc_change = format!("{:+}", temp_pc_change());
 
             view! {

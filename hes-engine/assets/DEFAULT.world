@@ -44337,7 +44337,7 @@
                     "ModifyIndustryResourcesAmount": [
                         "b04e3e96-5608-409e-98b6-59549ac22848",
                         "Fuel",
-                        10000000000000.0
+                        500.0
                     ]
                 },
                 {

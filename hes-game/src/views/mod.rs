@@ -30,13 +30,13 @@ pub use tips::*;
 macro_rules! memo {
     ($base:ident.$($path:ident).+) => {
         create_memo(move |_| {
-            tracing::debug!("Memo called for {}.{}", stringify!($base), stringify!($($path).+));
+            tracing::trace!("Memo called for {}.{}", stringify!($base), stringify!($($path).+));
             $base.with(move |value| value.$($path).+.clone())
         })
     };
     ($base:ident.$($($path:ident).+ ($($arg:tt)*)).+) => {
         create_memo(move |_| {
-            tracing::debug!("Memo called for {}.{}", stringify!($base), stringify!($($($path).+($($arg)*)).+));
+            tracing::trace!("Memo called for {}.{}", stringify!($base), stringify!($($($path).+($($arg)*)).+));
             $base.with(move |value| value.$($($path).+($($arg)*)).+)
         })
     };

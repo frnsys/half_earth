@@ -67,6 +67,15 @@ impl Industry {
         self.demand(lic_pop) * self.adj_byproducts()[byproduct]
     }
 
+    pub fn total_byproducts(
+        &self,
+        lic_pop: f32,
+    ) -> ByproductMap {
+        self.byproducts
+            * (self.byproduct_modifiers + 1.)
+            * self.demand(lic_pop)
+    }
+
     pub fn adj_resources(&self) -> ResourceMap {
         self.resources * (self.resource_modifiers + 1.)
     }

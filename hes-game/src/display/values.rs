@@ -1,5 +1,4 @@
 use crate::{
-    state::{STARTING_LAND, STARTING_WATER},
     vars::Impact,
 };
 use hes_engine::*;
@@ -26,34 +25,53 @@ pub fn format_number(val: f32) -> String {
     }
 }
 
+pub fn rounded(value: f32) -> String {
+    if value == 0. {
+        value.to_string()
+    } else {
+        let value = value.round();
+        if value >= 0. && value < 1. {
+            "<1".into()
+        } else {
+            value.to_string()
+        }
+    }
+}
+
+pub fn temp(tgav: f32) -> String {
+    format!("{:+.1}C", tgav)
+}
+
 pub fn emissions(emissions_gt: f32) -> String {
     format!("{:.1}Gt", emissions_gt)
 }
 
+// From kWh to TWh
 pub fn twh(amount: f32) -> f32 {
     (amount * 1e-9).round()
 }
 
-pub fn tcals(amount: f32) -> f32 {
-    (amount * 1e-9).round()
+/// Per 20000 Tcals
+pub fn to_calorie_units(amount: f32) -> f32 {
+    amount * (1e-9 / 2e4)
+}
+
+/// Per PWh
+pub fn to_energy_units(amount: f32) -> f32 {
+    amount * 1e-12
 }
 
 pub fn output(amount: f32, output: Output) -> f32 {
-    let scale = match output {
-        Output::Fuel => 1e-9 / 1e3, // per 1000 TWh
-        Output::Electricity => 1e-9 / 1e3, // per 1000 TWh
-        Output::PlantCalories => 1e-9 / 2e4, // per 20000 Tcals
-        Output::AnimalCalories => 1e-9 / 2e4, // per 20000 Tcals
-    };
-    (amount * scale).round()
+    match output {
+        Output::Fuel | Output::Electricity => to_energy_units(amount),
+        Output::PlantCalories | Output::AnimalCalories => to_calorie_units(amount),
+    }.round_to(1)
 }
 
-pub fn resource(amount: f32, resource: Resource) -> f32 {
-    let total_land =
-        STARTING_LAND.read().expect("Can read shared value");
+pub fn resource(amount: f32, resource: Resource, available_resources: ResourceMap) -> f32 {
     let scale = match resource {
-        Resource::Water => 1e-12 / 50., // per 50 km3
-        Resource::Land => 100. / *total_land, // percent of habitable land
+        Resource::Water => 100. / available_resources.water, // percent of available water
+        Resource::Land => 100. / available_resources.land, // percent of habitable land
         other => {
             if let Some(o) = other.as_output() {
                 return output(amount, o);
@@ -66,6 +84,14 @@ pub fn resource(amount: f32, resource: Resource) -> f32 {
         }
     };
     (amount * scale).round()
+}
+
+pub fn format_resource(amount: f32, res: Resource, available_resources: ResourceMap) -> String {
+    let amount = resource(amount, res, available_resources);
+    match res {
+        Resource::Water | Resource::Land => format!("{}%", amount),
+        _ => amount.to_string(),
+    }
 }
 
 pub fn outputs(outputs: &OutputMap) -> OutputMap {
@@ -86,16 +112,12 @@ pub fn outputs(outputs: &OutputMap) -> OutputMap {
     }
 }
 
-pub fn land_use_percent(m2: f32) -> f32 {
-    let total_land =
-        STARTING_LAND.read().expect("Can read shared value");
-    m2 / *total_land * 100.
+pub fn land_use_percent(m2: f32, available: f32) -> f32 {
+    m2 / available * 100.
 }
 
-pub fn water_use_percent(l: f32) -> f32 {
-    let total_water =
-        STARTING_WATER.read().expect("Can read shared value");
-    l / *total_water * 100.
+pub fn water_use_percent(l: f32, available: f32) -> f32 {
+    l / available * 100.
 }
 
 pub fn demand_percent(
@@ -112,10 +134,19 @@ pub fn demand_percent(
 
 pub fn percent(p: f32, round: bool) -> String {
     let percent = p * 100.;
-    if percent < 1. && percent > 0. {
-        "<1".to_string()
+    if percent.abs() < 1. && percent.abs() > 0. {
+        if p < 0. {
+            "-<1".to_string()
+        } else {
+            "<1".to_string()
+        }
     } else if round {
-        format!("{:.0}", percent.round())
+        let percent = percent.round();
+        if percent == 0. {
+            "0".into()
+        } else {
+            format!("{:.0}", percent.round())
+        }
     } else {
         format!("{:.1}", percent)
     }
@@ -123,26 +154,66 @@ pub fn percent(p: f32, round: bool) -> String {
 
 pub fn signed_percent(p: f32, round: bool) -> String {
     let s = percent(p, round);
-    if p >= 0. {
+    if p > 0. {
         format!("+{s}")
     } else {
-        format!("-{s}")
+        s
     }
 }
 
-pub fn format_impact(impact: Impact, val: f32) -> String {
+fn is_small(val: f32) -> bool {
+    val < 1. && val > 0.
+}
+
+pub fn format_impact(impact: Impact, val: f32, available_resources: ResourceMap) -> String {
     match impact {
         Impact::Land => {
-            percent(land_use_percent(val) / 100., true)
+            if is_small(val) {
+                "<1%".into()
+            } else {
+                format!("{}%", percent(land_use_percent(val, available_resources.land) / 100., true))
+            }
         }
-        Impact::Emissions => format!("{:.1}Gt", val * 1e-15),
+        Impact::Emissions => {
+            let val = val * 1e-15;
+            if is_small(val) {
+                "<1Gt".into()
+            } else {
+                format!("{:.1}Gt", val)
+            }
+        }
         Impact::Water => {
-            percent(water_use_percent(val) / 100., true)
+            if is_small(val) {
+                "<1%".into()
+            } else {
+                format!("{}%", percent(water_use_percent(val, available_resources.water) / 100., true))
+            }
         }
         Impact::Biodiversity => format!("{:.0}", val),
-        Impact::Energy => format!("{:.1}TWh", val * 1e-9),
-        Impact::Fuel => format!("{:.1}TWh", val * 1e-9),
-        Impact::Electricity => format!("{:.1}TWh", val * 1e-9),
+        Impact::Energy => {
+            let val = val * 1e-9;
+            if is_small(val) {
+                "<1TWh".into()
+            } else {
+                format!("{:.1}TWh", val * 1e-9)
+            }
+        },
+        Impact::Fuel => {
+            let val = val * 1e-9;
+            if is_small(val) {
+                "<1TWh".into()
+            } else {
+                format!("{:.1}TWh", val * 1e-9)
+            }
+        },
+        Impact::Electricity => {
+            let val = val * 1e-9;
+            if is_small(val) {
+                "<1TWh".into()
+            } else {
+                format!("{:.1}TWh", val * 1e-9)
+            }
+        }
     }
 }
 

@@ -75,7 +75,6 @@ pub fn Planning() -> impl IntoView {
 
     let (page, set_page) = create_signal(Page::Plan);
     let select_page = move |page: Page| {
-        tracing::debug!("Selecting planning page.");
         set_page.set(page);
 
         let phase = match page {
@@ -86,7 +85,6 @@ pub fn Planning() -> impl IntoView {
         };
 
         game.update_untracked(|game| {
-            tracing::debug!("Rolling planning page events.");
             events.set(StateExt::roll_events(game, phase));
         });
     };
@@ -95,7 +93,6 @@ pub fn Planning() -> impl IntoView {
     let tab = move |label: &'static str,
                     p: Page,
                     tutorial: Tutorial| {
-        tracing::debug!("Tab: {}", label);
         let active = page.get() == p;
         let highlight = cur_tutorial.get() == tutorial;
         let disabled = cur_tutorial.get() < tutorial;
@@ -118,12 +115,10 @@ pub fn Planning() -> impl IntoView {
     let page_view = move || match page.get() {
         Page::Plan => {
             view! { <Plan on_plan_change=move |_| {
-                tracing::debug!("Plan changed.");
                 game.update_untracked(|game| {
                     events.set(StateExt::roll_events(game, EventPhase::PlanningPlanChange));
                 });
             } on_page_change=move |phase| {
-                tracing::debug!("Plan page changed.");
                 game.update_untracked(|game| {
                     update!(|events| {
                         events.extend(StateExt::roll_events(game, phase));
@@ -137,16 +132,12 @@ pub fn Planning() -> impl IntoView {
     };
 
     let on_done = move |_| {
-        tracing::debug!("Planning events finished.");
-
         update!(|game, ui| {
             if game.flags.contains(&Flag::SkipTutorial) {
-                tracing::debug!("Skipping tutorial.");
                 ui.tutorial = Tutorial::Ready;
             } else if game.flags.contains(&Flag::RepeatTutorial)
                 && !ui.tutorial_restarted
             {
-                tracing::debug!("Restarting tutorial.");
                 ui.tutorial_restarted = true;
                 ui.tutorial = Tutorial::Projects;
                 events.set(StateExt::roll_events(
@@ -155,7 +146,6 @@ pub fn Planning() -> impl IntoView {
                 ));
             }
 
-            tracing::debug!("Checking tutorial.");
             let should_advance = match page.get_untracked() {
                 Page::Parliament => {
                     ui.tutorial == Tutorial::Parliament
@@ -171,7 +161,6 @@ pub fn Planning() -> impl IntoView {
             if should_advance {
                 ui.tutorial.advance();
             }
-            tracing::debug!("Done calling on done.");
         });
     };
 

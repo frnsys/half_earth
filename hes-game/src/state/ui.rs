@@ -4,7 +4,14 @@ use crate::{
 };
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
-use hes_engine::{IconEvent, Id, Income, Output, State};
+use hes_engine::{
+    IconEvent,
+    Id,
+    Income,
+    Output,
+    Process,
+    State,
+};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -146,5 +153,53 @@ impl UIState {
         self.cycle_start_state.parliament =
             state.npcs.iter().map(|npc| npc.seats).collect();
         self.cycle_start_state.completed_projects.clear();
+    }
+
+    pub fn has_any_process_mix_changes(&self) -> bool {
+        self.process_mix_changes.iter().any(|(_, changes)| {
+            changes.iter().any(|(_, change)| *change != 0)
+        })
+    }
+
+    pub fn has_process_mix_changes(
+        &self,
+        output: Output,
+    ) -> bool {
+        self.process_mix_changes[output]
+            .iter()
+            .any(|(_, change)| *change != 0)
+    }
+
+    pub fn remove_point(
+        &mut self,
+        points: &mut isize,
+        process: &Process,
+    ) {
+        let change = self.process_mix_changes[process.output]
+            .entry(process.id)
+            .or_default();
+        if process.mix_share as isize + *change > 0 {
+            *points += 1;
+            *change -= 1;
+        }
+    }
+
+    // Returns the point change.
+    pub fn add_point(
+        &mut self,
+        points: &mut isize,
+        process: &Process,
+        max_share: usize,
+    ) {
+        if *points > 0 {
+            let change = self.process_mix_changes
+                [process.output]
+                .entry(process.id)
+                .or_default();
+            if *change + 1 <= max_share as isize {
+                *points -= 1;
+                *change += 1;
+            }
+        }
     }
 }

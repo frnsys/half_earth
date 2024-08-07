@@ -64,13 +64,16 @@ macro_rules! t {
 }
 
 pub fn t(s: &str) -> String {
-    let lang = expect_context::<Rc<Language>>();
-    match &lang.phrases {
-        None => s.to_string(),
-        Some(phrases) => phrases
-            .get(s)
-            .map(|s| s.to_string())
-            .unwrap_or(s.to_string()),
+    if let Some(lang) = use_context::<Rc<Language>>() {
+        match &lang.phrases {
+            None => s.to_string(),
+            Some(phrases) => phrases
+                .get(s)
+                .map(|s| s.to_string())
+                .unwrap_or(s.to_string()),
+        }
+    } else {
+        s.to_string()
     }
 }
 pub fn num_fmt() -> impl Fn(f32) -> String {

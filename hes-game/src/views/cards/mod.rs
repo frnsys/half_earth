@@ -9,7 +9,7 @@ pub use cards::{CardFocusArea, Cards};
 pub use kinds::*;
 pub use mini::*;
 
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FactorsCard {
     pub icon: &'static str,
     pub kind: Var,
@@ -30,17 +30,19 @@ impl FactorsCard {
             Var::Water => {
                 format!(
                     "{}%",
-                    display::percent(self.total, true)
+                    display::percent(self.total / 100., true)
                 )
             }
-            Var::Energy => format!("{:.1}TWh", self.total),
-            Var::Electricity => format!("{:.1}TWh", self.total),
-            Var::Fuel => format!("{:.1}TWh", self.total),
+            Var::Energy => format!("{}", self.total.round()),
+            Var::Electricity => {
+                format!("{}", self.total.round())
+            }
+            Var::Fuel => format!("{}", self.total.round()),
             Var::PlantCalories => {
-                format!("{:.1}Tcals", self.total)
+                format!("{}", self.total.round())
             }
             Var::AnimalCalories => {
-                format!("{:.1}Tcals", self.total)
+                format!("{}", self.total.round())
             }
             Var::Contentedness => {
                 format!("{}", self.total)

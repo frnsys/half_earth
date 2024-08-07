@@ -468,9 +468,8 @@ pub fn ProcessCard(
     };
     let biodiversity_intensity = move || {
         with!(|game, process| {
-            let usage = process.extinction_rate(
-                game.world.starting_resources.land,
-            );
+            let usage = process
+                .extinction_rate(game.resources.available.land);
             let int = intensity::impact_intensity(
                 usage,
                 Impact::Biodiversity,

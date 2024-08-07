@@ -187,6 +187,15 @@ fn check_game_over(state: &mut State) {
     }
 }
 
+impl Default for Effect {
+    fn default() -> Self {
+        Effect::PlayerVariable(
+            PlayerVariable::PoliticalCapital,
+            10.,
+        )
+    }
+}
+
 impl Effect {
     pub fn from_kind(
         kind: EffectKind,

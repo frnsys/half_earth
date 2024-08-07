@@ -43,6 +43,23 @@ pub fn Root() -> impl IntoView {
     }
 }
 
+#[derive(Clone, Copy, PartialEq)]
+enum Phase {
+    Start,
+    Loading,
+    Ready,
+}
+impl Phase {
+    pub fn advance(&mut self) {
+        let next = match self {
+            Self::Start => Self::Loading,
+            Self::Loading => Self::Ready,
+            Self::Ready => Self::Ready,
+        };
+        *self = next;
+    }
+}
+
 #[component]
 pub fn App() -> impl IntoView {
     AnimationContext::provide();
@@ -59,8 +76,7 @@ pub fn App() -> impl IntoView {
 
     init_audio();
 
-    let (started, set_started) = create_signal(false);
-    let (loaded, set_loaded) = create_signal(false);
+    let phase = create_rw_signal(Phase::Start);
 
     let lang = create_resource(
         || (),
@@ -72,13 +88,17 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Show when=move || lang.get().is_some()>
-            <Show when=move || !started.get()>
-                <Start set_started/>
+            <Show when=move || phase.get() == Phase::Start>
+                <Start on_ready=move |_| {
+                    update!(|phase| phase.advance());
+                } />
             </Show>
-            <Show when=move || started.get() && !loaded.get()>
-                <Loading set_loaded/>
+            <Show when=move || phase.get() == Phase::Loading>
+                <Loading on_ready=move |_| {
+                    update!(|phase| phase.advance());
+                }/>
             </Show>
-            <Show when=move || started.get() && loaded.get()>
+            <Show when=move || phase.get() == Phase::Ready>
                 <ToolTip/>
                 <Game />
             </Show>

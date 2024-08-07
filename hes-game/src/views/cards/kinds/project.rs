@@ -14,7 +14,14 @@ use crate::{
         HasTip,
     },
 };
-use hes_engine::{Flag, Group, Project, ProjectType, State};
+use hes_engine::{
+    Effect as EngineEffect,
+    Flag,
+    Group,
+    Project,
+    ProjectType,
+    State,
+};
 use html::ToHtmlElement;
 use leptos::*;
 
@@ -145,10 +152,7 @@ pub fn ProjectCard(
         })
     };
     let show_pc_icon = move || {
-        with!(|project| {
-            project.kind == ProjectType::Policy
-                || !project.is_building()
-        })
+        with!(|project| { project.kind == ProjectType::Policy })
     };
     let is_building =
         move || with!(|project| project.is_building());
@@ -258,8 +262,21 @@ pub fn ProjectCard(
                     || project.is_online())
         })
     };
-    let effects =
-        move || with!(|project| active_effects(project));
+
+    let visible_effect = |d: &DisplayEffect| -> bool {
+        !matches!(
+            d.effect,
+            EngineEffect::ProjectRequest(..)
+                | EngineEffect::ProcessRequest(..)
+        )
+    };
+
+    let effects = move || {
+        with!(|project| active_effects(project)
+            .into_iter()
+            .filter(visible_effect)
+            .collect::<Vec<_>>())
+    };
 
     let queued_upgrades = memo!(ui.queued_upgrades);
     let upgrade_queued = move || {
@@ -320,6 +337,7 @@ pub fn ProjectCard(
                         .effects
                         .iter()
                         .map(DisplayEffect::from)
+                        .filter(visible_effect)
                         .collect();
                     Some((0, effects))
                 } else {
@@ -331,6 +349,7 @@ pub fn ProjectCard(
                                 .effects
                                 .iter()
                                 .map(DisplayEffect::from)
+                                .filter(visible_effect)
                                 .collect();
                         Some((upgrade.cost, effects))
                     } else {

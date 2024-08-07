@@ -72,8 +72,8 @@ pub fn Dashboard() -> impl IntoView {
         create_signal(false);
 
     let factors = memo!(ui.factors);
-    let starting_land =
-        memo!(game.world.starting_resources.land);
+    let available_land =
+        memo!(game.resources.available.land);
     let dataset = move || {
         let mut total = 0.;
         let mut data: BTreeMap<String, f32> =
@@ -86,7 +86,7 @@ pub fn Dashboard() -> impl IntoView {
         }
         if breakdown_factor == Var::Land {
             let name = t!("Unused");
-            let unused = starting_land.get() - total;
+            let unused = available_land.get() - total;
             data.insert(name, unused);
         }
         data
@@ -114,8 +114,11 @@ pub fn Dashboard() -> impl IntoView {
             color: intensity::color(int, true),
         }
     };
-    let water_stress = |demand: f32| {
-        let percent_use = display::water_use_percent(demand);
+
+    let available_water =
+        memo!(game.resources.available.water);
+    let water_stress = move |demand: f32| {
+        let percent_use = display::water_use_percent(demand, available_water.get());
         MiniCardData {
             label: display::percent(percent_use / 100., true),
             color: intensity::color(
@@ -177,7 +180,7 @@ pub fn Dashboard() -> impl IntoView {
         process_multipliers()
             .into_iter()
             .map(|(p, mult)| {
-                p.extinction_rate(starting_land.get()) * mult
+                p.extinction_rate(available_land.get()) * mult
             })
             .sum::<f32>()
             .round()
@@ -292,7 +295,8 @@ pub fn Dashboard() -> impl IntoView {
         format!(
             "{:.0}%",
             display::land_use_percent(
-                land_change() + land_demand.get()
+                land_change() + land_demand.get(),
+                available_land.get()
             )
         )
     };

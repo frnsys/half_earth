@@ -26,6 +26,7 @@ fn Industry(
                         signal=subsignal!(industry.resources)
                      />
                  </div>
+                 <div class="input-help">"Note that an industry's *direct* emissions (including due to land use) should be represented as byproducts, but for many industries their principle byproducts are due to energy use, which should be represented as fuel/electricity resource use."</div>
              </div>
 
              <div class="item-form desc-form">

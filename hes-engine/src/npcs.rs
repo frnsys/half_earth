@@ -12,7 +12,7 @@ use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 
 pub const RELATIONSHIP_CHANGE_AMOUNT: f32 = 0.5;
 
-#[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct NPC {
     pub id: Id,
     pub relationship: f32,

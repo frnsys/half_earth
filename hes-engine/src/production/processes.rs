@@ -137,6 +137,15 @@ impl Process {
             / (1. + self.output_modifier)
     }
 
+    pub fn adj_byproducts_with_modifier_change(
+        &self,
+        change: f32,
+    ) -> ByproductMap {
+        (self.byproducts
+            * (self.byproduct_modifiers + 1. + change))
+            / (1. + self.output_modifier)
+    }
+
     pub fn adj_feedstock_amount(&self) -> f32 {
         self.feedstock.1 / (1. + self.output_modifier)
     }

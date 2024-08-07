@@ -27,7 +27,9 @@ impl WorldStatus {
 }
 
 #[component]
-pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
+pub fn Start(
+    #[prop(into)] on_ready: Callback<()>,
+) -> impl IntoView {
     let lang = expect_context::<Rc<i18n::Language>>();
     let cur_lang = lang.locale;
 
@@ -43,8 +45,12 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
     let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
     let world = create_rw_signal(WorldStatus::Default);
+
+    // Show git commit for this build.
+    let git_hash = env!("GIT_HASH");
     view! {
         <div>
+            <div class="git-hash" title="Current Version">{git_hash}</div>
             <div id="start-bg"></div>
             <div id="start-screen">
                 <div id="lang-select">
@@ -88,7 +94,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                     let state = crate::state::load();
                                     game.set(state.0);
                                     ui.set(state.1);
-                                    set_started.set(true);
+                                    on_ready.call(());
                                 }
                             >
                                 {t!("Continue")}
@@ -105,7 +111,7 @@ pub fn Start(set_started: WriteSignal<bool>) -> impl IntoView {
                                     let state = crate::state::new_game(world);
                                     game.set(state.0);
                                     ui.set(state.1);
-                                    set_started.set(true);
+                                    on_ready.call(());
                                 }
                             >
                                 {t!("New Game")}

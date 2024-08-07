@@ -18,6 +18,7 @@ pub fn IndustryCard(
     let game = expect_context::<RwSignal<State>>();
 
     let lic_pop = memo!(game.world.lic_population());
+    let available_resources = memo!(game.resources.available);
     let demand = move || {
         with!(|industry| industry.demand(lic_pop.get()))
     };
@@ -32,6 +33,7 @@ pub fn IndustryCard(
         })
     };
     let resources_demand = memo!(game.resource_demand.total());
+
     let body_view = move || {
         if empty() {
             t!("This industry is not yet significant.")
@@ -42,6 +44,7 @@ pub fn IndustryCard(
                     each=move || total_resources().items()
                     key=|(key, _)| key.clone()
                     children=move |(key, val)| {
+                        let formatted = display::format_resource(val, key, available_resources.get());
                         let percent = display::demand_percent(
                             val,
                             resources_demand.get()[key],
@@ -50,7 +53,7 @@ pub fn IndustryCard(
                         let tip = tip(
                             key.icon(),
                             t!(
-                                "This industry's demand for {output}. This makes up {percent} of total demand for {output}.",
+                                "This industry's demand for {output}. This makes up {percent}% of total demand for {output}.",
                                 output : key.lower(), percent : percent,
                             ),
                         );
@@ -59,7 +62,7 @@ pub fn IndustryCard(
                                 <div>
                                     <div class="card-icon">
                                         <img src=key.icon()/>
-                                        {val}
+                                        {formatted}
                                     </div>
                                 </div>
                             </HasTip>
@@ -79,7 +82,7 @@ pub fn IndustryCard(
                                 if e < 1. {
                                     "<1".to_string()
                                 } else {
-                                    display::format_impact(Impact::Emissions, e)
+                                    display::format_impact(Impact::Emissions, e, available_resources.get())
                                 }
                             }}
 
