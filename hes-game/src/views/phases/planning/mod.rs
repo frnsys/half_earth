@@ -131,19 +131,23 @@ pub fn Planning() -> impl IntoView {
     };
 
     let on_done = move |_| {
-        update!(|game, ui| {
-            if game.flags.contains(&Flag::SkipTutorial) {
-                ui.tutorial = Tutorial::Ready;
-            } else if game.flags.contains(&Flag::RepeatTutorial)
-                && !ui.tutorial_restarted
-            {
-                ui.tutorial_restarted = true;
-                ui.tutorial = Tutorial::Projects;
-                events.set(StateExt::roll_events(
-                    game,
-                    EventPhase::PlanningStart,
-                ));
-            }
+        update!(|ui| {
+            game.update_untracked(|game| {
+                if game.flags.contains(&Flag::SkipTutorial) {
+                    ui.tutorial = Tutorial::Ready;
+                } else if game
+                    .flags
+                    .contains(&Flag::RepeatTutorial)
+                    && !ui.tutorial_restarted
+                {
+                    ui.tutorial_restarted = true;
+                    ui.tutorial = Tutorial::Projects;
+                    events.set(StateExt::roll_events(
+                        game,
+                        EventPhase::PlanningStart,
+                    ));
+                }
+            });
 
             let should_advance = match page.get_untracked() {
                 Page::Parliament => {

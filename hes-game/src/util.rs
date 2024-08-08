@@ -33,7 +33,7 @@ fn get_font_size(elem: &web_sys::HtmlElement) -> Option<i32> {
             .unwrap()
             .replace("px", "")
             .parse::<f32>()
-            .unwrap()
+            .unwrap_or(15.)
             .round() as i32
     })
 }

@@ -112,7 +112,7 @@ impl ScannerSpec for ProjectScanner {
                     .try_update(|game| {
                         ui.try_update(|ui| {
                             let mut keep_scanning = false;
-                            project.with(|project| {
+                            project.with_untracked(|project| {
                                 if let Some(p) = project {
                                     let changes = ui
                                         .plan_changes
@@ -271,7 +271,7 @@ impl ScannerSpec for ProjectScanner {
                     .try_update(|game| {
                         ui.try_update(|ui| {
                             let mut keep_scanning = false;
-                            project.with(|project| {
+                            project.with_untracked(|project| {
                                 if let Some(p) = project {
                                     controls.shrink_pulse_card();
                                     let mut keep_withdrawing = false;

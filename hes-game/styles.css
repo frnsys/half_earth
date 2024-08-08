@@ -341,10 +341,14 @@ strong{
 }
 .minicard--expanded .scanbar-wrapper {
   top: -50px;
+  left: calc(50% - 140px);
 }
 .minicard--expanded .draggable {
   z-index: 0;
-  margin-top: 3em;
+  margin-top: 0em;
+}
+.minicard--expanded .card-focus-area.wrapper {
+  display: none;
 }
 
 .scanbar-led {

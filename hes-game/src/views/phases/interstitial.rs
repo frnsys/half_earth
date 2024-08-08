@@ -105,7 +105,7 @@ fn describe_parliament(pc: isize) -> String {
 fn describe_warming(emissions: f32, temp: f32) -> String {
     if emissions > 0. {
         if temp > 3. {
-            t!("The world is hostile to life.")
+            t!("The world is becoming hostile to life.")
         } else if temp >= 2. {
             t!("The world is becoming unbearable.")
         } else {

@@ -71,6 +71,7 @@ pub enum Phase {
 }
 
 #[derive(
+    Debug,
     Default,
     Clone,
     Copy,

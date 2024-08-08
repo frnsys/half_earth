@@ -816,7 +816,7 @@ impl DisplayEffect {
                 let text = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
-                    prefix_probs!(prob, "unlock {name}.")
+                    prefix_probs!(prob, " unlock {name}.")
                 } else {
                     t!("<strong>Unlocks</strong> {name}.")
                 };
