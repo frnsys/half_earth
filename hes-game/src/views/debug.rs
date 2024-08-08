@@ -2,7 +2,13 @@ use crate::{
     memo,
     views::{DisplayEvent, Events, Updates},
 };
-use hes_engine::{ProjectType, ResolvedEvent, State, Update};
+use hes_engine::{
+    ProjectType,
+    ResolvedEvent,
+    State,
+    Status,
+    Update,
+};
 use leptos::*;
 
 #[component]
@@ -70,22 +76,59 @@ pub fn DebugEvents() -> impl IntoView {
         projects.get().iter().map(|project| {
             let id = project.id;
             let kind = project.kind;
-            view! {
-                <div class="debug-event" on:click=move |_| {
-                    let update = match kind {
-                        ProjectType::Policy => Update::Policy {
-                            id,
-                        },
-                        _ => Update::Project {
-                            id
-                        }
-                    };
-                    update!(|updates| {
-                        updates.push(update);
-                    });
-                }>
-                    {&project.name}
-                </div>
+            let n_outcomes = project.outcomes.len();
+            if n_outcomes == 1 {
+                view! {
+                    <div class="debug-event event-trigger" on:click=move |_| {
+                        let update = match kind {
+                            ProjectType::Policy => Update::Policy {
+                                id,
+                            },
+                            _ => Update::Project {
+                                id
+                            }
+                        };
+                        update!(|game| {
+                            game.world.projects[&id].status = Status::Active;
+                            game.world.projects[&id].active_outcome = Some(0);
+                        });
+                        update!(|updates| {
+                            updates.push(update);
+                        });
+                    }>
+                        {&project.name}
+                    </div>
+                }.into_view()
+            } else {
+                let inner = (0..n_outcomes).map(|i| {
+                    view! {
+                        <div class="event-trigger" on:click=move |_| {
+                            let update = match kind {
+                                ProjectType::Policy => Update::Policy {
+                                    id,
+                                },
+                                _ => Update::Project {
+                                    id
+                                }
+                            };
+                            update!(|game| {
+                                game.world.projects[&id].status = Status::Active;
+                                game.world.projects[&id].active_outcome = Some(i);
+                            });
+                            update!(|updates| {
+                                updates.push(update);
+                            });
+                        }>{format!("[Outcome {i}]")}</div>
+                    }
+                }).collect::<Vec<_>>();
+                view! {
+                    <div class="debug-event">
+                        {&project.name}
+                        <div class="debug-outcomes">
+                            {inner}
+                        </div>
+                    </div>
+                }.into_view()
             }
         }).collect::<Vec<_>>()
     };

@@ -35,14 +35,17 @@ fastrand = { version = "2.1.0" }
 
 [profile.release]
 debug = 0
+opt-level = 'z'
 lto = "fat"
+strip = true
 panic = "abort"
 codegen-units = 1
 
 [profile.wasm-release]
 inherits = "release"
+debug = 0
 opt-level = 'z'
-strip = true
 lto = true
-codegen-units = 1
+strip = true
 panic = "abort"
+codegen-units = 1

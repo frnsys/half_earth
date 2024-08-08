@@ -48,6 +48,14 @@ pub fn EventCard(
             format!("url('{image}')")
         };
 
+        let attribution = move || {
+            if attrib.trim().is_empty() {
+                "".into()
+            } else {
+                format!("{} {attrib}", t!("Image:"))
+            }
+        };
+
         view! {
             <div
                 class="event--body"
@@ -57,8 +65,8 @@ pub fn EventCard(
                 <div class="arc">{arc}</div>
                 <div class="event--factors">{factors_list}</div>
                 <div class="image-attribution">
-                {t!("Image:")}" "{attrib}
-            </div>
+                    {attribution}
+                </div>
             <div class="event--name">{name}</div>
             <Show when=show_effects>
                 <div class="event--effects">

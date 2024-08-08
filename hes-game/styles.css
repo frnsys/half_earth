@@ -3722,7 +3722,7 @@ color: #63FF96;
   font-family: 'Times Ten', serif;
   text-align: center;
   font-size: 1.5em;
-  padding: 0.5em 0.5em;
+  padding: 0.0em 0.5em;
   line-height: 110%;
 }
 
@@ -4701,7 +4701,6 @@ color: #63FF96;
 }
 .event--body {
   color: #fff;
-  height: 50vh;
   border-radius: 0.75em;
   border: 1px solid #222;
   background-size: cover !important;
@@ -4710,9 +4709,14 @@ color: #63FF96;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
   position: relative;
   background: #222;
+  display: flex;
+  flex-direction: column;
 
   image-rendering: pixelated;
   font-family: 'Inter', sans-serif;
+
+  height: 260px;
+  max-height: 50vh;
 }
 
 @media only screen and (min-width: 480px) {
@@ -4728,7 +4732,7 @@ color: #63FF96;
   padding: 0.25em 0;
   background: #222;
   display: block;
-  margin: 1em auto;
+  margin: 1em auto 0.5em;
   border-radius: 0.35em;
   width: 180px;
 }
@@ -4777,8 +4781,22 @@ color: #63FF96;
 .event--effects {
   padding: 1em;
   background: #222;
-  margin: 1em;
   image-rendering: auto;
+  margin: 0.5em 1em 1em 1em;
+  border-radius: 5px;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+.event--effects .effect {
+  margin: 0 0 0.5em 0;
+}
+.event--body .dialogue {
+  color: #000;
+  bottom: auto;
+  top: 100%;
 }
 
 .hidden {
@@ -4869,9 +4887,19 @@ color: #63FF96;
 }
 .debug-event {
   color: #ccc;
-  cursor: pointer;
   margin: 0.25em 0;
 }
-.debug-event:hover {
+.event-trigger {
+  cursor: pointer;
+}
+.event-trigger:hover {
   text-decoration: underline;
+}
+.debug-event,
+.debug-outcomes {
+  display: flex;
+}
+.debug-outcomes > div {
+  display: flex;
+  margin-left: 0.5em;
 }

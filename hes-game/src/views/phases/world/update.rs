@@ -5,7 +5,7 @@ use crate::{
     icons::{self, HasIcon},
     memo,
     t,
-    util::ImageExt,
+    util::{scale_text, to_ws_el, ImageExt},
     views::{
         effects::active_effects,
         events::Dialogue,
@@ -130,14 +130,19 @@ fn Update(
                 | EngineUpdate::Policy { id } => {
                     let proj = &projects[id];
 
+                    set_can_close.set_untracked(
+                        !proj.active_outcome.is_some(),
+                    );
+
                     let effects = active_effects(proj);
                     let outcome_dialogue = proj.active_outcome.map(|id| {
                         let (dialogue, _) = create_signal(proj.flavor.outcomes[id].clone());
                         view! {
                             <Dialogue dialogue on_start=move |_| {
-                                set_can_close.set(false)
+                                set_can_close.set(false);
                             } on_done=move |_| {
-                                set_can_close.set(true)
+                                set_can_close.set(true);
+                                on_done.call(());
                             } />
                         }
                     });
@@ -145,11 +150,20 @@ fn Update(
                     // TODO this is a hack
                     let (sig, _) = create_signal(effects);
 
+                    let effects_ref =
+                        create_node_ref::<html::Div>();
+                    create_effect(move |_| {
+                        if let Some(effects) = effects_ref.get()
+                        {
+                            scale_text(to_ws_el(effects), 7);
+                        }
+                    });
+
                     view! {
-                        <div class="event--effects">
+                        <div class="event--effects" ref={effects_ref}>
+                            <Effects effects=sig />
+                        </div>
                         {outcome_dialogue}
-                        <Effects effects=sig />
-                            </div>
                     }
                     .into_view()
                 }
@@ -258,21 +272,29 @@ fn Update(
         }
     };
 
+    let attribution = move || {
+        let attrib = image_attrib();
+        if attrib.trim().is_empty() {
+            "".into()
+        } else {
+            format!("{} {attrib}", t!("Image:"))
+        }
+    };
+
     view! {
         <div
             class="event project-completed"
             style:background-image=image
             on:click=try_done
-            class:regionup=is_region
-                  >
-                  <div class="event--body">
+            class:regionup=is_region>
+              <div class="event--body">
                   <div class="arc">{title}</div>
                   <div class="image-attribution">
-                  {t!("Image:")}" "{image_attrib}
-        </div>
-            <div class="event--name">{name}</div>
-            {outcomes}
-        </div>
+                      {attribution}
+                  </div>
+                    <div class="event--name">{name}</div>
+                  {outcomes}
+              </div>
             </div>
     }
 }

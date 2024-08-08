@@ -53,8 +53,7 @@ macro_rules! t {
         crate::i18n::t($text)
     }};
     ($text:expr, $($key:ident: $val:expr),* $(,)?) => {{
-        use crate::i18n::t;
-        let mut result = t($text);
+        let mut result = crate::i18n::t($text);
         $(
             let pattern = concat!("{", stringify!($key), "}");
             result = result.replace(pattern, &$val.to_string());
