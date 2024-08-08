@@ -15,8 +15,11 @@ use leptos::*;
 pub fn MiniProject(
     #[prop(into)] project: Signal<Project>,
 ) -> impl IntoView {
-    let image =
-        move || with!(|project| project.flavor.image.src());
+    let image = move || {
+        with!(|project| {
+            format!("url('{}')", project.flavor.image.src())
+        })
+    };
     let icon = move || with!(|project| project.kind.icon());
     let is_building =
         move || with!(|project| project.is_building());

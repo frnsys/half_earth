@@ -11,8 +11,11 @@ use leptos::*;
 pub fn MiniProcess(
     #[prop(into)] process: Signal<Process>,
 ) -> impl IntoView {
-    let image =
-        move || with!(|process| process.flavor.image.src());
+    let image = move || {
+        with!(|process| {
+            format!("url('{}')", process.flavor.image.src())
+        })
+    };
     let icon =
         move || process.with(|process| process.output.icon());
     let label = move || {

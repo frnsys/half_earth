@@ -94,8 +94,11 @@ pub fn Plan(
             projs.len()
         }
     };
-    let placeholders =
-        move || (slots.get() - active_projects().len()).max(0);
+    let placeholders = move || {
+        (slots.get() as isize
+            - active_projects().len() as isize)
+            .max(0) as usize
+    };
 
     let viewed = memo!(ui.viewed);
     let processes = memo!(game.world.processes);
