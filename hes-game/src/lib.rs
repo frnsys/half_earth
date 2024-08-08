@@ -5,7 +5,7 @@ mod app;
 mod audio;
 mod consts;
 mod debug;
-mod display;
+pub mod display;
 mod eval;
 mod i18n;
 mod icons;
@@ -15,7 +15,9 @@ mod util;
 mod vars;
 mod views;
 
-pub use views::CalcSurface;
+pub use eval::Badge;
+pub use vars::Var;
+pub use views::{CalcSurface, LOCALES};
 
 #[cfg(feature = "server")]
 mod server;

@@ -256,6 +256,35 @@ pub struct EffectTip {
     pub text: String,
 }
 
+// We use this to avoid doing
+// `t!(&format!(...))` as with this it's harder
+// to parse out the translation strings with need.
+macro_rules! prefix_probs {
+    ($prob:ident, $post:literal) => {
+        match $prob {
+            Likelihood::Guaranteed => {
+                t!(concat!("Will", $post))
+            }
+            Likelihood::Likely => {
+                t!(concat!("Likely to", $post))
+            }
+            Likelihood::Random => t!(concat!("Could", $post)),
+            Likelihood::Unlikely => {
+                t!(concat!("Unlikely to", $post))
+            }
+            Likelihood::Rare => {
+                t!(concat!("Small chance to", $post))
+            }
+            Likelihood::Improbable => {
+                t!(concat!("Tiny chance to", $post))
+            }
+            Likelihood::Impossible => {
+                t!(concat!("Won't", $post))
+            }
+        }
+    };
+}
+
 impl DisplayEffect {
     fn fmt_param(&self, value: f32) -> String {
         if self.is_unknown {
@@ -269,9 +298,11 @@ impl DisplayEffect {
         if self.is_unknown {
             t!("Changes")
         } else if let Some(prob) = self.likelihood {
-            let term =
-                if change < 0. { "reduce" } else { "increase" };
-            t!(&format!("{prob} {term}"))
+            if change < 0. {
+                prefix_probs!(prob, " reduce")
+            } else {
+                prefix_probs!(prob, " increase")
+            }
         } else {
             let term = if change < 0. {
                 t!("Reduces")
@@ -705,9 +736,9 @@ impl DisplayEffect {
                 let prob = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
-                    prob.to_string()
+                    prob
                 } else {
-                    "Will".into()
+                    Likelihood::Guaranteed
                 };
                 let tag = icon_card_tag(
                     &t!(&project.name),
@@ -716,18 +747,22 @@ impl DisplayEffect {
                 let text = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
-                    t!(&format!(
-                        "{prob} unlock the {{tag}} project."
-                    ))
+                    prefix_probs!(
+                        prob,
+                        " unlock the {tag} project."
+                    )
                 } else {
                     t!("<strong>Unlocks</strong> the {tag} project.")
                 };
 
                 (
-                    tip! {
+                    tip(
                         icons::UNLOCKS,
-                        &format!("{prob} unlock this project:"),
-                    }
+                        prefix_probs!(
+                            prob,
+                            " unlock this project:"
+                        ),
+                    )
                     .card(project.clone()),
                     text! {
                         "unlocks",
@@ -741,9 +776,9 @@ impl DisplayEffect {
                 let prob = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
-                    prob.to_string()
+                    prob
                 } else {
-                    "Will".into()
+                    Likelihood::Guaranteed
                 };
                 let tag = icon_card_tag(
                     &t!(&process.name),
@@ -752,18 +787,22 @@ impl DisplayEffect {
                 let text = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
-                    t!(&format!(
-                        "{prob} unlock the {{tag}} process."
-                    ))
+                    prefix_probs!(
+                        prob,
+                        " unlock the {tag} process."
+                    )
                 } else {
                     t!("<strong>Unlocks</strong> the {tag} process.")
                 };
 
                 (
-                    tip! {
+                    tip(
                         icons::UNLOCKS,
-                        &format!("{prob} unlock this process:"),
-                    }
+                        prefix_probs!(
+                            prob,
+                            " unlock this process:"
+                        ),
+                    )
                     .card(process.clone()),
                     text! {
                         "unlocks",
@@ -777,22 +816,22 @@ impl DisplayEffect {
                 let text = if self.is_unknown
                     && let Some(prob) = self.likelihood
                 {
-                    t!(&format!("{prob} unlock {{name}}."))
+                    prefix_probs!(prob, "unlock {name}.")
                 } else {
                     t!("<strong>Unlocks</strong> {name}.")
                 };
                 (
-                        tip! {
-                            icons::UNLOCKS,
-                            &format!("This new character will be unlocked:"),
-                        }
-                        .card(npc.clone()),
-                        text! {
-                            "unlocks",
-                            &text,
-                            name: t!(&npc.name),
-                        },
-                    )
+                    tip! {
+                        icons::UNLOCKS,
+                        "This new character will be unlocked:",
+                    }
+                    .card(npc.clone()),
+                    text! {
+                        "unlocks",
+                        &text,
+                        name: t!(&npc.name),
+                    },
+                )
             }
             Effect::ProjectCostModifier(id, amount) => {
                 let project = &state.world.projects[id];
@@ -948,11 +987,8 @@ impl DisplayEffect {
                     )
                 };
                 (
-                    tip! {
-                        icons::DEMAND,
-                        &tip_text,
-                    }
-                    .card(industry.clone()),
+                    tip(icons::DEMAND, tip_text)
+                        .card(industry.clone()),
                     text! {
                         "demand",
                         "{changeDir} demand for {tag} by {amount}.",
@@ -1126,11 +1162,8 @@ impl DisplayEffect {
                     )
                 };
                 (
-                    tip! {
-                        icons::EMISSIONS,
-                        &tip_text,
-                    }
-                    .card(industry.clone()),
+                    tip(icons::EMISSIONS, tip_text)
+                        .card(industry.clone()),
                     text! {
                         "emissions",
                         "{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.",
@@ -1223,10 +1256,7 @@ impl DisplayEffect {
                     )
                 };
                 (
-                    tip! {
-                        byproduct.icon(),
-                        &tip_text,
-                    },
+                    tip(byproduct.icon(), tip_text),
                     text! {
                         match byproduct {
                             Byproduct::Biodiversity => "biodiversity",

@@ -2,6 +2,7 @@ use hes_engine::Output;
 
 use crate::{
     state::demand_by_income_levels,
+    t,
     vars::{Impact, OutputKind},
 };
 
@@ -99,13 +100,13 @@ pub fn color(
     }
 }
 
-pub fn describe(intensity: usize) -> &'static str {
+pub fn describe(intensity: usize) -> String {
     match intensity {
-        0 => "Very Low",
-        1 => "Low",
-        2 => "Moderate",
-        3 => "High",
-        _ => "Very High",
+        0 => t!("Very Low"),
+        1 => t!("Low"),
+        2 => t!("Moderate"),
+        3 => t!("High"),
+        _ => t!("Very High"),
     }
 }
 

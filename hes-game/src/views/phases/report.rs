@@ -182,7 +182,9 @@ pub fn Report() -> impl IntoView {
     let warming_tip = || {
         tip(
             icons::WARMING,
-            t!("The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class=\"tip-goal\">Your goal is to get this below 1°C.</b>")
+            t!(
+                r#"The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class="tip-goal">Your goal is to get this below 1°C.</b>"#
+            ),
         )
     };
     let biodiversity_tip = move || {
@@ -474,7 +476,7 @@ pub fn Report() -> impl IntoView {
                                     children=|req| {
                                         view! {
                                             <tr>
-                                                <td colspan="4">{t!(& req.text)}</td>
+                                                <td colspan="4">{req.text}</td>
                                                 <td>
                                                     <strong>{format!("{:+}", req.bounty)}</strong>
                                                 </td>

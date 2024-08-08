@@ -72,8 +72,7 @@ pub fn Dashboard() -> impl IntoView {
         create_signal(false);
 
     let factors = memo!(ui.factors);
-    let available_land =
-        memo!(game.resources.available.land);
+    let available_land = memo!(game.resources.available.land);
     let dataset = move || {
         let mut total = 0.;
         let mut data: BTreeMap<String, f32> =
@@ -96,7 +95,7 @@ pub fn Dashboard() -> impl IntoView {
     let avg_income_level = move || {
         let avg = income.get();
         MiniCardData {
-            label: intensity::describe(avg - 1).to_string(),
+            label: intensity::describe(avg - 1),
             color: intensity::color(avg, true),
         }
     };
@@ -109,16 +108,17 @@ pub fn Dashboard() -> impl IntoView {
             intensity::Variable::Habitability,
         );
         MiniCardData {
-            label: intensity::describe(avg as usize)
-                .to_string(),
+            label: intensity::describe(avg as usize),
             color: intensity::color(int, true),
         }
     };
 
-    let available_water =
-        memo!(game.resources.available.water);
+    let available_water = memo!(game.resources.available.water);
     let water_stress = move |demand: f32| {
-        let percent_use = display::water_use_percent(demand, available_water.get());
+        let percent_use = display::water_use_percent(
+            demand,
+            available_water.get(),
+        );
         MiniCardData {
             label: display::percent(percent_use / 100., true),
             color: intensity::color(
@@ -133,7 +133,7 @@ pub fn Dashboard() -> impl IntoView {
             intensity::Variable::Extinction,
         );
         MiniCardData {
-            label: intensity::describe(int).to_string(),
+            label: intensity::describe(int),
             color: intensity::color(int, false),
         }
     };
@@ -456,7 +456,7 @@ pub fn Dashboard() -> impl IntoView {
         view! {
             <div class="dashboard--item">
                 <div class="minicard">
-                    <span style:color=income.color>{t!(& income.label)}</span>
+                    <span style:color=income.color>{&income.label}</span>
                 </div>
                 <img src=icons::WEALTH/>
                 <div class="dashboard--item-name">
@@ -472,7 +472,7 @@ pub fn Dashboard() -> impl IntoView {
             <div class="dashboard--item">
                 <div class="minicard">
                     <span style:color=habitability
-                        .color>{t!(& habitability.label)}</span>
+                        .color>{&habitability.label}</span>
                 </div>
                 <img src=icons::HABITABILITY/>
                 <div class="dashboard--item-name">

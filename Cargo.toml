@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "hes-game",
+    "hes-game/i18n",
     "hes-game/src-tauri",
     "hes-engine",
     "hes-editor",
@@ -11,6 +12,7 @@ default-members = [
     "hes-game",
     "hes-engine",
     "hes-editor",
+    "hes-game/i18n",
 ]
 
 [workspace.dependencies]

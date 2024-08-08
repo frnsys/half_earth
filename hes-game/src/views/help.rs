@@ -1,4 +1,4 @@
-use crate::{state::Settings, t};
+use crate::state::Settings;
 use leptos::*;
 
 /// A tutorial help tip.
@@ -49,7 +49,7 @@ pub fn Help(
 
                 <div class="help-tip--inner" class:center=center>
                     <img src="/assets/icons/help.svg"/>
-                    {t!(& text.get_value())}
+                    {text.get_value()}
                 </div>
             </div>
         </Show>

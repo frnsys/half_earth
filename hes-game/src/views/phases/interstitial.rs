@@ -11,8 +11,8 @@ use crate::{
 };
 use hes_engine::{EventPhase, State};
 
-struct Locale {
-    name: &'static str,
+pub struct Locale {
+    pub name: &'static str,
     background: &'static str,
     ambience: &'static str,
     credit: &'static str,
@@ -20,7 +20,7 @@ struct Locale {
 
 // List from Troy:
 // Bandung, Hanoi, Mexico City, Budapest, Thiruvananthapuram, Luanda, Ayn Issa, Ferrara, Vienna, Beijing, Aden, Caracas, Algiers, Belgrade, Moscow, Managua, Buenos Aires, Trier, Prague, Porto Alegre, Seattle/Burlington/Bronx, Dar es Salaam
-const LOCALES: &[Locale] = &[Locale {
+pub const LOCALES: &[Locale] = &[Locale {
   name: "Havana",
   background: "pexels-matthias-oben-3687869.jpg",
   ambience: "city_noise.mp3",
@@ -93,31 +93,27 @@ const LOCALES: &[Locale] = &[Locale {
 }];
 
 fn describe_parliament(pc: isize) -> String {
-    let desc = if pc <= 20 {
-        "is conspiring against you"
+    if pc <= 20 {
+        t!("Parliament is conspiring against you.")
     } else if pc <= 200 {
-        "is ready to work with you"
+        t!("Parliament is ready to work with you.")
     } else {
-        "trusts you completely"
-    };
-    let text = format!("Parliament {}.", desc);
-    t!(&text)
+        t!("Parliament trusts you completely.")
+    }
 }
 
 fn describe_warming(emissions: f32, temp: f32) -> String {
-    let desc = if emissions > 0. {
-        "still warming"
-    } else if emissions <= 0. {
-        "recovering"
-    } else if temp >= 2. {
-        "becoming unbearable"
-    } else if temp > 3. {
-        "hostile to life"
+    if emissions > 0. {
+        if temp > 3. {
+            t!("The world is hostile to life.")
+        } else if temp >= 2. {
+            t!("The world is becoming unbearable.")
+        } else {
+            t!("The world is still warming.")
+        }
     } else {
-        ""
-    };
-    let text = format!("The world is {}.", desc);
-    t!(&text)
+        t!("The world is recovering.")
+    }
 }
 
 fn describe_extinction(extinction_rate: f32) -> String {
@@ -125,17 +121,14 @@ fn describe_extinction(extinction_rate: f32) -> String {
         extinction_rate,
         intensity::Variable::Extinction,
     );
-    const DESCS: &[&str] = &[
-        "flourishing",
-        "recovering",
-        "stabilizing",
-        "struggling",
-        "suffering",
-        "plummeting",
-    ];
-    let idx = idx.min(DESCS.len() - 1).max(0);
-    let text = format!("Biodiversity is {}.", DESCS[idx]);
-    t!(&text)
+    match idx {
+        0 => t!("Biodiversity is flourishing."),
+        1 => t!("Biodiversity is recovering."),
+        2 => t!("Biodiversity is stabilizing."),
+        3 => t!("Biodiversity is struggling."),
+        4 => t!("Biodiversity is suffering."),
+        _ => t!("Biodiversity is plummeting."),
+    }
 }
 
 fn describe_outlook(outlook: f32) -> String {
@@ -143,13 +136,14 @@ fn describe_outlook(outlook: f32) -> String {
         outlook,
         intensity::Variable::WorldOutlook,
     );
-    const DESCS: &[&str] = &[
-        "furious", "upset", "unhappy", "content", "happy",
-        "ecstatic",
-    ];
-    let idx = idx.min(DESCS.len() - 1).max(0);
-    let text = format!("People are {}.", DESCS[idx]);
-    t!(&text)
+    match idx {
+        0 => t!("People are furious."),
+        1 => t!("People are upset."),
+        2 => t!("People are unhappy."),
+        3 => t!("People are content."),
+        4 => t!("People are happy."),
+        _ => t!("People are ecstatic."),
+    }
 }
 
 #[component]
@@ -197,12 +191,12 @@ pub fn Interstitial() -> impl IntoView {
     let title = move || {
         let n = number();
         let ext = match n {
-            1 => "st",
-            2 => "nd",
-            3 => "rd",
-            _ => "th",
+            1 => t!("st"),
+            2 => t!("nd"),
+            3 => t!("rd"),
+            _ => t!("th"),
         };
-        t!("The {n}{ext} Planning Session", n: n, ext: t!(ext))
+        t!("The {n}{ext} Planning Session", n: n, ext: ext)
     };
     let locale = move || {
         let idx = (number() - 1) % LOCALES.len();

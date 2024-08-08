@@ -28,3 +28,8 @@ build-web:
     cp target/release/hes-game build/web/hes-game
     cp -r target/hes-game build/web/site
     echo "To run: LEPTOS_SITE_ROOT="site" ./hes-game"
+
+# Extract strings for translation.
+strings:
+    cd hes-game && cargo expand --lib --ugly --color never | tr -d '\n' > /tmp/expanded
+    cargo run --bin hes-game-i18n

@@ -90,27 +90,26 @@ pub fn Planning() -> impl IntoView {
     };
 
     let cur_tutorial = memo!(ui.tutorial);
-    let tab = move |label: &'static str,
-                    p: Page,
-                    tutorial: Tutorial| {
-        let active = page.get() == p;
-        let highlight = cur_tutorial.get() == tutorial;
-        let disabled = cur_tutorial.get() < tutorial;
-        view! {
-            <div
-                class="planning--tab"
-                class:active=active
-                class:highlight=highlight
-                class:disabled=disabled
-                on:click=move |_| {
-                    select_page(p);
-                }
-            >
+    let tab =
+        move |label: String, p: Page, tutorial: Tutorial| {
+            let active = page.get() == p;
+            let highlight = cur_tutorial.get() == tutorial;
+            let disabled = cur_tutorial.get() < tutorial;
+            view! {
+                <div
+                    class="planning--tab"
+                    class:active=active
+                    class:highlight=highlight
+                    class:disabled=disabled
+                    on:click=move |_| {
+                        select_page(p);
+                    }
+                >
 
-                {t!(label)}
-            </div>
-        }
-    };
+                    {label}
+                </div>
+            }
+        };
 
     let page_view = move || match page.get() {
         Page::Plan => {
@@ -169,14 +168,14 @@ pub fn Planning() -> impl IntoView {
         <Events events on_done />
         <div class="planning">
             <header>
-                {move || tab("Plan", Page::Plan, Tutorial::Plan)}
+                {move || tab(t!("Plan"), Page::Plan, Tutorial::Plan)}
                 {move || tab(
-                    "Govt",
+                    t!("Govt"),
                     Page::Parliament,
                     Tutorial::Parliament,
                 )}
-                {move || tab("Stats", Page::Dashboard, Tutorial::Dashboard)}
-                {move || tab("World", Page::Regions, Tutorial::Regions)}
+                {move || tab(t!("Stats"), Page::Dashboard, Tutorial::Dashboard)}
+                {move || tab(t!("World"), Page::Regions, Tutorial::Regions)}
             </header>
             {page_view}
         </div>

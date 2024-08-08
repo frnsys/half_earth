@@ -161,6 +161,26 @@ pub fn Plan(
             problems
         });
 
+        enum Severity {
+            Mild,
+            Alarming,
+            Severe,
+            Critical,
+        }
+        impl Severity {
+            fn class(&self) -> String {
+                format!(
+                    "shortage-{}",
+                    match self {
+                        Severity::Mild => "mild",
+                        Severity::Alarming => "alarming",
+                        Severity::Severe => "severe",
+                        Severity::Critical => "critical",
+                    }
+                )
+            }
+        }
+
         let problems: Vec<_> = problems
             .into_iter()
             .filter(|(_, met)| *met < 1.)
@@ -168,13 +188,13 @@ pub fn Plan(
                 (
                     output,
                     if met >= 0.85 {
-                        t!("mild")
+                        Severity::Mild
                     } else if met >= 0.75 {
-                        t!("alarming")
+                        Severity::Alarming
                     } else if met >= 0.5 {
-                        t!("severe")
+                        Severity::Severe
                     } else {
-                        t!("critical")
+                        Severity::Critical
                     },
                 )
             })
@@ -184,10 +204,13 @@ pub fn Plan(
         } else {
             if problems.len() == 1 {
                 let (output, severity) = &problems[0];
-                let class = format!("shortage-{severity}");
-                let desc = t!(&format!(
-                    "There is a {severity} production shortage",
-                ));
+                let desc = match severity {
+                    Severity::Mild => t!("There is a mild production shortage"),
+                    Severity::Alarming => t!("There is a alarming production shortage"),
+                    Severity::Severe => t!("There is a severe production shortage"),
+                    Severity::Critical => t!("There is a critical production shortage"),
+                };
+                let class = severity.class();
                 let details = format!(
                     "<b class={class}>{}</b>",
                     t!(&output.title())
@@ -197,14 +220,20 @@ pub fn Plan(
                 let list = problems
                     .into_iter()
                     .map(|(output, severity)| {
-                        let class = format!("shortage-{severity}");
-                        let severity = t!(&severity);
+                        let class = severity.class();
+                        let severity = match severity {
+                            Severity::Mild => t!("mild"),
+                            Severity::Alarming => t!("alarming"),
+                            Severity::Severe => t!("severe"),
+                            Severity::Critical => t!("critical"),
+                        };
                         let title = t!(&output.title());
                         format!("<b class={class}>{title} ({severity})</b>")
                     })
                     .collect::<Vec<_>>().join("\n");
-                let desc =
-                    "There are multiple production shortages:";
+                let desc = t!(
+                    "There are multiple production shortages:"
+                );
                 Some(format!("{desc} {list}"))
             }
         }

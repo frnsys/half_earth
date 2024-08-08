@@ -35,7 +35,7 @@ pub use events::{
 };
 pub use industries::Industry;
 pub use kinds::*;
-pub use npcs::NPC;
+pub use npcs::{NPCRelation, NPC};
 pub use production::{Process, ProcessFeature};
 pub use projects::{
     Cost,

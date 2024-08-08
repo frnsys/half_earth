@@ -38,9 +38,9 @@ pub fn End(lose: bool) -> impl IntoView {
     });
 
     let message = if lose {
-        "This is not the end..."
+        t!("This is not the end...")
     } else {
-        "Well Played!"
+        t!("Well Played!")
     };
 
     let share_image = create_rw_signal(String::new());
@@ -90,7 +90,7 @@ pub fn End(lose: bool) -> impl IntoView {
             </Show>
             <Show when=move || show_start.get()>
                 <div class="break--actions">
-                    <h2>{t!(message)}</h2>
+                    <h2>{&message}</h2>
                     <button class="try-again-button" on:click=start_new_run>
                         {t!("Try Again?")}
                     </button>

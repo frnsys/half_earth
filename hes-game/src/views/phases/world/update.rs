@@ -180,18 +180,24 @@ fn Update(
                         (prev, next)
                     };
 
-                    // Ugh
-                    let change = if *up {
-                        "increased"
+                    // This is somewhat redundant so we are only using
+                    // literals in the `t!(...)` macro, which helps with extracting
+                    // translation strings.
+                    let html = if *up {
+                        t!("This region's income level has increased to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.",
+                            income: region.income.lower(),
+                            iconFuel: icons::FUEL,
+                            iconElec: icons::ELECTRICITY,
+                            iconPCals: icons::PLANT_CALORIES,
+                            iconACals: icons::ANIMAL_CALORIES)
                     } else {
-                        "contracted"
+                        t!("This region's income level has contracted to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.",
+                            income: region.income.lower(),
+                            iconFuel: icons::FUEL,
+                            iconElec: icons::ELECTRICITY,
+                            iconPCals: icons::PLANT_CALORIES,
+                            iconACals: icons::ANIMAL_CALORIES)
                     };
-                    let html = t!(&format!("This region's income level has {change} to <strong>{{income}}</strong>. Demand for <img src='{{iconElec}}'>electricity, <img src='{{iconFuel}}'>fuel, <img src='{{iconPCals}}'>plant and <img src='{{iconACals}}'>animal-based food has been updated."),
-                    income: region.income.lower(),
-                    iconFuel: icons::FUEL,
-                    iconElec: icons::ELECTRICITY,
-                    iconPCals: icons::PLANT_CALORIES,
-                    iconACals: icons::ANIMAL_CALORIES);
                     let prev_tip = tip(
                         icons::WEALTH,
                         t!("This region's previous income level."),

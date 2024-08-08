@@ -77,27 +77,28 @@ pub fn Processes(
             / consts::PROCESS_POINTS_PER_CYCLE as f32
     };
 
-    let tab =
-        move |name: &str, icon: &'static str, kind: Output| {
-            let selected = output.get() == kind;
-            let disabled = !allow_back();
-            view! {
-                <div
-                    class="planning-sub-tab"
-                    class:selected=selected
-                    class:disabled=disabled
-                    on:click=move |_| {
-                        if allow_back() {
-                            set_output.set(kind);
-                        }
+    let tab = move |name: String,
+                    icon: &'static str,
+                    kind: Output| {
+        let selected = output.get() == kind;
+        let disabled = !allow_back();
+        view! {
+            <div
+                class="planning-sub-tab"
+                class:selected=selected
+                class:disabled=disabled
+                on:click=move |_| {
+                    if allow_back() {
+                        set_output.set(kind);
                     }
-                >
+                }
+            >
 
-                    <img src=icon/>
-                    <div>{t!(name)}</div>
-                </div>
-            }
-        };
+                <img src=icon/>
+                <div>{name}</div>
+            </div>
+        }
+    };
 
     let mix_tokens = move || {
         (0..points.get()).map(|_| {
@@ -177,20 +178,20 @@ pub fn Processes(
                     </div>
                 </Show>
                 {move || tab(
-                    "Electricity",
+                    t!("Electricity"),
                     icons::ELECTRICITY,
                     Output::Electricity,
                 )}
 
-                {move || tab("Fuel", icons::FUEL, Output::Fuel)}
+                {move || tab(t!("Fuel"), icons::FUEL, Output::Fuel)}
                 {move || tab(
-                    "Crops",
+                    t!("Crops"),
                     icons::PLANT_CALORIES,
                     Output::PlantCalories,
                 )}
 
                 {move || tab(
-                    "Livestock",
+                    t!("Livestock"),
                     icons::ANIMAL_CALORIES,
                     Output::AnimalCalories,
                 )}
@@ -253,7 +254,7 @@ fn calc_change(
     }
 
     if change > 0.0 {
-        let s = t!("increase {k} by {warn}{change}", k: t!(key), warn: if change > 100. {
+        let s = t!("increase {k} by {warn}{change}", k: key, warn: if change > 100. {
             "⚠️"
         } else { "" }, change: display::percent(change, true));
         Some(
@@ -265,7 +266,7 @@ fn calc_change(
             .into_view(),
         )
     } else if change < 0.0 {
-        let s = t!("decrease {k} by {change}", k: t!(key), change: display::percent(change.abs(), true));
+        let s = t!("decrease {k} by {change}", k: key, change: display::percent(change.abs(), true));
         Some(
             view! {
                 <span class="change change-decrease">
@@ -363,27 +364,27 @@ fn display_changes(
         estimate_changes(state, mix_changes, processes);
     let descs = [
         calc_change(
-            "land use",
+            &t!("land use"),
             before.land_use,
             after.land_use,
         ),
         calc_change(
-            "water use",
+            &t!("water use"),
             before.water_use,
             after.water_use,
         ),
         calc_change(
-            "energy use",
+            &t!("energy use"),
             before.energy_use,
             after.energy_use,
         ),
         calc_change(
-            "emissions",
+            &t!("emissions"),
             before.emissions,
             after.emissions,
         ),
         calc_change(
-            "the extinction rate",
+            &t!("the extinction rate"),
             before.extinction_rate,
             after.extinction_rate,
         ),

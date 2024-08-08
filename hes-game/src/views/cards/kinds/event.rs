@@ -11,11 +11,12 @@ use leptos::*;
 pub fn EventCard(
     #[prop(into)] event: Signal<DisplayEvent>,
 ) -> impl IntoView {
-    let factor_tip = "The factors behind this event.↓";
+    let factor_tip =
+        store_value(t!("The factors behind this event.↓"));
     let (_, set_settings) = Settings::rw();
     on_cleanup(move || {
         set_settings.update(|settings| {
-            settings.read_help.push(factor_tip.to_string());
+            settings.read_help.push(factor_tip.get_value());
         });
     });
 
@@ -61,7 +62,7 @@ pub fn EventCard(
                 class="event--body"
                 style:background-image={background}
             >
-                <Help text={t!(factor_tip)} x=0.55 y=-18.0 center=false/>
+                <Help text={factor_tip.get_value()} x=0.55 y=-18.0 center=false/>
                 <div class="arc">{arc}</div>
                 <div class="event--factors">{factors_list}</div>
                 <div class="image-attribution">
