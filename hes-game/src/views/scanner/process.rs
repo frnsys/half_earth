@@ -68,7 +68,7 @@ impl ScannerSpec for ProcessScanner {
                         .get(&process.id)
                         .unwrap_or(&0);
                     points.get_untracked() != 0
-                        && (*change + 1) < max_share as isize
+                        && *change < max_share as isize
                 } else {
                     false
                 }

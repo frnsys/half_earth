@@ -298,18 +298,24 @@ pub fn Report() -> impl IntoView {
 
     let next_phase = move || {
         let pc_change = pc_change();
-        update!(|game, ui| {
+        game.update_untracked(|game| {
             game.change_political_capital(pc_change);
 
-            // Apply process mix changes
-            // and project upgrades.
-            game.update_processes(&mut ui.process_mix_changes);
-            game.upgrade_projects(&mut ui.queued_upgrades);
+            ui.update_untracked(|ui| {
+                // Apply process mix changes
+                // and project upgrades.
+                game.update_processes(
+                    &mut ui.process_mix_changes,
+                );
+                game.upgrade_projects(&mut ui.queued_upgrades);
 
-            // Reset session plan changes
-            ui.plan_changes.clear();
+                // Reset session plan changes
+                ui.plan_changes.clear();
+                ui.points.refundable_research = 0;
+            });
+        });
 
-            ui.points.refundable_research = 0;
+        ui.update(|ui| {
             ui.phase = Phase::Interstitial;
         });
     };

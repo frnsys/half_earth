@@ -74,6 +74,30 @@ fn warming_colour(mut temp: f32) -> String {
     // return '#fadbae';
 }
 
+fn get_emissions(state: &State) -> HashMap<&'static str, f64> {
+    // Set an upper cap to the amount of emissions we pass to hector,
+    // because very large numbers end up breaking it.
+    let emissions_factor = (consts::MAX_EMISSIONS
+        / state.emissions.as_gtco2eq().abs())
+    .min(1.0);
+
+    let (co2, ch4, n2o) = state.emissions.for_hector();
+    let mut emissions = HashMap::default();
+    emissions.insert(
+        "ffi_emissions",
+        (co2 * emissions_factor) as f64,
+    );
+    emissions.insert(
+        "CH4_emissions",
+        (ch4 * emissions_factor) as f64,
+    );
+    emissions.insert(
+        "N2O_emissions",
+        (n2o * emissions_factor) as f64,
+    );
+    emissions
+}
+
 #[derive(Debug)]
 struct Disaster {
     event_id: Id,
@@ -85,6 +109,7 @@ struct Disaster {
 
 #[component]
 fn Disasters(
+    year: RwSignal<usize>,
     phase: RwSignal<Subphase>,
     events: RwSignal<Vec<Disaster>>,
     #[prop(into)] skipping: Signal<bool>,
@@ -191,8 +216,6 @@ fn Disasters(
         on_done.call(());
     };
 
-    let year = memo!(game.world.year);
-
     view! {
         <div id="event-stream--year">
             {year}
@@ -203,10 +226,11 @@ fn Disasters(
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Subphase {
     Events,
     Disasters,
+    StepYear,
     Updates,
     Done,
 }
@@ -250,40 +274,83 @@ pub fn WorldEvents() -> impl IntoView {
     let skipping = create_rw_signal(false);
     let skip = move |_| skipping.set(true);
 
-    let year = memo!(game.world.year);
+    let year = create_rw_signal(with!(|game| game.world.year));
     let cycle_start_year = memo!(ui.cycle_start_state.year);
     let (_, set_game_phase) = slice!(ui.phase);
 
-    let ready_for_next_year = create_rw_signal(false);
+    let hector = expect_context::<StoredValue<HectorRef>>();
+
     let next_phase = move || {
         let mut next = match phase.get_untracked() {
-            Subphase::Disasters => Subphase::Updates,
+            Subphase::Disasters => Subphase::StepYear,
+            Subphase::StepYear => Subphase::Updates,
             Subphase::Updates => Subphase::Events,
             Subphase::Events => Subphase::Disasters,
             Subphase::Done => Subphase::Done,
         };
 
+        if next == Subphase::StepYear {
+            // Update the temp anomaly.
+            spawn_local(async move {
+                let emissions = game
+                    .with_untracked(|game| get_emissions(game));
+                let hector = hector.get_value();
+                hector.add_emissions(emissions);
+                let tgav = hector.calc_tgav().await as f32;
+
+                // Advance the year.
+                game.update_untracked(|game| {
+                    let step_updates = game.step_year(tgav);
+                    let completed_projects = step_updates
+                        .iter()
+                        .filter_map(|update| match update {
+                            EngineUpdate::Project { id } => {
+                                Some(id)
+                            }
+                            _ => None,
+                        });
+
+                    ui.update_untracked(|ui| {
+                        ui.cycle_start_state
+                            .completed_projects
+                            .extend(completed_projects);
+                    });
+
+                    updates.set(step_updates.into());
+                });
+
+                let cur_year =
+                    game.with_untracked(|game| game.world.year);
+                year.set(cur_year);
+            });
+        }
+
         if next == Subphase::Updates {
-            ready_for_next_year.set(true);
+            if with!(|updates| updates.is_empty())
+                || skipping.get()
+            {
+                next = Subphase::Events;
+            }
         }
 
         if next == Subphase::Events {
             game.update_untracked(|game| {
+                let evs = StateExt::roll_events(
+                    game,
+                    EventPhase::WorldMain,
+                );
+
                 ui.update_untracked(|ui| {
-                    let evs = StateExt::roll_events(
-                        game,
-                        EventPhase::WorldMain,
-                    );
                     for event in &evs {
                         ui.world_events.push(event.clone());
                     }
-
-                    if evs.is_empty() || skipping.get() {
-                        next = Subphase::Disasters;
-                    } else {
-                        events.set(evs);
-                    }
                 });
+
+                if evs.is_empty() || skipping.get() {
+                    next = Subphase::Disasters;
+                } else {
+                    events.set(evs);
+                }
             });
         }
 
@@ -319,84 +386,20 @@ pub fn WorldEvents() -> impl IntoView {
         phase.set(next);
     };
 
-    let hector = expect_context::<StoredValue<HectorRef>>();
-    let tgav_year =
-        create_rw_signal(game.with_untracked(|game| {
-            (game.world.year, game.world.temperature)
-        }));
-
     create_effect(move |_| {
-        let this_year = year.get();
-        let (y, tgav) = tgav_year.get();
-        if y == this_year && ready_for_next_year.get() {
-            game.update_untracked(|game| {
-                ui.update_untracked(|ui| {
-                    let step_updates = game.step_year(tgav);
-                    let completed_projects = step_updates
-                        .iter()
-                        .filter_map(|update| match update {
-                            EngineUpdate::Project { id } => {
-                                Some(id)
-                            }
-                            _ => None,
-                        });
-                    ui.cycle_start_state
-                        .completed_projects
-                        .extend(completed_projects);
-
-                    if step_updates.is_empty() || skipping.get()
-                    {
-                        // Skip to next phase.
-                        next_phase();
-                    } else {
-                        updates.set(step_updates.into());
-                    }
-                });
-            });
-
-            spawn_local(async move {
-                let emissions = game.with_untracked(|game| {
-                    // Set an upper cap to the amount of emissions we pass to hector,
-                    // because very large numbers end up breaking it.
-                    let emissions_factor =
-                        (consts::MAX_EMISSIONS
-                            / game
-                                .emissions
-                                .as_gtco2eq()
-                                .abs())
-                        .min(1.0);
-
-                    let (co2, ch4, n2o) =
-                        game.emissions.for_hector();
-                    let mut emissions = HashMap::default();
-                    emissions.insert(
-                        "ffi_emissions",
-                        (co2 * emissions_factor) as f64,
-                    );
-                    emissions.insert(
-                        "CH4_emissions",
-                        (ch4 * emissions_factor) as f64,
-                    );
-                    emissions.insert(
-                        "N2O_emissions",
-                        (n2o * emissions_factor) as f64,
-                    );
-                    emissions
-                });
-
-                let hector = hector.get_value();
-                hector.add_emissions(emissions);
-                let next_tgav = hector.calc_tgav().await;
-                tgav_year
-                    .set((this_year + 1, next_tgav as f32));
-            });
+        year.track();
+        phase.set_untracked(Subphase::Updates);
+        if updates.with_untracked(|updates| updates.is_empty())
+            || skipping.get_untracked()
+        {
+            next_phase();
         }
     });
 
     view! {
         <Hud/>
         <div id="event-stream">
-            <Disasters phase skipping events=disasters on_done=move |_| {
+            <Disasters year phase skipping events=disasters on_done=move |_| {
                 next_phase();
             } />
             <Show when=move || phase.get() == Subphase::Updates>
