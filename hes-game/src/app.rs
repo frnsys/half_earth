@@ -83,7 +83,11 @@ fn App() -> impl IntoView {
             <Show when=move || lang.get().is_some()>
                 <Show when=move || phase.get() == Phase::Start>
                     <Start on_ready=move |_| {
-                        update!(|phase| phase.advance());
+                        if get_debug_opts().skip_to_planning {
+                            update!(|phase| *phase = Phase::Ready);
+                        } else {
+                            update!(|phase| phase.advance());
+                        }
                     } />
                 </Show>
                 <Show when=move || phase.get() == Phase::Loading>

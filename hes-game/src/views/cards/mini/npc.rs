@@ -53,8 +53,10 @@ pub fn MiniNPC(
                 <div class="mini-npc-name">{name}</div>
                 <div class="mini-npc-seats">{faction_seats}</div>
                 <Show when=is_ally>
-                    <img src=icons::ALLY/>
-                    {t!("Ally")}
+                    <div class="mini-npc-tag npc-tag">
+                        <img src=icons::ALLY/>
+                        {t!("Ally")}
+                    </div>
                 </Show>
             </Body>
             <Expanded slot>

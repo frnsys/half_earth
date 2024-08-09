@@ -10,7 +10,7 @@ use nom::{
     Err,
     IResult,
 };
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::{collections::HashMap, path::Path};
 use strum::IntoEnumIterator;
 
@@ -276,11 +276,11 @@ fn extract_strings(from: &str) -> Vec<String> {
 
 fn main() {
     let expected = extract_strings("/tmp/expanded");
-    for entry in glob("hes-game/i18n/transl/*.csv").unwrap() {
+    for entry in glob("util/i18n/transl/*.csv").unwrap() {
         let path = entry.unwrap();
         let stem = path.file_stem().unwrap().to_str().unwrap();
 
-        let mut mapping = read_translation(&path);
+        let mapping = read_translation(&path);
 
         let mut missing = vec![];
         let mut extra = vec![];

@@ -16,7 +16,7 @@ use crate::{
     memo,
     state::{Settings, StateExt, Tutorial, UIState},
     t,
-    views::{hud::Hud, Events},
+    views::{hud::Hud, Events, rank_factors},
 };
 use leptos::*;
 
@@ -54,6 +54,10 @@ pub fn Planning() -> impl IntoView {
 
     let events = create_rw_signal(vec![]);
     game.update_untracked(|game| {
+        ui.update_untracked(|ui| {
+            ui.factors = rank_factors(game);
+        });
+
         let mut evs = [
             StateExt::roll_events(
                 game,
@@ -67,7 +71,10 @@ pub fn Planning() -> impl IntoView {
         .concat();
 
         if get_debug_opts().skip_to_planning {
-            evs.retain(|ev| ev.name != "Planning Intro");
+            evs.retain(|ev| {
+                ev.name != "Planning Intro"
+                    && ev.name != "Welcome Back"
+            });
         }
 
         events.set_untracked(evs);

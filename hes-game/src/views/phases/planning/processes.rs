@@ -305,7 +305,7 @@ fn estimate_changes(
 
     // Demand for each of these just from the current set of processes
     let mut current = Usage::default();
-    let available_land = state.resources.available.land;
+    let available_land = state.world.starting_resources.land;
     for process in processes {
         let mix_share = process.mix_share as f32;
         let total = mix_share / 20.

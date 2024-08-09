@@ -276,7 +276,7 @@ pub fn WorldEvents() -> impl IntoView {
         ));
     });
 
-    let skipping = create_rw_signal(false);
+    let skipping = create_rw_signal(get_debug_opts().always_skip_world);
     let skip = move |_| skipping.set(true);
 
     let year = create_rw_signal(with!(|game| game.world.year));

@@ -80,11 +80,12 @@ impl World {
     ) {
         let temp_outlook =
             temp_change * 6. * self.temperature.powf(2.);
-        self.base_outlook += temp_outlook;
+        let region_outlook_change = temp_outlook * 0.4;
         for region in self.regions.iter_mut() {
-            region.outlook += temp_outlook * 0.4;
+            region.outlook += region_outlook_change;
         }
-        self.temp_outlook = temp_outlook;
+        self.base_outlook += temp_outlook;
+        self.temp_outlook += temp_outlook;
         self.regions
             .update_outlook(wretched_ally, consumerist_ally);
     }

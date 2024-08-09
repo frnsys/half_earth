@@ -24,6 +24,9 @@ fn preload_assets() -> Vec<String> {
         "../../../public/assets/characters/*.png"
     ));
     preload.extend(list_files!(
+        "../../../public/assets/characters/*.webp"
+    ));
+    preload.extend(list_files!(
         "../../../public/assets/icons/*.png"
     ));
     preload.extend(list_files!(

@@ -134,7 +134,7 @@ impl Badge {
             Self::Space => "space",
             Self::Vegan => "vegan",
         };
-        format!("/public/assets/badges/{}.png", name)
+        format!("/assets/badges/{}.png", name)
     }
 }
 impl std::fmt::Display for Badge {
@@ -200,7 +200,7 @@ pub fn summarize(state: &State, win: bool) -> Summary {
             x.relationship.partial_cmp(&y.relationship).unwrap()
         })
         .unwrap();
-    let faction = format!("{}s", closest.name);
+    let faction = closest.name.to_string();
 
     Summary {
         badges,

@@ -14,16 +14,16 @@ use hes_engine::{EventPhase, State};
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
     const WIN_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/win/*.png"
+        "../../../public/assets/sharing/win/*.jpg"
     );
     const COUP_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/lose/coup/*.png"
+        "../../../public/assets/sharing/lose/coup/*.jpg"
     );
     const DEATH_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/lose/death/*.png"
+        "../../../public/assets/sharing/lose/death/*.jpg"
     );
     const LOSE_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/lose/generic/*.png"
+        "../../../public/assets/sharing/lose/generic/*.jpg"
     );
 
     let events = create_rw_signal(vec![]);
@@ -50,6 +50,10 @@ pub fn End(lose: bool) -> impl IntoView {
 
     let summary =
         game.with_untracked(|game| summarize(&game, !lose));
+
+    // A little hacky (ideally we do this at compile time)
+    // but turn the file paths into the proper urls.
+    let root = format!("{}/public", env!("CARGO_MANIFEST_DIR"));
     let image_opts = match summary.ending {
         Ending::Win => WIN_IMGS,
         Ending::Died => DEATH_IMGS,
@@ -59,10 +63,11 @@ pub fn End(lose: bool) -> impl IntoView {
     let image_opts: Vec<_> = image_opts
         .iter()
         .filter(|url| url.contains(&summary.faction))
+        .map(|path| path.replace(&root, "").to_string())
         .collect();
     let idx = (js_sys::Math::random() * image_opts.len() as f64)
         .ceil() as usize;
-    let share_image = *image_opts[idx];
+    let share_image = store_value(image_opts[idx].clone());
 
     let (show_start, set_show_start) = create_signal(false);
 
@@ -110,7 +115,7 @@ pub fn End(lose: bool) -> impl IntoView {
                     </button>
                 </div>
                 <div>
-                    <img class="share-image" src={share_image} />
+                    <img class="share-image" src={share_image.get_value()} />
                 </div>
             </Show>
         </div>

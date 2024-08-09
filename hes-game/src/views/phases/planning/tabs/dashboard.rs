@@ -72,7 +72,8 @@ pub fn Dashboard() -> impl IntoView {
         create_signal(false);
 
     let factors = memo!(ui.factors);
-    let available_land = memo!(game.resources.available.land);
+    let available_land =
+        memo!(game.world.starting_resources.land);
     let dataset = move || {
         let mut total = 0.;
         let mut data: BTreeMap<String, f32> =

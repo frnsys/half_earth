@@ -1,15 +1,15 @@
 export LEPTOS_WASM_OPT_VERSION := "version_118"
 
 # Run the development web game.
-run-web:
+game:
     trunk serve --config hes-game/Trunk.toml
 
 # Run the development app game.
-run-app:
+game-app:
     cd hes-game && cargo tauri dev
 
 # Run the development editor.
-run-editor:
+editor:
     cd hes-editor && cargo tauri dev
 
 # Run the engine tests.
@@ -18,7 +18,7 @@ test:
 
 # Build the game and editor apps for release.
 build-apps:
-    cd hes-game && cargo tauri build --releaese
+    cd hes-game && cargo tauri build --release
     cd hes-editor && cargo tauri build --release
 
 # Build the game web version.

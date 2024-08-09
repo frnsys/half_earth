@@ -7,9 +7,14 @@ use std::collections::BTreeMap;
 
 #[ext]
 pub impl State {
+    /// For total land use we have to take into account
+    /// protected land and use starting land resources as the baseline,
+    /// rather than available land (which is starting land minus protected land).
     fn land_use_percent(&self) -> String {
-        let usage = self.resource_demand.of(Resource::Land);
-        let total_land = self.resources.available.land;
+        let usage = self.resource_demand.of(Resource::Land)
+            + (self.protected_land
+                * self.world.starting_resources.land);
+        let total_land = self.world.starting_resources.land;
         let percent = usage / total_land;
         format!("{}%", display::percent(percent, true))
     }

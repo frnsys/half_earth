@@ -45,7 +45,7 @@ pub fn FactorsList(
             if let Some(max_value) = max_value {
                 view! {
                     <div>
-                        {total} <span class="type-total">/ {max_value}</span>
+                        {total} <span class="type-total">/{max_value}</span>
                         <img src=icon/>
                     </div>
                 }
@@ -78,29 +78,26 @@ pub fn FactorsList(
                 <div>{t!("Total")} :</div>
                 {total_label}
             </div>
-            <For
-                each=relevant_factors
-                key=|user: &Factor| user.name().to_string()
-                children=move |user| {
+            {move || {
+                relevant_factors().into_iter().map(|user| {
                     let highlight = cur_name() == Some(user.name().to_string());
                     let name = user.name().to_string();
                     view! {
-                        <div class="factors--user" class:highlight=highlight>
-                            <div>
-                                <div>{t!(& name)}</div>
-                            </div>
+                      <div class="factors--user" class:highlight=highlight>
+                           <div>
+                              <div>{t!(& name)}</div>
+                           </div>
                             <div>
                                 <FactorLine
                                     factor=user
                                     relation=relation.into_signal()
                                     icon=icon.into_signal()
-                                />
-                            </div>
-                        </div>
+                                    />
+                           </div>
+                      </div>
                     }
-                }
-            />
-
+                }).collect::<Vec<_>>()
+            }}
         </div>
     }
 }

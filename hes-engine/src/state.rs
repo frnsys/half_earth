@@ -76,7 +76,7 @@ pub struct State {
 
     pub shortages_outlook: f32,
     pub emissions: Emissions,
-    last_outlook: f32,
+    pub last_outlook: f32,
 
     pub events: Vec<Event>,
 
@@ -411,13 +411,14 @@ impl State {
         // If all demand met is 0 it should be an instant game over, basically.
         let demand_met =
             self.produced.total() / self.output_demand.total();
-        self.shortages_outlook = PRODUCTION_SHORTAGE_PENALTY
+        self.shortages_outlook = (PRODUCTION_SHORTAGE_PENALTY
             - ((demand_met.fuel
                 + demand_met.electricity
                 + demand_met.animal_calories
                 + demand_met.plant_calories)
                 * PRODUCTION_SHORTAGE_PENALTY
-                / 4.);
+                / 4.))
+            .max(0.);
 
         self.world
             .update_extinction_rate(&self.produced.by_process);
@@ -522,18 +523,6 @@ impl State {
         self.world.processes[process_id]
             .max_share(&output_demand, &feedstocks)
     }
-
-    // renamed to world.update_climate
-    // pub fn set_tgav(&mut self, tgav: f32) {
-    //     let prev_temp = self.world.temperature;
-    //     self.world.temperature =
-    //         tgav + self.temperature_modifier;
-    //     let temp_diff = prev_temp - self.world.temperature;
-    //     self.update_region_temps();
-    //     self.world.sea_level_rise += self.sea_level_rise_rate();
-    //     self.temp_outlook +=
-    //         self.compute_temp_outlook_change(temp_diff);
-    // }
 
     pub fn roll_events(
         &mut self,

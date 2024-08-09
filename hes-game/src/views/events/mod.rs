@@ -55,7 +55,14 @@ pub fn Events(
     if ready.get_untracked()
         && events.with_untracked(|events| events.is_empty())
     {
-        on_done.call(());
+        // Don't like doing this but this hack avoids borrow conflicts
+        // which I run into quite often with Leptos and are very hard to debug.
+        set_timeout(
+            move || {
+                on_done.call(());
+            },
+            Duration::from_millis(10),
+        );
     }
 
     view! {

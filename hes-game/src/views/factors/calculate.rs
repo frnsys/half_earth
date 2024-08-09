@@ -16,8 +16,9 @@ use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;
 
 use crate::{
-    display,
+    display::{self, FloatExt},
     icons::HasIcon,
+    t,
     vars::*,
     views::{intensity, FactorsCard},
 };
@@ -207,24 +208,24 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
             let effects = p.active_effects_with_outcomes();
             let amount = effects_factor(var, &effects, state);
 
-            let demand = state.output_demand.total();
             let display = if var.is_demand_var() {
-                let demand = match var {
-                    Var::Energy => demand.energy(),
-                    Var::Electricity => demand.electricity,
-                    Var::Fuel => demand.fuel,
-                    Var::PlantCalories => demand.plant_calories,
-                    Var::AnimalCalories => {
-                        demand.animal_calories
+                let amount = match var {
+                    Var::Energy
+                    | Var::Electricity
+                    | Var::Fuel => {
+                        display::to_energy_units(amount)
+                            .round_to(1)
+                    }
+                    Var::PlantCalories
+                    | Var::AnimalCalories => {
+                        display::to_calorie_units(amount)
+                            .round_to(1)
                     }
                     _ => unreachable!(),
                 };
-                format!(
-                    "{}%",
-                    display::percent(amount / demand, true)
-                )
-            } else {
                 amount.to_string()
+            } else {
+                amount.round_to(1).to_string()
             };
             Factor::Project {
                 name: p.name.clone(),
@@ -241,7 +242,6 @@ fn regional_factors(
     state: &State,
 ) -> Vec<Factor> {
     let per_capita_output_demand = &state.world.output_demand;
-    let output_demand = &state.output_demand.total();
     state
         .world
         .regions
@@ -250,20 +250,12 @@ fn regional_factors(
             let intensity = region.income.level() + 1;
             let amount =
                 region.demand(per_capita_output_demand)[output];
-
-            // What percent of total demand this region's demand represents.
-            let display = format!(
-                "{}%",
-                display::percent(
-                    amount / output_demand[output],
-                    true,
-                )
-            );
+            let amount = display::output(amount, output);
             Factor::Region {
                 name: region.name.clone(),
                 intensity,
-                amount: display::output(amount, output),
-                display,
+                display: amount.to_string(),
+                amount,
             }
         })
         .filter(|fac| fac.amount() != 0.)
@@ -339,7 +331,8 @@ fn impact_factor<S: HasImpacts>(
         Impact::Energy => source.resources().energy(),
         Impact::Emissions => source.byproducts().co2eq(),
         Impact::Biodiversity => {
-            let total_land = state.resources.available.land;
+            let total_land =
+                state.world.starting_resources.land;
             source.extinction_rate(total_land)
         }
     };
@@ -349,27 +342,23 @@ fn impact_factor<S: HasImpacts>(
 
     let display = match impact {
         Impact::Energy => {
-            let demand = state.output_demand.total().energy();
-            format!(
-                "{}%",
-                display::percent(total_impact / demand, true)
-            )
+            display::to_energy_units(total_impact)
+                .round_to(1)
+                .to_string()
         }
         Impact::Electricity => {
-            let demand =
-                state.output_demand.of(Output::Electricity);
-            format!(
-                "{}%",
-                display::percent(total_impact / demand, true)
-            )
+            display::output(total_impact, Output::Electricity)
+                .to_string()
         }
         Impact::Fuel => {
-            let demand = state.output_demand.of(Output::Fuel);
-            format!(
-                "{}%",
-                display::percent(total_impact / demand, true)
-            )
+            display::output(total_impact, Output::Fuel)
+                .to_string()
         }
+        Impact::Land => display::format_impact(
+            impact,
+            total_impact,
+            state.world.starting_resources,
+        ),
         _ => display::format_impact(
             impact,
             total_impact,
@@ -398,7 +387,7 @@ fn production_factors(
                 per_unit,
                 demand,
                 total,
-                display,
+                display: display_amount,
             } = impact_factor(proc, impact, state);
 
             let kind: OutputKind = proc.output.into();
@@ -416,7 +405,7 @@ fn production_factors(
                 produced: demand,
                 output: proc.output,
                 amount: total,
-                display,
+                display: display_amount,
                 intensity: inten,
                 display_produced,
             }
@@ -460,35 +449,52 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
         // Additional factors
         match var {
             Var::Contentedness => {
-                if state.world.temp_outlook != 0. {
+                if state.world.temp_outlook.round_to(1) != 0. {
                     rankings.push(Factor::Event {
-                        name: "Temperature Change".into(),
+                        name: t!("Temperature Change"),
                         amount: state
                             .world
                             .temp_outlook
-                            .round(),
+                            .round_to(1),
                         display: None,
                     })
                 }
                 if state.shortages_outlook != 0. {
                     rankings.push(Factor::Event {
-                        name: "Production Shortages".into(),
-                        amount: state.shortages_outlook.round(),
+                        name: t!("Production Shortages"),
+                        amount: -state
+                            .shortages_outlook
+                            .round_to(1),
                         display: None,
                     })
                 }
                 rankings.push(Factor::Event {
-                    name: "Post-Revolution Optimism".into(),
+                    name: t!("Post-Revolution Optimism"),
                     amount: 30.,
                     display: None,
-                })
+                });
+                // Delta relative to their starting value of 10.
+                let regions_outlook_delta =
+                    (state.world.regions.outlook() - 10.)
+                        .round_to(1);
+                if regions_outlook_delta != 0. {
+                    rankings.push(Factor::Event {
+                        name: t!("Regional Factors"),
+                        amount: regions_outlook_delta,
+                        display: None,
+                    })
+                }
             }
             Var::Land => {
+                // Note that for factors we compare against
+                // *starting* land and not *available* land,
+                // as available land is essentially starting land
+                // minus what's protected.
                 rankings.push(Factor::Event {
-                    name: "Nature Preserves".into(),
+                    name: t!("Nature Preserves"),
                     display: Some("10%".into()),
                     amount: 0.1
-                        * state.resources.available.land,
+                        * state.world.starting_resources.land,
                 });
             }
             Var::Biodiversity => {
@@ -549,9 +555,11 @@ pub fn factors_card(
                 state.world.extinction_rate.round().max(0.)
             }
             Var::Land => display::resource(
-                state.resource_demand.of(Resource::Land),
+                state.resource_demand.of(Resource::Land)
+                    + (state.protected_land
+                        * state.world.starting_resources.land),
                 Resource::Land,
-                state.resources.available,
+                state.world.starting_resources,
             ),
             Var::Energy => {
                 let demand =
@@ -563,7 +571,7 @@ pub fn factors_card(
                 Resource::Water,
                 state.resources.available,
             ),
-            Var::Contentedness => state.outlook().round(),
+            Var::Contentedness => state.outlook().round_to(1),
             Var::Electricity => display::to_energy_units(
                 state.output_demand.of(Output::Electricity),
             ),

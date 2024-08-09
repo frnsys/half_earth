@@ -7,7 +7,7 @@ use crate::{
     memo,
     state::{Phase, StateExt, UIState},
     t,
-    views::{events::Events, intensity, rank_factors},
+    views::{events::Events, intensity},
 };
 use hes_engine::{EventPhase, State};
 
@@ -154,11 +154,6 @@ pub fn Interstitial() -> impl IntoView {
     let events = create_rw_signal(vec![]);
 
     game.update_untracked(|game| {
-        ui.update_untracked(|ui| {
-            ui.factors = rank_factors(game);
-        });
-    });
-    game.update_untracked(|game| {
         let evs = if game.won() {
             StateExt::roll_events(
                 game,
@@ -212,7 +207,8 @@ pub fn Interstitial() -> impl IntoView {
         move || describe_extinction(extinction.get());
     let contentedness = move || describe_outlook(outlook.get());
     let years_left = move || {
-        let years_left = (death_year.get() - year.get()).max(0);
+        let years_left =
+            death_year.get().saturating_sub(year.get());
         t!(
             "You have {yearsLeft} years left in your tenure.",
             yearsLeft: years_left

@@ -54,6 +54,7 @@ If debugging the game there are a few options you can pass as URL parameters whi
 - `skip-to-planning`: Skip the intro and just go to the planning phase.
 - `skip-tutorial`: Skip the tutorial.
 - `fast-years`: Speed up years in the world events phase.
+- `always-skip-world`: Skip the world events phase.
 
 
 ## Running
@@ -62,8 +63,9 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 
 ```
 Available recipes:
-    run-web     # Run development web game (browser)
-    run-app     # Run development app game (tauri)
+    game        # Run development web game (browser)
+    game-app    # Run development app game (tauri)
+    editor      # Run development editor(tauri)
     test        # Run tests
     build-apps  # Build the app release versions (tauri)
                 # Note: this is just native, for cross-platform see below.

@@ -1,6 +1,4 @@
-use crate::{
-    vars::Impact,
-};
+use crate::vars::Impact;
 use hes_engine::*;
 
 pub trait DisplayValue {
@@ -63,12 +61,21 @@ pub fn to_energy_units(amount: f32) -> f32 {
 
 pub fn output(amount: f32, output: Output) -> f32 {
     match output {
-        Output::Fuel | Output::Electricity => to_energy_units(amount),
-        Output::PlantCalories | Output::AnimalCalories => to_calorie_units(amount),
-    }.round_to(1)
+        Output::Fuel | Output::Electricity => {
+            to_energy_units(amount)
+        }
+        Output::PlantCalories | Output::AnimalCalories => {
+            to_calorie_units(amount)
+        }
+    }
+    .round_to(1)
 }
 
-pub fn resource(amount: f32, resource: Resource, available_resources: ResourceMap) -> f32 {
+pub fn resource(
+    amount: f32,
+    resource: Resource,
+    available_resources: ResourceMap,
+) -> f32 {
     let scale = match resource {
         Resource::Water => 100. / available_resources.water, // percent of available water
         Resource::Land => 100. / available_resources.land, // percent of habitable land
@@ -86,10 +93,16 @@ pub fn resource(amount: f32, resource: Resource, available_resources: ResourceMa
     (amount * scale).round()
 }
 
-pub fn format_resource(amount: f32, res: Resource, available_resources: ResourceMap) -> String {
+pub fn format_resource(
+    amount: f32,
+    res: Resource,
+    available_resources: ResourceMap,
+) -> String {
     let amount = resource(amount, res, available_resources);
     match res {
-        Resource::Water | Resource::Land => format!("{}%", amount),
+        Resource::Water | Resource::Land => {
+            format!("{}%", amount)
+        }
         _ => amount.to_string(),
     }
 }
@@ -165,13 +178,26 @@ fn is_small(val: f32) -> bool {
     val < 1. && val > 0.
 }
 
-pub fn format_impact(impact: Impact, val: f32, available_resources: ResourceMap) -> String {
+pub fn format_impact(
+    impact: Impact,
+    val: f32,
+    available_resources: ResourceMap,
+) -> String {
     match impact {
         Impact::Land => {
             if is_small(val) {
                 "<1%".into()
             } else {
-                format!("{}%", percent(land_use_percent(val, available_resources.land) / 100., true))
+                format!(
+                    "{}%",
+                    percent(
+                        land_use_percent(
+                            val,
+                            available_resources.land
+                        ) / 100.,
+                        true
+                    )
+                )
             }
         }
         Impact::Emissions => {
@@ -186,10 +212,25 @@ pub fn format_impact(impact: Impact, val: f32, available_resources: ResourceMap)
             if is_small(val) {
                 "<1%".into()
             } else {
-                format!("{}%", percent(water_use_percent(val, available_resources.water) / 100., true))
+                format!(
+                    "{}%",
+                    percent(
+                        water_use_percent(
+                            val,
+                            available_resources.water
+                        ) / 100.,
+                        true
+                    )
+                )
             }
         }
-        Impact::Biodiversity => format!("{:.0}", val),
+        Impact::Biodiversity => {
+            if is_small(val) {
+                "<1".into()
+            } else {
+                format!("{:.0}", val)
+            }
+        }
         Impact::Energy => {
             let val = val * 1e-9;
             if is_small(val) {
@@ -197,7 +238,7 @@ pub fn format_impact(impact: Impact, val: f32, available_resources: ResourceMap)
             } else {
                 format!("{:.1}TWh", val * 1e-9)
             }
-        },
+        }
         Impact::Fuel => {
             let val = val * 1e-9;
             if is_small(val) {
@@ -205,7 +246,7 @@ pub fn format_impact(impact: Impact, val: f32, available_resources: ResourceMap)
             } else {
                 format!("{:.1}TWh", val * 1e-9)
             }
-        },
+        }
         Impact::Electricity => {
             let val = val * 1e-9;
             if is_small(val) {
