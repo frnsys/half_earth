@@ -307,6 +307,9 @@ pub fn WorldEvents() -> impl IntoView {
                             EngineUpdate::Project { id } => {
                                 Some(id)
                             }
+                            EngineUpdate::Policy { id } => {
+                                Some(id)
+                            }
                             _ => None,
                         });
 

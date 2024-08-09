@@ -214,8 +214,8 @@ impl State {
         updates
     }
 
-    fn is_planning_year(&self) -> bool {
-        self.world.year + 1 % 5 == 0
+    pub fn is_planning_year(&self) -> bool {
+        self.world.year % 5 == 0
     }
 
     pub fn apply_effects(
