@@ -1,0 +1,13 @@
+[package]
+name = "sharing"
+version = "1.0.0"
+description = "Generate game-end sharing images."
+authors = ["Francis Tseng"]
+edition = "2021"
+
+[dependencies]
+hes-engine = { path = "../../hes-engine" }
+image = { version = "0.25.2" }
+textwrap = { version = "0.16.1" }
+imageproc = { version = "0.25.0" }
+ab_glyph = { version = "0.2.28" }

@@ -55,6 +55,8 @@ If debugging the game there are a few options you can pass as URL parameters whi
 - `skip-tutorial`: Skip the tutorial.
 - `fast-years`: Speed up years in the world events phase.
 - `translate`: Extract translation strings and update the translation mappings from the source CSVs.
+- `surfaces`: Generate biome surface textures and regional climates.
+- `sharing`: Generate sharing images.
 
 
 ## Running

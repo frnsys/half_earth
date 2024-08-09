@@ -2017,7 +2017,6 @@ dependencies = [
 name = "hes-game"
 version = "1.0.0"
 dependencies = [
- "ab_glyph",
  "anyhow",
  "axum",
  "base64 0.22.1",
@@ -2033,8 +2032,6 @@ dependencies = [
  "gloo-utils",
  "hes-engine",
  "http 1.1.0",
- "image 0.25.2",
- "imageproc",
  "js-sys",
  "leptos",
  "leptos-use",
@@ -2052,7 +2049,6 @@ dependencies = [
  "serde-wasm-bindgen",
  "serde_json",
  "strum",
- "textwrap 0.16.1",
  "tokio",
  "tower",
  "tower-http",
@@ -4661,6 +4657,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
 dependencies = [
  "lazy_static",
+]
+
+[[package]]
+name = "sharing"
+version = "1.0.0"
+dependencies = [
+ "ab_glyph",
+ "hes-engine",
+ "image 0.25.2",
+ "imageproc",
+ "textwrap 0.16.1",
 ]
 
 [[package]]

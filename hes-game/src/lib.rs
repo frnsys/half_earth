@@ -19,9 +19,6 @@ pub use eval::Badge;
 pub use vars::Var;
 pub use views::LOCALES;
 
-#[cfg(feature = "server")]
-mod server;
-
 use app::Root;
 
 use leptos::*;

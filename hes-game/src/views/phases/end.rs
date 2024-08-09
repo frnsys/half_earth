@@ -10,15 +10,6 @@ use crate::{
 };
 use hes_engine::{EventPhase, State};
 
-#[server(prefix = "/compute", endpoint = "image")]
-pub async fn generate_image(
-    summary: Summary,
-) -> Result<String, ServerFnError> {
-    let image =
-        crate::server::sharing::generate_image(&summary);
-    Ok(image)
-}
-
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
     let events = create_rw_signal(vec![]);
@@ -46,8 +37,9 @@ pub fn End(lose: bool) -> impl IntoView {
     let share_image = create_rw_signal(String::new());
     spawn_local(async move {
         let summary = with!(|game| summarize(&game, !lose));
-        let img = generate_image(summary).await.unwrap();
-        share_image.set(img);
+        // TODO
+        // let img = generate_image(summary).await.unwrap();
+        // share_image.set(img);
     });
 
     let (show_start, set_show_start) = create_signal(false);
