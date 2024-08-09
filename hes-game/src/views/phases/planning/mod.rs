@@ -14,7 +14,7 @@ use crate::{
     audio,
     debug::get_debug_opts,
     memo,
-    state::{StateExt, Tutorial, UIState},
+    state::{Settings, StateExt, Tutorial, UIState},
     t,
     views::{hud::Hud, Events},
 };
@@ -135,6 +135,13 @@ pub fn Planning() -> impl IntoView {
             game.update_untracked(|game| {
                 if game.flags.contains(&Flag::SkipTutorial) {
                     ui.tutorial = Tutorial::Ready;
+                    let (_, settings) = Settings::rw();
+                    settings.update(|state| {
+                        state.tutorial = Tutorial::Ready;
+                        if state.runs_played == 0 {
+                            state.runs_played = 1;
+                        }
+                    });
                 } else if game
                     .flags
                     .contains(&Flag::RepeatTutorial)
@@ -163,6 +170,15 @@ pub fn Planning() -> impl IntoView {
             };
             if should_advance {
                 ui.tutorial.advance();
+                if ui.tutorial == Tutorial::Ready {
+                    let (_, settings) = Settings::rw();
+                    settings.update(|state| {
+                        state.tutorial = Tutorial::Ready;
+                        if state.runs_played == 0 {
+                            state.runs_played = 1;
+                        }
+                    });
+                }
             }
         });
     };

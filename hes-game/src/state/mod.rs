@@ -70,7 +70,6 @@ pub fn new_game(world: World) -> (State, UIState) {
     let runs = settings.with_untracked(|s| s.runs_played);
     ui_state.start_year = game.world.year;
     ui_state.tutorial = settings.with_untracked(|s| s.tutorial);
-
     game.runs = runs;
 
     // Set all starting projects/processes as "viewed"
@@ -130,14 +129,15 @@ pub fn save(game: &State, ui: &UIState) {
 }
 
 pub fn has_save() -> bool {
-    tracing::debug!("Checking saved game...");
     match read_save() {
         Ok(Some(_)) => true,
         Ok(None) => false,
         Err(_) => {
             // May mean something about the serialization
             // structure changed, so clear to avoid a crash.
-            tracing::debug!("Failed to deserialize save, clearing.");
+            tracing::debug!(
+                "Failed to deserialize save, clearing."
+            );
             clear_save();
             false
         }
