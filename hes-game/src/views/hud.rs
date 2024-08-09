@@ -63,7 +63,7 @@ pub fn Hud() -> impl IntoView {
     let warming_tip = move || {
         tip(
             icons::WARMING,
-            t!(r#"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>"#, anomaly: temperature.get()),
+            t!(r#"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class="tip-goal">Your goal is to get this below 1°C.</b>"#, anomaly: temperature.get().round_to(2)),
         )
     };
 
