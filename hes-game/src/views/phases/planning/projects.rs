@@ -47,13 +47,14 @@ pub fn Projects(
                 .filter(|p| {
                     p.kind == *kind && (!p.locked || debug.show_all_projects)
 
-                // Filter out finished projects
-                && p.status != Status::Finished
+                // Filter out finished projects,
+                // but show them if they have upgrades
+                && (p.status != Status::Finished || !p.upgrades.is_empty())
 
                 // Filter out finished policies
                 // but only ones added before
                 // this planning session
-                && (p.status != Status::Active || plan_changes.contains_key(&p.id))
+                && (p.status != Status::Active || plan_changes.contains_key(&p.id) || !p.upgrades.is_empty())
 
                 // Filter out projects that are mutually exclusive
                 // with active projects
