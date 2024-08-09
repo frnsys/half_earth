@@ -34,7 +34,8 @@ pub fn MiniCard(
     };
     let collapse = move |ev: MouseEvent| {
         let target: web_sys::HtmlElement = event_target(&ev);
-        if target.class_name() == "cards" {
+        let class = target.class_name();
+        if class == "cards" || class == "minicard--expanded" {
             set_is_expanded.set(false);
         }
     };
