@@ -12769,7 +12769,7 @@
                                 "id": 3
                             },
                             "speaker": "The Doctor",
-                            "text": "Not only that, they also found that pollution is placing communities at heightened risk of kidney damage, as well as diseases such as cancer, diabetes, Alzheimer\u2019s and Parkinson\u2019s. "
+                            "text": "Not only that, they also found that pollution is placing communities at heightened risk of kidney damage, as well as diseases such as cancer, diabetes, Alzheimer\u2019s and Parkinson\u2019s."
                         },
                         {
                             "id": 2,
@@ -13636,24 +13636,6 @@
                             "next": null,
                             "speaker": "The Utopian",
                             "text": "What a weight lifted of our shoulders though, eh?"
-                        },
-                        {
-                            "id": 4,
-                            "next": null,
-                            "speaker": "Gossy",
-                            "text": ""
-                        },
-                        {
-                            "id": 5,
-                            "next": null,
-                            "speaker": "Gossy",
-                            "text": ""
-                        },
-                        {
-                            "id": 6,
-                            "next": [],
-                            "speaker": "Gossy",
-                            "text": "dd"
                         }
                     ]
                 },
@@ -14555,7 +14537,7 @@
                                 {
                                     "id": 0,
                                     "next_line": null,
-                                    "text": "Increase FEMA budget."
+                                    "text": "Increase the disaster relief budget."
                                 },
                                 {
                                     "id": 1,
@@ -14836,7 +14818,7 @@
                             "id": 0,
                             "next": null,
                             "speaker": "The Geoengineer",
-                            "text": "Did you know there is evidence that the Sinai once was green \u2013 as recently as 4,500 to 8,000 years ago. Cave paintings found there depict trees and plants! "
+                            "text": "Did you know there is evidence that the Sinai once was green \u2013 as recently as 4,500 to 8,000 years ago. Cave paintings found there depict trees and plants!"
                         }
                     ]
                 },
@@ -15063,7 +15045,7 @@
                             "id": 0,
                             "next": null,
                             "speaker": "The Geoengineer",
-                            "text": " Our inspiration for the second moon is a French artist, who imagined a necklace of mirrors circling the Earth to illuminate the nighttime streets of Paris with reflected sunshine."
+                            "text": "Our inspiration for the second moon is a French artist, who imagined a necklace of mirrors circling the Earth to illuminate the nighttime streets of Paris with reflected sunshine."
                         }
                     ]
                 },
@@ -15619,7 +15601,7 @@
                                 "id": 1
                             },
                             "speaker": "Gossy",
-                            "text": "National parks are beautiful, but are taking up land a lot of land these days. "
+                            "text": "National parks are beautiful, but are taking up land a lot of land these days."
                         },
                         {
                             "id": 1,
@@ -16038,7 +16020,7 @@
                             "id": 1,
                             "next": null,
                             "speaker": "The Economist",
-                            "text": "Indigenous peoples have proven effective in blockading new pipelines and projects, lowering production. "
+                            "text": "Indigenous peoples have proven effective in blockading new pipelines and projects, lowering production."
                         }
                     ]
                 },
@@ -16046,7 +16028,7 @@
                     "data": {
                         "File": "1646524684.738316.png"
                     },
-                    "attribution": "Senado Federal, CC BY 2.0 "
+                    "attribution": "Senado Federal, CC BY 2.0"
                 }
             },
             "notes": ""
@@ -17170,7 +17152,7 @@
                     "data": {
                         "File": "1645736644.532036.png"
                     },
-                    "attribution": "IAEA Imagebank, CC BY-SA 2.0 "
+                    "attribution": "IAEA Imagebank, CC BY-SA 2.0"
                 }
             },
             "notes": "perhaps we should also lower inhabitability index? TV\nWould be nice to use the Sovocool equation for meltdowns. It should be based more on reactor numbers in absolute terms rather than percentage."
@@ -19691,7 +19673,7 @@
                                 "id": 1
                             },
                             "speaker": "The Doctor",
-                            "text": "What a tragedy. A hundred thousand people perished last week, most of them elderly. "
+                            "text": "What a tragedy. A hundred thousand people perished last week, most of them elderly."
                         },
                         {
                             "id": 1,
@@ -23723,7 +23705,7 @@
                     "data": {
                         "File": "1651503182.844638.png"
                     },
-                    "attribution": "CC BY-SA 3.0 IGO, Wikimedia Commons "
+                    "attribution": "CC BY-SA 3.0 IGO, Wikimedia Commons"
                 }
             },
             "notes": ""
@@ -24573,7 +24555,7 @@
                                 "id": 7
                             },
                             "speaker": "The Engineer",
-                            "text": " What's worse, we will risk major accidents if this continues."
+                            "text": "What's worse, we will risk major accidents if this continues."
                         },
                         {
                             "id": 3,
@@ -24605,7 +24587,7 @@
                             "id": 7,
                             "next": null,
                             "speaker": "The Ecologist",
-                            "text": "The acid eats away at concrete, causes 'forest death', and kills lakes. "
+                            "text": "The acid eats away at concrete, causes 'forest death', and kills lakes."
                         },
                         {
                             "id": 8,
@@ -24829,7 +24811,7 @@
                                 "id": 1
                             },
                             "speaker": "Gossy",
-                            "text": "But you can't leave, you're an important planning professional! "
+                            "text": "But you can't leave, you're an important planning professional!"
                         }
                     ]
                 },
@@ -24954,7 +24936,7 @@
                                 "id": 1
                             },
                             "speaker": "The Climatologist",
-                            "text": " Zero square kilometres of arctic sea ice."
+                            "text": "Zero square kilometres of arctic sea ice."
                         }
                     ]
                 },
@@ -25126,7 +25108,7 @@
                             "id": 3,
                             "next": null,
                             "speaker": "Gossy",
-                            "text": "This one was bad, but "
+                            "text": "This one was bad, but"
                         }
                     ]
                 },
@@ -25397,13 +25379,13 @@
                                 "id": 3
                             },
                             "speaker": "The Ecologist",
-                            "text": "By removing so many dams, rivers around the world have come back to life. "
+                            "text": "By removing so many dams, rivers around the world have come back to life."
                         },
                         {
                             "id": 1,
                             "next": null,
                             "speaker": "The Doctor",
-                            "text": "Cases of schistomiasis, caused by parasitic worms, have also fallen dramatically! "
+                            "text": "Cases of schistomiasis, caused by parasitic worms, have also fallen dramatically!"
                         },
                         {
                             "id": 2,
@@ -26157,7 +26139,7 @@
                                 "id": 3
                             },
                             "speaker": "The Doctor",
-                            "text": " Perhaps the compulsive dancing allows some relief from stress and grinding poverty."
+                            "text": "Perhaps the compulsive dancing allows some relief from stress and grinding poverty."
                         },
                         {
                             "id": 2,
@@ -26177,7 +26159,7 @@
                     "data": {
                         "File": "1645629214.674901.png"
                     },
-                    "attribution": "Pieter "
+                    "attribution": "Pieter"
                 }
             },
             "notes": "Maybe we should have a historian character?"
@@ -26877,7 +26859,7 @@
                     "data": {
                         "File": "1645730043.309456.png"
                     },
-                    "attribution": "Photo courtesy of Peter Buschmann, United States Forest Service, USDA. "
+                    "attribution": "Photo courtesy of Peter Buschmann, United States Forest Service, USDA."
                 }
             },
             "notes": "https://www.theguardian.com/australia-news/2020/jan/15/dinosaur-trees-firefighters-save-endangered-wollemi-pines-from-nsw-bushfires\n\nHow do we link this to a wildfire in Australia? TV\n\nUnfortunately we can't link it directly in that way, but I think it's fine if it just occurs randomly on its own - FT"
@@ -27087,7 +27069,7 @@
                                 "id": 2
                             },
                             "speaker": "Gossy",
-                            "text": "Well, the emergence of zoonotic diseases is closely related to ecological disturbance. "
+                            "text": "Well, the emergence of zoonotic diseases is closely related to ecological disturbance."
                         }
                     ]
                 },
@@ -27332,7 +27314,7 @@
                                 "id": 2
                             },
                             "speaker": "The Utopian",
-                            "text": "In 1816, a volcanic eruption cooled the global climate and caused widespread famine. The \"year without a summer\" inspired Mary Shelley's Frankenstein. "
+                            "text": "In 1816, a volcanic eruption cooled the global climate and caused widespread famine. The \"year without a summer\" inspired Mary Shelley's Frankenstein."
                         },
                         {
                             "id": 1,
@@ -27521,7 +27503,7 @@
                     "data": {
                         "File": "1645828852.647595.png"
                     },
-                    "attribution": "Charles J. Sharp, CC BY-SA 4.0 "
+                    "attribution": "Charles J. Sharp, CC BY-SA 4.0"
                 }
             },
             "notes": "Not sure how to design this--perhaps it happens if poverty in West Africa persists. TV"
@@ -27815,7 +27797,7 @@
                             "id": 1,
                             "next": null,
                             "speaker": "The Ecologist",
-                            "text": "It was as Rachel Carson foretold: 'on the mornings that had once throbbed with the dawn chorus of robins, catbirds, doves, jays, wrens, and scores of other bird voices there was now no sound; only silence lay over the fields and woods and marsh.' "
+                            "text": "It was as Rachel Carson foretold: 'on the mornings that had once throbbed with the dawn chorus of robins, catbirds, doves, jays, wrens, and scores of other bird voices there was now no sound; only silence lay over the fields and woods and marsh.'"
                         }
                     ]
                 },
@@ -27823,7 +27805,7 @@
                     "data": {
                         "File": "1645724556.589882.png"
                     },
-                    "attribution": "Filo g\u00e8n', CC BY-SA 4.0 "
+                    "attribution": "Filo g\u00e8n', CC BY-SA 4.0"
                 }
             },
             "notes": ""
@@ -27894,7 +27876,7 @@
                                 "id": 1
                             },
                             "speaker": "The Ecofeminist",
-                            "text": "As Donna Haraway once said, 'Tentacularity is about life lived along lines ... \u200anot at points, not in spheres.' "
+                            "text": "As Donna Haraway once said, 'Tentacularity is about life lived along lines ... \u200anot at points, not in spheres.'"
                         },
                         {
                             "id": 1,
@@ -28093,7 +28075,7 @@
                     "attribution": "CDC/Cynthia Goldsmith, Public domain"
                 }
             },
-            "notes": "Kills a billion. "
+            "notes": "Kills a billion."
         },
         {
             "name": "Processes Intro",
@@ -28263,7 +28245,7 @@
                             "id": 2,
                             "next": null,
                             "speaker": "Gossy",
-                            "text": "So don't be surprised if people "
+                            "text": "So don't be surprised if people"
                         },
                         {
                             "id": 3,
@@ -28313,7 +28295,7 @@
                                 {
                                     "id": 1,
                                     "next_line": 12,
-                                    "text": "Team up with a mental health startup to provide aid."
+                                    "text": "Team up with a mental health startup to provide teletherapy."
                                 }
                             ],
                             "speaker": "The Doctor",
@@ -29400,7 +29382,7 @@
                             "id": 1,
                             "next": null,
                             "speaker": "The Ecologist",
-                            "text": "But if your concern is feeding people, I suppose "
+                            "text": "But if your concern is feeding people, I suppose"
                         },
                         {
                             "id": 2,
@@ -29414,7 +29396,7 @@
                     "data": {
                         "File": "1645631123.140018.png"
                     },
-                    "attribution": "Department of Foreign Affairs and Trade, CC BY 2.0 "
+                    "attribution": "Department of Foreign Affairs and Trade, CC BY 2.0"
                 }
             },
             "notes": "fish makes up 17% of animal protein, not calories. https://www.fao.org/3/ca9229en/ca9229en.pdf TV"
@@ -30161,7 +30143,7 @@
                             "id": 2,
                             "next": null,
                             "speaker": "Gossy",
-                            "text": "But first let's visit parliament and get you acquainted with the people there. "
+                            "text": "But first let's visit parliament and get you acquainted with the people there."
                         },
                         {
                             "id": 3,
@@ -30608,7 +30590,7 @@
                                 "id": 3
                             },
                             "speaker": "Gossy",
-                            "text": "People really like living in McMansions, I guess. "
+                            "text": "People really like living in McMansions, I guess."
                         },
                         {
                             "id": 1,
@@ -30758,7 +30740,7 @@
                             "id": 3,
                             "next": null,
                             "speaker": "The Ecologist",
-                            "text": "Even if some people care little about the oceans, they'll be annoyed when their beach holiday is ruined. "
+                            "text": "Even if some people care little about the oceans, they'll be annoyed when their beach holiday is ruined."
                         }
                     ]
                 },
@@ -31227,7 +31209,7 @@
                     "data": {
                         "File": "1645835672.941156.png"
                     },
-                    "attribution": "Boaworm, CC BY 3.0 "
+                    "attribution": "Boaworm, CC BY 3.0"
                 }
             },
             "notes": ""
@@ -31566,7 +31548,7 @@
                             "id": 1,
                             "next": [],
                             "speaker": "The Ecologist",
-                            "text": "Because the boreal forest is not managed as intensely as other forests, the trees have been able to grow undisturbed, amassing large amounts of carbon in their roots and trunks. Twenty percent of the carbon held in forests in the world is in the boreal forest. "
+                            "text": "Because the boreal forest is not managed as intensely as other forests, the trees have been able to grow undisturbed, amassing large amounts of carbon in their roots and trunks. Twenty percent of the carbon held in forests in the world is in the boreal forest."
                         },
                         {
                             "id": 2,
@@ -31574,7 +31556,7 @@
                                 "id": 6
                             },
                             "speaker": "The Ecologist",
-                            "text": "Because the boreal forest is not managed as intensely as other forests, the trees have been able to grow undisturbed, amassing large amounts of carbon in their roots and trunks. Twenty percent of the carbon held in forests in the world is in the boreal forest. "
+                            "text": "Because the boreal forest is not managed as intensely as other forests, the trees have been able to grow undisturbed, amassing large amounts of carbon in their roots and trunks. Twenty percent of the carbon held in forests in the world is in the boreal forest."
                         },
                         {
                             "id": 3,
@@ -31874,7 +31856,7 @@
                                 "id": 2
                             },
                             "speaker": "The Ecologist",
-                            "text": "We call the breed 'Tauros' because they are not true aurochs, but pretty close. "
+                            "text": "We call the breed 'Tauros' because they are not true aurochs, but pretty close."
                         },
                         {
                             "id": 2,
@@ -32097,7 +32079,7 @@
                             "id": 2,
                             "next": null,
                             "speaker": "The Citizen",
-                            "text": "I hope to "
+                            "text": "I hope to"
                         },
                         {
                             "id": 3,
@@ -33282,7 +33264,7 @@
                                 "id": 2
                             },
                             "speaker": "The Citizen",
-                            "text": "What a disaster! All those people had to leave their homes and try to make a new life in the cooler, more stable parts of the world. "
+                            "text": "What a disaster! All those people had to leave their homes and try to make a new life in the cooler, more stable parts of the world."
                         },
                         {
                             "id": 1,
@@ -33631,7 +33613,7 @@
                     "data": {
                         "File": "1646251638.60377.png"
                     },
-                    "attribution": "Kumiko Nakashima, CC BY-SA 3.0 "
+                    "attribution": "Kumiko Nakashima, CC BY-SA 3.0"
                 }
             },
             "notes": "If there is no restrictions on cars, re-ruralization\n\nnot much, perhaps discontent increases\n\nGood mid-late game world-building event"
@@ -33814,7 +33796,7 @@
                                 "id": 2
                             },
                             "speaker": "The Ecofeminist",
-                            "text": "We can't build homes on top of toxic land fills and near nuclear power plants."
+                            "text": "We can't build homes on top of toxic land fills or near nuclear power plants."
                         },
                         {
                             "id": 1,
@@ -34895,7 +34877,7 @@
                     "data": {
                         "File": "1645828671.745603.png"
                     },
-                    "attribution": "Andreas Weith, CC BY-SA 4.0 "
+                    "attribution": "Andreas Weith, CC BY-SA 4.0"
                 }
             },
             "notes": "Newton, Robert, Stephanie Pfirman, L. Bruno Tremblay, and Patricia DeRepentigny. \"Defining the \u201cice shed\u201d of the Arctic Ocean's Last Ice Area and its future evolution.\" Earth's Future 9, no. 9 (2021): e2021EF001988.\n\nhttps://www.livescience.com/arctic-sea-ice-polar-bear-extinction-warning"
@@ -35489,7 +35471,7 @@
                     },
                     "attribution": "Ijas muhammod, CC BY-SA 4.0, via Wikimedia Commons"
                 },
-                "description": "Socialism is about providing not just bread and roses. Perhaps also BVLGARI and Ferraris for all. This policy will raise contentedness, but at a great environmental cost. ",
+                "description": "Socialism is about providing not just bread and roses. Perhaps also BVLGARI and Ferraris for all. This policy will raise contentedness, but at a great environmental cost.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -35759,7 +35741,7 @@
                                 "id": 6,
                                 "next": null,
                                 "speaker": "Gossy",
-                                "text": "In the process our robotic scout probes explored Europa "
+                                "text": "In the process our robotic scout probes explored Europa"
                             }
                         ]
                     },
@@ -35856,7 +35838,7 @@
                     },
                     "attribution": "Marko Ahtisaari, CC BY 2.0"
                 },
-                "description": "There is no official money in the post-revolutionary society, but libertarians still use crypto on the black market. Take thousands of these cryptographic-solving machines off the grid to save some electricity. ",
+                "description": "There is no official money in the post-revolutionary society, but libertarians still use crypto on the black market. Take thousands of these cryptographic-solving machines off the grid to save some electricity.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -35950,9 +35932,9 @@
                     "data": {
                         "File": "1646410640.432486.png"
                     },
-                    "attribution": "Beyond My Ken, CC BY-SA 4.0 "
+                    "attribution": "Beyond My Ken, CC BY-SA 4.0"
                 },
-                "description": "Build a global network of sewage treatment plants. This will clean up rivers and lakes, produce organic fertilizer, restore habitats, and improve health of local inhabitants.  ",
+                "description": "Build a global network of sewage treatment plants. This will clean up rivers and lakes, produce organic fertilizer, restore habitats, and improve health of local inhabitants.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -36469,7 +36451,7 @@
                     },
                     "attribution": "Unknown author, Public domain, via Wikimedia Commons"
                 },
-                "description": "New curriculum includes a vast literacy campaign to empower the working class and peasants of the global South. The works of Frantz Fanon, Paulo Freire, Audre Lorde will find a broad audience. This program will improve living conditions in the global South as well as your relationship with the Fanonist. ",
+                "description": "New curriculum includes a vast literacy campaign to empower the working class and peasants of the global South. The works of Frantz Fanon, Paulo Freire, Audre Lorde will find a broad audience. This program will improve living conditions in the global South as well as your relationship with the Fanonist.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -36545,7 +36527,7 @@
                     },
                     "attribution": "Ijas muhammod, CC BY-SA 4.0, via Wikimedia Commons"
                 },
-                "description": "Create a new curriculum that will teach students creative skills such as poetry, traditional weaving, and linear programming -- skills that will make them successful 'social engineers' who will think about future utopian possibilities. They will read classics by Ursula Le Guin, William Morris, Thomas More, and Otto Neurath.  ",
+                "description": "Create a new curriculum that will teach students creative skills such as poetry, traditional weaving, and linear programming -- skills that will make them successful 'social engineers' who will think about future utopian possibilities. They will read classics by Ursula Le Guin, William Morris, Thomas More, and Otto Neurath.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -36641,13 +36623,13 @@
                                     "id": 1
                                 },
                                 "speaker": "The Consumerist",
-                                "text": "Education is about training people for jobs that pay well. "
+                                "text": "Education is about training people for jobs that pay well."
                             },
                             {
                                 "id": 1,
                                 "next": null,
                                 "speaker": "The Consumerist",
-                                "text": "These jobs might not be fun, but you can afford that fancy electric car or a trip to Cuba (for the beach, not the planning bureau). "
+                                "text": "These jobs might not be fun, but you can afford that fancy electric car or a trip to Cuba (for the beach, not the planning bureau)."
                             }
                         ]
                     }
@@ -36909,7 +36891,7 @@
                     },
                     "attribution": "'Curiosity' ca. 1660\u201362 by Gerard ter Borch the Younger, The MET, Public Domain"
                 },
-                "description": "This new curriculum will teach students to think critically about the supposed objectivity of science or the naturalness of patriarchy. Students will read classics such as the 'Cyborg Manifesto', the 'Sexual Politics of Meat', the 'Parable of the Sower'. This policy will improve your relationship with the Ecofeminist. ",
+                "description": "This new curriculum will teach students to think critically about the supposed objectivity of science or the naturalness of patriarchy. Students will read classics such as the 'Cyborg Manifesto', the 'Sexual Politics of Meat', the 'Parable of the Sower'. This policy will improve your relationship with the Ecofeminist.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -36984,7 +36966,7 @@
                     "data": {
                         "File": "1651672889.876582.png"
                     },
-                    "attribution": "Team3LIUCGloria, CC BY-SA 4.0 "
+                    "attribution": "Team3LIUCGloria, CC BY-SA 4.0"
                 },
                 "description": "Build a self-sustainable underwater habitat for long-term human, plant and animal habitation.",
                 "outcomes": [
@@ -37075,7 +37057,7 @@
                     },
                     "attribution": "\"Phage\" by TheSimple1 is marked with CC BY-NC-ND 2.0"
                 },
-                "description": "Research the use of viruses ('phages') to kill bacteria. See this as a global insurance policy against the eventual obsolescence of antibiotics due to antimicrobial resistance (AMR). Phages might not be as effective as antibiotics, but they are better than nothing. ",
+                "description": "Research the use of viruses ('phages') to kill bacteria. See this as a global insurance policy against the eventual obsolescence of antibiotics due to antimicrobial resistance (AMR). Phages might not be as effective as antibiotics, but they are better than nothing.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -37350,7 +37332,7 @@
                     },
                     "attribution": "Paramanu Sarkar, CC BY-SA 4.0"
                 },
-                "description": "Tritium is a rare fuel used in fusion reactors, but it is plentiful on the moon. ",
+                "description": "Tritium is a rare fuel used in fusion reactors, but it is plentiful on the moon.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -37459,7 +37441,7 @@
                     },
                     "attribution": "Homes, Towns and Countryside by GeoBlogs, via Openverse, CC BY-NC 2.0."
                 },
-                "description": "Achieve a goal set out in the Communist Manifesto: the 'gradual abolition of all the distinction between town and country by a more equable distribution of the populace over the country.' Bring culture into the countryside to combat the 'idiocy' of rural life. Bring farms and gardens into the city, so people can discover their green thumbs. ",
+                "description": "Achieve a goal set out in the Communist Manifesto: the 'gradual abolition of all the distinction between town and country by a more equable distribution of the populace over the country.' Bring culture into the countryside to combat the 'idiocy' of rural life. Bring farms and gardens into the city, so people can discover their green thumbs.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -37552,7 +37534,7 @@
                     },
                     "attribution": ""
                 },
-                "description": "Mass electrify services and devices that typically rely on fuels and not electricity, such as transportation and major industrial processes (e.g. steel and concrete). ",
+                "description": "Mass electrify services and devices that typically rely on fuels and not electricity, such as transportation and major industrial processes (e.g. steel and concrete).",
                 "outcomes": [
                     {
                         "root": 0,
@@ -38405,7 +38387,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Animal Liberationist",
-                                "text": "The new curriculum instills children with a sense of compassion for all human and non-human animals. "
+                                "text": "The new curriculum instills children with a sense of compassion for all human and non-human animals."
                             }
                         ]
                     }
@@ -38878,9 +38860,9 @@
                     "data": {
                         "File": "1645617686.42098.png"
                     },
-                    "attribution": "frank wouters from antwerpen, belgium, CC BY 2.0 "
+                    "attribution": "frank wouters from antwerpen, belgium, CC BY 2.0"
                 },
-                "description": "Animals in zoos suffer high mortality, depression, stress, and injuries from patrons. Veterinarians speak of 'zoochosis', where animals pace or sway repetitively. This policy will release animals back into the wild when possible, and place others in sanctuaries. ",
+                "description": "Animals in zoos suffer high mortality, depression, stress, and injuries from patrons. Veterinarians speak of 'zoochosis', where animals pace or sway repetitively. This policy will release animals back into the wild when possible, and place others in sanctuaries.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -38986,7 +38968,7 @@
                     },
                     "attribution": "\"Peace\" by Muffet is licensed under CC BY-NC-SA 2.0"
                 },
-                "description": "Some say the end point of animal liberation is the ending of all suffering, both amongst farm animals and wild ones. This research project will require planned habitats, cross-species immunocontraception, swimming nanorobots, gene editing, and super computers to manage a global ecosystem free from pain. ",
+                "description": "Some say the end point of animal liberation is the ending of all suffering, both amongst farm animals and wild ones. This research project will require planned habitats, cross-species immunocontraception, swimming nanorobots, gene editing, and super computers to manage a global ecosystem free from pain.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -39151,7 +39133,7 @@
                     "data": {
                         "File": "1648178585.643725.png"
                     },
-                    "attribution": "Tokyo Street Car & Bus - 1957 Japan by Vintage Japan-esque, Openverse,  CC BY-NC-SA 2.0 "
+                    "attribution": "Tokyo Street Car & Bus - 1957 Japan by Vintage Japan-esque, Openverse,  CC BY-NC-SA 2.0"
                 },
                 "description": "A global effort to develop new comprehensive public transit networks and upgrade ailing existing networks.",
                 "outcomes": [
@@ -39272,7 +39254,7 @@
                     },
                     "attribution": "\"Undercover Investigation at Manitoba Pork Factory Farm\" by Mercy For Animals Canada is licensed under CC BY 2.0."
                 },
-                "description": "Slaughterhouses are still brutal, but for now the kill lines will be slower and some of the worst practices have been banned, such as de-beaking, tail docking, and horn bud burning, as well as feeding animals feces, carcasses, candy, and garbage.\n\n",
+                "description": "Slaughterhouses are still brutal, but for now the kill lines will be slower and some of the worst practices have been banned, such as de-beaking, tail docking, and horn bud burning, as well as feeding animals feces, carcasses, candy, and garbage.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -39805,7 +39787,7 @@
                                 "id": 2,
                                 "next": null,
                                 "speaker": "The Authoritarian",
-                                "text": "Don't expect me to help you when you're in a fix. "
+                                "text": "Don't expect me to help you when you're in a fix."
                             }
                         ]
                     }
@@ -39868,7 +39850,7 @@
                     },
                     "attribution": "Staff Sgt. Samuel Bendet, U.S. Air Force, Public domain"
                 },
-                "description": "Carry out 'psychological operations' to increase your political support and discredit your opponents. This can take the form of propaganda, influencing the media, staging events to create the appearance of popular support. ",
+                "description": "Carry out 'psychological operations' to increase your political support and discredit your opponents. This can take the form of propaganda, influencing the media, staging events to create the appearance of popular support.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -40255,7 +40237,7 @@
                     "data": {
                         "File": "1645914884.59607.png"
                     },
-                    "attribution": "NatureDan, CC BY-SA 3.0 "
+                    "attribution": "NatureDan, CC BY-SA 3.0"
                 },
                 "description": "A perennial cropping system featuring multiple layers of trees and other perennial crops, with high biosequestration impacts and food production.",
                 "outcomes": [
@@ -40268,7 +40250,7 @@
                                     "id": 2
                                 },
                                 "speaker": "The Ecofeminist",
-                                "text": "With the restoration of the Satoyama forests, students and senior citizens work with farmers to plant rice and clear irrigation channels. "
+                                "text": "With the restoration of the Satoyama forests, students and senior citizens work with farmers to plant rice and clear irrigation channels."
                             },
                             {
                                 "id": 1,
@@ -40469,7 +40451,7 @@
                     },
                     "attribution": "U.S. Fish and Wildlife Service Headquarters, Public domain"
                 },
-                "description": "Protect nature preserves with a small army of heavily armed park rangers. Their shoot-to-kill policy against poachers has made conservatism unpopular, especially in the Global South. ",
+                "description": "Protect nature preserves with a small army of heavily armed park rangers. Their shoot-to-kill policy against poachers has made conservatism unpopular, especially in the Global South.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -40666,7 +40648,7 @@
                     "data": {
                         "File": "1645618834.002155.png"
                     },
-                    "attribution": "Solomon203, CC BY-SA 4.0 "
+                    "attribution": "Solomon203, CC BY-SA 4.0"
                 },
                 "description": "Limit per-capita energy consumption to a level supportive of a good quality of life, though perhaps far lower than wealthier regions are used to.",
                 "outcomes": [
@@ -40898,7 +40880,7 @@
                     },
                     "attribution": "biodiversity heritage library, public domain."
                 },
-                "description": "A controversial technology among ecologists. While attempts to bring back mammoths are likely more crowd pleasers than real science, recently extinct animals might be usefully restored. ",
+                "description": "A controversial technology among ecologists. While attempts to bring back mammoths are likely more crowd pleasers than real science, recently extinct animals might be usefully restored.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -41474,7 +41456,7 @@
                                     "id": 1
                                 },
                                 "speaker": "The Consumerist",
-                                "text": "I want my fresh local swordfish, tuna, lobster and crabmeat! "
+                                "text": "I want my fresh local swordfish, tuna, lobster and crabmeat!"
                             },
                             {
                                 "id": 1,
@@ -41694,7 +41676,7 @@
                     "data": {
                         "File": "1651678814.447268.png"
                     },
-                    "attribution": "GMH official, CC BY-SA 3.0 "
+                    "attribution": "GMH official, CC BY-SA 3.0"
                 },
                 "description": "Improved efficiency compared to a blast furnace. Allows steel to be made from 100% scrap material rather than virgin steelmaking from ores, which is less energy intensive.",
                 "outcomes": [
@@ -42415,7 +42397,7 @@
                                     "id": 2
                                 },
                                 "speaker": "The Engineer",
-                                "text": "Did you know that green roofs can reflect up to 80% of the solar energy hitting it, back into space?? "
+                                "text": "Did you know that green roofs can reflect up to 80% of the solar energy hitting it, back into space??"
                             },
                             {
                                 "id": 1,
@@ -42745,7 +42727,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Malthusian",
-                                "text": " I agree, the battle to feed all of humanity is over."
+                                "text": "I agree, the battle to feed all of humanity is over."
                             }
                         ]
                     }
@@ -42813,7 +42795,7 @@
                     },
                     "attribution": "\"Ruth Wilson Gilmore talking prison abolition at UC Merced #raceandjusticemerced\" by tanyaboza is marked with CC BY 2.0."
                 },
-                "description": "Instead of prison, institute programs that will target the causes of crime by addressing poverty and mental health issues. Decriminalize sex work, drugs, and other offences that lead to felonies. Restorative justice and graduated re-integration will rehabilitate criminals and reconcile communities. ",
+                "description": "Instead of prison, institute programs that will target the causes of crime by addressing poverty and mental health issues. Decriminalize sex work, drugs, and other offences that lead to felonies. Restorative justice and graduated re-integration will rehabilitate criminals and reconcile communities.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -42957,7 +42939,7 @@
                     }
                 ]
             },
-            "notes": "reduces steel demand significantly, but increases demand on tree plantations. Not great if you are doing BECCS, but easy if you have banned meat\n\n\ngreat study:\nChurkina, Galina, Alan Organschi, Christopher PO Reyer, Andrew Ruff, Kira Vinke, Zhu Liu, Barbara K. Reck, T. E. Graedel, and Hans Joachim Schellnhuber. \"Buildings as a global carbon sink.\" Nature Sustainability 3, no. 4 (2020): 269-276.\n\nChurkina basically has four scenarios, including one with 90% of buildings made of wood rather than 99.5% steel and concrete. Significant co2 sequestration (2-20 Gt C) but needs about 40% of current wood production. "
+            "notes": "reduces steel demand significantly, but increases demand on tree plantations. Not great if you are doing BECCS, but easy if you have banned meat\n\n\ngreat study:\nChurkina, Galina, Alan Organschi, Christopher PO Reyer, Andrew Ruff, Kira Vinke, Zhu Liu, Barbara K. Reck, T. E. Graedel, and Hans Joachim Schellnhuber. \"Buildings as a global carbon sink.\" Nature Sustainability 3, no. 4 (2020): 269-276.\n\nChurkina basically has four scenarios, including one with 90% of buildings made of wood rather than 99.5% steel and concrete. Significant co2 sequestration (2-20 Gt C) but needs about 40% of current wood production."
         },
         {
             "id": "42371710-7e7c-489f-aa25-16e60b7d3981",
@@ -43193,7 +43175,7 @@
                                     "id": 1
                                 },
                                 "speaker": "The Citizen",
-                                "text": "Socialism is for the working class, but it isn't about work. "
+                                "text": "Socialism is for the working class, but it isn't about work."
                             },
                             {
                                 "id": 1,
@@ -43502,7 +43484,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Climatologist",
-                                "text": "There has been an increase in acid rain. Delicately synchronized ecologies have been disturbed too. "
+                                "text": "There has been an increase in acid rain. Delicately synchronized ecologies have been disturbed too."
                             }
                         ]
                     },
@@ -43513,7 +43495,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Climatologist",
-                                "text": "Some areas have experienced cooling, but without significant emissions abatement, SRM needs to be ramped up to keep pace. "
+                                "text": "Some areas have experienced cooling, but without significant emissions abatement, SRM needs to be ramped up to keep pace."
                             }
                         ]
                     }
@@ -43692,7 +43674,7 @@
                     },
                     "attribution": "Abandoned Car by Kool Cats Photography over 14 Million Views, via Openverse, CC BY-NC 2.0."
                 },
-                "description": "Ban private vehicles first in urban areas then everywhere. Tear up highways and transform cites, while saving lives, fuel and steel. This is a hard policy to push through, but the gains are immense. ",
+                "description": "Ban private vehicles first in urban areas then everywhere. Tear up highways and transform cites, while saving lives, fuel and steel. This is a hard policy to push through, but the gains are immense.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -43717,7 +43699,7 @@
                                 "id": 2,
                                 "next": null,
                                 "speaker": "The Doctor",
-                                "text": "...let alone "
+                                "text": "...let alone"
                             },
                             {
                                 "id": 3,
@@ -44092,7 +44074,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Engineer",
-                                "text": "We can now deploy fast-breeder reactors, which will help alleviate uranium shortages by burning spent nuclear waste. "
+                                "text": "We can now deploy fast-breeder reactors, which will help alleviate uranium shortages by burning spent nuclear waste."
                             }
                         ]
                     },
@@ -44553,7 +44535,7 @@
                     }
                 ]
             },
-            "notes": "I have no idea what this electricity usage should be - FT\nI think in terms of the game play, the three cards (bete, stakhanovites, and this) should be equal in terms of 20% effects on time, energy use, etc. "
+            "notes": "I have no idea what this electricity usage should be - FT\nI think in terms of the game play, the three cards (bete, stakhanovites, and this) should be equal in terms of 20% effects on time, energy use, etc."
         },
         {
             "id": "b8b6c31d-20c2-48ec-b59a-e1212a3fc0f0",
@@ -45024,7 +45006,7 @@
                                     "id": 4
                                 },
                                 "speaker": "The Fanonist",
-                                "text": "How cruel of you to forever condemn us to lives of poverty while others continue to live in absurd excess. "
+                                "text": "How cruel of you to forever condemn us to lives of poverty while others continue to live in absurd excess."
                             },
                             {
                                 "id": 1,
@@ -45494,7 +45476,7 @@
                                 "id": 2,
                                 "next": null,
                                 "speaker": "The Consumerist",
-                                "text": "Surely there is a way "
+                                "text": "Surely there is a way"
                             },
                             {
                                 "id": 3,
@@ -45570,7 +45552,7 @@
                     "data": {
                         "File": "1651671929.007706.png"
                     },
-                    "attribution": "My electric Car! by TonyHall via Openverse, CC BY 2.0 "
+                    "attribution": "My electric Car! by TonyHall via Openverse, CC BY 2.0"
                 },
                 "description": "Phase out cars with internal combustion engines and mandate a transition to electric-motored vehicles.",
                 "outcomes": [
@@ -45678,7 +45660,7 @@
                     },
                     "attribution": ""
                 },
-                "description": "Ban the breeding, capture, and sale of wildlife. This will help biodiversity and reduce the risk of new zoonoses. This policy is best done by simultaneously improving \n living standards in the Global South.",
+                "description": "Ban the breeding, capture, and sale of wildlife. This will help biodiversity and reduce the risk of new zoonoses. This policy is best done by simultaneously improving\n living standards in the Global South.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -45773,7 +45755,7 @@
                     "data": {
                         "File": "1651671648.102341.png"
                     },
-                    "attribution": " Left: Cannabis sativa plant (4).JPG,  via Wiki Commons, Attribution 3.0 Unported; Right: Hempcrete wall at CDL Green Gallery by Jnzl's Photos, via Openverse, CC BY 2.0 "
+                    "attribution": " Left: Cannabis sativa plant (4).JPG,  via Wiki Commons, Attribution 3.0 Unported; Right: Hempcrete wall at CDL Green Gallery by Jnzl's Photos, via Openverse, CC BY 2.0"
                 },
                 "description": "Scale up concrete production from hemp, locking carbon in building materials.",
                 "outcomes": [
@@ -45862,7 +45844,7 @@
                     },
                     "attribution": "The JR James Archive, University of Sheffield (CC BY-NC 2.0.)"
                 },
-                "description": "Introduce a new curriculum that argues population is the main driver of the environmental crisis. Children will be taught Malthusian classics such as 'An Essay on Population', 'The Tragedy of the Commons', and 'The Population Bomb'. This curriculum will endear you to the Malthusian but antagonize the Fanonist. ",
+                "description": "Introduce a new curriculum that argues population is the main driver of the environmental crisis. Children will be taught Malthusian classics such as 'An Essay on Population', 'The Tragedy of the Commons', and 'The Population Bomb'. This curriculum will endear you to the Malthusian but antagonize the Fanonist.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -46213,7 +46195,7 @@
                     },
                     "attribution": "Still Life, via the MET, public domain."
                 },
-                "description": "It is hard to make people give up meat entirely, but what if they are a bit less? Shrinking the livestock industry will help biodiversity and reduce GHG emissions\u2014yet even more drastic measures may be needed. Even this moderate policy, however, will likely provoke opposition. ",
+                "description": "It is hard to make people give up meat entirely, but what if they are a bit less? Shrinking the livestock industry will help biodiversity and reduce GHG emissions\u2014yet even more drastic measures may be needed. Even this moderate policy, however, will likely provoke opposition.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -46222,7 +46204,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Consumerist",
-                                "text": "This idea has gained popularity amongst my peers but it's a slippery slope. "
+                                "text": "This idea has gained popularity amongst my peers but it's a slippery slope."
                             }
                         ]
                     }
@@ -46401,7 +46383,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "Gossy",
-                                "text": "The religious scientific community is making great strides to recreate the exact species that would have been on Noah's ark. "
+                                "text": "The religious scientific community is making great strides to recreate the exact species that would have been on Noah's ark."
                             }
                         ]
                     }
@@ -46486,7 +46468,7 @@
                     },
                     "attribution": "Sfivat, Public domain, via Wikimedia Commons"
                 },
-                "description": "Rewild newly arid lands into vibrant ecosystems. Deserts can support a surprising variety of plants and animals if given a chance to recover. More plants might lower the albedo and heat up the atmosphere slightly. ",
+                "description": "Rewild newly arid lands into vibrant ecosystems. Deserts can support a surprising variety of plants and animals if given a chance to recover. More plants might lower the albedo and heat up the atmosphere slightly.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -46495,7 +46477,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Ecologist",
-                                "text": "Deserts reflect more sunlight than bush, and the increased solar absorption has led to temperature increase. "
+                                "text": "Deserts reflect more sunlight than bush, and the increased solar absorption has led to temperature increase."
                             }
                         ]
                     },
@@ -46506,7 +46488,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Ecologist",
-                                "text": "Deserts reflect more sunlight than bush, and the increased solar absorption has led to temperature increase. "
+                                "text": "Deserts reflect more sunlight than bush, and the increased solar absorption has led to temperature increase."
                             }
                         ]
                     }
@@ -46657,7 +46639,7 @@
                     "data": {
                         "File": "1646609177.501258.png"
                     },
-                    "attribution": "Ingimar Erl, CC BY-SA 4.0 "
+                    "attribution": "Ingimar Erl, CC BY-SA 4.0"
                 },
                 "description": "An old fashioned, low-tech solution that could have massive carbon sequestration potential. Half of all waste is biodegradable, but instead of decomposing into a useful carbon-rich fertilizer, this waste produces methane emissions when it is dumped in the anaerobic landfills.",
                 "outcomes": [
@@ -46743,7 +46725,7 @@
                     },
                     "attribution": "Ray Bird / Berkeley Hunt & Beaufort Hunt, Joint Meet, nr Kingscote, Gloucestershire 1988 / CC BY-SA 2.0"
                 },
-                "description": "Hunting is an important driver of the Sixth Extinction, but still secondary to land-use change caused by the livestock industry. Seven per cent of all mammals are threatened with extinction because of hunting. ",
+                "description": "Hunting is an important driver of the Sixth Extinction, but still secondary to land-use change caused by the livestock industry. Seven per cent of all mammals are threatened with extinction because of hunting.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -46914,7 +46896,7 @@
                     },
                     "attribution": "Alf van Beem (Public Domain)"
                 },
-                "description": "Reducing speed of freighters by 10% increases fuel efficiency by a third. Improvements in ship design, cleaner fuels, and sails can reduce emissions further up to 55%. ",
+                "description": "Reducing speed of freighters by 10% increases fuel efficiency by a third. Improvements in ship design, cleaner fuels, and sails can reduce emissions further up to 55%.",
                 "outcomes": [
                     {
                         "root": 0,
@@ -47183,7 +47165,7 @@
                     "data": {
                         "File": "1646300954.668196.png"
                     },
-                    "attribution": " Chen Yu (known as Sinammonite on Deviantart) for Deng et al 2013, CC BY-SA 4.0 "
+                    "attribution": " Chen Yu (known as Sinammonite on Deviantart) for Deng et al 2013, CC BY-SA 4.0"
                 },
                 "description": "For the longest time, climate modelling was far more advanced than ecosystem modelling. This program will allow ecologists to catch up! Capture and predict dynamic, non-linear and emergent behavior within ecosystems.",
                 "outcomes": [
@@ -47287,7 +47269,7 @@
                                 "id": 0,
                                 "next": null,
                                 "speaker": "The Accelerationist",
-                                "text": "Our children will become the Prometheans of tomorrow! "
+                                "text": "Our children will become the Prometheans of tomorrow!"
                             }
                         ]
                     }
@@ -47757,7 +47739,7 @@
                     },
                     "attribution": "\"Cows, beach\" by David Basanta is licensed under CC BY 2.0"
                 },
-                "description": "The seaweed Asparagopsis taxiformis reduces methane emissions (i.e., burps) from cows. It will take some work to carry out further research and scale up production to feed billions of cows. ",
+                "description": "The seaweed Asparagopsis taxiformis reduces methane emissions (i.e., burps) from cows. It will take some work to carry out further research and scale up production to feed billions of cows.",
                 "outcomes": [
                     {
                         "root": 0,

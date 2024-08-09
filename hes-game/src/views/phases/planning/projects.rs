@@ -25,8 +25,10 @@ pub fn Projects(
     on_kind_change.call(kind.get_untracked());
 
     let scan_tip = t!("↑ Swipe this card up and hold to add it to your plan ↑");
-    let scroll_tip =
-        t!("⟵ Swipe sideways to see other projects ⟶ ");
+    let scroll_tip = format!(
+        "⟵ {}⟶ ",
+        t!("Swipe sideways to see other projects")
+    );
 
     let back_disabled =
         memo!(ui.tutorial.lt(&Tutorial::ProjectsBack));

@@ -11,14 +11,14 @@ pub impl State {
         let usage = self.resource_demand.of(Resource::Land);
         let total_land = self.resources.available.land;
         let percent = usage / total_land;
-        display::percent(percent, true)
+        format!("{}%", display::percent(percent, true))
     }
 
     fn water_use_percent(&self) -> String {
         let usage = self.resource_demand.of(Resource::Water);
         let total_water = self.resources.available.water;
         let percent = usage / total_water;
-        display::percent(percent, true)
+        format!("{}%", display::percent(percent, true))
     }
 
     fn temp_anomaly(&self) -> String {

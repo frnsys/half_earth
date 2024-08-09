@@ -229,13 +229,13 @@ pub fn flag_tip(flag: Flag, demand: &OutputMap) -> Tip {
         Flag::RepeatTutorial => {
             tip! {
                 icons::ALERT,
-                "Repeat the tutorial"
+                "Repeat the tutorial."
             }
         }
         Flag::SkipTutorial => {
             tip! {
                 icons::ALERT,
-                "Skip the tutorial"
+                "Skip the tutorial."
             }
         }
     }
@@ -449,19 +449,7 @@ impl DisplayEffect {
                         amount: self.fmt_param(amount * 1000.)
                     },
                 ),
-                WorldVariable::Year => (
-                    tip! {
-                        icons::HELP,
-                        "The year is currently {year}.",
-                        year: state.world.year,
-                    },
-                    text! {
-                        "help",
-                        "{changeDir} the year by {amount}.",
-                        changeDir: self.change_dir(*amount),
-                        amount: self.fmt_param(*amount)
-                    },
-                ),
+                WorldVariable::Year => return Err(()),
             },
             Effect::PlayerVariable(var, amount) => match var {
                 PlayerVariable::ResearchPoints => (
@@ -471,11 +459,10 @@ impl DisplayEffect {
                     },
                     text! {
                         "research",
-                        "{random}+{amount} research points.",
-                        random: if self.is_unknown {
-                            format!("{} ", t!("Possible"))
+                        &if self.is_unknown {
+                            t!("Possible +{amount} research points.")
                         } else {
-                            "".into()
+                            t!("+{amount} research points.")
                         },
                         amount: self.fmt_param(*amount)
                     },
@@ -487,11 +474,10 @@ impl DisplayEffect {
                     },
                     text! {
                         "political_capital",
-                        "{random}+{amount} political capital.",
-                        random: if self.is_unknown {
-                            format!("{} ", t!("Possible"))
+                        &if self.is_unknown {
+                            t!("Possible +{amount} political capital.")
                         } else {
-                            "".into()
+                            t!("+{amount} political capital.")
                         },
                         amount: self.fmt_param(*amount)
                     },
@@ -1389,7 +1375,7 @@ impl DisplayEffect {
                         if est.is_infinite() {
                             t!("At current usage rates the estimated supply is expected to last indefinitely.")
                         } else {
-                            t!("At current usage rates the estimated supply is expected to last {estimate} year(s).", estimate: est)
+                            t!("At current usage rates the estimated supply is expected to last {years} year(s).", years: est)
                         }
                     }
                 };

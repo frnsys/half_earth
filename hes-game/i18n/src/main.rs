@@ -10,7 +10,7 @@ use nom::{
     Err,
     IResult,
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
 use strum::IntoEnumIterator;
 
@@ -21,14 +21,6 @@ struct Row {
 
     #[serde(rename = "Translation")]
     translation: String,
-
-    #[serde(rename = "Section")]
-    section: Option<String>,
-}
-impl Row {
-    fn is_section(&self) -> bool {
-        self.section == Some("Y".into())
-    }
 }
 
 fn read_translation(path: &Path) -> HashMap<String, String> {
@@ -36,8 +28,20 @@ fn read_translation(path: &Path) -> HashMap<String, String> {
     let mut rdr = csv::Reader::from_path(path).unwrap();
     for result in rdr.deserialize() {
         let row: Row = result.unwrap();
-        if !row.is_section() && !row.english.is_empty() {
-            mapping.insert(row.english, row.translation);
+        if !row.english.is_empty()
+            && !row.translation.is_empty()
+        {
+            // Note that we treat "-" as a deliberate indicator
+            // of an empty translation.
+            let translation = if row.translation == "-" {
+                "".to_string()
+            } else {
+                row.translation.trim().to_string()
+            };
+            mapping.insert(
+                row.english.trim().to_string(),
+                translation,
+            );
         }
     }
     mapping
@@ -122,11 +126,13 @@ fn extract_strings(from: &str) -> Vec<String> {
     for m in matches {
         // String literals
         if m.starts_with('"') {
-            literals.push(m[1..m.len() - 1].to_string());
+            literals
+                .push(m[1..m.len() - 1].replace("\\'", "'"));
 
         // Raw string literals
         } else if m.starts_with("r#") {
-            literals.push(m[3..m.len() - 2].to_string());
+            literals
+                .push(m[3..m.len() - 2].replace("\\'", "'"));
 
         // Skip macro invocations
         } else if !m.starts_with("$") {
@@ -244,9 +250,9 @@ fn extract_strings(from: &str) -> Vec<String> {
         for speaker in flavor::Speaker::iter() {
             add(&speaker.to_string());
         }
-        for locale in LOCALES {
-            add(&locale.name);
-        }
+        // for locale in LOCALES {
+        //     add(&locale.name);
+        // }
 
         for v in ["makes", "causes", "uses"] {
             add(&v);
@@ -270,9 +276,11 @@ fn extract_strings(from: &str) -> Vec<String> {
 
 fn main() {
     let expected = extract_strings("/tmp/expanded");
-    for entry in glob("langs/*.csv").unwrap() {
+    for entry in glob("hes-game/i18n/transl/*.csv").unwrap() {
         let path = entry.unwrap();
-        let mapping = read_translation(&path);
+        let stem = path.file_stem().unwrap().to_str().unwrap();
+
+        let mut mapping = read_translation(&path);
 
         let mut missing = vec![];
         let mut extra = vec![];
@@ -303,16 +311,6 @@ fn main() {
                 }
             }
 
-            if !extra.is_empty() {
-                println!(
-                    "  --[{}] EXTRA----------------",
-                    path.display()
-                );
-                for key in &extra {
-                    println!("    {}", key);
-                }
-            }
-
             println!(
                 "  Missing: {}, Extra {}",
                 missing.len(),
@@ -320,13 +318,13 @@ fn main() {
             );
         }
 
+        println!("Saving {:?}", stem);
         let ser =
             serde_json::to_string_pretty(&mapping).unwrap();
-        let stem = path.file_stem().unwrap().to_str().unwrap();
         let output =
-            format!("../public/assets/lang/{stem}.json");
+            format!("hes-game/public/assets/lang/{stem}.json");
         std::fs::write(&output, ser).unwrap_or_else(|_| {
-            panic!("Couldn't write file: {:?}", &path)
+            panic!("Couldn't write file: {:?}", &output)
         });
     }
 }

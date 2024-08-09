@@ -146,7 +146,7 @@ impl ScannerSpec for ProjectScanner {
                                         // Refundable upgrade
                                         changes.upgrades += 1;
 
-                                        // Adding points to Research/Infrastructure
+                                    // Adding points to Research/Infrastructure
                                     } else if p.kind != ProjectType::Policy
                                         && game.buy_point(
                                             &p.id,

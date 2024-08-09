@@ -254,7 +254,7 @@ fn calc_change(
     }
 
     if change > 0.0 {
-        let s = t!("increase {k} by {warn}{change}", k: key, warn: if change > 100. {
+        let s = t!("increase {k} by {warn}{change}%", k: key, warn: if change > 100. {
             "⚠️"
         } else { "" }, change: display::percent(change, true));
         Some(

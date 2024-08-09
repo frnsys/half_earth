@@ -15,7 +15,6 @@ const hectorOutputVars = {
 
 class Temperature {
   constructor(startYear) {
-    console.log("Constructing TEMPERATURE");
     this.startYear = startYear;
 
     fetch('/assets/hector/config.json')

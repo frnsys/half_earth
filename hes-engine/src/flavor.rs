@@ -161,7 +161,6 @@ pub enum Speaker {
     TheEngineer,
     TheSoldier,
     TheAuthoritarian,
-    TheAnalyst,
     TheAnimalLiberationist,
     ThePosadist,
     TheUtopian,
@@ -203,7 +202,6 @@ impl std::fmt::Display for Speaker {
                 Self::TheEngineer => "The Engineer",
                 Self::TheSoldier => "The Soldier",
                 Self::TheAuthoritarian => "The Authoritarian",
-                Self::TheAnalyst => "The Analyst",
                 Self::TheAnimalLiberationist =>
                     "The Animal Liberationist",
                 Self::ThePosadist => "The Posadist",
@@ -263,7 +261,6 @@ impl<'de> Deserialize<'de> for Speaker {
             "The Engineer" => Ok(Self::TheEngineer),
             "The Soldier" => Ok(Self::TheSoldier),
             "The Authoritarian" => Ok(Self::TheAuthoritarian),
-            "The Analyst" => Ok(Self::TheAnalyst),
             "The Animal Liberationist" => {
                 Ok(Self::TheAnimalLiberationist)
             }

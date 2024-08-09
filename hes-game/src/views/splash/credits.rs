@@ -2,7 +2,9 @@ use crate::t;
 use leptos::*;
 
 #[component]
-pub fn Credits(set_show_credits: WriteSignal<bool>) -> impl IntoView {
+pub fn Credits(
+    set_show_credits: WriteSignal<bool>,
+) -> impl IntoView {
     let show_book_link = std::env!("PLATFORM") != "STEAM";
 
     view! {
@@ -81,6 +83,7 @@ pub fn Credits(set_show_credits: WriteSignal<bool>) -> impl IntoView {
                     <li>
                         เนติวิทย์ โชติภัทร์ไพศาล / Netiwit Chotiphatphaisal, Sam Yan Press
                     </li>
+                    <li>Fatih Erdoğan</li>
                 </ul>
                 <Show
                     when=move || { show_book_link }

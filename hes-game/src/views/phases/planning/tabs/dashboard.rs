@@ -229,10 +229,15 @@ pub fn Dashboard() -> impl IntoView {
 
     let water_demand =
         memo!(game.resource_demand.of(Resource::Water));
-    let current_water_stress =
-        move || water_stress(water_demand.get());
+    let current_water_stress = memo!(game.water_use_percent());
     let after_water_stress = move || {
-        water_stress(water_change() + water_demand.get()).label
+        format!(
+            "{:.0}%",
+            display::water_use_percent(
+                water_change() + water_demand.get(),
+                available_water.get()
+            )
+        )
     };
 
     let temp_anomaly = memo!(game.temp_anomaly());
@@ -365,14 +370,11 @@ pub fn Dashboard() -> impl IntoView {
         })
     };
     let water_view = move || {
-        let current = current_water_stress();
-
         view! {
             <DashboardItem
                 tip=water_tip.into_signal()
                 label=t!("Water Stress")
-                color=current.color
-                display_value=current.label
+                display_value=current_water_stress
                 display_changed_value=after_water_stress
                 change=water_change
                 icon=icons::WATER
