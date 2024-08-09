@@ -16,7 +16,7 @@ use crate::{
     memo,
     state::{Settings, StateExt, Tutorial, UIState},
     t,
-    views::{hud::Hud, Events, rank_factors},
+    views::{hud::Hud, rank_factors, Events},
 };
 use leptos::*;
 
@@ -56,6 +56,7 @@ pub fn Planning() -> impl IntoView {
     game.update_untracked(|game| {
         ui.update_untracked(|ui| {
             ui.factors = rank_factors(game);
+            ui.points.research = game.collect_research_points();
         });
 
         let mut evs = [
