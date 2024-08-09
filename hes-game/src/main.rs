@@ -8,11 +8,10 @@ fn main() {
     console_error_panic_hook::set_once();
 
     let config = WASMLayerConfigBuilder::new()
-        .set_max_level(Level::WARN)
+        .set_max_level(Level::DEBUG)
         .build();
     tracing_wasm::set_as_global_default_with_config(config);
     mount_to_body(|| {
         view! { <Root /> }
     })
 }
-

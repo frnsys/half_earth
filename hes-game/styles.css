@@ -3741,8 +3741,8 @@ color: #63FF96;
   text-align: center;
   opacity: 0.8;
   font-size: 0.8em;
-  padding: 1rem;
-  margin: 1rem 2rem;
+  padding: 0.5rem 1rem;
+  margin: 1rem 2rem 0.5em;
   border-radius:0.5rem;
   box-shadow: inset 1px 1px 0px rgb(0 0 0 / 50%);
   border-right: 1px solid rgba(255,255,255,0.5);
@@ -3761,7 +3761,7 @@ color: #63FF96;
   text-align: center;
 }
 .event--icon-change {
-  margin: 0.5em 0;
+  margin: 0.25em 0;
 }
 .event--icon-change > * {
   display: inline-block;

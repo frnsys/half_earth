@@ -131,6 +131,10 @@ fn Disasters(
         set_globe.set(Some(globe));
     };
 
+    let time_controls = create_rw_signal::<
+        Option<(Callback<()>, Callback<()>)>,
+    >(None);
+
     // Called for each tick in the year.
     let on_tick = move |progress| {
         update!(|events, toasts| {
@@ -190,17 +194,18 @@ fn Disasters(
         });
     };
 
-    let time_controls = create_rw_signal::<
-        Option<(Callback<()>, Callback<()>)>,
-    >(None);
-
     create_effect(move |_| {
-        if phase.get() == Subphase::Disasters {
+        let phase = phase.get();
+        if phase == Subphase::Disasters {
             if let Some(globe) = globe.get() {
                 globe.rotate(true);
             }
             if let Some((_, resume)) = time_controls.get() {
                 resume.call(());
+            }
+        } else {
+            if let Some((pause, _)) = time_controls.get() {
+                pause.call(());
             }
         }
     });
@@ -391,12 +396,15 @@ pub fn WorldEvents() -> impl IntoView {
 
     create_effect(move |_| {
         year.track();
-        phase.set_untracked(Subphase::Updates);
-        if updates.with_untracked(|updates| updates.is_empty())
-            || skipping.get_untracked()
-        {
-            next_phase();
-        }
+
+        // A hack to call `next_phase` outside of this effect,
+        // to avoid borrow conflicts.
+        set_timeout(
+            move || {
+                next_phase();
+            },
+            std::time::Duration::from_millis(10),
+        );
     });
 
     view! {
@@ -486,7 +494,8 @@ fn YearProgress(
     let raf = use_raf_fn_with_options(
         move |args: UseRafFnCallbackArgs| {
             time.try_update(|time| {
-                *time += args.delta as f32;
+                let delta = args.delta.min(30.) as f32;
+                *time += delta;
                 let progress = *time / ms_per_year();
                 on_tick.call(progress);
                 if *time >= ms_per_year() {
