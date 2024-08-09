@@ -12,7 +12,7 @@ The project consists of two artifacts:
 - `hes-game` is the game itself, which is mostly a visual layer over the engine.
 - `hes-editor` is an editor to change parts of the game/engine, e.g. what projects are available, their parameters, etc, and is used to build custom `.world` files that can be loaded into new games.
 
-We also include [a version](https://github.com/frnsys/hector-wasm) of the [Hector simple climate model](https://jgcri.github.io/hector/) that we've adapted to run in the browser. The process for building Hector for WASM is complicated so pre-compiled versions are included here.
+We also include [a version](https://github.com/frnsys/hector-wasm) of the [Hector simple climate model](https://jgcri.github.io/hector/) that we've adapted to run in the browser. The process of building Hector for WASM is complicated so pre-compiled versions are included here.
 
 
 ## Setup
@@ -40,7 +40,7 @@ rustup target add wasm32-unknown-unknown
 
 There is some functionality which is better kept in JS rather than ported to Rust/WASM. In particular, the rendering of the globe (which depends on three.js), handling of audio, and interfacing with the Hector WASM module. We'd use our [Rust adapter for Hector](https://github.com/frnsys/hector-rs) directly but Rust/WASM doesn't work with C++ FFI, so we have to stick with using JS as a bridge.
 
-The globe and Hector modules need to re-built if any of their files are edited. They can be rebuilt by doing:
+The globe and Hector JS modules need to re-built if any of their files are edited. They can be rebuilt by doing:
 
 1. `cd hes-game/public/js`
 2. If you haven't already, run `just setup`.
@@ -54,9 +54,6 @@ If debugging the game there are a few options you can pass as URL parameters whi
 - `skip-to-planning`: Skip the intro and just go to the planning phase.
 - `skip-tutorial`: Skip the tutorial.
 - `fast-years`: Speed up years in the world events phase.
-- `translate`: Extract translation strings and update the translation mappings from the source CSVs.
-- `surfaces`: Generate biome surface textures and regional climates.
-- `sharing`: Generate sharing images.
 
 
 ## Running
@@ -71,36 +68,15 @@ Available recipes:
     build-apps  # Build the app release versions (tauri)
                 # Note: this is just native, for cross-platform see below.
     build-web   # Build the web release version (browser)
+    translate   # Extract translation strings and update the translation mappings from the source CSVs.
+    surfaces    # Generate biome surface textures and regional climates.
+    sharing     # Generate sharing images.
 ```
 
 ## Building & Deploying
 
 - Cross-platform builds are handled by Github Actions (using a `workflow_dispatch, i.e. manual trigger).
-- The web version of the game is built using `just build-web` and then managed as a `systemd` unit:
-
-```ini
-# /etc/systemd/system/apps.half.earth.service
-
-# Place the build artifacts (`hes-game`, `site/`) at
-# `/srv/projects/half-earth/game`.
-
-[Unit]
-Description=half-earth socialism game
-After=network.target
-
-[Service]
-Type=simple
-User=www-data
-Group=www-data
-Restart=always
-WorkingDirectory=/srv/projects/half-earth/game
-ExecStart=/srv/projects/half-earth/game/hes-game
-Environment=LEPTOS_SITE_ADDR=0.0.0.0:8888
-Environment=LEPTOS_SITE_ROOT=./site
-
-[Install]
-WantedBy=multi-user.target
-```
+- The web version of the game is built using `just build-web` and is hosted as a static site.
 
 ---
 

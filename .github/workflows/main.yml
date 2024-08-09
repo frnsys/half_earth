@@ -46,32 +46,12 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libboost-all-dev
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - name: Download Boost (Windows)
-        if: matrix.platform == 'windows-latest'
-        run: |
-          curl -L -o boost.zip https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip
-          New-Item -ItemType Directory -Force -Path $Env:GITHUB_WORKSPACE\hector-rs\include\boost
-          tar -xf boost.zip --strip-components=1 -C $Env:GITHUB_WORKSPACE\hector-rs\include
-          echo "BOOST_ROOT=$Env:GITHUB_WORKSPACE\hector-rs\include" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-          echo "BOOST_INCLUDEDIR=$Env:GITHUB_WORKSPACE\hector-rs\include" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-          echo "BOOST_LIBRARYDIR=$Env:GITHUB_WORKSPACE\hector-rs\include\stage\lib" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Install Boost (Mac)
-        if: matrix.platform == 'macos-latest'
-        run: |
-          brew install boost@1.85
-          echo "BOOST_ROOT=$(brew --prefix boost)" >> $GITHUB_ENV
-          echo "CXXFLAGS=-I$(brew --prefix boost)/include" >> $GITHUB_ENV
-
-      - name: Install cargo-leptos
+      - name: Install trunk
         uses: taiki-e/cache-cargo-install-action@v2.0.1
         with:
-          tool: cargo-leptos@0.2.17
-
-      - name: Install wasm target
-        run: rustup target add wasm32-unknown-unknown
+          tool: trunk@0.20.2
 
       - name: Build Game
         uses: tauri-apps/tauri-action@v0
@@ -85,11 +65,6 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
           projectPath: hes-game
-
-      - name: Install trunk
-        uses: taiki-e/cache-cargo-install-action@v2.0.1
-        with:
-          tool: trunk@0.20.2
 
       - name: Build Editor
         uses: tauri-apps/tauri-action@v0
