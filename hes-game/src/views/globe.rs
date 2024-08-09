@@ -1,7 +1,6 @@
-use crate::{memo, t, util::to_ws_el};
+use crate::{display::FloatExt, memo, t, util::to_ws_el};
 use gloo_utils::format::JsValueSerdeExt;
 use hes_engine::State;
-use js_sys::Uint8Array;
 use leptos::*;
 use std::{cell::RefCell, rc::Rc};
 
@@ -18,12 +17,7 @@ extern "C" {
     fn render(this: &Globe);
 
     #[wasm_bindgen(method)]
-    fn init(
-        this: &Globe,
-        width: usize,
-        height: usize,
-        pixels: Uint8Array,
-    );
+    fn init(this: &Globe, tex_path: &str);
 
     #[wasm_bindgen(method)]
     fn clear(this: &Globe);
@@ -49,8 +43,8 @@ extern "C" {
         intensity: usize,
     );
 
-    #[wasm_bindgen(method)]
-    fn update_surface(this: &Globe, pixels: Uint8Array);
+    #[wasm_bindgen(method, js_name = updateSurface)]
+    fn update_surface(this: &Globe, tex_path: &str);
 
     #[wasm_bindgen(method, js_name = onReady)]
     fn on_ready(this: &Globe, cb: &js_sys::Function);
@@ -106,6 +100,13 @@ impl GlobeRef {
     }
 }
 
+fn surface_path(tgav: f32) -> String {
+    // Max range is -2 to 14.9.
+    let tgav = tgav.max(-2.).min(14.9).round_to(1);
+    let key = format!("{tgav:.1}");
+    format!("/assets/surface/for_temp/{key}.png")
+}
+
 #[component]
 pub fn Globe(
     #[prop(optional, default = "globe")] id: &'static str,
@@ -116,6 +117,7 @@ pub fn Globe(
 ) -> impl IntoView {
     let (loading, set_loading) = create_signal(true);
     let globe_ref = create_node_ref::<html::Div>();
+    let globe_obj = store_value(None);
 
     let game = expect_context::<RwSignal<State>>();
     let tgav = memo!(game.world.temperature);
@@ -157,21 +159,24 @@ pub fn Globe(
             .borrow()
             .on_click(on_click.as_ref().unchecked_ref());
 
-        spawn_local(async move {
-            let (width, height, pixels) =
-                calc_surface(tgav.get_untracked())
-                    .await
-                    .unwrap();
-            g.inner.borrow().init(
-                width,
-                height,
-                pixels.as_slice().into(),
-            );
-            g.inner.borrow().render();
-        });
-
+        g.inner
+            .borrow()
+            .init(&surface_path(tgav.get_untracked()));
+        g.inner.borrow().render();
         on_ready.forget();
         on_click.forget();
+
+        globe_obj.set_value(Some(g));
+    });
+
+    create_effect(move |_| {
+        let tgav = tgav.get();
+        if let Some(g) = globe_obj.get_value() {
+            g.inner
+                .borrow()
+                .update_surface(&surface_path(tgav));
+            g.inner.borrow().render();
+        }
     });
 
     view! {
@@ -188,17 +193,4 @@ pub fn Globe(
             </Show>
         </div>
     }
-}
-
-#[server(prefix = "/compute", endpoint = "surface")]
-pub async fn calc_surface(
-    tgav: f32,
-) -> Result<(usize, usize, Vec<u8>), ServerFnError> {
-    let mut surface = crate::server::STARTING_SURFACE.clone();
-    let width = surface.width();
-    let height = surface.height();
-
-    surface.update_biomes(tgav);
-    surface.update_surface();
-    Ok((width, height, surface.pixels))
 }

@@ -2,7 +2,7 @@ export LEPTOS_WASM_OPT_VERSION := "version_118"
 
 # Run the development web game.
 run-web:
-    cd hes-game && cargo leptos watch
+    cargo leptos  --manifest-path hes-game/Cargo.toml watch
 
 # Run the development app game.
 run-app:
@@ -30,6 +30,10 @@ build-web:
     echo "To run: LEPTOS_SITE_ROOT="site" ./hes-game"
 
 # Extract strings for translation.
-strings:
+translate:
     cd hes-game && cargo expand --lib --ugly --color never | tr -d '\n' > /tmp/expanded
-    cargo run --bin hes-game-i18n
+    cargo run --bin i18n
+
+# Generate pre-computed earth surface textures.
+surfaces:
+    cargo run --bin surface --release

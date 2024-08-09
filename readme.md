@@ -54,6 +54,7 @@ If debugging the game there are a few options you can pass as URL parameters whi
 - `skip-to-planning`: Skip the intro and just go to the planning phase.
 - `skip-tutorial`: Skip the tutorial.
 - `fast-years`: Speed up years in the world events phase.
+- `translate`: Extract translation strings and update the translation mappings from the source CSVs.
 
 
 ## Running

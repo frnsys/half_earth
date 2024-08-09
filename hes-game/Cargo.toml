@@ -37,8 +37,6 @@ regex-lite = "0.1.6"
 paste = "1.0.15"
 tracing = "0.1.40"
 tracing-wasm = "0.2.1"
-lodepng = { version = "3.10.2", optional = true }
-rgb = { version = "0.8.42", features = ["as-bytes"], optional = true }
 axum = { version = "0.7", optional = true }
 leptos_axum = { version = "0.6", optional = true }
 leptos_integration_utils = { version = "0.6", optional = true }
@@ -66,8 +64,6 @@ server = [
 	"dep:ab_glyph",
 	"dep:imageproc",
 	"dep:image",
-	"dep:lodepng",
-	"dep:rgb",
 	"dep:axum",
 	"dep:tower",
 	"dep:tower-http",

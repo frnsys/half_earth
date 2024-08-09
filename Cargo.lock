@@ -2044,12 +2044,10 @@ dependencies = [
  "leptos_meta",
  "leptos_router",
  "list_files_macro",
- "lodepng",
  "log",
  "numfmt",
  "paste",
  "regex-lite",
- "rgb",
  "serde",
  "serde-wasm-bindgen",
  "serde_json",
@@ -2071,20 +2069,6 @@ version = "0.0.0"
 dependencies = [
  "tauri",
  "tauri-build",
-]
-
-[[package]]
-name = "hes-game-i18n"
-version = "0.0.0"
-dependencies = [
- "csv",
- "glob",
- "hes-engine",
- "hes-game",
- "nom",
- "serde",
- "serde_json",
- "strum",
 ]
 
 [[package]]
@@ -2217,6 +2201,20 @@ dependencies = [
  "hyper",
  "pin-project-lite",
  "tokio",
+]
+
+[[package]]
+name = "i18n"
+version = "1.0.0"
+dependencies = [
+ "csv",
+ "glob",
+ "hes-engine",
+ "hes-game",
+ "nom",
+ "serde",
+ "serde_json",
+ "strum",
 ]
 
 [[package]]
@@ -4859,6 +4857,18 @@ dependencies = [
  "quote",
  "rustversion",
  "syn 2.0.72",
+]
+
+[[package]]
+name = "surface"
+version = "1.0.0"
+dependencies = [
+ "float-cmp",
+ "hes-engine",
+ "lodepng",
+ "rgb",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

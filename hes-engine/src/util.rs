@@ -137,3 +137,14 @@ impl<T: HasId> IndexMut<&Id> for Collection<T> {
         self.try_get_mut(index).unwrap()
     }
 }
+
+pub fn round_to(value: f32, precision: i32) -> f32 {
+    let factor = 10_f32.powi(precision);
+    let abs_number = value.abs();
+    let rounded = f32::round(abs_number * factor) / factor;
+    if value < 0.0 {
+        -rounded
+    } else {
+        rounded
+    }
+}

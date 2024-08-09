@@ -87,8 +87,8 @@ class Globe {
     this.hexsphere.highlightRegion(regionName);
   }
 
-  init(width, height, pixels) {
-    this.surfaceTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBFormat);
+  init(texPath) {
+    this.surfaceTexture = texLoader.load(texPath);
     this.surfaceTexture.flipY = true;
 
     this.material = new THREE.ShaderMaterial({
@@ -151,8 +151,8 @@ class Globe {
     this._onReady.forEach((fn) => fn(this));
   }
 
-  updateSurface(pixels) {
-    this.surfaceTexture.image.data.set(pixels);
+  updateSurface(texPath) {
+    this.surfaceTexture = texLoader.load(texPath);
     this.surfaceTexture.needsUpdate = true;
   }
 

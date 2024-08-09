@@ -10,7 +10,6 @@ mod production;
 mod projects;
 mod regions;
 mod state;
-pub mod surface;
 mod util;
 mod world;
 

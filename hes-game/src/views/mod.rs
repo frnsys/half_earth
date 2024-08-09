@@ -20,7 +20,6 @@ pub use effects::Effects;
 pub use events::*;
 pub use factors::{rank as rank_factors, Factor};
 pub use game::Game;
-pub use globe::CalcSurface;
 pub use help::*;
 pub use phases::*;
 pub use splash::*;

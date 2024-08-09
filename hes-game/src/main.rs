@@ -4,7 +4,6 @@ use axum::{
     http::{Request, Response, StatusCode, Uri},
     response::{Html, IntoResponse, Response as AxumResponse},
 };
-use hes_game::CalcSurface;
 use leptos::LeptosOptions;
 use leptos_integration_utils::html_parts_separated;
 use tower::ServiceExt;
@@ -60,8 +59,6 @@ async fn main() {
     let conf = get_configuration(None).await.unwrap();
     let leptos_options = conf.leptos_options;
     let addr = leptos_options.site_addr;
-
-    server_fn::axum::register_explicit::<CalcSurface>();
 
     let app = Router::new()
         // server function handlers are normally set up by .leptos_routes()

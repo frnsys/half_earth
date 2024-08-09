@@ -17,7 +17,7 @@ mod views;
 
 pub use eval::Badge;
 pub use vars::Var;
-pub use views::{CalcSurface, LOCALES};
+pub use views::LOCALES;
 
 #[cfg(feature = "server")]
 mod server;

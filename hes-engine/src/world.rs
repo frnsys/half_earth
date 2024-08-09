@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::LazyLock};
 
 use crate::{
     events::Event,
@@ -7,11 +7,17 @@ use crate::{
     production::Process,
     projects::Project,
     regions::{Income, Region},
-    surface,
+    round_to,
     Collection,
     Id,
 };
 use serde::{Deserialize, Serialize};
+
+pub static CLIMATES: LazyLock<BTreeMap<String, Vec<[f32; 4]>>> =
+    LazyLock::new(|| {
+        let data = include_str!("../assets/climates.json");
+        serde_json::from_str(data).unwrap()
+    });
 
 /// The `World` represents a game configuration,
 /// defining the world's parameters as well
@@ -215,51 +221,18 @@ impl Collection<Region> {
     }
 
     fn update_climates(&mut self, temp: f32) {
-        let temps: Vec<f32> = surface::apply_pscl(
-            &surface::TEMP_PATTERN_W,
-            &surface::TEMP_PATTERN_B,
-            surface::BASE_TEMP + temp,
-        )
-        .collect();
-        let precips: Vec<f32> = surface::apply_pscl(
-            &surface::PRECIP_PATTERN_W,
-            &surface::PRECIP_PATTERN_B,
-            surface::BASE_TEMP + temp,
-        )
-        .collect();
-        for region in self.iter_mut() {
-            // We assert when generating the pattern idxs that they are not empty
-            let local_temps: Vec<f32> = region
-                .pattern_idxs
-                .iter()
-                .map(|idx| &temps[*idx])
-                .cloned()
-                .collect();
-            let local_precips: Vec<f32> = region
-                .pattern_idxs
-                .iter()
-                .map(|idx| &precips[*idx])
-                .cloned()
-                .collect();
-            region.temp_lo = local_temps
-                .iter()
-                .fold(f32::INFINITY, |a, &b| a.min(b));
-            region.temp_hi = local_temps
-                .iter()
-                .fold(-f32::INFINITY, |a, &b| a.max(b));
-
-            // In kg/m2/s, convert to cm/year
-            // 1 kg/m2/s = 1 mm/s
-            // 31536000 seconds per year, which yields mm/year
-            region.precip_lo = local_precips
-                .iter()
-                .fold(f32::INFINITY, |a, &b| a.min(b));
-            region.precip_hi = local_precips
-                .iter()
-                .fold(-f32::INFINITY, |a, &b| a.max(b));
-            region.precip_lo *= 31536000. / 10.;
-            region.precip_hi *= 31536000. / 10.;
-            // region.temp = region.pattern_idxs.iter().map(|idx| &temps[*idx]).sum::<f32>()/region.pattern_idxs.len() as f32;
+        // Max range is -2 to 14.9.
+        let temp = temp.max(-2.).min(14.9);
+        let tgav = round_to(temp, 1);
+        let key = format!("{tgav:.1}");
+        if let Some(climates) = CLIMATES.get(&key) {
+            for (region, vals) in self.iter_mut().zip(climates)
+            {
+                region.temp_lo = vals[0];
+                region.temp_hi = vals[1];
+                region.precip_lo = vals[2];
+                region.precip_hi = vals[3];
+            }
         }
     }
 
