@@ -14,9 +14,15 @@ use crate::{
     audio,
     debug::get_debug_opts,
     memo,
-    state::{Settings, StateExt, Tutorial, UIState},
+    state::{
+        update_factors,
+        Settings,
+        StateExt,
+        Tutorial,
+        UIState,
+    },
     t,
-    views::{hud::Hud, rank_factors, Events},
+    views::{hud::Hud, Events},
 };
 use leptos::*;
 
@@ -55,8 +61,9 @@ pub fn Planning() -> impl IntoView {
     let events = create_rw_signal(vec![]);
     game.update_untracked(|game| {
         ui.update_untracked(|ui| {
-            ui.factors = rank_factors(game);
-            ui.points.research = game.collect_research_points();
+            update_factors(game);
+            ui.points.research +=
+                game.collect_research_points();
         });
 
         let mut evs = [

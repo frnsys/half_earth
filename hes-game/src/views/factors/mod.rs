@@ -3,7 +3,7 @@ mod calculate;
 use crate::{
     consts,
     icons::{self, HasIcon},
-    state::UIState,
+    state::FACTORS,
     t,
     vars::Var,
     views::{cards::FactorsCard, intensity::IntensityIcon},
@@ -55,20 +55,25 @@ pub fn FactorsList(
         })
     };
 
-    let ui = expect_context::<RwSignal<UIState>>();
     let relevant_factors = move || {
-        with!(|ui, factors| {
-            ui.factors[factors.kind]
-                .iter()
-                .filter(|user| match user {
-                    Factor::Industry { produced, .. }
-                    | Factor::Process { produced, .. } => {
-                        *produced != 0.
-                    }
-                    _ => true,
-                })
-                .cloned()
-                .collect::<Vec<_>>()
+        with!(|factors| {
+            if let Ok(ranked) = FACTORS.read() {
+                ranked[factors.kind]
+                    .iter()
+                    .filter(|user| match user {
+                        Factor::Industry {
+                            produced, ..
+                        }
+                        | Factor::Process {
+                            produced, ..
+                        } => *produced != 0.,
+                        _ => true,
+                    })
+                    .cloned()
+                    .collect::<Vec<_>>()
+            } else {
+                vec![]
+            }
         })
     };
 

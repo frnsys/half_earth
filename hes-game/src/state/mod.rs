@@ -9,15 +9,30 @@ pub use ui::{Phase, PlanChange, Tutorial, UIState};
 
 use std::sync::{LazyLock, RwLock};
 
+use enum_map::EnumMap;
 use hes_engine::{Output, OutputMap, State, World};
 use leptos::*;
 
-use crate::debug::get_debug_opts;
+use crate::{
+    debug::get_debug_opts,
+    views::{rank_factors, Factor},
+    Var,
+};
 
 const SAVE_KEY: &str = "hes.save";
 pub static BASE_OUTPUT_DEMAND: LazyLock<
     RwLock<[OutputMap; 4]>,
 > = LazyLock::new(|| RwLock::new([OutputMap::default(); 4]));
+
+pub static FACTORS: LazyLock<
+    RwLock<EnumMap<Var, Vec<Factor>>>,
+> = LazyLock::new(|| RwLock::new(EnumMap::default()));
+
+pub fn update_factors(state: &State) {
+    if let Ok(mut factors) = FACTORS.write() {
+        *factors = rank_factors(state);
+    }
+}
 
 pub fn demand_by_income_levels(output: Output) -> [f32; 4] {
     BASE_OUTPUT_DEMAND

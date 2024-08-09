@@ -12,7 +12,7 @@ use crate::{
     display::{self, AsText, DisplayValue},
     icons::{self, HasIcon},
     memo,
-    state::{StateExt, UIState},
+    state::{StateExt, UIState, FACTORS},
     t,
     util::to_ws_el,
     vars::Var,
@@ -71,7 +71,6 @@ pub fn Dashboard() -> impl IntoView {
     let (show_breakdown_menu, set_show_breakdown_menu) =
         create_signal(false);
 
-    let factors = memo!(ui.factors);
     let available_land =
         memo!(game.world.starting_resources.land);
     let dataset = move || {
@@ -79,10 +78,12 @@ pub fn Dashboard() -> impl IntoView {
         let mut data: BTreeMap<String, f32> =
             BTreeMap::default();
         let breakdown_factor = breakdown_factor.get();
-        for fac in &factors.get()[breakdown_factor] {
-            let name = t!(&fac.name());
-            data.insert(name, fac.amount());
-            total += fac.amount();
+        if let Ok(factors) = FACTORS.read() {
+            for fac in &factors[breakdown_factor] {
+                let name = t!(&fac.name());
+                data.insert(name, fac.amount());
+                total += fac.amount();
+            }
         }
         if breakdown_factor == Var::Land {
             let name = t!("Unused");

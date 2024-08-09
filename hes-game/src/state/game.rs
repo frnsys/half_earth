@@ -1,4 +1,4 @@
-use super::Points;
+use super::{update_factors, Points};
 use crate::{consts, display, views::DisplayEvent};
 use enum_map::EnumMap;
 use extend::ext;
@@ -245,10 +245,13 @@ pub impl State {
         &mut self,
         phase: EventPhase,
     ) -> Vec<DisplayEvent> {
-        self.roll_events(phase)
+        let events = self
+            .roll_events(phase)
             .into_iter()
             .map(|ev| DisplayEvent::new(ev, &self))
-            .collect()
+            .collect();
+        update_factors(&self);
+        events
     }
 
     fn upgrade_projects(

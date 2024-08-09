@@ -235,6 +235,8 @@ impl State {
     ) {
         let mut effects = vec![];
         let event = &self.event_pool.events[&event_id];
+        self.events.push(event.clone());
+
         for effect in &event.effects {
             effects.push((effect.clone(), region_id));
         }

@@ -1,7 +1,4 @@
-use crate::{
-    vars::Var,
-    views::{DisplayEvent, Factor},
-};
+use crate::views::DisplayEvent;
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use hes_engine::{
@@ -108,7 +105,6 @@ pub struct UIState {
     pub start_year: usize,
     pub tutorial_restarted: bool,
     pub tutorial: Tutorial,
-    pub factors: EnumMap<Var, Vec<Factor>>,
 
     pub annual_region_events: BTreeMap<Id, Vec<IconEvent>>,
     pub world_events: Vec<DisplayEvent>,
