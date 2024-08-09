@@ -48,8 +48,13 @@ pub fn Start(
 
     // Show git commit for this build.
     let git_hash = env!("GIT_HASH");
+
     view! {
         <div>
+            <div class="under-construction">
+                <img src="/assets/under-construction-2.gif" />
+                "Dear planner,"<br />"We have recently re-written the game in anticipation of supporting custom cards and game parameters. As such this version may have bugs. For now the "<a href="https://store.steampowered.com/app/2071530/HalfEarth_Socialism/">Steam</a>" and "<a href="https://frnsys.itch.io/half-earth-socialism">Itch.io</a>" versions are running the old code and thus are more reliable. Please file bug reports "<a href="https://github.com/frnsys/half_earth/issues">here.</a>" Thank you for your patience and thanks for playing!"
+            </div>
             <div class="git-hash" title="Current Version">{git_hash}</div>
             <div id="start-bg"></div>
             <div id="start-screen">

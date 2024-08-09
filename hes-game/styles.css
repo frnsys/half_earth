@@ -4908,3 +4908,21 @@ color: #63FF96;
   display: flex;
   margin-left: 0.5em;
 }
+
+.under-construction {
+  position: fixed;
+  z-index: 2;
+  color: #fff;
+  background: #121212;
+  font-size: 11px;
+  padding: 6px;
+  width: 180px;
+  left: 6px;
+  top: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.75);
+}
+.under-construction img {
+  height: 16px;
+  margin: 0px 4px 0 0;
+  vertical-align: bottom;
+}
