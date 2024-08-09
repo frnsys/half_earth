@@ -1,7 +1,8 @@
 use leptos::*;
+use list_files_macro::list_files;
 
 use crate::{
-    eval::{eval_badges, summarize, Summary},
+    eval::{eval_badges, summarize, Ending},
     i18n,
     icons,
     state::{Settings, StateExt},
@@ -12,6 +13,19 @@ use hes_engine::{EventPhase, State};
 
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
+    const WIN_IMGS: &[&str] = &list_files!(
+        "../../../public/assets/sharing/win/*.png"
+    );
+    const COUP_IMGS: &[&str] = &list_files!(
+        "../../../public/assets/sharing/lose/coup/*.png"
+    );
+    const DEATH_IMGS: &[&str] = &list_files!(
+        "../../../public/assets/sharing/lose/death/*.png"
+    );
+    const LOSE_IMGS: &[&str] = &list_files!(
+        "../../../public/assets/sharing/lose/generic/*.png"
+    );
+
     let events = create_rw_signal(vec![]);
     let game = expect_context::<RwSignal<State>>();
     game.update_untracked(|game: &mut State| {
@@ -34,13 +48,21 @@ pub fn End(lose: bool) -> impl IntoView {
         t!("Well Played!")
     };
 
-    let share_image = create_rw_signal(String::new());
-    spawn_local(async move {
-        let summary = with!(|game| summarize(&game, !lose));
-        // TODO
-        // let img = generate_image(summary).await.unwrap();
-        // share_image.set(img);
-    });
+    let summary =
+        game.with_untracked(|game| summarize(&game, !lose));
+    let image_opts = match summary.ending {
+        Ending::Win => WIN_IMGS,
+        Ending::Died => DEATH_IMGS,
+        Ending::Coup => COUP_IMGS,
+        Ending::LostOther => LOSE_IMGS,
+    };
+    let image_opts: Vec<_> = image_opts
+        .iter()
+        .filter(|url| url.contains(&summary.faction))
+        .collect();
+    let idx = (js_sys::Math::random() * image_opts.len() as f64)
+        .ceil() as usize;
+    let share_image = *image_opts[idx];
 
     let (show_start, set_show_start) = create_signal(false);
 

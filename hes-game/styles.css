@@ -3599,6 +3599,7 @@ color: #63FF96;
   width: 100%;
   position: absolute;
   bottom: 50px;
+  z-index: 1;
 }
 
 .process-mix-change-notice {

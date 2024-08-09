@@ -5,12 +5,10 @@ edition = "2021"
 
 [lib]
 doctest = false
-crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 hes-engine = { path = "../hes-engine" }
 leptos = { workspace = true }
-leptos_meta = { workspace = true }
 leptos_router = { workspace = true }
 leptos-use = { workspace = true }
 wasm-bindgen = { workspace = true }
@@ -37,50 +35,10 @@ regex-lite = "0.1.6"
 paste = "1.0.15"
 tracing = "0.1.40"
 tracing-wasm = "0.2.1"
-axum = { version = "0.7", optional = true }
-leptos_axum = { version = "0.6", optional = true }
-leptos_integration_utils = { version = "0.6", optional = true }
-tower = { version = "0.4", optional = true }
-tower-http = { version = "0.5", features = ["fs"], optional = true }
-tokio = { version = "1", features = ["full"], optional = true }
 http = { version = "1.0" }
 base64 = "0.22.1"
 codee = { version = "0.1.2", features = ["json_serde"] }
-fastrand = { workspace = true, optional = true }
 
 [dependencies.web-sys]
 workspace = true
 features = ["Performance", "Animation", "KeyframeEffect", "KeyframeEffectOptions", "HtmlImageElement", "Storage"]
-
-[features]
-client = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
-server = [
-	"dep:fastrand",
-	"dep:axum",
-	"dep:tower",
-	"dep:tower-http",
-	"dep:tokio",
-	"dep:leptos_axum",
-	"dep:leptos_integration_utils",
-	"leptos/ssr",
-	"leptos_meta/ssr",
-	"leptos_router/ssr",
-]
-
-[package.metadata.leptos]
-bin-features = ["server"]
-bin-default-features = false
-lib-features = ["client"]
-lib-default-features = false
-lib-profile-release = "wasm-release"
-
-# The site root folder is where cargo-leptos generate all output.
-# WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
-site-root = "target/hes-game"
-
-# The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS.
-style-file = "styles.css"
-
-# Assets source dir. All files found here will be copied and synchronized to site-root.
-# The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
-assets-dir = "public"

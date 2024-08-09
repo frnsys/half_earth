@@ -2,7 +2,7 @@ export LEPTOS_WASM_OPT_VERSION := "version_118"
 
 # Run the development web game.
 run-web:
-    cargo leptos  --manifest-path hes-game/Cargo.toml watch
+    trunk serve --config hes-game/Trunk.toml
 
 # Run the development app game.
 run-app:
@@ -23,11 +23,8 @@ build-apps:
 
 # Build the game web version.
 build-web:
-    cargo leptos build --release
     rm -rf build/web && mkdir -p build/web
-    cp target/release/hes-game build/web/hes-game
-    cp -r target/hes-game build/web/site
-    echo "To run: LEPTOS_SITE_ROOT="site" ./hes-game"
+    trunk build --release --config hes-game/Trunk.toml --dist build/web
 
 # Extract strings for translation.
 translate:

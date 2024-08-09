@@ -15,29 +15,7 @@ mod util;
 mod vars;
 mod views;
 
+pub use app::Root;
 pub use eval::Badge;
 pub use vars::Var;
 pub use views::LOCALES;
-
-use app::Root;
-
-use leptos::*;
-use tracing::Level;
-use tracing_wasm::WASMLayerConfigBuilder;
-
-#[cfg_attr(
-    feature = "client",
-    wasm_bindgen::prelude::wasm_bindgen
-)]
-pub fn hydrate() {
-    _ = console_log::init_with_level(log::Level::Debug);
-    console_error_panic_hook::set_once();
-
-    let config = WASMLayerConfigBuilder::new()
-        .set_max_level(Level::DEBUG)
-        .build();
-    tracing_wasm::set_as_global_default_with_config(config);
-    mount_to_body(|| {
-        view! { <Root/> }
-    })
-}

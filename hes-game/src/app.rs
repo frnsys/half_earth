@@ -16,33 +16,11 @@ use crate::{
 use hes_engine::{State, World};
 use leptos::*;
 use leptos_animation::*;
-use leptos_meta::*;
 use leptos_router::*;
 
 #[component]
 pub fn Root() -> impl IntoView {
-    provide_meta_context();
-
-    // id=leptos means cargo-leptos will hot-reload this stylesheet
     view! {
-        <Title text="Half-Earth Socialism"/>
-        <Stylesheet id="leptos" href="/pkg/hes-game.css"/>
-        <Link rel="icon" type_="image/png" href="/assets/favicon/16.png" sizes="16x16" />
-        <Link rel="icon" type_="image/png" href="/assets/favicon/32.png" sizes="32x32" />
-
-        <Meta property="og:site_name" content="Half-Earth Socialism" />
-        <Meta property="og:type" content="website" />
-        <Meta property="og:description" content="Play as a planetary planner and decide what we should do about the climate, biodiversity, and human welfare. Can you bring the world safely to a better place?" />
-        <Meta property="og:title" content="Half-Earth Socialism: The Game" />
-        <Meta property="og:image" content="https://play.half.earth/assets/social.jpg" />
-        <Meta name="twitter:card" content="summary_large_image" />
-        <Meta name="twitter:title" content="Half-Earth Socialism: The Game" />
-        <Meta name="twitter:description" content="Play as a planetary planner and decide what we should do about the climate, biodiversity, and human welfare. Can you bring the world safely to a better place?" />
-        <Meta name="twitter:image" content="https://play.half.earth/assets/social.jpg" />
-        <Meta name="twitter:image:alt" content="A hot pink logo of the earth surrounded by grains. Underneath is the text 'Half Earth Socialism: A Planetary Crisis Planning Game'. The background is a pixelated mixture of marbled liquid." />
-        <Meta name="twitter:creator" content="@VersoBooks" />
-        <Meta name="twitter:site" content="@VersoBooks" />
-
         <Router>
             <Routes>
                 <Route path="" view=App/>
@@ -69,7 +47,7 @@ impl Phase {
 }
 
 #[component]
-pub fn App() -> impl IntoView {
+fn App() -> impl IntoView {
     AnimationContext::provide();
     provide_context(create_rw_signal::<TipState>(
         TipState::default(),
