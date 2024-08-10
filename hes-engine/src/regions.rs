@@ -13,7 +13,9 @@ use strum::{Display, EnumIter, EnumString, IntoStaticStr};
 // 40 years per level
 const DEVELOP_SPEED: f32 = 1. / 40.;
 
-#[derive(Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
+)]
 pub struct Region {
     pub id: Id,
 

@@ -2,9 +2,8 @@
 
 The project consists of two artifacts:
 
-- The _Half-Earth Socialism_ game (includes web browser and standalone app versions).
-- The _Half-Earth Socialism_ game editor (available only as a standalone app).
-  - Note: The only thing preventing the editor from having a web browser version is that it needs system file access.
+- The _Half-Earth Socialism_ game (both web browser and standalone app versions).
+- The _Half-Earth Socialism_ game editor (both web browser and standalone app).
 
 ## Overview
 
@@ -65,13 +64,14 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 
 ```
 Available recipes:
-    game        # Run development web game (browser)
-    game-app    # Run development app game (tauri)
-    editor      # Run development editor(tauri)
+    game        # Run development game (browser)
+    game-app    # Run development game (tauri)
+    editor      # Run development editor (browser)
+    editor-app  # Run development editor (tauri)
     test        # Run tests
+    build       # Build the web release version (browser)
     build-apps  # Build the app release versions (tauri)
-                # Note: this is just native, for cross-platform see below.
-    build-web   # Build the web release version (browser)
+                # Note: this only builds the current platform, for cross-platform see below.
     translate   # Extract translation strings and update the translation mappings from the source CSVs.
     surfaces    # Generate biome surface textures and regional climates.
     sharing     # Generate sharing images.

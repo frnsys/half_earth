@@ -1,31 +1,60 @@
+mod files;
 mod inputs;
 mod tabs;
 mod validate;
 mod worlds;
 
+use files::load_session;
 use hes_engine::{Collection, World, NPC};
 use inputs::{AsRef, Ref};
 use leptos::*;
 use leptos_toaster::{Toaster, ToasterPosition};
 use strum::{Display, EnumIter, IntoEnumIterator};
 use tabs::*;
-use worlds::{Status, WorldsMenu};
+use wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::Event;
+use worlds::WorldsMenu;
 
 #[derive(Debug, Clone, Copy, Display, EnumIter, PartialEq)]
 enum Tab {
-    World,
+    Planet,
     Industries,
     Processes,
     Projects,
     Events,
+    Help,
+}
+
+/// Warn about losing unsaved data before closing.
+fn before_unload() {
+    let window = web_sys::window()
+        .expect("should have a window in this context");
+    let closure = Closure::wrap(Box::new(move |event: Event| {
+        let event = event
+            .dyn_ref::<web_sys::BeforeUnloadEvent>()
+            .unwrap();
+        event.set_return_value("If you have unsaved changes, you should save with Ctrl+S first. Are you sure you want to close the tab?");
+    }) as Box<dyn FnMut(_)>);
+    window
+        .add_event_listener_with_callback(
+            "beforeunload",
+            closure.as_ref().unchecked_ref(),
+        )
+        .expect("Failed to add event listener");
+    closure.forget();
 }
 
 #[component]
 pub fn App() -> impl IntoView {
-    let tab = create_rw_signal(Tab::World);
+    before_unload();
 
-    let status = create_rw_signal(Status::None);
-    let world = create_rw_signal(World::default());
+    let tab = create_rw_signal(Tab::Planet);
+
+    let start_world = match load_session() {
+        Ok(Some(world)) => world,
+        Err(_) | Ok(None) => World::default(),
+    };
+    let world = create_rw_signal(start_world);
     let npcs = NPC::load();
 
     provide_context(Signal::derive(move || {
@@ -79,48 +108,33 @@ pub fn App() -> impl IntoView {
             .collect::<Vec<_>>()
     };
 
-    let world_loaded =
-        move || with!(|status| status.is_editing());
-    let menu = move || {
-        view! {
-            <div id="tabs">
-                <WorldsMenu world=world status=status />
-                <Show when={world_loaded}>
-                    {tabs}
-                </Show>
-            </div>
-        }
-    };
-
-    let main = move || {
-        if world_loaded() {
-            Some(view! {
-                {move || {
-                     match tab.get() {
-                         Tab::World => view! { <World world / > }.into_view(),
-                         Tab::Industries => view! { <Industries world / > }.into_view(),
-                         Tab::Processes => view! { <Processes world / > }.into_view(),
-                         Tab::Projects => view! { <Projects world / > }.into_view(),
-                         Tab::Events => view! { <Events world / > }.into_view(),
-                     }
-                 }
-                }
-            })
-        } else {
-            None
-        }
-    };
-
     view! {
         <main>
+            <div id="save-tip">Ctrl+S: Save the current session.</div>
             <Toaster
                 position=ToasterPosition::BottomRight
             >
-                {menu}
-                {main}
+                <div id="tabs">
+                    <WorldsMenu world />
+                    {tabs}
+                </div>
+                {move || {
+                    match tab.get() {
+                        Tab::Planet => view! { <World world / > }.into_view(),
+                        Tab::Industries => view! { <Industries world / > }.into_view(),
+                        Tab::Processes => view! { <Processes world / > }.into_view(),
+                        Tab::Projects => view! { <Projects world / > }.into_view(),
+                        Tab::Events => view! { <Events world / > }.into_view(),
+                        Tab::Help => view! { <Help / > }.into_view(),
+                    }
+                }}
             </Toaster>
         </main>
     }
+}
+
+async fn confirm(msg: &str) -> bool {
+    window().confirm_with_message(msg).unwrap()
 }
 
 #[macro_export]
@@ -131,7 +145,6 @@ macro_rules! infinite_list {
             UseInfiniteScrollOptions,
         };
         use leptos_toaster::{Toasts, ToastId, ToastOptions, dismiss_toast};
-        use tauri_sys::{dialog::MessageDialogBuilder};
 
         #[component]
         pub fn $name(world: RwSignal<World>) -> impl IntoView {
@@ -255,7 +268,7 @@ macro_rules! infinite_list {
                                                 let refs = with!(|world| crate::validate::find_references(id, crate::validate::RefKind::$single, world));
                                                 if !refs.is_empty() {
                                                     create_toast(name, refs);
-                                                } else if ev.ctrl_key() || MessageDialogBuilder::new().confirm(msg).await.unwrap() {
+                                                } else if ev.ctrl_key() || crate::confirm(msg).await {
                                                     update!(|world| {
                                                         world.$field.remove(&id);
                                                     });

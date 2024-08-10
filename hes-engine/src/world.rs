@@ -23,7 +23,7 @@ pub static CLIMATES: LazyLock<BTreeMap<String, Vec<[f32; 4]>>> =
 /// The `World` represents a game configuration,
 /// defining the world's parameters as well
 /// as the projects, processes, regions, and industries.
-#[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct World {
     pub year: usize,
 

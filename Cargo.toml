@@ -29,6 +29,8 @@ js-sys = "0.3"
 log = "0.4.22"
 console_log = "1.0.0"
 console_error_panic_hook = "0.1.7"
+tracing = "0.1.40"
+tracing-wasm = "0.2.1"
 numfmt = "1.1.1"
 strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
 enum-map = { version = "2.7.3", features = ["serde"] }

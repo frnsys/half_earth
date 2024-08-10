@@ -111,8 +111,8 @@ pub fn World(world: RwSignal<World>) -> impl IntoView {
                                                           label=format!("{}-{}", income, label)
                                                           help=format!("{} income per-capita demand for {}, in {}.", income, label, units)
                                                           signal=create_slice(world,
-                                                              move |world| world.per_capita_demand[j][output],
-                                                              move |world, val| world.per_capita_demand[j][output] = val
+                                                              move |world| world.per_capita_demand[j].base[output],
+                                                              move |world, val| world.per_capita_demand[j].base[output] = val
                                                           ) />
                                                   }
                                               }).collect::<Vec<_>>()

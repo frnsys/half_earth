@@ -852,7 +852,7 @@ textarea {
 .worlds-menu {
   position: absolute;
   left: 0;
-  top: 0.5em;
+  top: 9px;
   z-index: 4;
 }
 .worlds-menu-open {
@@ -860,6 +860,8 @@ textarea {
   font-size: 1.4em;
   padding: 0 0.5em 0.1em;
   color: #888;
+  display: inline-block;
+  vertical-align: middle;
 }
 .worlds-menu-open:hover {
   color: #fff;
@@ -885,4 +887,37 @@ textarea {
 .worlds-menu-inner > div:hover {
   background: #141414;
   color: #FFC107;
+}
+
+.world-name {
+  font-size: 11px;
+}
+
+#save-tip {
+  position: fixed;
+  pointer-events: none;
+  right: 1em;
+  bottom: 1em;
+  font-size: 10px;
+  width: 80px;
+  color: rgba(255,255,255,0.5);
+}
+
+#help {
+  max-width: 100%;
+  margin: 1em auto;
+  padding: 0 1em 5em;
+  width: 480px;
+}
+#help p strong {
+  color: #f54141;
+}
+#help a {
+  color: #9db5fc;
+}
+#help p em {
+  color: #ffdc9a;
+}
+#help code {
+  color: #7171ff;
 }

@@ -133,6 +133,16 @@ pub fn NumericInput<
     let (read, write) = signal;
     let maybe_val = create_rw_signal(Ok(read.get_untracked()));
 
+    // Frankly kind of hacky
+    let input_ref = create_node_ref::<html::Input>();
+    create_effect(move |_| {
+        let new_val = read.get();
+        maybe_val.set(Ok(new_val));
+        if let Some(input) = input_ref.get() {
+            input.set_value(&new_val.to_string());
+        }
+    });
+
     let help = store_value(help);
 
     view! {
@@ -140,6 +150,7 @@ pub fn NumericInput<
             <div class="numeric-group-inner">
                 <label>{label}</label>
                 <input
+                    ref=input_ref
                     class="numeric-input"
                     inputmode="decimal"
                     value=read.get_untracked()
@@ -175,12 +186,23 @@ pub fn PercentInput(
     let (read, write) = signal;
     let maybe_val = create_rw_signal(Ok(read.get_untracked()));
 
+    // Frankly kind of hacky
+    let input_ref = create_node_ref::<html::Input>();
+    create_effect(move |_| {
+        let new_val = read.get();
+        maybe_val.set(Ok(new_val * 100.));
+        if let Some(input) = input_ref.get() {
+            input.set_value(&(new_val * 100.).to_string());
+        }
+    });
+
     view! {
         <div class="input-group numeric-group" class:inline={inline}>
             <div class="numeric-group-inner">
                 <label>{label}</label>
                 <div class="input-suffixed">
                     <input
+                        ref={input_ref}
                         class="numeric-input"
                         inputmode="decimal"
                         value=read.get_untracked() * 100.

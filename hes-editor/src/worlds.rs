@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use hes_engine::World;
 use leptos::*;
 use leptos_toaster::*;
@@ -6,39 +8,175 @@ use leptos_use::{
     use_document,
     use_event_listener,
 };
-use serde::Serialize;
-use std::path::{Path, PathBuf};
-use tauri_sys::{dialog::MessageDialogBuilder, tauri};
 
-use crate::validate::validate;
+use wasm_bindgen::{prelude::*, JsCast};
+use wasm_bindgen_futures::JsFuture;
+use web_sys::{
+    Blob,
+    File,
+    FileReader,
+    HtmlAnchorElement,
+    HtmlInputElement,
+    Url,
+};
 
-fn ensure_extension<P: AsRef<Path>>(
-    path: P,
-    ext: &str,
-) -> PathBuf {
-    let path = path.as_ref();
-    let mut new_path = path.to_path_buf();
+use crate::{files, validate::validate};
 
-    if let Some(current_ext) =
-        path.extension().and_then(|e| e.to_str())
-    {
-        if current_ext == ext {
-            return new_path;
-        }
+pub async fn pick_and_load_file() -> Option<(String, String)> {
+    let document = window().document().unwrap();
+
+    // Create an input element of type 'file'
+    let input: HtmlInputElement = document
+        .create_element("input")
+        .unwrap()
+        .dyn_into::<HtmlInputElement>()
+        .unwrap();
+    input.set_type("file");
+    input.set_accept(".world");
+
+    // Add the input element to the DOM (hidden)
+    input.style().set_property("display", "none").unwrap();
+    document.body().unwrap().append_child(&input).unwrap();
+
+    // Create a promise and its resolution/rejection callbacks
+    let promise = js_sys::Promise::new(&mut |resolve, _| {
+        let resolve = resolve.clone();
+        let value = input.clone();
+        let closure = Closure::wrap(Box::new(move || {
+            let files = value.files();
+            if let Some(files) = files {
+                if files.length() > 0 {
+                    let file = files.get(0).unwrap(); // Take the first file (for simplicity)
+                    resolve
+                        .call1(&JsValue::NULL, &file)
+                        .unwrap();
+                } else {
+                    resolve
+                        .call1(&JsValue::NULL, &JsValue::NULL)
+                        .unwrap();
+                }
+            }
+        })
+            as Box<dyn FnMut()>);
+
+        input.set_onchange(Some(
+            closure.as_ref().unchecked_ref(),
+        ));
+        closure.forget();
+    });
+
+    // Trigger the file input click to open the file picker dialog
+    input.click();
+
+    // Await the user's file selection
+    let result = JsFuture::from(promise).await.unwrap();
+
+    // Clean up: remove the input element from the DOM
+    input.remove();
+
+    // Return the file content or None if no file was selected
+    if result.is_null() {
+        return None;
     }
 
-    // Add the extension
-    new_path.set_extension(ext);
-    new_path
+    let file = result.dyn_into::<File>().unwrap();
+    let file_content = read_file_as_text(&file).await;
+
+    Some((file.name(), file_content))
 }
 
-async fn confirm_lose_changes(has_world: bool) -> bool {
-    if has_world {
-        let msg = "Any unsaved changes to the current world will be lost. Continue?";
-        MessageDialogBuilder::new().confirm(msg).await.unwrap()
-    } else {
-        true
+async fn read_file_as_text(file: &File) -> String {
+    let reader = FileReader::new().unwrap();
+
+    let promise = js_sys::Promise::new(&mut |resolve, _| {
+        let reader_clone = reader.clone();
+        let resolve_clone = resolve.clone();
+
+        let closure = Closure::wrap(Box::new(move || {
+            let result = reader_clone.result().unwrap();
+            resolve_clone
+                .call1(&JsValue::NULL, &result)
+                .unwrap();
+        })
+            as Box<dyn FnMut()>);
+
+        reader.set_onloadend(Some(
+            closure.as_ref().unchecked_ref(),
+        ));
+        closure.forget();
+
+        reader.read_as_text(file).unwrap();
+    });
+
+    let result = JsFuture::from(promise).await.unwrap();
+
+    result.as_string().unwrap()
+}
+
+async fn download(data: &str, filename: &str) {
+    let parts = js_sys::Array::of1(&JsValue::from_str(&data));
+    let blob = Blob::new_with_str_sequence_and_options(
+        &parts,
+        web_sys::BlobPropertyBag::new().type_("text/plain"),
+    )
+    .expect("Failed to create Blob");
+    let url = Url::create_object_url_with_blob(&blob)
+        .expect("Failed to create object URL");
+
+    let document = window()
+        .document()
+        .expect("Should have a document on window");
+    let a: HtmlAnchorElement = document
+        .create_element("a")
+        .expect("Failed to create anchor element")
+        .dyn_into()
+        .expect("Failed to cast to HtmlAnchorElement");
+
+    a.set_href(&url);
+    a.set_download(filename);
+
+    document
+        .body()
+        .expect("Document should have a body")
+        .append_child(&a)
+        .expect("Failed to append anchor to body");
+    a.click();
+
+    a.remove();
+    Url::revoke_object_url(&url)
+        .expect("Failed to revoke object URL");
+}
+
+async fn export(
+    default_name: &str,
+    world: World,
+) -> Result<Option<String>, Error> {
+    let errors = validate(&world);
+    if !errors.is_empty() {
+        return Err(Error::Validation(errors));
     }
+
+    let result = window()
+        .prompt_with_message_and_default(
+            "Name Your World",
+            default_name,
+        )
+        .unwrap();
+
+    if let Some(name) = result {
+        let data =
+            serde_json::to_string_pretty(&world).unwrap();
+        let name = format!("{name}.world");
+        download(&data, &name).await;
+        Ok(Some(name))
+    } else {
+        Ok(None)
+    }
+}
+
+async fn confirm_lose_changes() -> bool {
+    let msg = "Any unsaved changes to the current world will be lost. Continue?";
+    crate::confirm(msg).await
 }
 
 enum Error {
@@ -46,74 +184,8 @@ enum Error {
     IO(String),
 }
 
-async fn save_named(
-    world: World,
-) -> Result<Option<PathBuf>, Error> {
-    let mut dialog =
-        tauri_sys::dialog::FileDialogBuilder::new();
-    dialog.add_filter("World", &["world"]);
-    if let Some(path) = dialog.save().await.unwrap() {
-        save(world, &path).await?;
-        Ok(Some(path))
-    } else {
-        Ok(None)
-    }
-}
-
-async fn save(world: World, path: &Path) -> Result<(), Error> {
-    let errors = validate(&world);
-    if !errors.is_empty() {
-        return Err(Error::Validation(errors));
-    }
-
-    let path = ensure_extension(path, "world");
-    let data = serde_json::to_string_pretty(&world)
-        .map_err(|err| Error::IO(err.to_string()))?;
-    let res: Result<(), _> = tauri::invoke(
-        "write_file",
-        &WriteFile {
-            path: path.clone(),
-            content: data,
-        },
-    )
-    .await;
-    res.map_err(|err| Error::IO(err.to_string()))?;
-    Ok(())
-}
-
-#[derive(Clone)]
-pub enum Status {
-    // No world is being edited.
-    None,
-
-    // A new, unsaved world is being edited.
-    New,
-
-    // An existing world with a known file path is being edited.
-    File(PathBuf),
-}
-impl Status {
-    pub fn is_editing(&self) -> bool {
-        !matches!(self, Status::None)
-    }
-}
-
-#[derive(Serialize)]
-struct ReadFile {
-    path: PathBuf,
-}
-
-#[derive(Serialize)]
-struct WriteFile {
-    path: PathBuf,
-    content: String,
-}
-
 #[component]
-pub fn WorldsMenu(
-    status: RwSignal<Status>,
-    world: RwSignal<World>,
-) -> impl IntoView {
+pub fn WorldsMenu(world: RwSignal<World>) -> impl IntoView {
     let toast_context = expect_context::<Toasts>();
     let notice_toast = move |title: String, details: String| {
         let toast_id = ToastId::new();
@@ -187,37 +259,64 @@ pub fn WorldsMenu(
         }
     });
 
-    let has_world = move || status.get().is_editing();
-    let editing_file = move || match status.get() {
-        Status::File(path) => Some(path.clone()),
-        _ => None,
-    };
-
     let _ = use_event_listener(
         use_document(),
         ev::keydown,
         move |ev| {
             if ev.key() == "s" && ev.ctrl_key() {
-                if let Some(path) = editing_file() {
-                    spawn_local(async move {
-                        match save(world.get(), &path).await {
-                            Ok(_) => {
-                                notice_toast(
-                                    path.display().to_string(),
-                                    "Successfully saved."
-                                        .into(),
-                                );
-                                status.set(Status::File(
-                                    path.clone(),
-                                ));
-                            }
-                            Err(err) => error_toast(err),
-                        }
-                    });
+                match files::save_session(&world.get()) {
+                    Ok(_) => {
+                        notice_toast(
+                            "Session saved".into(),
+                            "Don't forget to export your world!"
+                            .into(),
+                        );
+                    }
+                    Err(err) => {
+                        notice_toast(
+                            "Failed to save session:".into(),
+                            err.to_string(),
+                        );
+                    }
                 }
             }
         },
     );
+
+    let default_name = format!(
+        "world-{}",
+        (js_sys::Math::random() * usize::MAX as f64).round()
+            as usize
+    );
+    let last_name = create_rw_signal(default_name);
+
+    let load_action = create_action(move |_: &()| async move {
+        if let Some((name, data)) = pick_and_load_file().await {
+            if let Ok(w) = serde_json::from_str::<World>(&data)
+            {
+                let as_path = PathBuf::from(name);
+                if let Some(name) = as_path.file_stem() {
+                    last_name.set(
+                        name.to_string_lossy().to_string(),
+                    );
+                }
+                return Some(w);
+            } else {
+                error_toast(Error::IO("Failed to parse world from file. Are you sure it's valid?".to_string()));
+            }
+        } else {
+            error_toast(Error::IO(
+                "Failed to read file.".to_string(),
+            ));
+        }
+        None
+    });
+    let value = load_action.value();
+    create_effect(move |_| {
+        if let Some(w) = value.get().flatten() {
+            world.set(w);
+        }
+    });
 
     view! {
         <div class="worlds-menu" ref=target>
@@ -225,12 +324,11 @@ pub fn WorldsMenu(
                 on:click=move |_| {
                     update!(|open| *open = !*open);
             }
-            >"≡"</div>
+            >"≡"</div><span class="world-name">{last_name}</span>
             <div class="worlds-menu-inner" class:hidden=move || !open.get() >
                 <div on:click=move |_| {
                     spawn_local(async move {
-                        if confirm_lose_changes(has_world()).await {
-                            status.set(Status::New);
+                        if confirm_lose_changes().await {
                             world.set(World::default());
                         }
                     });
@@ -238,100 +336,28 @@ pub fn WorldsMenu(
                 }>"New"</div>
 
                 <div on:click=move |_| {
-                    spawn_local(async move {
-                        if confirm_lose_changes(has_world()).await {
-                            let mut dialog = tauri_sys::dialog::FileDialogBuilder::new();
-                            dialog.add_filter("World", &["world"]);
-                            if let Some(path) = dialog.pick_file().await.unwrap() {
-                                let res: Result<String, _> = tauri::invoke("read_file",
-                                    &ReadFile { path: path.clone() }).await;
-                                if let Ok(data) = res
-                                {
-                                    if let Ok(w) =
-                                        serde_json::from_str::<World>(
-                                            &data,
-                                        )
-                                    {
-                                        world.set(w);
-                                        status.set(Status::File(path.clone()));
-                                    } else {
-                                        error_toast(Error::IO("Failed to parse world from file. Are you sure it's valid?".to_string()));
-                                    }
-                                } else {
-                                    error_toast(Error::IO("Failed to read file.".to_string()));
-                                }
-                            }
-                        }
-                    });
+                    load_action.dispatch(());
                     open.set(false);
-                }>"Open"</div>
+                }>"Import"</div>
 
-                {move || {
-                    editing_file().map(|path| {
-                         view! {
-                             <div on:click=move |_| {
-                                 let path = path.clone();
-                                 spawn_local(async move {
-                                     match save(world.get(), &path).await {
-                                         Ok(_) => {
-                                             notice_toast(path.display().to_string(), "Successfully saved.".into());
-                                             status.set(Status::File(path.clone()));
-                                         }
-                                         Err(err) => error_toast(err),
-                                     }
-                                 });
-                                 open.set(false);
-                             }>"Save"</div>
+                 <div on:click=move |_| {
+                     spawn_local(async move {
+                         match export(&last_name.get_untracked(), world.get_untracked()).await {
+                             Ok(None) => (),
+                             Ok(Some(name)) => {
+                                 let as_path = PathBuf::from(name.clone());
+                                 if let Some(name) = as_path.file_stem() {
+                                     last_name.set(
+                                         name.to_string_lossy().to_string(),
+                                     );
+                                 }
+                                 notice_toast(name, "Successfully exported.".into());
+                             }
+                             Err(err) => error_toast(err),
                          }
-                     })
-                 }}
-
-                {move || {
-                     if has_world() {
-                         Some(view! {
-                             <div on:click=move |_| {
-                                 spawn_local(async move {
-                                     match save_named(world.get()).await {
-                                         Ok(None) => (),
-                                         Ok(Some(path)) => {
-                                             // Save to a named file and make it the
-                                             // currently-edited file.
-                                             notice_toast(path.display().to_string(), "Successfully saved.".into());
-                                             status.set(Status::File(path.clone()));
-                                         }
-                                         Err(err) => error_toast(err),
-                                     }
-                                 });
-                                 open.set(false);
-                             }>"Save As"</div>
-                         })
-                     } else {
-                         None
-                     }
-                 }}
-
-                {move || {
-                     if editing_file().is_some() {
-                         Some(view! {
-                             <div on:click=move |_| {
-                                 spawn_local(async move {
-                                     match save_named(world.get()).await {
-                                         Ok(None) => (),
-                                         Ok(Some(path)) => {
-                                             // Save to a named file, but don't make it the
-                                             // currently-edited file.
-                                             notice_toast(path.display().to_string(), "Successfully saved.".into());
-                                         }
-                                         Err(err) => error_toast(err),
-                                     }
-                                 });
-                                 open.set(false);
-                             }>"Save As Copy"</div>
-                         })
-                     } else {
-                         None
-                     }
-                 }}
+                     });
+                     open.set(false);
+                 }>"Export"</div>
             </div>
         </div>
     }
