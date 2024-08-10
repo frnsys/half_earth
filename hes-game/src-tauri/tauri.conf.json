@@ -30,7 +30,7 @@
     },
     "bundle": {
       "active": true,
-      "targets": "all",
+      "targets": ["appimage", "app", "msi"],
       "identifier": "earth.half.game",
       "icon": [
         "icons/32x32.png",
