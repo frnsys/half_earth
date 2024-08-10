@@ -77,7 +77,7 @@ pub fn Projects(
         projects
     };
 
-    let scanner = ProjectScanner::new(on_change);
+    let scanner = ProjectScanner::new(Some(on_change));
 
     view! {
         <div class="plan-change-select planning--page">

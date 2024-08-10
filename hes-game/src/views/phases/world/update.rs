@@ -122,7 +122,7 @@ fn Update(
         })
     };
 
-    let per_capita_demand = memo!(game.world.output_demand);
+    let per_capita_demand = memo!(game.world.per_capita_demand);
     let outcomes = move || {
         with!(|projects, regions, update, per_capita_demand| {
             match update {

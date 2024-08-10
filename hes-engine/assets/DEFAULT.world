@@ -15,30 +15,86 @@
         "electricity": 26936000000000.0,
         "fuel": 141397300000000.0
     },
-    "output_demand": [
+    "per_capita_demand": [
         {
-            "fuel": 84.823,
-            "electricity": 12.647,
-            "plant_calories": 781214.7,
-            "animal_calories": 62258.01
+            "base": {
+                "fuel": 84.823,
+                "electricity": 12.647,
+                "plant_calories": 781214.7,
+                "animal_calories": 62258.01
+            },
+            "factor": {
+                "fuel": 1.0,
+                "electricity": 1.0,
+                "plant_calories": 1.0,
+                "animal_calories": 1.0
+            },
+            "modifier": {
+                "fuel": 0.0,
+                "electricity": 0.0,
+                "plant_calories": 0.0,
+                "animal_calories": 0.0
+            }
         },
         {
-            "fuel": 478.748,
-            "electricity": 80.88187,
-            "plant_calories": 835119.06,
-            "animal_calories": 101446.23
+            "base": {
+                "fuel": 478.748,
+                "electricity": 80.88187,
+                "plant_calories": 835119.06,
+                "animal_calories": 101446.23
+            },
+            "factor": {
+                "fuel": 1.0,
+                "electricity": 1.0,
+                "plant_calories": 1.0,
+                "animal_calories": 1.0
+            },
+            "modifier": {
+                "fuel": 0.0,
+                "electricity": 0.0,
+                "plant_calories": 0.0,
+                "animal_calories": 0.0
+            }
         },
         {
-            "fuel": 1842.7817,
-            "electricity": 368.96432,
-            "plant_calories": 883168.5,
-            "animal_calories": 235324.58
+            "base": {
+                "fuel": 1842.7817,
+                "electricity": 368.96432,
+                "plant_calories": 883168.5,
+                "animal_calories": 235324.58
+            },
+            "factor": {
+                "fuel": 1.0,
+                "electricity": 1.0,
+                "plant_calories": 1.0,
+                "animal_calories": 1.0
+            },
+            "modifier": {
+                "fuel": 0.0,
+                "electricity": 0.0,
+                "plant_calories": 0.0,
+                "animal_calories": 0.0
+            }
         },
         {
-            "fuel": 4111.456,
-            "electricity": 750.5439,
-            "plant_calories": 900747.4,
-            "animal_calories": 320351.1
+            "base": {
+                "fuel": 4111.456,
+                "electricity": 750.5439,
+                "plant_calories": 900747.4,
+                "animal_calories": 320351.1
+            },
+            "factor": {
+                "fuel": 1.0,
+                "electricity": 1.0,
+                "plant_calories": 1.0,
+                "animal_calories": 1.0
+            },
+            "modifier": {
+                "fuel": 0.0,
+                "electricity": 0.0,
+                "plant_calories": 0.0,
+                "animal_calories": 0.0
+            }
         }
     ],
     "water_by_income": [

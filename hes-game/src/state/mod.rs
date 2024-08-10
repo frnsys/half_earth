@@ -34,7 +34,9 @@ pub fn update_factors(state: &State) {
     }
 }
 
-pub fn demand_by_income_levels(output: Output) -> [f32; 4] {
+pub fn base_demand_by_income_levels(
+    output: Output,
+) -> [f32; 4] {
     BASE_OUTPUT_DEMAND
         .read()
         .expect("Can read base output demand")
@@ -117,7 +119,7 @@ fn init_vars(game: &State) {
     *BASE_OUTPUT_DEMAND
         .write()
         .expect("Can write to shared value") =
-        game.world.output_demand;
+        game.world.per_capita_demand.clone().map(|d| d.base);
 }
 
 pub fn load() -> (State, UIState) {

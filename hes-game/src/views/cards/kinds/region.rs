@@ -25,7 +25,7 @@ pub fn RegionCard(
     };
     let game = expect_context::<RwSignal<State>>();
     let total_demand = memo!(game.output_demand.total());
-    let per_capita_demand = memo!(game.world.output_demand);
+    let per_capita_demand = memo!(game.world.per_capita_demand);
     let demand = move || {
         with!(|region, total_demand, per_capita_demand| {
             let demand = region.demand(per_capita_demand);

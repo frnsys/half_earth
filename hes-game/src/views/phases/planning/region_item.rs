@@ -166,7 +166,7 @@ pub fn RegionItem(
             .collect::<Vec<_>>()
     };
 
-    let output_demand = memo!(game.world.output_demand);
+    let output_demand = memo!(game.world.per_capita_demand);
     let demand_for_outputs = create_memo(move |_| {
         let demands: EnumMap<Output, f32> =
             with!(|game| Output::iter()

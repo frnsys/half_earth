@@ -38,7 +38,7 @@ pub fn MiniProject(
     };
     let projects = move || vec![project.get()];
     let scanner_cards = move || {
-        let scanner = ProjectScanner::new((|_| {}).into());
+        let scanner = ProjectScanner::new(None);
         view! {
             <ScannerCards
                 spec=scanner

@@ -1,7 +1,7 @@
 use hes_engine::Output;
 
 use crate::{
-    state::demand_by_income_levels,
+    state::base_demand_by_income_levels,
     t,
     vars::{Impact, OutputKind},
 };
@@ -47,7 +47,7 @@ fn impact_stops(key: Impact, kind: OutputKind) -> [f32; 4] {
             let output = key
                 .as_output()
                 .expect("Checked they're valid outputs");
-            demand_by_income_levels(output)
+            base_demand_by_income_levels(output)
         }
     }
 }
@@ -67,7 +67,7 @@ pub fn impact_intensity(
 }
 
 fn output_stops(key: Output) -> [f32; 4] {
-    demand_by_income_levels(key)
+    base_demand_by_income_levels(key)
 }
 
 pub fn output_intensity(val: f32, key: Output) -> usize {

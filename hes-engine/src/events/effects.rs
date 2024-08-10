@@ -525,8 +525,10 @@ impl Effect {
                 state.resources.available[*resource] += amount;
             }
             Effect::Demand(output, pct_change) => {
-                state.output_demand.factor[*output] +=
-                    pct_change;
+                for demand in &mut state.world.per_capita_demand
+                {
+                    demand.factor[*output] += pct_change;
+                }
             }
             Effect::DemandAmount(output, amount) => {
                 state.output_demand.modifier[*output] += amount;
@@ -719,7 +721,7 @@ impl Effect {
                     region.outlook += (mult
                         * region.demand_level(
                             output,
-                            &state.world.output_demand,
+                            &state.world.per_capita_demand,
                         ) as f32)
                         .round();
                 }
@@ -818,8 +820,10 @@ impl Effect {
                 state.resources.available[*resource] -= amount;
             }
             Effect::Demand(output, pct_change) => {
-                state.output_demand.factor[*output] -=
-                    pct_change;
+                for demand in &mut state.world.per_capita_demand
+                {
+                    demand.factor[*output] -= pct_change;
+                }
             }
             Effect::DemandAmount(output, amount) => {
                 state.output_demand.modifier[*output] -= amount;
@@ -924,7 +928,7 @@ impl Effect {
                     region.outlook -= (mult
                         * region.demand_level(
                             output,
-                            &state.world.output_demand,
+                            &state.world.per_capita_demand,
                         ) as f32)
                         .floor();
                 }
@@ -1106,7 +1110,7 @@ pub fn mean_demand_outlook_change(
             (mult
                 * region.demand_level(
                     output,
-                    &state.world.output_demand,
+                    &state.world.per_capita_demand,
                 ) as f32)
                 .floor()
         })

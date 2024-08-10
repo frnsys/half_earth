@@ -10,6 +10,7 @@ use crate::{
     round_to,
     Collection,
     Id,
+    OutputDemand,
 };
 use serde::{Deserialize, Serialize};
 
@@ -38,7 +39,7 @@ pub struct World {
     pub precipitation: f32,           // global precip avg
 
     pub regions: Collection<Region>,
-    pub output_demand: [OutputMap; 4],
+    pub per_capita_demand: [OutputDemand; 4],
     pub water_by_income: [f32; 4],
     pub materials_by_income: [f32; 4],
     pub income_pop_coefs: [[f32; 4]; 4],
@@ -160,7 +161,7 @@ impl World {
         self.regions.iter().fold(
             outputs!(),
             |mut acc, region| {
-                acc += region.demand(&self.output_demand);
+                acc += region.demand(&self.per_capita_demand);
                 acc
             },
         )
@@ -170,9 +171,9 @@ impl World {
         &self,
         output: Output,
     ) -> [f32; 4] {
-        self.output_demand
+        self.per_capita_demand
             .iter()
-            .map(|demand| demand[output])
+            .map(|demand| demand.of(output))
             .collect::<Vec<_>>()
             .try_into()
             .expect("Mapping from same size arrays")

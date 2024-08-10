@@ -325,9 +325,6 @@ pub fn Plan(
         };
         on_page_change.call(phase);
     };
-    let on_change = move |_| {
-        on_plan_change.call(());
-    };
 
     let process_over_limit_tip = move || {
         tip(
@@ -361,10 +358,10 @@ pub fn Plan(
     view! {
         <div class="planning--page plan">
             <Show when=move || page.get() == Page::Projects>
-                <Projects on_kind_change on_change close=move |_| close()/>
+                <Projects on_kind_change on_change=on_plan_change close=move |_| close()/>
             </Show>
             <Show when=move || page.get() == Page::Processes>
-                <Processes on_change close=move |_| close()/>
+                <Processes on_change=on_plan_change close=move |_| close()/>
             </Show>
             <Show when=move || page.get() == Page::All>
                 <ActivePlan

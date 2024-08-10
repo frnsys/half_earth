@@ -93,13 +93,13 @@ impl Region {
     pub fn demand_level(
         &self,
         output: &Output,
-        output_demand: &[OutputMap; 4],
+        output_demand: &[OutputDemand; 4],
     ) -> usize {
         let demand =
             self.demand(output_demand) / self.population;
         if let Some(idx) = output_demand
             .iter()
-            .position(|m| m[*output] >= demand[*output])
+            .position(|m| m.of(*output) >= demand[*output])
         {
             idx + 1
         } else {
@@ -109,7 +109,7 @@ impl Region {
 
     pub fn demand_levels(
         &self,
-        output_demand: &[OutputMap; 4],
+        output_demand: &[OutputDemand; 4],
     ) -> OutputMap {
         let mut demand_levels: OutputMap = outputs!();
         for (k, v) in demand_levels.items_mut() {
@@ -161,19 +161,19 @@ impl Region {
 
     pub fn demand(
         &self,
-        output_demand: &[OutputMap; 4],
+        output_demand: &[OutputDemand; 4],
     ) -> OutputMap {
         let mut demand = outputs!();
         let idx = self.income.level();
         if idx < 3 {
-            let upper_demand = output_demand[idx + 1];
-            for (k, v_a) in output_demand[idx].items() {
+            let upper_demand = output_demand[idx + 1].total();
+            for (k, v_a) in output_demand[idx].total().items() {
                 let v_b = upper_demand[k];
                 let v = (v_b - v_a) * self.development + v_a;
                 demand[k] = v * self.population;
             }
         } else {
-            for (k, v) in output_demand[idx].items() {
+            for (k, v) in output_demand[idx].total().items() {
                 demand[k] = v * self.population;
             }
         }

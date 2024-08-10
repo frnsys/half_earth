@@ -56,7 +56,7 @@ If debugging the game there are a few options you can pass as URL parameters whi
 - `skip-events`: Skip all events.
 - `fast-years`: Speed up years in the world events phase.
 - `always-skip-world`: Skip the world events phase.
-- `very-popular`: Start with 1000 political capital.
+- `i-am-the-state`: Start with 1000 political capital.
 
 
 ## Running

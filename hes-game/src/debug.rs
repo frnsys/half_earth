@@ -43,7 +43,7 @@ pub fn get_debug_opts() -> DebugOpts {
             always_skip_world: opts
                 .contains(&"always-skip-world")
                 || debug_all,
-            very_popular: opts.contains(&"very-popular")
+            very_popular: opts.contains(&"i-am-the-state")
                 || debug_all,
             check_events: opts.contains(&"check-events"),
         }

@@ -241,7 +241,8 @@ fn regional_factors(
     output: Output,
     state: &State,
 ) -> Vec<Factor> {
-    let per_capita_output_demand = &state.world.output_demand;
+    let per_capita_output_demand =
+        &state.world.per_capita_demand;
     state
         .world
         .regions

@@ -32,13 +32,13 @@ impl Scannable for Project {
 }
 
 pub struct ProjectScanner {
-    on_change: Callback<()>,
+    on_change: Option<Callback<()>>,
     player_seats: Memo<f32>,
     plan_changes: Memo<BTreeMap<Id, PlanChange>>,
     queued_upgrades: Memo<BTreeMap<Id, bool>>,
 }
 impl ProjectScanner {
-    pub fn new(on_change: Callback<()>) -> Self {
+    pub fn new(on_change: Option<Callback<()>>) -> Self {
         let ui = expect_context::<RwSignal<UIState>>();
         let game = expect_context::<RwSignal<State>>();
         Self {
@@ -218,7 +218,9 @@ impl ScannerSpec for ProjectScanner {
                     })
                 .unwrap_or(false);
                 if changed {
-                    on_change.call(());
+                    if let Some(cb) = on_change {
+                        cb.call(());
+                    }
                 }
                 keep_scanning
             };
@@ -328,7 +330,9 @@ impl ScannerSpec for ProjectScanner {
                     })
                 .unwrap_or(false);
                 if changed {
-                    on_change.call(());
+                    if let Some(cb) = on_change {
+                        cb.call(());
+                    }
                 }
                 keep_scanning
             };

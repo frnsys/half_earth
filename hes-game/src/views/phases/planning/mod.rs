@@ -126,13 +126,19 @@ pub fn Planning() -> impl IntoView {
             }
         };
 
+    let on_plan_change = move |_| {
+        game.update_untracked(|game| {
+            events.set(StateExt::roll_events(
+                game,
+                EventPhase::PlanningPlanChange,
+            ));
+        });
+    };
+
     let page_view = move || match page.get() {
         Page::Plan => {
-            view! { <Plan on_plan_change=move |_| {
-                game.update_untracked(|game| {
-                    events.set(StateExt::roll_events(game, EventPhase::PlanningPlanChange));
-                });
-            } on_page_change=move |phase| {
+            view! { <Plan on_plan_change
+            on_page_change=move |phase| {
                 game.update_untracked(|game| {
                     update!(|events| {
                         events.extend(StateExt::roll_events(game, phase));
