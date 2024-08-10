@@ -52,8 +52,10 @@ pub fn Start(
     view! {
         <div>
             <div class="under-construction">
-                <img src="/assets/under-construction-2.gif" />
-                "Dear planner,"<br />"We have recently re-written the game in anticipation of supporting custom cards and game parameters. As such this version may have bugs, saves may be corrupted, etc. For now the "<a href="https://store.steampowered.com/app/2071530/HalfEarth_Socialism/">Steam</a>" and "<a href="https://frnsys.itch.io/half-earth-socialism">Itch.io</a>" versions are running the old code and thus are more reliable. Please file bug reports "<a href="https://github.com/frnsys/half_earth/issues">here.</a>" Thank you for your patience and thanks for playing!"
+                <p>
+                    <img src="/assets/under-construction.gif" />
+                    "Dear planner, We have recently re-written the game in anticipation of supporting custom cards and game parameters. As such this version may have bugs, saves may be corrupted, etc. For now the "<a href="https://store.steampowered.com/app/2071530/HalfEarth_Socialism/">Steam</a>" and "<a href="https://frnsys.itch.io/half-earth-socialism">Itch.io</a>" versions are running the old code and thus are more reliable. Please file bug reports "<a href="https://github.com/frnsys/half_earth/issues">here.</a>" Thank you for your patience and thanks for playing!"
+                </p>
             </div>
             <div class="git-hash" title="Current Version">{git_hash}</div>
             <div id="start-bg"></div>
@@ -159,17 +161,18 @@ pub fn Start(
                                         {move || {
                                                      with!(|world| {
                                                          match world {
-                                                             WorldStatus::Default => "Default World".into(),
-                                                             WorldStatus::Custom(name, _world) => format!("Custom: {name}"),
-                                                             WorldStatus::FailedToParse => "Failed to parse provided world.".into(),
+                                                             WorldStatus::Default => t!("Default World"),
+                                                             WorldStatus::Custom(name, _world) => format!("{}: {name}", t!("Custom")),
+                                                             WorldStatus::FailedToParse => t!("Failed to parse provided world."),
                                                          }
                                                      })
                                                  }}
                                     </span>
                                 </label>
                                 <div class="world-details">
-                                    Click to load a custom world.<br />
-                                    New worlds can be made using the editor.
+                                    {t!("Click to load a custom world.")}<br />
+                                    {t!("New worlds can be made using the editor.")}<br />
+                                    {t!("Warning: Custom worlds may break parts of the game!")}
                                 </div>
                             </div>
                         </div>

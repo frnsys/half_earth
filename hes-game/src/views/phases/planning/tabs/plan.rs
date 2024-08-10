@@ -151,6 +151,17 @@ pub fn Plan(
             let mut problems: EnumMap<Output, f32> =
                 EnumMap::from_array([1.; 4]);
             for output in Output::iter() {
+                tracing::debug!(
+                    "{output:?}: produced={}, demand={}",
+                    crate::display::output(
+                        produced.of(output),
+                        output
+                    ),
+                    crate::display::output(
+                        output_demand[output],
+                        output
+                    )
+                );
                 let met =
                     produced.of(output) / output_demand[output];
                 if met >= 0.99 {

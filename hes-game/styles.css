@@ -4856,7 +4856,7 @@ color: #63FF96;
   top: 100%;
   left: 50%;
   translate: -50% 0;
-  width: 180px;
+  width: 240px;
 }
 .world-picker:hover .world-details {
   display: block;
@@ -4916,13 +4916,18 @@ color: #63FF96;
   background: #121212;
   font-size: 11px;
   padding: 6px;
-  width: 180px;
-  left: 6px;
-  top: 5px;
+  width: 100%;
+  left: 0;
+  top: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.75);
 }
 .under-construction img {
   height: 16px;
   margin: 0px 4px 0 0;
   vertical-align: bottom;
+}
+.under-construction p {
+  margin: 0 auto;
+  max-width: 600px;
+  width: 100%;
 }

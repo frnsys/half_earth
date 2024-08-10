@@ -822,17 +822,6 @@ impl DisplayEffect {
             Effect::ProjectCostModifier(id, amount) => {
                 let project = &state.world.projects[id];
 
-                // This is kind of hacky.
-                // First recover the base cost without the modifier,
-                // then apply the new modifier. This may be slightly off
-                // due to rounding.
-                let base_cost =
-                    project.cost as f32 / project.cost_modifier;
-                let after_cost = (base_cost
-                    * (project.cost_modifier + amount))
-                    .round();
-                let change_amount = after_cost - base_cost;
-
                 let tag = icon_card_tag(
                     &t!(&project.name),
                     project.kind.icon(),
@@ -846,39 +835,17 @@ impl DisplayEffect {
                         t!("development time")
                     }
                 };
-                let unit = match project.kind {
-                    ProjectType::Policy => "".into(),
-                    _ => format!(" {}", t!("year(s)")),
-                };
-                let tip_icon = match project.kind {
-                    ProjectType::Policy => format!(
-                        r#"<img src="{}" />"#,
-                        icons::POLITICAL_CAPITAL
-                    ),
-                    _ => "".into(),
-                };
                 let tip_amount = if self.is_unknown {
-                    t!("by an unknown amount")
+                    t!("an unknown amount")
+                } else if project.is_policy() {
+                    t!("{amount}% [political_capital]", amount: display::percent(amount.abs(), true))
                 } else {
-                    t!("from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit}",
-                        newCost: after_cost,
-                        unit: unit,
-                        cost: project.cost,
-                        tipIcon: tip_icon,
-                    )
+                    t!("{amount}%", amount: display::percent(amount.abs(), true))
                 };
-
-                let icon = match project.kind {
-                    ProjectType::Policy => {
-                        "[political_capital]"
-                    }
-                    _ => "",
-                };
-
                 (
                         tip! {
                             icons::COST,
-                            "This effect {changeDir} the {kind} of this project {tipAmount}.",
+                            "This effect {changeDir} the {kind} of this project by {tipAmount}.",
                             tipAmount: tip_amount,
                             kind: kind,
                             changeDir: self.change_dir(*amount).to_lowercase(),
@@ -886,13 +853,11 @@ impl DisplayEffect {
                         .card(project.clone()),
                         text! {
                             "cost",
-                            "{changeDir} {kind} of {tag} by {icon}{amount}{unit}.",
+                            "{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.",
                             changeDir: self.change_dir(*amount),
                             kind: kind,
                             tag: tag,
-                            icon: icon,
-                            unit: unit,
-                            amount: self.fmt_param(change_amount.abs().ceil())
+                            tipAmount: tip_amount,
                         },
                     )
             }
