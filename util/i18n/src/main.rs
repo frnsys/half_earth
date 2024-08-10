@@ -311,6 +311,16 @@ fn main() {
                 }
             }
 
+            if !extra.is_empty() {
+                println!(
+                    "  --[{}] EXTRA--------------",
+                    path.display()
+                );
+                for key in &extra {
+                    println!("    {}", key);
+                }
+            }
+
             println!(
                 "  Missing: {}, Extra {}",
                 missing.len(),

@@ -388,7 +388,7 @@ year(s),yıl(lar)
 {changeDir} the rate of sea level rise by {amount}mm/year.,Deniz seviyesindeki artış miktarını yıllık {amount} mm {changeDir}.
 {changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}]  küresel memnuniyeti <strong>{amount}</strong> {changeDir}.
 {changeDir} world contentedness by {amount}.,küresel memnuniyeti {amount}  kadar {changeDir}.
-{changeDir} {kind} of {tag} by {icon}{amount}{unit}.,{tag} {kind} maliyetini {icon}{amount}{unit} kadar {changeDir}
+{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{tag} {kind} maliyetini <b>{tipAmount}</b> kadar {changeDir}
 {changeDir} {label} for {tag} by <strong>{amount}</strong>.,[{icon}] {tag} için {label} <strong>{amount}</strong> kadar {changeDir}.
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{name} arzını mevcut arzın <img src=""{icon}"">{amount}."
 {changeDir} {name} supply by <strong>{percent}%.</strong>,[{icon}] {name} arzını <strong>{percent}%.</strong> {changeDir}
@@ -2657,3 +2657,11 @@ Temperature Change,Sıcaklık Değişimi
 Production Shortages,Üretim Kıtlıkları
 Post-Revolution Optimism,"Devrim Sonrası İyimserliği"
 Nature Preserves,Tabiatı Koruma Alanları
+Click to load a custom world.,Özel bir dünyayı yüklemek için tıklayın.
+Custom,Özel
+Default World,Varsayılan Dünya
+Failed to parse provided world.,Verilen dünya çözümlenemedi.
+New worlds can be made using the editor.,Yeni dünyalar editör kullanılarak oluşturulabilir.
+Regional Factors,Bölgesel Faktörler
+This effect {changeDir} the {kind} of this project by {tipAmount}.,"Bu etki, bu projenin {kind}'ini {tipAmount} {changeDir}."
+Warning: Custom worlds may break parts of the game!,Uyarı: Özel dünyalar oyunun bazı bölümlerini bozabilir!

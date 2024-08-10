@@ -838,9 +838,15 @@ impl DisplayEffect {
                 let tip_amount = if self.is_unknown {
                     t!("an unknown amount")
                 } else if project.is_policy() {
-                    t!("{amount}% [political_capital]", amount: display::percent(amount.abs(), true))
+                    format!(
+                        "{}% [political_capital]",
+                        display::percent(amount.abs(), true)
+                    )
                 } else {
-                    t!("{amount}%", amount: display::percent(amount.abs(), true))
+                    format!(
+                        "{}%",
+                        display::percent(amount.abs(), true)
+                    )
                 };
                 (
                         tip! {

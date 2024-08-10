@@ -388,7 +388,7 @@ year(s),年
 {changeDir} the rate of sea level rise by {amount}mm/year.,海面上昇率は、{amount}mm/year{changeDir}。
 {changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}] 世界の満足度は、<strong>{amount}</strong>{changeDir} 。
 {changeDir} world contentedness by {amount}.,世界の満足度は、{amount}{changeDir}。
-{changeDir} {kind} of {tag} by {icon}{amount}{unit}.,{tag}の{kind} が {icon}{amount}{unit}{changeDir}。
+{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{tag}の{kind} が <b>{tipAmount}</b>{changeDir}。
 {changeDir} {label} for {tag} by <strong>{amount}</strong>.,[{icon}]{tag}のための{label}が、<strong>{amount}</strong> {changeDir}
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{name}の供給量は、<img src=""{icon}"">{amount}{changeDir}。（現在の供給量の{percent}% ）"
 {changeDir} {name} supply by <strong>{percent}%.</strong>,[{icon}] {name} の供給が、<strong>{percent}%</strong>{changeDir}
@@ -2656,3 +2656,11 @@ Temperature Change,温度変化
 Production Shortages,生産不足
 Post-Revolution Optimism,革命後の楽観主義
 Nature Preserves,自然保護区
+Click to load a custom world.,クリックしてカスタムワールドを読み込む。
+Custom,カスタム
+Default World,デフォルトワールド
+Failed to parse provided world.,提供されたワールドの解析に失敗しました。
+New worlds can be made using the editor.,エディターを使用して新しいワールドを作成できます。
+Regional Factors,地域要因
+This effect {changeDir} the {kind} of this project by {tipAmount}.,この効果は、このプロジェクトの{kind}を{tipAmount}だけ{changeDir}。
+Warning: Custom worlds may break parts of the game!,警告: カスタムワールドはゲームの一部を破壊する可能性があります！

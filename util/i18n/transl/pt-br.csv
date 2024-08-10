@@ -394,7 +394,7 @@ year(s),ano(s)
 {changeDir} the rate of sea level rise by {amount}mm/year.,{changeDir} a taxa de aumento do nível do mar em {amount}mm/ano.
 {changeDir} world contentedness by <strong>{amount}</strong>.,{changeDir} aprovação mundial em <strong>{amount}</strong>.
 {changeDir} world contentedness by {amount}.,{changeDir} aprovação mundial por {amount}.
-{changeDir} {kind} of {tag} by {icon}{amount}{unit}.,{changeDir} {kind} de {tag} em {icon}{amount}{unit}.
+{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{changeDir} {kind} de {tag} em <b>{tipAmount}</b>.
 {changeDir} {label} for {tag} by <strong>{amount}</strong>.,{changeDir} {label} para {tag} por <strong>{percent}</ strong>.
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{changeDir} o fornecimento de {name} em <img src=""{icon}"">{amount}."
 {changeDir} {name} supply by <strong>{percent}%.</strong>,{changeDir} fornecimento de {name} em <strong>{percent}%.</strong>
@@ -2700,3 +2700,11 @@ Temperature Change,Mudança de Temperatura
 Production Shortages,Déficit de Produção
 Post-Revolution Optimism,Otimismo Pós-Revolução
 Nature Preserves,Reservas Naturais
+Click to load a custom world.,Clique para carregar um mundo personalizado.
+Custom,Personalizado
+Default World,Mundo Padrão
+Failed to parse provided world.,Falha ao processar o mundo fornecido.
+New worlds can be made using the editor.,Novos mundos podem ser feitos usando o editor.
+Regional Factors,Fatores Regionais
+This effect {changeDir} the {kind} of this project by {tipAmount}.,Este efeito {changeDir} o {kind} deste projeto em {tipAmount}.
+Warning: Custom worlds may break parts of the game!,Aviso: Mundos personalizados podem quebrar partes do jogo!

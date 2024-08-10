@@ -388,7 +388,7 @@ year(s),ปี
 {changeDir} the rate of sea level rise by {amount}mm/year.,{changeDir} อัตราการเพิ่มขึ้นของระดับน้่ำทะเล {amount} มม./ปี
 {changeDir} world contentedness by <strong>{amount}</strong>.,{changeDir} ความพึงพอใจระดับโลก <strong>{amount}</strong>
 {changeDir} world contentedness by {amount}.,{changeDir} ความพึงพอใจของโลกโดย {amount}.
-{changeDir} {kind} of {tag} by {icon}{amount}{unit}.,{changeDir} {kind} ของ {tag} ที่ {icon}{amount}{unit}.
+{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{changeDir} {kind} ของ {tag} ที่ <b>{tipAmount}</b>.
 {changeDir} {label} for {tag} by <strong>{amount}</strong>.,{changeDir} {label} สำหรับ {tag} ที่ <strong>{amount}</strong>.
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{changeDir} {name} อุปทาน <img src=""{icon}"">{amount}"
 {changeDir} {name} supply by <strong>{percent}%.</strong>,{changeDir} {name} อุปทาน <strong>{percent}%</strong>
@@ -2657,3 +2657,11 @@ Temperature Change,การเปลี่ยนแปลงอุณหภู�
 Production Shortages,การขาดแคลนการผลิต
 Post-Revolution Optimism,สุทรรศน์นิยมยุคหลังปฏิวัติ
 Nature Preserves,แหล่งอนุรักษ์ทางธรรมชาติ
+Click to load a custom world.,คลิกเพื่อโหลดโลกที่กำหนดเอง
+Custom,กำหนดเอง
+Default World,โลกเริ่มต้น
+Failed to parse provided world.,ไม่สามารถแยกวิเคราะห์โลกที่ให้มาได้
+New worlds can be made using the editor.,สามารถสร้างโลกใหม่ได้โดยใช้ตัวแก้ไข
+Regional Factors,ปัจจัยระดับภูมิภาค
+This effect {changeDir} the {kind} of this project by {tipAmount}.,เอฟเฟกต์นี้ {changeDir} {kind} ของโครงการนี้ {tipAmount}
+Warning: Custom worlds may break parts of the game!,คำเตือน: โลกที่กำหนดเองอาจทำให้เกมบางส่วนเสียหายได้!
