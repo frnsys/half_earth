@@ -3,17 +3,12 @@ target
 node_modules
 dist
 .env
+!hes-game/public/js/dist
 
-editor/data.json
-editor/strings
-assets/content/images/*
 out/
 design/data/src
+assets/content/images/*
 assets/src/images
 assets/src/audio
 assets/fonts/Synt
-*/uploads
-hector/hector-rs
-sharing/*.json
-deploy.sh
 build/
