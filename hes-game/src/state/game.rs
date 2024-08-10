@@ -1,5 +1,10 @@
 use super::{update_factors, Points};
-use crate::{consts, display, views::DisplayEvent};
+use crate::{
+    consts,
+    debug::get_debug_opts,
+    display,
+    views::DisplayEvent,
+};
 use enum_map::EnumMap;
 use extend::ext;
 use hes_engine::*;
@@ -245,13 +250,17 @@ pub impl State {
         &mut self,
         phase: EventPhase,
     ) -> Vec<DisplayEvent> {
-        let events = self
-            .roll_events(phase)
-            .into_iter()
-            .map(|ev| DisplayEvent::new(ev, &self))
-            .collect();
-        update_factors(&self);
-        events
+        if get_debug_opts().skip_events {
+            vec![]
+        } else {
+            let events = self
+                .roll_events(phase)
+                .into_iter()
+                .map(|ev| DisplayEvent::new(ev, &self))
+                .collect();
+            update_factors(&self);
+            events
+        }
     }
 
     fn upgrade_projects(

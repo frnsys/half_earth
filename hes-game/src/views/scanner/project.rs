@@ -137,6 +137,7 @@ impl ScannerSpec for ProjectScanner {
                                             changed = true;
                                         }
                                         controls.pulse_level();
+
                                         if p.next_upgrade()
                                             .is_some()
                                         {

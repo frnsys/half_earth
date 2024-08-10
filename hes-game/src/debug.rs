@@ -8,6 +8,7 @@ struct QueryParams {
 
 #[derive(Default, Debug)]
 pub struct DebugOpts {
+    pub skip_events: bool,
     pub skip_tutorial: bool,
     pub show_all_projects: bool,
     pub show_all_processes: bool,
@@ -15,6 +16,7 @@ pub struct DebugOpts {
     pub skip_to_planning: bool,
     pub always_skip_world: bool,
     pub check_events: bool,
+    pub very_popular: bool,
 }
 
 pub fn get_debug_opts() -> DebugOpts {
@@ -25,6 +27,8 @@ pub fn get_debug_opts() -> DebugOpts {
         let opts: Vec<_> = debug.split(",").collect();
         let debug_all = opts.contains(&"all");
         DebugOpts {
+            skip_events: opts.contains(&"skip-events")
+                || debug_all,
             skip_tutorial: opts.contains(&"skip-tutorial")
                 || debug_all,
             fast_years: opts.contains(&"fast-years")
@@ -38,6 +42,8 @@ pub fn get_debug_opts() -> DebugOpts {
                 || debug_all,
             always_skip_world: opts
                 .contains(&"always-skip-world")
+                || debug_all,
+            very_popular: opts.contains(&"very-popular")
                 || debug_all,
             check_events: opts.contains(&"check-events"),
         }

@@ -85,9 +85,69 @@ pub fn ProjectCard(
         }
     });
 
-    let plan_changes = memo!(ui.plan_changes);
+    // This is super hacky but I'm struggling to figure out
+    // how to approach these problems in leptos.
+    // As I understand it when a signal is updated in leptos
+    // it immediately starts triggering any dependents,
+    // which can lead to nested calls where an outer function
+    // borrows a signal that an inner, deeper function tries
+    // to borrow and can't, causing a borrow error.
+    //
+    // That in itself isn't necessarily a difficult problem to resolve,
+    // but when that error is thrown in leptos you're pointed to
+    // a line within the leptos library, not where the failed borrow
+    // was attempted, not what signal the borrow failed on,
+    // nor anything else that gives an idea of where to investigate.
+    //
+    // So you have to do a ton of trial-and-error, commenting out things
+    // to try and narrow down where the error is actually happening.
+    // And once you find that, then you have to figure out where in the call
+    // stack the conflicting borrow is happening--again requiring an very
+    // trial-and-error approach.
+    //
+    // A quick-and-dirty "solution" is what I'm doing here. You don't listen
+    // on directly to "real" signal but instead via a proxy signal. This proxy
+    // signal is updated as a side-effect when the real signal is updated,
+    // but crucially it's updated *after* the current call stack is resolved
+    // and any borrows are freed. Here I'm using `queue_microtask` but elsewhere
+    // I'm using `use_timeout` which accomplishes the same thing, though
+    // probably not as nicely.
+    let plan_changes_proxy =
+        create_rw_signal(with!(|ui| ui.plan_changes.clone()));
+    let plan_changes_source = memo!(ui.plan_changes);
+    create_effect(move |_| {
+        plan_changes_source.track();
+        queue_microtask(move || {
+            let changes =
+                ui.with_untracked(|ui| ui.plan_changes.clone());
+            plan_changes_proxy.set(changes);
+        });
+    });
+
+    let queued_upgrades_proxy =
+        create_rw_signal(with!(|ui| ui
+            .queued_upgrades
+            .clone()));
+    let queued_upgades_source = memo!(ui.queued_upgrades);
+    create_effect(move |_| {
+        queued_upgades_source.track();
+        queue_microtask(move || {
+            let upgrades = ui.with_untracked(|ui| {
+                ui.queued_upgrades.clone()
+            });
+            queued_upgrades_proxy.set(upgrades);
+        });
+    });
+
+    let upgrade_queued = move || {
+        with!(|project, queued_upgrades_proxy| {
+            queued_upgrades_proxy.get(&project.id)
+                == Some(&true)
+        })
+    };
+
     let remaining_cost = move || {
-        with!(|project, plan_changes| {
+        with!(|project, plan_changes_proxy| {
             if implemented() {
                 0.to_string()
             } else if project.is_building() {
@@ -109,7 +169,7 @@ pub fn ProjectCard(
                 match project.kind {
                     ProjectType::Policy => {
                         if let Some(changes) =
-                            plan_changes.get(&project.id)
+                            plan_changes_proxy.get(&project.id)
                         {
                             if changes.withdrawn {
                                 0.to_string()
@@ -278,40 +338,36 @@ pub fn ProjectCard(
             .collect::<Vec<_>>())
     };
 
-    let queued_upgrades = memo!(ui.queued_upgrades);
-    let upgrade_queued = move || {
-        with!(|project, queued_upgrades| {
-            queued_upgrades.get(&project.id) == Some(&true)
-        })
-    };
-    let next_upgrade = move || {
-        with!(|project, plan_changes| {
-            if project.upgrades.is_empty() {
-                None
-            } else {
-                let idx = project.level;
-                if idx >= project.upgrades.len() {
+    let next_upgrade =
+        move || -> Option<(usize, Vec<DisplayEffect>)> {
+            with!(|project, plan_changes_proxy| {
+                if project.upgrades.is_empty() {
                     None
                 } else {
-                    let upgrade = &project.upgrades[idx];
-                    let mut cost = upgrade.cost;
-                    if let Some(changes) =
-                        plan_changes.get(&project.id)
-                    {
-                        if changes.downgrades > 0 {
-                            cost = 0;
+                    let idx = project.level;
+                    if idx >= project.upgrades.len() {
+                        None
+                    } else {
+                        let upgrade = &project.upgrades[idx];
+                        let mut cost = upgrade.cost;
+                        if let Some(changes) =
+                            plan_changes_proxy.get(&project.id)
+                        {
+                            if changes.downgrades > 0 {
+                                cost = 0;
+                            }
                         }
+                        let effects: Vec<DisplayEffect> =
+                            upgrade
+                                .effects
+                                .iter()
+                                .map(|e| e.into())
+                                .collect();
+                        Some((cost, effects))
                     }
-                    let effects: Vec<DisplayEffect> = upgrade
-                        .effects
-                        .iter()
-                        .map(|e| e.into())
-                        .collect();
-                    Some((cost, effects))
                 }
-            }
-        })
-    };
+            })
+        };
     let has_upgrade = move || {
         with!(|project| {
             project.is_active() && next_upgrade().is_some()
@@ -412,9 +468,7 @@ pub fn ProjectCard(
                                 }
                             }
                         >
-
-                            {t!("Level")}
-                            {level}
+                            {t!("Level")}" "{level}
                         </Show>
                     </Show>
                 </div>
@@ -458,30 +512,36 @@ pub fn ProjectCard(
                     effects=effects.into_signal()
                 />
 
-                <Show when=has_upgrade>
-                    <div class="project-upgrade" class:upgrading=upgrade_queued>
-                        <div class="project-upgrade--title">
-                            <Show
-                                when=upgrade_queued
-                                fallback=move || {
-                                    next_upgrade()
-                                        .map(|(cost, _effects)| {
-                                            view! {
+                {move || {
+                     let is_active = with!(|project| project.is_active());
+                     if is_active && let Some((cost, effects)) = next_upgrade() {
+                         let is_upgrading = upgrade_queued();
+                         let effects = create_rw_signal(effects);
+                         Some(view! {
+                            <div class="project-upgrade" class:upgrading={is_upgrading}>
+                                <div class="project-upgrade--title">
+                                    {move || {
+                                         if is_upgrading {
+                                             view! {
+                                                <div>{t!("Upgrading in one planning cycle.")}</div>
+                                             }.into_view()
+                                         } else {
+                                             view! {
                                                 <div>{t!("Next Level")}</div>
                                                 <div>
                                                     {cost} <img class="pip" src=icons::POLITICAL_CAPITAL/>
                                                 </div>
-                                            }
-                                        })
-                                }
-                            >
-
-                                <div>{t!("Upgrading in one planning cycle.")}</div>
-                            </Show>
-                        </div>
-                        <Effects effects=move || next_upgrade().unwrap().1/>
-                    </div>
-                </Show>
+                                             }.into_view()
+                                         }
+                                    }}
+                                </div>
+                                <Effects effects />
+                            </div>
+                         })
+                     } else {
+                         None
+                     }
+                }}
                 <Show when=has_downgrade>
                     <div class="project-upgrade">
                         <div class="project-upgrade--title">

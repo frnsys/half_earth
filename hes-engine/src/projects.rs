@@ -232,6 +232,10 @@ impl Project {
         }
     }
 
+    pub fn is_policy(&self) -> bool {
+        self.kind == Type::Policy
+    }
+
     /// A project which is active can be made inactive.
     pub fn is_active(&self) -> bool {
         self.status == Status::Active
@@ -253,6 +257,10 @@ impl Project {
     pub fn is_haltable(&self) -> bool {
         self.is_online()
             && (self.kind == Type::Policy || self.ongoing)
+    }
+
+    pub fn can_upgrade(&self) -> bool {
+        self.next_upgrade().is_some()
     }
 
     pub fn can_downgrade(&self) -> bool {

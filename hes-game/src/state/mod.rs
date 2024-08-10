@@ -96,6 +96,10 @@ pub fn new_game(world: World) -> (State, UIState) {
         .chain(game.world.processes.unlocked().map(|p| p.id))
         .collect();
 
+    if get_debug_opts().very_popular {
+        game.political_capital = 1000;
+    }
+
     if get_debug_opts().skip_tutorial {
         ui_state.tutorial = Tutorial::Ready;
     }

@@ -53,8 +53,10 @@ If debugging the game there are a few options you can pass as URL parameters whi
 - `all-processes`: All processes are unlocked at the start.
 - `skip-to-planning`: Skip the intro and just go to the planning phase.
 - `skip-tutorial`: Skip the tutorial.
+- `skip-events`: Skip all events.
 - `fast-years`: Speed up years in the world events phase.
 - `always-skip-world`: Skip the world events phase.
+- `very-popular`: Start with 1000 political capital.
 
 
 ## Running
