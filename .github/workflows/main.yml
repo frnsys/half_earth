@@ -48,10 +48,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - name: Install trunk
-        uses: taiki-e/cache-cargo-install-action@v2.0.1
+      # - name: Install trunk
+      #   uses: taiki-e/cache-cargo-install-action@v2.0.1
+      #   with:
+      #     tool: trunk@0.20.2
+
+      - uses: jetli/trunk-action@v0.5.0
         with:
-          tool: trunk@0.20.2
+          # Optional version of trunk to install(eg. 'v0.19.1', 'latest')
+          version: 'latest'
+
+      - name: Install wasm target
+        run: rustup target add wasm32-unknown-unknown
 
       - name: Build Game
         uses: tauri-apps/tauri-action@v0
