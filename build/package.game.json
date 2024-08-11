@@ -28,7 +28,13 @@
         "publish": {
           "provider": "github",
           "publishAutoUpdate": false
-        }
+        },
+        "files": [
+            "**/*",
+            "!dist",
+            "!node_modules",
+            "!**/src"
+        ]
     },
     "dependencies": {
         "electron-serve": "^2.0.0"
