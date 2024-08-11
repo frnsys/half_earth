@@ -1,0 +1,31 @@
+{
+    "name": "hes-editor",
+    "productName": "Half-Earth Socialism: The Game: The Editor",
+    "description": "The world editor for Half-Earth Socialism: The Game.",
+    "author": "Francis Tseng",
+    "version": "1.0.0",
+    "license": "AGPL-3.0-or-later",
+	"type": "module",
+    "scripts": {
+        "build": "electron-builder"
+    },
+    "build": {
+        "appId": "earth.half.editor",
+        "mac": {
+            "target": "zip"
+        },
+        "linux": {
+            "target": "zip"
+        },
+        "win": {
+            "target": "portable"
+        }
+    },
+    "dependencies": {
+        "electron-serve": "^2.0.0"
+    },
+    "devDependencies": {
+        "electron": "^31.3.1",
+        "electron-builder": "^24.13.3"
+    }
+}

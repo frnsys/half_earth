@@ -3,7 +3,10 @@ target
 node_modules
 dist
 .env
+**/build/
 !hes-game/public/js/dist
+!build/
+build/site
 
 out/
 design/data/src
@@ -11,4 +14,3 @@ assets/content/images/*
 assets/src/images
 assets/src/audio
 assets/fonts/Synt
-build/

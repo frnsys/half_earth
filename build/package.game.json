@@ -1,0 +1,31 @@
+{
+    "name": "hes-game",
+    "productName": "Half-Earth Socialism: The Game",
+    "description": "Play as a planetary planner and decide what we should do about the climate, biodiversity, and human welfare. Can you bring the world safely to a better place?",
+    "author": "Francis Tseng",
+    "version": "1.0.0",
+    "license": "AGPL-3.0-or-later",
+	"type": "module",
+    "scripts": {
+        "build": "electron-builder"
+    },
+    "build": {
+        "appId": "earth.half.game",
+        "mac": {
+            "target": "zip"
+        },
+        "linux": {
+            "target": "zip"
+        },
+        "win": {
+            "target": "portable"
+        }
+    },
+    "dependencies": {
+        "electron-serve": "^2.0.0"
+    },
+    "devDependencies": {
+        "electron": "^31.3.1",
+        "electron-builder": "^24.13.3"
+    }
+}
