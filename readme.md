@@ -24,9 +24,6 @@ git submodule update
 ## Dependencies
 
 ```bash
-# Tauri is to wrap the web stack as an application.
-cargo install tauri-cli
-
 # Leptos is the main framework used for both the game and the editor.
 cargo install trunk
 cargo install cargo-leptos
@@ -65,12 +62,10 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 ```
 Available recipes:
     game        # Run development game (browser)
-    game-app    # Run development game (tauri)
     editor      # Run development editor (browser)
-    editor-app  # Run development editor (tauri)
     test        # Run tests
     build       # Build the web release version (browser)
-    build-apps  # Build the app release versions (tauri)
+    build-apps  # Build the app release versions (electron)
                 # Note: this only builds the current platform, for cross-platform see below.
     translate   # Extract translation strings and update the translation mappings from the source CSVs.
     surfaces    # Generate biome surface textures and regional climates.

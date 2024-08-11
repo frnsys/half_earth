@@ -2,10 +2,8 @@
 resolver = "2"
 members = [
     "hes-game",
-    "hes-game/src-tauri",
     "hes-engine",
     "hes-editor",
-    "hes-editor/src-tauri",
     "util/*",
 ]
 default-members = [

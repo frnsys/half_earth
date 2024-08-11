@@ -1,3 +1,3 @@
-[submodule "hes-engine/assets/biome_lookup/src/plotbiomes"]
-    path = hes-engine/assets/biome_lookup/src/plotbiomes
+[submodule "util/surface/assets/biome_lookup/src/plotbiomes"]
+    path = util/surface/assets/biome_lookup/src/plotbiomes
 	url = https://github.com/valentinitnelav/plotbiomes.git

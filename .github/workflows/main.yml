@@ -11,11 +11,11 @@ jobs:
       matrix:
         include:
           - platform: 'macos-latest'
-            args: '--target x86_64-apple-darwin'
+            args: '--mac'
           - platform: 'ubuntu-22.04'
-            args: ''
+            args: '--linux'
           - platform: 'windows-latest'
-            args: ''
+            args: '--win'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -42,47 +42,40 @@ jobs:
         with:
           workspaces: hes-game
 
-      - name: Install dependencies (Ubuntu)
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-
-      # - name: Install trunk
-      #   uses: taiki-e/cache-cargo-install-action@v2.0.1
-      #   with:
-      #     tool: trunk@0.20.2
-
       - uses: jetli/trunk-action@v0.5.0
         with:
           # Optional version of trunk to install(eg. 'v0.19.1', 'latest')
-          version: 'latest'
+          version: 'v0.20.3'
 
       - name: Install wasm target
         run: rustup target add wasm32-unknown-unknown
 
-      - name: Build Game
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: game-v__VERSION__
-          releaseName: 'Game v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
-          projectPath: hes-game
+      - name: Setup electron
+        working-directory: ./build
+        run: |
+          npm install --global yarn
+          yarn install --dev
 
-      - name: Build Editor
-        uses: tauri-apps/tauri-action@v0
+      - name: Build game
+        run: trunk build --release --config hes-game/Trunk.toml --dist build/site
+
+      - name: Build and release game app
+        working-directory: ./build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: editor-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'Editor v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
-          projectPath: hes-editor
+        run: |
+          cp package.game.json package.json
+          cp build/icon.game.png build/icon.png
+          yarn build ${{ matrix.args }} --publish always
+
+      - name: Build editor
+        run: trunk build --release --config hes-editor/Trunk.toml --dist build/site
+
+      - name: Build and release editor app
+        working-directory: ./build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp package.editor.json package.json
+          cp build/icon.editor.png build/icon.png
+          yarn build ${{ matrix.args }} --publish always
