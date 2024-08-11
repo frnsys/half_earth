@@ -51,16 +51,14 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
 
       - name: Setup electron
-        working-directory: ./build
-        run: |
-          npm install --global yarn
-          yarn install --dev
+        working-directory: build
+        run: yarn install --dev
 
       - name: Build game
         run: trunk build --release --config hes-game/Trunk.toml --dist build/site
 
       - name: Build and release game app
-        working-directory: ./build
+        working-directory: build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -72,7 +70,7 @@ jobs:
         run: trunk build --release --config hes-editor/Trunk.toml --dist build/site
 
       - name: Build and release editor app
-        working-directory: ./build
+        working-directory: build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
