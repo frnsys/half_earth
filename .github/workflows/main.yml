@@ -52,7 +52,9 @@ jobs:
 
       - name: Setup electron
         working-directory: build
-        run: yarn install --dev
+        run: |
+          cp package.game.json package.json
+          yarn install --dev
 
       - name: Build game
         run: trunk build --release --config hes-game/Trunk.toml --dist build/site
@@ -62,7 +64,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp package.game.json package.json
           cp build/icon.game.png build/icon.png
           yarn build ${{ matrix.args }} --publish always
 
