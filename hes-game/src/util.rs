@@ -56,7 +56,7 @@ pub fn is_safari() -> bool {
 
 /// Guess if we're running on Steam.
 pub fn is_steam() -> bool {
-    std::env!("PLATFORM") != "STEAM"
+    std::option_env!("PLATFORM") != Some("STEAM")
 }
 
 /// Identify the index of the child in the center

@@ -57,6 +57,8 @@ jobs:
           yarn install --dev
 
       - name: Build game
+        env:
+          PLATFORM: STEAM
         run: trunk build --release --config hes-game/Trunk.toml --dist build/site
 
       - name: Build and release game app
