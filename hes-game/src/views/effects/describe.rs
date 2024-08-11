@@ -1754,31 +1754,28 @@ mod tests {
         assert_eq!(project.kind, ProjectType::Initiative);
         let (text_vals, tip_vals) = effect_values(
             &state,
-            Effect::ProjectCostModifier(project.id, 5.),
+            Effect::ProjectCostModifier(project.id, 0.5),
         );
-        assert_eq!(text_vals[0], 100.);
-        assert_eq!(tip_vals[0], 20.);
-        assert_eq!(tip_vals[1], 120.);
+        assert_eq!(text_vals[0], 50.);
+        assert_eq!(tip_vals[0], 50.);
 
         let project = state.world.projects.by_idx(8);
         assert_eq!(project.kind, ProjectType::Research);
         let (text_vals, tip_vals) = effect_values(
             &state,
-            Effect::ProjectCostModifier(project.id, 5.),
+            Effect::ProjectCostModifier(project.id, 0.25),
         );
-        assert_eq!(text_vals[0], 50.);
-        assert_eq!(tip_vals[0], 10.);
-        assert_eq!(tip_vals[1], 60.);
+        assert_eq!(text_vals[0], 25.);
+        assert_eq!(tip_vals[0], 25.);
 
         let project = state.world.projects.by_idx(1);
         assert_eq!(project.kind, ProjectType::Policy);
         let (text_vals, tip_vals) = effect_values(
             &state,
-            Effect::ProjectCostModifier(project.id, 5.),
+            Effect::ProjectCostModifier(project.id, 2.),
         );
-        assert_eq!(text_vals[0], 150.);
-        assert_eq!(tip_vals[0], 30.);
-        assert_eq!(tip_vals[1], 180.);
+        assert_eq!(text_vals[0], 200.);
+        assert_eq!(tip_vals[0], 200.);
     }
 
     #[test]

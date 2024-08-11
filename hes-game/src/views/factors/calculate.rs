@@ -752,20 +752,6 @@ mod tests {
         assert_eq!(contrib.round(), 16.);
     }
 
-    // #[test]
-    // fn test_project_factors() {
-    //     let mut state = State::default();
-    //
-    //     for idx in [2, 6, 7, 9] {
-    //         let project = state.world.projects.by_idx_mut(idx);
-    //         project.locked = false;
-    //         project.status = Status::Active;
-    //     }
-    //     let factors = project_factors(Var::Energy, &state);
-    //     println!("factors {:?}", factors);
-    //     panic!();
-    // }
-
     #[test]
     fn test_process_impact_factors() {
         let state = State::default();
@@ -776,7 +762,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Electricity, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "2%");
+        assert_eq!(factors.display, "0.4");
 
         let source = state.world.processes.by_idx(17);
         println!("Name {:?}", source.name);
@@ -785,7 +771,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Fuel, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "1%");
+        assert_eq!(factors.display, "1.2");
 
         let source = state.world.processes.by_idx(17);
         println!("Name {:?}", source.name);
@@ -795,7 +781,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Energy, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "1%");
+        assert_eq!(factors.display, "1.6");
 
         let source = state.world.processes.by_idx(17);
         println!("Name {:?}", source.name);
@@ -804,7 +790,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Land, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "38%");
+        assert_eq!(factors.display, "35%");
 
         let source = state.world.processes.by_idx(17);
         println!("Name {:?}", source.name);
@@ -834,7 +820,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Electricity, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "9%");
+        assert_eq!(factors.display, "2.4");
 
         let source = state.world.industries.by_idx(3);
         println!("Name {:?}", source.name);
@@ -842,7 +828,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Fuel, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "13%");
+        assert_eq!(factors.display, "11.1");
 
         let source = state.world.industries.by_idx(3);
         println!("Name {:?}", source.name);
@@ -851,7 +837,7 @@ mod tests {
         let factors =
             impact_factor(source, Impact::Energy, &state);
         println!("  {:?}", factors);
-        assert_eq!(factors.display, "12%");
+        assert_eq!(factors.display, "13.5");
 
         let source = state.world.industries.by_idx(5);
         println!("Name {:?}", source.name);
@@ -903,7 +889,7 @@ mod tests {
 
         let card = factors_card(None, Var::Land, &state);
         println!("{:?}: {}", Var::Land, card.total_formatted());
-        assert_eq!(card.total_formatted(), "54%");
+        assert_eq!(card.total_formatted(), "59%");
 
         let card = factors_card(None, Var::Water, &state);
         println!(
