@@ -1,11 +1,11 @@
-use crate::t;
+use crate::{t, util};
 use leptos::*;
 
 #[component]
 pub fn Credits(
     set_show_credits: WriteSignal<bool>,
 ) -> impl IntoView {
-    let show_book_link = std::env!("PLATFORM") != "STEAM";
+    let show_book_link = util::is_steam();
 
     view! {
         <div class="credits">
