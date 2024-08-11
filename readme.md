@@ -63,10 +63,8 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 Available recipes:
     game        # Run development game (browser)
     editor      # Run development editor (browser)
+    build       # Build the web release versions (browser)
     test        # Run tests
-    build       # Build the web release version (browser)
-    build-apps  # Build the app release versions (electron)
-                # Note: this only builds the current platform, for cross-platform see below.
     translate   # Extract translation strings and update the translation mappings from the source CSVs.
     surfaces    # Generate biome surface textures and regional climates.
     sharing     # Generate sharing images.
