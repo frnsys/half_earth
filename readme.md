@@ -74,7 +74,7 @@ Available recipes:
 
 ## Building & Deploying
 
-- Cross-platform builds are handled by Github Actions (using a `workflow_dispatch, i.e. manual trigger).
+- Cross-platform builds are handled by Github Actions (using a `workflow_dispatch`, i.e. manual trigger).
 - The web version of the game is built using `just build-web` and is hosted as a static site.
 
 ---
