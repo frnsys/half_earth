@@ -2,8 +2,10 @@
 
 The project consists of two artifacts:
 
-- The _Half-Earth Socialism_ game (both web browser and standalone app versions).
-- The _Half-Earth Socialism_ game editor (both web browser and standalone app).
+- The [_Half-Earth Socialism_ game](https://play.half.earth) (both web browser and standalone app versions).
+- The [_Half-Earth Socialism_ editor](https://editor.half.earth) (both web browser and standalone app).
+
+[This video walks through an example of how to use the editor.](https://youtu.be/U8rmVcehZlg)
 
 ## Overview
 

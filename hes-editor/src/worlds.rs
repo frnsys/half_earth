@@ -264,6 +264,7 @@ pub fn WorldsMenu(world: RwSignal<World>) -> impl IntoView {
         ev::keydown,
         move |ev| {
             if ev.key() == "s" && ev.ctrl_key() {
+                ev.prevent_default();
                 match files::save_session(&world.get()) {
                     Ok(_) => {
                         notice_toast(

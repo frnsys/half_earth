@@ -896,7 +896,7 @@ textarea {
 #save-tip {
   position: fixed;
   pointer-events: none;
-  right: 1em;
+  left: 1em;
   bottom: 1em;
   font-size: 10px;
   width: 80px;

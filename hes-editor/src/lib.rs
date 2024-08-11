@@ -172,8 +172,7 @@ macro_rules! infinite_list {
                 with!(|world, max_idx| world
                     .$field
                     .iter()
-                    .enumerate()
-                    .map(|(i, item)| (i, item.id))
+                    .map(|item| item.id)
                     .take(*max_idx)
                     .collect::<Vec<_>>())
             };
@@ -255,8 +254,8 @@ macro_rules! infinite_list {
                         });
                     }>+ New</div>
                     <For each=list
-                        key=|(_, id)| *id
-                        children=move |(i, id)| {
+                        key=|id| *id
+                        children=move |id| {
                            view! {
                                 <div class="scroll-list-item">
                                     <div class="remove-item tooltip-parent"
@@ -264,7 +263,7 @@ macro_rules! infinite_list {
                                         on:click=move |ev| {
                                             spawn_local(async move {
                                                 let msg = "Are you sure you want to delete this?";
-                                                let name = with!(|world| world.$field.by_idx(i).name.clone());
+                                                let name = with!(|world| world.$field[&id].name.clone());
                                                 let refs = with!(|world| crate::validate::find_references(id, crate::validate::RefKind::$single, world));
                                                 if !refs.is_empty() {
                                                     create_toast(name, refs);
@@ -279,8 +278,8 @@ macro_rules! infinite_list {
                                         </div>
                                     <$single
                                         signal=create_slice(world,
-                                            move |world| world.$field.by_idx(i).clone(),
-                                            move |world, val| *world.$field.by_idx_mut(i) = val
+                                            move |world| world.$field[&id].clone(),
+                                            move |world, val| world.$field[&id] = val
                                         ) />
                                 </div>
                             }

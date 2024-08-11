@@ -47,11 +47,6 @@ For industries the unit is a bit more complicated. We use _low-income-per-capita
 
 If you want to work on multiple worlds you can _export_ and then re-_import_ worlds to your local filesystem. This is the best way to ensure that you don't lose any data.
 
-
-## Sharing
-
-You can share your worlds at the [Steam Workshop](#).
-
 ## Reporting bugs
 
 If you encounter any bugs with the editor, the game, or the integration of the two, please [file a report here](https://github.com/frnsys/half_earth/issues).

@@ -228,6 +228,7 @@ impl Project {
         Project {
             id: Id::new_v4(),
             name: "New Project".into(),
+            cost_modifier: 1.,
             ..Default::default()
         }
     }

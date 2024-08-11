@@ -206,7 +206,7 @@ pub fn PercentInput(
                         class="numeric-input"
                         inputmode="decimal"
                         value=read.get_untracked() * 100.
-                        on:input=move |ev| {
+                        on:change=move |ev| {
                             let res = event_target_value(&ev).parse::<f32>();
                             if let Ok(value) = &res {
                                 write.set(*value/100.);
@@ -812,7 +812,7 @@ pub fn ImageInput(
     signal: (Signal<Image>, SignalSetter<Image>),
 ) -> impl IntoView {
     let (read, write) = signal;
-    let help = "Images will be bundled with your exported world, so it's recommended that you make sure they aren't too big.";
+    let help = "Images will be bundled with your exported world, so it's recommended that you make sure they aren't too big. Recommended size is 360x240.";
 
     let image_src = move || match read.get().data {
         ImageData::File(fname) => {
