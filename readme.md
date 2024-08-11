@@ -75,14 +75,14 @@ Available recipes:
 ## Building & Deploying
 
 - Cross-platform builds are handled by Github Actions (using a `workflow_dispatch`, i.e. manual trigger).
-- The web version of the game is built using `just build-web` and is hosted as a static site.
+- The web versions of the game and editor are built using `just build` and are hosted as static sites.
 
 ---
 
 # Releases
 
 You can play it at:
-* [half.earth](https://play.half.earth/) (web)
+* [half.earth](https://play.half.earth/) (web; and [the editor](https://editor.half.earth/))
 * [Steam](https://store.steampowered.com/app/2071530/HalfEarth_Socialism/) (Windows/macOS/Linux) (Account needed)
   - _Note_: The build process for the Steam version is more complicated so it's less likely to be up-to-date.
 * [Itch.io](https://frnsys.itch.io/half-earth-socialism) (Windows/macOS/Linux)

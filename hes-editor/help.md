@@ -8,6 +8,10 @@ With that in mind, a small **caveat emptor**: Unfortunately we can't guarantee c
 
 If you *do* want to edit *everything*, you can open up a `.world` file in a text editor and you'll see that it's just JSON. Of course, if you edit worlds by hand then we really can't guarantee any stability. But it could be fun.
 
+## Video
+
+[This video walks through an example of how to use the editor.](https://youtu.be/U8rmVcehZlg)
+
 ## Some further details
 
 The `Planet` groups together parameters relating to:
