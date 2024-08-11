@@ -4,8 +4,6 @@ Electron is basically just being used as a browser to serve the otherwise static
 
 As such we just include both together (with separate `package.json` files). `yarn` unfortunately doesn't support pointing to a specific `package.json` file so when building e.g. the game you should copy `package.game.json` to `package.json`.
 
-Similarly we have separate icons (in `build/`) for the game and the editor; the appropriate one should be copied to `build/icon.png` before building.
-
 The static site is expected at `site/`, so first you'd run e.g. for the game:
 
 ```

@@ -63,9 +63,7 @@ jobs:
         working-directory: build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cp build/icon.game.png build/icon.png
-          yarn build ${{ matrix.args }} --publish always
+        run: yarn build ${{ matrix.args }} --publish always
 
       - name: Build editor
         run: trunk build --release --config hes-editor/Trunk.toml --dist build/site
@@ -76,5 +74,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp package.editor.json package.json
-          cp build/icon.editor.png build/icon.png
           yarn build ${{ matrix.args }} --publish always

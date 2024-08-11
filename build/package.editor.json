@@ -12,14 +12,22 @@
     },
     "build": {
         "appId": "earth.half.editor",
+        "icon": "icon.editor.png",
         "mac": {
-            "target": "zip"
+            "target": "zip",
+            "artifactName": "${name}.mac.${version}.${ext}"
         },
         "linux": {
-            "target": "zip"
+            "target": "zip",
+            "artifactName": "${name}.linux.${version}.${ext}"
         },
         "win": {
-            "target": "portable"
+            "target": "portable",
+            "artifactName": "${name}.win.${version}.${ext}"
+        },
+        "publish": {
+          "provider": "github",
+          "publishAutoUpdate": false
         }
     },
     "dependencies": {
