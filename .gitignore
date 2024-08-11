@@ -7,6 +7,8 @@ dist
 !hes-game/public/js/dist
 !build/
 build/site
+build/package.json
+build/build/icon.png
 
 out/
 design/data/src

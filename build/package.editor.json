@@ -1,9 +1,10 @@
 {
     "name": "hes-editor",
+    "version": "1.0.0",
     "productName": "Half-Earth Socialism: The Game: The Editor",
     "description": "The world editor for Half-Earth Socialism: The Game.",
     "author": "Francis Tseng",
-    "version": "1.0.0",
+    "repository": "https://github.com/frnsys/half_earth",
     "license": "AGPL-3.0-or-later",
 	"type": "module",
     "scripts": {
