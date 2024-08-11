@@ -15,15 +15,15 @@
         "icon": "icon.game.png",
         "mac": {
             "target": "zip",
-            "artifactName": "${name}.mac.${version}.${ext}"
+            "artifactName": "${name}.mac-${version}.${ext}"
         },
         "linux": {
             "target": "zip",
-            "artifactName": "${name}.linux.${version}.${ext}"
+            "artifactName": "${name}.linux-${version}.${ext}"
         },
         "win": {
             "target": "portable",
-            "artifactName": "${name}.win.${version}.${ext}"
+            "artifactName": "${name}.win-${version}.${ext}"
         },
         "publish": {
           "provider": "github",
