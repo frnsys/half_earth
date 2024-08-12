@@ -2,6 +2,7 @@ use crate::{
     debug::get_debug_opts,
     icons::{self, HasIcon},
     memo,
+    proxy,
     state::{StateExt, Tutorial, UIState},
     t,
     views::{scanner::*, Help},
@@ -136,9 +137,9 @@ fn Points(
 ) -> impl IntoView {
     let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
-    let pc_points = memo!(game.political_capital);
-    let init_points = memo!(ui.points.initiative);
-    let research_points = memo!(ui.points.research);
+    let pc_points = proxy!(game.political_capital);
+    let init_points = proxy!(ui.points.initiative);
+    let research_points = proxy!(ui.points.research);
     let available_points = move || match kind.get() {
         ProjectType::Policy => pc_points.get(),
         ProjectType::Initiative => init_points.get(),
@@ -155,21 +156,21 @@ fn Points(
             </div>
             <Show when=move || kind.get() != ProjectType::Policy>
                 <div class="pips-group">
-                    <Show
-                        when=move || { available_points() > 0 }
-                        fallback=move || {
-                            view! {
+                    {move || {
+                         if available_points() > 0 {
+                             view! {
+                                {available_points}
+                                <img class="pip" src=icon/>
+                             }
+                         } else {
+                             view! {
                                 {next_point_cost}
                                 <img class="pip" src=icons::POLITICAL_CAPITAL/>
                                 <img src=icons::ARROW_RIGHT class="pip-arrow"/>
                                 <img class="pip" src=icon/>
-                            }
-                        }
-                    >
-
-                        {available_points}
-                        <img class="pip" src=icon/>
-                    </Show>
+                             }
+                         }
+                    }}
                 </div>
             </Show>
         </div>

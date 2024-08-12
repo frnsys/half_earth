@@ -4,6 +4,7 @@ use crate::{
     display::AsText,
     icons::{self, HasIcon},
     memo,
+    proxy,
     state::UIState,
     t,
     util::{scale_text, to_ws_el, ImageExt},
@@ -85,69 +86,17 @@ pub fn ProjectCard(
         }
     });
 
-    // This is super hacky but I'm struggling to figure out
-    // how to approach these problems in leptos.
-    // As I understand it when a signal is updated in leptos
-    // it immediately starts triggering any dependents,
-    // which can lead to nested calls where an outer function
-    // borrows a signal that an inner, deeper function tries
-    // to borrow and can't, causing a borrow error.
-    //
-    // That in itself isn't necessarily a difficult problem to resolve,
-    // but when that error is thrown in leptos you're pointed to
-    // a line within the leptos library, not where the failed borrow
-    // was attempted, not what signal the borrow failed on,
-    // nor anything else that gives an idea of where to investigate.
-    //
-    // So you have to do a ton of trial-and-error, commenting out things
-    // to try and narrow down where the error is actually happening.
-    // And once you find that, then you have to figure out where in the call
-    // stack the conflicting borrow is happening--again requiring an very
-    // trial-and-error approach.
-    //
-    // A quick-and-dirty "solution" is what I'm doing here. You don't listen
-    // on directly to "real" signal but instead via a proxy signal. This proxy
-    // signal is updated as a side-effect when the real signal is updated,
-    // but crucially it's updated *after* the current call stack is resolved
-    // and any borrows are freed. Here I'm using `queue_microtask` but elsewhere
-    // I'm using `use_timeout` which accomplishes the same thing, though
-    // probably not as nicely.
-    let plan_changes_proxy =
-        create_rw_signal(with!(|ui| ui.plan_changes.clone()));
-    let plan_changes_source = memo!(ui.plan_changes);
-    create_effect(move |_| {
-        plan_changes_source.track();
-        queue_microtask(move || {
-            let changes =
-                ui.with_untracked(|ui| ui.plan_changes.clone());
-            plan_changes_proxy.set(changes);
-        });
-    });
-
-    let queued_upgrades_proxy =
-        create_rw_signal(with!(|ui| ui
-            .queued_upgrades
-            .clone()));
-    let queued_upgades_source = memo!(ui.queued_upgrades);
-    create_effect(move |_| {
-        queued_upgades_source.track();
-        queue_microtask(move || {
-            let upgrades = ui.with_untracked(|ui| {
-                ui.queued_upgrades.clone()
-            });
-            queued_upgrades_proxy.set(upgrades);
-        });
-    });
+    let plan_changes = proxy!(ui.plan_changes);
+    let queued_upgrades = proxy!(ui.queued_upgrades);
 
     let upgrade_queued = move || {
-        with!(|project, queued_upgrades_proxy| {
-            queued_upgrades_proxy.get(&project.id)
-                == Some(&true)
+        with!(|project, queued_upgrades| {
+            queued_upgrades.get(&project.id) == Some(&true)
         })
     };
 
     let remaining_cost = move || {
-        with!(|project, plan_changes_proxy| {
+        with!(|project, plan_changes| {
             if implemented() {
                 0.to_string()
             } else if project.is_building() {
@@ -169,7 +118,7 @@ pub fn ProjectCard(
                 match project.kind {
                     ProjectType::Policy => {
                         if let Some(changes) =
-                            plan_changes_proxy.get(&project.id)
+                            plan_changes.get(&project.id)
                         {
                             if changes.withdrawn {
                                 0.to_string()
@@ -340,7 +289,7 @@ pub fn ProjectCard(
 
     let next_upgrade =
         move || -> Option<(usize, Vec<DisplayEffect>)> {
-            with!(|project, plan_changes_proxy| {
+            with!(|project, plan_changes| {
                 if project.upgrades.is_empty() {
                     None
                 } else {
@@ -351,7 +300,7 @@ pub fn ProjectCard(
                         let upgrade = &project.upgrades[idx];
                         let mut cost = upgrade.cost;
                         if let Some(changes) =
-                            plan_changes_proxy.get(&project.id)
+                            plan_changes.get(&project.id)
                         {
                             if changes.downgrades > 0 {
                                 cost = 0;
