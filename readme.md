@@ -86,3 +86,7 @@ You can play it at:
 * [Steam](https://store.steampowered.com/app/2071530/HalfEarth_Socialism/) (Windows/macOS/Linux) (Account needed)
   - _Note_: The build process for the Steam version is more complicated so it's less likely to be up-to-date.
 * [Itch.io](https://frnsys.itch.io/half-earth-socialism) (Windows/macOS/Linux)
+
+# Community
+
+We have [a Discord for the game and book here](https://discord.gg/cUBtbDfzn5).
