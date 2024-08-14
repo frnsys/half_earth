@@ -4916,10 +4916,11 @@ color: #63FF96;
   background: #121212;
   font-size: 11px;
   padding: 6px;
-  width: 100%;
   left: 0;
   top: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.75);
+  max-width: calc(100vw - 100px);
+  width: 100%;
 }
 .under-construction img {
   height: 16px;
