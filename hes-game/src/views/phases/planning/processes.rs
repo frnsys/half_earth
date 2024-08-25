@@ -167,7 +167,7 @@ pub fn Processes(
     let estimated_changes = move || {
         with!(|game, mix_changes| {
             display_changes(game, mix_changes, &processes())
-        });
+        })
     };
     view! {
         <div class="plan-change-select planning--page">
@@ -266,7 +266,7 @@ fn calc_change(
             .into_view(),
         )
     } else if change < 0.0 {
-        let s = t!("decrease {k} by {change}", k: key, change: display::percent(change.abs(), true));
+        let s = t!("decrease {k} by {change}%", k: key, change: display::percent(change.abs(), true));
         Some(
             view! {
                 <span class="change change-decrease">
@@ -314,7 +314,8 @@ fn estimate_changes(
         current.water_use += process.resources.water * total;
         current.energy_use +=
             process.resources.energy() * total;
-        current.emissions += process.byproducts.co2eq() * total;
+        current.emissions +=
+            process.byproducts.gtco2eq() * total;
         current.extinction_rate +=
             process.extinction_rate(available_land) * total;
     }
@@ -332,7 +333,8 @@ fn estimate_changes(
         changed.water_use += process.resources.water * total;
         changed.energy_use +=
             process.resources.energy() * total;
-        changed.emissions += process.byproducts.co2eq() * total;
+        changed.emissions +=
+            process.byproducts.gtco2eq() * total;
         changed.extinction_rate +=
             process.extinction_rate(available_land) * total;
     }
