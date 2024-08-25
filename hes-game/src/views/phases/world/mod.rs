@@ -109,7 +109,7 @@ struct Disaster {
 
 #[component]
 fn Disasters(
-    year: RwSignal<usize>,
+    year: Memo<usize>,
     phase: RwSignal<Subphase>,
     events: RwSignal<Vec<Disaster>>,
     #[prop(into)] skipping: Signal<bool>,
@@ -276,10 +276,11 @@ pub fn WorldEvents() -> impl IntoView {
         ));
     });
 
-    let skipping = create_rw_signal(get_debug_opts().always_skip_world);
+    let skipping =
+        create_rw_signal(get_debug_opts().always_skip_world);
     let skip = move |_| skipping.set(true);
 
-    let year = create_rw_signal(with!(|game| game.world.year));
+    let year = memo!(game.world.year);
     let cycle_start_year = memo!(ui.cycle_start_state.year);
     let (_, set_game_phase) = slice!(ui.phase);
 
@@ -304,7 +305,7 @@ pub fn WorldEvents() -> impl IntoView {
                 let tgav = hector.calc_tgav().await as f32;
 
                 // Advance the year.
-                game.update_untracked(|game| {
+                game.update(|game| {
                     let step_updates = game.step_year(tgav);
                     let completed_projects = step_updates
                         .iter()
@@ -326,10 +327,6 @@ pub fn WorldEvents() -> impl IntoView {
 
                     updates.set(step_updates.into());
                 });
-
-                let cur_year =
-                    game.with_untracked(|game| game.world.year);
-                year.set(cur_year);
             });
         }
 
@@ -394,17 +391,20 @@ pub fn WorldEvents() -> impl IntoView {
         phase.set(next);
     };
 
-    create_effect(move |_| {
+    create_effect(move |last| {
         year.track();
 
-        // A hack to call `next_phase` outside of this effect,
-        // to avoid borrow conflicts.
-        set_timeout(
-            move || {
-                next_phase();
-            },
-            std::time::Duration::from_millis(10),
-        );
+        // Don't call on mount.
+        if last.is_some() {
+            // A hack to call `next_phase` outside of this effect,
+            // to avoid borrow conflicts.
+            set_timeout(
+                move || {
+                    next_phase();
+                },
+                std::time::Duration::from_millis(10),
+            );
+        }
     });
 
     view! {
