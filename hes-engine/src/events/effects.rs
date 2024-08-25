@@ -739,10 +739,42 @@ impl Effect {
                 state.world.projects[id].cost_modifier +=
                     change;
             }
+            Effect::TerminationShock => {
+                let p = state
+                    .world
+                    .projects
+                    .iter()
+                    .find(|p| {
+                        // HACK: Not great to be matching on the
+                        // project's name; ideally would introduce
+                        // a flag effect that mirrors `TerminationShock`
+                        // and match on any project that contains that flag,
+                        // but that may be a complicated change to make at this point.
+                        p.name.contains(
+                            "Solar Radiation Management",
+                        )
+                    })
+                    .unwrap();
+                let effects = p.active_effects();
+                let mut temp = 0.;
+                for eff in effects {
+                    match eff {
+                        Effect::WorldVariable(typ, val) => {
+                            match typ {
+                                WorldVariable::Temperature => {
+                                    temp += val
+                                }
+                                _ => (),
+                            }
+                        }
+                        _ => (),
+                    };
+                }
+                state.world.temperature_modifier -= temp;
+            }
             Effect::ProtectLand(percent) => {
                 state.protected_land += percent;
             }
-            _ => (),
         }
     }
 
@@ -950,7 +982,14 @@ impl Effect {
                     .projects
                     .iter()
                     .find(|p| {
-                        p.name == "Solar Radiation Management"
+                        // HACK: Not great to be matching on the
+                        // project's name; ideally would introduce
+                        // a flag effect that mirrors `TerminationShock`
+                        // and match on any project that contains that flag,
+                        // but that may be a complicated change to make at this point.
+                        p.name.contains(
+                            "Solar Radiation Management",
+                        )
                     })
                     .unwrap();
                 let effects = p.active_effects();
@@ -968,7 +1007,7 @@ impl Effect {
                         _ => (),
                     };
                 }
-                state.world.temperature_modifier -= temp;
+                state.world.temperature_modifier += temp;
             }
             Effect::ProtectLand(percent) => {
                 state.protected_land -= percent;
@@ -1116,4 +1155,53 @@ pub fn mean_demand_outlook_change(
         })
         .sum::<f32>()
         / state.world.regions.len() as f32
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Status;
+
+    use super::*;
+
+    #[test]
+    fn test_termination_shock() {
+        let mut state = State::default();
+        let temp_prev = state.world.temperature;
+        let effects = {
+            let project = state
+                .world
+                .projects
+                .iter_mut()
+                .find(|p| {
+                    p.name
+                        .contains("Solar Radiation Management")
+                })
+                .unwrap();
+
+            project.points = 100;
+            project.status = Status::Building;
+            for i in 0..40 {
+                project.advance(state.world.year + i);
+            }
+            assert_eq!(project.status, Status::Active);
+
+            project.active_effects().clone()
+        };
+
+        state.apply_effects(&effects, None);
+        state.world.update_climate(temp_prev);
+
+        let temp_next = state.world.temperature;
+        assert!(temp_next < temp_prev);
+
+        let effect = Effect::TerminationShock;
+        state.apply_effects(&[effect.clone()], None);
+        state.world.update_climate(temp_prev);
+        assert_eq!(state.world.temperature, temp_prev);
+
+        // Unapplying should return back to prev temp.
+        effect.unapply(&mut state, None);
+        state.world.update_climate(temp_prev);
+        assert_eq!(state.world.temperature, temp_next);
+    }
 }
