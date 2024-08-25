@@ -68,7 +68,11 @@ impl<M: KindMap<N>, const N: usize> From<M> for Reserve<M, N> {
 }
 impl<M: KindMap<N>, const N: usize> Reserve<M, N> {
     pub fn until_exhaustion(&self, key: M::Key) -> f32 {
-        self.available[key] / self.consumed[key]
+        if self.available[key] == 0. {
+            0.
+        } else {
+            self.available[key] / self.consumed[key]
+        }
     }
 
     /// Apply annual consumption.
@@ -581,5 +585,48 @@ impl Display for Byproduct {
                     "Biodiversity Pressure",
             }
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feedstock_exhaustion_estimate() {
+        let feedstocks = feedstocks!(coal: 100.);
+        let mut reserves = Reserve::from(feedstocks);
+        assert_eq!(reserves.available.coal, 100.);
+
+        // No consumption = lasts indefinitely
+        reserves.consumed.coal = 0.;
+        let estimate =
+            reserves.until_exhaustion(Feedstock::Coal);
+        assert!(estimate.is_infinite());
+
+        // Consumption = lasts according to rate of consumption
+        reserves.consumed.coal = 10.;
+        let estimate =
+            reserves.until_exhaustion(Feedstock::Coal);
+        assert_eq!(estimate, 10.);
+
+        reserves.available.coal = 10.;
+        let estimate =
+            reserves.until_exhaustion(Feedstock::Coal);
+        assert_eq!(estimate, 1.);
+
+        // Exhausted
+        reserves.consumed.coal = 10.;
+        reserves.available.coal = 0.;
+        let estimate =
+            reserves.until_exhaustion(Feedstock::Coal);
+        assert_eq!(estimate, 0.);
+
+        // Exhausted, even if no consumption
+        reserves.consumed.coal = 0.;
+        reserves.available.coal = 0.;
+        let estimate =
+            reserves.until_exhaustion(Feedstock::Coal);
+        assert_eq!(estimate, 0.);
     }
 }
