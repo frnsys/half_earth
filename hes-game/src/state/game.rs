@@ -296,15 +296,14 @@ pub impl State {
         &mut self,
         changes: &mut EnumMap<Output, BTreeMap<Id, isize>>,
     ) {
-        let mut rem_pts = consts::PROCESS_POINTS_PER_CYCLE;
-        let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
-
         for (_output, changes) in changes.iter_mut() {
+            let mut rem_pts = consts::PROCESS_POINTS_PER_CYCLE;
+            let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
             let mut total = changes
                 .values()
                 .map(|val| val.abs())
                 .sum::<isize>();
-            while rem_pts > 0 && add_pts > 0 && total > 0 {
+            while (rem_pts > 0 || add_pts > 0) && total > 0 {
                 for (process_id, change) in changes.iter_mut() {
                     if *change < 0 && rem_pts > 0 {
                         rem_pts -= 1;
@@ -324,5 +323,81 @@ pub impl State {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_update_process_mix() {
+        let mut state = State::default();
+        let mut changes: EnumMap<Output, BTreeMap<Id, isize>> =
+            EnumMap::default();
+
+        let solar_pv = state
+            .world
+            .processes
+            .iter()
+            .find(|p| p.name == "Solar PV")
+            .unwrap()
+            .id;
+        let hydro = state
+            .world
+            .processes
+            .iter()
+            .find(|p| p.name == "Hydropower")
+            .unwrap()
+            .id;
+        let coal = state
+            .world
+            .processes
+            .iter()
+            .find(|p| p.name == "Coal Power Generation")
+            .unwrap()
+            .id;
+        let ind_ag = state
+            .world
+            .processes
+            .iter()
+            .find(|p| p.name == "Industrial Crop Ag")
+            .unwrap()
+            .id;
+        let org_ag = state
+            .world
+            .processes
+            .iter()
+            .find(|p| p.name == "Organic Crop Ag")
+            .unwrap()
+            .id;
+
+        let coal_mix = state.world.processes[&coal].mix_share;
+        assert_eq!(coal_mix, 7);
+
+        // We're specifically testing changes that require multiple cycles.
+        assert!(coal_mix > consts::PROCESS_POINTS_PER_CYCLE);
+
+        changes[Output::Electricity].insert(coal, -7);
+        changes[Output::Electricity].insert(solar_pv, 5);
+        changes[Output::Electricity].insert(hydro, 2);
+
+        let ind_ag_mix =
+            state.world.processes[&ind_ag].mix_share;
+        assert_eq!(ind_ag_mix, 14);
+        assert!(ind_ag_mix > consts::PROCESS_POINTS_PER_CYCLE);
+
+        changes[Output::PlantCalories].insert(ind_ag, -12);
+        changes[Output::PlantCalories].insert(org_ag, 12);
+
+        state.update_processes(&mut changes);
+
+        // Assuming 5 points change per cycle for each output.
+        assert_eq!(consts::PROCESS_POINTS_PER_CYCLE, 5);
+        assert_eq!(changes[Output::Electricity][&coal], -2);
+        assert_eq!(changes[Output::Electricity][&solar_pv], 2);
+        assert_eq!(changes[Output::Electricity][&hydro], 0);
+        assert_eq!(changes[Output::PlantCalories][&ind_ag], -7);
+        assert_eq!(changes[Output::PlantCalories][&org_ag], 7);
     }
 }
