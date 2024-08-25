@@ -86,3 +86,35 @@ macro_rules! proxy {
         proxy
     }}
 }
+
+/// Another hack.
+/// Basically if a signal causes its parent component
+/// to be destroyed, the remaining reactions to the signal
+/// will continue to execute and throw errors as any
+/// other signals have now been deleted along with the component.
+///
+/// Again, there's probably a correct way to avoid this but for now
+/// this approach seems to work. Basically we have a dummy stored value
+/// and we check if it's still valid. If it's not valid we assume it's
+/// because it's been cleaned up as part of the parent component being
+/// destroyed.
+#[derive(Clone, Copy)]
+pub struct Sentinel {
+    value: leptos::StoredValue<()>,
+}
+impl Sentinel {
+    pub fn new() -> Self {
+        Sentinel {
+            value: leptos::store_value(()),
+        }
+    }
+
+    /// When false this indicates the parent component/context
+    /// has been destroyed and other signals are likely to be invalid.
+    pub fn is_ok(&self) -> bool {
+        self.value.try_get_value().is_some()
+    }
+}
+pub fn create_sentinel() -> Sentinel {
+    Sentinel::new()
+}

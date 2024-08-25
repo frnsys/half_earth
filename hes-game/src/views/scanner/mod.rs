@@ -10,7 +10,7 @@ use std::{rc::Rc, time::Duration};
 use wasm_bindgen::prelude::*;
 use web_sys::Animation;
 
-use crate::util::to_ws_el;
+use crate::{util::to_ws_el, views::create_sentinel};
 use draggable::{DragRect, Draggable};
 
 pub use cards::ScannerCards;
@@ -66,9 +66,16 @@ pub fn Scanner(
 ) -> impl IntoView {
     let (is_scanning, set_is_scanning) = create_signal(false);
 
+    let sentinel = create_sentinel();
     let (scanning_anim, set_scanning_anim) =
         create_signal(None::<Animation>);
     let stop_scanning_card = move |_| {
+        // If the sentinel is not ok,
+        // it means this component's been deleted
+        // so we just bail.
+        if !sentinel.is_ok() {
+            return;
+        }
         set_is_scanning.set(false);
         if let Some(target) = target_ref.get_untracked() {
             target
