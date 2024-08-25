@@ -530,11 +530,37 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
         // contribs.sort((a, b) => Math.abs(a.amount) > Math.abs(b.amount) ? -1 : 1)
         // factors[k] = modifiers.concat(contribs);
 
+        // HACK: Filter out non-finite (infinite or NaN) values.
+        // FIXME: All of the factor calculations *should* be finite.
+        rankings = rankings.into_iter().filter(|r| {
+            let amount = r.amount();
+            if !amount.is_finite() {
+                tracing::warn!("Non-finite ranking factor: {amount} for {}", r.name());
+                false
+            } else {
+                true
+            }
+        }).collect();
+
+        // Since we filtered out non-finite values
+        // we should be ok to sort this way.
         rankings.sort_by(|a, b| {
             b.amount()
                 .abs()
                 .partial_cmp(&a.amount().abs())
-                .unwrap()
+                .unwrap_or_else(|| {
+                    let a_invalid = a.amount().is_finite();
+                    let b_invalid = b.amount().is_finite();
+                    if a_invalid && b_invalid {
+                        std::cmp::Ordering::Equal
+                    } else if a_invalid {
+                        std::cmp::Ordering::Greater
+                    } else if b_invalid {
+                        std::cmp::Ordering::Less
+                    } else {
+                        unreachable!("At least one of the values will be non-finite.");
+                    }
+                })
         });
         factors[var] = rankings;
     }

@@ -38315,13 +38315,7 @@
                     }
                 }
             ],
-            "upgrades": [
-                {
-                    "cost": 0,
-                    "effects": [],
-                    "active": false
-                }
-            ],
+            "upgrades": [],
             "active_outcome": null,
             "supporters": [
                 "ccca3d9d-2d69-4c98-aec4-29df691c0c4a"
