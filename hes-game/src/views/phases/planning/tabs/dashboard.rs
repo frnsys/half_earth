@@ -152,7 +152,7 @@ pub fn Dashboard() -> impl IntoView {
                 .collect());
         demands
     });
-    let process_multipliers = move || {
+    let process_changes = move || {
         with!(|processes,
                process_mix_changes,
                demand_for_outputs| {
@@ -167,9 +167,9 @@ pub fn Dashboard() -> impl IntoView {
                         as f32
                         * 0.05;
                     if mix_change != 0. {
-                        let multiplier = mix_change
+                        let change = mix_change
                             * demand_for_outputs[p.output];
-                        Some((p.clone(), multiplier))
+                        Some((p.clone(), change))
                     } else {
                         None
                     }
@@ -179,7 +179,7 @@ pub fn Dashboard() -> impl IntoView {
     };
 
     let extinction_change = move || {
-        process_multipliers()
+        process_changes()
             .into_iter()
             .map(|(p, mult)| {
                 p.extinction_rate(available_land.get()) * mult
@@ -196,21 +196,21 @@ pub fn Dashboard() -> impl IntoView {
     };
 
     let land_change = move || {
-        process_multipliers()
+        process_changes()
             .into_iter()
             .map(|(p, mult)| p.adj_resources().land * mult)
             .sum::<f32>()
             .round()
     };
     let water_change = move || {
-        process_multipliers()
+        process_changes()
             .into_iter()
             .map(|(p, mult)| p.adj_resources().water * mult)
             .sum::<f32>()
             .round()
     };
     let energy_change = move || {
-        process_multipliers()
+        process_changes()
             .into_iter()
             .map(|(p, mult)| {
                 let energy = p.adj_resources().energy();
@@ -220,7 +220,7 @@ pub fn Dashboard() -> impl IntoView {
             .round()
     };
     let emissions_change = move || {
-        process_multipliers()
+        process_changes()
             .into_iter()
             .map(|(p, mult)| {
                 p.adj_byproducts().gtco2eq() * mult
@@ -338,8 +338,8 @@ pub fn Dashboard() -> impl IntoView {
         memo!(game.output_demand.total().energy());
     let energy_changed = move || {
         format!(
-            "{}TWh",
-            (display::twh(
+            "{}PWh",
+            (display::pwh(
                 energy_change() + energy_demand.get()
             ))
             .round()

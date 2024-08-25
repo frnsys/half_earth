@@ -49,6 +49,10 @@ pub fn twh(amount: f32) -> f32 {
     (amount * 1e-9).round()
 }
 
+pub fn pwh(amount: f32) -> f32 {
+    (amount * 1e-12).round()
+}
+
 /// Per 20000 Tcals
 pub fn to_calorie_units(amount: f32) -> f32 {
     amount * (1e-9 / 2e4)

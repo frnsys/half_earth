@@ -37,7 +37,7 @@ pub impl State {
 
     fn energy_pwh(&self) -> String {
         let energy = self.output_demand.total().energy();
-        format!("{}PWh", (display::twh(energy) / 1e3).round())
+        format!("{}PWh", display::pwh(energy).round())
     }
 
     fn energy_twh(&self) -> String {
