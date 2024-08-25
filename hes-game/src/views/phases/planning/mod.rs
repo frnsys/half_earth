@@ -62,8 +62,9 @@ pub fn Planning() -> impl IntoView {
     game.update_untracked(|game| {
         ui.update_untracked(|ui| {
             update_factors(game);
-            ui.points.research +=
-                game.collect_research_points();
+
+            let points = game.collect_research_points();
+            ui.points.research += points;
         });
 
         let mut evs = [

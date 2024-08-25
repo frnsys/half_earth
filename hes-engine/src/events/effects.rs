@@ -498,19 +498,15 @@ impl Effect {
                     }
                 }
             }
-            Effect::PlayerVariable(var, change) => {
-                match var {
-                    PlayerVariable::PoliticalCapital => {
-                        state.political_capital +=
-                            *change as isize
-                    }
-                    PlayerVariable::ResearchPoints => {
-                        state.research_points +=
-                            *change as isize
-                    } // TODO need to use the rust state for points then
-                    _ => (),
+            Effect::PlayerVariable(var, change) => match var {
+                PlayerVariable::PoliticalCapital => {
+                    state.political_capital += *change as isize
                 }
-            }
+                PlayerVariable::ResearchPoints => {
+                    state.research_points += *change as isize
+                }
+                _ => (),
+            },
             Effect::RegionHabitability(latitude, change) => {
                 for region in state
                     .world

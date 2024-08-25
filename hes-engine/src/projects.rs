@@ -521,7 +521,7 @@ impl Project {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ProjectChanges {
     pub completed: bool,
     pub remove_effects: Vec<Effect>,

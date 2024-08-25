@@ -573,17 +573,19 @@ impl State {
 
         let mut outcomes: Vec<(Id, usize)> = Vec::new();
         for (id, changes) in &mut changes {
-            let project = &self.world.projects[&id];
-            match self.roll_project_outcome(project) {
-                Some((outcome, i)) => {
-                    for effect in &outcome.effects {
-                        changes
-                            .add_effects
-                            .push(effect.clone());
+            if changes.completed {
+                let project = &self.world.projects[&id];
+                match self.roll_project_outcome(project) {
+                    Some((outcome, i)) => {
+                        for effect in &outcome.effects {
+                            changes
+                                .add_effects
+                                .push(effect.clone());
+                        }
+                        outcomes.push((*id, i));
                     }
-                    outcomes.push((*id, i));
+                    None => (),
                 }
-                None => (),
             }
         }
 
