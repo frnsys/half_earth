@@ -88,15 +88,11 @@ pub fn Draggable(
     );
 
     let start_drag = move |ev: ev::PointerEvent| {
-        if !draggable.get_untracked() {
+        if !draggable.get() {
             return;
         }
 
         ev.prevent_default();
-        if let Some(el) = el_ref.get_untracked() {
-            let _ = el.set_pointer_capture(ev.pointer_id());
-            let _ = el.style("cursor", "grab");
-        }
 
         let x = ev.client_x();
         let y = ev.client_y();
@@ -125,11 +121,26 @@ pub fn Draggable(
             if !down.get_value() {
                 return;
             }
+            if !draggable.get() {
+                return;
+            }
+
             let (x, y) = pos.get_value();
             let dx = ev.client_x() - x;
             let dy = ev.client_y() - y;
             if dy.abs() > dx.abs() {
                 dragging.set_value(true);
+
+                if let Some(el) = el_ref.get_untracked() {
+                    if !el.has_pointer_capture(ev.pointer_id())
+                    {
+                        let _ = el.set_pointer_capture(
+                            ev.pointer_id(),
+                        );
+                        let _ = el.style("cursor", "grab");
+                    }
+                }
+
                 if let Some(el) = el_ref.get() {
                     let new_top_y =
                         top_y.get_value() + dy as f64;
