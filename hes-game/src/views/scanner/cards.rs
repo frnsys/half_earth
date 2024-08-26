@@ -64,9 +64,11 @@ pub fn ScannerCards<S: ScannerSpec>(
     let can_scan = move || mode.get().can_scan();
 
     let on_drag = move |rect: DragRect| {
-        // This triggers the scanner functionalities
-        set_drag_rect.set(Some(rect));
-        set_mode.set(Mode::Scan);
+        if can_scan() {
+            // This triggers the scanner functionalities
+            set_drag_rect.set(Some(rect));
+            set_mode.set(Mode::Scan);
+        }
     };
 
     let update_focused = move || {
