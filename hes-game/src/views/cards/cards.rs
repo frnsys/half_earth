@@ -56,6 +56,16 @@ pub fn Cards(
         }
     };
 
+    create_effect(move |_| {
+        if let Some(el) = scroller_ref.get() {
+            if !enabled.get() {
+                let _ = el.style("touch-action", "none");
+            } else {
+                let _ = el.style("touch-action", "auto");
+            }
+        }
+    });
+
     // Drag to scroll horizontally on desktop
     let drag_start = move |ev: ev::PointerEvent| {
         // if let Some(elem) = scroller_ref.get() {

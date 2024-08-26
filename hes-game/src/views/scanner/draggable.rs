@@ -5,9 +5,11 @@ use leptos::*;
 use leptos_use::{
     use_document,
     use_event_listener,
+    use_event_listener_with_options,
     use_intersection_observer,
     use_resize_observer,
     use_throttle_fn_with_arg,
+    UseEventListenerOptions,
 };
 
 #[derive(Debug, Clone, Copy)]
@@ -205,6 +207,30 @@ pub fn Draggable(
         on_drag_stop.call(());
     };
 
+    let ev_opts =
+        UseEventListenerOptions::default().passive(false);
+    let _ = use_event_listener_with_options(
+        use_document(),
+        ev::touchstart,
+        move |ev| {
+            if dragging.get_value() {
+                ev.prevent_default();
+            }
+        },
+        ev_opts,
+    );
+
+    let _ = use_event_listener_with_options(
+        use_document(),
+        ev::touchmove,
+        move |ev| {
+            if dragging.get_value() {
+                ev.prevent_default();
+            }
+        },
+        ev_opts,
+    );
+
     view! {
         <div
             ref=el_ref
@@ -213,7 +239,7 @@ pub fn Draggable(
             on:pointerdown=start_drag
             on:pointermove=drag
             on:pointerup=move |ev| {
-                if let Some(elem) = el_ref.get_untracked() {
+                if let Some(elem) = el_ref.get() {
                     let _ = elem.release_pointer_capture(ev.pointer_id());
                 }
                 stop_drag();
