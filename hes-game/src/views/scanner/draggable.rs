@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crate::util::card_scale;
+use crate::util::{card_scale, to_ws_el};
 use leptos::*;
 use leptos_use::{
     use_document,
@@ -39,16 +39,35 @@ pub fn Draggable(
     let win_height = store_value(0.);
 
     let el_ref = create_node_ref::<html::Div>();
+
+    let update_rect = move || {
+        if let Some(el) = el_ref.get_untracked() {
+            let rect = to_ws_el(el).get_bounding_client_rect();
+            top_y.set_value(rect.y());
+            height.set_value(rect.height());
+            let wh = window()
+                .inner_height()
+                .unwrap()
+                .as_f64()
+                .unwrap();
+            win_height.set_value(wh);
+        }
+    };
+
+    // Apply card scaling on mount...
     create_effect(move |ok| {
         if ok.is_none()
             && let Some(el) = el_ref.get_untracked()
         {
-            let _ = el.style(
+            let el = el.style(
                 "transform",
                 format!("scale({})", card_scale()),
             );
+            update_rect();
         }
     });
+
+    // ...and when the window size changes.
     use_resize_observer(
         document().body().expect("We have a body element"),
         move |entries, observer| {
@@ -64,15 +83,7 @@ pub fn Draggable(
     use_intersection_observer(
         el_ref,
         move |entries, _observer| {
-            let rect = entries[0].bounding_client_rect();
-            top_y.set_value(rect.y());
-            height.set_value(rect.height());
-            let wh = window()
-                .inner_height()
-                .unwrap()
-                .as_f64()
-                .unwrap();
-            win_height.set_value(wh);
+            update_rect();
         },
     );
 
