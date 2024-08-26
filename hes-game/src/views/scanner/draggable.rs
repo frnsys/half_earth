@@ -6,6 +6,7 @@ use leptos_use::{
     use_document,
     use_event_listener,
     use_intersection_observer,
+    use_resize_observer,
     use_throttle_fn_with_arg,
 };
 
@@ -38,6 +39,27 @@ pub fn Draggable(
     let win_height = store_value(0.);
 
     let el_ref = create_node_ref::<html::Div>();
+    create_effect(move |ok| {
+        if ok.is_none()
+            && let Some(el) = el_ref.get_untracked()
+        {
+            let _ = el.style(
+                "transform",
+                format!("scale({})", card_scale()),
+            );
+        }
+    });
+    use_resize_observer(
+        document().body().expect("We have a body element"),
+        move |entries, observer| {
+            if let Some(el) = el_ref.get_untracked() {
+                let _ = el.style(
+                    "transform",
+                    format!("scale({})", card_scale()),
+                );
+            }
+        },
+    );
 
     use_intersection_observer(
         el_ref,
