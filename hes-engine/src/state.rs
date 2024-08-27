@@ -12,6 +12,7 @@ use crate::{
     },
     kinds::*,
     npcs::NPC,
+    outputs,
     production::{calculate_required, produce, ProcessChanges},
     projects::{
         Group,
@@ -21,6 +22,7 @@ use crate::{
         Status,
         Type as ProjectType,
     },
+    resources,
     world::World,
     Collection,
     Id,
@@ -934,7 +936,7 @@ impl Update {
 // #[cfg(test)]
 // mod test {
 //     use super::*;
-//
+
 //     #[test]
 //     fn test_promote_process() {
 //         let mut state = State::new(Difficulty::Normal);

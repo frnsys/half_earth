@@ -5,7 +5,7 @@ use crate::{
     eval::{eval_badges, summarize, Ending},
     i18n,
     icons,
-    state::{Settings, StateExt},
+    state::{Settings, StateExt, UIState},
     t,
     views::{tip, Events, HasTip},
 };
@@ -28,6 +28,7 @@ pub fn End(lose: bool) -> impl IntoView {
 
     let events = create_rw_signal(vec![]);
     let game = expect_context::<RwSignal<State>>();
+    let ui = expect_context::<RwSignal<UIState>>();
     game.update_untracked(|game: &mut State| {
         let evs = if lose {
             StateExt::roll_events(game, EventPhase::BreakStart)
@@ -66,7 +67,7 @@ pub fn End(lose: bool) -> impl IntoView {
         .map(|path| path.replace(&root, "").to_string())
         .collect();
     let idx = (js_sys::Math::random() * image_opts.len() as f64)
-        .ceil() as usize;
+        .floor() as usize;
     let share_image = store_value(image_opts[idx].clone());
 
     let (show_start, set_show_start) = create_signal(false);
@@ -91,6 +92,21 @@ pub fn End(lose: bool) -> impl IntoView {
     let start_new_run = move |_| {
         crate::state::start_new_run();
     };
+
+    let log = ui.with_untracked(|ui| {
+        ui.change_history
+            .iter()
+            .map(|(year, changes)| {
+                let s = changes
+                    .iter()
+                    .map(|diff| diff.to_string())
+                    .collect::<Vec<_>>()
+                    .join("\n");
+                format!("\n[{year}]\n{s}")
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    });
 
     view! {
         <div class="break">
@@ -118,6 +134,7 @@ pub fn End(lose: bool) -> impl IntoView {
                     <img class="share-image" src={share_image.get_value()} />
                 </div>
             </Show>
+            <pre class="game-history">"Your History\n------------\n"{log}</pre>
         </div>
     }
 }

@@ -1,6 +1,8 @@
 use crate::{
+    byproducts,
     flavor::IndustryFlavor,
     kinds::{Byproduct, ByproductMap, Resource, ResourceMap},
+    resources,
     Collection,
     HasId,
     Id,

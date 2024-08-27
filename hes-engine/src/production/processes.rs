@@ -277,7 +277,11 @@ impl Collection<Process> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::kinds::{Feedstock, Output};
+    use crate::{
+        kinds::{Feedstock, Output},
+        outputs,
+        resources,
+    };
 
     #[test]
     fn test_output_limit() {

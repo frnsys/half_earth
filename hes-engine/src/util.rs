@@ -46,6 +46,10 @@ impl<T: HasId + Serialize> Serialize for Collection<T> {
 }
 
 impl<T: HasId> Collection<T> {
+    pub fn values(&self) -> &[T] {
+        &self.values
+    }
+
     fn reindex(&mut self) {
         self.lookup.clear();
         for (i, value) in self.values.iter().enumerate() {

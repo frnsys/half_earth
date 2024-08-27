@@ -20,6 +20,7 @@ use crate::{
     },
 };
 use hes_engine::{
+    Diff,
     EventPhase,
     IconEvent,
     Id,
@@ -368,6 +369,19 @@ pub fn WorldEvents() -> impl IntoView {
                 update!(|game| {
                     game.finish_cycle();
                 });
+                let changes = with!(|ui, game| ui
+                    .session_start_state
+                    .diff(game));
+                ui.update_untracked(|ui| {
+                    let s = changes
+                        .iter()
+                        .map(|diff| diff.to_string())
+                        .collect::<Vec<_>>()
+                        .join("\n");
+                    tracing::debug!("[{cur_year}]: {s}");
+                    ui.change_history.push((cur_year, changes));
+                });
+
                 set_game_phase.set(Phase::Report);
                 next = Subphase::Done;
             } else {

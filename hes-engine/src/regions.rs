@@ -4,6 +4,7 @@ use crate::{
     events::RegionFlag,
     flavor::RegionFlavor,
     kinds::*,
+    outputs,
     HasId,
     Id,
 };

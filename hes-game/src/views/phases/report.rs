@@ -36,6 +36,9 @@ pub fn Report() -> impl IntoView {
             EventPhase::ReportStart,
         ));
     });
+    ui.update_untracked(|ui| {
+        ui.session_start_state = game.get_untracked();
+    });
 
     let year = memo!(game.world.year);
     let start_year = memo!(ui.cycle_start_state.year);

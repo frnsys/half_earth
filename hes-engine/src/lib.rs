@@ -1,10 +1,10 @@
 #![feature(generic_arg_infer)]
-#[macro_use]
 
-mod kinds;
+mod diff;
 mod events;
 pub mod flavor;
 mod industries;
+mod kinds;
 mod npcs;
 mod production;
 mod projects;
@@ -13,6 +13,7 @@ mod state;
 mod util;
 mod world;
 
+pub use diff::{Change, Diff};
 pub use events::{
     mean_demand_outlook_change,
     mean_income_outlook_change,

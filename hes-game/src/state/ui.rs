@@ -2,6 +2,7 @@ use crate::views::DisplayEvent;
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use hes_engine::{
+    Change,
     IconEvent,
     Id,
     Income,
@@ -109,13 +110,20 @@ pub struct UIState {
     pub annual_region_events: BTreeMap<Id, Vec<IconEvent>>,
     pub world_events: Vec<DisplayEvent>,
 
-    // // Track planned process mix changes
+    // Track state changes between planning cycles.
+    #[serde(default)]
+    pub change_history: Vec<(usize, Vec<Change>)>,
+
+    #[serde(default)]
+    pub session_start_state: State,
+
+    // Track planned process mix changes
     pub process_mix_changes:
         EnumMap<Output, BTreeMap<Id, isize>>,
 
-    // // Track changes made to the plan
-    // // in a given session, so they can
-    // // be reversed/refunded
+    // Track changes made to the plan
+    // in a given session, so they can
+    // be reversed/refunded
     pub plan_changes: BTreeMap<Id, PlanChange>,
     pub queued_upgrades: BTreeMap<Id, bool>,
 

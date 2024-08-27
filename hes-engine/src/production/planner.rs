@@ -4,7 +4,7 @@ use std::{
 };
 
 use super::processes::Process;
-use crate::kinds::*;
+use crate::{byproducts, feedstocks, kinds::*, resources};
 
 #[derive(Debug)]
 pub struct ProductionOrder<'a> {
@@ -247,6 +247,7 @@ mod test {
     use super::*;
     use crate::{
         kinds::{Feedstock, Output},
+        outputs,
         Id,
     };
 

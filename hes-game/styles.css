@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&display=swap');
 
 @font-face {
   font-family: 'Times Ten';
@@ -2251,8 +2252,9 @@ color: #63FF96;
 .break {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   height: 100vh;
+  padding: 2em 0;
+  overflow-y: scroll;
 }
 .break h2 {
   margin-top: 0;
@@ -4931,4 +4933,12 @@ color: #63FF96;
   margin: 0 auto;
   max-width: 600px;
   width: 100%;
+}
+
+.game-history {
+  color: #eee;
+  font-size: 11px;
+  max-width: 640px;
+  margin: 2em auto 5em auto;
+  font-family: "DM Mono", monospace;
 }

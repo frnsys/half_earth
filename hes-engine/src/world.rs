@@ -4,6 +4,7 @@ use crate::{
     events::Event,
     industries::Industry,
     kinds::{FeedstockMap, Output, OutputMap, ResourceMap},
+    outputs,
     production::Process,
     projects::Project,
     regions::{Income, Region},
