@@ -17,10 +17,10 @@ pub const HONEYMOON_PC: usize = 15;
 pub const HONEYMOON_YEARS: usize = 5;
 
 /// PC change per -0.1C temp change
-pub const TEMPERATURE_PC: usize = 2;
+pub const TEMPERATURE_PC: isize = 2;
 
 /// PC change per -0.5Gt emissions change
-pub const EMISSIONS_PC: usize = 5;
+pub const EMISSIONS_PC: isize = 4;
 
 /// Max points for a project
 pub const MAX_POINTS: usize = 12;

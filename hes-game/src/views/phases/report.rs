@@ -262,7 +262,7 @@ pub fn Report() -> impl IntoView {
         with!(|emissions, start_emissions| {
             let emissions_change = emissions - start_emissions;
             (emissions_change * 2.).round() as isize
-                * -(consts::EMISSIONS_PC as isize)
+                * -consts::EMISSIONS_PC
         })
     };
     let req_pc_change = move || {
