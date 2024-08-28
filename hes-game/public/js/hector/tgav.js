@@ -41,7 +41,6 @@ class Temperature {
         // Only get the base scenario data up to the game starting year
         let baseYears = this.startYear - baseScenario['startYear'];
         Object.keys(baseScenario['data']).forEach((k) => {
-          let len = baseScenario['data'][k].length;
           this.emissions['data'][k] = baseScenario['data'][k].slice(0, baseYears);
         });
       });
