@@ -83,6 +83,7 @@ fn get_emissions(state: &State) -> HashMap<&'static str, f64> {
     .min(1.0);
 
     let (co2, ch4, n2o) = state.emissions.for_hector();
+
     let mut emissions = HashMap::default();
     emissions.insert(
         "ffi_emissions",
@@ -301,9 +302,11 @@ pub fn WorldEvents() -> impl IntoView {
             spawn_local(async move {
                 let emissions = game
                     .with_untracked(|game| get_emissions(game));
+                tracing::debug!("emissions={emissions:?}");
                 let hector = hector.get_value();
                 hector.add_emissions(emissions);
                 let tgav = hector.calc_tgav().await as f32;
+                tracing::debug!("tgav={tgav}");
 
                 // Advance the year.
                 game.update(|game| {

@@ -1,6 +1,7 @@
 use js_sys::Promise;
 use leptos::*;
-use serde_wasm_bindgen::to_value;
+use serde::ser::Serialize;
+use serde_wasm_bindgen::Serializer;
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
@@ -41,7 +42,10 @@ impl HectorRef {
         &self,
         emissions: HashMap<&'static str, f64>,
     ) {
-        let emissions = to_value(&emissions).unwrap();
+        let serializer =
+            Serializer::new().serialize_maps_as_objects(true);
+        let emissions =
+            emissions.serialize(&serializer).unwrap();
         self.inner.borrow().add_emissions(emissions);
     }
 
