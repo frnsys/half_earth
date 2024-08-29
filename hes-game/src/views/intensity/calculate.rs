@@ -87,7 +87,7 @@ pub fn color(
     invert: bool,
 ) -> &'static str {
     if invert {
-        intensity = N_PIPS - intensity;
+        intensity = N_PIPS.saturating_sub(intensity);
     }
     if intensity <= 1 {
         "#2FE863"
