@@ -383,6 +383,14 @@ pub fn WorldEvents() -> impl IntoView {
                         .join("\n");
                     tracing::debug!("[{cur_year}]: {s}");
                     ui.change_history.push((cur_year, changes));
+
+                    // This has to happen before we enter the report
+                    // phase so the upgrades' effects are taken into account.
+                    game.update_untracked(|game| {
+                        game.upgrade_projects(
+                            &mut ui.queued_upgrades,
+                        );
+                    });
                 });
 
                 set_game_phase.set(Phase::Report);

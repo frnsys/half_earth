@@ -305,12 +305,10 @@ pub fn Report() -> impl IntoView {
             game.change_political_capital(pc_change);
 
             ui.update_untracked(|ui| {
-                // Apply process mix changes
-                // and project upgrades.
+                // Apply process mix changes.
                 game.update_processes(
                     &mut ui.process_mix_changes,
                 );
-                game.upgrade_projects(&mut ui.queued_upgrades);
 
                 // Reset session plan changes
                 ui.plan_changes.clear();
