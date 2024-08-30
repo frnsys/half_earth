@@ -473,3 +473,32 @@ impl std::fmt::Display for Comparator {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_output_demand_gap() {
+        let cond = Condition::OutputDemandGap(
+            Output::PlantCalories,
+            Comparator::GreaterEqual,
+            0.15,
+        );
+        let mut state = State::default();
+        state.output_demand.base.plant_calories = 100.;
+        state.produced.amount.plant_calories = 100.;
+        assert_eq!(cond.eval(&state, None), false);
+
+        state.output_demand.base.plant_calories = 100.;
+        state.produced.amount.plant_calories = 99.;
+        assert_eq!(cond.eval(&state, None), false);
+
+        state.output_demand.base.plant_calories = 100.;
+        state.produced.amount.plant_calories = 84.;
+        assert_eq!(cond.eval(&state, None), true);
+
+        state.produced.amount.plant_calories = 50.;
+        assert_eq!(cond.eval(&state, None), true);
+    }
+}

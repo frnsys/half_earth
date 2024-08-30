@@ -115,6 +115,10 @@ pub struct UIState {
     pub change_history: Vec<(usize, Vec<Change>)>,
 
     #[serde(default)]
+    pub process_mix_history:
+        Vec<(usize, EnumMap<Output, BTreeMap<String, usize>>)>,
+
+    #[serde(default)]
     pub session_start_state: State,
 
     // Track planned process mix changes
@@ -201,4 +205,32 @@ impl UIState {
             }
         }
     }
+}
+
+pub fn format_year_log(
+    year: usize,
+    changes: &[Change],
+    mixes: &EnumMap<Output, BTreeMap<String, usize>>,
+) -> String {
+    [
+        format!("\n[{year}]"),
+        changes
+            .iter()
+            .map(|diff| diff.to_string())
+            .collect::<Vec<_>>()
+            .join("\n"),
+        "Production Mix:".into(),
+        mixes
+            .iter()
+            .map(|(output, mix)| {
+                let mut parts = vec![format!("  [{output}]")];
+                for (name, mix) in mix {
+                    parts.push(format!("    {name}:{mix}"));
+                }
+                parts.join("\n")
+            })
+            .collect::<Vec<_>>()
+            .join("\n"),
+    ]
+    .join("\n")
 }

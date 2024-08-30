@@ -5,7 +5,7 @@ use crate::{
     eval::{eval_badges, summarize, Ending},
     i18n,
     icons,
-    state::{Settings, StateExt, UIState},
+    state::{format_year_log, Settings, StateExt, UIState},
     t,
     views::{tip, Events, HasTip},
 };
@@ -96,13 +96,13 @@ pub fn End(lose: bool) -> impl IntoView {
     let log = ui.with_untracked(|ui| {
         ui.change_history
             .iter()
-            .map(|(year, changes)| {
-                let s = changes
+            .zip(
+                ui.process_mix_history
                     .iter()
-                    .map(|diff| diff.to_string())
-                    .collect::<Vec<_>>()
-                    .join("\n");
-                format!("\n[{year}]\n{s}")
+                    .map(|(_, mixes)| mixes),
+            )
+            .map(|((year, changes), mixes)| {
+                format_year_log(*year, changes, mixes)
             })
             .collect::<Vec<_>>()
             .join("\n")

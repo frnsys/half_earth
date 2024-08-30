@@ -1,6 +1,7 @@
 mod update;
 
-use std::collections::HashMap;
+use enum_map::EnumMap;
+use std::collections::{BTreeMap, HashMap};
 pub use update::Updates;
 
 use crate::{
@@ -10,7 +11,7 @@ use crate::{
     display,
     icons,
     memo,
-    state::{Phase, StateExt, UIState},
+    state::{format_year_log, Phase, StateExt, UIState},
     t,
     tgav::HectorRef,
     views::{
@@ -24,6 +25,7 @@ use hes_engine::{
     EventPhase,
     IconEvent,
     Id,
+    Output,
     State,
     Update as EngineUpdate,
     ICON_EVENTS,
@@ -375,14 +377,31 @@ pub fn WorldEvents() -> impl IntoView {
                 let changes = with!(|ui, game| ui
                     .session_start_state
                     .diff(game));
+                let mixes = with!(|game| {
+                    let mut mixes: EnumMap<
+                        Output,
+                        BTreeMap<String, usize>,
+                    > = EnumMap::default();
+                    for process in game.world.processes.iter() {
+                        if process.mix_share > 0 {
+                            mixes[process.output].insert(
+                                process.name.to_string(),
+                                process.mix_share,
+                            );
+                        }
+                    }
+                    mixes
+                });
                 ui.update_untracked(|ui| {
-                    let s = changes
-                        .iter()
-                        .map(|diff| diff.to_string())
-                        .collect::<Vec<_>>()
-                        .join("\n");
-                    tracing::debug!("[{cur_year}]: {s}");
+                    tracing::debug!(
+                        "{}",
+                        format_year_log(
+                            cur_year, &changes, &mixes
+                        )
+                    );
                     ui.change_history.push((cur_year, changes));
+                    ui.process_mix_history
+                        .push((cur_year, mixes));
 
                     // This has to happen before we enter the report
                     // phase so the upgrades' effects are taken into account.

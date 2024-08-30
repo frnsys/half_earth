@@ -26,12 +26,13 @@ pub trait KindMap<const SIZE: usize>:
     + Copy
     + Default
 {
-    type Key: Copy;
+    type Key: Copy + Display;
 
     fn splat(val: f32) -> Self;
     fn keys(&self) -> [Self::Key; SIZE];
     fn items(&self) -> [(Self::Key, f32); SIZE];
     fn items_mut(&mut self) -> [(Self::Key, &mut f32); SIZE];
+    fn values(&self) -> [&f32; SIZE];
     fn values_mut(&mut self) -> [&mut f32; SIZE];
 }
 
@@ -336,6 +337,12 @@ macro_rules! define_enum_map {
                     )*]
                 }
 
+                fn values(&self) -> [&f32; count!($($field)*)] {
+                    [$(
+                        &self.[<$field:snake>],
+                    )*]
+                }
+
                 fn values_mut(&mut self) -> [&mut f32; count!($($field)*)] {
                     [$(
                         &mut self.[<$field:snake>],
@@ -352,6 +359,23 @@ macro_rules! define_enum_map {
                     [$(
                         ($name::$field, &mut self.[<$field:snake>]),
                     )*]
+                }
+            }
+
+            impl crate::Diff for [<$name Map>] {
+                fn diff(&self, other: &Self) -> Vec<crate::Change> {
+                    self.items()
+                        .iter()
+                        .zip(other.values())
+                        .filter_map(|((key, a), b)| {
+                            (*a != b).then(|| {
+                                crate::Change::Simple(format!(
+                                        "{}: {:.2} -> {:.2}",
+                                        key, a, b
+                                ))
+                            })
+                        })
+                    .collect()
                 }
             }
         }
@@ -492,11 +516,64 @@ impl OutputMap {
     pub fn energy(&self) -> f32 {
         self.electricity + self.fuel
     }
+
+    pub fn short_units(&self) -> OutputMap {
+        outputs!(
+            fuel: to_energy_units(self.fuel),
+            electricity: to_energy_units(self.electricity),
+            animal_calories: to_calorie_units(self.animal_calories),
+            plant_calories: to_calorie_units(self.plant_calories)
+        )
+    }
+}
+
+/// Per 20000 Tcals
+fn to_calorie_units(amount: f32) -> f32 {
+    amount * (1e-9 / 2e4)
+}
+
+/// Per PWh
+fn to_energy_units(amount: f32) -> f32 {
+    amount * 1e-12
+}
+
+fn g_to_megatons(amount: f32) -> f32 {
+    amount * 1e-12
+}
+
+fn l_to_million_megaliters(amount: f32) -> f32 {
+    amount * 1e-12
+}
+
+fn m2_to_million_km2(amount: f32) -> f32 {
+    amount * 1e-12
 }
 
 impl ResourceMap {
     pub fn energy(&self) -> f32 {
         self.electricity + self.fuel
+    }
+
+    pub fn short_units(&self) -> ResourceMap {
+        resources!(
+            fuel: to_energy_units(self.fuel),
+            electricity: to_energy_units(self.electricity),
+            land: m2_to_million_km2(self.land),
+            water: l_to_million_megaliters(self.water)
+        )
+    }
+}
+
+impl FeedstockMap {
+    pub fn short_units(&self) -> FeedstockMap {
+        feedstocks!(
+            coal: g_to_megatons(self.coal),
+            thorium: g_to_megatons(self.thorium),
+            uranium: g_to_megatons(self.uranium),
+            lithium: g_to_megatons(self.lithium),
+            oil: l_to_million_megaliters(self.oil),
+            natural_gas: l_to_million_megaliters(self.natural_gas)
+        )
     }
 }
 

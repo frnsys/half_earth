@@ -133,6 +133,49 @@ impl Diff for State {
         changes.extend(diff_methods!(self, other, {
             emissions.as_gtco2eq
         }));
+        changes.push(Change::Nested(
+            "production".into(),
+            self.produced
+                .total()
+                .short_units()
+                .diff(&other.produced.total().short_units()),
+        ));
+        changes.push(Change::Nested(
+            "output_demand".into(),
+            self.output_demand.total().short_units().diff(
+                &other.output_demand.total().short_units(),
+            ),
+        ));
+        changes.push(Change::Nested(
+            "production_surplus".into(),
+            (self.produced.total()
+                - self.output_demand.total())
+            .short_units()
+            .diff(
+                &(other.produced.total()
+                    - other.output_demand.total())
+                .short_units(),
+            ),
+        ));
+        changes.push(Change::Nested(
+            "resource_demand".into(),
+            self.resource_demand.total().short_units().diff(
+                &other.resource_demand.total().short_units(),
+            ),
+        ));
+        changes.push(Change::Nested(
+            "resources".into(),
+            self.resources
+                .available
+                .short_units()
+                .diff(&other.resources.available.short_units()),
+        ));
+        changes.push(Change::Nested(
+            "feedstocks".into(),
+            self.feedstocks.available.short_units().diff(
+                &other.feedstocks.available.short_units(),
+            ),
+        ));
         changes
             .extend(diff_vecs!(self, other, { flags, events }));
         changes.extend(self.world.diff(&other.world));

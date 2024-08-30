@@ -5,7 +5,13 @@ mod ui;
 pub use game::StateExt;
 pub use settings::Settings;
 use ui::Points;
-pub use ui::{Phase, PlanChange, Tutorial, UIState};
+pub use ui::{
+    format_year_log,
+    Phase,
+    PlanChange,
+    Tutorial,
+    UIState,
+};
 
 use std::sync::{LazyLock, RwLock};
 
