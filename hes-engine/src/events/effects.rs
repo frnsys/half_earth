@@ -530,7 +530,14 @@ impl Effect {
                 state.output_demand.modifier[*output] += amount;
             }
             Effect::Output(output, pct_change) => {
-                state.produced.factor[*output] += pct_change;
+                for process in state
+                    .world
+                    .processes
+                    .iter_mut()
+                    .filter(|p| p.output == *output)
+                {
+                    process.output_modifier += pct_change;
+                }
             }
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in state
@@ -857,7 +864,14 @@ impl Effect {
                 state.output_demand.modifier[*output] -= amount;
             }
             Effect::Output(output, pct_change) => {
-                state.produced.factor[*output] -= pct_change;
+                for process in state
+                    .world
+                    .processes
+                    .iter_mut()
+                    .filter(|p| p.output == *output)
+                {
+                    process.output_modifier -= pct_change;
+                }
             }
             Effect::OutputForFeature(feat, pct_change) => {
                 for process in state
@@ -1199,5 +1213,18 @@ mod tests {
         effect.unapply(&mut state, None);
         state.world.update_climate(temp_prev);
         assert_eq!(state.world.temperature, temp_next);
+    }
+
+    #[test]
+    fn test_output_demand_amount() {
+        let mut state = State::default();
+        state.output_demand.base.plant_calories = 5.;
+        let effect =
+            Effect::DemandAmount(Output::PlantCalories, 1.);
+        state.apply_effects(&[effect], None);
+        assert_eq!(
+            state.output_demand.of(Output::PlantCalories),
+            6.
+        );
     }
 }

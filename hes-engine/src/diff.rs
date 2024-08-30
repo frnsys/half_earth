@@ -171,6 +171,17 @@ impl Diff for State {
                 .diff(&other.resources.available.short_units()),
         ));
         changes.push(Change::Nested(
+            "resource_surplus".into(),
+            (self.resources.available
+                - self.resource_demand.total())
+            .short_units()
+            .diff(
+                &(other.resources.available
+                    - other.resource_demand.total())
+                .short_units(),
+            ),
+        ));
+        changes.push(Change::Nested(
             "feedstocks".into(),
             self.feedstocks.available.short_units().diff(
                 &other.feedstocks.available.short_units(),

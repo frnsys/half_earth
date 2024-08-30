@@ -797,14 +797,12 @@ impl State {
 
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 pub struct Production {
-    pub factor: OutputMap,
     pub amount: OutputMap,
     pub by_process: BTreeMap<Id, f32>,
 }
 impl Default for Production {
     fn default() -> Self {
         Self {
-            factor: OutputMap::splat(1.),
             amount: OutputMap::default(),
             by_process: BTreeMap::default(),
         }
@@ -812,11 +810,11 @@ impl Default for Production {
 }
 impl Production {
     pub fn of(&self, output: Output) -> f32 {
-        self.amount[output] * self.factor[output]
+        self.amount[output]
     }
 
     pub fn total(&self) -> OutputMap {
-        self.amount * self.factor
+        self.amount
     }
 }
 
