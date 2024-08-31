@@ -81,7 +81,7 @@ fn write_save(
 }
 pub fn clear_save() {
     if let Some(storage) = window().local_storage().unwrap() {
-        storage.clear().unwrap();
+        storage.remove_item(SAVE_KEY).unwrap();
     }
 }
 
