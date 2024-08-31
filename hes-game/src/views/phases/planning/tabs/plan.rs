@@ -1,6 +1,6 @@
 use crate::{
     display::*,
-    icons,
+    icons::{self, HasIcon},
     memo,
     state::{Phase, Tutorial, UIState},
     t,
@@ -16,6 +16,7 @@ use enum_map::EnumMap;
 use hes_engine::{
     EventPhase,
     Feedstock,
+    KindMap,
     Output,
     ProjectType,
     Resource,
@@ -42,6 +43,24 @@ fn calc_slots() -> usize {
         7
     } else {
         5
+    }
+}
+
+#[component]
+fn Check() -> impl IntoView {
+    view! {
+        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6L9 17L4 12" stroke="#03A781" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    }
+}
+
+#[component]
+fn Warn() -> impl IntoView {
+    view! {
+        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <path d="M11.9998 8.99999V13M11.9998 17H12.0098M10.6151 3.89171L2.39019 18.0983C1.93398 18.8863 1.70588 19.2803 1.73959 19.6037C1.769 19.8857 1.91677 20.142 2.14613 20.3088C2.40908 20.5 2.86435 20.5 3.77487 20.5H20.2246C21.1352 20.5 21.5904 20.5 21.8534 20.3088C22.0827 20.142 22.2305 19.8857 22.2599 19.6037C22.2936 19.2803 22.0655 18.8863 21.6093 18.0983L13.3844 3.89171C12.9299 3.10654 12.7026 2.71396 12.4061 2.58211C12.1474 2.4671 11.8521 2.4671 11.5935 2.58211C11.2969 2.71396 11.0696 3.10655 10.6151 3.89171Z" stroke="#DD0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>
     }
 }
 
@@ -366,6 +385,45 @@ pub fn Plan(
             .collect::<Vec<_>>()
     };
 
+    let resource_demand = memo!(game.resource_demand);
+    let resource_status = move || {
+        with!(|resources, resource_demand| {
+            resource_demand.total().items().map(|(k, demand)| {
+                let demand = match k {
+                    Resource::Electricity | Resource::Fuel => {
+                        to_energy_units(demand)
+                    },
+                    Resource::Land | Resource::Water => {
+                        resource(demand, k, resources.available)
+                    }
+                };
+                let available = match k {
+                    Resource::Electricity | Resource::Fuel => {
+                        to_energy_units(resources.available[k])
+                    },
+                    Resource::Land | Resource::Water => {
+                        100.
+                    }
+                };
+                let inner = view! {
+                    <div class="resources-info-pill" class:not-enough={demand > available}>
+                        <img src=k.icon()/>
+                        {format!("{:.0}", demand)}/{format!("{:.0}", available)}
+                    </div>
+                };
+                if production_shortages().is_some() {
+                    view!{
+                        <HasTip tip=shortages_tip.into_signal()>
+                            {inner}
+                        </HasTip>
+                    }.into_view()
+                } else {
+                    inner.into_view()
+                }
+            }).to_vec()
+        })
+    };
+
     view! {
         <div class="planning--page plan">
             <Show when=move || page.get() == Page::Projects>
@@ -459,10 +517,41 @@ pub fn Plan(
                             key=|proc| proc.id
                             children=move |process| {
                                 let (process, _) = create_signal(process);
-                                view! { <MiniProcess process/> }
+                                let produced = with!(|process, produced| {
+                                    crate::display::output(produced.of(process.output), process.output)
+                                });
+                                let demand = with!(|process, output_demand| {
+                                    crate::display::output(output_demand[process.output], process.output)
+                                });
+
+                                let icon = with!(|process| process.output.icon());
+                                view! {
+                                    <div>
+                                        <MiniProcess process/>
+                                        <div class="production-info">
+                                            {move || {
+                                                if produced/demand < 0.99 {
+                                                    view! {
+                                                        <HasTip tip=shortages_tip.into_signal()>
+                                                            <Warn />
+                                                        </HasTip>
+                                                    }
+                                                } else {
+                                                    view! {
+                                                        <Check />
+                                                    }
+                                                }
+                                            }}
+                                            {format!("{:.0}", produced)}/{format!("{:.0}", demand)}
+                                        </div>
+                                    </div>
+                                }
                             }
                         />
 
+                    </div>
+                    <div class="resources-info">
+                        {resource_status}
                     </div>
                     <div
                         class="plan--production-button btn"

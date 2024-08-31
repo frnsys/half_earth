@@ -4503,7 +4503,7 @@ color: #63FF96;
   z-index: 1;
 }
 
-.miniprocess--wrapper{
+.plan--production--processes > div {
   position: relative;
   width: 90px;
 }
@@ -4945,4 +4945,38 @@ color: #63FF96;
   margin: 2em auto 5em auto;
   font-family: "DM Mono", monospace;
   user-select: text;
+}
+
+.production-info,
+.resources-info
+{
+  font-size: 10px;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.resources-info svg,
+.resources-info img,
+.production-info svg {
+  height: 10px;
+  width: 10px;
+  margin-right: 2px;
+}
+.resources-info {
+  margin-top: 1.5em;
+  justify-content: space-around;
+}
+.resources-info-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+.resources-info-pill.not-enough {
+  background: #ff0000;
+  color: #fff;
 }

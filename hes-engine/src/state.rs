@@ -341,6 +341,7 @@ impl State {
         // Calculate required resources so we can add in food energy requirements
         let (required_resources, required_feedstocks) =
             calculate_required(&orders);
+
         self.output_demand.base.electricity +=
             required_resources.electricity;
         self.output_demand.base.fuel += required_resources.fuel;
@@ -371,13 +372,17 @@ impl State {
         self.produced.by_process = produced_by_process;
         self.produced.amount = produced_by_type;
 
-        resource_demand.water += consumed_resources.water;
-        resource_demand.land += consumed_resources.land;
+        resource_demand.water += required_resources.water;
+        resource_demand.land += required_resources.land;
         resource_demand.fuel = output_demand.fuel;
         resource_demand.electricity = output_demand.electricity;
         self.resource_demand.base = resource_demand;
         self.resources.consumed = consumed_resources;
         self.resources.required = required_resources;
+        self.resources.available.fuel =
+            self.produced.amount.fuel;
+        self.resources.available.electricity =
+            self.produced.amount.electricity;
 
         self.feedstocks.consumed = consumed_feedstocks;
         self.feedstocks.required = required_feedstocks;
