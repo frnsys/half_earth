@@ -49,7 +49,9 @@ fn effects_factor<E: AsRef<Effect>>(
             .sum::<f32>(),
         Var::Land => effects
             .filter_map(|e| match e {
-                Effect::ProtectLand(val) => Some(val * 100.),
+                Effect::ProtectLand(val) => Some(
+                    val * state.world.starting_resources.land,
+                ),
                 _ => None,
             })
             .sum::<f32>(),
@@ -224,6 +226,21 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
                     _ => unreachable!(),
                 };
                 amount.to_string()
+
+            // Land amounts are expressed in m2
+            // but should be displayed as % of available land.
+            } else if var == Var::Land {
+                format!(
+                    "{}%",
+                    display::percent(
+                        amount
+                            / state
+                                .world
+                                .starting_resources
+                                .land,
+                        true
+                    )
+                )
             } else {
                 amount.round_to(1).to_string()
             };
