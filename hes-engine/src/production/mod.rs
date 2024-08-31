@@ -20,6 +20,7 @@ use crate::{
 
 pub fn produce(
     orders: &[ProductionOrder],
+    demand: (&ResourceMap, &FeedstockMap),
     resources: &ResourceMap,
     feedstocks: &FeedstockMap,
 ) -> (
@@ -32,9 +33,7 @@ pub fn produce(
     // Calculate the output
     let (produced, consumed_r, consumed_f, byproducts) =
         planner::calculate_production(
-            &orders,
-            &resources,
-            &feedstocks,
+            orders, demand, resources, feedstocks,
         );
 
     // Calculate production per output type

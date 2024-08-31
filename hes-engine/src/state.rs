@@ -363,6 +363,7 @@ impl State {
             production_byproducts,
         ) = produce(
             &orders,
+            (&required_resources, &required_feedstocks),
             &self.resources.available,
             &self.feedstocks.available,
         );

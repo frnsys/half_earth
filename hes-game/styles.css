@@ -3464,6 +3464,9 @@ color: #63FF96;
 .shortage-critical {
   color: #ef3838;
 }
+.shortage-mild {
+  color: #ffbf00;
+}
 
 @keyframes new-pulse {
   from {
