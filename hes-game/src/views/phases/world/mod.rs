@@ -374,6 +374,22 @@ pub fn WorldEvents() -> impl IntoView {
                 update!(|game| {
                     game.finish_cycle();
                 });
+
+                // This has to happen before we enter the report
+                // phase and calculate changes
+                // so the upgrades' effects are taken into account.
+                ui.update_untracked(|ui| {
+                    game.update_untracked(|game| {
+                        game.upgrade_projects(
+                            &mut ui.queued_upgrades,
+                        );
+                        // Apply process mix changes.
+                        game.update_processes(
+                            &mut ui.process_mix_changes,
+                        );
+                    });
+                });
+
                 let changes = with!(|ui, game| ui
                     .session_start_state
                     .diff(game));
@@ -402,14 +418,6 @@ pub fn WorldEvents() -> impl IntoView {
                     ui.change_history.push((cur_year, changes));
                     ui.process_mix_history
                         .push((cur_year, mixes));
-
-                    // This has to happen before we enter the report
-                    // phase so the upgrades' effects are taken into account.
-                    game.update_untracked(|game| {
-                        game.upgrade_projects(
-                            &mut ui.queued_upgrades,
-                        );
-                    });
                 });
 
                 set_game_phase.set(Phase::Report);
