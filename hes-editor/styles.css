@@ -921,3 +921,19 @@ textarea {
 #help code {
   color: #7171ff;
 }
+.git-hash {
+  position: fixed;
+  top: 16px;
+  right: 12px;
+  z-index: 10;
+  color: #fff;
+  font-size: 8px;
+  font-family: monospace;
+  border: 0.75px solid #fff;
+  padding: 1px 2px;
+  border-radius: 3px;
+  opacity: 0.25;
+}
+.git-hash:hover {
+  opacity: 1.;
+}

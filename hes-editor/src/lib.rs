@@ -108,9 +108,15 @@ pub fn App() -> impl IntoView {
             .collect::<Vec<_>>()
     };
 
+    // Show git commit for this build.
+    let git_hash = env!("GIT_HASH");
+
     view! {
         <main>
-            <div id="save-tip">Ctrl+S: Save the current session.</div>
+            <div class="git-hash" title="Current Version">{git_hash}</div>
+            <div id="save-tip">
+                Ctrl+S: Save the current session.
+            </div>
             <Toaster
                 position=ToasterPosition::BottomRight
             >
