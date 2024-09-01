@@ -47626,7 +47626,7 @@
                         {
                             "WorldVariable": [
                                 "Emissions",
-                                -1.0
+                                -3.0
                             ]
                         },
                         {
@@ -47641,13 +47641,13 @@
                         {
                             "WorldVariable": [
                                 "ExtinctionRate",
-                                -5.0
+                                -7.0
                             ]
                         },
                         {
                             "WorldVariable": [
                                 "Emissions",
-                                -1.0
+                                -4.0
                             ]
                         },
                         {
@@ -47665,13 +47665,13 @@
                         {
                             "WorldVariable": [
                                 "ExtinctionRate",
-                                -1.0
+                                -10.0
                             ]
                         },
                         {
                             "WorldVariable": [
                                 "Emissions",
-                                -1.0
+                                -5.0
                             ]
                         }
                     ],
