@@ -16,19 +16,19 @@ pub impl State {
     /// protected land and use starting land resources as the baseline,
     /// rather than available land (which is starting land minus protected land).
     fn land_use_percent(&self) -> String {
-        let usage = self.resources.consumed.land
+        let usage = self.resource_demand.of(Resource::Land)
             + (self.protected_land
                 * self.world.starting_resources.land);
         let total_land = self.world.starting_resources.land;
         let percent = usage / total_land;
-        format!("{}%", display::percent(percent, true))
+        format!("{}%", display::percent(percent.min(1.0), true))
     }
 
     fn water_use_percent(&self) -> String {
-        let usage = self.resources.consumed.water;
+        let usage = self.resource_demand.of(Resource::Water);
         let total_water = self.resources.available.water;
         let percent = usage / total_water;
-        format!("{}%", display::percent(percent, true))
+        format!("{}%", display::percent(percent.min(1.0), true))
     }
 
     fn temp_anomaly(&self) -> String {
