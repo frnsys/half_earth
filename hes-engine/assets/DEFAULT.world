@@ -44363,7 +44363,7 @@
                     "ModifyIndustryResourcesAmount": [
                         "b04e3e96-5608-409e-98b6-59549ac22848",
                         "Fuel",
-                        500.0
+                        10.0
                     ]
                 },
                 {
