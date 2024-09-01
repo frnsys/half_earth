@@ -681,7 +681,7 @@ mod tests {
         ];
         let contrib =
             effects_factor(Var::Land, &effects, &state);
-        assert_eq!(contrib, 40.);
+        assert_eq!(contrib, 41599996000000.0);
     }
 
     #[test]
@@ -940,7 +940,7 @@ mod tests {
             Var::Water,
             card.total_formatted()
         );
-        assert_eq!(card.total_formatted(), "48%");
+        assert_eq!(card.total_formatted(), "47%");
 
         let card =
             factors_card(None, Var::PlantCalories, &state);

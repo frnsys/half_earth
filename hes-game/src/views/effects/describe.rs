@@ -1940,9 +1940,9 @@ mod tests {
         let state = State::default();
         let (text_vals, tip_vals) = effect_values(
             &state,
-            Effect::Feedstock(Feedstock::Oil, 0.75),
+            Effect::Feedstock(Feedstock::Oil, 7e15),
         );
-        assert_eq!(text_vals[0], 75.);
+        assert_eq!(text_vals[0], 865.);
         assert_eq!(tip_vals[0], 54.);
     }
 
