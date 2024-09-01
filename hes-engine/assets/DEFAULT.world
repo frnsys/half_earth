@@ -37358,7 +37358,7 @@
                 {
                     "Feedstock": [
                         "Lithium",
-                        2.0
+                        2.21e+14
                     ]
                 },
                 {
@@ -41326,7 +41326,7 @@
                         {
                             "Feedstock": [
                                 "Lithium",
-                                5.0
+                                5e+14
                             ]
                         }
                     ],
@@ -43086,12 +43086,6 @@
             "required_majority": 0.0,
             "effects": [
                 {
-                    "Feedstock": [
-                        "Soil",
-                        0.1
-                    ]
-                },
-                {
                     "ModifyProcessByproducts": [
                         "a6321414-cfff-4f90-b11a-676edf0f9389",
                         "Co2",
@@ -44265,13 +44259,13 @@
                 {
                     "Feedstock": [
                         "Oil",
-                        10.0
+                        8e+15
                     ]
                 },
                 {
                     "Feedstock": [
                         "NaturalGas",
-                        10.0
+                        8e+18
                     ]
                 },
                 {
@@ -45363,7 +45357,7 @@
                 {
                     "Feedstock": [
                         "Oil",
-                        2.0
+                        1e14,
                     ]
                 },
                 {
