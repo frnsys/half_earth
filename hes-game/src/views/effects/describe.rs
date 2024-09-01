@@ -238,6 +238,12 @@ pub fn flag_tip(flag: Flag, demand: &OutputMap) -> Tip {
                 "Skip the tutorial."
             }
         }
+        Flag::LifeGoesOn => {
+            tip! {
+                icons::ALERT,
+                "The game never ends."
+            }
+        }
     }
 }
 

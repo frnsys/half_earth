@@ -58,6 +58,7 @@ pub enum Flag {
     LaborSabotage,
     AlienEncounter,
     BailedOut,
+    LifeGoesOn,
 }
 impl std::fmt::Display for Flag {
     fn fmt(
@@ -86,6 +87,7 @@ impl std::fmt::Display for Flag {
           Self::EcosystemModeling => "Restoration projects take less time to complete.",
           Self::RepeatTutorial => "Repeat the tutorial.",
           Self::SkipTutorial => "Skip the tutorial.",
+          Self::LifeGoesOn => "The game never ends.",
         };
         write!(f, "{}", desc)
     }
@@ -182,6 +184,7 @@ impl AsRef<Effect> for Effect {
 fn check_game_over(state: &mut State) {
     if !state.npcs.is_ally("The Authoritarian")
         && state.outlook() < 0.
+        && !state.flags.contains(&Flag::LifeGoesOn)
     {
         state.game_over = true;
     }
@@ -444,7 +447,9 @@ impl Effect {
     ) {
         match self {
             Effect::GameOver => {
-                state.game_over = true;
+                if !state.flags.contains(&Flag::LifeGoesOn) {
+                    state.game_over = true;
+                }
             }
             Effect::BailOut(amount) => {
                 if state.political_capital < 0 {

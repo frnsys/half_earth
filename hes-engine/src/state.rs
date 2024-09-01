@@ -163,6 +163,7 @@ impl State {
         self.emissions.as_gtco2eq() <= WIN_EMISSIONS
             && self.world.extinction_rate <= WIN_EXTINCTION
             && self.world.temperature <= WIN_TEMPERATURE
+            && !self.flags.contains(&Flag::LifeGoesOn)
     }
 
     pub fn things_are_good(&self) -> bool {
@@ -435,7 +436,9 @@ impl State {
     }
 
     fn step_world(&mut self, tgav: f32) -> Vec<Update> {
-        if self.world.year >= self.death_year {
+        if self.world.year >= self.death_year
+            && !self.flags.contains(&Flag::LifeGoesOn)
+        {
             self.game_over = true;
         }
 
