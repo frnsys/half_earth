@@ -542,6 +542,12 @@ impl Collection<Project> {
             .filter(|p| p.is_online() || p.is_building())
     }
 
+    pub fn part_of_plan(
+        &self,
+    ) -> impl Iterator<Item = &Project> {
+        self.iter().filter(|p| p.is_online() || p.is_building())
+    }
+
     pub fn online(&self) -> impl Iterator<Item = &Project> {
         self.unlocked().filter(|p| p.is_online())
     }

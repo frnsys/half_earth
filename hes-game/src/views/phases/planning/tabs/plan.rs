@@ -101,7 +101,7 @@ pub fn Plan(
     let projects = memo!(game.world.projects);
     let active_projects = move || {
         with!(|projects| {
-            projects.changeable().cloned().collect::<Vec<_>>()
+            projects.part_of_plan().cloned().collect::<Vec<_>>()
         })
     };
     let n_projects = move || {
