@@ -1335,6 +1335,8 @@ impl DisplayEffect {
                         Some(est.round())
                     }
                 };
+                let available =
+                    state.feedstocks.available[*feedstock];
                 let text = match estimate {
                     None => {
                         t!("We aren't tracking this feedstock.")
@@ -1359,7 +1361,7 @@ impl DisplayEffect {
                         feedstock.as_key(),
                         "{changeDir} {name} supply by <strong>{percent}%.</strong>",
                         name: t!(feedstock.lower()),
-                        percent: display::percent(amount.abs(), true),
+                        percent: display::percent((amount/available).abs(), true),
                         changeDir: self.change_dir(*amount),
                     },
                 )
