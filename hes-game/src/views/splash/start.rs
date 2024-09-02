@@ -54,7 +54,7 @@ pub fn Start(
             <div class="under-construction">
                 <p>
                     <img src="/assets/under-construction.gif" />
-                    "Dear planner, We have recently re-written the game in anticipation of supporting custom cards and game parameters. As such this version may have bugs, saves may be corrupted, etc. For now the "<a href="https://store.steampowered.com/app/2071530/HalfEarth_Socialism/">Steam</a>" and "<a href="https://frnsys.itch.io/half-earth-socialism">Itch.io</a>" versions are running the old code and thus are more reliable. Please file bug reports "<a href="https://github.com/frnsys/half_earth/issues">here.</a>" Thank you for your patience and thanks for playing!"
+                    "Dear planner, We have recently re-written the game in anticipation of <a href="https://github.com/frnsys/half_earth/blob/main/hes-editor/readme.md">supporting custom cards and game parameters</a>. As such this version may have bugs, saves may be corrupted, etc. For now the "<a href="https://store.steampowered.com/app/2071530/HalfEarth_Socialism/">Steam</a>" and "<a href="https://frnsys.itch.io/half-earth-socialism">Itch.io</a>" versions are running the old code and thus are more reliable. Please file bug reports "<a href="https://github.com/frnsys/half_earth/issues">here.</a>" Thank you for your patience and thanks for playing!"
                 </p>
             </div>
             <div class="git-hash" title="Current Version">{git_hash}</div>
