@@ -12864,14 +12864,14 @@
                             "ProcessMixShare": [
                                 "f6d43b60-8ec3-4735-9ccd-1f8f7a41dbfc",
                                 "LessEqual",
-                                20.0
+                                0.2
                             ]
                         },
                         {
                             "ProcessMixShare": [
                                 "c0045e2a-e1d7-4cb7-9d36-870525b46c54",
                                 "LessEqual",
-                                20.0
+                                0.2
                             ]
                         },
                         {
@@ -16030,7 +16030,7 @@
                             "ProcessMixShare": [
                                 "769e516d-c5ec-4633-aa9f-243c7242966e",
                                 "Greater",
-                                30.0
+                                0.3
                             ]
                         },
                         {
@@ -16594,7 +16594,7 @@
                             "ProcessMixShare": [
                                 "26713198-bbc6-4ecd-821f-eacfcff7c049",
                                 "Greater",
-                                80.0
+                                0.8
                             ]
                         },
                         {
@@ -19405,7 +19405,7 @@
                             "ProcessMixShare": [
                                 "f6d43b60-8ec3-4735-9ccd-1f8f7a41dbfc",
                                 "GreaterEqual",
-                                50.0
+                                0.5
                             ]
                         },
                         {
@@ -20866,7 +20866,7 @@
                             "ProcessMixShare": [
                                 "8609da2d-a3a0-479a-a8fa-a0d37d5b3535",
                                 "GreaterEqual",
-                                20.0
+                                0.2
                             ]
                         },
                         {
@@ -21199,14 +21199,14 @@
                             "ProcessMixShare": [
                                 "f6d43b60-8ec3-4735-9ccd-1f8f7a41dbfc",
                                 "GreaterEqual",
-                                30.0
+                                0.3
                             ]
                         },
                         {
                             "ProcessMixShare": [
                                 "c0045e2a-e1d7-4cb7-9d36-870525b46c54",
                                 "GreaterEqual",
-                                30.0
+                                0.3
                             ]
                         },
                         {
@@ -21872,14 +21872,14 @@
                             "ProcessMixShare": [
                                 "98c7946e-bcac-403a-b3ed-23bb2af6c7bb",
                                 "LessEqual",
-                                10.0
+                                0.1
                             ]
                         },
                         {
                             "ProcessMixShare": [
                                 "769e516d-c5ec-4633-aa9f-243c7242966e",
                                 "LessEqual",
-                                10.0
+                                0.1
                             ]
                         },
                         {
@@ -22699,7 +22699,7 @@
                             "ProcessMixShare": [
                                 "f6d43b60-8ec3-4735-9ccd-1f8f7a41dbfc",
                                 "Greater",
-                                50.0
+                                0.5
                             ]
                         },
                         {
@@ -24217,7 +24217,7 @@
                             "ProcessMixShare": [
                                 "f541b7c2-1914-407e-841b-a6e6fc2f322b",
                                 "Greater",
-                                20.0
+                                0.2
                             ]
                         },
                         {
@@ -24236,7 +24236,7 @@
                             "ProcessMixShare": [
                                 "c0045e2a-e1d7-4cb7-9d36-870525b46c54",
                                 "Greater",
-                                20.0
+                                0.2
                             ]
                         },
                         {
@@ -25085,7 +25085,7 @@
                             "ProcessMixShare": [
                                 "c0045e2a-e1d7-4cb7-9d36-870525b46c54",
                                 "GreaterEqual",
-                                10.0
+                                0.1
                             ]
                         },
                         {
@@ -25104,7 +25104,7 @@
                             "ProcessMixShare": [
                                 "f541b7c2-1914-407e-841b-a6e6fc2f322b",
                                 "GreaterEqual",
-                                10.0
+                                0.1
                             ]
                         },
                         {
@@ -25377,7 +25377,7 @@
                             "ProcessMixShare": [
                                 "1db29e91-98a7-4264-bb2b-874458ea44b7",
                                 "LessEqual",
-                                5.0
+                                0.05
                             ]
                         },
                         {
@@ -27794,14 +27794,14 @@
                             "ProcessMixShare": [
                                 "f6d43b60-8ec3-4735-9ccd-1f8f7a41dbfc",
                                 "GreaterEqual",
-                                40.0
+                                0.4
                             ]
                         },
                         {
                             "ProcessMixShare": [
                                 "c0045e2a-e1d7-4cb7-9d36-870525b46c54",
                                 "GreaterEqual",
-                                40.0
+                                0.4
                             ]
                         },
                         {
@@ -28039,7 +28039,7 @@
                             "ProcessMixShare": [
                                 "c0045e2a-e1d7-4cb7-9d36-870525b46c54",
                                 "GreaterEqual",
-                                10.0
+                                0.1
                             ]
                         },
                         {
@@ -28058,7 +28058,7 @@
                             "ProcessMixShare": [
                                 "f541b7c2-1914-407e-841b-a6e6fc2f322b",
                                 "GreaterEqual",
-                                10.0
+                                0.1
                             ]
                         },
                         {
@@ -34771,7 +34771,7 @@
                             "ProcessMixShare": [
                                 "b5cb5cd5-f339-4918-b8a6-0488b89e5679",
                                 "GreaterEqual",
-                                30.0
+                                0.3
                             ]
                         },
                         {
