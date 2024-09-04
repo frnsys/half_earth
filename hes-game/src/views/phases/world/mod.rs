@@ -225,12 +225,20 @@ fn Disasters(
         on_done.call(());
     };
 
+    let globe_view = if get_debug_opts().no_globe {
+        None
+    } else {
+        Some(view! {
+            <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
+        })
+    };
+
     view! {
         <div id="event-stream--year">
             {year}
             <YearProgress skipping on_tick on_year_end controls=time_controls />
         </div>
-        <Globe id="events-globe" on_ready=on_globe_ready bg_color/>
+        {globe_view}
         <Toasts toasts />
     }
 }
@@ -305,9 +313,17 @@ pub fn WorldEvents() -> impl IntoView {
                 let emissions = game
                     .with_untracked(|game| get_emissions(game));
                 tracing::debug!("emissions={emissions:?}");
-                let hector = hector.get_value();
-                hector.add_emissions(emissions);
-                let tgav = hector.calc_tgav().await as f32;
+
+                // If the `no-hector` debug option is set
+                // just return a constant tgav.
+                let tgav = if get_debug_opts().no_hector {
+                    1.1
+                } else {
+                    let hector = hector.get_value();
+                    hector.add_emissions(emissions);
+                    let tgav = hector.calc_tgav().await as f32;
+                    tgav
+                };
                 tracing::debug!("tgav={tgav}");
 
                 // Advance the year.

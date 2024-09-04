@@ -17,6 +17,8 @@ pub struct DebugOpts {
     pub always_skip_world: bool,
     pub check_events: bool,
     pub very_popular: bool,
+    pub no_globe: bool,
+    pub no_hector: bool,
 }
 
 pub fn get_debug_opts() -> DebugOpts {
@@ -46,6 +48,8 @@ pub fn get_debug_opts() -> DebugOpts {
             very_popular: opts.contains(&"i-am-the-state")
                 || debug_all,
             check_events: opts.contains(&"check-events"),
+            no_globe: opts.contains(&"no-globe"),
+            no_hector: opts.contains(&"no-hector"),
         }
     } else {
         DebugOpts::default()
