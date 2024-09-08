@@ -275,8 +275,8 @@ This region's previous demand for {output}.,Bu bölgenin {output} için önceki 
 This region's previous income level.,Bu bölgenin önceki gelir seviyesi
 This region's progress to the next income level.,Bu bölgenin bir sonraki gelir düzeyine ilerleme seviyesi.
 "This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","Bu, {name} salınımlarını <img src=""{icon}"">{emissionsBefore} seviyesinden <img src=""{icon}"">{emissionsAfter} seviyesine getirecek. Bu tüm Salınımların %{emissionsChange} kadarını değiştirecek"
-This will change {resource} demand for {name} by some unknown amount.,"Bu, {reseource} için olan {name} talebini bilinmeyen bir miktar kadar değiştirir."
-"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","Bu, {name} için olan {reseource} talebini <img src=""{icon}"">{demandBefore} seviyesinden <img src=""{icon}"">{demandAfter} seviyesine getirecek. Bu, tüm {reseource} talebinde %{percent} kadar değişim demek."
+This will change {resource} demand for {name} by some unknown amount.,"Bu, {resource} için olan {name} talebini bilinmeyen bir miktar kadar değiştirir."
+"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","Bu, {name} için olan {resource} talebini <img src=""{icon}"">{demandBefore} seviyesinden <img src=""{icon}"">{demandAfter} seviyesine getirecek. Bu, tüm {resource} talebinde %{percent} kadar değişim demek."
 "This will change {short} for {name} from <img src=""{icon}"">{change}","Bu, {name} için {short} değerini <img src=""{icon}"">{change}"
 This will directly change annual emissions by {amount}.{percent},"Bu, yıllık emisyonları doğrudan {amount}. {percent} oranında değiştirecektir."
 This will directly change global precipitation by {amount}<strong>cm/yr</strong>.,"Bu, küresel yağış miktarını doğrudan  {amount}<strong>cm/yıl</strong> kadar değiştirir."
@@ -367,13 +367,13 @@ the extinction rate,Soyu tükenme oranı
 water use,su kullanımı
 year(s),yıl(lar)
 "{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> CO2 salınımlarını <strong>%{percent}</strong> {changeDir}."
-{changeDir} all {name} production by <strong>{percent}%.</strong>,[{icon}]  Tüm {name} üretimini  <strong>%{percent}.</strong> kadar {changeDir}.
+{changeDir} all {name} production by <strong>{percent}%.</strong>,Tüm {name} üretimini  <strong>%{percent}.</strong> kadar {changeDir}.
 {changeDir} biodiversity pressure by {amount}.,Biyoçeşitlilik baskısını {amount} kadar {changeDir}.
 "{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> tarafından ortaya çıkan biyoçeşitlilik baskısını <strong>{amount}</strong> kadar {changeDir}."
 {changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] memnuniyeti <strong>{amount}</strong> {changeDir} .
-"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","[{type}] {name} talebini <img src=""{icon}"">{amount} kadar {changeDir}."
-{changeDir} demand for {name} by <strong>{percent}%</strong>.,[{icon}] {name} talebini <strong>%{percent}</strong> kadar {changeDir}.
-{changeDir} demand for {tag} by {amount}.,{tag] talebini {amount} kadar {changeDir}
+"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","{name} talebini <img src=""{icon}"">{amount} kadar {changeDir}."
+{changeDir} demand for {name} by <strong>{percent}%</strong>.,{name} talebini <strong>%{percent}</strong> kadar {changeDir}.
+{changeDir} demand for {tag} by {amount}.,{tag} talebini {amount} kadar {changeDir}
 {changeDir} emissions by {amount}.,Salınımları {amount} kadar {changeDir}.
 {changeDir} global population by {amount}.,Küresel nüfusu {amount} {changeDir}.
 {changeDir} global population growth by {amount}<strong>%.</strong>,Küresel nüfus artışını </strong>%{amount}<strong> {changeDir}.
@@ -386,16 +386,16 @@ year(s),yıl(lar)
 "{changeDir} the chance of ""{event}"" by {amount}.","""{event}"" olasılığını {amount} {changeDir}."
 {changeDir} the global temperature by {amount}<strong>°c</strong>.,Küresel sıcaklığı {amount}<strong>°c</strong> {changeDir}.
 {changeDir} the rate of sea level rise by {amount}mm/year.,Deniz seviyesindeki artış miktarını yıllık {amount} mm {changeDir}.
-{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}]  küresel memnuniyeti <strong>{amount}</strong> {changeDir}.
-{changeDir} world contentedness by {amount}.,küresel memnuniyeti {amount}  kadar {changeDir}.
+{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] Küresel memnuniyeti <strong>{amount}</strong> {changeDir}.
+{changeDir} world contentedness by {amount}.,Küresel memnuniyeti {amount}  kadar {changeDir}.
 {changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{tag} {kind} maliyetini <b>{tipAmount}</b> kadar {changeDir}
-{changeDir} {label} for {tag} by <strong>{amount}</strong>.,[{icon}] {tag} için {label} <strong>{amount}</strong> kadar {changeDir}.
+{changeDir} {label} for {tag} by <strong>{amount}</strong>.,{tag} için {label} <strong>{amount}</strong> kadar {changeDir}.
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{name} arzını mevcut arzın <img src=""{icon}"">{amount}."
-{changeDir} {name} supply by <strong>{percent}%.</strong>,[{icon}] {name} arzını <strong>{percent}%.</strong> {changeDir}
-{changeDir} {name} supply by [{icon}]{amount}.,[{icon}] {name} arzını [{icon}]{amount} {changeDir}.
-{changeDir} {resource} demand for {tag} by {amount}.,[{icon}] {tag} için olan {reseource} talebini {amount} {changeDir}.
-{changeDir} {tag} output by <strong>{percent}%.</strong>,[{icon}] {tag} çıktısını <strong>%{percent}</strong> kadar {changeDir}.
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,[emissions]  {tag} tarafından ortaya çıkan  {type} salınımlarını <strong>{amount}</strong> {changeDir}.
+{changeDir} {name} supply by <strong>{percent}%.</strong>,{name} arzını <strong>{percent}%.</strong> {changeDir}
+{changeDir} {name} supply by [{icon}]{amount}.,{name} arzını [{icon}]{amount} {changeDir}.
+{changeDir} {resource} demand for {tag} by {amount}.,{tag} için olan {resource} talebini {amount} {changeDir}.
+{changeDir} {tag} output by <strong>{percent}%.</strong>,{tag} çıktısını <strong>%{percent}</strong> kadar {changeDir}.
+{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{tag} tarafından ortaya çıkan  {type} salınımlarını <strong>{amount}</strong> {changeDir}.
 {cost} yrs,{cost} yıl
 {disaster} in {region},{region} bölgesinde {disaster}
 "{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","{emissionsBefore} miktarından <img src=""{icon}"">{emissionsAfter} miktarına. Bu tüm salınımlarıda %{emissionsChange} değişim demek."

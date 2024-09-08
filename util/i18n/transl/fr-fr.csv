@@ -367,12 +367,12 @@ the extinction rate,le taux d'extinction
 water use,utilisation de l'eau
 year(s),an(s)
 "{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","Réduisez les émissions de CO2 pour <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> de <strong>{percent}%.</strong>"
-{changeDir} all {name} production by <strong>{percent}%.</strong>,[{icon}] Réduisez toute la production de {name} par <strong>{percent}%.</strong>
+{changeDir} all {name} production by <strong>{percent}%.</strong>,Réduisez toute la production de {name} par <strong>{percent}%.</strong>
 {changeDir} biodiversity pressure by {amount}.,Pression sur la biodiversité {changeDir} par {amount}.
 "{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","{changeDir} la pression sur la biodiversité pour <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> par <strong>{amount}.</strong>"
 {changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] la satisfaction augmente de <strong>{amount}</strong>.
-"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","[{type}] demande de {changeDir} pour {name} de <img src=""{icon}"">{amount}."
-{changeDir} demand for {name} by <strong>{percent}%</strong>.,[{icon}] La demande pour {name} a {changeDir} de <strong>{percent}%</strong>.
+"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","Demande de {changeDir} pour {name} de <img src=""{icon}"">{amount}."
+{changeDir} demand for {name} by <strong>{percent}%</strong>.,La demande pour {name} a {changeDir} de <strong>{percent}%</strong>.
 {changeDir} demand for {tag} by {amount}.,Demande de {changeDir} pour {tag} de {amount}.
 {changeDir} emissions by {amount}.,Réduisez les émissions de {amount}.
 {changeDir} global population by {amount}.,Changez la population mondiale de {amount}.
@@ -386,16 +386,16 @@ year(s),an(s)
 "{changeDir} the chance of ""{event}"" by {amount}.","{changeDir} la probabilité de ""{event}"" de {amount}."
 {changeDir} the global temperature by {amount}<strong>°c</strong>.,Changez la température globale de <strong>°c</strong>{amount}{changeDir}.
 {changeDir} the rate of sea level rise by {amount}mm/year.,Modifiez le taux de montée du niveau de la mer de {amount}mm/année.
-{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}] Le contentement mondial change de <strong>{amount}</strong> {changeDir}.
+{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] Le contentement mondial change de <strong>{amount}</strong> {changeDir}.
 {changeDir} world contentedness by {amount}.,Contenu mondial modifié par {amount}.
 {changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{changeDir} {kind} de {tag} par <b>{tipAmount}</b>.
-{changeDir} {label} for {tag} by <strong>{amount}</strong>.,[{icon}] Changer {changeDir} {label} pour {tag} par <strong>{amount}</strong>.
+{changeDir} {label} for {tag} by <strong>{amount}</strong>.,Changer {changeDir} {label} pour {tag} par <strong>{amount}</strong>.
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{changeDir} l'approvisionnement de {name} par <img src=""{icon}"">{amount}."
-{changeDir} {name} supply by <strong>{percent}%.</strong>,[{icon}] Augmentez la fourniture de {name} par <strong>{percent}%.</strong> {changeDir}
-{changeDir} {name} supply by [{icon}]{amount}.,[{icon}] Approvisionnez {name} en {changeDir} par [{icon}]{amount}.
-{changeDir} {resource} demand for {tag} by {amount}.,[{icon}] Demandez {changeDir} de {resource} pour {tag} par {amount}.
-{changeDir} {tag} output by <strong>{percent}%.</strong>,[{icon}] La sortie de {tag} {changeDir} de <strong>{percent}%.</strong>
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,[emissions] Les émissions de {type} pour {tag} ont {changeDir} de <strong>{amount}</strong>.
+{changeDir} {name} supply by <strong>{percent}%.</strong>,Augmentez la fourniture de {name} par <strong>{percent}%.</strong> {changeDir}
+{changeDir} {name} supply by [{icon}]{amount}.,Approvisionnez {name} en {changeDir} par [{icon}]{amount}.
+{changeDir} {resource} demand for {tag} by {amount}.,Demandez {changeDir} de {resource} pour {tag} par {amount}.
+{changeDir} {tag} output by <strong>{percent}%.</strong>,La sortie de {tag} {changeDir} de <strong>{percent}%.</strong>
+{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,Les émissions de {type} pour {tag} ont {changeDir} de <strong>{amount}</strong>.
 {cost} yrs,{cost} ans
 {disaster} in {region},{disaster} dans {region}
 "{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","De {emissionsBefore} à <img src=""{icon}"">{emissionsAfter}. C'est un changement de {emissionsChange}% de toutes les émissions."

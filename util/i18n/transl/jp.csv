@@ -367,11 +367,11 @@ the extinction rate,種の絶滅の速度
 water use,水資源の利用率
 year(s),年
 "{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> のCO2 排出量は、<strong>{percent}%</strong>{changeDir}"
-{changeDir} all {name} production by <strong>{percent}%.</strong>,[{icon}]すべての {name} の生産量が <strong>{percent}%.</strong>{changeDir} 。
+{changeDir} all {name} production by <strong>{percent}%.</strong>,すべての {name} の生産量が <strong>{percent}%.</strong>{changeDir} 。
 {changeDir} biodiversity pressure by {amount}.,世界の生物多様性に対する負荷は、{amount}{changeDir}。
 "{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span>の生物多様性に対する負荷が<strong>{amount}.</strong> {changeDir}。"
 {changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] 満足度が、<strong>{amount}</strong>{changeDir}
-"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","[{type}] {name} の需要が <img src=""{icon}"">{amount} {changeDir}"
+"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","{name} の需要が <img src=""{icon}"">{amount} {changeDir}"
 {changeDir} demand for {name} by <strong>{percent}%</strong>.,{name}における<strong>{percent}%</strong>{changeDir}。
 {changeDir} demand for {tag} by {amount}.,{tag}の需要が{amount}{changeDir} 。
 {changeDir} emissions by {amount}.,世界の排出量は、{amount}{changeDir}。
@@ -386,16 +386,16 @@ year(s),年
 "{changeDir} the chance of ""{event}"" by {amount}.",「{event}」の発生確率を{amount}だけ{changeDir}。
 {changeDir} the global temperature by {amount}<strong>°c</strong>.,地球の平均気温は、{amount}<strong>°c</strong>{changeDir} 。
 {changeDir} the rate of sea level rise by {amount}mm/year.,海面上昇率は、{amount}mm/year{changeDir}。
-{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] [{icon}] 世界の満足度は、<strong>{amount}</strong>{changeDir} 。
+{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] 世界の満足度は、<strong>{amount}</strong>{changeDir} 。
 {changeDir} world contentedness by {amount}.,世界の満足度は、{amount}{changeDir}。
 {changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{tag}の{kind} が <b>{tipAmount}</b>{changeDir}。
-{changeDir} {label} for {tag} by <strong>{amount}</strong>.,[{icon}]{tag}のための{label}が、<strong>{amount}</strong> {changeDir}
+{changeDir} {label} for {tag} by <strong>{amount}</strong>.,{tag}のための{label}が、<strong>{amount}</strong> {changeDir}
 "{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{name}の供給量は、<img src=""{icon}"">{amount}{changeDir}。（現在の供給量の{percent}% ）"
-{changeDir} {name} supply by <strong>{percent}%.</strong>,[{icon}] {name} の供給が、<strong>{percent}%</strong>{changeDir}
-{changeDir} {name} supply by [{icon}]{amount}.,[{icon}] {name} の供給は、[{icon}]{amount}{changeDir} 。
-{changeDir} {resource} demand for {tag} by {amount}.,[{icon}] {tag}の{resource}の需要が {amount}に{changeDir}。
-{changeDir} {tag} output by <strong>{percent}%.</strong>,[{icon}] {tag}の生産量が、<strong>{percent}%.</strong> {changeDir}。
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,[emissions] {type} の排出量が、<strong>{amount}</strong>{changeDir}
+{changeDir} {name} supply by <strong>{percent}%.</strong>,{name} の供給が、<strong>{percent}%</strong>{changeDir}
+{changeDir} {name} supply by [{icon}]{amount}.,{name} の供給は、[{icon}]{amount}{changeDir} 。
+{changeDir} {resource} demand for {tag} by {amount}.,{tag}の{resource}の需要が {amount}に{changeDir}。
+{changeDir} {tag} output by <strong>{percent}%.</strong>,{tag}の生産量が、<strong>{percent}%.</strong> {changeDir}。
+{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{type} の排出量が、<strong>{amount}</strong>{changeDir}
 {cost} yrs,{cost} 年
 {disaster} in {region},{region}で{disaster}発生
 "{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","{emissionsBefore} から <img src=""{icon}"">{emissionsAfter}になる。これはすべての排出量の{emissionsChange}%にあたる変化である。"
