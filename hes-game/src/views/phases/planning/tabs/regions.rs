@@ -82,7 +82,6 @@ pub fn Regions() -> impl IntoView {
     };
 
     let on_globe_ready = move |globe: GlobeRef| {
-        globe.clear();
         globe.rotate(false);
         globe.set_zoom(0.15);
         globe.clouds(false);

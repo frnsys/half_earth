@@ -46,6 +46,16 @@ class Globe {
     el.appendChild(this.scene.renderer.domElement);
   }
 
+  start() {
+    this.active = true;
+    this.render();
+  }
+
+  stop() {
+    this.active = false;
+    this.clear();
+  }
+
   clear() {
     this.pings.forEach((mesh) => {
       mesh.geometry.dispose();

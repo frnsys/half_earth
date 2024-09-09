@@ -14,13 +14,13 @@ extern "C" {
     fn new(el: &web_sys::HtmlElement) -> Globe;
 
     #[wasm_bindgen(method)]
-    fn render(this: &Globe);
-
-    #[wasm_bindgen(method)]
     fn init(this: &Globe, tex_path: &str);
 
     #[wasm_bindgen(method)]
-    fn clear(this: &Globe);
+    fn stop(this: &Globe);
+
+    #[wasm_bindgen(method)]
+    fn start(this: &Globe);
 
     #[wasm_bindgen(method, js_name = setClouds)]
     fn set_clouds(this: &Globe, visible: bool);
@@ -64,8 +64,12 @@ impl Clone for GlobeRef {
     }
 }
 impl GlobeRef {
-    pub fn clear(&self) {
-        self.inner.borrow().clear();
+    pub fn start(&self) {
+        self.inner.borrow().start();
+    }
+
+    pub fn stop(&self) {
+        self.inner.borrow().stop();
     }
 
     pub fn rotate(&self, rotate: bool) {
@@ -149,6 +153,7 @@ pub fn Globe(
         let on_ready = Closure::wrap(Box::new(move || {
             set_loading.set(false);
             on_ready.call(g_copy.clone());
+            g_copy.inner.borrow().start();
         })
             as Box<dyn FnMut()>);
 
@@ -158,11 +163,9 @@ pub fn Globe(
         g.inner
             .borrow()
             .on_click(on_click.as_ref().unchecked_ref());
-
         g.inner
             .borrow()
             .init(&surface_path(tgav.get_untracked()));
-        g.inner.borrow().render();
         on_ready.forget();
         on_click.forget();
 
@@ -175,7 +178,12 @@ pub fn Globe(
             g.inner
                 .borrow()
                 .update_surface(&surface_path(tgav));
-            g.inner.borrow().render();
+        }
+    });
+
+    on_cleanup(move || {
+        if let Some(g) = globe_obj.get_value() {
+            g.inner.borrow().stop();
         }
     });
 

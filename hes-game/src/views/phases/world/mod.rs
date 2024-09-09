@@ -129,7 +129,6 @@ fn Disasters(
     let temp = memo!(game.world.temperature);
     let bg_color = move || with!(|temp| warming_colour(*temp));
     let on_globe_ready = move |globe: GlobeRef| {
-        globe.clear();
         globe.rotate(true);
         globe.clouds(true);
         set_globe.set(Some(globe));
