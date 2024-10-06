@@ -231,10 +231,10 @@ pub fn Interstitial() -> impl IntoView {
             );
             set_timeout(
                 move || {
-                    if game_over.get_untracked() {
-                        set_phase.set(Phase::GameOver);
-                    } else if game_win.get_untracked() {
+                    if game_win.get_untracked() {
                         set_phase.set(Phase::GameWin);
+                    } else if game_over.get_untracked() {
+                        set_phase.set(Phase::GameOver);
                     } else {
                         set_phase.set(Phase::Planning);
                     }
