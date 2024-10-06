@@ -58,12 +58,18 @@ pub fn impact_intensity(
     kind: OutputKind,
 ) -> usize {
     let stops = impact_stops(key, kind);
-    stops
-        .windows(2)
-        .enumerate()
-        .find(|(_, stops)| val >= stops[0] && val < stops[1])
-        .map(|(i, _)| i + 1)
-        .unwrap_or(stops.len())
+    if val < stops[0] {
+        0
+    } else {
+        stops
+            .windows(2)
+            .enumerate()
+            .find(|(_, stops)| {
+                val >= stops[0] && val < stops[1]
+            })
+            .map(|(i, _)| i + 1)
+            .unwrap_or(stops.len())
+    }
 }
 
 fn output_stops(key: Output) -> [f32; 4] {
