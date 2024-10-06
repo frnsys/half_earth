@@ -126,7 +126,7 @@ impl World {
             self.industries.iter().fold(0., |acc, ind| {
                 acc + ind.extinction_rate(
                     self.starting_resources.land,
-                ) * lic_pop
+                ) * ind.demand(lic_pop)
             });
         let rate = base + from_industries + from_processes;
         self.extinction_rate = rate;
