@@ -77,7 +77,7 @@ impl ScannerSpec for ProjectScanner {
         // - An upgrade exists for the project.
         // - If the project is a policy, only if it's not already implemented.
         let addable = move || {
-            project.with_untracked(|p| {
+            let ok = project.with_untracked(|p| {
                 if let Some(p) = p {
                     let player_seats =
                         player_seats.get_untracked() as f32;
@@ -93,13 +93,16 @@ impl ScannerSpec for ProjectScanner {
                         && p.status == Status::Active
                     {
                         false
+                    } else if p.status == Status::Finished {
+                        false
                     } else {
                         true
                     }
                 } else {
                     false
                 }
-            })
+            });
+            ok
         };
 
         let game = expect_context::<RwSignal<State>>();
