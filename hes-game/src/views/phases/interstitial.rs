@@ -198,7 +198,7 @@ pub fn Interstitial() -> impl IntoView {
         &LOCALES[idx]
     };
     let game_over = memo!(game.game_over);
-    let game_win = memo!(game.won());
+    let game_win = move || with!(|game| game.won());
     let parliament = move || describe_parliament(pc.get());
     let world = move || {
         describe_warming(emissions.get(), temperature.get())
@@ -231,7 +231,7 @@ pub fn Interstitial() -> impl IntoView {
             );
             set_timeout(
                 move || {
-                    if game_win.get_untracked() {
+                    if game_win() {
                         set_phase.set(Phase::GameWin);
                     } else if game_over.get_untracked() {
                         set_phase.set(Phase::GameOver);

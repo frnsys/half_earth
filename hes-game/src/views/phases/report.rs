@@ -251,10 +251,12 @@ pub fn Report() -> impl IntoView {
         })
     };
     let ext_pc_change = move || {
+        let change = start_exr.get() - exr.get();
         let end = end_exr_int();
         consts::EXTINCTION_PC.get(end).unwrap_or_else(|| {
             consts::EXTINCTION_PC.last().unwrap()
-        })
+        }) + (change.round() as isize * consts::BIODIVERSITY_PC)
+            .max(0)
     };
     let emissions = memo!(game.emissions.as_gtco2eq());
     let start_emissions = memo!(ui.cycle_start_state.emissions);

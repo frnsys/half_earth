@@ -22,6 +22,9 @@ pub const TEMPERATURE_PC: isize = 2;
 /// PC change per -0.5Gt emissions change
 pub const EMISSIONS_PC: isize = 5;
 
+/// PC change per -1 extinction rate change
+pub const BIODIVERSITY_PC: isize = 2;
+
 /// Max points for a project
 pub const MAX_POINTS: usize = 12;
 
