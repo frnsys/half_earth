@@ -118,9 +118,10 @@ impl World {
                 let amount = produced_by_process
                     .get(&p.id)
                     .unwrap_or(&0.);
-                acc + (p.extinction_rate(
+                let contrib = p.extinction_rate(
                     self.starting_resources.land,
-                ) * amount)
+                ) * amount;
+                acc + contrib
             });
         let from_industries =
             self.industries.iter().fold(0., |acc, ind| {

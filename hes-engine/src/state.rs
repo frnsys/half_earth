@@ -209,7 +209,11 @@ impl State {
         updates.extend(self.step_world(tgav));
         self.world.year += 1;
 
-        if self.is_planning_year() {
+        // We actually apply policy changes the year
+        // before so that any impacts they have are
+        // accounted in the production phase of the last
+        // year.
+        if self.is_pre_planning_year() {
             let mut outcomes = self.roll_new_policy_outcomes();
             updates.append(&mut outcomes);
         }
@@ -219,6 +223,10 @@ impl State {
 
     pub fn is_planning_year(&self) -> bool {
         self.world.year % 5 == 0
+    }
+
+    pub fn is_pre_planning_year(&self) -> bool {
+        (self.world.year + 1) % 5 == 0
     }
 
     pub fn apply_effects(
