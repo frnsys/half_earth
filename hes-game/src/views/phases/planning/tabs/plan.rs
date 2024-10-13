@@ -385,16 +385,27 @@ pub fn Plan(
             .collect::<Vec<_>>()
     };
 
+    let protected_land = memo!(game.protected_land);
     let resource_demand = memo!(game.resource_demand);
+    let starting_resources =
+        memo!(game.world.starting_resources);
     let resource_status = move || {
-        with!(|resources, resource_demand| {
+        with!(|resources,
+               resource_demand,
+               starting_resources,
+               protected_land| {
             resource_demand.total().items().map(|(k, demand)| {
                 let demand = match k {
                     Resource::Electricity | Resource::Fuel => {
                         to_energy_units(demand)
                     },
-                    Resource::Land | Resource::Water => {
+                    Resource::Water => {
                         resource(demand, k, resources.available)
+                    }
+                    Resource::Land => {
+                        // For land we add in protected land as well.
+                        let protected = protected_land * 100.;
+                        resource(demand, k, *starting_resources) + protected
                     }
                 };
                 let available = match k {
