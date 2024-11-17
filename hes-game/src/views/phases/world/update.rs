@@ -135,8 +135,10 @@ fn Update(
                     );
 
                     let effects = active_effects(proj);
-                    let outcome_dialogue = proj.active_outcome.map(|id| {
-                        let (dialogue, _) = create_signal(proj.flavor.outcomes[id].clone());
+                    let outcome_dialogue = proj.active_outcome.and_then(|id| {
+                        proj.flavor.outcomes.get(id).cloned()
+                    }).map(|outcome| {
+                        let (dialogue, _) = create_signal(outcome);
                         view! {
                             <Dialogue dialogue on_start=move |_| {
                                 set_can_close.set(false);
