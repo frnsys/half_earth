@@ -204,8 +204,10 @@ impl State {
             }
             self.apply_changes(changes);
         }
+
         self.update_demand();
         self.step_production();
+
         updates.extend(self.step_world(tgav));
         self.world.year += 1;
 
@@ -416,7 +418,11 @@ impl State {
             self.produced.of(Output::Fuel);
         consumed_resources.electricity -=
             self.produced.of(Output::Fuel);
-        self.resources.consume(consumed_resources);
+
+        // We don't actually need to consume resources because
+        // `self.resources.available` actually represents resources
+        // available for the *next* year of  roduction.
+        // self.resources.consume(consumed_resources);
 
         // Weigh resources by scarcity;
         // higher weight = higher scarcity

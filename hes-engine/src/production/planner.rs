@@ -272,12 +272,14 @@ pub fn calculate_production(
 
             // Ok to unwrap b/c we check if `orders` is empty
             let order_idx = order_idxs.pop().unwrap();
+
             let amount = produce_amount(
                 &orders[order_idx],
                 &mut resources,
                 &mut feedstocks,
                 &mut produced_byproducts,
             );
+
             produced[order_idx] = amount;
         }
         continue_production = !orders_by_output
