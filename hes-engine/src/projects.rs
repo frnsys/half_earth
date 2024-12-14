@@ -378,9 +378,22 @@ impl Project {
         let mut changes = ProjectChanges::default();
 
         // Upgrade effects replace the previous effects.
-        changes
-            .remove_effects
-            .extend(self.active_effects().clone());
+        // EXCEPT for locks/unlocks.
+        let to_remove = self
+            .active_effects()
+            .into_iter()
+            .filter(|effect| {
+                !matches!(
+                    effect,
+                    Effect::LocksProject(..)
+                        | Effect::UnlocksProject(..)
+                        | Effect::UnlocksProcess(..)
+                        | Effect::UnlocksNPC(..)
+                        | Effect::AddEvent(..)
+                )
+            })
+            .cloned();
+        changes.remove_effects.extend(to_remove);
         let upgraded = if self.level < self.upgrades.len() {
             self.level += 1;
             true
