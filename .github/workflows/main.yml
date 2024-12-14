@@ -59,7 +59,7 @@ jobs:
       - name: Build game
         env:
           PLATFORM: STEAM
-        run: trunk build --release --config hes-game/Trunk.toml --dist build/site
+        run: trunk build --release --config hes-game/Trunk.toml --dist electron/site
 
       - name: Build and release game app
         working-directory: electron
@@ -68,7 +68,7 @@ jobs:
         run: yarn build ${{ matrix.args }} --publish always
 
       - name: Build editor
-        run: trunk build --release --config hes-editor/Trunk.toml --dist build/site
+        run: trunk build --release --config hes-editor/Trunk.toml --dist electron/site
 
       - name: Build and release editor app
         working-directory: electron
