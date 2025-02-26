@@ -1,7 +1,8 @@
 #!/bin/bash
 
 dl_dir="data/src"
-dl_url="https://github.com/JGCRI/hectorui/raw/main/inst/shinyApp/www/maps"
+dl_sha="a0216e5e2e7493d089d183beeda5d2f9ddcbb592"
+dl_url="https://github.com/JGCRI/hectorui/raw/$dl_sha/inst/shinyApp/www/maps"
 
 mkdir -p "$dl_dir"
 
