@@ -25,6 +25,8 @@ git submodule update
 
 ## Dependencies
 
+This requires Rust Nightly to compile.
+
 ```bash
 # Leptos is the main framework used for both the game and the editor.
 cargo install trunk
