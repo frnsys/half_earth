@@ -144,7 +144,7 @@ fn Disasters(
             // Trigger any scheduled disasters.
             // Get events scheduled for at or earlier than the provided time.
             let popped: Vec<_> = events
-                .extract_if(|ev| ev.when <= progress)
+                .extract_if(.., |ev| ev.when <= progress)
                 .collect();
 
             let mut occurring = vec![];

@@ -1,5 +1,4 @@
 #![feature(let_chains)]
-#![feature(extract_if)]
 
 mod app;
 mod audio;
