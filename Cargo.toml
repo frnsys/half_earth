@@ -16,7 +16,7 @@ default-members = [
 [workspace.dependencies]
 leptos = { version = "0.6", features = ["csr", "tracing"] }
 leptos_router = { version = "0.6", features = ["csr"] }
-leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "*" }
+leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "0.11.3" }
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 serde-wasm-bindgen = "0.6"
