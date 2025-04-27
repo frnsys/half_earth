@@ -36,6 +36,8 @@ cargo install cargo-leptos
 rustup target add wasm32-unknown-unknown
 ```
 
+If you're using Nix, you can run `nix-shell` instead of doing the above.
+
 ## Development
 
 There is some functionality which is better kept in JS rather than ported to Rust/WASM. In particular, the rendering of the globe (which depends on three.js), handling of audio, and interfacing with the Hector WASM module. We'd use our [Rust adapter for Hector](https://github.com/frnsys/hector-rs) directly but Rust/WASM doesn't work with C++ FFI, so we have to stick with using JS as a bridge.
