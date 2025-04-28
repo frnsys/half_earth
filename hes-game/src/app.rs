@@ -16,15 +16,21 @@ use crate::{
 use hes_engine::{State, World};
 use leptos::*;
 use leptos_animation::*;
+use leptos_hotkeys::{provide_hotkeys_context, scopes};
 use leptos_router::*;
 
 #[component]
 pub fn Root() -> impl IntoView {
+    let hotkeys_ref = NodeRef::<html::Main>::new();
+    provide_hotkeys_context(hotkeys_ref, false, scopes!());
+
     view! {
         <Router>
-            <Routes>
-                <Route path="" view=App/>
-            </Routes>
+            <main _ref=hotkeys_ref>
+                <Routes>
+                    <Route path="" view=App/>
+                </Routes>
+            </main>
         </Router>
     }
 }

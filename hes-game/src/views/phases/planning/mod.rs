@@ -6,6 +6,7 @@ mod tabs;
 
 pub use active_plan::ActivePlan;
 use hes_engine::{EventPhase, Flag, State};
+use leptos_hotkeys::use_hotkeys;
 pub use processes::Processes;
 pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
@@ -51,10 +52,33 @@ impl std::fmt::Display for Page {
     }
 }
 
+fn send_click(id: &str) {
+    // TODO: use a shared document instance perhaps? This feels dirty
+    // But this is the first Rust code I've written so I don't know how to do that
+    let document = web_sys::window().unwrap().document().unwrap();
+    document.get_element_by_id(id).unwrap().dyn_into::<web_sys::HtmlElement>().unwrap().click();
+}
+
 #[component]
 pub fn Planning() -> impl IntoView {
     let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
+
+    use_hotkeys!(("keyp") => move |_| {
+        send_click("tab-Plan");
+    });
+
+    use_hotkeys!(("keyg") => move |_| {
+        send_click("tab-Parliament");
+    });
+
+    use_hotkeys!(("keys") => move |_| {
+        send_click("tab-Dashboard");
+    });
+
+    use_hotkeys!(("keyw") => move |_| {
+        send_click("tab-Regions");
+    });
 
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
@@ -113,6 +137,7 @@ pub fn Planning() -> impl IntoView {
             let disabled = cur_tutorial.get() < tutorial;
             view! {
                 <div
+                    id=format!("tab-{}", p)
                     class="planning--tab"
                     class:active=active
                     class:highlight=highlight
