@@ -148,3 +148,10 @@ pub impl Image {
         }
     }
 }
+
+pub fn send_click(id: &str) {
+    // TODO: use a shared document instance perhaps? This feels dirty
+    // But this is the first Rust code I've written so I don't know how to do that
+    let document = web_sys::window().unwrap().document().unwrap();
+    document.get_element_by_id(id).unwrap().dyn_into::<web_sys::HtmlElement>().unwrap().click();
+}

@@ -10,6 +10,7 @@ use leptos_hotkeys::use_hotkeys;
 pub use processes::Processes;
 pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
+use crate::util::send_click;
 
 use crate::{
     audio,
@@ -50,13 +51,6 @@ impl std::fmt::Display for Page {
             }
         )
     }
-}
-
-fn send_click(id: &str) {
-    // TODO: use a shared document instance perhaps? This feels dirty
-    // But this is the first Rust code I've written so I don't know how to do that
-    let document = web_sys::window().unwrap().document().unwrap();
-    document.get_element_by_id(id).unwrap().dyn_into::<web_sys::HtmlElement>().unwrap().click();
 }
 
 #[component]
