@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use hes_engine::*;
 use serde::{Deserialize, Serialize};
 use strum::{EnumIter, IntoEnumIterator};
@@ -192,12 +194,13 @@ pub fn eval_badges(state: &State) -> Vec<Badge> {
 
 pub fn summarize(state: &State, win: bool) -> Summary {
     let badges = eval_badges(state);
-
     let closest = state
         .npcs
         .iter()
         .max_by(|x, y| {
-            x.relationship.partial_cmp(&y.relationship).unwrap()
+            x.relationship
+                .partial_cmp(&y.relationship)
+                .unwrap_or(Ordering::Equal)
         })
         .unwrap();
     let faction = closest.name.to_string();
