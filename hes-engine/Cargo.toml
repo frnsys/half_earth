@@ -1,6 +1,6 @@
 [package]
 name = "hes-engine"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["Francis Tseng"]
 edition = "2021"
 
