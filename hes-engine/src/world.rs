@@ -80,8 +80,9 @@ impl World {
         wretched_ally: bool,
         consumerist_ally: bool,
     ) {
-        let temp_outlook =
-            temp_change * 6. * self.temperature.powf(2.);
+        let temp_outlook = temp_change
+            * 6.
+            * self.temperature.max(0.).powf(2.);
         let region_outlook_change = temp_outlook * 0.4;
         for region in self.regions.iter_mut() {
             region.outlook += region_outlook_change;
@@ -135,18 +136,18 @@ impl World {
 
     /// Contribution to extinction rate from the tgav
     pub fn tgav_extinction_rate(&self) -> f32 {
-        self.temperature.powf(2.)
+        self.temperature.max(0.).powf(2.)
     }
 
     /// Contribution to extinction rate from sea level rise
     pub fn slr_extinction_rate(&self) -> f32 {
-        self.sea_level_rise.powf(2.)
+        self.sea_level_rise.max(0.).powf(2.)
     }
 
     pub fn sea_level_rise_rate(&self) -> f32 {
         // Meters
         // Chosen to roughly hit 1.4m-1.6m rise by 2100 in the BAU scenario
-        (0.0025 * self.temperature.powf(1.5))
+        (0.0025 * self.temperature.max(0.).powf(1.5))
             + self.sea_level_rise_modifier
     }
 
