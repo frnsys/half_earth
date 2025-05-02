@@ -102,7 +102,8 @@ pub fn Dashboard() -> impl IntoView {
         }
     };
 
-    let habitability = memo!(game.world.regions.habitability());
+    let habitability =
+        memo!(game.world.regions.habitability().max(0.));
     let avg_habitability = move || {
         let avg = habitability.get();
         let int = intensity::scale(
@@ -124,7 +125,7 @@ pub fn Dashboard() -> impl IntoView {
         MiniCardData {
             label: display::percent(percent_use / 100., true),
             color: intensity::color(
-                percent_use.round() as usize * 4,
+                percent_use.round().max(0.) as usize * 4,
                 false,
             ),
         }

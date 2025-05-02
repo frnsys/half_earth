@@ -55,7 +55,8 @@ pub impl State {
             total += income;
         }
         let n_regions = self.world.regions.len();
-        let avg = (total / n_regions as f32).round() as usize;
+        let avg =
+            (total / n_regions as f32).round().max(0.) as usize;
         avg
     }
 

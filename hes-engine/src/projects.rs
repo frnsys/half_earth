@@ -366,12 +366,13 @@ impl Project {
                         m * demand[output]
                     }
                 };
-                c.round() as usize
+                c.round().max(0.) as usize
             }
         };
         self.cost =
             (cost as f32 * self.cost_modifier * modifier)
-                .round() as usize;
+                .round()
+                .max(0.) as usize;
     }
 
     pub fn upgrade(&mut self) -> ProjectChanges {

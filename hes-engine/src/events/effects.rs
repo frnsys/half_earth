@@ -460,7 +460,9 @@ impl Effect {
             Effect::WorldVariable(var, change) => {
                 match var {
                     WorldVariable::Year => {
-                        state.world.year += *change as usize
+                        if *change > 0. {
+                            state.world.year += *change as usize
+                        }
                     }
                     WorldVariable::Population => state
                         .world
@@ -795,7 +797,9 @@ impl Effect {
             Effect::WorldVariable(var, change) => {
                 match var {
                     WorldVariable::Year => {
-                        state.world.year -= *change as usize
+                        if *change > 0. {
+                            state.world.year -= *change as usize
+                        }
                     }
                     WorldVariable::Population => state
                         .world

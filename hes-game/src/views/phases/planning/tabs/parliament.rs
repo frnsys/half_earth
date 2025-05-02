@@ -187,7 +187,8 @@ fn calculate_seats(
     let mut rng = mulberry32(year);
     let mut extras: BTreeMap<Id, usize> = BTreeMap::default();
     while extra_seats > 0 {
-        let idx = (rng() * seats.len() as f64).floor() as usize;
+        let idx = (rng() * seats.len() as f64).floor().max(0.)
+            as usize;
         let s = &mut seats[idx];
         s.seats += 1;
         let e = extras.entry(s.id).or_default();

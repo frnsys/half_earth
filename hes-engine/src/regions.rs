@@ -81,8 +81,9 @@ impl Region {
         // - [ ] precip TODO
         // - [ ] sea_level_rise TODO
         // - [X] number of negative events
-        self.base_habitability
-            - (f32::max(0., self.temp_hi - 35.).powf(2.) * 10.)
+        (self.base_habitability
+            - (f32::max(0., self.temp_hi - 35.).powf(2.) * 10.))
+            .max(0.)
     }
 
     pub fn set_income_level(&mut self, level: usize) {
