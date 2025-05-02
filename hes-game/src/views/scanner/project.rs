@@ -7,7 +7,14 @@ use crate::{
     t,
     views::cards::ProjectCard,
 };
-use hes_engine::{Id, Project, ProjectType, State, Status};
+use hes_engine::{
+    Flag,
+    Id,
+    Project,
+    ProjectType,
+    State,
+    Status,
+};
 use leptos::*;
 
 use super::{
@@ -36,6 +43,7 @@ pub struct ProjectScanner {
     player_seats: Memo<f32>,
     plan_changes: Memo<BTreeMap<Id, PlanChange>>,
     queued_upgrades: Memo<BTreeMap<Id, bool>>,
+    parliament_suspended: Memo<bool>,
 }
 impl ProjectScanner {
     pub fn new(on_change: Option<Callback<()>>) -> Self {
@@ -46,6 +54,9 @@ impl ProjectScanner {
             plan_changes: memo!(ui.plan_changes.clone()),
             queued_upgrades: memo!(ui.queued_upgrades.clone()),
             player_seats: memo!(game.npcs.coalition_seats()),
+            parliament_suspended: memo!(game
+                .flags
+                .contains(&Flag::ParliamentSuspended)),
         }
     }
 }
@@ -60,6 +71,8 @@ impl ScannerSpec for ProjectScanner {
         let on_change = self.on_change.clone();
         let player_seats = self.player_seats.clone();
         let queued_upgrades = self.queued_upgrades.clone();
+        let parliament_suspended =
+            self.parliament_suspended.clone();
 
         // Does this project already have an upgrade queued/under construction?
         let upgrade_queued = move || {
@@ -81,8 +94,11 @@ impl ScannerSpec for ProjectScanner {
                 if let Some(p) = p {
                     let player_seats =
                         player_seats.get_untracked() as f32;
-                    if p.required_majority > 0.
-                        && player_seats < p.required_majority
+                    let parliament_suspended =
+                        parliament_suspended.get_untracked();
+                    if (p.required_majority > 0.
+                        && player_seats < p.required_majority)
+                        && !parliament_suspended
                     {
                         false
                     } else if upgrade_queued() {
