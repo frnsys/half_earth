@@ -29,7 +29,7 @@ This requires Rust Nightly to compile.
 
 ```bash
 # Leptos is the main framework used for both the game and the editor.
-cargo install trunk
+cargo install trunk # last tested w/ trunk 0.21.13
 cargo install cargo-leptos
 
 # WASM target is required for frontend code.

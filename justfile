@@ -2,11 +2,11 @@ export LEPTOS_WASM_OPT_VERSION := "version_118"
 
 # Run the development game (browser).
 game:
-    trunk serve --config hes-game/Trunk.toml
+    trunk serve --locked --config hes-game/Trunk.toml
 
 # Run the development editor (browser).
 editor:
-    trunk serve --config hes-editor/Trunk.toml
+    trunk serve --locked --config hes-editor/Trunk.toml
 
 # Run tests.
 test:

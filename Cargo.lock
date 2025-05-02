@@ -1404,7 +1404,7 @@ dependencies = [
 [[package]]
 name = "leptos-use"
 version = "0.11.3"
-source = "git+https://github.com/Synphonyte/leptos-use#d32d72573171de58a71f8c1e0f5c0e70903617b6"
+source = "git+https://github.com/Synphonyte/leptos-use?rev=da56771900a2362e266243d81478c7fa5c158b14#da56771900a2362e266243d81478c7fa5c158b14"
 dependencies = [
  "async-trait",
  "cfg-if",
@@ -1635,8 +1635,7 @@ dependencies = [
 [[package]]
 name = "list_files_macro"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6eff66ba5d9ba509a1d814a02b53b5b21a839a41b1c8867e69179814b1a0d398"
+source = "git+https://github.com/frnsys/list-files-macro-rs#5f0b6515fa2e44cd3420b74c2b152c94cde57a0c"
 dependencies = [
  "glob",
  "quote",
