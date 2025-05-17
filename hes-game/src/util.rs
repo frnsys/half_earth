@@ -148,3 +148,27 @@ pub impl Image {
         }
     }
 }
+
+#[macro_export]
+macro_rules! load_images {
+    ($p:tt, $e:tt) => {{
+        let parent_path = $p.replace(
+            "$CARGO_MANIFEST_DIR",
+            env!("CARGO_MANIFEST_DIR"),
+        );
+        include_dir!($p)
+            .find(&format!("*.{}", $e))
+            .unwrap()
+            .map(|entry| {
+                format!(
+                    "{}{}",
+                    parent_path,
+                    entry.path().display()
+                )
+            })
+            .map(|full_path| full_path.into_boxed_str())
+            .collect::<Box<[Box<str>]>>()
+    }};
+}
+
+pub(crate) use load_images;

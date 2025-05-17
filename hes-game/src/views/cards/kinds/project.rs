@@ -463,33 +463,35 @@ pub fn ProjectCard(
 
                 {move || {
                      let is_active = with!(|project| project.is_active());
-                     if is_active && let Some((cost, effects)) = next_upgrade() {
-                         let is_upgrading = upgrade_queued();
-                         let effects = create_rw_signal(effects);
-                         Some(view! {
-                            <div class="project-upgrade" class:upgrading={is_upgrading}>
-                                <div class="project-upgrade--title">
-                                    {move || {
-                                         if is_upgrading {
-                                             view! {
-                                                <div>{t!("Upgrading in one planning cycle.")}</div>
-                                             }.into_view()
-                                         } else {
-                                             view! {
-                                                <div>{t!("Next Level")}</div>
-                                                <div>
-                                                    {cost} <img class="pip" src=icons::POLITICAL_CAPITAL/>
-                                                </div>
-                                             }.into_view()
-                                         }
-                                    }}
-                                </div>
-                                <Effects effects />
-                            </div>
-                         })
-                     } else {
-                         None
+                     match (is_active, next_upgrade()) {
+                        (true, Some((cost, effects))) => {
+                            let is_upgrading = upgrade_queued();
+                            let effects = create_rw_signal(effects);
+                            Some(view! {
+                               <div class="project-upgrade" class:upgrading={is_upgrading}>
+                                   <div class="project-upgrade--title">
+                                       {move || {
+                                            if is_upgrading {
+                                                view! {
+                                                   <div>{t!("Upgrading in one planning cycle.")}</div>
+                                                }.into_view()
+                                            } else {
+                                                view! {
+                                                   <div>{t!("Next Level")}</div>
+                                                   <div>
+                                                       {cost} <img class="pip" src=icons::POLITICAL_CAPITAL/>
+                                                   </div>
+                                                }.into_view()
+                                            }
+                                       }}
+                                   </div>
+                                   <Effects effects />
+                               </div>
+                            })
+                        }
+                        _ => None
                      }
+
                 }}
                 <Show when=has_downgrade>
                     <div class="project-upgrade">

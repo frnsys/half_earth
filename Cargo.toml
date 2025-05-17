@@ -1,17 +1,10 @@
 [workspace]
 resolver = "2"
-members = [
-    "hes-game",
-    "hes-engine",
-    "hes-editor",
-    "util/*",
-]
-default-members = [
-    "hes-game",
-    "hes-engine",
-    "hes-editor",
-    "util/*",
-]
+members = ["hes-game", "hes-engine", "hes-editor", "util/*"]
+default-members = ["hes-game", "hes-engine", "hes-editor", "util/*"]
+
+[workspace.package]
+rust-version = "1.87.0"
 
 [workspace.dependencies]
 leptos = { version = "0.6", features = ["csr", "tracing"] }
