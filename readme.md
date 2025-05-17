@@ -25,7 +25,7 @@ git submodule update
 
 ## Dependencies
 
-This requires Rust Nightly to compile (last tested with `1.88.0-nightly (b45dd71d1 2025-04-30)`).
+This requires Rust Stable version `1.87.0` or greater to compile.
 
 ```bash
 # Leptos is the main framework used for both the game and the editor.
