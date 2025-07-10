@@ -1,29 +1,33 @@
 use leptos::*;
-use list_files_macro::list_files;
 
 use crate::{
     eval::{eval_badges, summarize, Ending},
-    i18n,
-    icons,
+    i18n, icons,
     state::{format_year_log, Settings, StateExt, UIState},
     t,
+    util::load_images,
     views::{tip, Events, HasTip},
 };
 use hes_engine::{EventPhase, State};
+// we also need this macro or else load_images won't compile
+use include_dir::include_dir;
 
 #[component]
 pub fn End(lose: bool) -> impl IntoView {
-    const WIN_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/win/*.jpg"
+    let WIN_IMGS: Box<[Box<str>]> = load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/sharing/win/",
+        "jpg"
     );
-    const COUP_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/lose/coup/*.jpg"
+    let COUP_IMGS: Box<[Box<str>]> = load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/sharing/lose/coup/",
+        "jpg"
     );
-    const DEATH_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/lose/death/*.jpg"
+    let DEATH_IMGS: Box<[Box<str>]> = load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/sharing/lose/death/",
+        "jpg"
     );
-    const LOSE_IMGS: &[&str] = &list_files!(
-        "../../../public/assets/sharing/lose/generic/*.jpg"
+    let LOSE_IMGS: Box<[Box<str>]> = load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/sharing/lose/generic/", "jpg"
     );
 
     let events = create_rw_signal(vec![]);

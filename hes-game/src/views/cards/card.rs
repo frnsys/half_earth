@@ -75,8 +75,10 @@ pub fn Card(
 
     // Fit texts
     create_effect(move |_| {
-        if !is_process && let Some(name) = name_ref.get() {
-            scale_text(to_ws_el(name), 16);
+        if !is_process {
+            if let Some(name) = name_ref.get() {
+                scale_text(to_ws_el(name), 16);
+            }
         }
 
         // Can't target the body as a whole,

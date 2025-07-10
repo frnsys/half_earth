@@ -1,59 +1,84 @@
-use crate::{audio, t};
+use crate::{audio, t, util::load_images};
+
+// we also need this macro or else load_images won't compile
+use include_dir::include_dir;
 use leptos::*;
-use list_files_macro::list_files;
 
 fn preload_assets() -> Vec<String> {
     const PRELOAD: &[&str] = &[
-        "/assets/stamp.svg",
-        "/assets/backgrounds/menu.jpg",
-        "/assets/backgrounds/dashboard.png",
-        "/assets/backgrounds/parliament.png",
-        "/assets/backgrounds/plan.png",
-        "/assets/backgrounds/regions.png",
-        "/assets/backgrounds/report.png",
-        "/assets/gosplant.svg",
-        "/assets/clock.png",
-        "/assets/motto.png",
+        "$CARGO_MANIFEST_DIR/public/assets/stamp.svg",
+        "$CARGO_MANIFEST_DIR/public/assets/backgrounds/menu.jpg",
+        "$CARGO_MANIFEST_DIR/public/assets/backgrounds/dashboard.png",
+        "$CARGO_MANIFEST_DIR/public/assets/backgrounds/parliament.png",
+        "$CARGO_MANIFEST_DIR/public/assets/backgrounds/plan.png",
+        "$CARGO_MANIFEST_DIR/public/assets/backgrounds/regions.png",
+        "$CARGO_MANIFEST_DIR/public/assets/backgrounds/report.png",
+        "$CARGO_MANIFEST_DIR/public/assets/gosplant.svg",
+        "$CARGO_MANIFEST_DIR/public/assets/clock.png",
+        "$CARGO_MANIFEST_DIR/public/assets/motto.png",
     ];
 
-    let mut preload = Vec::from(PRELOAD);
-    preload.extend(list_files!(
-        "../../../public/assets/content/images/*.png"
+    let mut preload: Vec<Box<str>> = Vec::from(
+        PRELOAD
+            .into_iter()
+            .map(|s| {
+                s.replace(
+                    "$CARGO_MANIFEST_DIR",
+                    env!("CARGO_MANIFEST_DIR"),
+                )
+            })
+            .map(|s| s.into_boxed_str())
+            .collect::<Vec<_>>(),
+    );
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/content/images/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/characters/*.png"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/characters/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/characters/*.webp"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/characters/",
+        "webp"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/*.png"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/*.svg"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/",
+        "svg"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/feedstocks/*.png"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/feedstocks/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/features/*.png"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/features/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/pips/*.png"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/pips/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/industries/*.png"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/industries/",
+        "png"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/npcs/*.svg"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/npcs/",
+        "svg"
     ));
-    preload.extend(list_files!(
-        "../../../public/assets/icons/hud/*.svg"
+    preload.extend(load_images!(
+        "$CARGO_MANIFEST_DIR/public/assets/icons/hud/",
+        "svg"
     ));
 
     // A little hacky (ideally we do this at compile time)
     // but turn the file paths into the proper urls.
     let root = format!("{}/public", env!("CARGO_MANIFEST_DIR"));
+
     preload
         .into_iter()
         .map(|path| path.replace(&root, "").to_string())

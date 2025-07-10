@@ -34,7 +34,7 @@ jobs:
           default: true
           override: true
           profile: minimal
-          toolchain: nightly
+          toolchain: stable
           target: ${{ matrix.platform == 'macos-latest' && 'x86_64-apple-darwin' || '' }}
 
       - name: Setup Rust cache

@@ -58,14 +58,14 @@ pub fn Draggable(
 
     // Apply card scaling on mount...
     create_effect(move |ok| {
-        if ok.is_none()
-            && let Some(el) = el_ref.get_untracked()
-        {
-            let el = el.style(
-                "transform",
-                format!("scale({})", card_scale()),
-            );
-            update_rect();
+        if ok.is_none() {
+            if let Some(el) = el_ref.get_untracked() {
+                let el = el.style(
+                    "transform",
+                    format!("scale({})", card_scale()),
+                );
+                update_rect();
+            }
         }
     });
 

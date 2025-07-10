@@ -725,26 +725,18 @@ impl DisplayEffect {
             }
             Effect::UnlocksProject(id) => {
                 let project = &state.world.projects[id];
-                let prob = if self.is_unknown
-                    && let Some(prob) = self.likelihood
-                {
-                    prob
-                } else {
-                    Likelihood::Guaranteed
-                };
+                let prob =
+                    match (self.is_unknown, self.likelihood) {
+                        (true, Some(prob)) => prob,
+                        _ => Likelihood::Guaranteed,
+                    };
                 let tag = icon_card_tag(
                     &t!(&project.name),
                     project.kind.icon(),
                 );
-                let text = if self.is_unknown
-                    && let Some(prob) = self.likelihood
-                {
-                    prefix_probs!(
-                        prob,
-                        " unlock the {tag} project."
-                    )
-                } else {
-                    t!("<strong>Unlocks</strong> the {tag} project.")
+                let text = match (self.is_unknown, self.likelihood) {
+                    (true, Some(prob)) => prefix_probs!(prob, " unlock the {tag} project."),
+                    _ => t!("<strong>Unlocks</strong> the {tag} project."),
                 };
 
                 (
@@ -765,27 +757,20 @@ impl DisplayEffect {
             }
             Effect::UnlocksProcess(id) => {
                 let process = &state.world.processes[id];
-                let prob = if self.is_unknown
-                    && let Some(prob) = self.likelihood
-                {
-                    prob
-                } else {
-                    Likelihood::Guaranteed
-                };
+                let prob =
+                    match (self.is_unknown, self.likelihood) {
+                        (true, Some(prob)) => prob,
+                        _ => Likelihood::Guaranteed,
+                    };
                 let tag = icon_card_tag(
                     &t!(&process.name),
                     process.output.icon(),
                 );
-                let text = if self.is_unknown
-                    && let Some(prob) = self.likelihood
-                {
-                    prefix_probs!(
-                        prob,
-                        " unlock the {tag} process."
-                    )
-                } else {
-                    t!("<strong>Unlocks</strong> the {tag} process.")
-                };
+                let text =
+                    match (self.is_unknown, self.likelihood) {
+                        (true, Some(prob)) => prefix_probs!(prob, " unlock the {tag} process."),
+                        _ => t!("<strong>Unlocks</strong> the {tag} process."),
+                    };
 
                 (
                     tip(
@@ -805,13 +790,16 @@ impl DisplayEffect {
             }
             Effect::UnlocksNPC(id) => {
                 let npc = &state.npcs[id];
-                let text = if self.is_unknown
-                    && let Some(prob) = self.likelihood
-                {
-                    prefix_probs!(prob, " unlock {name}.")
-                } else {
-                    t!("<strong>Unlocks</strong> {name}.")
-                };
+                let text =
+                    match (self.is_unknown, self.likelihood) {
+                        (true, Some(prob)) => prefix_probs!(
+                            prob,
+                            " unlock {name}."
+                        ),
+                        _ => t!(
+                            "<strong>Unlocks</strong> {name}."
+                        ),
+                    };
                 (
                     tip! {
                         icons::UNLOCKS,
