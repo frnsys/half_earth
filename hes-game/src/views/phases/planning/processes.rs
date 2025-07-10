@@ -361,7 +361,7 @@ fn display_changes(
     state: &State,
     mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
     processes: &[Process],
-) -> impl IntoView {
+) -> impl IntoView + use<> {
     let (before, after) =
         estimate_changes(state, mix_changes, processes);
     let descs = [

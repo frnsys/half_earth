@@ -1,5 +1,8 @@
 use super::ProductionOrder;
 use crate::{
+    Collection,
+    HasId,
+    Id,
     flavor::ProcessFlavor,
     kinds::{
         ByproductMap,
@@ -10,9 +13,6 @@ use crate::{
         ResourceMap,
     },
     npcs::RELATIONSHIP_CHANGE_AMOUNT,
-    Collection,
-    HasId,
-    Id,
 };
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
@@ -102,7 +102,7 @@ impl Process {
     pub fn production_order(
         &self,
         demand: &OutputMap,
-    ) -> ProductionOrder {
+    ) -> ProductionOrder<'_> {
         // Production order amount can't be more than the process's limit,
         // if there is one.
         let mut amount =
@@ -245,7 +245,7 @@ impl Collection<Process> {
     pub fn orders(
         &self,
         demand: &OutputMap,
-    ) -> Vec<ProductionOrder> {
+    ) -> Vec<ProductionOrder<'_>> {
         self.iter()
             .map(|p| p.production_order(&demand))
             .collect()

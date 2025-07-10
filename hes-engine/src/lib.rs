@@ -1,5 +1,3 @@
-#![feature(generic_arg_infer)]
-
 mod diff;
 mod events;
 pub mod flavor;
