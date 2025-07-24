@@ -6,9 +6,11 @@ mod tabs;
 
 pub use active_plan::ActivePlan;
 use hes_engine::{EventPhase, Flag, State};
+use leptos_hotkeys::use_hotkeys;
 pub use processes::Processes;
 pub use projects::Projects;
 use tabs::{Dashboard, Parliament, Plan, Regions};
+use crate::util::send_click;
 
 use crate::{
     audio,
@@ -55,6 +57,22 @@ impl std::fmt::Display for Page {
 pub fn Planning() -> impl IntoView {
     let game = expect_context::<RwSignal<State>>();
     let ui = expect_context::<RwSignal<UIState>>();
+
+    use_hotkeys!(("keyp") => move |_| {
+        send_click("tab-Plan");
+    });
+
+    use_hotkeys!(("keyg") => move |_| {
+        send_click("tab-Parliament");
+    });
+
+    use_hotkeys!(("keys") => move |_| {
+        send_click("tab-Dashboard");
+    });
+
+    use_hotkeys!(("keyw") => move |_| {
+        send_click("tab-Regions");
+    });
 
     audio::play_phase_music("/assets/music/planning.mp3", true);
 
@@ -113,6 +131,7 @@ pub fn Planning() -> impl IntoView {
             let disabled = cur_tutorial.get() < tutorial;
             view! {
                 <div
+                    id=format!("tab-{}", p)
                     class="planning--tab"
                     class:active=active
                     class:highlight=highlight

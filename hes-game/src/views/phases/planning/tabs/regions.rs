@@ -8,6 +8,8 @@ use crate::{
 };
 use hes_engine::State;
 use leptos::*;
+use leptos_hotkeys::use_hotkeys;
+use crate::util::send_click;
 
 #[component]
 pub fn Regions() -> impl IntoView {
@@ -89,6 +91,15 @@ pub fn Regions() -> impl IntoView {
         center_on_region();
     };
 
+    use_hotkeys!(("arrowleft") => move |_| {
+        send_click("region-change-left");
+    });
+
+    use_hotkeys!(("arrowright") => move |_| {
+        send_click("region-change-right");
+    });
+
+
     view! {
         <div class="planning--page planning--page--regions">
             <Globe
@@ -98,13 +109,13 @@ pub fn Regions() -> impl IntoView {
                 on_click=on_globe_click
             />
             <div class="regions-browse">
-                <div class="region-change btn" on:click=prev_region>
+                <div class="region-change btn" id="region-change-left" on:click=prev_region>
                     <img src=icons::ARROW_LEFT/>
                 </div>
                 <div class="region-name cell" ref=region_name_ref>
                     {region_name}
                 </div>
-                <div class="region-change btn" on:click=next_region>
+                <div class="region-change btn" id="region-change-right" on:click=next_region>
                     <img src=icons::ARROW_RIGHT/>
                 </div>
             </div>

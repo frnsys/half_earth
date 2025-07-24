@@ -1113,6 +1113,7 @@ dependencies = [
  "leptos",
  "leptos-use",
  "leptos_animation",
+ "leptos_hotkeys",
  "leptos_router",
  "list_files_macro",
  "log",
@@ -1493,6 +1494,17 @@ dependencies = [
  "serde",
  "syn 2.0.73",
  "walkdir",
+]
+
+[[package]]
+name = "leptos_hotkeys"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8613bc48763c5a3c91ef63bb65c38391eeaa9a54d0c19f432cc01d296bc92e07"
+dependencies = [
+ "leptos",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]

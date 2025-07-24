@@ -39,6 +39,7 @@ paste = "1.0.15"
 http = { version = "1.0" }
 base64 = "0.22.1"
 codee = { version = "0.1.2", features = ["json_serde"] }
+leptos_hotkeys = "0.2.2"
 
 [dependencies.web-sys]
 workspace = true
