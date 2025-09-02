@@ -103,7 +103,7 @@ Increases,Artırır
 Infrastructure,Altyapı
 Infrastructure projects take 20% longer to finish.,Altyapı projelerinin tamamlanması %20 daha fazla sürecek.
 Land Use,Arazi Kullanımı
-Land: They're not making anymore of it. You're using {percent} of land.,Arazi: Artık bunu üretmiyorlar. Arazinin %{percent} kadarını kullanıyorsun.
+Land: They're not making anymore of it. You're using {percent} of land.,Arazi: Artık bunu üretmiyorlar. Arazinin {percent} kadarını kullanıyorsun.
 Level,Seviye
 Likely to increase,Artırması muhtemel:
 Likely to reduce,Azaltması muhtemel:
@@ -222,7 +222,6 @@ They won't have much effect.,Çok fazla etkileri olmayacak.
 "This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Bu, gelir seviyesine bağlı olarak bölgesel memnuniyeti değiştirir (daha zengin bölgeler bunu daha fazla hissedecek). Mevcut dünya memnuniyeti {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","Bu, {name} talebini <img src=""{icon}"">{currentDemand} seviyesinden <img src=""{icon}"">{afterDemand} seviyesine getirir."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","Bu, {name} talebini <img src=""{icon}"">{currentDemand} seviyesinden <img src=""{icon}"">{afterDemand} seviyesine getirir. Bu, tüm {name} talebinde %{percent} değişim demektir."
-This effect {changeDir} the {kind} of this project {tipAmount}.,Bu efekt projenin {kind} {tipAmount} {changeDir}
 "This event can occur if ""{name}"" is {label}.","Bu olay, eğer ""{name}"" {label} ise gerçekleşebilir."
 This event can occur if {name} is your {relType}.,Bu olay {name} sizin {relType} ise yaşanabilir.
 This event is influenced by biodiversity pressures.,Bu olay biyolojik çeşitlilik baskılarından etkilenir.
@@ -309,7 +308,7 @@ Very High,Çok Yüksek
 Very Low,Çok az
 View All,Tümünü Gör
 Water Stress,Su stresi
-Water: The giver of life. You're using {percent} of water resources.,Su: Hayat verir. Su kaynaklarının %{percent} kadarını kullanıyorsun.
+Water: The giver of life. You're using {percent} of water resources.,Su: Hayat verir. Su kaynaklarının {percent} kadarını kullanıyorsun.
 We aren't tracking this feedstock.,Bu hammaddeyi takip etmiyoruz.
 Well Played!,İyi Oyundu!
 Will increase,Artıracak:
@@ -346,7 +345,7 @@ by an unknown amount,Bilinmeyen bir miktar kadar
 cost,maliyet
 critical,Kritik
 crops,ekinler
-decrease {k} by {change},{k}'yi {change} azalt.
+decrease {k} by {change}%,{k}'yi {change}% azalt
 development time,geliştirme süresi
 electricity,elektrik
 emissions,salınımlar

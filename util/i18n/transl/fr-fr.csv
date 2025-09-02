@@ -1,7 +1,7 @@
 English,Translation
 1 planning cycle left,Il reste 1 cycle de planification
-<strong>Locks</strong> {tag},<strong>Serrures</strong> {tag}
-<strong>Unlocks</strong> the {tag} process.,<strong>Déverrouille</strong> le processus {tag}.
+<strong>Locks</strong> {tag},<strong>Bloque</strong> {tag}
+<strong>Unlocks</strong> the {tag} process.,<strong>Débloque</strong> le processus {tag}.
 <strong>Unlocks</strong> the {tag} project.,<strong>Débloque</strong> le projet {tag}.
 <strong>Unlocks</strong> {name}.,<strong>Débloque</strong> {name}.
 A Planetary Crisis Planning Game,Un Jeu de Planification de Crise Planétaire
@@ -103,7 +103,7 @@ Increases,Augmente
 Infrastructure,Infrastructure
 Infrastructure projects take 20% longer to finish.,Les projets d'infrastructure prennent 20% de temps en plus pour se terminer.
 Land Use,Utilisation des Terres
-Land: They're not making anymore of it. You're using {percent} of land.,Terre : Ils n'en produisent plus. Vous utilisez {percent}% de terre.
+Land: They're not making anymore of it. You're using {percent} of land.,Terre : Ils n'en produisent plus. Vous utilisez {percent} de terre.
 Level,Niveau
 Likely to increase,Susceptible d'augmenter
 Likely to reduce,Susceptible de réduire
@@ -222,7 +222,6 @@ They won't have much effect.,Ils n'auront pas beaucoup d'effet.
 "This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Cela modifie la satisfaction régionale en fonction du niveau de revenu (les régions plus riches le ressentiront davantage). La satisfaction mondiale actuelle est de {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","Cela change la demande de {name} de <img src=""{icon}"">{currentDemand} à <img src=""{icon}"">{afterDemand}."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","Cela change la demande de {name} de <img src=""{icon}"">{currentDemand} à <img src=""{icon}"">{afterDemand}. Il s'agit d'un changement de {percent}% de toute la demande de {name}."
-This effect {changeDir} the {kind} of this project {tipAmount}.,Cet effet {changeDir} le {kind} de ce projet de {tipAmount}.
 "This event can occur if ""{name}"" is {label}.","Cet événement peut se produire si ""{name}"" est {label}."
 This event can occur if {name} is your {relType}.,"Cet événement peut se produire si ""{name}"" est taon {relType}."
 This event is influenced by biodiversity pressures.,Cet événement est influencé par la pression exercée sur la biodiversité.
@@ -309,7 +308,7 @@ Very High,Très Haut
 Very Low,Très Faible
 View All,Voir tout
 Water Stress,Stress Hydrique
-Water: The giver of life. You're using {percent} of water resources.,Eau: La source de vie. Vous utilisez {percent}% des ressources en eau.
+Water: The giver of life. You're using {percent} of water resources.,Eau: La source de vie. Vous utilisez {percent} des ressources en eau.
 We aren't tracking this feedstock.,Nous ne suivons pas ce flux d'informations.
 Well Played!,Bien joué !
 Will increase,Augmentera
@@ -346,7 +345,7 @@ by an unknown amount,par une quantité inconnue
 cost,coût
 critical,critique
 crops,cultures
-decrease {k} by {change},Réduire {k} de {change}.
+decrease {k} by {change}%,réduire {k} de {change}%
 development time,temps de développement
 electricity,électricité
 emissions,émissions

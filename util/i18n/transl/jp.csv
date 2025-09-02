@@ -103,7 +103,7 @@ Increases,増加する
 Infrastructure,インフラ
 Infrastructure projects take 20% longer to finish.,インフラ施策の完了までの時間が20%遅延する。
 Land Use,土地利用率
-Land: They're not making anymore of it. You're using {percent} of land.,陸地：生産に使用していない土地。現在、{percent}%の陸地を使用している。
+Land: They're not making anymore of it. You're using {percent} of land.,陸地：生産に使用していない土地。現在、{percent}の陸地を使用している。
 Level,レベル
 Likely to increase,増加しそうである
 Likely to reduce,削減されそうである
@@ -222,7 +222,6 @@ They won't have much effect.,あまり効果がなさそうである。
 "This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","これは収入レベルに基づいて地域の満足度を変化させます（裕福な地域ほど影響を受けます）。現在の世界の満足度は {contentedness}<span class=""type-total"">/{maxContentedness}</span> です。"
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","これにより、{name}の需要が<img src=""{icon}"">{currentDemand} から <img src=""{icon}"">{afterDemand} に変化する。"
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","これにより、{name} の需要が <img src=""{icon}"">{currentDemand} から <img src=""{icon}"">{afterDemand} に変化する。 これはすべての {name} の需要の {percent}% にあたる変化である。"
-This effect {changeDir} the {kind} of this project {tipAmount}.,この影響により、この政策の{kind}は、 {tipAmount}{changeDir}。
 "This event can occur if ""{name}"" is {label}.","このイベントは、""{name}"" が {label}である場合に発生する。"
 This event can occur if {name} is your {relType}.,このイベントは、{name}があなたの{relType}である場合に発生する。
 This event is influenced by biodiversity pressures.,このイベントは、生物多様性に対する負荷の影響を受ける。
@@ -309,7 +308,7 @@ Very High,非常に高い
 Very Low,非常に低い
 View All,全て表示
 Water Stress,水資源の利用率
-Water: The giver of life. You're using {percent} of water resources.,水資源：全ての命を支えている。現在、 {percent}％の水資源を使用している。
+Water: The giver of life. You're using {percent} of water resources.,水資源：全ての命を支えている。現在、 {percent}の水資源を使用している。
 We aren't tracking this feedstock.,この原料を追跡されていない。
 Well Played!,お疲れさまでした！
 Will increase,増加する
@@ -346,7 +345,7 @@ by an unknown amount,金額は不明だが
 cost,費用
 critical,致命的な状況
 crops,農業
-decrease {k} by {change},{k} を {change} 減らす。
+decrease {k} by {change}%,{k} を {change}% 減らす
 development time,開発にかかる時間
 electricity,電力
 emissions,排出量

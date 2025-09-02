@@ -103,7 +103,7 @@ Increases,Incrementa
 Infrastructure,Infraestructura
 Infrastructure projects take 20% longer to finish.,Los proyectos de infraestructura tardan un 20% más en terminar.
 Land Use,Uso de tierra
-Land: They're not making anymore of it. You're using {percent} of land.,Tierra: No están haciendo más de eso. Estás usando el {percent}% de la tierra.
+Land: They're not making anymore of it. You're using {percent} of land.,Tierra: No están haciendo más de eso. Estás usando el {percent} de la tierra.
 Level,Nivel
 Likely to increase,Es probable que aumente
 Likely to reduce,Es probable que reduzca
@@ -222,7 +222,6 @@ They won't have much effect.,No tendrán mucho efecto.
 "This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Esto cambia la satisfacción regional según el nivel de ingresos (las regiones más ricas lo sentirán más). La satisfacción mundial actual es {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","Esto cambia la demanda de {name} de <img src=""{icon}"">{currentDemand} a <img src=""{icon}"">{afterDemand}."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","Esto cambia la demanda de {name} de <img src=""{icon}"">{currentDemand} a <img src=""{icon}"">{afterDemand}. Este es un cambio del {percent}% de toda la demanda de {name}."
-This effect {changeDir} the {kind} of this project {tipAmount}.,Este {changeDir} cambia {kind} de este proyecto {tipAmount}.
 "This event can occur if ""{name}"" is {label}.","Este evento puede ocurrir si ""{name}"" es {label}."
 This event can occur if {name} is your {relType}.,Este evento puede ocurrir si {name} es tu {relType}.
 This event is influenced by biodiversity pressures.,Este evento está influenciado por las presiones hacia la biodiversidad.
@@ -309,7 +308,7 @@ Very High,Muy alto
 Very Low,Muy bajo
 View All,Ver Todo
 Water Stress,Estrés hídrico
-Water: The giver of life. You're using {percent} of water resources.,Agua: El dador de la vida. Estás utilizando el {percent}% de los recursos hídricos.
+Water: The giver of life. You're using {percent} of water resources.,Agua: El dador de la vida. Estás utilizando el {percent} de los recursos hídricos.
 We aren't tracking this feedstock.,No estamos siguiendo esta materia prima
 Well Played!,Bien jugado!
 Will increase,Incrementará
@@ -346,7 +345,7 @@ by an unknown amount,por una cantidad desconocida
 cost,el costo
 critical,crítica
 crops,cultivos
-decrease {k} by {change},Disminuir {k} en {change}.
+decrease {k} by {change}%,disminuir {k} en {change}%
 development time,el tiempo de desarrollo
 electricity,electricidad
 emissions,las emisiones

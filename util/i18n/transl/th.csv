@@ -103,7 +103,7 @@ Increases,เพิ่มขึ้น
 Infrastructure,โครงสร้างพื้นฐาน
 Infrastructure projects take 20% longer to finish.,โครงการโครงสร้างพื้นฐานใช้เวลาเสร็จสิ้นนานขึ้น 20%
 Land Use,การใช้ที่ดิน
-Land: They're not making anymore of it. You're using {percent} of land.,ที่ดิน: ไม่มีเพิ่มให้อีกแล้ว คุณกำลังใช้ที่ดิน {percent}%
+Land: They're not making anymore of it. You're using {percent} of land.,ที่ดิน: ไม่มีเพิ่มให้อีกแล้ว คุณกำลังใช้ที่ดิน {percent}
 Level,ระดับ
 Likely to increase,มีแนวโน้มที่จะเพิ่ม
 Likely to reduce,มีแนวโน้มที่จะลด
@@ -222,7 +222,6 @@ They won't have much effect.,มันจะไม่ส่งผลมากน
 "This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","สิ่งนี้จะเปลี่ยนแปลงความพึงพอใจในภูมิภาคตามระดับรายได้ (ภูมิภาคที่ร่ำรวยกว่าจะรู้สึกถึงผลกระทบมากกว่า) ความพึงพอใจของโลกในปัจจุบันคือ {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","นี่จะเปลี่ยนอุปสงค์ {name} จาก <img src=""{icon}"">{currentDemand} สู่ <img src=""{icon}"">{afterDemand}."
 "This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","นี่จะเปลี่ยนอุปสงค์ {name} จาก <img src=""{icon}"">{currentDemand} สู่ <img src=""{icon}"">{afterDemand}. คิดเป็นการเปลี่ยนแปลง {percent}% จากอุปสงค์ {name} ทั้งหมด"
-This effect {changeDir} the {kind} of this project {tipAmount}.,ผลกระทบนี้ {changeDir} {kind} ของโครงการนี้ {tipAmount}.
 "This event can occur if ""{name}"" is {label}.","เหตุการณ์นี้สามารถเกิดขึ้นได้หาก ""{name}"" คือ {label}"
 This event can occur if {name} is your {relType}.,เหตุการณ์นี้สามารถเกิดขึ้นได้หาก {name} เป็น {reltype} ของคุณ
 This event is influenced by biodiversity pressures.,เหตุการณ์นี้ได้รับอิทธิพลจากแรงกดดันของความหลากหลายทางชีวภาพ
@@ -309,7 +308,7 @@ Very High,สูงมาก
 Very Low,ต่ำมาก
 View All,ดูทั้งหมด
 Water Stress,ความเครียดจากน้ำ
-Water: The giver of life. You're using {percent} of water resources.,น้ำ: ผู้ให้ชีวิต คุณกำลังใช้ทรัพยากรน้ำ {percent}%
+Water: The giver of life. You're using {percent} of water resources.,น้ำ: ผู้ให้ชีวิต คุณกำลังใช้ทรัพยากรน้ำ {percent}
 We aren't tracking this feedstock.,เราไม่ได้ติดตามวัตถุดิบนี้
 Well Played!,ทำได้ดี!
 Will increase,จะเพิ่ม
@@ -346,7 +345,7 @@ by an unknown amount,ด้วยประมาณการที่ไม่�
 cost,ค่าใช้จ่าย
 critical,วิกฤต
 crops,พืชผล
-decrease {k} by {change},ลด {k} ลง {change}
+decrease {k} by {change}%,ลด {k} ลง {change}%
 development time,เวลาในการพัฒนา
 electricity,ไฟฟ้า
 emissions,การปล่อยมลพิษ
