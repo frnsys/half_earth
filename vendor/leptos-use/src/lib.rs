@@ -1,0 +1,157 @@
+#![allow(unexpected_cfgs)]
+// #![feature(doc_cfg)]
+//! Collection of essential Leptos utilities inspired by SolidJS USE / VueUse
+
+pub mod core;
+#[cfg(feature = "docs")]
+pub mod docs;
+#[cfg(feature = "math")]
+pub mod math;
+pub mod storage;
+pub mod utils;
+
+// #[cfg(web_sys_unstable_apis)]
+// mod use_webtransport;
+// #[cfg(web_sys_unstable_apis)]
+// pub use use_webtransport::*;
+
+#[cfg(web_sys_unstable_apis)]
+mod use_clipboard;
+#[cfg(web_sys_unstable_apis)]
+pub use use_clipboard::*;
+
+mod is_err;
+mod is_none;
+mod is_ok;
+mod is_some;
+mod on_click_outside;
+mod signal_debounced;
+mod signal_throttled;
+mod sync_signal;
+mod use_active_element;
+mod use_breakpoints;
+mod use_broadcast_channel;
+mod use_color_mode;
+mod use_cookie;
+mod use_css_var;
+mod use_cycle_list;
+mod use_debounce_fn;
+mod use_device_orientation;
+mod use_device_pixel_ratio;
+mod use_display_media;
+mod use_document;
+mod use_document_visibility;
+mod use_draggable;
+mod use_drop_zone;
+mod use_element_bounding;
+mod use_element_hover;
+mod use_element_size;
+mod use_element_visibility;
+mod use_event_listener;
+mod use_event_source;
+mod use_favicon;
+mod use_geolocation;
+mod use_idle;
+mod use_infinite_scroll;
+mod use_intersection_observer;
+mod use_interval;
+mod use_interval_fn;
+mod use_intl_number_format;
+mod use_locale;
+mod use_locales;
+mod use_media_query;
+mod use_mouse;
+mod use_mouse_in_element;
+mod use_mutation_observer;
+mod use_permission;
+mod use_preferred_contrast;
+mod use_preferred_dark;
+mod use_raf_fn;
+mod use_resize_observer;
+mod use_scroll;
+mod use_service_worker;
+mod use_sorted;
+mod use_supported;
+mod use_throttle_fn;
+mod use_timeout_fn;
+mod use_timestamp;
+mod use_to_string;
+mod use_user_media;
+mod use_web_notification;
+mod use_websocket;
+mod use_window;
+mod use_window_focus;
+mod use_window_scroll;
+mod watch_debounced;
+mod watch_pausable;
+mod watch_throttled;
+mod watch_with_options;
+mod whenever;
+
+pub use is_err::*;
+pub use is_none::*;
+pub use is_ok::*;
+pub use is_some::*;
+pub use on_click_outside::*;
+pub use signal_debounced::*;
+pub use signal_throttled::*;
+pub use sync_signal::*;
+pub use use_active_element::*;
+pub use use_breakpoints::*;
+pub use use_broadcast_channel::*;
+pub use use_color_mode::*;
+pub use use_cookie::*;
+pub use use_css_var::*;
+pub use use_cycle_list::*;
+pub use use_debounce_fn::*;
+pub use use_device_orientation::*;
+pub use use_device_pixel_ratio::*;
+pub use use_display_media::*;
+pub use use_document::*;
+pub use use_document_visibility::*;
+pub use use_draggable::*;
+pub use use_drop_zone::*;
+pub use use_element_bounding::*;
+pub use use_element_hover::*;
+pub use use_element_size::*;
+pub use use_element_visibility::*;
+pub use use_event_listener::*;
+pub use use_event_source::*;
+pub use use_favicon::*;
+pub use use_geolocation::*;
+pub use use_idle::*;
+pub use use_infinite_scroll::*;
+pub use use_intersection_observer::*;
+pub use use_interval::*;
+pub use use_interval_fn::*;
+pub use use_intl_number_format::*;
+pub use use_locale::*;
+pub use use_locales::*;
+pub use use_media_query::*;
+pub use use_mouse::*;
+pub use use_mouse_in_element::*;
+pub use use_mutation_observer::*;
+pub use use_permission::*;
+pub use use_preferred_contrast::*;
+pub use use_preferred_dark::*;
+pub use use_raf_fn::*;
+pub use use_resize_observer::*;
+pub use use_scroll::*;
+pub use use_service_worker::*;
+pub use use_sorted::*;
+pub use use_supported::*;
+pub use use_throttle_fn::*;
+pub use use_timeout_fn::*;
+pub use use_timestamp::*;
+pub use use_to_string::*;
+pub use use_user_media::*;
+pub use use_web_notification::*;
+pub use use_websocket::*;
+pub use use_window::*;
+pub use use_window_focus::*;
+pub use use_window_scroll::*;
+pub use watch_debounced::*;
+pub use watch_pausable::*;
+pub use watch_throttled::*;
+pub use watch_with_options::*;
+pub use whenever::*;

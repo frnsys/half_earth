@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+:root {
+    --brand-color: #EF3939;
+    --brand-color-outline: rgba(239, 57, 57, 0.1);
+    --brand-color-dark: #9c2525;
+    --background-color: #ffffff;
+    --text-color: #856464;
+    --devider-light-color: #bbb;
+}
+
+.light {
+    --fg: #333;
+    --links: #c42f2f;
+    --sidebar-active: var(--links);
+}
+
+.coal {
+    --links: #ee6f6f;
+    --sidebar-active: var(--links);
+}
+
+pre > code {
+    border-radius: 5px;
+    padding: 1.5rem;
+}
+
+.meta-data {
+    font-size: 87.5%;
+    display: grid;
+    grid-template-columns: 70px auto;
+    gap: 0.8rem 2rem;
+    align-items: flex-start;
+    margin: 2rem 0 4rem;
+}
+
+.meta-data > div:nth-child(2n + 1) {
+    opacity: 0.5;
+}
+
+.sidebar .sidebar-scrollbox {
+    padding: 10px 10px 10px 20px;
+}
+
+.chapter li.chapter-item {
+    margin: 0;
+}
+
+.chapter li.part-title {
+    margin-top: 20px;
+}
+
+li.chapter-item a {
+    padding: 0.1em 1em;
+    margin: 0.4em 0 0;
+}
+
+li.chapter-item::before {
+    content: " ";
+    border-left: 1px solid var(--fg);
+    opacity: 0.1;
+}
+
+li.chapter-item a.active {
+    border-left: 1px solid currentColor;
+    font-weight: 600;
+    margin-left: -1px;
+}
+
+li.part-title + li.chapter-item a {
+    margin-top: 0;
+}
+
+li.chapter-item.affix::before {
+    content: none;
+}
+
+li.chapter-item.affix a {
+    padding-left: 0;
+}
+
+li.chapter-item.affix a.active {
+    border-left: 0 none;
+    margin-left: 0;
+}
+
+#header-logo-container, h1.menu-title {
+    font-family: 'Quicksand', sans-serif;
+    letter-spacing: -0.7px;
+}
+
+h1, h2, h3, h4, h5, h6, li.part-title {
+    font-family: 'Quicksand', sans-serif;
+}
+
+h1 {
+    font-weight: 700;
+}
+
+h2, h3, h4 {
+    font-weight: 600;
+}
+
+#searchbar {
+    font-size: 1.6rem;
+}

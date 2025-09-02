@@ -1,0 +1,90 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "on_click_outside",
+    "signal_debounced",
+    "signal_throttled",
+    "sync_signal",
+    "use_abs",
+    "use_active_element",
+    "use_and",
+    "use_breakpoints",
+    "use_broadcast_channel",
+    "use_ceil",
+    "use_clipboard",
+    "use_color_mode",
+    "use_cookie",
+    "use_css_var",
+    "use_cycle_list",
+    "use_debounce_fn",
+    "use_device_orientation",
+    "use_device_pixel_ratio",
+    "use_display_media",
+    "use_document_visibility",
+    "use_draggable",
+    "use_drop_zone",
+    "use_element_bounding",
+    "use_element_hover",
+    "use_element_size",
+    "use_element_visibility",
+    "use_event_listener",
+    "use_favicon",
+    "use_floor",
+    "use_geolocation",
+    "use_idle",
+    "use_infinite_scroll",
+    "use_intersection_observer",
+    "use_interval",
+    "use_interval_fn",
+    "use_intl_number_format",
+    "use_locale",
+    "use_locales",
+    "use_media_query",
+    "use_mouse",
+    "use_mouse_in_element",
+    "use_mutation_observer",
+    "use_not",
+    "use_or",
+    "use_permission",
+    "use_raf_fn",
+    "use_resize_observer",
+    "use_round",
+    "use_scroll",
+    "use_service_worker",
+    "use_sorted",
+    "use_storage",
+    "use_throttle_fn",
+    "use_timeout_fn",
+    "use_timestamp",
+    "use_user_media",
+    "use_web_notification",
+    "use_websocket",
+    "use_webtransport",
+    "use_window_focus",
+    "use_window_scroll",
+    "watch_debounced",
+    "watch_pausable",
+    "watch_throttled",
+]
+
+exclude = [
+    "ssr",
+    "use_webtransport_with_server",
+]
+
+[package]
+name = "leptos-use-examples"
+version = "0.3.3"
+edition = "2021"
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[lib]
+
+[package.metadata.leptos]
+lib-profile-release = "wasm-release"
