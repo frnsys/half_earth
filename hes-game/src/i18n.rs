@@ -2,11 +2,11 @@ use gloo_net::http::Request;
 use leptos::*;
 use leptos_router::*;
 use leptos_use::{
-    use_intl_number_format,
-    use_window,
     NumberStyle,
     UseIntlNumberFormatOptions,
     UseIntlNumberFormatReturn,
+    use_intl_number_format,
+    use_window,
 };
 use std::{collections::BTreeMap, rc::Rc};
 
@@ -15,7 +15,7 @@ use crate::state::Settings;
 const DEFAULT_LANGUAGE: &str = "en";
 pub const AVAILABLE_LANGUAGES: &[&str] = &[
     "en", "pt", "pt-br", "pt-pt", "es", "de-de", "jp", "fr-fr",
-    "th", "tr-tr",
+    "th", "tr-tr", "it",
 ];
 
 pub struct Language {

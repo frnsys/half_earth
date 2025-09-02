@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "hes-new",
     "hes-game",
     "hes-engine",
     "hes-editor",
@@ -16,8 +17,9 @@ default-members = [
 [workspace.dependencies]
 leptos = { version = "0.6", features = ["csr", "tracing"] }
 leptos_router = { version = "0.6", features = ["csr"] }
-leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "0.11.3", rev = "da56771900a2362e266243d81478c7fa5c158b14" }
-wasm-bindgen = "0.2"
+# leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "0.11.3", rev = "da56771900a2362e266243d81478c7fa5c158b14" }
+leptos-use = { path = "vendor/leptos-use" }
+wasm-bindgen = "0.2.100"
 wasm-bindgen-futures = "0.4"
 serde-wasm-bindgen = "0.6"
 serde = { version = "1", features = ["derive"] }

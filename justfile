@@ -2,11 +2,11 @@ export LEPTOS_WASM_OPT_VERSION := "version_123"
 
 # Run the development game (browser).
 game:
-    trunk serve --locked --config hes-game/Trunk.toml
+    trunk serve --config hes-game/Trunk.toml
 
 # Run the development editor (browser).
 editor:
-    trunk serve --locked --config hes-editor/Trunk.toml
+    trunk serve --config hes-editor/Trunk.toml
 
 # Run tests.
 test:
@@ -16,8 +16,8 @@ test:
 build:
     rm -rf /tmp/hes/game && mkdir -p /tmp/hes/game
     rm -rf /tmp/hes/editor && mkdir -p /tmp/hes/editor
-    trunk build --locked --release --config hes-game/Trunk.toml --dist /tmp/hes/game
-    trunk build --locked --release --config hes-editor/Trunk.toml --dist /tmp/hes/editor
+    trunk build --release --config hes-game/Trunk.toml --dist /tmp/hes/game
+    trunk build --release --config hes-editor/Trunk.toml --dist /tmp/hes/editor
 
 # Extract strings for translation.
 translate:
