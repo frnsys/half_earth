@@ -1,7 +1,7 @@
 English,Translation
 1 planning cycle left,1 ciclo di pianificazione rimasto
 <strong>Locks</strong> {tag},<strong>Blocca</strong> {tag}
-<strong>Unlocks</strong> the {tag} process.,<strong>Sblocca</strong> il procesos {tag}.
+<strong>Unlocks</strong> the {tag} process.,<strong>Sblocca</strong> il processo {tag}.
 <strong>Unlocks</strong> the {tag} project.,<strong>Sblocca</strong> il progetto {tag}.
 <strong>Unlocks</strong> {name}.,<strong>Sblocca</strong> {name}.
 A Planetary Crisis Planning Game,Un gioco di pianificazione per la crisi planetaria
@@ -274,8 +274,8 @@ This region's previous demand for {output}.,Domanda precedente di {output} di qu
 This region's previous income level.,Livello di reddito precedente di questa regione.
 This region's progress to the next income level.,Il progresso di questa regione verso il livello di reddito successivo.
 "This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","Questo cambierà le emissioni per {name} da <img src=""{icon}"">{emissionsBefore} a <img src=""{icon}"">{emissionsAfter}. Questo è un cambiamento del {emissionsChange}% di tutte le emissioni."
-This will change {resource} demand for {name} by some unknown amount.,Questo cambierà {resource} la domanda per {name} di una quantità sconosciuta.
-"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand."
+This will change {resource} demand for {name} by some unknown amount.,Questo cambierà la domanda di {resource} per {name} di una quantità sconosciuta.
+"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","Questo cambierà la domanda di {resource} per {name} da <img src=""{icon}"">{demandBefore} a <img src=""{icon}"">{demandAfter}. Questo è un cambiamento del {percent}% di tutta la domanda di {resource}."
 "This will change {short} for {name} from <img src=""{icon}"">{change}","Questo cambierà {short} per {name} da <img src=""{icon}"">{change}"
 This will directly change annual emissions by {amount}.{percent},Ciò modificherà direttamente le emissioni annuali del {importo}.{percent}
 This will directly change global precipitation by {amount}<strong>cm/yr</strong>.,Ciò modificherà direttamente le precipitazioni globali di {amount}<strong>cm/anno</strong>.
@@ -556,7 +556,9 @@ III-V Semiconductors solar panels and perovskite-based panels,Pannelli solari a 
 This new generation of photovoltaic cells have astounding efficiency improvements.,Questa nuova celle fotovoltaiche portano miglioramenti in efficienza sorprendenti.
 It makes all sorts of applications feasible now!,Ora è possibile realizzare ogni tipo di applicazione!
 Luxury for All,Lusso per tuttə
+"Socialism is about providing not just bread and roses. Perhaps also BVLGARI and Ferraris for all. This policy will raise contentedness, but at a great environmental cost.",Il socialismo è non solo dare pane e rose. Forse anche BVLGARI e Ferrari. Queste politiche accresceranno il consenso ma a un grave costo ambientale.
 "Hey well, I guess I'm a socialist after all!","Ehi, beh, credo di essere socialista dopotutto!"
+Bread and roses? Pfft! We demand Cartier and caviar!,Pane e rose? Pffff noi vogliamo Cartier e caviale!
 Carbon Capture and Sequestration,Cattura e sequestro del carbonio
 Mandate installation of point-source carbon capture and sequestration (CSS) on all fossil-fuel using facilities to store CO2 underground.,Rendi obbligatoria l'installazione di sistemi di cattura e sequestro del carbonio (CSS) in tutte le strutture che utilizzano combustibili fossili per lo stoccaggio sotterraneo della CO2.
 "We were able to reduce emissions somewhat, but leaks and upstream emissions limited the overall amount.","Siamo statə capaci di ridurre in parte le emissioni, ma le perdite e le emissioni a monte hanno limitato la riduzione totale"
@@ -574,9 +576,11 @@ The off-world colony was a success!,La colonia fuori dal mondo è stata un succe
 Can you hear me?,Mi puoi sentire?
 The connection's really bad.,La connessione è veramente pessima.
 Crack Down on Crypto-Mining,Reprimere il cripto-mining
+"There is no official money in the post-revolutionary society, but libertarians still use crypto on the black market. Take thousands of these cryptographic-solving machines off the grid to save some electricity.","Nella società post-rivoluzionaria non esiste una moneta ufficiale, ma ə libertarə usano ancora le criptovalute sul mercato nero. Togliete dalla rete migliaia di queste macchine crittografiche per risparmiare elettricità."
 "We've got a lot of extra graphics cards now, not sure what to do with them.",Ora abbiamo un sacco di schede grafiche extra e non sappiamo cosa farne.
 I guess we could recycle them?,Potremmo riciclarle?
 Sewage Treatment Plants,Impianti di depurazione
+"Build a global network of sewage treatment plants. This will clean up rivers and lakes, produce organic fertilizer, restore habitats, and improve health of local inhabitants.","Costruisci una rete globale di impianti di trattamento delle acque reflue. Ciò ripulirà fiumi e laghi, produrrà fertilizzanti organici, ripristinerà gli habitat e migliorerà la salute degli abitanti locali."
 Sewage treatment plants are unglamorous but so vital in improving the quality of  life for people and animals.,"Gli impianti di depurazione delle acque reflue non sono certo attraenti, ma svolgono un ruolo fondamentale nel migliorare la qualità della vita delle persone e degli animali."
 Esperanto,Esperanto
 "Unite humanity in a way it hasn't been since the Tower of Babel. Even better, achieve this goal with an artificial and cosmopolitan language rather than a colonial lingua franca. Once we achieve this goal then the utopia of global equality, peace and prosperity doesn't seem so impossible.","Unire l'umanità come ai tempi della Torre di Babele. Ancora meglio, raggiungi questo obiettivo con una lingua artificiale e cosmopolita piuttosto che con una lingua franca coloniale. L'utopia dell'uguaglianza globale, della pace e della prosperità non sembrerà così impossibile."
@@ -601,12 +605,15 @@ We've figured out enough of the technical hurdles to start producing cellular me
 It just doesn't hit the same way as real meat...,Ma non ha lo stesso effetto della carne vera...
 I just hope the eco-freaks don't try to ban cows next.,Spero solo che lə ambientalistə non provino a vietare anche le mucche.
 Fanonist Curriculum,Percorso di studi fanonista
+"New curriculum includes a vast literacy campaign to empower the working class and peasants of the global South. The works of Frantz Fanon, Paulo Freire, Audre Lorde will find a broad audience. This program will improve living conditions in the global South as well as your relationship with the Fanonist.","Il nuovo percorso di studi include una vasta campagna di alfabetizzazione per dare potere alla classe operaia e al Sud del mondo. Le opere di Frantz Fanon, Paulo Freire e Audre Lorde troveranno un vasto pubblico. Questo programma migliorerà le condizioni di vita nel Sud del mondo e il tuo rapporto con ə fanonistə."
 It's vital for each generation to discover its mission and to fight for it!,È fondamentale per ogni generazione scoprire la sua missione e combattere per realizzarla!
 Utopian Curriculum,Percorso di studi utopista
+"Create a new curriculum that will teach students creative skills such as poetry, traditional weaving, and linear programming -- skills that will make them successful 'social engineers' who will think about future utopian possibilities. They will read classics by Ursula Le Guin, William Morris, Thomas More, and Otto Neurath.","Crea un nuovo percorso di studi che insegni allə studenti competenze creative come la poesia, la tessitura tradizionale e la programmazione lineare, competenze che le renderanno ""ingegnere sociali"" di successo, capaci di riflettere su future possibilità utopiche. Leggeranno classici di Ursula Le Guin, William Morris, Thomas More e Otto Neurath."
 My recycling posters were inspired by Neurath's isotypes. Where would we be today without him!,I miei poster di riciclaggio sono stati ispirati dagli isotipi di Neurath. Dove saremmo oggi senza di lui!
 Consumerist Curriculum,Percorso di studi consumista
 "Create a new curriculum that won't teach critical thinking, but rather greed and mindless individualism. Just get a good job and try to keep up with the Joneses. Books by Steven Pinker and Thomas Friedman are often assigned; 'American Psycho' is taught unironically. This curriculum improves your relationship to the Consumerist.","Crea un nuovo percorso di studi che non insegni il pensiero critico, ma piuttosto l'avidità e l'individualismo sconsiderato. Trovati un buon lavoro e cerca di tenere il passo con i Joneses. Spesso vengono assegnati libri di Steven Pinker e Thomas Friedman; ""American Psycho"" viene preso sul serio. Questo programma migliora i tuoi rapporti con lə consumistə."
 Education is about training people for jobs that pay well.,L'istruzione ha lo scopo di preparare le persone a svolgere lavori ben retribuiti.
+"These jobs might not be fun, but you can afford that fancy electric car or a trip to Cuba (for the beach, not the planning bureau).","Questi lavori potrebbero non essere divertenti, ma puoi permetterti quella costosa auto elettrica o un viaggio a Cuba (per la spiaggia, non per l'ufficio di pianificazione)."
 Close Borders,Chiusura dei confini
 "Close borders between regions to slow down the movement of climate refugees. It will keep rich countries content but could spell doom for poor, hotter ones.","Chiudi i confini tra le regioni per rallentare il movimento dellə rifugiatə climatichə. Ciò farà contenti i paesi ricchi, ma potrebbe significare la fine per quelli poveri e più esposti al riscaldamento globale."
 "Closing the border is a tough decision, I know.","Chiudere i confini è una decisione difficile, lo so."
@@ -617,7 +624,9 @@ Rotational Grazing,Pascolo a rotazione
 "Cycle livestock through different pastures to allow other parts to regrow and recover. Sceptics think it will not have much of an effect, but it is popular with consumers.","Fa' circolare il bestiame attraverso diversi pascoli per consentire ai terreni di ricrescere e riprendersi. Lə scettichə pensano che non avrà un grande effetto, ma è popolare tra lə consumatorə."
 This didn't really do much.,In realtà non è servito a molto.
 Ecofeminist Curriculum,Percorso di studi ecofemminista
+"This new curriculum will teach students to think critically about the supposed objectivity of science or the naturalness of patriarchy. Students will read classics such as the 'Cyborg Manifesto', the 'Sexual Politics of Meat', the 'Parable of the Sower'. This policy will improve your relationship with the Ecofeminist.","Questo nuovo percorso di studi insegnerà allə studenti a riflettere criticamente sulla presunta oggettività della scienza o sulla naturalezza del patriarcato. Lə studenti leggeranno classici come il ""Manifesto Cyborg"", la ""Politica sessuale della carne"" e la ""Parabola del seminatore"". Questa politica migliorerà il tuo rapporto con lə ecofemministə."
 The students have organized a local group to implement multistrata agroforestry. Will you support them?,Lə studenti hanno organizzato un gruppo locale per implementare l'agrosilvicoltura multilivello. Lə sosterrai?
+Sure.,Certo
 "Multistrata agroforestry is a system for various types of crops to benefit each other, while also being a place where people of different ages and professions can work together.","L'agroforestazione multistrato è un sistema che consente a vari tipi di colture di trarre benefici reciproci e, al contempo, di far lavorare insieme persone di età e professioni diverse."
 Underwater Biosphere,Biosfera sottomarina
 "Build a self-sustainable underwater habitat for long-term human, plant and animal habitation.","Costruisci un habitat sottomarino autosostenibile per la vita a lungo termine di esseri umani, piante e animali."
@@ -626,6 +635,8 @@ We did it!,Ce l'abbiamo fatta!
 "I'm not sure anyone would want to *live* in these domes, but they provide a great environment for research.","Non sono sicuro che qualcunə vorrebbe *vivere* in queste cupole, ma rappresentano un ambiente ideale per la ricerca."
 "While the center bio-dome monitors life-support operations, humans, plants and animals would live and interact in the surrounding domes.","Mentre la bio-cupola centrale monitora le operazioni di supporto vitale, esseri umani, piante e animali vivrebbero e interagirebbero nelle cupole circostanti."
 Phage Therapy,Terapia fagica
+"Research the use of viruses ('phages') to kill bacteria. See this as a global insurance policy against the eventual obsolescence of antibiotics due to antimicrobial resistance (AMR). Phages might not be as effective as antibiotics, but they are better than nothing.","Studia l'uso dei virus (""fagi"") per uccidere i batteri. Consideralo come una polizza assicurativa globale contro l'eventuale obsolescenza degli antibiotici dovuta alla resistenza antimicrobica (AMR). I fagi potrebbero non essere efficaci quanto gli antibiotici, ma sono meglio di niente."
+"It was a major effort, but it will be worthwhile. AMR might kill ten million people a year.","È stato uno sforzo notevole, ma ne varrà la pena. La resistenza antimicrobica potrebbe uccidere dieci milioni di persone all'anno."
 It would be better if we addressed the causes of AMR by shrinking the industrial livestock industry and improving living standards in the Global South...,Sarebbe meglio se affrontassimo le cause della resistenza antimicrobica riducendo l'allevamento intensivo del bestiame e migliorando gli standard di vita nel Sud del mondo...
 Suspend Parliament,Sospendere il parlamento
 "Suspend parliament so that nothing gets in the way of your plans. This will give you some time and political capital carry out your agenda, but discontent will increase.","Sospendi il parlamento in modo che nulla si metta in mezzo ai tuoi piani. Questo ti darà un po' di tempo e capitale politico per portare avanti il ​​tuo programma, ma il malcontento aumenterà."
@@ -639,14 +650,17 @@ Soil Fertility AI,Applicazione dell'intelligenza artificiale alla fertilità del
 We've seen a modest boost in crop yields from this new infrastructure.,Abbiamo assistito a un modesto incremento delle rese dei raccolti grazie a questa nuova infrastruttura.
 "Strangely, we keep getting emails from the spinach saying they want 10x as much nitrogen than necessary.","Stranamente, continuiamo a ricevere email dallə agricoltorə che ci dicono di volere una quantità di azoto 10 volte superiore a quella necessaria."
 Mine Moon for Tritium,Estrarre trizio dalla luna
+"Tritium is a rare fuel used in fusion reactors, but it is plentiful on the moon.","Il trizio è un combustibile raro utilizzato nei reattori a fusione, ma è abbondante sulla Luna."
 Well the mining initiative was a success!,"Beh, l'iniziativa mineraria è stata un successo!"
 "We've tapped into enough tritium to cover our fusion needs for, well, forever as far as I can tell.","Abbiamo attinto a una quantità di trizio sufficiente a soddisfare il nostro fabbisogno di fusione, beh, per sempre."
 Reconcile Town and Country,Riconciliare città e campagna
+"Achieve a goal set out in the Communist Manifesto: the 'gradual abolition of all the distinction between town and country by a more equable distribution of the populace over the country.' Bring culture into the countryside to combat the 'idiocy' of rural life. Bring farms and gardens into the city, so people can discover their green thumbs.","Raggiungi un obiettivo stabilito nel Manifesto del Partito Comunista: la ""graduale abolizione di ogni distinzione tra città e campagna attraverso una più equa distribuzione della popolazione sul territorio"". Porta la cultura nelle campagne per combattere l'""idiozia"" della vita rurale. Porta fattorie e giardini in città, così che le persone possano scoprire il loro pollice verde."
 Quite a lot of people have made the move to the countryside.,Molte persone si sono trasferite in campagna.
 Most have reported it as an improvement in their quality of life.,La maggior parte delle persone lo ha considerato un miglioramento nella qualità della loro vita.
 "It's a lot quieter, and the fresh air has done wonders for me.",Tutto è molto più silenzioso e l'aria fresca ha fatto miracoli per me.
 Organic and fossil-free agriculture requires more labor than industrial farming.,L'agricoltura organica e senza combustibili richiede più lavoro di quella industriale.
 Mass Electrification,Elettrificazione di massa
+"Mass electrify services and devices that typically rely on fuels and not electricity, such as transportation and major industrial processes (e.g. steel and concrete).","Elettrifica in massa servizi e dispositivi che in genere dipendono dai combustibili e non dall'elettricità, come i trasporti e i principali processi industriali (ad esempio acciaio e cemento)."
 You hear that?,Lo senti?
 ...just the sweet hum of electricity.,...solo il dolce ronzio dell'elettricità.
 "No more roaring and rattling of engines, the sputtering and belching of combustion...","Niente più rombo e crepitio dei motori, scoppiettii della combustione..."
@@ -691,9 +705,11 @@ Expand recycling infrastructure to rural and undeveloped areas and implement res
 It also made the world a bit nicer to live in for humans.,Ha anche reso il mondo un posto un po' più piacevole in cui vivere per gli esseri umani.
 The elderly folks in my town love hanging out around the drop off facilities making sure people put the correct recyclables in the right bin.,Lə anzianə della mia città amano passare il tempo nei punti di raccolta e assicurarsi che le persone mettano i materiali riciclabili giusti nel bidone giusto.
 Abolish Zoos,Abolire gli zoo
+"Animals in zoos suffer high mortality, depression, stress, and injuries from patrons. Veterinarians speak of 'zoochosis', where animals pace or sway repetitively. This policy will release animals back into the wild when possible, and place others in sanctuaries.","Gli animali negli zoo soffrono di elevata mortalità, depressione, stress e lesioni causate daə padronə. Ə veterinarə parlano di ""zoochosi"", ovvero di animali che camminano avanti e indietro o ondeggiano ripetutamente. Questa politica prevede il rilascio degli animali in natura quando possibile e il collocamento degli altri in rifugi."
 "We don't put people in cages anymore, so why do we still think it's ok for animals?","Non mettiamo più le persone in gabbia, perché allora pensiamo ancora che vada bene per gli animali?"
 I say good riddance to those horrendous institutions of suffering.,Dico addio a quelle orribili istituzioni di sofferenza.
 Eliminate Natural Predation,Eliminazione della predazione naturale
+"Some say the end point of animal liberation is the ending of all suffering, both amongst farm animals and wild ones. This research project will require planned habitats, cross-species immunocontraception, swimming nanorobots, gene editing, and super computers to manage a global ecosystem free from pain.","Alcunə sostengono che il punto finale della liberazione animale sia la fine di ogni sofferenza, sia tra gli animali da allevamento sia tra quelli selvatici. Questo progetto di ricerca richiederà habitat pianificati, immunocontraccezione interspecie, nanorobot natanti, editing genetico e supercomputer per gestire un ecosistema globale libero dal dolore."
 "It was quite the undertaking, and an incredibly complex project, but it was worth it in the end.","È stata un'impresa ardua e un progetto incredibilmente complesso, ma alla fine ne è valsa la pena."
 "I can sleep soundly tonight knowing that no animal is at risk of being hunted, whether by humans or by other animals.","Stasera potrò dormire sonni tranquilli sapendo che nessun animale corre il rischio di essere cacciato, né dagli esseri umani né da altri animali."
 Feminist Science and Technology Studies,Scienza femminista e studi tecnologici
@@ -708,6 +724,7 @@ Well I'm all for public transit...,"Beh, io sono per i trasporti pubblici..."
 Communities affected most by highway infrastructure are experiencing less air pollution and increased health.,Le comunità maggiormente interessate dalle infrastrutture autostradali riscontrano un minore inquinamento atmosferico e un miglioramento delle condizioni di salute.
 I guess less people are driving now that public transit is so convenient.,"Immagino che ora che i trasporti pubblici sono così comodi, siano meno le persone che guidano."
 Factory Farming Reform,Riforma dell'allevamento industriale
+"Slaughterhouses are still brutal, but for now the kill lines will be slower and some of the worst practices have been banned, such as de-beaking, tail docking, and horn bud burning, as well as feeding animals feces, carcasses, candy, and garbage.","I macelli sono ancora brutali, ma per ora le linee di macellazione saranno più lente e alcune delle pratiche peggiori sono state vietate, come il taglio del becco, il taglio della coda e la combustione delle gemme cornute, nonché l'alimentazione degli animali con feci, carcasse, caramelle e immondizia."
 I feel way less guilty about eating meat now!,Adesso mi sento molto meno colpevole a magniare carne!
 This is a bunch of incrementalist garbage!,Questo è un mucchio di spazzatura incrementale!
 Slaughterhouse jobs have also gotten much less grim.,Anche i lavori nei mattatoi sono diventati molto meno tetri.
@@ -741,6 +758,7 @@ Begin global program to destroy weapons and scale down military and police budge
 We're totally defenceless now...,Ora siamo totalmente indifesə...
 Don't expect me to help you when you're in a fix.,Non aspettarti che io ti aiuti quando sei in difficoltà.
 Psyop,Operazione psicologica
+"Carry out 'psychological operations' to increase your political support and discredit your opponents. This can take the form of propaganda, influencing the media, staging events to create the appearance of popular support.","Porta avanti ""operazioni psicologiche"" per aumentare il tuo sostegno politico e screditare ə tuə avversariə, per esempio con propaganda, influenzando i media, organizzando eventi per creare l'apparenza di un sostegno popolare."
 "I'm glad you agreed to trust me. I'll make things easier for you, but don't ask me how I do it.","Sono contento che tu abbia accettato di fidarti di me. Ti renderò le cose più facili, ma non chiedermi come faccio."
 Champagne Socialism,Socialismo champagne
 "Make champagne an everyday luxury. After all, socialism is about roses as well as bread.","Fai dello champagne un lusso quotidiano. Dopotutto, il socialismo riguarda tanto il pane quanto le rose."
@@ -762,6 +780,7 @@ What are you doing?,Cosa stai facendo?
 It's about time that we recognize who the main perpetrators of all these crises are.,È giunto il momento di riconoscere chi sono i principali responsabili di tutte queste crisi.
 Multistrata Agroforestry,Agrosilvicoltura multilivello
 "A perennial cropping system featuring multiple layers of trees and other perennial crops, with high biosequestration impacts and food production.","Un sistema di coltivazione perenne caratterizzato da più strati di alberi e altre colture perenni, con elevati impatti di biosequestro e produzione alimentare"
+"With the restoration of the Satoyama forests, students and senior citizens work with farmers to plant rice and clear irrigation channels.","Con il ripristino delle foreste di Satoyama, studenti e anzianə collaborano con lə agricoltorə per piantare riso e ripulire i canali di irrigazione."
 We call ourselves the Matsutake Crusaders. Our co-op has been working together to condition the forest for Matsutake mushrooms to thrive again.,Ci chiamiamo Matsutake Crusaders. La nostra cooperativa ha lavorato insieme per preparare la foresta affinché i funghi Matsutake prosperino di nuovo.
 "So many more wonderful trees make habitats and store carbon, while still supporting food production.","Molti altri alberi meravigliosi creano habitat e immagazzinano carbonio, continuando a sostenere la produzione alimentare."
 How exciting!,Che emozione!
@@ -771,7 +790,8 @@ Limit air travel to only long-haul trips that can't be accomplished by train.,Li
 I thought I would hate the inconvenience of not being able to fly...,Pensavo che mi sarebbe dispiaciuto non poter volare...
 but who doesn't like trains?,Ma a chi non piacciono i treni?
 Militarized Conservation,Conservazione militarizzata
-"It may appear extreme to some, but sometimes you have to be a little tough with people to keep nature safe.","Ad alcuni potrebbe sembrare estremo, ma a volte bisogna essere un po' durə con le persone per salvaguardare la natura."
+"Protect nature preserves with a small army of heavily armed park rangers. Their shoot-to-kill policy against poachers has made conservatism unpopular, especially in the Global South.","Proteggi le riserve naturali con un piccolo esercito di guardie forestali pesantemente armate. La loro politica di sparare a vista contro i bracconieri ha reso il conservatorismo impopolare, soprattutto nel Sud del mondo."
+"It may appear extreme to some, but sometimes you have to be a little tough with people to keep nature safe.","Ad alcunə potrebbe sembrare estremo, ma a volte bisogna essere un po' durə con le persone per salvaguardare la natura."
 "Some people just don't know any better, you know what I mean?","Alcune persone semplicemente non ne sanno niente, capisci cosa intendo?"
 Co-Generation,Cogenerazione
 "Install co-generation systems in eligible structures and power facilities to generate electricity and heat at the same time, making use of otherwise wasted heat.","Installa sistemi di cogenerazione in strutture e impianti energetici idonei per generare contemporaneamente elettricità e calore, sfruttando il calore altrimenti sprecato."
@@ -789,7 +809,8 @@ Stakhanovite Shock Workers,Lavoratə stacanovistə
 "Wow, we've produced more than fourteen times the usual quota this year alone.","Wow, solo quest'anno abbiamo prodotto più di quattordici volte la quota normale."
 My back hurts from these long work hours. I hope it's worth it...,La mia schiena mi fa male per queste lunghe ore di lavoro. Spero che ne valga la pena...
 De-Extinction Program,Programma di de-estinzione
-"We were able to bring back the passenger pigeon, but this quickly became an exotic poultry dish leading to its extinction again.","Siamo riusciti a riportare in auge il piccione migratore, ma questo è diventato rapidamente un piatto esotico a base di pollame, causandone nuovamente l'estinzione."
+"A controversial technology among ecologists. While attempts to bring back mammoths are likely more crowd pleasers than real science, recently extinct animals might be usefully restored.","Una tecnologia controversa tra lə ecologə. Sebbene i tentativi di riportare in vita i mammut siano probabilmente più un tentativo di compiacere le masse più che una vera e propria scienza, animali estinti di recente potrebbero essere utilmente reintegrati."
+"We were able to bring back the passenger pigeon, but this quickly became an exotic poultry dish leading to its extinction again.","Siamo riuscitə a riportare in auge il piccione migratore, ma questo è diventato rapidamente un piatto esotico a base di pollame, causandone nuovamente l'estinzione."
 And now I'm getting a lot of requests to use this technology for designer dogs.,E ora ricevo molte richieste di utilizzare questa tecnologia per i cani di razza.
 We succeeded in cloning some lost species and successfully re-introduced them into their original ecosystems.,Siamo riuscitə a clonare alcune specie estinte e a reintrodurle con successo nei loro ecosistemi originali.
 Surprisingly there haven't been any major issues.,Sorprendentemente non ci sono stati problemi di rilievo.
@@ -800,10 +821,11 @@ So far we've seen a modest decrease in temperatures.,Finora abbiamo assistito a 
 I don't know how long it will last though.,"Non so quanto durerà, però."
 The temporary cooling has reversed.,Il raffreddamento temporaneo si è invertito.
 Biofabrication,Bioproduzione
+"Manufacture of products from raw materials such as living cells and biomaterials. Plastics are a major source of demand for fossil fuels, and this technique will help replace materials traditionally composed of animal based products or petroleum based products.",Produzione di prodotti a partire da materie prime come cellule viventi e biomateriali. La plastica è una delle principali fonti di domanda di combustibili fossili e questa tecnica contribuirà a sostituire materiali tradizionalmente composti da prodotti di origine animale o petrolifera.
 We've shifted quite a lot of petroleum-based plastic to these new biofabrication methods.,Abbiamo sostituito gran parte della plastica derivata dal petrolio con questi nuovi metodi di biofabbricazione.
 "Still, we're at least introducing less new CO2 into the atmosphere by avoiding some fossil fuel usage.",Ma almeno stiamo immettendo meno nuova CO2 nell'atmosfera evitando in parte l'uso di combustibili fossili.
 But--even though we use far less plastic than we did pre-revolution--the amount of biomass available still isn't enough to fully replace petroleum-based plastics.,"Tuttavia, anche se utilizziamo molta meno plastica rispetto al periodo pre-rivoluzionario, la quantità di biomassa disponibile non è ancora sufficiente a sostituire completamente la plastica derivata dal petrolio."
-Ban High-Seas Fishing,Vietare la pesca d'altura
+Ban High-Seas Fishing,Vieta la pesca d'altura
 "Ban fishing outside of exclusive economic zones (200 miles from the coast), effectively creating a huge nature preserve. However, most fish are near the coast so ecological benefits and economic impacts will be limited.","Vieta la pesca al di fuori delle zone economiche esclusive (200 miglia dalla costa), creando di fatto un'enorme riserva naturale. Tuttavia, la maggior parte dei pesci si trova vicino alla costa, quindi i benefici ecologici e gli impatti economici saranno limitati."
 The high seas fishing ban has had benefits...,Il divieto di pesca in alto mare ha avuto effetti positivi...
 but they have been limited since less than 10% of global fish catch was on the high seas.,ma sono stati limitati poiché meno del 10% del pescato mondiale avviene in alto mare.
@@ -814,6 +836,7 @@ We were able to capture the Davida asteroid and steer it within Earth's orbit an
 ...no doubt many evironmentally-destructive mining practices will become obsolete...,...non c'è dubbio che molte pratiche minerarie distruttive per l'ambiente diventeranno obsolete...
 Phase Out Commercial Fishing,Eliminazione graduale della pesca commerciale
 End subsidies for commercial seafood extraction and implement transition programs for workers in the fishing sector.,Interrompi i sussidi per l'estrazione commerciale di prodotti ittici e attua programmi di transizione per lə lavoratorə del settore della pesca.
+"I want my fresh local swordfish, tuna, lobster and crabmeat!","Voglio il mio pesce spada, il tonno, l'aragosta e la polpa di granchio freschi locali!"
 Now I can't get any of it...,Ora non posso averli...
 The hairy-nosed otter (Lutra sumatrana) has been seen again!,È stata avvistata di nuovo la lontra dal naso peloso (Lutra sumatrana)!
 Otters are the best :),Le lontre sono le migliori :)
@@ -858,6 +881,7 @@ You're mad with power--how was this a good idea?,Il potere ti ha dato alla testa
 Can't we just figure out more sustainable and ethical ways to produce meat?,Non possiamo semplicemente trovare modi più sostenibili ed etici per produrre carne?
 Green Roofs,Tetti verdi
 "Soil and vegetation function as living roof insulation, moderating building temperatures year-round. Greenhouse gas emissions are lower.","Il terreno e la vegetazione fungono da isolamento vivente del tetto, moderando le temperature dell'edificio durante tutto l'anno. Le emissioni di gas serra sono inferiori."
+"Did you know that green roofs can reflect up to 80% of the solar energy hitting it, back into space??",Sapevi che i tetti verdi possono riflettere nello spazio fino all'80% dell'energia solare che li colpisce?
 And it's nice to have an additional green space to enjoy.,Ed è bello avere uno spazio verde in più di cui godere.
 I've noticed that my apartment's temperature is much more consistent now...,Mi sono accortə che la temperatura del mio appartamento è molto più stabile ora.
 "My kids stopped complaining as much, at least.",Le mie bambine almeno hanno smesso di lamentarsi.
@@ -873,7 +897,9 @@ The ban on outdoor cats is going well.,Il divieto di tenere i gatti all'aperto s
 Wild to think how much damage those critters can do!,È incredibile quanti danni possano fare quelle creature!
 Stop Food Aid,Interruzione degli aiuti alimentari
 This policy will reduce population by halting food aid to famished regions. Mortality will go up significantly.,Questa politica ridurrà la popolazione bloccando gli aiuti alimentari alle regioni affamate. La mortalità aumenterà significativamente.
+"I agree, the battle to feed all of humanity is over.","Sono d'accordo, la battaglia per sfamare tutta l'umanità è finita."
 Abolish Prisons,Abolire le prigioni
+"Instead of prison, institute programs that will target the causes of crime by addressing poverty and mental health issues. Decriminalize sex work, drugs, and other offences that lead to felonies. Restorative justice and graduated re-integration will rehabilitate criminals and reconcile communities.","Invece del carcere, istituisci programmi che affrontino le cause della criminalità, affrontando la povertà e i problemi di salute mentale. Depenalizza il lavoro sessuale, la droga e altri reati che portano a reati gravi. La giustizia riparativa e il reinserimento graduale riabiliteranno ə criminali e riconcilieranno le comunità."
 It's wrong to lock people up in cages. As a socialist society we can do better than this!,È sbagliato rinchiudere le persone in gabbia. Come società socialista possiamo fare di meglio!
 "If you do this, don't expect help when you need some brute force to back you up...","Se fai così, non aspettarti aiuto quando hai bisogno della forza bruta per difenderti..."
 Wooden Skyscrapers,Grattacieli in legno
@@ -890,17 +916,20 @@ Regenerative Agriculture,Agricoltura rigenerativa
 Adaptations like non-tillage and cover crops made a notable difference in terms of carbon and water retention in soil.,Adattamenti come la non lavorazione del terreno e le colture di copertura hanno fatto una differenza notevole in termini di ritenzione di carbonio e acqua nel suolo.
 Rien Faire Comme une Bête,Rien Faire Comme une Bête
 "People won't work as long and instead enjoy more leisure time. Energy-use will go down substantially, but projects will also take longer to finish.","Le persone non lavoreranno meno e avranno più tempo libero. L'uso di energia diminuirà notevolmente, ma i progetti richiederanno più tempo per essere completati."
+"Socialism is for the working class, but it isn't about work.","Il socialismo è per la classe lavorativa, ma non riguarda il lavoro."
 "Just chill, comrade.","Rilassati, compagnə."
 "Great!, let's go hang out by the water.",Ottimo! Andiamo a rilassarci vicino all'acqua.
 Solar Radiation Management (SRM),Gestione della radiazione solare
 "Use high-flying jets to release sulfur aerosols or other particles into the stratosphere, which will reduce incoming solar radiation and cool the planet. Think of it as an artificial and permanent volcanic eruption. The consequences, however, are not fully understood.","Usa jet ad alta quota per rilasciare aerosol di zolfo o altre particelle nella stratosfera, il che ridurrà la radiazione solare in arrivo e raffredderà il pianeta, come un'eruzione vulcanica artificiale e permanente. Le conseguenze, tuttavia, sono ancora sconosciute."
 There has been an increase in acid rain. Delicately synchronized ecologies have been disturbed too.,C'è stato un aumento della pioggia acida. Le ecologie sono state disturbate.
+"Some areas have experienced cooling, but without significant emissions abatement, SRM needs to be ramped up to keep pace.","Alcune aree hanno sperimentato un raffreddamento, ma senza una significativa riduzione delle emissioni, è necessario aumentare l'SRM per tenere il passo."
 Deep Sea Mining,Industria mineraria sottomarina
 "Permit deep sea mining to open up vast new mineral resources, but at high risk to marine ecosystems.","Consenti l'estrazione mineraria in acque profonde per accedere a nuove vaste risorse minerarie, ma con un rischio elevato per gli ecosistemi marini."
 "A number of deep sea mining operations have sprouted up, opening up a steady supply of many important metals and minerals.","Sono sorte numerose attività di estrazione mineraria in acque profonde, che hanno consentito di ottenere una fornitura costante di molti metalli e minerali importanti."
 Maybe it's worth it?,Forse ne vale la pena?
 "It has however disrupted the lives of those living down there, and plumes of effluent have clouded large parts of the oceans.",Tuttavia ha sconvolto la vita delle persone che vivevano laggiù e colonne di effluenti hanno intorbidito vaste zone degli oceani.
 Ban Cars,Vietare le auto
+"Ban private vehicles first in urban areas then everywhere. Tear up highways and transform cites, while saving lives, fuel and steel. This is a hard policy to push through, but the gains are immense.",
 "There has been a rapid decline in fatalities from car accidents, which were on the order of millions of deaths per year.","Si è registrato un rapido calo dei decessi dovuti ad incidenti stradali, che erano nell'ordine di milioni all'anno."
 Air quality is better too!,La qualità dell'aria è anche migliore!
 ...let alone,...per non parlare
@@ -919,6 +948,7 @@ We had collected most of our samples but then a massive blackout spoiled everyth
 We were able to successfully develop the Ark and collect samples of a majority of the remaining species.,Siamo riuscitə a sviluppare con successo l'Arca e a raccogliere campioni della maggior parte delle specie rimanenti.
 Fast-Breeder Reactor,Reattore autofertilizzante
 "Research and develop nuclear reactors that run on spent uranium and generates more fissile material than it consumes. Current designs suffer from many issues, such as relying on volatile liquid sodium coolant.","Ricerca e sviluppa reattori nucleari che funzionano con uranio esaurito e generano più materiale fissile di quanto ne consumino. I progetti attuali soffrono di molti problemi, come l'affidamento a un refrigerante volatile al sodio liquido."
+"We can now deploy fast-breeder reactors, which will help alleviate uranium shortages by burning spent nuclear waste.","Ora possiamo installare reattori autofertilizzanti veloci, che contribuiranno ad alleviare la carenza di uranio bruciando i rifiuti nucleari esauriti."
 We were never able to overcome the reprocessing and fuel fabrication balance challenges. It's time to throw in the towel.,Non siamo mai statə in grado di superare le sfide del riprocessamento e dell'equilibrio nella fabbricazione del combustibile. È tempo di gettare la spugna.
 One-Child Policy,Politica dellə figliə unicə
 No family can have more than one child. An authoritarian solution to population growth.,Nessuna famiglia può avere più di un figlio. Una soluzione autoritaria alla crescita della popolazione.
@@ -955,6 +985,7 @@ I struggled a bit with shifting to a vegetarian diet...,Ho fatto un po' di fatic
 "And I can still enjoy some milk and cheese, which has also made the transition easier.","E posso continuare a godermi un po' di latte e formaggio, il che ha reso la transizione più facile."
 but there's been such an explosion of creative vegetarian recipes and techniques that I haven't found myself missing meat.,ma c'è stata una tale esplosione di ricette e tecniche vegetariane creative che non mi sono mai ritrovatə a sentire la mancanza della carne.
 Keep Global South Poor,Mantenere povero il sud globale
+"Prevent poorer regions of the world from developing further. While this will reduce the environmental costs of economic growth, it ignores the high and growing rates of consumption in the Global North.","Impedisci alle regioni più povere del mondo di svilupparsi ulteriormente. Se da un lato ciò ridurrebbe i costi ambientali della crescita economica, dall'altro ignorerebbe gli elevati e crescenti tassi di consumo nel Nord del mondo."
 How cruel of you to forever condemn us to lives of poverty while others continue to live in absurd excess.,Quanto è crudele da parte tua condannarci per sempre a una vita di povertà mentre altri continuano a vivere in eccessi assurdi.
 It's not our poverty that threatens the world but their wasteful extravagance!,"Non è la nostra povertà a minacciare il mondo, ma il loro spreco sfrenato!"
 There just isn't enough earth for everyone to live well.,Non c'è semplicemente abbastanza terra perché ognuno viva decentemente.
@@ -969,6 +1000,7 @@ Pump water from the ocean onto Antarctica to reduce melting rates.,Pompa acqua d
 "All of the pipelines, pump stations, and wind farms have caused some ecological disruption to polar ecosystems.","Tutte le condutture, le stazioni di pompaggio e i parchi eolici hanno causato un certo sconvolgimento ecologico negli ecosistemi polari."
 I'm not surprised...,Non mi sorprende...
 Environmentalist Curriculum,Percorso di studi ambientalista
+"Introduce an environmentalist curriculum to provide an ecological foundation for a child's budding development. Students will read texts by important thinkers in the movement, including Rachel Carson, Bill McKibben, Robert Bullard, Aldo Leopold, and Elizabeth Kolbert.","Introduci un percorso di studi ambientalista per fornire una base ecologica per lo sviluppo evolutivo dellə bambinə. Ə studenti leggeranno testi di importanti esponenti del movimento, tra cui Rachel Carson, Bill McKibben, Robert Bullard, Aldo Leopold ed Elizabeth Kolbert."
 The ecological education initiative is going great!,L'iniziativa di educazione ecologica sta andando alla grande!
 People are learning about their local ecology and finding better ways of interacting and relating to the life around them.,Le persone stanno imparando a conoscere l'ecologia locale e trovano modi migliori per interagire e relazionarsi con la vita che le circonda.
 Unconventional Petroleum Industry,Industria petrolifera non convenzionale
@@ -987,6 +1019,7 @@ Phase out cars with internal combustion engines and mandate a transition to elec
 Electrifying automobiles significantly decreased transport emissions and did wonders for urban air pollution...,L'elettrificazione delle automobili ha ridotto notevolmente le emissioni dei trasporti e ha fatto miracoli nell'inquinamento atmosferico urbano...
 Maybe you should reconsider the dominance of cars in our public infrastructure?,Forse dovresti riconsiderare la predominanza delle automobili nelle nostre infrastrutture pubbliche?
 "...but at a high cost in electricity and lithium, without doing anything to improve transportation access or traffic deaths.","...ma con un costo elevato in termini di elettricità e litio, senza fare nulla per migliorare l'accessibilità ai trasporti o ridurre le vittime della strada."
+Ban Exotic Animal Trade,Vieta il commercio di animali esotici
 "Ban the breeding, capture, and sale of wildlife. This will help biodiversity and reduce the risk of new zoonoses. This policy is best done by simultaneously improving
  living standards in the Global South.","Vieta l'allevamento, la cattura e la vendita di animali selvatici. Ciò aiuterà la biodiversità e ridurrà il rischio di nuove zoonosi. Questa politica è meglio attuata migliorando simultaneamente gli standard di vita nel Sud del mondo."
 Finally! This moment couldn't come any sooner.,Finalmente! Questo momento non poteva arrivare prima.
@@ -997,6 +1030,8 @@ Hempcrete,Mattoni di canapa
 "Hempcrete locked in a fair amount of carbon, but there are a few applications where it can't compete with conventional concrete.","Il calcestruzzo di canapa contiene una discreta quantità di carbonio, ma ci sono alcune applicazioni in cui non può competere con il calcestruzzo convenzionale."
 "We'll use it where we can, but it won't entirely replace old-fashioned concrete.","Lo utilizzeremo dove possibile, ma non sostituirà del tutto il vecchio cemento."
 Malthusian Curriculum,Percorso di studi malthusiano
+"Introduce a new curriculum that argues population is the main driver of the environmental crisis. Children will be taught Malthusian classics such as 'An Essay on Population', 'The Tragedy of the Commons', and 'The Population Bomb'. This curriculum will endear you to the Malthusian but antagonize the Fanonist.","Introduci un nuovo percorso di studi che sostenga che la popolazione è il principale motore della crisi ambientale. Aə bambinə verranno insegnati classici malthusiani come ""Saggio sulla popolazione"", ""La tragedia dei beni comuni"" e ""La bomba demografica"". Con qesto percorso di studi conquisterai ə malthusianə, ma ti mostrerai ostiale aə fanonistə."
+Unfortunate that more children are being created but at least we can teach them not to repeat the errors of their parents.,"È un peccato che vengano creatə sempre più bambinə, ma almeno possiamo insegnare loro a non ripetere gli errori deə loro genitorə."
 Energy Conservation Campaign,Campagna di risparmio energetico
 Start a campaign to encourage energy conservation and low-energy lifestyles.,Inizia una campagna per incoraggiare il risparmio energetico e stili di vita a basso consumo energetico.
 It took some time...,Ci è voluto del tempo...
@@ -1012,6 +1047,7 @@ Universal Family Planning,Pianificazione familiare universale
 What a relief that we finally have access to basic reproductive healthcare.,Che sollievo avere finalmente accesso all'assistenza sanitaria riproduttiva di base.
 I can't believe it took a literal revolution for that to happen.,Non ci posso credere che sia servita una vera e propria rivoluzione per questo.
 Flexitarian,Flexitarianə
+"It is hard to make people give up meat entirely, but what if they are a bit less? Shrinking the livestock industry will help biodiversity and reduce GHG emissions—yet even more drastic measures may be needed. Even this moderate policy, however, will likely provoke opposition.","È difficile convincere le persone ad abbandonare completamente la carne, ma cosa succederebbe se ne consumassero un po' meno? Ridurre l'allevamento del bestiame favorirebbe la biodiversità e ridurrebbe le emissioni di gas serra, ma potrebbero essere necessarie misure ancora più drastiche. Anche questa politica moderata, tuttavia, probabilmente susciterà opposizione."
 This idea has gained popularity amongst my peers but it's a slippery slope.,"Questa idea ha riscosso popolarità, ma è un percorso scivoloso."
 Cap and Trade Program for Children,Programma Cap and trade per bambinə
 "Limit the amount of children any family can have, and make these birth permits tradeable.",Limita il numero di figli che ogni famiglia può avere e rendi commerciabili i permessi di nascita.
@@ -1024,6 +1060,7 @@ Improved cloning techniques that would allow for the revival of extinct species.
 The religious scientific community is making great strides to recreate the exact species that would have been on Noah's ark.,La comunità scientifica religiosa sta compiendo grandi progressi per ricreare esattamente le specie che avrebbero dovuto trovarsi sull'arca di Noè.
 Restore Desert Habitats,Ripristino degli habitat desertici
 Rewild newly arid lands into vibrant ecosystems. Deserts can support a surprising variety of plants and animals if given a chance to recover. More plants might lower the albedo and heat up the atmosphere slightly.,Rigenerare terre divenute aride in ecosistemi vibranti. I deserti possono sostenere una sorprendente varietà di piante e animali se gli viene data la possibilità di riprendersi. Più piante potrebbero abbassare l'albedo e riscaldare leggermente l'atmosfera.
+"Deserts reflect more sunlight than bush, and the increased solar absorption has led to temperature increase.",I deserti riflettono più luce solare rispetto alla vegetazione e il maggiore assorbimento solare ha portato a un aumento della temperatura.
 Ecosocialist Video Game,Videogioco ecosocialista
 "Develop a video game where citizens can devise their own plans regulating the global economy and natural world. People can debate, compare plans, and become involved in a lively socialist democracy.","Sviluppa un videogioco in cui lə cittadinə possono ideare i propri piani per regolare l'economia globale e il mondo naturale. Le persone possono discutere, confrontare i piani e partecipare a una vivace democrazia socialista."
 "This game is not only fun, but I learnt about the about the interdependencies between the economy and biosphere.","Questo gioco non è solo divertente, ma mi ha anche insegnato le interdipendenze tra economia e biosfera."
@@ -1032,6 +1069,7 @@ Compost,Compost
 "An old fashioned, low-tech solution that could have massive carbon sequestration potential. Half of all waste is biodegradable, but instead of decomposing into a useful carbon-rich fertilizer, this waste produces methane emissions when it is dumped in the anaerobic landfills.","Una soluzione antiquata e low-tech che potrebbe avere un potenziale di sequestro del carbonio enorme. Metà di tutti i rifiuti è biodegradabile, ma invece di decomporsi in un utile fertilizzante ricco di carbonio, questi rifiuti producono emissioni di metano quando abbandonati nelle discariche."
 Old scraps are transformed—through practices of care and attention—into nutrient-rich new soil. What a great metaphor for how we can survive this era.,"I vecchi scarti vengono trasformati, attraverso pratiche di cura e attenzione, in nuovo terreno ricco di sostanze nutritive. Che grande metafora di come possiamo sopravvivere a questa era."
 Ban Non-Indigenous Hunting,Vietare la caccia non indigena
+"Hunting is an important driver of the Sixth Extinction, but still secondary to land-use change caused by the livestock industry. Seven per cent of all mammals are threatened with extinction because of hunting.","La caccia è un fattore importante della sesta estinzione, ma è ancora secondaria al cambiamento di uso del suolo causato dall'industria zootecnica. Il sette percento di tutti i mammiferi è a rischio di estinzione a causa della caccia."
 I can't believe people ever made a sport of killing things.,Non riesco a credere che l'uccisione di esseri sia stata uno sport.
 Glad we can finally get rid of that barbaric practice.,Sono felice che possiamo finalmente liberarci di questa pratica barbara.
 "Well, whether you agree with that or not, this is still a big improvement.","Beh, che tu sia d'accordo o meno, è sicuramente un grande passo in avanti."
@@ -1041,6 +1079,7 @@ Iron out some remaining technical issues to enable mass floating wind turbine in
 We've worked out several of the technical issues that made floating wind turbines difficult.,Abbiamo risolto molti dei problemi tecnici che rendevano difficoltosa la realizzazione delle turbine eoliche galleggianti.
 "They still require quite a bit of maintenance and repair, but it's good to have more options for energy production.","Richiedono ancora un bel po' di manutenzione e riparazione, ma è positivo avere più opzioni per la produzione di energia."
 'Green' Container Ships,Navi container verdi
+"Reducing speed of freighters by 10% increases fuel efficiency by a third. Improvements in ship design, cleaner fuels, and sails can reduce emissions further up to 55%.","Ridurre la velocità delle navi cargo del 10% aumenta l'efficienza del carburante di un terzo. Miglioramenti nella progettazione delle navi, carburanti più puliti e vele più performanti possono ridurre ulteriormente le emissioni fino al 55%."
 "The rapid circulation of goods dropped after the revolution, but oceanic shipping is still a major activity.","Dopo la rivoluzione la rapida circolazione delle merci diminuì, ma il trasporto marittimo oceanico continua a rappresentare un'attività importante."
 I'm happy to see it's a bit better for the planet now!,Sono felice di vedere che va un po' meglio per il pianeta ora!
 Marine Protected Areas,Aree marine protette
@@ -1054,6 +1093,7 @@ Now that the bike paths have improved it's much safer and more pleasant.,Ora che
 Advances in Ecosystem Modelling,Progressi nella modellazione degli ecosistemi
 "For the longest time, climate modelling was far more advanced than ecosystem modelling. This program will allow ecologists to catch up! Capture and predict dynamic, non-linear and emergent behavior within ecosystems.","Per molto tempo, la modellazione climatica è stata molto più avanzata della modellazione degli ecosistemi. Questo programma consentirà allə ecologhə di recuperare! Cattura e prevedi comportamenti dinamici, non lineari ed emergenti all'interno degli ecosistemi."
 It's amazing that we can now diagnose specialized issues like species decline in a matter of minutes instead of years.,È sorprendente che ora possiamo diagnosticare problemi specialistici come il declino delle specie in pochi minuti anziché anni.
+Like what?,Tipo cosa?
 "Well for example, our fish population had a sudden decline and we found that it was due to cooler temperatures attracting more predators in the area.","Per esempio, la fauna ittica ha subito un calo improvviso e abbiamo scoperto che ciò era dovuto alle temperature più fredde che attiravano più predatori nella zona."
 Accelerationist Curriculum,Percorso di studi accelerazionista
 "Teach children and adolescents that they can move mountains, channel rivers, and reshape the Earth until it becomes a mere human artifact. Socialism should remove the fetters on the forces of production, accelerate scientific developments, and reach for the stars! Students will read Edward Bellamy, Aaron Bastani, and Mikhail Budyko.","Insegna a bambinə e adolescenti che possono spostare montagne, deviare fiumi e rimodellare la Terra fino a farla diventare un manufatto umano. Il socialismo dovrebbe rimuovere le catene alle forze di produzione, accelerare gli sviluppi scientifici e raggiungere le stelle! Lə studenti leggeranno Edward Bellamy, Aaron Bastani e Mikhail Budyko."
@@ -1077,7 +1117,9 @@ Remediate and Protect Ecosystems,Proteggere gli ecosistemi
 "So many places are gradually becoming themselves again, after decades of exploitation and neglect.","Moltissimi luoghi stanno gradualmente tornando ad essere se stessi, dopo decenni di sfruttamento e abbandono."
 It's a beautiful sight to behold.,È uno spettacolo meraviglioso da vedere.
 Low-Methane Cattle Fodder,Mangime a basso contenuto di metano
+"The seaweed Asparagopsis taxiformis reduces methane emissions (i.e., burps) from cows. It will take some work to carry out further research and scale up production to feed billions of cows.","L'alga Asparagopsis taxiformis riduce le emissioni di metano (ad esempio, i rutti) delle mucche. Ci vorrà del lavoro per condurre ulteriori ricerche e aumentare la produzione per nutrire miliardi di mucche."
 "Maybe we should call burgers made from these cows ""low-methane burgers"" what do you think?","Forse dovremmo chiamare gli hamburger fatti con queste mucche ""hamburger a basso contenuto di metano"". Cosa ne pensi?"
+But does this method work?,Ma questo metodo funziona?
 "If I can eat more burgers, then sure!","Se posso mangiare più hamburger, allora sicuramente!"
 "While algae additives reduced enteric methane emissions from cattle farming, its effect was limited to the feedlot stage.","Sebbene gli additivi a base di alghe abbiano ridotto le emissioni enteriche di metano derivanti dall'allevamento bovino, il loro effetto è stato limitato alla fase di ingrasso."
 The uptick in seaweed farms has also increased pressure on coastal ecosystems.,L'aumento delle coltivazioni di alghe ha anche aumentato la pressione sugli ecosistemi costieri.
@@ -1124,6 +1166,7 @@ Western Africa,Africa occidentale
 Oil Pollution Causes High Infant Mortality,L'inquinamento da petrolio causa un'alta mortalità infantile
 "A Sick, Sick World","Un mondo malato, malato"
 A recent study compared siblings conceived before and after nearby oil spills and found that nearby oil spills double the neonatal mortality rate.,Uno studio recente ha confrontato i fratelli concepiti prima e dopo fuoriuscite di petrolio nelle vicinanze e ha scoperto che le fuoriuscite di petrolio nelle vicinanze raddoppiano il tasso di mortalità neonatale.
+"Not only that, they also found that pollution is placing communities at heightened risk of kidney damage, as well as diseases such as cancer, diabetes, Alzheimer’s and Parkinson’s.","Non solo, hanno anche scoperto che l'inquinamento espone le comunità a un rischio maggiore di danni renali e di malattie come cancro, diabete, Alzheimer e Parkinson."
 "If we keep up the oil production, more and more communities are going to have to face this danger.","Se continuiamo a produrre petrolio, sempre più comunità saranno costrette ad affrontare questo pericolo."
 Eutrophication - A Problem Solved,Eutrofizzazione - Un problema risolto
 Eden Earth,Terra dell'Eden
@@ -1172,6 +1215,7 @@ Natural Disasters,Disastri naturali
 Wildfires are growing in intensity and frequency.,Gli incendi boschivi stanno aumentando in intensità e frequenza.
 "Many of the people effected are elderly and are not tech savy so they don't trust ""apps"". They think they are talking to a robot.","Molte delle persone colpite sono anziane e non sono esperte di tecnologia, quindi non si fidano delle ""app"". Pensano di parlare con un robot."
 "People are suffering form PTSD from losing their homes, possessions, and pets. This is a mental health crisis!","Le persone soffrono di disturbo da stress post-traumatico per aver perso la casa, i beni e gli animali domestici. Questa è una crisi di salute mentale!"
+Team up with a mental health startup to provide teletherapy.,Collabora con una startup specializzata in salute mentale per offrire la teleterapia.
 So many others have had similar experiences.,Tante altre hanno avuto esperienze simili.
 They've ravaged countless communities across the globe.,Hanno devastato moltissime comunità in tutto il mondo.
 A home I spent years making my own was gone in an instant...,Una casa che avevo impiegato anni a rendere mia è scomparsa in un attimo...
@@ -1240,6 +1284,8 @@ Flooding is getting even worse than before.,Le inondazioni stanno peggiorando an
 These floods are effecting millions of people and it's becoming impossible to live in some places.,Queste inondazioni stanno colpendo milioni di persone e in alcuni luoghi sta diventando impossibile vivere.
 Mold and mildew grow soon after flooding...,Muffe e funghi si sviluppano subito dopo un'alluvione...
 We'll have to raise taxes.,Dovremo aumentare le tasse.
+Increase the disaster relief budget.,Aumenta il budget per gli aiuti in caso di calamità.
+Regulate the price on flood insurance.,Regolamenta il prezzo dell'assicurazione contro le inondazioni.
 Nuclear Waste,Scorie nucleari
 "Fukushima, Mon Amour","Fukushima, Mon Amour"
 We've identified several leaks at nuclear storage sites.,Abbiamo individuato diverse perdite nei siti di stoccaggio nucleare.
@@ -1248,8 +1294,9 @@ We've identified several leaks at nuclear storage sites.,Abbiamo individuato div
 Collapse of the Greenland Ice Sheet,Collasso della calotta artica della Groenlandia
 A Rising Tide,Una marea crescente
 This is bad. A collapse this large and the displacement of that much water will surely have other effects.,Questo è un male. Un crollo così grande e lo spostamento di così tanta acqua avranno sicuramente altri effetti.
-Geoengineer Desert Commentary,
+Geoengineer Desert Commentary,Commento del geoingegnere nel deserto
 Commentary,Commento
+"Did you know there is evidence that the Sinai once was green – as recently as 4,500 to 8,000 years ago. Cave paintings found there depict trees and plants!","Sapevi che ci sono prove che il Sinai un tempo fosse verde, tra i 4.500 e gli 8.000 anni fa? Le pitture rupestri rinvenute lì raffigurano alberi e piante!"
 Cloud Brightening Reversed,Schiarimento delle nuvole invertito
 Under a White Sky,Sotto un cielo bianco
 We've gotten lots of opposition to our cloud brightening scheme from island nations.,Abbiamo ricevuto molte opposizioni al nostro progetto di schiarimento delle nuvole da parte delle nazioni insulari.
@@ -1265,6 +1312,7 @@ Crop yields are taking a hit because of that grey shroud we have around our plan
 "The solar radiation management initiative is upsetting my plants! They like sun, ya know.","L'iniziativa di gestione delle radiazioni solari sta sconvolgendo le mie piante! A loro piace il sole, sai."
 Commentary - Artificial Moons,Commento - Lune artificiali
 Commentary,Commento
+"Our inspiration for the second moon is a French artist, who imagined a necklace of mirrors circling the Earth to illuminate the nighttime streets of Paris with reflected sunshine.","La nostra ispirazione per la seconda luna è un artista francese, che ha immaginato una collana di specchi che circonda la Terra per illuminare le strade notturne di Parigi con la luce riflessa del sole."
 Severe Flooding - Intro,Grave inondazione - Introduzione
 Natural Disasters,Disastri naturali
 Water just isn't doing what it used to. Some places are seeing torrential rainfall become commonplace...,L'acqua non fa più quello che faceva prima. In alcuni posti le piogge torrenziali stanno diventando una cosa comune...
@@ -1276,7 +1324,7 @@ A Dying Planet,Un pianeta morente
 The aragonite saturation horizon has risen to subsume virtually the entire Southern Ocean and encroached miles toward coasts around the world.,L'orizzonte di saturazione dell'aragonite si è innalzato fino a comprendere praticamente l'intero Oceano Antartico e ad estendersi per chilometri verso le coste di tutto il mondo.
 Molluscs like pteropods that form the basis of marine food webs are quite literally dissolving.,"I molluschi come gli pteropodi, che costituiscono la base delle reti alimentari marine, si stanno letteralmente dissolvendo."
 Severe Wildfires,Gravi incendi boschivi
-NIMBYs,Not in My Back Yard
+NIMBYs,"""Non nel mio giardino"""
 How's My Planning?,Com'è la mia pianificazione?
 You can't just transition to renewables and do all of your restoration projects in whatever neighborhood you want! I'm not going to endure blackouts just because of your novel ideas.,Non puoi semplicemente passare alle energie rinnovabili e fare tutti i tuoi progetti di restauro in qualsiasi quartiere tu voglia! Non sopporterò blackout solo per le tue idee innovative.
 You're going to regret this...,Te ne pentirai...
@@ -1287,6 +1335,7 @@ At the least we'll be able to speed up our research across the board!,Come minim
 "I'll spare you the details, but suffice to say this will help greatly in all sorts of applications.","Vi risparmierò i dettagli, ma basti dire che questo sarà di grande aiuto in ogni tipo di applicazione."
 Are We Preserving Too Much Land?,Stiamo preservando troppa terra?
 Commentary,Commento
+"National parks are beautiful, but are taking up land a lot of land these days.","I parchi nazionali sono bellissimi, ma ultimamente stanno occupando molto territorio."
 We'll have much less land for food—especially livestock—are you sure conservation is worth the cost?,"Avremo molta meno terra da destinare al cibo, soprattutto al bestiame: sei sicurə che la salvaguardia dell'ambiente valga la pena?"
 A Global Dustbowl,Una tempesta di sabbia globale
 A Dying Planet,Un pianeta morente
@@ -1298,7 +1347,7 @@ The soil just is blown away because we've ruined the land.,Il terreno è stato s
 "Pesticides, fertilizer, and irrigation each take their toll.","Pesticidi, fertilizzanti e irrigazione hanno tutti i loro effetti."
 About nearly half of global farmland is degraded and we're still losing top soil every year.,Circa la metà dei terreni agricoli mondiali è degradata e ogni anno continuiamo a perdere strato superficiale del suolo.
 Last Coral Reef Bleaches,Sbiancamento dell'ultima barriera corallina
-Gone Forever,Andatə per sempre
+Gone Forever,Andata per sempre
 "First the Great Barrier Reef, and now the very last coral has bleached.",Dopo la Grande Barriera Corallina ora anche l'ultimo corallo è sbiancato.
 I don't know if we can bring them back...,Non so se potremo riportarli indietro...
 ...but at the very least we can prevent something like this from happening again.,...ma almeno possiamo impedire che una cosa del genere accada di nuovo.
@@ -1311,6 +1360,7 @@ Either cut down your energy-use or find another source of energy fast.,Riduci il
 Indigenous Nations Block Oil Infrastructure,Le nazioni indigene bloccano l'infrastruttura petrolifera
 Crucible Earth,Terra del crogiolo
 "To keep up oil production firms have pushed deeper into remote regions, often in Indigenous territory.","Per mantenere la produzione di petrolio, le aziende si sono spinte più in profondità nelle regioni remote, spesso nei territori indigeni."
+"Indigenous peoples have proven effective in blockading new pipelines and projects, lowering production.","I popoli indigeni si sono dimostrati efficaci nel bloccare nuovi oleodotti e progetti, riducendone la produzione."
 Severe Flooding,Inondazione estrema
 New Mosquito-Borne Disease,Nuova malattia trasmessa dalle zanzare
 "A Sick, Sick World","Un mondo malato, malato"
@@ -1410,8 +1460,8 @@ If only you could have done more...,Se solo avessi potuto fare di più...
 ...and people suffered for it.,...e la gente ne ha sofferto le conseguenze.
 Your administration had failed to achieve its goals in time...,La tua amministrazione non è riuscita a raggiungere gli obiettivi in tempo...
 """Finally, an end to more than half a century of incompetence and disaster,"" they cheered.","""Finalmente, la fine di più di mezzo secolo di incompetenza e disastri"", hanno esultato."
-The Leather Underground - Formation,
-The Leather Underground,
+The Leather Underground - Formation,Il Leather Underground - Formazione
+The Leather Underground,Il Leather Underground
 Planner! How can you force these kinds of dietary restrictions on us?,Pianificatorə! Come puoi imporci questo tipo di restrizioni alimentari?
 You must reconsider this oppressive mandate!,Dovete riconsiderare questo mandato oppressivo!
 Humans are *omnivores*--we need to eat meat!,Gli esseri umani sono *onnivori*: abbiamo bisogno di mangiare carne!
@@ -1432,6 +1482,7 @@ Just something to be aware of.,Solo qualcosa di cui essere consapevoli.
 "The increased demand for electricity, especially during peak periods, over-taxes the electrical grid, triggering brownouts and blackouts","L'aumento della domanda di elettricità, soprattutto nei periodi di punta, sovraccarica la rete elettrica, innescando cali di tensione e blackout"
 We are seeing an overload of hospitalizations for people with outdoor professions...,Stiamo assistendo a un sovraccarico di ricoveri ospedalieri per le persone che svolgono professioni all'aperto...
 "construction workers, miners, firefighters, agricultural workers, and the like.","operai edili, minatori, vigili del fuoco, lavoratorə agricolə e simili."
+Change the work hours of the day for outdoor workers.,Modifica l'orario di lavoro giornaliero per chi lavora all'aperto.
 Game Over: Overthrown,Game Over: Rovesciato
 Your legacy as a planner was one that you feared most:,La tua eredità come pianificatorə era quella che temevi di più:
 If only you could go back and try again...,Se solo potessi tornare indietro e riprovare...
@@ -1452,7 +1503,7 @@ The Animal Liberationist is now a [nemesis] nemesis.,L'animalista è ora una [ne
 Bail Out,Salvataggio
 The End,La fine
 You've exhausted all your political capital...,Hai esaurito tutto il tuo capitale politico...
-...so don't mess things up!,
+...so don't mess things up!,...quindi non rovinare le cose!
 I believe in your decisions.,Credo nelle tue decisioni.
 Hold on!,Resisti!
 But they can only help you this one time...,Ma possono aiutarti solo questa volta...
@@ -1476,7 +1527,7 @@ Last Antibiotic Stops Working,L'ultimo antibiotico smette di funzionare
 The overuse of anti-biotics in animal husbandry has caused this problem.,L'uso eccessivo di antibiotici nell'allevamento animale è la causa di questo problema.
 We estimate ten million people will die a year from what used to be preventable infections.,Si stima che ogni anno moriranno dieci milioni di persone a causa di infezioni che un tempo erano prevenibili.
 "It takes years of research to make new antibiotics, but now resistant strains emerge within a year.","Ci vogliono anni di ricerca per creare nuovi antibiotici, ma ormai nel giro di un anno emergono ceppi resistenti."
-Half-Earth,Half-Earth
+Half-Earth,Metà-Terra
 A New Life,Una vita nuova
 I can't believe we finally did it! Half the Earth is now protected in nature preserves.,Non riesco a credere che finalmente ce l'abbiamo fatta! Metà della Terra è ora protetta da riserve naturali.
 "There still are environmental problems, but perhaps the worst may be behind us...","I problemi ambientali persistono, ma forse il peggio è ormai alle nostre spalle..."
@@ -1510,6 +1561,7 @@ I know of so many others who are in a similar situation...,So di tantə altrə c
 I hope one day I can go back.,Spero di poter tornare un giorno.
 Deadly Heat Wave,Ondata di calore mortale
 Crucible Earth,Terra del crogiolo
+"What a tragedy. A hundred thousand people perished last week, most of them elderly.","Che tragedia. Centomila persone sono morte la scorsa settimana, la maggior parte delle quali anziane."
 "We have to cool things down and fast, otherwise more people will die. These disasters make people lose hope that things will get better.","Dobbiamo calmare le cose e in fretta, altrimenti moriranno più persone. Questi disastri fanno perdere alle persone la speranza che le cose miglioreranno."
 Some say that in 20 years we will see a significant shift in political ideology as the previous generations perish under the impact of climate change.,"Alcuni sostengono che tra 20 anni assisteremo a un cambiamento significativo nell'ideologia politica, poiché le generazioni precedenti moriranno sotto l'impatto del cambiamento climatico."
 Blackouts,Blackouts
@@ -1714,7 +1766,7 @@ You have been elected as [gosplant]'s first lead planner.,Sei statə elettə pri
 "You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Devi farlo senza lasciare che la [soddisfazione] delle persone [contentedness]<em class=""lose-con"">contentedness dip below 0</em>..."
 "The regions of the world united to establish [gosplant], a global planning authority.","Le regioni del mondo si sono unite per fondare [gosplant], un'autorità di pianificazione globale."
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] è stato incaricato di porre rimedio ai molteplici danni che secoli di capitalismo avevano scatenato sul pianeta e sulla sua gente.
-Otherwise your adversaries may take the opportunity to replace you.,Altrimenti lə tuə avversariə potrebbero cogliere l'occasione per sostituirti.
+Otherwise your adversaries may take the opportunity to replace you.,Altrimenti ə tuə avversariə potrebbero cogliere l'occasione per sostituirti.
 Otherwise they will vote you out of office.,Altrimenti voteranno per estrometterti dall'incarico.
 "It's your duty to bring [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> while there's still time.","Il tuo compito è portare [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> finché c'è ancora tempo."
 SRM - Assassination,SRM - Assassinio
@@ -1791,9 +1843,11 @@ Acid Rain,Pioggia acida
 A Dying Planet,Un pianeta morente
 Either solar radiation management or coal power plants have caused acid rain to return...,O la gestione della radiazione solare o le centrali elettriche a carbone hanno causato il ritorno della pioggia acida...
 "...but you can't make an omelette without breaking a few eggs, right?","...ma non puoi fare una frittata senza rompere qualche uovo, giusto?"
+"What's worse, we will risk major accidents if this continues.",Quel che è peggio è che se continua così rischieremo incidenti gravi.
 "The bridges and buildings are crumbling, you need to put more money into public infrastructure.","I ponti e gli edifici stanno crollando, bisogna investire più soldi nelle infrastrutture pubbliche."
 I don't think it's worth it.,Non credo ne valga la pena.
 "The sulphuric acid eats away at concrete, turning the calcium carbonate into gypsum. We'll have to rebuild many of our bridges and buildings decades years earlier than we expected.  People aren't happy about their cities seemingly melting away in front of their eyes.","L'acido solforico corrode il cemento, trasformando il carbonato di calcio in gesso. Dovremo ricostruire molti dei nostri ponti ed edifici decenni prima di quanto ci aspettassimo. La gente non è contenta che le loro città sembrino sciogliersi davanti ai loro occhi."
+"The acid eats away at concrete, causes 'forest death', and kills lakes.","L'acido corrode il cemento, provoca la ""morte delle foreste"" e distrugge i laghi."
 "Actually, it's not that significant.",In realtà non è così significativo.
 Assassination Thwarted,Assassinio sventato
 The End,La fine
@@ -1811,6 +1865,7 @@ Toxic Airborne Event,Evento tossico nell'aria
 "A Sick, Sick World","Un mondo malato, malato"
 A train filled with Nyodene Derivative has derailed near your location.,Un treno carico di derivato del Nyodene è deragliato vicino alla tua posizione.
 "It's hard to hear the radio reports of the disaster over the white noise of your equipment, TV, tablet, and smartphone.","È difficile sentire i notiziari radiofonici del disastro a causa del rumore bianco delle apparecchiature, della TV, del tablet e dello smartphone."
+"But you can't leave, you're an important planning professional!","Ma non puoi andartene, sei un importante professionista della pianificazione!"
 Blue Ocean Event,Evento Oceano Blu
 A Rising Tide,Una marea crescente
 "This September, our satellites recorded...","Questo settembre, i nostri satelliti hanno registrato..."
@@ -1827,6 +1882,7 @@ Epidemic X,Epidemia X
 "A new virus has emerged, either from a factory farm or a degraded forest, we don't know yet for sure.","È emerso un nuovo virus, proveniente da un allevamento intensivo o da una foresta degradata, non lo sappiamo ancora con certezza."
 "As long as we have a large livestock industry and deforestation, these tragedies will keep happening.","Finché esisterà un'industria zootecnica e la deforestazione, queste tragedie continueranno a verificarsi."
 "The mortality rate is 2%, which can still kill millions but we predict that a new zoonosis could much deadlier.","Il tasso di mortalità è del 2%, cifra che potrebbe comunque uccidere milioni di persone, ma prevediamo che una nuova zoonosi potrebbe essere molto più letale."
+"This one was bad, but","Questo era brutto, ma"
 A New Prometheus,Un nuovo Prometeo
 A New Life,Una vita nuova
 "As Trotsky once said: 'Man will occupy himself with re-registering mountains and rivers, and will earnestly and repeatedly make improvements in nature.'","Come disse una volta Trotsky: ""L'uomo si occuperà di ricodificare montagne e fiumi e apporterà miglioramenti alla natura con impegno e frequenza""."
@@ -1840,6 +1896,8 @@ The Malthusian is now a [nemesis] nemesis.,Lə Malthusianə è ora una [nemesis]
 The natural world just cannot support this many people.,Il mondo naturale semplicemente non può sostenere così tante persone.
 River Restoration,Ripristino dei fiumi
 A New Life,Una vita nuova
+"By removing so many dams, rivers around the world have come back to life.","Grazie alla rimozione di così tante dighe, i fiumi di tutto il mondo sono tornati a vivere."
+"Cases of schistomiasis, caused by parasitic worms, have also fallen dramatically!","Anche i casi di schistomiasi, causata da vermi parassiti, sono diminuiti drasticamente!"
 "Rewilding and river restoration has not only decreased methane emissions and regulated streamflows, but also decreased wildfire severity. Thank a beaver.","Il rewilding e il ripristino dei fiumi non solo hanno ridotto le emissioni di metano e regolato i flussi dei corsi d'acqua, ma hanno anche ridotto la gravità degli incendi. Grazie a un castoro."
 The Wretched Attack,L'attacco dellə dannatə
 Permafrost Melting,Scioglimento del permafrost
@@ -1867,7 +1925,7 @@ I packed up and left the city some time ago when the reruralization program star
 "I love it. Hikes through the forests, volunteering on local farms, having time to swim and read...","Mi piace! Escursioni nei boschi, volontariato nelle fattorie locali, tempo per nuotare e leggere..."
 I know many others share my experience.,Conosco moltə altrə che hanno avuto la mia stessa esperienza.
 "With the new train network, it's not too difficult for me to visit the city when I'm craving it.","Grazie alla nuova rete ferroviaria, non mi è poi così difficile visitare la città quando ne ho voglia."
-"I'd never seen myself living out in the country, but I was in a tough time and thought a fresh start might do me good.","Non mi ero mai immaginato di vivere in campagna, ma stavo attraversando un periodo difficile e ho pensato che un nuovo inizio avrebbe potuto farmi bene."
+"I'd never seen myself living out in the country, but I was in a tough time and thought a fresh start might do me good.","Non mi ero mai immaginatə di vivere in campagna, ma stavo attraversando un periodo difficile e ho pensato che un nuovo inizio avrebbe potuto farmi bene."
 Ozone Depletion,Esaurimento dell'ozono
 Under a White Sky,Sotto un cielo bianco
 We're seeing signs of ozone depletion at a worrying rate.,Stiamo assistendo a segnali di riduzione dell'ozono a un ritmo preoccupante.
@@ -1925,8 +1983,8 @@ You can tap the pulsing [alert] alert icon for more information.,"Per ulteriori 
 Australian 'Dinosaur Trees' Destroyed in Wildfire,"Gli ""alberi-dinosauro"" australiani distrutti in un incendio"
 Wildfires,Incendi boschivi
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.","I pini di Wollemi esistono da 200 milioni di anni, ma l'ultima foresta naturale è stata recentemente distrutta da un incendio boschivo."
-Leather Underground - Attacks,
-The Leather Underground,
+Leather Underground - Attacks,Il Leather Underground - Attacchi
+The Leather Underground,Il Leather Underground
 We gave you a nice warning about banning meat and you've ignored us.,Vi abbiamo dato un gentile avvertimento sul divieto di consumare carne e voi ci avete ignoratə.
 Maybe you'll listen now?,Forse ora mi ascolterai?
 Coup,Colpo di Stato
@@ -1939,6 +1997,7 @@ Commentary,Commento
 The benefits of rewilding reduces the likelihood of more zoonotic disease.,I benefici del rewilding riducono la probabilità di ulteriori malattie zoonotiche.
 How is that?,Come mai?
 Clearing of otherwise undisturbed land to make room for things like industrial farming opens up opportunities for the transmission of pathogens from animals to humans.,La bonifica di terreni altrimenti incontaminati per far posto ad attività come l'agricoltura industriale apre la strada alla trasmissione di agenti patogeni dagli animali all'uomo.
+"Well, the emergence of zoonotic diseases is closely related to ecological disturbance.","Beh, l'insorgenza di malattie zoonotiche è strettamente correlata al disturbo ecologico."
 Uranium Running Out,L'uranio sta finendo
 Running Out,In esaurimento
 "Wow, uranium stocks have been run down fast by the massive increase in reactors worldwide. At this rate, we'll run out of high-quality uranium ore in twenty years.","Wow, le scorte di uranio sono state rapidamente esaurite dal massiccio aumento dei reattori in tutto il mondo. A questo ritmo, esauriremo il minerale di uranio di alta qualità in vent'anni."
@@ -1947,6 +2006,7 @@ Rotational Grazing,Pascolo a rotazione
 This didn't really do much.,In realtà non è servito a molto.
 Year without a Summer,Un anno senza un'estate
 Under a White Sky,Sotto un cielo bianco
+"In 1816, a volcanic eruption cooled the global climate and caused widespread famine. The ""year without a summer"" inspired Mary Shelley's Frankenstein.","Nel 1816, un'eruzione vulcanica raffreddò il clima globale e causò una carestia diffusa. L'""anno senza estate"" ispirò il romanzo Frankenstein di Mary Shelley."
 So exciting!,Così eccitante!
 Maybe we'll get another great novel out of this...,Forse da questo uscirà un altro romanzo grandioso...
 Environmental Injustice - Unconventional Oil,Ingiustizia ambientale - Petrolio non convenzionale
@@ -1971,8 +2031,10 @@ Disease Outbreak,Focolaio della malattia
 Silent Spring,Primavera silenziosa
 A Dying Planet,Un pianeta morente
 Pesticides from industrial agriculture have spread through the ecosystem with devastating consequences.,I pesticidi provenienti dall'agricoltura industriale si sono diffusi nell'ecosistema con conseguenze devastanti.
+"It was as Rachel Carson foretold: 'on the mornings that had once throbbed with the dawn chorus of robins, catbirds, doves, jays, wrens, and scores of other bird voices there was now no sound; only silence lay over the fields and woods and marsh.'","Fu come aveva predetto Rachel Carson: ""Nelle mattine che un tempo pulsavano del coro dell'alba di pettirossi, uccelli gatto, colombe, ghiandaie, scriccioli e decine di altre voci di uccelli, ora non c'era più alcun suono; solo il silenzio aleggiava sui campi, sui boschi e sulle paludi""."
 Chthulucene,Chthulucene
 A New Life,Una vita nuova
+"As Donna Haraway once said, 'Tentacularity is about life lived along lines ...  not at points, not in spheres.'","Come disse una volta Donna Haraway, ""La tentacolarità riguarda la vita vissuta lungo linee... non in punti, non in sfere""."
 "We are all compost, not posthuman.","Siamo tutti compost, non postumani."
 Ice Sheet Tsunami,Tsunami della calotta glaciale
 Natural Disasters,Disastri naturali
@@ -1999,11 +2061,12 @@ Wildfires - Intro,Incendi boschivi - Introduzione
 Natural Disasters,Disastri naturali
 Wildfires are growing in frequency and severity.,Gli incendi boschivi stanno aumentando in frequenza e gravità.
 For now we'll track these events on the globe.,Per ora seguiremo questi eventi sul globo.
-So don't be surprised if people,
+So don't be surprised if people,Quindi non sorprenderti se le persone
 We have to lower temperatures quickly and introduce natural solutions to manage this problem.,Dobbiamo abbassare rapidamente le temperature e introdurre soluzioni naturali per gestire questo problema.
 "There are several communities that live in high fire zones, when their homes are burn down they are displaced for long periods of time, some are never able to secure stable housing afterwards..","Ci sono diverse comunità che vivono in zone ad alto rischio di incendi; quando le loro case vanno a fuoco, restano sfollati per lunghi periodi di tempo; alcune non riescono mai ad avere un alloggio stabile."
 That's right. You can look through some options at the next planning session.,Esatto. Puoi dare un'occhiata ad alcune opzioni alla prossima sessione di pianificazione.
 "Whole towns are suffering from PTSD, this is a mental health crisis!",Intere città soffrono di disturbo da stress post-traumatico: questa è una crisi di salute mentale!
+Team up with a mental health startup to provide teletherapy.,Collabora con una startup specializzata in salute mentale per offrire la teleterapia.
 "Wildfires, of course, make it harder for people to live in an area.","Gli incendi boschivi, ovviamente, rendono più difficile la vita delle persone in una determinata zona."
 "Most of the people effected are elderly and not tech savy, they are suspicious of ""apps"" and think they are talking to a robot.","La maggior parte delle persone colpite sono anziane e non esperte di tecnologia, sono diffidenti nei confronti delle ""app"" e pensano di parlare con un robot."
 Brownouts - Intro,Cali di tensione - Introduzione
@@ -2029,7 +2092,7 @@ We must learn to appreciate the unexpected boons...,Dobbiamo imparare ad apprezz
 Permafrost Pandemic,Pandemia del permafrost
 Ancient Disease,Malattia antica
 What a waste of life! What a tragedy!,Che spreco di vita! Che tragedia!
-"A tragedy, sure, but also an opportunity...",
+"A tragedy, sure, but also an opportunity...","Una tragedica, certo, ma anche un'opportunità..."
 Parliament Intro,Introduzione al Parlamento
 Tutorial,Tutorial
 Your plans will benefit from having others on board.,I tuoi piani trarranno vantaggio dalla partecipazione di altre persone.
@@ -2069,6 +2132,7 @@ I suggest you build up a new energy system quickly.,Ti suggerisco di costruire r
 Fish Populations Collapse,Crollo delle popolazioni di pesci
 A Dying Planet,Un pianeta morente
 Ocean acidification and over-fishing have led to declines in marine population that may be hard to recover from.,L'acidificazione degli oceani e la pesca eccessiva hanno portato a un declino della popolazione marina da cui potrebbe essere difficile riprendersi.
+"But if your concern is feeding people, I suppose","Ma se la tua preoccupazione è nutrire le persone, suppongo"
 This will no doubt have reverberations throughout various food webs.,Ciò avrà senza dubbio ripercussioni su diverse reti alimentari.
 Global Equality,Uguaglianza globale
 A New Life,Una vita nuova
@@ -2132,6 +2196,7 @@ They have a point...,Hanno ragione...
 What a nuisance!,Che seccatura!
 Ex-Urban Explosion,Ex-esplosione urbana
 A New Life,Una vita nuova
+"People really like living in McMansions, I guess.",Immagino che alla gente piaccia molto vivere nelle McMansion.
 ...but also spillover into exurbs as some seek to escape the growing density of cities.,"...ma si riversano anche nelle periferie, cercando di sfuggire alla crescente densità delle città."
 They only care about their own consumption.,Si preoccupano solo dei loro consumi.
 No one seems to care that we are living during an environmental crisis.,Nessunə sembra badare al fatto che stiamo vivendo durante una crisi ambientale.
@@ -2139,6 +2204,7 @@ Massive Jellyfish Blooms,Invasione di meduse giganti
 A Dying Planet,Un pianeta morente
 "Warmer waters are bad for most marine species. Many kinds of jellyfish, however, thrive in these conditions.","Le acque più calde sono dannose per la maggior parte delle specie marine. Molti tipi di meduse, tuttavia, prosperano in queste condizioni."
 It doesn't help that too much fishing means there are fewer predators and competitors for jellyfish.,Non aiuta il fatto che una pesca eccessiva significhi meno predatori e meno specie animali concorrenti per le meduse.
+"Even if some people care little about the oceans, they'll be annoyed when their beach holiday is ruined.","Anche se ad alcune persone importa poco degli oceani, si irriteranno quando la loro vacanza al mare verrà rovinata."
 4000th nuclear reactor built,4000esimo reattore nucleare costruito
 "Fukushima, Mon Amour","Fukushima, Mon Amour"
 We've hit an interesting milestone--the 4000th nuclear reactor was just built.,Abbiamo raggiunto un traguardo interessante: è stato appena costruito il 4000° reattore nucleare.
@@ -2194,6 +2260,7 @@ Boreal Forest Shift,Spostamento della foresta boreale
 A Dying Planet,Un pianeta morente
 "These heat waves have extended all the way to the boreal forest, That's very dangerous.",Queste ondate di calore si sono estese fino alla foresta boreale. È molto pericoloso.
 Why?,Perché?
+"Because the boreal forest is not managed as intensely as other forests, the trees have been able to grow undisturbed, amassing large amounts of carbon in their roots and trunks. Twenty percent of the carbon held in forests in the world is in the boreal forest.","Poiché la foresta boreale non è gestita con la stessa intensità di altre foreste, gli alberi hanno potuto crescere indisturbati, accumulando grandi quantità di carbonio nelle radici e nei tronchi. Il 20% del carbonio contenuto nelle foreste del mondo si trova nella foresta boreale."
 "Frequent fire also threatens the permafrost—it can also lead to burning belowground, which melts the permafrost and can emit large amounts of carbon in a short time.","Anche gli incendi frequenti minacciano il permafrost: possono infatti provocare incendi nel sottosuolo, sciogliendo il permafrost e rilasciando grandi quantità di carbonio in poco tempo."
 "The boreal forest is shifting from a carbon sink to a carbon source, meaning it emits more carbon than it stores.","La foresta boreale si sta trasformando da pozzo di carbonio a fonte di carbonio, il che significa che emette più carbonio di quanto ne immagazzina."
 "But most of the carbon is found in the permafrost, an underground layer of ice, rock, sand, and soil that is below freezing. The permafrost layer represents the largest carbon sink in the world.","Ma la maggior parte del carbonio si trova nel permafrost, uno strato sotterraneo di ghiaccio, roccia, sabbia e terreno che è sotto lo zero. Lo strato di permafrost rappresenta il più grande pozzo di carbonio al mondo."
@@ -2213,6 +2280,7 @@ At the end of each cycle you'll be presented a report summarizing changes.,Alla 
 Aurochs Return to the Eurasian Plains,Gli uri tornano nelle pianure eurasiatiche
 A New Life,Una vita nuova
 "The auroch went extinct in 1627, but it has proven possible to 'back-breed' cattle and recover lost traits such as longer legs and horns.","L'uro si è estinto nel 1627, ma è stato dimostrato che è possibile riprodurre i bovini e recuperare caratteristiche perdute, come zampe più lunghe e corna."
+"We call the breed 'Tauros' because they are not true aurochs, but pretty close.","Chiamiamo questa razza ""Tauros"" perché non sono veri uri, ma ci vanno molto vicino."
 They will fill an important ecological niche in rewilding programs.,Occuperanno un'importante nicchia ecologica nei programmi di reintroduzione in natura.
 Heatwaves,Ondate di calore
 Book Extract - Havana,Estratto del libro - L'Avana
@@ -2223,7 +2291,7 @@ What's that?,Che cos'è quello?
 Oh it isn't just me. Thousands of people work there from all over the world.,"Oh, non sono solo io. Ci lavorano migliaia di persone da tutto il mondo."
 "Havana has had the most experience with planning, decarbonization, and organic agriculture, so I guess it made sense to put the bureau there..","L'Avana ha avuto più esperienza in materia di pianificazione, decarbonizzazione e agricoltura biologica, quindi credo che avesse senso istituire lì l'ufficio."
 What do you do there?,Cosa fai là?
-"Well, the parts of the world that have joined the Half-Earth Socialist bloc all provide data, technical expertise, and proposals to the central planning bureau in Cuba.","Ebbene, tutte le parti del mondo che hanno aderito al blocco socialista Half-Earth forniscono dati, competenze tecniche e proposte all'ufficio centrale di pianificazione a Cuba."
+"Well, the parts of the world that have joined the Half-Earth Socialist bloc all provide data, technical expertise, and proposals to the central planning bureau in Cuba.","Ebbene, tutte le parti del mondo che hanno aderito al blocco socialista di Metà-Terra forniscono dati, competenze tecniche e proposte all'ufficio centrale di pianificazione a Cuba."
 Why Havana?,Perché L'Avana?
 Night Life Adaptation,Adattamento alla vita notturna
 A New Life,Una vita nuova
@@ -2259,7 +2327,7 @@ My neighbors and I got rid of our lawns and encouraged native grasses to grow in
 "I've grown to appreciate how much we can do for our local environment, even as we try to change the world.","Ho imparato ad apprezzare quanto possiamo fare per l'ambiente locale, anche quando cerchiamo di cambiare il mondo."
 "Beautiful. These changes have brought a wealth of wildlife into our cities, like voles, shrews, and lupine!","Bellissimo. Questi cambiamenti hanno portato una grande quantità di fauna selvatica nelle nostre città, come arvicole, toporagni e lupini!"
 We rewilded the local golf course. I don't even miss the game as I got into birding instead.,Abbiamo re-inselvatichito il campo da golf locale. Non ne sento la mancanza perché ho sostituito il golf con il birdwatching.
-The Leather Underground Attack,
+The Leather Underground Attack,L'attacco Leather Underground
 Environmental Injustice - Rare Earth Metals,Ingiustizia ambientale - Rari metalli terrestri
 Poisoned Land,Terra avvelenata
 My town has become contaminated by the old tailings leaking into the ground water. People are dying.,La mia città è stata contaminata dai vecchi residui che si riversano nelle falde acquifere. La gente sta morendo.
@@ -2299,6 +2367,7 @@ Declining fossil fuel combustion has meant a drastic drop in air pollution.,La r
 "So many fewer respiratory illnesses and other complications, saving millions of lives a year.","Molte meno malattie respiratorie e altre complicazioni, salvando milioni di vite ogni anno."
 Millions of Climate Refugees on the Move,Milioni di rifugiatə climatichə in movimento
 Migrations,Migrazioni
+"What a disaster! All those people had to leave their homes and try to make a new life in the cooler, more stable parts of the world.",Che disastro! Tutte quelle persone hanno dovuto abbandonare le loro case e cercare di costruirsi una nuova vita nelle zone più fresche e stabili del mondo.
 Don't be a fool. It's their fault they didn't adapt or prove resilient in these hard times. I say we keep them out.,Non essere stupidə. È colpa loro se non si sono adattate o non si sono dimostrate resiliente in questi tempi difficili. Io dico di tenerle fuori.
 "We should help them, even if it will make things difficult for us here.","Dobbiamo aiutarle, anche se questo renderà le cose difficili per noi qui."
 Initiatives Intro,Introduzione alle iniziative
@@ -2324,6 +2393,7 @@ And the anxious fear of a changing planet still haunted the world.,E la paura an
 If only you could have done more...,Se solo avessi potuto fare di più...
 Feminist Citizen-Scientists,Cittadinə femminista - Scienziatə
 A Dying Planet,Un pianeta morente
+We can't build homes on top of toxic land fills or near nuclear power plants.,Non possiamo costruire case su discariche tossiche o vicino a centrali nucleari.
 We need to shift more quickly to renewable energy!,Dobbiamo passare più rapidamente alle energie rinnovabili!
 The ecofeminist movement is strong and will mobilize quickly against environmental injustices.,Il movimento ecofemminista è forte e si mobiliterà velocemente contro le ingiustizie ambientali.
 Nemesis - The Authoritarian,Nemesis - L'autoritariə
@@ -2549,7 +2619,7 @@ Nemesis,Nemesi
 Ally,Alleatə
 Friendly,Amichevole
 [GAME],[GIOCO]
-Gossy,
+Gossy,Gossy
 The Economist,L'economista
 The Ecologist,L'ecologista
 The Climatologist,Lə climatologə
@@ -2558,7 +2628,7 @@ The Farmer,L'agricoltorə
 The Alien,L'alienə
 The Citizen,Lə cittadinə
 The Doom Cultist,Lə cultista del destino
-The Leather Underground,
+The Leather Underground,Il Leather Underground
 The Earth Liberation Front,Il Fronte di Liberazione della Terra
 The Wretched,Lə dannatə
 The Spacer,Lə distrattə
@@ -2584,6 +2654,7 @@ Production Shortages,Carenze di produzione
 Post-Revolution Optimism,Ottimismo post-rivoluzionario
 Nature Preserves,Riserve naturali
 Click to load a custom world.,Clicca per caricare un mondo personalizzato.
+Custom,Personalizzato
 Default World,Mondo predefinito
 Failed to parse provided world.,Impossibile analizzare il mondo fornito.
 New worlds can be made using the editor.,Puoi creare nuovi mondi con l’editor.
