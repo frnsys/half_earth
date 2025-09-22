@@ -116,7 +116,7 @@ fn find_start(input: &str) -> IResult<&str, &str> {
 }
 
 fn extract_strings(from: &str) -> Vec<String> {
-    let contents = std::fs::read_to_string(from).unwrap();
+    let contents = fs_err::read_to_string(from).unwrap();
     let (_rest, matches) =
         many1(preceded(find_start, find_text))(&contents)
             .unwrap();
