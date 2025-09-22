@@ -36,7 +36,7 @@ CO2,CO2
 CO2 Emissions/Yr,Emissioni di CO2 all'anno
 Change Production,Cambia produzione
 Change the amount of land under protection by <strong>{percent}%</strong>.,Modifica la quantità di terreno protetto del <strong>{percent}%</strong>.
-Changes,Cambiamenti
+Changes,Cambia
 Changes demand for {name} by <strong>{percent}%.</strong>,Cambia la domanda per {name} del <strong>{percent}%.</strong>
 Changes demand for {name} by an unknown amount.,Cambia la domanda per {name} di una quantità sconosciuta.
 Changes emissions for {name} by an unknown amount.,Cambia le emissioni per {name} di una quantità sconosciuta.
@@ -125,7 +125,7 @@ Music,Musica
 N2O,N2O
 Nay,No
 New Game,Nuova partita
-Next,Prossimo
+Next,Avanti
 Next Level,Livello successivo
 Off,Off
 On,On
@@ -329,7 +329,7 @@ Won't unlock {name}.,Non sbloccherà {name}.
 World,Mondo
 Yea,Yes
 You had an extraterrestrial encounter.,Hai avuto un incontro con lə extraterrestri.
-You have {yearsLeft} years left in your tenure.,Mancano {yearsLeft} alla fine del tuo mandato.
+You have {yearsLeft} years left in your tenure.,Mancano {yearsLeft} anni alla fine del tuo mandato.
 You received a request to ban this process:,Hai ricevuto una richiesta di vietare questo processo:
 You received a request to implement this project:,Hai ricevuto una richiesta di implementare questo progetto:
 You received a request to promote this process:,Hai ricevuto una richiesta di promuovere questo processo:
@@ -346,8 +346,8 @@ cost,costo
 critical,critico
 crops,colture
 decrease {k} by {change}%,diminuisci {k} del {change}%
-development time,tempo di sviluppo
-electricity,elettrcitià
+development time,il tempo di sviluppo
+electricity,elettricità
 emissions,emissioni
 energy use,uso dell'energia
 from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit},da {tipIcon}{cost}{unit} a {tipIcon}{newCost}{unit}
@@ -358,7 +358,7 @@ livestock,bestiame
 mild,lieve
 nd,°
 rd,°
-research time,tempo di ricerca
+research time,il tempo di ricerca
 severe,grave
 st,°
 th,°
@@ -367,34 +367,34 @@ water use,uso dell'acqua
 year(s),anni
 "{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","{changeDir} le emissioni di CO2 per <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> del <strong>{percent}%.</strong>"
 {changeDir} all {name} production by <strong>{percent}%.</strong>,{changeDir} tutta la produzione di {name} del <strong>{percent}%.</strong>
-{changeDir} biodiversity pressure by {amount}.,{changeDir} pressione sulla biodiversità di {amount}.
+{changeDir} biodiversity pressure by {amount}.,{changeDir} la pressione sulla biodiversità di {amount}.
 "{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","{changeDir} la pressione sulla biodiversità per <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> di <strong>{amount}.</strong>"
-{changeDir} contentedness by <strong>{amount}</strong>.,{changeDir} contentezza di <strong>{amount}</strong>.
+{changeDir} contentedness by <strong>{amount}</strong>.,{changeDir} la contentezza di <strong>{amount}</strong>.
 "{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","{changeDir} la domanda per {name} di <img src=""{icon}"">{amount}."
 {changeDir} demand for {name} by <strong>{percent}%</strong>.,{changeDir} la domanda per {name} del <strong>{percent}%</strong>.
 {changeDir} demand for {tag} by {amount}.,{changeDir} la domanda per {tag} di {amount}.
-{changeDir} emissions by {amount}.,{changeDir} emissioni di {amount}.
-{changeDir} global population by {amount}.,{changeDir} popolazione mondiale di {amount}.
-{changeDir} global population growth by {amount}<strong>%.</strong>,{changeDir} crescita della popolazione globale del {amount}<strong>%.</strong>
-{changeDir} global precipitation by {amount}<strong>cm/yr</strong>.,{changeDir} precipitazioni globali per {amount}<strong>cm/anno</strong>.
-{changeDir} habitability in {type} regions by {amount}.,{changeDir} abitabilità nelle regioni di {type} per {amount}.
-{changeDir} maximum output for {process} by <strong>{amount}</strong>.,{changeDir} output massimo per {process} di <strong>{amount}</strong>.
-"{changeDir} output for <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>","{changeDir} l'output per <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> di <strong>{percent}%.</strong>"
+{changeDir} emissions by {amount}.,{changeDir} le emissioni di {amount}.
+{changeDir} global population by {amount}.,{changeDir} la popolazione mondiale di {amount}.
+{changeDir} global population growth by {amount}<strong>%.</strong>,{changeDir} la crescita della popolazione globale del {amount}<strong>%.</strong>
+{changeDir} global precipitation by {amount}<strong>cm/yr</strong>.,{changeDir} le precipitazioni globali per {amount}<strong>cm/anno</strong>.
+{changeDir} habitability in {type} regions by {amount}.,{changeDir} l'abitabilità nelle regioni di {type} per {amount}.
+{changeDir} maximum output for {process} by <strong>{amount}</strong>.,{changeDir} l'output massimo per {process} di <strong>{amount}</strong>.
+"{changeDir} output for <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>","{changeDir} l'output per <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> del <strong>{percent}%.</strong>"
 {changeDir} the CO2 emissions for these processes by <strong>{percent}%.</strong>,{changeDir} le emissioni di CO2 per questi processi del <strong>{percent}%.</strong>
 {changeDir} the amount of sea level rise by {amount}mm/year.,{changeDir} l’aumento del livello del mare di {amount} mm/anno.
 "{changeDir} the chance of ""{event}"" by {amount}.","{changeDir} la possibilità di ""{event}"" del {amount}."
 {changeDir} the global temperature by {amount}<strong>°c</strong>.,{changeDir} la temperatura globale di {amount}<strong>°c</strong>.
 {changeDir} the rate of sea level rise by {amount}mm/year.,{changeDir} il tasso di innalzamento del livello del mare di {amount} mm/anno.
-{changeDir} world contentedness by <strong>{amount}</strong>.,{changeDir} contentezza del mondo di <strong>{amount}</strong>.
-{changeDir} world contentedness by {amount}.,{changeDir} contentezza mondiale di {amount}.
+{changeDir} world contentedness by <strong>{amount}</strong>.,{changeDir} la contentezza del mondo di <strong>{amount}</strong>.
+{changeDir} world contentedness by {amount}.,{changeDir} la contentezza mondiale di {amount}.
 {changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{changeDir} {kind} di {tag} di <b>{tipAmount}</b>.
 {changeDir} {label} for {tag} by <strong>{amount}</strong>.,{changeDir} {label} per {tag} di <strong>{amount}</strong>.
-"{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{changeDir} fornitura di {name} pari a <img src=""{icon}"">{amount}."
-{changeDir} {name} supply by <strong>{percent}%.</strong>,{changeDir} {name} fornitura del <strong>{percent}%.</strong>
-{changeDir} {name} supply by [{icon}]{amount}.,{changeDir} fornitura {name} da parte di [{icon}]{amount}.
-{changeDir} {resource} demand for {tag} by {amount}.,{changeDir} {resource} domanda per {tag} di {amount}.
-{changeDir} {tag} output by <strong>{percent}%.</strong>,{changeDir} {tag} output del <strong>{percent}%.</strong>
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{changeDir} {type} emissioni per {tag} di <strong>{amount}</strong>.
+"{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{changeDir} la fornitura di {name} pari a <img src=""{icon}"">{amount}."
+{changeDir} {name} supply by <strong>{percent}%.</strong>,{changeDir} la fornitura di {name} del <strong>{percent}%.</strong>
+{changeDir} {name} supply by [{icon}]{amount}.,{changeDir} la fornitura di {name} di [{icon}]{amount}.
+{changeDir} {resource} demand for {tag} by {amount}.,{changeDir} la domanda di {resource} per {tag} di {amount}.
+{changeDir} {tag} output by <strong>{percent}%.</strong>,{changeDir} l'output di {tag} del <strong>{percent}%.</strong>
+{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{changeDir} le emissioni di {type} per {tag} di <strong>{amount}</strong>.
 {cost} yrs,{cost} anni
 {disaster} in {region},{disaster} in {region}
 "{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","{emissionsBefore} a <img src=""{icon}"">{emissionsAfter}. Questo è un cambiamento del {emissionsChange}% di tutte le emissinoi."
@@ -481,7 +481,7 @@ Shipping,Spedizione
 The big business of moving things across the world.,Il grande business dello spostamento di cose in tutto il mondo.
 Iron and Steel,Ferro e acciaio
 The production and processing of some of our most foundational materials.,La produzione e la lavorazione di alcuni dei nostri materiali più fondamentali.
-Chemical,Chimica
+Chemical,Sostanza chimica
 "Plastics, pharmaceuticals, cleaning agents, pesticides, and other sorts of compounds that are found scattered throughout our lives and the world.","Plastica, prodotti farmaceutici, detergenti, pesticidi e altri tipi di composti che sono sparsi nelle nostre vite e nel mondo."
 Other Industry,Altro settore
 All other industries not specified elsewhere--including the water and electricity usage across most industries.,"Tutti gli altri settori non specificati altrove, compresi i consumi di acqua ed elettricità nella maggior parte dei settori."
@@ -804,7 +804,7 @@ Reducing,Ridurre
 These restrictions have been ridiculous!,Queste restrizioni sono state ridicole!
 I'm sure I won't.,Sono sicurə che non lo farò.
 I've lived decently on less energy than this...I'm sure you'll get used to it.,Ho vissuto decentemente con meno energia di questa... sono sicurə che ti abituerai.
-Stakhanovite Shock Workers,Lavoratə stacanovistə
+Stakhanovite Shock Workers,Lavoratorə stacanovista
 "People will work longer and harder, but socialism will be built faster.",Le persone lavoreranno di più e più a lungo ma il socialismo sarà instaurato prima.
 "Wow, we've produced more than fourteen times the usual quota this year alone.","Wow, solo quest'anno abbiamo prodotto più di quattordici volte la quota normale."
 My back hurts from these long work hours. I hope it's worth it...,La mia schiena mi fa male per queste lunghe ore di lavoro. Spero che ne valga la pena...
@@ -1000,7 +1000,7 @@ Pump water from the ocean onto Antarctica to reduce melting rates.,Pompa acqua d
 "All of the pipelines, pump stations, and wind farms have caused some ecological disruption to polar ecosystems.","Tutte le condutture, le stazioni di pompaggio e i parchi eolici hanno causato un certo sconvolgimento ecologico negli ecosistemi polari."
 I'm not surprised...,Non mi sorprende...
 Environmentalist Curriculum,Percorso di studi ambientalista
-"Introduce an environmentalist curriculum to provide an ecological foundation for a child's budding development. Students will read texts by important thinkers in the movement, including Rachel Carson, Bill McKibben, Robert Bullard, Aldo Leopold, and Elizabeth Kolbert.","Introduci un percorso di studi ambientalista per fornire una base ecologica per lo sviluppo evolutivo dellə bambinə. Ə studenti leggeranno testi di importanti esponenti del movimento, tra cui Rachel Carson, Bill McKibben, Robert Bullard, Aldo Leopold ed Elizabeth Kolbert."
+"Introduce an environmentalist curriculum to provide an ecological foundation for a child's budding development. Students will read texts by important thinkers in the movement, including Rachel Carson, Bill McKibben, Robert Bullard, Aldo Leopold, and Elizabeth Kolbert.","Introduci un percorso di studi ambientalista per fornire una base ecologica per lo sviluppo evolutivo dellə bambinə. Lə studenti leggeranno testi di importanti esponenti del movimento, tra cui Rachel Carson, Bill McKibben, Robert Bullard, Aldo Leopold ed Elizabeth Kolbert."
 The ecological education initiative is going great!,L'iniziativa di educazione ecologica sta andando alla grande!
 People are learning about their local ecology and finding better ways of interacting and relating to the life around them.,Le persone stanno imparando a conoscere l'ecologia locale e trovano modi migliori per interagire e relazionarsi con la vita che le circonda.
 Unconventional Petroleum Industry,Industria petrolifera non convenzionale
@@ -1030,7 +1030,7 @@ Hempcrete,Mattoni di canapa
 "Hempcrete locked in a fair amount of carbon, but there are a few applications where it can't compete with conventional concrete.","Il calcestruzzo di canapa contiene una discreta quantità di carbonio, ma ci sono alcune applicazioni in cui non può competere con il calcestruzzo convenzionale."
 "We'll use it where we can, but it won't entirely replace old-fashioned concrete.","Lo utilizzeremo dove possibile, ma non sostituirà del tutto il vecchio cemento."
 Malthusian Curriculum,Percorso di studi malthusiano
-"Introduce a new curriculum that argues population is the main driver of the environmental crisis. Children will be taught Malthusian classics such as 'An Essay on Population', 'The Tragedy of the Commons', and 'The Population Bomb'. This curriculum will endear you to the Malthusian but antagonize the Fanonist.","Introduci un nuovo percorso di studi che sostenga che la popolazione è il principale motore della crisi ambientale. Aə bambinə verranno insegnati classici malthusiani come ""Saggio sulla popolazione"", ""La tragedia dei beni comuni"" e ""La bomba demografica"". Con qesto percorso di studi conquisterai ə malthusianə, ma ti mostrerai ostiale aə fanonistə."
+"Introduce a new curriculum that argues population is the main driver of the environmental crisis. Children will be taught Malthusian classics such as 'An Essay on Population', 'The Tragedy of the Commons', and 'The Population Bomb'. This curriculum will endear you to the Malthusian but antagonize the Fanonist.","Introduci un nuovo percorso di studi che sostenga che la popolazione è il principale motore della crisi ambientale. Allə bambinə verranno insegnati classici malthusiani come ""Saggio sulla popolazione"", ""La tragedia dei beni comuni"" e ""La bomba demografica"". Con qesto percorso di studi conquisterai ə malthusianə, ma ti mostrerai ostiale aə fanonistə."
 Unfortunate that more children are being created but at least we can teach them not to repeat the errors of their parents.,"È un peccato che vengano creatə sempre più bambinə, ma almeno possiamo insegnare loro a non ripetere gli errori deə loro genitorə."
 Energy Conservation Campaign,Campagna di risparmio energetico
 Start a campaign to encourage energy conservation and low-energy lifestyles.,Inizia una campagna per incoraggiare il risparmio energetico e stili di vita a basso consumo energetico.
@@ -1419,7 +1419,7 @@ The Accelerationist is now an [ally] ally. [research] Research points cost less 
 Plan Intro 2,Introduzione 2 al Piano
 Tutorial,Tutorial
 "Normally at this point you could hit that big ""Ready"" button to start running your plan.","Normalmente a questo punto potresti premere il grande pulsante ""Pronto"" per iniziare a eseguire il tuo piano."
-"Press the ""Govt"" tab to head on over.","Premi la scheda ""Govt"" per proseguire."
+"Press the ""Govt"" tab to head on over.","Premi la scheda ""Governo"" per proseguire."
 But first let's visit parliament and get you acquainted with the people there.,Ma prima visitiamo il parlamento e facciamo conoscenza con lə suə abitanti.
 Navier-Stokes Smoothness Proven,Le equazioni di Navier-Stokes sono comprovate
 Miracles,Miracoli
@@ -1679,7 +1679,7 @@ Remember that 1970s novel Ecotopia? I feel like we've actually realized that dre
 "You can't ignore whats been happening in Ecotopia. While the rest of the world crumbles in consumerism and nonstop progress, Ecotopia is a small window into what could be.","Non puoi ignorare cosa succedeva a Ecotopia. Mentre il resto del mondo crolla nel consumismo e nel progresso incessante, Ecotopia è una piccola finestra su cosa potrebbe essere."
 Planning Intro,Introduzione alla pianificazione
 Tutorial,Tutorial
-Welcome to the Gosplant planning application. You can call me Gossy.,Benvenutə alla domanda di pianificazione di Gosplant. Puoi chiamarmi Gossy.
+Welcome to the Gosplant planning application. You can call me Gossy.,Benvenutə al sistema di pianificazione Gosplant. Puoi chiamarmi Gossy.
 Hello.,Ciao.
 Let's get straight to it!,Andiamo drittə al punto!
 Got it?,Tutto chiaro?
@@ -1762,13 +1762,13 @@ Intro Cutscene,Scena introduttiva
 In 2022 a socialist revolution swept the globe.,Nel 2022 una rivoluzione socialista ha travolto il mondo.
 "It's a sunny day in Havana, where the first planning session will take place...","È una giornata di sole all'Avana, dove avrà luogo la prima sessione di pianificazione..."
 You have been elected as [gosplant]'s first lead planner.,Sei statə elettə primə responsabile della pianificazione di [gosplant].
-"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","E devi farlo senza lasciare che il tuo [political_capital]<em class=""lose-con"">political capital dip below 0</em>..."
-"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Devi farlo senza lasciare che la [soddisfazione] delle persone [contentedness]<em class=""lose-con"">contentedness dip below 0</em>..."
+"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","E devi farlo senza lasciare che il tuo [political_capital]<em class=""lose-con"">capitale politico vada sotto 0</em>..."
+"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Devi farlo senza lasciare che la <em class=""lose-con"">soddisfazione delle persone scenda sotto 0</em>..."
 "The regions of the world united to establish [gosplant], a global planning authority.","Le regioni del mondo si sono unite per fondare [gosplant], un'autorità di pianificazione globale."
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] è stato incaricato di porre rimedio ai molteplici danni che secoli di capitalismo avevano scatenato sul pianeta e sulla sua gente.
 Otherwise your adversaries may take the opportunity to replace you.,Altrimenti ə tuə avversariə potrebbero cogliere l'occasione per sostituirti.
 Otherwise they will vote you out of office.,Altrimenti voteranno per estrometterti dall'incarico.
-"It's your duty to bring [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> while there's still time.","Il tuo compito è portare [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> finché c'è ancora tempo."
+"It's your duty to bring [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> while there's still time.","Il tuo compito è portare [warming]<em class=""win-con"">il riscaldamento sotto a un 1°C</em>, il [extinction_rate]<em class=""win-con"">tasso di estinzione sotto a 20</em>, e le [emissions]<em class=""win-con"">emissioni sotto a 0</em> finché c'è ancora tempo."
 SRM - Assassination,SRM - Assassinio
 Under a White Sky,Sotto un cielo bianco
 One of my colleagues was murdered last night!,Uno dei miei colleghi è stato ucciso l'altra notte!
@@ -2052,7 +2052,7 @@ Tutorial,Tutorial
 We have a wide array of processes to produce two critical resources: [food] food and [energy] energy.,Disponiamo di un'ampia gamma di processi per produrre due risorse critiche: [food] cibo ed [energy] energia.
 Why don't you try changing some process mixes now?,Perché non provi a cambiare e a mescolare alcuni processi adesso?
 Different processes have different benefits and drawbacks.,Processi diversi presentano vantaggi e svantaggi diversi.
-"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","E alcuni richiedono determinate materie prime, come [oil] petrolio o [uranium] uranio, che potrebbero degradarsi. Quindi teneteli d'occhio."
+"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","E alcuni richiedono determinate materie prime, come [oil] petrolio o [uranium] uranio, che potrebbero degradarsi. Quindi tienili d'occhio."
 "If you need any more information about a process, just tap on it to flip it.","Se hai bisogno di maggiori informazioni su un processo, toccalo semplicemente per ruotarlo."
 "Some may require much more [land] land or more [energy] energy, for example.","Alcuni potrebbero aver bisogno di molta più [land] terra o più [energy] energia, per esempio."
 "Of course, it will take time to make all of these changes.","Naturalmente, per apportare tutti questi cambiamenti ci vorrà del tempo."
@@ -2178,7 +2178,7 @@ Tutorial,Tutorial
 "Now that you've added some projects to your plan, let's try changing our production processes.","Ora che hai aggiunto alcuni progetti al tuo piano, proviamo a modificare i nostri processi di produzione."
 "Press ""Change Production"" to go to the process manager.","Premi ""Modifica produzione"" per accedere al gestore dei processi."
 But first let's visit parliament and get you acquainted with the people there.,Ma prima visitiamo il parlamento e facciamo conoscenza con lə suə abitanti.
-"Press the ""Govt"" tab to head on over.","Premi la scheda ""Govt"" per proseguire."
+"Press the ""Govt"" tab to head on over.","Premi la scheda ""Governo"" per proseguire."
 Revolts,Rivolte
 Wet-Bulb Event,Evento di bulbo umido
 Crucible Earth,Terra del crogiolo
@@ -2493,7 +2493,7 @@ I urge you to act soon. Others are talking of more aggressive ways of stopping t
 Fuel,Combustibile
 fuel,combustibile
 Electricity,Elettricità
-electricity,elettrcitià
+electricity,elettricità
 Plant Calories,Calorie vegetali
 plant calories,calorie vegetali
 Animal Calories,Calorie animali
@@ -2547,7 +2547,7 @@ land,terra
 Water,Acqua
 water,acqua
 Electricity,Elettricità
-electricity,elettrcitià
+electricity,elettricità
 Fuel,Combustibile
 fuel,combustibile
 Low,Basso
