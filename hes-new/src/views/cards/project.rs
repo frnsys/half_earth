@@ -50,7 +50,9 @@ impl AsCard for Project {
                         flex_grow: 1.,
                         ..Default::default()
                     })
-                    .label(group);
+                    .label(
+                        egui::RichText::new(group).monospace(),
+                    );
 
                     tui.ui(|ui| {
                         if self.is_online() {
@@ -203,7 +205,7 @@ impl AsCard for Project {
 
     fn name(&self, ui: &mut egui::Ui, ctx: &CardState) {
         ui.vertical_centered(|ui| {
-            ui.label(&self.name);
+            ui.label(egui::RichText::new(&self.name).heading());
         });
     }
 

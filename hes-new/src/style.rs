@@ -1,7 +1,7 @@
 use egui::{
     Color32,
     FontDefinitions,
-    FontFamily::{self, Proportional},
+    FontFamily::{self, Monospace, Proportional},
     FontId,
     TextStyle,
     style::Interaction,
@@ -108,7 +108,7 @@ pub fn configure_style(ctx: &egui::Context) {
             ),
             (
                 TextStyle::Monospace,
-                FontId::new(FONT_SIZE, Proportional),
+                FontId::new(FONT_SIZE, family("W95FA")),
             ),
             (TextStyle::Button, FontId::new(9.0, Proportional)),
             (TextStyle::Small, FontId::new(8.0, Proportional)),
@@ -134,6 +134,7 @@ pub fn configure_style(ctx: &egui::Context) {
         },
         interaction: Interaction {
             tooltip_delay: 0.,
+            selectable_labels: false,
             ..Default::default()
         },
         ..Default::default()
@@ -144,7 +145,8 @@ pub fn configure_style(ctx: &egui::Context) {
     let mut visuals = egui::Visuals {
         panel_fill: PANEL_BG,
         extreme_bg_color: FIELD_BG,
-        // override_text_color: Some(Color32::WHITE),
+        image_loading_spinners: false,
+        override_text_color: Some(Color32::BLACK),
         ..Default::default()
     };
     visuals.selection.bg_fill =

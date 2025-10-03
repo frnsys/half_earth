@@ -6,7 +6,7 @@ use hes_engine::Id;
 use crate::views::cards::{AsCard, CardState};
 
 const CARD_HEIGHT: f32 = 380.;
-const CARD_WIDTH: f32 = 280.;
+pub const CARD_WIDTH: f32 = 280.;
 
 pub struct Card<C: AsCard> {
     id: Id,
@@ -39,18 +39,21 @@ impl<C: AsCard> Card<C> {
         &mut self,
         ui: &mut egui::Ui,
         ctx: &CardState,
+        is_offscreen: bool,
     ) {
         ui.vertical(|ui| {
             ui.set_height(CARD_HEIGHT);
             ui.set_width(CARD_WIDTH);
-            if !self.flipped {
-                self.data.header(ui, ctx);
-                self.data.figure(ui, ctx);
-                self.data.name(ui, ctx);
-                self.data.body(ui, ctx);
-            } else {
-                self.data.top_back(ui, ctx);
-                self.data.bottom_back(ui, ctx);
+            if !is_offscreen {
+                if !self.flipped {
+                    self.data.header(ui, ctx);
+                    self.data.figure(ui, ctx);
+                    self.data.name(ui, ctx);
+                    self.data.body(ui, ctx);
+                } else {
+                    self.data.top_back(ui, ctx);
+                    self.data.bottom_back(ui, ctx);
+                }
             }
         });
     }
@@ -59,6 +62,7 @@ impl<C: AsCard> Card<C> {
         &mut self,
         ui: &mut egui::Ui,
         ctx: &CardState,
+        is_offscreen: bool,
     ) -> egui::Response {
         let cursor = ui.cursor();
 
@@ -79,7 +83,11 @@ impl<C: AsCard> Card<C> {
                             .corner_radius(4.)
                             .fill(self.data.bg_color())
                             .show(ui, |ui| {
-                                self.render_contents(ui, ctx)
+                                self.render_contents(
+                                    ui,
+                                    ctx,
+                                    is_offscreen,
+                                )
                             })
                             .response;
                         let resp = resp
@@ -116,7 +124,9 @@ impl<C: AsCard> Card<C> {
             let resp = egui::Frame::NONE
                 .corner_radius(4.)
                 .fill(self.data.bg_color())
-                .show(ui, |ui| self.render_contents(ui, ctx))
+                .show(ui, |ui| {
+                    self.render_contents(ui, ctx, is_offscreen)
+                })
                 .response;
             resp
         }

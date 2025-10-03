@@ -43,7 +43,7 @@ static IMAGES: LazyLock<
 pub fn flavor_image(
     image: &hes_engine::flavor::Image,
 ) -> egui::Image {
-    let images = IMAGES.lock();
+    let mut images = IMAGES.lock();
 
     let fname = match &image.data {
         hes_engine::flavor::ImageData::File(fname) => {
@@ -65,26 +65,29 @@ pub fn flavor_image(
 
     let image = match images.get(&fname) {
         Some(image) => Image::new(image.clone()),
-        None => match &image.data {
-            hes_engine::flavor::ImageData::File(fname) => {
-                match ContentImages::get(&fname) {
-                    Some(image) => Image::from_bytes(
-                        format!("bytes:://{fname}"),
-                        image.data.to_vec(),
-                    ),
-                    None => Image::new(image!(
-                        "content/DEFAULT.jpg"
-                    )),
+        None => {
+            let source = match &image.data {
+                hes_engine::flavor::ImageData::File(fname) => {
+                    match ContentImages::get(&fname) {
+                        Some(image) => ImageSource::Bytes {
+                            uri: format!("bytes:://{fname}")
+                                .into(),
+                            bytes: image.data.to_vec().into(),
+                        },
+                        None => image!("content/DEFAULT.jpg"),
+                    }
                 }
-            }
-            hes_engine::flavor::ImageData::Data {
-                bytes,
-                ..
-            } => Image::from_bytes(
-                format!("bytes:://{fname}"),
-                bytes.clone(),
-            ),
-        },
+                hes_engine::flavor::ImageData::Data {
+                    bytes,
+                    ..
+                } => ImageSource::Bytes {
+                    uri: format!("bytes:://{fname}").into(),
+                    bytes: bytes.clone().into(),
+                },
+            };
+            images.insert(fname, source.clone());
+            Image::new(source)
+        }
     };
 
     image

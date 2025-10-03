@@ -2,6 +2,7 @@ use std::time::{Duration, Instant};
 
 use crate::views::{
     cards::{AsCard, CardState},
+    game::card::CARD_WIDTH,
     scanner::Scannable,
 };
 
@@ -76,14 +77,21 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
         let mut closest_card = None;
         let area =
             egui::ScrollArea::horizontal().show(ui, |ui| {
-                ui.set_max_width(ui.available_width());
-                let half_width = ui.available_width() / 2.;
+                let width = ui.available_width();
+                ui.set_max_width(width);
+                let half_width = width / 2.;
                 ui.horizontal(|ui| {
                     ui.add_space(half_width);
 
                     ui.style_mut().spacing.item_spacing.x = 18.;
                     for card in self.cards.iter_mut() {
-                        let resp = card.render(ui, ctx);
+                        let left_pos = ui.cursor().left();
+                        let is_offscreen =
+                            (left_pos + CARD_WIDTH) < 0.
+                                || left_pos > width;
+
+                        let resp =
+                            card.render(ui, ctx, is_offscreen);
                         let card_rect = resp.rect;
                         let cx = resp.rect.center().x;
                         let offset = h_center - cx;

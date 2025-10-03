@@ -149,7 +149,7 @@ impl Parliament {
                 process_points: &process_points,
             };
 
-            card.render(ui, &ctx);
+            card.render(ui, &ctx, false);
         }
     }
 }
