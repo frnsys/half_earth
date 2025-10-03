@@ -15,7 +15,7 @@ use crate::{
         Tip,
         cards::CardState,
         events::{active_effects, render_effects},
-        parts::flex_justified,
+        parts::{flavor_image, flex_justified},
         tip,
         tips::add_tip,
     },
@@ -128,9 +128,8 @@ impl AsCard for Project {
             ));
         }
 
-        // TODO
-        // let image = self.flavor.image.src();
-        // ui.image(image);
+        let image = flavor_image(&self.flavor.image);
+        ui.add(image);
 
         let has_points = self.kind != ProjectType::Policy
             && self.is_building();

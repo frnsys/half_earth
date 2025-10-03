@@ -1,12 +1,96 @@
+use std::sync::LazyLock;
+
+use crate::image;
 use egui::{
     Color32,
+    Image,
+    ImageSource,
     Margin,
     Rect,
     Shadow,
     TextureOptions,
     Vec2,
+    ahash::HashMap,
+    mutex::Mutex,
 };
 use egui_taffy::{Tui, taffy, tui};
+use rust_embed::Embed;
+
+#[derive(Embed)]
+#[folder = "assets/images/content"]
+struct ContentImages;
+
+fn hash_to_hex(data: &[u8]) -> String {
+    let hash = blake3::hash(data);
+    hash.to_hex().to_string()
+}
+
+fn ext_from_mime(mime: &str) -> Option<&'static str> {
+    match mime {
+        "image/png" => Some("png"),
+        "image/jpeg" => Some("jpg"),
+        "image/gif" => Some("gif"),
+        "image/webp" => Some("webp"),
+        "image/svg+xml" => Some("svg"),
+        _ => None,
+    }
+}
+
+static IMAGES: LazyLock<
+    Mutex<HashMap<String, ImageSource<'static>>>,
+> = LazyLock::new(|| Mutex::new(HashMap::default()));
+
+pub fn flavor_image(
+    image: &hes_engine::flavor::Image,
+) -> egui::Image {
+    let images = IMAGES.lock();
+
+    let fname = match &image.data {
+        hes_engine::flavor::ImageData::File(fname) => {
+            fname.to_string()
+        }
+        hes_engine::flavor::ImageData::Data { bytes, mime } => {
+            let fname = hash_to_hex(&bytes);
+            let ext = ext_from_mime(&mime);
+            if let Some(ext) = ext {
+                format!("{fname}.{ext}")
+            } else {
+                tracing::warn!("Unrecognized mimetype: {mime}");
+                return Image::new(image!(
+                    "content/DEFAULT.jpg"
+                ));
+            }
+        }
+    };
+
+    let image = match images.get(&fname) {
+        Some(image) => Image::new(image.clone()),
+        None => match &image.data {
+            hes_engine::flavor::ImageData::File(fname) => {
+                match ContentImages::get(&fname) {
+                    Some(image) => Image::from_bytes(
+                        format!("bytes:://{fname}"),
+                        image.data.to_vec(),
+                    ),
+                    None => Image::new(image!(
+                        "content/DEFAULT.jpg"
+                    )),
+                }
+            }
+            hes_engine::flavor::ImageData::Data {
+                bytes,
+                ..
+            } => Image::from_bytes(
+                format!("bytes:://{fname}"),
+                bytes.clone(),
+            ),
+        },
+    };
+
+    image
+        .show_loading_spinner(false)
+        .texture_options(TextureOptions::LINEAR)
+}
 
 /// Full cover background image.
 fn full_bg_image(

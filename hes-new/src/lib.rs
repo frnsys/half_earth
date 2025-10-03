@@ -201,6 +201,12 @@ impl eframe::App for App {
         egui::CentralPanel::default()
             .frame(egui::Frame::NONE.inner_margin(0.0))
             .show(ctx, |ui| {
+                // TODO move this to styling
+                ui.style_mut().interaction.selectable_labels =
+                    false;
+                ui.style_mut().visuals.image_loading_spinners =
+                    false;
+
                 let mut cards = Cards::new(&mut self.cards);
 
                 let viewed = Default::default();

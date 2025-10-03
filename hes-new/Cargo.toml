@@ -29,6 +29,8 @@ numfmt.workspace = true
 treemap = "0.3.2"
 ordered-float = "5.1.0"
 bincode = { version = "1" }
+rust-embed = "8.7.2"
+blake3 = "1.8.2"
 # hector = { path = "../hector-rs" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
