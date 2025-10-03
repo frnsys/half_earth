@@ -64,8 +64,7 @@ pub fn render_menu(
     };
     let time_place = format!("{}, {}", locale, year);
 
-    let close =
-        ui.add(Button::image(icon_from_slug(icons::CLOSE)));
+    let close = ui.add(Button::image(icons::CLOSE));
     if close.clicked() {
         return Some(MenuAction::CloseMenu);
     }
@@ -77,31 +76,31 @@ pub fn render_menu(
     ui.label(time_place);
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::POLITICAL_CAPITAL));
+        ui.image(icons::POLITICAL_CAPITAL);
         ui.label(pc.to_string());
         ui.label(t!("Political Capital"));
     });
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::EMISSIONS));
+        ui.image(icons::EMISSIONS);
         ui.label(emissions);
         ui.label(t!("CO2 Emissions/Yr"));
     });
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::WARMING));
+        ui.image(icons::WARMING);
         ui.label(temp);
         ui.label(t!("Temp. Anomaly"));
     });
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::EXTINCTION_RATE));
+        ui.image(icons::EXTINCTION_RATE);
         // <IntensityBar intensity=extinction.into_signal()/> // TODO
         ui.label(t!("Extinction Rate"));
     });
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::CONTENTEDNESS));
+        ui.image(icons::CONTENTEDNESS);
         // <IntensityBar
         //     intensity=contentedness.into_signal()
         //     invert=true
@@ -148,4 +147,3 @@ pub fn render_menu(
 
     None
 }
-

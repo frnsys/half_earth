@@ -13,6 +13,7 @@ use crate::{
         AsText,
         DisplayValue,
         HasIcon,
+        Icon,
         factors::factors_card,
         icon_from_slug,
         icons,
@@ -123,7 +124,7 @@ impl Stats {
 fn render_temp(ui: &mut egui::Ui, state: &State) {
     let temp_anomaly = state.temp_anomaly();
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::WARMING));
+        ui.image(icons::WARMING);
         ui.label(temp_anomaly);
         ui.label(t!("Temp. Anomaly"));
     });
@@ -337,7 +338,7 @@ fn render_sea_level_rise(ui: &mut egui::Ui, state: &State) {
     add_tip(
         tip,
         ui.vertical_centered(|ui| {
-            ui.image(icon_from_slug(icons::SEA_LEVEL_RISE));
+            ui.image(icons::SEA_LEVEL_RISE);
             ui.label(format!("{rise} m"));
             ui.label(t!("Sea Level Rise"));
         })
@@ -353,7 +354,7 @@ fn render_population(ui: &mut egui::Ui, state: &State) {
     let pop_fmted = f.fmt2(population as f64).to_string();
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::POPULATION));
+        ui.image(icons::POPULATION);
         ui.label(pop_fmted);
         ui.label(t!("Population"));
     });
@@ -367,7 +368,7 @@ fn render_income(ui: &mut egui::Ui, state: &State) {
     };
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::WEALTH));
+        ui.image(icons::WEALTH);
         // <span style:color=income.color>{&income.label}</span> TODO
         ui.label(income.label);
         ui.label(t!("Avg. Living Standards"));
@@ -389,7 +390,7 @@ fn render_habitability(ui: &mut egui::Ui, state: &State) {
     };
 
     ui.vertical_centered(|ui| {
-        ui.image(icon_from_slug(icons::HABITABILITY));
+        ui.image(icons::HABITABILITY);
         // <span style:color=habitability
         //     .color>{&habitability.label}</span> TODO
         ui.label(habitability.label);
@@ -439,7 +440,7 @@ fn render_breakdown(
 
     let table_data = factors_card(None, factor, state);
     let button = egui::Button::image_and_text(
-        icon_from_slug(factor.icon()),
+        factor.icon(),
         format!("{}▼", t!(factor.title())),
     );
     ui.add(button);
@@ -463,7 +464,7 @@ fn render_dashboard_item(
     display_changed_value: &str,
     item_tip: Tip,
     change: f32,
-    icon: &'static str,
+    icon: Icon,
 ) {
     add_tip(item_tip, ui.vertical_centered(|ui| {
         if let Some(color) = color {
@@ -478,11 +479,11 @@ fn render_dashboard_item(
                     t!("The estimated value after production changes have finished."),
                 );
             add_tip(change_tip, ui.horizontal_centered(|ui| {
-                ui.image(icon_from_slug(icons::DOWN_ARROW_SMALL));
+                ui.image(icons::DOWN_ARROW_SMALL);
                 ui.label(display_changed_value);
             }).response);
         }
-        ui.image(icon_from_slug(icon));
+        ui.image(icon);
         ui.label(label);
     }).response);
 }

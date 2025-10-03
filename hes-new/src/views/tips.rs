@@ -1,7 +1,10 @@
 use egui::Align2;
 use hes_engine::{Industry, NPC, Process, Project, Region};
 
-use crate::{display::DisplayEvent, views::FactorsCard};
+use crate::{
+    display::{DisplayEvent, Icon},
+    views::FactorsCard,
+};
 
 #[derive(Clone)]
 pub struct TipState {
@@ -20,10 +23,10 @@ impl Default for TipState {
 #[derive(Clone, PartialEq)]
 pub struct Tip {
     pub text: String,
-    pub icon: &'static str,
+    pub icon: Icon,
     pub card: Option<TipCard>,
-    pub subicon: Option<&'static str>,
-    pub supicon: Option<&'static str>,
+    pub subicon: Option<Icon>,
+    pub supicon: Option<Icon>,
 }
 impl Tip {
     pub fn card(mut self, card: impl Into<TipCard>) -> Self {
@@ -31,7 +34,7 @@ impl Tip {
         self
     }
 
-    pub fn subicon(mut self, icon: &'static str) -> Self {
+    pub fn subicon(mut self, icon: Icon) -> Self {
         self.subicon = Some(icon);
         self
     }
@@ -51,7 +54,7 @@ impl egui::Widget for Tip {
 }
 
 /// Define a tooltip.
-pub fn tip(icon: &'static str, text: impl Into<String>) -> Tip {
+pub fn tip(icon: Icon, text: impl Into<String>) -> Tip {
     Tip {
         icon,
         text: text.into(),

@@ -158,7 +158,7 @@ fn render_event_card(
         .cloned()
         .map(|(icon, factor)| {
             tip(
-                icons::to_static(&icon).unwrap(),
+                icons::icon_from_slug(&icon),
                 factor.to_string(),
             )
         })

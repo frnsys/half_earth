@@ -5,8 +5,8 @@ use crate::{
     display::{
         self,
         HasIcon,
+        Icon,
         factors::Factor,
-        icon_from_slug,
         icons,
         intensity::render_intensity_bar_with_pips,
     },
@@ -16,7 +16,7 @@ use crate::{
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct FactorsCard {
-    pub icon: &'static str,
+    pub icon: Icon,
     pub kind: Var,
     pub total: f32,
     pub current: Option<String>,
@@ -87,7 +87,7 @@ pub fn render_factors_list(
         } else {
             ui.label(total);
         }
-        ui.image(icon_from_slug(factors.icon));
+        ui.image(factors.icon);
     });
 
     let ranked = FACTORS.read();
@@ -113,25 +113,25 @@ fn render_factor_line(
     ui: &mut egui::Ui,
     factor: &Factor,
     relation: &str,
-    icon: &'static str,
+    icon: Icon,
 ) {
     match factor {
         Factor::Region {
             intensity, display, ..
         } => {
             ui.horizontal_centered(|ui| {
-                ui.image(icon_from_slug(icons::WEALTH));
+                ui.image(icons::WEALTH);
                 render_intensity_bar_with_pips(
                     ui, *intensity, false, 4,
                 );
                 ui.label(display);
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
             });
         }
         Factor::Project { display, .. } => {
             ui.horizontal_centered(|ui| {
                 ui.label(display);
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
             });
         }
         Factor::Event {
@@ -142,7 +142,7 @@ fn render_factor_line(
                 .unwrap_or_else(|| amount.to_string());
             ui.horizontal_centered(|ui| {
                 ui.label(display);
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
             });
         }
         Factor::Process {
@@ -153,27 +153,27 @@ fn render_factor_line(
             ..
         } => {
             ui.horizontal_centered(|ui| {
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
                 render_intensity_bar_with_pips(
                     ui, *intensity, false, 4,
                 );
                 ui.label(display_produced);
-                ui.image(icon_from_slug(output.icon()));
+                ui.image(output.icon());
                 ui.label(relation);
                 ui.label(display);
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
             });
         }
         Factor::Industry {
             intensity, display, ..
         } => {
             ui.horizontal_centered(|ui| {
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
                 render_intensity_bar_with_pips(
                     ui, *intensity, false, 4,
                 );
                 ui.label(display);
-                ui.image(icon_from_slug(icon));
+                ui.image(icon);
             });
         }
     }

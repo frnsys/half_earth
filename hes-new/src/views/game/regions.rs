@@ -58,9 +58,7 @@ impl Regions {
 
         ui.horizontal_centered(|ui| {
             if ui
-                .button(Image::new(icon_from_slug(
-                    icons::ARROW_LEFT,
-                )))
+                .button(Image::new(icons::ARROW_LEFT))
                 .clicked()
             {
                 if self.selected_region <= 0 {
@@ -74,9 +72,7 @@ impl Regions {
             ui.label(&region.name);
 
             if ui
-                .button(Image::new(icon_from_slug(
-                    icons::ARROW_RIGHT,
-                )))
+                .button(Image::new(icons::ARROW_RIGHT))
                 .clicked()
             {
                 self.selected_region += 1;
@@ -202,7 +198,7 @@ fn render_region_item(
     add_tip(
         temp_tip(),
         ui.horizontal_centered(|ui| {
-            ui.image(icon_from_slug(icons::TEMPERATURE));
+            ui.image(icons::TEMPERATURE);
             ui.label(temp_range);
         })
         .response,
@@ -211,7 +207,7 @@ fn render_region_item(
     add_tip(
         precip_tip(),
         ui.horizontal_centered(|ui| {
-            ui.image(icon_from_slug(icons::PRECIPITATION));
+            ui.image(icons::PRECIPITATION);
             ui.label(precip_range);
         })
         .response,
@@ -245,7 +241,7 @@ fn render_region_item(
         add_tip(
             hab_tip(),
             ui.vertical_centered(|ui| {
-                ui.image(icon_from_slug(icons::HABITABILITY));
+                ui.image(icons::HABITABILITY);
                 render_intensity_bar_with_pips(
                     ui,
                     habitability,
@@ -261,7 +257,7 @@ fn render_region_item(
         add_tip(
             cont_tip(),
             ui.vertical_centered(|ui| {
-                ui.image(icon_from_slug(icons::CONTENTEDNESS));
+                ui.image(icons::CONTENTEDNESS);
                 render_intensity_bar_with_pips(
                     ui,
                     contentedness,
@@ -277,7 +273,7 @@ fn render_region_item(
         add_tip(
             income_tip,
             ui.vertical_centered(|ui| {
-                ui.image(icon_from_slug(icons::WEALTH));
+                ui.image(icons::WEALTH);
                 render_intensity_bar_with_pips(
                     ui,
                     income_level,

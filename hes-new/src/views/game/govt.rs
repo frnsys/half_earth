@@ -285,7 +285,7 @@ fn render_npc(
         }
 
         if npc.is_ally() {
-            ui.image(icon_from_slug(icons::ALLY));
+            ui.image(icons::ALLY);
             ui.label(t!("Ally"));
         }
     })

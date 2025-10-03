@@ -63,9 +63,7 @@ impl AsCard for Project {
                                     t!("Level")
                                 ));
                             } else {
-                                ui.image(icon_from_slug(
-                                    icons::CHECK_BLK,
-                                ));
+                                ui.image(icons::CHECK_BLK);
                                 ui.label(t!("Completed"));
                             }
                         } else {
@@ -273,9 +271,7 @@ impl AsCard for Project {
                 ui.horizontal_centered(|ui| {
                     ui.label(t!("Next Level"));
                     ui.label(cost.to_string());
-                    ui.image(icon_from_slug(
-                        icons::POLITICAL_CAPITAL,
-                    ));
+                    ui.image(icons::POLITICAL_CAPITAL);
                 });
             }
             render_effects(ui, ctx.state, &effects);

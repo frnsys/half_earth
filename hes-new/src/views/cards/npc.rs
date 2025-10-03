@@ -40,7 +40,7 @@ impl AsCard for NPC {
                     } else {
                         icons::RELATIONSHIP_EMPTY
                     };
-                    ui.image(icon_from_slug(icon));
+                    ui.image(icon);
                 }
             })
             .response,
@@ -64,7 +64,7 @@ impl AsCard for NPC {
         let name = t!(&self.name);
         let rel_name = t!(&self.relationship_name());
 
-        ui.image(icon_from_slug(rel_icon));
+        ui.image(rel_icon);
         ui.label(rel_name);
         ui.label(name);
     }

@@ -167,10 +167,8 @@ impl Plan {
         // class:highlight=projects_highlighted
         let projects_highlighted =
             tutorial.eq(&Tutorial::Projects);
-        let button = egui::Button::image_and_text(
-            icon_from_slug(icons::ADD),
-            t!("Add"),
-        );
+        let button =
+            egui::Button::image_and_text(icons::ADD, t!("Add"));
         if ui.add(button).clicked() {
             self.set_page(Page::Projects(
                 ProjectType::Research,
@@ -233,10 +231,7 @@ impl Plan {
                         processes_over_limit.join(", ")
                 ),
             );
-            add_tip(
-                tip,
-                ui.image(icon_from_slug(icons::ALERT)),
-            );
+            add_tip(tip, ui.image(icons::ALERT));
         }
 
         let prod_shortages = production_shortages(state);
@@ -254,7 +249,7 @@ impl Plan {
         if prod_shortages.is_some() {
             add_tip(
                 shortages_tip.clone(),
-                ui.image(icon_from_slug(icons::ALERT)),
+                ui.image(icons::ALERT),
             );
         }
 
@@ -284,10 +279,10 @@ impl Plan {
             if produced / demand < 0.99 {
                 add_tip(
                     shortages_tip.clone(),
-                    ui.image(icon_from_slug(icons::ALERT)),
+                    ui.image(icons::ALERT),
                 );
             } else {
-                ui.image(icon_from_slug(icons::CHECK));
+                ui.image(icons::CHECK);
             }
             ui.label(format!("{:.0}/{:.0}", produced, demand));
         }
@@ -336,10 +331,8 @@ impl Plan {
             self.close_page(tutorial);
         }
 
-        let button = egui::Button::image_and_text(
-            icon_from_slug(icons::ADD),
-            t!("Add"),
-        );
+        let button =
+            egui::Button::image_and_text(icons::ADD, t!("Add"));
         if ui.add(button).clicked() {
             self.set_page(Page::Projects(
                 ProjectType::Research,
@@ -529,7 +522,7 @@ fn render_resource_status(
         // <div class="resources-info-pill" class:not-enough={demand > available}>
         let resp = ui
             .horizontal_centered(|ui| {
-                ui.image(icon_from_slug(k.icon()));
+                ui.image(k.icon());
                 ui.label(format!(
                     "{:.0}/{:.0}",
                     demand, available
@@ -592,19 +585,17 @@ fn render_points(
 
     ui.horizontal_centered(|ui| {
         ui.label(pc_points.to_string());
-        ui.image(icon_from_slug(icons::POLITICAL_CAPITAL));
+        ui.image(icons::POLITICAL_CAPITAL);
 
         if kind != ProjectType::Policy {
             if available_points > 0 {
                 ui.label(available_points.to_string());
-                ui.image(icon_from_slug(kind.icon()));
+                ui.image(kind.icon());
             } else {
                 ui.label(next_point_cost.to_string());
-                ui.image(icon_from_slug(
-                    icons::POLITICAL_CAPITAL,
-                ));
-                ui.image(icon_from_slug(icons::ARROW_RIGHT));
-                ui.image(icon_from_slug(kind.icon()));
+                ui.image(icons::POLITICAL_CAPITAL);
+                ui.image(icons::ARROW_RIGHT);
+                ui.image(kind.icon());
             }
         }
     });
@@ -659,7 +650,7 @@ fn render_projects(
             // TODO if selected
             let resp = ui
                 .vertical_centered(|ui| {
-                    ui.image(icon_from_slug(icon));
+                    ui.image(icon);
                     ui.label(label);
                 })
                 .response;

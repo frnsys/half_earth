@@ -119,9 +119,9 @@ pub fn render_hud(
                         pc_tip,
                         ui.horizontal(|ui| {
                             // <div class:warnPc=pc_danger> // TODO
-                            ui.image(icon_from_slug(
+                            ui.image(
                                 icons::HUD_POLITICAL_CAPITAL,
-                            ));
+                            );
                             ui.label(pc.to_string());
                         })
                         .response,
@@ -130,9 +130,9 @@ pub fn render_hud(
                     add_tip(
                         biodiversity_tip,
                         ui.horizontal(|ui| {
-                            ui.image(icon_from_slug(
+                            ui.image(
                                 icons::HUD_EXTINCTION_RATE,
-                            ));
+                            );
                             render_intensity_bar(
                                 ui, extinction, false,
                             );
@@ -144,9 +144,7 @@ pub fn render_hud(
                         contentedness_tip,
                         ui.horizontal(|ui| {
                             // <div class:bad=unhappy>
-                            ui.image(icon_from_slug(
-                                icons::HUD_CONTENTEDNESS,
-                            ));
+                            ui.image(icons::HUD_CONTENTEDNESS);
                             render_intensity_bar(
                                 ui,
                                 contentedness,
@@ -159,9 +157,7 @@ pub fn render_hud(
                     add_tip(
                         warming_tip,
                         ui.horizontal(|ui| {
-                            ui.image(icon_from_slug(
-                                icons::HUD_WARMING,
-                            ));
+                            ui.image(icons::HUD_WARMING);
                             render_intensity_bar(
                                 ui, warming, false,
                             );
@@ -172,9 +168,7 @@ pub fn render_hud(
                     add_tip(
                         emissions_tip,
                         ui.horizontal(|ui| {
-                            ui.image(icon_from_slug(
-                                icons::HUD_EMISSIONS,
-                            ));
+                            ui.image(icons::HUD_EMISSIONS);
                             let sym = if emissions_up {
                                 "↑"
                             } else {
@@ -188,7 +182,7 @@ pub fn render_hud(
             });
 
             let button = Button::image_and_text(
-                icon_from_slug(icons::SETTINGS),
+                icons::SETTINGS,
                 t!("Menu"),
             )
             .wrap_mode(egui::TextWrapMode::Extend);

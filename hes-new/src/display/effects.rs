@@ -3,6 +3,7 @@ use crate::{
     display::{
         self,
         AsText,
+        Icon,
         icons::{self, HasIcon},
     },
     views::{Tip, tip},
@@ -69,7 +70,7 @@ impl AsKey for ProjectType {
     }
 }
 
-fn icon_card_tag(name: &str, icon: &str) -> String {
+fn icon_card_tag(name: &str, icon: Icon) -> String {
     format!(r#"[c][i]%{icon}[/i]{name}[/c]"#)
 }
 fn card_tag(name: &str) -> String {

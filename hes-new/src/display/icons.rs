@@ -1,4 +1,5 @@
 use crate::vars::Var;
+use egui::ImageSource;
 use hes_engine::{
     Byproduct,
     Condition,
@@ -34,40 +35,59 @@ pub fn fill_icons(text: &str) -> String {
     // result
 }
 
+pub type Icon = &'static IconData;
+
+#[derive(Debug, Clone)]
+pub struct IconData {
+    slug: &'static str,
+    image: egui::ImageSource<'static>,
+}
+impl PartialEq for IconData {
+    fn eq(&self, other: &Self) -> bool {
+        self.slug == other.slug
+    }
+}
+impl std::fmt::Display for Icon {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.slug)
+    }
+}
+impl Into<ImageSource<'static>> for &IconData {
+    fn into(self) -> ImageSource<'static> {
+        self.image.clone()
+    }
+}
+
 macro_rules! icons {
     ($($name:ident: $path:literal),* $(,)?) => {
         paste! {
             $(
-                pub const $name: &'static str = stringify!([<$name:lower>]);
+                pub const $name: Icon = &IconData {
+                    slug: stringify!([<$name:lower>]),
+                    image: egui::include_image!(concat!("../../assets/images/", $path)),
+                };
             )*
 
+            pub const MISSING: Icon = &IconData {
+                slug: "missing",
+                image: egui::include_image!("../../assets/images/missing_content.png"),
+            };
+
             /// Get an icon path from its slug.
-            pub fn icon_from_slug(slug: &str) -> egui::ImageSource<'static> {
+            pub fn icon_from_slug(slug: &str) -> Icon {
                 match slug {
                     $(
-                        stringify!([<$name:lower>]) => egui::include_image!(concat!("../../assets/images/", $path)),
+                        stringify!([<$name:lower>]) => $name,
                     )*
                     _ => {
                         tracing::warn!("No icon defined for: {slug}.");
-                        egui::include_image!("../../assets/images/missing_content.png")
+                        MISSING
                     }
                 }
             }
-
-            /// Get a static icon &str from a non-static one.
-            pub fn to_static(name: &str) -> Option<&'static str> {
-                #[allow(unreachable_patterns)]
-                match name {
-                    $(
-                        $name => Some($name),
-                    )*
-                        _ => {
-                            tracing::warn!("No icon defined for: {name}.");
-                            None
-                        }
-                }
-            }
-
         }
     }
 }
@@ -203,11 +223,11 @@ icons! {
 }
 
 pub trait HasIcon {
-    fn icon(&self) -> &'static str;
+    fn icon(&self) -> Icon;
 }
 
 impl HasIcon for Output {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             Output::Fuel => FUEL,
             Output::Electricity => ELECTRICITY,
@@ -218,7 +238,7 @@ impl HasIcon for Output {
 }
 
 impl HasIcon for Var {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             Var::Land => LAND,
             Var::Water => WATER,
@@ -235,7 +255,7 @@ impl HasIcon for Var {
 }
 
 impl HasIcon for Resource {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             Resource::Land => LAND,
             Resource::Water => WATER,
@@ -246,7 +266,7 @@ impl HasIcon for Resource {
 }
 
 impl HasIcon for Feedstock {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             Feedstock::Coal => COAL,
             Feedstock::Lithium => LITHIUM,
@@ -261,7 +281,7 @@ impl HasIcon for Feedstock {
 }
 
 impl HasIcon for ProjectType {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             ProjectType::Research => RESEARCH,
             ProjectType::Initiative => INITIATIVE,
@@ -271,7 +291,7 @@ impl HasIcon for ProjectType {
 }
 
 impl HasIcon for ProcessFeature {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             ProcessFeature::UsesPesticides => USES_PESTICIDES,
             ProcessFeature::UsesSynFertilizer => {
@@ -296,7 +316,7 @@ impl HasIcon for ProcessFeature {
 }
 
 impl HasIcon for Byproduct {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             Byproduct::Biodiversity => BIODIVERSITY,
             _ => EMISSIONS,
@@ -305,7 +325,7 @@ impl HasIcon for Byproduct {
 }
 
 impl HasIcon for NPC {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self.name.as_str() {
             "The Authoritarian" => THE_AUTHORITARIAN,
             "The Economist" => THE_ECONOMIST,
@@ -332,7 +352,7 @@ impl HasIcon for NPC {
 }
 
 impl HasIcon for Condition {
-    fn icon(&self) -> &'static str {
+    fn icon(&self) -> Icon {
         match self {
             Condition::Demand(output, ..) => output.icon(),
             Condition::OutputDemandGap(output, ..) => {
