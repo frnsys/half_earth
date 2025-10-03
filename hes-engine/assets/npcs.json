@@ -12,7 +12,7 @@
             "effects": "Population projects are substantially cheaper.",
             "likes": "Lifeboats, nature, borders, famines",
             "dislikes": "Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats",
-            "color": "brown"
+            "color": "#a52a2a"
         }
     },
     {
@@ -28,7 +28,7 @@
             "effects": "Limits, Protection, and Restoration projects are cheaper.",
             "likes": "Poetry, stained glass, sci-fi, lost causes, sentimentality",
             "dislikes": "Ugly architecture, industrial wastelands, practicality, shoddy goods",
-            "color": "red"
+            "color": "#ff0000"
         }
     },
     {
@@ -60,7 +60,7 @@
             "effects": "Nuclear projects are substantially cheaper.",
             "likes": "UFOs, dolphins, water-birthing, telekinesis",
             "dislikes": "Bureaucracy, being called 'Trotskyites' \n",
-            "color": "orange"
+            "color": "#ffa500"
         }
     },
     {
@@ -76,7 +76,7 @@
             "effects": "The contentedness of lower and lower-middle income regions recovers more quickly.",
             "likes": "Psychoanalysis, internationalism, poetry, revolution",
             "dislikes": "Racism, authoritarianism, colonial Manichaenism",
-            "color": "blue"
+            "color": "#0000ff"
         }
     },
     {
@@ -108,7 +108,7 @@
             "effects": "You won't lose if contentedness dips below 0.",
             "likes": "Shiny leather boots, cults of personality, daddy issues",
             "dislikes": "Freedom, dissent, improvisational jazz",
-            "color": "white"
+            "color": "#ffffff"
         }
     },
     {
@@ -140,7 +140,7 @@
             "effects": "Restoration projects are substantially cheaper.",
             "likes": "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists",
             "dislikes": "Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx",
-            "color": "green"
+            "color": "#008000"
         }
     },
     {
@@ -156,7 +156,7 @@
             "effects": "Food projects are much cheaper.",
             "likes": "Peter Singer, bad puns, veganizing things, punk music",
             "dislikes": "Zoos, bacon, fur, honey (?) ",
-            "color": "black"
+            "color": "#000000"
         }
     }
 ]

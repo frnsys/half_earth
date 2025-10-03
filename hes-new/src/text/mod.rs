@@ -1,0 +1,191 @@
+use std::borrow::Cow;
+
+use egui::{Color32, Margin, RichText, TextStyle};
+
+use crate::display::icon_from_slug;
+
+mod animate;
+mod parse;
+
+pub fn bbcode(ui: &mut egui::Ui, text: &str) -> egui::Response {
+    ui.horizontal_wrapped(|ui| {
+        let style = ui.style();
+        let font_id = TextStyle::Body.resolve(style);
+        let text_height = ui.fonts(|f| f.row_height(&font_id));
+        ui.style_mut().spacing.item_spacing.x = 0.;
+
+        let (_, nodes) = parse::parse_bbcode(text).unwrap();
+        for node in nodes {
+            node.render_static(ui, text_height);
+        }
+    })
+    .response
+}
+
+#[derive(Default)]
+pub struct BbCodeAnimator {
+    animator: animate::NodesAnimator,
+}
+impl BbCodeAnimator {
+    pub fn finished(&self) -> bool {
+        self.animator.finished()
+    }
+
+    pub fn reset(&mut self) {
+        self.animator.reset(&[]);
+    }
+
+    pub fn render(&mut self, ui: &mut egui::Ui, text: &str) {
+        ui.horizontal_wrapped(|ui| {
+            let style = ui.style();
+            let font_id = TextStyle::Body.resolve(style);
+            let text_height =
+                ui.fonts(|f| f.row_height(&font_id));
+
+            ui.style_mut().spacing.item_spacing.x = 0.;
+
+            let (_, nodes) = parse::parse_bbcode(text).unwrap();
+            self.animator.animate(ui, nodes, text_height);
+        });
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub enum Tag {
+    Bold,
+    Image,
+    UnknownParam,
+    TypeTotal,     // TODO style
+    CardTag,       // TODO style
+    EffectFeature, // TODO style
+    TipWarn,       // TODO style
+    TipGoal,       // TODO style
+}
+
+// type-total
+// tip-warn
+// effect-feature
+
+// .card-tag {
+//   border-radius: 0.2em;
+//   display: inline-block;
+//   font-size: 0.9em;
+//   background-color: rgba(0,0,0,0.3);
+//   padding: 0.05em 0.2em;
+//   color: rgba(255,255,255,0.9);
+//   font-weight: 600;
+//   letter-spacing: 0.01em;
+// }
+// .card-tag:hover{
+//   background-color: rgba(0,0,0,0.5);
+// }
+//
+// .card-tag img {
+//   height: 13px;
+//   margin-right: 3px;
+// }
+
+// .effect--text .effect-feature {
+//   background: #222;
+//   border-radius: 1.2em;
+//   padding: 0.2em;
+//   height: 20px;
+//   margin: 0 2px;
+//   border: 1px solid #888;
+// }
+
+#[derive(Debug, PartialEq)]
+pub enum Node<'a> {
+    Text(&'a str),
+    Tagged { tag: Tag, children: Vec<Node<'a>> },
+}
+impl<'a> Node<'a> {
+    pub fn text(&'a self) -> Cow<'a, str> {
+        match self {
+            Node::Text(text) => (*text).into(),
+            Node::Tagged { children, .. } => {
+                let mut text = String::new();
+                for ch in children {
+                    text.push_str(&ch.text());
+                }
+                text.into()
+            }
+        }
+    }
+}
+
+impl Node<'_> {
+    fn render_static(
+        self,
+        ui: &mut egui::Ui,
+        text_height: f32,
+    ) {
+        match self {
+            Node::Text(text) => {
+                ui.label(text);
+            }
+            Node::Tagged { tag, children } => {
+                match tag {
+                    // ignore nested
+                    Tag::Bold => {
+                        let mut text = String::new();
+                        for ch in children {
+                            text.push_str(&ch.text());
+                        }
+                        let text = RichText::new(text).strong();
+                        ui.label(text);
+                    }
+
+                    // ignore nested
+                    Tag::Image => {
+                        let text = inner_text(&children);
+                        ui.add(
+                            egui::Image::new(icon_from_slug(
+                                &text,
+                            ))
+                            .max_height(text_height),
+                        );
+                    }
+
+                    // allow nested
+                    Tag::UnknownParam => {
+                        egui::Frame::NONE
+                            .inner_margin(Margin::symmetric(
+                                6, 1,
+                            ))
+                            .corner_radius(12)
+                            .fill(Color32::from_black_alpha(
+                                180,
+                            ))
+                            .show(ui, |ui| {
+                                ui.style_mut()
+                                    .visuals
+                                    .override_text_color =
+                                    Some(Color32::WHITE);
+                                for ch in children {
+                                    ch.render_static(
+                                        ui,
+                                        text_height,
+                                    );
+                                }
+                                // let text =
+                                //     RichText::new(text).strong().color(Color32::WHITE).size(16.);
+                            });
+                    }
+
+                    _ => {
+                        // TODO
+                    }
+                };
+            }
+        }
+    }
+}
+
+fn inner_text(nodes: &[Node<'_>]) -> String {
+    let mut text = String::new();
+    for ch in nodes {
+        text.push_str(&ch.text());
+    }
+    text
+}

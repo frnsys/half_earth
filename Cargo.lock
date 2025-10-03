@@ -2019,6 +2019,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "egui_taffy"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a373cec5981e777d8d961301e31839a1f3249960a5902754e9a7305c2c498912"
+dependencies = [
+ "egui",
+ "log",
+ "parking_lot",
+ "stackbox",
+ "taffy",
+]
+
+[[package]]
 name = "ehttp"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2727,6 +2740,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "grid"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "36119f3a540b086b4e436bb2b588cf98a68863470e0e880f4d0842f112a3183a"
+
+[[package]]
 name = "h2"
 version = "0.3.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2918,16 +2937,23 @@ dependencies = [
 name = "hes-new"
 version = "0.1.0"
 dependencies = [
+ "bincode",
  "eframe",
  "egui",
  "egui_animation",
  "egui_extras",
+ "egui_taffy",
  "enum-iterator",
  "enum-map",
  "extend",
+ "fastrand",
  "hes-engine",
+ "image 0.25.2",
  "kira",
+ "log",
  "nom 8.0.0",
+ "numfmt",
+ "ordered-float",
  "paste",
  "rust-i18n",
  "serde",
@@ -2935,6 +2961,7 @@ dependencies = [
  "strum 0.25.0",
  "sys-locale",
  "tracing",
+ "treemap",
  "wasm-bindgen-futures",
  "web-sys",
  "webbrowser",
@@ -4720,6 +4747,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ordered-float"
+version = "5.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f4779c6901a562440c3786d08192c6fbda7c1c2060edd10006b05ee35d10f2d"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "ordered-stream"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6243,6 +6279,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
+name = "stackbox"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "719cc368f443f1b8b4e9abfe8c1444d1f14341ce5fa9c9e6c59e456837523d0d"
+dependencies = [
+ "paste",
+]
+
+[[package]]
 name = "static_assertions"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6524,6 +6569,18 @@ dependencies = [
  "pkg-config",
  "toml",
  "version-compare",
+]
+
+[[package]]
+name = "taffy"
+version = "0.7.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab4f4d046dd956a47a7e1a2947083d7ac3e6aa3cfaaead36173ceaa5ab11878c"
+dependencies = [
+ "arrayvec",
+ "grid",
+ "serde",
+ "slotmap",
 ]
 
 [[package]]
@@ -6892,6 +6949,12 @@ dependencies = [
  "tracing-subscriber",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "treemap"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1571f89da27a5e1aa83304ee1ab9519ea8c6432b4c8903aaaa6c9a9eecb6f36"
 
 [[package]]
 name = "triomphe"

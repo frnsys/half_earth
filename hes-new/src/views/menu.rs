@@ -1,0 +1,151 @@
+use egui::Button;
+use hes_engine::State;
+use rust_i18n::t;
+
+use crate::{
+    display::{self, icon_from_slug, icons, intensity},
+    image,
+    state::STATE,
+};
+
+pub enum MenuAction {
+    CloseMenu,
+    RestartGame,
+    ShowCredits,
+    ToggleSound,
+    HideHelp,
+}
+
+const LOCALES: &[&str] = &[
+    "Havana",
+    "Ouagadougou",
+    "Port-au-Prince",
+    "San Cristóbal de las Casas",
+    "Paris",
+    "Bandung",
+    "Seattle",
+    "Hanoi",
+    "Dar es Salaam",
+    "Ayn Issa",
+    "Algiers",
+    "Managua",
+    "Prague",
+];
+
+pub fn render_menu(
+    ui: &mut egui::Ui,
+    state: &mut State,
+) -> Option<MenuAction> {
+    let year = state.world.year;
+    let pc = state.political_capital.max(0);
+    let outlook = state.outlook();
+    let emissions = state.emissions.as_gtco2eq();
+    let extinction = state.world.extinction_rate;
+    let temperature = state.world.temperature;
+
+    // let start_year = ui.start_year; // TODO
+    let start_year = 2022;
+
+    let temp = display::temp(temperature);
+    let emissions = display::emissions(emissions);
+    let contentedness = intensity::scale(
+        outlook,
+        intensity::Variable::WorldOutlook,
+    );
+    let extinction = intensity::scale(
+        extinction,
+        intensity::Variable::Extinction,
+    );
+    let locale = {
+        let elapsed = year - start_year;
+        let idx = (elapsed as f32 / 5.).round() as usize
+            % LOCALES.len();
+        &LOCALES[idx]
+    };
+    let time_place = format!("{}, {}", locale, year);
+
+    let close =
+        ui.add(Button::image(icon_from_slug(icons::CLOSE)));
+    if close.clicked() {
+        return Some(MenuAction::CloseMenu);
+    }
+
+    let logo = image!("gosplant.svg");
+    ui.image(logo);
+
+    ui.label("CLOCK"); // TODO
+    ui.label(time_place);
+
+    ui.vertical_centered(|ui| {
+        ui.image(icon_from_slug(icons::POLITICAL_CAPITAL));
+        ui.label(pc.to_string());
+        ui.label(t!("Political Capital"));
+    });
+
+    ui.vertical_centered(|ui| {
+        ui.image(icon_from_slug(icons::EMISSIONS));
+        ui.label(emissions);
+        ui.label(t!("CO2 Emissions/Yr"));
+    });
+
+    ui.vertical_centered(|ui| {
+        ui.image(icon_from_slug(icons::WARMING));
+        ui.label(temp);
+        ui.label(t!("Temp. Anomaly"));
+    });
+
+    ui.vertical_centered(|ui| {
+        ui.image(icon_from_slug(icons::EXTINCTION_RATE));
+        // <IntensityBar intensity=extinction.into_signal()/> // TODO
+        ui.label(t!("Extinction Rate"));
+    });
+
+    ui.vertical_centered(|ui| {
+        ui.image(icon_from_slug(icons::CONTENTEDNESS));
+        // <IntensityBar
+        //     intensity=contentedness.into_signal()
+        //     invert=true
+        //     /> // TODO
+        ui.label(t!("Contentedness"));
+    });
+
+    let motto = image!("motto.png");
+    ui.image(motto);
+
+    let sound = format!(
+        "{}: {}",
+        t!("Sound"),
+        if STATE.read().prefs.sound {
+            t!("On")
+        } else {
+            t!("Off")
+        }
+    );
+    if ui.button(sound).clicked() {
+        return Some(MenuAction::ToggleSound);
+    }
+
+    let tips = format!(
+        "{}: {}",
+        t!("Tips"),
+        if STATE.read().prefs.hide_help {
+            t!("On")
+        } else {
+            t!("Off")
+        }
+    );
+    if ui.button(tips).clicked() {
+        return Some(MenuAction::HideHelp);
+    }
+
+    if ui.button(t!("Restart Game")).clicked() {
+        return Some(MenuAction::RestartGame);
+    }
+
+    if ui.button(t!("Credits")).clicked() {
+        return Some(MenuAction::ShowCredits);
+    }
+
+    None
+}
+

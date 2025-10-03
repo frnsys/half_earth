@@ -13,14 +13,13 @@ mod world;
 
 pub use diff::{Change, Diff};
 pub use events::{
-    mean_demand_outlook_change,
-    mean_income_outlook_change,
     Condition,
     ConditionKind,
     Effect,
     EffectKind,
     Event,
     Flag,
+    ICON_EVENTS,
     IconEvent,
     Likelihood,
     LocalVariable,
@@ -29,11 +28,12 @@ pub use events::{
     Probability,
     Request as NPCRequest,
     WorldVariable,
-    ICON_EVENTS,
+    mean_demand_outlook_change,
+    mean_income_outlook_change,
 };
 pub use industries::Industry;
 pub use kinds::*;
-pub use npcs::{NPCRelation, NPC};
+pub use npcs::{NPC, NPCRelation};
 pub use production::{Process, ProcessFeature};
 pub use projects::{
     Cost,
