@@ -73,8 +73,8 @@ pub struct App {
     state: State,
 
     // TODO temp
-    cards: Vec<Card<Project>>,
-    // cards: Vec<Card<Process>>,
+    // cards: Vec<Card<Project>>,
+    cards: Vec<Card<Process>>,
 }
 impl App {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
@@ -90,21 +90,21 @@ impl App {
             State::default()
         };
 
-        let cards = state
-            .game
-            .world
-            .projects
-            .iter()
-            .map(|p| Card::new(p.clone()))
-            .collect();
-
         // let cards = state
         //     .game
         //     .world
-        //     .processes
+        //     .projects
         //     .iter()
         //     .map(|p| Card::new(p.clone()))
         //     .collect();
+
+        let cards = state
+            .game
+            .world
+            .processes
+            .iter()
+            .map(|p| Card::new(p.clone()))
+            .collect();
 
         Self {
             ui: ViewState::Start(Start::default()),

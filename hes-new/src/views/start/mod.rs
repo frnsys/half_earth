@@ -66,7 +66,7 @@ impl Start {
 
                                     if state.prefs.sound {
                                         let sound_data = audio!(
-                                            "notification.wav"
+                                            "notification.mp3"
                                         );
                                         let _ = AUDIO
                                             .write()

@@ -252,3 +252,26 @@ pub fn flex_justified(
         })
         .show(inner);
 }
+
+pub fn flex_spaced(
+    ui: &mut egui::Ui,
+    id: &str,
+    inner: impl FnOnce(&mut Tui),
+) {
+    tui(ui, ui.id().with(id))
+        .reserve_available_width()
+        .style(taffy::Style {
+            flex_grow: 1.,
+            flex_direction: taffy::FlexDirection::Row,
+            min_size: taffy::Size {
+                width: taffy::prelude::percent(1.),
+                height: taffy::prelude::auto(),
+            },
+            align_items: Some(taffy::AlignItems::Center),
+            justify_content: Some(
+                taffy::JustifyContent::SpaceAround,
+            ),
+            ..Default::default()
+        })
+        .show(inner);
+}

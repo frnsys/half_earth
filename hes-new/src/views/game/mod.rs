@@ -9,7 +9,7 @@ mod regions;
 mod session;
 mod stats;
 
-pub use card::Card;
+pub use card::{CARD_HEIGHT, Card};
 pub use cards::Cards;
 pub use govt::as_speaker;
 pub use interstitial::Interstitial;

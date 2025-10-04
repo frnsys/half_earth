@@ -117,19 +117,8 @@ impl AsCard for Project {
             }).response;
 
         let is_new = !ctx.viewed.contains(&self.id);
-        let size = egui::vec2(48., 48.);
-        let rect = egui::Rect::from_min_size(
-            resp.rect.left_top() - egui::vec2(16., 16.),
-            size,
-        );
         if is_new {
-            let new_icon = image!("new.svg");
-            ui.place(
-                rect,
-                egui::Image::new(new_icon)
-                    .fit_to_exact_size(size)
-                    .rotate(-0.5, egui::Vec2::splat(0.5)),
-            );
+            ui.add(new_icon(resp.rect));
         }
 
         // let barcode = image!("barcode.png");
@@ -159,54 +148,7 @@ impl AsCard for Project {
             .map(|id| npcs[id].clone())
             .filter(|npc| !npc.locked)
             .collect::<Vec<_>>();
-        let has_opposers = !opposers.is_empty();
-        let has_supporters = !supporters.is_empty();
-
-        let npc_rect = egui::Rect::from_min_size(
-            rect.left_bottom() + egui::vec2(6. + 6., -36.),
-            egui::vec2(128., 32.),
-        );
-        if has_opposers {
-            ui.place(npc_rect, |ui: &mut egui::Ui| {
-                ui.horizontal(|ui| {
-                    ui.style_mut().spacing.item_spacing.x = 2.;
-                    for npc in opposers {
-                        let tip = tip(
-                            npc.icon(),
-                            t!(
-                                "%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].",
-                                name = t!(&npc.name),
-                                icon = icons::RELATIONSHIP,
-                            ),
-                        );
-                        add_tip(tip, ui.add(npc_icon(&npc, false)));
-                    }
-                }).response});
-        }
-
-        let width = 32. * supporters.len() as f32;
-        let npc_rect = egui::Rect::from_min_size(
-            rect.right_bottom()
-                + egui::vec2(-(6. + 6.) - width, -36.),
-            egui::vec2(256., 32.),
-        );
-        if has_supporters {
-            ui.place(npc_rect, |ui: &mut egui::Ui| {
-                ui.horizontal(|ui| {
-                    ui.style_mut().spacing.item_spacing.x = 2.;
-                    for npc in supporters {
-                        let tip = tip(
-                            npc.icon(),
-                            t!(
-                        "%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].",
-                                name = t!(&npc.name),
-                                icon = icons::RELATIONSHIP,
-                            ),
-                        );
-                        add_tip(tip, ui.add(npc_icon(&npc, true)));
-                    }
-                }).response});
-        }
+        npc_support(ui, rect, &opposers, &supporters);
 
         let parliament_suspended = ctx
             .state
@@ -673,7 +615,7 @@ fn points(
     }
 }
 
-fn render_flavor_image(
+pub fn render_flavor_image(
     ui: &mut egui::Ui,
     image: &hes_engine::flavor::Image,
 ) -> Response {
@@ -688,7 +630,7 @@ fn render_flavor_image(
         .response
 }
 
-fn npc_icon(
+pub fn npc_icon(
     npc: &NPC,
     yea: bool,
 ) -> impl FnOnce(&mut egui::Ui) -> Response {
@@ -710,5 +652,80 @@ fn npc_icon(
                 ui.add(icon.size(24.));
             })
             .response
+    }
+}
+
+pub fn new_icon(
+    card_rect: Rect,
+) -> impl FnOnce(&mut egui::Ui) -> Response {
+    let size = egui::vec2(48., 48.);
+    let rect = egui::Rect::from_min_size(
+        card_rect.left_top() - egui::vec2(16., 16.),
+        size,
+    );
+    let new_icon = image!("new.svg");
+    move |ui| {
+        ui.place(
+            rect,
+            egui::Image::new(new_icon)
+                .fit_to_exact_size(size)
+                .rotate(-0.5, egui::Vec2::splat(0.5)),
+        )
+    }
+}
+
+pub fn npc_support(
+    ui: &mut egui::Ui,
+    frame_rect: Rect,
+    opposers: &[NPC],
+    supporters: &[NPC],
+) {
+    let has_opposers = !opposers.is_empty();
+    let has_supporters = !supporters.is_empty();
+
+    let npc_rect = egui::Rect::from_min_size(
+        frame_rect.left_bottom() + egui::vec2(6. + 6., -36.),
+        egui::vec2(128., 32.),
+    );
+    if has_opposers {
+        ui.place(npc_rect, |ui: &mut egui::Ui| {
+            ui.horizontal(|ui| {
+                ui.style_mut().spacing.item_spacing.x = 2.;
+                for npc in opposers {
+                    let tip = tip(
+                        npc.icon(),
+                        t!(
+                            "%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].",
+                            name = t!(&npc.name),
+                            icon = icons::RELATIONSHIP,
+                        ),
+                    );
+                    add_tip(tip, ui.add(npc_icon(&npc, false)));
+                }
+            }).response});
+    }
+
+    let width = 32. * supporters.len() as f32;
+    let npc_rect = egui::Rect::from_min_size(
+        frame_rect.right_bottom()
+            + egui::vec2(-(6. + 6.) - width, -36.),
+        egui::vec2(256., 32.),
+    );
+    if has_supporters {
+        ui.place(npc_rect, |ui: &mut egui::Ui| {
+            ui.horizontal(|ui| {
+                ui.style_mut().spacing.item_spacing.x = 2.;
+                for npc in supporters {
+                    let tip = tip(
+                        npc.icon(),
+                        t!(
+                            "%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].",
+                            name = t!(&npc.name),
+                            icon = icons::RELATIONSHIP,
+                        ),
+                    );
+                    add_tip(tip, ui.add(npc_icon(&npc, true)));
+                }
+            }).response});
     }
 }

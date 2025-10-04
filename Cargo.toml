@@ -2,13 +2,11 @@
 resolver = "2"
 members = [
     "hes-new",
-    "hes-game",
     "hes-engine",
     "hes-editor",
     "util/*",
 ]
 default-members = [
-    "hes-game",
     "hes-engine",
     "hes-editor",
     "util/*",

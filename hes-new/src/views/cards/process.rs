@@ -12,23 +12,35 @@ use crate::{
         factors::factors_card,
         icon_from_slug,
         icons,
-        intensity::{self, render_intensity_bar},
+        intensity::{
+            self,
+            render_intensity_bar,
+            render_intensity_bar_with_seg_width,
+        },
     },
     image,
     state::{PlanChange, StateExt},
     vars::{Impact, Var},
     views::{
         Tip,
-        cards::CardState,
+        cards::{
+            CardState,
+            project::{
+                new_icon,
+                npc_support,
+                render_flavor_image,
+            },
+        },
         events::{active_effects, render_effects},
-        parts::flex_justified,
+        game::CARD_HEIGHT,
+        parts::{center_center, flex_justified, flex_spaced},
         tip,
         tips::add_tip,
     },
 };
 
 use super::AsCard;
-use egui::{Color32, Margin};
+use egui::{Color32, CornerRadius, Margin, Stroke, StrokeKind};
 use egui_taffy::{Tui, TuiBuilderLogic, taffy, tui};
 use hes_engine::{
     Effect as EngineEffect,
@@ -118,49 +130,110 @@ impl AsCard for Process {
             )
         };
 
-        egui::Frame::NONE
-            .inner_margin(egui::Margin::symmetric(4, 6))
+        let resp = egui::Frame::NONE
+            .inner_margin(egui::Margin::symmetric(6, 6))
             .show(ui, |ui| {
                 flex_justified(ui, &self.name, |tui| {
                     tui.style(taffy::Style {
                         flex_grow: 1.,
                         ..Default::default()
                     })
-                    .label(output_name);
+                    .label(
+                        egui::RichText::new(
+                            output_name.to_uppercase(),
+                        )
+                        .monospace(),
+                    );
 
                     tui.ui(|ui| {
                         add_tip(
                             output_tip,
                             ui.horizontal_centered(|ui| {
+                                ui.style_mut()
+                                    .spacing
+                                    .item_spacing
+                                    .x = 2.;
                                 ui.label(produced.to_string());
-                                // ui.image(icon_from_slug(
-                                //     output_icon,
-                                // ));
+                                ui.add(output_icon.size(14.));
                                 ui.label(emissions.to_string());
-                                // ui.image(icon_from_slug(
-                                //     icons::EMISSIONS,
-                                // ));
+                                ui.add(
+                                    icons::EMISSIONS.size(14.),
+                                );
                             })
                             .response,
                         );
                     });
                 });
-            });
+            })
+            .response;
 
         let is_new = !ctx.viewed.contains(&self.id);
-        // if is_new {
-        //     let new_icon = image!("new.svg");
-        //     ui.image(new_icon);
-        // }
+        if is_new {
+            ui.add(new_icon(resp.rect));
+        }
+
+        // TODO dedupe
+        let max_share = ctx.state.process_max_share(&self.id);
+        let changed_mix_share = {
+            if let Some(change) = ctx.process_mix_changes
+                [self.output]
+                .get(&self.id)
+            {
+                self.mix_share as isize + change
+            } else {
+                self.mix_share as isize
+            }
+        };
+
+        let feedstocks = &ctx.state.feedstocks;
+        let feedstock_estimate = {
+            let feedstock = self.feedstock.0;
+            match feedstock {
+                Feedstock::Soil | Feedstock::Other => None,
+                _ => {
+                    let estimate =
+                        feedstocks.until_exhaustion(feedstock);
+                    Some(estimate.round())
+                }
+            }
+        };
+        let is_depleted = feedstock_estimate == Some(0.);
+
+        let bar_rect = egui::Rect::from_min_size(
+            resp.rect.right_top() + egui::vec2(-3., 10.),
+            egui::vec2(18., CARD_HEIGHT),
+        );
+        ui.place(
+            bar_rect,
+            render_mix_bar(
+                self.mix_share,
+                max_share,
+                changed_mix_share,
+                is_depleted,
+            ),
+        );
     }
 
     fn figure(&self, ui: &mut egui::Ui, ctx: &CardState) {
-        // TODO
-        // let image = self.flavor.image.src();
-        // ui.image(image);
+        let rect =
+            render_flavor_image(ui, &self.flavor.image).rect;
+
+        let npcs = &ctx.state.npcs;
+        let opposers = self
+            .opposers
+            .iter()
+            .map(|id| npcs[id].clone())
+            .filter(|npc| !npc.locked)
+            .collect::<Vec<_>>();
+        let supporters = self
+            .supporters
+            .iter()
+            .map(|id| npcs[id].clone())
+            .filter(|npc| !npc.locked)
+            .collect::<Vec<_>>();
+        npc_support(ui, rect, &opposers, &supporters);
 
         let max_share = ctx.state.process_max_share(&self.id);
-
         if max_share < 20 {
             let changed_mix_share = {
                 if let Some(change) = ctx.process_mix_changes
@@ -198,54 +271,11 @@ impl AsCard for Process {
             //     ui.image(icon_from_slug(icons::ALERT)),
             // );
         }
-
-        let npcs = &ctx.state.npcs;
-        let opposers = self
-            .opposers
-            .iter()
-            .map(|id| npcs[id].clone())
-            .filter(|npc| !npc.locked)
-            .collect::<Vec<_>>();
-        let supporters = self
-            .supporters
-            .iter()
-            .map(|id| npcs[id].clone())
-            .filter(|npc| !npc.locked)
-            .collect::<Vec<_>>();
-        let has_opposers = !opposers.is_empty();
-        let has_supporters = !supporters.is_empty();
-
-        if has_opposers {
-            for npc in opposers {
-                let tip = tip(
-                    npc.icon(),
-                    t!(
-                        "%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].",
-                        name = t!(&npc.name),
-                        icon = icons::RELATIONSHIP,
-                    ),
-                );
-                // add_tip(tip, ui.image(npc.icon()));
-            }
-        }
-        if has_supporters {
-            for npc in supporters {
-                let tip = tip(
-                    npc.icon(),
-                    t!(
-                        "%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].",
-                        name = t!(&npc.name),
-                        icon = icons::RELATIONSHIP,
-                    ),
-                );
-                // add_tip(tip, ui.image(npc.icon()));
-            }
-        }
     }
 
     fn name(&self, ui: &mut egui::Ui, ctx: &CardState) {
         ui.vertical_centered(|ui| {
-            ui.label(&self.name);
+            ui.label(egui::RichText::new(&self.name).heading());
         });
     }
 
@@ -293,23 +323,6 @@ impl AsCard for Process {
             )
         };
 
-        // TODO dedupe
-        let feedstocks = &ctx.state.feedstocks;
-        let feedstock_estimate = {
-            let feedstock = self.feedstock.0;
-            match feedstock {
-                Feedstock::Soil | Feedstock::Other => None,
-                _ => {
-                    let estimate =
-                        feedstocks.until_exhaustion(feedstock);
-                    Some(estimate.round())
-                }
-            }
-        };
-
-        // TODO use this
-        let depleted = feedstock_estimate == Some(0.);
-
         let change = {
             if let Some(change) = ctx.process_mix_changes
                 [self.output]
@@ -329,28 +342,55 @@ impl AsCard for Process {
             (self.mix_share as isize) < changed_mix_share;
         let changed_mix_share_percent = changed_mix_share * 5;
 
-        add_tip(
-            change_tip,
-            ui.horizontal_centered(|ui| {
-                ui.label(format!("{mix_share_percent}%"));
-                if has_change {
-                    // ui.image(icon_from_slug(
-                    //     icons::ARROW_RIGHT,
-                    // ));
-                    if is_shrink {
-                        // TODO
-                    } else if is_grow {
-                        // TODO
-                    }
-                    ui.label(format!(
-                        "{changed_mix_share_percent}%"
-                    ));
-                }
+        egui::Frame::NONE
+            .outer_margin(egui::Margin {
+                left: 6,
+                right: 6,
+                top: 0,
+                bottom: 6,
             })
-            .response,
-        );
+            .inner_margin(egui::Margin::symmetric(4, 4))
+            .corner_radius(4)
+            .stroke(Stroke::new(
+                1.,
+                Color32::from_white_alpha(24),
+            ))
+            .show(ui, |ui| {
+                ui.set_width(ui.available_width());
+                ui.set_height(ui.available_height());
 
-        ui.horizontal_centered(|ui| {
+                ui.vertical(|ui| {
+                    ui.set_height(64.);
+                    let id = format!("{}-percent", self.id);
+                    add_tip(
+                        change_tip,
+                        center_center(ui, &id, |tui| {
+                            tui.ui(|ui| {
+                                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
+                                ui.horizontal_centered(|ui| {
+                                    percentage(ui, mix_share_percent as isize);
+                                    if has_change {
+                                        ui.add(
+                                            icons::ARROW_RIGHT.size(24.),
+                                        );
+                                        if is_shrink {
+                                            // TODO
+                                        } else if is_grow {
+                                            // TODO
+                                        }
+                                        percentage(
+                                            ui,
+                                            changed_mix_share_percent,
+                                        );
+                                    }
+                                }).response
+                            })
+                        })
+                    );
+                });
+
+        let id = format!("{}-intensities", self.id);
+        flex_spaced(ui, &id, |tui| {
             let land_intensity =  {
                 let usage = self.adj_resources().land;
                 let int = intensity::impact_intensity(
@@ -415,18 +455,20 @@ impl AsCard for Process {
             };
 
             for (tip, icon, intensity) in [land_intensity, water_intensity, energy_intensity, emissions_intensity, biodiversity_intensity] {
-                add_tip(tip, ui.vertical_centered(|ui| {
-                    // ui.image(icon_from_slug(
-                    //         icon,
-                    // ));
-                    // render_intensity_bar(
-                    //     ui,
-                    //     intensity,
-                    //     false,
-                    // );
-                }).response);
+                tui.ui(|ui| {
+                    add_tip(tip, ui.vertical_centered(|ui| {
+                        ui.add(icon.size(24.));
+                        render_intensity_bar_with_seg_width(
+                            ui,
+                            intensity,
+                            false,
+                            5.,
+                        );
+                    }).response);
+                });
             }
         });
+            });
     }
 
     fn top_back(&self, ui: &mut egui::Ui, ctx: &CardState) {
@@ -494,13 +536,30 @@ impl AsCard for Process {
     }
 }
 
-fn render_mix_bar(
+fn percentage(
     ui: &mut egui::Ui,
+    value: isize,
+) -> egui::Response {
+    egui::Frame::NONE
+        .inner_margin(Margin::symmetric(6, 6))
+        .corner_radius(6)
+        .fill(Color32::from_black_alpha(128))
+        .show(ui, |ui| {
+            ui.label(
+                egui::RichText::new(format!("{value}%"))
+                    .monospace()
+                    .size(20.),
+            );
+        })
+        .response
+}
+
+fn render_mix_bar(
     mix_share: usize,
     max_share: usize,
     changed_mix_share: isize,
     is_depleted: bool,
-) {
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     let process_mix_tip = tip(
         icons::MIX_TOKEN,
         if max_share < 20 {
@@ -514,35 +573,62 @@ fn render_mix_bar(
             )
         },
     );
+    move |ui| {
+        add_tip(
+            process_mix_tip,
+            ui.vertical(|ui| {
+                for i in (1..=20).rev() {
+                    let disabled = i > max_share;
+                    let active = i <= mix_share;
+                    let grow = i > mix_share
+                        && (i as isize <= changed_mix_share);
+                    let shrink = i <= mix_share
+                        && (i as isize > changed_mix_share);
+                    let excess = (i <= mix_share
+                        || (i as isize <= changed_mix_share))
+                        && i > max_share;
 
-    add_tip(
-        process_mix_tip,
-        ui.vertical(|ui| {
-            for i in 1..=20 {
-                let disabled = i > max_share;
-                let active = i <= mix_share;
-                let grow = i > mix_share
-                    && (i as isize <= changed_mix_share);
-                let shrink = i <= mix_share
-                    && (i as isize > changed_mix_share);
-                let excess = (i <= mix_share
-                    || (i as isize <= changed_mix_share))
-                    && i > max_share;
+                    // TODO shrink, grow, and excess had glow effects
+                    let color = if disabled {
+                        Color32::from_rgb(0x83, 0x83, 0x83)
+                    } else if grow {
+                        Color32::from_rgb(0x43, 0xCC, 0x70)
+                    } else if shrink {
+                        Color32::from_rgb(0xF2, 0x84, 0x35)
+                    } else if active {
+                        Color32::from_rgb(0x1B, 0x97, 0xF3)
+                    } else if is_depleted {
+                        Color32::from_rgb(0x61, 0x90, 0xB3)
+                    } else if excess {
+                        Color32::from_rgb(0xDC, 0x32, 0x2E)
+                    } else {
+                        Color32::from_rgb(0x83, 0x83, 0x83)
+                    };
 
-                // TODO
-                // view! {
-                //     <div
-                //         class="process-mix-cell"
-                //         class:active=active
-                //         class:depleted=is_depleted
-                //         class:shrink=shrink
-                //         class:grow=grow
-                //         class:excess=excess
-                //         class:disabled=disabled
-                //     ></div>
-                // }
-            }
-        })
-        .response,
+                    draw_mix_cell(ui, color);
+                }
+            })
+            .response,
+        )
+    }
+}
+
+fn draw_mix_cell(ui: &mut egui::Ui, fill: Color32) {
+    let seg_h = 15.;
+    let seg_w = 8.;
+
+    let size = egui::vec2(seg_w, seg_h);
+    let (rect, _resp) =
+        ui.allocate_exact_size(size, egui::Sense::hover());
+
+    let painter = ui.painter();
+
+    let stroke = Stroke::NONE;
+    painter.rect(
+        rect,
+        CornerRadius::same(1),
+        fill,
+        stroke,
+        StrokeKind::Outside,
     );
 }

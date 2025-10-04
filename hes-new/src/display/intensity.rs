@@ -142,6 +142,7 @@ pub fn scale(val: f32, key: Variable) -> usize {
     val as usize
 }
 
+// TODO replace this with a fluent builder
 pub fn render_intensity_bar(
     ui: &mut egui::Ui,
     intensity: usize,
@@ -152,6 +153,16 @@ pub fn render_intensity_bar(
     );
 }
 
+pub fn render_intensity_bar_with_seg_width(
+    ui: &mut egui::Ui,
+    intensity: usize,
+    invert: bool,
+    seg_w: f32,
+) {
+    let color = color(intensity, invert);
+    draw_segmented_pill(ui, N_PIPS, color, intensity, seg_w);
+}
+
 pub fn render_intensity_bar_with_pips(
     ui: &mut egui::Ui,
     intensity: usize,
@@ -159,7 +170,7 @@ pub fn render_intensity_bar_with_pips(
     max_pips: usize,
 ) {
     let color = color(intensity, invert);
-    draw_segmented_pill(ui, max_pips, color, intensity);
+    draw_segmented_pill(ui, max_pips, color, intensity, 8.);
 }
 
 fn draw_segmented_pill(
@@ -167,8 +178,8 @@ fn draw_segmented_pill(
     n: usize,
     fill: Color32,
     fill_to: usize,
+    seg_w: f32,
 ) {
-    let seg_w = 8.;
     let seg_h = 6.;
     let spacing = 1.;
     let radius = 2;
