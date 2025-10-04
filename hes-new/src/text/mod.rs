@@ -1,8 +1,14 @@
 use std::borrow::Cow;
 
-use egui::{Color32, Margin, RichText, TextStyle};
+use egui::{
+    Color32,
+    Margin,
+    RichText,
+    TextStyle,
+    TextWrapMode,
+};
 
-use crate::display::icon_from_slug;
+use crate::display::{fill_icons, icon_from_slug};
 
 mod animate;
 mod parse;
@@ -14,7 +20,8 @@ pub fn bbcode(ui: &mut egui::Ui, text: &str) -> egui::Response {
         let text_height = ui.fonts(|f| f.row_height(&font_id));
         ui.style_mut().spacing.item_spacing.x = 0.;
 
-        let (_, nodes) = parse::parse_bbcode(text).unwrap();
+        let text = fill_icons(text);
+        let (_, nodes) = parse::parse_bbcode(&text).unwrap();
         for node in nodes {
             node.render_static(ui, text_height);
         }
@@ -55,11 +62,11 @@ pub enum Tag {
     Bold,
     Image,
     UnknownParam,
-    TypeTotal,     // TODO style
-    CardTag,       // TODO style
-    EffectFeature, // TODO style
-    TipWarn,       // TODO style
-    TipGoal,       // TODO style
+    TypeTotal,
+    CardTag,
+    EffectFeature,
+    TipWarn,
+    TipGoal,
 }
 
 // type-total
@@ -126,28 +133,31 @@ impl Node<'_> {
             }
             Node::Tagged { tag, children } => {
                 match tag {
-                    // ignore nested
                     Tag::Bold => {
                         let mut text = String::new();
                         for ch in children {
                             text.push_str(&ch.text());
                         }
-                        let text = RichText::new(text).strong();
+                        let mut text =
+                            RichText::new(text).strong();
+                        if let Some(color) = ui
+                            .style()
+                            .visuals
+                            .override_text_color
+                        {
+                            text = text.color(color);
+                        }
                         ui.label(text);
                     }
-
-                    // ignore nested
                     Tag::Image => {
                         let text = inner_text(&children);
                         ui.add(
                             egui::Image::new(icon_from_slug(
                                 &text,
                             ))
-                            .max_height(text_height),
+                            .max_height(text_height - 4.),
                         );
                     }
-
-                    // allow nested
                     Tag::UnknownParam => {
                         egui::Frame::NONE
                             .inner_margin(Margin::symmetric(
@@ -172,9 +182,36 @@ impl Node<'_> {
                                 //     RichText::new(text).strong().color(Color32::WHITE).size(16.);
                             });
                     }
-
-                    _ => {
-                        // TODO
+                    Tag::TypeTotal => {
+                        let text = inner_text(&children);
+                        ui.colored_label(
+                            Color32::from_white_alpha(150),
+                            text,
+                        );
+                    }
+                    Tag::CardTag => {
+                        for ch in children {
+                            ch.render_static(ui, text_height);
+                        }
+                    }
+                    Tag::EffectFeature => {
+                        for ch in children {
+                            ch.render_static(ui, text_height);
+                        }
+                    }
+                    Tag::TipWarn => {
+                        let text = inner_text(&children);
+                        ui.colored_label(
+                            Color32::from_rgb(0xeb, 0x39, 0x41),
+                            text,
+                        );
+                    }
+                    Tag::TipGoal => {
+                        let text = inner_text(&children);
+                        ui.colored_label(
+                            Color32::from_rgb(0x43, 0xcc, 0x70),
+                            text,
+                        );
                     }
                 };
             }

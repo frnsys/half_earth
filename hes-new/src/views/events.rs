@@ -190,7 +190,7 @@ fn render_event_card(
 
         ui.horizontal(|ui| {
             for fac in factors_list {
-                ui.add(fac);
+                fac.render(ui.ctx());
             }
         });
 
@@ -302,8 +302,10 @@ pub fn render_effects(
         })
         .collect::<Vec<_>>();
     effects.sort_by_key(|effect| effect.text.clone());
-    for effect in effects {
-        let resp = bbcode(ui, &effect.text);
-        add_tip(effect.tip, resp);
-    }
+    ui.vertical_centered(|ui| {
+        for effect in effects {
+            let resp = bbcode(ui, &effect.text);
+            add_tip(effect.tip, resp);
+        }
+    });
 }

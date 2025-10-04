@@ -71,7 +71,7 @@ impl AsKey for ProjectType {
 }
 
 fn icon_card_tag(name: &str, icon: Icon) -> String {
-    format!(r#"[c][i]%{icon}[/i]{name}[/c]"#)
+    format!(r#"[c][i]{icon}[/i]{name}[/c]"#)
 }
 fn card_tag(name: &str) -> String {
     format!(r#"[c]{name}[/c]"#)
@@ -307,7 +307,7 @@ macro_rules! prefix_probs {
 impl DisplayEffect {
     fn fmt_param(&self, value: f32) -> String {
         if self.is_unknown {
-            r#"<span class="unknown-param">?</span>"#.into()
+            r#"[u]?[/u]"#.into()
         } else {
             format!("[b]{}[/b]", value.abs())
         }
@@ -757,10 +757,10 @@ impl DisplayEffect {
                 {
                     prefix_probs!(
                         prob,
-                        " unlock the {tag} project."
+                        " unlock the %{tag} project."
                     )
                 } else {
-                    t!("[b]Unlocks[/b] the {tag} project.")
+                    t!("[b]Unlocks[/b] the %{tag} project.")
                 };
 
                 (
@@ -797,10 +797,10 @@ impl DisplayEffect {
                 {
                     prefix_probs!(
                         prob,
-                        " unlock the {tag} process."
+                        " unlock the %{tag} process."
                     )
                 } else {
-                    t!("[b]Unlocks[/b] the {tag} process.")
+                    t!("[b]Unlocks[/b] the %{tag} process.")
                 };
 
                 (

@@ -1,5 +1,5 @@
 use crate::vars::Var;
-use egui::ImageSource;
+use egui::{ImageSource, TextureOptions};
 use hes_engine::{
     Byproduct,
     Condition,
@@ -13,26 +13,26 @@ use hes_engine::{
     WorldVariable,
 };
 use paste::paste;
+use regex_lite::Regex;
 // use regex_lite::Regex;
 
 /// Fill icon references in a text, e.g. `"[political_capital]"`.
+// TODO this could perhaps just be integrated into `bbcode`.
 pub fn fill_icons(text: &str) -> String {
-    text.to_string()
-    // TODO
-    // let re = Regex::new(r"\[([a-z_]+)\]").unwrap();
-    // let mut result = text.to_string();
-    //
-    // for cap in re.captures_iter(text) {
-    //     let full_match = &cap[0];
-    //     let icon_key = &cap[1];
-    //     if let Some(icon_url) = icon_from_slug(icon_key) {
-    //         let replacement =
-    //             format!("<img src=\"{}\">", icon_url);
-    //         result = result.replace(full_match, &replacement);
-    //     }
-    // }
-    //
-    // result
+    // This is a hack since the bbcode tags also use `[` and `]`.
+    // We consider an icon to be `[..]` containing at least two matching characters,
+    // since the bbcode tags are all just one character, e.g. `[b]`.
+    let re = Regex::new(r"\[([a-z_]{2,})\]").unwrap();
+    let mut result = text.to_string();
+
+    for cap in re.captures_iter(text) {
+        let full_match = &cap[0];
+        let icon_key = &cap[1];
+        let replacement = format!("[i]{icon_key}[/i]");
+        result = result.replace(full_match, &replacement);
+    }
+
+    result
 }
 
 pub type Icon = &'static IconData;
@@ -58,6 +58,13 @@ impl std::fmt::Display for Icon {
 impl Into<ImageSource<'static>> for &IconData {
     fn into(self) -> ImageSource<'static> {
         self.image.clone()
+    }
+}
+impl IconData {
+    pub fn size(&self, size: f32) -> egui::Image {
+        egui::Image::new(self.image.clone())
+            .fit_to_exact_size(egui::vec2(size, size))
+            .texture_options(TextureOptions::LINEAR)
     }
 }
 

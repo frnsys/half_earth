@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use crate::views::{
     cards::{AsCard, CardState},
-    game::card::CARD_WIDTH,
+    game::card::{CARD_HEIGHT, CARD_WIDTH},
     scanner::Scannable,
 };
 
@@ -26,7 +26,7 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
         ui: &mut egui::Ui,
         ctx: &CardState,
     ) {
-        ui.add_space(100.);
+        let mid_y = ui.available_height() / 2.;
 
         let cursor = ui.cursor();
         const GAP: f32 = 24.;
@@ -36,7 +36,7 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
             .pivot(Align2::CENTER_BOTTOM)
             .fixed_pos((
                 cursor.left() + ui.available_width() / 2.,
-                cursor.top() - GAP,
+                mid_y - CARD_HEIGHT / 2. - GAP,
             ))
             .show(ui.ctx(), |ui| {
                 egui::Frame::NONE
@@ -51,13 +51,14 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
             .response
             .rect;
 
+        let scanner_height = 80.;
         let bot_scan_area = egui::Area::new("scan-down".into())
             .order(Order::Foreground)
             .movable(false)
             .pivot(Align2::CENTER_BOTTOM)
             .fixed_pos((
                 cursor.left() + ui.available_width() / 2.,
-                cursor.top() + ui.available_height(),
+                mid_y + CARD_HEIGHT / 2. + GAP + scanner_height,
             ))
             .show(ui.ctx(), |ui| {
                 egui::Frame::NONE
@@ -65,7 +66,7 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
                     .fill(Color32::WHITE)
                     .show(ui, |ui| {
                         ui.set_width(300.);
-                        ui.set_height(80.);
+                        ui.set_height(scanner_height);
                     });
             })
             .response
@@ -77,9 +78,17 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
         let mut closest_card = None;
         let area =
             egui::ScrollArea::horizontal().show(ui, |ui| {
+                ui.set_height(ui.available_height());
+
                 let width = ui.available_width();
                 ui.set_max_width(width);
                 let half_width = width / 2.;
+
+                ui.add_space(
+                    ui.available_height() / 2.
+                        - CARD_HEIGHT / 2.,
+                );
+
                 ui.horizontal(|ui| {
                     ui.add_space(half_width);
 
@@ -118,7 +127,23 @@ impl<'a, C: AsCard + Scannable> Cards<'a, C> {
                                         )
                                 {
                                     // card.add_scan_done(ctx) // TODO
-                                    println!("SCANNING");
+                                    println!("SCANNING TOP");
+                                } else {
+                                    println!("NOT ALLOWED");
+                                }
+                            } else if card_rect
+                                .intersects(bot_scan_area)
+                            {
+                                if card.is_add_allowed(ctx)
+                                    && self
+                                        .scan_timer
+                                        .has_elapsed(
+                                            card.add_scan_time(
+                                            ),
+                                        )
+                                {
+                                    // card.rem_scan_done(ctx) // TODO
+                                    println!("SCANNING BOTTOM");
                                 } else {
                                     println!("NOT ALLOWED");
                                 }

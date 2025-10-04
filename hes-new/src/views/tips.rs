@@ -1,8 +1,9 @@
-use egui::Align2;
+use egui::{Align2, Color32, Order};
 use hes_engine::{Industry, NPC, Process, Project, Region};
 
 use crate::{
     display::{DisplayEvent, Icon},
+    text::bbcode,
     views::FactorsCard,
 };
 
@@ -38,18 +39,21 @@ impl Tip {
         self.subicon = Some(icon);
         self
     }
-}
-impl egui::Widget for Tip {
-    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+
+    pub fn render(&self, ctx: &egui::Context) {
         egui::Area::new("tip".into())
+            .order(Order::Tooltip)
             .anchor(Align2::CENTER_TOP, egui::vec2(0., 20.))
-            .show(ui.ctx(), |ui| {
+            .show(ctx, |ui| {
                 super::parts::raised_frame(ui, |ui| {
-                    ui.set_max_width(700.);
-                    ui.label(&self.text);
+                    ui.set_max_width(480.);
+                    ui.style_mut()
+                        .visuals
+                        .override_text_color =
+                        Some(Color32::WHITE);
+                    bbcode(ui, &self.text);
                 });
-            })
-            .response
+            });
     }
 }
 
@@ -64,10 +68,16 @@ pub fn tip(icon: Icon, text: impl Into<String>) -> Tip {
     }
 }
 
-pub fn add_tip(tip: Tip, resp: egui::Response) {
-    resp.on_hover_ui(|ui| {
-        ui.add(tip);
-    });
+pub fn add_tip(
+    tip: Tip,
+    resp: egui::Response,
+) -> egui::Response {
+    let is_dragging = resp.ctx.dragged_id().is_some();
+    if !is_dragging && resp.contains_pointer() {
+        // if resp.hovered() { // TODO hovered is unreliable/inconsistent?
+        tip.render(&resp.ctx);
+    }
+    resp
 }
 
 #[derive(Clone, PartialEq)]

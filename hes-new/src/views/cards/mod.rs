@@ -34,6 +34,7 @@ pub struct CardStateMut<'a> {
 
 pub trait AsCard {
     fn bg_color(&self) -> Color32;
+    fn fg_color(&self) -> Color32;
     fn header(&self, ui: &mut egui::Ui, ctx: &CardState);
     fn figure(&self, ui: &mut egui::Ui, ctx: &CardState);
     fn name(&self, ui: &mut egui::Ui, ctx: &CardState);

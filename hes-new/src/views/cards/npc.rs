@@ -19,6 +19,10 @@ impl AsCard for NPC {
         Color32::from_rgb(0x72, 0x46, 0x80)
     }
 
+    fn fg_color(&self) -> Color32 {
+        Color32::WHITE
+    }
+
     fn header(&self, ui: &mut egui::Ui, ctx: &CardState) {
         ui.label(t!("Parliament"));
 

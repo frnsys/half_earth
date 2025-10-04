@@ -111,7 +111,7 @@ pub fn configure_style(ctx: &egui::Context) {
                 FontId::new(FONT_SIZE, family("W95FA")),
             ),
             (TextStyle::Button, FontId::new(9.0, Proportional)),
-            (TextStyle::Small, FontId::new(8.0, Proportional)),
+            (TextStyle::Small, FontId::new(12.0, Proportional)),
             (
                 TextStyle::Name("TimesTen".into()),
                 FontId::new(FONT_SIZE, family("TimesTen")),

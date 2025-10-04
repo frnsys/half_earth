@@ -343,7 +343,7 @@ fn render_sea_level_rise(ui: &mut egui::Ui, state: &State) {
             ui.label(t!("Sea Level Rise"));
         })
         .response,
-    )
+    );
 }
 
 fn render_population(ui: &mut egui::Ui, state: &State) {

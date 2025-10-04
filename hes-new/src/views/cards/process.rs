@@ -76,6 +76,10 @@ impl AsCard for Process {
         egui::Color32::from_gray(20)
     }
 
+    fn fg_color(&self) -> Color32 {
+        egui::Color32::WHITE
+    }
+
     fn header(&self, ui: &mut egui::Ui, ctx: &CardState) {
         let output_icon = self.output.icon();
         let output_name = t!(&self.output.title());
