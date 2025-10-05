@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use egui::{Color32, Margin};
+use egui::{Align, Color32, Layout, Margin};
 use hes_engine::{
     Id,
     State,
@@ -11,8 +11,14 @@ use rust_i18n::t;
 use crate::{
     display::{DisplayEffect, speaker_icon},
     text::BbCodeAnimator,
-    views::events::render_effects,
+    views::{events::render_effects, parts::button},
 };
+
+#[derive(Debug, PartialEq)]
+pub enum DialogueResult {
+    Advanced,
+    Finished,
+}
 
 pub struct Dialogue {
     dialogue: hes_engine::flavor::Dialogue,
@@ -51,7 +57,7 @@ impl Dialogue {
         &mut self,
         ui: &mut egui::Ui,
         state: &mut State,
-    ) -> bool {
+    ) -> Option<DialogueResult> {
         let line = &self.current_line;
         let profile = speaker_icon(&line.speaker);
         let is_last_line = line.next.is_none();
@@ -76,33 +82,52 @@ impl Dialogue {
 
         let revealed = self.animator.finished();
 
-        let mut is_finished = false;
+        let mut result = None;
         if revealed {
             if is_last_line {
                 if let Some(effects) = &self.effects {
                     render_effects(ui, state, effects);
                 }
 
-                if ui.button(t!("Continue")).clicked() {
-                    is_finished = true;
-                }
+                ui.with_layout(
+                    Layout::right_to_left(Align::Center),
+                    |ui| {
+                        ui.add_space(26.);
+                        if ui
+                            .add(button(t!("Continue")))
+                            .clicked()
+                        {
+                            result =
+                                Some(DialogueResult::Finished);
+                        }
+                    },
+                );
             } else if let Some(DialogueNext::Responses(
                 responses,
             )) = line.next.clone()
             {
                 for branch in responses {
                     let text = t!(&branch.text);
-                    if ui.button(text).clicked() {
+                    if ui.add(button(text)).clicked() {
                         self.select_choice(&branch, state);
                     }
                 }
             } else {
-                if ui.button(t!("Next")).clicked() {
-                    self.advance_line(state);
-                }
+                ui.with_layout(
+                    Layout::right_to_left(Align::Center),
+                    |ui| {
+                        ui.add_space(26.);
+                        if ui.add(button(t!("Next"))).clicked()
+                        {
+                            self.advance_line(state);
+                            result =
+                                Some(DialogueResult::Advanced);
+                        }
+                    },
+                );
             }
         }
-        is_finished
+        result
     }
 
     fn advance_line(&mut self, state: &State) {

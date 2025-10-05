@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use egui::{Color32, ImageSource, Margin};
+use egui::{Color32, ImageSource, Margin, TextWrapMode};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{EventPhase, State};
 use rust_i18n::t;
@@ -10,7 +10,7 @@ use crate::{
     image,
     views::{
         events::Events,
-        parts::{center_center, set_full_bg_image},
+        parts::{button, center_center, set_full_bg_image},
     },
 };
 
@@ -98,7 +98,7 @@ impl Interstitial {
         let go_to_next = center_center(ui, "events", |tui| {
             tui.ui(|ui| {
                 egui::Frame::NONE
-                    .fill(Color32::from_black_alpha(128))
+                    .fill(Color32::from_black_alpha(192))
                     .inner_margin(Margin::symmetric(6, 6))
                     .show(ui, |ui| {
                         ui.style_mut()
@@ -117,7 +117,7 @@ impl Interstitial {
                     });
 
                 if self.events.is_finished {
-                    ui.button(t!("Continue")).clicked()
+                    ui.add(button(t!("Continue"))).clicked()
                 } else {
                     false
                 }
@@ -138,11 +138,14 @@ impl Interstitial {
                             .visuals
                             .override_text_color =
                             Some(Color32::WHITE);
-                        ui.label(format!(
-                            "{} {}",
-                            t!("Image:"),
-                            locale.credit
-                        ));
+                        ui.add(
+                            egui::Label::new(format!(
+                                "{} {}",
+                                t!("Image:"),
+                                locale.credit
+                            ))
+                            .wrap_mode(TextWrapMode::Extend),
+                        );
                     });
             });
 

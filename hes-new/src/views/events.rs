@@ -9,12 +9,19 @@ use crate::{
     display::{DisplayEffect, DisplayEvent, fill_icons, icons},
     text::bbcode,
     views::{
-        dialogue::Dialogue,
+        dialogue::{Dialogue, DialogueResult},
         parts::center_center,
         tip,
         tips::add_tip,
     },
 };
+
+#[derive(Debug, PartialEq)]
+pub enum EventResult {
+    Advanced,
+    JustFinished,
+    AlreadyFinished,
+}
 
 pub struct Events {
     idx: usize,
@@ -52,28 +59,42 @@ impl Events {
         &mut self,
         ui: &mut egui::Ui,
         state: &mut State,
-    ) -> bool {
-        let mut just_finished = false;
+    ) -> Option<EventResult> {
+        let mut result = None;
         if !self.events.is_empty() {
             let event = self.events[self.idx].clone();
-            let go_to_next =
+            let dialogue_result =
                 center_center(ui, "events", |tui| {
                     tui.ui(|ui| {
                         self.render_event(ui, state, &event)
                     })
                 });
-            if go_to_next {
-                if self.idx < self.events.len() - 1 {
-                    self.idx += 1;
-                    let event = self.events[self.idx].clone();
-                    self.dialogue = Some(Dialogue::from(event));
-                } else {
-                    self.is_finished = true;
-                    just_finished = true;
+            if let Some(dialogue_result) = dialogue_result {
+                match dialogue_result {
+                    DialogueResult::Advanced => {
+                        result = Some(EventResult::Advanced);
+                    }
+                    DialogueResult::Finished => {
+                        if self.idx < self.events.len() - 1 {
+                            self.idx += 1;
+                            let event =
+                                self.events[self.idx].clone();
+                            self.dialogue =
+                                Some(Dialogue::from(event));
+                            result =
+                                Some(EventResult::Advanced);
+                        } else {
+                            self.is_finished = true;
+                            result =
+                                Some(EventResult::JustFinished);
+                        }
+                    }
                 }
             }
+        } else {
+            result = Some(EventResult::AlreadyFinished);
         }
-        just_finished
+        result
     }
 
     fn render_event(
@@ -81,7 +102,7 @@ impl Events {
         ui: &mut egui::Ui,
         state: &mut State,
         event: &DisplayEvent,
-    ) -> bool {
+    ) -> Option<DialogueResult> {
         if let Some(dialogue) = &mut self.dialogue {
             ui.set_width(400.);
             let go_to_next = ui
@@ -94,7 +115,7 @@ impl Events {
                 .inner;
             go_to_next
         } else {
-            false
+            None
         }
     }
 }

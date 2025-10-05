@@ -24,7 +24,7 @@ use crate::{
         update_factors,
     },
     views::{
-        events::Events,
+        events::{EventResult, Events},
         game::{
             govt::Parliament,
             plan::{Plan, PlanAction},
@@ -163,8 +163,8 @@ impl Session {
             );
         });
 
-        let just_finished = self.events.render(ui, state);
-        if just_finished {
+        let result = self.events.render(ui, state);
+        if result == Some(EventResult::JustFinished) {
             self.update_tutorial(state, tutorial);
         }
 

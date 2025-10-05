@@ -201,52 +201,52 @@ impl eframe::App for App {
         egui::CentralPanel::default()
             .frame(egui::Frame::NONE.inner_margin(0.0))
             .show(ctx, |ui| {
-                let mut cards = Cards::new(&mut self.cards);
+                // let mut cards = Cards::new(&mut self.cards);
+                //
+                // let viewed = Default::default();
+                // let plan_changes = Default::default();
+                // let queued_upgrades = Default::default();
+                // let process_mix_changes = Default::default();
+                // let process_points = Default::default();
+                // let ctx = CardState {
+                //     state: &self.state.game,
+                //     viewed: &viewed,
+                //     plan_changes: &plan_changes,
+                //     queued_upgrades: &queued_upgrades,
+                //     process_mix_changes: &process_mix_changes,
+                //     process_points: &process_points,
+                // };
+                // cards.render(ui, &ctx);
 
-                let viewed = Default::default();
-                let plan_changes = Default::default();
-                let queued_upgrades = Default::default();
-                let process_mix_changes = Default::default();
-                let process_points = Default::default();
-                let ctx = CardState {
-                    state: &self.state.game,
-                    viewed: &viewed,
-                    plan_changes: &plan_changes,
-                    queued_upgrades: &queued_upgrades,
-                    process_mix_changes: &process_mix_changes,
-                    process_points: &process_points,
-                };
-                cards.render(ui, &ctx);
-
-                // draw_bg_image(ui);
-                // egui::ScrollArea::vertical().show(ui, |ui| {
-                //     match &mut self.ui {
-                //         ViewState::Start(start) => {
-                //             if let Some(action) =
-                //                 start.render(ui)
-                //             {
-                //                 match action {
-                //                     StartAction::Continue => {
-                //                         todo!()
-                //                     }
-                //                     StartAction::NewGame => {
-                //                         self.ui =
-                //                             ViewState::Game(
-                //                                 UIState::intro(
-                //                                     start_year,
-                //                                     &mut self
-                //                                         .state
-                //                                         .game,
-                //                                 ),
-                //                             );
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //         ViewState::Game(game) => game
-                //             .render(ui, &mut self.state.game),
-                //     }
-                // });
+                draw_bg_image(ui);
+                egui::ScrollArea::vertical().show(ui, |ui| {
+                    match &mut self.ui {
+                        ViewState::Start(start) => {
+                            if let Some(action) =
+                                start.render(ui)
+                            {
+                                match action {
+                                    StartAction::Continue => {
+                                        todo!()
+                                    }
+                                    StartAction::NewGame => {
+                                        self.ui =
+                                            ViewState::Game(
+                                                UIState::intro(
+                                                    start_year,
+                                                    &mut self
+                                                        .state
+                                                        .game,
+                                                ),
+                                            );
+                                    }
+                                }
+                            }
+                        }
+                        ViewState::Game(game) => game
+                            .render(ui, &mut self.state.game),
+                    }
+                });
             });
     }
 

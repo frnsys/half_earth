@@ -1,4 +1,4 @@
-use std::sync::LazyLock;
+use std::{borrow::Cow, sync::LazyLock};
 
 use crate::image;
 use egui::{
@@ -7,7 +7,9 @@ use egui::{
     ImageSource,
     Margin,
     Rect,
+    Sense,
     Shadow,
+    Stroke,
     TextureOptions,
     Vec2,
     ahash::HashMap,
@@ -153,37 +155,19 @@ pub fn raised_frame(
     ui: &mut egui::Ui,
     contents: impl FnOnce(&mut egui::Ui),
 ) {
-    egui::Frame::NONE
-        .fill(Color32::from_gray(70))
-        .shadow(Shadow {
-            offset: [2, 2],
-            blur: 8,
-            spread: 2,
-            color: Color32::from_black_alpha(128),
-        })
-        .inner_margin(Margin {
-            top: 1,
-            left: 1,
-            ..Default::default()
-        })
-        .corner_radius(5)
-        .show(ui, |ui| {
+    raised_frame_impl(
+        ui,
+        Color32::from_gray(70),
+        Color32::from_gray(0),
+        |ui| {
             egui::Frame::NONE
-                .fill(Color32::from_gray(0))
+                .fill(Color32::from_gray(22))
                 .corner_radius(5)
-                .inner_margin(Margin {
-                    bottom: 2,
-                    right: 2,
-                    ..Default::default()
-                })
-                .show(ui, |ui| {
-                    egui::Frame::NONE
-                        .fill(Color32::from_gray(22))
-                        .corner_radius(5)
-                        .inner_margin(Margin::symmetric(8, 8))
-                        .show(ui, |ui| contents(ui))
-                });
-        });
+                .inner_margin(Margin::symmetric(8, 8))
+                .show(ui, |ui| contents(ui))
+                .response
+        },
+    );
 }
 
 pub fn glow(
@@ -205,6 +189,41 @@ pub fn glow(
             egui::StrokeKind::Outside,
         );
     }
+}
+
+fn raised_frame_impl(
+    ui: &mut egui::Ui,
+    highlight_color: Color32,
+    shadow_color: Color32,
+    contents: impl FnOnce(&mut egui::Ui) -> egui::Response,
+) -> egui::Response {
+    egui::Frame::NONE
+        .fill(highlight_color)
+        .shadow(Shadow {
+            offset: [2, 2],
+            blur: 8,
+            spread: 2,
+            color: Color32::from_black_alpha(128),
+        })
+        .inner_margin(Margin {
+            top: 1,
+            left: 1,
+            ..Default::default()
+        })
+        .corner_radius(5)
+        .show(ui, |ui| {
+            egui::Frame::NONE
+                .fill(shadow_color)
+                .corner_radius(5)
+                .inner_margin(Margin {
+                    bottom: 2,
+                    right: 2,
+                    ..Default::default()
+                })
+                .show(ui, contents)
+                .inner
+        })
+        .response
 }
 
 pub fn center_center<T>(
@@ -274,4 +293,37 @@ pub fn flex_spaced(
             ..Default::default()
         })
         .show(inner);
+}
+
+pub fn button<'a>(
+    text: Cow<'a, str>,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    move |ui| {
+        let resp = raised_frame_impl(
+            ui,
+            Color32::WHITE,
+            Color32::from_gray(0xBB),
+            |ui| {
+                let mut frame = egui::Frame::NONE
+                    .fill(Color32::from_gray(0xEE))
+                    .inner_margin(Margin::symmetric(6, 4))
+                    .corner_radius(4)
+                    .begin(ui);
+
+                frame.content_ui.label(
+                    egui::RichText::new(text)
+                        .heading()
+                        .size(14.),
+                );
+
+                let resp = frame.allocate_space(ui);
+                if resp.hovered() {
+                    frame.frame.fill = Color32::from_gray(0xCC);
+                }
+                frame.paint(ui);
+                resp
+            },
+        );
+        resp.interact(Sense::click())
+    }
 }

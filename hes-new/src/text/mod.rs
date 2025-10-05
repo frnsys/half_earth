@@ -51,7 +51,9 @@ impl BbCodeAnimator {
 
             ui.style_mut().spacing.item_spacing.x = 0.;
 
-            let (_, nodes) = parse::parse_bbcode(text).unwrap();
+            let text = fill_icons(text);
+            let (_, nodes) =
+                parse::parse_bbcode(&text).unwrap();
             self.animator.animate(ui, nodes, text_height);
         });
     }
@@ -68,38 +70,6 @@ pub enum Tag {
     TipWarn,
     TipGoal,
 }
-
-// type-total
-// tip-warn
-// effect-feature
-
-// .card-tag {
-//   border-radius: 0.2em;
-//   display: inline-block;
-//   font-size: 0.9em;
-//   background-color: rgba(0,0,0,0.3);
-//   padding: 0.05em 0.2em;
-//   color: rgba(255,255,255,0.9);
-//   font-weight: 600;
-//   letter-spacing: 0.01em;
-// }
-// .card-tag:hover{
-//   background-color: rgba(0,0,0,0.5);
-// }
-//
-// .card-tag img {
-//   height: 13px;
-//   margin-right: 3px;
-// }
-
-// .effect--text .effect-feature {
-//   background: #222;
-//   border-radius: 1.2em;
-//   padding: 0.2em;
-//   height: 20px;
-//   margin: 0 2px;
-//   border: 1px solid #888;
-// }
 
 #[derive(Debug, PartialEq)]
 pub enum Node<'a> {
@@ -151,12 +121,20 @@ impl Node<'_> {
                     }
                     Tag::Image => {
                         let text = inner_text(&children);
-                        ui.add(
-                            egui::Image::new(icon_from_slug(
-                                &text,
-                            ))
-                            .max_height(text_height - 4.),
-                        );
+                        // TODO HACKY
+                        if text == "gosplant" {
+                            ui.add(
+                                egui::Image::new(
+                                    icon_from_slug(&text),
+                                )
+                                .max_height(text_height),
+                            );
+                        } else {
+                            ui.add(
+                                icon_from_slug(&text)
+                                    .size(text_height - 2.),
+                            );
+                        }
                     }
                     Tag::UnknownParam => {
                         egui::Frame::NONE

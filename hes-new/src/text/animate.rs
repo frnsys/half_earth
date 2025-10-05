@@ -29,6 +29,7 @@ impl NodesAnimator {
         nodes: Vec<Node<'a>>,
         text_height: f32,
     ) {
+        ui.set_width(360.);
         if nodes.len() != self.states.len() {
             self.reset(&nodes);
         }
@@ -67,10 +68,11 @@ impl NodesAnimator {
                 }
                 found = true;
             } else {
-                ui.scope(|ui| {
-                    ui.set_opacity(0.);
-                    node.render_static(ui, text_height);
-                });
+                // TODO this is buggy
+                // ui.scope(|ui| {
+                //     ui.set_opacity(0.);
+                //     node.render_static(ui, text_height);
+                // });
             }
         }
     }
@@ -131,18 +133,29 @@ impl NodeAnimator {
         node: Node<'_>,
         text_height: f32,
     ) {
-        let num_chars = node.len();
-        let visible_chars_float = self.timer * num_chars as f32;
-        let visible_chars =
-            visible_chars_float.floor() as usize;
-        let progress =
-            visible_chars_float - visible_chars_float.floor();
-        node.render_partial(
-            ui,
-            visible_chars,
-            progress,
-            text_height,
-        );
+        if matches!(
+            node,
+            Node::Tagged {
+                tag: Tag::Image,
+                ..
+            }
+        ) {
+            self.animation_finished = true;
+        } else {
+            let num_chars = node.len();
+            let visible_chars_float =
+                self.timer * num_chars as f32;
+            let visible_chars =
+                visible_chars_float.floor() as usize;
+            let progress = visible_chars_float
+                - visible_chars_float.floor();
+            node.render_partial(
+                ui,
+                visible_chars,
+                progress,
+                text_height,
+            );
+        }
     }
 }
 
@@ -164,8 +177,13 @@ impl Node<'_> {
                     Tag::Image => 1,
                     Tag::UnknownParam => 1,
 
+                    // Everything else is just treated as normal text when animated
                     _ => {
-                        children.iter().map(|ch| ch.len()).sum()
+                        let mut text = String::new();
+                        for ch in children {
+                            text.push_str(&ch.text());
+                        }
+                        text.len()
                     }
                 }
             }
@@ -208,46 +226,61 @@ impl Node<'_> {
                         ui.scope(|ui| {
                             ui.set_opacity(progress);
                             let text = inner_text(&children);
-                            ui.add(
-                                egui::Image::new(
-                                    icon_from_slug(&text),
-                                )
-                                .max_height(text_height),
-                            );
+
+                            // TODO HACKY
+                            if text == "gosplant" {
+                                ui.add(
+                                    egui::Image::new(
+                                        icon_from_slug(&text),
+                                    )
+                                    .max_height(text_height),
+                                );
+                            } else {
+                                ui.add(
+                                    icon_from_slug(&text)
+                                        .size(text_height - 2.),
+                                );
+                            }
                         });
                     }
-
-                    Tag::UnknownParam => {
-                        ui.scope(|ui| {
-                            println!("opacity: {:?}", progress);
-                            ui.set_opacity(progress);
-                            egui::Frame::NONE
-                                .inner_margin(
-                                    Margin::symmetric(6, 1),
-                                )
-                                .corner_radius(12)
-                                .fill(
-                                    Color32::from_black_alpha(
-                                        180,
-                                    ),
-                                )
-                                .show(ui, |ui| {
-                                    ui.style_mut()
-                                        .visuals
-                                        .override_text_color =
-                                        Some(Color32::WHITE);
-                                    for ch in children {
-                                        ch.render_static(
-                                            ui,
-                                            text_height,
-                                        );
-                                    }
-                                });
-                        });
+                    Tag::TipWarn => {
+                        let mut style = current_text_style(ui);
+                        style.color =
+                            Color32::from_rgb(0xeb, 0x39, 0x41);
+                        let text = inner_text(&children);
+                        partial_text(
+                            ui,
+                            &text,
+                            style,
+                            visible_chars,
+                            progress,
+                        );
+                    }
+                    Tag::TipGoal => {
+                        let mut style = current_text_style(ui);
+                        style.color =
+                            Color32::from_rgb(0x43, 0xcc, 0x70);
+                        let text = inner_text(&children);
+                        partial_text(
+                            ui,
+                            &text,
+                            style,
+                            visible_chars,
+                            progress,
+                        );
                     }
 
+                    // Everything else is just treated as normal text when animated
                     _ => {
-                        // TODO
+                        let style = current_text_style(ui);
+                        let text = inner_text(&children);
+                        partial_text(
+                            ui,
+                            &text,
+                            style,
+                            visible_chars,
+                            progress,
+                        );
                     }
                 }
             }

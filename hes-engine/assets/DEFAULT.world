@@ -23355,7 +23355,7 @@
                                 "id": 8
                             },
                             "speaker": "[GAME]",
-                            "text": "And you must do so without letting your [political_capital]<em class=\"lose-con\">political capital dip below 0</em>..."
+                            "text": "And you must do so without letting your [political_capital][w]political capital dip below 0[/w]..."
                         },
                         {
                             "id": 5,
@@ -23363,7 +23363,7 @@
                                 "id": 9
                             },
                             "speaker": "[GAME]",
-                            "text": "You must do so without letting people's [contentedness]<em class=\"lose-con\">contentedness dip below 0</em>..."
+                            "text": "You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]..."
                         },
                         {
                             "id": 6,
@@ -23403,7 +23403,7 @@
                                 "id": 5
                             },
                             "speaker": "[GAME]",
-                            "text": "It's your duty to bring [warming]<em class=\"win-con\">warming to below 1\u00b0C</em>, the [extinction_rate]<em class=\"win-con\">extinction rate to below 20</em>, and [emissions]<em class=\"win-con\">emissions to below 0</em> while there's still time."
+                            "text": "It's your duty to bring [warming][g]warming to below 1\u00b0C[/g], the [extinction_rate][g]extinction rate to below 20[/g], and [emissions][g]emissions to below 0[/g] while there's still time."
                         }
                     ]
                 },

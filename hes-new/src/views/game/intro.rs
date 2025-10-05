@@ -4,7 +4,10 @@ use rust_i18n::t;
 use crate::{
     display::DisplayEvent,
     image,
-    views::{events::Events, parts::set_full_bg_image},
+    views::{
+        events::{EventResult, Events},
+        parts::{button, set_full_bg_image},
+    },
 };
 
 const IMAGES: &[(egui::ImageSource<'static>, f32, f32)] = &[
@@ -79,7 +82,10 @@ impl Intro {
             );
         }
 
-        self.events.render(ui, state);
+        let result = self.events.render(ui, state);
+        if result == Some(EventResult::Advanced) {
+            self.img_idx += 1;
+        }
         if self.events.is_finished {
             // TODO fade out
             return true;
@@ -91,7 +97,7 @@ impl Intro {
                 egui::Vec2::new(-10., -10.),
             )
             .show(ui.ctx(), |ui| {
-                if ui.button(t!("Skip")).clicked() {
+                if ui.add(button(t!("Skip"))).clicked() {
                     // TODO fade out
                     true
                 } else {
