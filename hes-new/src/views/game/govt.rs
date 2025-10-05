@@ -1,6 +1,16 @@
 use std::{collections::BTreeMap, sync::OnceLock};
 
-use egui::{Color32, Pos2, Sense};
+use egui::{
+    Color32,
+    CornerRadius,
+    Margin,
+    Order,
+    Pos2,
+    Sense,
+    Shadow,
+    Stroke,
+};
+use egui_taffy::TuiBuilderLogic;
 use hes_engine::{Flag, Id, NPC, State, flavor::Speaker};
 use rust_i18n::t;
 
@@ -11,7 +21,12 @@ use crate::{
     views::{
         CardState,
         game::Card,
-        parts::set_full_bg_image,
+        parts::{
+            center_center,
+            h_center,
+            raised_frame_impl,
+            set_full_bg_image,
+        },
         tip,
         tips::add_tip,
     },
@@ -86,6 +101,32 @@ impl Parliament {
             egui::vec2(1600., 1192.),
         );
 
+        // Note: this needs to go early so that
+        // clicking to show the card doesn't close
+        // the overlay in the same frame.
+        if let Some(card) = &mut self.card {
+            let should_close = overlay(ui, |ui| {
+                // TODO
+                let viewed = Default::default();
+                let plan_changes = Default::default();
+                let queued_upgrades = Default::default();
+                let process_mix_changes = Default::default();
+                let process_points = Default::default();
+                let ctx = CardState {
+                    state: state,
+                    viewed: &viewed,
+                    plan_changes: &plan_changes,
+                    queued_upgrades: &queued_upgrades,
+                    process_mix_changes: &process_mix_changes,
+                    process_points: &process_points,
+                };
+                card.render(ui, &ctx, false)
+            });
+            if should_close {
+                self.card = None;
+            }
+        }
+
         let suspended =
             state.flags.contains(&Flag::ParliamentSuspended);
 
@@ -108,49 +149,123 @@ impl Parliament {
         }
 
         ui.vertical_centered(|ui| {
-            for row in &self.seats {
-                ui.horizontal(|ui| {
-                    for seat in row {
-                        let speaker = as_speaker(&seat.name);
-                        let image = speaker_icon(&speaker);
-                        if seat.is_ally {
-                            // TODO
-                            ui.image(image);
-                        } else {
-                            ui.image(image);
-                        }
+            egui::Frame::NONE
+                .fill(Color32::from_rgb(0x96, 0x5F, 0xA9))
+                .inner_margin(Margin::symmetric(8, 12))
+                .outer_margin(Margin::symmetric(0, 16))
+                .stroke(Stroke::new(
+                    1.,
+                    Color32::from_rgb(0x76, 0x44, 0x87),
+                ))
+                .shadow(Shadow {
+                    offset: [2, 2],
+                    blur: 8,
+                    spread: 2,
+                    color: Color32::from_black_alpha(32),
+                })
+                .corner_radius(CornerRadius {
+                    nw: 5,
+                    ne: 5,
+                    sw: 255,
+                    se: 255,
+                })
+                .show(ui, |ui| {
+                    ui.set_width(320.);
+                    ui.set_height(140.);
+                    for (i, row) in
+                        self.seats.iter().enumerate()
+                    {
+                        h_center(
+                            ui,
+                            &format!("govt-row-{i}"),
+                            |tui| {
+                                tui.ui(|ui| {
+                                    ui.horizontal(|ui| {
+                            for seat in row {
+                                let speaker =
+                                    as_speaker(&seat.name);
+                                let image =
+                                    speaker_icon(&speaker);
+                                let fill = if seat.is_ally {
+                                    Color32::from_rgb(
+                                        0xfc, 0xe2, 0x97,
+                                    )
+                                } else {
+                                    Color32::TRANSPARENT
+                                };
+                                let stroke = if seat.is_ally {
+                                    Color32::from_rgb(
+                                        0xED, 0xB1, 0x40,
+                                    )
+                                } else {
+                                    Color32::TRANSPARENT
+                                };
+                                egui::Frame::NONE
+                                    .fill(fill)
+                                    .stroke(Stroke::new(
+                                        1., stroke,
+                                    ))
+                                    .corner_radius(3)
+                                    .show(ui, |ui| {
+                                        ui.add(
+                                    egui::Image::new(image)
+                                        .fit_to_exact_size(
+                                            egui::Vec2::splat(
+                                                24.,
+                                            ),
+                                        ),
+                                );
+                                    });
+                            }
+                        });
+                                });
+                            },
+                        );
                     }
                 });
-            }
         });
 
-        add_tip(tip, ui.label(coalition_text));
+        ui.vertical_centered(|ui| {
+            add_tip(
+                tip,
+                ui.label(
+                    egui::RichText::new(coalition_text)
+                        .heading()
+                        .color(Color32::WHITE),
+                ),
+            );
 
-        for npc in state.npcs.unlocked() {
-            let resp = render_npc(ui, npc, self.total_seats);
-            if resp.interact(Sense::click()).clicked() {
-                self.card = Some(Card::new(npc.clone()));
+            ui.add_space(32.);
+
+            let npcs: Vec<_> = state.npcs.unlocked().collect();
+            for (i, row) in npcs.chunks(3).enumerate() {
+                ui.add_space(32.);
+                h_center(ui, &format!("npc-row-{i}"), |tui| {
+                    tui.ui(|ui| {
+                        ui.horizontal(|ui| {
+                            for npc in row {
+                                let resp = render_npc(
+                                    ui,
+                                    npc,
+                                    self.total_seats,
+                                );
+                                if resp
+                                    .interact(Sense::click())
+                                    .clicked()
+                                {
+                                    self.card =
+                                        Some(Card::new(
+                                            (*npc).clone(),
+                                        ));
+                                }
+                            }
+                        });
+                    });
+                });
             }
-        }
 
-        if let Some(card) = &mut self.card {
-            // TODO
-            let viewed = Default::default();
-            let plan_changes = Default::default();
-            let queued_upgrades = Default::default();
-            let process_mix_changes = Default::default();
-            let process_points = Default::default();
-            let ctx = CardState {
-                state: state,
-                viewed: &viewed,
-                plan_changes: &plan_changes,
-                queued_upgrades: &queued_upgrades,
-                process_mix_changes: &process_mix_changes,
-                process_points: &process_points,
-            };
-
-            card.render(ui, &ctx, false);
-        }
+            ui.add_space(32.);
+        });
     }
 }
 
@@ -258,36 +373,99 @@ fn render_npc(
     let speaker = as_speaker(&npc.name);
     let portrait = speaker_icon(&speaker);
 
-    ui.vertical_centered(|ui| {
-        ui.image(portrait);
-        ui.label(&npc.name);
+    raised_frame_impl(
+        ui,
+        Color32::from_rgb(0xB0, 0x93, 0xBA),
+        Color32::from_rgb(0x4e, 0x2c, 0x59),
+        |ui| {
+            egui::Frame::NONE
+                .fill(Color32::from_rgb(0x96, 0x5F, 0xA9))
+                .corner_radius(5)
+                // .inner_margin(Margin::symmetric(8, 8))
+                .inner_margin(Margin {
+                    left: 8,
+                    right: 8,
+                    top: -32,
+                    bottom: 24,
+                })
+                .show(ui, |ui| {
+                    ui.set_width(150.);
+                    ui.vertical_centered(|ui| {
+                        ui.add(
+                            egui::Image::new(portrait)
+                                .fit_to_exact_size(
+                                    egui::Vec2::splat(64.),
+                                ),
+                        );
+                        ui.label(&npc.name);
 
-        let color = Color32::from_hex(&npc.flavor.color)
-            .expect("is valid color");
+                        let color = Color32::from_hex(
+                            &npc.flavor.color,
+                        )
+                        .expect("is valid color");
 
-        let side = 8.;
-        let spacing = 1.;
-        let width = (side * seats as f32)
-            + (spacing * (seats - 1) as f32);
-        let size = egui::vec2(width, side);
-        let (rect, _) =
-            ui.allocate_exact_size(size, Sense::empty());
+                        let side = 8.;
+                        let spacing = 1.;
+                        let width = (side * seats as f32)
+                            + (spacing * (seats - 1) as f32);
+                        let size = egui::vec2(width, side);
+                        let (rect, _) = ui.allocate_exact_size(
+                            size,
+                            Sense::empty(),
+                        );
 
-        let painter = ui.painter();
-        let mut x = rect.left();
-        for _ in 0..seats {
-            let pip = egui::Rect::from_min_max(
-                Pos2::new(x, rect.top()),
-                Pos2::new(x + side, rect.bottom()),
-            );
-            painter.rect_filled(pip, 0, color);
-            x += side + spacing;
-        }
+                        let painter = ui.painter();
+                        let mut x = rect.left();
+                        for _ in 0..seats {
+                            let pip = egui::Rect::from_min_max(
+                                Pos2::new(x, rect.top()),
+                                Pos2::new(
+                                    x + side,
+                                    rect.bottom(),
+                                ),
+                            );
+                            painter.rect_filled(pip, 0, color);
+                            x += side + spacing;
+                        }
 
-        if npc.is_ally() {
-            ui.image(icons::ALLY);
-            ui.label(t!("Ally"));
-        }
-    })
-    .response
+                        if npc.is_ally() {
+                            ui.image(icons::ALLY);
+                            ui.label(t!("Ally"));
+                        }
+                    });
+                })
+                .response
+        },
+    )
+}
+
+fn overlay(
+    ui: &mut egui::Ui,
+    inner: impl FnOnce(&mut egui::Ui) -> egui::Response,
+) -> bool {
+    egui::Area::new("overlay".into())
+        .order(Order::Tooltip)
+        .default_size(ui.ctx().screen_rect().size())
+        .movable(false)
+        .show(ui.ctx(), |ui| {
+            egui::Frame::NONE
+                .fill(Color32::from_black_alpha(200))
+                .inner_margin(Margin::symmetric(18, 18))
+                .show(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    ui.set_height(ui.available_height());
+                    center_center(
+                        ui,
+                        "overlay-content".into(),
+                        |tui| {
+                            tui.ui(|ui| {
+                                let resp = inner(ui);
+                                resp.clicked_elsewhere()
+                            })
+                        },
+                    )
+                })
+                .inner
+        })
+        .inner
 }

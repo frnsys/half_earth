@@ -1,6 +1,7 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::Color32;
+use egui::{Color32, Margin};
+use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{Id, Output, Process, Resource, State};
 use numfmt::{Formatter, Precision, Scales};
@@ -19,11 +20,17 @@ use crate::{
         icons,
         intensity,
     },
+    image,
     state::{FACTORS, StateExt},
     vars::Var,
     views::{
         Tip,
         factors::render_factors_list,
+        parts::{
+            h_center,
+            raised_frame_no_shadow_impl,
+            set_full_bg_image,
+        },
         tip,
         tips::add_tip,
         treemap::{TreeItem, treemap},
@@ -68,6 +75,12 @@ impl Stats {
             BTreeMap<Id, isize>,
         >,
     ) {
+        set_full_bg_image(
+            ui,
+            image!("backgrounds/dashboard.png"),
+            egui::vec2(1600., 1192.),
+        );
+
         let demand_for_outputs: EnumMap<Output, f32> =
             Output::iter()
                 .map(|output| {
@@ -97,20 +110,82 @@ impl Stats {
             })
             .collect::<Vec<_>>();
 
-        ui.horizontal_top(|ui| {
-            render_temp(ui, state);
-            render_emissions(ui, state, &process_changes);
-            render_land(ui, state, &process_changes);
-            render_energy(ui, state, &process_changes);
-            render_water(ui, state, &process_changes);
-            render_biodiversity(ui, state, &process_changes);
-            render_sea_level_rise(ui, state);
-            render_population(ui, state);
-            render_income(ui, state);
-            render_habitability(ui, state);
-        });
+        ui.vertical_centered(|ui| {
+            ui.add_space(32.);
+            ui.set_max_width(720.);
 
-        render_breakdown(ui, state, self.breakdown_factor);
+            h_center(ui, "stats-top".into(), |tui| {
+                tui.ui(|ui| {
+                    stat(
+                        ui,
+                        |ui| render_temp(ui, state),
+                        t!("Temp. Anomaly"),
+                    );
+                });
+                tui.ui(|ui| {
+                    render_emissions(
+                        ui,
+                        state,
+                        &process_changes,
+                    );
+                });
+                tui.ui(|ui| {
+                    render_land(ui, state, &process_changes);
+                });
+                tui.ui(|ui| {
+                    render_energy(ui, state, &process_changes);
+                });
+                tui.ui(|ui| {
+                    render_water(ui, state, &process_changes);
+                });
+            });
+
+            ui.add_space(32.);
+
+            h_center(ui, "stats-bottom".into(), |tui| {
+                tui.ui(|ui| {
+                    render_biodiversity(
+                        ui,
+                        state,
+                        &process_changes,
+                    );
+                });
+                tui.ui(|ui| {
+                    stat(
+                        ui,
+                        |ui| render_sea_level_rise(ui, state),
+                        t!("Sea Level Rise"),
+                    );
+                });
+                tui.ui(|ui| {
+                    stat(
+                        ui,
+                        |ui| render_population(ui, state),
+                        t!("Population"),
+                    );
+                });
+                tui.ui(|ui| {
+                    stat(
+                        ui,
+                        |ui| render_income(ui, state),
+                        t!("Avg. Living Standards"),
+                    );
+                });
+                tui.ui(|ui| {
+                    stat(
+                        ui,
+                        |ui| render_habitability(ui, state),
+                        t!("Avg. Habitability"),
+                    );
+                });
+            });
+
+            ui.add_space(32.);
+
+            render_breakdown(ui, state, self.breakdown_factor);
+
+            ui.add_space(64.);
+        });
 
         if self.show_breakdown_menu {
             if let Some(factor) = render_breakdown_menu(ui) {
@@ -121,12 +196,49 @@ impl Stats {
     }
 }
 
+fn stat(
+    ui: &mut egui::Ui,
+    inner: impl FnOnce(&mut egui::Ui),
+    label: Cow<'static, str>,
+) -> egui::Response {
+    ui.vertical_centered(|ui| {
+        ui.set_width(120.);
+        raised_frame_no_shadow_impl(
+            ui,
+            Color32::from_rgb(0x96, 0x8a, 0x68),
+            Color32::from_rgb(0xEF, 0xE5, 0xD2),
+            |ui| {
+                egui::Frame::NONE
+                    .fill(Color32::from_rgb(0xEB, 0xDE, 0xC6))
+                    .corner_radius(5)
+                    .inner_margin(Margin {
+                        left: 8,
+                        right: 8,
+                        top: -12,
+                        bottom: 18,
+                    })
+                    .show(ui, |ui| {
+                        ui.set_width(80.);
+                        inner(ui);
+                    })
+                    .response
+            },
+        );
+        ui.label(label);
+    })
+    .response
+}
+
 fn render_temp(ui: &mut egui::Ui, state: &State) {
     let temp_anomaly = state.temp_anomaly();
     ui.vertical_centered(|ui| {
-        ui.image(icons::WARMING);
-        ui.label(temp_anomaly);
-        ui.label(t!("Temp. Anomaly"));
+        ui.add(icons::WARMING.size(24.));
+        ui.add_space(8.);
+        ui.label(
+            egui::RichText::new(temp_anomaly)
+                .monospace()
+                .size(24.),
+        );
     });
 }
 
@@ -338,9 +450,9 @@ fn render_sea_level_rise(ui: &mut egui::Ui, state: &State) {
     add_tip(
         tip,
         ui.vertical_centered(|ui| {
-            ui.image(icons::SEA_LEVEL_RISE);
+            ui.add(icons::SEA_LEVEL_RISE.size(24.));
+            ui.add_space(8.);
             ui.label(format!("{rise} m"));
-            ui.label(t!("Sea Level Rise"));
         })
         .response,
     );
@@ -354,9 +466,9 @@ fn render_population(ui: &mut egui::Ui, state: &State) {
     let pop_fmted = f.fmt2(population as f64).to_string();
 
     ui.vertical_centered(|ui| {
-        ui.image(icons::POPULATION);
+        ui.add(icons::POPULATION.size(24.));
+        ui.add_space(8.);
         ui.label(pop_fmted);
-        ui.label(t!("Population"));
     });
 }
 
@@ -368,10 +480,10 @@ fn render_income(ui: &mut egui::Ui, state: &State) {
     };
 
     ui.vertical_centered(|ui| {
-        ui.image(icons::WEALTH);
+        ui.add(icons::WEALTH.size(24.));
         // <span style:color=income.color>{&income.label}</span> TODO
+        ui.add_space(8.);
         ui.label(income.label);
-        ui.label(t!("Avg. Living Standards"));
     });
 }
 
@@ -390,11 +502,11 @@ fn render_habitability(ui: &mut egui::Ui, state: &State) {
     };
 
     ui.vertical_centered(|ui| {
-        ui.image(icons::HABITABILITY);
+        ui.add(icons::HABITABILITY.size(24.));
         // <span style:color=habitability
         //     .color>{&habitability.label}</span> TODO
+        ui.add_space(8.);
         ui.label(habitability.label);
-        ui.label(t!("Avg. Habitability"));
     });
 }
 
@@ -466,26 +578,41 @@ fn render_dashboard_item(
     change: f32,
     icon: Icon,
 ) {
-    add_tip(item_tip, ui.vertical_centered(|ui| {
-        if let Some(color) = color {
-            ui.colored_label(color, display_value);
-        } else {
-            ui.label(display_value);
-        }
-        if change != 0. {
-            let change_tip =
-                tip(
-                    icon,
-                    t!("The estimated value after production changes have finished."),
-                );
-            add_tip(change_tip, ui.horizontal_centered(|ui| {
-                ui.image(icons::DOWN_ARROW_SMALL);
-                ui.label(display_changed_value);
-            }).response);
-        }
-        ui.image(icon);
-        ui.label(label);
-    }).response);
+    add_tip(
+        item_tip,
+        stat(
+            ui,
+            |ui| {
+                ui.add(icon.size(24.));
+                ui.add_space(8.);
+                let text = egui::RichText::new(display_value)
+                    .monospace()
+                    .size(24.);
+                if let Some(color) = color {
+                    ui.colored_label(color, text);
+                } else {
+                    ui.label(text);
+                }
+                if change != 0. {
+                    let change_tip = tip(
+                        icon,
+                        t!(
+                            "The estimated value after production changes have finished."
+                        ),
+                    );
+                    add_tip(
+                        change_tip,
+                        ui.horizontal_centered(|ui| {
+                            ui.image(icons::DOWN_ARROW_SMALL);
+                            ui.label(display_changed_value);
+                        })
+                        .response,
+                    );
+                }
+            },
+            Cow::Owned(label.to_string()),
+        ),
+    );
 }
 
 // TODO

@@ -11,7 +11,10 @@ mod stats;
 
 pub use card::{CARD_HEIGHT, Card};
 pub use cards::Cards;
+pub(crate) use govt::Parliament;
 pub use govt::as_speaker;
 pub use interstitial::Interstitial;
 pub use intro::Intro;
 pub use session::Session;
+pub(crate) use session::View;
+pub(crate) use stats::Stats;

@@ -112,7 +112,7 @@ pub struct UIState {
     pub phase: Phase,
 
     #[serde(skip)]
-    show_menu: bool,
+    pub(crate) show_menu: bool,
 
     pub start_year: usize,
     pub tutorial: Tutorial,

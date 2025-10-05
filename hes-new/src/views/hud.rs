@@ -1,4 +1,4 @@
-use egui::Button;
+use egui::{Button, Color32, Margin};
 use egui_taffy::{TuiBuilderLogic, taffy, tui};
 use hes_engine::State;
 use rust_i18n::t;
@@ -92,59 +92,68 @@ pub fn render_hud(
         ))
     };
 
-    tui(ui, ui.id().with("top-bar"))
-        .reserve_available_width()
-        .style(taffy::Style {
-            flex_grow: 1.,
-            flex_direction: taffy::FlexDirection::Row,
-            min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
-                height: taffy::prelude::auto(),
-            },
-            align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceBetween,
-            ),
-            ..Default::default()
-        })
-        .show(|tui| {
-            tui.ui(|ui| {
-                ui.set_min_width(50.);
-                ui.label(year.to_string());
-            });
+    egui::Frame::NONE
+        .fill(Color32::from_gray(0x20))
+        .inner_margin(Margin::symmetric(6, 3))
+        .show(ui, |ui| {
+            ui.style_mut().visuals.override_text_color =
+                Some(Color32::WHITE);
 
-            tui.ui(|ui| {
-                ui.horizontal(|ui| {
-                    add_tip(
-                        pc_tip,
+            tui(ui, ui.id().with("top-bar"))
+                .reserve_available_width()
+                .style(taffy::Style {
+                    flex_grow: 1.,
+                    flex_direction: taffy::FlexDirection::Row,
+                    min_size: taffy::Size {
+                        width: taffy::prelude::percent(1.),
+                        height: taffy::prelude::auto(),
+                    },
+                    align_items: Some(
+                        taffy::AlignItems::Center,
+                    ),
+                    justify_content: Some(
+                        taffy::JustifyContent::SpaceBetween,
+                    ),
+                    ..Default::default()
+                })
+                .show(|tui| {
+                    tui.ui(|ui| {
+                        ui.set_min_width(50.);
+                        ui.label(egui::RichText::new(year.to_string()).size(12.));
+                    });
+
+                    tui.ui(|ui| {
                         ui.horizontal(|ui| {
-                            // <div class:warnPc=pc_danger> // TODO
-                            ui.image(
-                                icons::HUD_POLITICAL_CAPITAL,
+                            add_tip(
+                                pc_tip,
+                                ui.horizontal(|ui| {
+                                    // <div class:warnPc=pc_danger> // TODO
+                                    ui.add(
+                                        icons::HUD_POLITICAL_CAPITAL.size(12.),
+                                    );
+                                    ui.label(egui::RichText::new(pc.to_string()).size(12.));
+                                })
+                                .response,
                             );
-                            ui.label(pc.to_string());
-                        })
-                        .response,
-                    );
 
-                    add_tip(
-                        biodiversity_tip,
-                        ui.horizontal(|ui| {
-                            ui.image(
-                                icons::HUD_EXTINCTION_RATE,
+                            add_tip(
+                                biodiversity_tip,
+                                ui.horizontal(|ui| {
+                                    ui.add(
+                                icons::HUD_EXTINCTION_RATE.size(12.),
                             );
-                            render_intensity_bar(
-                                ui, extinction, false,
+                                    render_intensity_bar(
+                                        ui, extinction, false,
+                                    );
+                                })
+                                .response,
                             );
-                        })
-                        .response,
-                    );
 
-                    add_tip(
+                            add_tip(
                         contentedness_tip,
                         ui.horizontal(|ui| {
                             // <div class:bad=unhappy>
-                            ui.image(icons::HUD_CONTENTEDNESS);
+                            ui.add(icons::HUD_CONTENTEDNESS.size(12.));
                             render_intensity_bar(
                                 ui,
                                 contentedness,
@@ -154,43 +163,49 @@ pub fn render_hud(
                         .response,
                     );
 
-                    add_tip(
-                        warming_tip,
-                        ui.horizontal(|ui| {
-                            ui.image(icons::HUD_WARMING);
-                            render_intensity_bar(
-                                ui, warming, false,
+                            add_tip(
+                                warming_tip,
+                                ui.horizontal(|ui| {
+                                    ui.add(
+                                        icons::HUD_WARMING.size(12.),
+                                    );
+                                    render_intensity_bar(
+                                        ui, warming, false,
+                                    );
+                                })
+                                .response,
                             );
-                        })
-                        .response,
-                    );
 
-                    add_tip(
-                        emissions_tip,
-                        ui.horizontal(|ui| {
-                            ui.image(icons::HUD_EMISSIONS);
-                            let sym = if emissions_up {
-                                "↑"
-                            } else {
-                                "↓"
-                            };
-                            ui.label(sym);
-                        })
-                        .response,
-                    );
-                });
-            });
+                            add_tip(
+                                emissions_tip,
+                                ui.horizontal(|ui| {
+                                    ui.add(
+                                        icons::HUD_EMISSIONS.size(14.),
+                                    );
+                                    let sym = if emissions_up {
+                                        "↑"
+                                    } else {
+                                        "↓"
+                                    };
+                                    ui.label(sym);
+                                })
+                                .response,
+                            );
+                        });
+                    });
 
-            let button = Button::image_and_text(
-                icons::SETTINGS,
-                t!("Menu"),
-            )
-            .wrap_mode(egui::TextWrapMode::Extend);
-            let resp = tui.ui_add(button);
-            if resp.clicked() {
-                return Some(HudAction::OpenMenu);
-            }
+                    let button = Button::image_and_text(
+                        icons::SETTINGS,
+                        t!("Menu"),
+                    )
+                    .wrap_mode(egui::TextWrapMode::Extend);
+                    let resp = tui.ui_add(button);
+                    if resp.clicked() {
+                        return Some(HudAction::OpenMenu);
+                    }
 
-            None
+                    None
+                })
         })
+        .inner
 }

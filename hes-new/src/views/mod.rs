@@ -12,6 +12,7 @@ mod tips;
 mod treemap;
 
 pub use cards::CardState;
+pub(crate) use events::Events;
 pub use factors::FactorsCard;
 pub use hud::{HudAction, render_hud};
 pub use menu::{MenuAction, render_menu};

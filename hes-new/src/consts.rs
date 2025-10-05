@@ -49,4 +49,4 @@ pub const PROCESS_CARD_WITHDRAW_TIME: f32 = 0.4 * 1000.;
 
 pub const MS_PER_YEAR: f32 = 4000.;
 
-pub const PARLIAMENT_SEATS: &[usize] = &[2, 3, 4, 5, 5, 5, 4, 3, 2];
+pub const PARLIAMENT_SEATS: &[usize] = &[9, 9, 7, 5, 3];

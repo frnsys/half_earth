@@ -191,7 +191,7 @@ pub fn glow(
     }
 }
 
-fn raised_frame_impl(
+pub fn raised_frame_impl(
     ui: &mut egui::Ui,
     highlight_color: Color32,
     shadow_color: Color32,
@@ -226,6 +226,35 @@ fn raised_frame_impl(
         .response
 }
 
+pub fn raised_frame_no_shadow_impl(
+    ui: &mut egui::Ui,
+    highlight_color: Color32,
+    shadow_color: Color32,
+    contents: impl FnOnce(&mut egui::Ui) -> egui::Response,
+) -> egui::Response {
+    egui::Frame::NONE
+        .fill(highlight_color)
+        .inner_margin(Margin {
+            top: 1,
+            left: 1,
+            ..Default::default()
+        })
+        .corner_radius(5)
+        .show(ui, |ui| {
+            egui::Frame::NONE
+                .fill(shadow_color)
+                .corner_radius(5)
+                .inner_margin(Margin {
+                    bottom: 1,
+                    right: 1,
+                    ..Default::default()
+                })
+                .show(ui, contents)
+                .inner
+        })
+        .response
+}
+
 pub fn center_center<T>(
     ui: &mut egui::Ui,
     id: &str,
@@ -239,6 +268,29 @@ pub fn center_center<T>(
             min_size: taffy::Size {
                 width: taffy::prelude::percent(1.),
                 height: taffy::prelude::percent(1.),
+            },
+            align_items: Some(taffy::AlignItems::Center),
+            justify_content: Some(
+                taffy::JustifyContent::SpaceAround,
+            ),
+            ..Default::default()
+        })
+        .show(inner)
+}
+
+pub fn h_center<T>(
+    ui: &mut egui::Ui,
+    id: &str,
+    inner: impl FnOnce(&mut Tui) -> T,
+) -> T {
+    tui(ui, ui.id().with(id))
+        .reserve_available_space()
+        .style(taffy::Style {
+            flex_grow: 1.,
+            flex_direction: taffy::FlexDirection::Row,
+            min_size: taffy::Size {
+                width: taffy::prelude::percent(1.),
+                height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
             justify_content: Some(

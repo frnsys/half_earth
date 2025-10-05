@@ -1,4 +1,4 @@
-use egui::Button;
+use egui::{Button, Color32, Margin};
 use hes_engine::State;
 use rust_i18n::t;
 
@@ -6,6 +6,11 @@ use crate::{
     display::{self, icon_from_slug, icons, intensity},
     image,
     state::STATE,
+    views::parts::{
+        button,
+        raised_frame_no_shadow_impl,
+        set_full_bg_image,
+    },
 };
 
 pub enum MenuAction {
@@ -36,6 +41,12 @@ pub fn render_menu(
     ui: &mut egui::Ui,
     state: &mut State,
 ) -> Option<MenuAction> {
+    set_full_bg_image(
+        ui,
+        image!("backgrounds/menu.jpg"),
+        egui::vec2(900., 1200.),
+    );
+
     let year = state.world.year;
     let pc = state.political_capital.max(0);
     let outlook = state.outlook();
@@ -69,11 +80,49 @@ pub fn render_menu(
         return Some(MenuAction::CloseMenu);
     }
 
-    let logo = image!("gosplant.svg");
-    ui.image(logo);
+    raised_frame_no_shadow_impl(
+        ui,
+        Color32::from_rgb(0x18, 0x15, 0x14),
+        Color32::from_rgb(0x78, 0x75, 0x75),
+        |ui| {
+            egui::Frame::NONE
+                .fill(Color32::from_rgb(0x42, 0x3B, 0x3B))
+                .inner_margin(Margin::symmetric(6, 6))
+                .corner_radius(4)
+                .show(ui, |ui| {
+                    let logo = image!("gosplant.svg");
+                    ui.add(
+                        egui::Image::new(logo).max_height(24.),
+                    );
+                })
+                .response
+        },
+    );
 
-    ui.label("CLOCK"); // TODO
-    ui.label(time_place);
+    ui.horizontal(|ui| {
+        ui.label("CLOCK"); // TODO
+        //
+        raised_frame_no_shadow_impl(
+            ui,
+            Color32::from_rgb(0x18, 0x15, 0x14),
+            Color32::from_rgb(0x78, 0x75, 0x75),
+            |ui| {
+                egui::Frame::NONE
+                    .fill(Color32::from_rgb(0x42, 0x3B, 0x3B))
+                    .inner_margin(Margin::symmetric(24, 12))
+                    .corner_radius(4)
+                    .show(ui, |ui| {
+                        ui.label(
+                            egui::RichText::new(time_place)
+                                .heading()
+                                .color(Color32::WHITE)
+                                .size(18.),
+                        );
+                    })
+                    .response
+            },
+        )
+    });
 
     ui.vertical_centered(|ui| {
         ui.image(icons::POLITICAL_CAPITAL);
@@ -120,7 +169,7 @@ pub fn render_menu(
             t!("Off")
         }
     );
-    if ui.button(sound).clicked() {
+    if ui.add(button(sound.into())).clicked() {
         return Some(MenuAction::ToggleSound);
     }
 
@@ -133,15 +182,15 @@ pub fn render_menu(
             t!("Off")
         }
     );
-    if ui.button(tips).clicked() {
+    if ui.add(button(tips.into())).clicked() {
         return Some(MenuAction::HideHelp);
     }
 
-    if ui.button(t!("Restart Game")).clicked() {
+    if ui.add(button(t!("Restart Game"))).clicked() {
         return Some(MenuAction::RestartGame);
     }
 
-    if ui.button(t!("Credits")).clicked() {
+    if ui.add(button(t!("Credits"))).clicked() {
         return Some(MenuAction::ShowCredits);
     }
 

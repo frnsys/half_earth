@@ -186,7 +186,8 @@ impl AsCard for Project {
 
     fn name(&self, ui: &mut egui::Ui, ctx: &CardState) {
         ui.vertical_centered(|ui| {
-            ui.label(egui::RichText::new(&self.name).heading());
+            let name = t!(&self.name);
+            ui.label(egui::RichText::new(name).heading());
         });
     }
 

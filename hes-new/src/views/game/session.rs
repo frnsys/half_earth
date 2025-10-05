@@ -1,6 +1,7 @@
 use std::{collections::BTreeMap, fmt::Display};
 
-use egui::Sense;
+use egui::{Color32, CornerRadius, Margin, Sense};
+use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{
     EventPhase,
@@ -31,12 +32,13 @@ use crate::{
             regions::Regions,
             stats::Stats,
         },
+        parts::h_center,
     },
 };
 
 pub struct Session {
-    view: View,
-    events: Events,
+    pub(crate) view: View,
+    pub(crate) events: Events,
 }
 impl Session {
     pub fn new(state: &mut State, ui: &mut UIState) -> Self {
@@ -103,7 +105,11 @@ impl Session {
 
         let resp = egui::Frame::NONE
             .show(ui, |ui| {
-                ui.label(tab.to_string());
+                ui.label(
+                    egui::RichText::new(tab.to_string())
+                        .heading()
+                        .size(15.),
+                );
             })
             .response;
         let resp = resp.interact(Sense::all());
@@ -132,35 +138,92 @@ impl Session {
         //     true,
         // );
 
-        ui.horizontal(|ui| {
-            self.render_tab(
-                ui,
-                Tab::Plan,
-                Tutorial::Plan,
-                tutorial,
-                state,
-            );
-            self.render_tab(
-                ui,
-                Tab::Govt,
-                Tutorial::Parliament,
-                tutorial,
-                state,
-            );
-            self.render_tab(
-                ui,
-                Tab::Stats,
-                Tutorial::Dashboard,
-                tutorial,
-                state,
-            );
-            self.render_tab(
-                ui,
-                Tab::World,
-                Tutorial::Regions,
-                tutorial,
-                state,
-            );
+        h_center(ui, "session-tabs", |tui| {
+            tui.ui(|ui| {
+                egui::Frame::NONE
+                    .inner_margin(Margin {
+                        top: -3,
+                        ..Default::default()
+                    })
+                    .show(ui, |ui| {
+                        ui.horizontal(|ui| {
+                            ui.style_mut()
+                                .spacing
+                                .item_spacing
+                                .x = 1.;
+                            tab_frame(
+                                self.view.as_tab() == Tab::Plan,
+                            )
+                            .corner_radius(CornerRadius {
+                                sw: 4,
+                                ..Default::default()
+                            })
+                            .show(
+                                ui,
+                                |ui| {
+                                    self.render_tab(
+                                        ui,
+                                        Tab::Plan,
+                                        Tutorial::Plan,
+                                        tutorial,
+                                        state,
+                                    );
+                                },
+                            );
+                            tab_frame(
+                                self.view.as_tab() == Tab::Govt,
+                            )
+                            .show(
+                                ui,
+                                |ui| {
+                                    self.render_tab(
+                                        ui,
+                                        Tab::Govt,
+                                        Tutorial::Parliament,
+                                        tutorial,
+                                        state,
+                                    );
+                                },
+                            );
+                            tab_frame(
+                                self.view.as_tab()
+                                    == Tab::Stats,
+                            )
+                            .show(
+                                ui,
+                                |ui| {
+                                    self.render_tab(
+                                        ui,
+                                        Tab::Stats,
+                                        Tutorial::Dashboard,
+                                        tutorial,
+                                        state,
+                                    );
+                                },
+                            );
+                            tab_frame(
+                                self.view.as_tab()
+                                    == Tab::World,
+                            )
+                            .corner_radius(CornerRadius {
+                                se: 4,
+                                ..Default::default()
+                            })
+                            .show(
+                                ui,
+                                |ui| {
+                                    self.render_tab(
+                                        ui,
+                                        Tab::World,
+                                        Tutorial::Regions,
+                                        tutorial,
+                                        state,
+                                    );
+                                },
+                            );
+                        });
+                    });
+            })
         });
 
         let result = self.events.render(ui, state);
@@ -253,7 +316,7 @@ impl Session {
     }
 }
 
-enum View {
+pub(crate) enum View {
     Plan(Plan),
     Govt(Parliament),
     Stats(Stats),
@@ -268,6 +331,16 @@ impl View {
             View::World(_) => Tab::World,
         }
     }
+}
+
+fn tab_frame(is_selected: bool) -> egui::Frame {
+    egui::Frame::NONE
+        .fill(if is_selected {
+            Color32::from_rgb(0xB9, 0xF8, 0x0D)
+        } else {
+            Color32::WHITE
+        })
+        .inner_margin(Margin::symmetric(12, 8))
 }
 
 #[derive(Debug, PartialEq)]

@@ -21,10 +21,14 @@ use debug::DEBUG;
 use state::{State, UIState};
 use views::{Start, StartAction};
 
-use crate::views::{
-    CardState,
-    draw_bg_image,
-    game::{Card, Cards},
+use crate::{
+    state::Phase,
+    views::{
+        CardState,
+        Events,
+        draw_bg_image,
+        game::{Card, Cards, Parliament, Session, Stats, View},
+    },
 };
 
 pub static AUDIO: LazyLock<Arc<RwLock<AudioManager>>> =
@@ -107,7 +111,17 @@ impl App {
             .collect();
 
         Self {
-            ui: ViewState::Start(Start::default()),
+            // ui: ViewState::Start(Start::default()),
+            ui: ViewState::Game(UIState {
+                phase: Phase::Planning(Session {
+                    view: View::Stats(Stats::new()),
+                    // view: View::Govt(Parliament::new(
+                    //     &state.game,
+                    // )),
+                    events: Events::new(vec![]),
+                }),
+                ..Default::default()
+            }),
             state,
             cards,
         }
