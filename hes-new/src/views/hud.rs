@@ -7,12 +7,11 @@ use crate::{
     display::{
         FloatExt,
         factors::factors_card,
-        icon_from_slug,
         icons,
-        intensity::{self, render_intensity_bar},
+        intensity::{self, intensity_bar},
     },
+    tips::{add_tip, tip},
     vars::Var,
-    views::{tip, tips::add_tip},
 };
 
 pub enum HudAction {
@@ -142,9 +141,9 @@ pub fn render_hud(
                                     ui.add(
                                 icons::HUD_EXTINCTION_RATE.size(12.),
                             );
-                                    render_intensity_bar(
-                                        ui, extinction, false,
-                                    );
+                                    ui.add(intensity_bar(
+                                        extinction
+                                    ));
                                 })
                                 .response,
                             );
@@ -154,11 +153,8 @@ pub fn render_hud(
                         ui.horizontal(|ui| {
                             // <div class:bad=unhappy>
                             ui.add(icons::HUD_CONTENTEDNESS.size(12.));
-                            render_intensity_bar(
-                                ui,
-                                contentedness,
-                                true,
-                            );
+                            ui.add(intensity_bar(
+                                contentedness).invert());
                         })
                         .response,
                     );
@@ -169,9 +165,7 @@ pub fn render_hud(
                                     ui.add(
                                         icons::HUD_WARMING.size(12.),
                                     );
-                                    render_intensity_bar(
-                                        ui, warming, false,
-                                    );
+                                    ui.add(intensity_bar(warming));
                                 })
                                 .response,
                             );

@@ -9,7 +9,7 @@ use enum_map::EnumMap;
 pub use game::StateExt;
 use hes_engine::{Output, OutputMap};
 pub use prefs::Settings;
-pub use ui::{Phase, PlanChange, Points, Tutorial, UIState};
+pub use ui::{PlanChange, Points, Tutorial, UIState};
 
 use serde::{Deserialize, Serialize};
 

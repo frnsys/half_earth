@@ -1,3 +1,9 @@
+mod govt;
+mod plan;
+mod regions;
+mod stats;
+mod treemap;
+
 use std::{collections::BTreeMap, fmt::Display};
 
 use egui::{Color32, CornerRadius, Margin, Sense};
@@ -15,6 +21,7 @@ use rust_i18n::t;
 
 use crate::{
     display::DisplayEvent,
+    parts::h_center,
     state::{
         PlanChange,
         Points,
@@ -24,17 +31,13 @@ use crate::{
         UIState,
         update_factors,
     },
-    views::{
-        events::{EventResult, Events},
-        game::{
-            govt::Parliament,
-            plan::{Plan, PlanAction},
-            regions::Regions,
-            stats::Stats,
-        },
-        parts::h_center,
-    },
+    views::events::{EventResult, Events},
 };
+
+use govt::Parliament;
+use plan::{Plan, PlanAction};
+use regions::Regions;
+use stats::Stats;
 
 pub struct Session {
     pub(crate) view: View,

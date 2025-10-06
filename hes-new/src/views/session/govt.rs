@@ -11,25 +11,21 @@ use egui::{
     Stroke,
 };
 use egui_taffy::TuiBuilderLogic;
-use hes_engine::{Flag, Id, NPC, State, flavor::Speaker};
+use hes_engine::{Flag, Id, NPC, State};
 use rust_i18n::t;
 
 use crate::{
     consts,
-    display::{icon_from_slug, icons, speaker_icon},
+    display::{as_speaker, icons, speaker_icon},
     image,
-    views::{
-        CardState,
-        game::Card,
-        parts::{
-            center_center,
-            h_center,
-            raised_frame_impl,
-            set_full_bg_image,
-        },
-        tip,
-        tips::add_tip,
+    parts::{
+        center_center,
+        h_center,
+        raised_frame,
+        set_full_bg_image,
     },
+    tips::{add_tip, tip},
+    views::cards::{Card, CardState},
 };
 
 #[derive(Debug)]
@@ -208,7 +204,7 @@ impl Parliament {
                                     .corner_radius(3)
                                     .show(ui, |ui| {
                                         ui.add(
-                                    egui::Image::new(image)
+                                    image
                                         .fit_to_exact_size(
                                             egui::Vec2::splat(
                                                 24.,
@@ -341,24 +337,6 @@ fn mulberry32(seed: u16) -> impl FnMut() -> f64 {
     }
 }
 
-pub fn as_speaker(name: &str) -> Speaker {
-    match name {
-        "The Malthusian" => Speaker::TheMalthusian,
-        "The Utopian" => Speaker::TheUtopian,
-        "The Consumerist" => Speaker::TheConsumerist,
-        "The Posadist" => Speaker::ThePosadist,
-        "The Fanonist" => Speaker::TheFanonist,
-        "The Ecofeminist" => Speaker::TheEcofeminist,
-        "The Authoritarian" => Speaker::TheAuthoritarian,
-        "The Accelerationist" => Speaker::TheAccelerationist,
-        "The Environmentalist" => Speaker::TheEnvironmentalist,
-        "The Animal Liberationist" => {
-            Speaker::TheAnimalLiberationist
-        }
-        _ => Speaker::Gossy,
-    }
-}
-
 fn render_npc(
     ui: &mut egui::Ui,
     npc: &NPC,
@@ -373,70 +351,57 @@ fn render_npc(
     let speaker = as_speaker(&npc.name);
     let portrait = speaker_icon(&speaker);
 
-    raised_frame_impl(
-        ui,
-        Color32::from_rgb(0xB0, 0x93, 0xBA),
-        Color32::from_rgb(0x4e, 0x2c, 0x59),
-        |ui| {
-            egui::Frame::NONE
-                .fill(Color32::from_rgb(0x96, 0x5F, 0xA9))
-                .corner_radius(5)
-                // .inner_margin(Margin::symmetric(8, 8))
-                .inner_margin(Margin {
-                    left: 8,
-                    right: 8,
-                    top: -32,
-                    bottom: 24,
-                })
-                .show(ui, |ui| {
-                    ui.set_width(150.);
-                    ui.vertical_centered(|ui| {
-                        ui.add(
-                            egui::Image::new(portrait)
-                                .fit_to_exact_size(
-                                    egui::Vec2::splat(64.),
-                                ),
-                        );
-                        ui.label(&npc.name);
+    raised_frame()
+        .colors(
+            Color32::from_rgb(0xB0, 0x93, 0xBA),
+            Color32::from_rgb(0x4e, 0x2c, 0x59),
+            Color32::from_rgb(0x96, 0x5F, 0xA9),
+        )
+        .margin(Margin {
+            left: 8,
+            right: 8,
+            top: -32,
+            bottom: 24,
+        })
+        .show(ui, |ui| {
+            ui.set_width(150.);
+            ui.vertical_centered(|ui| {
+                ui.add(
+                    portrait.fit_to_exact_size(
+                        egui::Vec2::splat(64.),
+                    ),
+                );
+                ui.label(&npc.name);
 
-                        let color = Color32::from_hex(
-                            &npc.flavor.color,
-                        )
+                let color =
+                    Color32::from_hex(&npc.flavor.color)
                         .expect("is valid color");
 
-                        let side = 8.;
-                        let spacing = 1.;
-                        let width = (side * seats as f32)
-                            + (spacing * (seats - 1) as f32);
-                        let size = egui::vec2(width, side);
-                        let (rect, _) = ui.allocate_exact_size(
-                            size,
-                            Sense::empty(),
-                        );
+                let side = 8.;
+                let spacing = 1.;
+                let width = (side * seats as f32)
+                    + (spacing * (seats - 1) as f32);
+                let size = egui::vec2(width, side);
+                let (rect, _) = ui
+                    .allocate_exact_size(size, Sense::empty());
 
-                        let painter = ui.painter();
-                        let mut x = rect.left();
-                        for _ in 0..seats {
-                            let pip = egui::Rect::from_min_max(
-                                Pos2::new(x, rect.top()),
-                                Pos2::new(
-                                    x + side,
-                                    rect.bottom(),
-                                ),
-                            );
-                            painter.rect_filled(pip, 0, color);
-                            x += side + spacing;
-                        }
+                let painter = ui.painter();
+                let mut x = rect.left();
+                for _ in 0..seats {
+                    let pip = egui::Rect::from_min_max(
+                        Pos2::new(x, rect.top()),
+                        Pos2::new(x + side, rect.bottom()),
+                    );
+                    painter.rect_filled(pip, 0, color);
+                    x += side + spacing;
+                }
 
-                        if npc.is_ally() {
-                            ui.image(icons::ALLY);
-                            ui.label(t!("Ally"));
-                        }
-                    });
-                })
-                .response
-        },
-    )
+                if npc.is_ally() {
+                    ui.image(icons::ALLY);
+                    ui.label(t!("Ally"));
+                }
+            });
+        })
 }
 
 fn overlay(

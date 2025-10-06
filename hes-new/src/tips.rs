@@ -3,6 +3,7 @@ use hes_engine::{Industry, NPC, Process, Project, Region};
 
 use crate::{
     display::{DisplayEvent, Icon},
+    parts::raised_frame,
     text::bbcode,
     views::FactorsCard,
 };
@@ -45,13 +46,13 @@ impl Tip {
             .order(Order::Tooltip)
             .anchor(Align2::CENTER_TOP, egui::vec2(0., 20.))
             .show(ctx, |ui| {
-                super::parts::raised_frame(ui, |ui| {
+                raised_frame().show(ui, |ui| {
                     ui.set_max_width(480.);
                     ui.style_mut()
                         .visuals
                         .override_text_color =
                         Some(Color32::WHITE);
-                    bbcode(ui, &self.text);
+                    ui.add(bbcode(&self.text));
                 });
             });
     }

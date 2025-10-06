@@ -9,7 +9,6 @@ use egui::{
     Rect,
     Sense,
     Shadow,
-    Stroke,
     TextureOptions,
     Vec2,
     ahash::HashMap,
@@ -151,23 +150,105 @@ pub fn draw_bg_image(ui: &mut egui::Ui) {
     }
 }
 
-pub fn raised_frame(
-    ui: &mut egui::Ui,
-    contents: impl FnOnce(&mut egui::Ui),
-) {
-    raised_frame_impl(
-        ui,
-        Color32::from_gray(70),
-        Color32::from_gray(0),
-        |ui| {
-            egui::Frame::NONE
-                .fill(Color32::from_gray(22))
-                .corner_radius(5)
-                .inner_margin(Margin::symmetric(8, 8))
-                .show(ui, |ui| contents(ui))
-                .response
-        },
-    );
+pub struct RaisedFrame {
+    top_color: Color32,
+    bot_color: Color32,
+    radius: u8,
+    inner_color: Color32,
+    inner_margin: Margin,
+    hover_color: Option<Color32>,
+    shadow: Option<Shadow>,
+}
+pub fn raised_frame() -> RaisedFrame {
+    RaisedFrame {
+        top_color: Color32::from_gray(70),
+        bot_color: Color32::from_gray(0),
+        inner_color: Color32::from_gray(22),
+        radius: 5,
+        inner_margin: 8.into(),
+        shadow: None,
+        hover_color: None,
+    }
+}
+impl RaisedFrame {
+    pub fn colors(
+        mut self,
+        top: Color32,
+        bot: Color32,
+        inner: Color32,
+    ) -> Self {
+        self.top_color = top;
+        self.bot_color = bot;
+        self.inner_color = inner;
+        self
+    }
+
+    pub fn margin(mut self, margin: impl Into<Margin>) -> Self {
+        self.inner_margin = margin.into();
+        self
+    }
+
+    pub fn hover(mut self, color: Color32) -> Self {
+        self.hover_color = Some(color);
+        self
+    }
+
+    pub fn shadow(mut self) -> Self {
+        self.shadow = Some(Shadow {
+            offset: [2, 2],
+            blur: 8,
+            spread: 2,
+            color: Color32::from_black_alpha(128),
+        });
+        self
+    }
+
+    pub fn show(
+        self,
+        ui: &mut egui::Ui,
+        inner: impl FnOnce(&mut egui::Ui),
+    ) -> egui::Response {
+        let mut frame = egui::Frame::NONE.fill(self.top_color);
+
+        if let Some(shadow) = self.shadow {
+            frame = frame.shadow(shadow);
+        }
+
+        frame
+            .inner_margin(Margin {
+                top: 1,
+                left: 1,
+                ..Default::default()
+            })
+            .corner_radius(self.radius)
+            .show(ui, |ui| {
+                egui::Frame::NONE
+                    .fill(self.bot_color)
+                    .corner_radius(self.radius)
+                    .inner_margin(Margin {
+                        bottom: 2,
+                        right: 2,
+                        ..Default::default()
+                    })
+                    .show(ui, |ui| {
+                        let mut frame = egui::Frame::NONE
+                            .fill(self.inner_color)
+                            .corner_radius(self.radius)
+                            .inner_margin(self.inner_margin)
+                            .begin(ui);
+                        inner(&mut frame.content_ui);
+
+                        let resp = frame.allocate_space(ui);
+                        if let Some(color) = self.hover_color
+                            && resp.hovered()
+                        {
+                            frame.frame.fill = color;
+                        }
+                        frame.paint(ui);
+                    })
+            })
+            .response
+    }
 }
 
 pub fn glow(
@@ -189,70 +270,6 @@ pub fn glow(
             egui::StrokeKind::Outside,
         );
     }
-}
-
-pub fn raised_frame_impl(
-    ui: &mut egui::Ui,
-    highlight_color: Color32,
-    shadow_color: Color32,
-    contents: impl FnOnce(&mut egui::Ui) -> egui::Response,
-) -> egui::Response {
-    egui::Frame::NONE
-        .fill(highlight_color)
-        .shadow(Shadow {
-            offset: [2, 2],
-            blur: 8,
-            spread: 2,
-            color: Color32::from_black_alpha(128),
-        })
-        .inner_margin(Margin {
-            top: 1,
-            left: 1,
-            ..Default::default()
-        })
-        .corner_radius(5)
-        .show(ui, |ui| {
-            egui::Frame::NONE
-                .fill(shadow_color)
-                .corner_radius(5)
-                .inner_margin(Margin {
-                    bottom: 2,
-                    right: 2,
-                    ..Default::default()
-                })
-                .show(ui, contents)
-                .inner
-        })
-        .response
-}
-
-pub fn raised_frame_no_shadow_impl(
-    ui: &mut egui::Ui,
-    highlight_color: Color32,
-    shadow_color: Color32,
-    contents: impl FnOnce(&mut egui::Ui) -> egui::Response,
-) -> egui::Response {
-    egui::Frame::NONE
-        .fill(highlight_color)
-        .inner_margin(Margin {
-            top: 1,
-            left: 1,
-            ..Default::default()
-        })
-        .corner_radius(5)
-        .show(ui, |ui| {
-            egui::Frame::NONE
-                .fill(shadow_color)
-                .corner_radius(5)
-                .inner_margin(Margin {
-                    bottom: 1,
-                    right: 1,
-                    ..Default::default()
-                })
-                .show(ui, contents)
-                .inner
-        })
-        .response
 }
 
 pub fn center_center<T>(
@@ -351,31 +368,21 @@ pub fn button<'a>(
     text: Cow<'a, str>,
 ) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
-        let resp = raised_frame_impl(
-            ui,
-            Color32::WHITE,
-            Color32::from_gray(0xBB),
-            |ui| {
-                let mut frame = egui::Frame::NONE
-                    .fill(Color32::from_gray(0xEE))
-                    .inner_margin(Margin::symmetric(6, 4))
-                    .corner_radius(4)
-                    .begin(ui);
-
-                frame.content_ui.label(
+        let resp = raised_frame()
+            .colors(
+                Color32::WHITE,
+                Color32::from_gray(0xBB),
+                Color32::from_gray(0xEE),
+            )
+            .hover(Color32::from_gray(0xCC))
+            .margin(Margin::symmetric(6, 4))
+            .show(ui, |ui| {
+                ui.label(
                     egui::RichText::new(text)
                         .heading()
                         .size(14.),
                 );
-
-                let resp = frame.allocate_space(ui);
-                if resp.hovered() {
-                    frame.frame.fill = Color32::from_gray(0xCC);
-                }
-                frame.paint(ui);
-                resp
-            },
-        );
+            });
         resp.interact(Sense::click())
     }
 }

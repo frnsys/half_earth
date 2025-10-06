@@ -1,32 +1,30 @@
 use std::borrow::Cow;
 
-use egui::{
-    Color32,
-    Margin,
-    RichText,
-    TextStyle,
-    TextWrapMode,
-};
+use egui::{Color32, Margin, RichText, TextStyle};
 
-use crate::display::{fill_icons, icon_from_slug};
+use crate::display::icon_from_slug;
 
 mod animate;
 mod parse;
 
-pub fn bbcode(ui: &mut egui::Ui, text: &str) -> egui::Response {
-    ui.horizontal_wrapped(|ui| {
-        let style = ui.style();
-        let font_id = TextStyle::Body.resolve(style);
-        let text_height = ui.fonts(|f| f.row_height(&font_id));
-        ui.style_mut().spacing.item_spacing.x = 0.;
+pub fn bbcode(
+    text: &str,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    |ui| {
+        ui.horizontal_wrapped(|ui| {
+            let style = ui.style();
+            let font_id = TextStyle::Body.resolve(style);
+            let text_height =
+                ui.fonts(|f| f.row_height(&font_id));
+            ui.style_mut().spacing.item_spacing.x = 0.;
 
-        let text = fill_icons(text);
-        let (_, nodes) = parse::parse_bbcode(&text).unwrap();
-        for node in nodes {
-            node.render_static(ui, text_height);
-        }
-    })
-    .response
+            let (_, nodes) = parse::parse_bbcode(text).unwrap();
+            for node in nodes {
+                node.render_static(ui, text_height);
+            }
+        })
+        .response
+    }
 }
 
 #[derive(Default)]
@@ -51,16 +49,14 @@ impl BbCodeAnimator {
 
             ui.style_mut().spacing.item_spacing.x = 0.;
 
-            let text = fill_icons(text);
-            let (_, nodes) =
-                parse::parse_bbcode(&text).unwrap();
+            let (_, nodes) = parse::parse_bbcode(text).unwrap();
             self.animator.animate(ui, nodes, text_height);
         });
     }
 }
 
 #[derive(Debug, PartialEq)]
-pub enum Tag {
+enum Tag {
     Bold,
     Image,
     UnknownParam,
@@ -72,12 +68,12 @@ pub enum Tag {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum Node<'a> {
+enum Node<'a> {
     Text(&'a str),
     Tagged { tag: Tag, children: Vec<Node<'a>> },
 }
 impl<'a> Node<'a> {
-    pub fn text(&'a self) -> Cow<'a, str> {
+    fn text(&'a self) -> Cow<'a, str> {
         match self {
             Node::Text(text) => (*text).into(),
             Node::Tagged { children, .. } => {
@@ -156,8 +152,6 @@ impl Node<'_> {
                                         text_height,
                                     );
                                 }
-                                // let text =
-                                //     RichText::new(text).strong().color(Color32::WHITE).size(16.);
                             });
                     }
                     Tag::TypeTotal => {

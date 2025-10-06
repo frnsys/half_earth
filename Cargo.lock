@@ -2880,7 +2880,6 @@ dependencies = [
  "numfmt",
  "ordered-float",
  "paste",
- "regex-lite",
  "rust-embed",
  "rust-i18n",
  "serde",

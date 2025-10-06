@@ -10,8 +10,9 @@ use rust_i18n::t;
 
 use crate::{
     display::{DisplayEffect, speaker_icon},
+    parts::button,
     text::BbCodeAnimator,
-    views::{events::render_effects, parts::button},
+    views::events::render_effects,
 };
 
 #[derive(Debug, PartialEq)]
@@ -70,7 +71,9 @@ impl Dialogue {
                 ui.style_mut().visuals.override_text_color =
                     Some(Color32::BLACK);
                 if line.speaker != Speaker::Game {
-                    ui.image(profile);
+                    ui.add(profile.fit_to_exact_size(
+                        egui::Vec2::splat(64.),
+                    ));
                     let text = t!(line.speaker.to_string());
                     ui.label(text);
                 }

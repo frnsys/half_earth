@@ -6,32 +6,26 @@ use crate::{
         AsText,
         DisplayEffect,
         HasIcon,
-        icon_from_slug,
+        active_effects,
         icons,
+        render_effects,
     },
     image,
+    parts::{flavor_image, flex_justified},
     state::PlanChange,
-    views::{
-        Tip,
-        cards::CardState,
-        events::{active_effects, render_effects},
-        parts::{center_center, flavor_image, flex_justified},
-        tip,
-        tips::add_tip,
-    },
+    tips::{Tip, add_tip, tip},
 };
 
-use super::AsCard;
+use super::{AsCard, CardState};
 use egui::{
     Color32,
-    Layout,
     Margin,
     Rect,
     Response,
     Stroke,
     TextStyle,
 };
-use egui_taffy::{Tui, TuiBuilderLogic, taffy, tui};
+use egui_taffy::{TuiBuilderLogic, taffy};
 use hes_engine::{
     Effect as EngineEffect,
     Flag,
@@ -380,7 +374,6 @@ impl AsCard for Project {
                             icon = icons::RELATIONSHIP,
                         ),
                     );
-                    // add_tip(tip, ui.image(npc.icon()));
                 }
             }
             if has_supporters {

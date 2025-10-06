@@ -4,7 +4,7 @@ use nom::{
     IResult,
     Parser,
     branch::alt,
-    bytes::complete::{tag, take_while1},
+    bytes::complete::{tag, take_while_m_n, take_while1},
     character::complete::char,
     combinator::map,
     multi::many0,
@@ -37,6 +37,26 @@ fn text<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     map(take_while1(|c| c != '['), Node::Text).parse(input)
 }
 
+fn is_ident_char(c: char) -> bool {
+    c.is_ascii_alphabetic() || c == '_'
+}
+
+/// E.g. `[political_capital]`
+fn icon<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
+    map(
+        delimited(
+            char('['),
+            take_while_m_n(2, usize::MAX, is_ident_char),
+            char(']'),
+        ),
+        |s| Node::Tagged {
+            tag: Tag::Image,
+            children: vec![Node::Text(s)],
+        },
+    )
+    .parse(input)
+}
+
 fn tagged<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     let (input, tag) = open_tag(input)?;
     let (input, children) =
@@ -53,6 +73,8 @@ fn tagged<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     }
 }
 
-pub fn parse_bbcode(input: &str) -> IResult<&str, Vec<Node>> {
-    many0(alt((tagged, text))).parse(input)
+pub fn parse_bbcode<'a>(
+    input: &'a str,
+) -> IResult<&'a str, Vec<Node<'a>>> {
+    many0(alt((icon, tagged, text))).parse(input)
 }

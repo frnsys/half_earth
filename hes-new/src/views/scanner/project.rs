@@ -1,13 +1,6 @@
 use std::collections::BTreeMap;
 
-use hes_engine::{
-    Flag,
-    Id,
-    Project,
-    ProjectType,
-    State,
-    Status,
-};
+use hes_engine::{Flag, Id, Project, ProjectType, Status};
 use rust_i18n::t;
 
 use crate::{

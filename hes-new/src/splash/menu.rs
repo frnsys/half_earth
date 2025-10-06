@@ -1,5 +1,5 @@
 use super::super::parts::set_full_bg_image;
-use crate::{image, state::STATE, views::parts::glow};
+use crate::{image, parts::glow, state::STATE};
 use egui::{
     Align2,
     Color32,

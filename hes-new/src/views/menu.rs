@@ -3,14 +3,15 @@ use hes_engine::State;
 use rust_i18n::t;
 
 use crate::{
-    display::{self, icon_from_slug, icons, intensity},
+    display::{self, icons, intensity},
     image,
-    state::STATE,
-    views::parts::{
+    parts::{
+        RaisedFrame,
         button,
-        raised_frame_no_shadow_impl,
+        raised_frame,
         set_full_bg_image,
     },
+    state::STATE,
 };
 
 pub enum MenuAction {
@@ -80,48 +81,25 @@ pub fn render_menu(
         return Some(MenuAction::CloseMenu);
     }
 
-    raised_frame_no_shadow_impl(
-        ui,
-        Color32::from_rgb(0x18, 0x15, 0x14),
-        Color32::from_rgb(0x78, 0x75, 0x75),
-        |ui| {
-            egui::Frame::NONE
-                .fill(Color32::from_rgb(0x42, 0x3B, 0x3B))
-                .inner_margin(Margin::symmetric(6, 6))
-                .corner_radius(4)
-                .show(ui, |ui| {
-                    let logo = image!("gosplant.svg");
-                    ui.add(
-                        egui::Image::new(logo).max_height(24.),
-                    );
-                })
-                .response
-        },
-    );
+    inset_frame().margin(6).show(ui, |ui| {
+        let logo = image!("gosplant.svg");
+        ui.add(egui::Image::new(logo).max_height(24.));
+    });
 
     ui.horizontal(|ui| {
         ui.label("CLOCK"); // TODO
         //
-        raised_frame_no_shadow_impl(
+        inset_frame().margin(Margin::symmetric(24, 12)).show(
             ui,
-            Color32::from_rgb(0x18, 0x15, 0x14),
-            Color32::from_rgb(0x78, 0x75, 0x75),
             |ui| {
-                egui::Frame::NONE
-                    .fill(Color32::from_rgb(0x42, 0x3B, 0x3B))
-                    .inner_margin(Margin::symmetric(24, 12))
-                    .corner_radius(4)
-                    .show(ui, |ui| {
-                        ui.label(
-                            egui::RichText::new(time_place)
-                                .heading()
-                                .color(Color32::WHITE)
-                                .size(18.),
-                        );
-                    })
-                    .response
+                ui.label(
+                    egui::RichText::new(time_place)
+                        .heading()
+                        .color(Color32::WHITE)
+                        .size(18.),
+                );
             },
-        )
+        );
     });
 
     ui.vertical_centered(|ui| {
@@ -195,4 +173,12 @@ pub fn render_menu(
     }
 
     None
+}
+
+fn inset_frame() -> RaisedFrame {
+    raised_frame().colors(
+        Color32::from_rgb(0x18, 0x15, 0x14),
+        Color32::from_rgb(0x78, 0x75, 0x75),
+        Color32::from_rgb(0x42, 0x3B, 0x3B),
+    )
 }

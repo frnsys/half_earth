@@ -8,7 +8,7 @@ use crate::{
         Icon,
         factors::Factor,
         icons,
-        intensity::render_intensity_bar_with_pips,
+        intensity::intensity_bar,
     },
     state::FACTORS,
     vars::Var,
@@ -121,9 +121,7 @@ fn render_factor_line(
         } => {
             ui.horizontal_centered(|ui| {
                 ui.image(icons::WEALTH);
-                render_intensity_bar_with_pips(
-                    ui, *intensity, false, 4,
-                );
+                ui.add(intensity_bar(*intensity).pips(4));
                 ui.label(display);
                 ui.image(icon);
             });
@@ -154,9 +152,7 @@ fn render_factor_line(
         } => {
             ui.horizontal_centered(|ui| {
                 ui.image(icon);
-                render_intensity_bar_with_pips(
-                    ui, *intensity, false, 4,
-                );
+                ui.add(intensity_bar(*intensity).pips(4));
                 ui.label(display_produced);
                 ui.image(output.icon());
                 ui.label(relation);
@@ -169,9 +165,7 @@ fn render_factor_line(
         } => {
             ui.horizontal_centered(|ui| {
                 ui.image(icon);
-                render_intensity_bar_with_pips(
-                    ui, *intensity, false, 4,
-                );
+                ui.add(intensity_bar(*intensity).pips(4));
                 ui.label(display);
                 ui.image(icon);
             });

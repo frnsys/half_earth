@@ -16,26 +16,18 @@ use crate::{
         HasIcon,
         Icon,
         factors::factors_card,
-        icon_from_slug,
         icons,
         intensity,
     },
     image,
+    parts::{h_center, raised_frame, set_full_bg_image},
     state::{FACTORS, StateExt},
+    tips::{Tip, add_tip, tip},
     vars::Var,
-    views::{
-        Tip,
-        factors::render_factors_list,
-        parts::{
-            h_center,
-            raised_frame_no_shadow_impl,
-            set_full_bg_image,
-        },
-        tip,
-        tips::add_tip,
-        treemap::{TreeItem, treemap},
-    },
+    views::factors::render_factors_list,
 };
+
+use super::treemap::{TreeItem, treemap};
 
 impl Var {
     pub fn color(&self) -> [u32; 2] {
@@ -203,27 +195,22 @@ fn stat(
 ) -> egui::Response {
     ui.vertical_centered(|ui| {
         ui.set_width(120.);
-        raised_frame_no_shadow_impl(
-            ui,
-            Color32::from_rgb(0x96, 0x8a, 0x68),
-            Color32::from_rgb(0xEF, 0xE5, 0xD2),
-            |ui| {
-                egui::Frame::NONE
-                    .fill(Color32::from_rgb(0xEB, 0xDE, 0xC6))
-                    .corner_radius(5)
-                    .inner_margin(Margin {
-                        left: 8,
-                        right: 8,
-                        top: -12,
-                        bottom: 18,
-                    })
-                    .show(ui, |ui| {
-                        ui.set_width(80.);
-                        inner(ui);
-                    })
-                    .response
-            },
-        );
+        raised_frame()
+            .colors(
+                Color32::from_rgb(0x96, 0x8a, 0x68),
+                Color32::from_rgb(0xEF, 0xE5, 0xD2),
+                Color32::from_rgb(0xEB, 0xDE, 0xC6),
+            )
+            .margin(Margin {
+                left: 8,
+                right: 8,
+                top: -12,
+                bottom: 18,
+            })
+            .show(ui, |ui| {
+                ui.set_width(80.);
+                inner(ui);
+            });
         ui.label(label);
     })
     .response
@@ -444,8 +431,7 @@ fn render_sea_level_rise(ui: &mut egui::Ui, state: &State) {
         rise = rise,
         rate = format!("{:.1}", sea_level_rise_rate * 1000.)
     );
-    let tip: Tip =
-        crate::views::tip(icons::SEA_LEVEL_RISE, tip_text);
+    let tip: Tip = tip(icons::SEA_LEVEL_RISE, tip_text);
 
     add_tip(
         tip,

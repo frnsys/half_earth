@@ -1,15 +1,4 @@
-use crate::{
-    AUDIO,
-    audio,
-    display::DisplayEvent,
-    views::{
-        HudAction,
-        MenuAction,
-        game::{Interstitial, Intro, Session},
-        render_hud,
-        render_menu,
-    },
-};
+use crate::display::DisplayEvent;
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
 use hes_engine::{
@@ -18,10 +7,8 @@ use hes_engine::{
     Id,
     Income,
     Output,
-    Process,
     State,
 };
-use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -59,21 +46,6 @@ pub struct Points {
     pub refundable_research: usize,
 }
 
-/// Phase of the game.
-#[derive(Default)]
-pub enum Phase {
-    Intro(Intro),
-    Interstitial(Interstitial),
-    Planning(Session),
-    Events,
-    Report,
-    GameOver,
-    GameWin,
-
-    #[default] // TODO
-    Foo,
-}
-
 #[derive(
     Debug,
     Default,
@@ -108,12 +80,6 @@ impl Tutorial {
 /// Transient UI-state that is not preserved b/w sessions.
 #[derive(Default, Serialize, Deserialize)]
 pub struct UIState {
-    #[serde(skip)]
-    pub phase: Phase,
-
-    #[serde(skip)]
-    pub(crate) show_menu: bool,
-
     pub start_year: usize,
     pub tutorial: Tutorial,
 
@@ -152,9 +118,8 @@ pub struct UIState {
     pub viewed: Vec<Id>,
 }
 impl UIState {
-    pub fn intro(start_year: usize, state: &mut State) -> Self {
+    pub fn new(start_year: usize) -> Self {
         Self {
-            phase: Phase::Intro(Intro::new(state)),
             start_year,
             ..Default::default()
         }
@@ -190,74 +155,6 @@ impl UIState {
         self.process_mix_changes[output]
             .iter()
             .any(|(_, change)| *change != 0)
-    }
-
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut State,
-    ) {
-        match &mut self.phase {
-            Phase::Intro(view) => {
-                let next = view.render(ui, state);
-                if next {
-                    let view = Interstitial::new(state);
-                    self.phase = Phase::Interstitial(view);
-                }
-            }
-            Phase::Interstitial(view) => {
-                let next = view.render(ui, state);
-                if next {
-                    if state.won() {
-                        self.phase = Phase::GameWin;
-                    } else if state.game_over {
-                        self.phase = Phase::GameOver;
-                    } else {
-                        let session = Session::new(state, self);
-                        self.phase = Phase::Planning(session);
-                    }
-                }
-            }
-            Phase::Planning(session) => {
-                if let Some(action) = render_hud(ui, state) {
-                    match action {
-                        HudAction::OpenMenu => {
-                            self.show_menu = true;
-                        }
-                    }
-                }
-                if self.show_menu {
-                    if let Some(action) = render_menu(ui, state)
-                    {
-                        match action {
-                            MenuAction::CloseMenu => {
-                                self.show_menu = false
-                            }
-                            MenuAction::RestartGame => todo!(),
-                            MenuAction::ShowCredits => todo!(),
-                            MenuAction::ToggleSound => todo!(),
-                            MenuAction::HideHelp => todo!(),
-                        }
-                    }
-                } else {
-                    session.render(
-                        ui,
-                        state,
-                        &mut self.tutorial,
-                        &self.annual_region_events,
-                        &self.process_mix_changes,
-                        &self.viewed,
-                        &self.points,
-                        &self.plan_changes,
-                    );
-                }
-            }
-            Phase::Events => todo!(),
-            Phase::Report => todo!(),
-            Phase::GameOver => todo!(),
-            Phase::GameWin => todo!(),
-            Phase::Foo => unreachable!(),
-        }
     }
 }
 

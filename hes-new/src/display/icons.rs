@@ -13,27 +13,6 @@ use hes_engine::{
     WorldVariable,
 };
 use paste::paste;
-use regex_lite::Regex;
-// use regex_lite::Regex;
-
-/// Fill icon references in a text, e.g. `"[political_capital]"`.
-// TODO this could perhaps just be integrated into `bbcode`.
-pub fn fill_icons(text: &str) -> String {
-    // This is a hack since the bbcode tags also use `[` and `]`.
-    // We consider an icon to be `[..]` containing at least two matching characters,
-    // since the bbcode tags are all just one character, e.g. `[b]`.
-    let re = Regex::new(r"\[([a-z_]{2,})\]").unwrap();
-    let mut result = text.to_string();
-
-    for cap in re.captures_iter(text) {
-        let full_match = &cap[0];
-        let icon_key = &cap[1];
-        let replacement = format!("[i]{icon_key}[/i]");
-        result = result.replace(full_match, &replacement);
-    }
-
-    result
-}
 
 pub type Icon = &'static IconData;
 
@@ -61,7 +40,7 @@ impl Into<ImageSource<'static>> for &IconData {
     }
 }
 impl IconData {
-    pub fn size(&self, size: f32) -> egui::Image {
+    pub fn size(&self, size: f32) -> egui::Image<'_> {
         egui::Image::new(self.image.clone())
             .fit_to_exact_size(egui::vec2(size, size))
             .texture_options(TextureOptions::LINEAR)

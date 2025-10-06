@@ -1,6 +1,13 @@
 use std::borrow::Cow;
 
-use egui::{Color32, ImageSource, Margin, TextWrapMode};
+use egui::{
+    Align,
+    Color32,
+    ImageSource,
+    Layout,
+    Margin,
+    TextWrapMode,
+};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{EventPhase, State};
 use rust_i18n::t;
@@ -8,14 +15,11 @@ use rust_i18n::t;
 use crate::{
     display::{DisplayEvent, intensity},
     image,
-    views::{
-        events::Events,
-        parts::{button, center_center, set_full_bg_image},
-    },
+    parts::{button, center_center, set_full_bg_image},
+    views::events::Events,
 };
 
 pub struct Interstitial {
-    img_idx: usize,
     events: Events,
 }
 
@@ -37,7 +41,6 @@ impl Interstitial {
         // let _ = AUDIO.write().play(sound_data);
 
         Self {
-            img_idx: 0,
             events: Events::new(events),
         }
     }
@@ -101,6 +104,7 @@ impl Interstitial {
                     .fill(Color32::from_black_alpha(192))
                     .inner_margin(Margin::symmetric(6, 6))
                     .show(ui, |ui| {
+                        ui.set_width(360.);
                         ui.style_mut()
                             .visuals
                             .override_text_color =
@@ -117,7 +121,16 @@ impl Interstitial {
                     });
 
                 if self.events.is_finished {
-                    ui.add(button(t!("Continue"))).clicked()
+                    ui.with_layout(
+                        Layout::right_to_left(Align::Center),
+                        |ui| {
+                            ui.set_width(360.);
+                            ui.add_space(26.);
+                            ui.add(button(t!("Continue")))
+                                .clicked()
+                        },
+                    )
+                    .inner
                 } else {
                     false
                 }

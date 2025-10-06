@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use crate::views::{
     cards::{AsCard, CardState},
@@ -7,7 +7,7 @@ use crate::views::{
 };
 
 use super::card::Card;
-use egui::{Align, Align2, Color32, Order, Widget};
+use egui::{Align, Align2, Color32, Order};
 
 pub struct Cards<'a, C: AsCard + Scannable> {
     cards: &'a mut Vec<Card<C>>,

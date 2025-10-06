@@ -4,10 +4,8 @@ use rust_i18n::t;
 use crate::{
     display::DisplayEvent,
     image,
-    views::{
-        events::{EventResult, Events},
-        parts::{button, set_full_bg_image},
-    },
+    parts::{button, set_full_bg_image},
+    views::events::{EventResult, Events},
 };
 
 const IMAGES: &[(egui::ImageSource<'static>, f32, f32)] = &[

@@ -5,7 +5,7 @@ use eframe::epaint::{
     FontId,
     text::{LayoutJob, TextFormat},
 };
-use egui::{Color32, Margin};
+use egui::Color32;
 
 #[derive(Default)]
 pub struct NodesAnimator {

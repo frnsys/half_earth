@@ -1,16 +1,19 @@
 mod consts;
 mod debug;
 mod display;
+mod parts;
+mod splash;
 mod state;
 mod style;
 mod text;
+mod tips;
 mod vars;
 mod views;
 
 use std::sync::{Arc, LazyLock};
 
 use egui::{Align2, Key, mutex::RwLock};
-use hes_engine::{Process, Project};
+use hes_engine::Process;
 use kira::{
     AudioManager,
     AudioManagerSettings,
@@ -18,17 +21,12 @@ use kira::{
 };
 
 use debug::DEBUG;
+use splash::{Start, StartAction};
 use state::{State, UIState};
-use views::{Start, StartAction};
 
 use crate::{
-    state::Phase,
-    views::{
-        CardState,
-        Events,
-        draw_bg_image,
-        game::{Card, Cards, Parliament, Session, Stats, View},
-    },
+    parts::draw_bg_image,
+    views::{Card, GameView, Phase},
 };
 
 pub static AUDIO: LazyLock<Arc<RwLock<AudioManager>>> =
@@ -69,7 +67,7 @@ macro_rules! audio {
 
 enum ViewState {
     Start(Start),
-    Game(UIState),
+    Game(UIState, GameView),
 }
 
 pub struct App {
@@ -85,7 +83,7 @@ impl App {
         egui_extras::install_image_loaders(&cc.egui_ctx);
         style::configure_style(&cc.egui_ctx);
 
-        let state = if let Some(storage) = cc.storage
+        let mut state = if let Some(storage) = cc.storage
             && let Some(state) =
                 eframe::get_value(storage, eframe::APP_KEY)
         {
@@ -112,16 +110,18 @@ impl App {
 
         Self {
             // ui: ViewState::Start(Start::default()),
-            ui: ViewState::Game(UIState {
-                phase: Phase::Planning(Session {
-                    view: View::Stats(Stats::new()),
-                    // view: View::Govt(Parliament::new(
-                    //     &state.game,
-                    // )),
-                    events: Events::new(vec![]),
-                }),
-                ..Default::default()
-            }),
+            ui: ViewState::Game(
+                UIState::new(2022),
+                GameView::new(&mut state.game),
+            ),
+            // phase: Phase::Planning(Session {
+            //     view: View::Stats(Stats::new()),
+            //     // view: View::Govt(Parliament::new(
+            //     //     &state.game,
+            //     // )),
+            //     events: Events::new(vec![]),
+            // }),
+            // ..Default::default()
             state,
             cards,
         }
@@ -246,8 +246,10 @@ impl eframe::App for App {
                                     StartAction::NewGame => {
                                         self.ui =
                                             ViewState::Game(
-                                                UIState::intro(
+                                                UIState::new(
                                                     start_year,
+                                                ),
+                                                GameView::new(
                                                     &mut self
                                                         .state
                                                         .game,
@@ -257,8 +259,12 @@ impl eframe::App for App {
                                 }
                             }
                         }
-                        ViewState::Game(game) => game
-                            .render(ui, &mut self.state.game),
+                        ViewState::Game(ui_state, view) => view
+                            .render(
+                                ui,
+                                &mut self.state.game,
+                                ui_state,
+                            ),
                     }
                 });
             });

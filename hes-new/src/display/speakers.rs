@@ -1,10 +1,9 @@
-use egui::ImageSource;
 use hes_engine::flavor::Speaker;
 
 use crate::image;
 
-pub fn speaker_icon(speaker: &Speaker) -> ImageSource<'_> {
-    match speaker {
+pub fn speaker_icon(speaker: &Speaker) -> egui::Image<'_> {
+    let image = match speaker {
         Speaker::Game => image!("characters/placeholder.png"),
         Speaker::Gossy => image!("characters/Gossy.webp"),
         Speaker::TheEconomist => {
@@ -83,5 +82,24 @@ pub fn speaker_icon(speaker: &Speaker) -> ImageSource<'_> {
             image!("characters/The Environmentalist.webp")
         }
         Speaker::TheHero => image!("characters/The Hero.webp"),
+    };
+    egui::Image::new(image)
+}
+
+pub fn as_speaker(name: &str) -> Speaker {
+    match name {
+        "The Malthusian" => Speaker::TheMalthusian,
+        "The Utopian" => Speaker::TheUtopian,
+        "The Consumerist" => Speaker::TheConsumerist,
+        "The Posadist" => Speaker::ThePosadist,
+        "The Fanonist" => Speaker::TheFanonist,
+        "The Ecofeminist" => Speaker::TheEcofeminist,
+        "The Authoritarian" => Speaker::TheAuthoritarian,
+        "The Accelerationist" => Speaker::TheAccelerationist,
+        "The Environmentalist" => Speaker::TheEnvironmentalist,
+        "The Animal Liberationist" => {
+            Speaker::TheAnimalLiberationist
+        }
+        _ => Speaker::Gossy,
     }
 }

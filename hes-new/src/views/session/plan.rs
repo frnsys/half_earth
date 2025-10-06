@@ -20,14 +20,13 @@ use crate::{
     display::{
         AsText,
         HasIcon,
-        icon_from_slug,
         icons,
         resource,
         to_energy_units,
     },
     image,
     state::{PlanChange, Points, StateExt, Tutorial},
-    views::{Tip, tip, tips::add_tip},
+    tips::{Tip, add_tip, tip},
 };
 
 pub enum PlanAction {

@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use crate::{
     consts,
     display::{
@@ -6,12 +8,122 @@ use crate::{
         Icon,
         icons::{self, HasIcon},
     },
-    views::{Tip, tip},
-    // views::factors::factors_card, // TODO
+    text::bbcode,
+    tips::{Tip, add_tip, tip}, // views::factors::factors_card, // TODO
 };
+use egui::ahash::HashSet;
 use hes_engine::*;
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
+
+fn outcome_effects(project: &Project) -> Vec<DisplayEffect> {
+    struct Count {
+        effect: DisplayEffect,
+        count: usize,
+        hashes: HashSet<Vec<u8>>,
+    }
+    let mut all_effects: BTreeMap<String, Count> =
+        BTreeMap::default();
+    let n_outcomes = project.outcomes.len();
+    for outcome in &project.outcomes {
+        for effect in &outcome.effects {
+            // TODO effect.is_hidden
+            let key = effect.fingerprint();
+            let mut efx = DisplayEffect::from(effect);
+            let hash = bincode::serialize(&effect).unwrap();
+            efx.likelihood =
+                Some(outcome.probability.likelihood);
+            let count =
+                all_effects.entry(key).or_insert_with(|| {
+                    Count {
+                        effect: efx,
+                        count: 0,
+                        hashes: HashSet::default(),
+                    }
+                });
+            count.count += 1;
+            count.hashes.insert(hash);
+        }
+    }
+
+    all_effects
+        .into_values()
+        .map(
+            |Count {
+                 mut effect,
+                 count,
+                 hashes,
+             }| {
+                effect.is_unknown =
+                    count != n_outcomes || hashes.len() > 1;
+                effect
+            },
+        )
+        .collect()
+}
+
+pub fn active_effects(project: &Project) -> Vec<DisplayEffect> {
+    let mut effects = vec![];
+
+    if project.kind == ProjectType::Policy
+        && !project.is_active()
+    {
+        // Project outcome effects are secret and delayed
+        effects.extend(
+            project.effects.iter().map(DisplayEffect::from),
+        );
+    } else if project.status == Status::Inactive
+        || project.status == Status::Building
+    {
+        effects.extend(
+            project.effects.iter().map(DisplayEffect::from),
+        );
+        effects.extend(outcome_effects(project).into_iter());
+    } else {
+        effects.extend(
+            project
+                .active_effects()
+                .iter()
+                .map(DisplayEffect::from),
+        );
+        if let Some(id) = project.active_outcome {
+            effects.extend(
+                project.outcomes[id]
+                    .effects
+                    .iter()
+                    .map(DisplayEffect::from),
+            );
+        }
+    }
+
+    effects
+}
+
+pub fn render_effects(
+    ui: &mut egui::Ui,
+    state: &State,
+    effects: &Vec<DisplayEffect>,
+) {
+    let mut effects = effects
+        .iter()
+        .filter(|effect| !effect.is_hidden)
+        .filter_map(|effect| {
+            effect.tip(state).ok().map(|mut details| {
+                if effect.is_unknown {
+                    details.tip.supicon = Some(icons::CHANCE);
+                }
+                details
+            })
+        })
+        .collect::<Vec<_>>();
+    effects.sort_by_key(|effect| effect.text.clone());
+    ui.vertical_centered(|ui| {
+        for effect in effects {
+            let resp = ui.add(bbcode(&effect.text));
+            add_tip(effect.tip, resp);
+        }
+    });
+}
 
 trait AsKey {
     fn as_key(&self) -> &'static str;

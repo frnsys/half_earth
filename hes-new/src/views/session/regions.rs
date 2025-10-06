@@ -18,11 +18,10 @@ use crate::{
         self,
         AsText,
         HasIcon,
-        icon_from_slug,
         icons,
-        intensity::{self, render_intensity_bar_with_pips},
+        intensity::{self, intensity_bar},
     },
-    views::{Tip, tip, tips::add_tip},
+    tips::{Tip, add_tip, tip},
 };
 
 pub struct Regions {
@@ -242,11 +241,10 @@ fn render_region_item(
             hab_tip(),
             ui.vertical_centered(|ui| {
                 ui.image(icons::HABITABILITY);
-                render_intensity_bar_with_pips(
-                    ui,
-                    habitability,
-                    true,
-                    4,
+                ui.add(
+                    intensity_bar(habitability)
+                        .invert()
+                        .pips(4),
                 );
             })
             .response,
@@ -258,11 +256,10 @@ fn render_region_item(
             cont_tip(),
             ui.vertical_centered(|ui| {
                 ui.image(icons::CONTENTEDNESS);
-                render_intensity_bar_with_pips(
-                    ui,
-                    contentedness,
-                    true,
-                    4,
+                ui.add(
+                    intensity_bar(contentedness)
+                        .invert()
+                        .pips(4),
                 );
             })
             .response,
@@ -274,11 +271,10 @@ fn render_region_item(
             income_tip,
             ui.vertical_centered(|ui| {
                 ui.image(icons::WEALTH);
-                render_intensity_bar_with_pips(
-                    ui,
-                    income_level,
-                    true,
-                    4,
+                ui.add(
+                    intensity_bar(income_level)
+                        .invert()
+                        .pips(4),
                 );
             })
             .response,
@@ -309,9 +305,7 @@ fn render_region_item(
             tip,
             ui.vertical_centered(|ui| {
                 // ui.image(k.icon()); // TODO
-                render_intensity_bar_with_pips(
-                    ui, int, false, 4,
-                );
+                ui.add(intensity_bar(int).pips(4));
             })
             .response,
         );

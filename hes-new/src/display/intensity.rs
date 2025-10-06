@@ -142,35 +142,48 @@ pub fn scale(val: f32, key: Variable) -> usize {
     val as usize
 }
 
-// TODO replace this with a fluent builder
-pub fn render_intensity_bar(
-    ui: &mut egui::Ui,
+pub struct IntensityBar {
     intensity: usize,
     invert: bool,
-) {
-    render_intensity_bar_with_pips(
-        ui, intensity, invert, N_PIPS,
-    );
+    n_pips: usize,
+    seg_width: f32,
+}
+impl IntensityBar {
+    pub fn invert(mut self) -> Self {
+        self.invert = true;
+        self
+    }
+
+    pub fn pips(mut self, n_pips: usize) -> Self {
+        self.n_pips = n_pips;
+        self
+    }
+
+    pub fn seg_width(mut self, width: f32) -> Self {
+        self.seg_width = width;
+        self
+    }
+}
+impl egui::Widget for IntensityBar {
+    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+        let color = color(self.intensity, self.invert);
+        draw_segmented_pill(
+            ui,
+            self.n_pips,
+            color,
+            self.intensity,
+            self.seg_width,
+        )
+    }
 }
 
-pub fn render_intensity_bar_with_seg_width(
-    ui: &mut egui::Ui,
-    intensity: usize,
-    invert: bool,
-    seg_w: f32,
-) {
-    let color = color(intensity, invert);
-    draw_segmented_pill(ui, N_PIPS, color, intensity, seg_w);
-}
-
-pub fn render_intensity_bar_with_pips(
-    ui: &mut egui::Ui,
-    intensity: usize,
-    invert: bool,
-    max_pips: usize,
-) {
-    let color = color(intensity, invert);
-    draw_segmented_pill(ui, max_pips, color, intensity, 8.);
+pub fn intensity_bar(intensity: usize) -> IntensityBar {
+    IntensityBar {
+        intensity,
+        invert: false,
+        n_pips: N_PIPS,
+        seg_width: 8.,
+    }
 }
 
 fn draw_segmented_pill(
@@ -179,7 +192,7 @@ fn draw_segmented_pill(
     fill: Color32,
     fill_to: usize,
     seg_w: f32,
-) {
+) -> egui::Response {
     let seg_h = 6.;
     let spacing = 1.;
     let radius = 2;
@@ -187,7 +200,7 @@ fn draw_segmented_pill(
     let total_width =
         (seg_w * n as f32) + (spacing * (n - 1) as f32);
     let size = egui::vec2(total_width, seg_h);
-    let (rect, _resp) =
+    let (rect, resp) =
         ui.allocate_exact_size(size, egui::Sense::hover());
 
     let painter = ui.painter();
@@ -239,4 +252,5 @@ fn draw_segmented_pill(
 
         x += seg_w + spacing;
     }
+    resp
 }

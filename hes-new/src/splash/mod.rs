@@ -5,12 +5,7 @@ use credits::Credits;
 use egui_taffy::TuiBuilderLogic;
 use menu::{Menu, MenuAction};
 
-use crate::{
-    AUDIO,
-    audio,
-    state::STATE,
-    views::parts::center_center,
-};
+use crate::{AUDIO, audio, parts::center_center, state::STATE};
 
 enum MenuView {
     Menu,

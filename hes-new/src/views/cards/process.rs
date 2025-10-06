@@ -1,57 +1,30 @@
-use std::{borrow::Cow, collections::BTreeMap};
+use std::borrow::Cow;
 
 use crate::{
-    consts,
     display::{
         self,
         AsText,
-        DisplayEffect,
         FloatExt,
         HasIcon,
-        emissions,
         factors::factors_card,
-        icon_from_slug,
         icons,
-        intensity::{
-            self,
-            render_intensity_bar,
-            render_intensity_bar_with_seg_width,
-        },
+        intensity::{self, intensity_bar},
     },
-    image,
-    state::{PlanChange, StateExt},
+    parts::{center_center, flex_justified, flex_spaced},
+    state::StateExt,
+    tips::{add_tip, tip},
     vars::{Impact, Var},
-    views::{
-        Tip,
-        cards::{
-            CardState,
-            project::{
-                new_icon,
-                npc_support,
-                render_flavor_image,
-            },
-        },
-        events::{active_effects, render_effects},
-        game::CARD_HEIGHT,
-        parts::{center_center, flex_justified, flex_spaced},
-        tip,
-        tips::add_tip,
-    },
 };
 
-use super::AsCard;
-use egui::{Color32, CornerRadius, Margin, Stroke, StrokeKind};
-use egui_taffy::{Tui, TuiBuilderLogic, taffy, tui};
-use hes_engine::{
-    Effect as EngineEffect,
-    Feedstock,
-    Flag,
-    Group,
-    Id,
-    Process,
-    Project,
-    ProjectType,
+use super::{
+    AsCard,
+    CARD_HEIGHT,
+    CardState,
+    project::{new_icon, npc_support, render_flavor_image},
 };
+use egui::{Color32, CornerRadius, Margin, Stroke, StrokeKind};
+use egui_taffy::{TuiBuilderLogic, taffy};
+use hes_engine::{Feedstock, Process};
 use rust_i18n::t;
 
 fn describe_estimate(estimate: f32) -> Cow<'static, str> {
@@ -458,12 +431,7 @@ impl AsCard for Process {
                 tui.ui(|ui| {
                     add_tip(tip, ui.vertical_centered(|ui| {
                         ui.add(icon.size(24.));
-                        render_intensity_bar_with_seg_width(
-                            ui,
-                            intensity,
-                            false,
-                            5.,
-                        );
+                        ui.add(intensity_bar(intensity).seg_width(5.));
                     }).response);
                 });
             }

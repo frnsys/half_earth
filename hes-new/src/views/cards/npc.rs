@@ -1,4 +1,4 @@
-use super::AsCard;
+use super::{AsCard, CardState};
 use egui::{Color32, Stroke};
 use egui_taffy::{TuiBuilderLogic, taffy};
 use hes_engine::NPC;
@@ -6,18 +6,9 @@ use rust_i18n::t;
 
 use crate::{
     consts,
-    display::{icon_from_slug, icons, speaker_icon},
-    views::{
-        cards::CardState,
-        game::as_speaker,
-        parts::{
-            flex_justified,
-            raised_frame_impl,
-            raised_frame_no_shadow_impl,
-        },
-        tip,
-        tips::add_tip,
-    },
+    display::{as_speaker, icons, speaker_icon},
+    parts::{flex_justified, raised_frame},
+    tips::{add_tip, tip},
 };
 
 impl AsCard for NPC {
@@ -81,34 +72,20 @@ impl AsCard for NPC {
         let portrait = speaker_icon(&speaker);
         ui.horizontal(|ui| {
             ui.add_space(6.);
-            raised_frame_no_shadow_impl(
-                ui,
-                Color32::from_rgb(0x4e, 0x2c, 0x59),
-                Color32::from_rgb(0xB0, 0x93, 0xBA),
-                |ui| {
-                    egui::Frame::NONE
-                        .fill(Color32::from_rgb(
-                            0x72, 0x46, 0x80,
+            raised_frame()
+                .colors(
+                    Color32::from_rgb(0x4e, 0x2c, 0x59),
+                    Color32::from_rgb(0xB0, 0x93, 0xBA),
+                    Color32::from_rgb(0x72, 0x46, 0x80),
+                )
+                .show(ui, |ui| {
+                    ui.set_width(ui.available_width() - 6.);
+                    ui.vertical_centered(|ui| {
+                        ui.add(portrait.fit_to_exact_size(
+                            egui::Vec2::splat(164.),
                         ))
-                        .corner_radius(5)
-                        .show(ui, |ui| {
-                            ui.set_width(
-                                ui.available_width() - 6.,
-                            );
-                            ui.vertical_centered(|ui| {
-                                ui.add(
-                                    egui::Image::new(portrait)
-                                        .fit_to_exact_size(
-                                            egui::Vec2::splat(
-                                                164.,
-                                            ),
-                                        ),
-                                )
-                            });
-                        })
-                        .response
-                },
-            );
+                    });
+                })
         });
 
         // TODO
@@ -171,8 +148,7 @@ impl AsCard for NPC {
 
     fn top_back(&self, ui: &mut egui::Ui, ctx: &CardState) {
         let speaker = as_speaker(&self.name);
-        let portrait = speaker_icon(&speaker);
-        ui.image(portrait);
+        ui.add(speaker_icon(&speaker));
 
         let desc = t!(&self.flavor.description);
         ui.label(desc);
