@@ -1,6 +1,7 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::Sense;
+use egui::{Color32, Margin, Sense, Shadow, Stroke};
+use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{
     EventPhase,
@@ -8,6 +9,8 @@ use hes_engine::{
     Id,
     KindMap,
     Output,
+    Process,
+    Project,
     ProjectType,
     Resource,
     State,
@@ -20,11 +23,22 @@ use crate::{
     display::{
         AsText,
         HasIcon,
+        group_color,
         icons,
         resource,
         to_energy_units,
     },
     image,
+    parts::{
+        RaisedFrame,
+        button,
+        flavor_image,
+        full_width_button,
+        h_center,
+        new_icon,
+        raised_frame,
+        set_full_bg_image,
+    },
     state::{PlanChange, Points, StateExt, Tutorial},
     tips::{Tip, add_tip, tip},
 };
@@ -71,6 +85,13 @@ impl Plan {
     ) -> Option<PlanAction> {
         let cur_page = self.page;
         let mut ret_action = None;
+
+        set_full_bg_image(
+            ui,
+            image!("backgrounds/plan.png"),
+            egui::vec2(1600., 1192.),
+        );
+
         match &mut self.page {
             Page::Overview => {
                 ret_action = self.render_overview(
@@ -157,22 +178,10 @@ impl Plan {
         //     center=true
         // />
 
-        let new_icon = image!("new.svg");
-        if any_new_projects {
-            ui.image(new_icon.clone());
-        }
-
         // TODO
         // class:highlight=projects_highlighted
         let projects_highlighted =
             tutorial.eq(&Tutorial::Projects);
-        let button =
-            egui::Button::image_and_text(icons::ADD, t!("Add"));
-        if ui.add(button).clicked() {
-            self.set_page(Page::Projects(
-                ProjectType::Research,
-            ));
-        }
 
         let slots = calc_slots(ui);
 
@@ -192,26 +201,68 @@ impl Plan {
             - active_projects.len() as isize)
             .max(0) as usize;
 
-        for p in active_projects.into_iter().take(n_projects) {
-            // TODO
-            // <MiniProject project/>
-        }
-        for _ in 0..placeholders {
-            // TODO empty card slot
-        }
-        if n_active > slots {
-            let resp = ui.button(t!("View All"));
-            if resp.clicked() {
-                self.set_page(Page::All);
-            }
-        }
+        let split_at = slots / 2;
+
+        let items: Vec<_> = active_projects
+            .into_iter()
+            .take(n_projects)
+            .map(|p| Some(p))
+            .chain((0..placeholders).map(|_| None))
+            .collect();
+        let top = &items[0..split_at];
+        let bot = &items[split_at..];
+
+        ui.add_space(48.);
+
+        h_center(ui, "plan-preview", |tui| {
+            tui.ui(|ui| {
+                ui.horizontal(|ui| {
+                    let resp = ui
+                        .add(add_cards_slot(any_new_projects))
+                        .interact(Sense::click());
+                    if resp.clicked() {
+                        self.set_page(Page::Projects(
+                            ProjectType::Research,
+                        ));
+                    }
+
+                    for p in top {
+                        match p {
+                            Some(proj) => {
+                                ui.add(project_card_slot(proj));
+                            }
+                            None => {
+                                ui.add(empty_card_slot());
+                            }
+                        }
+                    }
+                });
+
+                ui.horizontal(|ui| {
+                    for p in bot {
+                        match p {
+                            Some(proj) => {
+                                ui.add(project_card_slot(proj));
+                            }
+                            None => {
+                                ui.add(empty_card_slot());
+                            }
+                        }
+                    }
+
+                    if n_active > slots {
+                        let resp = ui
+                            .add(view_all_slot())
+                            .interact(Sense::click());
+                        if resp.clicked() {
+                            self.set_page(Page::All);
+                        }
+                    }
+                });
+            });
+        });
 
         // next section (production)
-
-        if any_new_processes {
-            ui.image(new_icon);
-        }
-
         let processes_over_limit = state
             .world
             .processes
@@ -260,55 +311,131 @@ impl Plan {
                 .unwrap()
         });
         let output_demand = state.output_demand.total();
-        for process in max_processes {
-            let produced = crate::display::output(
-                state.produced.of(process.output),
-                process.output,
-            );
 
-            let demand = crate::display::output(
-                output_demand[process.output],
-                process.output,
-            );
+        ui.add_space(48.);
 
-            let icon = process.output.icon();
+        h_center(ui, "plan-processes", |tui| {
+            tui.ui(|ui| {
+                let resp = inset_frame().show(ui, |ui| {
+                    ui.horizontal(|ui| {
+                        for process in max_processes {
+                            let produced =
+                                crate::display::output(
+                                    state
+                                        .produced
+                                        .of(process.output),
+                                    process.output,
+                                );
 
-            // TODO
-            // <MiniProcess process/>
-            if produced / demand < 0.99 {
-                add_tip(
-                    shortages_tip.clone(),
-                    ui.image(icons::ALERT),
-                );
-            } else {
-                ui.image(icons::CHECK);
-            }
-            ui.label(format!("{:.0}/{:.0}", produced, demand));
-        }
+                            let demand = crate::display::output(
+                                output_demand[process.output],
+                                process.output,
+                            );
 
-        render_resource_status(
-            ui,
-            state,
-            if prod_shortages.is_some() {
-                Some(shortages_tip)
-            } else {
-                None
-            },
-        );
+                            let icon = process.output.icon();
 
-        let processes_disabled =
-            tutorial.lt(&Tutorial::Processes);
-        let processes_highlighted =
-            tutorial.eq(&Tutorial::Processes);
-        // TODO highlighting
-        if ui.button(t!("Change Production")).clicked() {
-            self.set_page(Page::Processes);
-        }
+                            ui.vertical(|ui| {
+                                ui.set_width(105.);
+
+                                let has_shortage =
+                                    produced / demand < 0.99;
+
+                                let image = if has_shortage {
+                                    icons::ALERT.size(14.)
+                                } else {
+                                    icons::CHECK.size(14.).tint(
+                                        Color32::from_rgb(
+                                            0x1B, 0xAC, 0x89,
+                                        ),
+                                    )
+                                };
+
+                                let text =
+                                    center_text(format!(
+                                        "{:.0}/{:.0}",
+                                        produced, demand
+                                    ))
+                                    .image(image);
+
+                                let resp = ui.add(text);
+
+                                if has_shortage {
+                                    add_tip(
+                                        shortages_tip.clone(),
+                                        resp,
+                                    );
+                                }
+
+                                ui.vertical_centered(|ui| {
+                                    ui.add(process_card_slot(
+                                        process,
+                                    ));
+
+                                    ui.vertical_centered(
+                                        |ui| {
+                                            ui.label(
+                                        egui::RichText::new(
+                                            t!(&process
+                                                .output
+                                                .title()),
+                                        ),
+                                    );
+                                        },
+                                    );
+                                });
+                            });
+                        }
+                    });
+
+                    ui.add_space(16.);
+
+                    render_resource_status(
+                        ui,
+                        state,
+                        if prod_shortages.is_some() {
+                            Some(shortages_tip)
+                        } else {
+                            None
+                        },
+                    );
+
+                    ui.add_space(16.);
+
+                    let processes_disabled =
+                        tutorial.lt(&Tutorial::Processes);
+                    let processes_highlighted =
+                        tutorial.eq(&Tutorial::Processes);
+                    // TODO highlighting
+                    if ui
+                        .add(full_width_button(t!(
+                            "Change Production"
+                        )))
+                        .clicked()
+                    {
+                        self.set_page(Page::Processes);
+                    }
+                });
+                if any_new_processes {
+                    ui.add(new_icon(resp.rect));
+                }
+            });
+        });
+
+        ui.add_space(48.);
 
         let ready_disabled = tutorial.lt(&Tutorial::Ready);
         let ready_highlighted = tutorial.eq(&Tutorial::Ready);
         // TODO highlighting
-        if ui.button(t!("Ready")).clicked() {
+        let resp = ui
+            .vertical_centered(|ui| {
+                ui.set_width(320.);
+                ui.add(full_width_button(t!("Ready")))
+            })
+            .inner;
+
+        ui.add_space(48.);
+
+        if resp.clicked() {
             Some(PlanAction::EnterWorld)
         } else {
             None
@@ -330,19 +457,19 @@ impl Plan {
             self.close_page(tutorial);
         }
 
-        let button =
-            egui::Button::image_and_text(icons::ADD, t!("Add"));
-        if ui.add(button).clicked() {
-            self.set_page(Page::Projects(
-                ProjectType::Research,
-            ));
-        }
-
-        for project in active_projects {
-            // TODO
-            // <MiniProject project/>
-            ui.label(t!(&project.name));
-        }
+        ui.horizontal(|ui| {
+            let resp = ui
+                .add(add_cards_slot(false))
+                .interact(Sense::click());
+            if resp.clicked() {
+                self.set_page(Page::Projects(
+                    ProjectType::Research,
+                ));
+            }
+            for project in active_projects {
+                ui.add(project_card_slot(project));
+            }
+        });
     }
 
     fn close_page(&mut self, tutorial: &mut Tutorial) {
@@ -496,42 +623,55 @@ fn render_resource_status(
     let resource_demand = &state.resource_demand;
     let starting_resources = state.world.starting_resources;
 
-    for (k, demand) in resource_demand.total().items() {
-        let demand = match k {
-            Resource::Electricity | Resource::Fuel => {
-                to_energy_units(demand)
-            }
-            Resource::Water => {
-                resource(demand, k, resources.available)
-            }
-            Resource::Land => {
-                // For land we add in protected land as well.
-                let protected = protected_land * 100.;
-                resource(demand, k, starting_resources)
-                    + protected
-            }
-        };
-        let available = match k {
-            Resource::Electricity | Resource::Fuel => {
-                to_energy_units(resources.available[k])
-            }
-            Resource::Land | Resource::Water => 100.,
-        };
-        // TODO
-        // <div class="resources-info-pill" class:not-enough={demand > available}>
-        let resp = ui
-            .horizontal_centered(|ui| {
-                ui.image(k.icon());
-                ui.label(format!(
-                    "{:.0}/{:.0}",
-                    demand, available
-                ));
-            })
-            .response;
-        if let Some(shortages_tip) = &shortages_tip {
-            add_tip(shortages_tip.clone(), resp);
+    h_center(ui, "resource-status", |tui| {
+        for (k, demand) in resource_demand.total().items() {
+            let demand = match k {
+                Resource::Electricity | Resource::Fuel => {
+                    to_energy_units(demand)
+                }
+                Resource::Water => {
+                    resource(demand, k, resources.available)
+                }
+                Resource::Land => {
+                    // For land we add in protected land as well.
+                    let protected = protected_land * 100.;
+                    resource(demand, k, starting_resources)
+                        + protected
+                }
+            };
+            let available = match k {
+                Resource::Electricity | Resource::Fuel => {
+                    to_energy_units(resources.available[k])
+                }
+                Resource::Land | Resource::Water => 100.,
+            };
+            // TODO
+            // <div class="resources-info-pill" class:not-enough={demand > available}>
+            tui.ui(|ui| {
+                let resp = egui::Frame::NONE
+                    .fill(Color32::from_rgb(0xE4, 0xC9, 0xC2))
+                    .stroke(Stroke::new(
+                        1.,
+                        Color32::from_rgb(0xB8, 0xA2, 0x9C),
+                    ))
+                    .inner_margin(Margin::symmetric(3, 2))
+                    .corner_radius(3)
+                    .show(ui, |ui| {
+                        ui.horizontal_centered(|ui| {
+                            ui.add(k.icon().size(16.));
+                            ui.label(format!(
+                                "{:.0}/{:.0}",
+                                demand, available
+                            ));
+                        });
+                    })
+                    .response;
+                if let Some(shortages_tip) = &shortages_tip {
+                    add_tip(shortages_tip.clone(), resp);
+                }
+            });
         }
-    }
+    });
 }
 
 enum Severity {
@@ -718,4 +858,312 @@ fn render_projects(
     render_points(ui, state, points, *kind);
 
     action
+}
+
+fn add_cards_slot(
+    show_new: bool,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    move |ui| {
+        let resp = inset_frame().margin(0).show(ui, |ui| {
+            ui.set_height(155.);
+            ui.set_width(105. - 1.); // account for inset shadow
+            ui.vertical_centered(|ui| {
+                ui.add_space(54.);
+                ui.add(icons::ADD.size(32.));
+                ui.label(t!("Add"));
+            });
+        });
+
+        if show_new {
+            ui.add(new_icon(resp.rect));
+        }
+
+        resp
+    }
+}
+
+fn view_all_slot()
+-> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    move |ui| {
+        inset_frame().margin(0).show(ui, |ui| {
+            ui.set_height(155.);
+            ui.set_width(105. - 1.); // account for inset shadow
+            ui.vertical_centered(|ui| {
+                ui.add_space(68.);
+                ui.label(t!("View All"));
+            });
+        })
+    }
+}
+
+fn empty_card_slot()
+-> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    |ui| {
+        egui::Frame::NONE
+            .stroke(Stroke::new(
+                1.,
+                Color32::from_black_alpha(48),
+            ))
+            .corner_radius(6)
+            .show(ui, |ui| {
+                ui.set_height(155.);
+                ui.set_width(105.);
+            })
+            .response
+    }
+}
+
+fn project_card_slot(
+    project: &Project,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    let image = flavor_image(&project.flavor.image);
+    let (color, _) = group_color(&project.group);
+    let icon = project.kind.icon();
+    let is_building = project.is_building();
+    let is_finished = project.is_active();
+    let progress = project.progress;
+
+    move |ui| {
+        egui::Frame::NONE
+            .stroke(Stroke::new(5., color))
+            .corner_radius(6)
+            .shadow(Shadow {
+                offset: [1, 1],
+                blur: 5,
+                spread: 2,
+                color: Color32::from_black_alpha(48),
+            })
+            .show(ui, |ui| {
+                // account for stroke
+                ui.set_height(155. - 6.);
+                ui.set_width(105. - 8.);
+                let height = 155. - 6.;
+                let width = 105. - 8.;
+
+                if let Some(image_size) = image
+                    .load_and_calc_size(ui, ui.available_size())
+                {
+                    let target_size = egui::vec2(width, height);
+
+                    // Compute aspect ratios
+                    let image_aspect =
+                        image_size.x / image_size.y;
+                    let target_aspect =
+                        target_size.x / target_size.y;
+
+                    let draw_size =
+                        if image_aspect > target_aspect {
+                            egui::Vec2::new(
+                                target_size.y * image_aspect,
+                                target_size.y,
+                            )
+                        } else {
+                            egui::Vec2::new(
+                                target_size.x,
+                                target_size.x / image_aspect,
+                            )
+                        };
+
+                    let center = ui.cursor().left_top()
+                        + target_size / 2.;
+                    let clip_rect = egui::Rect::from_min_size(
+                        ui.cursor().left_top(),
+                        target_size,
+                    );
+                    let draw_rect =
+                        egui::Rect::from_center_size(
+                            center, draw_size,
+                        );
+                    ui.scope(|ui| {
+                        ui.shrink_clip_rect(clip_rect);
+                        image.paint_at(ui, draw_rect);
+                    });
+                }
+
+                // This is off-center for some reason and needs
+                // manual adjustment.
+                egui::Frame::NONE
+                    .inner_margin(Margin {
+                        left: -8,
+                        ..Default::default()
+                    })
+                    .show(ui, |ui| {
+                        ui.vertical_centered(|ui| {
+                            ui.add_space(42.);
+                            ui.add(icon.size(48.));
+
+                            ui.add_space(8.);
+
+                            if is_finished {
+                                ui.add(icons::CHECK.size(18.));
+                            } else if is_building {
+                                fill_bar(
+                                    ui,
+                                    (72., 8.),
+                                    progress,
+                                );
+                            }
+                        });
+                    });
+            })
+            .response
+    }
+}
+
+// TODO dedupe
+fn fill_bar(
+    ui: &mut egui::Ui,
+    (width, height): (f32, f32),
+    filled: f32,
+) {
+    let (rect, _) = ui.allocate_exact_size(
+        egui::vec2(width, height),
+        Sense::empty(),
+    );
+    let painter = ui.painter();
+    painter.rect_filled(rect, 2, Color32::WHITE);
+
+    let mut inner = rect.shrink(1.);
+    inner.set_width(inner.width() * filled);
+    painter.rect_filled(inner, 2, Color32::PURPLE);
+}
+
+fn inset_frame() -> RaisedFrame {
+    raised_frame().colors(
+        Color32::from_rgb(0x91, 0x7e, 0x7e),
+        Color32::from_rgb(0xF5, 0xE8, 0xD7),
+        Color32::from_rgb(0xF0, 0xD4, 0xCC),
+    )
+}
+
+fn process_card_slot(
+    process: &Process,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    let image = flavor_image(&process.flavor.image);
+    let icon = process.output.icon();
+
+    move |ui| {
+        egui::Frame::NONE
+            .corner_radius(6)
+            .show(ui, |ui| {
+                ui.set_height(155.);
+                ui.set_width(105.);
+                let height = 155.;
+                let width = 105.;
+
+                if let Some(image_size) = image
+                    .load_and_calc_size(ui, ui.available_size())
+                {
+                    let target_size = egui::vec2(width, height);
+
+                    // Compute aspect ratios
+                    let image_aspect =
+                        image_size.x / image_size.y;
+                    let target_aspect =
+                        target_size.x / target_size.y;
+
+                    let draw_size =
+                        if image_aspect > target_aspect {
+                            egui::Vec2::new(
+                                target_size.y * image_aspect,
+                                target_size.y,
+                            )
+                        } else {
+                            egui::Vec2::new(
+                                target_size.x,
+                                target_size.x / image_aspect,
+                            )
+                        };
+
+                    let center = ui.cursor().left_top()
+                        + target_size / 2.;
+                    let clip_rect = egui::Rect::from_min_size(
+                        ui.cursor().left_top(),
+                        target_size,
+                    );
+                    let draw_rect =
+                        egui::Rect::from_center_size(
+                            center, draw_size,
+                        );
+                    ui.scope(|ui| {
+                        ui.shrink_clip_rect(clip_rect);
+                        image.paint_at(ui, draw_rect);
+                    });
+                }
+
+                egui::Frame::NONE.show(ui, |ui| {
+                    ui.vertical_centered(|ui| {
+                        ui.add_space(48.);
+                        ui.add(icon.size(48.));
+                    });
+                });
+            })
+            .response
+    }
+}
+
+struct CenteredText<'a> {
+    text: String,
+    image: Option<egui::Image<'a>>,
+    font_size: f32,
+    font_family: egui::FontFamily,
+}
+fn center_text<'a>(
+    text: impl Into<String>,
+) -> CenteredText<'a> {
+    CenteredText {
+        text: text.into(),
+        image: None,
+        font_size: 14.,
+        font_family: egui::FontFamily::Proportional,
+    }
+}
+impl<'a> CenteredText<'a> {
+    pub fn image(mut self, image: egui::Image<'a>) -> Self {
+        self.image = Some(image);
+        self
+    }
+
+    pub fn size(mut self, size: f32) -> Self {
+        self.font_size = size;
+        self
+    }
+
+    pub fn family(mut self, family: egui::FontFamily) -> Self {
+        self.font_family = family;
+        self
+    }
+}
+impl egui::Widget for CenteredText<'_> {
+    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+        let font_id =
+            egui::FontId::new(self.font_size, self.font_family);
+
+        let galley = ui.fonts(|f| {
+            f.layout_delayed_color(
+                self.text,
+                font_id,
+                f32::INFINITY,
+            )
+        });
+        let mut content_width = galley.size().x;
+        let width = ui.available_width();
+
+        if let Some(image) = &self.image {
+            let spacing = ui.style().spacing.item_spacing.x;
+            let image_width =
+                image.calc_size(ui.available_size(), None).x;
+            content_width += image_width + spacing;
+        }
+
+        let offset = width / 2. - content_width / 2.;
+        ui.horizontal(|ui| {
+            ui.add_space(offset);
+            if let Some(image) = self.image {
+                ui.add(image);
+            }
+            ui.label(galley);
+        })
+        .response
+    }
 }

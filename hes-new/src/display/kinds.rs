@@ -1,4 +1,5 @@
 use crate::vars::Var;
+use egui::Color32;
 use hes_engine::*;
 
 pub trait AsText {
@@ -255,5 +256,78 @@ impl AsText for Var {
             Var::PlantCalories => "plant calories",
             Var::AnimalCalories => "animal calories",
         }
+    }
+}
+
+pub fn group_color(group: &Group) -> (Color32, Color32) {
+    match group {
+        Group::Restoration => (
+            Color32::from_rgb(0x24, 0x7f, 0x24),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Protection => (
+            Color32::from_rgb(0x53, 0xa5, 0x53),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Nuclear => (
+            Color32::from_rgb(0xff, 0xa5, 0x00),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Agriculture => (
+            Color32::from_rgb(0xf5, 0xde, 0xb3),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Control => (
+            Color32::from_rgb(0xd8, 0x35, 0x35),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Population => (
+            Color32::from_rgb(0x6b, 0x6b, 0xec),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Food => (
+            Color32::from_rgb(0xf3, 0xff, 0x56),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Space => (
+            Color32::from_rgb(0x25, 0x04, 0x41),
+            Color32::from_rgb(0xd0, 0xc0, 0xe4),
+        ),
+        Group::Geoengineering => (
+            Color32::from_rgb(0x61, 0x68, 0x8b),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Electrification => (
+            Color32::from_rgb(0xfc, 0xba, 0x03),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Behavior => (
+            Color32::from_rgb(0xb8, 0xad, 0x91),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Limits => (
+            Color32::from_rgb(0x4B, 0x5A, 0x85),
+            Color32::from_rgb(0xff, 0xff, 0xff),
+        ),
+        Group::Energy => (
+            Color32::from_rgb(0xfe, 0xe9, 0x4a),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Materials => (
+            Color32::from_rgb(0x5f, 0x29, 0x29),
+            Color32::from_rgb(0xff, 0xff, 0xff),
+        ),
+        Group::Buildings => (
+            Color32::from_rgb(0x8f, 0x7e, 0xa9),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
+        Group::Cities => (
+            Color32::from_rgb(0x56, 0x6b, 0x6a),
+            Color32::from_rgb(0xff, 0xff, 0xff),
+        ),
+        Group::Other => (
+            Color32::from_rgb(0xe0, 0xe0, 0xe0),
+            Color32::from_rgb(0x00, 0x00, 0x00),
+        ),
     }
 }

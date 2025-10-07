@@ -52,7 +52,10 @@ impl Tip {
                         .visuals
                         .override_text_color =
                         Some(Color32::WHITE);
-                    ui.add(bbcode(&self.text));
+                    ui.horizontal_top(|ui| {
+                        ui.add(self.icon.size(24.));
+                        ui.add(bbcode(&self.text));
+                    });
                 });
             });
     }

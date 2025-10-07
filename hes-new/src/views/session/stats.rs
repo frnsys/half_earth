@@ -1,6 +1,13 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::{Color32, Margin};
+use egui::{
+    Color32,
+    CornerRadius,
+    Margin,
+    Sense,
+    TextWrapMode,
+    emath::OrderedFloat,
+};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{Id, Output, Process, Resource, State};
@@ -20,7 +27,12 @@ use crate::{
         intensity,
     },
     image,
-    parts::{h_center, raised_frame, set_full_bg_image},
+    parts::{
+        h_center,
+        overlay,
+        raised_frame,
+        set_full_bg_image,
+    },
     state::{FACTORS, StateExt},
     tips::{Tip, add_tip, tip},
     vars::Var,
@@ -174,16 +186,30 @@ impl Stats {
 
             ui.add_space(32.);
 
-            render_breakdown(ui, state, self.breakdown_factor);
+            render_breakdown(
+                ui,
+                state,
+                self.breakdown_factor,
+                &mut self.show_breakdown_menu,
+            );
 
             ui.add_space(64.);
         });
 
         if self.show_breakdown_menu {
-            if let Some(factor) = render_breakdown_menu(ui) {
-                self.breakdown_factor = factor;
-                self.show_breakdown_menu = false;
-            }
+            overlay(ui, |ui| {
+                ui.vertical(|ui| {
+                    ui.style_mut().wrap_mode =
+                        Some(egui::TextWrapMode::Extend);
+                    if let Some(factor) =
+                        render_breakdown_menu(ui)
+                    {
+                        self.breakdown_factor = factor;
+                        self.show_breakdown_menu = false;
+                    }
+                })
+                .response
+            });
         }
     }
 }
@@ -438,7 +464,11 @@ fn render_sea_level_rise(ui: &mut egui::Ui, state: &State) {
         ui.vertical_centered(|ui| {
             ui.add(icons::SEA_LEVEL_RISE.size(24.));
             ui.add_space(8.);
-            ui.label(format!("{rise} m"));
+            ui.label(
+                egui::RichText::new(format!("{rise} m"))
+                    .monospace()
+                    .size(24.),
+            );
         })
         .response,
     );
@@ -454,7 +484,11 @@ fn render_population(ui: &mut egui::Ui, state: &State) {
     ui.vertical_centered(|ui| {
         ui.add(icons::POPULATION.size(24.));
         ui.add_space(8.);
-        ui.label(pop_fmted);
+        ui.label(
+            egui::RichText::new(pop_fmted)
+                .monospace()
+                .size(24.),
+        );
     });
 }
 
@@ -496,18 +530,111 @@ fn render_habitability(ui: &mut egui::Ui, state: &State) {
     });
 }
 
+// TODO dedupe
+fn text_width(ui: &mut egui::Ui, text: String) -> f32 {
+    let font_id = egui::FontId::new(
+        18.0,
+        egui::FontFamily::Name("TimesTen".into()),
+    );
+    let galley = ui.fonts(|f| {
+        f.layout_delayed_color(text, font_id, f32::INFINITY)
+    });
+    galley.size().x
+}
+
 fn render_breakdown_menu(ui: &mut egui::Ui) -> Option<Var> {
     let mut selected = None;
-    for var in Var::iter() {
-        let button = egui::Button::image_and_text(
-            var.icon(),
-            t!(var.title()),
-        );
-        let resp = ui.add(button);
-        if resp.clicked() {
-            selected = Some(var);
-        }
-    }
+    raised_frame()
+        .colors(
+            Color32::from_rgb(0xF7, 0xF4, 0xEF),
+            Color32::from_rgb(0xA7, 0x9A, 0x82),
+            Color32::from_rgb(0xEB, 0xDE, 0xC6),
+        )
+        .margin(0)
+        .show(ui, |ui| {
+            let max_width = Var::iter()
+                .map(|var| {
+                    OrderedFloat::from(text_width(
+                        ui,
+                        t!(var.title()).to_string(),
+                    ))
+                })
+                .max()
+                .expect("non-empty")
+                .into_inner()
+                + 24.;
+            let n = Var::iter().count();
+
+            ui.style_mut().spacing.item_spacing.y = 0.;
+            for (i, var) in Var::iter().enumerate() {
+                let rounding = if i == 0 {
+                    CornerRadius {
+                        nw: 5,
+                        ne: 5,
+                        ..Default::default()
+                    }
+                } else if i == n - 1 {
+                    CornerRadius {
+                        sw: 5,
+                        se: 5,
+                        ..Default::default()
+                    }
+                } else {
+                    0.into()
+                };
+
+                let mut frame = egui::Frame::NONE
+                    .inner_margin(8.)
+                    .corner_radius(rounding)
+                    .begin(ui);
+
+                frame.content_ui.horizontal(|ui| {
+                    ui.set_width(max_width);
+                    ui.vertical(|ui| {
+                        ui.add_space(3.); // Manual alignment
+                        ui.image(var.icon());
+                    });
+                    ui.label(
+                        egui::RichText::new(t!(var.title()))
+                            .heading()
+                            .size(18.),
+                    );
+                });
+
+                let resp = frame.allocate_space(ui);
+                if resp.hovered() {
+                    frame.frame.fill =
+                        Color32::from_rgb(0xD7, 0xC5, 0xA5);
+                }
+                frame.paint(ui);
+
+                if resp.interact(Sense::click()).clicked() {
+                    selected = Some(var);
+                }
+
+                if i < n - 1 {
+                    let rect = egui::Rect::from_min_size(
+                        ui.cursor().left_top()
+                            - egui::vec2(0., 1.),
+                        egui::vec2(resp.rect.width(), 1.),
+                    );
+                    ui.painter().rect_filled(
+                        rect,
+                        0.,
+                        Color32::from_rgb(0xAA, 0x9E, 0x88),
+                    );
+                    let rect = egui::Rect::from_min_size(
+                        ui.cursor().left_top(),
+                        egui::vec2(resp.rect.width(), 1.),
+                    );
+                    ui.painter().rect_filled(
+                        rect,
+                        0.,
+                        Color32::from_rgb(0xF7, 0xF4, 0xEF),
+                    );
+                }
+            }
+        });
     selected
 }
 
@@ -515,6 +642,7 @@ fn render_breakdown(
     ui: &mut egui::Ui,
     state: &State,
     factor: Var,
+    show_breakdown_menu: &mut bool,
 ) {
     let available_land = state.world.starting_resources.land;
 
@@ -536,17 +664,61 @@ fn render_breakdown(
         data
     };
 
-    let table_data = factors_card(None, factor, state);
-    let button = egui::Button::image_and_text(
-        factor.icon(),
-        format!("{}▼", t!(factor.title())),
-    );
-    ui.add(button);
+    let resp =
+        raised_frame()
+            .colors(
+                Color32::WHITE,
+                Color32::from_gray(0xBB),
+                Color32::from_gray(0xEE),
+            )
+            .hover(Color32::from_gray(0xCC))
+            .margin(Margin::symmetric(6, 4))
+            .show(ui, |ui| {
+                ui.set_width(160.);
+                ui.set_height(24.);
+                ui.add_space(3.);
+                h_center(ui, "breakdown-button", |tui| {
+                    tui.ui(|ui| {
+                        ui.horizontal(|ui| {
+                            ui.add(factor.icon().size(18.));
+                            ui.add(
+                        egui::Label::new(egui::RichText::new(
+                            format!("{}▼", t!(factor.title())),
+                        ))
+                        .wrap_mode(TextWrapMode::Extend),
+                    )
+                        });
+                    });
+                });
+            });
+    if resp.interact(Sense::click()).clicked() {
+        // TODO this interferes with the hover styling in
+        // the frame?
+        *show_breakdown_menu = true;
+    }
 
-    render_chart(ui, &dataset, factor.color());
-    render_factors_list(ui, table_data);
+    ui.vertical_centered(|ui| {
+        ui.set_width(320.);
+        render_chart(ui, &dataset, factor.color());
 
-    ui.label(t!("Only direct impacts are shown."));
+        let table_data = factors_card(None, factor, state);
+
+        raised_frame()
+            .colors(
+                Color32::from_rgb(0xb0, 0xa4, 0x8d),
+                Color32::from_rgb(0xfc, 0xf4, 0xe3),
+                Color32::from_rgb(0xEB, 0xDE, 0xC6),
+            )
+            .margin(0)
+            .show(ui, |ui| {
+                ui.set_height(320.);
+                egui::ScrollArea::vertical().show(ui, |ui| {
+                    render_factors_list(ui, table_data);
+                });
+            });
+
+        ui.label(t!("Only direct impacts are shown."));
+    });
 }
 
 struct MiniCardData {
@@ -601,7 +773,6 @@ fn render_dashboard_item(
     );
 }
 
-// TODO
 fn render_chart(
     ui: &mut egui::Ui,
     dataset: &BTreeMap<String, f32>,

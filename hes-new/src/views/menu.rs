@@ -1,13 +1,18 @@
-use egui::{Button, Color32, Margin};
+use egui::{Align2, Button, Color32, Margin, Sense};
 use hes_engine::State;
 use rust_i18n::t;
 
 use crate::{
-    display::{self, icons, intensity},
+    display::{
+        self,
+        icons,
+        intensity::{self, intensity_bar},
+    },
     image,
     parts::{
         RaisedFrame,
         button,
+        button_frame,
         raised_frame,
         set_full_bg_image,
     },
@@ -49,25 +54,10 @@ pub fn render_menu(
     );
 
     let year = state.world.year;
-    let pc = state.political_capital.max(0);
-    let outlook = state.outlook();
-    let emissions = state.emissions.as_gtco2eq();
-    let extinction = state.world.extinction_rate;
-    let temperature = state.world.temperature;
 
     // let start_year = ui.start_year; // TODO
     let start_year = 2022;
 
-    let temp = display::temp(temperature);
-    let emissions = display::emissions(emissions);
-    let contentedness = intensity::scale(
-        outlook,
-        intensity::Variable::WorldOutlook,
-    );
-    let extinction = intensity::scale(
-        extinction,
-        intensity::Variable::Extinction,
-    );
     let locale = {
         let elapsed = year - start_year;
         let idx = (elapsed as f32 / 5.).round() as usize
@@ -76,19 +66,32 @@ pub fn render_menu(
     };
     let time_place = format!("{}, {}", locale, year);
 
-    let close = ui.add(Button::image(icons::CLOSE));
-    if close.clicked() {
-        return Some(MenuAction::CloseMenu);
-    }
+    let mut action = None;
+    egui::Area::new("menu-close".into())
+        .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
+        .show(ui.ctx(), |ui| {
+            let resp =
+                button_frame().margin(6).show(ui, |ui| {
+                    ui.add(icons::CLOSE.size(24.));
+                });
+            if resp.interact(Sense::click()).clicked() {
+                action = Some(MenuAction::CloseMenu);
+            }
+        });
 
-    inset_frame().margin(6).show(ui, |ui| {
-        let logo = image!("gosplant.svg");
-        ui.add(egui::Image::new(logo).max_height(24.));
-    });
+    ui.vertical_centered(|ui| {
+        ui.set_max_width(480.);
 
-    ui.horizontal(|ui| {
-        ui.label("CLOCK"); // TODO
-        //
+        ui.add_space(64.);
+
+        inset_frame().margin(6).show(ui, |ui| {
+            ui.set_width(80.);
+            let logo = image!("gosplant.svg");
+            ui.add(egui::Image::new(logo).max_height(24.));
+        });
+
+        ui.add_space(8.);
+
         inset_frame().margin(Margin::symmetric(24, 12)).show(
             ui,
             |ui| {
@@ -100,79 +103,50 @@ pub fn render_menu(
                 );
             },
         );
-    });
 
-    ui.vertical_centered(|ui| {
-        ui.image(icons::POLITICAL_CAPITAL);
-        ui.label(pc.to_string());
-        ui.label(t!("Political Capital"));
-    });
+        ui.add_space(32.);
+        let motto = image!("motto.png");
+        ui.add(egui::Image::new(motto).max_height(80.));
+        ui.add_space(32.);
 
-    ui.vertical_centered(|ui| {
-        ui.image(icons::EMISSIONS);
-        ui.label(emissions);
-        ui.label(t!("CO2 Emissions/Yr"));
-    });
-
-    ui.vertical_centered(|ui| {
-        ui.image(icons::WARMING);
-        ui.label(temp);
-        ui.label(t!("Temp. Anomaly"));
-    });
-
-    ui.vertical_centered(|ui| {
-        ui.image(icons::EXTINCTION_RATE);
-        // <IntensityBar intensity=extinction.into_signal()/> // TODO
-        ui.label(t!("Extinction Rate"));
-    });
-
-    ui.vertical_centered(|ui| {
-        ui.image(icons::CONTENTEDNESS);
-        // <IntensityBar
-        //     intensity=contentedness.into_signal()
-        //     invert=true
-        //     /> // TODO
-        ui.label(t!("Contentedness"));
-    });
-
-    let motto = image!("motto.png");
-    ui.image(motto);
-
-    let sound = format!(
-        "{}: {}",
-        t!("Sound"),
-        if STATE.read().prefs.sound {
-            t!("On")
-        } else {
-            t!("Off")
+        let sound = format!(
+            "{}: {}",
+            t!("Sound"),
+            if STATE.read().prefs.sound {
+                t!("On")
+            } else {
+                t!("Off")
+            }
+        );
+        if ui.add(button(sound.into())).clicked() {
+            action = Some(MenuAction::ToggleSound);
         }
-    );
-    if ui.add(button(sound.into())).clicked() {
-        return Some(MenuAction::ToggleSound);
-    }
 
-    let tips = format!(
-        "{}: {}",
-        t!("Tips"),
-        if STATE.read().prefs.hide_help {
-            t!("On")
-        } else {
-            t!("Off")
+        let tips = format!(
+            "{}: {}",
+            t!("Tips"),
+            if STATE.read().prefs.hide_help {
+                t!("On")
+            } else {
+                t!("Off")
+            }
+        );
+        if ui.add(button(tips.into())).clicked() {
+            action = Some(MenuAction::HideHelp);
         }
-    );
-    if ui.add(button(tips.into())).clicked() {
-        return Some(MenuAction::HideHelp);
-    }
 
-    if ui.add(button(t!("Restart Game"))).clicked() {
-        return Some(MenuAction::RestartGame);
-    }
+        if ui.add(button(t!("Restart Game"))).clicked() {
+            action = Some(MenuAction::RestartGame);
+        }
 
-    if ui.add(button(t!("Credits"))).clicked() {
-        return Some(MenuAction::ShowCredits);
-    }
+        if ui.add(button(t!("Credits"))).clicked() {
+            action = Some(MenuAction::ShowCredits);
+        }
 
-    None
+        ui.add_space(36.);
+    });
+
+    action
 }
 
 fn inset_frame() -> RaisedFrame {

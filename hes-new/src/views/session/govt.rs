@@ -21,6 +21,7 @@ use crate::{
     parts::{
         center_center,
         h_center,
+        overlay,
         raised_frame,
         set_full_bg_image,
     },
@@ -402,35 +403,4 @@ fn render_npc(
                 }
             });
         })
-}
-
-fn overlay(
-    ui: &mut egui::Ui,
-    inner: impl FnOnce(&mut egui::Ui) -> egui::Response,
-) -> bool {
-    egui::Area::new("overlay".into())
-        .order(Order::Tooltip)
-        .default_size(ui.ctx().screen_rect().size())
-        .movable(false)
-        .show(ui.ctx(), |ui| {
-            egui::Frame::NONE
-                .fill(Color32::from_black_alpha(200))
-                .inner_margin(Margin::symmetric(18, 18))
-                .show(ui, |ui| {
-                    ui.set_width(ui.available_width());
-                    ui.set_height(ui.available_height());
-                    center_center(
-                        ui,
-                        "overlay-content".into(),
-                        |tui| {
-                            tui.ui(|ui| {
-                                let resp = inner(ui);
-                                resp.clicked_elsewhere()
-                            })
-                        },
-                    )
-                })
-                .inner
-        })
-        .inner
 }

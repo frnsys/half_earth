@@ -10,7 +10,12 @@ use crate::{
         icons,
         intensity::{self, intensity_bar},
     },
-    parts::{center_center, flex_justified, flex_spaced},
+    parts::{
+        center_center,
+        flex_justified,
+        flex_spaced,
+        new_icon,
+    },
     state::StateExt,
     tips::{add_tip, tip},
     vars::{Impact, Var},
@@ -20,7 +25,7 @@ use super::{
     AsCard,
     CARD_HEIGHT,
     CardState,
-    project::{new_icon, npc_support, render_flavor_image},
+    project::{npc_support, render_flavor_image},
 };
 use egui::{Color32, CornerRadius, Margin, Stroke, StrokeKind};
 use egui_taffy::{TuiBuilderLogic, taffy};

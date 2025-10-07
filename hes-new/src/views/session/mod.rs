@@ -4,7 +4,7 @@ mod regions;
 mod stats;
 mod treemap;
 
-use std::{collections::BTreeMap, fmt::Display};
+use std::{collections::BTreeMap, fmt::Display, sync::Arc};
 
 use egui::{Color32, CornerRadius, Margin, Sense};
 use egui_taffy::TuiBuilderLogic;
@@ -35,16 +35,21 @@ use crate::{
 };
 
 use govt::Parliament;
-use plan::{Plan, PlanAction};
-use regions::Regions;
-use stats::Stats;
+pub(super) use plan::{Plan, PlanAction};
+pub(super) use regions::Regions;
+pub(super) use stats::Stats;
 
 pub struct Session {
     pub(crate) view: View,
     pub(crate) events: Events,
+    pub(crate) glow_ctx: Arc<eframe::glow::Context>,
 }
 impl Session {
-    pub fn new(state: &mut State, ui: &mut UIState) -> Self {
+    pub fn new(
+        state: &mut State,
+        ui: &mut UIState,
+        glow_ctx: Arc<eframe::glow::Context>,
+    ) -> Self {
         let events = state
             .roll_events(EventPhase::PlanningStart)
             .into_iter()
@@ -68,6 +73,7 @@ impl Session {
         Self {
             view: View::Plan(Plan::new()),
             events: Events::new(events),
+            glow_ctx,
         }
     }
 
@@ -89,7 +95,9 @@ impl Session {
             Tab::Plan => View::Plan(Plan::new()),
             Tab::Govt => View::Govt(Parliament::new(state)),
             Tab::Stats => View::Stats(Stats::new()),
-            Tab::World => View::World(Regions::new()),
+            Tab::World => {
+                View::World(Regions::new(self.glow_ctx.clone()))
+            }
         };
     }
 
@@ -229,9 +237,11 @@ impl Session {
             })
         });
 
-        let result = self.events.render(ui, state);
-        if result == Some(EventResult::JustFinished) {
-            self.update_tutorial(state, tutorial);
+        if !self.events.is_finished {
+            let result = self.events.render(ui, state);
+            if result == Some(EventResult::JustFinished) {
+                self.update_tutorial(state, tutorial);
+            }
         }
 
         match &mut self.view {

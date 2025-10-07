@@ -6,6 +6,7 @@ use egui::{
     Image,
     ImageSource,
     Margin,
+    Order,
     Rect,
     Sense,
     Shadow,
@@ -14,7 +15,7 @@ use egui::{
     ahash::HashMap,
     mutex::Mutex,
 };
-use egui_taffy::{Tui, taffy, tui};
+use egui_taffy::{Tui, TuiBuilderLogic, taffy, tui};
 use rust_embed::Embed;
 
 #[derive(Embed)]
@@ -110,12 +111,9 @@ fn full_bg_image(
     let image_aspect = image_size.x / image_size.y;
     let target_aspect = target_size.x / target_size.y;
 
-    // Compute size to draw to match `background-size: cover`
     let draw_size = if image_aspect > target_aspect {
-        // Image is wider than target → match height, crop width
         Vec2::new(target_size.y * image_aspect, target_size.y)
     } else {
-        // Image is taller than target → match width, crop height
         Vec2::new(target_size.x, target_size.x / image_aspect)
     };
 
@@ -125,7 +123,7 @@ fn full_bg_image(
 
     egui::Image::new(image)
         .show_loading_spinner(false)
-        .texture_options(TextureOptions::NEAREST)
+        .texture_options(TextureOptions::LINEAR)
         .paint_at(ui, draw_rect);
 }
 
@@ -364,25 +362,94 @@ pub fn flex_spaced(
         .show(inner);
 }
 
+pub fn button_frame() -> RaisedFrame {
+    raised_frame()
+        .colors(
+            Color32::WHITE,
+            Color32::from_gray(0xBB),
+            Color32::from_gray(0xEE),
+        )
+        .hover(Color32::from_gray(0xCC))
+        .margin(Margin::symmetric(6, 4))
+}
+
 pub fn button<'a>(
     text: Cow<'a, str>,
 ) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
-        let resp = raised_frame()
-            .colors(
-                Color32::WHITE,
-                Color32::from_gray(0xBB),
-                Color32::from_gray(0xEE),
-            )
-            .hover(Color32::from_gray(0xCC))
-            .margin(Margin::symmetric(6, 4))
-            .show(ui, |ui| {
+        let resp = button_frame().show(ui, |ui| {
+            ui.label(
+                egui::RichText::new(text).heading().size(14.),
+            );
+        });
+        resp.interact(Sense::click())
+    }
+}
+
+pub fn full_width_button<'a>(
+    text: Cow<'a, str>,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    move |ui| {
+        let resp = button_frame().show(ui, |ui| {
+            ui.set_width(ui.available_width());
+            ui.vertical_centered(|ui| {
                 ui.label(
                     egui::RichText::new(text)
                         .heading()
                         .size(14.),
                 );
             });
+        });
         resp.interact(Sense::click())
+    }
+}
+
+pub fn overlay(
+    ui: &mut egui::Ui,
+    inner: impl FnOnce(&mut egui::Ui) -> egui::Response,
+) -> bool {
+    egui::Area::new("overlay".into())
+        .order(Order::Tooltip)
+        .default_size(ui.ctx().screen_rect().size())
+        .movable(false)
+        .show(ui.ctx(), |ui| {
+            egui::Frame::NONE
+                .fill(Color32::from_black_alpha(200))
+                .inner_margin(Margin::symmetric(18, 18))
+                .show(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    ui.set_height(ui.available_height());
+                    center_center(
+                        ui,
+                        "overlay-content".into(),
+                        |tui| {
+                            tui.ui(|ui| {
+                                let resp = inner(ui);
+                                resp.clicked_elsewhere()
+                            })
+                        },
+                    )
+                })
+                .inner
+        })
+        .inner
+}
+
+pub fn new_icon(
+    card_rect: Rect,
+) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+    let size = egui::vec2(48., 48.);
+    let rect = egui::Rect::from_min_size(
+        card_rect.left_top() - egui::vec2(16., 16.),
+        size,
+    );
+    let new_icon = image!("new.svg");
+    move |ui| {
+        ui.place(
+            rect,
+            egui::Image::new(new_icon)
+                .fit_to_exact_size(size)
+                .rotate(-0.5, egui::Vec2::splat(0.5)),
+        )
     }
 }

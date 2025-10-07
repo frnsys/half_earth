@@ -31,6 +31,8 @@ bincode = { version = "1" }
 rust-embed = "8.7.2"
 blake3 = "1.8.2"
 # hector = { path = "../hector-rs" }
+hexasphere = "16.0.0"
+three-d = { git = "https://github.com/asny/three-d.git", rev = "12f3400307dd778c45e0160da924ddd964d8831a" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = "0.4"

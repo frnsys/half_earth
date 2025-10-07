@@ -176,12 +176,12 @@ pub fn render_hud(
                                     ui.add(
                                         icons::HUD_EMISSIONS.size(14.),
                                     );
-                                    let sym = if emissions_up {
-                                        "↑"
+                                    let (sym, color) = if emissions_up {
+                                        ("↑", Color32::from_rgb(0xeb, 0x39, 0x41))
                                     } else {
-                                        "↓"
+                                        ("↓", Color32::from_rgb(0x43, 0xcc, 0x70))
                                     };
-                                    ui.label(sym);
+                                    ui.label(egui::RichText::new(sym).color(color));
                                 })
                                 .response,
                             );

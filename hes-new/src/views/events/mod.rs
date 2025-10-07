@@ -2,13 +2,12 @@ mod dialogue;
 
 use std::collections::BTreeMap;
 
-use egui_taffy::TuiBuilderLogic;
 use hes_engine::State;
 use rust_i18n::t;
 
 use crate::{
     display::{DisplayEvent, icons, render_effects},
-    parts::center_center,
+    parts::overlay,
     tips::tip,
 };
 
@@ -61,12 +60,14 @@ impl Events {
         let mut result = None;
         if !self.events.is_empty() {
             let event = self.events[self.idx].clone();
-            let dialogue_result =
-                center_center(ui, "events", |tui| {
-                    tui.ui(|ui| {
-                        self.render_event(ui, state, &event)
-                    })
-                });
+            let mut dialogue_result = None;
+            overlay(ui, |ui| {
+                ui.vertical(|ui| {
+                    dialogue_result =
+                        self.render_event(ui, state, &event);
+                })
+                .response
+            });
             if let Some(dialogue_result) = dialogue_result {
                 match dialogue_result {
                     DialogueResult::Advanced => {

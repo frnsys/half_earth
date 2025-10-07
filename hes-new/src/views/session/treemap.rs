@@ -64,7 +64,7 @@ pub fn treemap<'a>(
         );
 
         let font_id = egui::FontId::new(
-            16.0,
+            12.0,
             egui::FontFamily::Proportional,
         );
         let galley = ui.fonts(|f| {

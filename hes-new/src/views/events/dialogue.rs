@@ -64,24 +64,43 @@ impl Dialogue {
         let is_last_line = line.next.is_none();
         let has_decision = line.has_decision();
 
-        egui::Frame::NONE
-            .fill(Color32::WHITE)
-            .inner_margin(Margin::symmetric(6, 6))
-            .show(ui, |ui| {
-                ui.style_mut().visuals.override_text_color =
-                    Some(Color32::BLACK);
-                if line.speaker != Speaker::Game {
-                    ui.add(profile.fit_to_exact_size(
+        ui.horizontal_top(|ui| {
+            if line.speaker != Speaker::Game {
+                ui.add(
+                    profile.fit_to_exact_size(
                         egui::Vec2::splat(64.),
-                    ));
-                    let text = t!(line.speaker.to_string());
-                    ui.label(text);
-                }
+                    ),
+                );
+            }
 
-                // TODO apply context
-                //             fill_icons(&fill_vars(&t!(&line.text), context))
-                self.animator.render(ui, &line.text);
-            });
+            egui::Frame::NONE
+                .fill(Color32::WHITE)
+                .inner_margin(Margin::symmetric(6, 6))
+                .show(ui, |ui| {
+                    ui.style_mut()
+                        .visuals
+                        .override_text_color =
+                        Some(Color32::BLACK);
+
+                    ui.vertical(|ui| {
+                        if line.speaker != Speaker::Game {
+                            let text =
+                                t!(line.speaker.to_string());
+                            ui.label(
+                                egui::RichText::new(
+                                    text.to_uppercase(),
+                                )
+                                .size(11.),
+                            );
+                            ui.add_space(4.);
+                        }
+
+                        // TODO apply context
+                        //             fill_icons(&fill_vars(&t!(&line.text), context))
+                        self.animator.render(ui, &line.text);
+                    });
+                });
+        });
 
         let revealed = self.animator.finished();
 
@@ -95,7 +114,6 @@ impl Dialogue {
                 ui.with_layout(
                     Layout::right_to_left(Align::Center),
                     |ui| {
-                        ui.add_space(26.);
                         if ui
                             .add(button(t!("Continue")))
                             .clicked()
@@ -119,7 +137,6 @@ impl Dialogue {
                 ui.with_layout(
                     Layout::right_to_left(Align::Center),
                     |ui| {
-                        ui.add_space(26.);
                         if ui.add(button(t!("Next"))).clicked()
                         {
                             self.advance_line(state);

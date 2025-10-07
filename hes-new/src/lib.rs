@@ -26,7 +26,8 @@ use state::{State, UIState};
 
 use crate::{
     parts::draw_bg_image,
-    views::{Card, GameView, Phase},
+    state::update_factors,
+    views::{Card, GameView, Phase, debug_view},
 };
 
 pub static AUDIO: LazyLock<Arc<RwLock<AudioManager>>> =
@@ -77,6 +78,8 @@ pub struct App {
     // TODO temp
     // cards: Vec<Card<Project>>,
     cards: Vec<Card<Process>>,
+
+    glow_ctx: Arc<eframe::glow::Context>,
 }
 impl App {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
@@ -108,22 +111,20 @@ impl App {
             .map(|p| Card::new(p.clone()))
             .collect();
 
+        update_factors(&state.game); // TODO call this where needed
+
+        let glow_ctx = cc.gl.clone().unwrap();
+
         Self {
             // ui: ViewState::Start(Start::default()),
             ui: ViewState::Game(
                 UIState::new(2022),
-                GameView::new(&mut state.game),
+                // GameView::new(&mut state.game),
+                debug_view(glow_ctx.clone()),
             ),
-            // phase: Phase::Planning(Session {
-            //     view: View::Stats(Stats::new()),
-            //     // view: View::Govt(Parliament::new(
-            //     //     &state.game,
-            //     // )),
-            //     events: Events::new(vec![]),
-            // }),
-            // ..Default::default()
             state,
             cards,
+            glow_ctx,
         }
     }
 }
@@ -253,6 +254,7 @@ impl eframe::App for App {
                                                     &mut self
                                                         .state
                                                         .game,
+                                                        self.glow_ctx.clone(),
                                                 ),
                                             );
                                     }
