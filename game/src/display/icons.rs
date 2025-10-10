@@ -1,0 +1,468 @@
+use crate::vars::Var;
+use egui::{ImageSource, TextureOptions};
+use hes_engine::{
+    Byproduct,
+    Condition,
+    Feedstock,
+    LocalVariable,
+    NPC,
+    Output,
+    ProcessFeature,
+    ProjectType,
+    Resource,
+    WorldVariable,
+};
+use paste::paste;
+
+pub type Icon = &'static IconData;
+
+#[derive(Debug, Clone)]
+pub struct IconData {
+    slug: &'static str,
+    image: egui::ImageSource<'static>,
+}
+impl PartialEq for IconData {
+    fn eq(&self, other: &Self) -> bool {
+        self.slug == other.slug
+    }
+}
+impl PartialOrd for IconData {
+    fn partial_cmp(
+        &self,
+        other: &Self,
+    ) -> Option<std::cmp::Ordering> {
+        self.slug.partial_cmp(other.slug)
+    }
+}
+impl Eq for IconData {}
+impl Ord for IconData {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.slug.cmp(other.slug)
+    }
+}
+impl std::fmt::Display for Icon {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+        write!(f, "{}", self.slug)
+    }
+}
+impl Into<ImageSource<'static>> for &IconData {
+    fn into(self) -> ImageSource<'static> {
+        self.image.clone()
+    }
+}
+impl IconData {
+    pub fn size(&self, size: f32) -> egui::Image<'_> {
+        egui::Image::new(self.image.clone())
+            .fit_to_exact_size(egui::vec2(size, size))
+            .texture_options(TextureOptions::LINEAR)
+    }
+
+    pub fn bytes(&self) -> Option<&[u8]> {
+        match &self.image {
+            egui::ImageSource::Bytes { bytes, .. } => {
+                Some(bytes.as_ref())
+            }
+            _ => None, // Expect they're all bytes
+        }
+    }
+}
+
+macro_rules! icons {
+    ($($name:ident: $path:literal),* $(,)?) => {
+        paste! {
+            $(
+                pub const $name: Icon = &IconData {
+                    slug: stringify!([<$name:lower>]),
+                    image: egui::include_image!(concat!("../../assets/images/", $path)),
+                };
+            )*
+
+            pub const MISSING: Icon = &IconData {
+                slug: "missing",
+                image: egui::include_image!("../../assets/images/missing_content.png"),
+            };
+
+            /// Get an icon path from its slug.
+            pub fn icon_from_slug(slug: &str) -> Icon {
+                match slug {
+                    $(
+                        stringify!([<$name:lower>]) => $name,
+                    )*
+                    _ => {
+                        tracing::warn!("No icon defined for: {slug}.");
+                        MISSING
+                    }
+                }
+            }
+        }
+    }
+}
+
+icons! {
+    GOSPLANT: "/gosplant_inverse.svg",
+    CLOSE: "/icons/close.svg",
+    POLITICAL_CAPITAL: "/icons/pips/political_capital.png",
+    EMISSIONS: "/icons/emissions.png",
+    CO2: "/icons/emissions.png",
+    N2O: "/icons/emissions.png",
+    CH4: "/icons/emissions.png",
+    WARMING: "/icons/warming.png",
+    CONTENTEDNESS: "/icons/contentedness.png",
+    EXTINCTION_RATE: "/icons/extinction.png",
+    LAND: "/icons/land.png",
+    WATER: "/icons/water.png",
+    ENERGY: "/icons/energy.png",
+    FOOD: "/icons/plantcalories.png",
+    FUEL: "/icons/fuel.png",
+    ELECTRICITY: "/icons/electricity.png",
+    PLANT_CALORIES: "/icons/plantcalories.png",
+    ANIMAL_CALORIES: "/icons/animalcalories.png",
+    WEALTH: "/icons/wealth.png",
+    POPULATION: "/icons/population.png",
+    PRECIPITATION: "/icons/precipitation.svg",
+    HABITABILITY: "/icons/habitability.png",
+    TEMPERATURE: "/icons/temperature.svg",
+    DEVELOPMENT: "/icons/development.png",
+    MIX_TOKEN: "/icons/mix_allocation.png",
+    ALERT: "/icons/alert.png",
+    HELP: "/icons/help.png",
+    PROJECT: "/icons/implement.png",
+    DOWN_ARROW_SMALL: "/icons/down_arrow.svg",
+    ARROW_RIGHT: "/icons/arrow_right.svg",
+    ARROW_LEFT: "/icons/arrow_left.svg",
+    ARROW_RIGHT_LIGHT: "/icons/arrow_right_light.svg",
+    CLOSED_BORDERS: "/icons/ban.png",
+    RESEARCH: "/icons/pips/research.png",
+    INITIATIVE: "/icons/pips/initiative.png",
+    POLICY: "/icons/pips/political_capital.png",
+    DEGROWTH: "/icons/degrowth.png",
+    OCEAN: "/icons/ocean.png",
+    LABOR: "/icons/labor.png",
+    BIRB: "/icons/biodiversity.png",
+    BIODIVERSITY: "/icons/extinction.png",
+    SEA_LEVEL_RISE: "/icons/sea_level_rise.png",
+    UNLOCKS: "/icons/unlocks.png",
+    LOCKS: "/icons/locks.png",
+    PROTECT: "/icons/protect.png",
+    CHANCE: "/icons/chance.png",
+    COST: "/icons/cost.png",
+    REQUEST: "/icons/request.png",
+    IMPLEMENT: "/icons/implement.png",
+    BAN: "/icons/ban.png",
+    DEMAND: "/icons/demand.png",
+    OUTPUT: "/icons/output.png",
+    ADD: "/icons/add.svg",
+    CHECK: "/icons/check.png",
+    CHECK_BLK: "/icons/check_blk.png",
+    TIME: "/icons/time.svg",
+    WARNING: "/icons/warning.svg",
+    HALTED: "/icons/halted.png",
+    SETTINGS: "/icons/settings.svg",
+
+    HUD_POLITICAL_CAPITAL: "/icons/hud/political_capital.svg",
+    HUD_EXTINCTION_RATE: "/icons/hud/extinction.svg",
+    HUD_CONTENTEDNESS: "/icons/hud/contentedness.svg",
+    HUD_WARMING: "/icons/hud/warming.svg",
+    HUD_EMISSIONS: "/icons/hud/emissions.svg",
+
+    // NPC relationships
+    RELATIONSHIP: "/icons/relationship.png",
+    RELATIONSHIP_EMPTY: "/icons/relationship_empty.png",
+    ALLY: "/icons/npcs/ally.svg",
+    NEUTRAL: "/icons/npcs/neutral.svg",
+    FRIENDLY: "/icons/npcs/friendly.svg",
+    NEMESIS: "/icons/npcs/nemesis.svg",
+
+    // Industries
+    AVIATION: "/icons/industries/aviation.png",
+    BUILDINGS: "/icons/industries/buildings.png",
+    CHEMICALS: "/icons/industries/chemicals.png",
+    CONCRETE: "/icons/industries/concrete.png",
+    IRON_AND_STEEL: "/icons/industries/iron_and_steel.png",
+    OTHER_INDUSTRY: "/icons/industries/other_industry.png",
+    ROAD_TRANSPORT: "/icons/industries/road_transport.png",
+    SHIPPING: "/icons/industries/shipping.png",
+
+    // Feedstocks
+    COAL: "/icons/feedstocks/coal.png",
+    LITHIUM: "/icons/feedstocks/lithium.png",
+    NATURAL_GAS: "/icons/feedstocks/natural_gas.png",
+    OIL: "/icons/feedstocks/oil.png",
+    URANIUM: "/icons/feedstocks/uranium.png",
+    THORIUM: "/icons/feedstocks/thorium.png",
+    SOIL: "/icons/feedstocks/soil.png",
+    OTHER: "/icons/feedstocks/other.png",
+
+    // Characters
+    THE_AUTHORITARIAN: "/characters/The Authoritarian.png",
+    THE_ECONOMIST: "/characters/The Economist.png",
+    THE_ENVIRONMENTALIST: "/characters/The Environmentalist.png",
+    THE_SCIENTIST: "/characters/The Scientist.png",
+    THE_POPULIST: "/characters/The Populist.png",
+    THE_ECOLOGIST: "/characters/The Ecologist.png",
+    THE_MALTHUSIAN: "/characters/The Malthusian.png",
+    THE_GEOENGINEER: "/characters/The Geoengineer.png",
+    THE_POSADIST: "/characters/The Posadist.png",
+    THE_WRETCHED: "/characters/The Wretched.png",
+    THE_CONSUMERIST: "/characters/The Consumerist.png",
+    THE_UTOPIAN: "/characters/The Utopian.png",
+    THE_ACCELERATIONIST: "/characters/The Accelerationist.png",
+    THE_ANIMAL_LIBERATIONIST: "/characters/The Animal Liberationist.png",
+    THE_FARMER: "/characters/The Farmer.png",
+    THE_ECOFEMINIST: "/characters/The Ecofeminist.png",
+    THE_FANONIST: "/characters/The Fanonist.png",
+    THE_PLACEHOLDER: "/characters/placeholder.png",
+
+    // Process features
+    IS_CSS: "/icons/features/is_ccs.png",
+    IS_COMBUSTION: "/icons/features/is_combustion.png",
+    IS_INTERMITTENT: "/icons/features/is_intermittent.png",
+    MAKES_NUCLEAR_WASTE: "/icons/features/makes_nuclear_waste.png",
+    CAN_MELTDOWN: "/icons/features/can_meltdown.png",
+    IS_LABOR_INTENSIVE: "/icons/features/is_labor_intensive.png",
+    IS_SOLAR: "/icons/features/is_solar.png",
+    IS_FOSSIL: "/icons/features/is_fossil.png",
+    USES_OIL: "/icons/feedstocks/oil.png",
+    USES_LIVESTOCK: "/icons/features/uses_livestock.png",
+    USES_PESTICIDES: "/icons/features/uses_pesticides.png",
+    USES_SYN_FERTILIZER: "/icons/features/uses_syn_fertilizer.png",
+
+    // Disasters
+    HEATWAVE_3: "/icons/pips/heatwave__3.png",
+    WILDFIRES: "/icons/pips/wildfires.png",
+    FAMINE: "/icons/pips/famine.png",
+    RESISTANCE_2: "/icons/pips/resistance__2.png",
+    CO2_LEAK: "/icons/pips/co2_leak.png",
+    FLOOD_2: "/icons/pips/flood__2.png",
+    BLACKOUT: "/icons/pips/power.png",
+    FLOOD: "/icons/pips/flood.png",
+    HURRICANE: "/icons/pips/hurricane.png",
+    CROP_FAILURE: "/icons/pips/crop_failure.png",
+    DISEASE: "/icons/pips/disease.png",
+    ATTACKS: "/icons/pips/attacks.png",
+    WILDFIRES_3: "/icons/pips/wildfires__3.png",
+    WILDFIRES_2: "/icons/pips/wildfires__2.png",
+    BLACKOUT_2: "/icons/pips/power__2.png",
+    RESISTANCE: "/icons/pips/resistance.png",
+    HEATWAVE: "/icons/pips/heatwave.png",
+    FLOOD_3: "/icons/pips/flood__3.png",
+    RESISTANCE_3: "/icons/pips/resistance__3.png",
+    HEATWAVE_2: "/icons/pips/heatwave__2.png",
+
+    // Badges
+    BADGE_SECEDED: "/badges/seceded.png",
+    BADGE_ALIENS: "/badges/aliens.png",
+    BADGE_BIODIVERSITY: "/badges/biodiversity.png",
+    BADGE_ELECTRIFICATION: "/badges/electrification.png",
+    BADGE_EXTINCTION: "/badges/extinction.png",
+    BADGE_FOSSILFUELS: "/badges/fossil_fuels.png",
+    BADGE_MEAT: "/badges/meat.png",
+    BADGE_NUCLEAR: "/badges/nuclear.png",
+    BADGE_RENEWABLES: "/badges/renewables.png",
+    BADGE_SPACE: "/badges/space.png",
+    BADGE_VEGAN: "/badges/vegan.png",
+}
+
+pub trait HasIcon {
+    fn icon(&self) -> Icon;
+}
+
+impl HasIcon for Output {
+    fn icon(&self) -> Icon {
+        match self {
+            Output::Fuel => FUEL,
+            Output::Electricity => ELECTRICITY,
+            Output::PlantCalories => PLANT_CALORIES,
+            Output::AnimalCalories => ANIMAL_CALORIES,
+        }
+    }
+}
+
+impl HasIcon for Var {
+    fn icon(&self) -> Icon {
+        match self {
+            Var::Land => LAND,
+            Var::Water => WATER,
+            Var::Energy => ENERGY,
+            Var::Emissions => EMISSIONS,
+            Var::Biodiversity => EXTINCTION_RATE,
+            Var::Contentedness => CONTENTEDNESS,
+            Var::Fuel => FUEL,
+            Var::Electricity => ELECTRICITY,
+            Var::PlantCalories => PLANT_CALORIES,
+            Var::AnimalCalories => ANIMAL_CALORIES,
+        }
+    }
+}
+
+impl HasIcon for Resource {
+    fn icon(&self) -> Icon {
+        match self {
+            Resource::Land => LAND,
+            Resource::Water => WATER,
+            Resource::Electricity => ELECTRICITY,
+            Resource::Fuel => FUEL,
+        }
+    }
+}
+
+impl HasIcon for Feedstock {
+    fn icon(&self) -> Icon {
+        match self {
+            Feedstock::Coal => COAL,
+            Feedstock::Lithium => LITHIUM,
+            Feedstock::NaturalGas => NATURAL_GAS,
+            Feedstock::Oil => OIL,
+            Feedstock::Uranium => URANIUM,
+            Feedstock::Thorium => THORIUM,
+            Feedstock::Soil => SOIL,
+            Feedstock::Other => OTHER,
+        }
+    }
+}
+
+impl HasIcon for ProjectType {
+    fn icon(&self) -> Icon {
+        match self {
+            ProjectType::Research => RESEARCH,
+            ProjectType::Initiative => INITIATIVE,
+            ProjectType::Policy => POLITICAL_CAPITAL,
+        }
+    }
+}
+
+impl HasIcon for ProcessFeature {
+    fn icon(&self) -> Icon {
+        match self {
+            ProcessFeature::UsesPesticides => USES_PESTICIDES,
+            ProcessFeature::UsesSynFertilizer => {
+                USES_SYN_FERTILIZER
+            }
+            ProcessFeature::UsesLivestock => USES_LIVESTOCK,
+            ProcessFeature::UsesOil => USES_OIL,
+            ProcessFeature::IsIntermittent => IS_INTERMITTENT,
+            ProcessFeature::CanMeltdown => CAN_MELTDOWN,
+            ProcessFeature::MakesNuclearWaste => {
+                MAKES_NUCLEAR_WASTE
+            }
+            ProcessFeature::IsSolar => IS_SOLAR,
+            ProcessFeature::IsCCS => IS_CSS,
+            ProcessFeature::IsCombustion => IS_COMBUSTION,
+            ProcessFeature::IsFossil => IS_FOSSIL,
+            ProcessFeature::IsLaborIntensive => {
+                IS_LABOR_INTENSIVE
+            }
+        }
+    }
+}
+
+impl HasIcon for Byproduct {
+    fn icon(&self) -> Icon {
+        match self {
+            Byproduct::Biodiversity => BIODIVERSITY,
+            _ => EMISSIONS,
+        }
+    }
+}
+
+impl HasIcon for NPC {
+    fn icon(&self) -> Icon {
+        match self.name.as_str() {
+            "The Authoritarian" => THE_AUTHORITARIAN,
+            "The Economist" => THE_ECONOMIST,
+            "The Environmentalist" => THE_ENVIRONMENTALIST,
+            "The Scientist" => THE_SCIENTIST,
+            "The Populist" => THE_POPULIST,
+            "The Ecologist" => THE_ECOLOGIST,
+            "The Malthusian" => THE_MALTHUSIAN,
+            "The Geoengineer" => THE_GEOENGINEER,
+            "The Posadist" => THE_POSADIST,
+            "The Wretched" => THE_WRETCHED,
+            "The Consumerist" => THE_CONSUMERIST,
+            "The Utopian" => THE_UTOPIAN,
+            "The Accelerationist" => THE_ACCELERATIONIST,
+            "The Animal Liberationist" => {
+                THE_ANIMAL_LIBERATIONIST
+            }
+            "The Farmer" => THE_FARMER,
+            "The Ecofeminist" => THE_ECOFEMINIST,
+            "The Fanonist" => THE_FANONIST,
+            _ => THE_PLACEHOLDER,
+        }
+    }
+}
+
+impl HasIcon for Condition {
+    fn icon(&self) -> Icon {
+        match self {
+            Condition::Demand(output, ..) => output.icon(),
+            Condition::OutputDemandGap(output, ..) => {
+                output.icon()
+            }
+            Condition::ResourceDemandGap(resource, ..) => {
+                resource.icon()
+            }
+            Condition::ResourcePressure(resource, ..) => {
+                resource.icon()
+            }
+            Condition::ProcessMixShareFeature(feat, ..) => {
+                feat.icon()
+            }
+            Condition::FeedstockYears(feedstock, ..) => {
+                feedstock.icon()
+            }
+            Condition::LocalVariable(var, ..) => match var {
+                LocalVariable::Outlook => CONTENTEDNESS,
+                LocalVariable::Habitability => HABITABILITY,
+                LocalVariable::Population => POPULATION,
+            },
+            Condition::WorldVariable(var, ..) => match var {
+                WorldVariable::Temperature => WARMING,
+                WorldVariable::SeaLevelRise => SEA_LEVEL_RISE,
+                WorldVariable::SeaLevelRiseRate => {
+                    SEA_LEVEL_RISE
+                }
+                WorldVariable::Outlook => CONTENTEDNESS,
+                WorldVariable::Emissions => EMISSIONS,
+                WorldVariable::Precipitation => PRECIPITATION,
+                WorldVariable::Population => POPULATION,
+                WorldVariable::PopulationGrowth => POPULATION,
+                WorldVariable::ExtinctionRate => {
+                    EXTINCTION_RATE
+                }
+                _ => HELP,
+            },
+            Condition::ProtectLand(..) => PROTECT,
+            _ => HELP,
+        }
+    }
+}
+
+pub fn disaster_icon(key: &str) -> Icon {
+    match key {
+        "heatwave__3" => HEATWAVE_3,
+        "wildfires" => WILDFIRES,
+        "famine" => FAMINE,
+        "resistance__2" => RESISTANCE_2,
+        "co2_leak" => CO2_LEAK,
+        "flood__2" => FLOOD_2,
+        "power" => BLACKOUT,
+        "flood" => FLOOD,
+        "hurricane" => HURRICANE,
+        "crop_failure" => CROP_FAILURE,
+        "disease" => DISEASE,
+        "attacks" => ATTACKS,
+        "wildfires__3" => WILDFIRES_3,
+        "wildfires__2" => WILDFIRES_2,
+        "power__2" => BLACKOUT_2,
+        "resistance" => RESISTANCE,
+        "heatwave" => HEATWAVE,
+        "flood__3" => FLOOD_3,
+        "resistance__3" => RESISTANCE_3,
+        "heatwave__2" => HEATWAVE_2,
+        _ => panic!("Unknown disaster icon: {key}"),
+    }
+}

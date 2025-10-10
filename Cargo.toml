@@ -1,34 +1,19 @@
 [workspace]
 resolver = "2"
 members = [
-    "hes-new",
-    "hes-engine",
-    "hes-editor",
+    "game",
+    "engine",
     "util/*",
 ]
 default-members = [
-    "hes-engine",
-    "hes-editor",
-    "util/*",
+    "game",
+    "engine",
 ]
 
 [workspace.dependencies]
-leptos = { version = "0.6", features = ["csr", "tracing"] }
-leptos_router = { version = "0.6", features = ["csr"] }
-# leptos-use = { git = "https://github.com/Synphonyte/leptos-use", version = "0.11.3", rev = "da56771900a2362e266243d81478c7fa5c158b14" }
-leptos-use = { path = "vendor/leptos-use" }
-wasm-bindgen = "0.2.100"
-wasm-bindgen-futures = "0.4"
-serde-wasm-bindgen = "0.6"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1.0.120", features = ["float_roundtrip"] }
-web-sys = "0.3"
-js-sys = "0.3"
-log = "0.4.22"
-console_log = "1.0.0"
-console_error_panic_hook = "0.1.7"
 tracing = "0.1.40"
-tracing-wasm = "0.2.1"
 numfmt = "1.1.1"
 strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
 enum-map = { version = "2.7.3", features = ["serde"] }
@@ -44,9 +29,3 @@ codegen-units = 1
 
 [profile.wasm-release]
 inherits = "release"
-debug = 0
-opt-level = 'z'
-lto = true
-strip = true
-panic = "abort"
-codegen-units = 1

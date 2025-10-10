@@ -1,7 +1,0 @@
-build:
-    node build.mjs
-    cp hector/hector.wasm dist/
-    sed -i "s|hector.wasm|/js/dist/hector.wasm|g" dist/tgav.js
-
-setup:
-    npm install -d
