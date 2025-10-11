@@ -4,17 +4,12 @@ mod update;
 use egui::{Color32, Sense};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::State;
+use hes_images::flavor_image;
 use rust_i18n::t;
 
 use crate::{
     display::{DisplayEffect, DisplayEvent, render_effects},
-    parts::{
-        bg_cover_image,
-        button,
-        flavor_image,
-        h_center,
-        overlay,
-    },
+    parts::{bg_cover_image, button, h_center, overlay},
     tips::{add_tip, tip},
 };
 

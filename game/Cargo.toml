@@ -5,11 +5,12 @@ edition = "2024"
 
 [dependencies]
 eframe = { version = "0.32.0", default-features = false, features = ["glow", "persistence", "wayland", "x11"] }
-egui = { version = "0.32.3", features = ["persistence"], default-features = false }
+egui = { workspace = true }
 kira = { version = "0.10.8", default-features = false, features = ["cpal", "ogg"] }
 egui_extras = { version = "0.32.0", default-features = false, features = ["webp", "svg", "image"] }
 serde = { workspace = true, features = ["derive"] }
 hes-engine = { path = "../engine" }
+hes-images = { path = "../images" }
 extend = "1.2.0"
 enum-map = { workspace = true }
 enum-iterator = "2.1.0"
@@ -28,7 +29,6 @@ numfmt = { workspace = true }
 treemap = "0.3.2"
 bincode = { version = "1" }
 rust-embed = { version = "8.7.2" }
-blake3 = "1.8.2"
 hector = { path = "../hector-rs" }
 three-d = { git = "https://github.com/asny/three-d.git", rev = "12f3400307dd778c45e0160da924ddd964d8831a", default-features = false }
 egui-file-dialog = "0.11.0"

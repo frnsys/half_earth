@@ -6,18 +6,18 @@ mod probability;
 mod vars;
 
 pub use self::{
-    condition::{Condition, ConditionKind},
+    condition::{Comparator, Condition, ConditionKind},
     effects::{
-        mean_demand_outlook_change,
-        mean_income_outlook_change,
         Effect,
         EffectKind,
         Flag,
         RegionFlag,
         Request,
+        mean_demand_outlook_change,
+        mean_income_outlook_change,
     },
     events::{Event, EventPool, Phase},
-    icons::{IconEvent, ICON_EVENTS},
+    icons::{ICON_EVENTS, IconEvent},
     probability::{Likelihood, Probability},
     vars::{LocalVariable, PlayerVariable, WorldVariable},
 };

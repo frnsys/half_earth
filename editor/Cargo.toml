@@ -1,0 +1,16 @@
+[package]
+name = "hes-editor"
+version = "1.0.0"
+edition = "2024"
+
+[dependencies]
+hes-engine = { path = "../engine" }
+hes-images = { path = "../images" }
+egui = { workspace = true }
+egui-notify = "0.20.0"
+strum.workspace = true
+egui-file-dialog = "0.11.0"
+serde_json.workspace = true
+fs-err = "3.1.3"
+egui_commonmark = { version = "=0.21", features = ["macros"] }
+egui_extras = { version = "0.32.0", default-features = false }

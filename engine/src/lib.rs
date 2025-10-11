@@ -13,6 +13,7 @@ mod world;
 
 pub use diff::{Change, Diff};
 pub use events::{
+    Comparator,
     Condition,
     ConditionKind,
     Effect,
@@ -26,6 +27,7 @@ pub use events::{
     Phase as EventPhase,
     PlayerVariable,
     Probability,
+    RegionFlag,
     Request as NPCRequest,
     WorldVariable,
     mean_demand_outlook_change,

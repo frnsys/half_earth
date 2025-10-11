@@ -1,11 +1,11 @@
 use std::collections::HashSet;
 
 use hes_engine::{
-    flavor::DialogueNext,
     Condition,
     Effect,
     Id,
     World,
+    flavor::DialogueNext,
 };
 
 /// Errors:
@@ -69,37 +69,25 @@ impl IdTracker {
     }
 }
 
-#[derive(Clone, Copy)]
-pub enum RefKind {
-    Project,
-    Process,
-    Industry,
-    Event,
-}
-
 /// Find all references to this id, returning the names
 /// of the entities that reference it.
-pub fn find_references(
-    id: Id,
-    kind: RefKind,
-    world: &World,
-) -> Vec<String> {
+pub fn find_references(id: Id, world: &World) -> Vec<String> {
     let mut referenced_by: HashSet<String> = HashSet::default();
 
     let check_effect = move |effect: &Effect| {
-        let id_ = match kind {
-            RefKind::Project => effect.project_id(),
-            RefKind::Process => effect.process_id(),
-            RefKind::Industry => effect.industry_id(),
-            RefKind::Event => effect.event_id(),
-        };
-        id_ == Some(id)
+        [
+            effect.project_id(),
+            effect.process_id(),
+            effect.industry_id(),
+            effect.event_id(),
+        ]
+        .into_iter()
+        .any(|id_| id_ == Some(id))
     };
 
-    let check_condition = move |cond: &Condition| match kind {
-        RefKind::Project => cond.project_id() == Some(id),
-        RefKind::Process => cond.process_id() == Some(id),
-        _ => false,
+    let check_condition = move |cond: &Condition| {
+        cond.project_id() == Some(id)
+            || cond.process_id() == Some(id)
     };
 
     for item in world.projects.iter() {

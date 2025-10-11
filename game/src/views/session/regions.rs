@@ -11,6 +11,7 @@ use hes_engine::{
     Region,
     State,
 };
+use hes_images::flavor_image;
 use rust_i18n::t;
 use strum::IntoEnumIterator;
 
@@ -26,7 +27,6 @@ use crate::{
     parts::{
         RaisedFrame,
         fill_bar,
-        flavor_image,
         h_center,
         raised_frame,
         set_full_bg_image,

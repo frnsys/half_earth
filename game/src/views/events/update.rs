@@ -6,6 +6,7 @@ use hes_engine::{
     Update as EngineUpdate,
     World,
 };
+use hes_images::flavor_image;
 use rust_i18n::t;
 
 use super::{AsEventView, Dialogue, EventDetails};
@@ -18,7 +19,6 @@ use crate::{
         intensity::{self, intensity_bar},
         render_effects,
     },
-    parts::flavor_image,
     tips::{add_tip, tip},
 };
 

@@ -12,7 +12,7 @@ use crate::{
         render_effects,
     },
     image,
-    parts::{flavor_image, flex_justified, new_icon},
+    parts::{flex_justified, new_icon},
     state::{GameState, PlanChange},
     tips::{Tip, add_tip, tip},
 };
@@ -36,6 +36,7 @@ use hes_engine::{
     Project,
     ProjectType,
 };
+use hes_images::flavor_image;
 use rust_i18n::t;
 
 impl AsCard for Project {

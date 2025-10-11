@@ -16,6 +16,7 @@ use hes_engine::{
     State,
     Status,
 };
+use hes_images::flavor_image;
 use rust_i18n::t;
 use strum::IntoEnumIterator;
 
@@ -41,7 +42,6 @@ use crate::{
         button,
         center_text,
         fill_bar,
-        flavor_image,
         h_center,
         new_icon,
         raised_frame,
