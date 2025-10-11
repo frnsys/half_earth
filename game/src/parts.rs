@@ -299,6 +299,31 @@ pub fn glow(
     }
 }
 
+pub fn glow_fill(
+    painter: &egui::Painter,
+    rect: egui::Rect,
+    color: Color32,
+) {
+    painter.rect_filled(
+        rect,
+        8.0,
+        color.linear_multiply(40. / 255.),
+    );
+    for i in 1..=4 {
+        let expanded = rect.expand(i as f32);
+        let alpha = 40 / i; // fade out
+        painter.rect_stroke(
+            expanded,
+            8.0,
+            egui::Stroke::new(
+                i as f32 * 2.,
+                color.linear_multiply(alpha as f32 / 255.0),
+            ),
+            egui::StrokeKind::Middle,
+        );
+    }
+}
+
 pub fn center_center<T>(
     ui: &mut egui::Ui,
     id: &str,
@@ -459,14 +484,14 @@ pub fn button_frame() -> RaisedFrame {
 }
 
 pub fn overlay(
-    ui: &mut egui::Ui,
+    ctx: &egui::Context,
     inner: impl FnOnce(&mut egui::Ui) -> egui::Response,
 ) -> bool {
     egui::Area::new("overlay".into())
         .order(Order::Foreground)
-        .default_size(ui.ctx().screen_rect().size())
+        .default_size(ctx.screen_rect().size())
         .movable(false)
-        .show(ui.ctx(), |ui| {
+        .show(ctx, |ui| {
             egui::Frame::NONE
                 .fill(Color32::from_black_alpha(200))
                 .inner_margin(Margin::symmetric(18, 18))

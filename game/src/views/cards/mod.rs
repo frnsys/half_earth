@@ -91,7 +91,13 @@ impl<C: AsCard> Card<C> {
 
             rect.set_top(rect.top() + top_margin);
 
-            let resp = ui.place(
+            // Detect drag "under" the card contents or else
+            // it will capture all clicks.
+            let drag_id = ui.id().with("card-drag");
+            let resp =
+                ui.interact(rect, drag_id, Sense::drag());
+
+            ui.place(
                 rect,
                 |ui: &mut egui::Ui| -> egui::Response {
                     egui::Frame::NONE
@@ -108,10 +114,12 @@ impl<C: AsCard> Card<C> {
                 },
             );
 
-            let resp = resp.interact(Sense::click_and_drag());
-            if resp.clicked() {
-                self.flipped = !self.flipped;
-            }
+            corner(
+                ui,
+                rect,
+                "card-flip".into(),
+                &mut self.flipped,
+            );
 
             if resp.is_pointer_button_down_on() {
                 self.y_offset += resp.drag_delta().y;
@@ -141,11 +149,54 @@ impl<C: AsCard> Card<C> {
                     )
                 })
                 .response;
-            let resp = resp.interact(Sense::click());
-            if resp.clicked() {
-                self.flipped = !self.flipped;
-            }
+            corner(ui, resp.rect, resp.id, &mut self.flipped);
+
             resp
         }
+    }
+}
+
+fn corner(
+    ui: &mut egui::Ui,
+    rect: egui::Rect,
+    id: egui::Id,
+    flipped: &mut bool,
+) {
+    let pad = 4.0;
+    let size = 14.0;
+
+    let tri_rect = egui::Rect::from_min_max(
+        rect.max - egui::Vec2::new(size + pad, size + pad),
+        rect.max - egui::Vec2::new(pad, pad),
+    );
+
+    let tri_id = id.with("corner");
+    let resp = ui.interact(tri_rect, tri_id, Sense::click());
+
+    let base = Color32::from_black_alpha(32);
+    let hover = Color32::from_black_alpha(64);
+    let press = Color32::from_white_alpha(64);
+    let fill = if resp.is_pointer_button_down_on() {
+        press
+    } else if resp.hovered() {
+        hover
+    } else {
+        base
+    };
+
+    // Triangle
+    let p0 = egui::Pos2::new(tri_rect.min.x, tri_rect.max.y); // bottom-left
+    let p1 = tri_rect.max; // bottom-right
+    let p2 = egui::Pos2::new(tri_rect.max.x, tri_rect.min.y); // top-right
+
+    let painter = ui.painter_at(rect);
+    painter.add(egui::Shape::convex_polygon(
+        vec![p0, p1, p2],
+        fill,
+        egui::Stroke::NONE,
+    ));
+
+    if resp.clicked() {
+        *flipped = !*flipped;
     }
 }

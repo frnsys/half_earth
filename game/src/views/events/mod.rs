@@ -141,7 +141,7 @@ impl<E: AsEventView> Events<E> {
         let mut result = None;
         if !self.events.is_empty() && !self.is_finished {
             let mut dialogue_result = None;
-            overlay(ui, |ui| {
+            overlay(ui.ctx(), |ui| {
                 ui.vertical(|ui| {
                     dialogue_result =
                         self.render_event(ui, state);

@@ -1,9 +1,10 @@
-use egui::{Align2, Color32, Order};
+use egui::{Color32, LayerId, Order, PopupAnchor};
+use egui_taffy::TuiBuilderLogic;
 use hes_engine::{Industry, NPC, Process, Project, Region};
 
 use crate::{
     display::{DisplayEvent, Icon},
-    parts::raised_frame,
+    parts::{glow_fill, h_center, raised_frame},
     text::bbcode,
     views::FactorsCard,
 };
@@ -32,11 +33,16 @@ impl Tip {
         self
     }
 
-    pub fn render(&self, ctx: &egui::Context) {
-        egui::Area::new("tip".into())
-            .order(Order::Tooltip)
-            .anchor(Align2::CENTER_TOP, egui::vec2(0., 20.))
-            .show(ctx, |ui| {
+    pub fn render(&self, ui: &mut egui::Ui) {
+        // if let Some(card) = &self.card {
+        //     overlay(ctx, |ui| {
+        //         // TODO
+        //         ui.label("testing")
+        //     });
+        // }
+
+        h_center(ui, "tip", |tui| {
+            tui.ui(|ui| {
                 raised_frame().shadow().show(ui, |ui| {
                     ui.set_max_width(480.);
                     ui.style_mut()
@@ -49,6 +55,7 @@ impl Tip {
                     });
                 });
             });
+        });
     }
 }
 
@@ -67,12 +74,49 @@ pub fn add_tip(
     tip: Tip,
     resp: egui::Response,
 ) -> egui::Response {
-    let is_dragging = resp.ctx.dragged_id().is_some();
-    if !is_dragging && resp.contains_pointer() {
-        // if resp.hovered() { // TODO hovered is unreliable/inconsistent?
-        tip.render(&resp.ctx);
+    let popup_id = egui::Id::new("tip");
+    let rect = resp.rect;
+
+    if resp.contains_pointer() {
+        let painter = resp.ctx.layer_painter(resp.layer_id);
+        glow_fill(&painter, rect, Color32::WHITE);
+    }
+
+    if resp.interact(egui::Sense::click()).clicked() {
+        egui::Popup::open_id(&resp.ctx, popup_id);
+        resp.ctx.memory_mut(|mem| {
+            mem.data.insert_temp(popup_id, tip);
+        });
     }
     resp
+}
+
+pub fn render_tip(ctx: &egui::Context) {
+    let popup_id = egui::Id::new("tip");
+
+    if let Some(tip) =
+        ctx.memory(|mem| mem.data.get_temp::<Tip>(popup_id))
+    {
+        let height = ctx.screen_rect().height();
+        egui::Popup::new(
+            popup_id,
+            ctx.clone(),
+            PopupAnchor::Position(egui::Pos2::ZERO),
+            LayerId::new(Order::Tooltip, popup_id),
+        )
+        .open_memory(None)
+        .width(ctx.screen_rect().width())
+        .frame(
+            egui::Frame::NONE
+                .fill(Color32::from_black_alpha(220))
+                .inner_margin(egui::Margin::symmetric(18, 18)),
+        )
+        .show(|ui| {
+            ui.set_width(ui.available_width());
+            ui.set_height(height);
+            tip.render(ui);
+        });
+    }
 }
 
 #[derive(Clone, PartialEq)]

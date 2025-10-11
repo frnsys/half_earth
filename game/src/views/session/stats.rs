@@ -198,7 +198,7 @@ impl Stats {
         });
 
         if self.show_breakdown_menu {
-            overlay(ui, |ui| {
+            overlay(ui.ctx(), |ui| {
                 ui.vertical(|ui| {
                     ui.style_mut().wrap_mode =
                         Some(egui::TextWrapMode::Extend);

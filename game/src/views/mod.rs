@@ -15,6 +15,7 @@ mod world;
 use crate::{
     debug::{DEBUG, DebugView},
     state::{GameState, Settings},
+    tips::render_tip,
     views::{ending::End, report::Report, world::WorldEvents},
 };
 use hes_engine::State;
@@ -197,6 +198,9 @@ impl GameView {
                 }
             }
         }
+
+        render_tip(ui.ctx());
+
         ret_action
     }
 }

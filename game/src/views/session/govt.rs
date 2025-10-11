@@ -100,8 +100,9 @@ impl Parliament {
         // clicking to show the card doesn't close
         // the overlay in the same frame.
         if let Some(card) = &mut self.card {
-            let should_close =
-                overlay(ui, |ui| card.render(ui, state, false));
+            let should_close = overlay(ui.ctx(), |ui| {
+                card.render(ui, state, false)
+            });
             if should_close {
                 self.card = None;
             }
