@@ -33,39 +33,3 @@ pub enum ScanResult {
     SuccessStop,
     Rejected,
 }
-
-#[derive(Clone)]
-pub struct ScannerControls {
-    // reject_scan: Rc<dyn Fn() + 'static>,
-    // pub progress_elem: HtmlElement<html::Div>,
-}
-impl ScannerControls {
-    pub fn reject_scan(&self) {
-        // TODO
-        // (self.reject_scan)();
-        // TODO
-        // effects::shake_progress(to_ws_el(
-        //     self.progress_elem.clone(),
-        // ));
-    }
-
-    pub fn pulse_card(&self) {
-        // TODO
-        // effects::pulse_card();
-    }
-
-    pub fn pulse_level(&self) {
-        // TODO
-        // effects::pulse_level();
-    }
-
-    pub fn shrink_pulse_card(&self) {
-        // TODO
-        // effects::shrink_pulse_card();
-    }
-
-    pub fn shake_screen(&self) {
-        // TODO
-        // effects::shake_screen();
-    }
-}

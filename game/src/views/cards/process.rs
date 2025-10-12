@@ -22,11 +22,7 @@ use crate::{
     vars::{Impact, Var},
 };
 
-use super::{
-    AsCard,
-    CARD_HEIGHT,
-    project::{npc_support, render_flavor_image},
-};
+use super::{AsCard, CARD_HEIGHT, project::npc_support};
 use egui::{Color32, CornerRadius, Margin, Stroke, StrokeKind};
 use egui_taffy::{TuiBuilderLogic, taffy};
 use hes_engine::{Collection, Feedstock, NPC, Process};
@@ -194,7 +190,8 @@ impl AsCard for Process {
 
     fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
         let rect =
-            render_flavor_image(ui, &self.flavor.image).rect;
+            super::render_flavor_image(ui, &self.flavor.image)
+                .rect;
 
         let (opposers, supporters) =
             npc_stances(self, &state.npcs);
@@ -238,9 +235,7 @@ impl AsCard for Process {
     }
 
     fn name(&self, ui: &mut egui::Ui, _state: &GameState) {
-        ui.vertical_centered(|ui| {
-            ui.label(egui::RichText::new(&self.name).heading());
-        });
+        super::card_title(ui, &self.name);
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
@@ -421,8 +416,7 @@ impl AsCard for Process {
     }
 
     fn top_back(&self, ui: &mut egui::Ui, _state: &GameState) {
-        let desc = t!(&self.flavor.description);
-        ui.label(desc);
+        super::card_desc(ui, &self.flavor.description);
     }
 
     fn bottom_back(

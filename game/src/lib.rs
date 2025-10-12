@@ -14,7 +14,7 @@ mod views;
 
 use std::sync::{Arc, OnceLock};
 
-use egui::{Align2, Key};
+use egui::Key;
 
 use debug::DEBUG;
 use splash::{Start, StartAction};
@@ -90,76 +90,6 @@ impl App {
             state,
             has_save,
         }
-    }
-}
-
-struct FadeIn {
-    started: bool,
-}
-impl FadeIn {
-    fn advance(
-        &mut self,
-        ui: &mut egui::Ui,
-        duration: f32,
-        contents: impl FnOnce(&mut egui::Ui),
-    ) -> bool {
-        let target = if self.started {
-            1.0
-        } else {
-            self.started = true;
-            0.0
-        };
-
-        let easing: fn(f32) -> f32 =
-            egui_animation::easing::cubic_in_out;
-        let value = egui_animation::animate_eased(
-            ui.ctx(),
-            "fade-in",
-            target,
-            duration,
-            easing,
-        );
-        ui.scope(|ui| {
-            ui.set_opacity(value);
-            contents(ui);
-        });
-
-        value == 1.0
-    }
-}
-
-struct CardIn {
-    started: bool,
-}
-impl CardIn {
-    fn advance(
-        &mut self,
-        ui: &mut egui::Ui,
-        contents: impl FnOnce(&mut egui::Ui),
-    ) -> bool {
-        let target = if self.started {
-            300.0
-        } else {
-            self.started = true;
-            0.0
-        };
-
-        let easing: fn(f32) -> f32 =
-            egui_animation::easing::quart_out;
-        let y = egui_animation::animate_eased(
-            ui.ctx(),
-            "card-in",
-            target,
-            1.,
-            easing,
-        );
-        egui::Area::new("card-overlay".into())
-            .anchor(Align2::CENTER_BOTTOM, egui::vec2(0., -y))
-            .show(ui.ctx(), |ui| {
-                contents(ui);
-            });
-
-        y == 300.0
     }
 }
 

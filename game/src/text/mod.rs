@@ -6,6 +6,9 @@ use crate::display::icon_from_slug;
 
 mod animate;
 mod parse;
+mod scale;
+
+pub use scale::scale_text;
 
 pub fn bbcode(
     text: &str,

@@ -1,6 +1,14 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::{Color32, Margin, Rect, Sense, Shadow, Stroke};
+use egui::{
+    Align2,
+    Color32,
+    Margin,
+    Rect,
+    Sense,
+    Shadow,
+    Stroke,
+};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{
@@ -785,18 +793,21 @@ fn render_points(
     let next_point_cost = state.next_point_cost(&kind);
 
     ui.horizontal_centered(|ui| {
+        const ICON_SIZE: f32 = 16.;
         ui.label(pc_points.to_string());
-        ui.image(icons::POLITICAL_CAPITAL);
+        ui.add(icons::POLITICAL_CAPITAL.size(ICON_SIZE));
 
         if kind != ProjectType::Policy {
             if available_points > 0 {
                 ui.label(available_points.to_string());
-                ui.image(kind.icon());
+                ui.add(kind.icon().size(ICON_SIZE));
             } else {
                 ui.label(next_point_cost.to_string());
-                ui.image(icons::POLITICAL_CAPITAL);
-                ui.image(icons::ARROW_RIGHT);
-                ui.image(kind.icon());
+                ui.add(
+                    icons::POLITICAL_CAPITAL.size(ICON_SIZE),
+                );
+                ui.add(icons::ARROW_RIGHT.size(ICON_SIZE));
+                ui.add(kind.icon().size(ICON_SIZE));
             }
         }
     });
@@ -840,7 +851,6 @@ impl Processes {
             output,
             cards: Cards::new(
                 get_processes(state, output).into_iter(),
-                true,
             ),
         }
     }
@@ -849,7 +859,6 @@ impl Processes {
         self.output = output;
         self.cards = Cards::new(
             get_processes(state, output).into_iter(),
-            true,
         );
     }
 
@@ -1047,7 +1056,6 @@ impl Projects {
             cards: Cards::new(
                 get_projects(state, &kind, plan_changes)
                     .into_iter(),
-                true,
             ),
         }
     }
@@ -1062,7 +1070,6 @@ impl Projects {
         self.cards = Cards::new(
             get_projects(state, &kind, plan_changes)
                 .into_iter(),
-            true,
         );
     }
 
@@ -1120,7 +1127,24 @@ impl Projects {
             action = Some(ProjectsAction::Changed);
         }
 
-        render_points(ui, state, &state.ui.points, self.kind);
+        egui::Area::new("project-points".into())
+            .anchor(Align2::CENTER_BOTTOM, egui::vec2(0., -24.))
+            .show(ui.ctx(), |ui| {
+                ui.style_mut().wrap_mode =
+                    Some(egui::TextWrapMode::Extend);
+                egui::Frame::NONE
+                    .fill(Color32::from_black_alpha(200))
+                    .corner_radius(4)
+                    .inner_margin(4)
+                    .show(ui, |ui| {
+                        render_points(
+                            ui,
+                            state,
+                            &state.ui.points,
+                            self.kind,
+                        );
+                    });
+            });
 
         action
     }

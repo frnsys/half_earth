@@ -16,7 +16,7 @@ use crate::{
         h_center,
         overlay,
     },
-    tips::{add_hover_tip, add_tip, tip},
+    tips::{add_hover_tip, tip},
 };
 
 use dialogue::{Dialogue, DialogueResult};

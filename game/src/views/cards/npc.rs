@@ -96,10 +96,7 @@ impl AsCard for NPC {
     }
 
     fn name(&self, ui: &mut egui::Ui, _ctx: &GameState) {
-        let name = t!(&self.name);
-        ui.vertical_centered(|ui| {
-            ui.label(egui::RichText::new(name).heading());
-        });
+        super::card_title(ui, &self.name);
     }
 
     fn body(&self, ui: &mut egui::Ui, _ctx: &GameState) {
@@ -163,8 +160,7 @@ impl AsCard for NPC {
         let speaker = as_speaker(&self.name);
         ui.add(speaker_icon(&speaker));
 
-        let desc = t!(&self.flavor.description);
-        ui.label(desc);
+        super::card_desc(ui, &self.flavor.description);
     }
 
     fn bottom_back(&self, ui: &mut egui::Ui, _ctx: &GameState) {

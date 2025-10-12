@@ -14,6 +14,7 @@ use crate::{
     image,
     parts::{flex_justified, new_icon},
     state::{GameState, PlanChange},
+    text::scale_text,
     tips::{Tip, add_tip, tip},
 };
 
@@ -36,7 +37,6 @@ use hes_engine::{
     Project,
     ProjectType,
 };
-use hes_images::flavor_image;
 use rust_i18n::t;
 
 impl AsCard for Project {
@@ -130,7 +130,8 @@ impl AsCard for Project {
 
     fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
         let rect =
-            render_flavor_image(ui, &self.flavor.image).rect;
+            super::render_flavor_image(ui, &self.flavor.image)
+                .rect;
 
         // NOTE: this is hacky, but the cards actually display
         // a clone of the Project, so when we e.g. add points
@@ -184,10 +185,7 @@ impl AsCard for Project {
     }
 
     fn name(&self, ui: &mut egui::Ui, _state: &GameState) {
-        ui.vertical_centered(|ui| {
-            let name = t!(&self.name);
-            ui.label(egui::RichText::new(name).heading());
-        });
+        super::card_title(ui, &self.name);
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
@@ -223,8 +221,6 @@ impl AsCard for Project {
                 ui.style_mut().override_text_style =
                     Some(TextStyle::Small);
 
-                render_effects(ui, &state, &effects);
-
                 let is_building = self.is_building();
                 let is_active = self.is_active();
 
@@ -257,75 +253,80 @@ impl AsCard for Project {
                     state.ui.queued_upgrades.get(&self.id)
                         == Some(&true);
 
-                if is_active
-                    && let Some((cost, effects)) = next_upgrade
-                {
-                    if is_upgrading {
-                        ui.label(t!(
-                            "Upgrading in one planning cycle."
-                        ));
-                    } else {
-                        ui.horizontal_centered(|ui| {
-                            ui.label(t!("Next Level"));
-                            ui.label(cost.to_string());
-                            ui.image(icons::POLITICAL_CAPITAL);
-                        });
-                    }
-                    render_effects(ui, &state, &effects);
-                }
-
                 let can_downgrade = self.kind
                     == ProjectType::Policy
                     && self.level > 0;
                 let has_downgrade =
                     self.is_active() && can_downgrade;
-                if has_downgrade {
-                    ui.label(t!("Prev Level"));
-
-                    if can_downgrade {
-                        let prev_upgrade = {
-                            let idx = self.level as isize - 2;
-                            if idx < 0 {
-                                let effects: Vec<
-                                    DisplayEffect,
-                                > = self
+                let prev_upgrade = if can_downgrade {
+                    let idx = self.level as isize - 2;
+                    if idx < 0 {
+                        let effects: Vec<DisplayEffect> = self
+                            .effects
+                            .iter()
+                            .map(DisplayEffect::from)
+                            .filter(visible_effect)
+                            .collect();
+                        Some((0, effects))
+                    } else {
+                        if let Some(upgrade) =
+                            self.upgrades.get(idx as usize)
+                        {
+                            let effects: Vec<DisplayEffect> =
+                                upgrade
                                     .effects
                                     .iter()
                                     .map(DisplayEffect::from)
                                     .filter(visible_effect)
                                     .collect();
-                                Some((0, effects))
-                            } else {
-                                if let Some(upgrade) = self
-                                    .upgrades
-                                    .get(idx as usize)
-                                {
-                                    let effects: Vec<
-                                        DisplayEffect,
-                                    > = upgrade
-                                        .effects
-                                        .iter()
-                                        .map(
-                                            DisplayEffect::from,
-                                        )
-                                        .filter(visible_effect)
-                                        .collect();
-                                    Some((
-                                        upgrade.cost,
-                                        effects,
-                                    ))
-                                } else {
-                                    None
-                                }
-                            }
-                        };
-                        if let Some((_, effects)) = prev_upgrade
-                        {
-                            render_effects(
-                                ui, &state, &effects,
-                            );
+                            Some((upgrade.cost, effects))
+                        } else {
+                            None
                         }
                     }
+                } else {
+                    None
+                };
+
+                // When this in 0 in generally means this is offscreen
+                // so this won't work correctly.
+                if ui.available_height() != 0. {
+                    let max_size = egui::vec2(
+                        ui.available_width(),
+                        ui.available_height(),
+                    );
+                    scale_text(ui, max_size, move |ui| {
+                        render_effects(ui, &state, &effects);
+
+                        if is_active
+                            && let Some((cost, effects)) =
+                                &next_upgrade
+                        {
+                            if is_upgrading {
+                                ui.label(t!(
+                            "Upgrading in one planning cycle."
+                        ));
+                            } else {
+                                ui.horizontal_centered(|ui| {
+                            ui.label(t!("Next Level"));
+                            ui.label(cost.to_string());
+                            ui.image(icons::POLITICAL_CAPITAL);
+                        });
+                            }
+                            render_effects(ui, &state, effects);
+                        }
+
+                        if has_downgrade {
+                            ui.label(t!("Prev Level"));
+                            if let Some((_, effects)) =
+                                &prev_upgrade
+                            {
+                                render_effects(
+                                    ui, &state, effects,
+                                );
+                            }
+                        }
+                    });
                 }
 
                 if is_building {
@@ -344,8 +345,7 @@ impl AsCard for Project {
     }
 
     fn top_back(&self, ui: &mut egui::Ui, _state: &GameState) {
-        let desc = t!(&self.flavor.description);
-        ui.label(desc);
+        super::card_desc(ui, &self.flavor.description);
     }
 
     fn bottom_back(
@@ -516,21 +516,6 @@ fn points(
             .response;
         add_tip(tip, resp)
     }
-}
-
-pub fn render_flavor_image(
-    ui: &mut egui::Ui,
-    image: &hes_engine::flavor::Image,
-) -> Response {
-    let image = flavor_image(image);
-    egui::Frame::NONE
-        .outer_margin(egui::Margin::symmetric(6, 0))
-        .corner_radius(4)
-        .stroke(Stroke::new(1., Color32::from_black_alpha(64)))
-        .show(ui, |ui| {
-            ui.add(image.corner_radius(4));
-        })
-        .response
 }
 
 pub fn npc_icon(

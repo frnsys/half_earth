@@ -658,3 +658,35 @@ pub fn fill_bar(
         back_color: Color32::WHITE,
     }
 }
+
+// pub struct Fader {
+//     started: bool,
+// }
+// impl Fader {
+//     fn advance(
+//         &mut self,
+//         ui: &mut egui::Ui,
+//         duration: f32,
+//         contents: impl FnOnce(&mut egui::Ui),
+//     ) -> bool {
+//         let target = if self.started {
+//             1.0
+//         } else {
+//             self.started = true;
+//             0.0
+//         };
+//
+//         let easing: fn(f32) -> f32 =
+//             egui_animation::easing::cubic_in_out;
+//         let value = egui_animation::animate_eased(
+//             ui.ctx(),
+//             "fade-in",
+//             target,
+//             duration,
+//             easing,
+//         );
+//         ui.set_opacity(value);
+//
+//         value == 1.0
+//     }
+// }

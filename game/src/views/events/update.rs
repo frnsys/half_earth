@@ -137,9 +137,7 @@ fn render_project_outcomes(
     proj: &Project,
     state: &State,
 ) {
-    // TODO scale effects text
     let effects = active_effects(proj);
-
     render_effects(ui, state, &effects);
 }
 

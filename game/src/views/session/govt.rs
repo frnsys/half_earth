@@ -350,8 +350,6 @@ fn render_npc(
     npc: &NPC,
     total_seats: usize,
 ) -> egui::Response {
-    // TODO scale text?
-
     let seats = (npc.seats * total_seats as f32).floor()
         as usize
         + npc.extra_seats;

@@ -1,8 +1,10 @@
 use std::ops::Deref;
 
-use egui::{Color32, Sense};
+use egui::{Color32, Response, Sense};
+use hes_images::flavor_image;
+use rust_i18n::t;
 
-use crate::state::GameState;
+use crate::{state::GameState, text::scale_text};
 
 mod industry;
 mod npc;
@@ -96,13 +98,13 @@ impl<C: AsCard + Clone> Card<C> {
             // Detect drag "under" the card contents or else
             // it will capture all clicks.
             let drag_id = ui.id().with("card-drag");
-            let resp =
+            let mut resp =
                 ui.interact(rect, drag_id, Sense::drag());
 
             ui.place(
                 rect,
                 |ui: &mut egui::Ui| -> egui::Response {
-                    egui::Frame::NONE
+                    let resp = egui::Frame::NONE
                         .corner_radius(4.)
                         .fill(self.data.bg_color())
                         .show(ui, |ui| {
@@ -110,17 +112,18 @@ impl<C: AsCard + Clone> Card<C> {
                                 ui,
                                 state,
                                 is_offscreen,
-                            )
+                            );
                         })
-                        .response
-                },
-            );
+                        .response;
 
-            corner(
-                ui,
-                rect,
-                "card-flip".into(),
-                &mut self.flipped,
+                    corner(
+                        ui,
+                        resp.rect,
+                        "card-flip".into(),
+                        &mut self.flipped,
+                    );
+                    resp
+                },
             );
 
             if resp.is_pointer_button_down_on() {
@@ -137,6 +140,13 @@ impl<C: AsCard + Clone> Card<C> {
                     ui.ctx().request_repaint();
                 }
             }
+
+            // This is a bit hacky, but offsetting the rect
+            // above does not actually preserve the correct height;
+            // it shrinks to keep the bottom rect position consistent.
+            // The problem is that then this means the incorrect bottom
+            // rect position is reported. Forcing the correct height fixes this.
+            resp.rect.set_height(CARD_HEIGHT);
 
             resp
         } else {
@@ -201,4 +211,41 @@ fn corner(
     if resp.clicked() {
         *flipped = !*flipped;
     }
+}
+
+fn card_title(ui: &mut egui::Ui, name: &str) {
+    scaled_text(ui, name, 32.);
+}
+
+fn card_desc(ui: &mut egui::Ui, desc: &str) {
+    scaled_text(ui, desc, 128.);
+}
+
+fn scaled_text(ui: &mut egui::Ui, text: &str, height: f32) {
+    ui.vertical_centered(|ui| {
+        ui.set_height(height);
+        let max_size = egui::vec2(ui.available_width(), height);
+        let text = t!(text).to_string();
+        scale_text(ui, max_size, move |ui| {
+            ui.label(egui::RichText::new(&text).heading());
+        });
+    });
+}
+
+fn render_flavor_image(
+    ui: &mut egui::Ui,
+    image: &hes_engine::flavor::Image,
+) -> Response {
+    let image = flavor_image(image);
+    egui::Frame::NONE
+        .outer_margin(egui::Margin::symmetric(6, 0))
+        .corner_radius(4)
+        .stroke(egui::Stroke::new(
+            1.,
+            Color32::from_black_alpha(64),
+        ))
+        .show(ui, |ui| {
+            ui.add(image.corner_radius(4));
+        })
+        .response
 }

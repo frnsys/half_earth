@@ -6,7 +6,7 @@ use crate::{
     vars::Impact,
 };
 
-use super::{AsCard, project::render_flavor_image};
+use super::AsCard;
 use egui::{Color32, Stroke};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{Industry, KindMap};
@@ -39,13 +39,11 @@ impl AsCard for Industry {
     }
 
     fn figure(&self, ui: &mut egui::Ui, _state: &GameState) {
-        render_flavor_image(ui, &self.flavor.image);
+        super::render_flavor_image(ui, &self.flavor.image);
     }
 
     fn name(&self, ui: &mut egui::Ui, _state: &GameState) {
-        ui.vertical_centered(|ui| {
-            ui.label(egui::RichText::new(&self.name).heading());
-        });
+        super::card_title(ui, &self.name);
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
@@ -126,8 +124,7 @@ impl AsCard for Industry {
     }
 
     fn top_back(&self, ui: &mut egui::Ui, _state: &GameState) {
-        let desc = t!(&self.flavor.description);
-        ui.label(desc);
+        super::card_desc(ui, &self.flavor.description);
     }
 
     fn bottom_back(
