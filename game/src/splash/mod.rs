@@ -6,6 +6,7 @@ use egui::Align2;
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::World;
 use menu::{Menu, MenuAction};
+use rust_i18n::t;
 
 use crate::{audio, parts::center_center, state::Settings};
 
@@ -17,6 +18,7 @@ enum MenuView {
 pub enum StartAction {
     Continue,
     NewGame(World),
+    OpenEditor,
 }
 
 pub struct Start {
@@ -38,8 +40,59 @@ impl Start {
         prefs: &mut Settings,
         has_save: bool,
     ) -> Option<StartAction> {
-        lang_picker(ui);
         let mut start_action = None;
+
+        egui::Area::new("other-buttons".into())
+            .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
+            .show(ui.ctx(), |ui| {
+                ui.horizontal(|ui| {
+                    let resp =
+                        ui.add(
+                            egui::Button::new(format!(
+                                "  {}  ",
+                                t!("World Editor")
+                            ))
+                            .stroke(egui::Stroke::new(
+                                1.,
+                                egui::Color32::from_rgb(
+                                    0xFF, 0xCA, 0x28,
+                                ),
+                            )),
+                        );
+                    if resp.clicked() {
+                        start_action =
+                            Some(StartAction::OpenEditor);
+                    }
+
+                    let mut lang =
+                        rust_i18n::locale().to_string();
+                    egui::ComboBox::new("lang-picker", "")
+                        .width(0.)
+                        .selected_text(
+                            egui::RichText::new(&lang)
+                                .color(egui::Color32::WHITE),
+                        )
+                        .show_ui(ui, |ui| {
+                            ui.style_mut()
+                                .visuals
+                                .override_text_color =
+                                Some(egui::Color32::WHITE);
+                            let locales =
+                                rust_i18n::available_locales!();
+                            for locale in locales {
+                                ui.selectable_value(
+                                    &mut lang,
+                                    locale.to_string(),
+                                    locale,
+                                );
+                            }
+                        });
+                    if *rust_i18n::locale() != lang {
+                        rust_i18n::set_locale(&lang);
+                    }
+                });
+            });
+
         match self.view {
             MenuView::Menu => {
                 center_center(ui, "main-menu", |tui| {
@@ -88,36 +141,4 @@ impl Start {
         }
         start_action
     }
-}
-
-fn lang_picker(ui: &mut egui::Ui) {
-    egui::Area::new("lang-picker-area".into())
-        .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
-        .show(ui.ctx(), |ui| {
-            let mut lang = rust_i18n::locale().to_string();
-            egui::ComboBox::new("lang-picker", "")
-                .width(0.)
-                .selected_text(
-                    egui::RichText::new(&lang)
-                        .color(egui::Color32::WHITE),
-                )
-                .show_ui(ui, |ui| {
-                    ui.style_mut()
-                        .visuals
-                        .override_text_color =
-                        Some(egui::Color32::WHITE);
-                    let locales =
-                        rust_i18n::available_locales!();
-                    for locale in locales {
-                        ui.selectable_value(
-                            &mut lang,
-                            locale.to_string(),
-                            locale,
-                        );
-                    }
-                });
-            if *rust_i18n::locale() != lang {
-                rust_i18n::set_locale(&lang);
-            }
-        });
 }

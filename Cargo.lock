@@ -1864,6 +1864,7 @@ dependencies = [
  "extend",
  "fastrand",
  "hector",
+ "hes-editor",
  "hes-engine",
  "hes-images",
  "image",

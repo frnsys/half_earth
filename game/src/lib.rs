@@ -22,10 +22,11 @@ use state::Settings;
 
 use crate::{
     audio::AudioSystem,
-    parts::draw_bg_image,
+    parts::{draw_bg_image, set_full_bg_image},
     state::{GameState, Tutorial, prepare_game},
     views::{GameAction, GameView},
 };
+use hes_editor::WorldEditor;
 
 rust_i18n::i18n!("locales", fallback = "en");
 
@@ -46,6 +47,7 @@ pub static GLOW_CONTEXT: OnceLock<Arc<eframe::glow::Context>> =
 enum View {
     Start(Start),
     Game(GameView),
+    Editor(WorldEditor),
 }
 
 pub struct App {
@@ -198,6 +200,14 @@ impl eframe::App for App {
                                             ),
                                         );
                                     }
+                                    StartAction::OpenEditor => {
+                                        set_full_bg_image(
+                                            ui,
+                                            image!("backgrounds/editor.jpg"),
+                                            egui::vec2(1200., 897.),
+                                        );
+                                        self.view = View::Editor(WorldEditor::new());
+                                    }
                                 }
                             }
                         }
@@ -231,6 +241,9 @@ impl eframe::App for App {
                                     }
                                 }
                             }
+                        }
+                        View::Editor(editor) => {
+                            ui.add(editor);
                         }
                     }
                 });
