@@ -47,6 +47,7 @@ pub fn prepare_game(state: &mut GameState, prefs: &Settings) {
     DEBUG.apply(state);
     init_vars(&state.core);
     state.core.runs = prefs.runs_played;
+    state.ui.tutorial = prefs.tutorial;
 
     state.ui.viewed = state
         .core

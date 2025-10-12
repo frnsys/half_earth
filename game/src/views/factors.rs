@@ -25,6 +25,110 @@ pub struct FactorsCard {
     pub current: Option<String>,
 }
 impl FactorsCard {
+    pub fn render(&self, ui: &mut egui::Ui) {
+        egui::Frame::NONE.inner_margin(8).show(ui, |ui| {
+            ui.vertical(|ui| {
+                ui.style_mut().wrap_mode =
+                    Some(egui::TextWrapMode::Extend);
+
+                let relation = {
+                    let relation = match self.kind {
+                        Var::Emissions => "makes",
+                        Var::Biodiversity => "causes",
+                        _ => "uses",
+                    };
+                    t!(relation)
+                };
+
+                let cur_name = self.current.as_ref();
+
+                egui::Frame::NONE
+                    .inner_margin(4)
+                    .fill(Color32::from_black_alpha(64))
+                    .stroke(Stroke::new(
+                        1.,
+                        Color32::from_black_alpha(96),
+                    ))
+                    .corner_radius(4)
+                    .show(ui, |ui| {
+                        flex_justified(
+                            ui,
+                            "factors-header",
+                            |tui| {
+                                tui.label(format!(
+                                    "{} :",
+                                    t!("Total")
+                                ));
+                                tui.ui(|ui| {
+                        let max_value = match self.kind {
+                            Var::Biodiversity => {
+                                Some(consts::MAX_BIODIVERSITY)
+                            }
+                            Var::Contentedness => {
+                                Some(consts::MAX_CONTENTEDNESS)
+                            }
+                            _ => None,
+                        };
+                        let total = self.total_formatted();
+
+                        ui.horizontal(|ui| {
+                            if let Some(max_value) = max_value {
+                                ui.label(format!(
+                                    "{total}/{max_value}"
+                                ));
+                            } else {
+                                ui.label(total);
+                            }
+                            ui.add(self.icon.size(18.));
+                        });
+                    });
+                            },
+                        );
+                    });
+
+                let ranked = FACTORS.read();
+                let ranked =
+                    ranked[self.kind].iter().filter(|user| {
+                        match user {
+                            Factor::Industry {
+                                produced,
+                                ..
+                            }
+                            | Factor::Process {
+                                produced,
+                                ..
+                            } => *produced != 0.,
+                            _ => true,
+                        }
+                    });
+
+                ui.style_mut().spacing.item_spacing.y = 0.;
+                for user in ranked {
+                    let highlight =
+                        cur_name.is_some_and(|name| {
+                            name == user.name()
+                        });
+                    let name = user.name();
+                    egui::Frame::NONE
+                        .inner_margin(4)
+                        .corner_radius(4)
+                        .fill(if highlight {
+                            Color32::from_rgb(0xf5, 0xf9, 0xc7)
+                        } else {
+                            Color32::TRANSPARENT
+                        })
+                        .show(ui, |ui| {
+                            ui.label(t!(name));
+                            render_factor_line(
+                                ui, name, user, &relation,
+                                self.icon,
+                            );
+                        });
+                }
+            });
+        });
+    }
+
     pub fn total_formatted(&self) -> String {
         match self.kind {
             Var::Emissions => display::emissions(self.total),
@@ -57,112 +161,6 @@ impl FactorsCard {
             }
         }
     }
-}
-
-pub fn render_factors_list(
-    ui: &mut egui::Ui,
-    factors: FactorsCard,
-) {
-    egui::Frame::NONE.inner_margin(8).show(ui, |ui| {
-        ui.vertical(|ui| {
-            ui.style_mut().wrap_mode =
-                Some(egui::TextWrapMode::Extend);
-
-            let relation = {
-                let relation = match factors.kind {
-                    Var::Emissions => "makes",
-                    Var::Biodiversity => "causes",
-                    _ => "uses",
-                };
-                t!(relation)
-            };
-
-            let cur_name = factors.current.as_ref();
-
-            egui::Frame::NONE
-                .inner_margin(4)
-                .fill(Color32::from_rgb(0xBB, 0xB4, 0xA7))
-                .stroke(Stroke::new(
-                    1.,
-                    Color32::from_rgb(0x81, 0x78, 0x74),
-                ))
-                .corner_radius(4)
-                .show(ui, |ui| {
-                    flex_justified(
-                        ui,
-                        "factors-header",
-                        |tui| {
-                            tui.label(format!(
-                                "{} :",
-                                t!("Total")
-                            ));
-                            tui.ui(|ui| {
-                        let max_value = match factors.kind {
-                            Var::Biodiversity => {
-                                Some(consts::MAX_BIODIVERSITY)
-                            }
-                            Var::Contentedness => {
-                                Some(consts::MAX_CONTENTEDNESS)
-                            }
-                            _ => None,
-                        };
-                        let total = factors.total_formatted();
-
-                        ui.horizontal(|ui| {
-                            if let Some(max_value) = max_value {
-                                ui.label(format!(
-                                    "{total}/{max_value}"
-                                ));
-                            } else {
-                                ui.label(total);
-                            }
-                            ui.add(factors.icon.size(18.));
-                        });
-                    });
-                        },
-                    );
-                });
-
-            let ranked = FACTORS.read();
-            let ranked =
-                ranked[factors.kind].iter().filter(|user| {
-                    match user {
-                        Factor::Industry {
-                            produced, ..
-                        }
-                        | Factor::Process {
-                            produced, ..
-                        } => *produced != 0.,
-                        _ => true,
-                    }
-                });
-
-            ui.style_mut().spacing.item_spacing.y = 0.;
-            for user in ranked {
-                let highlight = cur_name
-                    .is_some_and(|name| name == user.name());
-                let name = user.name();
-                egui::Frame::NONE
-                    .inner_margin(4)
-                    .corner_radius(4)
-                    .fill(if highlight {
-                        Color32::from_rgb(0xf5, 0xf9, 0xc7)
-                    } else {
-                        Color32::TRANSPARENT
-                    })
-                    .show(ui, |ui| {
-                        ui.label(t!(name));
-                        render_factor_line(
-                            ui,
-                            name,
-                            user,
-                            &relation,
-                            factors.icon,
-                        );
-                    });
-            }
-        });
-    });
 }
 
 fn render_factor_line(

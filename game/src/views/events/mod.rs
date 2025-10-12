@@ -9,8 +9,14 @@ use rust_i18n::t;
 
 use crate::{
     display::{DisplayEffect, DisplayEvent, render_effects},
-    parts::{bg_cover_image, button, h_center, overlay},
-    tips::{add_tip, tip},
+    parts::{
+        bg_cover_image,
+        button,
+        center_text,
+        h_center,
+        overlay,
+    },
+    tips::{add_hover_tip, add_tip, tip},
 };
 
 use dialogue::{Dialogue, DialogueResult};
@@ -62,7 +68,7 @@ impl AsEventView for DisplayEvent {
             .collect::<Vec<_>>();
         ui.horizontal(|ui| {
             for (icon, tip) in factors_list {
-                add_tip(tip, ui.add(icon.size(16.)));
+                add_hover_tip(tip, ui.add(icon.size(16.)));
             }
         });
     }
@@ -186,9 +192,7 @@ impl<E: AsEventView> Events<E> {
             let go_to_next = ui
                 .vertical(|ui| {
                     if event.show_card() {
-                        let details = event.details(state);
-                        render_event_card(ui, state, details);
-                        event.render_extras(ui, state);
+                        render_event_card(ui, state, event);
                     }
                     dialogue.render(ui, state)
                 })
@@ -198,9 +202,7 @@ impl<E: AsEventView> Events<E> {
             let go_to_next = ui
                 .vertical(|ui| {
                     ui.set_width(420.);
-                    let details = event.details(state);
-                    render_event_card(ui, state, details);
-                    event.render_extras(ui, state);
+                    render_event_card(ui, state, event);
                     ui.add(button(t!("Continue"))).clicked()
                 })
                 .inner;
@@ -239,11 +241,13 @@ impl From<&DisplayEvent> for Dialogue {
     }
 }
 
-fn render_event_card(
+pub fn render_event_card<E: AsEventView>(
     ui: &mut egui::Ui,
     state: &State,
-    details: EventDetails,
+    event: &E,
 ) {
+    let details = event.details(state);
+
     let attribution = details.attrib.and_then(|attrib| {
         if attrib.trim().is_empty() {
             None
@@ -293,14 +297,18 @@ fn render_event_card(
                 title_label("name", &t!(details.name), 14.),
             );
         } else {
-            ui.label(t!(details.title));
-            ui.label(t!(details.name));
+            ui.add(center_text(t!(details.title)));
+            ui.add(center_text(t!(details.name)).size(18.));
         }
 
         if let Some(effects) = details.effects {
+            ui.add_space(8.);
             render_effects(ui, state, effects);
         }
     });
+
+    ui.add_space(8.);
+    event.render_extras(ui, state);
 }
 
 fn title_label(

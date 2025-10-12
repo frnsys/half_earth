@@ -4,6 +4,7 @@ use egui::{Color32, Sense};
 
 use crate::state::GameState;
 
+mod industry;
 mod npc;
 mod process;
 mod project;
@@ -25,14 +26,15 @@ pub trait AsCard {
 pub const CARD_HEIGHT: f32 = 380.;
 pub const CARD_WIDTH: f32 = 280.;
 
-pub struct Card<C: AsCard> {
+#[derive(Clone)]
+pub struct Card<C: AsCard + Clone> {
     data: C,
     y_offset: f32,
     flipped: bool,
     pub draggable: bool,
 }
 
-impl<C: AsCard> Deref for Card<C> {
+impl<C: AsCard + Clone> Deref for Card<C> {
     type Target = C;
 
     fn deref(&self) -> &Self::Target {
@@ -40,7 +42,7 @@ impl<C: AsCard> Deref for Card<C> {
     }
 }
 
-impl<C: AsCard> Card<C> {
+impl<C: AsCard + Clone> Card<C> {
     pub fn new(data: C) -> Self {
         Self {
             data,

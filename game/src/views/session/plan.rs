@@ -840,6 +840,7 @@ impl Processes {
             output,
             cards: Cards::new(
                 get_processes(state, output).into_iter(),
+                true,
             ),
         }
     }
@@ -848,6 +849,7 @@ impl Processes {
         self.output = output;
         self.cards = Cards::new(
             get_processes(state, output).into_iter(),
+            true,
         );
     }
 
@@ -1045,6 +1047,7 @@ impl Projects {
             cards: Cards::new(
                 get_projects(state, &kind, plan_changes)
                     .into_iter(),
+                true,
             ),
         }
     }
@@ -1059,6 +1062,7 @@ impl Projects {
         self.cards = Cards::new(
             get_projects(state, &kind, plan_changes)
                 .into_iter(),
+            true,
         );
     }
 

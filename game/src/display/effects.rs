@@ -5,6 +5,7 @@ use crate::{
     display::{
         self,
         AsText,
+        DisplayEvent,
         Icon,
         factors::factors_card,
         icons::{self, HasIcon},
@@ -1464,7 +1465,16 @@ impl DisplayEffect {
                     tip! {
                         icons::CHANCE,
                         text.to_string(),
-                    },
+                    }
+                    .card(
+                        DisplayEvent::new(
+                            ResolvedEvent {
+                                event: event.clone(),
+                                region: None,
+                            },
+                            state,
+                        ),
+                    ),
                     text! {
                         "chance",
                         text.to_string(),

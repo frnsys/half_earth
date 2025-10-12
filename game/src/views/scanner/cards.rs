@@ -18,15 +18,23 @@ use egui::{
     style::ScrollAnimation,
 };
 
+const GAP: f32 = 24.;
+const SCANNER_HEIGHT: f32 = 80.;
+
 pub struct Cards<C: AsCard + Scannable> {
     cards: Vec<Card<C>>,
     scan_timer: Timer,
+    scan_enabled: bool,
 }
 impl<C: AsCard + Scannable> Cards<C> {
-    pub fn new(cards: impl Iterator<Item = C>) -> Self {
+    pub fn new(
+        cards: impl Iterator<Item = C>,
+        scan_enabled: bool,
+    ) -> Self {
         Self {
             cards: cards.map(|card| Card::new(card)).collect(),
             scan_timer: Timer::default(),
+            scan_enabled,
         }
     }
 
@@ -37,61 +45,11 @@ impl<C: AsCard + Scannable> Cards<C> {
     ) -> bool {
         let mut changed = false;
 
-        let mid_y = ui.available_height() / 2.;
-
-        let cursor = ui.cursor();
-        const GAP: f32 = 24.;
-        let top_scan_area = egui::Area::new("scan-up".into())
-            .order(Order::Middle)
-            .movable(false)
-            .pivot(Align2::CENTER_BOTTOM)
-            .fixed_pos((
-                cursor.left() + ui.available_width() / 2.,
-                cursor.top() + mid_y - CARD_HEIGHT / 2. - GAP,
-            ))
-            .show(ui.ctx(), |ui| {
-                raised_frame()
-                    .colors(
-                        Color32::WHITE,
-                        Color32::from_rgb(0xdc, 0xe0, 0xe6),
-                        Color32::from_rgb(0xfa, 0xfc, 0xff),
-                    )
-                    .show(ui, |ui| {
-                        ui.set_width(300.);
-                        ui.set_height(80.);
-                        ui.label("above");
-                    });
-            })
-            .response
-            .rect;
-
-        let scanner_height = 80.;
-        let bot_scan_area = egui::Area::new("scan-down".into())
-            .order(Order::Middle)
-            .movable(false)
-            .pivot(Align2::CENTER_BOTTOM)
-            .fixed_pos((
-                cursor.left() + ui.available_width() / 2.,
-                cursor.top()
-                    + mid_y
-                    + CARD_HEIGHT / 2.
-                    + GAP
-                    + scanner_height,
-            ))
-            .show(ui.ctx(), |ui| {
-                raised_frame()
-                    .colors(
-                        Color32::WHITE,
-                        Color32::from_rgb(0xdc, 0xe0, 0xe6),
-                        Color32::from_rgb(0xfa, 0xfc, 0xff),
-                    )
-                    .show(ui, |ui| {
-                        ui.set_width(300.);
-                        ui.set_height(scanner_height);
-                    });
-            })
-            .response
-            .rect;
+        let scan_areas = if self.scan_enabled {
+            Some(self.render_scanners(ui))
+        } else {
+            None
+        };
 
         let h_center =
             ui.cursor().left() + ui.available_width() / 2.;
@@ -136,13 +94,19 @@ impl<C: AsCard + Scannable> Cards<C> {
                             state.ui.viewed.push(id);
                         }
                     }
-                    if offset.abs() <= 5. {
+
+                    if offset.abs() <= 5. && self.scan_enabled {
                         card.draggable = true;
                     } else {
                         card.draggable = false;
                     }
 
-                    if card.draggable {
+                    if card.draggable
+                        && let Some((
+                            top_scan_area,
+                            bot_scan_area,
+                        )) = scan_areas
+                    {
                         if card_rect.intersects(top_scan_area) {
                             if card.is_add_allowed(state)
                                 && self.scan_timer.has_elapsed(
@@ -267,6 +231,65 @@ impl<C: AsCard + Scannable> Cards<C> {
             }
         });
         changed
+    }
+
+    fn render_scanners(
+        &self,
+        ui: &mut egui::Ui,
+    ) -> (egui::Rect, egui::Rect) {
+        let cursor = ui.cursor();
+        let mid_y = ui.available_height() / 2.;
+        let top = egui::Area::new("scan-up".into())
+            .order(Order::Middle)
+            .movable(false)
+            .pivot(Align2::CENTER_BOTTOM)
+            .fixed_pos((
+                cursor.left() + ui.available_width() / 2.,
+                cursor.top() + mid_y - CARD_HEIGHT / 2. - GAP,
+            ))
+            .show(ui.ctx(), |ui| {
+                raised_frame()
+                    .colors(
+                        Color32::WHITE,
+                        Color32::from_rgb(0xdc, 0xe0, 0xe6),
+                        Color32::from_rgb(0xfa, 0xfc, 0xff),
+                    )
+                    .show(ui, |ui| {
+                        ui.set_width(300.);
+                        ui.set_height(SCANNER_HEIGHT);
+                    });
+            })
+            .response
+            .rect;
+
+        let bot = egui::Area::new("scan-down".into())
+            .order(Order::Middle)
+            .movable(false)
+            .pivot(Align2::CENTER_BOTTOM)
+            .fixed_pos((
+                cursor.left() + ui.available_width() / 2.,
+                cursor.top()
+                    + mid_y
+                    + CARD_HEIGHT / 2.
+                    + GAP
+                    + SCANNER_HEIGHT,
+            ))
+            .show(ui.ctx(), |ui| {
+                raised_frame()
+                    .colors(
+                        Color32::WHITE,
+                        Color32::from_rgb(0xdc, 0xe0, 0xe6),
+                        Color32::from_rgb(0xfa, 0xfc, 0xff),
+                    )
+                    .show(ui, |ui| {
+                        ui.set_width(300.);
+                        ui.set_height(SCANNER_HEIGHT);
+                    });
+            })
+            .response
+            .rect;
+
+        (top, bot)
     }
 }
 

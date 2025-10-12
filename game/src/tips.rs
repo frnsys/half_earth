@@ -1,15 +1,22 @@
-use egui::{Color32, LayerId, Order, PopupAnchor};
+use egui::{
+    Color32,
+    LayerId,
+    Order,
+    PopupAnchor,
+    PopupCloseBehavior,
+};
 use egui_taffy::TuiBuilderLogic;
-use hes_engine::{Industry, NPC, Process, Project, Region};
+use hes_engine::{Industry, NPC, Process, Project};
 
 use crate::{
     display::{DisplayEvent, Icon},
     parts::{glow_fill, h_center, raised_frame},
+    state::GameState,
     text::bbcode,
-    views::FactorsCard,
+    views::{Card, FactorsCard, render_event_card},
 };
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 pub struct Tip {
     text: String,
     icon: Icon,
@@ -33,29 +40,87 @@ impl Tip {
         self
     }
 
-    pub fn render(&self, ui: &mut egui::Ui) {
-        // if let Some(card) = &self.card {
-        //     overlay(ctx, |ui| {
-        //         // TODO
-        //         ui.label("testing")
-        //     });
-        // }
-
-        h_center(ui, "tip", |tui| {
-            tui.ui(|ui| {
-                raised_frame().shadow().show(ui, |ui| {
-                    ui.set_max_width(480.);
-                    ui.style_mut()
-                        .visuals
-                        .override_text_color =
-                        Some(Color32::WHITE);
-                    ui.horizontal_top(|ui| {
-                        ui.add(self.icon.size(24.));
-                        ui.add(bbcode(&self.text));
-                    });
-                });
+    // Doesn't support cards
+    pub fn render_as_hover(&self, ui: &mut egui::Ui) {
+        raised_frame().shadow().show(ui, |ui| {
+            ui.set_max_width(480.);
+            ui.style_mut().visuals.override_text_color =
+                Some(Color32::WHITE);
+            ui.horizontal_top(|ui| {
+                ui.add(self.icon.size(24.));
+                ui.add(bbcode(&self.text));
             });
         });
+    }
+
+    pub fn render(
+        &mut self,
+        ui: &mut egui::Ui,
+        state: &GameState,
+    ) -> bool {
+        let mut clicked_outside = false;
+        h_center(ui, "tip", |tui| {
+            tui.ui(|ui| {
+                let resp =
+                    raised_frame().shadow().show(ui, |ui| {
+                        ui.set_max_width(480.);
+                        ui.style_mut()
+                            .visuals
+                            .override_text_color =
+                            Some(Color32::WHITE);
+                        ui.horizontal_top(|ui| {
+                            ui.add(self.icon.size(24.));
+                            ui.add(bbcode(&self.text));
+                        });
+                    });
+                clicked_outside = resp.clicked_elsewhere();
+            });
+        });
+
+        if let Some(card) = &mut self.card {
+            ui.add_space(32.);
+            ui.style_mut().wrap_mode =
+                Some(egui::TextWrapMode::Extend);
+            h_center(ui, "tip-card", |tui| {
+                tui.ui(|ui| match card {
+                    TipCard::Project(card) => {
+                        card.render(ui, state, false);
+                    }
+                    TipCard::Process(card) => {
+                        card.render(ui, state, false);
+                    }
+                    TipCard::Processes(cards) => {
+                        // TODO horizontal scrolling, but seems to interfere with taffy
+                        ui.horizontal(|ui| {
+                            ui.style_mut()
+                                .spacing
+                                .item_spacing
+                                .x = 32.;
+                            ui.set_width(ui.available_width());
+                            for card in cards {
+                                card.render(ui, state, false);
+                            }
+                        });
+                    }
+                    TipCard::Industry(card) => {
+                        card.render(ui, state, false);
+                    }
+                    TipCard::Factors(factors_card) => {
+                        ui.set_width(420.);
+                        factors_card.render(ui);
+                    }
+                    TipCard::Event(event) => {
+                        ui.set_width(420.);
+                        render_event_card(ui, state, event);
+                    }
+                    TipCard::NPC(card) => {
+                        card.render(ui, state, false);
+                    }
+                });
+            });
+        }
+
+        clicked_outside
     }
 }
 
@@ -75,6 +140,9 @@ pub fn add_tip(
     resp: egui::Response,
 ) -> egui::Response {
     let popup_id = egui::Id::new("tip");
+    let opened_id = popup_id.with("just-opened");
+    let card_id = popup_id.with("card");
+
     let rect = resp.rect;
 
     if resp.contains_pointer() {
@@ -85,16 +153,48 @@ pub fn add_tip(
     if resp.interact(egui::Sense::click()).clicked() {
         egui::Popup::open_id(&resp.ctx, popup_id);
         resp.ctx.memory_mut(|mem| {
+            // Need to track if the tip was opened this frame
+            // so that the click doesn't immediately close it
+            // the same frame.
+            mem.data.insert_temp(opened_id, true);
+
+            // Track the current tip card separately, as
+            // we want to continue to display it if clicking
+            // tips within the current tip.
+            // E.g. if I have a tip open for `Solar PV` and
+            // I click on an NPC in the card, I want the `Solar PV`
+            // card to remain visible.
+            if let Some(card) = &tip.card {
+                mem.data.insert_temp(card_id, card.clone());
+            }
+
             mem.data.insert_temp(popup_id, tip);
         });
     }
     resp
 }
 
-pub fn render_tip(ctx: &egui::Context) {
-    let popup_id = egui::Id::new("tip");
+pub fn add_hover_tip(
+    tip: Tip,
+    resp: egui::Response,
+) -> egui::Response {
+    if resp.contains_pointer() {
+        egui::Popup::from_response(&resp)
+            .frame(egui::Frame::NONE)
+            .gap(8.)
+            .show(|ui| {
+                tip.render_as_hover(ui);
+            });
+    }
+    resp
+}
 
-    if let Some(tip) =
+pub fn render_tip(ctx: &egui::Context, state: &GameState) {
+    let popup_id = egui::Id::new("tip");
+    let opened_id = popup_id.with("just-opened");
+    let card_id = popup_id.with("card");
+
+    if let Some(mut tip) =
         ctx.memory(|mem| mem.data.get_temp::<Tip>(popup_id))
     {
         let height = ctx.screen_rect().height();
@@ -104,6 +204,7 @@ pub fn render_tip(ctx: &egui::Context) {
             PopupAnchor::Position(egui::Pos2::ZERO),
             LayerId::new(Order::Tooltip, popup_id),
         )
+        .close_behavior(PopupCloseBehavior::CloseOnClickOutside)
         .open_memory(None)
         .width(ctx.screen_rect().width())
         .frame(
@@ -114,50 +215,71 @@ pub fn render_tip(ctx: &egui::Context) {
         .show(|ui| {
             ui.set_width(ui.available_width());
             ui.set_height(height);
-            tip.render(ui);
+
+            if let Some(card) = ctx.memory(|mem| {
+                mem.data.get_temp::<TipCard>(card_id)
+            }) {
+                tip.card = Some(card);
+            }
+
+            // Close only if the tip wasn't just opened this frame.
+            let should_close = tip.render(ui, state);
+            let just_opened = ctx
+                .memory(|mem| {
+                    mem.data.get_temp::<bool>(opened_id)
+                })
+                .unwrap_or_default();
+            if should_close && !just_opened {
+                // Close and clear the current tip card.
+                egui::Popup::close_id(ctx, popup_id);
+                ctx.memory_mut(|mem| {
+                    mem.data.remove::<TipCard>(card_id);
+                });
+            }
+
+            // No longer just-opened this frame.
+            ctx.memory_mut(|mem| {
+                mem.data.insert_temp(opened_id, false);
+            });
         });
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 pub enum TipCard {
-    Project(Project),
-    Process(Process),
-    Region(Region),
-    Processes(Vec<Process>),
-    Industry(Industry),
+    Project(Card<Project>),
+    Process(Card<Process>),
+    Processes(Vec<Card<Process>>),
+    Industry(Card<Industry>),
     Factors(FactorsCard),
     Event(DisplayEvent),
-    NPC(NPC),
+    NPC(Card<NPC>),
 }
 impl From<Project> for TipCard {
     fn from(value: Project) -> Self {
-        TipCard::Project(value)
+        TipCard::Project(Card::new(value))
     }
 }
 impl From<Process> for TipCard {
     fn from(value: Process) -> Self {
-        TipCard::Process(value)
+        TipCard::Process(Card::new(value))
     }
 }
 impl From<NPC> for TipCard {
     fn from(value: NPC) -> Self {
-        TipCard::NPC(value)
-    }
-}
-impl From<Region> for TipCard {
-    fn from(value: Region) -> Self {
-        TipCard::Region(value)
+        TipCard::NPC(Card::new(value))
     }
 }
 impl From<Industry> for TipCard {
     fn from(value: Industry) -> Self {
-        TipCard::Industry(value)
+        TipCard::Industry(Card::new(value))
     }
 }
 impl From<Vec<Process>> for TipCard {
     fn from(value: Vec<Process>) -> Self {
-        TipCard::Processes(value)
+        TipCard::Processes(
+            value.into_iter().map(Card::new).collect(),
+        )
     }
 }
 impl From<FactorsCard> for TipCard {

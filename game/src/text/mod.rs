@@ -201,6 +201,6 @@ fn inline_image<'a>(
         egui::Image::new(icon_from_slug(&text))
             .max_height(text_height)
     } else {
-        icon_from_slug(&text).size(text_height - 2.)
+        icon_from_slug(&text).size(text_height - 4.)
     }
 }

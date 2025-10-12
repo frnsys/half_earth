@@ -25,6 +25,8 @@ use intro::Intro;
 use menu::{MenuAction, render_menu};
 use session::Session;
 
+pub(crate) use cards::Card;
+pub(crate) use events::render_event_card;
 pub(crate) use factors::FactorsCard;
 
 /// Phase of the game.
@@ -199,7 +201,7 @@ impl GameView {
             }
         }
 
-        render_tip(ui.ctx());
+        render_tip(ui.ctx(), state);
 
         ret_action
     }

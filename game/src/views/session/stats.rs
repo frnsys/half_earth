@@ -37,7 +37,6 @@ use crate::{
     state::{FACTORS, StateExt},
     tips::{Tip, add_tip, tip},
     vars::Var,
-    views::factors::render_factors_list,
 };
 
 use super::treemap::{TreeItem, treemap};
@@ -85,6 +84,8 @@ impl Stats {
             image!("backgrounds/dashboard.png"),
             egui::vec2(1600., 1192.),
         );
+        ui.style_mut().visuals.override_text_color =
+            Some(Color32::BLACK);
 
         let demand_for_outputs: EnumMap<Output, f32> =
             Output::iter()
@@ -562,6 +563,8 @@ fn render_breakdown_menu(ui: &mut egui::Ui) -> Option<Var> {
             let n = Var::iter().count();
 
             ui.style_mut().spacing.item_spacing.y = 0.;
+            ui.style_mut().visuals.override_text_color =
+                Some(Color32::BLACK);
             for (i, var) in Var::iter().enumerate() {
                 let rounding = if i == 0 {
                     CornerRadius {
@@ -709,7 +712,7 @@ fn render_breakdown(
             .show(ui, |ui| {
                 ui.set_height(320.);
                 egui::ScrollArea::vertical().show(ui, |ui| {
-                    render_factors_list(ui, table_data);
+                    table_data.render(ui);
                 });
             });
 
