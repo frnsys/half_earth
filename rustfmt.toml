@@ -1,4 +1,4 @@
-edition = "2021"
+edition = "2024"
 max_width = 64
 reorder_imports = true
 imports_layout = "HorizontalVertical"

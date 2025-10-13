@@ -6,7 +6,7 @@ authors = ["Francis Tseng"]
 edition = "2021"
 
 [dependencies]
-hes-engine = { path = "../../hes-engine" }
+hes-engine = { path = "../../engine" }
 lodepng = { version = "3.10.2" }
 rgb = { version = "0.8.42", features = ["as-bytes"] }
 serde_json = { workspace = true }

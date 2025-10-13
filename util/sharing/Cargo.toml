@@ -6,7 +6,7 @@ authors = ["Francis Tseng"]
 edition = "2021"
 
 [dependencies]
-hes-engine = { path = "../../hes-engine" }
+hes-engine = { path = "../../engine" }
 image = { version = "0.25.2" }
 textwrap = { version = "0.16.1" }
 imageproc = { version = "0.25.0" }
