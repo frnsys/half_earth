@@ -40,7 +40,26 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            libasound2-dev
+            libasound2-dev libboost-all-dev
+
+      - name: Install Boost (macOS)
+        if: startsWith(runner.os, 'macOS')
+        run: |
+          brew update
+          brew install boost
+          BREW_PREFIX="$(brew --prefix)"
+          echo "CPLUS_INCLUDE_PATH=$BREW_PREFIX/include" >> $GITHUB_ENV
+          echo "CPATH=$BREW_PREFIX/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$BREW_PREFIX/lib" >> $GITHUB_ENV
+
+      - name: Install Boost (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          choco install boost-msvc-14.3 -y
+          $boostDir = (Get-ChildItem -Path C:\local -Name 'boost_*' | Sort-Object -Descending | Select-Object -First 1)
+          echo "BOOST_ROOT=C:\local\$boostDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "INCLUDE=C:\local\$boostDir;$env:INCLUDE" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Build
         run: cargo build --release --locked
