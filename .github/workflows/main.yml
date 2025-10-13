@@ -43,6 +43,7 @@ jobs:
 
       - name: Build release binary
         uses: actions-rs/cargo@v1
+        working-directory: game
         with:
           command: build
           args: --release --locked --target ${{ matrix.target }}
