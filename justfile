@@ -1,3 +1,7 @@
+# Run the game
+run:
+    cargo run
+
 # Generate translation files.
 translate:
     cargo run --bin i18n

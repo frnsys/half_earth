@@ -19,6 +19,7 @@ pub enum DebugView {
 
 #[derive(Debug)]
 pub struct DebugOpts {
+    pub open_editor: bool,
     pub skip_events: bool,
     pub skip_tutorial: bool,
     pub show_all_projects: bool,
@@ -119,6 +120,7 @@ impl Default for DebugOpts {
 
         let view = env::var("DEBUG_VIEW").unwrap_or_default();
         Self {
+            open_editor: debug.contains(&"EDITOR"),
             skip_events: debug.contains(&"SKIP_EVENTS"),
             skip_tutorial: debug.contains(&"SKIP_TUTORIAL"),
             show_all_projects: debug.contains(&"ALL_PROJECTS"),

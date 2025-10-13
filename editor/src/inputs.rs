@@ -1,11 +1,14 @@
 use std::fmt::Display;
 
 use egui::{Color32, Sense};
+use egui_extras::{Column, TableBuilder, TableRow};
 use hes_engine::{flavor::Image, *};
 use hes_images::flavor_image;
 use strum::IntoEnumIterator;
 
-use crate::parts;
+use crate::parts::{self, flex_justified};
+
+const FADED: u8 = 96;
 
 pub fn edit<V: Editable>(value: V) -> Input<V> {
     Input::new(value)
@@ -24,6 +27,12 @@ pub fn textarea<'a>(
     value: &'a mut String,
 ) -> Input<LongText<'a>> {
     Input::new(LongText(value))
+}
+
+pub fn heading<'a>(
+    value: &'a mut String,
+) -> Input<Heading<'a>> {
+    Input::new(Heading(value))
 }
 
 pub fn lock<'a>(value: &'a mut bool) -> Input<Lock<'a>> {
@@ -53,6 +62,12 @@ pub fn nonneg_float<'a>(
     Input::new(NonNeg(value))
 }
 
+pub fn precise_float<'a, const U: usize>(
+    value: &'a mut f32,
+) -> Input<Precise<'a, U>> {
+    Input::new(Precise(value))
+}
+
 pub struct Toggle<'a>(&'a mut bool, &'static str, &'static str);
 pub struct ToggleEnum<
     'a,
@@ -62,7 +77,9 @@ pub struct Lock<'a>(&'a mut bool);
 pub struct Percent<'a>(&'a mut f32);
 pub struct Share<'a>(&'a mut f32);
 pub struct NonNeg<'a>(&'a mut f32);
+pub struct Precise<'a, const U: usize>(&'a mut f32);
 pub struct LongText<'a>(&'a mut String);
+pub struct Heading<'a>(&'a mut String);
 
 pub trait Describe {
     fn describe(&self) -> &'static str;
@@ -78,9 +95,30 @@ impl Editable for &mut String {
     }
 }
 
+impl<'a> Editable for Heading<'a> {
+    fn edit(self, ui: &mut egui::Ui) {
+        ui.scope(|ui| {
+            ui.style_mut().text_styles.insert(
+                egui::TextStyle::Body,
+                egui::FontId::new(
+                    24.0,
+                    egui::FontFamily::Name("TimesTen".into()),
+                ),
+            );
+            ui.style_mut().spacing.text_edit_width =
+                ui.available_width();
+            ui.text_edit_singleline(self.0);
+        });
+    }
+}
+
 impl<'a> Editable for LongText<'a> {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.text_edit_multiline(self.0);
+        ui.scope(|ui| {
+            ui.style_mut().spacing.text_edit_width =
+                ui.available_width();
+            ui.text_edit_multiline(self.0);
+        });
     }
 }
 
@@ -104,7 +142,7 @@ impl<'a> Editable for Toggle<'a> {
             if on {
                 Color32::WHITE
             } else {
-                Color32::from_gray(128)
+                Color32::from_gray(FADED)
             },
             self.1,
         );
@@ -116,7 +154,7 @@ impl<'a> Editable for Toggle<'a> {
             if !on {
                 Color32::WHITE
             } else {
-                Color32::from_gray(128)
+                Color32::from_gray(FADED)
             },
             self.2,
         );
@@ -130,17 +168,22 @@ impl<'a, E: Display + PartialEq + IntoEnumIterator> Editable
     for ToggleEnum<'a, E>
 {
     fn edit(self, ui: &mut egui::Ui) {
-        for v in E::iter() {
-            let color = if v == *self.0 {
-                Color32::WHITE
-            } else {
-                Color32::from_gray(128)
-            };
-            let resp = ui.colored_label(color, v.to_string());
-            if resp.interact(Sense::click()).clicked() {
-                *self.0 = v;
+        ui.horizontal(|ui| {
+            for v in E::iter() {
+                let text = if v == *self.0 {
+                    egui::RichText::new(v.to_string())
+                        .color(Color32::WHITE)
+                        .underline()
+                } else {
+                    egui::RichText::new(v.to_string())
+                        .color(Color32::from_gray(FADED))
+                };
+                let resp = ui.label(text);
+                if resp.interact(Sense::click()).clicked() {
+                    *self.0 = v;
+                }
             }
-        }
+        });
     }
 }
 
@@ -184,19 +227,19 @@ impl Editable for &mut Option<f32> {
 
 impl Editable for &mut Option<Image> {
     fn edit(self, ui: &mut egui::Ui) {
-        let mut enable = self.is_some();
-        ui.add(edit(&mut enable));
+        // let mut enable = self.is_some();
+        // ui.add(edit(&mut enable));
 
         if let Some(image) = self {
             ui.add(edit(image));
         }
 
-        if enable != self.is_some() {
-            *self = match self {
-                Some(_) => None,
-                None => Some(Image::default()),
-            };
-        }
+        // if enable != self.is_some() {
+        //     *self = match self {
+        //         Some(_) => None,
+        //         None => Some(Image::default()),
+        //     };
+        // }
     }
 }
 
@@ -234,6 +277,12 @@ impl<'a> Editable for NonNeg<'a> {
     }
 }
 
+impl<'a, const U: usize> Editable for Precise<'a, U> {
+    fn edit(self, ui: &mut egui::Ui) {
+        ui.add(egui::DragValue::new(self.0).min_decimals(U));
+    }
+}
+
 impl Editable for &mut Image {
     fn edit(self, ui: &mut egui::Ui) {
         ui.vertical(|ui| {
@@ -244,114 +293,123 @@ impl Editable for &mut Image {
     }
 }
 
+fn input_table<T: Editable, const U: usize>(
+    ui: &mut egui::Ui,
+    id: &str,
+    inputs: [Input<T>; U],
+) {
+    ui.style_mut().spacing.interact_size.x = 100.; // Min DragValue size
+    TableBuilder::new(ui)
+        .id_salt(id)
+        .vscroll(false)
+        .column(Column::remainder())
+        .column(Column::auto())
+        .body(|mut body| {
+            for input in inputs.into_iter() {
+                body.row(parts::ROW_HEIGHT, |row| {
+                    input.as_row(row);
+                });
+            }
+        });
+}
+
 impl Editable for &mut ByproductMap {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.add(
-            edit(&mut self.co2)
-                .label("CO2")
-                .help("CO2 in grams."),
-        );
-        ui.add(
-            edit(&mut self.ch4)
-                .label("CH4")
-                .help("CH4 (methane) in grams."),
-        );
-        ui.add(
-            edit(&mut self.n2o)
-                .label("N2O")
-                .help("N2O (nitrous oxide) in grams."),
-        );
-        ui.add(
-            edit(&mut self.biodiversity)
-                .label("Biodiversity")
-                .help(r#"Effects on biodiversity, in "pressure"; e.g. -1 pressure means +1 to the extinction rate."#),
+        input_table(
+            ui,
+            "byproducts",
+            [
+                edit(&mut self.co2)
+                    .label("CO2")
+                    .help("CO2 in grams."),
+                edit(&mut self.ch4)
+                    .label("CH4")
+                    .help("CH4 (methane) in grams."),
+                edit(&mut self.n2o)
+                    .label("N2O")
+                    .help("N2O (nitrous oxide) in grams."),
+                edit(&mut self.biodiversity)
+                    .label("Biodiversity")
+                    .help(r#"Effects on biodiversity, in "pressure"; e.g. -1 pressure means +1 to the extinction rate."#),
+            ]
         );
     }
 }
 
 impl Editable for &mut ResourceMap {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.add(
-            edit(&mut self.land)
-                .label("Land")
-                .help("Land in square meters (m2)."),
-        );
-        ui.add(
-            edit(&mut self.water)
-                .label("Water")
-                .help("Water in liters (L)."),
-        );
-        ui.add(
-            edit(&mut self.electricity)
-                .label("Electricity")
-                .help("Electricity in kilowatt-hours (kWh)."),
-        );
-        ui.add(
-            edit(&mut self.fuel)
-                .label("Fuel")
-                .help("Fuel in kilowatt-hours (kWh)."),
+        input_table(
+            ui,
+            "resources",
+            [
+                edit(&mut self.land)
+                    .label("Land")
+                    .help("Land in square meters (m2)."),
+                edit(&mut self.water)
+                    .label("Water")
+                    .help("Water in liters (L)."),
+                edit(&mut self.electricity)
+                    .label("Electricity")
+                    .help(
+                        "Electricity in kilowatt-hours (kWh).",
+                    ),
+                edit(&mut self.fuel)
+                    .label("Fuel")
+                    .help("Fuel in kilowatt-hours (kWh)."),
+            ],
         );
     }
 }
 
 impl Editable for &mut OutputMap {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.add(
-            edit(&mut self.fuel)
-                .label("Fuel")
-                .help("Fuel in kilowatt-hours (kWh)."),
-        );
-        ui.add(
-            edit(&mut self.electricity)
-                .label("Electricity")
-                .help("Electricity in kilowatt-hours (kWh)."),
-        );
-        ui.add(
-            edit(&mut self.plant_calories)
-                .label("Plant Calories")
-                .help("Plant calories in kilocalories (kcal)."),
-        );
-        ui.add(
-            edit(&mut self.animal_calories)
-                .label("Animal Calories")
-                .help(
-                    "Animal calories in kilocalories (kcal).",
-                ),
+        input_table(
+            ui,
+            "outputs",
+            [
+                edit(&mut self.fuel)
+                    .label("Fuel")
+                    .help("Fuel in kilowatt-hours (kWh)."),
+                edit(&mut self.electricity)
+                    .label("Electricity")
+                    .help("Electricity in kilowatt-hours (kWh)."),
+                edit(&mut self.plant_calories)
+                    .label("Plant Calories")
+                    .help("Plant calories in kilocalories (kcal)."),
+                edit(&mut self.animal_calories)
+                    .label("Animal Calories")
+                    .help(
+                        "Animal calories in kilocalories (kcal)."),
+            ]
         );
     }
 }
 
 impl Editable for &mut FeedstockMap {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.add(
-            edit(&mut self.coal)
-                .label("Coal")
-                .help("Coal in grams (g)."),
-        );
-        ui.add(
-            edit(&mut self.oil)
-                .label("Oil")
-                .help("Oil in liters (L)."),
-        );
-        ui.add(
-            edit(&mut self.natural_gas)
-                .label("Natural Gas")
-                .help("Natural Gas in liters (L)"),
-        );
-        ui.add(
-            edit(&mut self.thorium)
-                .label("Thorium")
-                .help("Thorium in grams (g)."),
-        );
-        ui.add(
-            edit(&mut self.uranium)
-                .label("Uranium")
-                .help("Uranium in grams (g)."),
-        );
-        ui.add(
-            edit(&mut self.lithium)
-                .label("Lithium")
-                .help("Lithium in grams (g)."),
+        input_table(
+            ui,
+            "feedstocks",
+            [
+                edit(&mut self.coal)
+                    .label("Coal")
+                    .help("Coal in grams (g)."),
+                edit(&mut self.oil)
+                    .label("Oil")
+                    .help("Oil in liters (L)."),
+                edit(&mut self.natural_gas)
+                    .label("Natural Gas")
+                    .help("Natural Gas in liters (L)"),
+                edit(&mut self.thorium)
+                    .label("Thorium")
+                    .help("Thorium in grams (g)."),
+                edit(&mut self.uranium)
+                    .label("Uranium")
+                    .help("Uranium in grams (g)."),
+                edit(&mut self.lithium)
+                    .label("Lithium")
+                    .help("Lithium in grams (g)."),
+            ],
         );
     }
 }
@@ -359,12 +417,14 @@ impl Editable for &mut FeedstockMap {
 impl Editable for &mut Factor {
     fn edit(self, ui: &mut egui::Ui) {
         let mut kind: FactorKind = (*self).into();
-        ui.add(toggle_enum(&mut kind));
-        if let Factor::Output(output) = self {
-            ui.add(edit(output).label("Output Type").help(
-                "The output to use for the demand factor.",
-            ));
-        }
+        ui.vertical(|ui| {
+            ui.add(toggle_enum(&mut kind));
+            if let Factor::Output(output) = self {
+                ui.add(edit(output).label("Output Type").help(
+                    "The output to use for the demand factor.",
+                ).inline());
+            }
+        });
 
         if kind != (*self).into() {
             *self = kind.into();
@@ -377,7 +437,6 @@ pub struct Input<V: Editable> {
     help: Option<String>,
     label: Option<String>,
     inline: bool,
-    tooltip: Option<String>,
 }
 impl<V: Editable> Input<V> {
     fn new(value: V) -> Self {
@@ -386,7 +445,6 @@ impl<V: Editable> Input<V> {
             inline: false,
             help: None,
             label: None,
-            tooltip: None,
         }
     }
 
@@ -400,17 +458,26 @@ impl<V: Editable> Input<V> {
         self
     }
 
-    pub fn tooltip(
-        mut self,
-        tooltip: impl Into<String>,
-    ) -> Self {
-        self.tooltip = Some(tooltip.into());
-        self
-    }
-
     pub fn inline(mut self) -> Self {
         self.inline = true;
         self
+    }
+
+    pub fn as_row(self, mut row: TableRow) {
+        if let Some(label) = self.label {
+            row.col(|ui| {
+                ui.label(label);
+            });
+        } else {
+            row.col(|_| {});
+        }
+        row.col(|ui| {
+            ui.with_layout(
+                egui::Layout::default()
+                    .with_cross_align(egui::Align::RIGHT),
+                |ui| self.value.edit(ui),
+            );
+        });
     }
 }
 
@@ -424,15 +491,17 @@ impl<V: Editable> egui::Widget for Input<V> {
                     }
                     self.value.edit(ui);
                 });
+                if let Some(help) = self.help {
+                    ui.add(parts::help(&help));
+                }
             } else {
                 if let Some(label) = self.label {
                     ui.label(label);
                 }
+                if let Some(help) = self.help {
+                    ui.add(parts::help(&help));
+                }
                 self.value.edit(ui);
-            }
-
-            if let Some(help) = self.help {
-                ui.label(help);
             }
         })
         .response
@@ -441,25 +510,27 @@ impl<V: Editable> egui::Widget for Input<V> {
 
 impl Editable for &mut Vec<ProcessFeature> {
     fn edit(self, ui: &mut egui::Ui) {
-        for v in ProcessFeature::iter() {
-            let selected = self.contains(&v);
-            let color = if selected {
-                Color32::WHITE
-            } else {
-                Color32::from_gray(128)
-            };
-            let resp = ui
-                .colored_label(color, v.to_string())
-                .on_hover_text(v.describe())
-                .interact(Sense::click());
-            if resp.clicked() {
-                if selected {
-                    self.retain(|item| *item != v);
+        ui.horizontal_wrapped(|ui| {
+            for v in ProcessFeature::iter() {
+                let selected = self.contains(&v);
+                let color = if selected {
+                    Color32::WHITE
                 } else {
-                    self.push(v);
+                    Color32::from_gray(FADED)
+                };
+                let resp = ui
+                    .colored_label(color, v.to_string())
+                    .on_hover_text(v.describe())
+                    .interact(Sense::click());
+                if resp.clicked() {
+                    if selected {
+                        self.retain(|item| *item != v);
+                    } else {
+                        self.push(v);
+                    }
                 }
             }
-        }
+        });
     }
 }
 
@@ -505,24 +576,26 @@ pub enum CostKind {
 impl Editable for (&mut Vec<Id>, &Collection<NPC>) {
     fn edit(self, ui: &mut egui::Ui) {
         let (ids, opts) = self;
-        for v in opts.iter() {
-            let selected = ids.contains(&v.id);
-            let color = if selected {
-                Color32::WHITE
-            } else {
-                Color32::from_gray(128)
-            };
-            let resp = ui
-                .colored_label(color, v.to_string())
-                .interact(Sense::click());
-            if resp.clicked() {
-                if selected {
-                    ids.retain(|item| *item != v.id);
+        ui.horizontal_wrapped(|ui| {
+            for v in opts.iter() {
+                let selected = ids.contains(&v.id);
+                let color = if selected {
+                    Color32::WHITE
                 } else {
-                    ids.push(v.id);
+                    Color32::from_gray(FADED)
+                };
+                let resp = ui
+                    .colored_label(color, v.to_string())
+                    .interact(Sense::click());
+                if resp.clicked() {
+                    if selected {
+                        ids.retain(|item| *item != v.id);
+                    } else {
+                        ids.push(v.id);
+                    }
                 }
             }
-        }
+        });
     }
 }
 
@@ -581,9 +654,14 @@ fn filter_list<'a, T: HasId>(
     let popup_id = ui.make_persistent_id(key);
 
     let resp = if let Some(current) = opts.try_get(id) {
-        ui.label(get_label(&current))
+        ui.label(
+            egui::RichText::new(get_label(&current))
+                .underline(),
+        )
     } else {
-        ui.label("Nothing selected")
+        ui.label(
+            egui::RichText::new("Nothing selected").underline(),
+        )
     };
 
     let resp = resp.interact(Sense::click());
@@ -595,6 +673,7 @@ fn filter_list<'a, T: HasId>(
         .id(popup_id)
         .open_memory(None)
         .align(egui::RectAlign::BOTTOM_START)
+        .align_alternatives(&[])
         .close_behavior(
             egui::PopupCloseBehavior::CloseOnClickOutside,
         )
@@ -607,23 +686,31 @@ fn filter_list<'a, T: HasId>(
         )
         .show(|ui| {
             ui.set_min_width(120.);
+            ui.set_max_height(200.);
 
             let key: egui::Id = popup_id.with("query");
             let mut query: String = ui.memory(|mem| {
                 mem.data.get_temp(key).unwrap_or_default()
             });
             let resp = ui.text_edit_singleline(&mut query);
+            resp.request_focus();
 
             let q = query.to_lowercase();
-            for item in opts.iter() {
-                let label = get_label(item);
-                if label.to_lowercase().contains(&q) {
-                    let resp = ui.label(label);
-                    if resp.interact(Sense::click()).clicked() {
-                        *id = *item.id();
+
+            egui::ScrollArea::vertical().show(ui, |ui| {
+                for item in opts.iter() {
+                    let label = get_label(item);
+                    if label.to_lowercase().contains(&q) {
+                        let resp = ui.label(label);
+                        if resp
+                            .interact(Sense::click())
+                            .clicked()
+                        {
+                            *id = *item.id();
+                        }
                     }
                 }
-            }
+            });
 
             if resp.changed() {
                 ui.memory_mut(|mem| {
@@ -639,7 +726,7 @@ fn enum_dropdown<E: Display + PartialEq + IntoEnumIterator>(
     id: &str,
     value: &mut E,
 ) -> egui::Response {
-    egui::ComboBox::from_label(id)
+    egui::ComboBox::new(id, "")
         .selected_text(value.to_string())
         .show_ui(ui, |ui| {
             for opt in E::iter() {
@@ -652,13 +739,32 @@ fn enum_dropdown<E: Display + PartialEq + IntoEnumIterator>(
 
 fn edit_list<T>(
     list: &mut Vec<T>,
+    name: &str,
+    help: Option<&str>,
     new: impl FnOnce(&mut egui::Ui) -> Option<T>,
     edit: impl Fn(&mut egui::Ui, &mut T),
 ) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
         ui.vertical(|ui| {
-            if let Some(item) = new(ui) {
-                list.push(item);
+            flex_justified(
+                ui,
+                name,
+                |ui| {
+                    ui.vertical(|ui| {
+                        ui.label(name);
+                    });
+                },
+                |ui| {
+                    ui.horizontal(|ui| {
+                        if let Some(item) = new(ui) {
+                            list.push(item);
+                        }
+                    });
+                },
+            );
+
+            if let Some(help) = help {
+                ui.add(parts::help(help));
             }
 
             enum ListAction {
@@ -669,28 +775,56 @@ fn edit_list<T>(
 
             let n = list.len();
             let mut action = None;
-            for (i, item) in list.iter_mut().enumerate() {
-                if ui
-                    .button("Remove")
-                    .on_hover_text("Double-click to delete")
-                    .double_clicked()
-                {
-                    action = Some(ListAction::Remove(i));
+            ui.push_id(name, |ui| {
+                if list.is_empty() {
+                    ui.colored_label(Color32::from_gray(128), "List is empty.");
                 }
 
-                if i > 0 {
-                    if ui.button("Move Up").clicked() {
-                        action = Some(ListAction::MoveUp(i));
-                    }
-                }
-                if i < n - 1 {
-                    if ui.button("Move Down").clicked() {
-                        action = Some(ListAction::MoveDown(i));
-                    }
-                }
+                for (i, item) in list.iter_mut().enumerate() {
+                    ui.push_id(i, |ui| {
+                        let resp = parts::frame().outer_margin(0).inner_margin(egui::Margin::symmetric(4, 3)).corner_radius(2).show(
+                            ui,
+                            |ui| {
+                                ui.set_width(ui.available_width());
+                                edit(ui, item);
+                            },
+                        ).response;
 
-                edit(ui, item);
-            }
+                        let pos = resp.rect.right_top();
+                        let rect = egui::Rect::from_min_max(
+                            pos + egui::vec2(-64., 6.),
+                            pos + egui::vec2(-8., 24.),
+                        );
+                        ui.place(rect, |ui: &mut egui::Ui| {
+                            ui.with_layout(
+                                egui::Layout::right_to_left(egui::Align::Center),
+                                |ui| {
+                                    ui.style_mut().spacing.item_spacing.x = 4.;
+                                    if ui
+                                        .button( "❌ ")
+                                            .on_hover_text("Double-click to delete")
+                                            .double_clicked()
+                                    {
+                                        action = Some(ListAction::Remove(i));
+                                    }
+
+                                    if i > 0 {
+                                        if ui.button(" ▲ ").clicked() {
+                                            action =
+                                                Some(ListAction::MoveUp(i));
+                                        }
+                                    }
+                                    if i < n - 1 {
+                                        if ui.button(" ▼ ").clicked() {
+                                            action =
+                                                Some(ListAction::MoveDown(i));
+                                        }
+                                    }
+                                }).response
+                        });
+                    });
+                }
+            });
 
             if let Some(action) = action {
                 match action {
@@ -712,14 +846,6 @@ fn edit_list<T>(
     }
 }
 
-// impl<T: Default> Editable for &mut Vec<T>
-// where
-//     for<'a> &'a mut T: Editable,
-// {
-//     fn edit(self, ui: &mut egui::Ui) {
-//     }
-// }
-
 impl Editable
     for (
         &mut Probability,
@@ -730,7 +856,7 @@ impl Editable
 {
     fn edit(self, ui: &mut egui::Ui) {
         let (prob, processes, projects, npcs) = self;
-        ui.add(edit(&mut prob.likelihood));
+        ui.add(edit(&mut prob.likelihood).label("Likelihood").help("The likelihood when all conditions are met.").inline());
         ui.add(edit((
             &mut prob.conditions,
             processes,
@@ -750,9 +876,10 @@ impl Editable
 {
     fn edit(self, ui: &mut egui::Ui) {
         let (list, processes, projects, npcs) = self;
-        ui.add(parts::help("Probabilities are checked in their defined order, and the first probability with all conditions satisfied is the one that is rolled."));
         ui.add(edit_list(
             list,
+            "Probabilities",
+            Some("Probabilities are checked in their defined order, and the first probability with all conditions satisfied is the one that is rolled."),
             |ui| {
                 if ui.button("Add").clicked() {
                     Some(Probability::default())
@@ -779,6 +906,8 @@ impl Editable
         let (list, processes, projects, npcs) = self;
         ui.add(edit_list(
             list,
+            "Conditions",
+            None,
             |ui| {
                 let mut kind: ConditionKind =
                     ui.memory(|mem| {
@@ -848,102 +977,160 @@ impl Editable
                 };
 
                 ui.add(parts::help("Compare against a global variable."));
-                ui.add(
-                    edit(var)
+
+                parts::three_columns(ui, |ui| {
+                    ui.add(
+                        edit(var)
                         .label("Variable")
-                        .help("The reference variable."),
-                );
-                ui.add(
-                    edit(comp)
+                        .help("The reference variable.").inline(),
+                    );
+                }, |ui| {
+                    ui.add(
+                        edit(comp)
                         .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
-                    edit(value)
+                        .help("The comparison operation.").inline(),
+                    );
+                }, |ui| {
+                    ui.add(
+                        edit(value)
                         .label("Value")
                         .help(help)
                         .inline(),
-                );
+                    );
+                });
             }
             Condition::LocalVariable(var, comp, value) => {
                 ui.add(parts::help("Compare against a local (regional) variable."));
-                ui.add(
-                    edit(var)
-                        .label("Variable")
-                        .help("The reference variable."),
-                );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
-                    edit(value)
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(var)
+                                .label("Variable")
+                                .help("The reference variable.")
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
+                        edit(value)
                         .label("Value")
                         .help("The value to compare against.")
                         .inline(),
+                    );
+                    },
                 );
             }
             Condition::PlayerVariable(var, comp, value) => {
                 ui.add(parts::help(
                     "Compare against a player variable.",
                 ));
-                ui.add(
-                    edit(var)
-                        .label("Variable")
-                        .help("The reference variable."),
-                );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(var)
+                                .label("Variable")
+                                .help("The reference variable.")
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Value")
                         .help("The value to compare against.")
                         .inline(),
+                );
+                    },
                 );
             }
             Condition::ProcessOutput(id, comp, value) => {
                 ui.add(parts::help(
                     "Compare against the output of a process.",
                 ));
-                ui.add(
+
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, processes))
                         .label("Process")
                         .help(
                             "Which process to compare against.",
-                        ),
+                        )
+                        .inline(),
                 );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(edit(value).label("Value").help("The output value to compare against.").inline());
+                    },
                 );
-                ui.add(edit(value).label("Value").help("The output value to compare against.").inline());
             }
             Condition::ProcessMixShare(id, comp, value) => {
                 ui.add(parts::help("Compare against the mix share (percentage) of a process."));
-                ui.add(
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, processes))
                         .label("Process")
                         .help(
                             "Which process to compare against.",
-                        ),
+                        )
+                        .inline(),
                 );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     share(value)
                         .label("Mix Share")
                         .help(
                             "The mix share to compare against.",
                         )
                         .inline(),
+                );
+                    },
                 );
             }
             Condition::ProcessMixShareFeature(
@@ -952,21 +1139,33 @@ impl Editable
                 value,
             ) => {
                 ui.add(parts::help("Compare against the total mix share (percentage) of processes with a particular feature."));
-                ui.add(edit(feat).label("Process").help(
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(edit(feat).label("Process").help(
                     "Which process feature to compare against.",
-                ));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                ).inline());
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     share(value)
                         .label("Mix Share")
                         .help(
                             "The mix share to compare against.",
                         )
                         .inline(),
+                );
+                    },
                 );
             }
             Condition::ResourcePressure(
@@ -975,19 +1174,31 @@ impl Editable
                 value,
             ) => {
                 ui.add(parts::help("Compare against the pressure on a particular resource. Pressure is represented as a percentage, where 0% means there is no pressure on the resource (demand for it is 0) and 100% means the demand for the resource equals its total supply."));
-                ui.add(edit(resource).label("Resource").help(
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(edit(resource).label("Resource").help(
                     "Which resource to compare against.",
-                ));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                ).inline());
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     share(value)
                         .label("Pressure")
                         .help("The value to compare against.")
                         .inline(),
+                );
+                    },
                 );
             }
             Condition::ResourceDemandGap(
@@ -996,70 +1207,123 @@ impl Editable
                 value,
             ) => {
                 ui.add(parts::help("Compare against the gap between the demand and the supply of a particular resource, in the resource's units."));
-                ui.add(edit(resource).label("Resource").help(
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(edit(resource).label("Resource").help(
                     "Which resource to compare against.",
-                ));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                ).inline());
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Gap Size")
                         .help("The value to compare against.")
                         .inline(),
+                );
+                    },
                 );
             }
             Condition::OutputDemandGap(output, comp, value) => {
                 ui.add(parts::help("Compare against the gap between the demand and the supply of a particular output, in the output's units."));
-                ui.add(
-                    edit(output).label("Output").help(
-                        "Which output to compare against.",
-                    ),
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit(output)
+                        .label("Output")
+                        .help(
+                            "Which output to compare against.",
+                        )
+                        .inline(),
                 );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Gap Size")
                         .help("The value to compare against.")
                         .inline(),
                 );
+                    },
+                );
             }
             Condition::Demand(output, comp, value) => {
                 ui.add(parts::help("Compare against the demand for a particular output, in the output's units."));
-                ui.add(
-                    edit(output).label("Output").help(
-                        "Which output to compare against.",
-                    ),
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit(output)
+                        .label("Output")
+                        .help(
+                            "Which output to compare against.",
+                        )
+                        .inline(),
                 );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Demand Amount")
                         .help("The value to compare against.")
                         .inline(),
                 );
+                    },
+                );
             }
             Condition::ProjectStatus(id, status) => {
                 ui.add(parts::help("Check if the status of a particular project matches the specified value."));
-                ui.add(
-                    edit((id, projects)).label("Project").help(
-                        "Which project to compare against.",
-                    ),
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit((id, projects))
+                        .label("Project")
+                        .help(
+                            "Which project to compare against.",
+                        )
+                        .inline(),
                 );
-                ui.add(
-                    edit(status)
-                        .label("Status")
-                        .help("The expected status."),
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(status)
+                                .label("Status")
+                                .help("The expected status.")
+                                .inline(),
+                        );
+                    },
                 );
             }
             Condition::ActiveProjectUpgrades(
@@ -1068,33 +1332,60 @@ impl Editable
                 value,
             ) => {
                 ui.add(parts::help("Compare against the number of active upgrades of a particular project."));
-                ui.add(
-                    edit((id, projects)).label("Project").help(
-                        "Which project to compare against.",
-                    ),
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit((id, projects))
+                        .label("Project")
+                        .help(
+                            "Which project to compare against.",
+                        )
+                        .inline(),
                 );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Number of Upgrades")
-                        .help("The value to compare against."),
+                        .help("The value to compare against.")
+                        .inline(),
+                );
+                    },
                 );
             }
             Condition::RunsPlayed(comp, value) => {
                 ui.add(parts::help("Compare against the number of times the player has played the game."));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Number of Runs")
-                        .help("The value to compare against."),
+                        .help("The value to compare against.")
+                        .inline(),
+                );
+                    },
                 );
             }
             Condition::RegionFlag(flag) => {
@@ -1102,20 +1393,29 @@ impl Editable
                 ui.add(
                     edit(flag)
                         .label("Flag")
-                        .help("Which flag to compare against."),
+                        .help("Which flag to compare against.")
+                        .inline(),
                 );
             }
             Condition::NPCRelationship(id, relation) => {
                 ui.add(parts::help("Check if the relationship status with a particular NPC matches the specified value."));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, npcs))
                         .label("NPC")
-                        .help("Which NPC to compare against."),
+                        .help("Which NPC to compare against.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     edit(relation).label("Relationship").help(
                         "The relationship to compare against.",
-                    ),
+                    ).inline(),
+                );
+                    },
                 );
             }
             Condition::FeedstockYears(
@@ -1124,21 +1424,33 @@ impl Editable
                 value,
             ) => {
                 ui.add(parts::help("Compare against the estimated number of years before a particular feedstock is depleted."));
-                ui.add(
+                parts::three_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit(feedstock).label("Feedstock").help(
                         "Which feedstock to compare against.",
-                    ),
+                    ).inline(),
                 );
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Years")
                         .help("The value to compare against.")
                         .inline(),
+                );
+                    },
                 );
             }
             Condition::HasFlag(flag) => {
@@ -1148,7 +1460,8 @@ impl Editable
                 ui.add(
                     edit(flag)
                         .label("Flag")
-                        .help("Which flag to compare against."),
+                        .help("Which flag to compare against.")
+                        .inline(),
                 );
             }
             Condition::WithoutFlag(flag) => {
@@ -1158,46 +1471,79 @@ impl Editable
                 ui.add(
                     edit(flag)
                         .label("Flag")
-                        .help("Which flag to compare against."),
+                        .help("Which flag to compare against.")
+                        .inline(),
                 );
             }
             Condition::HeavyProjects(comp, value) => {
                 ui.add(parts::help(r#"Compare against the number of active "Heavy" projects. This includes projects in the following groups: "Space", "Nuclear", "Geoengineering", "Electrification"."#));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                         .label("Number of Projects")
-                        .help("The value to compare against."),
+                        .help("The value to compare against.")
+                        .inline(),
+                );
+                    },
                 );
             }
             Condition::ProtectLand(comp, value) => {
                 ui.add(parts::help("Compare against the percentage of land under protection."));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     share(value)
                         .label("Land Under Protection")
-                        .help("The value to compare against."),
+                        .help("The value to compare against.")
+                        .inline(),
+                );
+                    },
                 );
             }
             Condition::WaterStress(comp, value) => {
                 ui.add(parts::help("Compare against the percentage of water demanded over water available."));
-                ui.add(
-                    edit(comp)
-                        .label("Comparator")
-                        .help("The comparison operation."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(comp)
+                                .label("Comparator")
+                                .help(
+                                    "The comparison operation.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     share(value)
                         .label("Percent of available water in use.")
-                        .help("The value to compare against."),
+                        .help("The value to compare against.").inline(),
+                );
+                    },
                 );
             }
         }
@@ -1225,6 +1571,8 @@ impl Editable
         ) = self;
         ui.add(edit_list(
             list,
+            "Effects",
+            None,
             |ui| {
                 let mut kind: EffectKind = ui.memory(|mem| {
                     mem.data
@@ -1293,157 +1641,265 @@ impl Editable
             npcs,
         ) = self;
         let kind: EffectKind = effect.clone().into();
-        ui.label(kind.to_string());
+        ui.label(
+            egui::RichText::new(kind.to_string()).underline(),
+        );
         match effect {
-            #[rustfmt::skip]
-                    Effect::WorldVariable(var, value) => {
-                        let help = match var {
-                            WorldVariable::Emissions => "The amount to change annual emissions by, in Gt CO2eq.",
-                            WorldVariable::Temperature => "The change in global temperatures, in C.",
-                            WorldVariable::SeaLevelRise => "The amount to change the sea level rise by, in meters.",
-                            WorldVariable::SeaLevelRiseRate => "The annual change in sea level rise, in meters/year.",
-                            WorldVariable::Precipitation => "The amount to change the precipitation by, in cm/year.",
-                            WorldVariable::PopulationGrowth => "The change in population growth.",
-                            _ => "The amount to change the variable by.",
-                        };
-
+            Effect::WorldVariable(var, value) => {
+                let help = match var {
+                    WorldVariable::Emissions => {
+                        "The amount to change annual emissions by, in Gt CO2eq."
+                    }
+                    WorldVariable::Temperature => {
+                        "The change in global temperatures, in C."
+                    }
+                    WorldVariable::SeaLevelRise => {
+                        "The amount to change the sea level rise by, in meters."
+                    }
+                    WorldVariable::SeaLevelRiseRate => {
+                        "The annual change in sea level rise, in meters/year."
+                    }
+                    WorldVariable::Precipitation => {
+                        "The amount to change the precipitation by, in cm/year."
+                    }
+                    WorldVariable::PopulationGrowth => {
+                        "The change in population growth."
+                    }
+                    _ => {
+                        "The amount to change the variable by."
+                    }
+                };
+                parts::two_columns(
+                    ui,
+                    |ui| {
                         ui.add(
                             edit(var)
                                 .label("Variable")
-                                .help("What variable is changed."),
+                                .help(
+                                    "What variable is changed.",
+                                )
+                                .inline(),
                         );
+                    },
+                    |ui| {
                         ui.add(
                             edit(value)
                                 .label("Value")
                                 .help(help)
                                 .inline(),
                         );
-                    }
-            Effect::PlayerVariable(var, value) => {
-                ui.add(
-                    edit(var)
-                        .label("Variable")
-                        .help("What variable is changed."),
+                    },
                 );
-                ui.add(
-                            edit(value)
-                                .label("Value")
-                                .help("The amount to change the variable by.")
+            }
+            Effect::PlayerVariable(var, value) => {
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(var)
+                                .label("Variable")
+                                .help(
+                                    "What variable is changed.",
+                                )
                                 .inline(),
                         );
+                    },
+                    |ui| {
+                        ui.add(
+                        edit(value)
+                        .label("Value")
+                        .help("The amount to change the variable by.")
+                        .inline(),
+                    );
+                    },
+                );
             }
             Effect::RegionHabitability(lat, value) => {
                 ui.add(parts::help("Modify the habitability of all regions at the given latitude."));
-                ui.add(
-                    edit(lat)
-                        .label("Latitude")
-                        .help("What latitude is affected."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(lat)
+                            .label("Latitude")
+                            .help("What latitude is affected.")
+                            .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                             edit(value)
                                 .label("Value")
                                 .help("The amount to change the habitability by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::Resource(resource, value) => {
                 ui.add(parts::help("Modify the availability of the specified resource by an absolute amount. Note that this won't do anything for fuel and electricity as those are dynamically calculated."));
-                ui.add(
-                    edit(resource)
-                        .label("Resource")
-                        .help("What resource is affected."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(resource)
+                            .label("Resource")
+                            .help("What resource is affected.")
+                            .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                             edit(value)
                                 .label("Value")
                                 .help("The amount to change the resource reserves by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::Demand(output, value) => {
                 ui.add(parts::help("Modify all demand for the specified output by a percentage."));
-                ui.add(
-                    edit(output)
-                        .label("Output")
-                        .help("What output is affected."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(output)
+                                .label("Output")
+                                .help(
+                                    "What output is affected.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                             percent(value)
                                 .label("Percent Change")
                                 .help("The percent to modify this output's demand by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::Output(output, value) => {
                 ui.add(parts::help("Modify all production for the specified output by a percentage"));
-                ui.add(
-                    edit(output)
-                        .label("Output")
-                        .help("What output is affected."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(output)
+                                .label("Output")
+                                .help(
+                                    "What output is affected.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                             percent(value)
                                 .label("Percent Change")
                                 .help("The percent to modify this output's amount by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::DemandAmount(output, value) => {
                 ui.add(parts::help("Modify all demand for the specified output by an absolute amount."));
-                ui.add(
-                    edit(output)
-                        .label("Output")
-                        .help("What output is affected."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(output)
+                                .label("Output")
+                                .help(
+                                    "What output is affected.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                             edit(value)
                                 .label("Amount")
                                 .help("The amount to modify this output's demand by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::OutputForFeature(feat, value) => {
                 ui.add(parts::help("Modify the production efficiency of processes with the specified feature by a percentage. For example, a value of 10% means 10% more output is produced for the same resources/byproduct as the baseline."));
-                ui.add(
-                    edit(feat).label("Feature").help(
-                        "What process feature is affected.",
-                    ),
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit(feat)
+                        .label("Feature")
+                        .help(
+                            "What process feature is affected.",
+                        )
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                             percent(value)
                                 .label("Percent Change")
                                 .help("The percent to modify the output by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::OutputForProcess(id, value) => {
                 ui.add(parts::help(
 "Modify the production efficiency of a single process by a percentage. For example, a value of 10% means 10% more output is produced for the same resources/byproduct as the baseline."
                 ));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, processes))
                         .label("Process")
-                        .help("Which process is affected."),
+                        .help("Which process is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                             percent(value)
                                 .label("Percent Change")
                                 .help("The percent to modify this process's output by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::CO2ForFeature(feat, value) => {
                 ui.add(parts::help("Modify CO2 emitted for processes with the specified feature by a percentage."));
-                ui.add(
-                    edit(feat).label("Feature").help(
-                        "What process feature is affected.",
-                    ),
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit(feat)
+                        .label("Feature")
+                        .help(
+                            "What process feature is affected.",
+                        )
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify this process's CO2 emissions by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::BiodiversityPressureForFeature(
@@ -1451,46 +1907,72 @@ impl Editable
                 value,
             ) => {
                 ui.add(parts::help("Modify biodiversity pressure for processes with the specified feature by a percentage."));
-                ui.add(
-                    edit(feat).label("Feature").help(
-                        "What process feature is affected.",
-                    ),
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                    edit(feat)
+                        .label("Feature")
+                        .help(
+                            "What process feature is affected.",
+                        )
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify this process's biodiversity pressure by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ProcessLimit(id, value) => {
                 ui.add(parts::help(
 "Modify the limit of the specified process by an absolute amount. If no process limit is defined for the process this will do nothing."
                 ));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, processes))
                         .label("Process")
-                        .help("Which process is affected."),
+                        .help("Which process is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                             edit(value)
                                 .label("Amount")
                                 .help("The amount to modify this process's limit by.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::Feedstock(feedstock, value) => {
                 ui.add(parts::help("Modify the specified feedstock's reserves by a percentage"));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit(feedstock)
                         .label("Feedstock")
-                        .help("What feedstock is affected."),
+                        .help("What feedstock is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify this feedstock's amount by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::AddEvent(id) => {
@@ -1500,24 +1982,33 @@ impl Editable
                 ui.add(
                     edit((id, events))
                         .label("Event")
-                        .help("Which event is unlocked."),
+                        .help("Which event is unlocked.")
+                        .inline(),
                 );
             }
             Effect::TriggerEvent(id, years) => {
                 ui.add(parts::help(
 "Trigger an event after a specified number of years. Note: This effect is always hidden (not displayed to the user)."
                 ));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, events))
                         .label("Event")
-                        .help("Which event will be triggered."),
+                        .help("Which event will be triggered.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                             edit(years)
                                 .label("Years")
                                 .help("Years after which the event will be triggered.")
                                 .inline(),
                         );
+                    },
+                );
             }
             Effect::LocksProject(id) => {
                 ui.add(parts::help(
@@ -1526,7 +2017,8 @@ impl Editable
                 ui.add(
                     edit((id, projects))
                         .label("Project")
-                        .help("Which project is locked."),
+                        .help("Which project is locked.")
+                        .inline(),
                 );
             }
             Effect::UnlocksProject(id) => {
@@ -1534,7 +2026,8 @@ impl Editable
                 ui.add(
                     edit((id, projects))
                         .label("Project")
-                        .help("Which project is unlocked."),
+                        .help("Which project is unlocked.")
+                        .inline(),
                 );
             }
             Effect::UnlocksProcess(id) => {
@@ -1542,7 +2035,8 @@ impl Editable
                 ui.add(
                     edit((id, processes))
                         .label("Process")
-                        .help("Which process is unlocked."),
+                        .help("Which process is unlocked.")
+                        .inline(),
                 );
             }
             Effect::UnlocksNPC(id) => {
@@ -1550,7 +2044,8 @@ impl Editable
                 ui.add(
                     edit((id, npcs))
                         .label("NPC")
-                        .help("Which NPC is unlocked."),
+                        .help("Which NPC is unlocked.")
+                        .inline(),
                 );
             }
             Effect::ProjectRequest(id, active, bounty) => {
@@ -1560,14 +2055,23 @@ impl Editable
                 ui.add(
                     edit((id, projects))
                         .label("Project")
-                        .help("Which project is requested."),
+                        .help("Which project is requested.")
+                        .inline(),
                 );
-                ui.add(toggle(active, "Active", "Inactive").label("Active").help("If the request is for this project to be implemented (active) or stopped (inactive)."));
-                ui.add(
+
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(toggle(active, "Active", "Inactive").label("Active").help("If the request is for this project to be implemented (active) or stopped (inactive).").inline());
+                    },
+                    |ui| {
+                        ui.add(
                     edit(bounty)
                     .label("Reward")
                     .help("How much political capital is awarded for fulfilling the request.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ProcessRequest(id, active, bounty) => {
@@ -1577,14 +2081,22 @@ impl Editable
                 ui.add(
                     edit((id, processes))
                         .label("Process")
-                        .help("Which process is requested."),
+                        .help("Which process is requested.")
+                        .inline(),
                 );
-                ui.add(toggle(active, "Active", "Inactive").label("Active").help("If the request is for this process to be active (mix share > 0) or stopped (mix share == 0)."));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(toggle(active, "Active", "Inactive").label("Active").help("If the request is for this process to be active (mix share > 0) or stopped (mix share == 0).").inline());
+                    },
+                    |ui| {
+                        ui.add(
                     edit(bounty)
                     .label("Reward")
                     .help("How much political capital is awarded for fulfilling the request.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::Migration => {
@@ -1605,7 +2117,8 @@ r#"This effect only triggers when it is *unapplied*, in which case it undoes the
                 ui.add(
                     edit(flag)
                         .label("Flag")
-                        .help("Which flag to add."),
+                        .help("Which flag to add.")
+                        .inline(),
                 );
             }
             Effect::AddFlag(flag) => {
@@ -1613,21 +2126,29 @@ r#"This effect only triggers when it is *unapplied*, in which case it undoes the
                 ui.add(
                     edit(flag)
                         .label("Flag")
-                        .help("Which flag to add."),
+                        .help("Which flag to add.")
+                        .inline(),
                 );
             }
             Effect::NPCRelationship(id, change) => {
                 ui.add(parts::help(
                     "Change the relationship with an NPC.",
                 ));
-                ui.add(edit((id, npcs)).label("NPC").help(
-                    "Which NPC's relationship is affected.",
-                ));
-                ui.add(
-                    edit(change)
-                    .label("Value")
-                    .help("The amount to change the relationship by.")
-                    .inline(),
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(edit((id, npcs)).label("NPC").help(
+                                "Which NPC's relationship is affected.",
+                        ).inline());
+                    },
+                    |ui| {
+                        ui.add(
+                            edit(change)
+                            .label("Value")
+                            .help("The amount to change the relationship by.")
+                            .inline(),
+                        );
+                    },
                 );
             }
             Effect::ModifyProcessByproducts(
@@ -1641,18 +2162,27 @@ r#"This effect only triggers when it is *unapplied*, in which case it undoes the
                 ui.add(
                     edit((id, processes))
                         .label("Process")
-                        .help("Which process is affected."),
+                        .help("Which process is affected.")
+                        .inline(),
                 );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit(byproduct)
                         .label("Byproduct")
-                        .help("Which byproduct is affected."),
+                        .help("Which byproduct is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify the byproduct by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ModifyIndustryByproducts(
@@ -1667,18 +2197,27 @@ dustry but are rather because of emissions from its energy use. This modifier do
                 ui.add(
                     edit((id, industries))
                         .label("Industry")
-                        .help("Which industry is affected."),
+                        .help("Which industry is affected.")
+                        .inline(),
                 );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit(byproduct)
                         .label("Byproduct")
-                        .help("Which byproduct is affected."),
+                        .help("Which byproduct is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify the byproduct by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ModifyIndustryResources(
@@ -1692,18 +2231,27 @@ dustry but are rather because of emissions from its energy use. This modifier do
                 ui.add(
                     edit((id, industries))
                         .label("Industry")
-                        .help("Which industry is affected."),
+                        .help("Which industry is affected.")
+                        .inline(),
                 );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit(resource)
                         .label("Resource")
-                        .help("Which resource is affected."),
+                        .help("Which resource is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify the resource by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ModifyIndustryResourcesAmount(
@@ -1717,66 +2265,101 @@ dustry but are rather because of emissions from its energy use. This modifier do
                 ui.add(
                     edit((id, industries))
                         .label("Industry")
-                        .help("Which industry is affected."),
+                        .help("Which industry is affected.")
+                        .inline(),
                 );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit(resource)
                         .label("Resource")
-                        .help("Which resource is affected."),
+                        .help("Which resource is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     edit(value)
                     .label("Value")
                     .help("The amount to change the resource use by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ModifyEventProbability(id, value) => {
                 ui.add(parts::help(
 "Modify the probability of an event occurring."
                 ));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, events))
                         .label("Event")
-                        .help("Which event will be affected."),
+                        .help("Which event will be affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to add to the event's probability.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ModifyIndustryDemand(id, value) => {
                 ui.add(parts::help(
 "Modify the demand for a single industry by a percentage."
                 ));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, industries))
                         .label("Industry")
-                        .help("Which industry is affected."),
+                        .help("Which industry is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(value)
                     .label("Percent Change")
                     .help("The percent to modify the demand by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::DemandOutlookChange(output, mult) => {
                 ui.add(parts::help("Apply a change in contentedness to every region based on its level of demand for the specified output, multiplied by the specified factor. Demand lev
 el ranges from [1, 5], where 1 is the lowest demand level and 5 is the highest. For example, with `Output::Fuel` and a factor of 0.5 and a region with demand level 2, that means `2 * 0.5 = 1
 ` will be added to that region's contentedness. Note that this value is rounded, so if it were `3 * 0.5 = 1.5` this would be rounded to `2.0`."));
-                ui.add(
-                    edit(output)
-                        .label("Output")
-                        .help("What output is affected."),
-                );
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
+                            edit(output)
+                                .label("Output")
+                                .help(
+                                    "What output is affected.",
+                                )
+                                .inline(),
+                        );
+                    },
+                    |ui| {
+                        ui.add(
                     edit(mult)
                     .label("Factor")
                     .help("Factor to scale the demand level by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::IncomeOutlookChange(mult) => {
@@ -1792,16 +2375,24 @@ el ranges from [1, 5], where 1 is the lowest demand level and 5 is the highest. 
             }
             Effect::ProjectCostModifier(id, change) => {
                 ui.add(parts::help("Modifies the cost a project by a percentage."));
-                ui.add(
+                parts::two_columns(
+                    ui,
+                    |ui| {
+                        ui.add(
                     edit((id, projects))
                         .label("Project")
-                        .help("Which project is affected."),
+                        .help("Which project is affected.")
+                        .inline(),
                 );
-                ui.add(
+                    },
+                    |ui| {
+                        ui.add(
                     percent(change)
                     .label("Percent Change")
                     .help("The percent to modify the project's cost by.")
                     .inline(),
+                );
+                    },
                 );
             }
             Effect::ProtectLand(amount) => {
@@ -1850,7 +2441,7 @@ impl Editable
             events,
             npcs,
         ) = self;
-        ui.add(edit(&mut outcome.probability.likelihood).label("Likelihood").help("The likelihood when all conditions are met."));
+        ui.add(edit(&mut outcome.probability.likelihood).label("Likelihood").help("The likelihood when all conditions are met.").inline());
         ui.add(edit((
             &mut outcome.probability.conditions,
             processes,
@@ -1887,9 +2478,10 @@ impl Editable
             events,
             npcs,
         ) = self;
-        ui.add(parts::help("Outcomes are checked in their defined order, so you should order them from least likely to most likely. For example, if you have a guaranteed outcome first, then that's the one that will always trigger. You should move it to the end so other outcomes can be checked before it."));
         ui.add(edit_list(
             list,
+            "Outcomes",
+            Some("Outcomes are checked in their defined order, so you should order them from least likely to most likely. For example, if you have a guaranteed outcome first, then that's the one that will always trigger. You should move it to the end so other outcomes can be checked before it."),
             |ui| {
                 if ui.button("Add").clicked() {
                     Some(Outcome::default())
@@ -1963,6 +2555,8 @@ impl Editable
         ) = self;
         ui.add(edit_list(
             list,
+            "Upgrades",
+            None,
             |ui| {
                 if ui.button("Add").clicked() {
                     Some(Upgrade::default())

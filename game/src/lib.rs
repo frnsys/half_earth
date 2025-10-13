@@ -81,7 +81,9 @@ impl App {
         GLOW_CONTEXT.get_or_init(|| cc.gl.clone().unwrap());
 
         Self {
-            view: if DEBUG.view.is_some() {
+            view: if DEBUG.open_editor {
+                View::Editor(WorldEditor::new())
+            } else if DEBUG.view.is_some() {
                 prepare_game(&mut state, &prefs);
                 View::Game(GameView::new(&mut state))
             } else {
@@ -201,11 +203,6 @@ impl eframe::App for App {
                                         );
                                     }
                                     StartAction::OpenEditor => {
-                                        set_full_bg_image(
-                                            ui,
-                                            image!("backgrounds/editor.jpg"),
-                                            egui::vec2(1200., 897.),
-                                        );
                                         self.view = View::Editor(WorldEditor::new());
                                     }
                                 }
@@ -243,6 +240,11 @@ impl eframe::App for App {
                             }
                         }
                         View::Editor(editor) => {
+                            set_full_bg_image(
+                                ui,
+                                image!("backgrounds/editor.jpg"),
+                                egui::vec2(1200., 897.),
+                            );
                             ui.add(editor);
                         }
                     }

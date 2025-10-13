@@ -14,3 +14,4 @@ serde_json.workspace = true
 fs-err = "3.1.3"
 egui_commonmark = { version = "=0.21", features = ["macros"] }
 egui_extras = { version = "0.32.0", default-features = false }
+egui_taffy = { workspace = true }

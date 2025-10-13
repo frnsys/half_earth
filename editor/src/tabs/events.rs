@@ -30,22 +30,44 @@ fn event_view(
 ) -> egui::Response {
     egui::Frame::NONE
         .show(ui, |ui| {
-            ui.add(inputs::edit(&mut event.name));
-            ui.add(
-                inputs::lock(&mut event.locked)
+            ui.add(inputs::heading(&mut event.name));
+
+            parts::space(ui);
+
+            parts::two_columns(
+                ui,
+                |ui| {
+                    ui.add(inputs::edit(
+                        &mut event.flavor.image,
+                    ));
+
+                    parts::space(ui);
+
+                    ui.add(
+                    inputs::lock(&mut event.locked)
                     .label("Locked")
-                    .tooltip(
+                    .help(
                         "If this event is locked at the start.",
-                    ),
-            );
-            ui.add(inputs::edit(&mut event.flavor.image));
-            ui.add(
-                inputs::edit(&mut event.flavor.arc)
-                    .help("Optional story arc name"),
-            );
-            ui.add(inputs::edit(&mut event.phase).help(
-                "What phase/screen the event can occur on.",
-            ));
+                    )
+                    .inline(),
+                    );
+                },
+                |ui| {
+                    ui.add(
+                        inputs::edit(&mut event.flavor.arc)
+                        .label("Arc")
+                        .help("Optional story arc name").inline(),
+                    );
+
+                    parts::space(ui);
+
+                    ui.add(inputs::edit(&mut event.phase).label("Phase").help(
+                            "What phase/screen the event can occur on.",
+                    ).inline());
+                },
+                );
+
+            parts::space(ui);
 
             ui.add(inputs::edit((
                 &mut event.effects,
@@ -56,12 +78,16 @@ fn event_view(
                 npcs,
             )));
 
+            parts::space(ui);
+
             ui.add(inputs::edit((
                 &mut event.probabilities,
                 processes,
                 projects,
                 npcs,
             )));
+
+            parts::space(ui);
 
             ui.add(
                 inputs::textarea(&mut event.notes)

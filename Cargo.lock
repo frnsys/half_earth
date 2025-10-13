@@ -1784,6 +1784,7 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 [[package]]
 name = "hector"
 version = "0.1.1"
+source = "git+https://github.com/frnsys/hector-rs.git?rev=93b424a62d6e63cacabb41c45677b4d6f3d153be#93b424a62d6e63cacabb41c45677b4d6f3d153be"
 dependencies = [
  "cxx",
  "cxx-build",
@@ -1823,6 +1824,7 @@ dependencies = [
  "egui-notify",
  "egui_commonmark",
  "egui_extras",
+ "egui_taffy",
  "fs-err",
  "hes-engine",
  "hes-images",
@@ -1844,7 +1846,6 @@ dependencies = [
  "serde_bytes",
  "serde_json",
  "strum 0.25.0",
- "tracing",
  "uuid",
 ]
 

@@ -74,62 +74,93 @@ fn process_view(
     process: &mut Process,
     npcs: &Collection<NPC>,
 ) -> egui::Response {
-    egui::Frame::NONE.show(ui, |ui| {
-        ui.add(inputs::edit(&mut process.name));
-        ui.add(inputs::lock(&mut process.locked).label("Locked").tooltip("If this process is locked at the start."));
+    ui.vertical(|ui| {
+        ui.add(inputs::heading(&mut process.name));
 
-        ui.add(inputs::edit(&mut process.flavor.image));
-        ui.add(inputs::edit(&mut process.mix_share).label("Mix Share").help("What percent of total output production this process represents at the start. Note that 1 mix share = 5% of total output.").inline());
-        ui.add(inputs::edit(&mut process.limit).label("Output Limit").help("(Optional) This process can never produce more than this much output, effectively setting a limit on its mix share. This may be because, for example, of a finite availability, e.g. with geothermal."));
+        parts::space(ui);
 
+        parts::two_columns(ui, |ui| {
+            ui.add(inputs::edit(&mut process.flavor.image));
+
+            parts::space(ui);
+
+            ui.add(inputs::lock(&mut process.locked).label("Locked").help("If this process is locked at the start.").inline());
+        }, |ui| {
             ui.add(
                 inputs::edit(&mut process.output)
                 .label("Output Type")
-                .help("What this process produces."),
+                .help("What this process produces.").inline(),
             );
+
+            parts::space(ui);
 
             ui.add(
                 inputs::edit(&mut process.feedstock.0)
                 .label("Feedstock Type")
-                .help(r#"What this feedstock this process requires. If no particular feedstock, just set to "Other". Note that "Soil" is ignored."#),
+                .help(r#"What this feedstock this process requires. If no particular feedstock, just set to "Other". Note that "Soil" is ignored."#).inline(),
             );
 
             if process.feedstock.0 != Feedstock::Other {
                 ui.add(inputs::nonneg_float(&mut process.feedstock.1).label("Feedstock").help(
-format!("Feedstock required per unit output, in {} of {}.", units(&process.feedstock.0), process.feedstock.0.to_string())
-                        ));
+                        format!("Feedstock required per unit output, in {} of {}.", units(&process.feedstock.0), process.feedstock.0.to_string())
+                ));
             }
 
+            parts::space(ui);
+
             ui.add(inputs::edit(&mut process.byproducts).label("Byproducts").help("Byproducts produced, per unit output."));
+
+            parts::space(ui);
+
             ui.add(inputs::edit(&mut process.resources).label("Resources").help("Resources used, per unit output."));
+        });
 
-            ui.add(
-                inputs::textarea(&mut process.flavor.description)
-                .label("Description")
-                .help("Describe the process."),
-            );
+        parts::space(ui);
 
-            ui.add(
-                inputs::edit(&mut process.features)
-                .label("Features")
-                .help("Special properties associated with this process."),
-            );
+        parts::two_columns(ui, |ui| {
+            ui.add(inputs::edit(&mut process.mix_share).label("Mix Share").help("What percent of total output production this process represents at the start. Note that 1 mix share = 5% of total output.").inline());
+        }, |ui| {
+            ui.add(inputs::edit(&mut process.limit).label("Output Limit").help("(Optional) This process can never produce more than this much output, effectively setting a limit on its mix share. This may be because, for example, of a finite availability, e.g. with geothermal.").inline());
+        });
 
+        parts::space(ui);
+
+        ui.add(
+            inputs::edit(&mut process.features)
+            .label("Features")
+            .help("Special properties associated with this process."),
+        );
+
+        parts::space(ui);
+
+        parts::two_columns(ui, |ui| {
             ui.add(
                 inputs::edit((&mut process.supporters, npcs))
                 .label("Supporters")
                 .help("NPCs that support this process."),
             );
+        }, |ui| {
             ui.add(
                 inputs::edit((&mut process.opposers, npcs))
                 .label("Opposers")
                 .help("NPCs that oppose this process."),
             );
+        });
 
-            ui.add(
-                inputs::textarea(&mut process.notes)
-                .label("Notes")
-                .help("Optional notes"),
-            );
+        parts::space(ui);
+
+        ui.add(
+            inputs::textarea(&mut process.flavor.description)
+            .label("Description")
+            .help("Describe the process."),
+        );
+
+        parts::space(ui);
+
+        ui.add(
+            inputs::textarea(&mut process.notes)
+            .label("Notes")
+            .help("Optional notes"),
+        );
     }).response
 }
