@@ -16,13 +16,10 @@ jobs:
         include:
         - build: x86_64-linux
           os: ubuntu-latest
-          target: x86_64-unknown-linux-gnu
         - build: x86_64-macos
           os: macos-latest
-          target: x86_64-apple-darwin
         - build: x86_64-windows
           os: windows-latest
-          target: x86_64-pc-windows-msvc
 
     steps:
       - name: Checkout sources
@@ -38,22 +35,29 @@ jobs:
         with:
           cache-on-failure: true
 
+      - name: Install native dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libasound2-dev
+
       - name: Build
-        run: cargo build --release --locked --target ${{ matrix.target }}
+        run: cargo build --release --locked
         working-directory: ./game
 
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'x86_64-linux' || matrix.build == 'x86_64-macos'
-        run: strip "target/${{ matrix.target }}/release/$BIN_NAME"
+        run: strip "target/release/$BIN_NAME"
 
       - name: Build archive
         shell: bash
         run: |
           mkdir dist
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp "target/${{ matrix.target }}/release/$BIN_NAME.exe" "dist/"
+            cp "target/release/$BIN_NAME.exe" "dist/"
           else
-            cp "target/${{ matrix.target }}/release/$BIN_NAME" "dist/"
+            cp "target/release/$BIN_NAME" "dist/"
           fi
 
       - uses: actions/upload-artifact@v4
