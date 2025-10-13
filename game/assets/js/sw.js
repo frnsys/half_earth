@@ -2,8 +2,8 @@ var cacheName = 'egui-template-pwa';
 var filesToCache = [
   './',
   './index.html',
-  './shimmer.js',
-  './shimmer_bg.wasm',
+  './hes-game.js',
+  './hes-game_bg.wasm',
 ];
 
 /* Start the service worker and cache all of the app's content */
