@@ -23,12 +23,8 @@ git submodule init
 git submodule update
 ```
 
-Rust Nightly is required to compile (last tested with `1.92.0-nightly (a454fccb0 2025-09-15)`).
+Building was last tested with Rust stable `1.89.0 (29483883e 2025-08-04)`.
 
-```bash
-# WASM target is required for frontend code.
-rustup target add wasm32-unknown-unknown
-```
 
 ## Debugging
 
