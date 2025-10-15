@@ -42,12 +42,12 @@ impl Start {
     ) -> Option<StartAction> {
         let mut start_action = None;
 
-        egui::Area::new("other-buttons".into())
-            .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
-            .show(ui.ctx(), |ui| {
-                ui.horizontal(|ui| {
-                    let resp =
-                        ui.add(
+        if matches!(self.view, MenuView::Menu) {
+            egui::Area::new("other-buttons".into())
+                .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
+                .show(ui.ctx(), |ui| {
+                    ui.horizontal(|ui| {
+                        let resp = ui.add(
                             egui::Button::new(format!(
                                 "  {}  ",
                                 t!("World Editor")
@@ -59,14 +59,14 @@ impl Start {
                                 ),
                             )),
                         );
-                    if resp.clicked() {
-                        start_action =
-                            Some(StartAction::OpenEditor);
-                    }
+                        if resp.clicked() {
+                            start_action =
+                                Some(StartAction::OpenEditor);
+                        }
 
-                    let mut lang =
-                        rust_i18n::locale().to_string();
-                    egui::ComboBox::new("lang-picker", "")
+                        let mut lang =
+                            rust_i18n::locale().to_string();
+                        egui::ComboBox::new("lang-picker", "")
                         .width(0.)
                         .selected_text(
                             egui::RichText::new(&lang)
@@ -79,6 +79,11 @@ impl Start {
                                 Some(egui::Color32::WHITE);
                             let locales =
                                 rust_i18n::available_locales!();
+                            ui.selectable_value(
+                                &mut lang,
+                                "en-US".to_string(),
+                                "en",
+                            );
                             for locale in locales {
                                 ui.selectable_value(
                                     &mut lang,
@@ -87,11 +92,12 @@ impl Start {
                                 );
                             }
                         });
-                    if *rust_i18n::locale() != lang {
-                        rust_i18n::set_locale(&lang);
-                    }
+                        if *rust_i18n::locale() != lang {
+                            rust_i18n::set_locale(&lang);
+                        }
+                    });
                 });
-            });
+        }
 
         match self.view {
             MenuView::Menu => {

@@ -487,11 +487,14 @@ pub fn overlay(
     ctx: &egui::Context,
     inner: impl FnOnce(&mut egui::Ui) -> egui::Response,
 ) -> bool {
+    let screen_size = ctx.screen_rect().size();
     egui::Area::new("overlay".into())
         .order(Order::Foreground)
-        .default_size(ctx.screen_rect().size())
+        .default_size(screen_size)
         .movable(false)
         .show(ctx, |ui| {
+            ui.set_max_size(screen_size); // Needed for resizing
+
             egui::Frame::NONE
                 .fill(Color32::from_black_alpha(200))
                 .inner_margin(Margin::symmetric(18, 18))

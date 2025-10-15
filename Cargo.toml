@@ -7,7 +7,9 @@ members = [
     "images",
     "util/*",
 ]
-default-members = []
+default-members = [
+    "game",
+]
 
 [workspace.dependencies]
 serde = { version = "1", features = ["derive"] }

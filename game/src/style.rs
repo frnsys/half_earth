@@ -60,11 +60,21 @@ fn load_fonts() -> egui::FontDefinitions {
             "../assets/fonts/NotoSansThai-Regular.ttf"
         ),
     );
-    fonts
+    fonts.load_font(
+        "NotoSansJP",
+        include_bytes!(
+            "../assets/fonts/NotoSansJP-Regular.ttf"
+        ),
+    );
+
+    let prop = fonts
         .families
         .get_mut(&egui::FontFamily::Proportional)
-        .unwrap()
-        .insert(0, "Inter".into());
+        .unwrap();
+    prop.insert(0, "Inter".into());
+    prop.push("NotoSansThai".into());
+    prop.push("NotoSansJP".into());
+
     fonts
         .families
         .entry(egui::FontFamily::Monospace)
@@ -73,10 +83,10 @@ fn load_fonts() -> egui::FontDefinitions {
 
     let serif = fonts
         .families
-        .entry(egui::FontFamily::Name("Serif".into()))
+        .entry(egui::FontFamily::Name("TimesTen".into()))
         .or_default();
-    serif.push("TimesTen".into());
     serif.push("NotoSansThai".into());
+    serif.push("NotoSansJP".into());
 
     // fonts.load_font(
     //     "Bold",

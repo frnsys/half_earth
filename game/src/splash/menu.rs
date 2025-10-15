@@ -1,7 +1,12 @@
 use std::sync::Arc;
 
 use super::super::parts::set_full_bg_image;
-use crate::{image, parts::glow, state::Settings};
+use crate::{
+    image,
+    parts::glow,
+    state::Settings,
+    text::scale_text,
+};
 use egui::{
     Align2,
     Color32,
@@ -171,7 +176,7 @@ impl Menu {
             Color32::from_rgba_premultiplied(0, 0, 0, 180),
         );
         ui.vertical(|ui| {
-            const WIDTH: f32 = 320.;
+            const WIDTH: f32 = 360.;
             ui.set_width(ui.available_width());
             ui.vertical_centered(|ui| {
                 ui.set_width(WIDTH);
@@ -257,20 +262,17 @@ fn button(ui: &mut egui::Ui, label: &str, width: f32) -> bool {
         .begin(ui);
     let clicked = {
         frame.content_ui.set_width(width);
-        frame.content_ui.set_height(24.);
-        let text = RichText::new(label).font(FontId::new(
-            24.,
-            FontFamily::Name("TimesTen".into()),
-        ));
-        let label = egui::Label::new(text).selectable(false);
-        frame.content_ui.with_layout(
-            Layout::centered_and_justified(
-                egui::Direction::TopDown,
-            ),
-            |ui| {
+        frame.content_ui.set_height(32.);
+        frame.content_ui.vertical_centered(|ui| {
+            let size = egui::vec2(width, 32.);
+            scale_text(ui, size, |ui| {
+                // let));
+                let text = RichText::new(label).heading();
+                let label =
+                    egui::Label::new(text).selectable(false);
                 ui.add(label);
-            },
-        );
+            });
+        });
 
         let resp = frame.allocate_space(ui);
         let resp = resp.interact(egui::Sense::click());

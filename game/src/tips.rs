@@ -197,7 +197,7 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
     if let Some(mut tip) =
         ctx.memory(|mem| mem.data.get_temp::<Tip>(popup_id))
     {
-        let height = ctx.screen_rect().height();
+        let screen_size = ctx.screen_rect().size();
         egui::Popup::new(
             popup_id,
             ctx.clone(),
@@ -206,15 +206,16 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
         )
         .close_behavior(PopupCloseBehavior::CloseOnClickOutside)
         .open_memory(None)
-        .width(ctx.screen_rect().width())
+        .width(screen_size.x)
         .frame(
             egui::Frame::NONE
                 .fill(Color32::from_black_alpha(220))
                 .inner_margin(egui::Margin::symmetric(18, 18)),
         )
         .show(|ui| {
+            ui.set_max_size(screen_size); // Needed for resizing
             ui.set_width(ui.available_width());
-            ui.set_height(height);
+            ui.set_height(screen_size.y);
 
             if let Some(card) = ctx.memory(|mem| {
                 mem.data.get_temp::<TipCard>(card_id)

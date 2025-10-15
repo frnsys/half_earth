@@ -1,13 +1,6 @@
 use std::borrow::Cow;
 
-use egui::{
-    Align,
-    Color32,
-    ImageSource,
-    Layout,
-    Margin,
-    TextWrapMode,
-};
+use egui::{Color32, ImageSource, Margin, TextWrapMode};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{EventPhase, State};
 use rust_i18n::t;
@@ -94,39 +87,41 @@ impl Interstitial {
             egui::Vec2::from(locale.background_size),
         );
 
+        ui.painter().rect_filled(
+            ui.ctx().screen_rect(),
+            0.,
+            Color32::from_rgba_premultiplied(0, 0, 0, 200),
+        );
+
         let go_to_next = center_center(ui, "events", |tui| {
             tui.ui(|ui| {
-                egui::Frame::NONE
-                    .fill(Color32::from_black_alpha(192))
-                    .inner_margin(Margin::symmetric(6, 6))
-                    .show(ui, |ui| {
-                        ui.set_width(360.);
-                        ui.style_mut()
-                            .visuals
-                            .override_text_color =
-                            Some(Color32::WHITE);
-                        ui.label(year.to_string());
-                        ui.label(title);
-                        ui.label(locale.name);
+                egui::Frame::NONE.show(ui, |ui| {
+                    ui.set_width(360.);
+                    ui.style_mut()
+                        .visuals
+                        .override_text_color =
+                        Some(Color32::WHITE);
+                    ui.label(
+                        egui::RichText::new(title).heading(),
+                    );
+                    ui.label(format!(
+                        "{}, {}",
+                        locale.name, year
+                    ));
 
-                        ui.label(contentedness);
-                        ui.label(biodiversity);
-                        ui.label(world);
-                        ui.label(parliament);
-                        ui.label(years_left);
-                    });
+                    ui.add_space(16.);
+
+                    ui.label(contentedness);
+                    ui.label(biodiversity);
+                    ui.label(world);
+                    ui.label(parliament);
+                    ui.label(years_left);
+                });
 
                 if self.events.is_finished {
-                    ui.with_layout(
-                        Layout::right_to_left(Align::Center),
-                        |ui| {
-                            ui.set_width(360.);
-                            ui.add_space(26.);
-                            ui.add(button(t!("Continue")))
-                                .clicked()
-                        },
-                    )
-                    .inner
+                    ui.add_space(18.);
+                    ui.add(button(t!("Continue")).full_width())
+                        .clicked()
                 } else {
                     false
                 }
@@ -141,18 +136,21 @@ impl Interstitial {
             .show(ui.ctx(), |ui| {
                 egui::Frame::NONE
                     .fill(Color32::from_black_alpha(128))
-                    .inner_margin(Margin::symmetric(6, 6))
+                    .inner_margin(Margin::symmetric(6, 3))
                     .show(ui, |ui| {
                         ui.style_mut()
                             .visuals
                             .override_text_color =
                             Some(Color32::WHITE);
                         ui.add(
-                            egui::Label::new(format!(
-                                "{} {}",
-                                t!("Image:"),
-                                locale.credit
-                            ))
+                            egui::Label::new(
+                                egui::RichText::new(format!(
+                                    "{} {}",
+                                    t!("Image:"),
+                                    locale.credit
+                                ))
+                                .size(11.),
+                            )
                             .wrap_mode(TextWrapMode::Extend),
                         );
                     });
