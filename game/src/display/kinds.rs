@@ -295,7 +295,7 @@ pub fn group_color(group: &Group) -> (Color32, Color32) {
         ),
         Group::Geoengineering => (
             Color32::from_rgb(0x61, 0x68, 0x8b),
-            Color32::from_rgb(0x00, 0x00, 0x00),
+            Color32::from_rgb(0xff, 0xff, 0xff),
         ),
         Group::Electrification => (
             Color32::from_rgb(0xfc, 0xba, 0x03),

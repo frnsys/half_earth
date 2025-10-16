@@ -88,11 +88,6 @@ fn load_fonts() -> egui::FontDefinitions {
     serif.push("NotoSansThai".into());
     serif.push("NotoSansJP".into());
 
-    // fonts.load_font(
-    //     "Bold",
-    //     include_bytes!("../../../assets/fonts/Inter/Inter-Bold.ttf"),
-    // );
-
     fonts
 }
 
@@ -120,10 +115,6 @@ pub fn configure_style(ctx: &egui::Context) {
                 TextStyle::Name("TimesTen".into()),
                 FontId::new(FONT_SIZE, family("TimesTen")),
             ),
-            // (
-            //     TextStyle::Name("Bold".into()),
-            //     FontId::new(FONT_SIZE, family("Bold")),
-            // ),
         ]
         .into(),
         spacing: egui::style::Spacing {
@@ -157,8 +148,6 @@ pub fn configure_style(ctx: &egui::Context) {
         Color32::from_rgb(0xfc, 0xba, 0x03);
     visuals.selection.stroke =
         egui::Stroke::new(1., egui::Color32::BLACK);
-    //visuals.widgets.active.bg_fill = HIGHLIGHT_COLOR;
-    //visuals.widgets.hovered.bg_fill = HIGHLIGHT_COLOR;
     visuals.widgets.hovered.weak_bg_fill =
         egui::Color32::from_gray(20);
     visuals.widgets.hovered.bg_stroke =

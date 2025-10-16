@@ -1,11 +1,5 @@
-use egui::{
-    Align,
-    Color32,
-    Key,
-    Layout,
-    Margin,
-    PointerButton,
-};
+use egui::{Color32, Key, Margin, PointerButton};
+use egui_taffy::TuiBuilderLogic;
 use hes_engine::{
     Id,
     State,
@@ -15,7 +9,7 @@ use rust_i18n::t;
 
 use crate::{
     display::{DisplayEffect, speaker_icon},
-    parts::button,
+    parts::{button, r_align},
     text::BbCodeAnimator,
     views::events::render_effects,
 };
@@ -108,6 +102,10 @@ impl Dialogue {
                 .fill(Color32::WHITE)
                 .inner_margin(Margin::symmetric(6, 6))
                 .show(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    if line.speaker != Speaker::Game {
+                        ui.set_min_height(64.);
+                    }
                     ui.style_mut()
                         .visuals
                         .override_text_color =
@@ -149,9 +147,10 @@ impl Dialogue {
                     render_effects(ui, state, effects);
                 }
 
-                ui.with_layout(
-                    Layout::right_to_left(Align::Center),
-                    |ui| {
+                ui.style_mut().wrap_mode =
+                    Some(egui::TextWrapMode::Extend);
+                r_align(ui, "dialogue-opts", |tui| {
+                    tui.ui(|ui| {
                         if ui
                             .add(button(t!("Continue")))
                             .clicked()
@@ -159,30 +158,40 @@ impl Dialogue {
                             result =
                                 Some(DialogueResult::Finished);
                         }
-                    },
-                );
+                    });
+                });
             } else if let Some(DialogueNext::Responses(
                 responses,
             )) = line.next.clone()
             {
-                for branch in responses {
-                    let text = t!(&branch.text);
-                    if ui.add(button(text)).clicked() {
-                        self.select_choice(&branch, state);
+                ui.style_mut().wrap_mode =
+                    Some(egui::TextWrapMode::Extend);
+                r_align(ui, "dialogue-opts", |tui| {
+                    for branch in responses {
+                        tui.ui(|ui| {
+                            let text = t!(&branch.text);
+                            if ui.add(button(text)).clicked() {
+                                self.select_choice(
+                                    &branch, state,
+                                );
+                            }
+                            ui.add_space(1.);
+                        });
                     }
-                }
+                });
             } else {
-                ui.with_layout(
-                    Layout::right_to_left(Align::Center),
-                    |ui| {
+                ui.style_mut().wrap_mode =
+                    Some(egui::TextWrapMode::Extend);
+                r_align(ui, "dialogue-opts", |tui| {
+                    tui.ui(|ui| {
                         if ui.add(button(t!("Next"))).clicked()
                         {
                             self.advance_line(state);
                             result =
                                 Some(DialogueResult::Advanced);
                         }
-                    },
-                );
+                    });
+                });
             }
         }
         result

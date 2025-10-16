@@ -245,7 +245,7 @@ pub fn render_event_card<E: AsEventView>(
     ui: &mut egui::Ui,
     state: &State,
     event: &E,
-) {
+) -> egui::Response {
     let details = event.details(state);
 
     let attribution = details.attrib.and_then(|attrib| {
@@ -305,10 +305,11 @@ pub fn render_event_card<E: AsEventView>(
             ui.add_space(8.);
             render_effects(ui, state, effects);
         }
-    });
 
-    ui.add_space(8.);
-    event.render_extras(ui, state);
+        ui.add_space(8.);
+        event.render_extras(ui, state);
+    })
+    .response
 }
 
 fn title_label(

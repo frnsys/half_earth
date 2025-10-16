@@ -62,7 +62,8 @@ use crate::{
         StateExt,
         Tutorial,
     },
-    tips::{Tip, add_tip, tip},
+    text::scale_text_ui,
+    tips::{Tip, add_card, add_tip, tip},
     vars::Var,
     views::{
         cards::draw_mix_cell,
@@ -252,7 +253,12 @@ impl Plan {
                     for p in top {
                         match p {
                             Some(proj) => {
-                                ui.add(project_card_slot(proj));
+                                add_card(
+                                    (*proj).clone(),
+                                    ui.add(project_card_slot(
+                                        proj,
+                                    )),
+                                );
                             }
                             None => {
                                 ui.add(empty_card_slot());
@@ -515,7 +521,10 @@ impl Plan {
                 )));
             }
             for project in active_projects {
-                ui.add(project_card_slot(project));
+                add_card(
+                    project.clone(),
+                    ui.add(project_card_slot(project)),
+                );
             }
         });
     }
@@ -962,57 +971,77 @@ impl Processes {
             ret_action = Some(ProcessesAction::Changed);
         }
 
-        if has_changes {
-            let change_notice = {
-                let changes_time = changes_time.ceil() as usize;
-                let ext =
-                    if changes_time > 1 { "s" } else { "" };
-                t!(
-                    "These changes will take %{changesTime} planning cycle%{ext} to take effect.",
-                    changesTime = changes_time,
-                    ext = ext
-                )
-            };
+        egui::Area::new("processes-info".into())
+            .order(egui::Order::Foreground)
+            .anchor(egui::Align2::CENTER_BOTTOM, egui::vec2(0., -18.))
+            .movable(false)
+            .show(ui.ctx(), |ui| {
+                if has_changes {
+                    h_center(ui, "processes-changes", |tui| {
+                        tui.ui(|ui| {
+                            egui::Frame::NONE
+                                .fill(Color32::from_gray(20))
+                                .corner_radius(3)
+                                .inner_margin(6)
+                                .show(ui, |ui| {
+                                    ui.set_max_width(360.);
 
-            ui.label(change_notice);
+                                    let change_notice = {
+                                        let changes_time = changes_time.ceil() as usize;
+                                        let ext =
+                                            if changes_time > 1 { "s" } else { "" };
+                                        t!(
+                                            "These changes will take %{changesTime} planning cycle%{ext} to take effect.",
+                                            changesTime = changes_time,
+                                            ext = ext
+                                        )
+                                    };
+                                    let processes = &state.world.processes;
 
-            let processes = &state.world.processes;
-            let estimated_changes = display_changes(
-                state,
-                &state.ui.process_mix_changes,
-                processes,
-            );
-            ui.add(estimated_changes);
-        }
+                                    scale_text_ui(ui, egui::vec2(360., 80.), |ui| {
+                                        ui.label(egui::RichText::new(change_notice.clone()));
 
-        ui.horizontal(|ui| {
-            for (output, demand) in
-                display::outputs(&state.output_demand.total()).items()
-            {
-                let tip = tip(
-                    output.icon(),
-                    t!(
-                        "Global demand for %{output}.",
-                        output = output.lower()
-                    ),
-                )
-                    .card(factors_card(
-                            None,
-                            output.into(),
-                            state,
-                    ));
-                add_tip(tip, output_demand(ui, demand.to_string(), output.icon()));
-            }
+                                        let estimated_changes = display_changes(
+                                            state,
+                                            &state.ui.process_mix_changes,
+                                            processes,
+                                        );
+                                        ui.add(estimated_changes);
+                                    });
+                                });
+                        });
+                    });
+                }
 
-            let emissions =
-                state.byproducts.total().gtco2eq().round_to(1);
-            let tip = tip(
-                icons::EMISSIONS,
-                t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
-            )
-                .card(factors_card(None, Var::Emissions, state));
-                add_tip(tip, output_demand(ui, emissions.to_string(), icons::EMISSIONS));
-        });
+                ui.horizontal(|ui| {
+                    for (output, demand) in
+                        display::outputs(&state.output_demand.total()).items()
+                        {
+                            let tip = tip(
+                                output.icon(),
+                                t!(
+                                    "Global demand for %{output}.",
+                                    output = output.lower()
+                                ),
+                            )
+                                .card(factors_card(
+                                        None,
+                                        output.into(),
+                                        state,
+                                ));
+                            add_tip(tip, output_demand(ui, demand.to_string(), output.icon()));
+                        }
+
+                    let emissions =
+                        state.byproducts.total().gtco2eq().round_to(1);
+                    let tip = tip(
+                        icons::EMISSIONS,
+                        t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
+                    )
+                        .card(factors_card(None, Var::Emissions, state));
+                    add_tip(tip, output_demand(ui, emissions.to_string(), icons::EMISSIONS));
+                });
+            });
         ret_action
     }
 }
@@ -1526,7 +1555,7 @@ fn display_changes(
         if descs.is_empty() {
             ui.label(t!("They won't have much effect."))
         } else {
-            ui.horizontal(|ui| {
+            ui.horizontal_wrapped(|ui| {
                 ui.label(t!("This output's production will"));
                 for desc in descs {
                     ui.add(desc);

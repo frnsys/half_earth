@@ -9,7 +9,7 @@ use egui_taffy::TuiBuilderLogic;
 use hes_engine::{Industry, NPC, Process, Project};
 
 use crate::{
-    display::{DisplayEvent, Icon},
+    display::{DisplayEvent, Icon, icons},
     parts::{glow_fill, h_center, raised_frame},
     state::GameState,
     text::bbcode,
@@ -59,62 +59,77 @@ impl Tip {
         state: &GameState,
     ) -> bool {
         let mut clicked_outside = false;
-        h_center(ui, "tip", |tui| {
-            tui.ui(|ui| {
-                let resp =
-                    raised_frame().shadow().show(ui, |ui| {
-                        ui.set_max_width(480.);
-                        ui.style_mut()
-                            .visuals
-                            .override_text_color =
-                            Some(Color32::WHITE);
-                        ui.horizontal_top(|ui| {
-                            ui.add(self.icon.size(24.));
-                            ui.add(bbcode(&self.text));
-                        });
-                    });
-                clicked_outside = resp.clicked_elsewhere();
+        if !self.text.is_empty() {
+            h_center(ui, "tip", |tui| {
+                tui.ui(|ui| {
+                    let resp = raised_frame().shadow().show(
+                        ui,
+                        |ui| {
+                            ui.set_max_width(480.);
+                            ui.style_mut()
+                                .visuals
+                                .override_text_color =
+                                Some(Color32::WHITE);
+                            ui.horizontal_top(|ui| {
+                                ui.add(self.icon.size(24.));
+                                ui.add(bbcode(&self.text));
+                            });
+                        },
+                    );
+                    clicked_outside = resp.clicked_elsewhere();
+                });
             });
-        });
+        }
 
         if let Some(card) = &mut self.card {
             ui.add_space(32.);
             ui.style_mut().wrap_mode =
                 Some(egui::TextWrapMode::Extend);
             h_center(ui, "tip-card", |tui| {
-                tui.ui(|ui| match card {
-                    TipCard::Project(card) => {
-                        card.render(ui, state, false);
-                    }
-                    TipCard::Process(card) => {
-                        card.render(ui, state, false);
-                    }
-                    TipCard::Processes(cards) => {
-                        // TODO horizontal scrolling, but seems to interfere with taffy
-                        ui.horizontal(|ui| {
-                            ui.style_mut()
-                                .spacing
-                                .item_spacing
-                                .x = 32.;
-                            ui.set_width(ui.available_width());
-                            for card in cards {
-                                card.render(ui, state, false);
-                            }
-                        });
-                    }
-                    TipCard::Industry(card) => {
-                        card.render(ui, state, false);
-                    }
-                    TipCard::Factors(factors_card) => {
-                        ui.set_width(420.);
-                        factors_card.render(ui);
-                    }
-                    TipCard::Event(event) => {
-                        ui.set_width(420.);
-                        render_event_card(ui, state, event);
-                    }
-                    TipCard::NPC(card) => {
-                        card.render(ui, state, false);
+                tui.ui(|ui| {
+                    let resp = match card {
+                        TipCard::Project(card) => {
+                            card.render(ui, state, false)
+                        }
+                        TipCard::Process(card) => {
+                            card.render(ui, state, false)
+                        }
+                        TipCard::Processes(cards) => {
+                            // TODO horizontal scrolling, but seems to interfere with taffy
+                            ui.horizontal(|ui| {
+                                ui.style_mut()
+                                    .spacing
+                                    .item_spacing
+                                    .x = 32.;
+                                ui.set_width(
+                                    ui.available_width(),
+                                );
+                                for card in cards {
+                                    card.render(
+                                        ui, state, false,
+                                    );
+                                }
+                            })
+                            .response
+                        }
+                        TipCard::Industry(card) => {
+                            card.render(ui, state, false)
+                        }
+                        TipCard::Factors(factors_card) => {
+                            ui.set_width(420.);
+                            factors_card.render(ui)
+                        }
+                        TipCard::Event(event) => {
+                            ui.set_width(420.);
+                            render_event_card(ui, state, event)
+                        }
+                        TipCard::NPC(card) => {
+                            card.render(ui, state, false)
+                        }
+                    };
+                    if !clicked_outside {
+                        clicked_outside =
+                            resp.clicked_elsewhere();
                     }
                 });
             });
@@ -139,39 +154,54 @@ pub fn add_tip(
     tip: Tip,
     resp: egui::Response,
 ) -> egui::Response {
-    let popup_id = egui::Id::new("tip");
-    let opened_id = popup_id.with("just-opened");
-    let card_id = popup_id.with("card");
-
     let rect = resp.rect;
-
     if resp.contains_pointer() {
         let painter = resp.ctx.layer_painter(resp.layer_id);
         glow_fill(&painter, rect, Color32::WHITE);
     }
 
     if resp.interact(egui::Sense::click()).clicked() {
-        egui::Popup::open_id(&resp.ctx, popup_id);
-        resp.ctx.memory_mut(|mem| {
-            // Need to track if the tip was opened this frame
-            // so that the click doesn't immediately close it
-            // the same frame.
-            mem.data.insert_temp(opened_id, true);
-
-            // Track the current tip card separately, as
-            // we want to continue to display it if clicking
-            // tips within the current tip.
-            // E.g. if I have a tip open for `Solar PV` and
-            // I click on an NPC in the card, I want the `Solar PV`
-            // card to remain visible.
-            if let Some(card) = &tip.card {
-                mem.data.insert_temp(card_id, card.clone());
-            }
-
-            mem.data.insert_temp(popup_id, tip);
-        });
+        open_tip(&resp, tip);
     }
     resp
+}
+
+pub fn add_card<C: Into<TipCard>>(
+    card: C,
+    resp: egui::Response,
+) -> egui::Response {
+    if resp.interact(egui::Sense::click()).clicked() {
+        let mut tip = tip(icons::OTHER, "");
+        tip.card = Some(card.into());
+        open_tip(&resp, tip);
+    }
+    resp
+}
+
+fn open_tip(resp: &egui::Response, tip: Tip) {
+    let popup_id = egui::Id::new("tip");
+    let opened_id = popup_id.with("just-opened");
+    let card_id = popup_id.with("card");
+
+    egui::Popup::open_id(&resp.ctx, popup_id);
+    resp.ctx.memory_mut(|mem| {
+        // Need to track if the tip was opened this frame
+        // so that the click doesn't immediately close it
+        // the same frame.
+        mem.data.insert_temp(opened_id, true);
+
+        // Track the current tip card separately, as
+        // we want to continue to display it if clicking
+        // tips within the current tip.
+        // E.g. if I have a tip open for `Solar PV` and
+        // I click on an NPC in the card, I want the `Solar PV`
+        // card to remain visible.
+        if let Some(card) = &tip.card {
+            mem.data.insert_temp(card_id, card.clone());
+        }
+
+        mem.data.insert_temp(popup_id, tip);
+    });
 }
 
 pub fn add_hover_tip(

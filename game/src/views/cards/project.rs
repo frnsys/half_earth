@@ -14,7 +14,7 @@ use crate::{
     image,
     parts::{flex_justified, new_icon},
     state::{GameState, PlanChange},
-    text::scale_text,
+    text::scale_text_ui,
     tips::{Tip, add_tip, tip},
 };
 
@@ -202,7 +202,7 @@ impl AsCard for Project {
             .filter(visible_effect)
             .collect::<Vec<_>>();
 
-        egui::Frame::NONE
+        let resp = egui::Frame::NONE
             .outer_margin(egui::Margin {
                 left: 6,
                 right: 6,
@@ -221,7 +221,6 @@ impl AsCard for Project {
                 ui.style_mut().override_text_style =
                     Some(TextStyle::Small);
 
-                let is_building = self.is_building();
                 let is_active = self.is_active();
 
                 let next_upgrade = if self.upgrades.is_empty() {
@@ -295,7 +294,7 @@ impl AsCard for Project {
                         ui.available_width(),
                         ui.available_height(),
                     );
-                    scale_text(ui, max_size, move |ui| {
+                    scale_text_ui(ui, max_size, move |ui| {
                         render_effects(ui, &state, &effects);
 
                         if is_active
@@ -328,23 +327,52 @@ impl AsCard for Project {
                         }
                     });
                 }
+            })
+            .response;
 
-                if is_building {
-                    let building_term = match self.kind {
-                        ProjectType::Research => {
-                            t!("Researching")
-                        }
-                        ProjectType::Initiative => {
-                            t!("Building")
-                        }
-                        ProjectType::Policy => t!("Passing"),
-                    };
-                    ui.label(building_term);
+        if self.is_building() {
+            let rect = egui::Rect::from_min_size(
+                resp.rect.center_bottom()
+                    + egui::vec2(-6., -10.),
+                egui::vec2(0., 0.),
+            );
+
+            let building_term = match self.kind {
+                ProjectType::Research => {
+                    t!("Researching")
                 }
+                ProjectType::Initiative => {
+                    t!("Building")
+                }
+                ProjectType::Policy => t!("Passing"),
+            };
+
+            ui.place(rect, |ui: &mut egui::Ui| {
+                egui::Frame::NONE
+                    .fill(Color32::WHITE)
+                    .stroke(egui::Stroke::new(
+                        1.,
+                        Color32::BLACK,
+                    ))
+                    .corner_radius(6)
+                    .inner_margin(Margin::symmetric(3, 1))
+                    .show(ui, |ui| {
+                        ui.style_mut().wrap_mode =
+                            Some(egui::TextWrapMode::Extend);
+                        ui.label(
+                            egui::RichText::new(
+                                building_term.to_uppercase(),
+                            )
+                            .size(11.),
+                        );
+                    })
+                    .response
             });
+        }
     }
 
     fn top_back(&self, ui: &mut egui::Ui, _state: &GameState) {
+        ui.add_space(12.);
         super::card_desc(ui, &self.flavor.description);
     }
 
@@ -353,29 +381,48 @@ impl AsCard for Project {
         ui: &mut egui::Ui,
         state: &GameState,
     ) {
+        ui.add_space(12.);
         let (opposers, supporters) =
             npc_stances(self, &state.npcs);
         let has_opposers = !opposers.is_empty();
         let has_supporters = !supporters.is_empty();
 
+        ui.vertical_centered(|ui| {
+            ui.label(
+                egui::RichText::new(t!("Political Effects"))
+                    .underline(),
+            );
+        });
         if has_opposers || has_supporters {
-            ui.label(t!("Political Effects"));
-            if has_opposers {
-                ui.label(t!("Nay"));
-                for npc in opposers {
-                    npc_opposer(ui, npc);
-                }
-            }
-            if has_supporters {
-                ui.label(t!("Yea"));
-                for npc in supporters {
-                    npc_supporter(ui, npc);
-                }
-            }
+            ui.columns(2, |cols| {
+                cols[0].vertical_centered(|ui| {
+                    ui.label(t!("Nay"));
+                    for npc in opposers {
+                        npc_opposer(ui, npc);
+                    }
+                });
+                cols[1].vertical_centered(|ui| {
+                    ui.label(t!("Yea"));
+                    for npc in supporters {
+                        npc_supporter(ui, npc);
+                    }
+                });
+            });
         }
+        ui.add_space(24.);
 
-        let image_attrib = &self.flavor.image.attribution;
-        ui.label(format!("{} {image_attrib}", t!("Image:")));
+        ui.vertical_centered(|ui| {
+            let image_attrib = &self.flavor.image.attribution;
+            if !image_attrib.is_empty() {
+                ui.label(
+                    egui::RichText::new(format!(
+                        "{} {image_attrib}",
+                        t!("Image:")
+                    ))
+                    .size(11.),
+                );
+            }
+        });
     }
 }
 
@@ -531,12 +578,12 @@ pub fn npc_icon(
         };
 
         egui::Frame::NONE
-            // .fill(Color32::from_black_alpha(128))
             .fill(color)
             .corner_radius(4)
             .inner_margin(Margin::symmetric(3, 3))
             .stroke(Stroke::new(1., color))
             .show(ui, |ui| {
+                ui.set_width(24.);
                 ui.add(icon.size(24.));
             })
             .response

@@ -15,6 +15,7 @@ use crate::{
         fill_bar,
         flex_justified,
         flex_spaced,
+        h_center,
         new_icon,
     },
     state::{GameState, StateExt},
@@ -197,41 +198,66 @@ impl AsCard for Process {
             npc_stances(self, &state.npcs);
         npc_support(ui, rect, &opposers, &supporters);
 
-        let max_share = state.process_max_share(&self.id);
-        if max_share < 20 {
-            let changed_mix_share = {
-                if let Some(change) =
-                    state.ui.process_mix_changes[self.output]
-                        .get(&self.id)
-                {
-                    self.mix_share as isize + change
-                } else {
-                    self.mix_share as isize
-                }
-            };
+        let rect = egui::Rect::from_min_size(
+            rect.left_top() + egui::vec2(14., 6.),
+            egui::Vec2::ZERO,
+        );
+        ui.place(rect, |ui: &mut egui::Ui| {
+            ui.style_mut().spacing.item_spacing.x = 2.;
+            ui.horizontal(|ui| {
+                let (max_share, changed_mix_share) =
+                    max_and_changed_share(self, state);
 
-            let alert_tip = {
-                let mix_share = self.mix_share;
-                tip(
-                    icons::ALERT,
-                    t!(
-                        "Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion}",
-                        maxPercent = max_share * 5,
-                        suggestion = if mix_share > max_share
-                            || changed_mix_share
-                                > max_share as isize
+                if max_share < 20 {
+                    let changed_mix_share = {
+                        if let Some(change) =
+                            state.ui.process_mix_changes[self.output]
+                                .get(&self.id)
                         {
-                            t!(
-                                "You should reallocate its points to other processes."
-                            )
+                            self.mix_share as isize + change
                         } else {
-                            "".into()
+                            self.mix_share as isize
                         }
-                    ),
-                )
-            };
-            add_tip(alert_tip, ui.add(icons::ALERT.size(14.)));
-        }
+                    };
+
+                    let alert_tip = {
+                        let mix_share = self.mix_share;
+                        tip(
+                            icons::ALERT,
+                            t!(
+                                "Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion}",
+                                maxPercent = max_share * 5,
+                                suggestion = if mix_share > max_share
+                                || changed_mix_share
+                                > max_share as isize
+                                {
+                                    t!(
+                                        "You should reallocate its points to other processes."
+                                    )
+                                } else {
+                                    "".into()
+                                }
+                            ),
+                        )
+                    };
+                    add_tip(alert_tip, ui.add(icons::ALERT.size(24.)));
+                }
+
+                let process_excess = {
+                    self.mix_share > max_share
+                        || changed_mix_share > max_share as isize
+                };
+                if process_excess || true {
+                    let excess_tip = tip(
+                        icons::ALERT,
+                        t!(
+                            "This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes."
+                        ),
+                    );
+                    add_tip(excess_tip, ui.add(icons::ALERT.size(24.)));
+                }
+            }).response
+        });
     }
 
     fn name(&self, ui: &mut egui::Ui, _state: &GameState) {
@@ -239,22 +265,8 @@ impl AsCard for Process {
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
-        let (max_share, changed_mix_share) =
+        let (_, changed_mix_share) =
             max_and_changed_share(self, state);
-
-        let process_excess = {
-            self.mix_share > max_share
-                || changed_mix_share > max_share as isize
-        };
-        if process_excess {
-            let excess_tip = tip(
-                icons::ALERT,
-                t!(
-                    "This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes."
-                ),
-            );
-            add_tip(excess_tip, ui.add(icons::ALERT.size(14.)));
-        }
 
         let change_tip = {
             let output = t!(self.output.lower());
@@ -416,6 +428,7 @@ impl AsCard for Process {
     }
 
     fn top_back(&self, ui: &mut egui::Ui, _state: &GameState) {
+        ui.add_space(12.);
         super::card_desc(ui, &self.flavor.description);
     }
 
@@ -437,61 +450,81 @@ impl AsCard for Process {
             }
         };
 
-        let is_halted =
-            feedstock_estimate.is_some_and(|est| est == 0.);
-        let almost_halted =
-            feedstock_estimate.is_some_and(|est| est < 0.);
-        if almost_halted {
-            ui.add(icons::ALERT.size(14.));
-        } else if is_halted {
-            ui.add(icons::HALTED.size(14.));
-        }
+        ui.add_space(12.);
+        h_center(ui, &format!("{}-feats", self.id), |tui| {
+            tui.ui(|ui| {
+                ui.horizontal(|ui| {
+                    let is_halted =
+                        feedstock_estimate.is_some_and(|est| est == 0.);
+                    let almost_halted =
+                        feedstock_estimate.is_some_and(|est| est < 0.);
+                    if almost_halted {
+                        ui.add(icons::ALERT.size(24.));
+                    } else if is_halted {
+                        ui.add(icons::HALTED.size(24.));
+                    }
 
-        let has_feedstock =
-            self.feedstock.0 != Feedstock::Other;
-        if has_feedstock {
-            let icon = self.feedstock.0.icon();
-            let desc = feedstock_estimate
-                .map(describe_estimate)
-                .unwrap_or_default();
-            let tip = tip(
-                icon,
-                t!(
-                    "This process uses %{feedstockName}. %{feedstockEstimateDesc}",
-                    feedstockName =
-                        t!(self.feedstock.0.lower()),
-                    feedstockEstimateDesc = desc
-                ),
-            );
-            add_tip(tip, ui.add(icon.size(14.)));
+                    let has_feedstock =
+                        self.feedstock.0 != Feedstock::Other;
+                    if has_feedstock {
+                        ui.vertical(|ui| {
+                            let icon = self.feedstock.0.icon();
+                            let desc = feedstock_estimate
+                                .map(describe_estimate)
+                                .unwrap_or_default();
+                            let tip = tip(
+                                icon,
+                                t!(
+                                    "This process uses %{feedstockName}. %{feedstockEstimateDesc}",
+                                    feedstockName =
+                                    t!(self.feedstock.0.lower()),
+                                    feedstockEstimateDesc = desc
+                                ),
+                            );
+                            add_tip(tip, ui.add(icon.size(24.)));
 
-            let level = feedstock_estimate
-                .map(describe_stocks)
-                .unwrap_or(FeedstockLevel::High);
-            let (color, fill) = match level {
-                FeedstockLevel::Low => {
-                    (Color32::from_rgb(0xEF, 0x38, 0x38), 0.2)
-                }
-                FeedstockLevel::Mid => {
-                    (Color32::from_rgb(0xFB, 0xC0, 0x11), 0.5)
-                }
-                FeedstockLevel::High => {
-                    (Color32::from_rgb(0x43, 0xCC, 0x70), 0.8)
-                }
-                FeedstockLevel::VeryHigh => {
-                    (Color32::from_rgb(0x43, 0xCC, 0x70), 0.95)
-                }
-            };
-            ui.add(fill_bar((48., 8.), fill).fill_color(color));
-        }
+                            let level = feedstock_estimate
+                                .map(describe_stocks)
+                                .unwrap_or(FeedstockLevel::High);
+                            let (color, fill) = match level {
+                                FeedstockLevel::Low => {
+                                    (Color32::from_rgb(0xEF, 0x38, 0x38), 0.2)
+                                }
+                                FeedstockLevel::Mid => {
+                                    (Color32::from_rgb(0xFB, 0xC0, 0x11), 0.5)
+                                }
+                                FeedstockLevel::High => {
+                                    (Color32::from_rgb(0x43, 0xCC, 0x70), 0.8)
+                                }
+                                FeedstockLevel::VeryHigh => {
+                                    (Color32::from_rgb(0x43, 0xCC, 0x70), 0.95)
+                                }
+                            };
+                            ui.add(fill_bar((24., 4.), fill).fill_color(color).back_color(Color32::from_gray(32)));
+                        });
+                    }
 
-        for feat in &self.features {
-            let tip = tip(feat.icon(), t!(feat.title()));
-            add_tip(tip, ui.add(feat.icon().size(14.)));
-        }
+                    for feat in &self.features {
+                        let tip = tip(feat.icon(), t!(feat.title()));
+                        add_tip(tip, ui.add(feat.icon().size(24.)));
+                    }
+                });
+            });
+        });
+        ui.add_space(24.);
 
-        let image_attrib = &self.flavor.image.attribution;
-        ui.label(format!("{} {image_attrib}", t!("Image:")));
+        ui.vertical_centered(|ui| {
+            let image_attrib = &self.flavor.image.attribution;
+            if !image_attrib.is_empty() {
+                ui.label(
+                    egui::RichText::new(format!(
+                        "{} {image_attrib}",
+                        t!("Image:")
+                    ))
+                    .size(11.),
+                );
+            }
+        });
     }
 }
 

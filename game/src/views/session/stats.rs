@@ -30,11 +30,13 @@ use crate::{
     parts::{
         calc_text_width,
         h_center,
+        h_center_top,
         overlay,
         raised_frame,
         set_full_bg_image,
     },
     state::{FACTORS, StateExt},
+    text::{scale_text, scale_text_styles},
     tips::{Tip, add_tip, tip},
     vars::Var,
 };
@@ -120,7 +122,7 @@ impl Stats {
             ui.add_space(32.);
             ui.set_max_width(720.);
 
-            h_center(ui, "stats-top".into(), |tui| {
+            h_center_top(ui, "stats-top".into(), |tui| {
                 tui.ui(|ui| {
                     stat(
                         ui,
@@ -148,7 +150,7 @@ impl Stats {
 
             ui.add_space(32.);
 
-            h_center(ui, "stats-bottom".into(), |tui| {
+            h_center_top(ui, "stats-bottom".into(), |tui| {
                 tui.ui(|ui| {
                     render_biodiversity(
                         ui,
@@ -249,11 +251,7 @@ fn render_temp(ui: &mut egui::Ui, state: &State) {
     ui.vertical_centered(|ui| {
         ui.add(icons::WARMING.size(24.));
         ui.add_space(8.);
-        ui.label(
-            egui::RichText::new(temp_anomaly)
-                .monospace()
-                .size(24.),
-        );
+        render_stat_text(ui, &temp_anomaly, None);
     });
 }
 
@@ -466,11 +464,7 @@ fn render_sea_level_rise(ui: &mut egui::Ui, state: &State) {
         ui.vertical_centered(|ui| {
             ui.add(icons::SEA_LEVEL_RISE.size(24.));
             ui.add_space(8.);
-            ui.label(
-                egui::RichText::new(format!("{rise} m"))
-                    .monospace()
-                    .size(24.),
-            );
+            render_stat_text(ui, &format!("{rise} m"), None);
         })
         .response,
     );
@@ -486,11 +480,7 @@ fn render_population(ui: &mut egui::Ui, state: &State) {
     ui.vertical_centered(|ui| {
         ui.add(icons::POPULATION.size(24.));
         ui.add_space(8.);
-        ui.label(
-            egui::RichText::new(pop_fmted)
-                .monospace()
-                .size(24.),
-        );
+        render_stat_text(ui, &pop_fmted, None);
     });
 }
 
@@ -504,10 +494,7 @@ fn render_income(ui: &mut egui::Ui, state: &State) {
     ui.vertical_centered(|ui| {
         ui.add(icons::WEALTH.size(24.));
         ui.add_space(8.);
-        ui.label(
-            egui::RichText::new(income.label)
-                .color(income.color),
-        );
+        render_stat_text(ui, &income.label, Some(income.color));
     });
 }
 
@@ -528,9 +515,10 @@ fn render_habitability(ui: &mut egui::Ui, state: &State) {
     ui.vertical_centered(|ui| {
         ui.add(icons::HABITABILITY.size(24.));
         ui.add_space(8.);
-        ui.label(
-            egui::RichText::new(habitability.label)
-                .color(habitability.color),
+        render_stat_text(
+            ui,
+            &habitability.label,
+            Some(habitability.color),
         );
     });
 }
@@ -647,18 +635,36 @@ fn render_breakdown(
 
     let dataset = {
         let mut total = 0.;
-        let mut data: BTreeMap<String, f32> =
+        let mut data: BTreeMap<String, (f32, String)> =
             BTreeMap::default();
         let factors = FACTORS.read();
         for fac in &factors[factor] {
             let name = t!(&fac.name());
-            data.insert(name.to_string(), fac.amount());
+            data.insert(
+                name.to_string(),
+                (fac.amount(), fac.display()),
+            );
             total += fac.amount();
         }
         if factor == Var::Land {
             let name = t!("Unused");
             let unused = available_land - total;
-            data.insert(name.to_string(), unused);
+            data.insert(
+                name.to_string(),
+                (
+                    unused,
+                    format!(
+                        "{}%",
+                        display::percent(
+                            display::land_use_percent(
+                                unused,
+                                available_land,
+                            ) / 100.,
+                            true
+                        )
+                    ),
+                ),
+            );
         }
         data
     };
@@ -691,8 +697,6 @@ fn render_breakdown(
                 });
             });
     if resp.interact(Sense::click()).clicked() {
-        // TODO this interferes with the hover styling in
-        // the frame?
         *show_breakdown_menu = true;
     }
 
@@ -700,6 +704,7 @@ fn render_breakdown(
         ui.set_width(320.);
         render_chart(ui, &dataset, factor.color());
 
+        scale_text_styles(ui.style_mut(), 0.8);
         let table_data = factors_card(None, factor, state);
 
         raised_frame()
@@ -742,14 +747,8 @@ fn render_dashboard_item(
             |ui| {
                 ui.add(icon.size(24.));
                 ui.add_space(8.);
-                let text = egui::RichText::new(display_value)
-                    .monospace()
-                    .size(24.);
-                if let Some(color) = color {
-                    ui.colored_label(color, text);
-                } else {
-                    ui.label(text);
-                }
+                render_stat_text(ui, display_value, color);
+
                 if change != 0. {
                     let change_tip = tip(
                         icon,
@@ -759,11 +758,12 @@ fn render_dashboard_item(
                     );
                     add_tip(
                         change_tip,
-                        ui.horizontal_centered(|ui| {
-                            ui.image(icons::DOWN_ARROW_SMALL);
-                            ui.label(display_changed_value);
-                        })
-                        .response,
+                        ui.label(
+                            egui::RichText::new(format!(
+                                "» {display_changed_value}"
+                            ))
+                            .size(11.),
+                        ),
                     );
                 }
             },
@@ -774,19 +774,20 @@ fn render_dashboard_item(
 
 fn render_chart(
     ui: &mut egui::Ui,
-    dataset: &BTreeMap<String, f32>,
+    dataset: &BTreeMap<String, (f32, String)>,
     colors: [u32; 2],
 ) {
     let n = dataset.len() as f32;
     let items: Vec<_> = dataset
         .iter()
         .enumerate()
-        .map(|(i, (k, v))| {
+        .map(|(i, (k, (v, display)))| {
             let (r, g, b) =
                 lerp_color(colors[0], colors[1], i as f32 / n);
             TreeItem {
                 label: k,
                 value: *v,
+                display,
                 color: Color32::from_rgb(r, g, b),
             }
         })
@@ -809,4 +810,16 @@ fn lerp_color(from: u32, to: u32, ratio: f32) -> (u8, u8, u8) {
     let rb = ab + ratio * (bb - ab);
 
     (rr.round() as u8, rg.round() as u8, rb.round() as u8)
+}
+
+fn render_stat_text(
+    ui: &mut egui::Ui,
+    text: &str,
+    color: Option<Color32>,
+) {
+    let mut text = egui::RichText::new(text).monospace();
+    if let Some(color) = color {
+        text = text.color(color);
+    }
+    scale_text(ui, egui::vec2(80., 28.), text, 24.);
 }

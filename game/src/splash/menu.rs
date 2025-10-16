@@ -5,7 +5,7 @@ use crate::{
     image,
     parts::glow,
     state::Settings,
-    text::scale_text,
+    text::scale_text_ui,
 };
 use egui::{
     Align2,
@@ -265,12 +265,9 @@ fn button(ui: &mut egui::Ui, label: &str, width: f32) -> bool {
         frame.content_ui.set_height(32.);
         frame.content_ui.vertical_centered(|ui| {
             let size = egui::vec2(width, 32.);
-            scale_text(ui, size, |ui| {
-                // let));
+            scale_text_ui(ui, size, |ui| {
                 let text = RichText::new(label).heading();
-                let label =
-                    egui::Label::new(text).selectable(false);
-                ui.add(label);
+                ui.label(text);
             });
         });
 

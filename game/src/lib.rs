@@ -188,10 +188,7 @@ impl eframe::App for App {
                                         world,
                                     ) => {
                                         self.state =
-                                            GameState::default(
-                                            );
-                                        self.state.world =
-                                            world;
+                                            GameState::from_world(world);
                                         prepare_game(
                                             &mut self.state,
                                             &self.prefs,

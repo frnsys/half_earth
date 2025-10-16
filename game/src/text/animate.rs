@@ -52,9 +52,7 @@ impl NodesAnimator {
                 );
             } else if !found {
                 let animator =
-                    self.animator.get_or_insert_with(|| {
-                        NodeAnimator::new(2.)
-                    });
+                    self.animator.get_or_insert_default();
                 animator.advance(ui.ctx());
                 *finished = animator.is_animation_finished();
                 if *finished {
@@ -92,33 +90,20 @@ impl Default for NodeAnimator {
     fn default() -> Self {
         Self {
             timer: 0.0,
-            speed: 2.5,
+            speed: 50.,
             animation_finished: false,
         }
     }
 }
 
 impl NodeAnimator {
-    fn new(speed: f32) -> Self {
-        Self {
-            timer: 0.0,
-            speed,
-            animation_finished: false,
-        }
-    }
-
     fn advance(&mut self, ctx: &egui::Context) {
         if self.animation_finished {
             return;
         }
 
         let dt = ctx.input(|i| i.unstable_dt);
-        let increment = dt * self.speed;
-
-        self.timer = (self.timer + increment).min(1.0);
-        if self.timer >= 1.0 {
-            self.animation_finished = true;
-        }
+        self.timer = self.timer + dt;
     }
 
     fn is_animation_finished(&self) -> bool {
@@ -141,8 +126,9 @@ impl NodeAnimator {
             self.animation_finished = true;
         } else {
             let num_chars = node.len();
-            let visible_chars_float =
-                self.timer * num_chars as f32;
+            let total_time = num_chars as f32 * 1. / self.speed;
+            let p = self.timer / total_time;
+            let visible_chars_float = p * num_chars as f32;
             let visible_chars =
                 visible_chars_float.floor() as usize;
             let progress = visible_chars_float
@@ -153,6 +139,9 @@ impl NodeAnimator {
                 progress,
                 text_height,
             );
+            if p >= 1. {
+                self.animation_finished = true;
+            }
         }
     }
 }

@@ -185,6 +185,18 @@ impl Factor {
             Self::Event { amount, .. } => *amount,
         }
     }
+
+    pub fn display(&self) -> String {
+        match self {
+            Self::Project { display, .. } => display.clone(),
+            Self::Region { display, .. } => display.clone(),
+            Self::Process { display, .. } => display.clone(),
+            Self::Industry { display, .. } => display.clone(),
+            Self::Event {
+                display, amount, ..
+            } => display.clone().unwrap_or(amount.to_string()),
+        }
+    }
 }
 
 fn event_factors(var: Var, state: &State) -> Vec<Factor> {

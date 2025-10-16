@@ -9,7 +9,7 @@ use crate::{
     display::{as_speaker, icons, speaker_icon},
     parts::{flex_justified, h_center, raised_frame},
     state::GameState,
-    text::bbcode,
+    text::{bbcode, scale_text_ui},
     tips::{add_tip, tip},
 };
 
@@ -157,19 +157,49 @@ impl AsCard for NPC {
     }
 
     fn top_back(&self, ui: &mut egui::Ui, _ctx: &GameState) {
-        let speaker = as_speaker(&self.name);
-        ui.add(speaker_icon(&speaker));
+        ui.vertical_centered(|ui| {
+            ui.add_space(12.);
+            let speaker = as_speaker(&self.name);
+            ui.add(
+                speaker_icon(&speaker)
+                    .fit_to_exact_size(egui::Vec2::splat(64.)),
+            );
+        });
 
         super::card_desc(ui, &self.flavor.description);
     }
 
     fn bottom_back(&self, ui: &mut egui::Ui, _ctx: &GameState) {
-        let likes = t!(&self.flavor.likes);
-        ui.label(t!("Likes"));
-        ui.label(likes);
-
-        let dislikes = t!(&self.flavor.dislikes);
-        ui.label(t!("Dislikes"));
-        ui.label(dislikes);
+        ui.add_space(12.);
+        let max_size = egui::vec2(ui.available_width(), 128.);
+        scale_text_ui(ui, max_size, move |ui| {
+            egui::Frame::NONE
+                .inner_margin(egui::Margin::symmetric(8, 0))
+                .show(ui, |ui| {
+                    ui.columns(2, |cols| {
+                        cols[0].vertical(|ui| {
+                            let likes = t!(&self.flavor.likes);
+                            ui.label(
+                                egui::RichText::new(t!(
+                                    "Likes"
+                                ))
+                                .underline(),
+                            );
+                            ui.label(likes);
+                        });
+                        cols[1].vertical(|ui| {
+                            let dislikes =
+                                t!(&self.flavor.dislikes);
+                            ui.label(
+                                egui::RichText::new(t!(
+                                    "Dislikes"
+                                ))
+                                .underline(),
+                            );
+                            ui.label(dislikes);
+                        });
+                    });
+                });
+        });
     }
 }

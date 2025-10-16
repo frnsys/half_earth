@@ -374,6 +374,10 @@ fn render_tabs<'a, T>(
                             |ui| {
                                 let resp = egui::Frame::NONE
                                     .show(ui, |ui| {
+                                        if disabled {
+                                            ui.set_opacity(0.5);
+                                        }
+
                                         if let Some(icon) = tab.icon {
                                             ui.add(icon.size(16.));
                                         }

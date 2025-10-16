@@ -249,11 +249,20 @@ fn render_region_item(
                             add_tip(
                                 temp_tip(),
                                 ui.horizontal_centered(|ui| {
+                                    ui.style_mut()
+                                        .spacing
+                                        .item_spacing
+                                        .x = 2.;
                                     ui.add(
                                         icons::TEMPERATURE
                                             .size(12.),
                                     );
-                                    ui.label(temp_range);
+                                    ui.label(
+                                        egui::RichText::new(
+                                            temp_range,
+                                        )
+                                        .size(12.),
+                                    );
                                 })
                                 .response,
                             );
@@ -261,15 +270,26 @@ fn render_region_item(
                             add_tip(
                                 precip_tip(),
                                 ui.horizontal_centered(|ui| {
+                                    ui.style_mut()
+                                        .spacing
+                                        .item_spacing
+                                        .x = 2.;
                                     ui.add(
                                         icons::PRECIPITATION
                                             .size(12.),
                                     );
-                                    ui.label(precip_range);
+                                    ui.label(
+                                        egui::RichText::new(
+                                            precip_range,
+                                        )
+                                        .size(12.),
+                                    );
                                 })
                                 .response,
                             );
                         });
+
+                        ui.add_space(8.);
 
                         let is_max_level =
                             region.is_max_income();
@@ -277,10 +297,10 @@ fn render_region_item(
                         add_tip(
                             devel_tip(),
                             ui.horizontal_centered(|ui| {
-                                ui.label(format!(
-                                    "{}: ",
+                                ui.label(egui::RichText::new(format!(
+                                    "{}:",
                                     t!("Development Progress")
-                                ));
+                                )).underline());
                                 render_devel_bar(
                                     ui,
                                     is_max_level,
@@ -290,7 +310,9 @@ fn render_region_item(
                             .response,
                         );
 
-                        ui.label(t!("Recent Disasters"));
+                        ui.add_space(8.);
+
+                        ui.label(egui::RichText::new(t!("Recent Disasters")).underline());
                         ui.horizontal_centered(|ui| {
                             if let Some(events) = events {
                                 for ev in events {
@@ -300,6 +322,8 @@ fn render_region_item(
                                         );
                                     ui.add(icon.size(14.));
                                 }
+                            } else {
+                                ui.label(egui::RichText::new("---").color(Color32::from_white_alpha(64)));
                             }
                         });
                     });

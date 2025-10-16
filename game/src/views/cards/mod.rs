@@ -4,7 +4,7 @@ use egui::{Color32, Response, Sense};
 use hes_images::flavor_image;
 use rust_i18n::t;
 
-use crate::{state::GameState, text::scale_text};
+use crate::{state::GameState, text::scale_text_ui};
 
 mod industry;
 mod npc;
@@ -120,6 +120,7 @@ impl<C: AsCard + Clone> Card<C> {
                         ui,
                         resp.rect,
                         "card-flip".into(),
+                        self.bg_color().intensity() < 0.5,
                         &mut self.flipped,
                     );
                     resp
@@ -161,7 +162,13 @@ impl<C: AsCard + Clone> Card<C> {
                     )
                 })
                 .response;
-            corner(ui, resp.rect, resp.id, &mut self.flipped);
+            corner(
+                ui,
+                resp.rect,
+                resp.id,
+                self.bg_color().intensity() < 0.5,
+                &mut self.flipped,
+            );
 
             resp
         }
@@ -172,6 +179,7 @@ fn corner(
     ui: &mut egui::Ui,
     rect: egui::Rect,
     id: egui::Id,
+    on_dark: bool,
     flipped: &mut bool,
 ) {
     let pad = 4.0;
@@ -185,8 +193,16 @@ fn corner(
     let tri_id = id.with("corner");
     let resp = ui.interact(tri_rect, tri_id, Sense::click());
 
-    let base = Color32::from_black_alpha(32);
-    let hover = Color32::from_black_alpha(64);
+    let base = if on_dark {
+        Color32::from_white_alpha(32)
+    } else {
+        Color32::from_black_alpha(32)
+    };
+    let hover = if on_dark {
+        Color32::from_white_alpha(64)
+    } else {
+        Color32::from_black_alpha(64)
+    };
     let press = Color32::from_white_alpha(64);
     let fill = if resp.is_pointer_button_down_on() {
         press
@@ -218,7 +234,11 @@ fn card_title(ui: &mut egui::Ui, name: &str) {
 }
 
 fn card_desc(ui: &mut egui::Ui, desc: &str) {
-    scaled_text(ui, desc, 128.);
+    egui::Frame::NONE
+        .inner_margin(egui::Margin::symmetric(8, 0))
+        .show(ui, |ui| {
+            scaled_text(ui, desc, 128.);
+        });
 }
 
 fn scaled_text(ui: &mut egui::Ui, text: &str, height: f32) {
@@ -226,7 +246,7 @@ fn scaled_text(ui: &mut egui::Ui, text: &str, height: f32) {
         ui.set_height(height);
         let max_size = egui::vec2(ui.available_width(), height);
         let text = t!(text).to_string();
-        scale_text(ui, max_size, move |ui| {
+        scale_text_ui(ui, max_size, move |ui| {
             ui.label(egui::RichText::new(&text).heading());
         });
     });

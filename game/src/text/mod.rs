@@ -8,7 +8,7 @@ mod animate;
 mod parse;
 mod scale;
 
-pub use scale::scale_text;
+pub use scale::{scale_text, scale_text_styles, scale_text_ui};
 
 pub fn bbcode(
     text: &str,

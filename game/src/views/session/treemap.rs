@@ -14,6 +14,7 @@ pub struct TreeItem<'a> {
     pub label: &'a str,
     pub value: f32,
     pub color: Color32,
+    pub display: &'a str,
 }
 
 pub fn treemap<'a>(
@@ -101,9 +102,9 @@ pub fn treemap<'a>(
 
         if ui.rect_contains_pointer(node) {
             tip = Some(format!(
-                "{}: {:.2}",
+                "{}: {}",
                 t!(item.label),
-                item.value
+                item.display
             ));
         }
     }
@@ -116,10 +117,10 @@ pub fn treemap<'a>(
             PopupAnchor::Pointer,
         )
         .show(|ui| {
-            ui.set_min_width(60.);
+            ui.set_min_width(120.);
             ui.label(
                 RichText::new(tip)
-                    .size(14.)
+                    .size(12.)
                     .color(egui::Color32::WHITE)
                     .family(egui::FontFamily::Proportional),
             );

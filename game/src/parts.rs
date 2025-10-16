@@ -347,6 +347,48 @@ pub fn center_center<T>(
         .show(inner)
 }
 
+pub fn r_align<T>(
+    ui: &mut egui::Ui,
+    id: &str,
+    inner: impl FnOnce(&mut Tui) -> T,
+) -> T {
+    tui(ui, ui.id().with(id))
+        .reserve_available_space()
+        .style(taffy::Style {
+            flex_grow: 1.,
+            flex_direction: taffy::FlexDirection::Column,
+            min_size: taffy::Size {
+                width: taffy::prelude::percent(1.),
+                height: taffy::prelude::auto(),
+            },
+            align_items: Some(taffy::AlignItems::End),
+            justify_content: Some(taffy::JustifyContent::Start),
+            ..Default::default()
+        })
+        .show(inner)
+}
+
+pub fn b_align<T>(
+    ui: &mut egui::Ui,
+    id: &str,
+    inner: impl FnOnce(&mut Tui) -> T,
+) -> T {
+    tui(ui, ui.id().with(id))
+        .reserve_available_space()
+        .style(taffy::Style {
+            flex_grow: 1.,
+            flex_direction: taffy::FlexDirection::Column,
+            min_size: taffy::Size {
+                width: taffy::prelude::percent(1.),
+                height: taffy::prelude::percent(1.),
+            },
+            align_items: Some(taffy::AlignItems::Center),
+            justify_content: Some(taffy::JustifyContent::End),
+            ..Default::default()
+        })
+        .show(inner)
+}
+
 pub fn h_center<T>(
     ui: &mut egui::Ui,
     id: &str,
@@ -362,6 +404,29 @@ pub fn h_center<T>(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
+            justify_content: Some(
+                taffy::JustifyContent::SpaceAround,
+            ),
+            ..Default::default()
+        })
+        .show(inner)
+}
+
+pub fn h_center_top<T>(
+    ui: &mut egui::Ui,
+    id: &str,
+    inner: impl FnOnce(&mut Tui) -> T,
+) -> T {
+    tui(ui, ui.id().with(id))
+        .reserve_available_space()
+        .style(taffy::Style {
+            flex_grow: 1.,
+            flex_direction: taffy::FlexDirection::Row,
+            min_size: taffy::Size {
+                width: taffy::prelude::percent(1.),
+                height: taffy::prelude::auto(),
+            },
+            align_items: Some(taffy::AlignItems::Start),
             justify_content: Some(
                 taffy::JustifyContent::SpaceAround,
             ),
