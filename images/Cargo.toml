@@ -6,6 +6,9 @@ edition = "2024"
 [dependencies]
 egui = { workspace = true }
 hes-engine = { path = "../engine" }
-rust-embed = { version = "8.7.2" }
 tracing = { workspace = true }
 blake3 = "1.8.2"
+fastrand = { workspace = true }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rust-embed = { version = "8.7.2" }

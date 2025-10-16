@@ -7,15 +7,129 @@ use egui::{
     ahash::HashMap,
     mutex::Mutex,
 };
-use rust_embed::Embed;
 
 static IMAGES: LazyLock<
     Mutex<HashMap<String, ImageSource<'static>>>,
 > = LazyLock::new(|| Mutex::new(HashMap::default()));
 
-#[derive(Embed)]
-#[folder = "images"]
-struct ContentImages;
+#[cfg(not(target_arch = "wasm32"))]
+mod content {
+    use egui::ImageSource;
+    use rust_embed::{Embed, RustEmbed};
+
+    #[derive(Embed)]
+    #[folder = "assets/content"]
+    struct ContentImages;
+
+    pub fn load<'a>(fname: &str) -> ImageSource<'a> {
+        match ContentImages::get(fname) {
+            Some(image) => ImageSource::Bytes {
+                uri: format!("bytes:://{fname}").into(),
+                bytes: image.data.to_vec().into(),
+            },
+            None => super::DEFAULT_IMAGE,
+        }
+    }
+
+    fn rand_image<'a, D: RustEmbed>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        let image_opts: Vec<_> = D::iter()
+            .filter(|path| path.contains(faction))
+            .collect();
+        fastrand::choice(&image_opts).and_then(|path| {
+            D::get(path).map(|file| ImageSource::Bytes {
+                uri: format!("bytes:://{path}").into(),
+                bytes: file.data.to_vec().into(),
+            })
+        })
+    }
+
+    #[derive(Embed)]
+    #[folder = "assets/sharing/win"]
+    struct WinImages;
+
+    pub fn win_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        rand_image::<WinImages>(faction)
+    }
+
+    #[derive(Embed)]
+    #[folder = "assets/sharing/lose/death"]
+    struct DeathImages;
+
+    pub fn death_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        rand_image::<DeathImages>(faction)
+    }
+
+    #[derive(Embed)]
+    #[folder = "assets/sharing/lose/coup"]
+    struct CoupImages;
+
+    pub fn coup_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        rand_image::<CoupImages>(faction)
+    }
+
+    #[derive(Embed)]
+    #[folder = "assets/sharing/lose/generic"]
+    struct LoseImages;
+
+    pub fn lose_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        rand_image::<LoseImages>(faction)
+    }
+}
+
+#[cfg(target_arch = "wasm32")]
+mod content {
+    use egui::ImageSource;
+
+    pub fn load<'a>(fname: &str) -> ImageSource<'a> {
+        // TODO
+        super::DEFAULT_IMAGE
+    }
+
+    pub fn win_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        // TODO
+        Some(super::DEFAULT_IMAGE)
+    }
+
+    pub fn death_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        // TODO
+        Some(super::DEFAULT_IMAGE)
+    }
+
+    pub fn coup_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        // TODO
+        Some(super::DEFAULT_IMAGE)
+    }
+
+    pub fn lose_image<'a>(
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        // TODO
+        Some(super::DEFAULT_IMAGE)
+    }
+}
+
+pub use content::{
+    coup_image,
+    death_image,
+    lose_image,
+    win_image,
+};
 
 fn hash_to_hex(data: &[u8]) -> String {
     let hash = blake3::hash(data);
@@ -33,12 +147,12 @@ fn ext_from_mime(mime: &str) -> Option<&'static str> {
 }
 
 const DEFAULT_IMAGE: ImageSource<'static> = egui::include_image!(
-    concat!(env!("CARGO_MANIFEST_DIR"), "/images/DEFAULT.webp",)
+    concat!(env!("CARGO_MANIFEST_DIR"), "/assets/DEFAULT.webp",)
 );
 
-pub fn flavor_image(
+pub fn flavor_image<'a>(
     image: &hes_engine::flavor::Image,
-) -> egui::Image<'_> {
+) -> egui::Image<'a> {
     let mut images = IMAGES.lock();
 
     let fname = match &image.data {
@@ -62,14 +176,7 @@ pub fn flavor_image(
         None => {
             let source = match &image.data {
                 hes_engine::flavor::ImageData::File(fname) => {
-                    match ContentImages::get(&fname) {
-                        Some(image) => ImageSource::Bytes {
-                            uri: format!("bytes:://{fname}")
-                                .into(),
-                            bytes: image.data.to_vec().into(),
-                        },
-                        None => DEFAULT_IMAGE,
-                    }
+                    content::load(&fname)
                 }
                 hes_engine::flavor::ImageData::Data {
                     bytes,
