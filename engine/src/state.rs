@@ -1,6 +1,8 @@
 use std::collections::BTreeMap;
 
 use crate::{
+    Collection,
+    Id,
     events::{
         Condition,
         Effect,
@@ -13,7 +15,7 @@ use crate::{
     kinds::*,
     npcs::NPC,
     outputs,
-    production::{calculate_required, produce, ProcessChanges},
+    production::{ProcessChanges, calculate_required, produce},
     projects::{
         Group,
         Outcome,
@@ -24,8 +26,6 @@ use crate::{
     },
     resources,
     world::World,
-    Collection,
-    Id,
 };
 use serde::{Deserialize, Serialize};
 
@@ -411,26 +411,10 @@ impl State {
         // is more or less renewable.
         // Then we subtract out fuel and electricity usage
         // that's compensated by production.
-        let mut consumed_resources = self.resources.consumed;
-        consumed_resources.water = 0.;
-        consumed_resources.land = 0.;
-        consumed_resources.fuel -=
-            self.produced.of(Output::Fuel);
-        consumed_resources.electricity -=
-            self.produced.of(Output::Fuel);
-
-        // We don't actually need to consume resources because
+        // However, we don't actually need to consume resources because
         // `self.resources.available` actually represents resources
-        // available for the *next* year of  roduction.
+        // available for the *next* year of production.
         // self.resources.consume(consumed_resources);
-
-        // Weigh resources by scarcity;
-        // higher weight = higher scarcity
-        let mut resource_weights = self.resources.scarcity();
-        resource_weights.electricity = 2.;
-        let mut feedstock_weights = self.feedstocks.scarcity();
-        feedstock_weights.soil = 0.; // TODO add this back in?
-        feedstock_weights.other = 0.;
 
         // Outlook impacts based on production shortages
         // If all demand met is 0 it should be an instant game over, basically.

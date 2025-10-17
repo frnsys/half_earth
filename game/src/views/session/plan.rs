@@ -43,7 +43,6 @@ use crate::{
         resource,
         to_energy_units,
     },
-    image,
     parts::{
         RaisedFrame,
         bg_cover_image,

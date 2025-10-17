@@ -174,19 +174,37 @@ const DEFAULT_IMAGE: ImageSource<'static> = egui::include_image!(
 pub fn locale_image<'a>(
     fname: &'static str,
 ) -> egui::ImageSource<'a> {
-    content::load(&format!("locales/{fname}"))
+    let mut images = IMAGES.lock();
+    images
+        .entry(fname.to_string())
+        .or_insert_with(|| {
+            content::load(&format!("locales/{fname}"))
+        })
+        .clone()
 }
 
 pub fn intro_image<'a>(
     fname: &'static str,
 ) -> egui::ImageSource<'a> {
-    content::load(&format!("intro/{fname}"))
+    let mut images = IMAGES.lock();
+    images
+        .entry(fname.to_string())
+        .or_insert_with(|| {
+            content::load(&format!("intro/{fname}"))
+        })
+        .clone()
 }
 
 pub fn background_image<'a>(
     fname: &'static str,
 ) -> egui::ImageSource<'a> {
-    content::load(&format!("backgrounds/{fname}"))
+    let mut images = IMAGES.lock();
+    images
+        .entry(fname.to_string())
+        .or_insert_with(|| {
+            content::load(&format!("backgrounds/{fname}"))
+        })
+        .clone()
 }
 
 pub fn flavor_image<'a>(

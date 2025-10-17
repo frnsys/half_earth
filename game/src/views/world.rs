@@ -25,7 +25,6 @@ use crate::{
     consts,
     debug::DEBUG,
     display::{Icon, icons},
-    image,
     parts::{
         button,
         center_center,

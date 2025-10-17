@@ -21,7 +21,6 @@ use crate::{
         icons,
         intensity::{self, IntensityBar, intensity_bar},
     },
-    image,
     parts::{
         button,
         center_center,

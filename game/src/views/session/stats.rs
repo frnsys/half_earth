@@ -26,7 +26,6 @@ use crate::{
         icons,
         intensity,
     },
-    image,
     parts::{
         calc_text_width,
         h_center,

@@ -16,7 +16,6 @@ use rust_i18n::t;
 use crate::{
     consts,
     display::{as_speaker, icons, speaker_icon},
-    image,
     parts::{
         center_center,
         h_center,

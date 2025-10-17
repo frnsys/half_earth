@@ -118,10 +118,7 @@ impl App {
             prefs.tutorial.finish();
         }
 
-        let audio = AudioSystem::new();
-        if !prefs.sound {
-            audio::mute();
-        }
+        let audio = AudioSystem::new(!prefs.sound);
 
         let ctx = cc.gl.clone().unwrap();
         Self {

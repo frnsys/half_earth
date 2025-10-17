@@ -23,7 +23,6 @@ use crate::{
         icons,
         intensity::{self, intensity_bar},
     },
-    image,
     parts::{
         RaisedFrame,
         fill_bar,
