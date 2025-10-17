@@ -7,40 +7,41 @@ edition = "2024"
 egui = { workspace = true }
 egui_taffy = { workspace = true }
 egui_extras = { version = "0.32.0", default-features = false, features = ["webp", "svg", "image"] }
+egui-file-dialog = "0.11.0"
+egui_animation = "0.9.0"
+image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"] }
 serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 hes-engine = { path = "../engine" }
 hes-images = { path = "../images" }
+rust-i18n = "3.1.5"
+sys-locale = "0.3.2"
 extend = "1.2.0"
 enum-map = { workspace = true }
 enum-iterator = "2.1.0"
 strum = { workspace = true }
-tracing = { workspace = true }
 paste = "1.0.15"
-rust-i18n = "3.1.5"
 nom = "8.0.0"
-egui_animation = "0.9.0"
-image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"] }
 fastrand = { workspace = true }
 numfmt = { workspace = true }
 treemap = "0.3.2"
 bincode = { version = "1" }
 three-d = { git = "https://github.com/asny/three-d.git", rev = "12f3400307dd778c45e0160da924ddd964d8831a", default-features = false }
-egui-file-dialog = "0.11.0"
-serde_json.workspace = true
-sys-locale = "0.3.2"
 phf = "0.13.1"
 xxhash-rust = { version = "0.8.15", features = ["xxh3"] }
 web-time = "1.1.0"
+tracing = { workspace = true }
+log = "0.4"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = "0.2.100"
-serde-wasm-bindgen = "0.6"
-eframe = { version = "0.32.0", default-features = false, features = ["glow", "persistence"] }
-log = "0.4"
 wasm-bindgen-futures = "0.4"
-sys-locale = { version = "0.3.2", features = ["js"] }
+serde-wasm-bindgen = "0.6"
 web-sys = { version = "0.3", default-features = false }
+eframe = { version = "0.32.0", default-features = false, features = ["glow", "persistence"] }
 egui_extras = { version = "0.32.0", default-features = false, features = ["webp", "svg", "image", "http"] }
+sys-locale = { version = "0.3.2", features = ["js"] }
+poll-promise = { version = "0.3.0", features = ["web"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 hes-editor = { path = "../editor" }

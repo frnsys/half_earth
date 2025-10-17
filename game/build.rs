@@ -1,5 +1,10 @@
 use glob::glob;
-use std::{collections::HashMap, env, path::PathBuf};
+use std::{
+    collections::HashMap,
+    env,
+    path::PathBuf,
+    process::Command,
+};
 use xxhash_rust::xxh3::xxh3_64;
 
 fn main() {
@@ -10,6 +15,7 @@ fn main() {
     let git_hash = String::from_utf8(output.stdout).unwrap();
     println!("cargo:rustc-env=GIT_HASH={}", git_hash);
 
+    // Include translations
     let out = PathBuf::from(env::var("OUT_DIR").unwrap())
         .join("locales.rs");
 
@@ -41,4 +47,21 @@ fn main() {
         ),
     )
     .unwrap();
+
+    // For wasm, build JS
+    let target = env::var("TARGET").unwrap_or_default();
+    if target == "wasm32-unknown-unknown" {
+        let manifest_dir =
+            env::var("CARGO_MANIFEST_DIR").unwrap();
+
+        // Prefer setting current_dir instead of "cd && ..."
+        let status = Command::new("./build.sh")
+            .current_dir(format!("{manifest_dir}/assets/js"))
+            .status()
+            .expect("failed to spawn script");
+
+        if !status.success() {
+            panic!("Failed to build JS");
+        }
+    }
 }

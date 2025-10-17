@@ -48,6 +48,7 @@ pub struct WorldEvents {
     skipping: bool,
     globe: GlobeView,
     climate: Climate,
+    tgav: f32,
 }
 impl WorldEvents {
     pub fn new(
@@ -84,6 +85,7 @@ impl WorldEvents {
             disasters: Vec::default(),
             updates: Updates::new(vec![], state),
             climate,
+            tgav: state.world.temperature,
         }
     }
 
@@ -96,7 +98,7 @@ impl WorldEvents {
         ui: &mut egui::Ui,
         state: &mut GameState,
     ) {
-        let tint = warming_colour(state.world.temperature);
+        let tint = warming_colour(self.tgav);
         set_full_bg_image_tinted(
             ui,
             hes_images::background_image("globe.png"),
@@ -139,6 +141,14 @@ impl WorldEvents {
                 });
 
                 if p >= 1. {
+                    self.next_phase(state);
+                }
+            }
+            Subphase::ComputeTgav => {
+                if let Some(tgav) =
+                    self.climate.tgav(state.world.year)
+                {
+                    self.tgav = tgav;
                     self.next_phase(state);
                 }
             }
@@ -254,28 +264,24 @@ impl WorldEvents {
 
     fn next_phase(&mut self, state: &mut GameState) {
         let mut next = match self.phase {
-            Subphase::Disasters => Subphase::StepYear,
+            Subphase::Disasters => Subphase::ComputeTgav,
+            Subphase::ComputeTgav => Subphase::StepYear,
             Subphase::StepYear => Subphase::Updates,
             Subphase::Updates => Subphase::Events,
             Subphase::Events => Subphase::Disasters,
             Subphase::Done => Subphase::Done,
         };
 
-        if next == Subphase::StepYear {
-            // Update the temp anomaly.
+        if next == Subphase::ComputeTgav {
+            // Update emissions to compute the temp anomaly.
             let emissions = get_emissions(&state.core);
-            tracing::debug!("emissions={emissions:?}");
+            self.climate.add_emissions(emissions);
+            state.ui.emissions = self.climate.emissions_data();
+        }
 
-            let tgav = {
-                self.climate.add_emissions(emissions);
-                state.ui.emissions =
-                    self.climate.emissions_data();
-                self.climate.calc_tgav() as f32
-            };
-            tracing::debug!("tgav={tgav}");
-
+        if next == Subphase::StepYear {
             // Advance the year.
-            let step_updates = state.step_year(tgav);
+            let step_updates = state.step_year(self.tgav);
             let completed_projects = step_updates
                 .iter()
                 .filter_map(|update| match update {
@@ -460,6 +466,7 @@ struct Disaster {
 enum Subphase {
     Events,
     Disasters,
+    ComputeTgav,
     StepYear,
     Updates,
     Done,

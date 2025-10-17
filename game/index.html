@@ -17,6 +17,8 @@
     <link data-trunk rel="copy-dir" href="../images/assets" data-target-path="images"/>
     <link data-trunk rel="copy-dir" href="assets/public" data-target-path="public"/>
     <link data-trunk rel="copy-dir" href="assets/sounds" data-target-path="sounds"/>
+    <link data-trunk rel="copy-dir" href="assets/hector" data-target-path="hector"/>
+    <link data-trunk rel="copy-file" href="assets/js/dist/hector.wasm" data-target-path="hector"/>
 
     <link rel="icon" type="image/png" href="/public/favicon/16.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="/public/favicon/32.png" sizes="32x32" />
@@ -96,8 +98,8 @@
             content: "";
             grid-area: 1/1;
             background:
-                linear-gradient(#fff 0 0) left,
-            linear-gradient(#fff 0 0) right;
+                linear-gradient(#B9F80D 0 0) left,
+            linear-gradient(#B9F80D 0 0) right;
         background-size: 20px 25px;
         background-origin: content-box;
         background-repeat: no-repeat;
@@ -107,7 +109,7 @@
             width:  20px;
             margin: auto 0;
             border-radius: 50%;
-            background: #fff;
+            background: #B9F80D;
             animation: l10 1s infinite;
         }
         @keyframes l10{
@@ -125,7 +127,7 @@
     <div class="centered" id="loading_text">
         <img src="/public/gosplant.svg" />
         <div class="loader"></div>
-        <p style="font-size:16px">
+        <p style="font-size:12px">
             Booting up…
         </p>
     </div>

@@ -94,7 +94,7 @@ impl Credits {
                 ui.add_space(18.);
                 for name in names.iter() {
                     ui.label(RichText::new(*name).family(
-                        FontFamily::Name("Serif".into()),
+                        FontFamily::Name("TimesTen".into()),
                     ));
                 }
                 ui.add_space(32.);

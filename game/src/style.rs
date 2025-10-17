@@ -63,7 +63,7 @@ fn load_fonts() -> egui::FontDefinitions {
     fonts.load_font(
         "NotoSansJP",
         include_bytes!(
-            "../assets/fonts/NotoSansJP-Regular.ttf"
+            "../assets/fonts/NotoSansJP-Regular.subset.ttf"
         ),
     );
 

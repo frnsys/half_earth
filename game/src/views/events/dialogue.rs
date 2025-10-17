@@ -171,9 +171,13 @@ impl Dialogue {
                         tui.ui(|ui| {
                             let text = t!(&branch.text);
                             if ui.add(button(text)).clicked() {
-                                self.select_choice(
+                                let done = self.select_choice(
                                     &branch, state,
                                 );
+                                if done {
+                                    result =
+                                        Some(DialogueResult::Finished);
+                                }
                             }
                             ui.add_space(1.);
                         });
@@ -234,12 +238,15 @@ impl Dialogue {
         &mut self,
         response: &Response,
         state: &mut State,
-    ) {
+    ) -> bool {
         state.apply_effects(&response.effects, self.region_id);
 
         if let Some(line_id) = response.next_line {
             self.current_line =
                 self.dialogue.lines[line_id].clone();
+            false
+        } else {
+            true
         }
     }
 }
