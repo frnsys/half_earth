@@ -12,6 +12,8 @@ mod scanner;
 mod session;
 mod world;
 
+use std::sync::Arc;
+
 use crate::{
     debug::{DEBUG, DebugView},
     state::{GameState, Settings},
@@ -48,16 +50,20 @@ pub enum GameAction {
 pub struct GameView {
     phase: Phase,
     show_menu: bool,
+    ctx: Arc<three_d::context::Context>,
 }
 impl GameView {
-    pub fn new(state: &mut GameState) -> Self {
+    pub fn new(
+        state: &mut GameState,
+        context: &Arc<three_d::context::Context>,
+    ) -> Self {
         if let Some(debug_view) = &DEBUG.view {
             let phase = match debug_view {
                 DebugView::Plan => {
                     Phase::Planning(Session::plan())
                 }
                 DebugView::Regions => {
-                    Phase::Planning(Session::regions())
+                    Phase::Planning(Session::regions(context))
                 }
                 DebugView::Parliament => Phase::Planning(
                     Session::govt(&mut state.core),
@@ -65,9 +71,9 @@ impl GameView {
                 DebugView::Stats => {
                     Phase::Planning(Session::stats())
                 }
-                DebugView::World => {
-                    Phase::Events(WorldEvents::new(state))
-                }
+                DebugView::World => Phase::Events(
+                    WorldEvents::new(state, context),
+                ),
                 DebugView::Report => {
                     Phase::Report(Report::new(state))
                 }
@@ -78,23 +84,31 @@ impl GameView {
                     Phase::Ending(End::new(false, state))
                 }
             };
-            GameView::with_phase(phase)
+            GameView::with_phase(phase, context.clone())
         } else {
-            Self::intro(&mut state.core)
+            Self::intro(&mut state.core, context.clone())
         }
     }
 
-    fn intro(state: &mut State) -> Self {
+    fn intro(
+        state: &mut State,
+        ctx: Arc<three_d::context::Context>,
+    ) -> Self {
         Self {
             phase: Phase::Intro(Intro::new(state)),
             show_menu: false,
+            ctx,
         }
     }
 
-    fn with_phase(phase: Phase) -> Self {
+    fn with_phase(
+        phase: Phase,
+        ctx: Arc<three_d::context::Context>,
+    ) -> Self {
         Self {
             phase,
             show_menu: false,
+            ctx,
         }
     }
 
@@ -170,10 +184,11 @@ impl GameView {
                         }
                     }
 
-                    let go_to_world = session.render(ui, state);
+                    let go_to_world =
+                        session.render(ui, state, &self.ctx);
                     if go_to_world {
                         self.phase = Phase::Events(
-                            WorldEvents::new(state),
+                            WorldEvents::new(state, &self.ctx),
                         );
                         ret_action = Some(GameAction::Save);
                     }

@@ -89,6 +89,8 @@ impl AudioSystem {
                     }
                 }
                 AudioRequest::Loop(track) => {
+                    // TODO
+                    #[cfg(not(target_arch = "wasm32"))]
                     if !self.muted {
                         let sound = match track {
                             Track::Intro => {

@@ -92,7 +92,7 @@ impl Parliament {
     ) {
         set_full_bg_image(
             ui,
-            image!("backgrounds/parliament.webp"),
+            hes_images::background_image("parliament.webp"),
             egui::vec2(1600., 1192.),
         );
 

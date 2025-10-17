@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::Arc};
 
 use egui::{Color32, Margin, Sense};
 use egui_taffy::TuiBuilderLogic;
@@ -40,8 +40,10 @@ pub struct Regions {
     globe_view: GlobeView,
 }
 impl Regions {
-    pub fn new() -> Self {
-        let mut globe = GlobeView::new(280, 200.);
+    pub fn new(
+        context: &Arc<three_d::context::Context>,
+    ) -> Self {
+        let mut globe = GlobeView::new(280, 200., context);
         globe.hide_clouds();
         globe.dont_rotate();
 
@@ -61,7 +63,7 @@ impl Regions {
     ) {
         set_full_bg_image(
             ui,
-            image!("backgrounds/regions.png"),
+            hes_images::background_image("regions.png"),
             egui::vec2(1600., 1192.),
         );
 

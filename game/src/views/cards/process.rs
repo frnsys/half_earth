@@ -80,7 +80,7 @@ impl AsCard for Process {
 
     fn header(&self, ui: &mut egui::Ui, state: &GameState) {
         let output_icon = self.output.icon();
-        let output_name = t!(&self.output.title());
+        let output_name = t!(self.output.title());
 
         let produced_by_process = state
             .produced

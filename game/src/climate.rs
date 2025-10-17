@@ -37,8 +37,8 @@ mod tgav {
             self.emissions = data;
         }
 
-        pub fn emissions_data(&self) -> &super::EmissionsData {
-            &self.emissions
+        pub fn emissions_data(&self) -> super::EmissionsData {
+            self.emissions.clone()
         }
 
         pub fn add_emissions(
@@ -77,19 +77,15 @@ mod tgav {
         }
     }
 }
-pub use tgav::*;
 
 #[cfg(target_arch = "wasm32")]
 mod tgav {
-    use js_sys::Promise;
-    use leptos::*;
     use serde::ser::Serialize;
     use serde_wasm_bindgen::Serializer;
     use std::{cell::RefCell, collections::HashMap, rc::Rc};
     use wasm_bindgen::prelude::*;
-    use wasm_bindgen_futures::JsFuture;
 
-    #[wasm_bindgen(module = "/public/js/dist/tgav.js")]
+    #[wasm_bindgen(module = "/assets/js/dist/tgav.js")]
     extern "C" {
         type Temperature;
 
@@ -102,26 +98,44 @@ mod tgav {
             emissions: JsValue,
         );
 
+        #[wasm_bindgen(method, js_name = setEmissions)]
+        fn set_emissions(
+            this: &Temperature,
+            emissions: JsValue,
+        );
+
+        #[wasm_bindgen(method, js_name = getEmissions)]
+        fn get_emissions(this: &Temperature) -> JsValue;
+
         #[wasm_bindgen(method, js_name = updateTemperature)]
-        fn calc_tgav(this: &Temperature) -> Promise;
+        fn calc_tgav(this: &Temperature) -> f64;
     }
 
-    pub struct HectorRef {
+    pub struct Climate {
         inner: Rc<RefCell<Temperature>>,
     }
-    impl Clone for HectorRef {
-        fn clone(&self) -> Self {
-            Self {
-                inner: self.inner.clone(),
-            }
-        }
-    }
-    impl HectorRef {
+    impl Climate {
         pub fn new(start_year: usize) -> Self {
             let hector = Temperature::new(start_year);
-            HectorRef {
+            Climate {
                 inner: Rc::new(RefCell::new(hector)),
             }
+        }
+
+        pub fn set_emissions_data(
+            &mut self,
+            data: super::EmissionsData,
+        ) {
+            let serializer = Serializer::new()
+                .serialize_maps_as_objects(true);
+            let emissions =
+                data.serialize(&serializer).unwrap();
+            self.inner.borrow().set_emissions(emissions);
+        }
+
+        pub fn emissions_data(&self) -> super::EmissionsData {
+            let data = self.inner.borrow().get_emissions();
+            serde_wasm_bindgen::from_value(data).unwrap()
         }
 
         pub fn add_emissions(
@@ -135,11 +149,10 @@ mod tgav {
             self.inner.borrow().add_emissions(emissions);
         }
 
-        pub async fn calc_tgav(&self) -> f64 {
-            let promise = self.inner.borrow().calc_tgav();
-            let future = JsFuture::from(promise);
-            let result = future.await.unwrap();
-            result.as_f64().unwrap()
+        pub fn calc_tgav(&self) -> f64 {
+            self.inner.borrow().calc_tgav()
         }
     }
 }
+
+pub use tgav::*;

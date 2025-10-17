@@ -4,7 +4,12 @@ use egui::{Color32, ImageSource};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::*;
-use rust_embed::Embed;
+use hes_images::{
+    coup_image,
+    death_image,
+    lose_image,
+    win_image,
+};
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 use strum::{EnumIter, IntoEnumIterator};
@@ -16,22 +21,6 @@ use crate::{
     tips::{add_tip, tip},
     views::events::Events,
 };
-
-#[derive(Embed)]
-#[folder = "assets/images/sharing/win"]
-struct WinImages;
-
-#[derive(Embed)]
-#[folder = "assets/images/sharing/lose/death"]
-struct DeathImages;
-
-#[derive(Embed)]
-#[folder = "assets/images/sharing/lose/coup"]
-struct CoupImages;
-
-#[derive(Embed)]
-#[folder = "assets/images/sharing/lose/generic"]
-struct LoseImages;
 
 pub struct End {
     lose: bool,
@@ -55,31 +44,12 @@ impl End {
         };
         let summary = summarize(&state.core, !lose);
 
-        let image_opts: Vec<_> = match summary.ending {
-            Ending::Win => WinImages::iter().collect(),
-            Ending::Died => DeathImages::iter().collect(),
-            Ending::Coup => CoupImages::iter().collect(),
-            Ending::LostOther => LoseImages::iter().collect(),
+        let image = match summary.ending {
+            Ending::Win => win_image(&summary.faction),
+            Ending::Died => death_image(&summary.faction),
+            Ending::Coup => coup_image(&summary.faction),
+            Ending::LostOther => lose_image(&summary.faction),
         };
-        let image_opts: Vec<_> = image_opts
-            .into_iter()
-            .filter(|path| path.contains(&summary.faction))
-            .collect();
-        let image =
-            fastrand::choice(&image_opts).and_then(|path| {
-                match summary.ending {
-                    Ending::Win => WinImages::get(path),
-                    Ending::Died => DeathImages::get(path),
-                    Ending::Coup => CoupImages::get(path),
-                    Ending::LostOther => LoseImages::get(path),
-                }
-                .map(|file| {
-                    ImageSource::Bytes {
-                        uri: format!("bytes:://{path}").into(),
-                        bytes: file.data.to_vec().into(),
-                    }
-                })
-            });
 
         let log = state
             .ui

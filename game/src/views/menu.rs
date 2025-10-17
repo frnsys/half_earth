@@ -45,7 +45,7 @@ pub fn render_menu(
 ) -> Option<MenuAction> {
     set_full_bg_image(
         ui,
-        image!("backgrounds/menu.jpg"),
+        hes_images::background_image("menu.jpg"),
         egui::vec2(900., 1200.),
     );
 

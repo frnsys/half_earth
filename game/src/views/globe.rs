@@ -5,10 +5,11 @@ use egui::{
     epaint::ImageDelta,
 };
 use serde::Deserialize;
-use std::{collections::HashMap, f32, time::Instant};
+use std::{collections::HashMap, f32, sync::Arc};
 use three_d::*;
+use web_time::Instant;
 
-use crate::{GLOW_CONTEXT, display::Icon};
+use crate::display::Icon;
 
 const ADJUSTMENT_ANGLE: f32 = -f32::consts::PI; // For adjusting hexsphere coordinates
 const HEXSPHERE: &str = include_str!(concat!(
@@ -286,10 +287,11 @@ pub struct GlobeView {
     context: three_d::Context,
 }
 impl GlobeView {
-    pub fn new(size: u32, camera_distance: f32) -> Self {
-        let ctx = GLOW_CONTEXT
-            .get()
-            .expect("glow context initialized");
+    pub fn new(
+        size: u32,
+        camera_distance: f32,
+        ctx: &Arc<context::Context>,
+    ) -> Self {
         let context =
             three_d::Context::from_gl_context(ctx.clone())
                 .unwrap();
@@ -520,9 +522,9 @@ impl Material for SurfaceMaterial {
         _viewer: &dyn Viewer,
         _lights: &[&dyn Light],
     ) {
-        program.use_texture("shadows", &self.shadows);
-        program.use_texture("satTexture", &self.satellite);
-        program.use_texture("biomesTexture", &self.biomes);
+        program.use_texture("uShadows", &self.shadows);
+        program.use_texture("uSatTexture", &self.satellite);
+        program.use_texture("uBiomesTexture", &self.biomes);
     }
 
     fn render_states(&self) -> RenderStates {

@@ -368,27 +368,6 @@ pub fn r_align<T>(
         .show(inner)
 }
 
-pub fn b_align<T>(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui) -> T,
-) -> T {
-    tui(ui, ui.id().with(id))
-        .reserve_available_space()
-        .style(taffy::Style {
-            flex_grow: 1.,
-            flex_direction: taffy::FlexDirection::Column,
-            min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
-                height: taffy::prelude::percent(1.),
-            },
-            align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(taffy::JustifyContent::End),
-            ..Default::default()
-        })
-        .show(inner)
-}
-
 pub fn h_center<T>(
     ui: &mut egui::Ui,
     id: &str,

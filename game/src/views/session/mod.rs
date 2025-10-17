@@ -4,7 +4,7 @@ mod regions;
 mod stats;
 mod treemap;
 
-use std::fmt::Display;
+use std::{fmt::Display, sync::Arc};
 
 use egui::{Color32, CornerRadius, Margin, Sense};
 use egui_taffy::TuiBuilderLogic;
@@ -70,8 +70,10 @@ impl Session {
         Self::from_view(View::Govt(Parliament::new(state)))
     }
 
-    pub(super) fn regions() -> Self {
-        Self::from_view(View::World(Regions::new()))
+    pub(super) fn regions(
+        context: &Arc<three_d::context::Context>,
+    ) -> Self {
+        Self::from_view(View::World(Regions::new(context)))
     }
 
     pub(super) fn plan() -> Self {
@@ -85,7 +87,12 @@ impl Session {
         }
     }
 
-    fn set_tab(&mut self, tab: &Tab, state: &mut State) {
+    fn set_tab(
+        &mut self,
+        tab: &Tab,
+        state: &mut State,
+        ctx: &Arc<three_d::context::Context>,
+    ) {
         let phase = match tab {
             Tab::Plan => EventPhase::PlanningPlan,
             Tab::World => EventPhase::PlanningRegions,
@@ -99,7 +106,7 @@ impl Session {
             Tab::Plan => View::Plan(Plan::new()),
             Tab::Govt => View::Govt(Parliament::new(state)),
             Tab::Stats => View::Stats(Stats::new()),
-            Tab::World => View::World(Regions::new()),
+            Tab::World => View::World(Regions::new(ctx)),
         };
     }
 
@@ -107,6 +114,7 @@ impl Session {
         &mut self,
         ui: &mut egui::Ui,
         state: &mut GameState,
+        ctx: &Arc<three_d::context::Context>,
     ) -> bool {
         if self.view.show_tabs() {
             let tabs = &[
@@ -146,7 +154,7 @@ impl Session {
             if let Some(tab) =
                 render_tabs(ui, &state.ui.tutorial, tabs)
             {
-                self.set_tab(tab, &mut state.core);
+                self.set_tab(tab, &mut state.core, ctx);
             }
         }
 

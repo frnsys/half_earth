@@ -825,7 +825,7 @@ impl DisplayEffect {
                         "%{changeDir} demand for %{name} by [b]%{percent}%[/b].",
                         percent = display::percent(amount.abs(), true),
                         changeDir = self.change_dir(*amount),
-                        name = t!(&output.lower()),
+                        name = t!(output.lower()),
                     },
                 )
             }

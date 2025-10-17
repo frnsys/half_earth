@@ -3,6 +3,7 @@ mod climate;
 mod consts;
 mod debug;
 mod display;
+mod locales;
 mod parts;
 mod splash;
 mod state;
@@ -12,7 +13,7 @@ mod tips;
 mod vars;
 mod views;
 
-use std::sync::{Arc, OnceLock};
+use std::sync::Arc;
 
 use egui::Key;
 
@@ -26,8 +27,52 @@ use crate::{
     state::{GameState, Tutorial, prepare_game},
     views::{GameAction, GameView},
 };
+
+#[cfg(not(target_arch = "wasm32"))]
 use hes_editor::WorldEditor;
 
+#[cfg(target_arch = "wasm32")]
+mod i18n {
+    use super::locales;
+    use xxhash_rust::xxh3::xxh3_64;
+
+    pub struct WebI18n;
+    impl Default for WebI18n {
+        fn default() -> Self {
+            Self
+        }
+    }
+    impl rust_i18n::Backend for WebI18n {
+        fn available_locales(&self) -> Vec<&str> {
+            locales::LOCALES.keys().map(|v| *v).collect()
+        }
+
+        fn translate(
+            &self,
+            locale: &str,
+            key: &str,
+        ) -> Option<&str> {
+            if locale == "en" {
+                None
+            } else {
+                let key = xxh3_64(key.as_bytes());
+                locales::LOCALES
+                    .get(locale)
+                    .and_then(|trs| trs.get(&key))
+                    .map(|v| *v)
+            }
+        }
+    }
+}
+
+#[cfg(target_arch = "wasm32")]
+rust_i18n::i18n!(
+    "/dev/null",
+    fallback = "en",
+    backend = i18n::WebI18n::default()
+);
+
+#[cfg(not(target_arch = "wasm32"))]
 rust_i18n::i18n!("locales", fallback = "en");
 
 #[macro_export]
@@ -41,12 +86,11 @@ macro_rules! image {
     };
 }
 
-pub static GLOW_CONTEXT: OnceLock<Arc<eframe::glow::Context>> =
-    OnceLock::new();
-
 enum View {
     Start(Start),
     Game(GameView),
+
+    #[cfg(not(target_arch = "wasm32"))]
     Editor(WorldEditor),
 }
 
@@ -55,6 +99,7 @@ pub struct App {
     state: GameState,
     prefs: Settings,
     audio: AudioSystem,
+    ctx: Arc<three_d::context::Context>,
 
     has_save: bool,
 }
@@ -78,14 +123,21 @@ impl App {
             audio::mute();
         }
 
-        GLOW_CONTEXT.get_or_init(|| cc.gl.clone().unwrap());
-
+        let ctx = cc.gl.clone().unwrap();
         Self {
             view: if DEBUG.open_editor {
-                View::Editor(WorldEditor::new())
+                #[cfg(not(target_arch = "wasm32"))]
+                {
+                    View::Editor(WorldEditor::new())
+                }
+
+                #[cfg(target_arch = "wasm32")]
+                {
+                    View::Start(Start::default())
+                }
             } else if DEBUG.view.is_some() {
                 prepare_game(&mut state, &prefs);
-                View::Game(GameView::new(&mut state))
+                View::Game(GameView::new(&mut state, &ctx))
             } else {
                 View::Start(Start::default())
             },
@@ -93,6 +145,7 @@ impl App {
             prefs,
             state,
             has_save,
+            ctx,
         }
     }
 }
@@ -181,6 +234,7 @@ impl eframe::App for App {
                                         self.view = View::Game(
                                             GameView::new(
                                                 &mut self.state,
+                                                &self.ctx,
                                             ),
                                         );
                                     }
@@ -196,9 +250,12 @@ impl eframe::App for App {
                                         self.view = View::Game(
                                             GameView::new(
                                                 &mut self.state,
+                                                &self.ctx,
                                             ),
                                         );
                                     }
+
+                                    #[cfg(not(target_arch = "wasm32"))]
                                     StartAction::OpenEditor => {
                                         self.view = View::Editor(WorldEditor::new());
                                     }
@@ -236,10 +293,12 @@ impl eframe::App for App {
                                 }
                             }
                         }
+
+                        #[cfg(not(target_arch = "wasm32"))]
                         View::Editor(editor) => {
                             set_full_bg_image(
                                 ui,
-                                image!("backgrounds/editor.jpg"),
+                                hes_images::background_image("editor.jpg"),
                                 egui::vec2(1200., 897.),
                             );
                             ui.add(editor);

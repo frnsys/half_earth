@@ -18,6 +18,8 @@ enum MenuView {
 pub enum StartAction {
     Continue,
     NewGame(World),
+
+    #[cfg(not(target_arch = "wasm32"))]
     OpenEditor,
 }
 
@@ -47,21 +49,25 @@ impl Start {
                 .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
                 .show(ui.ctx(), |ui| {
                     ui.horizontal(|ui| {
-                        let resp = ui.add(
-                            egui::Button::new(format!(
-                                "  {}  ",
-                                t!("World Editor")
-                            ))
-                            .stroke(egui::Stroke::new(
-                                1.,
-                                egui::Color32::from_rgb(
-                                    0xFF, 0xCA, 0x28,
-                                ),
-                            )),
-                        );
-                        if resp.clicked() {
-                            start_action =
-                                Some(StartAction::OpenEditor);
+                        #[cfg(not(target_arch = "wasm32"))]
+                        {
+                            let resp = ui.add(
+                                egui::Button::new(format!(
+                                    "  {}  ",
+                                    t!("World Editor")
+                                ))
+                                .stroke(egui::Stroke::new(
+                                    1.,
+                                    egui::Color32::from_rgb(
+                                        0xFF, 0xCA, 0x28,
+                                    ),
+                                )),
+                            );
+                            if resp.clicked() {
+                                start_action = Some(
+                                    StartAction::OpenEditor,
+                                );
+                            }
                         }
 
                         let mut lang =

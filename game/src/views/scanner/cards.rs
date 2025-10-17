@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 use crate::{
     parts::raised_frame,
     state::GameState,
@@ -18,6 +16,7 @@ use egui::{
     Rect,
     style::ScrollAnimation,
 };
+use web_time::Instant;
 
 const GAP: f32 = 24.;
 const SCANNER_HEIGHT: f32 = 48.;

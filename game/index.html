@@ -14,6 +14,24 @@
     <base data-trunk-public-url />
 
     <link data-trunk rel="copy-file" href="assets/js/sw.js"/>
+    <link data-trunk rel="copy-dir" href="../images/assets" data-target-path="images"/>
+    <link data-trunk rel="copy-dir" href="assets/public" data-target-path="public"/>
+
+    <link rel="icon" type="image/png" href="/public/favicon/16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/public/favicon/32.png" sizes="32x32" />
+
+    <meta property="og:site_name" content="Half-Earth Socialism">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Play as a planetary planner and decide what we should do about the climate, biodiversity, and human welfare. Can you bring the world safely to a better place?">
+    <meta property="og:title" content="Half-Earth Socialism: The Game">
+    <meta property="og:image" content="https://play.half.earth/public/social.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Half-Earth Socialism: The Game">
+    <meta name="twitter:description" content="Play as a planetary planner and decide what we should do about the climate, biodiversity, and human welfare. Can you bring the world safely to a better place?">
+    <meta name="twitter:image" content="https://play.half.earth/public/social.jpg">
+    <meta name="twitter:image:alt" content="A hot pink logo of the earth surrounded by grains. Underneath is the text 'Half Earth Socialism: A Planetary Crisis Planning Game'. The background is a pixelated mixture of marbled liquid.">
+    <meta name="twitter:creator" content="@VersoBooks">
+    <meta name="twitter:site" content="@VersoBooks">
 
     <style>
         html {
@@ -22,17 +40,7 @@
         }
 
         body {
-            /* Light mode background color for what is not covered by the egui canvas,
-            or where the egui canvas is translucent. */
-            background: #909090;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                /* Dark mode background color for what is not covered by the egui canvas,
-                or where the egui canvas is translucent. */
-                background: #404040;
-            }
+            background: #000000;
         }
 
         /* Allow canvas to fill entire web page: */
@@ -65,57 +73,60 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: #f0f0f0;
-            font-size: 24px;
-            font-family: Ubuntu-Light, Helvetica, sans-serif;
+            color: #fff;
+            font-size: 16px;
+            font-family: monospace;
             text-align: center;
         }
 
-        /* ---------------------------------------------- */
-        /* Loading animation from https://loading.io/css/ */
-        .lds-dual-ring {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
+        /* From: https://css-loaders.com/blob/ */
+        .loader {
+            width: 100px;
+            aspect-ratio: 1;
+            padding: 10px;
+            box-sizing: border-box;
+            display: grid;
+            background: #000;
+            filter: blur(5px) contrast(10);
+            mix-blend-mode: darken;
         }
-
-        .lds-dual-ring:after {
-            content: " ";
-            display: block;
-            width: 24px;
-            height: 24px;
-            margin: 0px;
+        .loader:before,
+        .loader:after{
+            content: "";
+            grid-area: 1/1;
+            background:
+                linear-gradient(#fff 0 0) left,
+            linear-gradient(#fff 0 0) right;
+        background-size: 20px 25px;
+        background-origin: content-box;
+        background-repeat: no-repeat;
+        }
+        .loader:after {
+            height: 20px;
+            width:  20px;
+            margin: auto 0;
             border-radius: 50%;
-            border: 3px solid #fff;
-            border-color: #fff transparent #fff transparent;
-            animation: lds-dual-ring 1.2s linear infinite;
+            background: #fff;
+            animation: l10 1s infinite;
         }
-
-        @keyframes lds-dual-ring {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+        @keyframes l10{
+            90%,100% {transform: translate(300%)}
         }
     </style>
 </head>
 
 <body>
-    <link data-trunk rel="inline" href="assets/js/audio.js"/>
-
     <!-- The WASM code will resize the canvas dynamically -->
     <!-- the id is hardcoded in main.rs . so, make sure both match. -->
     <canvas id="the_canvas_id"></canvas>
 
     <!-- the loading spinner will be removed in main.rs -->
     <div class="centered" id="loading_text">
+        <img src="/public/gosplant.svg" />
+        <div class="loader"></div>
         <p style="font-size:16px">
-            Loading…
+            Booting up…
         </p>
-        <div class="lds-dual-ring"></div>
     </div>
 
     <!--Register Service Worker. this will cache the wasm / js scripts for offline use (for PWA functionality). -->

@@ -106,7 +106,7 @@ impl Report {
         let mut done = false;
         set_full_bg_image(
             ui,
-            image!("backgrounds/report.png"),
+            hes_images::background_image("report.png"),
             egui::vec2(1600., 1192.),
         );
 

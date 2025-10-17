@@ -102,7 +102,7 @@ impl Plan {
 
         set_full_bg_image(
             ui,
-            image!("backgrounds/plan.png"),
+            hes_images::background_image("plan.png"),
             egui::vec2(1600., 1192.),
         );
 
@@ -406,7 +406,7 @@ impl Plan {
                                         |ui| {
                                             ui.label(
                                         egui::RichText::new(
-                                            t!(&process
+                                            t!(process
                                                 .output
                                                 .title()),
                                         ),
@@ -660,13 +660,13 @@ fn production_shortages(state: &State) -> Option<String> {
         if problems.len() == 1 {
             let (output, severity) = &problems[0];
             let desc = severity.desc();
-            let details = t!(&output.title());
+            let details = t!(output.title());
             Some(format!("{desc}: {details}"))
         } else {
             let list = problems
                 .into_iter()
                 .map(|(output, severity)| {
-                    let title = t!(&output.title());
+                    let title = t!(output.title());
                     let label = severity.label();
                     format!("{title} ({label})")
                 })

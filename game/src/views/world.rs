@@ -1,6 +1,6 @@
 use std::{
     collections::{BTreeMap, HashMap, VecDeque},
-    time::Instant,
+    sync::Arc,
 };
 
 use egui::Color32;
@@ -17,6 +17,7 @@ use hes_engine::{
     Update as EngineUpdate,
 };
 use rust_i18n::t;
+use web_time::Instant;
 
 use crate::{
     audio,
@@ -50,7 +51,10 @@ pub struct WorldEvents {
     climate: Climate,
 }
 impl WorldEvents {
-    pub fn new(state: &mut GameState) -> Self {
+    pub fn new(
+        state: &mut GameState,
+        context: &Arc<three_d::context::Context>,
+    ) -> Self {
         state.ui.cycle_start_snapshot(&state.core);
 
         let good = state.things_are_good();
@@ -76,7 +80,7 @@ impl WorldEvents {
             year_timer: Timer::new(),
             skipping: DEBUG.always_skip_world,
             events: Events::new(events, state),
-            globe: GlobeView::new(360, 250.),
+            globe: GlobeView::new(360, 250., context),
             toasts: VecDeque::default(),
             disasters: Vec::default(),
             updates: Updates::new(vec![], state),
@@ -96,7 +100,7 @@ impl WorldEvents {
         let tint = warming_colour(state.world.temperature);
         set_full_bg_image_tinted(
             ui,
-            image!("backgrounds/globe.png"),
+            hes_images::background_image("globe.png"),
             egui::vec2(1048., 702.),
             tint,
         );
@@ -266,7 +270,7 @@ impl WorldEvents {
             let tgav = {
                 self.climate.add_emissions(emissions);
                 state.ui.emissions =
-                    self.climate.emissions_data().clone();
+                    self.climate.emissions_data();
                 self.climate.calc_tgav() as f32
             };
             tracing::debug!("tgav={tgav}");

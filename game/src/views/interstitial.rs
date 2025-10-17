@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use egui::{Color32, ImageSource, Margin, TextWrapMode};
+use egui::{Color32, Margin, TextWrapMode};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{EventPhase, State};
 use rust_i18n::t;
@@ -8,7 +8,6 @@ use rust_i18n::t;
 use crate::{
     audio,
     display::intensity,
-    image,
     parts::{button, center_center, set_full_bg_image},
     state::StateExt,
     views::events::Events,
@@ -83,7 +82,7 @@ impl Interstitial {
 
         set_full_bg_image(
             ui,
-            locale.background.clone(),
+            locale.background(),
             egui::Vec2::from(locale.background_size),
         );
 
@@ -164,9 +163,14 @@ impl Interstitial {
 
 pub struct Locale {
     pub name: &'static str,
-    background: ImageSource<'static>,
+    background: &'static str,
     background_size: (f32, f32),
     credit: &'static str,
+}
+impl Locale {
+    pub fn background<'a>(&self) -> egui::ImageSource<'a> {
+        hes_images::locale_image(self.background)
+    }
 }
 
 // List from Troy:
@@ -174,111 +178,85 @@ pub struct Locale {
 pub const LOCALES: &[Locale] = &[
     Locale {
         name: "Havana",
-        background: image!(
-            "locales/pexels-matthias-oben-3687869.webp"
-        ),
+        background: "pexels-matthias-oben-3687869.webp",
         credit: "Matthias Oben",
         background_size: (1200., 800.),
     },
     Locale {
         name: "Ouagadougou",
-        background: image!(
-            "locales/2560px-Ouagadougou_BCEAO_day.webp"
-        ),
+        background: "2560px-Ouagadougou_BCEAO_day.webp",
         credit: "Wegmann, CC BY-SA 3.0, via Wikimedia Commons",
         background_size: (1200., 803.),
     },
     Locale {
         name: "Port-au-Prince",
-        background: image!(
-            "locales/robin-canfield-CkCV7vTmmz4-unsplash.webp"
-        ),
+        background: "robin-canfield-CkCV7vTmmz4-unsplash.webp",
         credit: "Robin Canfield",
         background_size: (800., 1200.),
     },
     Locale {
         name: "San Cristóbal de las Casas",
-        background: image!(
-            "locales/1536px-Street_Scene_with_Church_Cupola_-_San_Cristobal_de_las_Casas_-_Chiapas_-_Mexico.webp"
-        ),
+        background: "1536px-Street_Scene_with_Church_Cupola_-_San_Cristobal_de_las_Casas_-_Chiapas_-_Mexico.webp",
         credit: "Adam Jones, CC BY 2.0, via Wikimedia Commons",
         background_size: (900., 1200.),
     },
     Locale {
         name: "Paris",
-        background: image!(
-            "locales/pexels-pierre-blache-3073666.webp"
-        ),
+        background: "pexels-pierre-blache-3073666.webp",
         credit: "Pierre Blaché",
         background_size: (960., 1200.),
     },
     Locale {
         name: "Bandung",
-        background: image!(
-            "locales/Street_Braga,_Bandung_City,_West_Java,_Indonesia.webp"
-        ),
+        background: "Street_Braga,_Bandung_City,_West_Java,_Indonesia.webp",
         credit: "PACARNYAKEYES, CC BY-SA 4.0, via Wikimedia Commons",
         background_size: (430., 534.),
     },
     Locale {
         name: "Seattle",
-        background: image!("locales/2560px-Seattle_4.webp"),
+        background: "2560px-Seattle_4.webp",
         credit: "Daniel Schwen, CC BY-SA 4.0, via Wikimedia Commons",
         background_size: (1200., 674.),
     },
     Locale {
         name: "Hanoi",
-        background: image!(
-            "locales/2560px-Vietnam,_Hanoi,_Streets_of_central_Hanoi_2.webp"
-        ),
+        background: "2560px-Vietnam,_Hanoi,_Streets_of_central_Hanoi_2.webp",
         credit: "© Vyacheslav Argenberg / http://www.vascoplanet.com/, CC BY 4.0, via Wikimedia Commons",
         background_size: (1200., 800.),
     },
     Locale {
         name: "Dar es Salaam",
-        background: image!(
-            "locales/Dar_es_Salaam_before_dusk.webp"
-        ),
+        background: "Dar_es_Salaam_before_dusk.webp",
         credit: "Muhammad Mahdi Karim, GFDL 1.2, via Wikimedia Commons",
         background_size: (1200., 643.),
     },
     Locale {
         name: "Ayn Issa",
-        background: image!(
-            "locales/2560px-Another_Year_Without_Daesh.webp"
-        ),
+        background: "2560px-Another_Year_Without_Daesh.webp",
         credit: "Combined Joint Task Force - Operation Inherent Resolve/Sgt. Raymond Boyington, Public domain, via Wikimedia Commons",
         background_size: (1200., 800.),
     },
     Locale {
         name: "Algiers",
-        background: image!(
-            "locales/2560px-Martyrs_Memorial,_A_cloudy_day_in_Algiers.webp"
-        ),
+        background: "2560px-Martyrs_Memorial,_A_cloudy_day_in_Algiers.webp",
         credit: "EL Hacene Boulkroune, CC BY-SA 4.0, via Wikimedia Commons",
         background_size: (1200., 900.),
     },
     Locale {
         name: "Managua",
-        background: image!(
-            "locales/Old_Managua_Cathedral_from_Highway_2.webp"
-        ),
+        background: "Old_Managua_Cathedral_from_Highway_2.webp",
         credit: "Byralaal, CC BY-SA 4.0, via Wikimedia Commons",
         background_size: (1200., 720.),
     },
     Locale {
         name: "Prague",
-        background: image!(
-            "locales/2560px-Vltava_river_in_Prague.webp"
-        ),
+        background: "2560px-Vltava_river_in_Prague.webp",
         credit: "Dmitry A. Mottl, CC BY-SA 4.0, via Wikimedia Commons",
         background_size: (1200., 800.),
     },
     Locale {
         name: "Havana",
-        background: image!(
-            "locales/pexels-matthias-oben-3687869.webp"
-        ),
+        background: "pexels-matthias-oben-3687869.webp",
         credit: "Matthias Oben",
         background_size: (1200., 800.),
     },

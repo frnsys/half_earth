@@ -83,7 +83,7 @@ impl Stats {
     ) {
         set_full_bg_image(
             ui,
-            image!("backgrounds/dashboard.png"),
+            hes_images::background_image("dashboard.png"),
             egui::vec2(1600., 1192.),
         );
         ui.style_mut().visuals.override_text_color =
@@ -639,7 +639,7 @@ fn render_breakdown(
             BTreeMap::default();
         let factors = FACTORS.read();
         for fac in &factors[factor] {
-            let name = t!(&fac.name());
+            let name = t!(fac.name());
             data.insert(
                 name.to_string(),
                 (fac.amount(), fac.display()),

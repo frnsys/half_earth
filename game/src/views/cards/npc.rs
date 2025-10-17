@@ -124,7 +124,7 @@ impl AsCard for NPC {
                     "Neutral" => icons::NEUTRAL,
                     _ => unreachable!(),
                 };
-                let rel_name = t!(&self.relationship_name());
+                let rel_name = t!(self.relationship_name());
                 h_center(ui, "rel", |tui| {
                     tui.ui(|ui| {
                         ui.horizontal(|ui| {

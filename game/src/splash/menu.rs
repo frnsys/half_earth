@@ -15,6 +15,7 @@ use egui::{
     FontId,
     Layout,
     Margin,
+    OpenUrl,
     RichText,
     Sense,
     Stroke,
@@ -166,7 +167,7 @@ impl Menu {
 
         set_full_bg_image(
             ui,
-            image!("start.png"),
+            hes_images::background_image("start.png"),
             egui::vec2(715., 973.),
         );
 
@@ -306,9 +307,7 @@ fn book_button(ui: &mut egui::Ui, width: f32) {
         let resp = frame.allocate_space(ui);
         let resp = resp.interact(egui::Sense::click());
         if resp.clicked() {
-            let _ = webbrowser::open(
-                "https://www.versobooks.com/books/3818-half-earth-socialism",
-            );
+            ui.ctx().open_url(OpenUrl::new_tab("https://www.versobooks.com/books/3818-half-earth-socialism"));
         }
         if resp.hovered() {
             frame

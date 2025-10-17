@@ -3,49 +3,26 @@ use rust_i18n::t;
 
 use crate::{
     audio,
-    image,
     parts::{button, set_full_bg_image},
     state::StateExt,
     views::events::{EventResult, Events},
 };
 
-const IMAGES: &[(egui::ImageSource<'static>, f32, f32)] = &[
-    (image!("intro/pexels-lt-chan-2833366.webp"), 1800., 1200.),
-    (image!("intro/gosplant_world.webp"), 1800., 900.),
-    (image!("intro/gosplant_world.webp"), 1800., 900.),
-    (image!("intro/gosplant_world.webp"), 1800., 900.),
+const IMAGES: &[(&'static str, f32, f32)] = &[
+    ("pexels-lt-chan-2833366.webp", 1800., 1200.),
+    ("gosplant_world.webp", 1800., 900.),
+    ("gosplant_world.webp", 1800., 900.),
+    ("gosplant_world.webp", 1800., 900.),
+    ("pexels-marco-allasio-4275996.webp", 1200., 1800.),
+    ("pexels-mentatdgt-1185433.webp", 1800., 1200.),
+    ("hasan-almasi-OwqLxCvoVxI-unsplash.webp", 1800., 1200.),
     (
-        image!("intro/pexels-marco-allasio-4275996.webp"),
-        1200.,
-        1800.,
-    ),
-    (
-        image!("intro/pexels-mentatdgt-1185433.webp"),
+        "matthew-tenbruggencate-0HJWobhGhJs-unsplash.webp",
         1800.,
         1200.,
     ),
-    (
-        image!("intro/hasan-almasi-OwqLxCvoVxI-unsplash.webp"),
-        1800.,
-        1200.,
-    ),
-    (
-        image!(
-            "intro/matthew-tenbruggencate-0HJWobhGhJs-unsplash.webp"
-        ),
-        1800.,
-        1200.,
-    ),
-    (
-        image!("intro/hasan-almasi-OwqLxCvoVxI-unsplash.webp"),
-        1800.,
-        1200.,
-    ),
-    (
-        image!("intro/kelly-sikkema-VpcSDucAYjw-unsplash.webp"),
-        1200.,
-        1800.,
-    ),
+    ("hasan-almasi-OwqLxCvoVxI-unsplash.webp", 1800., 1200.),
+    ("kelly-sikkema-VpcSDucAYjw-unsplash.webp", 1200., 1800.),
 ];
 
 pub struct Intro {
@@ -75,7 +52,7 @@ impl Intro {
         if let Some((img, x, y)) = IMAGES.get(self.img_idx) {
             set_full_bg_image(
                 ui,
-                img.clone(),
+                hes_images::intro_image(img),
                 egui::vec2(*x, *y),
             );
         }
