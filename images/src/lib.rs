@@ -89,38 +89,59 @@ mod content {
 #[cfg(target_arch = "wasm32")]
 mod content {
     use egui::ImageSource;
+    use web_sys::window;
+
+    fn get_origin() -> String {
+        window()
+            .and_then(|w| w.location().origin().ok())
+            .unwrap()
+    }
 
     pub fn load<'a>(fname: &str) -> ImageSource<'a> {
-        // TODO
-        super::DEFAULT_IMAGE
+        let origin = get_origin();
+        ImageSource::Uri(
+            format!("{origin}/images/content/{fname}").into(),
+        )
+    }
+
+    include!(concat!(env!("OUT_DIR"), "/sharing.rs"));
+
+    fn rand_image<'a>(
+        opts: &[&'static str],
+        faction: &str,
+    ) -> Option<ImageSource<'a>> {
+        let image_opts: Vec<_> = opts
+            .iter()
+            .filter(|path| path.contains(faction))
+            .collect();
+        fastrand::choice(&image_opts).map(|path| {
+            let origin = get_origin();
+            ImageSource::Uri(format!("{origin}/{path}").into())
+        })
     }
 
     pub fn win_image<'a>(
         faction: &str,
     ) -> Option<ImageSource<'a>> {
-        // TODO
-        Some(super::DEFAULT_IMAGE)
+        rand_image(&WIN, faction)
     }
 
     pub fn death_image<'a>(
         faction: &str,
     ) -> Option<ImageSource<'a>> {
-        // TODO
-        Some(super::DEFAULT_IMAGE)
+        rand_image(&DEATH, faction)
     }
 
     pub fn coup_image<'a>(
         faction: &str,
     ) -> Option<ImageSource<'a>> {
-        // TODO
-        Some(super::DEFAULT_IMAGE)
+        rand_image(&COUP, faction)
     }
 
     pub fn lose_image<'a>(
         faction: &str,
     ) -> Option<ImageSource<'a>> {
-        // TODO
-        Some(super::DEFAULT_IMAGE)
+        rand_image(&LOSE, faction)
     }
 }
 
@@ -150,6 +171,24 @@ const DEFAULT_IMAGE: ImageSource<'static> = egui::include_image!(
     concat!(env!("CARGO_MANIFEST_DIR"), "/assets/DEFAULT.webp",)
 );
 
+pub fn locale_image<'a>(
+    fname: &'static str,
+) -> egui::ImageSource<'a> {
+    content::load(&format!("locales/{fname}"))
+}
+
+pub fn intro_image<'a>(
+    fname: &'static str,
+) -> egui::ImageSource<'a> {
+    content::load(&format!("intro/{fname}"))
+}
+
+pub fn background_image<'a>(
+    fname: &'static str,
+) -> egui::ImageSource<'a> {
+    content::load(&format!("backgrounds/{fname}"))
+}
+
 pub fn flavor_image<'a>(
     image: &hes_engine::flavor::Image,
 ) -> egui::Image<'a> {
@@ -176,7 +215,7 @@ pub fn flavor_image<'a>(
         None => {
             let source = match &image.data {
                 hes_engine::flavor::ImageData::File(fname) => {
-                    content::load(&fname)
+                    content::load(&format!("flavor/{fname}"))
                 }
                 hes_engine::flavor::ImageData::Data {
                     bytes,
