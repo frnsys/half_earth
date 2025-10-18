@@ -178,6 +178,9 @@ pub fn locale_image<'a>(
     images
         .entry(fname.to_string())
         .or_insert_with(|| {
+            #[cfg(target_arch = "wasm32")]
+            let fname = fname.replace("webp", "jpg");
+
             content::load(&format!("locales/{fname}"))
         })
         .clone()
@@ -190,6 +193,8 @@ pub fn intro_image<'a>(
     images
         .entry(fname.to_string())
         .or_insert_with(|| {
+            #[cfg(target_arch = "wasm32")]
+            let fname = fname.replace("webp", "jpg");
             content::load(&format!("intro/{fname}"))
         })
         .clone()

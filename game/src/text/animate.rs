@@ -32,8 +32,9 @@ impl NodesAnimator {
         ui: &mut egui::Ui,
         nodes: Vec<Node<'a>>,
         text_height: f32,
+        available_width: f32,
     ) {
-        ui.set_width(360.);
+        ui.set_width(available_width);
         if nodes.len() != self.states.len() {
             self.reset(&nodes);
         }

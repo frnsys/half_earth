@@ -43,7 +43,12 @@ impl BbCodeAnimator {
         self.animator.finish();
     }
 
-    pub fn render(&mut self, ui: &mut egui::Ui, text: &str) {
+    pub fn render(
+        &mut self,
+        ui: &mut egui::Ui,
+        text: &str,
+        available_width: f32,
+    ) {
         ui.horizontal_wrapped(|ui| {
             let style = ui.style();
             let font_id = TextStyle::Body.resolve(style);
@@ -53,7 +58,12 @@ impl BbCodeAnimator {
             ui.style_mut().spacing.item_spacing.x = 0.;
 
             let (_, nodes) = parse::parse_bbcode(text).unwrap();
-            self.animator.animate(ui, nodes, text_height);
+            self.animator.animate(
+                ui,
+                nodes,
+                text_height,
+                available_width,
+            );
         });
     }
 }

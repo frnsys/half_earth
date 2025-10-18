@@ -57,6 +57,7 @@ impl Dialogue {
         &mut self,
         ui: &mut egui::Ui,
         state: &mut State,
+        mut width: f32,
     ) -> Option<DialogueResult> {
         let mut result = None;
 
@@ -96,13 +97,13 @@ impl Dialogue {
                         egui::Vec2::splat(64.),
                     ),
                 );
+                width -= 64.;
             }
 
             egui::Frame::NONE
                 .fill(Color32::WHITE)
                 .inner_margin(Margin::symmetric(6, 6))
                 .show(ui, |ui| {
-                    ui.set_width(ui.available_width());
                     if line.speaker != Speaker::Game {
                         ui.set_min_height(64.);
                     }
@@ -134,7 +135,7 @@ impl Dialogue {
                                 &t!(region_name.as_str()),
                             );
                         }
-                        self.animator.render(ui, &text);
+                        self.animator.render(ui, &text, width);
                     });
                 });
         });

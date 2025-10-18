@@ -187,21 +187,25 @@ impl<E: AsEventView> Events<E> {
         state: &mut State,
     ) -> Option<DialogueResult> {
         let event = &self.events[self.idx];
+        let width = (ui.ctx().screen_rect().width()
+            - (18. * 3.))
+            .min(360.)
+            .max(0.);
         if let Some(dialogue) = &mut self.dialogue {
-            ui.set_width(420.);
+            ui.set_width(width);
             let go_to_next = ui
                 .vertical(|ui| {
                     if event.show_card() {
                         render_event_card(ui, state, event);
                     }
-                    dialogue.render(ui, state)
+                    dialogue.render(ui, state, width)
                 })
                 .inner;
             go_to_next
         } else if event.show_card() {
             let go_to_next = ui
                 .vertical(|ui| {
-                    ui.set_width(420.);
+                    ui.set_width(width);
                     render_event_card(ui, state, event);
                     ui.add(button(t!("Continue"))).clicked()
                 })
