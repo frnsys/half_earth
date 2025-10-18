@@ -31,49 +31,11 @@ use crate::{
 #[cfg(not(target_arch = "wasm32"))]
 use hes_editor::WorldEditor;
 
-#[cfg(target_arch = "wasm32")]
-mod i18n {
-    use super::locales;
-    use xxhash_rust::xxh3::xxh3_64;
-
-    pub struct WebI18n;
-    impl Default for WebI18n {
-        fn default() -> Self {
-            Self
-        }
-    }
-    impl rust_i18n::Backend for WebI18n {
-        fn available_locales(&self) -> Vec<&str> {
-            locales::LOCALES.keys().map(|v| *v).collect()
-        }
-
-        fn translate(
-            &self,
-            locale: &str,
-            key: &str,
-        ) -> Option<&str> {
-            if locale == "en" {
-                None
-            } else {
-                let key = xxh3_64(key.as_bytes());
-                locales::LOCALES
-                    .get(locale)
-                    .and_then(|trs| trs.get(&key))
-                    .map(|v| *v)
-            }
-        }
-    }
-}
-
-#[cfg(target_arch = "wasm32")]
 rust_i18n::i18n!(
     "/dev/null",
     fallback = "en",
-    backend = i18n::WebI18n::default()
+    backend = locales::Backend
 );
-
-#[cfg(not(target_arch = "wasm32"))]
-rust_i18n::i18n!("locales", fallback = "en");
 
 #[macro_export]
 macro_rules! image {

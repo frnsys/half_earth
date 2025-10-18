@@ -43,7 +43,6 @@ You can use [`just`](https://github.com/casey/just) to run most tasks:
 ```
 Available recipes:
     run         # Run the game.
-    translate   # Update translation files.
     surfaces    # Generate biome surface textures and regional climates.
     sharing     # Generate sharing images.
 ```

@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::path::PathBuf;
 
 use super::super::parts::set_full_bg_image;
 use crate::{
@@ -22,7 +22,6 @@ use egui::{
     TextFormat,
     text::LayoutJob,
 };
-use egui_file_dialog::FileDialog;
 use hes_engine::World;
 use rust_i18n::t;
 
@@ -43,24 +42,10 @@ enum WorldStatus {
 
 struct WorldPicker {
     world: WorldStatus,
-    dialog: FileDialog,
 }
 impl WorldPicker {
     fn new() -> Self {
-        let mut dialog = FileDialog::new();
-
-        dialog = dialog
-            .add_file_filter(
-                "World files",
-                Arc::new(|path| {
-                    path.extension().unwrap_or_default()
-                        == "world"
-                }),
-            )
-            .default_file_filter("World files");
-
         Self {
-            dialog,
             world: WorldStatus::Default,
         }
     }
@@ -102,28 +87,66 @@ impl WorldPicker {
             frame.paint(ui);
 
             if resp.clicked() {
-                self.dialog.pick_file();
+                self.pick_and_load_world();
             }
         });
+    }
 
-        self.dialog.update(ui.ctx());
-        if let Some(path) = self.dialog.take_picked() {
-            self.world = match std::fs::read_to_string(&path) {
-                Ok(data) => {
-                    match serde_json::from_str::<World>(&data) {
-                        Ok(world) => {
-                            let name = path
-                                .file_stem()
-                                .unwrap_or_default()
-                                .to_string_lossy()
-                                .to_string();
-                            WorldStatus::Custom(name, world)
-                        }
-                        Err(_) => WorldStatus::FailedToParse,
-                    }
-                }
-                Err(_) => WorldStatus::FailedToRead,
+    #[cfg(not(target_arch = "wasm32"))]
+    fn pick_and_load_world(&mut self) {
+        let file = rfd::FileDialog::new()
+            .add_filter("World", &["world"])
+            .pick_file();
+        if let Some(path) = file {
+            self.load_world(path);
+        }
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    fn pick_and_load_world(&mut self) {
+        use pollster::FutureExt as _;
+        let future = async {
+            let file = rfd::AsyncFileDialog::new()
+                .add_filter("World", &["world"])
+                .pick_file()
+                .await;
+
+            if let Some(file) = file {
+                let name: String = file.file_name();
+                let data: Vec<u8> = file.read().await;
+                Some((name, data))
+            } else {
+                None
             }
+        };
+        let data: Option<(String, Vec<u8>)> = future.block_on();
+        if let Some((name, data)) = data {
+            self.world =
+                match serde_json::from_slice::<World>(&data) {
+                    Ok(world) => {
+                        WorldStatus::Custom(name, world)
+                    }
+                    Err(_) => WorldStatus::FailedToParse,
+                };
+        }
+    }
+
+    fn load_world(&mut self, path: PathBuf) {
+        self.world = match std::fs::read_to_string(&path) {
+            Ok(data) => {
+                match serde_json::from_str::<World>(&data) {
+                    Ok(world) => {
+                        let name = path
+                            .file_stem()
+                            .unwrap_or_default()
+                            .to_string_lossy()
+                            .to_string();
+                        WorldStatus::Custom(name, world)
+                    }
+                    Err(_) => WorldStatus::FailedToParse,
+                }
+            }
+            Err(_) => WorldStatus::FailedToRead,
         }
     }
 }
@@ -162,6 +185,8 @@ impl Menu {
             .anchor(Align2::RIGHT_BOTTOM, egui::vec2(-8., -8.))
             .show(ui.ctx(), |ui| {
                 let git_hash = env!("GIT_HASH");
+                ui.style_mut().wrap_mode =
+                    Some(egui::TextWrapMode::Extend);
                 ui.label(RichText::new(git_hash).size(10.));
             });
 
