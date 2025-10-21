@@ -134,6 +134,10 @@ impl AsCard for Process {
         if is_new {
             ui.add(new_icon(resp.rect));
         }
+    }
+
+    fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
+        let rect = super::render_flavor_image(ui, &self.flavor.image);
 
         let (max_share, changed_mix_share) = max_and_changed_share(self, state);
 
@@ -151,17 +155,13 @@ impl AsCard for Process {
         let is_depleted = feedstock_estimate == Some(0.);
 
         let bar_rect = egui::Rect::from_min_size(
-            resp.rect.right_top() + egui::vec2(-3., 2.),
+            rect.right_top() + egui::vec2(-4., -25.),
             egui::vec2(18., CARD_HEIGHT),
         );
         ui.place(
             bar_rect,
             render_mix_bar(self.mix_share, max_share, changed_mix_share, is_depleted),
         );
-    }
-
-    fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
-        let rect = super::render_flavor_image(ui, &self.flavor.image).rect;
 
         let (opposers, supporters) = npc_stances(self, &state.npcs);
         npc_support(ui, rect, &opposers, &supporters);

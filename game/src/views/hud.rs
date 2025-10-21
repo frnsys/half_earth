@@ -87,6 +87,7 @@ pub fn render_hud(ui: &mut egui::Ui, state: &mut State) -> Option<HudAction> {
                 .fill(Color32::from_gray(0x20))
                 .inner_margin(Margin::symmetric(6, 3))
                 .show(ui, |ui| {
+                    ui.set_height(24. - 6.);
                     ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
 
                     tui(ui, ui.id().with("top-bar"))

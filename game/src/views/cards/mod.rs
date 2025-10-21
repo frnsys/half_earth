@@ -1,10 +1,10 @@
 use std::ops::Deref;
 
-use egui::{Color32, Response, Sense};
+use egui::{Color32, Sense};
 use hes_images::flavor_image;
 use rust_i18n::t;
 
-use crate::{state::GameState, text::scale_text_ui};
+use crate::{parts::bg_cover_image, state::GameState, text::scale_text_ui};
 
 mod industry;
 mod npc;
@@ -151,7 +151,7 @@ impl<C: AsCard + Clone> Card<C> {
                 self.y_offset += y;
 
                 // const MAX: f32 = GAP * 2.;
-                const MAX: f32 = 24. * 2.;
+                const MAX: f32 = 20.;
                 self.y_offset = self.y_offset.clamp(-MAX, MAX);
             } else {
                 self.y_offset *= 0.8;
@@ -260,14 +260,10 @@ fn scaled_text(ui: &mut egui::Ui, text: &str, height: f32) {
     });
 }
 
-fn render_flavor_image(ui: &mut egui::Ui, image: &hes_engine::flavor::Image) -> Response {
+fn render_flavor_image(ui: &mut egui::Ui, image: &hes_engine::flavor::Image) -> egui::Rect {
+    let rect = egui::Rect::from_min_size(ui.cursor().left_top(), egui::vec2(CARD_WIDTH, 160.));
+    ui.allocate_rect(rect, egui::Sense::empty());
     let image = flavor_image(image);
-    egui::Frame::NONE
-        .outer_margin(egui::Margin::symmetric(6, 0))
-        .corner_radius(4)
-        .stroke(egui::Stroke::new(1., Color32::from_black_alpha(64)))
-        .show(ui, |ui| {
-            ui.add(image.corner_radius(4));
-        })
-        .response
+    bg_cover_image(ui, image, rect);
+    rect
 }

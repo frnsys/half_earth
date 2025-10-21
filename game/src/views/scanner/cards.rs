@@ -1,5 +1,5 @@
 use crate::{
-    parts::raised_frame,
+    parts::{get_sizing, h_center, raised_frame},
     state::GameState,
     views::{
         cards::{AsCard, CARD_HEIGHT, CARD_WIDTH, Card},
@@ -7,7 +7,8 @@ use crate::{
     },
 };
 
-use egui::{Align, Align2, Color32, Key, Order, Rect, style::ScrollAnimation};
+use egui::{Align, Align2, Color32, Key, Margin, Order, Rect, Sense, style::ScrollAnimation};
+use egui_taffy::TuiBuilderLogic;
 use web_time::Instant;
 
 const GAP: f32 = 24.;
@@ -50,7 +51,8 @@ impl<C: AsCard + Scannable> Cards<C> {
     pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> bool {
         let mut changed = false;
 
-        let (top_scan_area, bot_scan_area) = self.render_scanners(ui);
+        let mut action = None;
+        let (top_scan_area, bot_scan_area) = self.render_scanners(ui, &mut action);
 
         let h_center = ui.cursor().left() + ui.available_width() / 2.;
         let mut closest_offset = f32::INFINITY;
@@ -150,20 +152,18 @@ impl<C: AsCard + Scannable> Cards<C> {
                 ui.add_space(half_width);
             });
 
-            let action = ui.input(|inp| {
+            ui.input(|inp| {
                 if [Key::ArrowLeft, Key::A].iter().any(|k| inp.key_pressed(*k)) {
-                    Some(Action::Prev)
+                    action = Some(Action::Prev);
                 } else if [Key::ArrowRight, Key::D]
                     .iter()
                     .any(|k| inp.key_pressed(*k))
                 {
-                    Some(Action::Next)
+                    action = Some(Action::Next);
                 } else if [Key::ArrowUp, Key::W].iter().any(|k| inp.key_pressed(*k)) {
-                    Some(Action::Up)
+                    action = Some(Action::Up);
                 } else if [Key::ArrowDown, Key::S].iter().any(|k| inp.key_pressed(*k)) {
-                    Some(Action::Down)
-                } else {
-                    None
+                    action = Some(Action::Down);
                 }
             });
 
@@ -210,7 +210,10 @@ impl<C: AsCard + Scannable> Cards<C> {
                 },
                 None => {
                     if let Some(resp) = selected_idx.map(|idx| &card_resps[idx]) {
-                        resp.scroll_to_me(Some(Align::Center));
+                        resp.scroll_to_me_animation(
+                            Some(Align::Center),
+                            ScrollAnimation::duration(0.05),
+                        );
                     }
                 }
             }
@@ -218,7 +221,11 @@ impl<C: AsCard + Scannable> Cards<C> {
         changed
     }
 
-    fn render_scanners(&mut self, ui: &mut egui::Ui) -> (egui::Rect, egui::Rect) {
+    fn render_scanners(
+        &mut self,
+        ui: &mut egui::Ui,
+        action: &mut Option<Action>,
+    ) -> (egui::Rect, egui::Rect) {
         let scanner_height = scanner_height(ui);
 
         let cursor = ui.cursor();
@@ -277,7 +284,7 @@ impl<C: AsCard + Scannable> Cards<C> {
                 cursor.top() + mid_y + CARD_HEIGHT / 2. + GAP + GAP + scanner_height,
             ))
             .show(ui.ctx(), |ui| {
-                raised_frame()
+                let rect = raised_frame()
                     .colors(
                         Color32::WHITE,
                         Color32::from_rgb(0xdc, 0xe0, 0xe6),
@@ -308,7 +315,13 @@ impl<C: AsCard + Scannable> Cards<C> {
                             let progress = self.scan_timer.progress();
                             scanning_bar(ui.painter(), rect, progress);
                         }
-                    });
+                    })
+                    .rect;
+
+                let sizing = get_sizing(ui);
+                if sizing.is_small {
+                    ui.place(rect, |ui: &mut egui::Ui| touch_controls(ui, action));
+                }
             })
             .response
             .rect;
@@ -419,4 +432,33 @@ fn progress_bar(painter: &egui::Painter, mut rect: Rect, color: Color32, percent
             egui::StrokeKind::Middle,
         );
     }
+}
+
+fn touch_controls(ui: &mut egui::Ui, action: &mut Option<Action>) -> egui::Response {
+    let screen_height = ui.ctx().screen_rect().height();
+    let is_short = screen_height < 600.;
+    egui::Frame::NONE
+        .inner_margin(Margin::symmetric(6, if is_short { 18 } else { 20 }))
+        .show(ui, |ui| {
+            ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
+            h_center(ui, "controls-buttons", |tui| {
+                tui.ui(|ui| {
+                    let label = egui::RichText::new("◄")
+                        .size(18.)
+                        .color(Color32::from_gray(230));
+                    if ui.label(label).interact(Sense::click()).clicked() {
+                        *action = Some(Action::Prev);
+                    }
+                });
+                tui.ui(|ui| {
+                    let label = egui::RichText::new("►")
+                        .size(18.)
+                        .color(Color32::from_gray(230));
+                    if ui.label(label).interact(Sense::click()).clicked() {
+                        *action = Some(Action::Next);
+                    }
+                });
+            });
+        })
+        .response
 }

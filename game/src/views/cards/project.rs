@@ -88,7 +88,7 @@ impl AsCard for Project {
     }
 
     fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
-        let rect = super::render_flavor_image(ui, &self.flavor.image).rect;
+        let rect = super::render_flavor_image(ui, &self.flavor.image);
 
         // NOTE: this is hacky, but the cards actually display
         // a clone of the Project, so when we e.g. add points
@@ -391,12 +391,10 @@ fn majority_warning(rect: Rect) -> impl FnOnce(&mut egui::Ui) -> Response {
 
     move |ui| {
         egui::Frame::NONE
-            .outer_margin(egui::Margin::symmetric(6, 0))
             .inner_margin(egui::Margin::symmetric(PADDING, PADDING))
-            .corner_radius(4)
             .fill(Color32::from_black_alpha(128))
             .show(ui, |ui| {
-                ui.set_width(rect.width() - 12. - P);
+                ui.set_width(rect.width() - P);
                 ui.set_height(rect.height() - P);
 
                 ui.vertical_centered(|ui| {
@@ -431,7 +429,7 @@ fn points(n: usize, kind: &ProjectType) -> impl FnOnce(&mut egui::Ui) -> Respons
                 ui.vertical(|ui| {
                     ui.style_mut().spacing.item_spacing = egui::vec2(3., 3.);
                     ui.horizontal_wrapped(|ui| {
-                        ui.set_max_width(ICON_SIZE * 2. + 5.);
+                        ui.set_max_width(ICON_SIZE * 5. + 5.);
                         for i in 0..consts::MAX_POINTS {
                             let empty = i >= n;
                             if empty {
