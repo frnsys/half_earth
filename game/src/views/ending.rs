@@ -4,12 +4,7 @@ use egui::{Color32, ImageSource};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::*;
-use hes_images::{
-    coup_image,
-    death_image,
-    lose_image,
-    win_image,
-};
+use hes_images::{coup_image, death_image, lose_image, win_image};
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 use strum::{EnumIter, IntoEnumIterator};
@@ -32,15 +27,9 @@ pub struct End {
 impl End {
     pub fn new(lose: bool, state: &mut GameState) -> Self {
         let events = if lose {
-            StateExt::roll_events(
-                &mut state.core,
-                EventPhase::BreakStart,
-            )
+            StateExt::roll_events(&mut state.core, EventPhase::BreakStart)
         } else {
-            StateExt::roll_events(
-                &mut state.core,
-                EventPhase::EndStart,
-            )
+            StateExt::roll_events(&mut state.core, EventPhase::EndStart)
         };
         let summary = summarize(&state.core, !lose);
 
@@ -55,16 +44,8 @@ impl End {
             .ui
             .change_history
             .iter()
-            .zip(
-                state
-                    .ui
-                    .process_mix_history
-                    .iter()
-                    .map(|(_, mixes)| mixes),
-            )
-            .map(|((year, changes), mixes)| {
-                format_year_log(*year, changes, mixes)
-            })
+            .zip(state.ui.process_mix_history.iter().map(|(_, mixes)| mixes))
+            .map(|((year, changes), mixes)| format_year_log(*year, changes, mixes))
             .collect::<Vec<_>>();
 
         Self {
@@ -76,19 +57,15 @@ impl End {
         }
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut GameState,
-    ) -> bool {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> bool {
         let mut restart = false;
         if !self.events.is_finished {
             self.events.render(ui, state);
         } else {
             ui.vertical_centered(|ui| {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
-                ui.set_max_width(480.);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
+                let width = (ui.ctx().screen_rect().width() - 12.).min(480.);
+                ui.set_max_width(width);
 
                 ui.add_space(64.);
 
@@ -96,16 +73,8 @@ impl End {
                     tui.ui(|ui| {
                         ui.horizontal(|ui| {
                             for badge in &self.badges {
-                                let tip = tip(
-                                    icons::HELP,
-                                    t!(badge.to_string()),
-                                );
-                                add_tip(
-                                    tip,
-                                    ui.add(
-                                        badge.icon().size(32.),
-                                    ),
-                                );
+                                let tip = tip(icons::HELP, t!(badge.to_string()));
+                                add_tip(tip, ui.add(badge.icon().size(32.)));
                             }
                         });
                     });
@@ -121,48 +90,40 @@ impl End {
                             t!("Well Played!")
                         };
                         ui.label(
-                            egui::RichText::new(
-                                message.to_uppercase(),
-                            )
-                            .heading()
-                            .italics()
-                            .color(Color32::WHITE),
+                            egui::RichText::new(message.to_uppercase())
+                                .heading()
+                                .italics()
+                                .color(Color32::WHITE),
                         );
                     });
                 });
 
                 ui.add_space(64.);
 
-                let resp = ui
-                    .add(button(t!("Try Again?")).full_width());
+                let resp = ui.add(button(t!("Try Again?")).full_width());
                 restart = resp.clicked();
 
                 ui.add_space(32.);
 
                 h_center(ui, "history", |tui| {
                     tui.ui(|ui| {
-                        ui.set_width(480.);
+                        ui.set_max_width(width);
                         if let Some(image) = &self.image {
-                            ui.add(egui::Image::new(
-                                image.clone(),
-                            ));
+                            ui.add(egui::Image::new(image.clone()));
                         }
 
                         ui.add_space(32.);
 
-                        ui.style_mut()
-                            .visuals
-                            .override_text_color =
-                            Some(Color32::WHITE);
-                        ui.style_mut()
-                            .interaction
-                            .selectable_labels = true;
+                        ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+                        ui.style_mut().interaction.selectable_labels = true;
                         ui.monospace("Your History");
                         for line in &self.log {
                             ui.monospace(line);
                         }
                     });
                 });
+
+                ui.add_space(64.);
             });
         }
         restart
@@ -177,9 +138,7 @@ enum Ending {
     LostOther,
 }
 
-#[derive(
-    Debug, Clone, Copy, Serialize, Deserialize, EnumIter,
-)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, EnumIter)]
 enum Badge {
     Seceded,
     Aliens,
@@ -196,44 +155,27 @@ enum Badge {
 impl Badge {
     fn applies(&self, state: &State) -> bool {
         match self {
-            Self::Seceded => state
-                .world
-                .regions
-                .iter()
-                .any(|reg| reg.seceded),
-            Self::Aliens => {
-                state.flags.contains(&Flag::AlienEncounter)
-            }
-            Self::Biodiversity => {
-                state.world.extinction_rate <= 15.
-            }
-            Self::Extinction => {
-                state.world.extinction_rate >= 60.
-            }
-            Self::Electrification => {
-                state.world.projects.iter().any(|proj| {
-                    proj.name == "Mass Electrification"
-                        && (proj.status == Status::Finished
-                            || proj.status == Status::Active)
-                })
-            }
+            Self::Seceded => state.world.regions.iter().any(|reg| reg.seceded),
+            Self::Aliens => state.flags.contains(&Flag::AlienEncounter),
+            Self::Biodiversity => state.world.extinction_rate <= 15.,
+            Self::Extinction => state.world.extinction_rate >= 60.,
+            Self::Electrification => state.world.projects.iter().any(|proj| {
+                proj.name == "Mass Electrification"
+                    && (proj.status == Status::Finished || proj.status == Status::Active)
+            }),
             Self::FossilFuels => {
                 state
                     .world
                     .processes
                     .iter()
-                    .filter(|proc| {
-                        proc.features
-                            .contains(&ProcessFeature::IsFossil)
-                    })
+                    .filter(|proc| proc.features.contains(&ProcessFeature::IsFossil))
                     .map(|proc| proc.mix_share)
                     .sum::<usize>()
                     > 0
             }
             Self::Meat => {
                 // Animal calories demand at least 80% of starting value
-                state.output_demand.of(Output::AnimalCalories)
-                    >= 2e15
+                state.output_demand.of(Output::AnimalCalories) >= 2e15
             }
             Self::Nuclear => {
                 state
@@ -241,11 +183,8 @@ impl Badge {
                     .processes
                     .iter()
                     .filter(|proc| {
-                        proc.features.contains(
-                            &ProcessFeature::CanMeltdown,
-                        ) || proc.features.contains(
-                            &ProcessFeature::MakesNuclearWaste,
-                        )
+                        proc.features.contains(&ProcessFeature::CanMeltdown)
+                            || proc.features.contains(&ProcessFeature::MakesNuclearWaste)
                     })
                     .map(|proc| proc.mix_share)
                     .sum::<usize>()
@@ -256,11 +195,7 @@ impl Badge {
                     .world
                     .processes
                     .iter()
-                    .filter(|proc| {
-                        proc.features.contains(
-                            &ProcessFeature::IsIntermittent,
-                        )
-                    })
+                    .filter(|proc| proc.features.contains(&ProcessFeature::IsIntermittent))
                     .map(|proc| proc.mix_share)
                     .sum::<usize>()
                     >= 10
@@ -270,19 +205,16 @@ impl Badge {
                     .world
                     .projects
                     .iter()
-                    .map(|proj| {
+                    .filter(|proj| {
                         proj.group == Group::Space
-                            && (proj.status == Status::Finished
-                                || proj.status
-                                    == Status::Active)
+                            && (proj.status == Status::Finished || proj.status == Status::Active)
                     })
                     .count()
                     >= 3
             }
             Self::Vegan => {
                 // Animal calories demand down to less than 10% of starting val
-                state.output_demand.of(Output::AnimalCalories)
-                    < 2e14
+                state.output_demand.of(Output::AnimalCalories) < 2e14
             }
         }
     }
@@ -292,9 +224,7 @@ impl Badge {
             Self::Seceded => icons::BADGE_SECEDED,
             Self::Aliens => icons::BADGE_ALIENS,
             Self::Biodiversity => icons::BADGE_BIODIVERSITY,
-            Self::Electrification => {
-                icons::BADGE_ELECTRIFICATION
-            }
+            Self::Electrification => icons::BADGE_ELECTRIFICATION,
             Self::Extinction => icons::BADGE_EXTINCTION,
             Self::FossilFuels => icons::BADGE_FOSSILFUELS,
             Self::Meat => icons::BADGE_MEAT,
@@ -306,42 +236,19 @@ impl Badge {
     }
 }
 impl std::fmt::Display for Badge {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let desc = match self {
-            Self::Seceded => {
-                "At least one region seceded from Gosplant."
-            }
-            Self::Aliens => {
-                "You had an extraterrestrial encounter."
-            }
-            Self::Biodiversity => {
-                "Planetary life flourished under your tenure."
-            }
-            Self::Electrification => {
-                "You helped electrify the world."
-            }
-            Self::Extinction => {
-                "Planetary life suffered under your tenure."
-            }
-            Self::FossilFuels => {
-                "You kept on using fossil fuels."
-            }
+            Self::Seceded => "At least one region seceded from Gosplant.",
+            Self::Aliens => "You had an extraterrestrial encounter.",
+            Self::Biodiversity => "Planetary life flourished under your tenure.",
+            Self::Electrification => "You helped electrify the world.",
+            Self::Extinction => "Planetary life suffered under your tenure.",
+            Self::FossilFuels => "You kept on using fossil fuels.",
             Self::Meat => "Carnivorous diets were left intact.",
-            Self::Nuclear => {
-                "Nuclear was your preferred form of energy."
-            }
-            Self::Renewables => {
-                "Renewables dominated energy production."
-            }
-            Self::Space => {
-                "You pushed humanity towards the stars."
-            }
-            Self::Vegan => {
-                "Global diets shifted towards vegan."
-            }
+            Self::Nuclear => "Nuclear was your preferred form of energy.",
+            Self::Renewables => "Renewables dominated energy production.",
+            Self::Space => "You pushed humanity towards the stars.",
+            Self::Vegan => "Global diets shifted towards vegan.",
         };
         write!(f, "{}", desc)
     }

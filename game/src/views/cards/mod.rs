@@ -25,7 +25,7 @@ pub trait AsCard {
     fn bottom_back(&self, ui: &mut egui::Ui, state: &GameState);
 }
 
-pub const CARD_HEIGHT: f32 = 380.;
+pub const CARD_HEIGHT: f32 = 360.;
 pub const CARD_WIDTH: f32 = 280.;
 
 #[derive(Clone)]
@@ -54,17 +54,11 @@ impl<C: AsCard + Clone> Card<C> {
         }
     }
 
-    fn render_contents(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &GameState,
-        is_offscreen: bool,
-    ) {
+    fn render_contents(&mut self, ui: &mut egui::Ui, state: &GameState, is_offscreen: bool) {
         ui.vertical(|ui| {
             ui.set_height(CARD_HEIGHT);
             ui.set_width(CARD_WIDTH);
-            ui.style_mut().visuals.override_text_color =
-                Some(self.data.fg_color());
+            ui.style_mut().visuals.override_text_color = Some(self.data.fg_color());
             if !is_offscreen {
                 if !self.flipped {
                     self.data.header(ui, state);
@@ -88,47 +82,73 @@ impl<C: AsCard + Clone> Card<C> {
         if self.draggable {
             let top_margin = self.y_offset;
 
-            let (mut rect, _) = ui.allocate_exact_size(
-                egui::vec2(CARD_WIDTH, CARD_HEIGHT),
-                Sense::empty(),
-            );
+            let (mut rect, _) =
+                ui.allocate_exact_size(egui::vec2(CARD_WIDTH, CARD_HEIGHT), Sense::empty());
 
             rect.set_top(rect.top() + top_margin);
 
             // Detect drag "under" the card contents or else
             // it will capture all clicks.
             let drag_id = ui.id().with("card-drag");
-            let mut resp =
-                ui.interact(rect, drag_id, Sense::drag());
 
-            ui.place(
-                rect,
-                |ui: &mut egui::Ui| -> egui::Response {
-                    let resp = egui::Frame::NONE
-                        .corner_radius(4.)
-                        .fill(self.data.bg_color())
-                        .show(ui, |ui| {
-                            self.render_contents(
-                                ui,
-                                state,
-                                is_offscreen,
-                            );
-                        })
-                        .response;
+            let is_already_dragging = ui.ctx().is_being_dragged(drag_id);
+            let y_delta = ui.input(|inp| {
+                let is_dragging = inp.pointer.is_decidedly_dragging();
+                if is_dragging && let Some(pos) = inp.pointer.interact_pos() {
+                    let contains = rect.contains(pos);
+                    let delta = inp.pointer.delta();
 
-                    corner(
-                        ui,
-                        resp.rect,
-                        "card-flip".into(),
-                        self.bg_color().intensity() < 0.5,
-                        &mut self.flipped,
-                    );
-                    resp
-                },
-            );
+                    // Starting a new drag or moving an existing drag.
+                    // Here we check if the movement is vertical.
+                    if contains && delta.y.abs() > delta.x.abs() {
+                        Some(delta.y)
 
-            if resp.is_pointer_button_down_on() {
-                self.y_offset += resp.drag_delta().y;
+                    // No movement in an existing drag.
+                    // If we've already detected a vertical drag
+                    // then we don't care about horizontal movement.
+                    } else if is_already_dragging {
+                        Some(0.)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            });
+
+            let mut resp = if y_delta.is_some() && ui.input(|inp| inp.pointer.primary_down()) {
+                ui.ctx().set_dragged_id(drag_id);
+                ui.interact(rect, drag_id, Sense::empty())
+            } else {
+                if is_already_dragging {
+                    ui.ctx().stop_dragging();
+                }
+                ui.allocate_rect(rect, Sense::empty())
+            };
+
+            ui.place(rect, |ui: &mut egui::Ui| -> egui::Response {
+                let resp = egui::Frame::NONE
+                    .corner_radius(4.)
+                    .fill(self.data.bg_color())
+                    .show(ui, |ui| {
+                        self.render_contents(ui, state, is_offscreen);
+                    })
+                    .response;
+
+                corner(
+                    ui,
+                    resp.rect,
+                    "card-flip".into(),
+                    self.bg_color().intensity() < 0.5,
+                    &mut self.flipped,
+                );
+                resp
+            });
+
+            if let Some(y) = y_delta {
+                // if resp.is_pointer_button_down_on() {
+                // self.y_offset += resp.drag_delta().y;
+                self.y_offset += y;
 
                 // const MAX: f32 = GAP * 2.;
                 const MAX: f32 = 24. * 2.;
@@ -154,13 +174,7 @@ impl<C: AsCard + Clone> Card<C> {
             let resp = egui::Frame::NONE
                 .corner_radius(4.)
                 .fill(self.data.bg_color())
-                .show(ui, |ui| {
-                    self.render_contents(
-                        ui,
-                        state,
-                        is_offscreen,
-                    )
-                })
+                .show(ui, |ui| self.render_contents(ui, state, is_offscreen))
                 .response;
             corner(
                 ui,
@@ -175,13 +189,7 @@ impl<C: AsCard + Clone> Card<C> {
     }
 }
 
-fn corner(
-    ui: &mut egui::Ui,
-    rect: egui::Rect,
-    id: egui::Id,
-    on_dark: bool,
-    flipped: &mut bool,
-) {
+fn corner(ui: &mut egui::Ui, rect: egui::Rect, id: egui::Id, on_dark: bool, flipped: &mut bool) {
     let pad = 4.0;
     let size = 14.0;
 
@@ -252,18 +260,12 @@ fn scaled_text(ui: &mut egui::Ui, text: &str, height: f32) {
     });
 }
 
-fn render_flavor_image(
-    ui: &mut egui::Ui,
-    image: &hes_engine::flavor::Image,
-) -> Response {
+fn render_flavor_image(ui: &mut egui::Ui, image: &hes_engine::flavor::Image) -> Response {
     let image = flavor_image(image);
     egui::Frame::NONE
         .outer_margin(egui::Margin::symmetric(6, 0))
         .corner_radius(4)
-        .stroke(egui::Stroke::new(
-            1.,
-            Color32::from_black_alpha(64),
-        ))
+        .stroke(egui::Stroke::new(1., Color32::from_black_alpha(64)))
         .show(ui, |ui| {
             ui.add(image.corner_radius(4));
         })

@@ -1,28 +1,35 @@
 use std::time::Duration;
 
 use crate::image;
-use egui::{
-    Color32,
-    CornerRadius,
-    Margin,
-    Order,
-    Rect,
-    Sense,
-    Shadow,
-    TextureOptions,
-    Vec2,
-};
+use egui::{Color32, CornerRadius, Margin, Order, Rect, Sense, Shadow, TextureOptions, Vec2};
 use egui_animation::{animate_repeating, easing};
-use egui_taffy::{Tui, TuiBuilderLogic, taffy, tui};
+use egui_taffy::{
+    Tui, TuiBuilderLogic,
+    taffy::{self, Size},
+    tui,
+};
 
-pub fn bg_cover_image(
-    ui: &mut egui::Ui,
-    image: egui::Image<'_>,
-    target_rect: Rect,
-) {
-    if let Some(image_size) =
-        image.load_and_calc_size(ui, ui.available_size())
-    {
+#[derive(Clone)]
+pub struct Sizing {
+    pub scale: f32,
+    pub normal: f32,
+    pub is_small: bool,
+}
+impl Default for Sizing {
+    fn default() -> Self {
+        Self {
+            scale: 1.,
+            normal: 14.,
+            is_small: false,
+        }
+    }
+}
+pub fn get_sizing(ui: &egui::Ui) -> Sizing {
+    ui.memory(|mem| mem.data.get_temp(egui::Id::NULL).unwrap_or_default())
+}
+
+pub fn bg_cover_image(ui: &mut egui::Ui, image: egui::Image<'_>, target_rect: Rect) {
+    if let Some(image_size) = image.load_and_calc_size(ui, ui.available_size()) {
         let target_size = target_rect.size();
 
         // Compute aspect ratios
@@ -30,21 +37,12 @@ pub fn bg_cover_image(
         let target_aspect = target_size.x / target_size.y;
 
         let draw_size = if image_aspect > target_aspect {
-            egui::Vec2::new(
-                target_size.y * image_aspect,
-                target_size.y,
-            )
+            egui::Vec2::new(target_size.y * image_aspect, target_size.y)
         } else {
-            egui::Vec2::new(
-                target_size.x,
-                target_size.x / image_aspect,
-            )
+            egui::Vec2::new(target_size.x, target_size.x / image_aspect)
         };
 
-        let draw_rect = egui::Rect::from_center_size(
-            target_rect.center(),
-            draw_size,
-        );
+        let draw_rect = egui::Rect::from_center_size(target_rect.center(), draw_size);
         ui.scope(|ui| {
             ui.shrink_clip_rect(target_rect);
             image.paint_at(ui, draw_rect);
@@ -88,16 +86,10 @@ fn full_bg_image(
     image.paint_at(ui, draw_rect);
 }
 
-pub fn set_full_bg_image(
-    ui: &mut egui::Ui,
-    image: egui::ImageSource<'static>,
-    image_size: Vec2,
-) {
+pub fn set_full_bg_image(ui: &mut egui::Ui, image: egui::ImageSource<'static>, image_size: Vec2) {
     ui.memory_mut(|mem| {
-        mem.data.insert_temp(
-            "bg-image".into(),
-            (image, image_size, None::<Color32>),
-        );
+        mem.data
+            .insert_temp("bg-image".into(), (image, image_size, None::<Color32>));
     });
 }
 
@@ -108,17 +100,13 @@ pub fn set_full_bg_image_tinted(
     tint: Color32,
 ) {
     ui.memory_mut(|mem| {
-        mem.data.insert_temp(
-            "bg-image".into(),
-            (image, image_size, Some(tint)),
-        );
+        mem.data
+            .insert_temp("bg-image".into(), (image, image_size, Some(tint)));
     });
 }
 
 pub fn draw_bg_image(ui: &mut egui::Ui) {
-    if let Some((image, size, tint)) =
-        ui.memory(|mem| mem.data.get_temp("bg-image".into()))
-    {
+    if let Some((image, size, tint)) = ui.memory(|mem| mem.data.get_temp("bg-image".into())) {
         full_bg_image(ui, image, size, tint);
     }
 }
@@ -148,12 +136,7 @@ pub fn raised_frame() -> RaisedFrame {
     }
 }
 impl RaisedFrame {
-    pub fn colors(
-        mut self,
-        top: Color32,
-        bot: Color32,
-        inner: Color32,
-    ) -> Self {
+    pub fn colors(mut self, top: Color32, bot: Color32, inner: Color32) -> Self {
         self.top_color = top;
         self.bot_color = bot;
         self.inner_color = inner;
@@ -165,10 +148,7 @@ impl RaisedFrame {
         self
     }
 
-    pub fn radius(
-        mut self,
-        radius: impl Into<CornerRadius>,
-    ) -> Self {
+    pub fn radius(mut self, radius: impl Into<CornerRadius>) -> Self {
         self.radius = radius.into();
         self
     }
@@ -183,7 +163,7 @@ impl RaisedFrame {
             offset: [2, 2],
             blur: 8,
             spread: 2,
-            color: Color32::from_black_alpha(128),
+            color: Color32::from_black_alpha(64),
         });
         self
     }
@@ -199,8 +179,7 @@ impl RaisedFrame {
     }
 
     pub fn highlight(mut self) -> Self {
-        self.highlight =
-            Some(Color32::from_rgb(0xeb, 0x40, 0x34));
+        self.highlight = Some(Color32::from_rgb(0xeb, 0x40, 0x34));
         self.font_color = Some(Color32::BLACK);
         self.colors(
             Color32::from_rgb(0xe5, 0xfa, 0xaf),
@@ -214,20 +193,11 @@ impl RaisedFrame {
         if highlight { self.highlight() } else { self }
     }
 
-    pub fn show(
-        mut self,
-        ui: &mut egui::Ui,
-        inner: impl FnOnce(&mut egui::Ui),
-    ) -> egui::Response {
+    pub fn show(mut self, ui: &mut egui::Ui, inner: impl FnOnce(&mut egui::Ui)) -> egui::Response {
         let mut frame = egui::Frame::NONE.fill(self.top_color);
 
         if let Some(glow) = self.highlight {
-            let t = animate_repeating(
-                ui,
-                easing::roundtrip,
-                Duration::from_millis(750),
-                0.,
-            );
+            let t = animate_repeating(ui, easing::roundtrip, Duration::from_millis(750), 0.);
             self = self.glow(glow, (6. * t).round() as u8);
         }
 
@@ -253,10 +223,7 @@ impl RaisedFrame {
                     })
                     .show(ui, |ui| {
                         if let Some(color) = self.font_color {
-                            ui.style_mut()
-                                .visuals
-                                .override_text_color =
-                                Some(color);
+                            ui.style_mut().visuals.override_text_color = Some(color);
                         }
                         let mut frame = egui::Frame::NONE
                             .fill(self.inner_color)
@@ -278,11 +245,7 @@ impl RaisedFrame {
     }
 }
 
-pub fn glow(
-    ui: &mut egui::Ui,
-    rect: egui::Rect,
-    color: Color32,
-) {
+pub fn glow(ui: &mut egui::Ui, rect: egui::Rect, color: Color32) {
     let painter = ui.painter();
     for i in 1..=4 {
         let expanded = rect.expand(i as f32);
@@ -290,45 +253,27 @@ pub fn glow(
         painter.rect_stroke(
             expanded,
             8.0,
-            egui::Stroke::new(
-                i as f32 * 2.,
-                color.linear_multiply(alpha as f32 / 255.0),
-            ),
+            egui::Stroke::new(i as f32 * 2., color.linear_multiply(alpha as f32 / 255.0)),
             egui::StrokeKind::Outside,
         );
     }
 }
 
-pub fn glow_fill(
-    painter: &egui::Painter,
-    rect: egui::Rect,
-    color: Color32,
-) {
-    painter.rect_filled(
-        rect,
-        8.0,
-        color.linear_multiply(40. / 255.),
-    );
+pub fn glow_fill(painter: &egui::Painter, rect: egui::Rect, color: Color32) {
+    painter.rect_filled(rect, 8.0, color.linear_multiply(40. / 255.));
     for i in 1..=4 {
         let expanded = rect.expand(i as f32);
         let alpha = 40 / i; // fade out
         painter.rect_stroke(
             expanded,
             8.0,
-            egui::Stroke::new(
-                i as f32 * 2.,
-                color.linear_multiply(alpha as f32 / 255.0),
-            ),
+            egui::Stroke::new(i as f32 * 2., color.linear_multiply(alpha as f32 / 255.0)),
             egui::StrokeKind::Middle,
         );
     }
 }
 
-pub fn center_center<T>(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui) -> T,
-) -> T {
+pub fn center_center<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui) -> T) -> T {
     tui(ui, ui.id().with(id))
         .reserve_available_space()
         .style(taffy::Style {
@@ -339,19 +284,13 @@ pub fn center_center<T>(
                 height: taffy::prelude::percent(1.),
             },
             align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceAround,
-            ),
+            justify_content: Some(taffy::JustifyContent::SpaceAround),
             ..Default::default()
         })
         .show(inner)
 }
 
-pub fn r_align<T>(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui) -> T,
-) -> T {
+pub fn r_align<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui) -> T) -> T {
     tui(ui, ui.id().with(id))
         .reserve_available_space()
         .style(taffy::Style {
@@ -368,11 +307,7 @@ pub fn r_align<T>(
         .show(inner)
 }
 
-pub fn h_center<T>(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui) -> T,
-) -> T {
+pub fn h_center<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui) -> T) -> T {
     tui(ui, ui.id().with(id))
         .reserve_available_space()
         .style(taffy::Style {
@@ -383,19 +318,13 @@ pub fn h_center<T>(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceAround,
-            ),
+            justify_content: Some(taffy::JustifyContent::SpaceAround),
             ..Default::default()
         })
         .show(inner)
 }
 
-pub fn h_center_top<T>(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui) -> T,
-) -> T {
+pub fn h_center_top<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui) -> T) -> T {
     tui(ui, ui.id().with(id))
         .reserve_available_space()
         .style(taffy::Style {
@@ -406,19 +335,14 @@ pub fn h_center_top<T>(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Start),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceAround,
-            ),
+            justify_content: Some(taffy::JustifyContent::Center),
+            gap: Size::length(12.),
             ..Default::default()
         })
         .show(inner)
 }
 
-pub fn flex_justified(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui),
-) {
+pub fn flex_justified(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui)) {
     tui(ui, ui.id().with(id))
         .reserve_available_width()
         .style(taffy::Style {
@@ -429,19 +353,13 @@ pub fn flex_justified(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceBetween,
-            ),
+            justify_content: Some(taffy::JustifyContent::SpaceBetween),
             ..Default::default()
         })
         .show(inner);
 }
 
-pub fn flex_spaced(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut Tui),
-) {
+pub fn flex_spaced(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui)) {
     tui(ui, ui.id().with(id))
         .reserve_available_width()
         .style(taffy::Style {
@@ -452,9 +370,7 @@ pub fn flex_spaced(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceAround,
-            ),
+            justify_content: Some(taffy::JustifyContent::SpaceAround),
             ..Default::default()
         })
         .show(inner);
@@ -478,15 +394,8 @@ impl Button {
         self
     }
 
-    pub fn colors(
-        mut self,
-        top: Color32,
-        bot: Color32,
-        inner: Color32,
-        hover: Color32,
-    ) -> Self {
-        self.frame =
-            self.frame.colors(top, bot, inner).hover(hover);
+    pub fn colors(mut self, top: Color32, bot: Color32, inner: Color32, hover: Color32) -> Self {
+        self.frame = self.frame.colors(top, bot, inner).hover(hover);
         self
     }
 
@@ -527,10 +436,7 @@ pub fn button_frame() -> RaisedFrame {
         .margin(Margin::symmetric(6, 4))
 }
 
-pub fn overlay(
-    ctx: &egui::Context,
-    inner: impl FnOnce(&mut egui::Ui) -> egui::Response,
-) -> bool {
+pub fn overlay(ctx: &egui::Context, inner: impl FnOnce(&mut egui::Ui) -> egui::Response) -> bool {
     let screen_size = ctx.screen_rect().size();
     egui::Area::new("overlay".into())
         .order(Order::Foreground)
@@ -545,30 +451,21 @@ pub fn overlay(
                 .show(ui, |ui| {
                     ui.set_width(ui.available_width());
                     ui.set_height(ui.available_height());
-                    center_center(
-                        ui,
-                        "overlay-content".into(),
-                        |tui| {
-                            tui.ui(|ui| {
-                                let resp = inner(ui);
-                                resp.clicked_elsewhere()
-                            })
-                        },
-                    )
+                    center_center(ui, "overlay-content".into(), |tui| {
+                        tui.ui(|ui| {
+                            let resp = inner(ui);
+                            resp.clicked_elsewhere()
+                        })
+                    })
                 })
                 .inner
         })
         .inner
 }
 
-pub fn new_icon(
-    card_rect: Rect,
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+pub fn new_icon(card_rect: Rect) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     let size = egui::vec2(48., 48.);
-    let rect = egui::Rect::from_min_size(
-        card_rect.left_top() - egui::vec2(16., 16.),
-        size,
-    );
+    let rect = egui::Rect::from_min_size(card_rect.left_top() - egui::vec2(16., 16.), size);
     let new_icon = image!("new.svg");
     move |ui| {
         ui.place(
@@ -586,9 +483,7 @@ pub struct CenteredText<'a> {
     font_size: f32,
     font_family: egui::FontFamily,
 }
-pub fn center_text<'a>(
-    text: impl Into<String>,
-) -> CenteredText<'a> {
+pub fn center_text<'a>(text: impl Into<String>) -> CenteredText<'a> {
     CenteredText {
         text: text.into(),
         image: None,
@@ -614,23 +509,15 @@ impl<'a> CenteredText<'a> {
 }
 impl egui::Widget for CenteredText<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        let font_id =
-            egui::FontId::new(self.font_size, self.font_family);
+        let font_id = egui::FontId::new(self.font_size, self.font_family);
 
-        let galley = ui.fonts(|f| {
-            f.layout_delayed_color(
-                self.text,
-                font_id,
-                f32::INFINITY,
-            )
-        });
+        let galley = ui.fonts(|f| f.layout_delayed_color(self.text, font_id, f32::INFINITY));
         let mut content_width = galley.size().x;
         let width = ui.available_width();
 
         if let Some(image) = &self.image {
             let spacing = ui.style().spacing.item_spacing.x;
-            let image_width =
-                image.calc_size(ui.available_size(), None).x;
+            let image_width = image.calc_size(ui.available_size(), None).x;
             content_width += image_width + spacing;
         }
 
@@ -653,9 +540,7 @@ pub fn calc_text_width(
     family: egui::FontFamily,
 ) -> f32 {
     let font_id = egui::FontId::new(size, family);
-    let galley = ui.fonts(|f| {
-        f.layout_delayed_color(text, font_id, f32::INFINITY)
-    });
+    let galley = ui.fonts(|f| f.layout_delayed_color(text, font_id, f32::INFINITY));
     galley.size().x
 }
 
@@ -679,10 +564,8 @@ impl FillBar {
 }
 impl egui::Widget for FillBar {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        let (rect, resp) = ui.allocate_exact_size(
-            egui::vec2(self.width, self.height),
-            Sense::empty(),
-        );
+        let (rect, resp) =
+            ui.allocate_exact_size(egui::vec2(self.width, self.height), Sense::empty());
         let painter = ui.painter();
         painter.rect_filled(rect, 2, self.back_color);
 
@@ -693,10 +576,7 @@ impl egui::Widget for FillBar {
     }
 }
 
-pub fn fill_bar(
-    (width, height): (f32, f32),
-    filled: f32,
-) -> FillBar {
+pub fn fill_bar((width, height): (f32, f32), filled: f32) -> FillBar {
     FillBar {
         width,
         height,

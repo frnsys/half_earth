@@ -7,19 +7,10 @@ use crate::{
     },
 };
 
-use egui::{
-    Align,
-    Align2,
-    Color32,
-    Key,
-    Order,
-    Rect,
-    style::ScrollAnimation,
-};
+use egui::{Align, Align2, Color32, Key, Order, Rect, style::ScrollAnimation};
 use web_time::Instant;
 
 const GAP: f32 = 24.;
-const SCANNER_HEIGHT: f32 = 48.;
 const SCANNER_WIDTH: f32 = 300.;
 
 enum ScanSide {
@@ -27,6 +18,16 @@ enum ScanSide {
     Bottom,
 }
 const LED_DURATION: u8 = 12;
+
+fn scanner_height(ui: &egui::Ui) -> f32 {
+    const SCANNER_HEIGHT: f32 = 48.;
+    let screen_height = ui.ctx().screen_rect().height();
+    if screen_height < 600. {
+        SCANNER_HEIGHT / 2.
+    } else {
+        SCANNER_HEIGHT
+    }
+}
 
 pub struct Cards<C: AsCard + Scannable> {
     cards: Vec<Card<C>>,
@@ -46,18 +47,12 @@ impl<C: AsCard + Scannable> Cards<C> {
         }
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut GameState,
-    ) -> bool {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> bool {
         let mut changed = false;
 
-        let (top_scan_area, bot_scan_area) =
-            self.render_scanners(ui);
+        let (top_scan_area, bot_scan_area) = self.render_scanners(ui);
 
-        let h_center =
-            ui.cursor().left() + ui.available_width() / 2.;
+        let h_center = ui.cursor().left() + ui.available_width() / 2.;
         let mut closest_offset = f32::INFINITY;
         egui::ScrollArea::horizontal().show(ui, |ui| {
             ui.set_height(ui.available_height());
@@ -66,9 +61,7 @@ impl<C: AsCard + Scannable> Cards<C> {
             ui.set_max_width(width);
             let half_width = width / 2.;
 
-            ui.add_space(
-                ui.available_height() / 2. - CARD_HEIGHT / 2.,
-            );
+            ui.add_space(ui.available_height() / 2. - CARD_HEIGHT / 2. - 12.);
 
             let mut selected_idx = None;
             let mut card_resps = vec![];
@@ -77,16 +70,11 @@ impl<C: AsCard + Scannable> Cards<C> {
                 ui.add_space(half_width);
 
                 ui.style_mut().spacing.item_spacing.x = 18.;
-                for (i, card) in
-                    self.cards.iter_mut().enumerate()
-                {
+                for (i, card) in self.cards.iter_mut().enumerate() {
                     let left_pos = ui.cursor().left();
-                    let is_offscreen = (left_pos + CARD_WIDTH)
-                        < 0.
-                        || left_pos > width;
+                    let is_offscreen = (left_pos + CARD_WIDTH) < 0. || left_pos > width;
 
-                    let resp =
-                        card.render(ui, state, is_offscreen);
+                    let resp = card.render(ui, state, is_offscreen);
                     let card_rect = resp.rect;
                     let cx = resp.rect.center().x;
                     let offset = h_center - cx;
@@ -100,12 +88,11 @@ impl<C: AsCard + Scannable> Cards<C> {
                         }
                     }
 
-                    if offset.abs() <= 5. {
+                    if offset.abs() <= 15. {
                         card.draggable = true;
                     } else {
                         card.draggable = false;
                     }
-
 
                     if card.draggable {
                         if card_rect.intersects(top_scan_area) {
@@ -120,15 +107,16 @@ impl<C: AsCard + Scannable> Cards<C> {
                                 self.scan_timer.reset();
                                 self.scans = self.scans.saturating_add(1);
                                 self.scan_result = match card.add_scan_done(state) {
-                                    ScanResult::SuccessContinue |
-                                    ScanResult::SuccessStop => Some((ScanSide::Top, true, LED_DURATION)),
-                                    ScanResult::Rejected => Some((ScanSide::Top, false, LED_DURATION)),
+                                    ScanResult::SuccessContinue | ScanResult::SuccessStop => {
+                                        Some((ScanSide::Top, true, LED_DURATION))
+                                    }
+                                    ScanResult::Rejected => {
+                                        Some((ScanSide::Top, false, LED_DURATION))
+                                    }
                                 };
                                 changed = true;
                             }
-                        } else if card_rect
-                            .intersects(bot_scan_area)
-                        {
+                        } else if card_rect.intersects(bot_scan_area) {
                             ui.ctx().request_repaint();
                             self.scanning = Some(ScanSide::Bottom);
                             if card.is_rem_allowed(state)
@@ -140,9 +128,12 @@ impl<C: AsCard + Scannable> Cards<C> {
                                 self.scan_timer.reset();
                                 self.scans = self.scans.saturating_add(1);
                                 self.scan_result = match card.rem_scan_done(state) {
-                                    ScanResult::SuccessContinue |
-                                    ScanResult::SuccessStop => Some((ScanSide::Bottom, true, LED_DURATION)),
-                                    ScanResult::Rejected => Some((ScanSide::Bottom, false, LED_DURATION)),
+                                    ScanResult::SuccessContinue | ScanResult::SuccessStop => {
+                                        Some((ScanSide::Bottom, true, LED_DURATION))
+                                    }
+                                    ScanResult::Rejected => {
+                                        Some((ScanSide::Bottom, false, LED_DURATION))
+                                    }
                                 };
                                 changed = true;
                             }
@@ -160,25 +151,16 @@ impl<C: AsCard + Scannable> Cards<C> {
             });
 
             let action = ui.input(|inp| {
-                if [Key::ArrowLeft, Key::A]
-                    .iter()
-                    .any(|k| inp.key_pressed(*k))
-                {
+                if [Key::ArrowLeft, Key::A].iter().any(|k| inp.key_pressed(*k)) {
                     Some(Action::Prev)
                 } else if [Key::ArrowRight, Key::D]
                     .iter()
                     .any(|k| inp.key_pressed(*k))
                 {
                     Some(Action::Next)
-                } else if [Key::ArrowUp, Key::W]
-                    .iter()
-                    .any(|k| inp.key_pressed(*k))
-                {
+                } else if [Key::ArrowUp, Key::W].iter().any(|k| inp.key_pressed(*k)) {
                     Some(Action::Up)
-                } else if [Key::ArrowDown, Key::S]
-                    .iter()
-                    .any(|k| inp.key_pressed(*k))
-                {
+                } else if [Key::ArrowDown, Key::S].iter().any(|k| inp.key_pressed(*k)) {
                     Some(Action::Down)
                 } else {
                     None
@@ -188,13 +170,10 @@ impl<C: AsCard + Scannable> Cards<C> {
             match action {
                 Some(action) => match action {
                     Action::Next => {
-                        if let Some(resp) = selected_idx
-                            .and_then(|idx| {
-                                let next_idx =
-                                    idx.saturating_add(1);
-                                card_resps.get(next_idx)
-                            })
-                        {
+                        if let Some(resp) = selected_idx.and_then(|idx| {
+                            let next_idx = idx.saturating_add(1);
+                            card_resps.get(next_idx)
+                        }) {
                             resp.scroll_to_me_animation(
                                 Some(Align::Center),
                                 ScrollAnimation::none(),
@@ -202,13 +181,10 @@ impl<C: AsCard + Scannable> Cards<C> {
                         }
                     }
                     Action::Prev => {
-                        if let Some(resp) = selected_idx
-                            .and_then(|idx| {
-                                let next_idx =
-                                    idx.saturating_sub(1);
-                                card_resps.get(next_idx)
-                            })
-                        {
+                        if let Some(resp) = selected_idx.and_then(|idx| {
+                            let next_idx = idx.saturating_sub(1);
+                            card_resps.get(next_idx)
+                        }) {
                             resp.scroll_to_me_animation(
                                 Some(Align::Center),
                                 ScrollAnimation::none(),
@@ -216,11 +192,7 @@ impl<C: AsCard + Scannable> Cards<C> {
                         }
                     }
                     Action::Up => {
-                        if let Some(card) = selected_idx
-                            .and_then(|idx| {
-                                self.cards.get_mut(idx)
-                            })
-                        {
+                        if let Some(card) = selected_idx.and_then(|idx| self.cards.get_mut(idx)) {
                             if card.is_add_allowed(state) {
                                 card.add_scan_done(state);
                                 changed = true;
@@ -228,11 +200,7 @@ impl<C: AsCard + Scannable> Cards<C> {
                         }
                     }
                     Action::Down => {
-                        if let Some(card) = selected_idx
-                            .and_then(|idx| {
-                                self.cards.get_mut(idx)
-                            })
-                        {
+                        if let Some(card) = selected_idx.and_then(|idx| self.cards.get_mut(idx)) {
                             if card.is_rem_allowed(state) {
                                 card.rem_scan_done(state);
                                 changed = true;
@@ -241,9 +209,7 @@ impl<C: AsCard + Scannable> Cards<C> {
                     }
                 },
                 None => {
-                    if let Some(resp) =
-                        selected_idx.map(|idx| &card_resps[idx])
-                    {
+                    if let Some(resp) = selected_idx.map(|idx| &card_resps[idx]) {
                         resp.scroll_to_me(Some(Align::Center));
                     }
                 }
@@ -252,19 +218,18 @@ impl<C: AsCard + Scannable> Cards<C> {
         changed
     }
 
-    fn render_scanners(
-        &mut self,
-        ui: &mut egui::Ui,
-    ) -> (egui::Rect, egui::Rect) {
+    fn render_scanners(&mut self, ui: &mut egui::Ui) -> (egui::Rect, egui::Rect) {
+        let scanner_height = scanner_height(ui);
+
         let cursor = ui.cursor();
-        let mid_y = ui.available_height() / 2.;
+        let mid_y = ui.available_height() / 2. - 24.;
         let top = egui::Area::new("scan-up".into())
             .order(Order::Middle)
             .movable(false)
             .pivot(Align2::CENTER_BOTTOM)
             .fixed_pos((
                 cursor.left() + ui.available_width() / 2.,
-                cursor.top() + mid_y - CARD_HEIGHT / 2. - GAP,
+                cursor.top() + mid_y - CARD_HEIGHT / 2. - GAP + 24.,
             ))
             .show(ui.ctx(), |ui| {
                 raised_frame()
@@ -275,23 +240,13 @@ impl<C: AsCard + Scannable> Cards<C> {
                     )
                     .show(ui, |ui| {
                         ui.set_width(SCANNER_WIDTH);
-                        ui.set_height(SCANNER_HEIGHT);
+                        ui.set_height(scanner_height);
 
-                        let c = ui.cursor().right_bottom()
-                            - egui::vec2(8., 6.);
+                        let c = ui.cursor().right_bottom() - egui::vec2(8., 6.);
 
                         match &mut self.scan_result {
-                            Some((
-                                ScanSide::Top,
-                                accepted,
-                                countdown,
-                            )) => {
-                                if lit_led(
-                                    ui.painter(),
-                                    c,
-                                    *accepted,
-                                    countdown,
-                                ) {
+                            Some((ScanSide::Top, accepted, countdown)) => {
+                                if lit_led(ui.painter(), c, *accepted, countdown) {
                                     self.scan_result = None;
                                 }
                             }
@@ -300,27 +255,13 @@ impl<C: AsCard + Scannable> Cards<C> {
                             }
                         }
 
-                        let lt = ui.cursor().left_bottom()
-                            + egui::vec2(6., -7.);
-                        let rect = Rect::from_min_size(
-                            lt,
-                            egui::vec2(
-                                SCANNER_WIDTH - 12. - 16.,
-                                2.,
-                            ),
-                        );
+                        let lt = ui.cursor().left_bottom() + egui::vec2(6., -7.);
+                        let rect =
+                            Rect::from_min_size(lt, egui::vec2(SCANNER_WIDTH - 12. - 16., 2.));
 
-                        if matches!(
-                            self.scanning,
-                            Some(ScanSide::Top)
-                        ) {
-                            let progress =
-                                self.scan_timer.progress();
-                            scanning_bar(
-                                ui.painter(),
-                                rect,
-                                progress,
-                            );
+                        if matches!(self.scanning, Some(ScanSide::Top)) {
+                            let progress = self.scan_timer.progress();
+                            scanning_bar(ui.painter(), rect, progress);
                         }
                     });
             })
@@ -333,12 +274,7 @@ impl<C: AsCard + Scannable> Cards<C> {
             .pivot(Align2::CENTER_BOTTOM)
             .fixed_pos((
                 cursor.left() + ui.available_width() / 2.,
-                cursor.top()
-                    + mid_y
-                    + CARD_HEIGHT / 2.
-                    + GAP
-                    + GAP
-                    + SCANNER_HEIGHT,
+                cursor.top() + mid_y + CARD_HEIGHT / 2. + GAP + GAP + scanner_height,
             ))
             .show(ui.ctx(), |ui| {
                 raised_frame()
@@ -349,23 +285,13 @@ impl<C: AsCard + Scannable> Cards<C> {
                     )
                     .show(ui, |ui| {
                         ui.set_width(SCANNER_WIDTH);
-                        ui.set_height(SCANNER_HEIGHT);
+                        ui.set_height(scanner_height);
 
-                        let c = ui.cursor().right_top()
-                            - egui::vec2(8., -6.);
+                        let c = ui.cursor().right_top() - egui::vec2(8., -6.);
 
                         match &mut self.scan_result {
-                            Some((
-                                ScanSide::Bottom,
-                                accepted,
-                                countdown,
-                            )) => {
-                                if lit_led(
-                                    ui.painter(),
-                                    c,
-                                    *accepted,
-                                    countdown,
-                                ) {
+                            Some((ScanSide::Bottom, accepted, countdown)) => {
+                                if lit_led(ui.painter(), c, *accepted, countdown) {
                                     self.scan_result = None;
                                 }
                             }
@@ -374,27 +300,13 @@ impl<C: AsCard + Scannable> Cards<C> {
                             }
                         }
 
-                        let lt = ui.cursor().left_top()
-                            + egui::vec2(6., 7.);
-                        let rect = Rect::from_min_size(
-                            lt,
-                            egui::vec2(
-                                SCANNER_WIDTH - 12. - 16.,
-                                2.,
-                            ),
-                        );
+                        let lt = ui.cursor().left_top() + egui::vec2(6., 7.);
+                        let rect =
+                            Rect::from_min_size(lt, egui::vec2(SCANNER_WIDTH - 12. - 16., 2.));
 
-                        if matches!(
-                            self.scanning,
-                            Some(ScanSide::Bottom)
-                        ) {
-                            let progress =
-                                self.scan_timer.progress();
-                            scanning_bar(
-                                ui.painter(),
-                                rect,
-                                progress,
-                            );
+                        if matches!(self.scanning, Some(ScanSide::Bottom)) {
+                            let progress = self.scan_timer.progress();
+                            scanning_bar(ui.painter(), rect, progress);
                         }
                     });
             })
@@ -445,12 +357,7 @@ impl Timer {
     }
 }
 
-fn led(
-    painter: &egui::Painter,
-    center: egui::Pos2,
-    color: Color32,
-    glow: bool,
-) {
+fn led(painter: &egui::Painter, center: egui::Pos2, color: Color32, glow: bool) {
     const RADIUS: f32 = 3.;
     painter.circle_filled(center, RADIUS + 1., color);
 
@@ -461,10 +368,7 @@ fn led(
             painter.circle_stroke(
                 center,
                 RADIUS + i,
-                egui::Stroke::new(
-                    1.,
-                    color.gamma_multiply(alpha),
-                ),
+                egui::Stroke::new(1., color.gamma_multiply(alpha)),
             );
         }
     }
@@ -490,11 +394,7 @@ fn dim_led(painter: &egui::Painter, center: egui::Pos2) {
     led(painter, center, Color32::from_gray(220), false);
 }
 
-fn scanning_bar(
-    painter: &egui::Painter,
-    rect: Rect,
-    progress: f32,
-) {
+fn scanning_bar(painter: &egui::Painter, rect: Rect, progress: f32) {
     if progress > 0. {
         progress_bar(
             painter,
@@ -505,12 +405,7 @@ fn scanning_bar(
     }
 }
 
-fn progress_bar(
-    painter: &egui::Painter,
-    mut rect: Rect,
-    color: Color32,
-    percent: f32,
-) {
+fn progress_bar(painter: &egui::Painter, mut rect: Rect, color: Color32, percent: f32) {
     rect.set_width(rect.width() * percent);
     painter.rect_filled(rect, 2, color);
 
@@ -520,10 +415,7 @@ fn progress_bar(
         painter.rect_stroke(
             rect,
             2 + i as u8,
-            egui::Stroke::new(
-                i * 2.,
-                color.gamma_multiply(alpha),
-            ),
+            egui::Stroke::new(i * 2., color.gamma_multiply(alpha)),
             egui::StrokeKind::Middle,
         );
     }

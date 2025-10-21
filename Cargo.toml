@@ -24,7 +24,7 @@ egui_taffy = "0.9"
 
 [profile.release]
 debug = 0
-opt-level = 'z'
+opt-level = 3
 lto = "fat"
 strip = true
 panic = "abort"

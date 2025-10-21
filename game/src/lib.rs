@@ -23,7 +23,7 @@ use state::Settings;
 
 use crate::{
     audio::AudioSystem,
-    parts::{draw_bg_image, set_full_bg_image},
+    parts::{Sizing, draw_bg_image, set_full_bg_image},
     state::{GameState, Tutorial, prepare_game},
     views::{GameAction, GameView},
 };
@@ -31,11 +31,7 @@ use crate::{
 #[cfg(not(target_arch = "wasm32"))]
 use hes_editor::WorldEditor;
 
-rust_i18n::i18n!(
-    "/dev/null",
-    fallback = "en",
-    backend = locales::Backend
-);
+rust_i18n::i18n!("/dev/null", fallback = "en", backend = locales::Backend);
 
 #[macro_export]
 macro_rules! image {
@@ -70,8 +66,7 @@ impl App {
         egui_extras::install_image_loaders(&cc.egui_ctx);
         style::configure_style(&cc.egui_ctx);
 
-        let mut prefs =
-            load_prefs(cc.storage).unwrap_or_default();
+        let mut prefs = load_prefs(cc.storage).unwrap_or_default();
         let state = load_game(cc.storage);
         let has_save = state.is_some();
         let mut state = state.unwrap_or_default();
@@ -116,51 +111,29 @@ impl App {
     }
 
     fn save_game(&mut self, storage: &mut dyn eframe::Storage) {
-        eframe::set_value(
-            storage,
-            eframe::APP_KEY,
-            &self.state,
-        );
+        eframe::set_value(storage, eframe::APP_KEY, &self.state);
     }
 
-    fn save_prefs(
-        &mut self,
-        storage: &mut dyn eframe::Storage,
-    ) {
+    fn save_prefs(&mut self, storage: &mut dyn eframe::Storage) {
         self.prefs.tutorial = self.state.ui.tutorial;
-        if self.prefs.tutorial == Tutorial::Ready
-            && self.prefs.runs_played == 0
-        {
+        if self.prefs.tutorial == Tutorial::Ready && self.prefs.runs_played == 0 {
             self.prefs.runs_played = 1;
         }
         eframe::set_value(storage, "prefs", &self.prefs);
     }
 }
 
-fn load_game(
-    storage: Option<&dyn eframe::Storage>,
-) -> Option<GameState> {
-    storage.and_then(|storage| {
-        eframe::get_value(storage, eframe::APP_KEY)
-    })
+fn load_game(storage: Option<&dyn eframe::Storage>) -> Option<GameState> {
+    storage.and_then(|storage| eframe::get_value(storage, eframe::APP_KEY))
 }
 
-fn load_prefs(
-    storage: Option<&dyn eframe::Storage>,
-) -> Option<Settings> {
-    storage
-        .and_then(|storage| eframe::get_value(storage, "prefs"))
+fn load_prefs(storage: Option<&dyn eframe::Storage>) -> Option<Settings> {
+    storage.and_then(|storage| eframe::get_value(storage, "prefs"))
 }
 
 impl eframe::App for App {
-    fn update(
-        &mut self,
-        ctx: &egui::Context,
-        frame: &mut eframe::Frame,
-    ) {
-        if ctx.input(|inp| {
-            inp.key_released(Key::Q) && inp.modifiers.ctrl
-        }) {
+    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+        if ctx.input(|inp| inp.key_released(Key::Q) && inp.modifiers.ctrl) {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
 
@@ -168,50 +141,36 @@ impl eframe::App for App {
             tracing::error!("Audio error: {err}");
         }
 
+        let is_small_screen = ctx.screen_rect().width() <= 450.;
+        let scale = if is_small_screen { 0.7 } else { 1. };
+        let sizing = Sizing {
+            scale,
+            normal: 14. * scale,
+            is_small: is_small_screen,
+        };
+        ctx.memory_mut(|mem| mem.data.insert_temp(egui::Id::NULL, sizing));
+
         egui::CentralPanel::default()
             .frame(egui::Frame::NONE.inner_margin(0.0))
             .show(ctx, |ui| {
                 draw_bg_image(ui);
                 egui::ScrollArea::vertical().show(ui, |ui| {
+                    ui.set_width(ui.available_width());
                     match &mut self.view {
                         View::Start(start) => {
-                            if let Some(action) = start.render(
-                                ui,
-                                &mut self.prefs,
-                                self.has_save,
-                            ) {
+                            if let Some(action) = start.render(ui, &mut self.prefs, self.has_save) {
                                 match action {
                                     StartAction::Continue => {
-                                        self.state = load_game(
-                                            frame.storage(),
-                                        )
-                                        .unwrap_or_default();
-                                        prepare_game(
-                                            &mut self.state,
-                                            &self.prefs,
-                                        );
-                                        self.view = View::Game(
-                                            GameView::new(
-                                                &mut self.state,
-                                                &self.ctx,
-                                            ),
-                                        );
+                                        self.state = load_game(frame.storage()).unwrap_or_default();
+                                        prepare_game(&mut self.state, &self.prefs);
+                                        self.view =
+                                            View::Game(GameView::new(&mut self.state, &self.ctx));
                                     }
-                                    StartAction::NewGame(
-                                        world,
-                                    ) => {
-                                        self.state =
-                                            GameState::from_world(world);
-                                        prepare_game(
-                                            &mut self.state,
-                                            &self.prefs,
-                                        );
-                                        self.view = View::Game(
-                                            GameView::new(
-                                                &mut self.state,
-                                                &self.ctx,
-                                            ),
-                                        );
+                                    StartAction::NewGame(world) => {
+                                        self.state = GameState::from_world(world);
+                                        prepare_game(&mut self.state, &self.prefs);
+                                        self.view =
+                                            View::Game(GameView::new(&mut self.state, &self.ctx));
                                     }
 
                                     #[cfg(not(target_arch = "wasm32"))]
@@ -222,30 +181,25 @@ impl eframe::App for App {
                             }
                         }
                         View::Game(view) => {
-                            if let Some(action) = view.render(
-                                ui,
-                                &mut self.state,
-                                &mut self.prefs,
-                            ) {
+                            if let Some(action) = view.render(ui, &mut self.state, &mut self.prefs)
+                            {
                                 match action {
                                     GameAction::Restart => {
-                                        self.view = View::Start(
-                                            Start::default(),
-                                        );
+                                        self.view = View::Start(Start::default());
                                     }
                                     GameAction::ToggleSound => {
-                                        self.prefs.sound =
-                                            !self.prefs.sound;
+                                        self.prefs.sound = !self.prefs.sound;
                                         if self.prefs.sound {
                                             audio::unmute();
                                         } else {
                                             audio::mute();
                                         }
+                                        if let Some(storage) = frame.storage_mut() {
+                                            self.save_prefs(storage);
+                                        }
                                     }
                                     GameAction::Save => {
-                                        if let Some(storage) =
-                                            frame.storage_mut()
-                                        {
+                                        if let Some(storage) = frame.storage_mut() {
                                             self.save(storage);
                                         }
                                     }

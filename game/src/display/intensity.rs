@@ -30,9 +30,7 @@ fn impact_stops(key: Impact, kind: OutputKind) -> [f32; 4] {
         Impact::Energy => match kind {
             // Enhancement: Take into account EROI
             OutputKind::Energy => [0., 0.001, 0.01, 0.1],
-            OutputKind::Calories => {
-                [0., 0.00015, 0.0005, 0.001]
-            }
+            OutputKind::Calories => [0., 0.00015, 0.0005, 0.001],
         },
         Impact::Water => match kind {
             OutputKind::Energy => [0., 1., 2., 5.],
@@ -47,19 +45,13 @@ fn impact_stops(key: Impact, kind: OutputKind) -> [f32; 4] {
             OutputKind::Calories => [0., 1e-16, 1e-15, 1e-14],
         },
         Impact::Electricity | Impact::Fuel => {
-            let output = key
-                .as_output()
-                .expect("Checked they're valid outputs");
+            let output = key.as_output().expect("Checked they're valid outputs");
             base_demand_by_income_levels(output)
         }
     }
 }
 
-pub fn impact_intensity(
-    val: f32,
-    key: Impact,
-    kind: OutputKind,
-) -> usize {
+pub fn impact_intensity(val: f32, key: Impact, kind: OutputKind) -> usize {
     let stops = impact_stops(key, kind);
     if val < stops[0] {
         0
@@ -67,9 +59,7 @@ pub fn impact_intensity(
         stops
             .windows(2)
             .enumerate()
-            .find(|(_, stops)| {
-                val >= stops[0] && val < stops[1]
-            })
+            .find(|(_, stops)| val >= stops[0] && val < stops[1])
             .map(|(i, _)| i + 1)
             .unwrap_or(stops.len())
     }
@@ -91,10 +81,7 @@ pub fn output_intensity(val: f32, key: Output) -> usize {
 
 pub const N_PIPS: usize = 5;
 
-pub fn color(
-    mut intensity: usize,
-    invert: bool,
-) -> egui::Color32 {
+pub fn color(mut intensity: usize, invert: bool) -> egui::Color32 {
     if invert {
         intensity = N_PIPS.saturating_sub(intensity);
     }
@@ -121,20 +108,10 @@ pub fn describe(intensity: usize) -> Cow<'static, str> {
 
 pub fn scale(val: f32, key: Variable) -> usize {
     let val = match key {
-        Variable::Outlook => {
-            (val / BASE_REGIONAL_OUTLOOK * 4.).round().max(1.)
-        }
-        Variable::Extinction => {
-            (val / 100. * 4.).round().max(0.)
-        }
-        Variable::Habitability => {
-            (val / BASE_REGIONAL_HABITABILITY * 4.)
-                .round()
-                .max(0.)
-        }
-        Variable::WorldOutlook => (val
-            / (BASE_REGIONAL_OUTLOOK + BASE_WORLD_OUTLOOK)
-            * 4.)
+        Variable::Outlook => (val / BASE_REGIONAL_OUTLOOK * 4.).round().max(1.),
+        Variable::Extinction => (val / 100. * 4.).round().max(0.),
+        Variable::Habitability => (val / BASE_REGIONAL_HABITABILITY * 4.).round().max(0.),
+        Variable::WorldOutlook => (val / (BASE_REGIONAL_OUTLOOK + BASE_WORLD_OUTLOOK) * 4.)
             .round()
             .max(1.),
         Variable::Warming => val.floor() + 1.,
@@ -171,14 +148,9 @@ impl egui::Widget for IntensityBar {
 }
 impl egui::Widget for &IntensityBar {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+        let intensity = (self.intensity as f32 * self.n_pips as f32 / N_PIPS as f32) as usize;
         let color = color(self.intensity, self.invert);
-        draw_segmented_pill(
-            ui,
-            self.n_pips,
-            color,
-            self.intensity,
-            self.seg_width,
-        )
+        draw_segmented_pill(ui, self.n_pips, color, intensity, self.seg_width)
     }
 }
 
@@ -202,23 +174,18 @@ fn draw_segmented_pill(
     let spacing = 1.;
     let radius = 2;
 
-    let total_width =
-        (seg_w * n as f32) + (spacing * (n - 1) as f32);
+    let total_width = (seg_w * n as f32) + (spacing * (n - 1) as f32);
     let size = egui::vec2(total_width, seg_h);
-    let (rect, resp) =
-        ui.allocate_exact_size(size, egui::Sense::hover());
+    let (rect, resp) = ui.allocate_exact_size(size, egui::Sense::hover());
 
     let painter = ui.painter();
 
     let mut x = rect.left();
     for i in 0..n {
         let x0 = x;
-        let x1 =
-            if i == n - 1 { rect.right() } else { x0 + seg_w };
-        let seg_rect = egui::Rect::from_min_max(
-            Pos2::new(x0, rect.top()),
-            Pos2::new(x1, rect.bottom()),
-        );
+        let x1 = if i == n - 1 { rect.right() } else { x0 + seg_w };
+        let seg_rect =
+            egui::Rect::from_min_max(Pos2::new(x0, rect.top()), Pos2::new(x1, rect.bottom()));
 
         // Corner rounding per segment
         let rounding = if i == 0 {
@@ -247,13 +214,7 @@ fn draw_segmented_pill(
         } else {
             Color32::from_rgb(0x45, 0x3E, 0x3E)
         };
-        painter.rect(
-            seg_rect,
-            rounding,
-            color,
-            stroke,
-            StrokeKind::Outside,
-        );
+        painter.rect(seg_rect, rounding, color, stroke, StrokeKind::Outside);
 
         x += seg_w + spacing;
     }

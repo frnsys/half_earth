@@ -2,15 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     consts,
-    display::{
-        AsText,
-        DisplayEffect,
-        HasIcon,
-        active_effects,
-        group_color,
-        icons,
-        render_effects,
-    },
+    display::{AsText, DisplayEffect, HasIcon, active_effects, group_color, icons, render_effects},
     image,
     parts::{flex_justified, new_icon},
     state::{GameState, PlanChange},
@@ -19,24 +11,9 @@ use crate::{
 };
 
 use super::AsCard;
-use egui::{
-    Color32,
-    Margin,
-    Rect,
-    Response,
-    Stroke,
-    TextStyle,
-};
+use egui::{Color32, Margin, Rect, Response, Stroke, TextStyle};
 use egui_taffy::{TuiBuilderLogic, taffy};
-use hes_engine::{
-    Collection,
-    Effect as EngineEffect,
-    Flag,
-    Id,
-    NPC,
-    Project,
-    ProjectType,
-};
+use hes_engine::{Collection, Effect as EngineEffect, Flag, Id, NPC, Project, ProjectType};
 use rust_i18n::t;
 
 impl AsCard for Project {
@@ -64,23 +41,14 @@ impl AsCard for Project {
                         flex_grow: 1.,
                         ..Default::default()
                     })
-                    .label(
-                        egui::RichText::new(
-                            group.to_uppercase(),
-                        )
-                        .monospace(),
-                    );
+                    .label(egui::RichText::new(group.to_uppercase()).monospace());
 
                     tui.ui(|ui| {
                         if self.is_online() {
-                            let has_levels =
-                                !self.upgrades.is_empty();
+                            let has_levels = !self.upgrades.is_empty();
                             if has_levels {
                                 let level = self.level + 1;
-                                ui.label(format!(
-                                    "{} {level}",
-                                    t!("Level")
-                                ));
+                                ui.label(format!("{} {level}", t!("Level")));
                             } else {
                                 ui.image(icons::CHECK_BLK);
                                 ui.label(t!("Completed"));
@@ -88,26 +56,16 @@ impl AsCard for Project {
                         } else {
                             // See other note why we need to get the canonical ref.
                             let p = &state.world.projects[&self.id];
-                            let remaining_cost = remaining_cost(
-                                p,
-                                &state.ui.plan_changes,
-                            );
-                            let is_countdown = self.kind
-                                != ProjectType::Policy
-                                || p.is_building();
+                            let remaining_cost = remaining_cost(p, &state.ui.plan_changes);
+                            let is_countdown = self.kind != ProjectType::Policy || p.is_building();
                             add_tip(
-                                cost_tip(
-                                    &self.kind,
-                                    &remaining_cost,
-                                ),
+                                cost_tip(&self.kind, &remaining_cost),
                                 ui.horizontal_centered(|ui| {
                                     ui.style_mut().spacing.item_spacing.x = 2.;
                                     if is_countdown {
                                         ui.add(icons::TIME.size(12.));
                                     } else if self.kind == ProjectType::Policy {
-                                        ui.add(
-                                            icons::POLITICAL_CAPITAL.size(14.),
-                                        );
+                                        ui.add(icons::POLITICAL_CAPITAL.size(14.));
                                     }
                                     ui.label(egui::RichText::new(remaining_cost).size(12.));
                                 })
@@ -116,7 +74,8 @@ impl AsCard for Project {
                         }
                     });
                 });
-            }).response;
+            })
+            .response;
 
         let is_new = !state.ui.viewed.contains(&self.id);
         if is_new {
@@ -129,9 +88,7 @@ impl AsCard for Project {
     }
 
     fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
-        let rect =
-            super::render_flavor_image(ui, &self.flavor.image)
-                .rect;
+        let rect = super::render_flavor_image(ui, &self.flavor.image).rect;
 
         // NOTE: this is hacky, but the cards actually display
         // a clone of the Project, so when we e.g. add points
@@ -142,33 +99,28 @@ impl AsCard for Project {
         // to directly use the canonical project ref but it's of low priority.
         let p = &state.world.projects[&self.id];
 
-        let has_points =
-            self.kind != ProjectType::Policy && p.is_building();
+        let has_points = self.kind != ProjectType::Policy && p.is_building();
         if has_points {
             ui.place(rect, points(p.points, &self.kind));
         }
 
-        let (opposers, supporters) =
-            npc_stances(self, &state.npcs);
+        let (opposers, supporters) = npc_stances(self, &state.npcs);
         npc_support(ui, rect, &opposers, &supporters);
 
-        let parliament_suspended =
-            state.flags.contains(&Flag::ParliamentSuspended);
+        let parliament_suspended = state.flags.contains(&Flag::ParliamentSuspended);
         let player_seats = state.npcs.coalition_seats();
         let majority_satisfied = if parliament_suspended {
             true
         } else {
             player_seats as f32 > self.required_majority
         };
-        let warn_majority =
-            self.required_majority > 0. && !majority_satisfied;
+        let warn_majority = self.required_majority > 0. && !majority_satisfied;
 
         if warn_majority {
             ui.place(rect, majority_warning(rect));
         }
 
-        let passed = self.kind == ProjectType::Policy
-            && (p.is_building() || p.is_online());
+        let passed = self.kind == ProjectType::Policy && (p.is_building() || p.is_online());
         if passed {
             let rect = egui::Rect::from_min_size(
                 rect.left_top() + egui::vec2(16., -48.),
@@ -192,8 +144,7 @@ impl AsCard for Project {
         let visible_effect = |d: &DisplayEffect| -> bool {
             !matches!(
                 d.effect,
-                EngineEffect::ProjectRequest(..)
-                    | EngineEffect::ProcessRequest(..)
+                EngineEffect::ProjectRequest(..) | EngineEffect::ProcessRequest(..)
             )
         };
 
@@ -211,15 +162,11 @@ impl AsCard for Project {
             })
             .inner_margin(egui::Margin::symmetric(4, 4))
             .corner_radius(4)
-            .stroke(Stroke::new(
-                1.,
-                Color32::from_black_alpha(64),
-            ))
+            .stroke(Stroke::new(1., Color32::from_black_alpha(64)))
             .show(ui, |ui| {
                 ui.set_width(ui.available_width());
                 ui.set_height(ui.available_height());
-                ui.style_mut().override_text_style =
-                    Some(TextStyle::Small);
+                ui.style_mut().override_text_style = Some(TextStyle::Small);
 
                 let is_active = self.is_active();
 
@@ -232,31 +179,20 @@ impl AsCard for Project {
                     } else {
                         let upgrade = &self.upgrades[idx];
                         let mut cost = upgrade.cost;
-                        if let Some(changes) =
-                            state.ui.plan_changes.get(&self.id)
-                        {
+                        if let Some(changes) = state.ui.plan_changes.get(&self.id) {
                             if changes.downgrades > 0 {
                                 cost = 0;
                             }
                         }
                         let effects: Vec<DisplayEffect> =
-                            upgrade
-                                .effects
-                                .iter()
-                                .map(|e| e.into())
-                                .collect();
+                            upgrade.effects.iter().map(|e| e.into()).collect();
                         Some((cost, effects))
                     }
                 };
-                let is_upgrading =
-                    state.ui.queued_upgrades.get(&self.id)
-                        == Some(&true);
+                let is_upgrading = state.ui.queued_upgrades.get(&self.id) == Some(&true);
 
-                let can_downgrade = self.kind
-                    == ProjectType::Policy
-                    && self.level > 0;
-                let has_downgrade =
-                    self.is_active() && can_downgrade;
+                let can_downgrade = self.kind == ProjectType::Policy && self.level > 0;
+                let has_downgrade = self.is_active() && can_downgrade;
                 let prev_upgrade = if can_downgrade {
                     let idx = self.level as isize - 2;
                     if idx < 0 {
@@ -268,16 +204,13 @@ impl AsCard for Project {
                             .collect();
                         Some((0, effects))
                     } else {
-                        if let Some(upgrade) =
-                            self.upgrades.get(idx as usize)
-                        {
-                            let effects: Vec<DisplayEffect> =
-                                upgrade
-                                    .effects
-                                    .iter()
-                                    .map(DisplayEffect::from)
-                                    .filter(visible_effect)
-                                    .collect();
+                        if let Some(upgrade) = self.upgrades.get(idx as usize) {
+                            let effects: Vec<DisplayEffect> = upgrade
+                                .effects
+                                .iter()
+                                .map(DisplayEffect::from)
+                                .filter(visible_effect)
+                                .collect();
                             Some((upgrade.cost, effects))
                         } else {
                             None
@@ -290,39 +223,27 @@ impl AsCard for Project {
                 // When this in 0 in generally means this is offscreen
                 // so this won't work correctly.
                 if ui.available_height() != 0. {
-                    let max_size = egui::vec2(
-                        ui.available_width(),
-                        ui.available_height(),
-                    );
+                    let max_size = egui::vec2(ui.available_width(), ui.available_height());
                     scale_text_ui(ui, max_size, move |ui| {
                         render_effects(ui, &state, &effects);
 
-                        if is_active
-                            && let Some((cost, effects)) =
-                                &next_upgrade
-                        {
+                        if is_active && let Some((cost, effects)) = &next_upgrade {
                             if is_upgrading {
-                                ui.label(t!(
-                            "Upgrading in one planning cycle."
-                        ));
+                                ui.label(t!("Upgrading in one planning cycle."));
                             } else {
                                 ui.horizontal_centered(|ui| {
-                            ui.label(t!("Next Level"));
-                            ui.label(cost.to_string());
-                            ui.image(icons::POLITICAL_CAPITAL);
-                        });
+                                    ui.label(t!("Next Level"));
+                                    ui.label(cost.to_string());
+                                    ui.image(icons::POLITICAL_CAPITAL);
+                                });
                             }
                             render_effects(ui, &state, effects);
                         }
 
                         if has_downgrade {
                             ui.label(t!("Prev Level"));
-                            if let Some((_, effects)) =
-                                &prev_upgrade
-                            {
-                                render_effects(
-                                    ui, &state, effects,
-                                );
+                            if let Some((_, effects)) = &prev_upgrade {
+                                render_effects(ui, &state, effects);
                             }
                         }
                     });
@@ -332,8 +253,7 @@ impl AsCard for Project {
 
         if self.is_building() {
             let rect = egui::Rect::from_min_size(
-                resp.rect.center_bottom()
-                    + egui::vec2(-6., -10.),
+                resp.rect.center_bottom() + egui::vec2(-6., -10.),
                 egui::vec2(0., 0.),
             );
 
@@ -350,21 +270,12 @@ impl AsCard for Project {
             ui.place(rect, |ui: &mut egui::Ui| {
                 egui::Frame::NONE
                     .fill(Color32::WHITE)
-                    .stroke(egui::Stroke::new(
-                        1.,
-                        Color32::BLACK,
-                    ))
+                    .stroke(egui::Stroke::new(1., Color32::BLACK))
                     .corner_radius(6)
                     .inner_margin(Margin::symmetric(3, 1))
                     .show(ui, |ui| {
-                        ui.style_mut().wrap_mode =
-                            Some(egui::TextWrapMode::Extend);
-                        ui.label(
-                            egui::RichText::new(
-                                building_term.to_uppercase(),
-                            )
-                            .size(11.),
-                        );
+                        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
+                        ui.label(egui::RichText::new(building_term.to_uppercase()).size(11.));
                     })
                     .response
             });
@@ -376,22 +287,14 @@ impl AsCard for Project {
         super::card_desc(ui, &self.flavor.description);
     }
 
-    fn bottom_back(
-        &self,
-        ui: &mut egui::Ui,
-        state: &GameState,
-    ) {
+    fn bottom_back(&self, ui: &mut egui::Ui, state: &GameState) {
         ui.add_space(12.);
-        let (opposers, supporters) =
-            npc_stances(self, &state.npcs);
+        let (opposers, supporters) = npc_stances(self, &state.npcs);
         let has_opposers = !opposers.is_empty();
         let has_supporters = !supporters.is_empty();
 
         ui.vertical_centered(|ui| {
-            ui.label(
-                egui::RichText::new(t!("Political Effects"))
-                    .underline(),
-            );
+            ui.label(egui::RichText::new(t!("Political Effects")).underline());
         });
         if has_opposers || has_supporters {
             ui.columns(2, |cols| {
@@ -414,13 +317,7 @@ impl AsCard for Project {
         ui.vertical_centered(|ui| {
             let image_attrib = &self.flavor.image.attribution;
             if !image_attrib.is_empty() {
-                ui.label(
-                    egui::RichText::new(format!(
-                        "{} {image_attrib}",
-                        t!("Image:")
-                    ))
-                    .size(11.),
-                );
+                ui.label(egui::RichText::new(format!("{} {image_attrib}", t!("Image:"))).size(11.));
             }
         });
     }
@@ -454,21 +351,15 @@ fn cost_tip(kind: &ProjectType, remaining_cost: &str) -> Tip {
     }
 }
 
-fn remaining_cost(
-    project: &Project,
-    plan_changes: &BTreeMap<Id, PlanChange>,
-) -> String {
+fn remaining_cost(project: &Project, plan_changes: &BTreeMap<Id, PlanChange>) -> String {
     if project.is_online() {
         0.to_string()
     } else if project.is_building() {
         match project.kind {
-            ProjectType::Policy => {
-                t!("1 planning cycle left").to_string()
-            }
+            ProjectType::Policy => t!("1 planning cycle left").to_string(),
             _ => {
                 let years = project.years_remaining();
-                t!("%{years} yrs left", years = years)
-                    .to_string()
+                t!("%{years} yrs left", years = years).to_string()
             }
         }
     } else {
@@ -479,9 +370,7 @@ fn remaining_cost(
         };
         match project.kind {
             ProjectType::Policy => {
-                if let Some(changes) =
-                    plan_changes.get(&project.id)
-                {
+                if let Some(changes) = plan_changes.get(&project.id) {
                     if changes.withdrawn {
                         0.to_string()
                     } else {
@@ -496,18 +385,14 @@ fn remaining_cost(
     }
 }
 
-fn majority_warning(
-    rect: Rect,
-) -> impl FnOnce(&mut egui::Ui) -> Response {
+fn majority_warning(rect: Rect) -> impl FnOnce(&mut egui::Ui) -> Response {
     const PADDING: i8 = 6;
     const P: f32 = (PADDING * 2) as f32;
 
     move |ui| {
         egui::Frame::NONE
             .outer_margin(egui::Margin::symmetric(6, 0))
-            .inner_margin(egui::Margin::symmetric(
-                    PADDING, PADDING,
-            ))
+            .inner_margin(egui::Margin::symmetric(PADDING, PADDING))
             .corner_radius(4)
             .fill(Color32::from_black_alpha(128))
             .show(ui, |ui| {
@@ -519,17 +404,15 @@ fn majority_warning(
                     ui.add_space(48.);
                     ui.add(icons::WARNING.size(24.));
                     ui.label(t!(
-                            "Because of opposition, this requires a majority in parliament."
+                        "Because of opposition, this requires a majority in parliament."
                     ));
                 });
-            }).response
+            })
+            .response
     }
 }
 
-fn points(
-    n: usize,
-    kind: &ProjectType,
-) -> impl FnOnce(&mut egui::Ui) -> Response {
+fn points(n: usize, kind: &ProjectType) -> impl FnOnce(&mut egui::Ui) -> Response {
     let icon = kind.icon();
     let tip = tip(
         icon,
@@ -546,8 +429,7 @@ fn points(
             .inner_margin(egui::Margin::symmetric(12, 6))
             .show(ui, |ui| {
                 ui.vertical(|ui| {
-                    ui.style_mut().spacing.item_spacing =
-                        egui::vec2(3., 3.);
+                    ui.style_mut().spacing.item_spacing = egui::vec2(3., 3.);
                     ui.horizontal_wrapped(|ui| {
                         ui.set_max_width(ICON_SIZE * 2. + 5.);
                         for i in 0..consts::MAX_POINTS {
@@ -565,10 +447,7 @@ fn points(
     }
 }
 
-pub fn npc_icon(
-    npc: &NPC,
-    yea: bool,
-) -> impl FnOnce(&mut egui::Ui) -> Response {
+pub fn npc_icon(npc: &NPC, yea: bool) -> impl FnOnce(&mut egui::Ui) -> Response {
     let icon = npc.icon();
     move |ui| {
         let color = if yea {
@@ -590,12 +469,7 @@ pub fn npc_icon(
     }
 }
 
-pub fn npc_support(
-    ui: &mut egui::Ui,
-    frame_rect: Rect,
-    opposers: &[&NPC],
-    supporters: &[&NPC],
-) {
+pub fn npc_support(ui: &mut egui::Ui, frame_rect: Rect, opposers: &[&NPC], supporters: &[&NPC]) {
     let has_opposers = !opposers.is_empty();
     let has_supporters = !supporters.is_empty();
 
@@ -617,8 +491,7 @@ pub fn npc_support(
 
     let width = 32. * supporters.len() as f32;
     let npc_rect = egui::Rect::from_min_size(
-        frame_rect.right_bottom()
-            + egui::vec2(-(6. + 6.) - width, -36.),
+        frame_rect.right_bottom() + egui::vec2(-(6. + 6.) - width, -36.),
         egui::vec2(256., 32.),
     );
     if has_supporters {
@@ -634,10 +507,7 @@ pub fn npc_support(
     }
 }
 
-fn npc_stances<'a>(
-    proj: &Project,
-    npcs: &'a Collection<NPC>,
-) -> (Vec<&'a NPC>, Vec<&'a NPC>) {
+fn npc_stances<'a>(proj: &Project, npcs: &'a Collection<NPC>) -> (Vec<&'a NPC>, Vec<&'a NPC>) {
     let opposers = proj
         .opposers
         .iter()

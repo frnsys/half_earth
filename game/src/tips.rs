@@ -1,10 +1,4 @@
-use egui::{
-    Color32,
-    LayerId,
-    Order,
-    PopupAnchor,
-    PopupCloseBehavior,
-};
+use egui::{Color32, LayerId, Order, PopupAnchor, PopupCloseBehavior};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{Industry, NPC, Process, Project};
 
@@ -13,8 +7,13 @@ use crate::{
     parts::{glow_fill, h_center, raised_frame},
     state::GameState,
     text::bbcode,
-    views::{Card, FactorsCard, render_event_card},
+    views::{Card, Changes, FactorsCard, render_event_card},
 };
+
+fn set_tip_width(ui: &mut egui::Ui) {
+    let width = (ui.ctx().screen_rect().width() - 36.).min(420.);
+    ui.set_max_width(width);
+}
 
 #[derive(Clone)]
 pub struct Tip {
@@ -43,9 +42,8 @@ impl Tip {
     // Doesn't support cards
     pub fn render_as_hover(&self, ui: &mut egui::Ui) {
         raised_frame().shadow().show(ui, |ui| {
-            ui.set_max_width(480.);
-            ui.style_mut().visuals.override_text_color =
-                Some(Color32::WHITE);
+            set_tip_width(ui);
+            ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
             ui.horizontal_top(|ui| {
                 ui.add(self.icon.size(24.));
                 ui.add(bbcode(&self.text));
@@ -53,83 +51,57 @@ impl Tip {
         });
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &GameState,
-    ) -> bool {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &GameState) -> bool {
         let mut clicked_outside = false;
         if !self.text.is_empty() {
             h_center(ui, "tip", |tui| {
                 tui.ui(|ui| {
-                    let resp = raised_frame().shadow().show(
-                        ui,
-                        |ui| {
-                            ui.set_max_width(480.);
-                            ui.style_mut()
-                                .visuals
-                                .override_text_color =
-                                Some(Color32::WHITE);
-                            ui.horizontal_top(|ui| {
-                                ui.add(self.icon.size(24.));
-                                ui.add(bbcode(&self.text));
-                            });
-                        },
-                    );
+                    let resp = raised_frame().shadow().show(ui, |ui| {
+                        set_tip_width(ui);
+                        ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+                        ui.horizontal_top(|ui| {
+                            ui.add(self.icon.size(24.));
+                            ui.add(bbcode(&self.text));
+                        });
+                    });
                     clicked_outside = resp.clicked_elsewhere();
                 });
             });
         }
 
         if let Some(card) = &mut self.card {
-            ui.add_space(32.);
-            ui.style_mut().wrap_mode =
-                Some(egui::TextWrapMode::Extend);
+            ui.add_space(24.);
+            ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
             h_center(ui, "tip-card", |tui| {
                 tui.ui(|ui| {
                     let resp = match card {
-                        TipCard::Project(card) => {
-                            card.render(ui, state, false)
-                        }
-                        TipCard::Process(card) => {
-                            card.render(ui, state, false)
-                        }
+                        TipCard::Project(card) => card.render(ui, state, false),
+                        TipCard::Process(card) => card.render(ui, state, false),
                         TipCard::Processes(cards) => {
                             // TODO horizontal scrolling, but seems to interfere with taffy
                             ui.horizontal(|ui| {
-                                ui.style_mut()
-                                    .spacing
-                                    .item_spacing
-                                    .x = 32.;
-                                ui.set_width(
-                                    ui.available_width(),
-                                );
+                                ui.style_mut().spacing.item_spacing.x = 32.;
+                                ui.set_width(ui.available_width());
                                 for card in cards {
-                                    card.render(
-                                        ui, state, false,
-                                    );
+                                    card.render(ui, state, false);
                                 }
                             })
                             .response
                         }
-                        TipCard::Industry(card) => {
-                            card.render(ui, state, false)
-                        }
+                        TipCard::Industry(card) => card.render(ui, state, false),
                         TipCard::Factors(factors_card) => {
-                            ui.set_width(420.);
+                            set_tip_width(ui);
                             factors_card.render(ui)
                         }
                         TipCard::Event(event) => {
-                            ui.set_width(420.);
+                            set_tip_width(ui);
                             render_event_card(ui, state, event)
                         }
-                        TipCard::NPC(card) => {
-                            card.render(ui, state, false)
-                        }
+                        TipCard::NPC(card) => card.render(ui, state, false),
+                        TipCard::Changes(changes) => ui.add(&(*changes)),
                     };
                     if !clicked_outside {
-                        clicked_outside =
-                            resp.clicked_elsewhere();
+                        clicked_outside = resp.clicked_elsewhere();
                     }
                 });
             });
@@ -150,10 +122,7 @@ pub fn tip(icon: Icon, text: impl Into<String>) -> Tip {
     }
 }
 
-pub fn add_tip(
-    tip: Tip,
-    resp: egui::Response,
-) -> egui::Response {
+pub fn add_tip(tip: Tip, resp: egui::Response) -> egui::Response {
     let rect = resp.rect;
     if resp.contains_pointer() {
         let painter = resp.ctx.layer_painter(resp.layer_id);
@@ -166,10 +135,7 @@ pub fn add_tip(
     resp
 }
 
-pub fn add_card<C: Into<TipCard>>(
-    card: C,
-    resp: egui::Response,
-) -> egui::Response {
+pub fn add_card<C: Into<TipCard>>(card: C, resp: egui::Response) -> egui::Response {
     if resp.interact(egui::Sense::click()).clicked() {
         let mut tip = tip(icons::OTHER, "");
         tip.card = Some(card.into());
@@ -204,10 +170,7 @@ fn open_tip(resp: &egui::Response, tip: Tip) {
     });
 }
 
-pub fn add_hover_tip(
-    tip: Tip,
-    resp: egui::Response,
-) -> egui::Response {
+pub fn add_hover_tip(tip: Tip, resp: egui::Response) -> egui::Response {
     if resp.contains_pointer() {
         egui::Popup::from_response(&resp)
             .frame(egui::Frame::NONE)
@@ -224,9 +187,7 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
     let opened_id = popup_id.with("just-opened");
     let card_id = popup_id.with("card");
 
-    if let Some(mut tip) =
-        ctx.memory(|mem| mem.data.get_temp::<Tip>(popup_id))
-    {
+    if let Some(mut tip) = ctx.memory(|mem| mem.data.get_temp::<Tip>(popup_id)) {
         let screen_size = ctx.screen_rect().size();
         egui::Popup::new(
             popup_id,
@@ -240,25 +201,21 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
         .frame(
             egui::Frame::NONE
                 .fill(Color32::from_black_alpha(220))
-                .inner_margin(egui::Margin::symmetric(18, 18)),
+                .inner_margin(egui::Margin::symmetric(0, 18)),
         )
         .show(|ui| {
             ui.set_max_size(screen_size); // Needed for resizing
             ui.set_width(ui.available_width());
             ui.set_height(screen_size.y);
 
-            if let Some(card) = ctx.memory(|mem| {
-                mem.data.get_temp::<TipCard>(card_id)
-            }) {
+            if let Some(card) = ctx.memory(|mem| mem.data.get_temp::<TipCard>(card_id)) {
                 tip.card = Some(card);
             }
 
             // Close only if the tip wasn't just opened this frame.
             let should_close = tip.render(ui, state);
             let just_opened = ctx
-                .memory(|mem| {
-                    mem.data.get_temp::<bool>(opened_id)
-                })
+                .memory(|mem| mem.data.get_temp::<bool>(opened_id))
                 .unwrap_or_default();
             if should_close && !just_opened {
                 // Close and clear the current tip card.
@@ -285,6 +242,7 @@ pub enum TipCard {
     Factors(FactorsCard),
     Event(DisplayEvent),
     NPC(Card<NPC>),
+    Changes(Changes),
 }
 impl From<Project> for TipCard {
     fn from(value: Project) -> Self {
@@ -308,9 +266,7 @@ impl From<Industry> for TipCard {
 }
 impl From<Vec<Process>> for TipCard {
     fn from(value: Vec<Process>) -> Self {
-        TipCard::Processes(
-            value.into_iter().map(Card::new).collect(),
-        )
+        TipCard::Processes(value.into_iter().map(Card::new).collect())
     }
 }
 impl From<FactorsCard> for TipCard {
@@ -321,5 +277,10 @@ impl From<FactorsCard> for TipCard {
 impl From<DisplayEvent> for TipCard {
     fn from(value: DisplayEvent) -> Self {
         TipCard::Event(value)
+    }
+}
+impl From<Changes> for TipCard {
+    fn from(value: Changes) -> Self {
+        TipCard::Changes(value)
     }
 }

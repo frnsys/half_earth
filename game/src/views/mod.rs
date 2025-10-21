@@ -30,6 +30,7 @@ use session::Session;
 pub(crate) use cards::Card;
 pub(crate) use events::render_event_card;
 pub(crate) use factors::FactorsCard;
+pub(crate) use session::Changes;
 
 /// Phase of the game.
 enum Phase {
@@ -53,36 +54,17 @@ pub struct GameView {
     ctx: Arc<three_d::context::Context>,
 }
 impl GameView {
-    pub fn new(
-        state: &mut GameState,
-        context: &Arc<three_d::context::Context>,
-    ) -> Self {
+    pub fn new(state: &mut GameState, context: &Arc<three_d::context::Context>) -> Self {
         if let Some(debug_view) = &DEBUG.view {
             let phase = match debug_view {
-                DebugView::Plan => {
-                    Phase::Planning(Session::plan())
-                }
-                DebugView::Regions => {
-                    Phase::Planning(Session::regions(context))
-                }
-                DebugView::Parliament => Phase::Planning(
-                    Session::govt(&mut state.core),
-                ),
-                DebugView::Stats => {
-                    Phase::Planning(Session::stats())
-                }
-                DebugView::World => Phase::Events(
-                    WorldEvents::new(state, context),
-                ),
-                DebugView::Report => {
-                    Phase::Report(Report::new(state))
-                }
-                DebugView::GameOver => {
-                    Phase::Ending(End::new(true, state))
-                }
-                DebugView::GameWin => {
-                    Phase::Ending(End::new(false, state))
-                }
+                DebugView::Plan => Phase::Planning(Session::plan()),
+                DebugView::Regions => Phase::Planning(Session::regions(context)),
+                DebugView::Parliament => Phase::Planning(Session::govt(&mut state.core)),
+                DebugView::Stats => Phase::Planning(Session::stats()),
+                DebugView::World => Phase::Events(WorldEvents::new(state, context)),
+                DebugView::Report => Phase::Report(Report::new(state)),
+                DebugView::GameOver => Phase::Ending(End::new(true, state)),
+                DebugView::GameWin => Phase::Ending(End::new(false, state)),
             };
             GameView::with_phase(phase, context.clone())
         } else {
@@ -90,10 +72,7 @@ impl GameView {
         }
     }
 
-    fn intro(
-        state: &mut State,
-        ctx: Arc<three_d::context::Context>,
-    ) -> Self {
+    fn intro(state: &mut State, ctx: Arc<three_d::context::Context>) -> Self {
         Self {
             phase: Phase::Intro(Intro::new(state)),
             show_menu: false,
@@ -101,10 +80,7 @@ impl GameView {
         }
     }
 
-    fn with_phase(
-        phase: Phase,
-        ctx: Arc<three_d::context::Context>,
-    ) -> Self {
+    fn with_phase(phase: Phase, ctx: Arc<three_d::context::Context>) -> Self {
         Self {
             phase,
             show_menu: false,
@@ -128,22 +104,14 @@ impl GameView {
                 }
             }
             Phase::Interstitial(view) => {
-                let next = view.render(
-                    ui,
-                    &mut state.core,
-                    state.ui.start_year,
-                );
+                let next = view.render(ui, &mut state.core, state.ui.start_year);
                 if next {
                     if state.won() {
                         prefs.runs_played += 1;
-                        self.phase = Phase::Ending(End::new(
-                            false, state,
-                        ));
+                        self.phase = Phase::Ending(End::new(false, state));
                     } else if state.game_over {
                         prefs.runs_played += 1;
-                        self.phase = Phase::Ending(End::new(
-                            true, state,
-                        ));
+                        self.phase = Phase::Ending(End::new(true, state));
                     } else {
                         let session = Session::new(state);
                         self.phase = Phase::Planning(session);
@@ -153,30 +121,21 @@ impl GameView {
             }
             Phase::Planning(session) => {
                 if self.show_menu {
-                    if let Some(action) = render_menu(
-                        ui,
-                        &mut state.core,
-                        prefs,
-                        state.ui.start_year,
-                    ) {
+                    if let Some(action) =
+                        render_menu(ui, &mut state.core, prefs, state.ui.start_year)
+                    {
                         match action {
-                            MenuAction::CloseMenu => {
-                                self.show_menu = false
-                            }
+                            MenuAction::CloseMenu => self.show_menu = false,
                             MenuAction::RestartGame => {
-                                ret_action =
-                                    Some(GameAction::Restart);
+                                ret_action = Some(GameAction::Restart);
                             }
                             MenuAction::ToggleSound => {
-                                ret_action = Some(
-                                    GameAction::ToggleSound,
-                                );
+                                ret_action = Some(GameAction::ToggleSound);
                             }
                         }
                     }
                 } else {
-                    if let Some(action) = render_hud(ui, state)
-                    {
+                    if let Some(action) = render_hud(ui, state) {
                         match action {
                             HudAction::OpenMenu => {
                                 self.show_menu = true;
@@ -184,12 +143,9 @@ impl GameView {
                         }
                     }
 
-                    let go_to_world =
-                        session.render(ui, state, &self.ctx);
+                    let go_to_world = session.render(ui, state, &self.ctx);
                     if go_to_world {
-                        self.phase = Phase::Events(
-                            WorldEvents::new(state, &self.ctx),
-                        );
+                        self.phase = Phase::Events(WorldEvents::new(state, &self.ctx));
                         ret_action = Some(GameAction::Save);
                     }
                 }
@@ -197,8 +153,7 @@ impl GameView {
             Phase::Events(world) => {
                 world.render(ui, state);
                 if world.is_done() {
-                    self.phase =
-                        Phase::Report(Report::new(state));
+                    self.phase = Phase::Report(Report::new(state));
                 }
             }
             Phase::Report(report) => {

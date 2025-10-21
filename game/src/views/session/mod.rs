@@ -7,7 +7,6 @@ mod treemap;
 use std::{fmt::Display, sync::Arc};
 
 use egui::{Color32, CornerRadius, Margin, Sense};
-use egui_taffy::TuiBuilderLogic;
 use hes_engine::{EventPhase, Flag, State};
 use rust_i18n::t;
 
@@ -15,7 +14,7 @@ use crate::{
     audio,
     debug::DEBUG,
     display::Icon,
-    parts::{RaisedFrame, h_center, raised_frame},
+    parts::{RaisedFrame, get_sizing, raised_frame},
     state::{GameState, StateExt, Tutorial, update_factors},
     views::events::{EventResult, Events},
 };
@@ -25,22 +24,21 @@ use plan::{Plan, PlanAction};
 use regions::Regions;
 use stats::Stats;
 
+pub use plan::Changes;
+
 pub struct Session {
     view: View,
     events: Events,
 }
 impl Session {
     pub fn new(state: &mut GameState) -> Self {
-        let mut events: Vec<_> = StateExt::roll_events(
-            &mut state.core,
-            EventPhase::PlanningStart,
-        )
-        .into_iter()
-        .chain(StateExt::roll_events(
-            &mut state.core,
-            EventPhase::PlanningPlan,
-        ))
-        .collect();
+        let mut events: Vec<_> = StateExt::roll_events(&mut state.core, EventPhase::PlanningStart)
+            .into_iter()
+            .chain(StateExt::roll_events(
+                &mut state.core,
+                EventPhase::PlanningPlan,
+            ))
+            .collect();
 
         update_factors(state);
 
@@ -50,10 +48,7 @@ impl Session {
         audio::soundtrack(audio::Track::Planning);
 
         if DEBUG.view.is_some() {
-            events.retain(|ev| {
-                ev.name != "Planning Intro"
-                    && ev.name != "Welcome Back"
-            });
+            events.retain(|ev| ev.name != "Planning Intro" && ev.name != "Welcome Back");
         }
 
         Self {
@@ -70,9 +65,7 @@ impl Session {
         Self::from_view(View::Govt(Parliament::new(state)))
     }
 
-    pub(super) fn regions(
-        context: &Arc<three_d::context::Context>,
-    ) -> Self {
+    pub(super) fn regions(context: &Arc<three_d::context::Context>) -> Self {
         Self::from_view(View::World(Regions::new(context)))
     }
 
@@ -87,12 +80,7 @@ impl Session {
         }
     }
 
-    fn set_tab(
-        &mut self,
-        tab: &Tab,
-        state: &mut State,
-        ctx: &Arc<three_d::context::Context>,
-    ) {
+    fn set_tab(&mut self, tab: &Tab, state: &mut State, ctx: &Arc<three_d::context::Context>) {
         let phase = match tab {
             Tab::Plan => EventPhase::PlanningPlan,
             Tab::World => EventPhase::PlanningRegions,
@@ -151,9 +139,7 @@ impl Session {
                     disabled: false,
                 },
             ];
-            if let Some(tab) =
-                render_tabs(ui, &state.ui.tutorial, tabs)
-            {
+            if let Some(tab) = render_tabs(ui, &state.ui.tutorial, tabs) {
                 self.set_tab(tab, &mut state.core, ctx);
             }
         }
@@ -161,10 +147,7 @@ impl Session {
         if !self.events.is_finished {
             let result = self.events.render(ui, state);
             if result == Some(EventResult::JustFinished) {
-                self.update_tutorial(
-                    &mut state.core,
-                    &mut state.ui.tutorial,
-                );
+                self.update_tutorial(&mut state.core, &mut state.ui.tutorial);
             }
         }
 
@@ -178,61 +161,39 @@ impl Session {
                             go_to_world = true;
                         }
                         PlanAction::PlanChanged => {
-                            self.events
-                                .replace(StateExt::roll_events(
-                                &mut state.core,
-                                EventPhase::PlanningPlanChange,
-                            ), state);
-                        }
-                        PlanAction::PageChanged(phase) => {
                             self.events.replace(
                                 StateExt::roll_events(
                                     &mut state.core,
-                                    phase,
+                                    EventPhase::PlanningPlanChange,
                                 ),
                                 state,
                             );
                         }
+                        PlanAction::PageChanged(phase) => {
+                            self.events
+                                .replace(StateExt::roll_events(&mut state.core, phase), state);
+                        }
                     }
                 }
             }
-            View::Govt(parliament) => {
-                parliament.render(ui, state)
-            }
+            View::Govt(parliament) => parliament.render(ui, state),
             View::Stats(stats) => {
-                stats.render(
-                    ui,
-                    &state.core,
-                    &state.ui.process_mix_changes,
-                );
+                stats.render(ui, &state.core, &state.ui.process_mix_changes);
             }
-            View::World(regions) => regions.render(
-                ui,
-                &state.core,
-                &state.ui.annual_region_events,
-            ),
+            View::World(regions) => regions.render(ui, &state.core, &state.ui.annual_region_events),
         }
 
         go_to_world
     }
 
-    fn update_tutorial(
-        &mut self,
-        state: &mut State,
-        tutorial: &mut Tutorial,
-    ) {
+    fn update_tutorial(&mut self, state: &mut State, tutorial: &mut Tutorial) {
         if state.flags.contains(&Flag::SkipTutorial) {
             *tutorial = Tutorial::Ready;
         } else if state.flags.contains(&Flag::RepeatTutorial) {
-            state
-                .flags
-                .retain(|flag| *flag != Flag::RepeatTutorial);
+            state.flags.retain(|flag| *flag != Flag::RepeatTutorial);
             *tutorial = Tutorial::Projects;
 
-            let events = StateExt::roll_events(
-                state,
-                EventPhase::PlanningStart,
-            );
+            let events = StateExt::roll_events(state, EventPhase::PlanningStart);
             self.events.replace(events, state);
         }
 
@@ -297,10 +258,7 @@ enum Tab {
     World,
 }
 impl Display for Tab {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{}",
@@ -329,82 +287,67 @@ fn render_tabs<'a, T>(
     tabs: &'a [TabItem<T>],
 ) -> Option<&'a T> {
     let mut clicked_tab = None;
-    h_center(ui, "session-tabs", |tui| {
-        tui.ui(|ui| {
-            egui::Frame::NONE
-                .inner_margin(Margin {
-                    top: -3,
-                    ..Default::default()
-                })
-            .show(ui, |ui| {
-                ui.horizontal(|ui| {
-                    ui.style_mut()
-                        .spacing
-                        .item_spacing
-                        .x = 1.;
-                    ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
+    let is_small = get_sizing(ui).is_small;
+    egui::Area::new("session-tabs".into())
+        .anchor(egui::Align2::CENTER_TOP, egui::vec2(0., 24.))
+        .order(egui::Order::Foreground)
+        .show(ui.ctx(), |ui| {
+            ui.horizontal(|ui| {
+                ui.style_mut().spacing.item_spacing.x = 1.;
+                ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
 
-                    let n = tabs.len();
-                    for (i, tab) in tabs.into_iter().enumerate() {
-                        let mut highlight = false;
-                        let mut disabled = tab.disabled;
-                        if let Some(tutorial) = tab.tutorial {
-                            highlight = *cur_tutorial == tutorial;
-                            disabled = *cur_tutorial < tutorial || tab.disabled;
-                        }
-
-                        let radius = if i == 0 {
-                            CornerRadius {
-                                sw: 4,
-                                ..Default::default()
-                            }
-                        } else if i == n - 1 {
-                            CornerRadius {
-                                se: 4,
-                                ..Default::default()
-                            }
-                        } else {
-                            CornerRadius::default()
-                        };
-
-                        let mut frame =
-                            tab_frame(
-                                tab.selected,
-                            )
-                            .radius(radius);
-
-                        if highlight {
-                            frame = frame.highlight();
-                        }
-
-                        frame.show(
-                            ui,
-                            |ui| {
-                                let resp = egui::Frame::NONE
-                                    .show(ui, |ui| {
-                                        if disabled {
-                                            ui.set_opacity(0.5);
-                                        }
-
-                                        if let Some(icon) = tab.icon {
-                                            ui.add(icon.size(16.));
-                                        }
-                                        ui.label(
-                                            egui::RichText::new(&tab.label)
-                                            .heading()
-                                            .size(15.),
-                                        );
-                                    })
-                                .response;
-                                let resp = resp.interact(Sense::all());
-                                if !disabled && resp.clicked() {
-                                    clicked_tab = Some(&tab.tab);
-                                }
-                            });
+                let n = tabs.len();
+                for (i, tab) in tabs.into_iter().enumerate() {
+                    let mut highlight = false;
+                    let mut disabled = tab.disabled;
+                    if let Some(tutorial) = tab.tutorial {
+                        highlight = *cur_tutorial == tutorial;
+                        disabled = *cur_tutorial < tutorial || tab.disabled;
                     }
-                });
+
+                    let radius = if i == 0 {
+                        CornerRadius {
+                            sw: 4,
+                            ..Default::default()
+                        }
+                    } else if i == n - 1 {
+                        CornerRadius {
+                            se: 4,
+                            ..Default::default()
+                        }
+                    } else {
+                        CornerRadius::default()
+                    };
+
+                    let mut frame = tab_frame(tab.selected).radius(radius).shadow();
+
+                    if highlight {
+                        frame = frame.highlight();
+                    }
+
+                    frame.show(ui, |ui| {
+                        let resp = egui::Frame::NONE
+                            .show(ui, |ui| {
+                                if disabled {
+                                    ui.set_opacity(0.5);
+                                }
+
+                                if let Some(icon) = tab.icon {
+                                    ui.add(icon.size(16.));
+                                }
+
+                                if tab.icon.is_none() || !is_small {
+                                    ui.label(egui::RichText::new(&tab.label).heading().size(14.));
+                                }
+                            })
+                            .response;
+                        let resp = resp.interact(Sense::all());
+                        if !disabled && resp.clicked() {
+                            clicked_tab = Some(&tab.tab);
+                        }
+                    });
+                }
             });
-        })
-    });
+        });
     clicked_tab
 }

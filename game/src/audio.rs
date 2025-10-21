@@ -218,6 +218,10 @@ mod engine {
             &mut self,
             request: AudioRequest,
         ) -> Result<(), String> {
+            if self.muted {
+                get_audio_manager().mute();
+            }
+
             match request {
                 AudioRequest::Mute => {
                     get_audio_manager().mute();

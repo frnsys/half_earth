@@ -34,12 +34,7 @@ impl Interstitial {
         }
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut State,
-        start_year: usize,
-    ) -> bool {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut State, start_year: usize) -> bool {
         let year = state.world.year;
         let pc = state.political_capital.max(0);
         let outlook = state.outlook();
@@ -48,8 +43,7 @@ impl Interstitial {
         let temperature = state.world.temperature;
         let death_year = state.death_year;
 
-        let n = ((year - start_year) as f32 / 5. + 1.).round()
-            as usize;
+        let n = ((year - start_year) as f32 / 5. + 1.).round() as usize;
         let title = {
             let ext = match n {
                 1 => t!("st"),
@@ -57,11 +51,7 @@ impl Interstitial {
                 3 => t!("rd"),
                 _ => t!("th"),
             };
-            t!(
-                "The %{n}%{ext} Planning Session",
-                n = n,
-                ext = ext
-            )
+            t!("The %{n}%{ext} Planning Session", n = n, ext = ext)
         };
         let locale = {
             let idx = (n - 1) % LOCALES.len();
@@ -94,33 +84,26 @@ impl Interstitial {
 
         let go_to_next = center_center(ui, "events", |tui| {
             tui.ui(|ui| {
-                egui::Frame::NONE.show(ui, |ui| {
-                    ui.set_width(360.);
-                    ui.style_mut()
-                        .visuals
-                        .override_text_color =
-                        Some(Color32::WHITE);
-                    ui.label(
-                        egui::RichText::new(title).heading(),
-                    );
-                    ui.label(format!(
-                        "{}, {}",
-                        locale.name, year
-                    ));
+                egui::Frame::NONE
+                    .inner_margin(Margin::symmetric(6, 6))
+                    .show(ui, |ui| {
+                        ui.set_max_width(360.);
+                        ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+                        ui.label(egui::RichText::new(title).heading());
+                        ui.label(format!("{}, {}", locale.name, year));
 
-                    ui.add_space(16.);
+                        ui.add_space(16.);
 
-                    ui.label(contentedness);
-                    ui.label(biodiversity);
-                    ui.label(world);
-                    ui.label(parliament);
-                    ui.label(years_left);
-                });
+                        ui.label(contentedness);
+                        ui.label(biodiversity);
+                        ui.label(world);
+                        ui.label(parliament);
+                        ui.label(years_left);
+                    });
 
                 if self.events.is_finished {
                     ui.add_space(18.);
-                    ui.add(button(t!("Continue")).full_width())
-                        .clicked()
+                    ui.add(button(t!("Continue")).full_width()).clicked()
                 } else {
                     false
                 }
@@ -128,27 +111,17 @@ impl Interstitial {
         });
 
         egui::Area::new(egui::Id::new("image-attrib"))
-            .anchor(
-                egui::Align2::LEFT_BOTTOM,
-                egui::Vec2::new(10., -10.),
-            )
+            .anchor(egui::Align2::LEFT_BOTTOM, egui::Vec2::new(10., -10.))
             .show(ui.ctx(), |ui| {
                 egui::Frame::NONE
                     .fill(Color32::from_black_alpha(128))
                     .inner_margin(Margin::symmetric(6, 3))
                     .show(ui, |ui| {
-                        ui.style_mut()
-                            .visuals
-                            .override_text_color =
-                            Some(Color32::WHITE);
+                        ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
                         ui.add(
                             egui::Label::new(
-                                egui::RichText::new(format!(
-                                    "{} {}",
-                                    t!("Image:"),
-                                    locale.credit
-                                ))
-                                .size(11.),
+                                egui::RichText::new(format!("{} {}", t!("Image:"), locale.credit))
+                                    .size(11.),
                             )
                             .wrap_mode(TextWrapMode::Extend),
                         );
@@ -272,10 +245,7 @@ fn describe_parliament(pc: isize) -> Cow<'static, str> {
     }
 }
 
-fn describe_warming(
-    emissions: f32,
-    temp: f32,
-) -> Cow<'static, str> {
+fn describe_warming(emissions: f32, temp: f32) -> Cow<'static, str> {
     if emissions > 0. {
         if temp > 3. {
             t!("The world is becoming hostile to life.")
@@ -289,13 +259,8 @@ fn describe_warming(
     }
 }
 
-fn describe_extinction(
-    extinction_rate: f32,
-) -> Cow<'static, str> {
-    let idx = intensity::scale(
-        extinction_rate,
-        intensity::Variable::Extinction,
-    );
+fn describe_extinction(extinction_rate: f32) -> Cow<'static, str> {
+    let idx = intensity::scale(extinction_rate, intensity::Variable::Extinction);
     match idx {
         0 => t!("Biodiversity is flourishing."),
         1 => t!("Biodiversity is recovering."),
@@ -307,10 +272,7 @@ fn describe_extinction(
 }
 
 fn describe_outlook(outlook: f32) -> Cow<'static, str> {
-    let idx = intensity::scale(
-        outlook,
-        intensity::Variable::WorldOutlook,
-    );
+    let idx = intensity::scale(outlook, intensity::Variable::WorldOutlook);
     match idx {
         0 => t!("People are furious."),
         1 => t!("People are upset."),

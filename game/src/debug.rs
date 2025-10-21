@@ -2,8 +2,7 @@ use std::{env, sync::LazyLock};
 
 use hes_engine::{ByproductMap, Flag, ProjectType, State};
 
-pub static DEBUG: LazyLock<DebugOpts> =
-    LazyLock::new(|| DebugOpts::default());
+pub static DEBUG: LazyLock<DebugOpts> = LazyLock::new(|| DebugOpts::default());
 
 #[derive(Debug)]
 pub enum DebugView {
@@ -67,17 +66,14 @@ impl DebugOpts {
             state.world.temperature = 0.;
         }
         if self.region_seceded {
-            let region =
-                state.world.regions.get_mut(0).unwrap();
+            let region = state.world.regions.get_mut(0).unwrap();
             region.seceded = true;
         }
         if self.feedstock_shortage {
             state.world.feedstock_reserves.oil = 0.;
         }
         if self.production_shortage {
-            state.world.per_capita_demand[0]
-                .modifier
-                .electricity = 10.;
+            state.world.per_capita_demand[0].modifier.electricity = 10.;
         }
 
         if self.with_projects {
@@ -124,8 +120,7 @@ impl Default for DebugOpts {
             skip_events: debug.contains(&"SKIP_EVENTS"),
             skip_tutorial: debug.contains(&"SKIP_TUTORIAL"),
             show_all_projects: debug.contains(&"ALL_PROJECTS"),
-            show_all_processes: debug
-                .contains(&"ALL_PROCESSES"),
+            show_all_processes: debug.contains(&"ALL_PROCESSES"),
             with_projects: debug.contains(&"WITH_PROJECTS"),
             fast_years: debug.contains(&"FAST_YEARS"),
             always_skip_world: debug.contains(&"SKIP_WORLD"),
@@ -133,10 +128,8 @@ impl Default for DebugOpts {
             parliament_suspended: debug.contains(&"SUSPENDED"),
             pre_win: debug.contains(&"PRE_WIN"),
             pre_lose: debug.contains(&"PRE_LOSE"),
-            production_shortage: debug
-                .contains(&"PRODUCTION_SHORTAGE"),
-            feedstock_shortage: debug
-                .contains(&"FEEDSTOCK_SHORTAGE"),
+            production_shortage: debug.contains(&"PRODUCTION_SHORTAGE"),
+            feedstock_shortage: debug.contains(&"FEEDSTOCK_SHORTAGE"),
             region_seceded: debug.contains(&"SECEDED"),
             view: match view.as_str() {
                 "Plan" => Some(DebugView::Plan),

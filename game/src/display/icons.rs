@@ -1,16 +1,8 @@
 use crate::vars::Var;
 use egui::{ImageSource, TextureOptions};
 use hes_engine::{
-    Byproduct,
-    Condition,
-    Feedstock,
-    LocalVariable,
-    NPC,
-    Output,
-    ProcessFeature,
-    ProjectType,
-    Resource,
-    WorldVariable,
+    Byproduct, Condition, Feedstock, LocalVariable, NPC, Output, ProcessFeature, ProjectType,
+    Resource, WorldVariable,
 };
 use paste::paste;
 
@@ -27,10 +19,7 @@ impl PartialEq for IconData {
     }
 }
 impl PartialOrd for IconData {
-    fn partial_cmp(
-        &self,
-        other: &Self,
-    ) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.slug.partial_cmp(other.slug)
     }
 }
@@ -41,10 +30,7 @@ impl Ord for IconData {
     }
 }
 impl std::fmt::Display for Icon {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.slug)
     }
 }
@@ -62,9 +48,7 @@ impl IconData {
 
     pub fn bytes(&self) -> Option<&[u8]> {
         match &self.image {
-            egui::ImageSource::Bytes { bytes, .. } => {
-                Some(bytes.as_ref())
-            }
+            egui::ImageSource::Bytes { bytes, .. } => Some(bytes.as_ref()),
             _ => None, // Expect they're all bytes
         }
     }
@@ -338,23 +322,17 @@ impl HasIcon for ProcessFeature {
     fn icon(&self) -> Icon {
         match self {
             ProcessFeature::UsesPesticides => USES_PESTICIDES,
-            ProcessFeature::UsesSynFertilizer => {
-                USES_SYN_FERTILIZER
-            }
+            ProcessFeature::UsesSynFertilizer => USES_SYN_FERTILIZER,
             ProcessFeature::UsesLivestock => USES_LIVESTOCK,
             ProcessFeature::UsesOil => USES_OIL,
             ProcessFeature::IsIntermittent => IS_INTERMITTENT,
             ProcessFeature::CanMeltdown => CAN_MELTDOWN,
-            ProcessFeature::MakesNuclearWaste => {
-                MAKES_NUCLEAR_WASTE
-            }
+            ProcessFeature::MakesNuclearWaste => MAKES_NUCLEAR_WASTE,
             ProcessFeature::IsSolar => IS_SOLAR,
             ProcessFeature::IsCCS => IS_CSS,
             ProcessFeature::IsCombustion => IS_COMBUSTION,
             ProcessFeature::IsFossil => IS_FOSSIL,
-            ProcessFeature::IsLaborIntensive => {
-                IS_LABOR_INTENSIVE
-            }
+            ProcessFeature::IsLaborIntensive => IS_LABOR_INTENSIVE,
         }
     }
 }
@@ -384,9 +362,7 @@ impl HasIcon for NPC {
             "The Consumerist" => THE_CONSUMERIST,
             "The Utopian" => THE_UTOPIAN,
             "The Accelerationist" => THE_ACCELERATIONIST,
-            "The Animal Liberationist" => {
-                THE_ANIMAL_LIBERATIONIST
-            }
+            "The Animal Liberationist" => THE_ANIMAL_LIBERATIONIST,
             "The Farmer" => THE_FARMER,
             "The Ecofeminist" => THE_ECOFEMINIST,
             "The Fanonist" => THE_FANONIST,
@@ -399,21 +375,11 @@ impl HasIcon for Condition {
     fn icon(&self) -> Icon {
         match self {
             Condition::Demand(output, ..) => output.icon(),
-            Condition::OutputDemandGap(output, ..) => {
-                output.icon()
-            }
-            Condition::ResourceDemandGap(resource, ..) => {
-                resource.icon()
-            }
-            Condition::ResourcePressure(resource, ..) => {
-                resource.icon()
-            }
-            Condition::ProcessMixShareFeature(feat, ..) => {
-                feat.icon()
-            }
-            Condition::FeedstockYears(feedstock, ..) => {
-                feedstock.icon()
-            }
+            Condition::OutputDemandGap(output, ..) => output.icon(),
+            Condition::ResourceDemandGap(resource, ..) => resource.icon(),
+            Condition::ResourcePressure(resource, ..) => resource.icon(),
+            Condition::ProcessMixShareFeature(feat, ..) => feat.icon(),
+            Condition::FeedstockYears(feedstock, ..) => feedstock.icon(),
             Condition::LocalVariable(var, ..) => match var {
                 LocalVariable::Outlook => CONTENTEDNESS,
                 LocalVariable::Habitability => HABITABILITY,
@@ -422,17 +388,13 @@ impl HasIcon for Condition {
             Condition::WorldVariable(var, ..) => match var {
                 WorldVariable::Temperature => WARMING,
                 WorldVariable::SeaLevelRise => SEA_LEVEL_RISE,
-                WorldVariable::SeaLevelRiseRate => {
-                    SEA_LEVEL_RISE
-                }
+                WorldVariable::SeaLevelRiseRate => SEA_LEVEL_RISE,
                 WorldVariable::Outlook => CONTENTEDNESS,
                 WorldVariable::Emissions => EMISSIONS,
                 WorldVariable::Precipitation => PRECIPITATION,
                 WorldVariable::Population => POPULATION,
                 WorldVariable::PopulationGrowth => POPULATION,
-                WorldVariable::ExtinctionRate => {
-                    EXTINCTION_RATE
-                }
+                WorldVariable::ExtinctionRate => EXTINCTION_RATE,
                 _ => HELP,
             },
             Condition::ProtectLand(..) => PROTECT,

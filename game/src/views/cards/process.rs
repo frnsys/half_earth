@@ -2,22 +2,12 @@ use std::borrow::Cow;
 
 use crate::{
     display::{
-        self,
-        AsText,
-        FloatExt,
-        HasIcon,
+        self, AsText, FloatExt, HasIcon,
         factors::factors_card,
         icons,
         intensity::{self, intensity_bar},
     },
-    parts::{
-        center_center,
-        fill_bar,
-        flex_justified,
-        flex_spaced,
-        h_center,
-        new_icon,
-    },
+    parts::{center_center, fill_bar, flex_justified, flex_spaced, h_center, new_icon},
     state::{GameState, StateExt},
     tips::{add_tip, tip},
     vars::{Impact, Var},
@@ -40,9 +30,7 @@ fn describe_estimate(estimate: f32) -> Cow<'static, str> {
             years = estimate
         )
     } else {
-        t!(
-            "At current usage rates the estimated supply is expected to last indefinitely."
-        )
+        t!("At current usage rates the estimated supply is expected to last indefinitely.")
     }
 }
 
@@ -82,16 +70,11 @@ impl AsCard for Process {
         let output_icon = self.output.icon();
         let output_name = t!(self.output.title());
 
-        let produced_by_process = state
-            .produced
-            .by_process
-            .get(&self.id)
-            .unwrap_or(&0.);
+        let produced_by_process = state.produced.by_process.get(&self.id).unwrap_or(&0.);
 
         let (produced, emissions) = {
             let base_amount = *produced_by_process;
-            let mut amount =
-                display::output(base_amount, self.output);
+            let mut amount = display::output(base_amount, self.output);
             if amount > 0. {
                 amount = amount.max(1.);
             }
@@ -116,34 +99,29 @@ impl AsCard for Process {
         };
 
         let resp = egui::Frame::NONE
-            .inner_margin(egui::Margin::symmetric(6, 6))
+            .inner_margin(egui::Margin {
+                left: 6,
+                right: 6,
+                top: 6,
+                bottom: 0,
+            })
             .show(ui, |ui| {
                 flex_justified(ui, &self.name, |tui| {
                     tui.style(taffy::Style {
                         flex_grow: 1.,
                         ..Default::default()
                     })
-                    .label(
-                        egui::RichText::new(
-                            output_name.to_uppercase(),
-                        )
-                        .monospace(),
-                    );
+                    .label(egui::RichText::new(output_name.to_uppercase()).monospace());
 
                     tui.ui(|ui| {
                         add_tip(
                             output_tip,
                             ui.horizontal_centered(|ui| {
-                                ui.style_mut()
-                                    .spacing
-                                    .item_spacing
-                                    .x = 2.;
+                                ui.style_mut().spacing.item_spacing.x = 2.;
                                 ui.label(produced.to_string());
                                 ui.add(output_icon.size(14.));
                                 ui.label(emissions.to_string());
-                                ui.add(
-                                    icons::EMISSIONS.size(14.),
-                                );
+                                ui.add(icons::EMISSIONS.size(14.));
                             })
                             .response,
                         );
@@ -157,8 +135,7 @@ impl AsCard for Process {
             ui.add(new_icon(resp.rect));
         }
 
-        let (max_share, changed_mix_share) =
-            max_and_changed_share(self, state);
+        let (max_share, changed_mix_share) = max_and_changed_share(self, state);
 
         let feedstocks = &state.feedstocks;
         let feedstock_estimate = {
@@ -166,8 +143,7 @@ impl AsCard for Process {
             match feedstock {
                 Feedstock::Soil | Feedstock::Other => None,
                 _ => {
-                    let estimate =
-                        feedstocks.until_exhaustion(feedstock);
+                    let estimate = feedstocks.until_exhaustion(feedstock);
                     Some(estimate.round())
                 }
             }
@@ -175,33 +151,23 @@ impl AsCard for Process {
         let is_depleted = feedstock_estimate == Some(0.);
 
         let bar_rect = egui::Rect::from_min_size(
-            resp.rect.right_top() + egui::vec2(-3., 10.),
+            resp.rect.right_top() + egui::vec2(-3., 2.),
             egui::vec2(18., CARD_HEIGHT),
         );
         ui.place(
             bar_rect,
-            render_mix_bar(
-                self.mix_share,
-                max_share,
-                changed_mix_share,
-                is_depleted,
-            ),
+            render_mix_bar(self.mix_share, max_share, changed_mix_share, is_depleted),
         );
     }
 
     fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
-        let rect =
-            super::render_flavor_image(ui, &self.flavor.image)
-                .rect;
+        let rect = super::render_flavor_image(ui, &self.flavor.image).rect;
 
-        let (opposers, supporters) =
-            npc_stances(self, &state.npcs);
+        let (opposers, supporters) = npc_stances(self, &state.npcs);
         npc_support(ui, rect, &opposers, &supporters);
 
-        let rect = egui::Rect::from_min_size(
-            rect.left_top() + egui::vec2(14., 6.),
-            egui::Vec2::ZERO,
-        );
+        let rect =
+            egui::Rect::from_min_size(rect.left_top() + egui::vec2(14., 6.), egui::Vec2::ZERO);
         ui.place(rect, |ui: &mut egui::Ui| {
             ui.style_mut().spacing.item_spacing.x = 2.;
             ui.horizontal(|ui| {
@@ -247,7 +213,7 @@ impl AsCard for Process {
                     self.mix_share > max_share
                         || changed_mix_share > max_share as isize
                 };
-                if process_excess || true {
+                if process_excess {
                     let excess_tip = tip(
                         icons::ALERT,
                         t!(
@@ -265,8 +231,7 @@ impl AsCard for Process {
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
-        let (_, changed_mix_share) =
-            max_and_changed_share(self, state);
+        let (_, changed_mix_share) = max_and_changed_share(self, state);
 
         let change_tip = {
             let output = t!(self.output.lower());
@@ -282,10 +247,7 @@ impl AsCard for Process {
         };
 
         let change = {
-            if let Some(change) = state.ui.process_mix_changes
-                [self.output]
-                .get(&self.id)
-            {
+            if let Some(change) = state.ui.process_mix_changes[self.output].get(&self.id) {
                 *change
             } else {
                 0
@@ -294,10 +256,8 @@ impl AsCard for Process {
         let has_change = change != 0;
         let mix_share_percent = self.mix_share * 5;
 
-        let is_shrink =
-            (self.mix_share as isize) > changed_mix_share;
-        let is_grow =
-            (self.mix_share as isize) < changed_mix_share;
+        let is_shrink = (self.mix_share as isize) > changed_mix_share;
+        let is_grow = (self.mix_share as isize) < changed_mix_share;
         let changed_mix_share_percent = changed_mix_share * 5;
 
         egui::Frame::NONE
@@ -318,7 +278,7 @@ impl AsCard for Process {
                 ui.set_height(ui.available_height());
 
                 ui.vertical(|ui| {
-                    ui.set_height(64.);
+                    ui.set_height(48.);
                     let id = format!("{}-percent", self.id);
                     add_tip(
                         change_tip,
@@ -432,19 +392,14 @@ impl AsCard for Process {
         super::card_desc(ui, &self.flavor.description);
     }
 
-    fn bottom_back(
-        &self,
-        ui: &mut egui::Ui,
-        state: &GameState,
-    ) {
+    fn bottom_back(&self, ui: &mut egui::Ui, state: &GameState) {
         let feedstocks = &state.feedstocks;
         let feedstock_estimate = {
             let feedstock = self.feedstock.0;
             match feedstock {
                 Feedstock::Soil | Feedstock::Other => None,
                 _ => {
-                    let estimate =
-                        feedstocks.until_exhaustion(feedstock);
+                    let estimate = feedstocks.until_exhaustion(feedstock);
                     Some(estimate.round())
                 }
             }
@@ -454,18 +409,15 @@ impl AsCard for Process {
         h_center(ui, &format!("{}-feats", self.id), |tui| {
             tui.ui(|ui| {
                 ui.horizontal(|ui| {
-                    let is_halted =
-                        feedstock_estimate.is_some_and(|est| est == 0.);
-                    let almost_halted =
-                        feedstock_estimate.is_some_and(|est| est < 0.);
+                    let is_halted = feedstock_estimate.is_some_and(|est| est == 0.);
+                    let almost_halted = feedstock_estimate.is_some_and(|est| est < 0.);
                     if almost_halted {
                         ui.add(icons::ALERT.size(24.));
                     } else if is_halted {
                         ui.add(icons::HALTED.size(24.));
                     }
 
-                    let has_feedstock =
-                        self.feedstock.0 != Feedstock::Other;
+                    let has_feedstock = self.feedstock.0 != Feedstock::Other;
                     if has_feedstock {
                         ui.vertical(|ui| {
                             let icon = self.feedstock.0.icon();
@@ -476,8 +428,7 @@ impl AsCard for Process {
                                 icon,
                                 t!(
                                     "This process uses %{feedstockName}. %{feedstockEstimateDesc}",
-                                    feedstockName =
-                                    t!(self.feedstock.0.lower()),
+                                    feedstockName = t!(self.feedstock.0.lower()),
                                     feedstockEstimateDesc = desc
                                 ),
                             );
@@ -487,20 +438,18 @@ impl AsCard for Process {
                                 .map(describe_stocks)
                                 .unwrap_or(FeedstockLevel::High);
                             let (color, fill) = match level {
-                                FeedstockLevel::Low => {
-                                    (Color32::from_rgb(0xEF, 0x38, 0x38), 0.2)
-                                }
-                                FeedstockLevel::Mid => {
-                                    (Color32::from_rgb(0xFB, 0xC0, 0x11), 0.5)
-                                }
-                                FeedstockLevel::High => {
-                                    (Color32::from_rgb(0x43, 0xCC, 0x70), 0.8)
-                                }
+                                FeedstockLevel::Low => (Color32::from_rgb(0xEF, 0x38, 0x38), 0.2),
+                                FeedstockLevel::Mid => (Color32::from_rgb(0xFB, 0xC0, 0x11), 0.5),
+                                FeedstockLevel::High => (Color32::from_rgb(0x43, 0xCC, 0x70), 0.8),
                                 FeedstockLevel::VeryHigh => {
                                     (Color32::from_rgb(0x43, 0xCC, 0x70), 0.95)
                                 }
                             };
-                            ui.add(fill_bar((24., 4.), fill).fill_color(color).back_color(Color32::from_gray(32)));
+                            ui.add(
+                                fill_bar((24., 4.), fill)
+                                    .fill_color(color)
+                                    .back_color(Color32::from_gray(32)),
+                            );
                         });
                     }
 
@@ -516,23 +465,13 @@ impl AsCard for Process {
         ui.vertical_centered(|ui| {
             let image_attrib = &self.flavor.image.attribution;
             if !image_attrib.is_empty() {
-                ui.label(
-                    egui::RichText::new(format!(
-                        "{} {image_attrib}",
-                        t!("Image:")
-                    ))
-                    .size(11.),
-                );
+                ui.label(egui::RichText::new(format!("{} {image_attrib}", t!("Image:"))).size(11.));
             }
         });
     }
 }
 
-fn percentage(
-    ui: &mut egui::Ui,
-    value: isize,
-    color: Color32,
-) -> egui::Response {
+fn percentage(ui: &mut egui::Ui, value: isize, color: Color32) -> egui::Response {
     egui::Frame::NONE
         .inner_margin(Margin::symmetric(6, 6))
         .corner_radius(6)
@@ -562,9 +501,7 @@ fn render_mix_bar(
                 maxPercent = max_share * 5
             )
         } else {
-            t!(
-                "There is currently no limit on this process' mix share."
-            )
+            t!("There is currently no limit on this process' mix share.")
         },
     );
     move |ui| {
@@ -574,16 +511,13 @@ fn render_mix_bar(
                 for i in (1..=20).rev() {
                     let disabled = i > max_share;
                     let active = i <= mix_share;
-                    let grow = i > mix_share
-                        && (i as isize <= changed_mix_share);
-                    let shrink = i <= mix_share
-                        && (i as isize > changed_mix_share);
-                    let excess = (i <= mix_share
-                        || (i as isize <= changed_mix_share))
-                        && i > max_share;
+                    let grow = i > mix_share && (i as isize <= changed_mix_share);
+                    let shrink = i <= mix_share && (i as isize > changed_mix_share);
+                    let excess =
+                        (i <= mix_share || (i as isize <= changed_mix_share)) && i > max_share;
 
                     let color = if disabled {
-                        Color32::from_rgb(0x83, 0x83, 0x83)
+                        Color32::from_rgba_unmultiplied(0x83, 0x83, 0x83, 0x66)
                     } else if grow {
                         Color32::from_rgb(0x43, 0xCC, 0x70)
                     } else if shrink {
@@ -611,8 +545,7 @@ pub fn draw_mix_cell(ui: &mut egui::Ui, fill: Color32) {
     let seg_w = 8.;
 
     let size = egui::vec2(seg_w, seg_h);
-    let (rect, _resp) =
-        ui.allocate_exact_size(size, egui::Sense::hover());
+    let (rect, _resp) = ui.allocate_exact_size(size, egui::Sense::hover());
 
     let painter = ui.painter();
 
@@ -626,10 +559,7 @@ pub fn draw_mix_cell(ui: &mut egui::Ui, fill: Color32) {
     );
 }
 
-fn npc_stances<'a>(
-    proc: &Process,
-    npcs: &'a Collection<NPC>,
-) -> (Vec<&'a NPC>, Vec<&'a NPC>) {
+fn npc_stances<'a>(proc: &Process, npcs: &'a Collection<NPC>) -> (Vec<&'a NPC>, Vec<&'a NPC>) {
     let opposers = proc
         .opposers
         .iter()
@@ -645,16 +575,10 @@ fn npc_stances<'a>(
     (opposers, supporters)
 }
 
-fn max_and_changed_share(
-    proc: &Process,
-    state: &GameState,
-) -> (usize, isize) {
+fn max_and_changed_share(proc: &Process, state: &GameState) -> (usize, isize) {
     let max_share = state.process_max_share(&proc.id);
     let changed_mix_share = {
-        if let Some(change) = state.ui.process_mix_changes
-            [proc.output]
-            .get(&proc.id)
-        {
+        if let Some(change) = state.ui.process_mix_changes[proc.output].get(&proc.id) {
             proc.mix_share as isize + change
         } else {
             proc.mix_share as isize

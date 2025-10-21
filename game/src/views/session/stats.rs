@@ -1,13 +1,6 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::{
-    Color32,
-    CornerRadius,
-    Margin,
-    Sense,
-    TextWrapMode,
-    emath::OrderedFloat,
-};
+use egui::{Color32, CornerRadius, Margin, Sense, TextWrapMode, emath::OrderedFloat};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{Id, Output, Process, Resource, State};
@@ -16,22 +9,9 @@ use rust_i18n::t;
 use strum::IntoEnumIterator;
 
 use crate::{
-    display::{
-        self,
-        AsText,
-        DisplayValue,
-        HasIcon,
-        Icon,
-        factors::factors_card,
-        icons,
-        intensity,
-    },
+    display::{self, AsText, DisplayValue, HasIcon, Icon, factors::factors_card, icons, intensity},
     parts::{
-        calc_text_width,
-        h_center,
-        h_center_top,
-        overlay,
-        raised_frame,
+        calc_text_width, get_sizing, h_center, h_center_top, overlay, raised_frame,
         set_full_bg_image,
     },
     state::{FACTORS, StateExt},
@@ -75,25 +55,18 @@ impl Stats {
         &mut self,
         ui: &mut egui::Ui,
         state: &State,
-        process_mix_changes: &EnumMap<
-            Output,
-            BTreeMap<Id, isize>,
-        >,
+        process_mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
     ) {
         set_full_bg_image(
             ui,
             hes_images::background_image("dashboard.png"),
             egui::vec2(1600., 1192.),
         );
-        ui.style_mut().visuals.override_text_color =
-            Some(Color32::BLACK);
+        ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
 
-        let demand_for_outputs: EnumMap<Output, f32> =
-            Output::iter()
-                .map(|output| {
-                    (output, state.output_demand.of(output))
-                })
-                .collect();
+        let demand_for_outputs: EnumMap<Output, f32> = Output::iter()
+            .map(|output| (output, state.output_demand.of(output)))
+            .collect();
 
         let process_changes = state
             .world
@@ -101,15 +74,10 @@ impl Stats {
             .iter()
             .filter(|p| !p.locked)
             .filter_map(move |p| {
-                let mix_change = (*process_mix_changes
-                    [p.output]
-                    .get(&p.id)
-                    .unwrap_or(&0))
-                    as f32
-                    * 0.05;
+                let mix_change =
+                    (*process_mix_changes[p.output].get(&p.id).unwrap_or(&0)) as f32 * 0.05;
                 if mix_change != 0. {
-                    let change = mix_change
-                        * demand_for_outputs[p.output];
+                    let change = mix_change * demand_for_outputs[p.output];
                     Some((p.clone(), change))
                 } else {
                     None
@@ -121,71 +89,213 @@ impl Stats {
             ui.add_space(32.);
             ui.set_max_width(720.);
 
-            h_center_top(ui, "stats-top".into(), |tui| {
-                tui.ui(|ui| {
-                    stat(
-                        ui,
-                        |ui| render_temp(ui, state),
-                        t!("Temp. Anomaly"),
-                    );
+            let sizing = get_sizing(ui);
+            let screen_width = ui.ctx().screen_rect().width();
+            if sizing.is_small {
+                h_center_top(ui, "stats-top".into(), |tui| {
+                    tui.ui(|ui| {
+                        stat(ui, |ui| render_temp(ui, state), t!("Temp. Anomaly"));
+                    });
+                    tui.ui(|ui| {
+                        render_emissions(ui, state, &process_changes);
+                    });
                 });
-                tui.ui(|ui| {
-                    render_emissions(
-                        ui,
-                        state,
-                        &process_changes,
-                    );
-                });
-                tui.ui(|ui| {
-                    render_land(ui, state, &process_changes);
-                });
-                tui.ui(|ui| {
-                    render_energy(ui, state, &process_changes);
-                });
-                tui.ui(|ui| {
-                    render_water(ui, state, &process_changes);
-                });
-            });
 
-            ui.add_space(32.);
+                ui.add_space(32.);
 
-            h_center_top(ui, "stats-bottom".into(), |tui| {
-                tui.ui(|ui| {
-                    render_biodiversity(
-                        ui,
-                        state,
-                        &process_changes,
-                    );
+                h_center_top(ui, "stats-middle".into(), |tui| {
+                    tui.ui(|ui| {
+                        render_land(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_energy(ui, state, &process_changes);
+                    });
                 });
-                tui.ui(|ui| {
-                    stat(
-                        ui,
-                        |ui| render_sea_level_rise(ui, state),
-                        t!("Sea Level Rise"),
-                    );
+
+                ui.add_space(32.);
+
+                h_center_top(ui, "stats-middle-2".into(), |tui| {
+                    tui.ui(|ui| {
+                        render_water(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_biodiversity(ui, state, &process_changes);
+                    });
                 });
-                tui.ui(|ui| {
-                    stat(
-                        ui,
-                        |ui| render_population(ui, state),
-                        t!("Population"),
-                    );
+
+                ui.add_space(32.);
+
+                h_center_top(ui, "stats-bottom".into(), |tui| {
+                    tui.ui(|ui| {
+                        stat(
+                            ui,
+                            |ui| render_sea_level_rise(ui, state),
+                            t!("Sea Level Rise"),
+                        );
+                    });
+                    tui.ui(|ui| {
+                        stat(ui, |ui| render_population(ui, state), t!("Population"));
+                    });
                 });
-                tui.ui(|ui| {
-                    stat(
-                        ui,
-                        |ui| render_income(ui, state),
-                        t!("Avg. Living Standards"),
-                    );
+
+                ui.add_space(32.);
+
+                h_center_top(ui, "stats-bottom-2".into(), |tui| {
+                    tui.ui(|ui| {
+                        stat(
+                            ui,
+                            |ui| render_income(ui, state),
+                            t!("Avg. Living Standards"),
+                        );
+                    });
+                    tui.ui(|ui| {
+                        stat(
+                            ui,
+                            |ui| render_habitability(ui, state),
+                            t!("Avg. Habitability"),
+                        );
+                    });
                 });
-                tui.ui(|ui| {
-                    stat(
-                        ui,
-                        |ui| render_habitability(ui, state),
-                        t!("Avg. Habitability"),
-                    );
+            } else if screen_width <= 720. {
+                h_center_top(ui, "stats-top".into(), |tui| {
+                    tui.ui(|ui| {
+                        stat(ui, |ui| render_temp(ui, state), t!("Temp. Anomaly"));
+                    });
+                    tui.ui(|ui| {
+                        render_emissions(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_land(ui, state, &process_changes);
+                    });
                 });
-            });
+
+                ui.add_space(32.);
+
+                h_center_top(ui, "stats-middle".into(), |tui| {
+                    tui.ui(|ui| {
+                        render_energy(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_water(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_biodiversity(ui, state, &process_changes);
+                    });
+                });
+
+                ui.add_space(32.);
+
+                if screen_width <= 520. {
+                    h_center_top(ui, "stats-bottom".into(), |tui| {
+                        tui.ui(|ui| {
+                            stat(
+                                ui,
+                                |ui| render_sea_level_rise(ui, state),
+                                t!("Sea Level Rise"),
+                            );
+                        });
+                        tui.ui(|ui| {
+                            stat(ui, |ui| render_population(ui, state), t!("Population"));
+                        });
+                    });
+
+                    ui.add_space(32.);
+
+                    h_center_top(ui, "stats-bottom-2".into(), |tui| {
+                        tui.ui(|ui| {
+                            stat(
+                                ui,
+                                |ui| render_income(ui, state),
+                                t!("Avg. Living Standards"),
+                            );
+                        });
+                        tui.ui(|ui| {
+                            stat(
+                                ui,
+                                |ui| render_habitability(ui, state),
+                                t!("Avg. Habitability"),
+                            );
+                        });
+                    });
+                } else {
+                    h_center_top(ui, "stats-bottom".into(), |tui| {
+                        tui.ui(|ui| {
+                            stat(
+                                ui,
+                                |ui| render_sea_level_rise(ui, state),
+                                t!("Sea Level Rise"),
+                            );
+                        });
+                        tui.ui(|ui| {
+                            stat(ui, |ui| render_population(ui, state), t!("Population"));
+                        });
+                        tui.ui(|ui| {
+                            stat(
+                                ui,
+                                |ui| render_income(ui, state),
+                                t!("Avg. Living Standards"),
+                            );
+                        });
+                        tui.ui(|ui| {
+                            stat(
+                                ui,
+                                |ui| render_habitability(ui, state),
+                                t!("Avg. Habitability"),
+                            );
+                        });
+                    });
+                }
+            } else {
+                h_center_top(ui, "stats-top".into(), |tui| {
+                    tui.ui(|ui| {
+                        stat(ui, |ui| render_temp(ui, state), t!("Temp. Anomaly"));
+                    });
+                    tui.ui(|ui| {
+                        render_emissions(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_land(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_energy(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        render_water(ui, state, &process_changes);
+                    });
+                });
+
+                ui.add_space(32.);
+
+                h_center_top(ui, "stats-bottom".into(), |tui| {
+                    tui.ui(|ui| {
+                        render_biodiversity(ui, state, &process_changes);
+                    });
+                    tui.ui(|ui| {
+                        stat(
+                            ui,
+                            |ui| render_sea_level_rise(ui, state),
+                            t!("Sea Level Rise"),
+                        );
+                    });
+                    tui.ui(|ui| {
+                        stat(ui, |ui| render_population(ui, state), t!("Population"));
+                    });
+                    tui.ui(|ui| {
+                        stat(
+                            ui,
+                            |ui| render_income(ui, state),
+                            t!("Avg. Living Standards"),
+                        );
+                    });
+                    tui.ui(|ui| {
+                        stat(
+                            ui,
+                            |ui| render_habitability(ui, state),
+                            t!("Avg. Habitability"),
+                        );
+                    });
+                });
+            }
 
             ui.add_space(32.);
 
@@ -202,11 +312,8 @@ impl Stats {
         if self.show_breakdown_menu {
             overlay(ui.ctx(), |ui| {
                 ui.vertical(|ui| {
-                    ui.style_mut().wrap_mode =
-                        Some(egui::TextWrapMode::Extend);
-                    if let Some(factor) =
-                        render_breakdown_menu(ui)
-                    {
+                    ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
+                    if let Some(factor) = render_breakdown_menu(ui) {
                         self.breakdown_factor = factor;
                         self.show_breakdown_menu = false;
                     }
@@ -254,11 +361,7 @@ fn render_temp(ui: &mut egui::Ui, state: &State) {
     });
 }
 
-fn render_emissions(
-    ui: &mut egui::Ui,
-    state: &State,
-    process_changes: &[(Process, f32)],
-) {
+fn render_emissions(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let emissions_change = process_changes
         .into_iter()
         .map(|(p, mult)| p.adj_byproducts().gtco2eq() * mult)
@@ -266,19 +369,12 @@ fn render_emissions(
         .round();
 
     let tip = {
-        let tip_text = t!(
-            "Current annual emissions, in gigatonnes of CO2 equivalent."
-        );
-        tip(icons::EMISSIONS, tip_text).card(factors_card(
-            None,
-            Var::Emissions,
-            state,
-        ))
+        let tip_text = t!("Current annual emissions, in gigatonnes of CO2 equivalent.");
+        tip(icons::EMISSIONS, tip_text).card(factors_card(None, Var::Emissions, state))
     };
     let emissions = state.emissions.as_gtco2eq();
     let emissions_display = state.emissions.display();
-    let emissions_changed =
-        display::emissions(emissions_change + emissions);
+    let emissions_changed = display::emissions(emissions_change + emissions);
 
     render_dashboard_item(
         ui,
@@ -292,14 +388,9 @@ fn render_emissions(
     );
 }
 
-fn render_land(
-    ui: &mut egui::Ui,
-    state: &State,
-    process_changes: &[(Process, f32)],
-) {
+fn render_land(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let available_land = state.world.starting_resources.land;
-    let tip = tip(icons::LAND, t!("Current land use."))
-        .card(factors_card(None, Var::Land, state));
+    let tip = tip(icons::LAND, t!("Current land use.")).card(factors_card(None, Var::Land, state));
     let land_use = state.land_use_percent();
     let land_demand = state.resource_demand.of(Resource::Land);
 
@@ -310,10 +401,7 @@ fn render_land(
         .round();
     let land_changed = format!(
         "{:.0}%",
-        display::land_use_percent(
-            land_change + land_demand,
-            available_land
-        )
+        display::land_use_percent(land_change + land_demand, available_land)
     );
 
     render_dashboard_item(
@@ -328,11 +416,7 @@ fn render_land(
     );
 }
 
-fn render_energy(
-    ui: &mut egui::Ui,
-    state: &State,
-    process_changes: &[(Process, f32)],
-) {
+fn render_energy(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let energy_change = process_changes
         .into_iter()
         .map(|(p, mult)| {
@@ -342,8 +426,8 @@ fn render_energy(
         .sum::<f32>()
         .round();
 
-    let tip = tip(icons::ENERGY, t!("Current energy use."))
-        .card(factors_card(None, Var::Energy, state));
+    let tip =
+        tip(icons::ENERGY, t!("Current energy use.")).card(factors_card(None, Var::Energy, state));
     let energy_use = state.energy_pwh();
     let energy_demand = state.output_demand.total().energy();
     let energy_changed = format!(
@@ -363,11 +447,7 @@ fn render_energy(
     );
 }
 
-fn render_water(
-    ui: &mut egui::Ui,
-    state: &State,
-    process_changes: &[(Process, f32)],
-) {
+fn render_water(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let available_water = state.resources.available.water;
     let water_change = process_changes
         .into_iter()
@@ -375,19 +455,15 @@ fn render_water(
         .sum::<f32>()
         .round();
 
-    let water_demand =
-        state.resource_demand.of(Resource::Water);
+    let water_demand = state.resource_demand.of(Resource::Water);
     let current_water_stress = state.water_use_percent();
     let after_water_stress = format!(
         "{:.0}%",
-        display::water_use_percent(
-            water_change + water_demand,
-            available_water
-        )
+        display::water_use_percent(water_change + water_demand, available_water)
     );
 
-    let tip = tip(icons::WATER, t!("Current water demand."))
-        .card(factors_card(None, Var::Water, state));
+    let tip =
+        tip(icons::WATER, t!("Current water demand.")).card(factors_card(None, Var::Water, state));
 
     render_dashboard_item(
         ui,
@@ -401,16 +477,9 @@ fn render_water(
     );
 }
 
-fn render_biodiversity(
-    ui: &mut egui::Ui,
-    state: &State,
-    process_changes: &[(Process, f32)],
-) {
+fn render_biodiversity(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let extinction = |amount: f32| {
-        let int = intensity::scale(
-            amount,
-            intensity::Variable::Extinction,
-        );
+        let int = intensity::scale(amount, intensity::Variable::Extinction);
         MiniCardData {
             label: intensity::describe(int),
             color: intensity::color(int, false),
@@ -420,21 +489,18 @@ fn render_biodiversity(
     let available_land = state.world.starting_resources.land;
     let extinction_change = process_changes
         .into_iter()
-        .map(|(p, mult)| {
-            p.extinction_rate(available_land) * mult
-        })
+        .map(|(p, mult)| p.extinction_rate(available_land) * mult)
         .sum::<f32>()
         .round();
     let extinction_rate = state.world.extinction_rate;
     let current = extinction(extinction_rate);
-    let after_extinction =
-        extinction(extinction_rate + extinction_change).label;
+    let after_extinction = extinction(extinction_rate + extinction_change).label;
 
     let tip_text = t!(
         "The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse."
     );
-    let tip = tip(icons::EXTINCTION_RATE, tip_text)
-        .card(factors_card(None, Var::Biodiversity, state));
+    let tip =
+        tip(icons::EXTINCTION_RATE, tip_text).card(factors_card(None, Var::Biodiversity, state));
     render_dashboard_item(
         ui,
         &t!("Extinction Rate"),
@@ -498,13 +564,9 @@ fn render_income(ui: &mut egui::Ui, state: &State) {
 }
 
 fn render_habitability(ui: &mut egui::Ui, state: &State) {
-    let habitability =
-        state.world.regions.habitability().max(0.);
+    let habitability = state.world.regions.habitability().max(0.);
     let habitability = {
-        let int = intensity::scale(
-            habitability,
-            intensity::Variable::Habitability,
-        );
+        let int = intensity::scale(habitability, intensity::Variable::Habitability);
         MiniCardData {
             label: intensity::describe(habitability as usize),
             color: intensity::color(int, true),
@@ -514,11 +576,7 @@ fn render_habitability(ui: &mut egui::Ui, state: &State) {
     ui.vertical_centered(|ui| {
         ui.add(icons::HABITABILITY.size(24.));
         ui.add_space(8.);
-        render_stat_text(
-            ui,
-            &habitability.label,
-            Some(habitability.color),
-        );
+        render_stat_text(ui, &habitability.label, Some(habitability.color));
     });
 }
 
@@ -538,9 +596,7 @@ fn render_breakdown_menu(ui: &mut egui::Ui) -> Option<Var> {
                         ui,
                         t!(var.title()).to_string(),
                         18.0,
-                        egui::FontFamily::Name(
-                            "TimesTen".into(),
-                        ),
+                        egui::FontFamily::Name("TimesTen".into()),
                     ))
                 })
                 .max()
@@ -550,8 +606,7 @@ fn render_breakdown_menu(ui: &mut egui::Ui) -> Option<Var> {
             let n = Var::iter().count();
 
             ui.style_mut().spacing.item_spacing.y = 0.;
-            ui.style_mut().visuals.override_text_color =
-                Some(Color32::BLACK);
+            ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
             for (i, var) in Var::iter().enumerate() {
                 let rounding = if i == 0 {
                     CornerRadius {
@@ -580,17 +635,12 @@ fn render_breakdown_menu(ui: &mut egui::Ui) -> Option<Var> {
                         ui.add_space(3.); // Manual alignment
                         ui.image(var.icon());
                     });
-                    ui.label(
-                        egui::RichText::new(t!(var.title()))
-                            .heading()
-                            .size(18.),
-                    );
+                    ui.label(egui::RichText::new(t!(var.title())).heading().size(18.));
                 });
 
                 let resp = frame.allocate_space(ui);
                 if resp.hovered() {
-                    frame.frame.fill =
-                        Color32::from_rgb(0xD7, 0xC5, 0xA5);
+                    frame.frame.fill = Color32::from_rgb(0xD7, 0xC5, 0xA5);
                 }
                 frame.paint(ui);
 
@@ -600,49 +650,33 @@ fn render_breakdown_menu(ui: &mut egui::Ui) -> Option<Var> {
 
                 if i < n - 1 {
                     let rect = egui::Rect::from_min_size(
-                        ui.cursor().left_top()
-                            - egui::vec2(0., 1.),
+                        ui.cursor().left_top() - egui::vec2(0., 1.),
                         egui::vec2(resp.rect.width(), 1.),
                     );
-                    ui.painter().rect_filled(
-                        rect,
-                        0.,
-                        Color32::from_rgb(0xAA, 0x9E, 0x88),
-                    );
+                    ui.painter()
+                        .rect_filled(rect, 0., Color32::from_rgb(0xAA, 0x9E, 0x88));
                     let rect = egui::Rect::from_min_size(
                         ui.cursor().left_top(),
                         egui::vec2(resp.rect.width(), 1.),
                     );
-                    ui.painter().rect_filled(
-                        rect,
-                        0.,
-                        Color32::from_rgb(0xF7, 0xF4, 0xEF),
-                    );
+                    ui.painter()
+                        .rect_filled(rect, 0., Color32::from_rgb(0xF7, 0xF4, 0xEF));
                 }
             }
         });
     selected
 }
 
-fn render_breakdown(
-    ui: &mut egui::Ui,
-    state: &State,
-    factor: Var,
-    show_breakdown_menu: &mut bool,
-) {
+fn render_breakdown(ui: &mut egui::Ui, state: &State, factor: Var, show_breakdown_menu: &mut bool) {
     let available_land = state.world.starting_resources.land;
 
     let dataset = {
         let mut total = 0.;
-        let mut data: BTreeMap<String, (f32, String)> =
-            BTreeMap::default();
+        let mut data: BTreeMap<String, (f32, String)> = BTreeMap::default();
         let factors = FACTORS.read();
         for fac in &factors[factor] {
             let name = t!(fac.name());
-            data.insert(
-                name.to_string(),
-                (fac.amount(), fac.display()),
-            );
+            data.insert(name.to_string(), (fac.amount(), fac.display()));
             total += fac.amount();
         }
         if factor == Var::Land {
@@ -655,10 +689,7 @@ fn render_breakdown(
                     format!(
                         "{}%",
                         display::percent(
-                            display::land_use_percent(
-                                unused,
-                                available_land,
-                            ) / 100.,
+                            display::land_use_percent(unused, available_land,) / 100.,
                             true
                         )
                     ),
@@ -668,33 +699,33 @@ fn render_breakdown(
         data
     };
 
-    let resp =
-        raised_frame()
-            .colors(
-                Color32::WHITE,
-                Color32::from_gray(0xBB),
-                Color32::from_gray(0xEE),
-            )
-            .hover(Color32::from_gray(0xCC))
-            .margin(Margin::symmetric(6, 4))
-            .show(ui, |ui| {
-                ui.set_width(160.);
-                ui.set_height(24.);
-                ui.add_space(3.);
-                h_center(ui, "breakdown-button", |tui| {
-                    tui.ui(|ui| {
-                        ui.horizontal(|ui| {
-                            ui.add(factor.icon().size(18.));
-                            ui.add(
-                        egui::Label::new(egui::RichText::new(
-                            format!("{}▼", t!(factor.title())),
-                        ))
-                        .wrap_mode(TextWrapMode::Extend),
-                    )
-                        });
+    let resp = raised_frame()
+        .colors(
+            Color32::WHITE,
+            Color32::from_gray(0xBB),
+            Color32::from_gray(0xEE),
+        )
+        .hover(Color32::from_gray(0xCC))
+        .margin(Margin::symmetric(6, 4))
+        .show(ui, |ui| {
+            ui.set_width(160.);
+            ui.set_height(24.);
+            ui.add_space(3.);
+            h_center(ui, "breakdown-button", |tui| {
+                tui.ui(|ui| {
+                    ui.horizontal(|ui| {
+                        ui.add(factor.icon().size(18.));
+                        ui.add(
+                            egui::Label::new(egui::RichText::new(format!(
+                                "{}▼",
+                                t!(factor.title())
+                            )))
+                            .wrap_mode(TextWrapMode::Extend),
+                        )
                     });
                 });
             });
+        });
     if resp.interact(Sense::click()).clicked() {
         *show_breakdown_menu = true;
     }
@@ -751,17 +782,12 @@ fn render_dashboard_item(
                 if change != 0. {
                     let change_tip = tip(
                         icon,
-                        t!(
-                            "The estimated value after production changes have finished."
-                        ),
+                        t!("The estimated value after production changes have finished."),
                     );
                     add_tip(
                         change_tip,
                         ui.label(
-                            egui::RichText::new(format!(
-                                "» {display_changed_value}"
-                            ))
-                            .size(11.),
+                            egui::RichText::new(format!("» {display_changed_value}")).size(11.),
                         ),
                     );
                 }
@@ -771,18 +797,13 @@ fn render_dashboard_item(
     );
 }
 
-fn render_chart(
-    ui: &mut egui::Ui,
-    dataset: &BTreeMap<String, (f32, String)>,
-    colors: [u32; 2],
-) {
+fn render_chart(ui: &mut egui::Ui, dataset: &BTreeMap<String, (f32, String)>, colors: [u32; 2]) {
     let n = dataset.len() as f32;
     let items: Vec<_> = dataset
         .iter()
         .enumerate()
         .map(|(i, (k, (v, display)))| {
-            let (r, g, b) =
-                lerp_color(colors[0], colors[1], i as f32 / n);
+            let (r, g, b) = lerp_color(colors[0], colors[1], i as f32 / n);
             TreeItem {
                 label: k,
                 value: *v,
@@ -811,11 +832,7 @@ fn lerp_color(from: u32, to: u32, ratio: f32) -> (u8, u8, u8) {
     (rr.round() as u8, rg.round() as u8, rb.round() as u8)
 }
 
-fn render_stat_text(
-    ui: &mut egui::Ui,
-    text: &str,
-    color: Option<Color32>,
-) {
+fn render_stat_text(ui: &mut egui::Ui, text: &str, color: Option<Color32>) {
     let mut text = egui::RichText::new(text).monospace();
     if let Some(color) = color {
         text = text.color(color);

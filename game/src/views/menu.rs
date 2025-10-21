@@ -5,13 +5,7 @@ use rust_i18n::t;
 use crate::{
     display::icons,
     image,
-    parts::{
-        RaisedFrame,
-        button,
-        button_frame,
-        raised_frame,
-        set_full_bg_image,
-    },
+    parts::{RaisedFrame, button, button_frame, raised_frame, set_full_bg_image},
     state::Settings,
 };
 
@@ -53,8 +47,7 @@ pub fn render_menu(
 
     let locale = {
         let elapsed = year - start_year;
-        let idx = (elapsed as f32 / 5.).round() as usize
-            % LOCALES.len();
+        let idx = (elapsed as f32 / 5.).round() as usize % LOCALES.len();
         &LOCALES[idx]
     };
     let time_place = format!("{}, {}", locale, year);
@@ -63,60 +56,63 @@ pub fn render_menu(
     egui::Area::new("menu-close".into())
         .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
         .show(ui.ctx(), |ui| {
-            let resp =
-                button_frame().margin(6).show(ui, |ui| {
-                    ui.add(icons::CLOSE.size(24.));
-                });
+            let resp = button_frame().margin(6).show(ui, |ui| {
+                ui.add(icons::CLOSE.size(24.));
+            });
             if resp.interact(Sense::click()).clicked() {
                 action = Some(MenuAction::CloseMenu);
             }
         });
 
-    ui.vertical_centered(|ui| {
-        ui.set_max_width(480.);
+    egui::Frame::NONE
+        .inner_margin(Margin::symmetric(6, 6))
+        .show(ui, |ui| {
+            ui.vertical_centered(|ui| {
+                let width = (ui.ctx().screen_rect().width() - 12.).min(480.);
+                ui.set_max_width(width);
 
-        ui.add_space(64.);
+                ui.add_space(64.);
 
-        inset_frame().margin(6).show(ui, |ui| {
-            ui.set_width(80.);
-            let logo = image!("gosplant.svg");
-            ui.add(egui::Image::new(logo).max_height(24.));
-        });
+                inset_frame().margin(6).show(ui, |ui| {
+                    ui.set_width(80.);
+                    let logo = image!("gosplant.svg");
+                    ui.add(egui::Image::new(logo).max_height(24.));
+                });
 
-        ui.add_space(8.);
+                ui.add_space(8.);
 
-        inset_frame().margin(Margin::symmetric(24, 12)).show(
-            ui,
-            |ui| {
-                ui.label(
-                    egui::RichText::new(time_place)
-                        .heading()
-                        .color(Color32::WHITE)
-                        .size(18.),
+                inset_frame()
+                    .margin(Margin::symmetric(24, 12))
+                    .show(ui, |ui| {
+                        ui.label(
+                            egui::RichText::new(time_place)
+                                .heading()
+                                .color(Color32::WHITE)
+                                .size(18.),
+                        );
+                    });
+
+                ui.add_space(32.);
+                let motto = image!("motto.png");
+                ui.add(egui::Image::new(motto).max_height(80.));
+                ui.add_space(32.);
+
+                let sound = format!(
+                    "{}: {}",
+                    t!("Sound"),
+                    if prefs.sound { t!("On") } else { t!("Off") }
                 );
-            },
-        );
+                if ui.add(button(sound)).clicked() {
+                    action = Some(MenuAction::ToggleSound);
+                }
 
-        ui.add_space(32.);
-        let motto = image!("motto.png");
-        ui.add(egui::Image::new(motto).max_height(80.));
-        ui.add_space(32.);
+                if ui.add(button(t!("Restart Game"))).clicked() {
+                    action = Some(MenuAction::RestartGame);
+                }
 
-        let sound = format!(
-            "{}: {}",
-            t!("Sound"),
-            if prefs.sound { t!("On") } else { t!("Off") }
-        );
-        if ui.add(button(sound)).clicked() {
-            action = Some(MenuAction::ToggleSound);
-        }
-
-        if ui.add(button(t!("Restart Game"))).clicked() {
-            action = Some(MenuAction::RestartGame);
-        }
-
-        ui.add_space(36.);
-    });
+                ui.add_space(36.);
+            });
+        });
 
     action
 }

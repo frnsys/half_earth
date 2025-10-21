@@ -3,33 +3,17 @@ use std::{collections::BTreeMap, sync::Arc};
 use egui::{Color32, Margin, Sense};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
-use hes_engine::{
-    IconEvent,
-    Id,
-    KindMap,
-    Output,
-    Region,
-    State,
-};
+use hes_engine::{IconEvent, Id, KindMap, Output, Region, State};
 use hes_images::flavor_image;
 use rust_i18n::t;
 use strum::IntoEnumIterator;
 
 use crate::{
     display::{
-        self,
-        AsText,
-        HasIcon,
-        icons,
+        self, AsText, HasIcon, icons,
         intensity::{self, intensity_bar},
     },
-    parts::{
-        RaisedFrame,
-        fill_bar,
-        h_center,
-        raised_frame,
-        set_full_bg_image,
-    },
+    parts::{RaisedFrame, fill_bar, get_sizing, h_center, raised_frame, set_full_bg_image},
     tips::{Tip, add_tip, tip},
     views::globe::GlobeView,
 };
@@ -39,9 +23,7 @@ pub struct Regions {
     globe_view: GlobeView,
 }
 impl Regions {
-    pub fn new(
-        context: &Arc<three_d::context::Context>,
-    ) -> Self {
+    pub fn new(context: &Arc<three_d::context::Context>) -> Self {
         let mut globe = GlobeView::new(280, 200., context);
         globe.hide_clouds();
         globe.dont_rotate();
@@ -74,8 +56,7 @@ impl Regions {
             });
         });
 
-        let region =
-            state.world.regions.by_idx(self.selected_region);
+        let region = state.world.regions.by_idx(self.selected_region);
         let n_regions = state.world.regions.len();
 
         h_center(ui, "region-name", |tui| {
@@ -89,8 +70,7 @@ impl Regions {
                         .clicked()
                     {
                         if self.selected_region <= 0 {
-                            self.selected_region =
-                                n_regions - 1;
+                            self.selected_region = n_regions - 1;
                         } else {
                             self.selected_region -= 1;
                         }
@@ -108,9 +88,7 @@ impl Regions {
 
                     if button_frame()
                         .show(ui, |ui| {
-                            ui.add(
-                                icons::ARROW_RIGHT.size(16.),
-                            );
+                            ui.add(icons::ARROW_RIGHT.size(16.));
                         })
                         .interact(Sense::click())
                         .clicked()
@@ -155,10 +133,7 @@ fn devel_tip() -> Tip {
 }
 
 fn cont_tip() -> Tip {
-    tip(
-        icons::CONTENTEDNESS,
-        t!("This region's contentedness."),
-    )
+    tip(icons::CONTENTEDNESS, t!("This region's contentedness."))
 }
 
 fn hab_tip() -> Tip {
@@ -180,11 +155,7 @@ fn inc_tip(income: &str) -> Tip {
     )
 }
 
-fn demand_tip(
-    output: &Output,
-    demand: f32,
-    percent: String,
-) -> Tip {
+fn demand_tip(output: &Output, demand: f32, percent: String) -> Tip {
     let demand = if demand < 1. {
         "<1".to_string()
     } else {
@@ -207,239 +178,169 @@ fn render_region_item(
     state: &State,
     region_events: &BTreeMap<Id, Vec<IconEvent>>,
 ) {
-    let events = region_events.get(&region.id);
+    let sizing = get_sizing(ui);
+    if sizing.is_small {
+        h_center(ui, "region-details-preview", |tui| {
+            tui.ui(|ui| {
+                region_preview(ui, region, region_events);
+            });
+        });
+        h_center(ui, "region-details-impacts", |tui| {
+            tui.ui(|ui| {
+                region_impacts(ui, region, state);
+            });
+        });
+    } else {
+        h_center(ui, "region-details", |tui| {
+            tui.ui(|ui| {
+                ui.horizontal(|ui| {
+                    region_preview(ui, region, region_events);
+                    region_impacts(ui, region, state);
+                });
+            });
+        });
+    }
+}
 
-    let contentedness = intensity::scale(
-        region.outlook,
-        intensity::Variable::Outlook,
-    );
-    let habitability = intensity::scale(
-        region.habitability(),
-        intensity::Variable::Habitability,
-    );
+fn region_preview(
+    ui: &mut egui::Ui,
+    region: &Region,
+    region_events: &BTreeMap<Id, Vec<IconEvent>>,
+) {
+    let events = region_events.get(&region.id);
+    let temp_range = region.temp_range();
+    let precip_range = region.precip_range();
+
+    inset_frame().show(ui, |ui| {
+        ui.vertical(|ui| {
+            let image = flavor_image(&region.flavor.image);
+            ui.add(image.fit_to_exact_size(egui::vec2(320., 200.)));
+
+            ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+
+            if region.seceded {
+                ui.label(t!("Seceded"));
+            }
+
+            ui.horizontal(|ui| {
+                add_tip(
+                    temp_tip(),
+                    ui.horizontal_centered(|ui| {
+                        ui.style_mut().spacing.item_spacing.x = 2.;
+                        ui.add(icons::TEMPERATURE.size(12.));
+                        ui.label(egui::RichText::new(temp_range).size(12.));
+                    })
+                    .response,
+                );
+
+                add_tip(
+                    precip_tip(),
+                    ui.horizontal_centered(|ui| {
+                        ui.style_mut().spacing.item_spacing.x = 2.;
+                        ui.add(icons::PRECIPITATION.size(12.));
+                        ui.label(egui::RichText::new(precip_range).size(12.));
+                    })
+                    .response,
+                );
+            });
+
+            ui.add_space(8.);
+
+            let is_max_level = region.is_max_income();
+            let development = region.development;
+            add_tip(
+                devel_tip(),
+                ui.horizontal(|ui| {
+                    ui.label(
+                        egui::RichText::new(format!("{}:", t!("Development Progress"))).underline(),
+                    );
+                    render_devel_bar(ui, is_max_level, development);
+                })
+                .response,
+            );
+
+            ui.add_space(8.);
+
+            ui.label(egui::RichText::new(t!("Recent Disasters")).underline());
+            ui.horizontal(|ui| {
+                if let Some(events) = events {
+                    for ev in events {
+                        let icon = icons::disaster_icon(&ev.icon);
+                        ui.add(icon.size(14.));
+                    }
+                } else {
+                    ui.label(egui::RichText::new("---").color(Color32::from_white_alpha(64)));
+                }
+            });
+        });
+    });
+}
+
+fn region_impacts(ui: &mut egui::Ui, region: &Region, state: &State) {
+    let contentedness = intensity::scale(region.outlook, intensity::Variable::Outlook);
+    let habitability = intensity::scale(region.habitability(), intensity::Variable::Habitability);
     let income_tip = {
         let name = t!(region.income.lower());
         inc_tip(&name)
     };
 
     let income_level = region.income.level() + 1;
-    let temp_range = region.temp_range();
-    let precip_range = region.precip_range();
 
-    h_center(ui, "region-details", |tui| {
-        tui.ui(|ui| {
-            ui.horizontal(|ui| {
-                inset_frame().show(ui, |ui| {
-                    ui.vertical(|ui| {
-                        let image =
-                            flavor_image(&region.flavor.image);
-                        ui.add(image.fit_to_exact_size(
-                            egui::vec2(320., 200.),
-                        ));
+    inset_frame().show(ui, |ui| {
+        ui.vertical(|ui| {
+            add_tip(
+                hab_tip(),
+                ui.horizontal(|ui| {
+                    ui.add(icons::HABITABILITY.size(18.));
+                    ui.add(intensity_bar(habitability).invert().pips(4));
+                })
+                .response,
+            );
 
-                        ui.style_mut()
-                            .visuals
-                            .override_text_color =
-                            Some(Color32::WHITE);
+            add_tip(
+                cont_tip(),
+                ui.horizontal(|ui| {
+                    ui.add(icons::CONTENTEDNESS.size(18.));
+                    ui.add(intensity_bar(contentedness).invert().pips(4));
+                })
+                .response,
+            );
 
-                        if region.seceded {
-                            ui.label(t!("Seceded"));
-                        }
+            add_tip(
+                income_tip,
+                ui.horizontal(|ui| {
+                    ui.add(icons::WEALTH.size(18.));
+                    ui.add(intensity_bar(income_level).invert().pips(4));
+                })
+                .response,
+            );
 
-                        ui.horizontal(|ui| {
-                            add_tip(
-                                temp_tip(),
-                                ui.horizontal_centered(|ui| {
-                                    ui.style_mut()
-                                        .spacing
-                                        .item_spacing
-                                        .x = 2.;
-                                    ui.add(
-                                        icons::TEMPERATURE
-                                            .size(12.),
-                                    );
-                                    ui.label(
-                                        egui::RichText::new(
-                                            temp_range,
-                                        )
-                                        .size(12.),
-                                    );
-                                })
-                                .response,
-                            );
+            let output_demand = &state.world.per_capita_demand;
+            let demand_for_outputs: EnumMap<Output, f32> = Output::iter()
+                .map(|output| (output, state.output_demand.of(output)))
+                .collect();
 
-                            add_tip(
-                                precip_tip(),
-                                ui.horizontal_centered(|ui| {
-                                    ui.style_mut()
-                                        .spacing
-                                        .item_spacing
-                                        .x = 2.;
-                                    ui.add(
-                                        icons::PRECIPITATION
-                                            .size(12.),
-                                    );
-                                    ui.label(
-                                        egui::RichText::new(
-                                            precip_range,
-                                        )
-                                        .size(12.),
-                                    );
-                                })
-                                .response,
-                            );
-                        });
+            for (k, demand) in region.demand(&output_demand).items() {
+                let per_capita_demand = demand / region.population;
+                let int = intensity::output_intensity(per_capita_demand, k);
+                let per = display::demand_percent(demand, demand_for_outputs[k], true);
+                let amount = display::output(demand, k);
 
-                        ui.add_space(8.);
-
-                        let is_max_level =
-                            region.is_max_income();
-                        let development = region.development;
-                        add_tip(
-                            devel_tip(),
-                            ui.horizontal_centered(|ui| {
-                                ui.label(egui::RichText::new(format!(
-                                    "{}:",
-                                    t!("Development Progress")
-                                )).underline());
-                                render_devel_bar(
-                                    ui,
-                                    is_max_level,
-                                    development,
-                                );
-                            })
-                            .response,
-                        );
-
-                        ui.add_space(8.);
-
-                        ui.label(egui::RichText::new(t!("Recent Disasters")).underline());
-                        ui.horizontal_centered(|ui| {
-                            if let Some(events) = events {
-                                for ev in events {
-                                    let icon =
-                                        icons::disaster_icon(
-                                            &ev.icon,
-                                        );
-                                    ui.add(icon.size(14.));
-                                }
-                            } else {
-                                ui.label(egui::RichText::new("---").color(Color32::from_white_alpha(64)));
-                            }
-                        });
-                    });
-                });
-
-                inset_frame().show(ui, |ui| {
-                    ui.vertical(|ui| {
-                        add_tip(
-                            hab_tip(),
-                            ui.horizontal(|ui| {
-                                ui.add(
-                                    icons::HABITABILITY
-                                        .size(18.),
-                                );
-                                ui.add(
-                                    intensity_bar(habitability)
-                                        .invert()
-                                        .pips(4),
-                                );
-                            })
-                            .response,
-                        );
-
-                        add_tip(
-                            cont_tip(),
-                            ui.horizontal(|ui| {
-                                ui.add(
-                                    icons::CONTENTEDNESS
-                                        .size(18.),
-                                );
-                                ui.add(
-                                    intensity_bar(
-                                        contentedness,
-                                    )
-                                    .invert()
-                                    .pips(4),
-                                );
-                            })
-                            .response,
-                        );
-
-                        add_tip(
-                            income_tip,
-                            ui.horizontal(|ui| {
-                                ui.add(icons::WEALTH.size(18.));
-                                ui.add(
-                                    intensity_bar(income_level)
-                                        .invert()
-                                        .pips(4),
-                                );
-                            })
-                            .response,
-                        );
-
-                        let output_demand =
-                            &state.world.per_capita_demand;
-                        let demand_for_outputs: EnumMap<
-                            Output,
-                            f32,
-                        > = Output::iter()
-                            .map(|output| {
-                                (
-                                    output,
-                                    state
-                                        .output_demand
-                                        .of(output),
-                                )
-                            })
-                            .collect();
-
-                        for (k, demand) in region
-                            .demand(&output_demand)
-                            .items()
-                        {
-                            let per_capita_demand =
-                                demand / region.population;
-                            let int =
-                                intensity::output_intensity(
-                                    per_capita_demand,
-                                    k,
-                                );
-                            let per = display::demand_percent(
-                                demand,
-                                demand_for_outputs[k],
-                                true,
-                            );
-                            let amount =
-                                display::output(demand, k);
-
-                            let tip =
-                                demand_tip(&k, amount, per);
-                            add_tip(
-                                tip,
-                                ui.horizontal(|ui| {
-                                    ui.add(k.icon().size(18.));
-                                    ui.add(
-                                        intensity_bar(int)
-                                            .pips(4),
-                                    );
-                                })
-                                .response,
-                            );
-                        }
-                    });
-                });
-            });
+                let tip = demand_tip(&k, amount, per);
+                add_tip(
+                    tip,
+                    ui.horizontal(|ui| {
+                        ui.add(k.icon().size(18.));
+                        ui.add(intensity_bar(int).pips(4));
+                    })
+                    .response,
+                );
+            }
         });
     });
 }
 
-fn render_devel_bar(
-    ui: &mut egui::Ui,
-    is_max_level: bool,
-    development: f32,
-) {
+fn render_devel_bar(ui: &mut egui::Ui, is_max_level: bool, development: f32) {
     if is_max_level {
         ui.label(t!("Max Level"));
     } else {

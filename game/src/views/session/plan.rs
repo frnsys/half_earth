@@ -1,27 +1,10 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::{
-    Align2,
-    Color32,
-    Margin,
-    Rect,
-    Sense,
-    Shadow,
-    Stroke,
-};
+use egui::{Align2, Color32, Margin, Order, Rect, Sense, Shadow, Stroke};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{
-    EventPhase,
-    Feedstock,
-    Id,
-    KindMap,
-    Output,
-    Process,
-    Project,
-    ProjectType,
-    Resource,
-    State,
+    EventPhase, Feedstock, Id, KindMap, Output, Process, Project, ProjectType, Resource, State,
     Status,
 };
 use hes_images::flavor_image;
@@ -32,36 +15,15 @@ use crate::{
     consts,
     debug::DEBUG,
     display::{
-        self,
-        AsText,
-        FloatExt,
-        HasIcon,
-        Icon,
-        factors::factors_card,
-        group_color,
-        icons,
-        resource,
+        self, AsText, FloatExt, HasIcon, Icon, factors::factors_card, group_color, icons, resource,
         to_energy_units,
     },
     parts::{
-        RaisedFrame,
-        bg_cover_image,
-        button,
-        center_text,
-        fill_bar,
-        h_center,
-        new_icon,
-        raised_frame,
-        set_full_bg_image,
+        RaisedFrame, bg_cover_image, button, center_text, fill_bar, get_sizing, h_center, new_icon,
+        raised_frame, set_full_bg_image,
     },
-    state::{
-        GameState,
-        PlanChange,
-        Points,
-        StateExt,
-        Tutorial,
-    },
-    text::scale_text_ui,
+    state::{GameState, PlanChange, Points, StateExt, Tutorial},
+    text::bbcode,
     tips::{Tip, add_card, add_tip, tip},
     vars::Var,
     views::{
@@ -91,11 +53,7 @@ impl Plan {
         !matches!(self.page, Page::Overview)
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut GameState,
-    ) -> Option<PlanAction> {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> Option<PlanAction> {
         let cur_page = self.page.as_uint();
         let mut ret_action = None;
 
@@ -116,16 +74,12 @@ impl Plan {
                 );
             }
             Page::Processes(processes) => {
-                if let Some(action) =
-                    processes.render(ui, state)
-                {
+                if let Some(action) = processes.render(ui, state) {
                     match action {
                         ProcessesAction::Changed => {
-                            ret_action =
-                                Some(PlanAction::PlanChanged);
+                            ret_action = Some(PlanAction::PlanChanged);
                         }
-                        ProcessesAction::Back => self
-                            .close_page(&mut state.ui.tutorial),
+                        ProcessesAction::Back => self.close_page(&mut state.ui.tutorial),
                     }
                 }
             }
@@ -135,26 +89,16 @@ impl Plan {
                     match action {
                         ProjectsAction::ChangeTo(next_kind) => {
                             let phase = match next_kind {
-                                ProjectType::Policy => {
-                                    EventPhase::PlanningPolicies
-                                }
-                                ProjectType::Research => {
-                                    EventPhase::PlanningResearch
-                                }
-                                ProjectType::Initiative => {
-                                    EventPhase::PlanningInitiatives
-                                }
+                                ProjectType::Policy => EventPhase::PlanningPolicies,
+                                ProjectType::Research => EventPhase::PlanningResearch,
+                                ProjectType::Initiative => EventPhase::PlanningInitiatives,
                             };
-                            ret_action = Some(
-                                PlanAction::PageChanged(phase),
-                            );
+                            ret_action = Some(PlanAction::PageChanged(phase));
                         }
                         ProjectsAction::Changed => {
-                            ret_action =
-                                Some(PlanAction::PlanChanged);
+                            ret_action = Some(PlanAction::PlanChanged);
                         }
-                        ProjectsAction::Back => self
-                            .close_page(&mut state.ui.tutorial),
+                        ProjectsAction::Back => self.close_page(&mut state.ui.tutorial),
                     }
                 }
             }
@@ -172,9 +116,7 @@ impl Plan {
             let phase = match self.page {
                 Page::Overview => EventPhase::PlanningPlan,
                 Page::Projects(_) => EventPhase::PlanningAdd,
-                Page::Processes(_) => {
-                    EventPhase::PlanningProcesses
-                }
+                Page::Processes(_) => EventPhase::PlanningProcesses,
                 Page::All => EventPhase::PlanningPlan,
             };
             ret_action = Some(PlanAction::PageChanged(phase));
@@ -193,20 +135,14 @@ impl Plan {
     ) -> Option<PlanAction> {
         let projects = &state.world.projects;
         let processes = &state.world.processes;
-        let any_new_projects = projects
-            .unlocked()
-            .any(|p| !viewed.contains(&p.id));
-        let any_new_processes = processes
-            .unlocked()
-            .any(|p| !viewed.contains(&p.id));
+        let any_new_projects = projects.unlocked().any(|p| !viewed.contains(&p.id));
+        let any_new_processes = processes.unlocked().any(|p| !viewed.contains(&p.id));
 
-        let projects_highlighted =
-            tutorial.eq(&Tutorial::Projects);
+        let projects_highlighted = tutorial.eq(&Tutorial::Projects);
 
         let slots = calc_slots(ui);
 
-        let active_projects =
-            projects.part_of_plan().collect::<Vec<_>>();
+        let active_projects = projects.part_of_plan().collect::<Vec<_>>();
         let n_active = active_projects.len();
         let n_projects = {
             if n_active > slots {
@@ -217,9 +153,7 @@ impl Plan {
             }
         };
 
-        let placeholders = (slots as isize
-            - active_projects.len() as isize)
-            .max(0) as usize;
+        let placeholders = (slots as isize - active_projects.len() as isize).max(0) as usize;
 
         let split_at = slots / 2;
 
@@ -238,26 +172,16 @@ impl Plan {
             tui.ui(|ui| {
                 ui.horizontal(|ui| {
                     let resp = ui
-                        .add(add_cards_slot(
-                            any_new_projects,
-                            projects_highlighted,
-                        ))
+                        .add(add_cards_slot(any_new_projects, projects_highlighted))
                         .interact(Sense::click());
                     if resp.clicked() {
-                        self.set_page(Page::Projects(
-                            Projects::new(state, plan_changes),
-                        ));
+                        self.set_page(Page::Projects(Projects::new(state, plan_changes)));
                     }
 
                     for p in top {
                         match p {
                             Some(proj) => {
-                                add_card(
-                                    (*proj).clone(),
-                                    ui.add(project_card_slot(
-                                        proj,
-                                    )),
-                                );
+                                add_card((*proj).clone(), ui.add(project_card_slot(proj)));
                             }
                             None => {
                                 ui.add(empty_card_slot());
@@ -279,9 +203,7 @@ impl Plan {
                     }
 
                     if n_active > slots {
-                        let resp = ui
-                            .add(view_all_slot())
-                            .interact(Sense::click());
+                        let resp = ui.add(view_all_slot()).interact(Sense::click());
                         if resp.clicked() {
                             self.set_page(Page::All);
                         }
@@ -294,10 +216,7 @@ impl Plan {
         let processes_over_limit = state
             .world
             .processes
-            .over_limit(
-                state.output_demand.total(),
-                state.feedstocks.available,
-            )
+            .over_limit(state.output_demand.total(), state.feedstocks.available)
             .map(|p| t!(&p.name))
             .collect::<Vec<_>>();
         if !processes_over_limit.is_empty() {
@@ -305,8 +224,7 @@ impl Plan {
                 icons::ALERT,
                 t!(
                     "The following processes can't produce as much as they need to: %{processesOverLimit}",
-                    processesOverLimit =
-                        processes_over_limit.join(", ")
+                    processesOverLimit = processes_over_limit.join(", ")
                 ),
             );
             add_tip(tip, ui.image(icons::ALERT));
@@ -325,10 +243,7 @@ impl Plan {
         );
 
         if prod_shortages.is_some() {
-            add_tip(
-                shortages_tip.clone(),
-                ui.image(icons::ALERT),
-            );
+            add_tip(shortages_tip.clone(), ui.image(icons::ALERT));
         }
 
         let max_processes = Output::iter().map(|output| {
@@ -345,19 +260,13 @@ impl Plan {
         h_center(ui, "plan-processes", |tui| {
             tui.ui(|ui| {
                 let resp = inset_frame().show(ui, |ui| {
-                    ui.style_mut()
-                        .visuals
-                        .override_text_color =
-                        Some(Color32::BLACK);
+                    ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
                     ui.horizontal(|ui| {
                         for process in max_processes {
-                            let produced =
-                                crate::display::output(
-                                    state
-                                        .produced
-                                        .of(process.output),
-                                    process.output,
-                                );
+                            let produced = crate::display::output(
+                                state.produced.of(process.output),
+                                process.output,
+                            );
 
                             let demand = crate::display::output(
                                 output_demand[process.output],
@@ -365,53 +274,39 @@ impl Plan {
                             );
 
                             ui.vertical(|ui| {
-                                ui.set_width(105.);
+                                let sizing = get_sizing(ui);
 
-                                let has_shortage =
-                                    produced / demand < 0.99;
+                                ui.set_width(105. * sizing.scale);
+
+                                let has_shortage = produced / demand < 0.99;
 
                                 let image = if has_shortage {
-                                    icons::ALERT.size(14.)
+                                    icons::ALERT.size(sizing.normal)
                                 } else {
-                                    icons::CHECK.size(14.).tint(
-                                        Color32::from_rgb(
-                                            0x1B, 0xAC, 0x89,
-                                        ),
-                                    )
+                                    icons::CHECK
+                                        .size(sizing.normal)
+                                        .tint(Color32::from_rgb(0x1B, 0xAC, 0x89))
                                 };
 
-                                let text =
-                                    center_text(format!(
-                                        "{:.0}/{:.0}",
-                                        produced, demand
-                                    ))
+                                let text = center_text(format!("{:.0}/{:.0}", produced, demand))
+                                    .size(sizing.normal)
                                     .image(image);
 
                                 let resp = ui.add(text);
 
                                 if has_shortage {
-                                    add_tip(
-                                        shortages_tip.clone(),
-                                        resp,
-                                    );
+                                    add_tip(shortages_tip.clone(), resp);
                                 }
 
                                 ui.vertical_centered(|ui| {
-                                    ui.add(process_card_slot(
-                                        process,
-                                    ));
+                                    ui.add(process_card_slot(process));
 
-                                    ui.vertical_centered(
-                                        |ui| {
-                                            ui.label(
-                                        egui::RichText::new(
-                                            t!(process
-                                                .output
-                                                .title()),
-                                        ),
-                                    );
-                                        },
-                                    );
+                                    ui.vertical_centered(|ui| {
+                                        ui.label(
+                                            egui::RichText::new(t!(process.output.title()))
+                                                .size(sizing.normal),
+                                        );
+                                    });
                                 });
                             });
                         }
@@ -431,22 +326,16 @@ impl Plan {
 
                     ui.add_space(16.);
                     ui.scope(|ui| {
-                        let processes_disabled =
-                            tutorial.lt(&Tutorial::Processes);
-                        let processes_highlighted =
-                            tutorial.eq(&Tutorial::Processes);
+                        let processes_disabled = tutorial.lt(&Tutorial::Processes);
+                        let processes_highlighted = tutorial.eq(&Tutorial::Processes);
                         if processes_disabled {
                             ui.disable();
                         }
                         let b = button(t!("Change Production"))
                             .full_width()
-                            .maybe_highlight(
-                                processes_highlighted,
-                            );
+                            .maybe_highlight(processes_highlighted);
                         if ui.add(b).clicked() {
-                            self.set_page(Page::Processes(
-                                Processes::new(state),
-                            ));
+                            self.set_page(Page::Processes(Processes::new(state)));
                         }
                     });
                 });
@@ -462,10 +351,8 @@ impl Plan {
             .vertical_centered(|ui| {
                 ui.set_width(320.);
 
-                let ready_disabled =
-                    tutorial.lt(&Tutorial::Ready);
-                let ready_highlighted =
-                    tutorial.eq(&Tutorial::Ready);
+                let ready_disabled = tutorial.lt(&Tutorial::Ready);
+                let ready_highlighted = tutorial.eq(&Tutorial::Ready);
 
                 let mut b = button(t!("Ready")).full_width();
 
@@ -501,9 +388,7 @@ impl Plan {
         plan_changes: &BTreeMap<Id, PlanChange>,
     ) {
         let projects = &state.world.projects;
-        let active_projects = projects
-            .iter()
-            .filter(|p| p.is_online() || p.is_building());
+        let active_projects = projects.iter().filter(|p| p.is_online() || p.is_building());
 
         if ui.button(t!("Back")).clicked() {
             self.close_page(tutorial);
@@ -514,28 +399,18 @@ impl Plan {
                 .add(add_cards_slot(false, false))
                 .interact(Sense::click());
             if resp.clicked() {
-                self.set_page(Page::Projects(Projects::new(
-                    state,
-                    plan_changes,
-                )));
+                self.set_page(Page::Projects(Projects::new(state, plan_changes)));
             }
             for project in active_projects {
-                add_card(
-                    project.clone(),
-                    ui.add(project_card_slot(project)),
-                );
+                add_card(project.clone(), ui.add(project_card_slot(project)));
             }
         });
     }
 
     fn close_page(&mut self, tutorial: &mut Tutorial) {
-        if matches!(self.page, Page::Projects(_))
-            && *tutorial == Tutorial::ProjectsBack
-        {
+        if matches!(self.page, Page::Projects(_)) && *tutorial == Tutorial::ProjectsBack {
             tutorial.advance();
-        } else if matches!(self.page, Page::Processes(_))
-            && *tutorial == Tutorial::ProcessesBack
-        {
+        } else if matches!(self.page, Page::Processes(_)) && *tutorial == Tutorial::ProcessesBack {
             tutorial.advance();
         }
         self.set_page(Page::Overview);
@@ -584,9 +459,7 @@ fn input_shortages(state: &State) -> Option<String> {
 
     let feedstock: Vec<_> = Feedstock::iter()
         .filter(|res| {
-            feedstocks.has_shortage(*res)
-                && *res != Feedstock::Other
-                && *res != Feedstock::Soil
+            feedstocks.has_shortage(*res) && *res != Feedstock::Other && *res != Feedstock::Soil
         })
         .map(|r| t!(r.title()))
         .collect();
@@ -607,22 +480,14 @@ fn production_shortages(state: &State) -> Option<String> {
     let output_demand = state.output_demand.total();
 
     let problems = {
-        let mut problems: EnumMap<Output, f32> =
-            EnumMap::from_array([1.; 4]);
+        let mut problems: EnumMap<Output, f32> = EnumMap::from_array([1.; 4]);
         for output in Output::iter() {
             tracing::debug!(
                 "{output:?}: produced={}, demand={}",
-                crate::display::output(
-                    produced.of(output),
-                    output
-                ),
-                crate::display::output(
-                    output_demand[output],
-                    output
-                )
+                crate::display::output(produced.of(output), output),
+                crate::display::output(output_demand[output], output)
             );
-            let met =
-                produced.of(output) / output_demand[output];
+            let met = produced.of(output) / output_demand[output];
             if met >= 0.99 {
                 continue;
             } else {
@@ -671,18 +536,13 @@ fn production_shortages(state: &State) -> Option<String> {
                 })
                 .collect::<Vec<_>>()
                 .join("\n");
-            let desc =
-                t!("There are multiple production shortages:");
+            let desc = t!("There are multiple production shortages:");
             Some(format!("{desc} {list}"))
         }
     }
 }
 
-fn render_resource_status(
-    ui: &mut egui::Ui,
-    state: &State,
-    shortages_tip: Option<Tip>,
-) {
+fn render_resource_status(ui: &mut egui::Ui, state: &State, shortages_tip: Option<Tip>) {
     let resources = &state.resources;
     let protected_land = state.protected_land;
     let resource_demand = &state.resource_demand;
@@ -691,55 +551,42 @@ fn render_resource_status(
     h_center(ui, "resource-status", |tui| {
         for (k, demand) in resource_demand.total().items() {
             let demand = match k {
-                Resource::Electricity | Resource::Fuel => {
-                    to_energy_units(demand)
-                }
-                Resource::Water => {
-                    resource(demand, k, resources.available)
-                }
+                Resource::Electricity | Resource::Fuel => to_energy_units(demand),
+                Resource::Water => resource(demand, k, resources.available),
                 Resource::Land => {
                     // For land we add in protected land as well.
                     let protected = protected_land * 100.;
-                    resource(demand, k, starting_resources)
-                        + protected
+                    resource(demand, k, starting_resources) + protected
                 }
             };
             let available = match k {
-                Resource::Electricity | Resource::Fuel => {
-                    to_energy_units(resources.available[k])
-                }
+                Resource::Electricity | Resource::Fuel => to_energy_units(resources.available[k]),
                 Resource::Land | Resource::Water => 100.,
             };
 
             let not_enough = demand > available;
             tui.ui(|ui| {
+                let sizing = get_sizing(ui);
                 let resp = egui::Frame::NONE
                     .fill(if not_enough {
                         Color32::from_rgb(0xFF, 0x00, 0x00)
                     } else {
                         Color32::from_rgb(0xE4, 0xC9, 0xC2)
                     })
-                    .stroke(Stroke::new(
-                        1.,
-                        Color32::from_rgb(0xB8, 0xA2, 0x9C),
-                    ))
+                    .stroke(Stroke::new(1., Color32::from_rgb(0xB8, 0xA2, 0x9C)))
                     .inner_margin(Margin::symmetric(3, 2))
                     .corner_radius(3)
                     .show(ui, |ui| {
                         ui.horizontal_centered(|ui| {
-                            ui.add(k.icon().size(16.));
+                            ui.style_mut().spacing.item_spacing.x = 2.;
+                            ui.add(k.icon().size(sizing.normal));
 
-                            let t = format!(
-                                "{:.0}/{:.0}",
-                                demand, available
-                            );
+                            let t = format!("{:.0}/{:.0}", demand, available);
+                            let text = egui::RichText::new(t).size(sizing.normal);
                             if not_enough {
-                                ui.colored_label(
-                                    Color32::WHITE,
-                                    t,
-                                );
+                                ui.colored_label(Color32::WHITE, text);
                             } else {
-                                ui.label(t);
+                                ui.label(text);
                             }
                         });
                     })
@@ -786,12 +633,7 @@ impl Severity {
     }
 }
 
-fn render_points(
-    ui: &mut egui::Ui,
-    state: &State,
-    points: &Points,
-    kind: ProjectType,
-) {
+fn render_points(ui: &mut egui::Ui, state: &State, points: &Points, kind: ProjectType) {
     let pc_points = state.political_capital;
     let available_points = match kind {
         ProjectType::Policy => state.political_capital,
@@ -811,10 +653,8 @@ fn render_points(
                 ui.add(kind.icon().size(ICON_SIZE));
             } else {
                 ui.label(next_point_cost.to_string());
-                ui.add(
-                    icons::POLITICAL_CAPITAL.size(ICON_SIZE),
-                );
-                ui.add(icons::ARROW_RIGHT.size(ICON_SIZE));
+                ui.add(icons::POLITICAL_CAPITAL.size(ICON_SIZE));
+                ui.add(icons::ARROW_RIGHT_LIGHT.size(ICON_SIZE));
                 ui.add(kind.icon().size(ICON_SIZE));
             }
         }
@@ -826,23 +666,16 @@ enum ProcessesAction {
     Back,
 }
 
-fn get_processes(
-    state: &State,
-    output: Output,
-) -> Vec<Process> {
+fn get_processes(state: &State, output: Output) -> Vec<Process> {
     let show_all = DEBUG.show_all_processes;
     let mut processes = state
         .world
         .processes
         .iter()
-        .filter(|p| {
-            (!p.locked || show_all) && p.output == output
-        })
+        .filter(|p| (!p.locked || show_all) && p.output == output)
         .cloned()
         .collect::<Vec<_>>();
-    processes.sort_by(|a, b| {
-        a.name.to_lowercase().cmp(&b.name.to_lowercase())
-    });
+    processes.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
     processes
 }
 
@@ -857,40 +690,29 @@ impl Processes {
         Self {
             points: 0,
             output,
-            cards: Cards::new(
-                get_processes(state, output).into_iter(),
-            ),
+            cards: Cards::new(get_processes(state, output).into_iter()),
         }
     }
 
     fn set_output(&mut self, state: &State, output: Output) {
         self.output = output;
-        self.cards = Cards::new(
-            get_processes(state, output).into_iter(),
-        );
+        self.cards = Cards::new(get_processes(state, output).into_iter());
     }
 
-    fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut GameState,
-    ) -> Option<ProcessesAction> {
+    fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> Option<ProcessesAction> {
         let mut ret_action = None;
         let allow_back = self.points == 0;
 
-        let has_changes =
-            state.ui.has_process_mix_changes(self.output);
+        let has_changes = state.ui.has_process_mix_changes(self.output);
 
         let changing_points = {
-            let total = state.ui.process_mix_changes
-                [self.output]
+            let total = state.ui.process_mix_changes[self.output]
                 .values()
                 .map(|change| change.abs())
                 .sum::<isize>() as f32;
             (total / 2.).ceil()
         };
-        let changes_time = changing_points
-            / consts::PROCESS_POINTS_PER_CYCLE as f32;
+        let changes_time = changing_points / consts::PROCESS_POINTS_PER_CYCLE as f32;
 
         let mut tabs: Vec<_> = Output::iter()
             .map(|output| TabItem {
@@ -916,53 +738,51 @@ impl Processes {
             icon: None,
             disabled: !allow_back,
         });
-        if let Some(tab) =
-            render_tabs(ui, &state.ui.tutorial, &tabs)
-        {
+        if let Some(tab) = render_tabs(ui, &state.ui.tutorial, &tabs) {
             match tab {
-                Some(output) => {
-                    self.set_output(&state.core, *output)
-                }
-                None => {
-                    ret_action = Some(ProcessesAction::Back)
-                }
+                Some(output) => self.set_output(&state.core, *output),
+                None => ret_action = Some(ProcessesAction::Back),
             }
         }
 
-        ui.vertical_centered(|ui| {
-            ui.set_height(48.);
-
-            if !allow_back {
-                ui.colored_label(Color32::BLACK, t!(
-                        "Drag a card up to assign leftover production"
-                ));
-            }
-
-            if self.points > 0 {
-                h_center(ui, "process-points", |tui| {
-                    tui.ui(|ui| {
-                        let tip = tip(
-                            icons::MIX_TOKEN,
-                            t!(
-                                "One production point represents 5% of an entire production sector's productive capacity."
-                            ),
-                        );
-                        add_tip(
-                            tip,
-                            ui.horizontal(|ui| {
-                                for _ in 0..self.points {
-                                    draw_mix_cell(
-                                        ui,
-                                        Color32::from_rgb(0x1B, 0x97, 0xF3),
-                                    );
-                                }
-                            })
-                            .response,
-                        );
-                    });
+        if !allow_back {
+            egui::Area::new("process-back-warning".into())
+                .order(egui::Order::Foreground)
+                .anchor(egui::Align2::CENTER_TOP, egui::vec2(0., 24. + 4.))
+                .movable(false)
+                .show(ui.ctx(), |ui| {
+                    egui::Frame::NONE
+                        .fill(Color32::from_black_alpha(224))
+                        .corner_radius(4)
+                        .inner_margin(Margin::symmetric(6, 6))
+                        .show(ui, |ui| {
+                            ui.style_mut().wrap_mode =
+                                Some(egui::TextWrapMode::Extend);
+                            ui.label(egui::RichText::new(t!("Drag a card up to assign leftover production")).size(12.));
+                            let tip = tip(
+                                icons::MIX_TOKEN,
+                                t!(
+                                    "One production point represents 5% of an entire production sector's productive capacity."
+                                ),
+                            );
+                            add_tip(
+                                tip,
+                                ui.horizontal(|ui| {
+                                    ui.style_mut().spacing.item_spacing.x = 2.;
+                                    let h = ui.available_width() / 2.;
+                                    ui.add_space(h - ((self.points as f32) * 10.)/2.);
+                                    for _ in 0..self.points {
+                                        draw_mix_cell(
+                                            ui,
+                                            Color32::from_rgb(0x1B, 0x97, 0xF3),
+                                        );
+                                    }
+                                })
+                                .response,
+                            );
+                        });
                 });
-            }
-        });
+        }
 
         let changed = self.cards.render(ui, state);
         self.points = state.ui.process_points.max(0) as usize;
@@ -975,89 +795,99 @@ impl Processes {
             .anchor(egui::Align2::CENTER_BOTTOM, egui::vec2(0., -18.))
             .movable(false)
             .show(ui.ctx(), |ui| {
-                if has_changes {
-                    h_center(ui, "processes-changes", |tui| {
-                        tui.ui(|ui| {
+                ui.vertical_centered(|ui| {
+                    if has_changes {
+                        let changes_time = changes_time.ceil() as usize;
+                        let change_notice = {
+                            let ext =
+                                if changes_time > 1 { "s" } else { "" };
+                            t!(
+                                "These changes will take %{changesTime} planning cycle%{ext} to take effect.",
+                                changesTime = changes_time,
+                                ext = ext
+                            )
+                        };
+
+                        let processes = &state.world.processes;
+
+                        let estimated_changes = estimate_changes(
+                            state,
+                            &state.ui.process_mix_changes,
+                            processes,
+                        );
+
+                        let tip = tip(
+                            icons::PROJECT,
+                            change_notice.to_string(),
+                        ).card(estimated_changes.clone());
+                        let resp = ui.horizontal(|ui| {
+
+                            estimated_changes.render_compact(ui);
+
+                            let sizing = get_sizing(ui);
                             egui::Frame::NONE
-                                .fill(Color32::from_gray(20))
+                                .fill(Color32::from_rgb(0xB9, 0xF8, 0x0D))
                                 .corner_radius(3)
-                                .inner_margin(6)
+                                .inner_margin(6. * sizing.scale)
                                 .show(ui, |ui| {
-                                    ui.set_max_width(360.);
-
-                                    let change_notice = {
-                                        let changes_time = changes_time.ceil() as usize;
-                                        let ext =
-                                            if changes_time > 1 { "s" } else { "" };
-                                        t!(
-                                            "These changes will take %{changesTime} planning cycle%{ext} to take effect.",
-                                            changesTime = changes_time,
-                                            ext = ext
-                                        )
-                                    };
-                                    let processes = &state.world.processes;
-
-                                    scale_text_ui(ui, egui::vec2(360., 80.), |ui| {
-                                        ui.label(egui::RichText::new(change_notice.clone()));
-
-                                        let estimated_changes = display_changes(
-                                            state,
-                                            &state.ui.process_mix_changes,
-                                            processes,
-                                        );
-                                        ui.add(estimated_changes);
+                                    ui.horizontal(|ui| {
+                                        ui.style_mut().spacing.item_spacing.x = 4.;
+                                        ui.add(icons::TIME.size(sizing.normal));
+                                        ui.label(egui::RichText::new(changes_time.to_string()).size(sizing.normal + 1.).color(Color32::BLACK));
                                     });
                                 });
-                        });
-                    });
-                }
 
-                ui.horizontal(|ui| {
-                    for (output, demand) in
-                        display::outputs(&state.output_demand.total()).items()
+                        }).response;
+                        add_tip(tip, resp);
+                    }
+
+                    ui.horizontal(|ui| {
+                        for (output, demand) in
+                            display::outputs(&state.output_demand.total()).items()
+                            {
+                                let tip = tip(
+                                    output.icon(),
+                                    t!(
+                                        "Global demand for %{output}.",
+                                        output = output.lower()
+                                    ),
+                                )
+                                    .card(factors_card(
+                                            None,
+                                            output.into(),
+                                            state,
+                                    ));
+                                add_tip(tip, number_box(ui, demand.to_string(), output.icon()));
+                            }
+
                         {
+                            let emissions =
+                                state.byproducts.total().gtco2eq().round_to(1);
                             let tip = tip(
-                                output.icon(),
-                                t!(
-                                    "Global demand for %{output}.",
-                                    output = output.lower()
-                                ),
+                                icons::EMISSIONS,
+                                t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
                             )
-                                .card(factors_card(
-                                        None,
-                                        output.into(),
-                                        state,
-                                ));
-                            add_tip(tip, output_demand(ui, demand.to_string(), output.icon()));
+                                .card(factors_card(None, Var::Emissions, state));
+                            add_tip(tip, number_box(ui, emissions.to_string(), icons::EMISSIONS));
                         }
-
-                    let emissions =
-                        state.byproducts.total().gtco2eq().round_to(1);
-                    let tip = tip(
-                        icons::EMISSIONS,
-                        t!("Current annual emissions, in gigatonnes of CO2 equivalent."),
-                    )
-                        .card(factors_card(None, Var::Emissions, state));
-                    add_tip(tip, output_demand(ui, emissions.to_string(), icons::EMISSIONS));
+                    });
                 });
             });
         ret_action
     }
 }
 
-fn output_demand(
-    ui: &mut egui::Ui,
-    label: String,
-    icon: Icon,
-) -> egui::Response {
+fn number_box(ui: &mut egui::Ui, label: String, icon: Icon) -> egui::Response {
+    let sizing = get_sizing(ui);
     egui::Frame::NONE
         .fill(Color32::from_gray(20))
         .corner_radius(3)
-        .inner_margin(6)
+        .inner_margin(6. * sizing.scale)
         .show(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.label(label);
-                ui.add(icon.size(18.));
+                ui.style_mut().spacing.item_spacing.x = 2.;
+                ui.label(egui::RichText::new(label).size(sizing.normal));
+                ui.add(icon.size(sizing.normal + 1.));
             });
         })
         .response
@@ -1074,17 +904,11 @@ struct Projects {
     cards: Cards<Project>,
 }
 impl Projects {
-    fn new(
-        state: &State,
-        plan_changes: &BTreeMap<Id, PlanChange>,
-    ) -> Self {
+    fn new(state: &State, plan_changes: &BTreeMap<Id, PlanChange>) -> Self {
         let kind = ProjectType::Research;
         Self {
             kind,
-            cards: Cards::new(
-                get_projects(state, &kind, plan_changes)
-                    .into_iter(),
-            ),
+            cards: Cards::new(get_projects(state, &kind, plan_changes).into_iter()),
         }
     }
 
@@ -1095,17 +919,10 @@ impl Projects {
         plan_changes: &BTreeMap<Id, PlanChange>,
     ) {
         self.kind = kind;
-        self.cards = Cards::new(
-            get_projects(state, &kind, plan_changes)
-                .into_iter(),
-        );
+        self.cards = Cards::new(get_projects(state, &kind, plan_changes).into_iter());
     }
 
-    fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut GameState,
-    ) -> Option<ProjectsAction> {
+    fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> Option<ProjectsAction> {
         let mut action = None;
 
         let mut tabs: Vec<_> = ProjectType::iter()
@@ -1133,18 +950,11 @@ impl Projects {
             icon: None,
             disabled: false,
         });
-        if let Some(tab) =
-            render_tabs(ui, &state.ui.tutorial, &tabs)
-        {
+        if let Some(tab) = render_tabs(ui, &state.ui.tutorial, &tabs) {
             match tab {
                 Some(kind) => {
-                    self.set_kind(
-                        &state.core,
-                        *kind,
-                        &state.ui.plan_changes,
-                    );
-                    action =
-                        Some(ProjectsAction::ChangeTo(*kind));
+                    self.set_kind(&state.core, *kind, &state.ui.plan_changes);
+                    action = Some(ProjectsAction::ChangeTo(*kind));
                 }
                 None => action = Some(ProjectsAction::Back),
             }
@@ -1156,21 +966,16 @@ impl Projects {
         }
 
         egui::Area::new("project-points".into())
-            .anchor(Align2::CENTER_BOTTOM, egui::vec2(0., -24.))
+            .anchor(Align2::CENTER_BOTTOM, egui::vec2(0., -12.))
+            .order(Order::Foreground)
             .show(ui.ctx(), |ui| {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 egui::Frame::NONE
                     .fill(Color32::from_black_alpha(200))
                     .corner_radius(4)
                     .inner_margin(4)
                     .show(ui, |ui| {
-                        render_points(
-                            ui,
-                            state,
-                            &state.ui.points,
-                            self.kind,
-                        );
+                        render_points(ui, state, &state.ui.points, self.kind);
                     });
             });
 
@@ -1214,16 +1019,11 @@ fn get_projects(
                 })
                 .cloned()
                 .collect::<Vec<_>>();
-    projects.sort_by(|a, b| {
-        a.name.to_lowercase().cmp(&b.name.to_lowercase())
-    });
+    projects.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
     projects
 }
 
-fn add_cards_slot(
-    show_new: bool,
-    highlight: bool,
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+fn add_cards_slot(show_new: bool, highlight: bool) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
         let resp = inset_frame()
             .margin(0)
@@ -1233,10 +1033,7 @@ fn add_cards_slot(
                 ui.set_width(105. - 1.); // account for inset shadow
                 ui.vertical_centered(|ui| {
                     ui.add_space(54.);
-                    ui.style_mut()
-                        .visuals
-                        .override_text_color =
-                        Some(Color32::BLACK);
+                    ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
                     ui.add(icons::ADD.size(32.));
                     ui.label(t!("Add"));
                 });
@@ -1250,8 +1047,7 @@ fn add_cards_slot(
     }
 }
 
-fn view_all_slot()
--> impl FnOnce(&mut egui::Ui) -> egui::Response {
+fn view_all_slot() -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
         inset_frame().margin(0).show(ui, |ui| {
             ui.set_height(155.);
@@ -1264,14 +1060,10 @@ fn view_all_slot()
     }
 }
 
-fn empty_card_slot()
--> impl FnOnce(&mut egui::Ui) -> egui::Response {
+fn empty_card_slot() -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     |ui| {
         egui::Frame::NONE
-            .stroke(Stroke::new(
-                1.,
-                Color32::from_black_alpha(48),
-            ))
+            .stroke(Stroke::new(1., Color32::from_black_alpha(48)))
             .corner_radius(6)
             .show(ui, |ui| {
                 ui.set_height(155.);
@@ -1281,9 +1073,7 @@ fn empty_card_slot()
     }
 }
 
-fn project_card_slot(
-    project: &Project,
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+fn project_card_slot(project: &Project) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     let image = flavor_image(&project.flavor.image);
     let (color, _) = group_color(&project.group);
     let icon = project.kind.icon();
@@ -1309,10 +1099,8 @@ fn project_card_slot(
                 let width = 105. - 8.;
 
                 let target_size = egui::vec2(width, height);
-                let center =
-                    ui.cursor().left_top() + target_size / 2.;
-                let target_rect =
-                    Rect::from_center_size(center, target_size);
+                let center = ui.cursor().left_top() + target_size / 2.;
+                let target_rect = Rect::from_center_size(center, target_size);
                 bg_cover_image(ui, image, target_rect);
 
                 // This is off-center for some reason and needs
@@ -1332,10 +1120,7 @@ fn project_card_slot(
                             if is_finished {
                                 ui.add(icons::CHECK.size(18.));
                             } else if is_building {
-                                ui.add(fill_bar(
-                                    (72., 8.),
-                                    progress,
-                                ));
+                                ui.add(fill_bar((72., 8.), progress));
                             }
                         });
                     });
@@ -1352,32 +1137,30 @@ fn inset_frame() -> RaisedFrame {
     )
 }
 
-fn process_card_slot(
-    process: &Process,
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+fn process_card_slot(process: &Process) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     let image = flavor_image(&process.flavor.image);
     let icon = process.output.icon();
 
     move |ui| {
+        let sizing = get_sizing(ui);
+
         egui::Frame::NONE
             .corner_radius(6)
             .show(ui, |ui| {
-                ui.set_height(155.);
-                ui.set_width(105.);
-                let height = 155.;
-                let width = 105.;
+                ui.set_height(155. * sizing.scale);
+                ui.set_width(105. * sizing.scale);
+                let height = 155. * sizing.scale;
+                let width = 105. * sizing.scale;
 
                 let target_size = egui::vec2(width, height);
-                let center =
-                    ui.cursor().left_top() + target_size / 2.;
-                let target_rect =
-                    Rect::from_center_size(center, target_size);
+                let center = ui.cursor().left_top() + target_size / 2.;
+                let target_rect = Rect::from_center_size(center, target_size);
                 bg_cover_image(ui, image, target_rect);
 
                 egui::Frame::NONE.show(ui, |ui| {
                     ui.vertical_centered(|ui| {
-                        ui.add_space(48.);
-                        ui.add(icon.size(48.));
+                        ui.add_space(48. * sizing.scale);
+                        ui.add(icon.size(48. * sizing.scale));
                     });
                 });
             })
@@ -1387,8 +1170,10 @@ fn process_card_slot(
 
 fn calc_change(
     key: &str,
+    icon: Icon,
     before: f32,
     after: f32,
+    short: bool,
 ) -> Option<Box<dyn FnOnce(&mut egui::Ui) -> egui::Response>> {
     let mut change = if before == 0. {
         if after > 0. {
@@ -1406,36 +1191,56 @@ fn calc_change(
     }
 
     if change > 0.0 {
-        let s = t!(
-            "increase %{k} by %{warn}%{change}%",
-            k = key,
-            warn = if change > 100. { "⚠️" } else { "" },
-            change = display::percent(change, true)
-        );
-        Some(Box::new(|ui: &mut egui::Ui| {
-            ui.colored_label(
-                Color32::from_rgb(0xEF, 0x38, 0x38),
-                s,
-            )
-        }))
+        if short {
+            let change = display::percent(change, true);
+            Some(Box::new(move |ui: &mut egui::Ui| {
+                ui.style_mut().visuals.override_text_color =
+                    Some(Color32::from_rgb(0xEF, 0x38, 0x38));
+                let label = format!("↑{change}%");
+                number_box(ui, label, icon)
+            }))
+        } else {
+            let s = t!(
+                "increase [i]%{icon}[/i] %{k} by %{warn}%{change}%",
+                k = key,
+                warn = if change > 100. { "⚠️" } else { "" },
+                change = display::percent(change, true),
+                icon = icon,
+            );
+            Some(Box::new(move |ui: &mut egui::Ui| {
+                ui.style_mut().visuals.override_text_color =
+                    Some(Color32::from_rgb(0xEF, 0x38, 0x38));
+                ui.add(bbcode(&s))
+            }))
+        }
     } else if change < 0.0 {
-        let s = t!(
-            "decrease %{k} by %{change}%",
-            k = key,
-            change = display::percent(change.abs(), true)
-        );
-        Some(Box::new(|ui: &mut egui::Ui| {
-            ui.colored_label(
-                Color32::from_rgb(0x2F, 0xE8, 0x63),
-                s,
-            )
-        }))
+        if short {
+            let change = display::percent(change.abs(), true);
+            Some(Box::new(move |ui: &mut egui::Ui| {
+                ui.style_mut().visuals.override_text_color =
+                    Some(Color32::from_rgb(0x2F, 0xE8, 0x63));
+                let label = format!("↓{change}%");
+                number_box(ui, label, icon)
+            }))
+        } else {
+            let s = t!(
+                "decrease [i]%{icon}[/i] %{k} by %{change}%",
+                k = key,
+                change = display::percent(change.abs(), true),
+                icon = icon,
+            );
+            Some(Box::new(move |ui: &mut egui::Ui| {
+                ui.style_mut().visuals.override_text_color =
+                    Some(Color32::from_rgb(0x2F, 0xE8, 0x63));
+                ui.add(bbcode(&s))
+            }))
+        }
     } else {
         None
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 struct Usage {
     emissions: f32,
     energy_use: f32,
@@ -1448,7 +1253,7 @@ fn estimate_changes(
     state: &State,
     mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
     processes: &[Process],
-) -> (Usage, Usage) {
+) -> Changes {
     // Total demand for each of these
     let before = Usage {
         emissions: state.emissions.as_gtco2eq(),
@@ -1463,98 +1268,143 @@ fn estimate_changes(
     let available_land = state.world.starting_resources.land;
     for process in processes {
         let mix_share = process.mix_share as f32;
-        let total = mix_share / 20.
-            * state.output_demand.of(process.output);
+        let total = mix_share / 20. * state.output_demand.of(process.output);
         current.land_use += process.resources.land * total;
         current.water_use += process.resources.water * total;
-        current.energy_use +=
-            process.resources.energy() * total;
-        current.emissions +=
-            process.byproducts.gtco2eq() * total;
-        current.extinction_rate +=
-            process.extinction_rate(available_land) * total;
+        current.energy_use += process.resources.energy() * total;
+        current.emissions += process.byproducts.gtco2eq() * total;
+        current.extinction_rate += process.extinction_rate(available_land) * total;
     }
 
     // Changed demand for each of these, just for the current set of processes
     let mut changed = Usage::default();
     for process in processes {
         let mix_share = process.mix_share as f32
-            + (*mix_changes[process.output]
-                .get(&process.id)
-                .unwrap_or(&0)) as f32;
-        let total = mix_share / 20.
-            * state.output_demand.of(process.output);
+            + (*mix_changes[process.output].get(&process.id).unwrap_or(&0)) as f32;
+        let total = mix_share / 20. * state.output_demand.of(process.output);
         changed.land_use += process.resources.land * total;
         changed.water_use += process.resources.water * total;
-        changed.energy_use +=
-            process.resources.energy() * total;
-        changed.emissions +=
-            process.byproducts.gtco2eq() * total;
-        changed.extinction_rate +=
-            process.extinction_rate(available_land) * total;
+        changed.energy_use += process.resources.energy() * total;
+        changed.emissions += process.byproducts.gtco2eq() * total;
+        changed.extinction_rate += process.extinction_rate(available_land) * total;
     }
 
     // Changed overall/total/global demand for each of these
     // Subtract out previous process demand, then add in changed process demand
     let mut after = Usage::default();
-    after.land_use =
-        before.land_use - current.land_use + changed.land_use;
-    after.water_use = before.water_use - current.water_use
-        + changed.water_use;
-    after.energy_use = before.energy_use - current.energy_use
-        + changed.energy_use;
-    after.emissions = before.emissions - current.emissions
-        + changed.emissions;
-    after.extinction_rate = before.extinction_rate
-        - current.extinction_rate
-        + changed.extinction_rate;
+    after.land_use = before.land_use - current.land_use + changed.land_use;
+    after.water_use = before.water_use - current.water_use + changed.water_use;
+    after.energy_use = before.energy_use - current.energy_use + changed.energy_use;
+    after.emissions = before.emissions - current.emissions + changed.emissions;
+    after.extinction_rate =
+        before.extinction_rate - current.extinction_rate + changed.extinction_rate;
 
-    (before, after)
+    Changes { before, after }
 }
 
-fn display_changes(
-    state: &State,
-    mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
-    processes: &[Process],
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
-    let (before, after) =
-        estimate_changes(state, mix_changes, processes);
-    let descs = [
-        calc_change(
-            &t!("land use"),
-            before.land_use,
-            after.land_use,
-        ),
-        calc_change(
-            &t!("water use"),
-            before.water_use,
-            after.water_use,
-        ),
-        calc_change(
-            &t!("energy use"),
-            before.energy_use,
-            after.energy_use,
-        ),
-        calc_change(
-            &t!("emissions"),
-            before.emissions,
-            after.emissions,
-        ),
-        calc_change(
-            &t!("the extinction rate"),
-            before.extinction_rate,
-            after.extinction_rate,
-        ),
-    ]
-    .into_iter()
-    .filter_map(|c| c)
-    .collect::<Vec<_>>();
+#[derive(Clone)]
+pub struct Changes {
+    before: Usage,
+    after: Usage,
+}
+impl Changes {
+    fn render_compact(&self, ui: &mut egui::Ui) {
+        let descs = [
+            calc_change(
+                &t!("land use"),
+                icons::LAND,
+                self.before.land_use,
+                self.after.land_use,
+                true,
+            ),
+            calc_change(
+                &t!("water use"),
+                icons::WATER,
+                self.before.water_use,
+                self.after.water_use,
+                true,
+            ),
+            calc_change(
+                &t!("energy use"),
+                icons::ENERGY,
+                self.before.energy_use,
+                self.after.energy_use,
+                true,
+            ),
+            calc_change(
+                &t!("emissions"),
+                icons::EMISSIONS,
+                self.before.emissions,
+                self.after.emissions,
+                true,
+            ),
+            calc_change(
+                &t!("the extinction rate"),
+                icons::EXTINCTION_RATE,
+                self.before.extinction_rate,
+                self.after.extinction_rate,
+                true,
+            ),
+        ]
+        .into_iter()
+        .filter_map(|c| c)
+        .collect::<Vec<_>>();
 
-    |ui| {
+        if !descs.is_empty() {
+            for desc in descs {
+                ui.add(desc);
+            }
+        }
+    }
+}
+impl egui::Widget for &Changes {
+    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+        let descs = [
+            calc_change(
+                &t!("land use"),
+                icons::LAND,
+                self.before.land_use,
+                self.after.land_use,
+                false,
+            ),
+            calc_change(
+                &t!("water use"),
+                icons::WATER,
+                self.before.water_use,
+                self.after.water_use,
+                false,
+            ),
+            calc_change(
+                &t!("energy use"),
+                icons::ENERGY,
+                self.before.energy_use,
+                self.after.energy_use,
+                false,
+            ),
+            calc_change(
+                &t!("emissions"),
+                icons::EMISSIONS,
+                self.before.emissions,
+                self.after.emissions,
+                false,
+            ),
+            calc_change(
+                &t!("the extinction rate"),
+                icons::EXTINCTION_RATE,
+                self.before.extinction_rate,
+                self.after.extinction_rate,
+                false,
+            ),
+        ]
+        .into_iter()
+        .filter_map(|c| c)
+        .collect::<Vec<_>>();
+
         if descs.is_empty() {
             ui.label(t!("They won't have much effect."))
         } else {
-            ui.horizontal_wrapped(|ui| {
+            ui.vertical(|ui| {
+                ui.set_width(320.);
                 ui.label(t!("This output's production will"));
                 for desc in descs {
                     ui.add(desc);
