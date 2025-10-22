@@ -1,6 +1,6 @@
 use std::{borrow::Cow, collections::BTreeMap};
 
-use egui::{Align2, Color32, Margin, Order, Rect, Sense, Shadow, Stroke};
+use egui::{Align2, Color32, CornerRadius, Margin, Order, Rect, Sense, Shadow, Stroke};
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{
@@ -194,7 +194,7 @@ impl Plan {
                     for p in bot {
                         match p {
                             Some(proj) => {
-                                ui.add(project_card_slot(proj));
+                                add_card((*proj).clone(), ui.add(project_card_slot(proj)));
                             }
                             None => {
                                 ui.add(empty_card_slot());
@@ -213,23 +213,6 @@ impl Plan {
         });
 
         // next section (production)
-        let processes_over_limit = state
-            .world
-            .processes
-            .over_limit(state.output_demand.total(), state.feedstocks.available)
-            .map(|p| t!(&p.name))
-            .collect::<Vec<_>>();
-        if !processes_over_limit.is_empty() {
-            let tip = tip(
-                icons::ALERT,
-                t!(
-                    "The following processes can't produce as much as they need to: %{processesOverLimit}",
-                    processesOverLimit = processes_over_limit.join(", ")
-                ),
-            );
-            add_tip(tip, ui.image(icons::ALERT));
-        }
-
         let prod_shortages = production_shortages(state);
         let inp_shortages = input_shortages(state);
 
@@ -241,10 +224,6 @@ impl Plan {
                 inp_shortages.unwrap_or(String::new())
             ),
         );
-
-        if prod_shortages.is_some() {
-            add_tip(shortages_tip.clone(), ui.image(icons::ALERT));
-        }
 
         let max_processes = Output::iter().map(|output| {
             processes
@@ -318,7 +297,7 @@ impl Plan {
                         ui,
                         state,
                         if prod_shortages.is_some() {
-                            Some(shortages_tip)
+                            Some(shortages_tip.clone())
                         } else {
                             None
                         },
@@ -342,6 +321,52 @@ impl Plan {
                 if any_new_processes {
                     ui.add(new_icon(resp.rect));
                 }
+
+                let size = egui::vec2(48., 24.);
+                let rect = egui::Rect::from_min_size(resp.rect.right_top() - egui::vec2(80., 24.), size);
+                ui.place(
+                    rect,
+                    |ui: &mut egui::Ui| {
+                        ui.horizontal(|ui| {
+                            let processes_over_limit = state
+                                .world
+                                .processes
+                                .over_limit(state.output_demand.total(), state.feedstocks.available)
+                                .map(|p| t!(&p.name))
+                                .collect::<Vec<_>>();
+                            if !processes_over_limit.is_empty() {
+                                let tip = tip(
+                                    icons::ALERT,
+                                    t!(
+                                        "The following processes can't produce as much as they need to: %{processesOverLimit}",
+                                        processesOverLimit = processes_over_limit.join(", ")
+                                    ),
+                                );
+                                add_tip(tip, egui::Frame::NONE
+                                    .fill(Color32::from_rgb(0xEF, 0x38, 0x38))
+                                    .corner_radius(CornerRadius {
+                                        nw: 3,
+                                        ne: 3,
+                                        ..Default::default()
+                                    })
+                                    .inner_margin(Margin::symmetric(6, 3))
+                                    .show(ui, |ui| ui.add(icons::ALERT.size(18.))).response);
+                            }
+
+
+                            if prod_shortages.is_some() {
+                                add_tip(shortages_tip, egui::Frame::NONE
+                                    .fill(Color32::from_rgb(0xEF, 0x38, 0x38))
+                                    .corner_radius(CornerRadius {
+                                        nw: 3,
+                                        ne: 3,
+                                        ..Default::default()
+                                    })
+                                    .inner_margin(Margin::symmetric(6, 3))
+                                    .show(ui, |ui| ui.add(icons::ALERT.size(18.))).response);
+                            }
+                        }).response
+                    });
             });
         });
 

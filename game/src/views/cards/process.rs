@@ -516,7 +516,9 @@ fn render_mix_bar(
                     let excess =
                         (i <= mix_share || (i as isize <= changed_mix_share)) && i > max_share;
 
-                    let color = if disabled {
+                    let color = if disabled && active {
+                        Color32::from_rgba_unmultiplied(0x75, 0xae, 0xd9, 0x88)
+                    } else if disabled {
                         Color32::from_rgba_unmultiplied(0x83, 0x83, 0x83, 0x66)
                     } else if grow {
                         Color32::from_rgb(0x43, 0xCC, 0x70)

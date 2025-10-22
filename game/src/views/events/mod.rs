@@ -2,20 +2,14 @@ mod dialogue;
 mod update;
 
 use egui::{Color32, Sense};
-use egui_taffy::TuiBuilderLogic;
 use hes_engine::State;
 use hes_images::flavor_image;
 use rust_i18n::t;
 
 use crate::{
     display::{DisplayEffect, DisplayEvent, render_effects},
-    parts::{
-        bg_cover_image,
-        button,
-        center_text,
-        h_center,
-        overlay,
-    },
+    parts::{bg_cover_image, button, center_text, overlay},
+    text::scale_text_styles,
     tips::{add_hover_tip, tip},
 };
 
@@ -39,10 +33,7 @@ pub struct EventDetails<'a> {
 }
 
 pub trait AsEventView {
-    fn details<'a>(
-        &'a self,
-        state: &'a State,
-    ) -> EventDetails<'a>;
+    fn details<'a>(&'a self, state: &'a State) -> EventDetails<'a>;
     fn dialogue(&self, state: &State) -> Option<Dialogue>;
     fn show_card(&self) -> bool;
     fn render_extras(&self, ui: &mut egui::Ui, state: &State);
@@ -62,9 +53,7 @@ impl AsEventView for DisplayEvent {
             .factors
             .iter()
             .cloned()
-            .map(|(icon, factor)| {
-                (icon, tip(icon, factor.to_string()))
-            })
+            .map(|(icon, factor)| (icon, tip(icon, factor.to_string())))
             .collect::<Vec<_>>();
         ui.horizontal(|ui| {
             for (icon, tip) in factors_list {
@@ -73,12 +62,8 @@ impl AsEventView for DisplayEvent {
         });
     }
 
-    fn details<'a>(
-        &'a self,
-        _state: &'a State,
-    ) -> EventDetails<'a> {
-        let image =
-            self.flavor.image.as_ref().map(flavor_image);
+    fn details<'a>(&'a self, _state: &'a State) -> EventDetails<'a> {
+        let image = self.flavor.image.as_ref().map(flavor_image);
         let attrib = self
             .flavor
             .image
@@ -139,18 +124,13 @@ impl<E: AsEventView> Events<E> {
         *self = Events::new(events, state);
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut State,
-    ) -> Option<EventResult> {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut State) -> Option<EventResult> {
         let mut result = None;
         if !self.events.is_empty() && !self.is_finished {
             let mut dialogue_result = None;
             overlay(ui.ctx(), |ui| {
                 ui.vertical(|ui| {
-                    dialogue_result =
-                        self.render_event(ui, state);
+                    dialogue_result = self.render_event(ui, state);
                 })
                 .response
             });
@@ -163,14 +143,11 @@ impl<E: AsEventView> Events<E> {
                         if self.idx < self.events.len() - 1 {
                             self.idx += 1;
                             let event = &self.events[self.idx];
-                            self.dialogue =
-                                event.dialogue(state);
-                            result =
-                                Some(EventResult::Advanced);
+                            self.dialogue = event.dialogue(state);
+                            result = Some(EventResult::Advanced);
                         } else {
                             self.is_finished = true;
-                            result =
-                                Some(EventResult::JustFinished);
+                            result = Some(EventResult::JustFinished);
                         }
                     }
                 }
@@ -181,14 +158,9 @@ impl<E: AsEventView> Events<E> {
         result
     }
 
-    fn render_event(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut State,
-    ) -> Option<DialogueResult> {
+    fn render_event(&mut self, ui: &mut egui::Ui, state: &mut State) -> Option<DialogueResult> {
         let event = &self.events[self.idx];
-        let width = (ui.ctx().screen_rect().width()
-            - (18. * 3.))
+        let width = (ui.ctx().screen_rect().width() - (18. * 3.))
             .min(360.)
             .max(0.);
         if let Some(dialogue) = &mut self.dialogue {
@@ -223,10 +195,7 @@ impl<E: AsEventView> Events<E> {
 
 impl From<&DisplayEvent> for Dialogue {
     fn from(event: &DisplayEvent) -> Self {
-        let region_name = event
-            .region
-            .as_ref()
-            .map(|(_, name)| name.to_string());
+        let region_name = event.region.as_ref().map(|(_, name)| name.to_string());
 
         // Only show effects in the dialogue if there's
         // no event card being shown.
@@ -275,30 +244,17 @@ pub fn render_event_card<E: AsEventView>(
                     pos - egui::vec2(0., 24.),
                     egui::vec2(ui.available_width(), 16.),
                 );
-                ui.place(
-                    rect,
-                    title_label("attrib", &attribution, 11.),
-                );
+                ui.place(rect, title_label(&[(attribution.as_str(), 11.)]));
             }
 
             let pos = target_rect.left_top();
             let rect = egui::Rect::from_min_size(
-                pos + egui::vec2(0., 4.),
+                pos + egui::vec2(0., 8.),
                 egui::vec2(ui.available_width(), 16.),
             );
             ui.place(
                 rect,
-                title_label("title", &t!(details.title), 11.),
-            );
-
-            let pos = target_rect.left_top();
-            let rect = egui::Rect::from_min_size(
-                pos + egui::vec2(0., 24.),
-                egui::vec2(ui.available_width(), 16.),
-            );
-            ui.place(
-                rect,
-                title_label("name", &t!(details.name), 14.),
+                title_label(&[(&t!(details.title), 11.), (&t!(details.name), 14.)]),
             );
         } else {
             ui.add(center_text(t!(details.title)));
@@ -307,7 +263,9 @@ pub fn render_event_card<E: AsEventView>(
 
         if let Some(effects) = details.effects {
             ui.add_space(8.);
+            scale_text_styles(ui.style_mut(), 0.9);
             render_effects(ui, state, effects);
+            ui.add_space(8.);
         }
 
         ui.add_space(8.);
@@ -316,29 +274,16 @@ pub fn render_event_card<E: AsEventView>(
     .response
 }
 
-fn title_label(
-    id: &str,
-    text: &str,
-    size: f32,
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+fn title_label(lines: &[(&str, f32)]) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
-        h_center(ui, id, |tui| {
-            tui.ui(|ui| {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
-                egui::Frame::NONE
-                    .fill(Color32::from_gray(20))
-                    .corner_radius(3)
-                    .inner_margin(egui::Margin::symmetric(3, 1))
-                    .show(ui, |ui| {
-                        ui.label(
-                            egui::RichText::new(text)
-                                .color(Color32::WHITE)
-                                .size(size),
-                        );
-                    })
-                    .response
+        egui::Frame::NONE
+            .fill(Color32::from_black_alpha(220))
+            .inner_margin(egui::Margin::symmetric(3, 1))
+            .show(ui, |ui| {
+                for (text, size) in lines {
+                    ui.label(egui::RichText::new(*text).color(Color32::WHITE).size(*size));
+                }
             })
-        })
+            .response
     }
 }

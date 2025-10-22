@@ -286,6 +286,9 @@ fn render_tabs<'a, T>(
     cur_tutorial: &Tutorial,
     tabs: &'a [TabItem<T>],
 ) -> Option<&'a T> {
+    // Space to accommodate the tabs
+    ui.add_space(32.);
+
     let mut clicked_tab = None;
     let is_small = get_sizing(ui).is_small;
     egui::Area::new("session-tabs".into())
@@ -325,27 +328,25 @@ fn render_tabs<'a, T>(
                         frame = frame.highlight();
                     }
 
-                    frame.show(ui, |ui| {
-                        let resp = egui::Frame::NONE
-                            .show(ui, |ui| {
-                                if disabled {
-                                    ui.set_opacity(0.5);
-                                }
+                    let resp = frame.show(ui, |ui| {
+                        egui::Frame::NONE.show(ui, |ui| {
+                            if disabled {
+                                ui.set_opacity(0.5);
+                            }
 
-                                if let Some(icon) = tab.icon {
-                                    ui.add(icon.size(16.));
-                                }
+                            if let Some(icon) = tab.icon {
+                                ui.add(icon.size(16.));
+                            }
 
-                                if tab.icon.is_none() || !is_small {
-                                    ui.label(egui::RichText::new(&tab.label).heading().size(14.));
-                                }
-                            })
-                            .response;
-                        let resp = resp.interact(Sense::all());
-                        if !disabled && resp.clicked() {
-                            clicked_tab = Some(&tab.tab);
-                        }
+                            if tab.icon.is_none() || !is_small {
+                                ui.label(egui::RichText::new(&tab.label).heading().size(14.));
+                            }
+                        });
                     });
+                    let resp = resp.interact(Sense::all());
+                    if !disabled && resp.clicked() {
+                        clicked_tab = Some(&tab.tab);
+                    }
                 }
             });
         });

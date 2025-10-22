@@ -1,8 +1,7 @@
 use egui::{Color32, Key, Margin, PointerButton};
 use egui_taffy::TuiBuilderLogic;
 use hes_engine::{
-    Id,
-    State,
+    Id, State,
     flavor::{DialogueLine, DialogueNext, Response, Speaker},
 };
 use rust_i18n::t;
@@ -64,11 +63,8 @@ impl Dialogue {
         let is_last_line = self.current_line.next.is_none();
         let has_decision = self.current_line.has_decision();
 
-        let enter_pressed =
-            ui.input(|inp| inp.key_pressed(Key::Enter));
-        let clicked = ui.input(|inp| {
-            inp.pointer.button_clicked(PointerButton::Primary)
-        });
+        let enter_pressed = ui.input(|inp| inp.key_pressed(Key::Enter));
+        let clicked = ui.input(|inp| inp.pointer.button_clicked(PointerButton::Primary));
         let anim_finished = self.animator.finished();
 
         // Finish animation on click/Enter
@@ -92,12 +88,8 @@ impl Dialogue {
 
         ui.horizontal_top(|ui| {
             if line.speaker != Speaker::Game {
-                ui.add(
-                    profile.fit_to_exact_size(
-                        egui::Vec2::splat(64.),
-                    ),
-                );
-                width -= 64.;
+                ui.add(profile.fit_to_exact_size(egui::Vec2::splat(64.)));
+                width -= 84.;
             }
 
             egui::Frame::NONE
@@ -107,33 +99,18 @@ impl Dialogue {
                     if line.speaker != Speaker::Game {
                         ui.set_min_height(64.);
                     }
-                    ui.style_mut()
-                        .visuals
-                        .override_text_color =
-                        Some(Color32::BLACK);
+                    ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
 
                     ui.vertical(|ui| {
                         if line.speaker != Speaker::Game {
-                            let text =
-                                t!(line.speaker.to_string());
-                            ui.label(
-                                egui::RichText::new(
-                                    text.to_uppercase(),
-                                )
-                                .size(11.),
-                            );
+                            let text = t!(line.speaker.to_string());
+                            ui.label(egui::RichText::new(text.to_uppercase()).size(11.));
                             ui.add_space(4.);
                         }
 
-                        let mut text =
-                            t!(&line.text).to_string();
-                        if let Some(region_name) =
-                            &self.region_name
-                        {
-                            text = text.replace(
-                                "{region}",
-                                &t!(region_name.as_str()),
-                            );
+                        let mut text = t!(&line.text).to_string();
+                        if let Some(region_name) = &self.region_name {
+                            text = text.replace("{region}", &t!(region_name.as_str()));
                         }
                         self.animator.render(ui, &text, width);
                     });
@@ -148,36 +125,24 @@ impl Dialogue {
                     render_effects(ui, state, effects);
                 }
 
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 r_align(ui, "dialogue-opts", |tui| {
                     tui.ui(|ui| {
-                        if ui
-                            .add(button(t!("Continue")))
-                            .clicked()
-                        {
-                            result =
-                                Some(DialogueResult::Finished);
+                        if ui.add(button(t!("Continue"))).clicked() {
+                            result = Some(DialogueResult::Finished);
                         }
                     });
                 });
-            } else if let Some(DialogueNext::Responses(
-                responses,
-            )) = line.next.clone()
-            {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+            } else if let Some(DialogueNext::Responses(responses)) = line.next.clone() {
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 r_align(ui, "dialogue-opts", |tui| {
                     for branch in responses {
                         tui.ui(|ui| {
                             let text = t!(&branch.text);
                             if ui.add(button(text)).clicked() {
-                                let done = self.select_choice(
-                                    &branch, state,
-                                );
+                                let done = self.select_choice(&branch, state);
                                 if done {
-                                    result =
-                                        Some(DialogueResult::Finished);
+                                    result = Some(DialogueResult::Finished);
                                 }
                             }
                             ui.add_space(1.);
@@ -185,15 +150,12 @@ impl Dialogue {
                     }
                 });
             } else {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 r_align(ui, "dialogue-opts", |tui| {
                     tui.ui(|ui| {
-                        if ui.add(button(t!("Next"))).clicked()
-                        {
+                        if ui.add(button(t!("Next"))).clicked() {
                             self.advance_line(state);
-                            result =
-                                Some(DialogueResult::Advanced);
+                            result = Some(DialogueResult::Advanced);
                         }
                     });
                 });
@@ -207,26 +169,16 @@ impl Dialogue {
         if let Some(next) = next {
             match next {
                 DialogueNext::Line { id } => {
-                    self.current_line =
-                        self.dialogue.lines[*id].clone();
+                    self.current_line = self.dialogue.lines[*id].clone();
                 }
                 DialogueNext::Responses(responses) => {
                     if self.event_id.is_some() {
-                        let branch =
-                            responses.iter().find(|b| {
-                                state.eval_conditions(
-                                    &b.conditions,
-                                    self.region_id,
-                                )
-                            });
+                        let branch = responses
+                            .iter()
+                            .find(|b| state.eval_conditions(&b.conditions, self.region_id));
                         if let Some(branch) = branch {
-                            if let Some(line_id) =
-                                branch.next_line
-                            {
-                                self.current_line = self
-                                    .dialogue
-                                    .lines[line_id]
-                                    .clone();
+                            if let Some(line_id) = branch.next_line {
+                                self.current_line = self.dialogue.lines[line_id].clone();
                             }
                         }
                     }
@@ -235,16 +187,11 @@ impl Dialogue {
         }
     }
 
-    fn select_choice(
-        &mut self,
-        response: &Response,
-        state: &mut State,
-    ) -> bool {
+    fn select_choice(&mut self, response: &Response, state: &mut State) -> bool {
         state.apply_effects(&response.effects, self.region_id);
 
         if let Some(line_id) = response.next_line {
-            self.current_line =
-                self.dialogue.lines[line_id].clone();
+            self.current_line = self.dialogue.lines[line_id].clone();
             false
         } else {
             true

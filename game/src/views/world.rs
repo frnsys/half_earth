@@ -7,14 +7,7 @@ use egui::Color32;
 use egui_taffy::TuiBuilderLogic;
 use enum_map::EnumMap;
 use hes_engine::{
-    Diff,
-    EventPhase,
-    ICON_EVENTS,
-    IconEvent,
-    Id,
-    Output,
-    State,
-    Update as EngineUpdate,
+    Diff, EventPhase, ICON_EVENTS, IconEvent, Id, Output, State, Update as EngineUpdate,
 };
 use rust_i18n::t;
 use web_time::Instant;
@@ -25,12 +18,7 @@ use crate::{
     consts,
     debug::DEBUG,
     display::{Icon, icons},
-    parts::{
-        button,
-        center_center,
-        fill_bar,
-        set_full_bg_image_tinted,
-    },
+    parts::{button, center_center, fill_bar, set_full_bg_image_tinted},
     state::{GameState, StateExt},
     views::{
         events::{Events, Updates},
@@ -51,10 +39,7 @@ pub struct WorldEvents {
     tgav: f32,
 }
 impl WorldEvents {
-    pub fn new(
-        state: &mut GameState,
-        context: &Arc<three_d::context::Context>,
-    ) -> Self {
+    pub fn new(state: &mut GameState, context: &Arc<three_d::context::Context>) -> Self {
         state.ui.cycle_start_snapshot(&state.core);
 
         let good = state.things_are_good();
@@ -64,15 +49,11 @@ impl WorldEvents {
             audio::soundtrack(audio::Track::ReportBad);
         }
 
-        let events = StateExt::roll_events(
-            &mut state.core,
-            EventPhase::WorldStart,
-        );
+        let events = StateExt::roll_events(&mut state.core, EventPhase::WorldStart);
 
         let mut climate = Climate::new(state.ui.start_year);
         if !state.ui.emissions.is_empty() {
-            climate
-                .set_emissions_data(state.ui.emissions.clone());
+            climate.set_emissions_data(state.ui.emissions.clone());
         }
 
         Self {
@@ -93,11 +74,7 @@ impl WorldEvents {
         self.phase == Subphase::Done
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut GameState,
-    ) {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) {
         let tint = warming_colour(self.tgav);
         set_full_bg_image_tinted(
             ui,
@@ -129,8 +106,7 @@ impl WorldEvents {
                 self.render_toasts(ui);
 
                 let width = 320.;
-                let offset =
-                    ui.available_width() / 2. - width / 2.;
+                let offset = ui.available_width() / 2. - width / 2.;
                 ui.horizontal(|ui| {
                     ui.add_space(offset);
                     ui.add(
@@ -145,9 +121,7 @@ impl WorldEvents {
                 }
             }
             Subphase::ComputeTgav => {
-                if let Some(tgav) =
-                    self.climate.tgav(state.world.year)
-                {
+                if let Some(tgav) = self.climate.tgav(state.world.year) {
                     self.tgav = tgav;
                     self.next_phase(state);
                 }
@@ -157,11 +131,8 @@ impl WorldEvents {
         }
 
         egui::Area::new(egui::Id::new("world-skip"))
-            .order(egui::Order::Tooltip)
-            .anchor(
-                egui::Align2::RIGHT_BOTTOM,
-                egui::Vec2::new(-10., -10.),
-            )
+            .order(egui::Order::Foreground)
+            .anchor(egui::Align2::RIGHT_BOTTOM, egui::Vec2::new(-10., -10.))
             .show(ui.ctx(), |ui| {
                 if ui.add(button(t!("Skip"))).clicked() {
                     self.skipping = true;
@@ -173,42 +144,25 @@ impl WorldEvents {
     fn render_toasts(&self, ui: &mut egui::Ui) {
         egui::Area::new(egui::Id::new("world-toasts"))
             .order(egui::Order::Foreground)
-            .anchor(
-                egui::Align2::CENTER_BOTTOM,
-                egui::Vec2::new(0., -10.),
-            )
+            .anchor(egui::Align2::CENTER_BOTTOM, egui::Vec2::new(0., -10.))
             .show(ui.ctx(), |ui| {
                 let n = self.toasts.len();
-                for (i, toast) in self.toasts.iter().enumerate()
-                {
+                for (i, toast) in self.toasts.iter().enumerate() {
                     let opacity = (i + 1) as f32 / n as f32;
                     ui.scope(|ui| {
                         ui.set_opacity(opacity);
-                        egui::Frame::NONE
-                            .corner_radius(3)
-                            .show(ui, |ui| {
-                                ui.horizontal(|ui| {
-                                    ui.add(
-                                        toast.icon.size(20.),
-                                    );
-                                    ui.label(
-                                        egui::RichText::new(
-                                            &toast.desc,
-                                        )
-                                        .size(18.),
-                                    );
-                                });
+                        egui::Frame::NONE.corner_radius(3).show(ui, |ui| {
+                            ui.horizontal(|ui| {
+                                ui.add(toast.icon.size(20.));
+                                ui.label(egui::RichText::new(&toast.desc).size(18.));
                             });
+                        });
                     });
                 }
             });
     }
 
-    fn tick_disasters(
-        &mut self,
-        state: &mut GameState,
-        progress: f32,
-    ) {
+    fn tick_disasters(&mut self, state: &mut GameState, progress: f32) {
         // Trigger any scheduled disasters.
         // Get events scheduled for at or earlier than the provided time.
         let popped: Vec<_> = self
@@ -220,41 +174,22 @@ impl WorldEvents {
         for ev_meta in popped {
             if let Disaster {
                 event_id,
-                region:
-                    Some((region_id, region_name, region_idx)),
+                region: Some((region_id, region_name, region_idx)),
                 ..
             } = ev_meta
             {
                 if let Some(ev) = ICON_EVENTS.get(&event_id) {
-                    self.globe.show_event(
-                        region_idx,
-                        icons::disaster_icon(&ev.icon),
-                        ev.intensity,
-                    );
-                    occurring.push((
-                        ev,
-                        event_id,
-                        region_id,
-                        region_name,
-                    ));
+                    self.globe
+                        .show_event(region_idx, icons::disaster_icon(&ev.icon), ev.intensity);
+                    occurring.push((ev, event_id, region_id, region_name));
                 }
             }
         }
 
-        for (ev, event_id, region_id, region_name) in occurring
-        {
-            let region_events = state
-                .ui
-                .annual_region_events
-                .entry(region_id)
-                .or_default();
+        for (ev, event_id, region_id, region_name) in occurring {
+            let region_events = state.ui.annual_region_events.entry(region_id).or_default();
             region_events.push(ev.clone());
-            StateExt::apply_disaster(
-                &mut state.core,
-                ev,
-                &event_id,
-                &region_id,
-            );
+            StateExt::apply_disaster(&mut state.core, ev, &event_id, &region_id);
             self.toasts.push_back(Toast::new(ev, &region_name));
             while self.toasts.len() > 3 {
                 self.toasts.pop_front();
@@ -282,21 +217,18 @@ impl WorldEvents {
         if next == Subphase::StepYear {
             // Advance the year.
             let step_updates = state.step_year(self.tgav);
-            let completed_projects = step_updates
-                .iter()
-                .filter_map(|update| match update {
-                    EngineUpdate::Project { id } => Some(id),
-                    EngineUpdate::Policy { id } => Some(id),
-                    _ => None,
-                });
+            let completed_projects = step_updates.iter().filter_map(|update| match update {
+                EngineUpdate::Project { id } => Some(id),
+                EngineUpdate::Policy { id } => Some(id),
+                _ => None,
+            });
             state
                 .ui
                 .cycle_start_state
                 .completed_projects
                 .extend(completed_projects);
 
-            self.updates =
-                Updates::new(step_updates, &state.core);
+            self.updates = Updates::new(step_updates, &state.core);
         }
 
         if next == Subphase::Updates {
@@ -306,10 +238,7 @@ impl WorldEvents {
         }
 
         if next == Subphase::Events {
-            let evs = StateExt::roll_events(
-                &mut state.core,
-                EventPhase::WorldMain,
-            );
+            let evs = StateExt::roll_events(&mut state.core, EventPhase::WorldMain);
             for event in &evs {
                 state.ui.world_events.push(event.clone());
             }
@@ -325,51 +254,32 @@ impl WorldEvents {
         if next == Subphase::Disasters {
             self.year_timer.reset();
             let cur_year = state.world.year;
-            let cycle_start_year =
-                state.ui.cycle_start_state.year;
-            if cur_year > cycle_start_year && cur_year % 5 == 0
-            {
+            let cycle_start_year = state.ui.cycle_start_state.year;
+            if cur_year > cycle_start_year && cur_year % 5 == 0 {
                 state.finish_cycle();
 
                 // This has to happen before we enter the report
                 // phase and calculate changes
                 // so the upgrades' effects are taken into account.
-                state.core.upgrade_projects(
-                    &mut state.ui.queued_upgrades,
-                );
+                state.core.upgrade_projects(&mut state.ui.queued_upgrades);
                 // Apply process mix changes.
-                state.core.update_processes(
-                    &mut state.ui.process_mix_changes,
-                );
+                state
+                    .core
+                    .update_processes(&mut state.ui.process_mix_changes);
 
-                let changes = state
-                    .ui
-                    .session_start_state
-                    .diff(&state.core);
+                let changes = state.ui.session_start_state.diff(&state.core);
                 let mixes = {
-                    let mut mixes: EnumMap<
-                        Output,
-                        BTreeMap<String, usize>,
-                    > = EnumMap::default();
-                    for process in state.world.processes.iter()
-                    {
+                    let mut mixes: EnumMap<Output, BTreeMap<String, usize>> = EnumMap::default();
+                    for process in state.world.processes.iter() {
                         if process.mix_share > 0 {
-                            mixes[process.output].insert(
-                                process.name.to_string(),
-                                process.mix_share,
-                            );
+                            mixes[process.output]
+                                .insert(process.name.to_string(), process.mix_share);
                         }
                     }
                     mixes
                 };
-                state
-                    .ui
-                    .change_history
-                    .push((cur_year, changes));
-                state
-                    .ui
-                    .process_mix_history
-                    .push((cur_year, mixes));
+                state.ui.change_history.push((cur_year, changes));
+                state.ui.process_mix_history.push((cur_year, mixes));
 
                 next = Subphase::Done;
             } else {
@@ -380,23 +290,17 @@ impl WorldEvents {
                     .enumerate()
                     .map(|(i, region)| (region.id, i))
                     .collect();
-                let evs: Vec<_> = StateExt::roll_events(
-                    &mut state.core,
-                    EventPhase::Icon,
-                )
-                .into_iter()
-                .map(|ev| Disaster {
-                    event_id: ev.id,
-                    region: ev.region.clone().map(
-                        |(id, name)| {
-                            let idx =
-                                region_lookup.get(&id).unwrap();
+                let evs: Vec<_> = StateExt::roll_events(&mut state.core, EventPhase::Icon)
+                    .into_iter()
+                    .map(|ev| Disaster {
+                        event_id: ev.id,
+                        region: ev.region.clone().map(|(id, name)| {
+                            let idx = region_lookup.get(&id).unwrap();
                             (id, name, *idx)
-                        },
-                    ),
-                    when: fastrand::f32(),
-                })
-                .collect();
+                        }),
+                        when: fastrand::f32(),
+                    })
+                    .collect();
                 self.disasters = evs;
             }
         }
@@ -443,8 +347,7 @@ impl Timer {
 
     fn p_elapsed(&mut self) -> f32 {
         let duration = self.start.elapsed();
-        let target =
-            if self.skipping { 10. } else { self.target };
+        let target = if self.skipping { 10. } else { self.target };
         duration.as_millis() as f32 / target
     }
 
@@ -494,24 +397,13 @@ fn warming_colour(mut temp: f32) -> Color32 {
 fn get_emissions(state: &State) -> HashMap<&'static str, f64> {
     // Set an upper cap to the amount of emissions we pass to hector,
     // because very large numbers end up breaking it.
-    let emissions_factor = (consts::MAX_EMISSIONS
-        / state.emissions.as_gtco2eq().abs())
-    .min(1.0);
+    let emissions_factor = (consts::MAX_EMISSIONS / state.emissions.as_gtco2eq().abs()).min(1.0);
 
     let (co2, ch4, n2o) = state.emissions.for_hector();
 
     let mut emissions = HashMap::default();
-    emissions.insert(
-        "ffi_emissions",
-        (co2 * emissions_factor) as f64,
-    );
-    emissions.insert(
-        "CH4_emissions",
-        (ch4 * emissions_factor) as f64,
-    );
-    emissions.insert(
-        "N2O_emissions",
-        (n2o * emissions_factor) as f64,
-    );
+    emissions.insert("ffi_emissions", (co2 * emissions_factor) as f64);
+    emissions.insert("CH4_emissions", (ch4 * emissions_factor) as f64);
+    emissions.insert("N2O_emissions", (n2o * emissions_factor) as f64);
     emissions
 }

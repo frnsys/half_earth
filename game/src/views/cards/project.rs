@@ -45,13 +45,16 @@ impl AsCard for Project {
 
                     tui.ui(|ui| {
                         if self.is_online() {
+                            ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                             let has_levels = !self.upgrades.is_empty();
                             if has_levels {
                                 let level = self.level + 1;
-                                ui.label(format!("{} {level}", t!("Level")));
+                                ui.label(
+                                    egui::RichText::new(format!("{} {level}", t!("Level")))
+                                        .size(12.),
+                                );
                             } else {
-                                ui.image(icons::CHECK_BLK);
-                                ui.label(t!("Completed"));
+                                ui.add(icons::CHECK.size(12.).tint(self.fg_color()));
                             }
                         } else {
                             // See other note why we need to get the canonical ref.
