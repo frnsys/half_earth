@@ -18,7 +18,7 @@ use crate::{
     consts,
     debug::DEBUG,
     display::{Icon, icons},
-    parts::{button, center_center, fill_bar, set_full_bg_image_tinted},
+    parts::{button, center_center, center_text, fill_bar, set_full_bg_image_tinted},
     state::{GameState, StateExt},
     views::{
         events::{Events, Updates},
@@ -115,6 +115,7 @@ impl WorldEvents {
                             .fill_color(Color32::WHITE),
                     );
                 });
+                ui.add(center_text(state.world.year.to_string()));
 
                 if p >= 1. {
                     self.next_phase(state);
