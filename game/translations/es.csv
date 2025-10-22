@@ -1,55 +1,55 @@
 English,Translation
 1 planning cycle left,1 ciclo de planificación restante
-<strong>Locks</strong> {tag},<strong>Bloquea</strong> {tag}
-<strong>Unlocks</strong> the {tag} process.,<strong>Desbloquea</strong> el proceso de {tag}.
-<strong>Unlocks</strong> the {tag} project.,<strong>Desbloquea</strong> el proyecto de {tag}.
-<strong>Unlocks</strong> {name}.,<strong>Desbloquea</strong> {name}.
+[b]Locks[/b] %{tag},[b]Bloquea[/b] %{tag}
+[b]Unlocks[/b] the %{tag} process.,[b]Desbloquea[/b] el proceso de %{tag}.
+[b]Unlocks[/b] the %{tag} project.,[b]Desbloquea[/b] el proyecto de %{tag}.
+[b]Unlocks[/b] %{name}.,[b]Desbloquea[/b] %{name}.
 A Planetary Crisis Planning Game,Un juego de planificación de crisis planetaria
 A parliamentary majority is no longer required for any project.,Ya no se requiere mayoría parlamentaria para ningún proyecto.
 Accelerates regional development throughout the world.,Acelera el desarrollo regional en todo el mundo.
 Add,Añadir
 Add some cards to get started,Añade algunas tarjetas para empezar
 Ally,Aliado
-"Animal calorie demand will change from <img src=""{iconACals}"">{prevDemandACals} to <img src=""{iconACals}"">{nextDemandACals} and plant calorie demand will change from <img src=""{iconPCals}"">{prevDemandPCals} to <img src=""{iconPCals}"">{nextDemandPCals}.","La demanda calórica animal cambiará de <img src=""{iconACals}"">{prevDemandACals} a <img src=""{iconACals}"">{nextDemandACals} y la demanda calórica vegetal cambiará de <img src=""{iconPCals}"">{prevDemandPCals} a <img src=""{iconPCals}"">{prevDemandPCals}."
+"Animal calorie demand will change from [i]%{iconACals}[/i]%{prevDemandACals} to [i]%{iconACals}[/i]%{nextDemandACals} and plant calorie demand will change from [i]%{iconPCals}[/i]%{prevDemandPCals} to [i]%{iconPCals}[/i]%{nextDemandPCals}.","La demanda calórica animal cambiará de [i]%{iconACals}[/i]%{prevDemandACals} a [i]%{iconACals}[/i]%{nextDemandACals} y la demanda calórica vegetal cambiará de [i]%{iconPCals}[/i]%{prevDemandPCals} a [i]%{iconPCals}[/i]%{prevDemandPCals}."
 At current usage rates the estimated supply is expected to last indefinitely.,"Con las tasas de uso actuales, se espera que el suministro estimado dure indefinidamente."
-At current usage rates the estimated supply is expected to last {years} year(s).,"A las tasas de uso actuales, se espera que el suministro estimado dure {years} año(s)."
-At current usage rates the estimated supply is expected to last {years} years.,"A las tasas de uso actuales, se espera que el suministro estimado dure {years} años."
-Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.,El nivel medio del mar ha subido {rise}m y está aumentando a un ritmo de {rate}mm por año.
+At current usage rates the estimated supply is expected to last %{years} year(s).,"A las tasas de uso actuales, se espera que el suministro estimado dure %{years} año(s)."
+At current usage rates the estimated supply is expected to last %{years} years.,"A las tasas de uso actuales, se espera que el suministro estimado dure %{years} años."
+Average sea levels have risen by %{rise}m and are rising at a rate of %{rate}mm per year.,El nivel medio del mar ha subido %{rise}m y está aumentando a un ritmo de %{rate}mm por año.
 Avg. Habitability,Med. de habitabilidad
 Avg. Living Standards,Med. de estándares de vida
 Back,Atrás
 Based on the book,Basado en el libro
 "Because of opposition, this requires a majority in parliament.","A causa de la oposición, esto requiere mayoría parlamentaria."
-Because of resource availability this process can only make up to {maxPercent}% of production.,"Debido a la disponibilidad de recursos, este proceso solo puede representar hasta el {maxPercent}% de la producción."
-Because of resource availability this process can only make up to {maxPercent}% of production. {suggestion},"Debido a la disponibilidad de recursos, este proceso solo puede representar hasta el {maxPercent}% de la producción. {suggestion}"
+Because of resource availability this process can only make up to %{maxPercent}% of production.,"Debido a la disponibilidad de recursos, este proceso solo puede representar hasta el %{maxPercent}% de la producción."
+Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion},"Debido a la disponibilidad de recursos, este proceso solo puede representar hasta el %{maxPercent}% de la producción. %{suggestion}"
 Biodiversity is flourishing.,La biodiversidad está floreciendo.
 Biodiversity is plummeting.,La biodiversidad cayendo en picado.
 Biodiversity is recovering.,La biodiversidad está recuperándose.
 Biodiversity is stabilizing.,La biodiversidad está estabilizándose.
 Biodiversity is struggling.,La biodiversidad está afectada.
 Biodiversity is suffering.,La biodiversidad está sufriendo.
-Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.,Biodiversidad: Los cohabitantes del planeta. El índice actual de amenazas a la biodiversidad es {amount}.
+Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is %{amount}.,Biodiversidad: Los cohabitantes del planeta. El índice actual de amenazas a la biodiversidad es %{amount}.
 Booting Up,Iniciando
 Building,Construyendo
 CH4,CH4
 CO2,CO2
 CO2 Emissions/Yr,Emisiones de CO2/Año
 Change Production,Cambiar la producción
-Change the amount of land under protection by <strong>{percent}%</strong>.,Cambia la cantidad de tierra bajo protección en <strong>{percent}%</strong>.
+Change the amount of land under protection by [b]%{percent}%[/b].,Cambia la cantidad de tierra bajo protección en [b]%{percent}%[/b].
 Changes,Cambios
-Changes demand for {name} by <strong>{percent}%.</strong>,Cambia la demanda de {name} en un <strong>{percent}%.</strong>
-Changes demand for {name} by an unknown amount.,Cambia la demanda de {name} por una cantidad desconocida.
-Changes emissions for {name} by an unknown amount.,Cambia las emisiones de {name} en una cantidad desconocida.
-Changes the biodiversity pressure for these processes by <strong>{amount}.</strong>,Cambia la presión sobre la biodiversidad para estos procesos en <strong>{amount}.</strong>
-Changes the output for these processes by {percent}% without changing their impacts.,Cambia la salida de estos procesos en un {percent}% sin cambiar sus impactos.
-Changes the output for this process by {percent}% with no change in impacts.,Cambia el resultado de este proceso en un {percent}% sin cambios en los impactos.
-Changes {label} for {name} by an unknown amount.,Cambia {label} de {name} en una cantidad desconocida.
+Changes demand for %{name} by [b]%{percent}%.[/b],Cambia la demanda de %{name} en un [b]%{percent}%.[/b]
+Changes demand for %{name} by an unknown amount.,Cambia la demanda de %{name} por una cantidad desconocida.
+Changes emissions for %{name} by an unknown amount.,Cambia las emisiones de %{name} en una cantidad desconocida.
+Changes the biodiversity pressure for these processes by [b]%{amount}.[/b],Cambia la presión sobre la biodiversidad para estos procesos en [b]%{amount}.[/b]
+Changes the output for these processes by %{percent}% without changing their impacts.,Cambia la salida de estos procesos en un %{percent}% sin cambiar sus impactos.
+Changes the output for this process by %{percent}% with no change in impacts.,Cambia el resultado de este proceso en un %{percent}% sin cambios en los impactos.
+Changes %{label} for %{name} by an unknown amount.,Cambia %{label} de %{name} en una cantidad desconocida.
 Completed,Completado
 Completed Projects,Proyectos completados
-Completed Request: Ban {name},Solicitud completada: Ban {name}
-Completed Request: Implement {name},Solicitud completada: Implementar {name}
-Completed Request: Stop {name},Solicitud completada: Detener {name}
-Completed Request: Unban {name},Solicitud completada: Permitir {name}
+Completed Request: Ban %{name},Solicitud completada: Ban %{name}
+Completed Request: Implement %{name},Solicitud completada: Implementar %{name}
+Completed Request: Stop %{name},Solicitud completada: Detener %{name}
+Completed Request: Unban %{name},Solicitud completada: Permitir %{name}
 Completed Requests,Peticiones completadas
 Concept,Concepto
 Contentedness,Felicidad
@@ -57,21 +57,21 @@ Continue,Continuar
 Contract the economies of the wealthiest regions.,Contraer las economías de las regiones más ricas.
 Could increase,Podría aumentar
 Could reduce,Podría reducir
-Could unlock the {tag} process.,Podría desbloquear el proceso de {tag}.
-Could unlock the {tag} project.,Podría desbloquear el proyecto de {tag}.
+Could unlock the %{tag} process.,Podría desbloquear el proceso de %{tag}.
+Could unlock the %{tag} project.,Podría desbloquear el proyecto de %{tag}.
 Could unlock this process:,Podría desbloquear este proceso:
 Could unlock this project:,Podría desbloquear este proyecto:
-Could unlock {name}.,Podría desbloquear {name}.
+Could unlock %{name}.,Podría desbloquear %{name}.
 Credits,Créditos
 Crops,Cultivos
-"Current annual emissions are {emissions} gigatonnes. <b class=""tip-goal"">Your goal is to get this to below 0.</b>","Las emisiones anuales actuales son {emissions} gigatoneladas. <b class=""tip-goal"">Tu objetivo es reducir esto por debajo de 0.</b>"
-"Current annual emissions are {emissions}. <b class=""tip-goal"">Your goal is to get this to below 0.</b>","Las emisiones anuales actuales son {emissions}. <b class=""tip-goal"">Tu objetivo es llegar a menos de 0.</b>"
+"Current annual emissions are %{emissions} gigatonnes. [g]Your goal is to get this to below 0.[/g]","Las emisiones anuales actuales son %{emissions} gigatoneladas. [g]Tu objetivo es reducir esto por debajo de 0.[/g]"
+"Current annual emissions are %{emissions}. [g]Your goal is to get this to below 0.[/g]","Las emisiones anuales actuales son %{emissions}. [g]Tu objetivo es llegar a menos de 0.[/g]"
 "Current annual emissions, in gigatonnes of CO2 equivalent.","Emisiones anuales actuales, en gigatoneladas de CO2 equivalente."
-"Current biodiversity pressure is {amount}<span class=""type-total"">/{maxAmount}</span>.","La presión actual sobre la biodiversidad es {amount}<span class=""type-total"">/{maxAmount}</span>."
+"Current biodiversity pressure is %{amount}[t]/%{maxAmount}[/t].","La presión actual sobre la biodiversidad es %{amount}[t]/%{maxAmount}[/t]."
 Current energy use.,Uso de energía actual.
 Current land use.,Uso actual del suelo.
 Current water demand.,Demanda actual de agua.
-"Current world contentedness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","La satisfacción mundial actual es {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
+"Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].","La satisfacción mundial actual es %{contentedness}[t]/%{maxContentedness}[/t]."
 Design,Diseño
 Development,Desarrollo
 Development Progress,Progreso del Desarrollo
@@ -81,37 +81,37 @@ Downgrade,Degradar
 Drag a card up to assign leftover production,Arrastre una tarjeta hacia arriba para asignar la producción sobrante
 Electricity,Electricidad
 Emissions,Emisiones
-Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.,Emisiones: Una mortaja alrededor de la tierra. Estás emitiendo {amount} gigatoneladas por año.
+Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,Emisiones: Una mortaja alrededor de la tierra. Estás emitiendo %{amount} gigatoneladas por año.
 Energy Use,Uso de energía
-Energy: The fundamental mover. You're using {amount}TWh of energy.,Energía: El motor fundamental. Estás usando {amount}TWh de energía.
+Energy: The fundamental mover. You're using %{amount}TWh of energy.,Energía: El motor fundamental. Estás usando %{amount}TWh de energía.
 Events,Eventos
 Extinction Rate,Tasa de extinción
 Fuel,Combustible
-"Fuel demand will change from <img src=""{iconFuel}"">{prevDemandFuel} to <img src=""{iconFuel}"">{nextDemandFuel} and electricity demand will change from <img src=""{iconElec}"">{prevDemandElec} to <img src=""{iconElec}"">{nextDemandElec}.","La demanda de fuel cambiará de <img src=""{iconFuel}"">{prevDemandFuel} a <img src=""{iconFuel}"">{nextDemandFuel}  y la demanda de la electricidad cambiará de <img src=""{iconElec}"">{prevDemandElec} a <img src=""{iconElec}"">{prevDemandElec}."
-Global demand for {output}.,Demanda mundial de {output}.
-"Global {name} output will change from <img src=""{icon}"">{base} to <img src=""{icon}"">{changed} with no change in impacts.","La producción mundial de {name} cambiará de <img src=""{icon}"">{base} a <img src=""{icon}"">{changed} sin cambios en los impactos."
+"Fuel demand will change from [i]%{iconFuel}[/i]%{prevDemandFuel} to [i]%{iconFuel}[/i]%{nextDemandFuel} and electricity demand will change from [i]%{iconElec}[/i]%{prevDemandElec} to [i]%{iconElec}[/i]%{nextDemandElec}.","La demanda de fuel cambiará de [i]%{iconFuel}[/i]%{prevDemandFuel} a [i]%{iconFuel}[/i]%{nextDemandFuel}  y la demanda de la electricidad cambiará de [i]%{iconElec}[/i]%{prevDemandElec} a [i]%{iconElec}[/i]%{prevDemandElec}."
+Global demand for %{output}.,Demanda mundial de %{output}.
+"Global %{name} output will change from [i]%{icon}[/i]%{base} to [i]%{icon}[/i]%{changed} with no change in impacts.","La producción mundial de %{name} cambiará de [i]%{icon}[/i]%{base} a [i]%{icon}[/i]%{changed} sin cambios en los impactos."
 Govt,Gob.
 High,Alto
 How many seats your coalition has. Draw parties to your coalition by implementing projects they support.,Cuántos escaños tiene su coalición. Atraiga a los partidos a su coalición implementando los proyectos que apoyan.
-"How much political capital you have. Political capital is what you spend to implement your plans. <b class=""tip-warn"">If you run out you'll be pushed out of government.</b>","Cuánto capital político tienes. El capital político es lo que gastas para implementar tus planes. <b class=""tip-warn"">Si se te acaba, serás expulsado del gobierno.</b>"
-"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class=""tip-warn"">If this goes below 0 you will be removed from power.</b>","Cómo se siente la gente de todo el mundo sobre el estado de las cosas. Esta es una combinación de satisfacción regional, crisis y decisiones políticas. <b class=""tip-warn"">Si esto desciende por debajo de 0, se le quitará el poder.</b>"
-I request that you implement {name}. (+{pc}PC),Solicito que implementes {name} (+{pc}PC)
-I request that you stop {name}. (+{pc}PC),Solicito que detengas {name}. (+{pc}PC)
+"How much political capital you have. Political capital is what you spend to implement your plans. [w]If you run out you'll be pushed out of government.[/w]","Cuánto capital político tienes. El capital político es lo que gastas para implementar tus planes. [w]Si se te acaba, serás expulsado del gobierno.[/w]"
+"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. [w]If this goes below 0 you will be removed from power.[/w]","Cómo se siente la gente de todo el mundo sobre el estado de las cosas. Esta es una combinación de satisfacción regional, crisis y decisiones políticas. [w]Si esto desciende por debajo de 0, se le quitará el poder.[/w]"
+I request that you implement %{name}. (+%{pc}PC),Solicito que implementes %{name} (+%{pc}PC)
+I request that you stop %{name}. (+%{pc}PC),Solicito que detengas %{name}. (+%{pc}PC)
 Image:,Imagen
-Improve your relationship with {name} to activate this ability.,Mejora tu relación con {name} para activar esta habilidad.
+Improve your relationship with %{name} to activate this ability.,Mejora tu relación con %{name} para activar esta habilidad.
 Increases,Incrementa
 Infrastructure,Infraestructura
 Infrastructure projects take 20% longer to finish.,Los proyectos de infraestructura tardan un 20% más en terminar.
 Land Use,Uso de tierra
-Land: They're not making anymore of it. You're using {percent} of land.,Tierra: No están haciendo más de eso. Estás usando el {percent} de la tierra.
+Land: They're not making anymore of it. You're using %{percent} of land.,Tierra: No están haciendo más de eso. Estás usando el %{percent} de la tierra.
 Level,Nivel
 Likely to increase,Es probable que aumente
 Likely to reduce,Es probable que reduzca
-Likely to unlock the {tag} process.,Es probable que desbloquee el proceso de {tag}.
-Likely to unlock the {tag} project.,Es probable que desbloquee el proyecto de {tag}.
+Likely to unlock the %{tag} process.,Es probable que desbloquee el proceso de %{tag}.
+Likely to unlock the %{tag} project.,Es probable que desbloquee el proyecto de %{tag}.
 Likely to unlock this process:,Es probable que desbloquee este proceso:
 Likely to unlock this project:,Es probable que desbloquee este proyecto:
-Likely to unlock {name}.,Es probable que desbloquee {name}.
+Likely to unlock %{name}.,Es probable que desbloquee %{name}.
 Likes,Le gusta
 Livestock,Ganado
 Loading,Cargando
@@ -170,7 +170,7 @@ Research and Writing,Investigación y escritura
 Research and infrastructure take 10% less time to complete.,La investigación y la infraestructura tardan un 10 % menos en completarse.
 Research and infrastructure take 10% more time to complete.,La investigación y la infraestructura tardan un 10 % más en completarse.
 Research and infrastructure take 5% more time to complete.,La investigación y la infraestructura tardan un 5 % más en completarse.
-"Research points are 1<img src=""{iconPC}""> cheaper.","Los puntos de investigación son 1<img src=""{iconPC}""> más barato."
+"Research points are 1[i]%{iconPC}[/i] cheaper.","Los puntos de investigación son 1[i]%{iconPC}[/i] más barato."
 Research points: Allocate them to research projects!,Puntos de investigación: ¡Asignarlos a proyectos de investigación!
 Researching,Investigando
 Restart Game,Reiniciar juego
@@ -182,11 +182,11 @@ Skip,Saltar
 Skip the tutorial.,Omitir el tutorial.
 Small chance to increase,Poca posibilidad de aumentar
 Small chance to reduce,Poca posibilidad de reducir
-Small chance to unlock the {tag} process.,Pequeña posibilidad de desbloquear el proceso de {tag}.
-Small chance to unlock the {tag} project.,Pocas posibilidades de desbloquear el proyecto de {tag}.
+Small chance to unlock the %{tag} process.,Pequeña posibilidad de desbloquear el proceso de %{tag}.
+Small chance to unlock the %{tag} project.,Pocas posibilidades de desbloquear el proyecto de %{tag}.
 Small chance to unlock this process:,Pocas posibilidades de desbloquear este proceso:
 Small chance to unlock this project:,Pocas posibilidades de desbloquear este proyecto:
-Small chance to unlock {name}.,Pocas posibilidades de desbloquear {name}.
+Small chance to unlock %{name}.,Pocas posibilidades de desbloquear %{name}.
 Sound,Sonido
 Stats,Estadísticas
 Stops regional development throughout the world.,Detiene el desarrollo regional en todo el mundo.
@@ -194,36 +194,36 @@ Tap for more details.,Pulsa para más detalles.
 Temp. Anomaly,Anomalía de temp.
 Temperature,Temperatura
 Thank you for playing!,Gracias por jugar!
-That's a {percent}% change.,Eso es un {percent}% de cambio.
-The amount of sea level rise is currently {amount}m.,La cantidad de aumento del nivel del mar es actualmente {amount}m.
+That's a %{percent}% change.,Eso es un %{percent}% de cambio.
+The amount of sea level rise is currently %{amount}m.,La cantidad de aumento del nivel del mar es actualmente %{amount}m.
 "The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.","La presión actual sobre la biodiversidad. El alto uso de la tierra y otros factores aumentan esto y, con él, el riesgo de colapso ecológico."
-"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class=""tip-goal"">Your goal is to get this to below 20.</b>","La presión actual sobre la biodiversidad. El alto uso de la tierra y otros factores aumentan esto y, con él, el riesgo de colapso ecológico. <b class=""tip-goal"">Tu objetivo es llegar a menos de 20.</b>"
-"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class=""tip-goal"">Your goal is to get this below 1°C.</b>","La anomalía de temperatura global actual es de +{anomaly}°C. Cuanto más alto es, más impredecible se vuelve el clima. <b class=""tip-goal"">Su objetivo es que la temperatura sea inferior a 1 °C.</b>"
-"The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class=""tip-goal"">Your goal is to get this below 1°C.</b>","La anomalía actual de la temperatura global. <strong>El aumento del calentamiento</strong> dañará su capital político. <b class=""tip-goal"">Su objetivo es que la temperatura sea inferior a 1 °C.</b>"
+"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. [g]Your goal is to get this to below 20.[/g]","La presión actual sobre la biodiversidad. El alto uso de la tierra y otros factores aumentan esto y, con él, el riesgo de colapso ecológico. [g]Tu objetivo es llegar a menos de 20.[/g]"
+"The current global temperature anomaly is +%{anomaly}°C. The higher this is, the more unpredictable the climate becomes. [g]Your goal is to get this below 1°C.[/g]","La anomalía de temperatura global actual es de +%{anomaly}°C. Cuanto más alto es, más impredecible se vuelve el clima. [g]Su objetivo es que la temperatura sea inferior a 1 °C.[/g]"
+"The current global temperature anomaly. [b]Increased warming[/b] will damage your political capital. [g]Your goal is to get this below 1°C.[/g]","La anomalía actual de la temperatura global. [b]El aumento del calentamiento[/b] dañará su capital político. [g]Su objetivo es que la temperatura sea inferior a 1 °C.[/g]"
 The estimated value after production changes have finished.,El valor estimado una vez finalizados los cambios de producción.
 The factors behind this event.↓,Los factores detrás de este evento.↓
-The following processes can't produce as much as they need to: {processesOverLimit},Los siguientes procesos no pueden producir tanto como necesitan: {processesOverLimit}
+The following processes can't produce as much as they need to: %{processesOverLimit},Los siguientes procesos no pueden producir tanto como necesitan: %{processesOverLimit}
 The number of people on the planet.,El número de personas en el planeta.
 The world is becoming hostile to life.,El mundo está volviéndose hostil para la vida.
 The world is becoming unbearable.,El mundo está volviéndose insuportable.
 The world is recovering.,El mundo está recuperándose.
 The world is still warming.,El mundo está aún calentándose.
-The {n}{ext} Planning Session,La {n}{ext} Sesión de Planificación
+The %{n}%{ext} Planning Session,La %{n}%{ext} Sesión de Planificación
 There are multiple production shortages:,Hay múltiples carencias de producción:
 There is a alarming production shortage,Hay una escasez de producción alarmante
 There is a critical production shortage,Hay una escasez crítica de producción
 There is a mild production shortage,Hay una leve escasez de producción
 There is a severe production shortage,Hay una grave escasez de producción
 There is currently no limit on this process' mix share.,Actualmente no hay límite en la cuota de mezcla de este proceso.
-There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,No hay suficientes {recursos}. Debe cambiar sus mezclas de producción para usar menos de estos o reducir la demanda en otros lugares.
-These changes will take {changesTime} planning cycle{ext} to take effect.,Estos cambios tardarán {changesTime} ciclo{ext} de planificación en surtir efecto.
+There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,No hay suficientes {recursos}. Debe cambiar sus mezclas de producción para usar menos de estos o reducir la demanda en otros lugares.
+These changes will take %{changesTime} planning cycle%{ext} to take effect.,Estos cambios tardarán %{changesTime} ciclo%{ext} de planificación en surtir efecto.
 They won't have much effect.,No tendrán mucho efecto.
-"This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class=""type-total"">/{maxAmount}</span>.","Esto cambia la satisfacción regional según la demanda de {name}. La satisfacción mundial actual es {amount}<span class=""type-total"">/{maxAmount}</span>."
-"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Esto cambia la satisfacción regional según el nivel de ingresos (las regiones más ricas lo sentirán más). La satisfacción mundial actual es {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
-"This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","Esto cambia la demanda de {name} de <img src=""{icon}"">{currentDemand} a <img src=""{icon}"">{afterDemand}."
-"This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","Esto cambia la demanda de {name} de <img src=""{icon}"">{currentDemand} a <img src=""{icon}"">{afterDemand}. Este es un cambio del {percent}% de toda la demanda de {name}."
-"This event can occur if ""{name}"" is {label}.","Este evento puede ocurrir si ""{name}"" es {label}."
-This event can occur if {name} is your {relType}.,Este evento puede ocurrir si {name} es tu {relType}.
+"This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].","Esto cambia la satisfacción regional según la demanda de %{name}. La satisfacción mundial actual es %{amount}[t]/%{maxAmount}[/t]."
+"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].","Esto cambia la satisfacción regional según el nivel de ingresos (las regiones más ricas lo sentirán más). La satisfacción mundial actual es %{contentedness}[t]/%{maxContentedness}[/t]."
+"This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}.","Esto cambia la demanda de %{name} de [i]%{icon}[/i]%{currentDemand} a [i]%{icon}[/i]%{afterDemand}."
+"This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.","Esto cambia la demanda de %{name} de [i]%{icon}[/i]%{currentDemand} a [i]%{icon}[/i]%{afterDemand}. Este es un cambio del %{percent}% de toda la demanda de %{name}."
+"This event can occur if ""%{name}"" is %{label}.","Este evento puede ocurrir si ""%{name}"" es %{label}."
+This event can occur if %{name} is your %{relType}.,Este evento puede ocurrir si %{name} es tu %{relType}.
 This event is influenced by biodiversity pressures.,Este evento está influenciado por las presiones hacia la biodiversidad.
 This event is influenced by how happy people are.,Este evento está influenciado por el nivel de felicidad de las personas.
 This event is influenced by how much energy production can meltdown.,Este evento está influenciado por la cantidad de energía que se produce con peligro de fusión de nucleo.
@@ -241,54 +241,54 @@ This event is influenced by the demand for fuel.,Este evento está influenciado 
 This event is influenced by the demand for plant calories.,Este evento está influenciado por la demanda de calorías vegetales.
 This event is influenced by the global temperature anomaly.,Este evento está influenciado por la temperatura global anómala.
 This event is influenced by the habitability of regions.,Este evento está influenciado por la habitabilidad de las regiones.
-This event is influenced by the mix share of {name}.,Este evento está influenciado por el mix en la producción de {name}.
-This event is influenced by the output of {name}.,Este evento está influenciado por el output de {name}.
+This event is influenced by the mix share of %{name}.,Este evento está influenciado por el mix en la producción de %{name}.
+This event is influenced by the output of %{name}.,Este evento está influenciado por el output de %{name}.
 This event occurred during this planning cycle.,Este evento ocurrió durante este ciclo de planeamiento
 This feedstock has been depleted.,Esta materia prima se ha agotado.
 "This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.","Esta materia prima se agota, por lo que este proceso se detiene. Debe reasignar sus puntos a otros procesos."
 This industry is not yet significant.,Esta industria no es significante aún.
-This industry's demand for {output}. This makes up {percent}% of total demand for {output}.,La demanda de esta industria por {output}. Esto constituye el {percent}% de la demanda total de {output}.
+This industry's demand for %{output}. This makes up %{percent}% of total demand for %{output}.,La demanda de esta industria por %{output}. Esto constituye el %{percent}% de la demanda total de %{output}.
 This industry's non-energy CO2eq emissions.,Emisiones de CO2eq no energético de esta industria.
 This is not the end...,Esto no es el final...
 This new character will be unlocked:,Este nuevo personaje se desbloqueará:
 This output's production will,La producción va a
-This policy costs {remainingCost} political capital to implement.,Implementar esta política cuesta {remainingCost} de capital político.
+This policy costs %{remainingCost} political capital to implement.,Implementar esta política cuesta %{remainingCost} de capital político.
 This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes.,Este proceso no puede producir tanto debido a la materia prima u otros límites. Debe reasignar sus puntos a otros procesos.
-This process currently makes up {mixPercent}% of {output} production.,Este proceso representa actualmente el {mixPercent}% de la producción de {output}.
-This process currently produces {amount}<img src='{outputIcon}'> and {emissions}<img src='{emissionsIcon}'> per year.,Este proceso produce actualmente {amount}<img src='{outputIcon}'> y {emissions}<img src='{emissionsIcon}'> al año.
-This process uses {feedstockName}. {feedstockEstimateDesc},Este proceso usa {feedstockName}. {feedstockEstimateDesc}
+This process currently makes up %{mixPercent}% of %{output} production.,Este proceso representa actualmente el %{mixPercent}% de la producción de %{output}.
+This process currently produces %{amount}[i]%{outputIcon}[/i] and %{emissions}[i]%{emissionsIcon}[/i] per year.,Este proceso produce actualmente %{amount}[i]%{outputIcon}[/i] y %{emissions}[i]%{emissionsIcon}[/i] al año.
+This process uses %{feedstockName}. %{feedstockEstimateDesc},Este proceso usa %{feedstockName}. %{feedstockEstimateDesc}
 This project was completed.,Este proyecto fue completado.
-This region has {incomeName} living standards. Higher living standards mean higher material footprints.,Esta región tiene un nivel de vida de {incomeName}. Los estándares de vida más altos significan huellas materiales más altas.
+This region has %{incomeName} living standards. Higher living standards mean higher material footprints.,Esta región tiene un nivel de vida de %{incomeName}. Los estándares de vida más altos significan huellas materiales más altas.
 This region's contentedness.,La satisfacción de esta región.
 This region's current precipitation range.,Rango de precipitación actual de esta región.
 This region's current temperature range.,Rango de temperatura actual de esta región.
 This region's habitability.,La habitabilidad de esta región.
 This region's habitability. Natural disasters and hotter temperatures lower habitability.,La habitabilidad de esta región. Los desastres naturales y las temperaturas más altas reducen la habitabilidad.
-"This region's income level has contracted to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.","El nivel de ingresos de esta región se ha reducido a <strong>{{display.enumDisplay(obj.income, true)}}</strong>. Se actualizó la demanda de <img :src='icons.electricity'>electricidad, <img :src='icons.fuel'>combustible, <img :src='icons.plant_calories'>alimentos de origen vegetal y <img :src='icons.animal_calories'>animal."
-"This region's income level has increased to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.","Los ingresos de esta región han aumentado a <strong>{income}</strong>. La demanda por la <img :src='icons.electricity'>electricidad, <img :src='icons.fuel'>combustible, <img :src='icons.plant_calories'> comida basada en plantas y <img :src='icons.animal_calories'> animales ha sido actualizada."
-This region's new demand for {output}.,La demanda nueva de esta región para {output}.
+"This region's income level has contracted to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","El nivel de ingresos de esta región se ha reducido a [b]{{display.enumDisplay(obj.income, true)}}[/b]. Se actualizó la demanda de [i]%{iconElec}[/i]electricidad, [i]%{iconFuel}[/i]combustible, [i]%{iconPCals}[/i]alimentos de origen vegetal y [i]%{iconACals}[/i]animal."
+"This region's income level has increased to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Los ingresos de esta región han aumentado a [b]%{income}[/b]. La demanda por la [i]%{iconElec}[/i]electricidad, [i]%{iconFuel}[/i]combustible, [i]%{iconPCals}[/i] comida basada en plantas y [i]%{iconACals}[/i] animales ha sido actualizada."
+This region's new demand for %{output}.,La demanda nueva de esta región para %{output}.
 This region's new income level.,El nuevo nivel de ingresos de esta región.
-This region's per-capita demand level for {output}. The total regions's demand is {demand}. This makes up {demandPercent} of total demand for {output}.,El nivel de demanda per cápita de {output} de esta región. La demanda total de las regiones es {demand}. Esto constituye {demandPercent} de la demanda total de {output}.
-This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.,El nivel de demanda per cápita de {output} de esta región. La demanda total de las regiones es {demand}<img src='{icon}' />. Esto constituye el {percent} de la demanda total de {output}.
-This region's previous demand for {output}.,La demanda previa de esta región para {output}.
+This region's per-capita demand level for %{output}. The total regions's demand is %{demand}. This makes up %{demandPercent} of total demand for %{output}.,El nivel de demanda per cápita de %{output} de esta región. La demanda total de las regiones es %{demand}. Esto constituye %{demandPercent} de la demanda total de %{output}.
+This region's per-capita demand level for %{output}. The total regions's demand is %{demand}[i]%{icon}[/i]. This makes up %{percent}% of total demand for %{output}.,El nivel de demanda per cápita de %{output} de esta región. La demanda total de las regiones es %{demand}[i]%{icon}[/i]. Esto constituye el %{percent}% de la demanda total de %{output}.
+This region's previous demand for %{output}.,La demanda previa de esta región para %{output}.
 This region's previous income level.,El nivel de ingresos previo de esta región.
 This region's progress to the next income level.,El progreso de esta región al siguiente nivel de ingresos.
-"This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","Esto cambiará las emisiones de {name} de <img src=""{icon}"">{emissionsBefore} a <img src=""{icon}"">{emissionsAfter}. Este es un cambio del {emissionsChange}% de todas las emisiones."
-This will change {resource} demand for {name} by some unknown amount.,Esto cambiará la demanda de {resource} para {name} en una cantidad desconocida.
-"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand."
-"This will change {short} for {name} from <img src=""{icon}"">{change}","Esto cambiará {short} por {name} de <img src=""{icon}"">{change}"
-This will directly change annual emissions by {amount}.{percent},Esto cambiará directamente las emisiones anuales en {amount}.{percent}.
-This will directly change global precipitation by {amount}<strong>cm/yr</strong>.,Esto cambiará directamente la precipitación global por {amount}<strong>cm/yr</strong>.
-This will directly change the global temperature anomaly by {amount}<strong>°c</strong>.,Esto cambiará directamente la anomalía de la temperatura global en {amount}<strong>°c</strong>.
-This will limit the amount of land that processes can use. The amount of land under protection will change from {before}% to {after}%.,Esto limitará la cantidad de tierra que los procesos pueden usar. La cantidad de tierra bajo protección cambiará del {before}% al {after}%.
-This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.,Esto tomará alrededor de {remainingCost} para terminar. Asignar más puntos de {kind} acelerar su progreso.
+"This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.","Esto cambiará las emisiones de %{name} de [i]%{icon}[/i]%{emissionsBefore} a [i]%{icon}[/i]%{emissionsAfter}. Este es un cambio del %{emissionsChange}% de todas las emisiones."
+This will change %{resource} demand for %{name} by some unknown amount.,Esto cambiará la demanda de %{resource} para %{name} en una cantidad desconocida.
+"This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.","This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand."
+"This will change %{short} for %{name} from [i]%{icon}[/i]%{change}","Esto cambiará %{short} por %{name} de [i]%{icon}[/i]%{change}"
+This will directly change annual emissions by %{amount}.%{percent},Esto cambiará directamente las emisiones anuales en %{amount}.%{percent}.
+This will directly change global precipitation by %{amount}[b]cm/yr[/b].,Esto cambiará directamente la precipitación global por %{amount}[b]cm/yr[/b].
+This will directly change the global temperature anomaly by %{amount}[b]°c[/b].,Esto cambiará directamente la anomalía de la temperatura global en %{amount}[b]°c[/b].
+This will limit the amount of land that processes can use. The amount of land under protection will change from %{before}% to %{after}%.,Esto limitará la cantidad de tierra que los procesos pueden usar. La cantidad de tierra bajo protección cambiará del %{before}% al %{after}%.
+This will take about %{remainingCost} to finish. Allocate more %{kind} points to accelerate its progress.,Esto tomará alrededor de %{remainingCost} para terminar. Asignar más puntos de %{kind} acelerar su progreso.
 Tiny chance to increase,Pocas posibilidades de aumentar
 Tiny chance to reduce,Pequeña posibilidad de reducir
-Tiny chance to unlock the {tag} process.,Pocas posibilidades de desbloquear el proceso de {tag}.
-Tiny chance to unlock the {tag} project.,Pequeña oportunidad de desbloquear el proyecto de {tag}.
+Tiny chance to unlock the %{tag} process.,Pocas posibilidades de desbloquear el proceso de %{tag}.
+Tiny chance to unlock the %{tag} project.,Pequeña oportunidad de desbloquear el proyecto de %{tag}.
 Tiny chance to unlock this process:,Pequeña oportunidad de desbloquear este proceso:
 Tiny chance to unlock this project:,Pequeña oportunidad de desbloquear este proyecto:
-Tiny chance to unlock {name}.,Pequeña oportunidad de desbloquear {name}.
+Tiny chance to unlock %{name}.,Pequeña oportunidad de desbloquear %{name}.
 Tips,Pistas
 Total,Total
 Total Change,Cambio total
@@ -297,47 +297,47 @@ Try Again?,Intentar otra vez?
 Undo,Deshacer
 Unlikely to increase,Es improbable que aumente
 Unlikely to reduce,Es poco probable que se reduzca
-Unlikely to unlock the {tag} process.,Es poco probable que desbloquee el proceso de {tag}.
-Unlikely to unlock the {tag} project.,Es poco probable que desbloquee el proyecto de {tag}.
+Unlikely to unlock the %{tag} process.,Es poco probable que desbloquee el proceso de %{tag}.
+Unlikely to unlock the %{tag} project.,Es poco probable que desbloquee el proyecto de %{tag}.
 Unlikely to unlock this process:,Es poco probable que desbloquee este proceso:
 Unlikely to unlock this project:,Es poco probable que desbloquee este proyecto:
-Unlikely to unlock {name}.,Es poco probable que desbloquee {name}.
+Unlikely to unlock %{name}.,Es poco probable que desbloquee %{name}.
 Unused,No utilizado
 Upgrading in one planning cycle.,Mejorandolo en un ciclo de planificación.
 Very High,Muy alto
 Very Low,Muy bajo
 View All,Ver Todo
 Water Stress,Estrés hídrico
-Water: The giver of life. You're using {percent} of water resources.,Agua: El dador de la vida. Estás utilizando el {percent} de los recursos hídricos.
+Water: The giver of life. You're using %{percent} of water resources.,Agua: El dador de la vida. Estás utilizando el %{percent} de los recursos hídricos.
 We aren't tracking this feedstock.,No estamos siguiendo esta materia prima
 Well Played!,Bien jugado!
 Will increase,Incrementará
 Will reduce,Se reducirá
-Will unlock the {tag} process.,Desbloqueará el proceso de {tag}.
-Will unlock the {tag} project.,Desbloqueará el proyecto de {tag}.
+Will unlock the %{tag} process.,Desbloqueará el proceso de %{tag}.
+Will unlock the %{tag} project.,Desbloqueará el proyecto de %{tag}.
 Will unlock this process:,Desbloqueará este proceso:
 Will unlock this project:,Desbloqueará este proyecto:
-Will unlock {name}.,Desbloqueará {name}.
+Will unlock %{name}.,Desbloqueará %{name}.
 Withdraw,Retirar
 Won't increase,No aumentará
 Won't reduce,No reducirá
-Won't unlock the {tag} process.,No desbloqueará el proceso de {tag}.
-Won't unlock the {tag} project.,No desbloqueará el proyecto de {tag}.
+Won't unlock the %{tag} process.,No desbloqueará el proceso de %{tag}.
+Won't unlock the %{tag} project.,No desbloqueará el proyecto de %{tag}.
 Won't unlock this process:,No desbloqueará este proceso:
 Won't unlock this project:,No desbloqueará este proyecto:
-Won't unlock {name}.,No desbloqueará {name}.
+Won't unlock %{name}.,No desbloqueará %{name}.
 World,Planeta
 Yea,Sep
 You had an extraterrestrial encounter.,Has tenido un encuentro con extraterrestres.
-You have {yearsLeft} years left in your tenure.,Te quedan {yearsLeft} años restantes en tu cargo.
+You have %{yearsLeft} years left in your tenure.,Te quedan %{yearsLeft} años restantes en tu cargo.
 You received a request to ban this process:,Recibistes una solicitud para prohibir este proceso:
 You received a request to implement this project:,Recibiste una solicitud para implementar este proyecto:
 You received a request to promote this process:,Recibiste una solicitud para promover este proceso:
 You received a request to stop this project:,Recibiste una solicitud para detener este proyecto:
 You should reallocate its points to other processes.,Debe reasignar sus puntos a otros procesos.
 You were bailed out.,Fuiste rescatado.
-Your coalition has {coalitionSeats}/{totalSeats} seats.,Tu coalición tiene {coalitionSeats}/{totalSeats} sillas.
-Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,Tu relación con {nombre}. Incrementarlo implementando proyectos que les gusten. Con 5 corazones o más se unirán a tu coalición.
+Your coalition has %{coalitionSeats}/%{totalSeats} seats.,Tu coalición tiene %{coalitionSeats}/%{totalSeats} sillas.
+Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,Tu relación con {nombre}. Incrementarlo implementando proyectos que les gusten. Con 5 corazones o más se unirán a tu coalición.
 alarming,alarmante
 an unknown amount,una cantidad desconocida
 biodiversity pressure,la presión de la biodiversidad
@@ -345,14 +345,14 @@ by an unknown amount,por una cantidad desconocida
 cost,el costo
 critical,crítica
 crops,cultivos
-decrease {k} by {change}%,disminuir {k} en {change}%
+decrease [i]%{icon}[/i] %{k} by %{change}%,disminuir [i]%{icon}[/i] %{k} en %{change}%
 development time,el tiempo de desarrollo
 electricity,electricidad
 emissions,las emisiones
 energy use,uso de energía
-from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit},de {tipIcon}{cost}{unit} a {tipIcon}{newCost}{unit}
+from {tipIcon}%{cost}{unit} to {tipIcon}{newCost}{unit},de {tipIcon}%{cost}{unit} a {tipIcon}{newCost}{unit}
 fuel,combustible
-increase {k} by {warn}{change}%,incremento {k} del {warn}{change}%
+increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,incremento [i]%{icon}[/i] %{k} del %{warn}%{change}%
 land use,uso de tierra
 livestock,ganado
 mild,leve
@@ -365,47 +365,47 @@ th,ᵃ
 the extinction rate,tasa de extinción
 water use,uso del agua
 year(s),año(s)
-"{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","{changeDir} las emisiones de CO2 de <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> en <strong>{percent}%.</strong>"
-{changeDir} all {name} production by <strong>{percent}%.</strong>,{changeDir} toda la producción de {name} en un <strong>{percent}%.</strong>
-{changeDir} biodiversity pressure by {amount}.,{changeDir} presión de la biodiversidad por {amount}.
-"{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","{changeDir} la presión sobre la biodiversidad para <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> en <strong>{amount}.</strong>"
-{changeDir} contentedness by <strong>{amount}</strong>.,{changeDir} la satisfacción por <strong>{amount}</strong>.
-"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","{changeDir} la demanda de {name} en <img src=""{icon}"">{amount}."
-{changeDir} demand for {name} by <strong>{percent}%</strong>.,{changeDir} la demanda de {name} en un <strong>{percent}%</strong>.
-{changeDir} demand for {tag} by {amount}.,{changeDir} demanda de {tag} por {amount}.
-{changeDir} emissions by {amount}.,{changeDir} emisiones por {amount}.
-{changeDir} global population by {amount}.,{changeDir} población mundial por {amount}.
-{changeDir} global population growth by {amount}<strong>%.</strong>,{changeDir} crecimiento de la población mundial por {amount}<strong>%.</strong>
-{changeDir} global precipitation by {amount}<strong>cm/yr</strong>.,{changeDir} precipitación global por {amount}<strong>cm/yr</strong>.
-{changeDir} habitability in {type} regions by {amount}.,{changeDir} habitabilidad en regiones {type} por {cantidad}.
-{changeDir} maximum output for {process} by <strong>{amount}</strong>.,{changeDir} salida máxima para {process} por <strong>{amount}</strong>.
-"{changeDir} output for <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>","{changeDir} la producción de <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> en un <strong>{percent}%.</strong>"
-{changeDir} the CO2 emissions for these processes by <strong>{percent}%.</strong>,{changeDir} las emisiones de CO2 de estos procesos en <strong>{percent}%.</strong>
-{changeDir} the amount of sea level rise by {amount}mm/year.,{changeDir} la cantidad de aumento del nivel del mar en {amount} mm/año.
-"{changeDir} the chance of ""{event}"" by {amount}.","{changeDir} la probabilidad de ""{event}"" en {amount}."
-{changeDir} the global temperature by {amount}<strong>°c</strong>.,{changeDir} la temperatura global por {amount}<strong>°c</strong>.
-{changeDir} the rate of sea level rise by {amount}mm/year.,{changeDir} la tasa de aumento del nivel del mar en {amount}mm/año.
-{changeDir} world contentedness by <strong>{amount}</strong>.,{changeDir} la satisfacción del mundo por <strong>{amount}</strong>.
-{changeDir} world contentedness by {amount}.,{changeDir} satisfacción mundial por {amount}.
-{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{changeDir} {kind} de {tag} en <b>{tipAmount}</b>.
-{changeDir} {label} for {tag} by <strong>{amount}</strong>.,{changeDir} {label} por {tag} en un <strong>{amount}</strong>.
-"{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{changeDir} el suministro de {name} en <img src=""{icon}"">{amount}."
-{changeDir} {name} supply by <strong>{percent}%.</strong>,{changeDir} el suministro de {name} en un <strong>{percent}%.</strong>
-{changeDir} {name} supply by [{icon}]{amount}.,{changeDir} el suministro de {name} en [{icon}]{amount}.
-{changeDir} {resource} demand for {tag} by {amount}.,{changeDir} la demanda de {resource} por {tag} en {amount}.
-{changeDir} {tag} output by <strong>{percent}%.</strong>,{changeDir} la producción de {tag} en <strong>{percent}%.</strong>
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{changeDir} las emisiones de {type} de {tag} en un <strong>{amount}</strong>.
-{cost} yrs,{cost} años
-{disaster} in {region},{disaster} en {region}
-"{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","{emissionsBefore} a <img src=""{icon}"">{emissionsAfter}. Este es un cambio del {emissionsChange}% de todas las emisiones."
-"{fromAmount} to {toAmount}<img src=""{icon}"">.","{fromAmount} a {toAmount}<img src=""{icon}"">."
-"{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.","{name} se opone a esto. Si lo implementa, su relación empeorará en -<img src='{icon}' />."
-"{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.","{name} apoya esto. Si lo implementa, su relación mejorará en +<img src='{icon}' />."
-{name} will be unavailable while this project is active.,{name} no estará disponible mientras este proyecto esté activo.
-{points} {kind} points are allocated to this project,{points} puntos de {kind} se asignan a este proyecto
-{region} is now {income} income.,{region} es ahora de ingresos {income}.
-{type} emissions,las emisiones de {type}
-{years} yrs left,{years} años restantes
+"%{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b]","%{changeDir} las emisiones de CO2 de [e][i]%{icon}[/i]%{feature}[/e] en [b]%{percent}%.[/b]"
+%{changeDir} all %{name} production by [b]%{percent}%.[/b],%{changeDir} toda la producción de %{name} en un [b]%{percent}%.[/b]
+%{changeDir} biodiversity pressure by %{amount}.,%{changeDir} presión de la biodiversidad por %{amount}.
+"%{changeDir} biodiversity pressure for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{amount}.[/b]","%{changeDir} la presión sobre la biodiversidad para [e][i]%{icon}[/i]%{feature}[/e] en [b]%{amount}.[/b]"
+%{changeDir} contentedness by [b]%{amount}[/b].,%{changeDir} la satisfacción por [b]%{amount}[/b].
+"%{changeDir} demand for %{name} by [i]%{icon}[/i]%{amount}.","%{changeDir} la demanda de %{name} en [i]%{icon}[/i]%{amount}."
+%{changeDir} demand for %{name} by [b]%{percent}%[/b].,%{changeDir} la demanda de %{name} en un [b]%{percent}%[/b].
+%{changeDir} demand for %{tag} by %{amount}.,%{changeDir} demanda de %{tag} por %{amount}.
+%{changeDir} emissions by %{amount}.,%{changeDir} emisiones por %{amount}.
+%{changeDir} global population by %{amount}.,%{changeDir} población mundial por %{amount}.
+%{changeDir} global population growth by %{amount}[b]%.[/b],%{changeDir} crecimiento de la población mundial por %{amount}[b]%.[/b]
+%{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,%{changeDir} precipitación global por %{amount}[b]cm/yr[/b].
+%{changeDir} habitability in %{kind} regions by %{amount}.,%{changeDir} habitabilidad en regiones %{kind} por {cantidad}.
+%{changeDir} maximum output for %{process} by [b]%{amount}[/b].,%{changeDir} salida máxima para %{process} por [b]%{amount}[/b].
+"%{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b]","%{changeDir} la producción de [e][i]%{icon}[/i][b]%{feature}[/b][/e] en un [b]%{percent}%.[/b]"
+%{changeDir} the CO2 emissions for these processes by [b]%{percent}%.[/b],%{changeDir} las emisiones de CO2 de estos procesos en [b]%{percent}%.[/b]
+%{changeDir} the amount of sea level rise by %{amount}mm/year.,%{changeDir} la cantidad de aumento del nivel del mar en %{amount} mm/año.
+"%{changeDir} the chance of ""%{event}"" by %{amount}.","%{changeDir} la probabilidad de ""%{event}"" en %{amount}."
+%{changeDir} the global temperature by %{amount}[b]°c[/b].,%{changeDir} la temperatura global por %{amount}[b]°c[/b].
+%{changeDir} the rate of sea level rise by %{amount}mm/year.,%{changeDir} la tasa de aumento del nivel del mar en %{amount}mm/año.
+%{changeDir} world contentedness by [b]%{amount}[/b].,%{changeDir} la satisfacción del mundo por [b]%{amount}[/b].
+%{changeDir} world contentedness by %{amount}.,%{changeDir} satisfacción mundial por %{amount}.
+%{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{changeDir} %{kind} de %{tag} en [b]%{tipAmount}[/b].
+%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{changeDir} %{label} por %{tag} en un [b]%{amount}[/b].
+"%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.","%{changeDir} el suministro de %{name} en [i]%{icon}[/i]%{amount}."
+%{changeDir} %{name} supply by [b]%{percent}%.[/b],%{changeDir} el suministro de %{name} en un [b]%{percent}%.[/b]
+%{changeDir} %{name} supply by [{icon}]%{amount}.,%{changeDir} el suministro de %{name} en [{icon}]%{amount}.
+%{changeDir} %{resource} demand for %{tag} by %{amount}.,%{changeDir} la demanda de %{resource} por %{tag} en %{amount}.
+%{changeDir} %{tag} output by [b]%{percent}%.[/b],%{changeDir} la producción de %{tag} en [b]%{percent}%.[/b]
+%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{changeDir} las emisiones de %{kind} de %{tag} en un [b]%{amount}[/b].
+%{cost} yrs,%{cost} años
+%{disaster} in %{region},%{disaster} en %{region}
+"%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.","%{emissionsBefore} a [i]%{icon}[/i]%{emissionsAfter}. Este es un cambio del %{emissionsChange}% de todas las emisiones."
+"%{fromAmount} to %{toAmount}[i]%{icon}[/i].","%{fromAmount} a %{toAmount}[i]%{icon}[/i]."
+"%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].","%{name} se opone a esto. Si lo implementa, su relación empeorará en -[i]%{icon}[/i]."
+"%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].","%{name} apoya esto. Si lo implementa, su relación mejorará en +[i]%{icon}[/i]."
+%{name} will be unavailable while this project is active.,%{name} no estará disponible mientras este proyecto esté activo.
+%{points} %{kind} points are allocated to this project,%{points} puntos de %{kind} se asignan a este proyecto
+%{region} is now %{income} income.,%{region} es ahora de ingresos %{income}.
+%{kind} emissions,las emisiones de %{kind}
+%{years} yrs left,%{years} años restantes
 ↑ Swipe this card up and hold to add it to your plan ↑,↑ Deslice esta tarjeta hacia arriba y manténgala presionada para agregarla a su plan ↑
 Swipe sideways to see other projects,Desliza hacia los lados para ver otros proyectos
 The Malthusian,Maltusiano
@@ -1383,7 +1383,7 @@ But now people have a more direct connection to the food they eat than they ever
 Most of the world is self-sufficient in crop production. I never thought I'd see the day.,La producción agrícola de la mayor parte del mundo es autosuficiente. Nunca pensé que llegaría  ver algo así.
 Unrest - Secession,Malestar - Secesión
 How's My Planning?,Como va mi planificación?
-{region} has seceded from Gosplant.,{región} se ha escincido de Gosplant.
+%{region} has seceded from Gosplant.,{región} se ha escincido de Gosplant.
 This is a major blow to Gosplant...,Una pérdida importante para Gosplant...
 ...but maybe we'll survive it.,...Pero sobreviviremos a ello.
 They felt neglected by your decision-making and lost all confidence in your capacity as planner.,Sienten que no los tienes en cuenta en tu toma de decisiones y han perdido toda confianza en tu capacidad de planificación.
@@ -1768,13 +1768,13 @@ Intro Cutscene,Escena de corte
 In 2022 a socialist revolution swept the globe.,"En 2022, una revolución socialista sacudió el mundo."
 "It's a sunny day in Havana, where the first planning session will take place...","Es un día soleado en la Havana, donde va a tener lugar la primera sesión de planificación..."
 You have been elected as [gosplant]'s first lead planner.,Has sido escogido primer planificador jefe de [gosplant].
-"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","Debes ejercer sin que tu [capital_político]<em class=""lose-con""> capital político caiga por debajo de 0 </em>..."
-"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Debes ejercer sin que la [satisfacción]<em class=""lose-con""> satisfacción de la población caiga por debajo de 0 </em>"
+"And you must do so without letting your [political_capital][w]political capital dip below 0[/w]...","Debes ejercer sin que tu [capital_político][w] capital político caiga por debajo de 0 [/w]..."
+"You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...","Debes ejercer sin que la [satisfacción][w] satisfacción de la población caiga por debajo de 0 [/w]"
 "The regions of the world united to establish [gosplant], a global planning authority.","Las regiones del mundo se unieron para formar [gosplant], un organismo de planificación global."
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,Se encargó a [gosplant] la tarea de enmendar la infinidad de daños que siglos de capitalismo habían infligido sobre el planeta y sus habitantes
 Otherwise your adversaries may take the opportunity to replace you.,"De otro modo, tus adversarios aprovecharán la oportundad para sustituirte."
 Otherwise they will vote you out of office.,"De otro modo, votarán a favor de expulsarte del gobierno."
-"It's your duty to bring [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> while there's still time.","Es tu deber hacer que el [aumento de las temperaturas]<em class=""win-con""> aumento de las temperaturas se mantenga por debajo de 1ºC</em> y las [emisiones]<em class=""win-con""> emisiones por debajo de 0</em> mientras aún estamos a tiempo."
+"It's your duty to bring [warming][g]warming to below 1°C[/g], the [extinction_rate][g]extinction rate to below 20[/g], and [emissions][g]emissions to below 0[/g] while there's still time.","Es tu deber hacer que el [aumento de las temperaturas][g] aumento de las temperaturas se mantenga por debajo de 1ºC[/g] y las [emisiones][g] emisiones por debajo de 0[/g] mientras aún estamos a tiempo."
 SRM - Assassination,GRS - Asesinato
 Under a White Sky,Bajo un cielo blanco
 One of my colleagues was murdered last night!,¡Uno de mis compañeros fue asesinado anoche!
@@ -2665,5 +2665,5 @@ Default World,Mundo Predeterminado
 Failed to parse provided world.,No se pudo analizar el mundo proporcionado.
 New worlds can be made using the editor.,Se pueden crear nuevos mundos usando el editor.
 Regional Factors,Factores Regionales
-This effect {changeDir} the {kind} of this project by {tipAmount}.,Este efecto {changeDir} el {kind} de este proyecto en {tipAmount}.
+This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,Este efecto %{changeDir} el %{kind} de este proyecto en %{tipAmount}.
 Warning: Custom worlds may break parts of the game!,Advertencia: ¡Los mundos personalizados pueden romper partes del juego!

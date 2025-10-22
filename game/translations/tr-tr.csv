@@ -1,55 +1,55 @@
 English,Translation
 1 planning cycle left,1 Planlama döngüsü kaldı
-<strong>Locks</strong> {tag},<strong>Şunu kiltler:</strong> {tag}
-<strong>Unlocks</strong> the {tag} process.,{tag} İşleminin </strong>kilidini açar</strong>.
-<strong>Unlocks</strong> the {tag} project.,{tag} Projesinin </strong>kilidini açar</strong>.
-<strong>Unlocks</strong> {name}.,</strong>kilidini açar:</strong> {name}.
+[b]Locks[/b] %{tag},[b]Şunu kiltler:[/b] %{tag}
+[b]Unlocks[/b] the %{tag} process.,%{tag} İşleminin [/b]kilidini açar[/b].
+[b]Unlocks[/b] the %{tag} project.,%{tag} Projesinin [/b]kilidini açar[/b].
+[b]Unlocks[/b] %{name}.,[/b]kilidini açar:[/b] %{name}.
 A Planetary Crisis Planning Game,Bir gezegensel kriz planlama oyunu
 A parliamentary majority is no longer required for any project.,Herhangi bir proje için parlementoda çoğunluk artık gerekmiyor.
 Accelerates regional development throughout the world.,Dünya genelinde bölgesel kalkınmayı hızlandırır.
 Add,Ekle
 Add some cards to get started,Başlamak için birkaç kart ekle.
 Ally,Müttefik
-"Animal calorie demand will change from <img src=""{iconACals}"">{prevDemandACals} to <img src=""{iconACals}"">{nextDemandACals} and plant calorie demand will change from <img src=""{iconPCals}"">{prevDemandPCals} to <img src=""{iconPCals}"">{nextDemandPCals}.","Hayvan kalorisi talebi <img src=""{iconACals}"">{prevDemandACals} seviyesinden <img src=""{iconACals}"">{nextDemandACals} seviyesine gelecek ve bitki kalorisi talebi  <img src=""{iconPCals}"">{prevDemandPCals} seviyesinden <img src=""{iconPCals}"">{nextDemandPCals} seviyesine gelecek."
+"Animal calorie demand will change from [i]%{iconACals}[/i]%{prevDemandACals} to [i]%{iconACals}[/i]%{nextDemandACals} and plant calorie demand will change from [i]%{iconPCals}[/i]%{prevDemandPCals} to [i]%{iconPCals}[/i]%{nextDemandPCals}.","Hayvan kalorisi talebi [i]%{iconACals}[/i]%{prevDemandACals} seviyesinden [i]%{iconACals}[/i]%{nextDemandACals} seviyesine gelecek ve bitki kalorisi talebi  [i]%{iconPCals}[/i]%{prevDemandPCals} seviyesinden [i]%{iconPCals}[/i]%{nextDemandPCals} seviyesine gelecek."
 At current usage rates the estimated supply is expected to last indefinitely.,"Mevcut kullanım oranlarında, tahmini arzın süresiz olarak sürmesi bekleniyor."
-At current usage rates the estimated supply is expected to last {years} year(s).,"Mevcut kullanım oranlarında, tahmini arzın {years} yıl sürmesi bekleniyor."
-At current usage rates the estimated supply is expected to last {years} years.,Mevcut kullanım oranlarına göre arzın {years} yıl sonra tükenmesi öngörülüyor.
-Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.,Ortalama deniz seviyeleri {rise}m yükseldi ve yılda {rate}mm oranında yükseliyor.
+At current usage rates the estimated supply is expected to last %{years} year(s).,"Mevcut kullanım oranlarında, tahmini arzın %{years} yıl sürmesi bekleniyor."
+At current usage rates the estimated supply is expected to last %{years} years.,Mevcut kullanım oranlarına göre arzın %{years} yıl sonra tükenmesi öngörülüyor.
+Average sea levels have risen by %{rise}m and are rising at a rate of %{rate}mm per year.,Ortalama deniz seviyeleri %{rise}m yükseldi ve yılda %{rate}mm oranında yükseliyor.
 Avg. Habitability,Ort. Yaşanılabilirlik
 Avg. Living Standards,Ort. Yaşam Standartları
 Back,Geri
 Based on the book,Kıtabına Dayanırılmıştır
 "Because of opposition, this requires a majority in parliament.",Muhalefet yüzünden bu parlementoda çoğunluk gerektiriyor
-Because of resource availability this process can only make up to {maxPercent}% of production.,Bu işlemi mümkün kılan kaynakların yetersizliği sebebiyle üretimin ancak %{maxPercent} kadarını gerçekleştirebilir.
-Because of resource availability this process can only make up to {maxPercent}% of production. {suggestion},Bu işlemi mümkün kılan kaynakların yetersizliği sebebiyle üretimin ancak %{maxPercent} kadarını gerçekleştirebilir. {suggestion}
+Because of resource availability this process can only make up to %{maxPercent}% of production.,Bu işlemi mümkün kılan kaynakların yetersizliği sebebiyle üretimin ancak %%{maxPercent} kadarını gerçekleştirebilir.
+Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion},Bu işlemi mümkün kılan kaynakların yetersizliği sebebiyle üretimin ancak %%{maxPercent} kadarını gerçekleştirebilir. %{suggestion}
 Biodiversity is flourishing.,Biyoçeşitlilik gelişiyor.
 Biodiversity is plummeting.,Biyoçeşitlilik dibi görüyor.
 Biodiversity is recovering.,Biyoçeşitlilik iyileşiyor.
 Biodiversity is stabilizing.,Biyoçeşitlilik düzeliyor.
 Biodiversity is struggling.,Biyoçeşitlilik çırpınıyor.
 Biodiversity is suffering.,Biyoçeşitlilik acı çekiyor.
-Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.,Biyoçeşitlilik: Gezegenin ortak sakinleri. Mevcut biyolojik çeşitlilik tehdit endeksi {amount}.
+Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is %{amount}.,Biyoçeşitlilik: Gezegenin ortak sakinleri. Mevcut biyolojik çeşitlilik tehdit endeksi %{amount}.
 Booting Up,Açılıyor
 Building,İnşa Ediliyor
 CH4,CH4
 CO2,CO2
 CO2 Emissions/Yr,CO2 Emisyonları/Yıl
 Change Production,Üretimi Değiştir
-Change the amount of land under protection by <strong>{percent}%</strong>.,Koruma altındaki arazi miktarını <strong>{percent}%</strong> oranında değiştirin.
+Change the amount of land under protection by [b]%{percent}%[/b].,Koruma altındaki arazi miktarını [b]%{percent}%[/b] oranında değiştirin.
 Changes,Değişimler
-Changes demand for {name} by <strong>{percent}%.</strong>,{name} talebini <strong>%{percent}</strong> kadar değiştirir.
-Changes demand for {name} by an unknown amount.,{name} talebini bilinmeyen bir miktarda değiştirir.
-Changes emissions for {name} by an unknown amount.,{name} salınımlarını bilinmeyen bir miiktarda değiştirir.
-Changes the biodiversity pressure for these processes by <strong>{amount}.</strong>,Bu işlemlerin biyoçeşitlilik baskısını  <strong>{amount}</strong> kadar değiştirir.
-Changes the output for these processes by {percent}% without changing their impacts.,"Bu işlemlerin üretim miktarını, etkilerini değiştirmeden %{percent} artırır."
-Changes the output for this process by {percent}% with no change in impacts.,Bu üretim sürecinin çıktı miktarını hiçbir çevresel etki olmadan %{percent} kadar değiştirir.
-Changes {label} for {name} by an unknown amount.,{name} için olan {label} bilinmeyen bir miktar kadar değişir.
+Changes demand for %{name} by [b]%{percent}%.[/b],%{name} talebini [b]%%{percent}[/b] kadar değiştirir.
+Changes demand for %{name} by an unknown amount.,%{name} talebini bilinmeyen bir miktarda değiştirir.
+Changes emissions for %{name} by an unknown amount.,%{name} salınımlarını bilinmeyen bir miiktarda değiştirir.
+Changes the biodiversity pressure for these processes by [b]%{amount}.[/b],Bu işlemlerin biyoçeşitlilik baskısını  [b]%{amount}[/b] kadar değiştirir.
+Changes the output for these processes by %{percent}% without changing their impacts.,"Bu işlemlerin üretim miktarını, etkilerini değiştirmeden %%{percent} artırır."
+Changes the output for this process by %{percent}% with no change in impacts.,Bu üretim sürecinin çıktı miktarını hiçbir çevresel etki olmadan %%{percent} kadar değiştirir.
+Changes %{label} for %{name} by an unknown amount.,%{name} için olan %{label} bilinmeyen bir miktar kadar değişir.
 Completed,Tamamlandı
 Completed Projects,Tamamlanan Projeler
-Completed Request: Ban {name},İstek Tamamlandı: {name} Yasakla
-Completed Request: Implement {name},İstek Tamamlandı: {name} Uygula
-Completed Request: Stop {name},İstek Tamamlandı: {name} durdur
-Completed Request: Unban {name},İstek Tamamlandı: {name} Yasağını kaldır
+Completed Request: Ban %{name},İstek Tamamlandı: %{name} Yasakla
+Completed Request: Implement %{name},İstek Tamamlandı: %{name} Uygula
+Completed Request: Stop %{name},İstek Tamamlandı: %{name} durdur
+Completed Request: Unban %{name},İstek Tamamlandı: %{name} Yasağını kaldır
 Completed Requests,Tamamlanan istekler:
 Concept,Konsept
 Contentedness,Memnuniyet
@@ -57,21 +57,21 @@ Continue,Devam
 Contract the economies of the wealthiest regions.,En zengin bölgelerin ekonomilerini küçült.
 Could increase,Artırabilir:
 Could reduce,Azaltabilir:
-Could unlock the {tag} process.,{tag} işleminin kilidini açabilir.
-Could unlock the {tag} project.,{tag} projesini açabilir.
+Could unlock the %{tag} process.,%{tag} işleminin kilidini açabilir.
+Could unlock the %{tag} project.,%{tag} projesini açabilir.
 Could unlock this process:,Şu işlemin kilidini açabilir:
 Could unlock this project:,Şu projeyi açabilir:
-Could unlock {name}.,Kilidini açabilir: {name}
+Could unlock %{name}.,Kilidini açabilir: %{name}
 Credits,Emeği Geçenler
 Crops,Ekinler
-"Current annual emissions are {emissions} gigatonnes. <b class=""tip-goal"">Your goal is to get this to below 0.</b>","Mevcut yıllık emisyonlar {emissions} gigaton. <b class=""tip-goal"">Amacınız bunu 0'ın altına indirmektir.</b>"
-"Current annual emissions are {emissions}. <b class=""tip-goal"">Your goal is to get this to below 0.</b>","Mevcut yıllık salınımlar {emissions}. <b class=""tip-goal"">Amacın bunu 0'ın altına getirmek.</b>"
+"Current annual emissions are %{emissions} gigatonnes. [g]Your goal is to get this to below 0.[/g]","Mevcut yıllık emisyonlar %{emissions} gigaton. [g]Amacınız bunu 0'ın altına indirmektir.[/g]"
+"Current annual emissions are %{emissions}. [g]Your goal is to get this to below 0.[/g]","Mevcut yıllık salınımlar %{emissions}. [g]Amacın bunu 0'ın altına getirmek.[/g]"
 "Current annual emissions, in gigatonnes of CO2 equivalent.",Gigaton CO2 cinsinden mevcut yıllık  salınım.
-"Current biodiversity pressure is {amount}<span class=""type-total"">/{maxAmount}</span>.","Mevcut biyoçeşitlilik baskısı {amount}<span class=""type-total"">/{maxAmount}</span>."
+"Current biodiversity pressure is %{amount}[t]/%{maxAmount}[/t].","Mevcut biyoçeşitlilik baskısı %{amount}[t]/%{maxAmount}[/t]."
 Current energy use.,Mevcut enerji kullanımı.
 Current land use.,Mevcut arazi kullanımı.
 Current water demand.,Mevcut su talebi.
-"Current world contentedness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Şuanki küresel memnuniyet {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
+"Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].","Şuanki küresel memnuniyet %{contentedness}[t]/%{maxContentedness}[/t]."
 Design,Tasarım
 Development,Geliştirme
 Development Progress,Kalkınma İlerlemesi
@@ -81,37 +81,37 @@ Downgrade,Derecesini alçalt
 Drag a card up to assign leftover production,Kalan üretimi atamak için bir kartı yukarı sürükle
 Electricity,Elektrik
 Emissions,Salınımlar
-Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.,Salınımlar: Dünya'nın etrafında bir örtü. Her yıl {amount} gigaton salınım yapıyorsun.
+Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,Salınımlar: Dünya'nın etrafında bir örtü. Her yıl %{amount} gigaton salınım yapıyorsun.
 Energy Use,Enerji Kullanımı
-Energy: The fundamental mover. You're using {amount}TWh of energy.,Enerji: Esas haraket ettirici güç. {amount}TWh enerji kullanıyorsun.
+Energy: The fundamental mover. You're using %{amount}TWh of energy.,Enerji: Esas haraket ettirici güç. %{amount}TWh enerji kullanıyorsun.
 Events,Olaylar
 Extinction Rate,Soyu Tükenme Oranı
 Fuel,Yakıt
-"Fuel demand will change from <img src=""{iconFuel}"">{prevDemandFuel} to <img src=""{iconFuel}"">{nextDemandFuel} and electricity demand will change from <img src=""{iconElec}"">{prevDemandElec} to <img src=""{iconElec}"">{nextDemandElec}.","Yakıt talebi <img src=""{iconFuel}"">{prevDemandFuel} seviyesinden <img src=""{iconFuel}"">{nextDemandFuel} seviyesine gelecek ve elektrik talebi <img src=""{iconElec}"">{prevDemandElec} seviyesinden <img src=""{iconElec}"">{nextDemandElec} seviyesine gelecek."
-Global demand for {output}.,{output} için küresel talep.
-"Global {name} output will change from <img src=""{icon}"">{base} to <img src=""{icon}"">{changed} with no change in impacts.","Küresel {name} üretimi <img src=""{icon}"">{base} miktarından <img src=""{icon}"">{changed} miktarına herhangi bir etki olmadan değişecek."
+"Fuel demand will change from [i]%{iconFuel}[/i]%{prevDemandFuel} to [i]%{iconFuel}[/i]%{nextDemandFuel} and electricity demand will change from [i]%{iconElec}[/i]%{prevDemandElec} to [i]%{iconElec}[/i]%{nextDemandElec}.","Yakıt talebi [i]%{iconFuel}[/i]%{prevDemandFuel} seviyesinden [i]%{iconFuel}[/i]%{nextDemandFuel} seviyesine gelecek ve elektrik talebi [i]%{iconElec}[/i]%{prevDemandElec} seviyesinden [i]%{iconElec}[/i]%{nextDemandElec} seviyesine gelecek."
+Global demand for %{output}.,%{output} için küresel talep.
+"Global %{name} output will change from [i]%{icon}[/i]%{base} to [i]%{icon}[/i]%{changed} with no change in impacts.","Küresel %{name} üretimi [i]%{icon}[/i]%{base} miktarından [i]%{icon}[/i]%{changed} miktarına herhangi bir etki olmadan değişecek."
 Govt,Hükümet
 High,Yüksek
 How many seats your coalition has. Draw parties to your coalition by implementing projects they support.,Koalisyonunun ne kadar koltuğu olduğu. Destekledikleri projeleri uygulayarak koalisyonuna diğer partileri kat.
-"How much political capital you have. Political capital is what you spend to implement your plans. <b class=""tip-warn"">If you run out you'll be pushed out of government.</b>","Sahip olduğun siyasi sermaye. Siyasi sermaye, planlarını uygulamak için harcadığın şeydir. <b class=""tip-warn"">Eğer hepsini tüketirsen, iktidardan uzaklaştırılırsın.</b>"
-"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class=""tip-warn"">If this goes below 0 you will be removed from power.</b>","Dünyanın dört bir yanındaki insanların mevcut durum hakkında ne hissettiği. Bu; bölgesel memnuniyet, krizler ve politika kararlarının bir birleşimidir. <b class=""tip-warn"">Bu 0'ın altına düşerse, iktidardan uzaklaştırılırsın.</b>"
-I request that you implement {name}. (+{pc}PC),Şunu uygulamanı talep ediyorum: {name}. (+{pc}PC)
-I request that you stop {name}. (+{pc}PC),Şu işlemi durdumanı talep ediyorum: {name} (+{pc}PC)
+"How much political capital you have. Political capital is what you spend to implement your plans. [w]If you run out you'll be pushed out of government.[/w]","Sahip olduğun siyasi sermaye. Siyasi sermaye, planlarını uygulamak için harcadığın şeydir. [w]Eğer hepsini tüketirsen, iktidardan uzaklaştırılırsın.[/w]"
+"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. [w]If this goes below 0 you will be removed from power.[/w]","Dünyanın dört bir yanındaki insanların mevcut durum hakkında ne hissettiği. Bu; bölgesel memnuniyet, krizler ve politika kararlarının bir birleşimidir. [w]Bu 0'ın altına düşerse, iktidardan uzaklaştırılırsın.[/w]"
+I request that you implement %{name}. (+%{pc}PC),Şunu uygulamanı talep ediyorum: %{name}. (+%{pc}PC)
+I request that you stop %{name}. (+%{pc}PC),Şu işlemi durdumanı talep ediyorum: %{name} (+%{pc}PC)
 Image:,Görsel:
-Improve your relationship with {name} to activate this ability.,Bu yeteneği açmak için {name} ile olan ilişkinizi geliştirin.
+Improve your relationship with %{name} to activate this ability.,Bu yeteneği açmak için %{name} ile olan ilişkinizi geliştirin.
 Increases,Artırır
 Infrastructure,Altyapı
 Infrastructure projects take 20% longer to finish.,Altyapı projelerinin tamamlanması %20 daha fazla sürecek.
 Land Use,Arazi Kullanımı
-Land: They're not making anymore of it. You're using {percent} of land.,Arazi: Artık bunu üretmiyorlar. Arazinin {percent} kadarını kullanıyorsun.
+Land: They're not making anymore of it. You're using %{percent} of land.,Arazi: Artık bunu üretmiyorlar. Arazinin %{percent} kadarını kullanıyorsun.
 Level,Seviye
 Likely to increase,Artırması muhtemel:
 Likely to reduce,Azaltması muhtemel:
-Likely to unlock the {tag} process.,{tag} işleminin kilidini açması muhtemel.
-Likely to unlock the {tag} project.,{tag} projesini açması muhtemel.
+Likely to unlock the %{tag} process.,%{tag} işleminin kilidini açması muhtemel.
+Likely to unlock the %{tag} project.,%{tag} projesini açması muhtemel.
 Likely to unlock this process:,Şu işlemin kilidini muhtemelen açar:
 Likely to unlock this project:,Şu projeyi açması muhtemel:
-Likely to unlock {name}.,Kilidini açması muhtemel
+Likely to unlock %{name}.,Kilidini açması muhtemel
 Likes,Sevdikleri
 Livestock,Hayvancılık
 Loading,Yükleniyor
@@ -170,7 +170,7 @@ Research and Writing,Araştırma ve Yazma
 Research and infrastructure take 10% less time to complete.,Araştırma ve Altyapı projelerinin tamamlanması %10 daha az zaman alacak
 Research and infrastructure take 10% more time to complete.,Araştırma ve Altyapı projelerinin tamamlanması %10 daha fazla zaman alacak
 Research and infrastructure take 5% more time to complete.,Araştırma ve Altyapı projelerinin tamamlanması %5 daha fazla zaman alacak
-"Research points are 1<img src=""{iconPC}""> cheaper.","Araştırma puanları 1<img src=""{iconPC}""> daha ucuz."
+"Research points are 1[i]%{iconPC}[/i] cheaper.","Araştırma puanları 1[i]%{iconPC}[/i] daha ucuz."
 Research points: Allocate them to research projects!,Araştırma puanları: bunları araştırma projelerine tahsis et!
 Researching,Araştırılıyor
 Restart Game,Oyunu yeniden başlat
@@ -182,11 +182,11 @@ Skip,Geç
 Skip the tutorial.,Eğitimi atla.
 Small chance to increase,Düşük şansla artırır:
 Small chance to reduce,Düşük şansla azaltır:
-Small chance to unlock the {tag} process.,Düşük ihtimalle {tag} işleminin kilidini açar.
-Small chance to unlock the {tag} project.,Düşük ihtimalle {tag} projesini açar.
+Small chance to unlock the %{tag} process.,Düşük ihtimalle %{tag} işleminin kilidini açar.
+Small chance to unlock the %{tag} project.,Düşük ihtimalle %{tag} projesini açar.
 Small chance to unlock this process:,Düşük ihtimalle şu işlemin kilidini açar:
 Small chance to unlock this project:,Az ihtimalle şu projeyi açar:
-Small chance to unlock {name}.,Düşük ihtimalle kilidini açar: {name}.
+Small chance to unlock %{name}.,Düşük ihtimalle kilidini açar: %{name}.
 Sound,Ses
 Stats,İstatistikler
 Stops regional development throughout the world.,Dünya genelinde bölgesel kalkınmayı durdurur.
@@ -194,36 +194,36 @@ Tap for more details.,Detay için tıkla.
 Temp. Anomaly,Sıcaklık Anomalisi
 Temperature,Sıcaklık
 Thank you for playing!,Oynadığınız için teşekkürler!
-That's a {percent}% change.,Bu %{percent} değişim demek.
-The amount of sea level rise is currently {amount}m.,Deniz seviyesindeki artış miktarı şuan {amount} metre.
+That's a %{percent}% change.,Bu %%{percent} değişim demek.
+The amount of sea level rise is currently %{amount}m.,Deniz seviyesindeki artış miktarı şuan %{amount} metre.
 "The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.",Mevcut biyolojik çeşitlilik baskısı. Yüksek arazi kullanımı ve diğer faktörler bunu ve bununla birlikte ekolojik çöküş riskini artırır.
-"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class=""tip-goal"">Your goal is to get this to below 20.</b>","Mevcut biyolojik çeşitlilik baskısı. Yüksek arazi kullanımı ve diğer faktörler bunu ve bununla birlikte ekolojik çöküş riskini artırır. <b class=""tip-goal"">Amacın bunu 20'nin altına indirmek.</b>"
-"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class=""tip-goal"">Your goal is to get this below 1°C.</b>","Mevcut küresel sıcaklık anomalisi +{anomali}°C'dir.  Bu ne kadar yüksek olursa, iklim o kadar öngörülemez hale gelir. <b class=""tip-goal"">Amacın bunu 1°C'nin altına düşürmek.</b>"
-"The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class=""tip-goal"">Your goal is to get this below 1°C.</b>","Mevcut küresel sıcaklık anomalisi. strong>Artan ısınma</strong> politik sermayene zarar verir. <b class=""tip-goal"">Hedefin bunu 1°C'nin altına indirmek.</b>"
+"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. [g]Your goal is to get this to below 20.[/g]","Mevcut biyolojik çeşitlilik baskısı. Yüksek arazi kullanımı ve diğer faktörler bunu ve bununla birlikte ekolojik çöküş riskini artırır. [g]Amacın bunu 20'nin altına indirmek.[/g]"
+"The current global temperature anomaly is +%{anomaly}°C. The higher this is, the more unpredictable the climate becomes. [g]Your goal is to get this below 1°C.[/g]","Mevcut küresel sıcaklık anomalisi +{anomali}°C'dir.  Bu ne kadar yüksek olursa, iklim o kadar öngörülemez hale gelir. [g]Amacın bunu 1°C'nin altına düşürmek.[/g]"
+"The current global temperature anomaly. [b]Increased warming[/b] will damage your political capital. [g]Your goal is to get this below 1°C.[/g]","Mevcut küresel sıcaklık anomalisi. strong>Artan ısınma[/b] politik sermayene zarar verir. [g]Hedefin bunu 1°C'nin altına indirmek.[/g]"
 The estimated value after production changes have finished.,Üretim değişiklikleri bittikten sonra tahmini değer.
 The factors behind this event.↓,Bu olayın arkasındaki faktörler.↓
-The following processes can't produce as much as they need to: {processesOverLimit},Aşağıdaki işlemler gerektiği kadar üretemiyor: {processesOverLimit}
+The following processes can't produce as much as they need to: %{processesOverLimit},Aşağıdaki işlemler gerektiği kadar üretemiyor: %{processesOverLimit}
 The number of people on the planet.,Gezegendeki insan sayısı.
 The world is becoming hostile to life.,Dünya yaşama düşman hale geliyor.
 The world is becoming unbearable.,Dünya yaşanılmaz hale geliyor.
 The world is recovering.,Dünya iyileşiyor.
 The world is still warming.,Dünya hala ısınıyor.
-The {n}{ext} Planning Session,{n}{ext} Planlama Oturumu
+The %{n}%{ext} Planning Session,%{n}%{ext} Planlama Oturumu
 There are multiple production shortages:,Birden fazla üretim kıtlığı var:
 There is a alarming production shortage,Endişe verici bir üretim kıtlığı var
 There is a critical production shortage,Kritik bir üretim kıtlığı var
 There is a mild production shortage,Hafif bir üretim kıtlığı var
 There is a severe production shortage,Şiddetli bir üretim kıtlığı var
 There is currently no limit on this process' mix share.,Şu anda bu işlemin karışım paylaşımında herhangi bir sınırlama yok.
-There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,Yeterince {resources} yok. Üretim işlemlerini bundan daha az kullanacak şekilde değiştir veya talebi azalt.
-These changes will take {changesTime} planning cycle{ext} to take effect.,Bu değişikliklerin eyleme geçmesi {changesTime} tur {ext} sürecek.
+There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,Yeterince %{resources} yok. Üretim işlemlerini bundan daha az kullanacak şekilde değiştir veya talebi azalt.
+These changes will take %{changesTime} planning cycle%{ext} to take effect.,Bu değişikliklerin eyleme geçmesi %{changesTime} tur %{ext} sürecek.
 They won't have much effect.,Çok fazla etkileri olmayacak.
-"This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class=""type-total"">/{maxAmount}</span>.","Bu, bölgesel memnuniyeti {name} talebine göre değiştirir. Mevcut küresel memnuniyet {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
-"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","Bu, gelir seviyesine bağlı olarak bölgesel memnuniyeti değiştirir (daha zengin bölgeler bunu daha fazla hissedecek). Mevcut dünya memnuniyeti {contentedness}<span class=""type-total"">/{maxContentedness}</span>."
-"This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","Bu, {name} talebini <img src=""{icon}"">{currentDemand} seviyesinden <img src=""{icon}"">{afterDemand} seviyesine getirir."
-"This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","Bu, {name} talebini <img src=""{icon}"">{currentDemand} seviyesinden <img src=""{icon}"">{afterDemand} seviyesine getirir. Bu, tüm {name} talebinde %{percent} değişim demektir."
-"This event can occur if ""{name}"" is {label}.","Bu olay, eğer ""{name}"" {label} ise gerçekleşebilir."
-This event can occur if {name} is your {relType}.,Bu olay {name} sizin {relType} ise yaşanabilir.
+"This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].","Bu, bölgesel memnuniyeti %{name} talebine göre değiştirir. Mevcut küresel memnuniyet %{contentedness}[t]/%{maxContentedness}[/t]."
+"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].","Bu, gelir seviyesine bağlı olarak bölgesel memnuniyeti değiştirir (daha zengin bölgeler bunu daha fazla hissedecek). Mevcut dünya memnuniyeti %{contentedness}[t]/%{maxContentedness}[/t]."
+"This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}.","Bu, %{name} talebini [i]%{icon}[/i]%{currentDemand} seviyesinden [i]%{icon}[/i]%{afterDemand} seviyesine getirir."
+"This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.","Bu, %{name} talebini [i]%{icon}[/i]%{currentDemand} seviyesinden [i]%{icon}[/i]%{afterDemand} seviyesine getirir. Bu, tüm %{name} talebinde %%{percent} değişim demektir."
+"This event can occur if ""%{name}"" is %{label}.","Bu olay, eğer ""%{name}"" %{label} ise gerçekleşebilir."
+This event can occur if %{name} is your %{relType}.,Bu olay %{name} sizin %{relType} ise yaşanabilir.
 This event is influenced by biodiversity pressures.,Bu olay biyolojik çeşitlilik baskılarından etkilenir.
 This event is influenced by how happy people are.,"Bu olay, insanların ne kadar mutlu olduklarından etkilenir."
 This event is influenced by how much energy production can meltdown.,"Bu olay, ne kadar enerji üretiminin nükleer erime geçirebileceğinden etkilenir."
@@ -241,54 +241,54 @@ This event is influenced by the demand for fuel.,Bu olay yakıt talebinden etkil
 This event is influenced by the demand for plant calories.,"Bu olay, bitki kalorilerine olan talepten etkilenir."
 This event is influenced by the global temperature anomaly.,"Bu olay, küresel sıcaklık anomalisinden etkilenir."
 This event is influenced by the habitability of regions.,Bu olay bölgelerin yaşanabilirliğinden etkilenir.
-This event is influenced by the mix share of {name}.,Bu olay şunun bir karışımından etkilenmiştir: {name}
-This event is influenced by the output of {name}.,Bu olay {name} üretiminden etkilenmiştir.
+This event is influenced by the mix share of %{name}.,Bu olay şunun bir karışımından etkilenmiştir: %{name}
+This event is influenced by the output of %{name}.,Bu olay %{name} üretiminden etkilenmiştir.
 This event occurred during this planning cycle.,Bu olay planlama dögüsü sırasında gerçekleşti.
 This feedstock has been depleted.,Bu hammadde tükendi.
 "This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.","Bu hammadde tükendi, bu yüzden işlem durmuş durumda. Puanlarunı diğer işlemlere tahsis etmelisin."
 This industry is not yet significant.,Bu endüstri henüz önemli değil.
-This industry's demand for {output}. This makes up {percent}% of total demand for {output}.,"Bu endüstrinin {output} talebi. Bu, {output} için toplam talebin %{percent}'ini oluşturur."
+This industry's demand for %{output}. This makes up %{percent}% of total demand for %{output}.,"Bu endüstrinin %{output} talebi. Bu, %{output} için toplam talebin %%{percent}'ini oluşturur."
 This industry's non-energy CO2eq emissions.,Bu endüstrinin enerji kaynaklı olmayan CO2 cinsinden salınımları.
 This is not the end...,Bu bir son değil…
 This new character will be unlocked:,Şu yeni karakter açılacak:
 This output's production will,Bu çıktının üretimi
-This policy costs {remainingCost} political capital to implement.,Bu politikanın uygulanması {remainingCost} politik sermayeye mal olur.
+This policy costs %{remainingCost} political capital to implement.,Bu politikanın uygulanması %{remainingCost} politik sermayeye mal olur.
 This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes.,Bu işlem hammadde veya diğer sınırlamalar yüzünden bu kadar üretemez. Puanlarını başka işlemlere aktarmalısın.
-This process currently makes up {mixPercent}% of {output} production.,Bu işlem şu anda {output} üretiminin %{mixPercent} kadarını karşılıyor.
-This process currently produces {amount}<img src='{outputIcon}'> and {emissions}<img src='{emissionsIcon}'> per year.,Bu işlem şuanda yılda {amount}<img src='{outputIcon}'> ve {emissions}<img src='{emissionsIcon}'>  üretiyor.
-This process uses {feedstockName}. {feedstockEstimateDesc},Bu işlem {feedstockName} kullanır. {feedstockEstimateDesc}
+This process currently makes up %{mixPercent}% of %{output} production.,Bu işlem şu anda %{output} üretiminin %%{mixPercent} kadarını karşılıyor.
+This process currently produces %{amount}[i]%{outputIcon}[/i] and %{emissions}[i]%{emissionsIcon}[/i] per year.,Bu işlem şuanda yılda %{amount}[i]%{outputIcon}[/i] ve %{emissions}[i]%{emissionsIcon}[/i]  üretiyor.
+This process uses %{feedstockName}. %{feedstockEstimateDesc},Bu işlem %{feedstockName} kullanır. %{feedstockEstimateDesc}
 This project was completed.,Bu proje tamamlandı.
-This region has {incomeName} living standards. Higher living standards mean higher material footprints.,Bu bölge {incomeName} yaşam standartlarına sahip. Daha yüksek yaşam standartları daha fazla materyal ayak izi demek.
+This region has %{incomeName} living standards. Higher living standards mean higher material footprints.,Bu bölge %{incomeName} yaşam standartlarına sahip. Daha yüksek yaşam standartları daha fazla materyal ayak izi demek.
 This region's contentedness.,Bu bölgenin memnuniyeti.
 This region's current precipitation range.,Bu bölgenin mevcut yağış aralığı.
 This region's current temperature range.,Bu bölgenin mevcut sıcaklık aralığı.
 This region's habitability.,Bu bölgenin yaşanabilirliği.
 This region's habitability. Natural disasters and hotter temperatures lower habitability.,Bu bölgenin yaşanabilirliği. Doğal afetler ve daha yüksek sıcaklıklar yaşanabilirliği azaltır.
-"This region's income level has contracted to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.","Bu bölgenin gelir düzeyi <strong>{income}</strong> seviyesine daraldı. <img src='{iconElec}'>elektrik, <img src='{iconFuel}'>yakıt, <img src='{iconPCals}'>bitkisel ve <img src='{iconACals}'>hayvansal gıda talebi güncellendi."
-"This region's income level has increased to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.","Bu bölgenin gelir düzeyi <strong>{gelir}</strong> seviyesine yükseldi. <img src='{iconElec}'>elektrik, <img src='{iconFuel}'>yakıt, <img src='{iconPCals}'>bitkisel ve <img src='{iconACals}'>hayvansal gıda talebi güncellendi."
-This region's new demand for {output}.,Bu bölgenin {output} için yeni talebi.
+"This region's income level has contracted to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Bu bölgenin gelir düzeyi [b]%{income}[/b] seviyesine daraldı. [i]%{iconElec}[/i]elektrik, [i]%{iconFuel}[/i]yakıt, [i]%{iconPCals}[/i]bitkisel ve [i]%{iconACals}[/i]hayvansal gıda talebi güncellendi."
+"This region's income level has increased to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Bu bölgenin gelir düzeyi [b]{gelir}[/b] seviyesine yükseldi. [i]%{iconElec}[/i]elektrik, [i]%{iconFuel}[/i]yakıt, [i]%{iconPCals}[/i]bitkisel ve [i]%{iconACals}[/i]hayvansal gıda talebi güncellendi."
+This region's new demand for %{output}.,Bu bölgenin %{output} için yeni talebi.
 This region's new income level.,Bu bölgenin yeni gelir seviyesi
-This region's per-capita demand level for {output}. The total regions's demand is {demand}. This makes up {demandPercent} of total demand for {output}.,Bu bölgenin {output} için olan kişi başına talep seviyesi. Bölgenin toplam talebi {demand}. Bu toplam {output} talebinin {demandPercent} kadarını oluşturuyor.
-This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.,Bu bölgenin {output} için kişi başına talep seviyesi. Bölgenin toplam talebi  {demand}<img src='{icon}' />. Bu toplam {output} talebinin {percent} kadarını oluşturuyor.
-This region's previous demand for {output}.,Bu bölgenin {output} için önceki talebi.
+This region's per-capita demand level for %{output}. The total regions's demand is %{demand}. This makes up %{demandPercent} of total demand for %{output}.,Bu bölgenin %{output} için olan kişi başına talep seviyesi. Bölgenin toplam talebi %{demand}. Bu toplam %{output} talebinin %{demandPercent} kadarını oluşturuyor.
+This region's per-capita demand level for %{output}. The total regions's demand is %{demand}[i]%{icon}[/i]. This makes up %{percent}% of total demand for %{output}.,Bu bölgenin %{output} için kişi başına talep seviyesi. Bölgenin toplam talebi  %{demand}[i]%{icon}[/i]. Bu toplam %{output} talebinin %{percent}% kadarını oluşturuyor.
+This region's previous demand for %{output}.,Bu bölgenin %{output} için önceki talebi.
 This region's previous income level.,Bu bölgenin önceki gelir seviyesi
 This region's progress to the next income level.,Bu bölgenin bir sonraki gelir düzeyine ilerleme seviyesi.
-"This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","Bu, {name} salınımlarını <img src=""{icon}"">{emissionsBefore} seviyesinden <img src=""{icon}"">{emissionsAfter} seviyesine getirecek. Bu tüm Salınımların %{emissionsChange} kadarını değiştirecek"
-This will change {resource} demand for {name} by some unknown amount.,"Bu, {resource} için olan {name} talebini bilinmeyen bir miktar kadar değiştirir."
-"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","Bu, {name} için olan {resource} talebini <img src=""{icon}"">{demandBefore} seviyesinden <img src=""{icon}"">{demandAfter} seviyesine getirecek. Bu, tüm {resource} talebinde %{percent} kadar değişim demek."
-"This will change {short} for {name} from <img src=""{icon}"">{change}","Bu, {name} için {short} değerini <img src=""{icon}"">{change}"
-This will directly change annual emissions by {amount}.{percent},"Bu, yıllık emisyonları doğrudan {amount}. {percent} oranında değiştirecektir."
-This will directly change global precipitation by {amount}<strong>cm/yr</strong>.,"Bu, küresel yağış miktarını doğrudan  {amount}<strong>cm/yıl</strong> kadar değiştirir."
-This will directly change the global temperature anomaly by {amount}<strong>°c</strong>.,"Bu, küresel sıcaklık anomalisini doğrudan {amount}<strong>°c</strong> kadar değiştirecektir."
-This will limit the amount of land that processes can use. The amount of land under protection will change from {before}% to {after}%.,"Bu, süreçlerin kullanabileceği arazi miktarını sınırlayacaktır. Koruma altındaki arazi miktarı {before}%’ten {after}%’e değişecektir."
-This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.,Bu işlemin tamamlanması yaklaşık {remainingCost} sürer. İlerlemesini hızlandırmak için daha fazla {kind} puanı tahsis et.
+"This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.","Bu, %{name} salınımlarını [i]%{icon}[/i]%{emissionsBefore} seviyesinden [i]%{icon}[/i]%{emissionsAfter} seviyesine getirecek. Bu tüm Salınımların %%{emissionsChange} kadarını değiştirecek"
+This will change %{resource} demand for %{name} by some unknown amount.,"Bu, %{resource} için olan %{name} talebini bilinmeyen bir miktar kadar değiştirir."
+"This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.","Bu, %{name} için olan %{resource} talebini [i]%{icon}[/i]%{demandBefore} seviyesinden [i]%{icon}[/i]%{demandAfter} seviyesine getirecek. Bu, tüm %{resource} talebinde %%{percent} kadar değişim demek."
+"This will change %{short} for %{name} from [i]%{icon}[/i]%{change}","Bu, %{name} için %{short} değerini [i]%{icon}[/i]%{change}"
+This will directly change annual emissions by %{amount}.%{percent},"Bu, yıllık emisyonları doğrudan %{amount}. %{percent} oranında değiştirecektir."
+This will directly change global precipitation by %{amount}[b]cm/yr[/b].,"Bu, küresel yağış miktarını doğrudan  %{amount}[b]cm/yıl[/b] kadar değiştirir."
+This will directly change the global temperature anomaly by %{amount}[b]°c[/b].,"Bu, küresel sıcaklık anomalisini doğrudan %{amount}[b]°c[/b] kadar değiştirecektir."
+This will limit the amount of land that processes can use. The amount of land under protection will change from %{before}% to %{after}%.,"Bu, süreçlerin kullanabileceği arazi miktarını sınırlayacaktır. Koruma altındaki arazi miktarı %{before}%’ten %{after}%’e değişecektir."
+This will take about %{remainingCost} to finish. Allocate more %{kind} points to accelerate its progress.,Bu işlemin tamamlanması yaklaşık %{remainingCost} sürer. İlerlemesini hızlandırmak için daha fazla %{kind} puanı tahsis et.
 Tiny chance to increase,Çok düşük şansla artırır:
 Tiny chance to reduce,Çok düşük şansla azaltır:
-Tiny chance to unlock the {tag} process.,Çok düşük ihtimalle {tag} işleminin kilidini açar.
-Tiny chance to unlock the {tag} project.,Çok düşük ihtimalle {tag} projesini açar.
+Tiny chance to unlock the %{tag} process.,Çok düşük ihtimalle %{tag} işleminin kilidini açar.
+Tiny chance to unlock the %{tag} project.,Çok düşük ihtimalle %{tag} projesini açar.
 Tiny chance to unlock this process:,Çok düşük ihtimalle şu işlemin kilidini açar:
 Tiny chance to unlock this project:,Çok düşük ihtimalle şu projeyi açar:
-Tiny chance to unlock {name}.,Çok düşük ihtimalle kilidini açar: {name}.
+Tiny chance to unlock %{name}.,Çok düşük ihtimalle kilidini açar: %{name}.
 Tips,İpuçları
 Total,Toplam
 Total Change,Toplam Değişim
@@ -297,47 +297,47 @@ Try Again?,Tekrar Dene?
 Undo,Geri al
 Unlikely to increase,Artırması muhtemel değil:
 Unlikely to reduce,Azaltması muhtemel değil:
-Unlikely to unlock the {tag} process.,{tag} işleminin kilidini açması muhtemel değil.
-Unlikely to unlock the {tag} project.,{tag} projesini açması muhtemel değil.
+Unlikely to unlock the %{tag} process.,%{tag} işleminin kilidini açması muhtemel değil.
+Unlikely to unlock the %{tag} project.,%{tag} projesini açması muhtemel değil.
 Unlikely to unlock this process:,Şu işlemin kilidini açması muhtemel değil:
 Unlikely to unlock this project:,Şu projeyi açması muhtemel değil:
-Unlikely to unlock {name}.,Kilidini açması muhtemel değil: {name}.
+Unlikely to unlock %{name}.,Kilidini açması muhtemel değil: %{name}.
 Unused,Kullanılmamış
 Upgrading in one planning cycle.,Bir planlama döngüsü içerisinde yükseltilecek.
 Very High,Çok Yüksek
 Very Low,Çok az
 View All,Tümünü Gör
 Water Stress,Su stresi
-Water: The giver of life. You're using {percent} of water resources.,Su: Hayat verir. Su kaynaklarının {percent} kadarını kullanıyorsun.
+Water: The giver of life. You're using %{percent} of water resources.,Su: Hayat verir. Su kaynaklarının %{percent} kadarını kullanıyorsun.
 We aren't tracking this feedstock.,Bu hammaddeyi takip etmiyoruz.
 Well Played!,İyi Oyundu!
 Will increase,Artıracak:
 Will reduce,Azaltacak
-Will unlock the {tag} process.,{tag} işlemininin kilidini açar.
-Will unlock the {tag} project.,{tag} projesini açar.
+Will unlock the %{tag} process.,%{tag} işlemininin kilidini açar.
+Will unlock the %{tag} project.,%{tag} projesini açar.
 Will unlock this process:,Şu işlemi açar:
 Will unlock this project:,Şu projeyi açar:
-Will unlock {name}.,Kilidini açar: {tag}.
+Will unlock %{name}.,Kilidini açar: %{tag}.
 Withdraw,Geri Çek
 Won't increase,Artırmayacak:
 Won't reduce,Azaltmayacak
-Won't unlock the {tag} process.,{tag} işleminin kilidini açmaz.
-Won't unlock the {tag} project.,{tag} projesini açmaz
+Won't unlock the %{tag} process.,%{tag} işleminin kilidini açmaz.
+Won't unlock the %{tag} project.,%{tag} projesini açmaz
 Won't unlock this process:,Şu işlemi açmaz:
 Won't unlock this project:,Şu projeyi açmaz:
-Won't unlock {name}.,Kilidini açmaz: {tag}.
+Won't unlock %{name}.,Kilidini açmaz: %{tag}.
 World,Dünya
 Yea,Evet
 You had an extraterrestrial encounter.,Dünya dışı bir karşılaşma yaşadın
-You have {yearsLeft} years left in your tenure.,Görev sürenizde {yearsLeft}  yılınız kaldı
-You received a request to ban this process:,Şu işlemi durdurmak için bir talep aldın: {name}
+You have %{yearsLeft} years left in your tenure.,Görev sürenizde %{yearsLeft}  yılınız kaldı
+You received a request to ban this process:,Şu işlemi durdurmak için bir talep aldın: %{name}
 You received a request to implement this project:,Şu projeyi uygulamak için bir talep aldın:
-You received a request to promote this process:,Şu işlemi desteklemek için talep aldın: {name}
+You received a request to promote this process:,Şu işlemi desteklemek için talep aldın: %{name}
 You received a request to stop this project:,Şu projeyi durdurmak için bir talep aldın:
 You should reallocate its points to other processes.,Bu işlemin puanlarını başka noktalara aktarmalısın.
 You were bailed out.,Kurtarıldın.
-Your coalition has {coalitionSeats}/{totalSeats} seats.,Koalisyonunuzda {coalitionSeats}/{totalSeats} sandalye var.
-Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,{name} ile olan ilişkiniz. Beğendikleri projeleri uygulayarak artırabilirsin. 5 veya daha fazla kalpte koalisyonuna katılacaklar.
+Your coalition has %{coalitionSeats}/%{totalSeats} seats.,Koalisyonunuzda %{coalitionSeats}/%{totalSeats} sandalye var.
+Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,%{name} ile olan ilişkiniz. Beğendikleri projeleri uygulayarak artırabilirsin. 5 veya daha fazla kalpte koalisyonuna katılacaklar.
 alarming,Endişe verici
 an unknown amount,Bilinmeyen  bir miktarda
 biodiversity pressure,biyoçeşitlilik baskısı
@@ -345,14 +345,14 @@ by an unknown amount,Bilinmeyen bir miktar kadar
 cost,maliyet
 critical,Kritik
 crops,ekinler
-decrease {k} by {change}%,{k}'yi {change}% azalt
+decrease [i]%{icon}[/i] %{k} by %{change}%,[i]%{icon}[/i] %{k}'yi %{change}% azalt
 development time,geliştirme süresi
 electricity,elektrik
 emissions,salınımlar
 energy use,enerji kullanımı
-from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit},{tipIcon}{cost}{unit} seviyesinden {tipIcon}{newCost}{unit} seviyesine gelir.
+from {tipIcon}%{cost}{unit} to {tipIcon}{newCost}{unit},{tipIcon}%{cost}{unit} seviyesinden {tipIcon}{newCost}{unit} seviyesine gelir.
 fuel,yakıt
-increase {k} by {warn}{change}%,{k} %{warn}{change} artır
+increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,[i]%{icon}[/i] %{k} %{warn}%{change}% artır
 land use,Arazi kullanımı
 livestock,hayvan
 mild,Hafif
@@ -365,47 +365,47 @@ th,.
 the extinction rate,Soyu tükenme oranı
 water use,su kullanımı
 year(s),yıl(lar)
-"{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> CO2 salınımlarını <strong>%{percent}</strong> {changeDir}."
-{changeDir} all {name} production by <strong>{percent}%.</strong>,Tüm {name} üretimini  <strong>%{percent}.</strong> kadar {changeDir}.
-{changeDir} biodiversity pressure by {amount}.,Biyoçeşitlilik baskısını {amount} kadar {changeDir}.
-"{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> tarafından ortaya çıkan biyoçeşitlilik baskısını <strong>{amount}</strong> kadar {changeDir}."
-{changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] memnuniyeti <strong>{amount}</strong> {changeDir} .
-"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","{name} talebini <img src=""{icon}"">{amount} kadar {changeDir}."
-{changeDir} demand for {name} by <strong>{percent}%</strong>.,{name} talebini <strong>%{percent}</strong> kadar {changeDir}.
-{changeDir} demand for {tag} by {amount}.,{tag} talebini {amount} kadar {changeDir}
-{changeDir} emissions by {amount}.,Salınımları {amount} kadar {changeDir}.
-{changeDir} global population by {amount}.,Küresel nüfusu {amount} {changeDir}.
-{changeDir} global population growth by {amount}<strong>%.</strong>,Küresel nüfus artışını </strong>%{amount}<strong> {changeDir}.
-{changeDir} global precipitation by {amount}<strong>cm/yr</strong>.,Küresel yağış miktarını  {amount}<strong>cm/yıl</strong> kadar {changeDir}
-{changeDir} habitability in {type} regions by {amount}.,{type} tipi bölgelerin yaşanılabilirliğini {amount} {changeDir}.
-{changeDir} maximum output for {process} by <strong>{amount}</strong>.,{process} sürecinin maksimum çıktısını <strong>{amount}</strong> {changeDir}.
-"{changeDir} output for <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>","<span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> çıktısını <strong>%{percent}</strong> {changeDir}."
-{changeDir} the CO2 emissions for these processes by <strong>{percent}%.</strong>,Bu işlemlerin CO2 salınımlarının miktarını  <strong>%{percent}</strong> {changeDir}.
-{changeDir} the amount of sea level rise by {amount}mm/year.,Deniz seviyesi artışını yılda {amount} mm {changeDir}.
-"{changeDir} the chance of ""{event}"" by {amount}.","""{event}"" olasılığını {amount} {changeDir}."
-{changeDir} the global temperature by {amount}<strong>°c</strong>.,Küresel sıcaklığı {amount}<strong>°c</strong> {changeDir}.
-{changeDir} the rate of sea level rise by {amount}mm/year.,Deniz seviyesindeki artış miktarını yıllık {amount} mm {changeDir}.
-{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] Küresel memnuniyeti <strong>{amount}</strong> {changeDir}.
-{changeDir} world contentedness by {amount}.,Küresel memnuniyeti {amount}  kadar {changeDir}.
-{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{tag} {kind} maliyetini <b>{tipAmount}</b> kadar {changeDir}
-{changeDir} {label} for {tag} by <strong>{amount}</strong>.,{tag} için {label} <strong>{amount}</strong> kadar {changeDir}.
-"{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{name} arzını mevcut arzın <img src=""{icon}"">{amount}."
-{changeDir} {name} supply by <strong>{percent}%.</strong>,{name} arzını <strong>{percent}%.</strong> {changeDir}
-{changeDir} {name} supply by [{icon}]{amount}.,{name} arzını [{icon}]{amount} {changeDir}.
-{changeDir} {resource} demand for {tag} by {amount}.,{tag} için olan {resource} talebini {amount} {changeDir}.
-{changeDir} {tag} output by <strong>{percent}%.</strong>,{tag} çıktısını <strong>%{percent}</strong> kadar {changeDir}.
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{tag} tarafından ortaya çıkan  {type} salınımlarını <strong>{amount}</strong> {changeDir}.
-{cost} yrs,{cost} yıl
-{disaster} in {region},{region} bölgesinde {disaster}
-"{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","{emissionsBefore} miktarından <img src=""{icon}"">{emissionsAfter} miktarına. Bu tüm salınımlarıda %{emissionsChange} değişim demek."
-"{fromAmount} to {toAmount}<img src=""{icon}"">.","{fromAmount} miktarından {toAmount}<img src=""{icon}""> miktarına getirir."
-"{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.",{name} buna karşı. Eğer uygularsan onunla olan ilişkin -<img src='{icon}' /> kötüleşecek.
-"{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.",{name} bunu destekliyor. Eğer uygularsan ilişkin +<img src='{icon}' /> kadar gelişir.
-{name} will be unavailable while this project is active.,Bu proje aktif olduğu sürece {name} müsait olmayacak.
-{points} {kind} points are allocated to this project,Bu projeye {points} {kind} puan tahsis edildi.
-{region} is now {income} income.,{region} bölgesi şimdi {income} Gelirde.
-{type} emissions,{type} salınımları
-{years} yrs left,{years} yıl kaldı
+"%{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b]","[e][i]%{icon}[/i]%{feature}[/e] CO2 salınımlarını [b]%%{percent}[/b] %{changeDir}."
+%{changeDir} all %{name} production by [b]%{percent}%.[/b],Tüm %{name} üretimini  [b]%%{percent}.[/b] kadar %{changeDir}.
+%{changeDir} biodiversity pressure by %{amount}.,Biyoçeşitlilik baskısını %{amount} kadar %{changeDir}.
+"%{changeDir} biodiversity pressure for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{amount}.[/b]","[e][i]%{icon}[/i]%{feature}[/e] tarafından ortaya çıkan biyoçeşitlilik baskısını [b]%{amount}[/b] kadar %{changeDir}."
+%{changeDir} contentedness by [b]%{amount}[/b].,[contentedness] memnuniyeti [b]%{amount}[/b] %{changeDir} .
+"%{changeDir} demand for %{name} by [i]%{icon}[/i]%{amount}.","%{name} talebini [i]%{icon}[/i]%{amount} kadar %{changeDir}."
+%{changeDir} demand for %{name} by [b]%{percent}%[/b].,%{name} talebini [b]%%{percent}[/b] kadar %{changeDir}.
+%{changeDir} demand for %{tag} by %{amount}.,%{tag} talebini %{amount} kadar %{changeDir}
+%{changeDir} emissions by %{amount}.,Salınımları %{amount} kadar %{changeDir}.
+%{changeDir} global population by %{amount}.,Küresel nüfusu %{amount} %{changeDir}.
+%{changeDir} global population growth by %{amount}[b]%.[/b],Küresel nüfus artışını [/b]%%{amount}[b] %{changeDir}.
+%{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,Küresel yağış miktarını  %{amount}[b]cm/yıl[/b] kadar %{changeDir}
+%{changeDir} habitability in %{kind} regions by %{amount}.,%{kind} tipi bölgelerin yaşanılabilirliğini %{amount} %{changeDir}.
+%{changeDir} maximum output for %{process} by [b]%{amount}[/b].,%{process} sürecinin maksimum çıktısını [b]%{amount}[/b] %{changeDir}.
+"%{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b]","[e][i]%{icon}[/i][b]%{feature}[/b][/e] çıktısını [b]%%{percent}[/b] %{changeDir}."
+%{changeDir} the CO2 emissions for these processes by [b]%{percent}%.[/b],Bu işlemlerin CO2 salınımlarının miktarını  [b]%%{percent}[/b] %{changeDir}.
+%{changeDir} the amount of sea level rise by %{amount}mm/year.,Deniz seviyesi artışını yılda %{amount} mm %{changeDir}.
+"%{changeDir} the chance of ""%{event}"" by %{amount}.","""%{event}"" olasılığını %{amount} %{changeDir}."
+%{changeDir} the global temperature by %{amount}[b]°c[/b].,Küresel sıcaklığı %{amount}[b]°c[/b] %{changeDir}.
+%{changeDir} the rate of sea level rise by %{amount}mm/year.,Deniz seviyesindeki artış miktarını yıllık %{amount} mm %{changeDir}.
+%{changeDir} world contentedness by [b]%{amount}[/b].,[contentedness] Küresel memnuniyeti [b]%{amount}[/b] %{changeDir}.
+%{changeDir} world contentedness by %{amount}.,Küresel memnuniyeti %{amount}  kadar %{changeDir}.
+%{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{tag} %{kind} maliyetini [b]%{tipAmount}[/b] kadar %{changeDir}
+%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{tag} için %{label} [b]%{amount}[/b] kadar %{changeDir}.
+"%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.","%{name} arzını mevcut arzın [i]%{icon}[/i]%{amount}."
+%{changeDir} %{name} supply by [b]%{percent}%.[/b],%{name} arzını [b]%{percent}%.[/b] %{changeDir}
+%{changeDir} %{name} supply by [{icon}]%{amount}.,%{name} arzını [{icon}]%{amount} %{changeDir}.
+%{changeDir} %{resource} demand for %{tag} by %{amount}.,%{tag} için olan %{resource} talebini %{amount} %{changeDir}.
+%{changeDir} %{tag} output by [b]%{percent}%.[/b],%{tag} çıktısını [b]%%{percent}[/b] kadar %{changeDir}.
+%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{tag} tarafından ortaya çıkan  %{kind} salınımlarını [b]%{amount}[/b] %{changeDir}.
+%{cost} yrs,%{cost} yıl
+%{disaster} in %{region},%{region} bölgesinde %{disaster}
+"%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.","%{emissionsBefore} miktarından [i]%{icon}[/i]%{emissionsAfter} miktarına. Bu tüm salınımlarıda %%{emissionsChange} değişim demek."
+"%{fromAmount} to %{toAmount}[i]%{icon}[/i].","%{fromAmount} miktarından %{toAmount}[i]%{icon}[/i] miktarına getirir."
+"%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].",%{name} buna karşı. Eğer uygularsan onunla olan ilişkin -[i]%{icon}[/i] kötüleşecek.
+"%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].",%{name} bunu destekliyor. Eğer uygularsan ilişkin +[i]%{icon}[/i] kadar gelişir.
+%{name} will be unavailable while this project is active.,Bu proje aktif olduğu sürece %{name} müsait olmayacak.
+%{points} %{kind} points are allocated to this project,Bu projeye %{points} %{kind} puan tahsis edildi.
+%{region} is now %{income} income.,%{region} bölgesi şimdi %{income} Gelirde.
+%{kind} emissions,%{kind} salınımları
+%{years} yrs left,%{years} yıl kaldı
 ↑ Swipe this card up and hold to add it to your plan ↑,↑ Planınıza eklemek için bu kartı yukarı kaydırın ve basılı tutun ↑
 Swipe sideways to see other projects,Diğer projeleri görmek için yana doğru kaydırın
 The Malthusian,Maltusçu
@@ -1382,7 +1382,7 @@ But now people have a more direct connection to the food they eat than they ever
 Most of the world is self-sufficient in crop production. I never thought I'd see the day.,Dünyanın büyük bir kısmı bitkisel üretimde kendi kendine yeterli hale geldi. Bu günü göreceğimi hiç düşünmemiştim.
 Unrest - Secession,Karışıklık - Ayrılma
 How's My Planning?,Planlamam Nasıl?
-{region} has seceded from Gosplant.,{region} Gosplant'tan ayrıldı.
+%{region} has seceded from Gosplant.,%{region} Gosplant'tan ayrıldı.
 This is a major blow to Gosplant...,"Bu, Gosplant'a büyük bir darbe..."
 ...but maybe we'll survive it.,…Ama belki bunu atlatabiliriz
 They felt neglected by your decision-making and lost all confidence in your capacity as planner.,Karar verme sürecin tarafından ihmal edildiklerini hissettiler ve planlamacı olarak kapasitene olan tüm güvenlerini yitirdiler
@@ -1764,13 +1764,13 @@ Intro Cutscene,Giriş  Ara Sahesi
 In 2022 a socialist revolution swept the globe.,2022'de sosyalist devrim dünyayı kasıp kavurdu.
 "It's a sunny day in Havana, where the first planning session will take place...",İlk planlama oturumunun gerçekleştirileceği Havana'da güneşli bir gün.
 You have been elected as [gosplant]'s first lead planner.,[gosplant]'ın ilk baş planlayıcısı olarak seçildin.
-"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","Ve [political_capital]<em class=""lose-con""> politik sermayenin 0'ın altına düşmesine izin vermeden </em> yapmalısın…"
-"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","Bunları insanların [contentedness]<em class=""lose-con""> memnuniyet seviyesi 0'ın altına düşmeden </em>…"
+"And you must do so without letting your [political_capital][w]political capital dip below 0[/w]...","Ve [political_capital][w] politik sermayenin 0'ın altına düşmesine izin vermeden [/w] yapmalısın…"
+"You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...","Bunları insanların [contentedness][w] memnuniyet seviyesi 0'ın altına düşmeden [/w]…"
 "The regions of the world united to establish [gosplant], a global planning authority.",Dünyanın bölgeleri birleşip küresel bir planlama otoritesi olan  [gosplant]'ı kurdu.
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,"[gosplant], kapitalizmin gezegene ve insanlara yüzyıllar içerisinde verdiği sayısız zararı geri almakla görevlendirildi."
 Otherwise your adversaries may take the opportunity to replace you.,"Aksi takdirde, düşmanlarınız sizin yerinize geçme fırsatını yakalayabilir."
 Otherwise they will vote you out of office.,Aksi takdirde sizi görevden alacaklar.
-"It's your duty to bring [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> while there's still time.","Görevin; hala zaman varken [warming]<em class=""win-con""> ısınmayı 1°C'nin altına indirmek</em>,  [extinction_rate]<em class=""win-con""> soyu tükenme oranını 20'nin altına indirmek</em> ve [emissions]<em class=""win-con""> Salınımları 0'ın altına indirmek </em>."
+"It's your duty to bring [warming][g]warming to below 1°C[/g], the [extinction_rate][g]extinction rate to below 20[/g], and [emissions][g]emissions to below 0[/g] while there's still time.","Görevin; hala zaman varken [warming][g] ısınmayı 1°C'nin altına indirmek[/g],  [extinction_rate][g] soyu tükenme oranını 20'nin altına indirmek[/g] ve [emissions][g] Salınımları 0'ın altına indirmek [/g]."
 SRM - Assassination,GRİ - Süikast
 Under a White Sky,Beyaz Bir Göğün Altında
 One of my colleagues was murdered last night!,Dün gece meslektaşlarımdan biri öldürüldü!
@@ -2662,5 +2662,5 @@ Default World,Varsayılan Dünya
 Failed to parse provided world.,Verilen dünya çözümlenemedi.
 New worlds can be made using the editor.,Yeni dünyalar editör kullanılarak oluşturulabilir.
 Regional Factors,Bölgesel Faktörler
-This effect {changeDir} the {kind} of this project by {tipAmount}.,"Bu etki, bu projenin {kind}'ini {tipAmount} {changeDir}."
+This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,"Bu etki, bu projenin %{kind}'ini %{tipAmount} %{changeDir}."
 Warning: Custom worlds may break parts of the game!,Uyarı: Özel dünyalar oyunun bazı bölümlerini bozabilir!

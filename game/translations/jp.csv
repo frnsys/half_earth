@@ -1,77 +1,77 @@
 English,Translation
 1 planning cycle left,残り１計画サイクル
-<strong>Locks</strong> {tag},[locks]{tag}は<strong>選択不可</strong>になる。
-<strong>Unlocks</strong> the {tag} process.,{tag}が<strong>選択可能</strong>になる。
-<strong>Unlocks</strong> the {tag} project.,{tag}が<strong>選択可能</strong>になる。
-<strong>Unlocks</strong> {name}.,{name}が<strong>選択可能</strong>になる。
+[b]Locks[/b] %{tag},[locks]%{tag}は[b]選択不可[/b]になる。
+[b]Unlocks[/b] the %{tag} process.,%{tag}が[b]選択可能[/b]になる。
+[b]Unlocks[/b] the %{tag} project.,%{tag}が[b]選択可能[/b]になる。
+[b]Unlocks[/b] %{name}.,%{name}が[b]選択可能[/b]になる。
 A Planetary Crisis Planning Game,惑星危機管理ゲーム
 A parliamentary majority is no longer required for any project.,どの政策を実行するにも議会の過半数の承認は必要なくなる。
 Accelerates regional development throughout the world.,世界中の開発を加速する。
 Add,カードの追加
 Add some cards to get started,カードを追加してスタート
 Ally,味方
-"Animal calorie demand will change from <img src=""{iconACals}"">{prevDemandACals} to <img src=""{iconACals}"">{nextDemandACals} and plant calorie demand will change from <img src=""{iconPCals}"">{prevDemandPCals} to <img src=""{iconPCals}"">{nextDemandPCals}.","動物のカロリー需要は<img src=""{iconACals}"">{prevDemandACals} から <img src=""{iconACals}"">{nextDemandACals} に変化し、、植物のカロリー需要は<img src=""{iconPCals}"">{prevDemandPCals} から <img src=""{iconPCals}"">{nextDemandPCals} に変化する。"
+"Animal calorie demand will change from [i]%{iconACals}[/i]%{prevDemandACals} to [i]%{iconACals}[/i]%{nextDemandACals} and plant calorie demand will change from [i]%{iconPCals}[/i]%{prevDemandPCals} to [i]%{iconPCals}[/i]%{nextDemandPCals}.","動物のカロリー需要は[i]%{iconACals}[/i]%{prevDemandACals} から [i]%{iconACals}[/i]%{nextDemandACals} に変化し、、植物のカロリー需要は[i]%{iconPCals}[/i]%{prevDemandPCals} から [i]%{iconPCals}[/i]%{nextDemandPCals} に変化する。"
 At current usage rates the estimated supply is expected to last indefinitely.,現在の使用率から、供給が尽きることはないと推定されている。
-At current usage rates the estimated supply is expected to last {years} year(s).,現在の使用率では、推定供給量は {years} 年間持続する見込みです。
-At current usage rates the estimated supply is expected to last {years} years.,現在の使用率から、 あと{years} 年間、供給が可能であると推定されている。
-Average sea levels have risen by {rise}m and are rising at a rate of {rate}mm per year.,海面水位は{rise}m上昇した。1年間あたり{rate}mmずつ上昇している。
+At current usage rates the estimated supply is expected to last %{years} year(s).,現在の使用率では、推定供給量は %{years} 年間持続する見込みです。
+At current usage rates the estimated supply is expected to last %{years} years.,現在の使用率から、 あと%{years} 年間、供給が可能であると推定されている。
+Average sea levels have risen by %{rise}m and are rising at a rate of %{rate}mm per year.,海面水位は%{rise}m上昇した。1年間あたり%{rate}mmずつ上昇している。
 Avg. Habitability,全体の住みやすさ
 Avg. Living Standards,全体の生活水準
 Back,戻る
 Based on the book,原作
 "Because of opposition, this requires a majority in parliament.",反対意見があるため、施行には議会での過半数の承認が必要。
-Because of resource availability this process can only make up to {maxPercent}% of production.,使用可能な資源の都合により、この方法では生産量の{maxPercent}%までしかまかなうことができない。
-Because of resource availability this process can only make up to {maxPercent}% of production. {suggestion},使用可能な資源の都合により、この方法では生産量の{maxPercent}％までしかまかなうことができない。{suggestion}
+Because of resource availability this process can only make up to %{maxPercent}% of production.,使用可能な資源の都合により、この方法では生産量の%{maxPercent}%までしかまかなうことができない。
+Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion},使用可能な資源の都合により、この方法では生産量の%{maxPercent}％までしかまかなうことができない。%{suggestion}
 Biodiversity is flourishing.,生物多様性は豊かな状況である。.
 Biodiversity is plummeting.,生物多様性は壊滅的な状況である。.
 Biodiversity is recovering.,生物多様性は回復しつつある。.
 Biodiversity is stabilizing.,生物多様性は安定を取り戻している。.
 Biodiversity is struggling.,生物多様性は苦境に立たされている。.
 Biodiversity is suffering.,生物多様性は危機的状況である。.
-Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is {amount}.,生物多様性：地球上に共に暮らす生命。現在の生物多様性の脅威指数は、{amount} である。
+Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is %{amount}.,生物多様性：地球上に共に暮らす生命。現在の生物多様性の脅威指数は、%{amount} である。
 Booting Up,起動中
 Building,建築
 CH4,CH4
 CO2,CO2
 CO2 Emissions/Yr,1年当たりのCO2排出量
 Change Production,生産の変更
-Change the amount of land under protection by <strong>{percent}%</strong>.,保護されている土地の量を<strong>{percent}%</strong>変更します。
+Change the amount of land under protection by [b]%{percent}%[/b].,保護されている土地の量を[b]%{percent}%[/b]変更します。
 Changes,変化したこと
-Changes demand for {name} by <strong>{percent}%.</strong>,{name} の需要が <strong>{percent}%</strong>に変化する。
-Changes demand for {name} by an unknown amount.,{name} の需要がいくらか変化する。
-Changes emissions for {name} by an unknown amount.,{name} の排出量がいくらか変化する。
-Changes the biodiversity pressure for these processes by <strong>{amount}.</strong>,この政策により、生物多様性に対する負荷が<strong>{amount}</strong>に変化する。
-Changes the output for these processes by {percent}% without changing their impacts.,影響を与えることなく、この方法の生産量が{percent}%変化する。
-Changes the output for this process by {percent}% with no change in impacts.,影響をあたえることなく、この生産量が{percent}%変化する。
-Changes {label} for {name} by an unknown amount.,{name}のための{label}がいくらか変化する。
+Changes demand for %{name} by [b]%{percent}%.[/b],%{name} の需要が [b]%{percent}%[/b]に変化する。
+Changes demand for %{name} by an unknown amount.,%{name} の需要がいくらか変化する。
+Changes emissions for %{name} by an unknown amount.,%{name} の排出量がいくらか変化する。
+Changes the biodiversity pressure for these processes by [b]%{amount}.[/b],この政策により、生物多様性に対する負荷が[b]%{amount}[/b]に変化する。
+Changes the output for these processes by %{percent}% without changing their impacts.,影響を与えることなく、この方法の生産量が%{percent}%変化する。
+Changes the output for this process by %{percent}% with no change in impacts.,影響をあたえることなく、この生産量が%{percent}%変化する。
+Changes %{label} for %{name} by an unknown amount.,%{name}のための%{label}がいくらか変化する。
 Completed,完成
 Completed Projects,完了した施策
-Completed Request: Ban {name},{name}を禁止する要請の完了
-Completed Request: Implement {name},{name}を実装する要請の完了
-Completed Request: Stop {name},{name}を停止する要請の完了
-Completed Request: Unban {name},{name}を禁止を解除する要請の完了
-Completed Requests,{name}を禁止する要請の完了
+Completed Request: Ban %{name},%{name}を禁止する要請の完了
+Completed Request: Implement %{name},%{name}を実装する要請の完了
+Completed Request: Stop %{name},%{name}を停止する要請の完了
+Completed Request: Unban %{name},%{name}を禁止を解除する要請の完了
+Completed Requests,%{name}を禁止する要請の完了
 Concept,コンセプト
 Contentedness,満足度
 Continue,次へ
 Contract the economies of the wealthiest regions.,高所得者地域の経済を衰退させる。
 Could increase,増加可能である
 Could reduce,削減可能である
-Could unlock the {tag} process.,{tag}は選択可能だ
-Could unlock the {tag} project.,施策{tag}は選択可能だ
+Could unlock the %{tag} process.,%{tag}は選択可能だ
+Could unlock the %{tag} project.,施策%{tag}は選択可能だ
 Could unlock this process:,この方法は選択可能だ
 Could unlock this project:,この施策は選択可能だ
-Could unlock {name}.,{name}は選択可能だ
+Could unlock %{name}.,%{name}は選択可能だ
 Credits,クレジット
 Crops,農業
-"Current annual emissions are {emissions} gigatonnes. <b class=""tip-goal"">Your goal is to get this to below 0.</b>","現在の年間排出量は {emissions} ギガトンです。<b class=""tip-goal"">あなたの目標は、これを0未満にすることです。</b>"
-"Current annual emissions are {emissions}. <b class=""tip-goal"">Your goal is to get this to below 0.</b>","現在のCO2の年間排出量は、 {emissions} ギガトンである. <b class=""tip-goal"">この数値を0以下にすることがあなたの目標である。</b>"
+"Current annual emissions are %{emissions} gigatonnes. [g]Your goal is to get this to below 0.[/g]","現在の年間排出量は %{emissions} ギガトンです。[g]あなたの目標は、これを0未満にすることです。[/g]"
+"Current annual emissions are %{emissions}. [g]Your goal is to get this to below 0.[/g]","現在のCO2の年間排出量は、 %{emissions} ギガトンである. [g]この数値を0以下にすることがあなたの目標である。[/g]"
 "Current annual emissions, in gigatonnes of CO2 equivalent.",現在の年間排出量（単位：CO2換算ギガトン）。
-"Current biodiversity pressure is {amount}<span class=""type-total"">/{maxAmount}</span>.","現在の生物多様性に対する負荷は、{amount}<span class=""type-total"">/{maxAmount}</span>である。"
+"Current biodiversity pressure is %{amount}[t]/%{maxAmount}[/t].","現在の生物多様性に対する負荷は、%{amount}[t]/%{maxAmount}[/t]である。"
 Current energy use.,現在のエネルギー使用量の内訳
 Current land use.,現在の土地利用の内訳
 Current water demand.,現在の水資源の使用量の内訳
-"Current world contentedness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","現在の世界の満足度は、{contentedness}<span class=""type-total"">/{maxContentedness}</span>である。"
+"Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].","現在の世界の満足度は、%{contentedness}[t]/%{maxContentedness}[/t]である。"
 Design,デザイン
 Development,開発
 Development Progress,開発進行度
@@ -81,37 +81,37 @@ Downgrade,ダウングレード
 Drag a card up to assign leftover production,カードを上にドラッグして、残りの生産ポイントを割り当てる
 Electricity,電力
 Emissions,CO2排出量
-Emissions: A shroud around the earth. You're emitting {amount} gigatonnes per year.,排気ガス：地球を覆う排気ガス。現在、年間で {amount}Gtの排気ガスを排出している。
+Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,排気ガス：地球を覆う排気ガス。現在、年間で %{amount}Gtの排気ガスを排出している。
 Energy Use,エネルギー使用量
-Energy: The fundamental mover. You're using {amount}TWh of energy.,エネルギー：基本的な動力。現在、{amount}TWhのエネルギーを使用している。
+Energy: The fundamental mover. You're using %{amount}TWh of energy.,エネルギー：基本的な動力。現在、%{amount}TWhのエネルギーを使用している。
 Events,イベント
 Extinction Rate,絶滅率
 Fuel,燃料
-"Fuel demand will change from <img src=""{iconFuel}"">{prevDemandFuel} to <img src=""{iconFuel}"">{nextDemandFuel} and electricity demand will change from <img src=""{iconElec}"">{prevDemandElec} to <img src=""{iconElec}"">{nextDemandElec}.","燃料需要は <img src=""{iconFuel}"">{prevDemandFuel}から <img src=""{iconFuel}"">{nextDemandFuel} に変化し、電力需要は <img src=""{iconElec}"">{prevDemandElec} から <img src=""{iconElec}"">{nextDemandElec} に変化する。"
-Global demand for {output}.,{output}の世界的な需要。
-"Global {name} output will change from <img src=""{icon}"">{base} to <img src=""{icon}"">{changed} with no change in impacts.","影響を与えることなく、世界の{name}の生産量が、 <img src=""{icon}"">{base}から<img src=""{icon}"">に{changed}。"
+"Fuel demand will change from [i]%{iconFuel}[/i]%{prevDemandFuel} to [i]%{iconFuel}[/i]%{nextDemandFuel} and electricity demand will change from [i]%{iconElec}[/i]%{prevDemandElec} to [i]%{iconElec}[/i]%{nextDemandElec}.","燃料需要は [i]%{iconFuel}[/i]%{prevDemandFuel}から [i]%{iconFuel}[/i]%{nextDemandFuel} に変化し、電力需要は [i]%{iconElec}[/i]%{prevDemandElec} から [i]%{iconElec}[/i]%{nextDemandElec} に変化する。"
+Global demand for %{output}.,%{output}の世界的な需要。
+"Global %{name} output will change from [i]%{icon}[/i]%{base} to [i]%{icon}[/i]%{changed} with no change in impacts.","影響を与えることなく、世界の%{name}の生産量が、 [i]%{icon}[/i]%{base}から[i]%{icon}[/i]に%{changed}。"
 Govt,議会
 High,高い
 How many seats your coalition has. Draw parties to your coalition by implementing projects they support.,あなたの同盟の議席数。各政党が支持する施策を実施することで、それぞれの政党をあなたの同盟に引き入れることができる。
-"How much political capital you have. Political capital is what you spend to implement your plans. <b class=""tip-warn"">If you run out you'll be pushed out of government.</b>","あなたが所持する政治資本。施策を実行するために使用する。 <b class=""tip-warn"">もし政治資本が0になったら、あなたは議会から追い出される。</b>"
-"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. <b class=""tip-warn"">If this goes below 0 you will be removed from power.</b>","世界中の人々が現状に対して感じていることを数値化したもの。これは、各地域の満足度、危機、政策決定の組み合わせによって決まる。<b class=""tip-warn"">もしこの数値が0以下になったら、あなたは責任者の任を解かれる。</b>"
-I request that you implement {name}. (+{pc}PC),{name}を実行することを要請する。 (+{pc}PC)
-I request that you stop {name}. (+{pc}PC),{name}を停止させることを要請する。 (+{pc}PC)
+"How much political capital you have. Political capital is what you spend to implement your plans. [w]If you run out you'll be pushed out of government.[/w]","あなたが所持する政治資本。施策を実行するために使用する。 [w]もし政治資本が0になったら、あなたは議会から追い出される。[/w]"
+"How people around the world feel about the state of things. This is a combination of regional contentedness, crises, and policy decisions. [w]If this goes below 0 you will be removed from power.[/w]","世界中の人々が現状に対して感じていることを数値化したもの。これは、各地域の満足度、危機、政策決定の組み合わせによって決まる。[w]もしこの数値が0以下になったら、あなたは責任者の任を解かれる。[/w]"
+I request that you implement %{name}. (+%{pc}PC),%{name}を実行することを要請する。 (+%{pc}PC)
+I request that you stop %{name}. (+%{pc}PC),%{name}を停止させることを要請する。 (+%{pc}PC)
 Image:,イメージ画像
-Improve your relationship with {name} to activate this ability.,{name}との友好関係が深まると、この効果が発動する。
+Improve your relationship with %{name} to activate this ability.,%{name}との友好関係が深まると、この効果が発動する。
 Increases,増加する
 Infrastructure,インフラ
 Infrastructure projects take 20% longer to finish.,インフラ施策の完了までの時間が20%遅延する。
 Land Use,土地利用率
-Land: They're not making anymore of it. You're using {percent} of land.,陸地：生産に使用していない土地。現在、{percent}の陸地を使用している。
+Land: They're not making anymore of it. You're using %{percent} of land.,陸地：生産に使用していない土地。現在、%{percent}の陸地を使用している。
 Level,レベル
 Likely to increase,増加しそうである
 Likely to reduce,削減されそうである
-Likely to unlock the {tag} process.,{tag}は選択可能になりそうだ
-Likely to unlock the {tag} project.,施策{tag}は選択可能になりそうだ
+Likely to unlock the %{tag} process.,%{tag}は選択可能になりそうだ
+Likely to unlock the %{tag} project.,施策%{tag}は選択可能になりそうだ
 Likely to unlock this process:,この方法は選択可能になりそうだ
 Likely to unlock this project:,この施策は選択可能になりそうだ
-Likely to unlock {name}.,{name}は選択可能になりそうだ
+Likely to unlock %{name}.,%{name}は選択可能になりそうだ
 Likes,好き
 Livestock,畜産
 Loading,読み込み中…
@@ -170,7 +170,7 @@ Research and Writing,研究と執筆
 Research and infrastructure take 10% less time to complete.,研究とインフラの完了までの時間が、10％短縮する。
 Research and infrastructure take 10% more time to complete.,研究とインフラの完了までの時間が、10％遅延する。
 Research and infrastructure take 5% more time to complete.,研究とインフラの完了までの時間が、5％遅延する。
-"Research points are 1<img src=""{iconPC}""> cheaper.","研究に必要なポイントが<img src=""{iconPC}"">1下がる。"
+"Research points are 1[i]%{iconPC}[/i] cheaper.","研究に必要なポイントが[i]%{iconPC}[/i]1下がる。"
 Research points: Allocate them to research projects!,研究ポイントを、研究施策の割り当てよう！
 Researching,研究
 Restart Game,ゲームのリスタート
@@ -182,11 +182,11 @@ Skip,スキップ
 Skip the tutorial.,チュートリアルをスキップする。
 Small chance to increase,低確率で増加する
 Small chance to reduce,低確率で削減される
-Small chance to unlock the {tag} process.,{tag}は低確率で選択可能になる
-Small chance to unlock the {tag} project.,施策{tag}は低確率で選択可能になる
+Small chance to unlock the %{tag} process.,%{tag}は低確率で選択可能になる
+Small chance to unlock the %{tag} project.,施策%{tag}は低確率で選択可能になる
 Small chance to unlock this process:,この方法は低確率で選択可能になる
 Small chance to unlock this project:,この施策は低確率で選択可能になる
-Small chance to unlock {name}.,{name}は低確率で選択可能になる
+Small chance to unlock %{name}.,%{name}は低確率で選択可能になる
 Sound,音量
 Stats,統計データ
 Stops regional development throughout the world.,世界中の経済発展を止める。
@@ -194,36 +194,36 @@ Tap for more details.,タップで詳細表示
 Temp. Anomaly,気温上昇
 Temperature,気温
 Thank you for playing!,このゲームをプレイしていただきまして、ありがとうございました！
-That's a {percent}% change.,{percent}%の変化である。
-The amount of sea level rise is currently {amount}m.,現在の海面上昇量は、{amount}m。
+That's a %{percent}% change.,%{percent}%の変化である。
+The amount of sea level rise is currently %{amount}m.,現在の海面上昇量は、%{amount}m。
 "The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.",現在の生物多様性に対する負荷。土地利用率の上昇などの要因が生物多様性に対する負荷となり、生態系崩壊の危険性が高まる。
-"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. <b class=""tip-goal"">Your goal is to get this to below 20.</b>","現在の生物多様性に対する負荷。土地利用率の上昇などの要因が生物多様性に対する負荷となり、生態系崩壊の危険性が高まる。<b class=""tip-goal"">この数値を20以下にすることがあなたの目標である。</b>"
-"The current global temperature anomaly is +{anomaly}°C. The higher this is, the more unpredictable the climate becomes. <b class=""tip-goal"">Your goal is to get this below 1°C.</b>","現在の地球の気温上昇は+{anomaly}℃である。気温上昇が高くなるほど気候変動は予測できなくなる。<b class=""tip-goal"">この数値を1℃以下にすることがあなたの目標である。</b>"
-"The current global temperature anomaly. <strong>Increased warming</strong> will damage your political capital. <b class=""tip-goal"">Your goal is to get this below 1°C.</b>","現在の地球の温度変化。<strong>温暖化が進行するほど</strong>より多くの政治資本が投入される。<b class=""tip-goal"">この数値を1℃以下にすることがあなたの目標である。</b>"
+"The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. [g]Your goal is to get this to below 20.[/g]","現在の生物多様性に対する負荷。土地利用率の上昇などの要因が生物多様性に対する負荷となり、生態系崩壊の危険性が高まる。[g]この数値を20以下にすることがあなたの目標である。[/g]"
+"The current global temperature anomaly is +%{anomaly}°C. The higher this is, the more unpredictable the climate becomes. [g]Your goal is to get this below 1°C.[/g]","現在の地球の気温上昇は+%{anomaly}℃である。気温上昇が高くなるほど気候変動は予測できなくなる。[g]この数値を1℃以下にすることがあなたの目標である。[/g]"
+"The current global temperature anomaly. [b]Increased warming[/b] will damage your political capital. [g]Your goal is to get this below 1°C.[/g]","現在の地球の温度変化。[b]温暖化が進行するほど[/b]より多くの政治資本が投入される。[g]この数値を1℃以下にすることがあなたの目標である。[/g]"
 The estimated value after production changes have finished.,生産変更後の推定値
 The factors behind this event.↓,↓この出来事の原因
-The following processes can't produce as much as they need to: {processesOverLimit},この方法では必要な量を生産できない：{processesOverLimit}
+The following processes can't produce as much as they need to: %{processesOverLimit},この方法では必要な量を生産できない：%{processesOverLimit}
 The number of people on the planet.,地球上の総人口。
 The world is becoming hostile to life.,世界は地球上の生命に牙を剥きはじめている。.
 The world is becoming unbearable.,世界はもう耐えられないかもしれない。.
 The world is recovering.,世界は回復しつつある。.
 The world is still warming.,世界は温暖化が進行している。.
-The {n}{ext} Planning Session,第{n}回 政策会議
+The %{n}%{ext} Planning Session,第%{n}回 政策会議
 There are multiple production shortages:,だいぶ生産が不足している。
 There is a alarming production shortage,生産不足が懸念される。
 There is a critical production shortage,生産不足が危機的な状況である。
 There is a mild production shortage,少し生産が不足している。
 There is a severe production shortage,深刻な生産不足に陥っている。
 There is currently no limit on this process' mix share.,現在、この方法のポイントの割り当てを変更することはできない。
-There is not enough {resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,{resources} が不足している。{resources}の使用量を減らすか、他の場所での需要を減らすよう、生産構成を変更する必要がある。
-These changes will take {changesTime} planning cycle{ext} to take effect.,これらの変更が有効になるには、{changesTime}計画サイクル{ext}が必要である。
+There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,%{resources} が不足している。%{resources}の使用量を減らすか、他の場所での需要を減らすよう、生産構成を変更する必要がある。
+These changes will take %{changesTime} planning cycle%{ext} to take effect.,これらの変更が有効になるには、%{changesTime}計画サイクル%{ext}が必要である。
 They won't have much effect.,あまり効果がなさそうである。
-"This changes regional contentedness based on demand for {name}. Current world contentedeness is {amount}<span class=""type-total"">/{maxAmount}</span>.","これにより、{name} の需要に基づいて地域の満足度が変化する。 現在の世界の満足度は {amount}<span class=""type-total"">/{max Amount}</span> 。"
-"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is {contentedness}<span class=""type-total"">/{maxContentedness}</span>.","これは収入レベルに基づいて地域の満足度を変化させます（裕福な地域ほど影響を受けます）。現在の世界の満足度は {contentedness}<span class=""type-total"">/{maxContentedness}</span> です。"
-"This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}.","これにより、{name}の需要が<img src=""{icon}"">{currentDemand} から <img src=""{icon}"">{afterDemand} に変化する。"
-"This changes {name} demand from <img src=""{icon}"">{currentDemand} to <img src=""{icon}"">{afterDemand}. This is a {percent}% change of all {name} demand.","これにより、{name} の需要が <img src=""{icon}"">{currentDemand} から <img src=""{icon}"">{afterDemand} に変化する。 これはすべての {name} の需要の {percent}% にあたる変化である。"
-"This event can occur if ""{name}"" is {label}.","このイベントは、""{name}"" が {label}である場合に発生する。"
-This event can occur if {name} is your {relType}.,このイベントは、{name}があなたの{relType}である場合に発生する。
+"This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].","これにより、%{name} の需要に基づいて地域の満足度が変化する。 現在の世界の満足度は %{amount}[t]/{max Amount}[/t] 。"
+"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].","これは収入レベルに基づいて地域の満足度を変化させます（裕福な地域ほど影響を受けます）。現在の世界の満足度は %{contentedness}[t]/%{maxContentedness}[/t] です。"
+"This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}.","これにより、%{name}の需要が[i]%{icon}[/i]%{currentDemand} から [i]%{icon}[/i]%{afterDemand} に変化する。"
+"This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.","これにより、%{name} の需要が [i]%{icon}[/i]%{currentDemand} から [i]%{icon}[/i]%{afterDemand} に変化する。 これはすべての %{name} の需要の %{percent}% にあたる変化である。"
+"This event can occur if ""%{name}"" is %{label}.","このイベントは、""%{name}"" が %{label}である場合に発生する。"
+This event can occur if %{name} is your %{relType}.,このイベントは、%{name}があなたの%{relType}である場合に発生する。
 This event is influenced by biodiversity pressures.,このイベントは、生物多様性に対する負荷の影響を受ける。
 This event is influenced by how happy people are.,このイベントは、人々の幸福度の影響を受ける。
 This event is influenced by how much energy production can meltdown.,このイベントは、エネルギー生産におけるメルトダウンする可能性の影響を受ける。
@@ -241,54 +241,54 @@ This event is influenced by the demand for fuel.,このイベントは、燃料�
 This event is influenced by the demand for plant calories.,このイベントは、植物由来の食品の影響を受ける。
 This event is influenced by the global temperature anomaly.,このイベントは、地球の気候変動の影響を受ける。
 This event is influenced by the habitability of regions.,このイベントは、人々の満足度の影響を受ける。
-This event is influenced by the mix share of {name}.,このイベントは、{name}のポイントの割り当てに影響を受ける。
-This event is influenced by the output of {name}.,このイベントは、{name}の生産力に影響を受ける。
+This event is influenced by the mix share of %{name}.,このイベントは、%{name}のポイントの割り当てに影響を受ける。
+This event is influenced by the output of %{name}.,このイベントは、%{name}の生産力に影響を受ける。
 This event occurred during this planning cycle.,このイベントは、この計画サイクルに発生しました。
 This feedstock has been depleted.,この原料は枯渇してしまった。
 "This feedstock is depleted, so this process is stopped. You should reallocate its points to other processes.",必要な資源が枯渇したため、この方法は停止している。ポイントの割り当てを他の方法に変更する必要がある。
 This industry is not yet significant.,この産業はまだ重要ではない。
-This industry's demand for {output}. This makes up {percent}% of total demand for {output}.,この業界の{output}への需要。これは{output}の総需要の{percent}%を占めています。
+This industry's demand for %{output}. This makes up %{percent}% of total demand for %{output}.,この業界の%{output}への需要。これは%{output}の総需要の%{percent}%を占めています。
 This industry's non-energy CO2eq emissions.,この産業の非エネルギー CO2 排出量。
 This is not the end...,これは終わりではない...
 This new character will be unlocked:,新しい登場人物が選択可能になる。
 This output's production will,この項目の生産量は
-This policy costs {remainingCost} political capital to implement.,この施策を実行するには、政治資本{remainingCost}が必要である。
+This policy costs %{remainingCost} political capital to implement.,この施策を実行するには、政治資本%{remainingCost}が必要である。
 This process can't produce this much because of feedstock or other limits. You should reallocate its points to other processes.,この方法では、資源やその他の制限要因により、必要な量を生産することができない。ポイントの割り当てを他の方法に変更する必要がある。
-This process currently makes up {mixPercent}% of {output} production.,この方法は、{output} の生産量のうち、 {mixPercent}%を占めている。
-This process currently produces {amount}<img src='{outputIcon}'> and {emissions}<img src='{emissionsIcon}'> per year.,この方法は１年間で、{amount}<img src='{outputIcon}'> を生み出し、 {emissions}<img src='{emissionsIcon}'> を排出している。
-This process uses {feedstockName}. {feedstockEstimateDesc},この方法は {feedstockName}を使用する。 {feedstockEstimateDesc}
+This process currently makes up %{mixPercent}% of %{output} production.,この方法は、%{output} の生産量のうち、 %{mixPercent}%を占めている。
+This process currently produces %{amount}[i]%{outputIcon}[/i] and %{emissions}[i]%{emissionsIcon}[/i] per year.,この方法は１年間で、%{amount}[i]%{outputIcon}[/i] を生み出し、 %{emissions}[i]%{emissionsIcon}[/i] を排出している。
+This process uses %{feedstockName}. %{feedstockEstimateDesc},この方法は %{feedstockName}を使用する。 %{feedstockEstimateDesc}
 This project was completed.,この施策は完了した
-This region has {incomeName} living standards. Higher living standards mean higher material footprints.,この地域には {incomeName} の人が住んでいる。 生活水準が高い地域ほど天然資源を多く消費する。
+This region has %{incomeName} living standards. Higher living standards mean higher material footprints.,この地域には %{incomeName} の人が住んでいる。 生活水準が高い地域ほど天然資源を多く消費する。
 This region's contentedness.,この地域の満足度。
 This region's current precipitation range.,この地域の最低気温と最高気温。降水量
 This region's current temperature range.,この地域の最低気温と最高気温。
 This region's habitability.,この地域の住みやすさ
 This region's habitability. Natural disasters and hotter temperatures lower habitability.,この地域の住みやすさ。自然災害の頻度が高いことや、気温が高いことは、住みやすさの度合いを低下させる。
-"This region's income level has contracted to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.",この地域の所得水準は<strong>{income}</strong>に低下した。<img src='{iconElec}'>電力、<img src='{iconFuel}'>燃料、<img src='{iconPCals}'>植物由来の食品、<img src='{iconACals}'>動物由来の食品の需要が変化した。
-"This region's income level has increased to <strong>{income}</strong>. Demand for <img src='{iconElec}'>electricity, <img src='{iconFuel}'>fuel, <img src='{iconPCals}'>plant and <img src='{iconACals}'>animal-based food has been updated.",この地域の所得水準は<strong>{income}</strong>に上昇した。 <img src='{iconElec}'>電力、<img src='{iconFuel}'>燃料、<img src='{iconPCals}'>植物由来の食品、<img src='{iconACals}'>動物由来の食品の需要が変化した。
-This region's new demand for {output}.,この地域の新たな需要は {output}。
+"This region's income level has contracted to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.",この地域の所得水準は[b]%{income}[/b]に低下した。[i]%{iconElec}[/i]電力、[i]%{iconFuel}[/i]燃料、[i]%{iconPCals}[/i]植物由来の食品、[i]%{iconACals}[/i]動物由来の食品の需要が変化した。
+"This region's income level has increased to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.",この地域の所得水準は[b]%{income}[/b]に上昇した。 [i]%{iconElec}[/i]電力、[i]%{iconFuel}[/i]燃料、[i]%{iconPCals}[/i]植物由来の食品、[i]%{iconACals}[/i]動物由来の食品の需要が変化した。
+This region's new demand for %{output}.,この地域の新たな需要は %{output}。
 This region's new income level.,この地域の新しい所得水準。
-This region's per-capita demand level for {output}. The total regions's demand is {demand}. This makes up {demandPercent} of total demand for {output}.,この地域の{output}の1人あたりの需要レベル。全ての地域の需要は{demand}である。これは、{output} のすべて需要の {demandPercent}にあたる。
-This region's per-capita demand level for {output}. The total regions's demand is {demand}<img src='{icon}' />. This makes up {percent} of total demand for {output}.,この地域の1人あたりの{output}の需要レベル。 {output}の全地域の需要量は{demand}<img src='{icon}' />であり、この地域の需要量は全体の{percent}を占める。
-This region's previous demand for {output}.,この地域の以前の需要は {output}。
+This region's per-capita demand level for %{output}. The total regions's demand is %{demand}. This makes up %{demandPercent} of total demand for %{output}.,この地域の%{output}の1人あたりの需要レベル。全ての地域の需要は%{demand}である。これは、%{output} のすべて需要の %{demandPercent}にあたる。
+This region's per-capita demand level for %{output}. The total regions's demand is %{demand}[i]%{icon}[/i]. This makes up %{percent}% of total demand for %{output}.,この地域の1人あたりの%{output}の需要レベル。 %{output}の全地域の需要量は%{demand}[i]%{icon}[/i]であり、この地域の需要量は全体の%{percent}%を占める。
+This region's previous demand for %{output}.,この地域の以前の需要は %{output}。
 This region's previous income level.,この地域以前の所得水準。
 This region's progress to the next income level.,この地域が、次の所得水準に上がるまでのレベル。
-"This will change emissions for {name} from <img src=""{icon}"">{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","これにより、{name} の排出量が <img src=""{icon}"">{emissions Before} から <img src=""{icon}"">{emissions After} に変化する。 これは、すべての排出量の {emissionsChange}% にあたる変化である。"
-This will change {resource} demand for {name} by some unknown amount.,これにより、{name}のための {resource}の需要がいくらか変化する。
-"This will change {resource} demand for {name} from <img src=""{icon}"">{demandBefore} to <img src=""{icon}"">{demandAfter}. This is a {percent}% change of all {resource} demand.","これにより、{name}のための {resource}の需要が<img src=""{icon}"">{demandBefore}から<img src=""{icon}"">{demandAfter}に変化する。これはすべての{resource}の需要の{percent}%にあたる変化である。"
-"This will change {short} for {name} from <img src=""{icon}"">{change}","これにより、{name} の {short} が <img src=""{icon}"">{change} 変化する。"
-This will directly change annual emissions by {amount}.{percent},これは年間排出量を直接 {amount}。{percent} 変更します。
-This will directly change global precipitation by {amount}<strong>cm/yr</strong>.,これにより、地球の降水量が{amount}<strong>cm/yr</strong>変化する。
-This will directly change the global temperature anomaly by {amount}<strong>°c</strong>.,これにより、地球の気温は直接 <strong>{amount}℃</strong> 変化する。
-This will limit the amount of land that processes can use. The amount of land under protection will change from {before}% to {after}%.,これはプロセスが使用できる土地の量を制限します。保護下にある土地の量は、{before}% から {after}% に変わります。
-This will take about {remainingCost} to finish. Allocate more {kind} points to accelerate its progress.,この施策は完了までに{remainingCost} 年かかる。{kind}ポイントを使用することで、進行を早めることができる。
+"This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.","これにより、%{name} の排出量が [i]%{icon}[/i]{emissions Before} から [i]%{icon}[/i]{emissions After} に変化する。 これは、すべての排出量の %{emissionsChange}% にあたる変化である。"
+This will change %{resource} demand for %{name} by some unknown amount.,これにより、%{name}のための %{resource}の需要がいくらか変化する。
+"This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.","これにより、%{name}のための %{resource}の需要が[i]%{icon}[/i]%{demandBefore}から[i]%{icon}[/i]%{demandAfter}に変化する。これはすべての%{resource}の需要の%{percent}%にあたる変化である。"
+"This will change %{short} for %{name} from [i]%{icon}[/i]%{change}","これにより、%{name} の %{short} が [i]%{icon}[/i]%{change} 変化する。"
+This will directly change annual emissions by %{amount}.%{percent},これは年間排出量を直接 %{amount}。%{percent} 変更します。
+This will directly change global precipitation by %{amount}[b]cm/yr[/b].,これにより、地球の降水量が%{amount}[b]cm/yr[/b]変化する。
+This will directly change the global temperature anomaly by %{amount}[b]°c[/b].,これにより、地球の気温は直接 [b]%{amount}℃[/b] 変化する。
+This will limit the amount of land that processes can use. The amount of land under protection will change from %{before}% to %{after}%.,これはプロセスが使用できる土地の量を制限します。保護下にある土地の量は、%{before}% から %{after}% に変わります。
+This will take about %{remainingCost} to finish. Allocate more %{kind} points to accelerate its progress.,この施策は完了までに%{remainingCost} 年かかる。%{kind}ポイントを使用することで、進行を早めることができる。
 Tiny chance to increase,僅かな確率で増加する
 Tiny chance to reduce,僅かな確率で削減される
-Tiny chance to unlock the {tag} process.,{tag}は僅かな確率で選択可能になる
-Tiny chance to unlock the {tag} project.,施策{tag}は僅かな確率で選択可能になる
+Tiny chance to unlock the %{tag} process.,%{tag}は僅かな確率で選択可能になる
+Tiny chance to unlock the %{tag} project.,施策%{tag}は僅かな確率で選択可能になる
 Tiny chance to unlock this process:,この方法は僅かな確率で選択可能になる
 Tiny chance to unlock this project:,この施策は僅かな確率で選択可能になる
-Tiny chance to unlock {name}.,{name}は僅かな確率で選択可能になる
+Tiny chance to unlock %{name}.,%{name}は僅かな確率で選択可能になる
 Tips,ヒント
 Total,合計
 Total Change,トータル
@@ -297,47 +297,47 @@ Try Again?,もう一度遊ぶ？
 Undo,やり直す
 Unlikely to increase,増加しそうにない
 Unlikely to reduce,削減されそうにない
-Unlikely to unlock the {tag} process.,{tag}は選択可能になりそうにない
-Unlikely to unlock the {tag} project.,施策{tag}は選択可能になりそうにない
+Unlikely to unlock the %{tag} process.,%{tag}は選択可能になりそうにない
+Unlikely to unlock the %{tag} project.,施策%{tag}は選択可能になりそうにない
 Unlikely to unlock this process:,この方法は選択可能になりそうにない
 Unlikely to unlock this project:,この施策は選択可能になりそうにない
-Unlikely to unlock {name}.,{name}は選択可能になりそうにない
+Unlikely to unlock %{name}.,%{name}は選択可能になりそうにない
 Unused,未使用
 Upgrading in one planning cycle.,1サイクルでアップグレード。
 Very High,非常に高い
 Very Low,非常に低い
 View All,全て表示
 Water Stress,水資源の利用率
-Water: The giver of life. You're using {percent} of water resources.,水資源：全ての命を支えている。現在、 {percent}の水資源を使用している。
+Water: The giver of life. You're using %{percent} of water resources.,水資源：全ての命を支えている。現在、 %{percent}の水資源を使用している。
 We aren't tracking this feedstock.,この原料を追跡されていない。
 Well Played!,お疲れさまでした！
 Will increase,増加する
 Will reduce,削減される
-Will unlock the {tag} process.,{tag}は選択可能になる
-Will unlock the {tag} project.,施策{tag}は選択可能になる
+Will unlock the %{tag} process.,%{tag}は選択可能になる
+Will unlock the %{tag} project.,施策%{tag}は選択可能になる
 Will unlock this process:,この方法は選択可能になる
 Will unlock this project:,この施策は選択可能になる
-Will unlock {name}.,{name}は選択可能になる
+Will unlock %{name}.,%{name}は選択可能になる
 Withdraw,撤回
 Won't increase,増加しない
 Won't reduce,削減されない
-Won't unlock the {tag} process.,{tag}は選択可能にならない
-Won't unlock the {tag} project.,施策{tag}は選択可能にならない
+Won't unlock the %{tag} process.,%{tag}は選択可能にならない
+Won't unlock the %{tag} project.,施策%{tag}は選択可能にならない
 Won't unlock this process:,この方法は選択可能にならない
 Won't unlock this project:,この施策は選択可能にならない
-Won't unlock {name}.,{name}は選択可能にならない
+Won't unlock %{name}.,%{name}は選択可能にならない
 World,世界
 Yea,賛成
 You had an extraterrestrial encounter.,あなたは地球外生命体と遭遇した。
-You have {yearsLeft} years left in your tenure.,あなたの任期は、あと{yearsLeft}年。
+You have %{yearsLeft} years left in your tenure.,あなたの任期は、あと%{yearsLeft}年。
 You received a request to ban this process:,次の政策を禁止する要請を受理した;
 You received a request to implement this project:,次の政策を実行する要請を受理した;
 You received a request to promote this process:,次の政策の促進要請を受理した;
 You received a request to stop this project:,次の政策の停止要請を受理した;
 You should reallocate its points to other processes.,ポイントの割り当てを他の方法に変更する必要がある。
 You were bailed out.,助けられました。
-Your coalition has {coalitionSeats}/{totalSeats} seats.,現在のあなたの同盟の議席数は、{coalitionSeats}/{totalSeats}
-Your relationship with {name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,あなたと {name}の友好度を表す。{name}が支持する施策を実施すると、ハートが増える。ハートが5つ以上になると、{name}はあなたの同盟に加わる。
+Your coalition has %{coalitionSeats}/%{totalSeats} seats.,現在のあなたの同盟の議席数は、%{coalitionSeats}/%{totalSeats}
+Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,あなたと %{name}の友好度を表す。%{name}が支持する施策を実施すると、ハートが増える。ハートが5つ以上になると、%{name}はあなたの同盟に加わる。
 alarming,注意すべき状況
 an unknown amount,不明な量
 biodiversity pressure,生物多様性に対する負荷
@@ -345,14 +345,14 @@ by an unknown amount,金額は不明だが
 cost,費用
 critical,致命的な状況
 crops,農業
-decrease {k} by {change}%,{k} を {change}% 減らす
+decrease [i]%{icon}[/i] %{k} by %{change}%,[i]%{icon}[/i] %{k} を %{change}% 減らす
 development time,開発にかかる時間
 electricity,電力
 emissions,排出量
 energy use,エネルギー使用量
-from {tipIcon}{cost}{unit} to {tipIcon}{newCost}{unit},{tipIcon}{cost}{unit} から {tipIcon}{newCost}{unit} へ。
+from {tipIcon}%{cost}{unit} to {tipIcon}{newCost}{unit},{tipIcon}%{cost}{unit} から {tipIcon}{newCost}{unit} へ。
 fuel,燃料
-increase {k} by {warn}{change}%,{k}が{warn}{change}%増加する
+increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,[i]%{icon}[/i] %{k}が%{warn}%{change}%増加する
 land use,土地利用率
 livestock,畜産
 mild,懸念すべき状況
@@ -365,47 +365,47 @@ th,番目
 the extinction rate,種の絶滅の速度
 water use,水資源の利用率
 year(s),年
-"{changeDir} CO2 emissions for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{percent}%.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> のCO2 排出量は、<strong>{percent}%</strong>{changeDir}"
-{changeDir} all {name} production by <strong>{percent}%.</strong>,すべての {name} の生産量が <strong>{percent}%.</strong>{changeDir} 。
-{changeDir} biodiversity pressure by {amount}.,世界の生物多様性に対する負荷は、{amount}{changeDir}。
-"{changeDir} biodiversity pressure for <span><img class=""effect-feature"" src=""{icon}"" />{feature}</span> by <strong>{amount}.</strong>","<span><img class=""effect-feature"" src=""{icon}"" />{feature}</span>の生物多様性に対する負荷が<strong>{amount}.</strong> {changeDir}。"
-{changeDir} contentedness by <strong>{amount}</strong>.,[contentedness] 満足度が、<strong>{amount}</strong>{changeDir}
-"{changeDir} demand for {name} by <img src=""{icon}"">{amount}.","{name} の需要が <img src=""{icon}"">{amount} {changeDir}"
-{changeDir} demand for {name} by <strong>{percent}%</strong>.,{name}における<strong>{percent}%</strong>{changeDir}。
-{changeDir} demand for {tag} by {amount}.,{tag}の需要が{amount}{changeDir} 。
-{changeDir} emissions by {amount}.,世界の排出量は、{amount}{changeDir}。
-{changeDir} global population by {amount}.,世界人口は、{amount}{changeDir} 。
-{changeDir} global population growth by {amount}<strong>%.</strong>,世界人口の増加は、{amount}<strong>%.</strong>{changeDir} 。
-{changeDir} global precipitation by {amount}<strong>cm/yr</strong>.,地球全体の降水量は、{amount}<strong>cm/yr</strong>{changeDir} 。
-{changeDir} habitability in {type} regions by {amount}.,{type}地域の居住性は、{amount}{changeDir} 。
-{changeDir} maximum output for {process} by <strong>{amount}</strong>.,{process} の最大出力量は、<strong>{amount}</strong>{changeDir} 。.
-"{changeDir} output for <span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span> by <strong>{percent}%.</strong>","<span><img class=""effect-feature"" src=""{icon}"" /><strong>{feature}</strong></span>の生産量が、<strong>{percent}%</strong>に{changeDir}。"
-{changeDir} the CO2 emissions for these processes by <strong>{percent}%.</strong>,この過程で排出されるCO2は、<strong>{percent}%</strong>{changeDir}。
-{changeDir} the amount of sea level rise by {amount}mm/year.,海面上昇を年間 {amount} mm {changeDir}。
-"{changeDir} the chance of ""{event}"" by {amount}.",「{event}」の発生確率を{amount}だけ{changeDir}。
-{changeDir} the global temperature by {amount}<strong>°c</strong>.,地球の平均気温は、{amount}<strong>°c</strong>{changeDir} 。
-{changeDir} the rate of sea level rise by {amount}mm/year.,海面上昇率は、{amount}mm/year{changeDir}。
-{changeDir} world contentedness by <strong>{amount}</strong>.,[contentedness] 世界の満足度は、<strong>{amount}</strong>{changeDir} 。
-{changeDir} world contentedness by {amount}.,世界の満足度は、{amount}{changeDir}。
-{changeDir} {kind} of {tag} by <b>{tipAmount}</b>.,{tag}の{kind} が <b>{tipAmount}</b>{changeDir}。
-{changeDir} {label} for {tag} by <strong>{amount}</strong>.,{tag}のための{label}が、<strong>{amount}</strong> {changeDir}
-"{changeDir} {name} supply by <img src=""{icon}"">{amount}.","{name}の供給量は、<img src=""{icon}"">{amount}{changeDir}。（現在の供給量の{percent}% ）"
-{changeDir} {name} supply by <strong>{percent}%.</strong>,{name} の供給が、<strong>{percent}%</strong>{changeDir}
-{changeDir} {name} supply by [{icon}]{amount}.,{name} の供給は、[{icon}]{amount}{changeDir} 。
-{changeDir} {resource} demand for {tag} by {amount}.,{tag}の{resource}の需要が {amount}に{changeDir}。
-{changeDir} {tag} output by <strong>{percent}%.</strong>,{tag}の生産量が、<strong>{percent}%.</strong> {changeDir}。
-{changeDir} {type} emissions for {tag} by <strong>{amount}</strong>.,{type} の排出量が、<strong>{amount}</strong>{changeDir}
-{cost} yrs,{cost} 年
-{disaster} in {region},{region}で{disaster}発生
-"{emissionsBefore} to <img src=""{icon}"">{emissionsAfter}. This is a {emissionsChange}% change of all emissions.","{emissionsBefore} から <img src=""{icon}"">{emissionsAfter}になる。これはすべての排出量の{emissionsChange}%にあたる変化である。"
-"{fromAmount} to {toAmount}<img src=""{icon}"">.","{fromAmount} から {toAmount}<img src=""{icon}"">になる。"
-"{name} is opposed to this. If you implement it, your relationship will worsen by -<img src='{icon}' />.",{name}は、この施策に反対している。もしあなたがこの施策を実行すると、{name}との関係が悪くなる。－<img src='{icon}' />
-"{name} supports this. If you implement it, your relationship will improve by +<img src='{icon}' />.",{name}は、この施策に賛成している。もしあなたがこの施策を実行すると、{name}との関係が良くなる。＋<img src='{icon}' />
-{name} will be unavailable while this project is active.,この施策が有効な間は、{name}が実行できなくなる。
-{points} {kind} points are allocated to this project,この施策には、{points} {kind}ポイントが割り当てられている。
-{region} is now {income} income.,{region}が、{income}になった。
-{type} emissions,{type} の排出量
-{years} yrs left,残り{years} 年
+"%{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b]","[e][i]%{icon}[/i]%{feature}[/e] のCO2 排出量は、[b]%{percent}%[/b]%{changeDir}"
+%{changeDir} all %{name} production by [b]%{percent}%.[/b],すべての %{name} の生産量が [b]%{percent}%.[/b]%{changeDir} 。
+%{changeDir} biodiversity pressure by %{amount}.,世界の生物多様性に対する負荷は、%{amount}%{changeDir}。
+"%{changeDir} biodiversity pressure for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{amount}.[/b]","[e][i]%{icon}[/i]%{feature}[/e]の生物多様性に対する負荷が[b]%{amount}.[/b] %{changeDir}。"
+%{changeDir} contentedness by [b]%{amount}[/b].,[contentedness] 満足度が、[b]%{amount}[/b]%{changeDir}
+"%{changeDir} demand for %{name} by [i]%{icon}[/i]%{amount}.","%{name} の需要が [i]%{icon}[/i]%{amount} %{changeDir}"
+%{changeDir} demand for %{name} by [b]%{percent}%[/b].,%{name}における[b]%{percent}%[/b]%{changeDir}。
+%{changeDir} demand for %{tag} by %{amount}.,%{tag}の需要が%{amount}%{changeDir} 。
+%{changeDir} emissions by %{amount}.,世界の排出量は、%{amount}%{changeDir}。
+%{changeDir} global population by %{amount}.,世界人口は、%{amount}%{changeDir} 。
+%{changeDir} global population growth by %{amount}[b]%.[/b],世界人口の増加は、%{amount}[b]%.[/b]%{changeDir} 。
+%{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,地球全体の降水量は、%{amount}[b]cm/yr[/b]%{changeDir} 。
+%{changeDir} habitability in %{kind} regions by %{amount}.,%{kind}地域の居住性は、%{amount}%{changeDir} 。
+%{changeDir} maximum output for %{process} by [b]%{amount}[/b].,%{process} の最大出力量は、[b]%{amount}[/b]%{changeDir} 。.
+"%{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b]","[e][i]%{icon}[/i][b]%{feature}[/b][/e]の生産量が、[b]%{percent}%[/b]に%{changeDir}。"
+%{changeDir} the CO2 emissions for these processes by [b]%{percent}%.[/b],この過程で排出されるCO2は、[b]%{percent}%[/b]%{changeDir}。
+%{changeDir} the amount of sea level rise by %{amount}mm/year.,海面上昇を年間 %{amount} mm %{changeDir}。
+"%{changeDir} the chance of ""%{event}"" by %{amount}.",「%{event}」の発生確率を%{amount}だけ%{changeDir}。
+%{changeDir} the global temperature by %{amount}[b]°c[/b].,地球の平均気温は、%{amount}[b]°c[/b]%{changeDir} 。
+%{changeDir} the rate of sea level rise by %{amount}mm/year.,海面上昇率は、%{amount}mm/year%{changeDir}。
+%{changeDir} world contentedness by [b]%{amount}[/b].,[contentedness] 世界の満足度は、[b]%{amount}[/b]%{changeDir} 。
+%{changeDir} world contentedness by %{amount}.,世界の満足度は、%{amount}%{changeDir}。
+%{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{tag}の%{kind} が [b]%{tipAmount}[/b]%{changeDir}。
+%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{tag}のための%{label}が、[b]%{amount}[/b] %{changeDir}
+"%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.","%{name}の供給量は、[i]%{icon}[/i]%{amount}%{changeDir}。（現在の供給量の%{percent}% ）"
+%{changeDir} %{name} supply by [b]%{percent}%.[/b],%{name} の供給が、[b]%{percent}%[/b]%{changeDir}
+%{changeDir} %{name} supply by [{icon}]%{amount}.,%{name} の供給は、[{icon}]%{amount}%{changeDir} 。
+%{changeDir} %{resource} demand for %{tag} by %{amount}.,%{tag}の%{resource}の需要が %{amount}に%{changeDir}。
+%{changeDir} %{tag} output by [b]%{percent}%.[/b],%{tag}の生産量が、[b]%{percent}%.[/b] %{changeDir}。
+%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{kind} の排出量が、[b]%{amount}[/b]%{changeDir}
+%{cost} yrs,%{cost} 年
+%{disaster} in %{region},%{region}で%{disaster}発生
+"%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.","%{emissionsBefore} から [i]%{icon}[/i]%{emissionsAfter}になる。これはすべての排出量の%{emissionsChange}%にあたる変化である。"
+"%{fromAmount} to %{toAmount}[i]%{icon}[/i].","%{fromAmount} から %{toAmount}[i]%{icon}[/i]になる。"
+"%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].",%{name}は、この施策に反対している。もしあなたがこの施策を実行すると、%{name}との関係が悪くなる。－[i]%{icon}[/i]
+"%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].",%{name}は、この施策に賛成している。もしあなたがこの施策を実行すると、%{name}との関係が良くなる。＋[i]%{icon}[/i]
+%{name} will be unavailable while this project is active.,この施策が有効な間は、%{name}が実行できなくなる。
+%{points} %{kind} points are allocated to this project,この施策には、%{points} %{kind}ポイントが割り当てられている。
+%{region} is now %{income} income.,%{region}が、%{income}になった。
+%{kind} emissions,%{kind} の排出量
+%{years} yrs left,残り%{years} 年
 ↑ Swipe this card up and hold to add it to your plan ↑,↑このカードを上にドラッグして一定時間静止すると、計画が実行される。
 Swipe sideways to see other projects,横にスワイプして、他のプロジェクトを見る。
 The Malthusian,マルサス主義者
@@ -1382,7 +1382,7 @@ But now people have a more direct connection to the food they eat than they ever
 Most of the world is self-sufficient in crop production. I never thought I'd see the day.,世界のほとんどの地域で作物生産を自給自足しています。 まさかその日が来るとは思ってもいませんでした。
 Unrest - Secession,不穏な動き－離脱－
 How's My Planning?,私の計画どうでしょう？
-{region} has seceded from Gosplant.,{region}はゴスプラントから離脱しました。
+%{region} has seceded from Gosplant.,%{region}はゴスプラントから離脱しました。
 This is a major blow to Gosplant...,これはゴスプラントにとって大きな痛手です…
 ...but maybe we'll survive it.,...しかし、私たちは生き延びることができるかもしれません。
 They felt neglected by your decision-making and lost all confidence in your capacity as planner.,彼らは意思決定の場で無視されていると感じ、計画立案者としてのあなたの能力を完全に疑っています。
@@ -1764,13 +1764,13 @@ Intro Cutscene,イントロカットシーン
 In 2022 a socialist revolution swept the globe.,2022年、社会主義革命が起こり、世界政府が樹立した。
 "It's a sunny day in Havana, where the first planning session will take place...",最初の企画会議が行われたバハマは、抜けるような青空が広がっていた…
 You have been elected as [gosplant]'s first lead planner.,あなたは、選挙によって[gosplant]の計画立案部門の最初の責任者に選ばれた。
-"And you must do so without letting your [political_capital]<em class=""lose-con"">political capital dip below 0</em>...","そして、[political_capital]<em class=""lose-con"">政治資本が0</em>以下にならないよう、気を配らなければなりません…"
-"You must do so without letting people's [contentedness]<em class=""lose-con"">contentedness dip below 0</em>...","このとき、人々の[contentedness]<em class=""lose-con"">満足度が0</em>以下になることは、絶対に避けなければならない…"
+"And you must do so without letting your [political_capital][w]political capital dip below 0[/w]...","そして、[political_capital][w]政治資本が0[/w]以下にならないよう、気を配らなければなりません…"
+"You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...","このとき、人々の[contentedness][w]満足度が0[/w]以下になることは、絶対に避けなければならない…"
 "The regions of the world united to establish [gosplant], a global planning authority.",世界中の地域が手を取り合って、地球規模の計画立案期間である[gosplant]を設立した。
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant]の任務は、資本主義が何世紀にもわたり地球と人類にもたらした無数の傷跡を回復させることだ。
 Otherwise your adversaries may take the opportunity to replace you.,そのようなことがあれば、あなたの敵対勢力はその好機を見逃すことなく、あなたの席を狙うだろう。
 Otherwise they will vote you out of office.,そのようなことがあれば、あなたの首は選挙によって別の人間の首にすげ替えられることになるだろう。
-"It's your duty to bring [warming]<em class=""win-con"">warming to below 1°C</em>, the [extinction_rate]<em class=""win-con"">extinction rate to below 20</em>, and [emissions]<em class=""win-con"">emissions to below 0</em> while there's still time.","あなたは地球に残されたわずかな時間の中で、以下の基準を達成しなければならない。[warming]<em class=""win-con"">気温上昇を1℃</em>以下にすること、[extinction_rate]<em class=""win-con"">種の絶滅の速度を20</em>以下にすること、 [emissions]<em class=""win-con"">CO2の排出量を0</em>以下にすること。"
+"It's your duty to bring [warming][g]warming to below 1°C[/g], the [extinction_rate][g]extinction rate to below 20[/g], and [emissions][g]emissions to below 0[/g] while there's still time.","あなたは地球に残されたわずかな時間の中で、以下の基準を達成しなければならない。[warming][g]気温上昇を1℃[/g]以下にすること、[extinction_rate][g]種の絶滅の速度を20[/g]以下にすること、 [emissions][g]CO2の排出量を0[/g]以下にすること。"
 SRM - Assassination,太陽放射管理－暗殺－
 Under a White Sky,白い空の下で
 One of my colleagues was murdered last night!,昨夜、私の同僚の一人が殺害されました！
@@ -2661,5 +2661,5 @@ Default World,デフォルトワールド
 Failed to parse provided world.,提供されたワールドの解析に失敗しました。
 New worlds can be made using the editor.,エディターを使用して新しいワールドを作成できます。
 Regional Factors,地域要因
-This effect {changeDir} the {kind} of this project by {tipAmount}.,この効果は、このプロジェクトの{kind}を{tipAmount}だけ{changeDir}。
+This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,この効果は、このプロジェクトの%{kind}を%{tipAmount}だけ%{changeDir}。
 Warning: Custom worlds may break parts of the game!,警告: カスタムワールドはゲームの一部を破壊する可能性があります！
