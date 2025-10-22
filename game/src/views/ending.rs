@@ -11,7 +11,7 @@ use strum::{EnumIter, IntoEnumIterator};
 
 use crate::{
     display::{Icon, icons},
-    parts::{button, h_center},
+    parts::{button, clear_full_bg_image, h_center},
     state::{GameState, StateExt},
     tips::{add_tip, tip},
     views::events::Events,
@@ -58,6 +58,8 @@ impl End {
     }
 
     pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> bool {
+        clear_full_bg_image(ui);
+
         let mut restart = false;
         if !self.events.is_finished {
             self.events.render(ui, state);
@@ -117,10 +119,14 @@ impl End {
                         ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
                         ui.style_mut().interaction.selectable_labels = true;
                         ui.monospace("Your History");
-                        for line in &self.log {
-                            ui.monospace(line);
-                        }
                     });
+                });
+
+                ui.vertical(|ui| {
+                    ui.set_width(320.);
+                    for line in &self.log {
+                        ui.monospace(line);
+                    }
                 });
 
                 ui.add_space(64.);

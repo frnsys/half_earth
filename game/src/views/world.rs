@@ -121,7 +121,7 @@ impl WorldEvents {
                 }
             }
             Subphase::ComputeTgav => {
-                if let Some(tgav) = self.climate.tgav(state.world.year) {
+                if let Some(tgav) = self.climate.tgav(state.world.year + 1) {
                     self.tgav = tgav;
                     self.next_phase(state);
                 }
@@ -348,7 +348,7 @@ impl Timer {
     fn p_elapsed(&mut self) -> f32 {
         let duration = self.start.elapsed();
         let target = if self.skipping { 10. } else { self.target };
-        duration.as_millis() as f32 / target
+        (duration.as_millis() as f32 / target).min(1.)
     }
 
     fn reset(&mut self) {

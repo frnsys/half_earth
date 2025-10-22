@@ -107,6 +107,8 @@ impl Report {
                         self.render_region_incomes(ui);
                         self.render_disasters(ui);
 
+                        ui.add_space(16.);
+
                         if ui.add(button(t!("Next")).full_width()).clicked() {
                             state.change_political_capital(self.pc_change);
 

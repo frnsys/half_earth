@@ -105,6 +105,13 @@ pub fn set_full_bg_image_tinted(
     });
 }
 
+pub fn clear_full_bg_image(ui: &mut egui::Ui) {
+    ui.memory_mut(|mem| {
+        mem.data
+            .remove::<(egui::ImageSource<'static>, Vec2, Option<Color32>)>("bg-image".into());
+    });
+}
+
 pub fn draw_bg_image(ui: &mut egui::Ui) {
     if let Some((image, size, tint)) = ui.memory(|mem| mem.data.get_temp("bg-image".into())) {
         full_bg_image(ui, image, size, tint);
