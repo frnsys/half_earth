@@ -48,6 +48,6 @@ pub const PROCESS_CARD_SCAN_TIME: f32 = 0.4 * 1000.;
 pub const PROCESS_CARD_WITHDRAW_TIME: f32 = 0.4 * 1000.;
 
 /// How many ms for each year to pass in the world events view.
-pub const MS_PER_YEAR: f32 = 4000.;
+pub const MS_PER_YEAR: f32 = 2500.;
 
 pub const PARLIAMENT_SEATS: &[usize] = &[9, 9, 7, 5, 3];
