@@ -1,16 +1,7 @@
 use enum_map::EnumMap;
 use hes_engine::{
-    ByproductMap,
-    Effect,
-    Industry,
-    Output,
-    Process,
-    Resource,
-    ResourceMap,
-    State,
-    WorldVariable,
-    mean_demand_outlook_change,
-    mean_income_outlook_change,
+    ByproductMap, Effect, Industry, Output, Process, Resource, ResourceMap, State, WorldVariable,
+    mean_demand_outlook_change, mean_income_outlook_change,
 };
 use serde::{Deserialize, Serialize};
 use strum::IntoEnumIterator;
@@ -22,97 +13,66 @@ use crate::{
 };
 use rust_i18n::t;
 
-fn effects_factor<E: AsRef<Effect>>(
-    var: Var,
-    effects: &[E],
-    state: &State,
-) -> f32 {
+fn effects_factor<E: AsRef<Effect>>(var: Var, effects: &[E], state: &State) -> f32 {
     let effects = effects.iter().map(|e| e.as_ref());
     match var {
         Var::Emissions => effects
             .filter_map(|e| match e {
-                Effect::WorldVariable(
-                    WorldVariable::Emissions,
-                    val,
-                ) => Some(val),
+                Effect::WorldVariable(WorldVariable::Emissions, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::Water => effects
             .filter_map(|e| match e {
-                Effect::Resource(Resource::Water, val) => {
-                    Some(val)
-                }
+                Effect::Resource(Resource::Water, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::Land => effects
             .filter_map(|e| match e {
-                Effect::ProtectLand(val) => Some(
-                    val * state.world.starting_resources.land,
-                ),
+                Effect::ProtectLand(val) => Some(val * state.world.starting_resources.land),
                 _ => None,
             })
             .sum::<f32>(),
         Var::Energy => effects
             .filter_map(|e| match e {
-                Effect::DemandAmount(
-                    Output::Electricity | Output::Fuel,
-                    val,
-                ) => Some(val),
+                Effect::DemandAmount(Output::Electricity | Output::Fuel, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::Electricity => effects
             .filter_map(|e| match e {
-                Effect::DemandAmount(
-                    Output::Electricity,
-                    val,
-                ) => Some(val),
+                Effect::DemandAmount(Output::Electricity, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::Fuel => effects
             .filter_map(|e| match e {
-                Effect::DemandAmount(Output::Fuel, val) => {
-                    Some(val)
-                }
+                Effect::DemandAmount(Output::Fuel, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::PlantCalories => effects
             .filter_map(|e| match e {
-                Effect::DemandAmount(
-                    Output::PlantCalories,
-                    val,
-                ) => Some(val),
+                Effect::DemandAmount(Output::PlantCalories, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::AnimalCalories => effects
             .filter_map(|e| match e {
-                Effect::DemandAmount(
-                    Output::AnimalCalories,
-                    val,
-                ) => Some(val),
+                Effect::DemandAmount(Output::AnimalCalories, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
         Var::Contentedness => effects
             .filter_map(|e| match e {
-                Effect::WorldVariable(
-                    WorldVariable::Outlook,
-                    val,
-                ) => Some(*val),
+                Effect::WorldVariable(WorldVariable::Outlook, val) => Some(*val),
                 Effect::IncomeOutlookChange(val) => {
-                    let change =
-                        mean_income_outlook_change(*val, state);
+                    let change = mean_income_outlook_change(*val, state);
                     Some(change)
                 }
                 Effect::DemandOutlookChange(output, val) => {
-                    let change = mean_demand_outlook_change(
-                        *val, output, state,
-                    );
+                    let change = mean_demand_outlook_change(*val, output, state);
                     Some(change)
                 }
                 _ => None,
@@ -120,10 +80,7 @@ fn effects_factor<E: AsRef<Effect>>(
             .sum::<f32>(),
         Var::Biodiversity => effects
             .filter_map(|e| match e {
-                Effect::WorldVariable(
-                    WorldVariable::ExtinctionRate,
-                    val,
-                ) => Some(val),
+                Effect::WorldVariable(WorldVariable::ExtinctionRate, val) => Some(val),
                 _ => None,
             })
             .sum::<f32>(),
@@ -223,16 +180,11 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
 
             let display = if var.is_demand_var() {
                 let amount = match var {
-                    Var::Energy
-                    | Var::Electricity
-                    | Var::Fuel => {
-                        display::to_energy_units(amount)
-                            .round_to(1)
+                    Var::Energy | Var::Electricity | Var::Fuel => {
+                        display::to_energy_units(amount).round_to(1)
                     }
-                    Var::PlantCalories
-                    | Var::AnimalCalories => {
-                        display::to_calorie_units(amount)
-                            .round_to(1)
+                    Var::PlantCalories | Var::AnimalCalories => {
+                        display::to_calorie_units(amount).round_to(1)
                     }
                     _ => unreachable!(),
                 };
@@ -243,14 +195,7 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
             } else if var == Var::Land {
                 format!(
                     "{}%",
-                    display::percent(
-                        amount
-                            / state
-                                .world
-                                .starting_resources
-                                .land,
-                        true
-                    )
+                    display::percent(amount / state.world.starting_resources.land, true)
                 )
             } else {
                 amount.round_to(1).to_string()
@@ -265,20 +210,15 @@ fn project_factors(var: Var, state: &State) -> Vec<Factor> {
         .collect()
 }
 
-fn regional_factors(
-    output: Output,
-    state: &State,
-) -> Vec<Factor> {
-    let per_capita_output_demand =
-        &state.world.per_capita_demand;
+fn regional_factors(output: Output, state: &State) -> Vec<Factor> {
+    let per_capita_output_demand = &state.world.per_capita_demand;
     state
         .world
         .regions
         .iter()
         .map(|region| {
             let intensity = region.income.level() + 1;
-            let amount =
-                region.demand(per_capita_output_demand)[output];
+            let amount = region.demand(per_capita_output_demand)[output];
             let amount = display::output(amount, output);
             Factor::Region {
                 name: region.name.clone(),
@@ -342,26 +282,16 @@ impl HasImpacts for Industry {
     }
 }
 
-fn impact_factor<S: HasImpacts>(
-    source: &S,
-    impact: Impact,
-    state: &State,
-) -> Impacts {
+fn impact_factor<S: HasImpacts>(source: &S, impact: Impact, state: &State) -> Impacts {
     let base = match impact {
-        Impact::Land
-        | Impact::Water
-        | Impact::Electricity
-        | Impact::Fuel => {
-            let res = impact
-                .as_resource()
-                .expect("Checked that it's a resource.");
+        Impact::Land | Impact::Water | Impact::Electricity | Impact::Fuel => {
+            let res = impact.as_resource().expect("Checked that it's a resource.");
             source.resources()[res]
         }
         Impact::Energy => source.resources().energy(),
         Impact::Emissions => source.byproducts().co2eq(),
         Impact::Biodiversity => {
-            let total_land =
-                state.world.starting_resources.land;
+            let total_land = state.world.starting_resources.land;
             source.extinction_rate(total_land)
         }
     };
@@ -370,29 +300,15 @@ fn impact_factor<S: HasImpacts>(
     let total_impact = base * demand;
 
     let display = match impact {
-        Impact::Energy => {
-            display::to_energy_units(total_impact)
-                .round_to(1)
-                .to_string()
+        Impact::Energy => display::to_energy_units(total_impact)
+            .round_to(1)
+            .to_string(),
+        Impact::Electricity => display::output(total_impact, Output::Electricity).to_string(),
+        Impact::Fuel => display::output(total_impact, Output::Fuel).to_string(),
+        Impact::Land => {
+            display::format_impact(impact, total_impact, state.world.starting_resources)
         }
-        Impact::Electricity => {
-            display::output(total_impact, Output::Electricity)
-                .to_string()
-        }
-        Impact::Fuel => {
-            display::output(total_impact, Output::Fuel)
-                .to_string()
-        }
-        Impact::Land => display::format_impact(
-            impact,
-            total_impact,
-            state.world.starting_resources,
-        ),
-        _ => display::format_impact(
-            impact,
-            total_impact,
-            state.resources.available,
-        ),
+        _ => display::format_impact(impact, total_impact, state.resources.available),
     };
 
     Impacts {
@@ -403,10 +319,7 @@ fn impact_factor<S: HasImpacts>(
     }
 }
 
-fn production_factors(
-    impact: Impact,
-    state: &State,
-) -> Vec<Factor> {
+fn production_factors(impact: Impact, state: &State) -> Vec<Factor> {
     state
         .world
         .processes
@@ -420,15 +333,9 @@ fn production_factors(
             } = impact_factor(proc, impact, state);
 
             let kind: OutputKind = proc.output.into();
-            let inten = intensity::impact_intensity(
-                per_unit, impact, kind,
-            );
-            let total_demand =
-                state.output_demand.of(proc.output);
-            let display_produced = format!(
-                "{}%",
-                display::percent(demand / total_demand, true)
-            );
+            let inten = intensity::impact_intensity(per_unit, impact, kind);
+            let total_demand = state.output_demand.of(proc.output);
+            let display_produced = format!("{}%", display::percent(demand / total_demand, true));
             Factor::Process {
                 name: proc.name.to_string(),
                 produced: demand,
@@ -446,11 +353,7 @@ fn production_factors(
                 total,
                 display,
             } = impact_factor(ind, impact, state);
-            let inten = intensity::impact_intensity(
-                per_unit,
-                impact,
-                OutputKind::Energy,
-            );
+            let inten = intensity::impact_intensity(per_unit, impact, OutputKind::Energy);
             Factor::Industry {
                 name: ind.name.to_string(),
                 produced: demand,
@@ -480,39 +383,28 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
             Var::Contentedness => {
                 if state.world.temp_outlook.round_to(1) != 0. {
                     rankings.push(Factor::Event {
-                        name: t!("Temperature Change")
-                            .to_string(),
-                        amount: state
-                            .world
-                            .temp_outlook
-                            .round_to(1),
+                        name: t!("Temperature Change").to_string(),
+                        amount: state.world.temp_outlook.round_to(1),
                         display: None,
                     })
                 }
                 if state.shortages_outlook != 0. {
                     rankings.push(Factor::Event {
-                        name: t!("Production Shortages")
-                            .to_string(),
-                        amount: -state
-                            .shortages_outlook
-                            .round_to(1),
+                        name: t!("Production Shortages").to_string(),
+                        amount: -state.shortages_outlook.round_to(1),
                         display: None,
                     })
                 }
                 rankings.push(Factor::Event {
-                    name: t!("Post-Revolution Optimism")
-                        .to_string(),
+                    name: t!("Post-Revolution Optimism").to_string(),
                     amount: 30.,
                     display: None,
                 });
                 // Delta relative to their starting value of 10.
-                let regions_outlook_delta =
-                    (state.world.regions.outlook() - 10.)
-                        .round_to(1);
+                let regions_outlook_delta = (state.world.regions.outlook() - 10.).round_to(1);
                 if regions_outlook_delta != 0. {
                     rankings.push(Factor::Event {
-                        name: t!("Regional Factors")
-                            .to_string(),
+                        name: t!("Regional Factors").to_string(),
                         amount: regions_outlook_delta,
                         display: None,
                     })
@@ -526,25 +418,18 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
                 rankings.push(Factor::Event {
                     name: t!("Nature Preserves").to_string(),
                     display: Some("10%".into()),
-                    amount: 0.1
-                        * state.world.starting_resources.land,
+                    amount: 0.1 * state.world.starting_resources.land,
                 });
             }
             Var::Biodiversity => {
                 rankings.push(Factor::Event {
                     name: "Sea Level Rise".into(),
-                    amount: state
-                        .world
-                        .slr_extinction_rate()
-                        .round(),
+                    amount: state.world.slr_extinction_rate().round(),
                     display: None,
                 });
                 rankings.push(Factor::Event {
                     name: "Temperature Change".into(),
-                    amount: state
-                        .world
-                        .tgav_extinction_rate()
-                        .round(),
+                    amount: state.world.tgav_extinction_rate().round(),
                     display: None,
                 });
             }
@@ -564,7 +449,7 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
 
         // HACK: Filter out non-finite (infinite or NaN) values.
         // FIXME: All of the factor calculations *should* be finite.
-        rankings = rankings.into_iter().filter(|r| {
+        rankings.retain(|r| {
             let amount = r.amount();
             if !amount.is_finite() {
                 tracing::warn!("Non-finite ranking factor: {amount} for {}", r.name());
@@ -572,7 +457,7 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
             } else {
                 true
             }
-        }).collect();
+        });
 
         // Since we filtered out non-finite values
         // we should be ok to sort this way.
@@ -599,30 +484,22 @@ pub fn rank(state: &State) -> EnumMap<Var, Vec<Factor>> {
     factors
 }
 
-pub fn factors_card(
-    current_name: Option<String>,
-    var: Var,
-    state: &State,
-) -> FactorsCard {
+pub fn factors_card(current_name: Option<String>, var: Var, state: &State) -> FactorsCard {
     FactorsCard {
         icon: var.icon(),
         kind: var,
         current: current_name,
         total: match var {
             Var::Emissions => state.emissions.as_gtco2eq(),
-            Var::Biodiversity => {
-                state.world.extinction_rate.round().max(0.)
-            }
+            Var::Biodiversity => state.world.extinction_rate.round().max(0.),
             Var::Land => display::resource(
                 state.resource_demand.of(Resource::Land)
-                    + (state.protected_land
-                        * state.world.starting_resources.land),
+                    + (state.protected_land * state.world.starting_resources.land),
                 Resource::Land,
                 state.world.starting_resources,
             ),
             Var::Energy => {
-                let demand =
-                    state.output_demand.total().energy();
+                let demand = state.output_demand.total().energy();
                 display::to_energy_units(demand)
             }
             Var::Water => display::resource(
@@ -631,18 +508,16 @@ pub fn factors_card(
                 state.resources.available,
             ),
             Var::Contentedness => state.outlook().round_to(1),
-            Var::Electricity => display::to_energy_units(
-                state.output_demand.of(Output::Electricity),
-            ),
-            Var::Fuel => display::to_energy_units(
-                state.output_demand.of(Output::Fuel),
-            ),
-            Var::PlantCalories => display::to_calorie_units(
-                state.output_demand.of(Output::PlantCalories),
-            ),
-            Var::AnimalCalories => display::to_calorie_units(
-                state.output_demand.of(Output::AnimalCalories),
-            ),
+            Var::Electricity => {
+                display::to_energy_units(state.output_demand.of(Output::Electricity))
+            }
+            Var::Fuel => display::to_energy_units(state.output_demand.of(Output::Fuel)),
+            Var::PlantCalories => {
+                display::to_calorie_units(state.output_demand.of(Output::PlantCalories))
+            }
+            Var::AnimalCalories => {
+                display::to_calorie_units(state.output_demand.of(Output::AnimalCalories))
+            }
         },
     }
 }
@@ -655,21 +530,11 @@ mod tests {
     fn test_effect_factors_emissions() {
         let state = State::default();
         let effects = vec![
-            Effect::WorldVariable(
-                WorldVariable::Emissions,
-                12.,
-            ),
-            Effect::WorldVariable(
-                WorldVariable::Emissions,
-                16.,
-            ),
-            Effect::WorldVariable(
-                WorldVariable::Emissions,
-                -2.,
-            ),
+            Effect::WorldVariable(WorldVariable::Emissions, 12.),
+            Effect::WorldVariable(WorldVariable::Emissions, 16.),
+            Effect::WorldVariable(WorldVariable::Emissions, -2.),
         ];
-        let contrib =
-            effects_factor(Var::Emissions, &effects, &state);
+        let contrib = effects_factor(Var::Emissions, &effects, &state);
         assert_eq!(contrib, 26.);
     }
 
@@ -681,8 +546,7 @@ mod tests {
             Effect::Resource(Resource::Water, 12.),
             Effect::Resource(Resource::Water, -2.),
         ];
-        let contrib =
-            effects_factor(Var::Water, &effects, &state);
+        let contrib = effects_factor(Var::Water, &effects, &state);
         assert_eq!(contrib, 18.);
     }
 
@@ -694,8 +558,7 @@ mod tests {
             Effect::ProtectLand(-0.3),
             Effect::ProtectLand(0.5),
         ];
-        let contrib =
-            effects_factor(Var::Land, &effects, &state);
+        let contrib = effects_factor(Var::Land, &effects, &state);
         assert_eq!(contrib, 41599996000000.0);
     }
 
@@ -708,8 +571,7 @@ mod tests {
             Effect::DemandAmount(Output::Fuel, 0.5),
             Effect::DemandAmount(Output::Electricity, -2.),
         ];
-        let contrib =
-            effects_factor(Var::Energy, &effects, &state);
+        let contrib = effects_factor(Var::Energy, &effects, &state);
         assert_eq!(contrib, 25.5);
     }
 
@@ -722,8 +584,7 @@ mod tests {
             Effect::DemandAmount(Output::Fuel, 0.5),
             Effect::DemandAmount(Output::Electricity, -2.),
         ];
-        let contrib =
-            effects_factor(Var::Electricity, &effects, &state);
+        let contrib = effects_factor(Var::Electricity, &effects, &state);
         assert_eq!(contrib, 13.);
     }
 
@@ -736,8 +597,7 @@ mod tests {
             Effect::DemandAmount(Output::Fuel, 0.5),
             Effect::DemandAmount(Output::Electricity, -2.),
         ];
-        let contrib =
-            effects_factor(Var::Fuel, &effects, &state);
+        let contrib = effects_factor(Var::Fuel, &effects, &state);
         assert_eq!(contrib, 12.5);
     }
 
@@ -750,11 +610,7 @@ mod tests {
             Effect::DemandAmount(Output::AnimalCalories, 0.5),
             Effect::DemandAmount(Output::PlantCalories, -2.),
         ];
-        let contrib = effects_factor(
-            Var::PlantCalories,
-            &effects,
-            &state,
-        );
+        let contrib = effects_factor(Var::PlantCalories, &effects, &state);
         assert_eq!(contrib, 13.);
     }
 
@@ -767,11 +623,7 @@ mod tests {
             Effect::DemandAmount(Output::AnimalCalories, 0.5),
             Effect::DemandAmount(Output::PlantCalories, -2.),
         ];
-        let contrib = effects_factor(
-            Var::AnimalCalories,
-            &effects,
-            &state,
-        );
+        let contrib = effects_factor(Var::AnimalCalories, &effects, &state);
         assert_eq!(contrib, 12.5);
     }
 
@@ -784,11 +636,7 @@ mod tests {
             Effect::WorldVariable(WorldVariable::Outlook, -6.),
             Effect::DemandOutlookChange(Output::Fuel, 1.), // 3.
         ];
-        let contrib = effects_factor(
-            Var::Contentedness,
-            &effects,
-            &state,
-        );
+        let contrib = effects_factor(Var::Contentedness, &effects, &state);
         assert_eq!(contrib.round(), 24.);
     }
 
@@ -796,17 +644,10 @@ mod tests {
     fn test_effect_factors_biodiversity() {
         let state = State::default();
         let effects = vec![
-            Effect::WorldVariable(
-                WorldVariable::ExtinctionRate,
-                22.,
-            ),
-            Effect::WorldVariable(
-                WorldVariable::ExtinctionRate,
-                -6.,
-            ),
+            Effect::WorldVariable(WorldVariable::ExtinctionRate, 22.),
+            Effect::WorldVariable(WorldVariable::ExtinctionRate, -6.),
         ];
-        let contrib =
-            effects_factor(Var::Biodiversity, &effects, &state);
+        let contrib = effects_factor(Var::Biodiversity, &effects, &state);
         assert_eq!(contrib.round(), 16.);
     }
 
@@ -817,8 +658,7 @@ mod tests {
         println!("Name {:?}", source.name);
         assert!(source.resources.electricity > 0.);
         assert!(source.mix_share > 0);
-        let factors =
-            impact_factor(source, Impact::Electricity, &state);
+        let factors = impact_factor(source, Impact::Electricity, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "0.4");
 
@@ -826,8 +666,7 @@ mod tests {
         println!("Name {:?}", source.name);
         assert!(source.resources.fuel > 0.);
         assert!(source.mix_share > 0);
-        let factors =
-            impact_factor(source, Impact::Fuel, &state);
+        let factors = impact_factor(source, Impact::Fuel, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "1.2");
 
@@ -836,8 +675,7 @@ mod tests {
         assert!(source.resources.fuel > 0.);
         assert!(source.resources.electricity > 0.);
         assert!(source.mix_share > 0);
-        let factors =
-            impact_factor(source, Impact::Energy, &state);
+        let factors = impact_factor(source, Impact::Energy, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "1.6");
 
@@ -845,8 +683,7 @@ mod tests {
         println!("Name {:?}", source.name);
         assert!(source.resources.land > 0.);
         assert!(source.mix_share > 0);
-        let factors =
-            impact_factor(source, Impact::Land, &state);
+        let factors = impact_factor(source, Impact::Land, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "35%");
 
@@ -854,8 +691,7 @@ mod tests {
         println!("Name {:?}", source.name);
         assert!(source.resources.water > 0.);
         assert!(source.mix_share > 0);
-        let factors =
-            impact_factor(source, Impact::Water, &state);
+        let factors = impact_factor(source, Impact::Water, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "11%");
 
@@ -863,8 +699,7 @@ mod tests {
         println!("Name {:?}", source.name);
         assert!(source.byproducts.gtco2eq() > 0.);
         assert!(source.mix_share > 0);
-        let factors =
-            impact_factor(source, Impact::Emissions, &state);
+        let factors = impact_factor(source, Impact::Emissions, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "5.4Gt");
     }
@@ -875,16 +710,14 @@ mod tests {
         let source = state.world.industries.by_idx(3);
         println!("Name {:?}", source.name);
         assert!(source.resources.electricity > 0.);
-        let factors =
-            impact_factor(source, Impact::Electricity, &state);
+        let factors = impact_factor(source, Impact::Electricity, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "2.4");
 
         let source = state.world.industries.by_idx(3);
         println!("Name {:?}", source.name);
         assert!(source.resources.fuel > 0.);
-        let factors =
-            impact_factor(source, Impact::Fuel, &state);
+        let factors = impact_factor(source, Impact::Fuel, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "11.1");
 
@@ -892,24 +725,21 @@ mod tests {
         println!("Name {:?}", source.name);
         assert!(source.resources.fuel > 0.);
         assert!(source.resources.electricity > 0.);
-        let factors =
-            impact_factor(source, Impact::Energy, &state);
+        let factors = impact_factor(source, Impact::Energy, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "13.5");
 
         let source = state.world.industries.by_idx(5);
         println!("Name {:?}", source.name);
         assert!(source.resources.water > 0.);
-        let factors =
-            impact_factor(source, Impact::Water, &state);
+        let factors = impact_factor(source, Impact::Water, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "2%");
 
         let source = state.world.industries.by_idx(4);
         println!("Name {:?}", source.name);
         assert!(source.byproducts.gtco2eq() > 0.);
-        let factors =
-            impact_factor(source, Impact::Emissions, &state);
+        let factors = impact_factor(source, Impact::Emissions, &state);
         println!("  {:?}", factors);
         assert_eq!(factors.display, "<1Gt");
     }
@@ -922,27 +752,15 @@ mod tests {
         assert_eq!(card.total_formatted(), "88");
 
         let card = factors_card(None, Var::Electricity, &state);
-        println!(
-            "{:?}: {}",
-            Var::Electricity,
-            card.total_formatted()
-        );
+        println!("{:?}: {}", Var::Electricity, card.total_formatted());
         assert_eq!(card.total_formatted(), "26");
 
         let card = factors_card(None, Var::Energy, &state);
-        println!(
-            "{:?}: {}",
-            Var::Energy,
-            card.total_formatted()
-        );
+        println!("{:?}: {}", Var::Energy, card.total_formatted());
         assert_eq!(card.total_formatted(), "115");
 
         let card = factors_card(None, Var::Emissions, &state);
-        println!(
-            "{:?}: {}",
-            Var::Emissions,
-            card.total_formatted()
-        );
+        println!("{:?}: {}", Var::Emissions, card.total_formatted());
         assert_eq!(card.total_formatted(), "51.6Gt");
 
         let card = factors_card(None, Var::Land, &state);
@@ -950,47 +768,23 @@ mod tests {
         assert_eq!(card.total_formatted(), "59%");
 
         let card = factors_card(None, Var::Water, &state);
-        println!(
-            "{:?}: {}",
-            Var::Water,
-            card.total_formatted()
-        );
+        println!("{:?}: {}", Var::Water, card.total_formatted());
         assert_eq!(card.total_formatted(), "47%");
 
-        let card =
-            factors_card(None, Var::PlantCalories, &state);
-        println!(
-            "{:?}: {}",
-            Var::PlantCalories,
-            card.total_formatted()
-        );
+        let card = factors_card(None, Var::PlantCalories, &state);
+        println!("{:?}: {}", Var::PlantCalories, card.total_formatted());
         assert_eq!(card.total_formatted(), "342");
 
-        let card =
-            factors_card(None, Var::AnimalCalories, &state);
-        println!(
-            "{:?}: {}",
-            Var::AnimalCalories,
-            card.total_formatted()
-        );
+        let card = factors_card(None, Var::AnimalCalories, &state);
+        println!("{:?}: {}", Var::AnimalCalories, card.total_formatted());
         assert_eq!(card.total_formatted(), "73");
 
-        let card =
-            factors_card(None, Var::Biodiversity, &state);
-        println!(
-            "{:?}: {}",
-            Var::Biodiversity,
-            card.total_formatted()
-        );
+        let card = factors_card(None, Var::Biodiversity, &state);
+        println!("{:?}: {}", Var::Biodiversity, card.total_formatted());
         assert_eq!(card.total_formatted(), "90");
 
-        let card =
-            factors_card(None, Var::Contentedness, &state);
-        println!(
-            "{:?}: {}",
-            Var::Contentedness,
-            card.total_formatted()
-        );
+        let card = factors_card(None, Var::Contentedness, &state);
+        println!("{:?}: {}", Var::Contentedness, card.total_formatted());
         assert_eq!(card.total_formatted(), "30");
     }
 }

@@ -8,7 +8,7 @@ use crate::{
     views::events::{EventResult, Events},
 };
 
-const IMAGES: &[(&'static str, f32, f32)] = &[
+const IMAGES: &[(&str, f32, f32)] = &[
     ("pexels-lt-chan-2833366.webp", 1800., 1200.),
     ("gosplant_world.webp", 1800., 900.),
     ("gosplant_world.webp", 1800., 900.),
@@ -31,10 +31,7 @@ pub struct Intro {
 }
 impl Intro {
     pub fn new(state: &mut State) -> Self {
-        let events = StateExt::roll_events(
-            state,
-            EventPhase::CutsceneIntro,
-        );
+        let events = StateExt::roll_events(state, EventPhase::CutsceneIntro);
 
         audio::soundtrack(audio::Track::Intro);
 
@@ -44,17 +41,9 @@ impl Intro {
         }
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &mut State,
-    ) -> bool {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut State) -> bool {
         if let Some((img, x, y)) = IMAGES.get(self.img_idx) {
-            set_full_bg_image(
-                ui,
-                hes_images::intro_image(img),
-                egui::vec2(*x, *y),
-            );
+            set_full_bg_image(ui, hes_images::intro_image(img), egui::vec2(*x, *y));
         }
 
         let result = self.events.render(ui, state);
@@ -67,17 +56,8 @@ impl Intro {
 
         egui::Area::new(egui::Id::new("cutscene-skip"))
             .order(egui::Order::Tooltip)
-            .anchor(
-                egui::Align2::RIGHT_BOTTOM,
-                egui::Vec2::new(-10., -10.),
-            )
-            .show(ui.ctx(), |ui| {
-                if ui.add(button(t!("Skip"))).clicked() {
-                    true
-                } else {
-                    false
-                }
-            })
+            .anchor(egui::Align2::RIGHT_BOTTOM, egui::Vec2::new(-10., -10.))
+            .show(ui.ctx(), |ui| ui.add(button(t!("Skip"))).clicked())
             .inner
     }
 }

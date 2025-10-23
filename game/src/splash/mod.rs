@@ -17,7 +17,7 @@ enum MenuView {
 
 pub enum StartAction {
     Continue,
-    NewGame(World),
+    NewGame(Box<World>),
 
     #[cfg(not(target_arch = "wasm32"))]
     OpenEditor,
@@ -52,52 +52,31 @@ impl Start {
                         #[cfg(not(target_arch = "wasm32"))]
                         {
                             let resp = ui.add(
-                                egui::Button::new(format!(
-                                    "  {}  ",
-                                    t!("World Editor")
-                                ))
-                                .stroke(egui::Stroke::new(
-                                    1.,
-                                    egui::Color32::from_rgb(
-                                        0xFF, 0xCA, 0x28,
+                                egui::Button::new(format!("  {}  ", t!("World Editor"))).stroke(
+                                    egui::Stroke::new(
+                                        1.,
+                                        egui::Color32::from_rgb(0xFF, 0xCA, 0x28),
                                     ),
-                                )),
+                                ),
                             );
                             if resp.clicked() {
-                                start_action = Some(
-                                    StartAction::OpenEditor,
-                                );
+                                start_action = Some(StartAction::OpenEditor);
                             }
                         }
 
-                        let mut lang =
-                            rust_i18n::locale().to_string();
+                        let mut lang = rust_i18n::locale().to_string();
                         egui::ComboBox::new("lang-picker", "")
-                        .width(0.)
-                        .selected_text(
-                            egui::RichText::new(&lang)
-                                .color(egui::Color32::WHITE),
-                        )
-                        .show_ui(ui, |ui| {
-                            ui.style_mut()
-                                .visuals
-                                .override_text_color =
-                                Some(egui::Color32::WHITE);
-                            let locales =
-                                rust_i18n::available_locales!();
-                            ui.selectable_value(
-                                &mut lang,
-                                "en-US".to_string(),
-                                "en",
-                            );
-                            for locale in locales {
-                                ui.selectable_value(
-                                    &mut lang,
-                                    locale.to_string(),
-                                    locale,
-                                );
-                            }
-                        });
+                            .width(0.)
+                            .selected_text(egui::RichText::new(&lang).color(egui::Color32::WHITE))
+                            .show_ui(ui, |ui| {
+                                ui.style_mut().visuals.override_text_color =
+                                    Some(egui::Color32::WHITE);
+                                let locales = rust_i18n::available_locales!();
+                                ui.selectable_value(&mut lang, "en-US".to_string(), "en");
+                                for locale in locales {
+                                    ui.selectable_value(&mut lang, locale.to_string(), locale);
+                                }
+                            });
                         if *rust_i18n::locale() != lang {
                             rust_i18n::set_locale(&lang);
                         }
@@ -109,26 +88,16 @@ impl Start {
             MenuView::Menu => {
                 center_center(ui, "main-menu", |tui| {
                     tui.ui(|ui| {
-                        if let Some(action) = self
-                            .menu
-                            .render(ui, prefs, has_save)
-                        {
+                        if let Some(action) = self.menu.render(ui, prefs, has_save) {
                             match action {
                                 MenuAction::Credits => {
-                                    self.view =
-                                        MenuView::Credits;
+                                    self.view = MenuView::Credits;
                                 }
                                 MenuAction::Continue => {
-                                    start_action = Some(
-                                        StartAction::Continue,
-                                    );
+                                    start_action = Some(StartAction::Continue);
                                 }
                                 MenuAction::NewGame(world) => {
-                                    start_action = Some(
-                                        StartAction::NewGame(
-                                            world,
-                                        ),
-                                    );
+                                    start_action = Some(StartAction::NewGame(world));
                                 }
                                 MenuAction::ToggleSound => {
                                     prefs.sound = !prefs.sound;

@@ -10,15 +10,12 @@ mod scale;
 
 pub use scale::{scale_text, scale_text_styles, scale_text_ui};
 
-pub fn bbcode(
-    text: &str,
-) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
+pub fn bbcode(text: &str) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     |ui| {
         ui.horizontal_wrapped(|ui| {
             let style = ui.style();
             let font_id = TextStyle::Body.resolve(style);
-            let text_height =
-                ui.fonts(|f| f.row_height(&font_id));
+            let text_height = ui.fonts(|f| f.row_height(&font_id));
             ui.style_mut().spacing.item_spacing.x = 0.;
 
             let (_, nodes) = parse::parse_bbcode(text).unwrap();
@@ -43,27 +40,17 @@ impl BbCodeAnimator {
         self.animator.finish();
     }
 
-    pub fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        text: &str,
-        available_width: f32,
-    ) {
+    pub fn render(&mut self, ui: &mut egui::Ui, text: &str, available_width: f32) {
         ui.horizontal_wrapped(|ui| {
             let style = ui.style();
             let font_id = TextStyle::Body.resolve(style);
-            let text_height =
-                ui.fonts(|f| f.row_height(&font_id));
+            let text_height = ui.fonts(|f| f.row_height(&font_id));
 
             ui.style_mut().spacing.item_spacing.x = 0.;
 
             let (_, nodes) = parse::parse_bbcode(text).unwrap();
-            self.animator.animate(
-                ui,
-                nodes,
-                text_height,
-                available_width,
-            );
+            self.animator
+                .animate(ui, nodes, text_height, available_width);
         });
     }
 }
@@ -74,7 +61,7 @@ enum Tag {
     Image,
     UnknownParam,
     TypeTotal,
-    CardTag,
+    Card,
     EffectFeature,
     TipWarn,
     TipGoal,
@@ -101,11 +88,7 @@ impl<'a> Node<'a> {
 }
 
 impl Node<'_> {
-    fn render_static(
-        self,
-        ui: &mut egui::Ui,
-        text_height: f32,
-    ) {
+    fn render_static(self, ui: &mut egui::Ui, text_height: f32) {
         match self {
             Node::Text(text) => {
                 ui.label(text);
@@ -117,54 +100,32 @@ impl Node<'_> {
                         for ch in children {
                             text.push_str(&ch.text());
                         }
-                        let mut text = RichText::new(text)
-                            .strong()
-                            .underline();
-                        if let Some(color) = ui
-                            .style()
-                            .visuals
-                            .override_text_color
-                        {
+                        let mut text = RichText::new(text).strong().underline();
+                        if let Some(color) = ui.style().visuals.override_text_color {
                             text = text.color(color);
                         }
                         ui.label(text);
                     }
                     Tag::Image => {
-                        ui.add(inline_image(
-                            &children,
-                            text_height,
-                        ));
+                        ui.add(inline_image(&children, text_height));
                     }
                     Tag::UnknownParam => {
                         egui::Frame::NONE
-                            .inner_margin(Margin::symmetric(
-                                6, 1,
-                            ))
+                            .inner_margin(Margin::symmetric(6, 1))
                             .corner_radius(12)
-                            .fill(Color32::from_black_alpha(
-                                180,
-                            ))
+                            .fill(Color32::from_black_alpha(180))
                             .show(ui, |ui| {
-                                ui.style_mut()
-                                    .visuals
-                                    .override_text_color =
-                                    Some(Color32::WHITE);
+                                ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
                                 for ch in children {
-                                    ch.render_static(
-                                        ui,
-                                        text_height,
-                                    );
+                                    ch.render_static(ui, text_height);
                                 }
                             });
                     }
                     Tag::TypeTotal => {
                         let text = inner_text(&children);
-                        ui.colored_label(
-                            Color32::from_white_alpha(150),
-                            text,
-                        );
+                        ui.colored_label(Color32::from_white_alpha(150), text);
                     }
-                    Tag::CardTag => {
+                    Tag::Card => {
                         for ch in children {
                             ch.render_static(ui, text_height);
                         }
@@ -176,17 +137,11 @@ impl Node<'_> {
                     }
                     Tag::TipWarn => {
                         let text = inner_text(&children);
-                        ui.colored_label(
-                            Color32::from_rgb(0xeb, 0x39, 0x41),
-                            text,
-                        );
+                        ui.colored_label(Color32::from_rgb(0xeb, 0x39, 0x41), text);
                     }
                     Tag::TipGoal => {
                         let text = inner_text(&children);
-                        ui.colored_label(
-                            Color32::from_rgb(0x43, 0xcc, 0x70),
-                            text,
-                        );
+                        ui.colored_label(Color32::from_rgb(0x43, 0xcc, 0x70), text);
                     }
                 };
             }
@@ -202,17 +157,13 @@ fn inner_text(nodes: &[Node<'_>]) -> String {
     text
 }
 
-fn inline_image<'a>(
-    nodes: &'a [Node<'_>],
-    text_height: f32,
-) -> egui::Image<'a> {
+fn inline_image<'a>(nodes: &'a [Node<'_>], text_height: f32) -> egui::Image<'a> {
     let text = inner_text(nodes);
 
     // Special treatment for the Gosplant mark,
     // which is the only non-square icon.
     if text == "gosplant" {
-        egui::Image::new(icon_from_slug(&text))
-            .max_height(text_height)
+        egui::Image::new(icon_from_slug(&text)).max_height(text_height)
     } else {
         icon_from_slug(&text).size(text_height - 4.)
     }

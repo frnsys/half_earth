@@ -300,7 +300,7 @@ fn render_tabs<'a, T>(
                 ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
 
                 let n = tabs.len();
-                for (i, tab) in tabs.into_iter().enumerate() {
+                for (i, tab) in tabs.iter().enumerate() {
                     let mut highlight = false;
                     let mut disabled = tab.disabled;
                     if let Some(tutorial) = tab.tutorial {

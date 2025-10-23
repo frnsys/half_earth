@@ -92,7 +92,7 @@ impl Stats {
             let sizing = get_sizing(ui);
             let screen_width = ui.ctx().screen_rect().width();
             if sizing.is_small {
-                h_center_top(ui, "stats-top".into(), |tui| {
+                h_center_top(ui, "stats-top", |tui| {
                     tui.ui(|ui| {
                         stat(ui, |ui| render_temp(ui, state), t!("Temp. Anomaly"));
                     });
@@ -103,7 +103,7 @@ impl Stats {
 
                 ui.add_space(32.);
 
-                h_center_top(ui, "stats-middle".into(), |tui| {
+                h_center_top(ui, "stats-middle", |tui| {
                     tui.ui(|ui| {
                         render_land(ui, state, &process_changes);
                     });
@@ -114,7 +114,7 @@ impl Stats {
 
                 ui.add_space(32.);
 
-                h_center_top(ui, "stats-middle-2".into(), |tui| {
+                h_center_top(ui, "stats-middle-2", |tui| {
                     tui.ui(|ui| {
                         render_water(ui, state, &process_changes);
                     });
@@ -125,7 +125,7 @@ impl Stats {
 
                 ui.add_space(32.);
 
-                h_center_top(ui, "stats-bottom".into(), |tui| {
+                h_center_top(ui, "stats-bottom", |tui| {
                     tui.ui(|ui| {
                         stat(
                             ui,
@@ -140,7 +140,7 @@ impl Stats {
 
                 ui.add_space(32.);
 
-                h_center_top(ui, "stats-bottom-2".into(), |tui| {
+                h_center_top(ui, "stats-bottom-2", |tui| {
                     tui.ui(|ui| {
                         stat(
                             ui,
@@ -157,7 +157,7 @@ impl Stats {
                     });
                 });
             } else if screen_width <= 720. {
-                h_center_top(ui, "stats-top".into(), |tui| {
+                h_center_top(ui, "stats-top", |tui| {
                     tui.ui(|ui| {
                         stat(ui, |ui| render_temp(ui, state), t!("Temp. Anomaly"));
                     });
@@ -171,7 +171,7 @@ impl Stats {
 
                 ui.add_space(32.);
 
-                h_center_top(ui, "stats-middle".into(), |tui| {
+                h_center_top(ui, "stats-middle", |tui| {
                     tui.ui(|ui| {
                         render_energy(ui, state, &process_changes);
                     });
@@ -186,7 +186,7 @@ impl Stats {
                 ui.add_space(32.);
 
                 if screen_width <= 520. {
-                    h_center_top(ui, "stats-bottom".into(), |tui| {
+                    h_center_top(ui, "stats-bottom", |tui| {
                         tui.ui(|ui| {
                             stat(
                                 ui,
@@ -201,7 +201,7 @@ impl Stats {
 
                     ui.add_space(32.);
 
-                    h_center_top(ui, "stats-bottom-2".into(), |tui| {
+                    h_center_top(ui, "stats-bottom-2", |tui| {
                         tui.ui(|ui| {
                             stat(
                                 ui,
@@ -218,7 +218,7 @@ impl Stats {
                         });
                     });
                 } else {
-                    h_center_top(ui, "stats-bottom".into(), |tui| {
+                    h_center_top(ui, "stats-bottom", |tui| {
                         tui.ui(|ui| {
                             stat(
                                 ui,
@@ -246,7 +246,7 @@ impl Stats {
                     });
                 }
             } else {
-                h_center_top(ui, "stats-top".into(), |tui| {
+                h_center_top(ui, "stats-top", |tui| {
                     tui.ui(|ui| {
                         stat(ui, |ui| render_temp(ui, state), t!("Temp. Anomaly"));
                     });
@@ -266,7 +266,7 @@ impl Stats {
 
                 ui.add_space(32.);
 
-                h_center_top(ui, "stats-bottom".into(), |tui| {
+                h_center_top(ui, "stats-bottom", |tui| {
                     tui.ui(|ui| {
                         render_biodiversity(ui, state, &process_changes);
                     });
@@ -363,7 +363,7 @@ fn render_temp(ui: &mut egui::Ui, state: &State) {
 
 fn render_emissions(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let emissions_change = process_changes
-        .into_iter()
+        .iter()
         .map(|(p, mult)| p.adj_byproducts().gtco2eq() * mult)
         .sum::<f32>()
         .round();
@@ -395,7 +395,7 @@ fn render_land(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f3
     let land_demand = state.resource_demand.of(Resource::Land);
 
     let land_change = process_changes
-        .into_iter()
+        .iter()
         .map(|(p, mult)| p.adj_resources().land * mult)
         .sum::<f32>()
         .round();
@@ -418,7 +418,7 @@ fn render_land(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f3
 
 fn render_energy(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let energy_change = process_changes
-        .into_iter()
+        .iter()
         .map(|(p, mult)| {
             let energy = p.adj_resources().energy();
             energy * mult
@@ -450,7 +450,7 @@ fn render_energy(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, 
 fn render_water(ui: &mut egui::Ui, state: &State, process_changes: &[(Process, f32)]) {
     let available_water = state.resources.available.water;
     let water_change = process_changes
-        .into_iter()
+        .iter()
         .map(|(p, mult)| p.adj_resources().water * mult)
         .sum::<f32>()
         .round();
@@ -488,7 +488,7 @@ fn render_biodiversity(ui: &mut egui::Ui, state: &State, process_changes: &[(Pro
 
     let available_land = state.world.starting_resources.land;
     let extinction_change = process_changes
-        .into_iter()
+        .iter()
         .map(|(p, mult)| p.extinction_rate(available_land) * mult)
         .sum::<f32>()
         .round();

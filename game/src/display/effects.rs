@@ -15,11 +15,8 @@ use hes_engine::*;
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 
-fn is_hidden(effect: &Effect) -> bool {
-    match effect {
-        Effect::AddEvent(..) | Effect::TriggerEvent(..) => true,
-        _ => false,
-    }
+pub fn is_hidden(effect: &Effect) -> bool {
+    matches!(effect, Effect::AddEvent(..) | Effect::TriggerEvent(..))
 }
 
 fn outcome_effects(project: &Project) -> Vec<DisplayEffect> {
@@ -69,7 +66,7 @@ pub fn active_effects(project: &Project) -> Vec<DisplayEffect> {
         effects.extend(project.effects.iter().map(DisplayEffect::from));
     } else if project.status == Status::Inactive || project.status == Status::Building {
         effects.extend(project.effects.iter().map(DisplayEffect::from));
-        effects.extend(outcome_effects(project).into_iter());
+        effects.extend(outcome_effects(project));
     } else {
         effects.extend(project.active_effects().iter().map(DisplayEffect::from));
         if let Some(id) = project.active_outcome {
@@ -80,18 +77,11 @@ pub fn active_effects(project: &Project) -> Vec<DisplayEffect> {
     effects
 }
 
-pub fn render_effects(ui: &mut egui::Ui, state: &State, effects: &Vec<DisplayEffect>) {
+pub fn render_effects(ui: &mut egui::Ui, state: &State, effects: &[DisplayEffect]) {
     let mut effects = effects
         .iter()
         .filter(|effect| !effect.is_hidden)
-        .filter_map(|effect| {
-            effect.tip(state).ok().map(|mut details| {
-                if effect.is_unknown {
-                    details.tip = details.tip.supicon(icons::CHANCE);
-                }
-                details
-            })
-        })
+        .filter_map(|effect| effect.tip(state).ok())
         .collect::<Vec<_>>();
     effects.sort_by_key(|effect| effect.text.clone());
     ui.vertical_centered(|ui| {
@@ -1294,32 +1284,39 @@ impl DisplayEffect {
                             name = t!(output.lower()),
                             maxAmount = consts::MAX_CONTENTEDNESS,
                             amount = state.outlook().round(),
-                        )).subicon(output.icon()),
-                        icon_text(
-                            "contentedness",
-                            &t!(
-                                "%{changeDir} world contentedness by [b]%{amount}[/b].",
-                                amount = change.abs(),
-                                changeDir = self.change_dir(*amount),
-                            ))
+                        ),
+                    ),
+                    icon_text(
+                        "contentedness",
+                        &t!(
+                            "%{changeDir} world contentedness by [b]%{amount}[/b].",
+                            amount = change.abs(),
+                            changeDir = self.change_dir(*amount),
+                        ),
+                    ),
                 )
             }
             Effect::IncomeOutlookChange(amount) => {
                 let change = mean_income_outlook_change(*amount, state).round();
-                (tip(
+                (
+                    tip(
                         icons::CONTENTEDNESS,
                         t!(
                             r#"This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t]."#,
                             maxContentedness = consts::MAX_CONTENTEDNESS,
                             contentedness = state.outlook().round(),
-                            amount = amount)
-                ).subicon(icons::WEALTH), icon_text(
-                "contentedness",
-                &t!(
-                    "%{changeDir} contentedness by [b]%{amount}[/b].",
-                    amount = change.abs(),
-                    changeDir = self.change_dir(*amount),
-                )))
+                            amount = amount
+                        ),
+                    ),
+                    icon_text(
+                        "contentedness",
+                        &t!(
+                            "%{changeDir} contentedness by [b]%{amount}[/b].",
+                            amount = change.abs(),
+                            changeDir = self.change_dir(*amount),
+                        ),
+                    ),
+                )
             }
             Effect::ModifyEventProbability(id, amount) => {
                 let event = &state.event_pool.events[id];
@@ -1525,7 +1522,7 @@ mod tests {
             is_unknown: false,
             ..Default::default()
         };
-        let tip = effect.tip(&state).unwrap();
+        let tip = effect.tip(state).unwrap();
         println!("  {}", tip.text);
         println!("  {}", tip.tip.text);
         (extract_numbers(&tip.text), extract_numbers(&tip.tip.text))
@@ -1534,9 +1531,11 @@ mod tests {
     #[test]
     fn test_electrified_flag_tip() {
         // Formatting is in PWh, i.e. 1e12 kWh.
-        let mut demand = OutputMap::default();
-        demand.fuel = 1.5e12;
-        demand.electricity = 2.5e12;
+        let demand = OutputMap {
+            fuel: 1.5e12,
+            electricity: 2.5e12,
+            ..Default::default()
+        };
 
         // Expect 80% of fuel to go to electricity.
         // let expected_fuel =
@@ -1559,9 +1558,11 @@ mod tests {
     #[test]
     fn test_vegan_flag_tip() {
         // Formatting is per 20,000 TCals.
-        let mut demand = OutputMap::default();
-        demand.animal_calories = 1.5e9 * 2e4;
-        demand.plant_calories = 2.5e9 * 2e4;
+        let demand = OutputMap {
+            animal_calories: 1.5e9 * 2e4,
+            plant_calories: 2.5e9 * 2e4,
+            ..Default::default()
+        };
 
         // Expect 80% of fuel to go to electricity.
         // let expected_fuel =
@@ -1582,9 +1583,11 @@ mod tests {
     #[test]
     fn test_vegetarian_flag_tip() {
         // Formatting is per 20,000 TCals.
-        let mut demand = OutputMap::default();
-        demand.animal_calories = 3e9 * 2e4;
-        demand.plant_calories = 5e9 * 2e4;
+        let demand = OutputMap {
+            animal_calories: 3e9 * 2e4,
+            plant_calories: 5e9 * 2e4,
+            ..Default::default()
+        };
 
         // Expect 80% of fuel to go to electricity.
         // let expected_fuel =

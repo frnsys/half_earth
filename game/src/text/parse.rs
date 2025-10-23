@@ -1,8 +1,7 @@
 use super::{Node, Tag};
 
 use nom::{
-    IResult,
-    Parser,
+    IResult, Parser,
     branch::alt,
     bytes::complete::{tag, take_while_m_n, take_while1},
     character::complete::char,
@@ -20,7 +19,7 @@ fn parse_tag(input: &str) -> IResult<&str, Tag> {
         map(tag("e"), |_| Tag::EffectFeature),
         map(tag("w"), |_| Tag::TipWarn),
         map(tag("g"), |_| Tag::TipGoal),
-        map(tag("c"), |_| Tag::CardTag),
+        map(tag("c"), |_| Tag::Card),
     ))
     .parse(input)
 }
@@ -59,8 +58,7 @@ fn icon<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
 
 fn tagged<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     let (input, tag) = open_tag(input)?;
-    let (input, children) =
-        many0(alt((tagged, text))).parse(input)?;
+    let (input, children) = many0(alt((tagged, text))).parse(input)?;
     let (input, close) = close_tag(input)?;
 
     if tag == close {
@@ -73,8 +71,6 @@ fn tagged<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     }
 }
 
-pub fn parse_bbcode<'a>(
-    input: &'a str,
-) -> IResult<&'a str, Vec<Node<'a>>> {
+pub fn parse_bbcode<'a>(input: &'a str) -> IResult<&'a str, Vec<Node<'a>>> {
     many0(alt((icon, tagged, text))).parse(input)
 }

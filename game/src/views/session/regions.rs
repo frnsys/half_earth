@@ -69,7 +69,7 @@ impl Regions {
                         .interact(Sense::click())
                         .clicked()
                     {
-                        if self.selected_region <= 0 {
+                        if self.selected_region == 0 {
                             self.selected_region = n_regions - 1;
                         } else {
                             self.selected_region -= 1;
@@ -320,7 +320,7 @@ fn region_impacts(ui: &mut egui::Ui, region: &Region, state: &State) {
                 .map(|output| (output, state.output_demand.of(output)))
                 .collect();
 
-            for (k, demand) in region.demand(&output_demand).items() {
+            for (k, demand) in region.demand(output_demand).items() {
                 let per_capita_demand = demand / region.population;
                 let int = intensity::output_intensity(per_capita_demand, k);
                 let per = display::demand_percent(demand, demand_for_outputs[k], true);

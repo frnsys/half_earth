@@ -1,7 +1,6 @@
 use super::ui::Points;
 use crate::{
-    DEBUG,
-    consts,
+    DEBUG, consts,
     display::{self, DisplayEvent},
     state::update_factors,
 };
@@ -17,8 +16,7 @@ pub impl State {
     /// rather than available land (which is starting land minus protected land).
     fn land_use_percent(&self) -> String {
         let usage = self.resource_demand.of(Resource::Land)
-            + (self.protected_land
-                * self.world.starting_resources.land);
+            + (self.protected_land * self.world.starting_resources.land);
         let total_land = self.world.starting_resources.land;
         let percent = usage / total_land;
         format!("{}%", display::percent(percent.min(1.0), true))
@@ -48,15 +46,11 @@ pub impl State {
     fn avg_income_level(&self) -> usize {
         let mut total = 0.;
         for region in self.world.regions.iter() {
-            let income = region.income.level() as f32
-                + 1.
-                + region.development;
+            let income = region.income.level() as f32 + 1. + region.development;
             total += income;
         }
         let n_regions = self.world.regions.len();
-        let avg =
-            (total / n_regions as f32).round().max(0.) as usize;
-        avg
+        (total / n_regions as f32).round().max(0.) as usize
     }
 
     /// Cost for the next point for a project, taking into
@@ -71,14 +65,10 @@ pub impl State {
                 discount += 1;
             }
         }
-        0.max(consts::POINT_COST - discount) as usize
+        consts::POINT_COST.saturating_sub(discount) as usize
     }
 
-    fn buy_point(
-        &mut self,
-        project_id: &Id,
-        points: &mut Points,
-    ) -> bool {
+    fn buy_point(&mut self, project_id: &Id, points: &mut Points) -> bool {
         let (kind, proj_points) = {
             let project = &self.world.projects[project_id];
             (project.kind, project.points)
@@ -93,12 +83,8 @@ pub impl State {
             if cost <= self.political_capital {
                 self.change_political_capital(-cost);
                 match kind {
-                    ProjectType::Research => {
-                        points.research += 1
-                    }
-                    ProjectType::Initiative => {
-                        points.initiative += 1
-                    }
+                    ProjectType::Research => points.research += 1,
+                    ProjectType::Initiative => points.initiative += 1,
                     _ => (),
                 }
                 if is_research {
@@ -116,23 +102,15 @@ pub impl State {
         // rather than assigned.
         let project = &self.world.projects[project_id];
         let available = self.political_capital;
-        if project.status == Status::Inactive
-            && available >= project.cost as isize
-        {
-            self.change_political_capital(
-                -(project.cost as isize),
-            );
+        if project.status == Status::Inactive && available >= project.cost as isize {
+            self.change_political_capital(-(project.cost as isize));
             true
         } else {
             false
         }
     }
 
-    fn assign_point(
-        &mut self,
-        project_id: &Id,
-        points: &mut Points,
-    ) {
+    fn assign_point(&mut self, project_id: &Id, points: &mut Points) {
         let (kind, cur_points, status) = {
             let project = &self.world.projects[project_id];
             (project.kind, project.points, project.status)
@@ -151,11 +129,7 @@ pub impl State {
         }
     }
 
-    fn unassign_points(
-        &mut self,
-        project_id: &Id,
-        points: usize,
-    ) {
+    fn unassign_points(&mut self, project_id: &Id, points: usize) {
         let (current_points, status) = {
             let project = &self.world.projects[project_id];
             (project.points, project.status)
@@ -189,7 +163,7 @@ pub impl State {
         }
     }
 
-    fn upgrade_project_x(
+    fn upgrade_project_ext(
         &mut self,
         project_id: &Id,
         is_free: bool,
@@ -201,12 +175,8 @@ pub impl State {
         };
         if let Some(upgrade) = upgrade {
             let available = self.political_capital;
-            if is_free || available >= upgrade.cost as isize {
-                if !is_free {
-                    self.change_political_capital(
-                        -(upgrade.cost as isize),
-                    );
-                }
+            if !is_free && available >= upgrade.cost as isize {
+                self.change_political_capital(-(upgrade.cost as isize));
             }
 
             match kind {
@@ -224,20 +194,14 @@ pub impl State {
         }
     }
 
-    fn downgrade_project_x(
-        &mut self,
-        project_id: &Id,
-        queued_upgrades: &mut BTreeMap<Id, bool>,
-    ) {
+    fn downgrade_project_ext(&mut self, project_id: &Id, queued_upgrades: &mut BTreeMap<Id, bool>) {
         let (kind, prev_upgrade) = {
             let project = &self.world.projects[project_id];
             (project.kind, project.prev_upgrade())
         };
 
         if let Some(upgrade) = prev_upgrade {
-            self.change_political_capital(
-                upgrade.cost as isize,
-            );
+            self.change_political_capital(upgrade.cost as isize);
             if kind == ProjectType::Policy {
                 self.downgrade_project(project_id);
             } else {
@@ -246,27 +210,21 @@ pub impl State {
         }
     }
 
-    fn roll_events(
-        &mut self,
-        phase: EventPhase,
-    ) -> Vec<DisplayEvent> {
+    fn roll_events(&mut self, phase: EventPhase) -> Vec<DisplayEvent> {
         if DEBUG.skip_events {
             vec![]
         } else {
             let events = self
                 .roll_events(phase)
                 .into_iter()
-                .map(|ev| DisplayEvent::new(ev, &self))
+                .map(|ev| DisplayEvent::new(ev, self))
                 .collect();
-            update_factors(&self);
+            update_factors(self);
             events
         }
     }
 
-    fn upgrade_projects(
-        &mut self,
-        upgrades: &mut BTreeMap<Id, bool>,
-    ) {
+    fn upgrade_projects(&mut self, upgrades: &mut BTreeMap<Id, bool>) {
         // for (id, queued) in self.ui.queued_upgrades.iter_mut() {
         for (id, queued) in upgrades.iter_mut() {
             if *queued {
@@ -276,47 +234,28 @@ pub impl State {
         }
     }
 
-    fn apply_disaster(
-        &mut self,
-        event: &IconEvent,
-        event_id: &Id,
-        region_id: &Id,
-    ) {
-        let effect = event.intensity as f32
-            * consts::EVENT_INTENSITY_TO_CONTENTEDNESS;
+    fn apply_disaster(&mut self, event: &IconEvent, event_id: &Id, region_id: &Id) {
+        let effect = event.intensity as f32 * consts::EVENT_INTENSITY_TO_CONTENTEDNESS;
 
-        self.apply_disaster(
-            -effect.round() as isize,
-            region_id,
-        );
+        self.apply_disaster(-effect.round() as isize, region_id);
         self.apply_event(*event_id, Some(*region_id));
     }
 
-    fn update_processes(
-        &mut self,
-        changes: &mut EnumMap<Output, BTreeMap<Id, isize>>,
-    ) {
+    fn update_processes(&mut self, changes: &mut EnumMap<Output, BTreeMap<Id, isize>>) {
         for (_output, changes) in changes.iter_mut() {
             let mut rem_pts = consts::PROCESS_POINTS_PER_CYCLE;
             let mut add_pts = consts::PROCESS_POINTS_PER_CYCLE;
-            let mut total = changes
-                .values()
-                .map(|val| val.abs())
-                .sum::<isize>();
+            let mut total = changes.values().map(|val| val.abs()).sum::<isize>();
             while (rem_pts > 0 || add_pts > 0) && total > 0 {
                 for (process_id, change) in changes.iter_mut() {
                     if *change < 0 && rem_pts > 0 {
                         rem_pts -= 1;
-                        self.change_process_mix_share(
-                            process_id, -1,
-                        );
+                        self.change_process_mix_share(process_id, -1);
                         total -= 1;
                         *change += 1;
                     } else if *change > 0 && add_pts > 0 {
                         add_pts -= 1;
-                        self.change_process_mix_share(
-                            process_id, 1,
-                        );
+                        self.change_process_mix_share(process_id, 1);
                         total -= 1;
                         *change -= 1;
                     }
@@ -333,8 +272,7 @@ mod tests {
     #[test]
     fn test_update_process_mix() {
         let mut state = State::default();
-        let mut changes: EnumMap<Output, BTreeMap<Id, isize>> =
-            EnumMap::default();
+        let mut changes: EnumMap<Output, BTreeMap<Id, isize>> = EnumMap::default();
 
         let solar_pv = state
             .world
@@ -382,8 +320,7 @@ mod tests {
         changes[Output::Electricity].insert(solar_pv, 5);
         changes[Output::Electricity].insert(hydro, 2);
 
-        let ind_ag_mix =
-            state.world.processes[&ind_ag].mix_share;
+        let ind_ag_mix = state.world.processes[&ind_ag].mix_share;
         assert_eq!(ind_ag_mix, 14);
         assert!(ind_ag_mix > consts::PROCESS_POINTS_PER_CYCLE);
 

@@ -2,7 +2,7 @@ use std::{env, sync::LazyLock};
 
 use hes_engine::{ByproductMap, Flag, ProjectType, State};
 
-pub static DEBUG: LazyLock<DebugOpts> = LazyLock::new(|| DebugOpts::default());
+pub static DEBUG: LazyLock<DebugOpts> = LazyLock::new(DebugOpts::default);
 
 #[derive(Debug)]
 pub enum DebugView {
@@ -18,10 +18,19 @@ pub enum DebugView {
 
 #[derive(Debug)]
 pub struct DebugOpts {
+    /// Directly open the editor.
     pub open_editor: bool,
+
+    /// Skip all events.
     pub skip_events: bool,
+
+    /// Skip the tutorial.
     pub skip_tutorial: bool,
+
+    /// Start with all projects unlocked.
     pub show_all_projects: bool,
+
+    /// Start with all processes unlocked.
     pub show_all_processes: bool,
 
     /// Make years in the world event view advance very quickly.
@@ -36,14 +45,25 @@ pub struct DebugOpts {
     /// Start building a project of each type.
     pub with_projects: bool,
 
+    /// An initial view to start with.
     pub view: Option<DebugView>,
 
-    // State opts
+    /// Start with parliament suspended.
     pub parliament_suspended: bool,
+
+    /// Start ready to win.
     pub pre_win: bool,
+
+    /// Start ready to lose.
     pub pre_lose: bool,
+
+    /// Start with a production shortage.
     pub production_shortage: bool,
+
+    /// Start with a feedstock shortage.
     pub feedstock_shortage: bool,
+
+    /// Start with a seceded region.
     pub region_seceded: bool,
 }
 impl DebugOpts {
@@ -110,6 +130,7 @@ impl DebugOpts {
 }
 
 impl Default for DebugOpts {
+    /// Initialize debug options from env variables.
     fn default() -> Self {
         let d = env::var("DEBUG").unwrap_or_default();
         let debug: Vec<_> = d.split(',').collect();

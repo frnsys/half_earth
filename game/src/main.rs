@@ -3,11 +3,11 @@ use hes_game::App;
 #[cfg(not(target_arch = "wasm32"))]
 fn run_gui() -> eframe::Result {
     let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default().with_inner_size([350.0, 590.0]),
+        viewport: egui::ViewportBuilder::default().with_inner_size([800.0, 720.0]),
         ..Default::default()
     };
     eframe::run_native(
-        "half-earth socialism",
+        "Half-Earth Socialism: The Game",
         options,
         Box::new(|cc| Ok(Box::new(App::new(cc)))),
     )

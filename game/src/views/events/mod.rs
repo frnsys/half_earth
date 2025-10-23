@@ -52,7 +52,6 @@ impl AsEventView for DisplayEvent {
         let factors_list = self
             .factors
             .iter()
-            .cloned()
             .map(|(icon, factor)| (icon, tip(icon, factor.to_string())))
             .collect::<Vec<_>>();
         ui.horizontal(|ui| {
@@ -79,9 +78,9 @@ impl AsEventView for DisplayEvent {
         EventDetails {
             title: &self.flavor.arc,
             name: &self.name,
-            image: image,
-            attrib: attrib,
-            effects: effects,
+            image,
+            attrib,
+            effects,
         }
     }
 }
@@ -160,20 +159,16 @@ impl<E: AsEventView> Events<E> {
 
     fn render_event(&mut self, ui: &mut egui::Ui, state: &mut State) -> Option<DialogueResult> {
         let event = &self.events[self.idx];
-        let width = (ui.ctx().screen_rect().width() - (18. * 3.))
-            .min(360.)
-            .max(0.);
+        let width = (ui.ctx().screen_rect().width() - (18. * 3.)).clamp(0., 360.);
         if let Some(dialogue) = &mut self.dialogue {
             ui.set_width(width);
-            let go_to_next = ui
-                .vertical(|ui| {
-                    if event.show_card() {
-                        render_event_card(ui, state, event);
-                    }
-                    dialogue.render(ui, state, width)
-                })
-                .inner;
-            go_to_next
+            ui.vertical(|ui| {
+                if event.show_card() {
+                    render_event_card(ui, state, event);
+                }
+                dialogue.render(ui, state, width)
+            })
+            .inner
         } else if event.show_card() {
             let go_to_next = ui
                 .vertical(|ui| {

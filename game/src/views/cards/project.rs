@@ -115,7 +115,7 @@ impl AsCard for Project {
         let majority_satisfied = if parliament_suspended {
             true
         } else {
-            player_seats as f32 > self.required_majority
+            player_seats > self.required_majority
         };
         let warn_majority = self.required_majority > 0. && !majority_satisfied;
 
@@ -182,10 +182,10 @@ impl AsCard for Project {
                     } else {
                         let upgrade = &self.upgrades[idx];
                         let mut cost = upgrade.cost;
-                        if let Some(changes) = state.ui.plan_changes.get(&self.id) {
-                            if changes.downgrades > 0 {
-                                cost = 0;
-                            }
+                        if let Some(changes) = state.ui.plan_changes.get(&self.id)
+                            && changes.downgrades > 0
+                        {
+                            cost = 0;
                         }
                         let effects: Vec<DisplayEffect> =
                             upgrade.effects.iter().map(|e| e.into()).collect();
@@ -206,18 +206,16 @@ impl AsCard for Project {
                             .filter(visible_effect)
                             .collect();
                         Some((0, effects))
+                    } else if let Some(upgrade) = self.upgrades.get(idx as usize) {
+                        let effects: Vec<DisplayEffect> = upgrade
+                            .effects
+                            .iter()
+                            .map(DisplayEffect::from)
+                            .filter(visible_effect)
+                            .collect();
+                        Some((upgrade.cost, effects))
                     } else {
-                        if let Some(upgrade) = self.upgrades.get(idx as usize) {
-                            let effects: Vec<DisplayEffect> = upgrade
-                                .effects
-                                .iter()
-                                .map(DisplayEffect::from)
-                                .filter(visible_effect)
-                                .collect();
-                            Some((upgrade.cost, effects))
-                        } else {
-                            None
-                        }
+                        None
                     }
                 } else {
                     None
@@ -228,7 +226,7 @@ impl AsCard for Project {
                 if ui.available_height() != 0. {
                     let max_size = egui::vec2(ui.available_width(), ui.available_height());
                     scale_text_ui(ui, max_size, move |ui| {
-                        render_effects(ui, &state, &effects);
+                        render_effects(ui, state, &effects);
 
                         if is_active && let Some((cost, effects)) = &next_upgrade {
                             if is_upgrading {
@@ -240,13 +238,13 @@ impl AsCard for Project {
                                     ui.image(icons::POLITICAL_CAPITAL);
                                 });
                             }
-                            render_effects(ui, &state, effects);
+                            render_effects(ui, state, effects);
                         }
 
                         if has_downgrade {
                             ui.label(t!("Prev Level"));
                             if let Some((_, effects)) = &prev_upgrade {
-                                render_effects(ui, &state, effects);
+                                render_effects(ui, state, effects);
                             }
                         }
                     });
@@ -533,7 +531,7 @@ fn npc_opposer(ui: &mut egui::Ui, npc: &NPC) {
             icon = icons::RELATIONSHIP,
         ),
     );
-    add_tip(tip, ui.add(npc_icon(&npc, false)));
+    add_tip(tip, ui.add(npc_icon(npc, false)));
 }
 
 fn npc_supporter(ui: &mut egui::Ui, npc: &NPC) {
@@ -545,5 +543,5 @@ fn npc_supporter(ui: &mut egui::Ui, npc: &NPC) {
             icon = icons::RELATIONSHIP,
         ),
     );
-    add_tip(tip, ui.add(npc_icon(&npc, true)));
+    add_tip(tip, ui.add(npc_icon(npc, true)));
 }

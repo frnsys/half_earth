@@ -62,9 +62,7 @@ pub fn prepare_game(state: &mut GameState, prefs: &Settings) {
         .projects
         .unlocked()
         .map(|p| p.id)
-        .chain(
-            state.core.world.processes.unlocked().map(|p| p.id),
-        )
+        .chain(state.core.world.processes.unlocked().map(|p| p.id))
         .collect();
 }
 
@@ -72,15 +70,12 @@ static BASE_OUTPUT_DEMAND: LazyLock<RwLock<[OutputMap; 4]>> =
     LazyLock::new(|| RwLock::new([OutputMap::default(); 4]));
 
 fn init_vars(state: &State) {
-    *BASE_OUTPUT_DEMAND.write() =
-        state.world.per_capita_demand.clone().map(|d| d.base);
+    *BASE_OUTPUT_DEMAND.write() = state.world.per_capita_demand.clone().map(|d| d.base);
 
-    update_factors(&state);
+    update_factors(state);
 }
 
-pub fn base_demand_by_income_levels(
-    output: Output,
-) -> [f32; 4] {
+pub fn base_demand_by_income_levels(output: Output) -> [f32; 4] {
     BASE_OUTPUT_DEMAND
         .read()
         .iter()
@@ -90,9 +85,8 @@ pub fn base_demand_by_income_levels(
         .expect("Mapping from same size arrays")
 }
 
-pub static FACTORS: LazyLock<
-    RwLock<EnumMap<Var, Vec<Factor>>>,
-> = LazyLock::new(|| RwLock::new(EnumMap::default()));
+pub static FACTORS: LazyLock<RwLock<EnumMap<Var, Vec<Factor>>>> =
+    LazyLock::new(|| RwLock::new(EnumMap::default()));
 
 pub fn update_factors(state: &hes_engine::State) {
     let mut factors = FACTORS.write();

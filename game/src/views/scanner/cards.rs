@@ -90,11 +90,7 @@ impl<C: AsCard + Scannable> Cards<C> {
                         }
                     }
 
-                    if offset.abs() <= 15. {
-                        card.draggable = true;
-                    } else {
-                        card.draggable = false;
-                    }
+                    card.draggable = offset.abs() <= 15.;
 
                     if card.draggable {
                         if card_rect.intersects(top_scan_area) {
@@ -192,19 +188,19 @@ impl<C: AsCard + Scannable> Cards<C> {
                         }
                     }
                     Action::Up => {
-                        if let Some(card) = selected_idx.and_then(|idx| self.cards.get_mut(idx)) {
-                            if card.is_add_allowed(state) {
-                                card.add_scan_done(state);
-                                changed = true;
-                            }
+                        if let Some(card) = selected_idx.and_then(|idx| self.cards.get_mut(idx))
+                            && card.is_add_allowed(state)
+                        {
+                            card.add_scan_done(state);
+                            changed = true;
                         }
                     }
                     Action::Down => {
-                        if let Some(card) = selected_idx.and_then(|idx| self.cards.get_mut(idx)) {
-                            if card.is_rem_allowed(state) {
-                                card.rem_scan_done(state);
-                                changed = true;
-                            }
+                        if let Some(card) = selected_idx.and_then(|idx| self.cards.get_mut(idx))
+                            && card.is_rem_allowed(state)
+                        {
+                            card.rem_scan_done(state);
+                            changed = true;
                         }
                     }
                 },

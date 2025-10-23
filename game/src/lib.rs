@@ -82,7 +82,7 @@ impl App {
             view: if DEBUG.open_editor {
                 #[cfg(not(target_arch = "wasm32"))]
                 {
-                    View::Editor(WorldEditor::new())
+                    View::Editor(WorldEditor::default())
                 }
 
                 #[cfg(target_arch = "wasm32")]
@@ -167,7 +167,7 @@ impl eframe::App for App {
                                             View::Game(GameView::new(&mut self.state, &self.ctx));
                                     }
                                     StartAction::NewGame(world) => {
-                                        self.state = GameState::from_world(world);
+                                        self.state = GameState::from_world(*world);
                                         prepare_game(&mut self.state, &self.prefs);
                                         self.view =
                                             View::Game(GameView::new(&mut self.state, &self.ctx));
@@ -175,7 +175,7 @@ impl eframe::App for App {
 
                                     #[cfg(not(target_arch = "wasm32"))]
                                     StartAction::OpenEditor => {
-                                        self.view = View::Editor(WorldEditor::new());
+                                        self.view = View::Editor(WorldEditor::default());
                                     }
                                 }
                             }

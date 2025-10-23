@@ -1,3 +1,9 @@
+//! Two different audio "engines" here; on web we still use JS as it uses
+//! the browser's optimized decoding so audio files load much faster
+//! and it can load the audio files asynchronously so the WASM size is much smaller.
+//!
+//! [`AudioSystem`] provides a unified interface over both implementations.
+
 use std::sync::{OnceLock, mpsc};
 
 enum AudioRequest {
@@ -7,38 +13,29 @@ enum AudioRequest {
     Loop(Track),
 }
 
-static AUDIO_TX: OnceLock<mpsc::Sender<AudioRequest>> =
-    OnceLock::new();
+static AUDIO_TX: OnceLock<mpsc::Sender<AudioRequest>> = OnceLock::new();
 
 #[cfg(not(target_arch = "wasm32"))]
 mod engine {
     use super::{AudioRequest, Track};
     use kira::{
-        AudioManager,
-        AudioManagerSettings,
-        Decibels,
-        DefaultBackend,
-        PlaySoundError,
-        Tween,
+        AudioManager, AudioManagerSettings, Decibels, DefaultBackend, PlaySoundError, Tween,
         sound::{
             SoundData,
-            static_sound::{
-                StaticSoundData,
-                StaticSoundHandle,
-            },
+            static_sound::{StaticSoundData, StaticSoundHandle},
         },
     };
 
     macro_rules! audio {
         ($path:literal) => {
-            kira::sound::static_sound::StaticSoundData::from_cursor(
-                std::io::Cursor::new(include_bytes!(concat!(
-                            env!("CARGO_MANIFEST_DIR"),
-                            "/assets/sounds/",
-                            $path
-                ))),
-            )
-                .unwrap()
+            kira::sound::static_sound::StaticSoundData::from_cursor(std::io::Cursor::new(
+                include_bytes!(concat!(
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/assets/sounds/",
+                    $path
+                )),
+            ))
+            .unwrap()
         };
     }
 
@@ -79,20 +76,14 @@ mod engine {
         fn play_or_queue_track(
             &mut self,
             track: Track,
-        ) -> Result<
-            (),
-            PlaySoundError<
-                <StaticSoundData as SoundData>::Error,
-            >,
-        > {
+        ) -> Result<(), PlaySoundError<<StaticSoundData as SoundData>::Error>> {
             if !self.muted {
                 let sound = self.load_track(track);
                 if let Some(handle) = &mut self.handle {
                     handle.stop(Tween::default());
                 }
                 if let Some(manager) = &mut self.manager {
-                    let handle = manager
-                        .play(sound.loop_region(0.0..))?;
+                    let handle = manager.play(sound.loop_region(0.0..))?;
                     self.handle = Some(handle);
                 }
             }
@@ -101,37 +92,27 @@ mod engine {
 
         fn mute(&mut self) {
             if let Some(manager) = &mut self.manager {
-                manager.main_track().set_volume(
-                    Decibels::SILENCE,
-                    Tween::default(),
-                );
+                manager
+                    .main_track()
+                    .set_volume(Decibels::SILENCE, Tween::default());
                 self.muted = true;
             }
         }
 
         fn unmute(&mut self) {
             if let Some(manager) = &mut self.manager {
-                manager
-                    .main_track()
-                    .set_volume(0., Tween::default());
+                manager.main_track().set_volume(0., Tween::default());
                 self.muted = false;
             }
         }
 
-        fn ping(
-            &mut self,
-        ) -> Result<
-            (),
-            PlaySoundError<
-                <StaticSoundData as SoundData>::Error,
-            >,
-        > {
-            if !self.muted {
-                if let Some(manager) = &mut self.manager {
-                    let sound = audio!("notification.ogg");
-                    let handle = manager.play(sound)?;
-                    self.handle = Some(handle);
-                }
+        fn ping(&mut self) -> Result<(), PlaySoundError<<StaticSoundData as SoundData>::Error>> {
+            if !self.muted
+                && let Some(manager) = &mut self.manager
+            {
+                let sound = audio!("notification.ogg");
+                let handle = manager.play(sound)?;
+                self.handle = Some(handle);
             }
             Ok(())
         }
@@ -139,18 +120,10 @@ mod engine {
         pub fn handle_request(
             &mut self,
             request: AudioRequest,
-        ) -> Result<
-            (),
-            PlaySoundError<
-                <StaticSoundData as SoundData>::Error,
-            >,
-        > {
+        ) -> Result<(), PlaySoundError<<StaticSoundData as SoundData>::Error>> {
             if self.manager.is_none() {
                 let manager =
-                    AudioManager::<DefaultBackend>::new(
-                        AudioManagerSettings::default(),
-                    )
-                    .unwrap();
+                    AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
                 self.manager = Some(manager);
                 if self.muted {
                     self.mute();
@@ -187,11 +160,7 @@ mod engine {
         fn get_audio_manager() -> AudioManager;
 
         #[wasm_bindgen(method, js_name = startSoundtrack)]
-        fn start_soundtrack(
-            this: &AudioManager,
-            file: &str,
-            fade: bool,
-        );
+        fn start_soundtrack(this: &AudioManager, file: &str, fade: bool);
 
         #[wasm_bindgen(method, js_name = stopSoundtrack)]
         fn stop_soundtrack(this: &AudioManager, fade: bool);
@@ -214,10 +183,7 @@ mod engine {
             Self { muted }
         }
 
-        pub fn handle_request(
-            &mut self,
-            request: AudioRequest,
-        ) -> Result<(), String> {
+        pub fn handle_request(&mut self, request: AudioRequest) -> Result<(), String> {
             if self.muted {
                 get_audio_manager().mute();
             }
@@ -230,27 +196,15 @@ mod engine {
                     get_audio_manager().unmute();
                 }
                 AudioRequest::Ping => {
-                    get_audio_manager().play_one_shot(
-                        "/sounds/notification.ogg",
-                    );
+                    get_audio_manager().play_one_shot("/sounds/notification.ogg");
                 }
                 AudioRequest::Loop(track) => {
                     let url = match track {
-                        Track::Intro => {
-                            "/sounds/music/intro.ogg"
-                        }
-                        Track::Planning => {
-                            "/sounds/music/planning.ogg"
-                        }
-                        Track::Interstitial => {
-                            "/sounds/music/city_noise.ogg"
-                        }
-                        Track::ReportBad => {
-                            "/sounds/music/report_bad.ogg"
-                        }
-                        Track::ReportGood => {
-                            "/sounds/music/report_good.ogg"
-                        }
+                        Track::Intro => "/sounds/music/intro.ogg",
+                        Track::Planning => "/sounds/music/planning.ogg",
+                        Track::Interstitial => "/sounds/music/city_noise.ogg",
+                        Track::ReportBad => "/sounds/music/report_bad.ogg",
+                        Track::ReportGood => "/sounds/music/report_good.ogg",
                     };
                     let fade = false;
                     let manager = get_audio_manager();

@@ -178,12 +178,11 @@ impl WorldEvents {
                 region: Some((region_id, region_name, region_idx)),
                 ..
             } = ev_meta
+                && let Some(ev) = ICON_EVENTS.get(&event_id)
             {
-                if let Some(ev) = ICON_EVENTS.get(&event_id) {
-                    self.globe
-                        .show_event(region_idx, icons::disaster_icon(&ev.icon), ev.intensity);
-                    occurring.push((ev, event_id, region_id, region_name));
-                }
+                self.globe
+                    .show_event(region_idx, icons::disaster_icon(&ev.icon), ev.intensity);
+                occurring.push((ev, event_id, region_id, region_name));
             }
         }
 
@@ -232,10 +231,8 @@ impl WorldEvents {
             self.updates = Updates::new(step_updates, &state.core);
         }
 
-        if next == Subphase::Updates {
-            if self.updates.is_finished || self.skipping {
-                next = Subphase::Events;
-            }
+        if next == Subphase::Updates && (self.updates.is_finished || self.skipping) {
+            next = Subphase::Events;
         }
 
         if next == Subphase::Events {
@@ -256,7 +253,7 @@ impl WorldEvents {
             self.year_timer.reset();
             let cur_year = state.world.year;
             let cycle_start_year = state.ui.cycle_start_state.year;
-            if cur_year > cycle_start_year && cur_year % 5 == 0 {
+            if cur_year > cycle_start_year && cur_year.is_multiple_of(5) {
                 state.finish_cycle();
 
                 // This has to happen before we enter the report

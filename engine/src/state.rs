@@ -1,29 +1,13 @@
 use std::collections::BTreeMap;
 
 use crate::{
-    Collection,
-    Id,
-    events::{
-        Condition,
-        Effect,
-        Event,
-        EventPool,
-        Flag,
-        Phase,
-        Request,
-    },
+    Collection, Id,
+    events::{Condition, Effect, Event, EventPool, Flag, Phase, Request},
     kinds::*,
     npcs::NPC,
     outputs,
     production::{ProcessChanges, calculate_required, produce},
-    projects::{
-        Group,
-        Outcome,
-        Project,
-        ProjectChanges,
-        Status,
-        Type as ProjectType,
-    },
+    projects::{Group, Outcome, Project, ProjectChanges, Status, Type as ProjectType},
     resources,
     world::World,
 };
@@ -94,9 +78,7 @@ impl Default for State {
 impl State {
     pub fn new(mut world: World) -> State {
         let mut npcs = NPC::load();
-        let n_npcs =
-            npcs.iter().filter(|npc| !npc.locked).count()
-                as f32;
+        let n_npcs = npcs.iter().filter(|npc| !npc.locked).count() as f32;
         for npc in npcs.iter_mut() {
             if !npc.locked {
                 npc.seats = 1. / n_npcs;
@@ -114,8 +96,7 @@ impl State {
         let death_year = world.year + LIFESPAN;
 
         let resources = Reserve::from(world.starting_resources);
-        let feedstocks =
-            Reserve::from(world.feedstock_reserves);
+        let feedstocks = Reserve::from(world.feedstock_reserves);
 
         let mut state = State {
             npcs,
@@ -172,13 +153,8 @@ impl State {
             || self.emissions.as_gtco2eq() <= 0.
     }
 
-    pub fn apply_disaster(
-        &mut self,
-        intensity: isize,
-        region_id: &Id,
-    ) {
-        self.world.regions[region_id].base_habitability -=
-            intensity as f32;
+    pub fn apply_disaster(&mut self, intensity: isize, region_id: &Id) {
+        self.world.regions[region_id].base_habitability -= intensity as f32;
     }
 
     pub fn outlook(&self) -> f32 {
@@ -224,28 +200,20 @@ impl State {
     }
 
     pub fn is_planning_year(&self) -> bool {
-        self.world.year % 5 == 0
+        self.world.year.is_multiple_of(5)
     }
 
     pub fn is_pre_planning_year(&self) -> bool {
-        (self.world.year + 1) % 5 == 0
+        (self.world.year + 1).is_multiple_of(5)
     }
 
-    pub fn apply_effects(
-        &mut self,
-        effects: &[Effect],
-        region_id: Option<Id>,
-    ) {
+    pub fn apply_effects(&mut self, effects: &[Effect], region_id: Option<Id>) {
         for effect in effects {
             effect.apply(self, region_id);
         }
     }
 
-    pub fn apply_event(
-        &mut self,
-        event_id: Id,
-        region_id: Option<Id>,
-    ) {
+    pub fn apply_event(&mut self, event_id: Id, region_id: Option<Id>) {
         let mut effects = vec![];
         let event = &self.event_pool.events[&event_id];
         self.events.push(event.clone());
@@ -259,11 +227,7 @@ impl State {
         }
     }
 
-    pub fn eval_conditions(
-        &self,
-        conditions: &[Condition],
-        region_id: Option<Id>,
-    ) -> bool {
+    pub fn eval_conditions(&self, conditions: &[Condition], region_id: Option<Id>) -> bool {
         if conditions.is_empty() {
             true
         } else {
@@ -283,32 +247,23 @@ impl State {
     /// `modifiable.modifier` or `modifiable.factor`
     /// instead.
     fn update_demand(&mut self) {
-        let (
-            output_demand,
-            mut resource_demand,
-            industry_byproducts,
-        ) = {
+        let (output_demand, mut resource_demand, industry_byproducts) = {
             let world = &self.world;
             let mut output_demand = outputs!();
             let mut resource_demand = resources!();
 
             // Ignore electric/fuel, captured by everything else
             let world_demand = world.region_demand();
-            output_demand.animal_calories +=
-                world_demand.animal_calories;
-            output_demand.plant_calories +=
-                world_demand.plant_calories;
+            output_demand.animal_calories += world_demand.animal_calories;
+            output_demand.plant_calories += world_demand.plant_calories;
 
             // Demand and impacts from non-modeled industries
             let lic_pop = world.lic_population();
-            let industry_demand =
-                world.industries.resource_demand(lic_pop);
-            let industry_byproducts =
-                world.industries.byproducts(lic_pop);
+            let industry_demand = world.industries.resource_demand(lic_pop);
+            let industry_byproducts = world.industries.byproducts(lic_pop);
 
             output_demand.fuel = industry_demand.fuel;
-            output_demand.electricity =
-                industry_demand.electricity;
+            output_demand.electricity = industry_demand.electricity;
 
             // Water and land demand from industries.
             // Process resource demand will be added later.
@@ -325,23 +280,17 @@ impl State {
 
             // For vegan-ish diets, move some animal calorie
             // demand to plants.
-            let cal_change =
-                if self.flags.contains(&Flag::Vegan) {
-                    output_demand.animal_calories * 0.9
-                } else if self.flags.contains(&Flag::Vegetarian)
-                {
-                    output_demand.animal_calories * 0.75
-                } else {
-                    0.
-                };
+            let cal_change = if self.flags.contains(&Flag::Vegan) {
+                output_demand.animal_calories * 0.9
+            } else if self.flags.contains(&Flag::Vegetarian) {
+                output_demand.animal_calories * 0.75
+            } else {
+                0.
+            };
             output_demand.animal_calories -= cal_change;
             output_demand.plant_calories += cal_change;
 
-            (
-                output_demand,
-                resource_demand,
-                industry_byproducts,
-            )
+            (output_demand, resource_demand, industry_byproducts)
         };
         self.output_demand.base = output_demand;
 
@@ -350,11 +299,9 @@ impl State {
         let orders = self.world.processes.orders(&total_demand);
 
         // Calculate required resources so we can add in food energy requirements
-        let (required_resources, required_feedstocks) =
-            calculate_required(&orders);
+        let (required_resources, required_feedstocks) = calculate_required(&orders);
 
-        self.output_demand.base.electricity +=
-            required_resources.electricity;
+        self.output_demand.base.electricity += required_resources.electricity;
         self.output_demand.base.fuel += required_resources.fuel;
 
         // Now re-calculate orders
@@ -363,8 +310,7 @@ impl State {
 
         // Apply land protection
         self.resources.available.land =
-            self.world.starting_resources.land
-                * (1. - self.protected_land);
+            self.world.starting_resources.land * (1. - self.protected_land);
 
         // Run production function
         let (
@@ -390,16 +336,13 @@ impl State {
         self.resource_demand.base = resource_demand;
         self.resources.consumed = consumed_resources;
         self.resources.required = required_resources;
-        self.resources.available.fuel =
-            self.produced.amount.fuel;
-        self.resources.available.electricity =
-            self.produced.amount.electricity;
+        self.resources.available.fuel = self.produced.amount.fuel;
+        self.resources.available.electricity = self.produced.amount.electricity;
 
         self.feedstocks.consumed = consumed_feedstocks;
         self.feedstocks.required = required_feedstocks;
 
-        self.byproducts.base =
-            production_byproducts + industry_byproducts;
+        self.byproducts.base = production_byproducts + industry_byproducts;
         self.emissions.update(self.byproducts.total());
     }
 
@@ -418,8 +361,7 @@ impl State {
 
         // Outlook impacts based on production shortages
         // If all demand met is 0 it should be an instant game over, basically.
-        let demand_met =
-            self.produced.total() / self.output_demand.total();
+        let demand_met = self.produced.total() / self.output_demand.total();
         self.shortages_outlook = (PRODUCTION_SHORTAGE_PENALTY
             - ((demand_met.fuel
                 + demand_met.electricity
@@ -429,14 +371,11 @@ impl State {
                 / 4.))
             .max(0.);
 
-        self.world
-            .update_extinction_rate(&self.produced.by_process);
+        self.world.update_extinction_rate(&self.produced.by_process);
     }
 
     fn step_world(&mut self, tgav: f32) -> Vec<Update> {
-        if self.world.year >= self.death_year
-            && !self.flags.contains(&Flag::LifeGoesOn)
-        {
+        if self.world.year >= self.death_year && !self.flags.contains(&Flag::LifeGoesOn) {
             self.game_over = true;
         }
 
@@ -446,17 +385,12 @@ impl State {
         let stop = self.flags.contains(&Flag::StopDevelopment);
         let fast = self.flags.contains(&Flag::FastDevelopment);
         let degrow = self.flags.contains(&Flag::Degrowth);
-        let (regions_up, regions_down) =
-            self.world.regions.develop(stop, fast, degrow);
+        let (regions_up, regions_down) = self.world.regions.develop(stop, fast, degrow);
 
         let wretched_ally = self.npcs.is_ally("The Fanonist");
-        let consumerist_ally =
-            self.npcs.is_ally("The Consumerist");
-        self.world.update_outlook(
-            temp_change,
-            wretched_ally,
-            consumerist_ally,
-        );
+        let consumerist_ally = self.npcs.is_ally("The Consumerist");
+        self.world
+            .update_outlook(temp_change, wretched_ally, consumerist_ally);
         regions_up
             .into_iter()
             .map(|id| Update::Region { id, up: true })
@@ -471,41 +405,28 @@ impl State {
     // Every planning cycle
     pub fn finish_cycle(&mut self) {
         let outlook_change = self.outlook() - self.last_outlook;
-        let recent_projects: Vec<&Project> = self
-            .world
-            .projects
-            .recent(self.world.year)
-            .collect();
-        self.npcs
-            .update_seats(outlook_change, &recent_projects);
+        let recent_projects: Vec<&Project> = self.world.projects.recent(self.world.year).collect();
+        self.npcs.update_seats(outlook_change, &recent_projects);
         self.last_outlook = self.outlook();
     }
 
-    pub fn check_requests(
-        &mut self,
-    ) -> Vec<(Request, Id, bool, usize)> {
+    pub fn check_requests(&mut self) -> Vec<(Request, Id, bool, usize)> {
         let mut i = 0;
         let mut completed = Vec::new();
         while i < self.requests.len() {
-            let (kind, id, active, bounty) =
-                self.requests[i].clone();
+            let (kind, id, active, bounty) = self.requests[i].clone();
             let complete = match kind {
                 Request::Project => {
                     let project = &self.world.projects[&id];
                     (active
-                        && (project.status == Status::Active
-                            || project.status
-                                == Status::Finished))
+                        && (project.status == Status::Active || project.status == Status::Finished))
                         || (!active
-                            && (project.status
-                                == Status::Inactive
-                                || project.status
-                                    == Status::Halted))
+                            && (project.status == Status::Inactive
+                                || project.status == Status::Halted))
                 }
                 Request::Process => {
                     let process = &self.world.processes[&id];
-                    (active && process.is_promoted())
-                        || (!active && process.is_banned())
+                    (active && process.is_promoted()) || (!active && process.is_banned())
                 }
             };
             if complete {
@@ -518,43 +439,27 @@ impl State {
         completed
     }
 
-    pub fn change_process_mix_share(
-        &mut self,
-        process_id: &Id,
-        change: isize,
-    ) {
-        let changes = self.world.processes[process_id]
-            .change_mix_share(change);
+    pub fn change_process_mix_share(&mut self, process_id: &Id, change: isize) {
+        let changes = self.world.processes[process_id].change_mix_share(change);
         self.apply_changes(changes);
     }
 
     pub fn process_max_share(&self, process_id: &Id) -> usize {
         let output_demand = self.output_demand.total();
         let feedstocks = self.feedstocks.available;
-        self.world.processes[process_id]
-            .max_share(&output_demand, &feedstocks)
+        self.world.processes[process_id].max_share(&output_demand, &feedstocks)
     }
 
-    pub fn roll_events(
-        &mut self,
-        phase: Phase,
-    ) -> Vec<ResolvedEvent> {
+    pub fn roll_events(&mut self, phase: Phase) -> Vec<ResolvedEvent> {
         let mut pool = self.event_pool.clone();
-        let events = pool.roll_for_phase(phase, &self);
+        let events = pool.roll_for_phase(phase, self);
         self.event_pool = pool;
 
         let events: Vec<ResolvedEvent> = events
             .into_iter()
             .map(|(ev, region_id)| ResolvedEvent {
                 event: ev,
-                region: region_id.map(|id| {
-                    (
-                        id,
-                        self.world.regions[&id]
-                            .name
-                            .to_string(),
-                    )
-                }),
+                region: region_id.map(|id| (id, self.world.regions[&id].name.to_string())),
             })
             .collect();
 
@@ -563,10 +468,7 @@ impl State {
         // apply their effects immediately here.
         if phase != Phase::Icon {
             for ev in &events {
-                self.apply_event(
-                    ev.id,
-                    ev.region.as_ref().map(|(id, _)| *id),
-                );
+                self.apply_event(ev.id, ev.region.as_ref().map(|(id, _)| *id));
             }
         }
 
@@ -577,23 +479,17 @@ impl State {
 // Project related functionality.
 impl State {
     fn step_projects(&mut self) -> Vec<(Id, ProjectChanges)> {
-        let mut changes =
-            self.world.projects.step(self.world.year);
+        let mut changes = self.world.projects.step(self.world.year);
 
         let mut outcomes: Vec<(Id, usize)> = Vec::new();
         for (id, changes) in &mut changes {
             if changes.completed {
-                let project = &self.world.projects[&id];
-                match self.roll_project_outcome(project) {
-                    Some((outcome, i)) => {
-                        for effect in &outcome.effects {
-                            changes
-                                .add_effects
-                                .push(effect.clone());
-                        }
-                        outcomes.push((*id, i));
+                let project = &self.world.projects[id];
+                if let Some((outcome, i)) = self.roll_project_outcome(project) {
+                    for effect in &outcome.effects {
+                        changes.add_effects.push(effect.clone());
                     }
-                    None => (),
+                    outcomes.push((*id, i));
                 }
             }
         }
@@ -614,25 +510,20 @@ impl State {
 
         let posadist_ally = self.npcs.is_ally("The Posadist");
         let utopian_ally = self.npcs.is_ally("The Utopian");
-        let animal_ally =
-            self.npcs.is_ally("The Animal Liberationist");
-        let environ_ally =
-            self.npcs.is_ally("The Environmentalist");
+        let animal_ally = self.npcs.is_ally("The Animal Liberationist");
+        let environ_ally = self.npcs.is_ally("The Environmentalist");
         let ecofem_ally = self.npcs.is_ally("The Ecofeminist");
         let malthus_ally = self.npcs.is_ally("The Malthusian");
 
         for project in self.world.projects.iter_mut() {
             let mut group_modifier = 1.0;
-            if posadist_ally && project.group == Group::Nuclear
-            {
+            if posadist_ally && project.group == Group::Nuclear {
                 group_modifier *= 0.5;
             }
             if ecofem_ally
                 && matches!(
                     project.group,
-                    Group::Food
-                        | Group::Agriculture
-                        | Group::Protection
+                    Group::Food | Group::Agriculture | Group::Protection
                 )
             {
                 group_modifier *= 0.75;
@@ -640,28 +531,21 @@ impl State {
             if utopian_ally
                 && matches!(
                     project.group,
-                    Group::Limits
-                        | Group::Protection
-                        | Group::Restoration
+                    Group::Limits | Group::Protection | Group::Restoration
                 )
             {
                 group_modifier *= 0.75;
             }
-            if environ_ally
-                && project.group == Group::Protection
-            {
+            if environ_ally && project.group == Group::Protection {
                 group_modifier *= 0.5;
             }
             if animal_ally && project.group == Group::Food {
                 group_modifier *= 0.5;
             }
-            if malthus_ally
-                && project.group == Group::Population
-            {
+            if malthus_ally && project.group == Group::Population {
                 group_modifier *= 0.5;
             }
-            if self.flags.contains(&Flag::EcosystemModeling)
-                && project.group == Group::Restoration
+            if self.flags.contains(&Flag::EcosystemModeling) && project.group == Group::Restoration
             {
                 group_modifier *= 1.1;
             }
@@ -682,14 +566,13 @@ impl State {
     }
 
     fn base_project_cost_modifier(&self) -> f32 {
-        let mut modifier =
-            if self.flags.contains(&Flag::MetalsShortage)
-                && !self.flags.contains(&Flag::DeepSeaMining)
-            {
-                0.8
-            } else {
-                1.
-            };
+        let mut modifier = if self.flags.contains(&Flag::MetalsShortage)
+            && !self.flags.contains(&Flag::DeepSeaMining)
+        {
+            0.8
+        } else {
+            1.
+        };
         if self.flags.contains(&Flag::MoreLabor) {
             modifier *= 0.9;
         }
@@ -716,8 +599,7 @@ impl State {
     }
 
     pub fn stop_project(&mut self, project_id: &Id) {
-        let (changes, is_policy) =
-            self.world.projects[project_id].stop();
+        let (changes, is_policy) = self.world.projects[project_id].stop();
         if is_policy {
             self.policy_queue.retain(|&id| id != *project_id);
         }
@@ -730,35 +612,24 @@ impl State {
     }
 
     pub fn downgrade_project(&mut self, project_id: &Id) {
-        let changes =
-            self.world.projects[project_id].downgrade();
+        let changes = self.world.projects[project_id].downgrade();
         self.apply_changes(changes);
     }
 
-    pub fn set_project_points(
-        &mut self,
-        project_id: &Id,
-        points: usize,
-    ) {
+    pub fn set_project_points(&mut self, project_id: &Id, points: usize) {
         self.world.projects[project_id].set_points(points);
     }
 
     /// Roll to see the outcome of this project
-    fn roll_project_outcome<'a>(
-        &self,
-        project: &'a Project,
-    ) -> Option<(&'a Outcome, usize)> {
+    fn roll_project_outcome<'a>(&self, project: &'a Project) -> Option<(&'a Outcome, usize)> {
         let mut outcome = None;
         for (i, o) in project.outcomes.iter().enumerate() {
-            match o.probability.eval(self, None) {
-                Some(likelihood) => {
-                    let prob = likelihood.p();
-                    if fastrand::f32() <= prob {
-                        outcome = Some((o, i));
-                        break;
-                    }
+            if let Some(likelihood) = o.probability.eval(self, None) {
+                let prob = likelihood.p();
+                if fastrand::f32() <= prob {
+                    outcome = Some((o, i));
+                    break;
                 }
-                None => (),
             }
         }
         if outcome.is_none() {
@@ -769,19 +640,15 @@ impl State {
 
     fn roll_new_policy_outcomes(&mut self) -> Vec<Update> {
         let mut effects: Vec<Effect> = Vec::new();
-        let ids: Vec<Id> =
-            self.policy_queue.drain(..).collect();
+        let ids: Vec<Id> = self.policy_queue.drain(..).collect();
         for id in &ids {
             let mut active_outcome = None;
             let proj = &self.world.projects[id];
-            match self.roll_project_outcome(proj) {
-                Some((outcome, i)) => {
-                    for effect in &outcome.effects {
-                        effects.push(effect.clone());
-                    }
-                    active_outcome = Some(i);
+            if let Some((outcome, i)) = self.roll_project_outcome(proj) {
+                for effect in &outcome.effects {
+                    effects.push(effect.clone());
                 }
-                None => (),
+                active_outcome = Some(i);
             }
             let proj = &mut self.world.projects[id];
             proj.active_outcome = active_outcome;
@@ -796,24 +663,14 @@ impl State {
         }
         self.update_demand();
 
-        ids.into_iter()
-            .map(|id| Update::Policy { id })
-            .collect()
+        ids.into_iter().map(|id| Update::Policy { id }).collect()
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct Production {
     pub amount: OutputMap,
     pub by_process: BTreeMap<Id, f32>,
-}
-impl Default for Production {
-    fn default() -> Self {
-        Self {
-            amount: OutputMap::default(),
-            by_process: BTreeMap::default(),
-        }
-    }
 }
 impl Production {
     pub fn of(&self, output: Output) -> f32 {
@@ -927,10 +784,7 @@ impl Update {
     }
 
     pub fn is_project(&self) -> bool {
-        matches!(
-            self,
-            Update::Project { .. } | Update::Policy { .. }
-        )
+        matches!(self, Update::Project { .. } | Update::Policy { .. })
     }
 
     pub fn is_policy(&self) -> bool {

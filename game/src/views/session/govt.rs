@@ -224,7 +224,7 @@ struct Seats {
 fn calculate_seats(year: u16, npcs: &[NPC], total_seats: usize) -> Vec<Seats> {
     let mut used_seats = 0;
     let mut seats = npcs
-        .into_iter()
+        .iter()
         .map(|npc| {
             let seats = (npc.seats * total_seats as f32).floor() as usize;
             used_seats += seats;

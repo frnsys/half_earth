@@ -21,9 +21,7 @@ pub struct Collection<T: HasId> {
     lookup: BTreeMap<Id, usize>,
 }
 
-impl<'de, T: HasId + Deserialize<'de>> Deserialize<'de>
-    for Collection<T>
-{
+impl<'de, T: HasId + Deserialize<'de>> Deserialize<'de> for Collection<T> {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -34,10 +32,7 @@ impl<'de, T: HasId + Deserialize<'de>> Deserialize<'de>
 }
 
 impl<T: HasId + Serialize> Serialize for Collection<T> {
-    fn serialize<S>(
-        &self,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -89,9 +84,9 @@ impl<T: HasId> Collection<T> {
     }
 
     pub fn remove(&mut self, id: &Id) {
-        self.lookup.get(id).map(|idx| {
+        if let Some(idx) = self.lookup.get(id) {
             self.values.remove(*idx);
-        });
+        }
         self.reindex();
     }
 }
@@ -105,9 +100,7 @@ impl<T: HasId> From<Vec<T>> for Collection<T> {
     }
 }
 impl<T: HasId> FromIterator<T> for Collection<T> {
-    fn from_iter<I: IntoIterator<Item = T>>(
-        iter: I,
-    ) -> Collection<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Collection<T> {
         let values = iter.into_iter().collect::<Vec<_>>();
         Collection::from(values)
     }
@@ -146,9 +139,5 @@ pub fn round_to(value: f32, precision: i32) -> f32 {
     let factor = 10_f32.powi(precision);
     let abs_number = value.abs();
     let rounded = f32::round(abs_number * factor) / factor;
-    if value < 0.0 {
-        -rounded
-    } else {
-        rounded
-    }
+    if value < 0.0 { -rounded } else { rounded }
 }

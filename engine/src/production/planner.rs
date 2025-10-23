@@ -16,16 +16,13 @@ pub struct ProductionOrder<'a> {
 /// usage for a process. `1.0` means the most efficient.
 ///
 /// * Pressure is the overall demand for the resource over
-///     the total available amount of the resource.
+///   the total available amount of the resource.
 /// * Relative intensity is the relative intensity of this process
-///     for that resource compared to the most intensive process.
+///   for that resource compared to the most intensive process.
 ///
 /// The idea here is that higher pressure on a resource means
 /// that lower-intensity usages will be valued more.
-fn efficiency_score(
-    pressure: f32,
-    relative_intensity: f32,
-) -> f32 {
+fn efficiency_score(pressure: f32, relative_intensity: f32) -> f32 {
     let val = (1. / (relative_intensity + 1.)).powf(pressure);
     (val - 0.5) / 0.5
 }
@@ -54,19 +51,11 @@ fn resource_score(
         .fold(f32::INFINITY, |a, b| a.min(b))
 }
 
-fn feedstock_score(
-    required: f32,
-    demand: f32,
-    available: f32,
-    max_intensity: f32,
-) -> f32 {
+fn feedstock_score(required: f32, demand: f32, available: f32, max_intensity: f32) -> f32 {
     if required == 0. {
         f32::INFINITY
     } else {
-        efficiency_score(
-            demand / available,
-            required / max_intensity,
-        )
+        efficiency_score(demand / available, required / max_intensity)
     }
 }
 
@@ -82,8 +71,7 @@ fn rank_orders(
 ) {
     let mut resource_scores = vec![];
     let mut feedstock_scores = vec![];
-    let mut scores: BTreeMap<usize, (f32, f32)> =
-        BTreeMap::default();
+    let mut scores: BTreeMap<usize, (f32, f32)> = BTreeMap::default();
 
     let mut max_intensity = resources!();
     for i in indices.iter() {
@@ -98,30 +86,20 @@ fn rank_orders(
         let process = orders[*i].process;
         let feedstock = process.adj_feedstock_amount();
         max_intensity_fs[process.feedstock.0] =
-            max_intensity_fs[process.feedstock.0]
-                .max(feedstock);
+            max_intensity_fs[process.feedstock.0].max(feedstock);
     }
 
     for i in indices.iter() {
         let process = orders[*i].process;
 
         let r = process.adj_resources();
-        let resource_score = resource_score(
-            &r,
-            resources,
-            demand.0,
-            &max_intensity,
-        );
+        let resource_score = resource_score(&r, resources, demand.0, &max_intensity);
         resource_scores.push(resource_score);
 
         let f = process.adj_feedstock_amount();
         let fs = process.feedstock.0;
-        let feedstock_score = feedstock_score(
-            f,
-            demand.1[fs],
-            feedstocks[fs],
-            max_intensity_fs[fs],
-        );
+        let feedstock_score =
+            feedstock_score(f, demand.1[fs], feedstocks[fs], max_intensity_fs[fs]);
         feedstock_scores.push(feedstock_score);
 
         scores.insert(*i, (resource_score, feedstock_score));
@@ -167,21 +145,15 @@ fn produce_amount(
         .map(|(k, v)| available_resources[k] / v)
         .fold(f32::INFINITY, |a, b| a.min(b));
 
-    let amount_produced = order
-        .amount
-        .min(feedstock_max.min(resource_max))
-        .max(0.);
+    let amount_produced = order.amount.min(feedstock_max.min(resource_max)).max(0.);
 
     for (k, v) in resources.items() {
-        available_resources[k] = (available_resources[k]
-            - v * amount_produced)
-            .max(0.);
+        available_resources[k] = (available_resources[k] - v * amount_produced).max(0.);
     }
     for (k, v) in byproducts.items() {
         produced_byproducts[k] += v * amount_produced;
     }
-    available_feedstocks[feedstock] -=
-        feedstock_amount * amount_produced;
+    available_feedstocks[feedstock] -= feedstock_amount * amount_produced;
 
     amount_produced
 }
@@ -203,9 +175,7 @@ impl Outputs {
         ]
     }
 
-    pub fn items_mut(
-        &mut self,
-    ) -> [(Output, &mut Vec<usize>); 4] {
+    pub fn items_mut(&mut self) -> [(Output, &mut Vec<usize>); 4] {
         [
             (Output::Fuel, &mut self.fuel),
             (Output::Electricity, &mut self.electricity),
@@ -226,10 +196,7 @@ impl Index<Output> for Outputs {
     }
 }
 impl IndexMut<Output> for Outputs {
-    fn index_mut(
-        &mut self,
-        index: Output,
-    ) -> &mut Self::Output {
+    fn index_mut(&mut self, index: Output) -> &mut Self::Output {
         match index {
             Output::Fuel => &mut self.fuel,
             Output::Electricity => &mut self.electricity,
@@ -245,8 +212,8 @@ pub fn calculate_production(
     starting_resources: &ResourceMap,
     starting_feedstocks: &FeedstockMap,
 ) -> (Vec<f32>, ResourceMap, FeedstockMap, ByproductMap) {
-    let mut resources = starting_resources.clone();
-    let mut feedstocks = starting_feedstocks.clone();
+    let mut resources = *starting_resources;
+    let mut feedstocks = *starting_feedstocks;
     let mut produced_byproducts: ByproductMap = byproducts!();
     let mut produced = vec![0.; orders.len()];
 
@@ -262,13 +229,7 @@ pub fn calculate_production(
                 continue;
             }
 
-            rank_orders(
-                orders,
-                order_idxs,
-                demand,
-                &resources,
-                &feedstocks,
-            );
+            rank_orders(orders, order_idxs, demand, &resources, &feedstocks);
 
             // Ok to unwrap b/c we check if `orders` is empty
             let order_idx = order_idxs.pop().unwrap();
@@ -282,10 +243,7 @@ pub fn calculate_production(
 
             produced[order_idx] = amount;
         }
-        continue_production = !orders_by_output
-            .values()
-            .iter()
-            .all(|idxs| idxs.is_empty());
+        continue_production = !orders_by_output.values().iter().all(|idxs| idxs.is_empty());
     }
 
     let consumed_resources = *starting_resources - resources;
@@ -300,9 +258,7 @@ pub fn calculate_production(
 
 /// Calculate the total required resources to completely
 /// meet the demand of the provided production orders.
-pub fn calculate_required(
-    orders: &[ProductionOrder],
-) -> (ResourceMap, FeedstockMap) {
+pub fn calculate_required(orders: &[ProductionOrder]) -> (ResourceMap, FeedstockMap) {
     let mut resources = resources!();
     let mut feedstocks = feedstocks!();
     for order in orders {
@@ -320,9 +276,9 @@ pub fn calculate_required(
 mod test {
     use super::*;
     use crate::{
+        Id,
         kinds::{Feedstock, Output},
         outputs,
-        Id,
     };
 
     fn gen_processes() -> Vec<Process> {
@@ -406,8 +362,7 @@ mod test {
             .map(|p| p.production_order(&demand))
             .collect();
 
-        let (required_r, required_f) =
-            calculate_required(&orders);
+        let (required_r, required_f) = calculate_required(&orders);
         let expected = resources!(
             water: 200.
         );
@@ -474,18 +429,8 @@ mod test {
             water: 1.,
             land: 1.
         );
-        let score_a = resource_score(
-            &required_a,
-            &available,
-            &overall_demand,
-            &max_intensity,
-        );
-        let score_b = resource_score(
-            &required_b,
-            &available,
-            &overall_demand,
-            &max_intensity,
-        );
+        let score_a = resource_score(&required_a, &available, &overall_demand, &max_intensity);
+        let score_b = resource_score(&required_b, &available, &overall_demand, &max_intensity);
 
         // Process B should be better as it uses less water,
         // even though it uses a bit more land.
@@ -497,18 +442,8 @@ mod test {
             water: 1.,
             land: 0.5
         );
-        let score_a = resource_score(
-            &required_a,
-            &overall_demand,
-            &available,
-            &max_intensity,
-        );
-        let score_b = resource_score(
-            &required_b,
-            &overall_demand,
-            &available,
-            &max_intensity,
-        );
+        let score_a = resource_score(&required_a, &overall_demand, &available, &max_intensity);
+        let score_b = resource_score(&required_b, &overall_demand, &available, &max_intensity);
         assert!(score_a > score_b);
     }
 }

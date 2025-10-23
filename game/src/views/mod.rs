@@ -59,7 +59,7 @@ impl GameView {
             let phase = match debug_view {
                 DebugView::Plan => Phase::Planning(Session::plan()),
                 DebugView::Regions => Phase::Planning(Session::regions(context)),
-                DebugView::Parliament => Phase::Planning(Session::govt(&mut state.core)),
+                DebugView::Parliament => Phase::Planning(Session::govt(&state.core)),
                 DebugView::Stats => Phase::Planning(Session::stats()),
                 DebugView::World => Phase::Events(WorldEvents::new(state, context)),
                 DebugView::Report => Phase::Report(Report::new(state)),

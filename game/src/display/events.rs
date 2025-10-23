@@ -3,6 +3,8 @@ use std::ops::Deref;
 use hes_engine::*;
 use rust_i18n::t;
 
+use crate::display::is_hidden;
+
 use super::{
     DisplayEffect,
     icons::{HasIcon, Icon},
@@ -27,8 +29,7 @@ impl DisplayEvent {
             .iter()
             .flat_map(|prob| {
                 prob.conditions.iter().filter_map(|cond| {
-                    describe_condition(cond, state)
-                        .map(|desc| (cond.icon(), desc))
+                    describe_condition(cond, state).map(|desc| (cond.icon(), desc))
                 })
             })
             .collect::<Vec<_>>();
@@ -53,12 +54,7 @@ impl DisplayEvent {
         if self.event.effects.is_empty() {
             false
         } else {
-            self.event.effects.iter().any(|effect| match effect
-            {
-                Effect::AddEvent(..)
-                | Effect::TriggerEvent(..) => false,
-                _ => true,
-            })
+            self.event.effects.iter().any(|effect| !is_hidden(effect))
         }
     }
 
@@ -67,10 +63,7 @@ impl DisplayEvent {
     }
 }
 
-fn describe_condition(
-    condition: &Condition,
-    state: &State,
-) -> Option<String> {
+fn describe_condition(condition: &Condition, state: &State) -> Option<String> {
     match condition {
         Condition::ProjectStatus(id, status) => {
             let name = state.world.projects[id].name.as_str();

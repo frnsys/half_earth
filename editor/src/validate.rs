@@ -1,16 +1,10 @@
 use std::collections::HashSet;
 
-use hes_engine::{
-    Condition,
-    Effect,
-    Id,
-    World,
-    flavor::DialogueNext,
-};
+use hes_engine::{Condition, Effect, Id, World, flavor::DialogueNext};
 
-/// Errors:
-/// - Effect refers to entity that doesn't exist.
-/// - Condition refers to entity that doesn't exist.
+// Errors:
+// - Effect refers to entity that doesn't exist.
+// - Condition refers to entity that doesn't exist.
 
 struct IdTracker {
     projects: Vec<Id>,
@@ -21,26 +15,10 @@ struct IdTracker {
 impl IdTracker {
     fn new(world: &World) -> Self {
         Self {
-            projects: world
-                .projects
-                .iter()
-                .map(|item| item.id)
-                .collect(),
-            processes: world
-                .processes
-                .iter()
-                .map(|item| item.id)
-                .collect(),
-            industries: world
-                .industries
-                .iter()
-                .map(|item| item.id)
-                .collect(),
-            events: world
-                .events
-                .iter()
-                .map(|item| item.id)
-                .collect(),
+            projects: world.projects.iter().map(|item| item.id).collect(),
+            processes: world.processes.iter().map(|item| item.id).collect(),
+            industries: world.industries.iter().map(|item| item.id).collect(),
+            events: world.events.iter().map(|item| item.id).collect(),
         }
     }
 
@@ -85,10 +63,8 @@ pub fn find_references(id: Id, world: &World) -> Vec<String> {
         .any(|id_| id_ == Some(id))
     };
 
-    let check_condition = move |cond: &Condition| {
-        cond.project_id() == Some(id)
-            || cond.process_id() == Some(id)
-    };
+    let check_condition =
+        move |cond: &Condition| cond.project_id() == Some(id) || cond.process_id() == Some(id);
 
     for item in world.projects.iter() {
         for effect in &item.effects {
@@ -118,20 +94,16 @@ pub fn find_references(id: Id, world: &World) -> Vec<String> {
 
         for dialogue in &item.flavor.outcomes {
             for line in &dialogue.lines {
-                if let Some(DialogueNext::Responses(resps)) =
-                    &line.next
-                {
+                if let Some(DialogueNext::Responses(resps)) = &line.next {
                     for resp in resps {
                         for effect in &resp.effects {
                             if check_effect(effect) {
-                                referenced_by
-                                    .insert(item.name.clone());
+                                referenced_by.insert(item.name.clone());
                             }
                         }
                         for cond in &resp.conditions {
                             if check_condition(cond) {
-                                referenced_by
-                                    .insert(item.name.clone());
+                                referenced_by.insert(item.name.clone());
                             }
                         }
                     }
@@ -155,20 +127,16 @@ pub fn find_references(id: Id, world: &World) -> Vec<String> {
         }
 
         for line in &item.flavor.dialogue.lines {
-            if let Some(DialogueNext::Responses(resps)) =
-                &line.next
-            {
+            if let Some(DialogueNext::Responses(resps)) = &line.next {
                 for resp in resps {
                     for effect in &resp.effects {
                         if check_effect(effect) {
-                            referenced_by
-                                .insert(item.name.clone());
+                            referenced_by.insert(item.name.clone());
                         }
                     }
                     for cond in &resp.conditions {
                         if check_condition(cond) {
-                            referenced_by
-                                .insert(item.name.clone());
+                            referenced_by.insert(item.name.clone());
                         }
                     }
                 }
@@ -186,25 +154,37 @@ pub fn validate(world: &World) -> Vec<String> {
     for item in world.projects.iter() {
         for effect in &item.effects {
             if !tracker.check_effect(effect) {
-                errors.push(format!("Project effects of {:?} refers to a non-existent entity.", item.name));
+                errors.push(format!(
+                    "Project effects of {:?} refers to a non-existent entity.",
+                    item.name
+                ));
             }
         }
         for outcome in &item.outcomes {
             for effect in &outcome.effects {
                 if !tracker.check_effect(effect) {
-                    errors.push(format!("Project outcomes of {:?} refers to a non-existent entity.", item.name));
+                    errors.push(format!(
+                        "Project outcomes of {:?} refers to a non-existent entity.",
+                        item.name
+                    ));
                 }
             }
             for cond in &outcome.probability.conditions {
                 if !tracker.check_condition(cond) {
-                    errors.push(format!("Project outcome conditions for {:?} refers to a non-existent entity.", item.name));
+                    errors.push(format!(
+                        "Project outcome conditions for {:?} refers to a non-existent entity.",
+                        item.name
+                    ));
                 }
             }
         }
         for upgrade in &item.upgrades {
             for effect in &upgrade.effects {
                 if !tracker.check_effect(effect) {
-                    errors.push(format!("Project upgrades of {:?} refers to a non-existent entity.", item.name));
+                    errors.push(format!(
+                        "Project upgrades of {:?} refers to a non-existent entity.",
+                        item.name
+                    ));
                 }
             }
         }
@@ -213,13 +193,19 @@ pub fn validate(world: &World) -> Vec<String> {
     for item in world.events.iter() {
         for effect in &item.effects {
             if !tracker.check_effect(effect) {
-                errors.push(format!("Event {:?} refers to a non-existent entity.", item.name));
+                errors.push(format!(
+                    "Event {:?} refers to a non-existent entity.",
+                    item.name
+                ));
             }
         }
         for prob in &item.probabilities {
             for cond in &prob.conditions {
                 if !tracker.check_condition(cond) {
-                    errors.push(format!("Event conditions for {:?} refers to a non-existent entity.", item.name));
+                    errors.push(format!(
+                        "Event conditions for {:?} refers to a non-existent entity.",
+                        item.name
+                    ));
                 }
             }
         }

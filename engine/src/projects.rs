@@ -1,21 +1,13 @@
 use crate::{
+    Collection, HasId, Id,
     events::{Effect, Probability},
     flavor::ProjectFlavor,
     kinds::{Output, OutputMap},
-    npcs::{NPCRelation, NPC, RELATIONSHIP_CHANGE_AMOUNT},
-    Collection,
-    HasId,
-    Id,
+    npcs::{NPC, NPCRelation, RELATIONSHIP_CHANGE_AMOUNT},
 };
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
-use strum::{
-    Display,
-    EnumDiscriminants,
-    EnumIter,
-    EnumString,
-    IntoStaticStr,
-};
+use strum::{Display, EnumDiscriminants, EnumIter, EnumString, IntoStaticStr};
 
 /// The project's status.
 #[derive(
@@ -110,21 +102,8 @@ impl Default for Cost {
 }
 
 /// A cost factor used to compute dynamic costs.
-#[derive(
-    Serialize,
-    Deserialize,
-    Copy,
-    Clone,
-    PartialEq,
-    Debug,
-    EnumDiscriminants,
-)]
-#[strum_discriminants(derive(
-    EnumIter,
-    EnumString,
-    IntoStaticStr,
-    Display
-))]
+#[derive(Serialize, Deserialize, Copy, Clone, PartialEq, Debug, EnumDiscriminants)]
+#[strum_discriminants(derive(EnumIter, EnumString, IntoStaticStr, Display))]
 #[strum_discriminants(name(FactorKind))]
 pub enum Factor {
     Time,
@@ -137,35 +116,27 @@ impl From<FactorKind> for Factor {
         match kind {
             FactorKind::Time => Factor::Time,
             FactorKind::Income => Factor::Income,
-            FactorKind::Output => {
-                Factor::Output(Output::default())
-            }
+            FactorKind::Output => Factor::Output(Output::default()),
         }
     }
 }
 
 /// An outcome resulting from the completion of a project.
-#[derive(
-    Debug, Deserialize, Serialize, Clone, PartialEq, Default,
-)]
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Default)]
 pub struct Outcome {
     pub effects: Vec<Effect>,
     pub probability: Probability,
 }
 
 /// An upgrade for a project.
-#[derive(
-    Debug, Deserialize, Serialize, Default, Clone, PartialEq,
-)]
+#[derive(Debug, Deserialize, Serialize, Default, Clone, PartialEq)]
 pub struct Upgrade {
     pub cost: usize,
     pub effects: Vec<Effect>,
     pub active: bool,
 }
 
-#[derive(
-    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
-)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct Project {
     pub id: Id,
     pub name: String,
@@ -200,10 +171,7 @@ pub struct Project {
 }
 
 impl Display for Project {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.name)
     }
 }
@@ -256,8 +224,7 @@ impl Project {
     }
 
     pub fn is_haltable(&self) -> bool {
-        self.is_online()
-            && (self.kind == Type::Policy || self.ongoing)
+        self.is_online() && (self.kind == Type::Policy || self.ongoing)
     }
 
     pub fn can_upgrade(&self) -> bool {
@@ -270,8 +237,7 @@ impl Project {
 
     pub fn years_remaining(&self) -> usize {
         let remaining = 1. - self.progress;
-        let progress_per_year =
-            1. / years_for_points(self.points, self.cost);
+        let progress_per_year = 1. / years_for_points(self.points, self.cost);
         (remaining / progress_per_year).round() as usize
     }
 
@@ -279,8 +245,7 @@ impl Project {
     pub fn build(&mut self) -> bool {
         match &mut self.status {
             Status::Building => {
-                self.progress += 1.
-                    / years_for_points(self.points, self.cost);
+                self.progress += 1. / years_for_points(self.points, self.cost);
                 if self.progress >= 1. {
                     self.status = if self.ongoing {
                         Status::Active
@@ -304,30 +269,23 @@ impl Project {
     pub fn stop(&mut self) -> (ProjectChanges, bool) {
         let mut changes = ProjectChanges::default();
 
-        if self.status == Status::Active
-            || self.status == Status::Finished
-        {
-            changes
-                .remove_effects
-                .extend(self.active_effects().clone());
+        if self.status == Status::Active || self.status == Status::Finished {
+            changes.remove_effects.extend(self.active_effects().clone());
 
             if let Some(outcome_id) = self.active_outcome {
-                let effects =
-                    &self.outcomes[outcome_id].effects;
+                let effects = &self.outcomes[outcome_id].effects;
                 changes.remove_effects.extend(effects.clone());
             }
 
             for npc_id in &self.supporters {
-                changes.relationships.push((
-                    *npc_id,
-                    -RELATIONSHIP_CHANGE_AMOUNT,
-                ));
+                changes
+                    .relationships
+                    .push((*npc_id, -RELATIONSHIP_CHANGE_AMOUNT));
             }
             for npc_id in &self.opposers {
-                changes.relationships.push((
-                    *npc_id,
-                    RELATIONSHIP_CHANGE_AMOUNT,
-                ));
+                changes
+                    .relationships
+                    .push((*npc_id, RELATIONSHIP_CHANGE_AMOUNT));
             }
         }
 
@@ -344,8 +302,7 @@ impl Project {
 
     pub fn set_points(&mut self, points: usize) {
         self.points = points;
-        self.estimate =
-            years_for_points(self.points, self.cost) as usize;
+        self.estimate = years_for_points(self.points, self.cost) as usize;
     }
 
     pub fn update_cost(
@@ -362,17 +319,14 @@ impl Project {
                     // Kind of arbitrarily choose 1980 as the starting point
                     Factor::Time => m * (year - 1980) as f32,
                     Factor::Income => m * (1. + income_level),
-                    Factor::Output(output) => {
-                        m * demand[output]
-                    }
+                    Factor::Output(output) => m * demand[output],
                 };
                 c.round().max(0.) as usize
             }
         };
-        self.cost =
-            (cost as f32 * self.cost_modifier * modifier)
-                .round()
-                .max(0.) as usize;
+        self.cost = (cost as f32 * self.cost_modifier * modifier)
+            .round()
+            .max(0.) as usize;
     }
 
     pub fn upgrade(&mut self) -> ProjectChanges {
@@ -382,7 +336,7 @@ impl Project {
         // EXCEPT for locks/unlocks.
         let to_remove = self
             .active_effects()
-            .into_iter()
+            .iter()
             .filter(|effect| {
                 !matches!(
                     effect,
@@ -402,9 +356,7 @@ impl Project {
             false
         };
         if upgraded {
-            changes
-                .add_effects
-                .extend(self.active_effects().clone());
+            changes.add_effects.extend(self.active_effects().clone());
         } else {
             changes.remove_effects.clear();
         }
@@ -414,9 +366,7 @@ impl Project {
 
     pub fn downgrade(&mut self) -> ProjectChanges {
         let mut changes = ProjectChanges::default();
-        changes
-            .remove_effects
-            .extend(self.active_effects().clone());
+        changes.remove_effects.extend(self.active_effects().clone());
 
         let downgraded = if self.level > 0 {
             self.level -= 1;
@@ -426,9 +376,7 @@ impl Project {
         };
 
         if downgraded {
-            changes
-                .add_effects
-                .extend(self.active_effects().clone());
+            changes.add_effects.extend(self.active_effects().clone());
         } else {
             changes.remove_effects.clear();
         }
@@ -456,38 +404,30 @@ impl Project {
         let prev_progress = self.progress;
         if prev_progress > 0. && self.gradual {
             for effect in &self.effects {
-                changes
-                    .remove_effects
-                    .push(effect.clone() * prev_progress);
+                changes.remove_effects.push(effect.clone() * prev_progress);
             }
         }
 
         let completed = self.build();
         if completed {
             self.completed_at = year;
-            changes
-                .add_effects
-                .extend(self.effects.iter().cloned());
+            changes.add_effects.extend(self.effects.iter().cloned());
 
             for npc_id in &self.supporters {
-                changes.relationships.push((
-                    *npc_id,
-                    RELATIONSHIP_CHANGE_AMOUNT,
-                ));
+                changes
+                    .relationships
+                    .push((*npc_id, RELATIONSHIP_CHANGE_AMOUNT));
             }
             for npc_id in &self.opposers {
-                changes.relationships.push((
-                    *npc_id,
-                    -RELATIONSHIP_CHANGE_AMOUNT,
-                ));
+                changes
+                    .relationships
+                    .push((*npc_id, -RELATIONSHIP_CHANGE_AMOUNT));
             }
 
             changes.completed = true;
         } else if self.gradual {
             for effect in &self.effects {
-                changes
-                    .add_effects
-                    .push(effect.clone() * self.progress);
+                changes.add_effects.push(effect.clone() * self.progress);
             }
         }
         changes
@@ -506,32 +446,24 @@ impl Project {
         if self.is_online() {
             effects.extend(self.active_effects().iter());
             if let Some(id) = self.active_outcome {
-                effects
-                    .extend(self.outcomes[id].effects.iter());
+                effects.extend(self.outcomes[id].effects.iter());
             }
         }
         effects
     }
 
-    pub fn update_required_majority(
-        &mut self,
-        npcs: &Collection<NPC>,
-    ) {
+    pub fn update_required_majority(&mut self, npcs: &Collection<NPC>) {
         let opposers = self
             .opposers
             .iter()
-            .filter(|id| {
-                !npcs[*id].locked
-                    && npcs[*id].relation() != NPCRelation::Ally
-            })
+            .filter(|id| !npcs[*id].locked && npcs[*id].relation() != NPCRelation::Ally)
             .count();
         let supporters = self
             .supporters
             .iter()
             .filter(|id| !npcs[*id].locked)
             .count();
-        self.required_majority =
-            if opposers > supporters { 0.5 } else { 0. };
+        self.required_majority = if opposers > supporters { 0.5 } else { 0. };
     }
 }
 
@@ -544,21 +476,16 @@ pub struct ProjectChanges {
 }
 
 impl Collection<Project> {
-    fn in_progress(
-        &mut self,
-    ) -> impl Iterator<Item = &mut Project> {
+    fn in_progress(&mut self) -> impl Iterator<Item = &mut Project> {
         self.iter_mut()
             .filter(|p| matches!(p.status, Status::Building))
     }
 
     pub fn changeable(&self) -> impl Iterator<Item = &Project> {
-        self.unlocked()
-            .filter(|p| p.is_online() || p.is_building())
+        self.unlocked().filter(|p| p.is_online() || p.is_building())
     }
 
-    pub fn part_of_plan(
-        &self,
-    ) -> impl Iterator<Item = &Project> {
+    pub fn part_of_plan(&self) -> impl Iterator<Item = &Project> {
         self.iter().filter(|p| p.is_online() || p.is_building())
     }
 
@@ -570,27 +497,19 @@ impl Collection<Project> {
         self.iter().filter(|p| !p.locked)
     }
 
-    pub fn recent(
-        &self,
-        year: usize,
-    ) -> impl Iterator<Item = &Project> {
+    pub fn recent(&self, year: usize) -> impl Iterator<Item = &Project> {
         self.iter().filter(move |p| {
             if p.status == Status::Finished {
                 // Completed within the past ten years
                 p.completed_at >= year - 10
             } else {
-                p.status == Status::Active
-                    || (p.status == Status::Building
-                        && p.gradual)
+                p.status == Status::Active || (p.status == Status::Building && p.gradual)
             }
         })
     }
 
     /// Advance all projects in progress.
-    pub fn step(
-        &mut self,
-        year: usize,
-    ) -> Vec<(Id, ProjectChanges)> {
+    pub fn step(&mut self, year: usize) -> Vec<(Id, ProjectChanges)> {
         self.in_progress()
             .map(|project| {
                 let updates = project.advance(year);

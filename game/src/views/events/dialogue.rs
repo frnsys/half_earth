@@ -176,10 +176,10 @@ impl Dialogue {
                         let branch = responses
                             .iter()
                             .find(|b| state.eval_conditions(&b.conditions, self.region_id));
-                        if let Some(branch) = branch {
-                            if let Some(line_id) = branch.next_line {
-                                self.current_line = self.dialogue.lines[line_id].clone();
-                            }
+                        if let Some(branch) = branch
+                            && let Some(line_id) = branch.next_line
+                        {
+                            self.current_line = self.dialogue.lines[line_id].clone();
                         }
                     }
                 }

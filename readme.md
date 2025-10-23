@@ -21,6 +21,7 @@ For native (i.e. non-web) builds we instead use [a Rust wrapper for Hector](http
 ```bash
 git submodule init
 git submodule update
+cd game/assets/js && npm install -d
 ```
 
 Building was last tested with Rust stable `1.89.0 (29483883e 2025-08-04)`.

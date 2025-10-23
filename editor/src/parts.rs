@@ -45,22 +45,16 @@ pub fn editable_list<T: Default + HasId>(
 
             h_center(ui, "add-item", |ui| {
                 ui.add_space(6.);
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
 
                 let mut frame = frame()
-                    .inner_margin(egui::Margin::symmetric(
-                        16, 4,
-                    ))
+                    .inner_margin(egui::Margin::symmetric(16, 4))
                     .begin(ui);
                 frame.content_ui.label("+ New");
 
-                let resp = frame
-                    .allocate_space(ui)
-                    .interact(egui::Sense::click());
+                let resp = frame.allocate_space(ui).interact(egui::Sense::click());
                 if resp.hovered() {
-                    frame.frame.fill =
-                        Color32::from_rgb(0x23, 0x86, 0x36);
+                    frame.frame.fill = Color32::from_rgb(0x23, 0x86, 0x36);
                 }
                 frame.paint(ui);
 
@@ -73,7 +67,7 @@ pub fn editable_list<T: Default + HasId>(
             for item in items.iter_mut() {
                 let resp = frame()
                     .show(ui, |ui| {
-                        let id = item.id().clone();
+                        let id = *item.id();
                         ui.push_id(id, |ui| {
                             let resp = list_item(ui, item);
                             if resp.changed() {
@@ -84,15 +78,10 @@ pub fn editable_list<T: Default + HasId>(
                     .response;
 
                 let pos = resp.rect.right_top();
-                let rect = egui::Rect::from_min_max(
-                    pos + egui::vec2(-64., 6.),
-                    pos + egui::vec2(0., 24.),
-                );
+                let rect =
+                    egui::Rect::from_min_max(pos + egui::vec2(-64., 6.), pos + egui::vec2(0., 24.));
                 ui.place(rect, |ui: &mut egui::Ui| {
-                    let resp =
-                        ui.button("Delete").on_hover_text(
-                            "Double-click to delete.",
-                        );
+                    let resp = ui.button("Delete").on_hover_text("Double-click to delete.");
 
                     if resp.double_clicked() {
                         let id = item.id();
@@ -112,11 +101,7 @@ pub fn editable_list<T: Default + HasId>(
     InnerResponse::new(request, resp)
 }
 
-pub fn h_center<T>(
-    ui: &mut egui::Ui,
-    id: &str,
-    inner: impl FnOnce(&mut egui::Ui) -> T,
-) -> T {
+pub fn h_center<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut egui::Ui) -> T) -> T {
     tui(ui, ui.id().with(id))
         .reserve_available_space()
         .style(taffy::Style {
@@ -127,9 +112,7 @@ pub fn h_center<T>(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceAround,
-            ),
+            justify_content: Some(taffy::JustifyContent::SpaceAround),
             ..Default::default()
         })
         .show(|tui| tui.ui(inner))
@@ -151,20 +134,16 @@ pub fn flex_justified(
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
-            justify_content: Some(
-                taffy::JustifyContent::SpaceBetween,
-            ),
+            justify_content: Some(taffy::JustifyContent::SpaceBetween),
             ..Default::default()
         })
         .show(|tui| {
             tui.ui(|ui| {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 left(ui);
             });
             tui.ui(|ui| {
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 right(ui);
             });
         });

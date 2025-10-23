@@ -1,26 +1,10 @@
 use std::path::PathBuf;
 
 use super::super::parts::set_full_bg_image;
-use crate::{
-    image,
-    parts::glow,
-    state::Settings,
-    text::scale_text_ui,
-};
+use crate::{image, parts::glow, state::Settings, text::scale_text_ui};
 use egui::{
-    Align2,
-    Color32,
-    CursorIcon,
-    FontFamily,
-    FontId,
-    Layout,
-    Margin,
-    OpenUrl,
-    RichText,
-    Sense,
-    Stroke,
-    TextFormat,
-    text::LayoutJob,
+    Align2, Color32, CursorIcon, FontFamily, FontId, Layout, Margin, OpenUrl, RichText, Sense,
+    Stroke, TextFormat, text::LayoutJob,
 };
 use hes_engine::World;
 use rust_i18n::t;
@@ -28,14 +12,14 @@ use rust_i18n::t;
 pub enum MenuAction {
     Credits,
     Continue,
-    NewGame(World),
+    NewGame(Box<World>),
     ToggleSound,
 }
 
 #[derive(Clone)]
 enum WorldStatus {
     Default,
-    Custom(String, World),
+    Custom(String, Box<World>),
     FailedToRead,
     FailedToParse,
 }
@@ -58,31 +42,24 @@ impl WorldPicker {
                 .begin(ui);
 
             let label = match &self.world {
-                WorldStatus::Default => {
-                    t!("Default World").to_string()
-                }
+                WorldStatus::Default => t!("Default World").to_string(),
                 WorldStatus::Custom(name, _) => {
                     format!("{}: {name}", t!("Custom World"))
                 }
                 WorldStatus::FailedToRead => {
-                    t!("Error reading world, please re-select")
-                        .to_string()
+                    t!("Error reading world, please re-select").to_string()
                 }
                 WorldStatus::FailedToParse => {
-                    t!("Error parsing world, please re-select")
-                        .to_string()
+                    t!("Error parsing world, please re-select").to_string()
                 }
             };
-            frame.content_ui.label(
-                egui::RichText::new(label).heading().size(12.),
-            );
+            frame
+                .content_ui
+                .label(egui::RichText::new(label).heading().size(12.));
 
-            let resp = frame
-                .allocate_space(ui)
-                .interact(Sense::click());
+            let resp = frame.allocate_space(ui).interact(Sense::click());
             if resp.hovered() {
-                frame.frame.stroke =
-                    Stroke::new(1., Color32::WHITE);
+                frame.frame.stroke = Stroke::new(1., Color32::WHITE);
             }
             frame.paint(ui);
 
@@ -121,31 +98,26 @@ impl WorldPicker {
         };
         let data: Option<(String, Vec<u8>)> = future.block_on();
         if let Some((name, data)) = data {
-            self.world =
-                match serde_json::from_slice::<World>(&data) {
-                    Ok(world) => {
-                        WorldStatus::Custom(name, world)
-                    }
-                    Err(_) => WorldStatus::FailedToParse,
-                };
+            self.world = match serde_json::from_slice::<World>(&data) {
+                Ok(world) => WorldStatus::Custom(name, world),
+                Err(_) => WorldStatus::FailedToParse,
+            };
         }
     }
 
     fn load_world(&mut self, path: PathBuf) {
         self.world = match std::fs::read_to_string(&path) {
-            Ok(data) => {
-                match serde_json::from_str::<World>(&data) {
-                    Ok(world) => {
-                        let name = path
-                            .file_stem()
-                            .unwrap_or_default()
-                            .to_string_lossy()
-                            .to_string();
-                        WorldStatus::Custom(name, world)
-                    }
-                    Err(_) => WorldStatus::FailedToParse,
+            Ok(data) => match serde_json::from_str::<World>(&data) {
+                Ok(world) => {
+                    let name = path
+                        .file_stem()
+                        .unwrap_or_default()
+                        .to_string_lossy()
+                        .to_string();
+                    WorldStatus::Custom(name, Box::new(world))
                 }
-            }
+                Err(_) => WorldStatus::FailedToParse,
+            },
             Err(_) => WorldStatus::FailedToRead,
         }
     }
@@ -163,12 +135,12 @@ impl Menu {
         }
     }
 
-    fn world(&self) -> World {
+    fn world(&self) -> Box<World> {
         match &self.world {
-            WorldStatus::Default => World::default(),
+            WorldStatus::Default | WorldStatus::FailedToRead | WorldStatus::FailedToParse => {
+                Box::new(World::default())
+            }
             WorldStatus::Custom(_, world) => world.clone(),
-            WorldStatus::FailedToRead
-            | WorldStatus::FailedToParse => World::default(),
         }
     }
 
@@ -185,8 +157,7 @@ impl Menu {
             .anchor(Align2::RIGHT_BOTTOM, egui::vec2(-8., -8.))
             .show(ui.ctx(), |ui| {
                 let git_hash = env!("GIT_HASH");
-                ui.style_mut().wrap_mode =
-                    Some(egui::TextWrapMode::Extend);
+                ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 ui.label(RichText::new(git_hash).size(10.));
             });
 
@@ -210,24 +181,15 @@ impl Menu {
                 ui.add(
                     egui::Image::new(image)
                         .maintain_aspect_ratio(true)
-                        .fit_to_exact_size(egui::vec2(
-                            300., 300.,
-                        )),
+                        .fit_to_exact_size(egui::vec2(300., 300.)),
                 );
-                ui.style_mut().visuals.override_text_color =
-                    Some(Color32::WHITE);
-                ui.style_mut()
-                    .visuals
-                    .widgets
-                    .noninteractive
-                    .bg_stroke =
+                ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+                ui.style_mut().visuals.widgets.noninteractive.bg_stroke =
                     Stroke::new(1., Color32::WHITE);
 
                 ui.add_space(18.);
 
-                ui.label(t!(
-                    "A Planetary Crisis Planning Game"
-                ));
+                ui.label(t!("A Planetary Crisis Planning Game"));
 
                 ui.add_space(18.);
 
@@ -242,8 +204,7 @@ impl Menu {
                 ui.separator();
 
                 if button(ui, &t!("New Game"), WIDTH) {
-                    action =
-                        Some(MenuAction::NewGame(self.world()));
+                    action = Some(MenuAction::NewGame(self.world()));
                 }
                 self.picker.render(ui);
 
@@ -255,20 +216,12 @@ impl Menu {
                     let sound = format!(
                         "{}: {}",
                         t!("Sound"),
-                        if prefs.sound {
-                            t!("On")
-                        } else {
-                            t!("Off")
-                        }
+                        if prefs.sound { t!("On") } else { t!("Off") }
                     );
                     if button(ui, &sound, WIDTH / 2. - 2.) {
                         action = Some(MenuAction::ToggleSound);
                     }
-                    if button(
-                        ui,
-                        &t!("Credits"),
-                        WIDTH / 2. - 2.,
-                    ) {
+                    if button(ui, &t!("Credits"), WIDTH / 2. - 2.) {
                         action = Some(MenuAction::Credits);
                     }
                 });
@@ -304,8 +257,7 @@ fn button(ui: &mut egui::Ui, label: &str, width: f32) -> bool {
                 .content_ui
                 .ctx()
                 .set_cursor_icon(CursorIcon::PointingHand);
-            frame.frame.fill =
-                egui::Color32::from_black_alpha(96);
+            frame.frame.fill = egui::Color32::from_black_alpha(96);
         }
         resp.clicked()
     };
@@ -314,11 +266,8 @@ fn button(ui: &mut egui::Ui, label: &str, width: f32) -> bool {
 }
 
 fn book_button(ui: &mut egui::Ui, width: f32) {
-    let is_hovered: bool = ui.memory(|mem| {
-        mem.data
-            .get_temp("book-hover".into())
-            .unwrap_or_default()
-    });
+    let is_hovered: bool =
+        ui.memory(|mem| mem.data.get_temp("book-hover".into()).unwrap_or_default());
     let mut frame = egui::Frame::NONE
         .corner_radius(3.)
         .inner_margin(egui::Margin::symmetric(3, 12))
@@ -332,30 +281,22 @@ fn book_button(ui: &mut egui::Ui, width: f32) {
         let resp = frame.allocate_space(ui);
         let resp = resp.interact(egui::Sense::click());
         if resp.clicked() {
-            ui.ctx().open_url(OpenUrl::new_tab("https://www.versobooks.com/books/3818-half-earth-socialism"));
+            ui.ctx().open_url(OpenUrl::new_tab(
+                "https://www.versobooks.com/books/3818-half-earth-socialism",
+            ));
         }
         if resp.hovered() {
             frame
                 .content_ui
                 .ctx()
                 .set_cursor_icon(CursorIcon::PointingHand);
-            frame.frame.fill =
-                egui::Color32::from_rgb(0xB9, 0xF8, 0x0D);
-            glow(
-                ui,
-                resp.rect,
-                egui::Color32::from_rgb(0xB9, 0xF8, 0x0D),
-            );
+            frame.frame.fill = egui::Color32::from_rgb(0xB9, 0xF8, 0x0D);
+            glow(ui, resp.rect, egui::Color32::from_rgb(0xB9, 0xF8, 0x0D));
             if !is_hovered {
-                ui.memory_mut(|mem| {
-                    mem.data
-                        .insert_temp("book-hover".into(), true)
-                });
+                ui.memory_mut(|mem| mem.data.insert_temp("book-hover".into(), true));
             }
         } else if is_hovered {
-            ui.memory_mut(|mem| {
-                mem.data.insert_temp("book-hover".into(), false)
-            });
+            ui.memory_mut(|mem| mem.data.insert_temp("book-hover".into(), false));
         }
     }
     frame.end(ui);
@@ -368,9 +309,7 @@ fn read_label(ui: &mut egui::Ui, is_hovered: bool) {
         Color32::WHITE
     };
     ui.with_layout(
-        Layout::centered_and_justified(
-            egui::Direction::TopDown,
-        ),
+        Layout::centered_and_justified(egui::Direction::TopDown),
         |ui| {
             let mut job = LayoutJob::default();
 
@@ -378,10 +317,7 @@ fn read_label(ui: &mut egui::Ui, is_hovered: bool) {
                 "Read the book: ",
                 0.0,
                 TextFormat {
-                    font_id: FontId::new(
-                        16.,
-                        FontFamily::Name("TimesTen".into()),
-                    ),
+                    font_id: FontId::new(16., FontFamily::Name("TimesTen".into())),
                     color,
                     ..Default::default()
                 },
@@ -391,12 +327,7 @@ fn read_label(ui: &mut egui::Ui, is_hovered: bool) {
                 "Half-Earth Socialism.",
                 0.0,
                 TextFormat {
-                    font_id: FontId::new(
-                        16.,
-                        FontFamily::Name(
-                            "TimesTen-Italic".into(),
-                        ),
-                    ),
+                    font_id: FontId::new(16., FontFamily::Name("TimesTen-Italic".into())),
                     color,
                     ..Default::default()
                 },

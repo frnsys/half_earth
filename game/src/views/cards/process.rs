@@ -321,7 +321,7 @@ impl AsCard for Process {
                 );
                 let percent = state.land_use_percent();
                 let tip = tip(icons::LAND, t!("Land: They're not making anymore of it. You're using %{percent} of land.", percent=percent))
-                    .card(factors_card(Some(self.name.clone()), Var::Land, &state));
+                    .card(factors_card(Some(self.name.clone()), Var::Land, state));
                 (tip, icons::LAND, int)
             };
             let water_intensity =  {
@@ -333,7 +333,7 @@ impl AsCard for Process {
                 );
                 let percent = state.water_use_percent();
                 let tip = tip(icons::WATER, t!("Water: The giver of life. You're using %{percent} of water resources.", percent=percent))
-                    .card(factors_card(Some(self.name.clone()), Var::Water, &state));
+                    .card(factors_card(Some(self.name.clone()), Var::Water, state));
                 (tip, icons::WATER, int)
             };
             let energy_intensity =  {
@@ -345,7 +345,7 @@ impl AsCard for Process {
                 );
                 let amount = state.energy_twh();
                 let tip = tip(icons::ENERGY, t!("Energy: The fundamental mover. You're using %{amount}TWh of energy.", amount=amount))
-                    .card(factors_card(Some(self.name.clone()), Var::Energy, &state));
+                    .card(factors_card(Some(self.name.clone()), Var::Energy, state));
                 (tip, icons::ENERGY, int)
             };
             let emissions_intensity =  {
@@ -357,7 +357,7 @@ impl AsCard for Process {
                 );
                 let amount = state.emissions.as_gtco2eq();
                 let tip = tip(icons::EMISSIONS, t!("Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.", amount=amount))
-                    .card(factors_card(Some(self.name.clone()), Var::Emissions, &state));
+                    .card(factors_card(Some(self.name.clone()), Var::Emissions, state));
                 (tip, icons::EMISSIONS, int)
             };
             let biodiversity_intensity =  {
@@ -371,7 +371,7 @@ impl AsCard for Process {
                 );
                 let amount = state.world.extinction_rate;
                 let tip = tip(icons::EXTINCTION_RATE, t!("Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is %{amount}.", amount=amount))
-                    .card(factors_card(Some(self.name.clone()), Var::Biodiversity, &state));
+                    .card(factors_card(Some(self.name.clone()), Var::Biodiversity, state));
                 (tip, icons::EXTINCTION_RATE, int)
             };
 

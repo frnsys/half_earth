@@ -289,14 +289,12 @@ fn summarize(state: &State, win: bool) -> Summary {
         faction,
         ending: if win {
             Ending::Win
+        } else if state.world.year >= state.death_year {
+            Ending::Died
+        } else if state.political_capital <= 0 {
+            Ending::Coup
         } else {
-            if state.world.year >= state.death_year {
-                Ending::Died
-            } else if state.political_capital <= 0 {
-                Ending::Coup
-            } else {
-                Ending::LostOther
-            }
+            Ending::LostOther
         },
     }
 }

@@ -1,11 +1,5 @@
 use crate::{inputs, parts};
-use hes_engine::{
-    Collection,
-    Feedstock,
-    NPC,
-    Process,
-    ProcessFeature,
-};
+use hes_engine::{Collection, Feedstock, NPC, Process, ProcessFeature};
 
 impl inputs::Describe for ProcessFeature {
     fn describe(&self) -> &'static str {
@@ -19,31 +13,17 @@ impl inputs::Describe for ProcessFeature {
             Self::UsesLivestock => {
                 "For agriculture; does the process use a significant amount of livestock"
             }
-            Self::IsIntermittent => {
-                "For electricity sources; if the supply is intermittent"
-            }
+            Self::IsIntermittent => "For electricity sources; if the supply is intermittent",
             Self::MakesNuclearWaste => {
                 "For electricity sources, if the supply produces nuclear waste"
             }
-            Self::CanMeltdown => {
-                "For electricity sources, if the supply has a meltdown risk"
-            }
-            Self::IsSolar => {
-                "If the process depends on sunlight"
-            }
-            Self::IsCCS => {
-                "Whether this process produces CO2 that is then stored/transported/used"
-            }
-            Self::IsCombustion => {
-                "If this process depends on combustion"
-            }
-            Self::IsFossil => {
-                "If this process uses fossil fuels"
-            }
+            Self::CanMeltdown => "For electricity sources, if the supply has a meltdown risk",
+            Self::IsSolar => "If the process depends on sunlight",
+            Self::IsCCS => "Whether this process produces CO2 that is then stored/transported/used",
+            Self::IsCombustion => "If this process depends on combustion",
+            Self::IsFossil => "If this process uses fossil fuels",
             Self::UsesOil => "If this process uses oil",
-            Self::IsLaborIntensive => {
-                "If this process is especially labor intensive"
-            }
+            Self::IsLaborIntensive => "If this process is especially labor intensive",
         }
     }
 }
@@ -51,10 +31,9 @@ impl inputs::Describe for ProcessFeature {
 fn units(feedstock: &Feedstock) -> &'static str {
     match feedstock {
         Feedstock::Oil | Feedstock::NaturalGas => "liters (L)",
-        Feedstock::Thorium
-        | Feedstock::Uranium
-        | Feedstock::Lithium
-        | Feedstock::Coal => "grams (g)",
+        Feedstock::Thorium | Feedstock::Uranium | Feedstock::Lithium | Feedstock::Coal => {
+            "grams (g)"
+        }
         Feedstock::Soil | Feedstock::Other => "(n/a)",
     }
 }
@@ -64,9 +43,7 @@ pub fn processes(
     items: &mut Vec<Process>,
     npcs: &Collection<NPC>,
 ) -> parts::ListResponse {
-    parts::editable_list(ui, items, |ui, item| {
-        process_view(ui, item, npcs)
-    })
+    parts::editable_list(ui, items, |ui, item| process_view(ui, item, npcs))
 }
 
 fn process_view(
@@ -102,7 +79,7 @@ fn process_view(
 
             if process.feedstock.0 != Feedstock::Other {
                 ui.add(inputs::nonneg_float(&mut process.feedstock.1).label("Feedstock").help(
-                        format!("Feedstock required per unit output, in {} of {}.", units(&process.feedstock.0), process.feedstock.0.to_string())
+                        format!("Feedstock required per unit output, in {} of {}.", units(&process.feedstock.0), process.feedstock.0)
                 ));
             }
 

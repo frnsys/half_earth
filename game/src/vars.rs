@@ -14,16 +14,16 @@ pub enum Impact {
     Emissions,
     Biodiversity,
 }
-impl Into<Var> for Impact {
-    fn into(self) -> Var {
-        match self {
-            Self::Land => Var::Land,
-            Self::Water => Var::Water,
-            Self::Electricity => Var::Electricity,
-            Self::Fuel => Var::Fuel,
-            Self::Energy => Var::Energy,
-            Self::Emissions => Var::Emissions,
-            Self::Biodiversity => Var::Biodiversity,
+impl From<Impact> for Var {
+    fn from(val: Impact) -> Self {
+        match val {
+            Impact::Land => Var::Land,
+            Impact::Water => Var::Water,
+            Impact::Electricity => Var::Electricity,
+            Impact::Fuel => Var::Fuel,
+            Impact::Energy => Var::Energy,
+            Impact::Emissions => Var::Emissions,
+            Impact::Biodiversity => Var::Biodiversity,
         }
     }
 }
@@ -55,26 +55,13 @@ pub enum OutputKind {
 impl From<Output> for OutputKind {
     fn from(value: Output) -> Self {
         match value {
-            Output::Fuel | Output::Electricity => {
-                OutputKind::Energy
-            }
-            Output::AnimalCalories | Output::PlantCalories => {
-                OutputKind::Calories
-            }
+            Output::Fuel | Output::Electricity => OutputKind::Energy,
+            Output::AnimalCalories | Output::PlantCalories => OutputKind::Calories,
         }
     }
 }
 
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    PartialEq,
-    Enum,
-    EnumIter,
-    Serialize,
-    Deserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Enum, EnumIter, Serialize, Deserialize)]
 pub enum Var {
     Land,
     Water,
@@ -109,14 +96,10 @@ impl From<Output> for Var {
 }
 impl Var {
     pub fn is_demand_var(&self) -> bool {
-        match self {
-            Var::Energy
-            | Var::Electricity
-            | Var::Fuel
-            | Var::PlantCalories
-            | Var::AnimalCalories => true,
-            _ => false,
-        }
+        matches!(
+            self,
+            Var::Energy | Var::Electricity | Var::Fuel | Var::PlantCalories | Var::AnimalCalories
+        )
     }
 
     pub fn as_impact(&self) -> Option<Impact> {

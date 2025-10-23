@@ -14,10 +14,7 @@ pub fn projects(
     npcs: &Collection<NPC>,
 ) -> parts::ListResponse {
     parts::editable_list(ui, items, |ui, item| {
-        project_view(
-            ui, item, processes, projects, industries, events,
-            npcs,
-        )
+        project_view(ui, item, processes, projects, industries, events, npcs)
     })
 }
 
@@ -87,7 +84,7 @@ fn project_view(
                 Cost::Fixed(_) => CostKind::Fixed,
                 Cost::Dynamic(_, _) => CostKind::Dynamic,
             };
-            let prev = cost_kind.clone();
+            let prev = cost_kind;
             ui.add(inputs::toggle_enum(&mut cost_kind).label("Cost Kind").help("If this project uses a dynamically-calculated cost.").inline());
             if cost_kind != prev {
                 ui.memory_mut(|mem| {

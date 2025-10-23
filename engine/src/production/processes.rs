@@ -1,17 +1,8 @@
 use super::ProductionOrder;
 use crate::{
-    Collection,
-    HasId,
-    Id,
+    Collection, HasId, Id,
     flavor::ProcessFlavor,
-    kinds::{
-        ByproductMap,
-        Feedstock,
-        FeedstockMap,
-        Output,
-        OutputMap,
-        ResourceMap,
-    },
+    kinds::{ByproductMap, Feedstock, FeedstockMap, Output, OutputMap, ResourceMap},
     npcs::RELATIONSHIP_CHANGE_AMOUNT,
 };
 use serde::{Deserialize, Serialize};
@@ -45,9 +36,7 @@ pub enum ProcessFeature {
     IsLaborIntensive,
 }
 
-#[derive(
-    Debug, Clone, Serialize, Deserialize, PartialEq, Default,
-)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct Process {
     pub id: Id,
     pub name: String,
@@ -74,10 +63,7 @@ pub struct Process {
 }
 
 impl Display for Process {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.name)
     }
 }
@@ -99,25 +85,21 @@ impl Process {
 
     /// Generates production orders based on the provided demand
     /// and this sector's process mix.
-    pub fn production_order(
-        &self,
-        demand: &OutputMap,
-    ) -> ProductionOrder<'_> {
+    pub fn production_order(&self, demand: &OutputMap) -> ProductionOrder<'_> {
         // Production order amount can't be more than the process's limit,
         // if there is one.
-        let mut amount =
-            demand[self.output] * self.mix_percent() as f32;
+        let mut amount = demand[self.output] * self.mix_percent();
         if let Some(limit) = self.limit {
             amount = f32::min(amount, limit);
         }
         ProductionOrder {
-            process: &self,
+            process: self,
             amount,
         }
     }
 
     pub fn mix_percent(&self) -> f32 {
-        return self.mix_share as f32 * 0.05;
+        self.mix_share as f32 * 0.05
     }
 
     pub fn is_promoted(&self) -> bool {
@@ -133,17 +115,11 @@ impl Process {
     }
 
     pub fn adj_byproducts(&self) -> ByproductMap {
-        (self.byproducts * (self.byproduct_modifiers + 1.))
-            / (1. + self.output_modifier)
+        (self.byproducts * (self.byproduct_modifiers + 1.)) / (1. + self.output_modifier)
     }
 
-    pub fn adj_byproducts_with_modifier_change(
-        &self,
-        change: f32,
-    ) -> ByproductMap {
-        (self.byproducts
-            * (self.byproduct_modifiers + 1. + change))
-            / (1. + self.output_modifier)
+    pub fn adj_byproducts_with_modifier_change(&self, change: f32) -> ByproductMap {
+        (self.byproducts * (self.byproduct_modifiers + 1. + change)) / (1. + self.output_modifier)
     }
 
     pub fn adj_feedstock_amount(&self) -> f32 {
@@ -156,11 +132,7 @@ impl Process {
         (pressure / 3e16 + land / starting_land) * 100.
     }
 
-    pub fn max_share(
-        &self,
-        output_demand: &OutputMap,
-        feedstocks: &FeedstockMap,
-    ) -> usize {
+    pub fn max_share(&self, output_demand: &OutputMap, feedstocks: &FeedstockMap) -> usize {
         let mut max_share = 1.;
         let demand = output_demand[self.output];
 
@@ -184,49 +156,41 @@ impl Process {
     }
 
     /// Changes this process's mix share by the specified amount.
-    pub fn change_mix_share(
-        &mut self,
-        change: isize,
-    ) -> ProcessChanges {
+    pub fn change_mix_share(&mut self, change: isize) -> ProcessChanges {
         let was_banned = self.is_banned();
         let was_promoted = self.is_promoted();
         if change < 0 {
-            self.mix_share = self
-                .mix_share
-                .saturating_sub(change.abs() as usize);
+            self.mix_share = self.mix_share.saturating_sub(change.unsigned_abs());
         } else {
             self.mix_share += change as usize;
         }
 
-        let (support_change, oppose_change) =
-            if !was_banned && self.is_banned() {
-                // Ban
-                (-1., 1.)
-            } else if was_banned && !self.is_banned() {
-                // Unban
-                (1., -1.)
-            } else if was_promoted && !self.is_promoted() {
-                // Unpromote
-                (-1., 1.)
-            } else if !was_promoted && self.is_promoted() {
-                // Promote
-                (1., -1.)
-            } else {
-                (0., 0.)
-            };
+        let (support_change, oppose_change) = if !was_banned && self.is_banned() {
+            // Ban
+            (-1., 1.)
+        } else if was_banned && !self.is_banned() {
+            // Unban
+            (1., -1.)
+        } else if was_promoted && !self.is_promoted() {
+            // Unpromote
+            (-1., 1.)
+        } else if !was_promoted && self.is_promoted() {
+            // Promote
+            (1., -1.)
+        } else {
+            (0., 0.)
+        };
 
         let mut changes = ProcessChanges::default();
         for npc_id in &self.supporters {
-            changes.relationships.push((
-                *npc_id,
-                support_change * RELATIONSHIP_CHANGE_AMOUNT,
-            ));
+            changes
+                .relationships
+                .push((*npc_id, support_change * RELATIONSHIP_CHANGE_AMOUNT));
         }
         for npc_id in &self.opposers {
-            changes.relationships.push((
-                *npc_id,
-                oppose_change * RELATIONSHIP_CHANGE_AMOUNT,
-            ));
+            changes
+                .relationships
+                .push((*npc_id, oppose_change * RELATIONSHIP_CHANGE_AMOUNT));
         }
         changes
     }
@@ -242,20 +206,11 @@ impl Collection<Process> {
         self.iter().filter(|p| !p.locked)
     }
 
-    pub fn orders(
-        &self,
-        demand: &OutputMap,
-    ) -> Vec<ProductionOrder<'_>> {
-        self.iter()
-            .map(|p| p.production_order(&demand))
-            .collect()
+    pub fn orders(&self, demand: &OutputMap) -> Vec<ProductionOrder<'_>> {
+        self.iter().map(|p| p.production_order(demand)).collect()
     }
 
-    pub fn max_shares(
-        &self,
-        output_demand: &OutputMap,
-        feedstocks: &FeedstockMap,
-    ) -> Vec<usize> {
+    pub fn max_shares(&self, output_demand: &OutputMap, feedstocks: &FeedstockMap) -> Vec<usize> {
         self.iter()
             .map(|p| p.max_share(output_demand, feedstocks))
             .collect::<Vec<_>>()
@@ -267,8 +222,7 @@ impl Collection<Process> {
         feedstocks: FeedstockMap,
     ) -> impl Iterator<Item = &Process> {
         self.iter().filter(move |p| {
-            let max_share =
-                p.max_share(&output_demand, &feedstocks);
+            let max_share = p.max_share(&output_demand, &feedstocks);
             p.mix_share > 0 && p.mix_share > max_share
         })
     }
@@ -279,8 +233,7 @@ mod test {
     use super::*;
     use crate::{
         kinds::{Feedstock, Output},
-        outputs,
-        resources,
+        outputs, resources,
     };
 
     #[test]

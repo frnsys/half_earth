@@ -1,9 +1,4 @@
-use egui::{
-    TextureHandle,
-    TextureOptions,
-    Widget,
-    epaint::ImageDelta,
-};
+use egui::{TextureHandle, TextureOptions, Widget, epaint::ImageDelta};
 use serde::Deserialize;
 use std::{collections::HashMap, f32, sync::Arc};
 use three_d::*;
@@ -79,16 +74,10 @@ impl Renderer {
         );
 
         render_target
-            .clear(ClearState::color_and_depth(
-                0.0, 0.0, 0.0, 0.0, 1.0,
-            ))
+            .clear(ClearState::color_and_depth(0.0, 0.0, 0.0, 0.0, 1.0))
             .render(&camera, &globe.globe, &[]);
 
-        render_target.render(
-            &camera,
-            &globe.highlighted_tiles,
-            &[],
-        );
+        render_target.render(&camera, &globe.highlighted_tiles, &[]);
 
         if globe.show_clouds {
             render_target.render(&camera, &globe.clouds, &[]);
@@ -97,23 +86,16 @@ impl Renderer {
         render_target.render(&camera, &globe.disasters, &[]);
         render_target.render(&camera, &globe.pings, &[]);
 
-        let data = render_target
-            .read_color::<[u8; 4]>()
-            .into_flattened();
+        let data = render_target.read_color::<[u8; 4]>().into_flattened();
 
         let size = [
             render_target.width() as usize,
             render_target.height() as usize,
         ];
-        let img = egui::ColorImage::from_rgba_unmultiplied(
-            size, &data,
-        );
+        let img = egui::ColorImage::from_rgba_unmultiplied(size, &data);
         if self.texture_id.is_none() {
-            self.texture_id = Some(ctx.load_texture(
-                "globe-render-texture",
-                img,
-                TextureOptions::NEAREST,
-            ));
+            self.texture_id =
+                Some(ctx.load_texture("globe-render-texture", img, TextureOptions::NEAREST));
         } else {
             ctx.tex_manager().write().set(
                 self.texture_id.as_ref().unwrap().id(),
@@ -124,11 +106,7 @@ impl Renderer {
     }
 }
 
-fn load_texture(
-    name: &str,
-    bytes: &'static [u8],
-    flip: bool,
-) -> CpuTexture {
+fn load_texture(name: &str, bytes: &'static [u8], flip: bool) -> CpuTexture {
     let bytes = std::io::Cursor::new(bytes);
     let mut img = image::ImageReader::new(bytes)
         .with_guessed_format()
@@ -145,9 +123,7 @@ fn load_texture(
         data: TextureData::RgbaU8(
             img.as_raw()
                 .chunks_exact(4)
-                .map(|chunk| {
-                    [chunk[0], chunk[1], chunk[2], chunk[3]]
-                })
+                .map(|chunk| [chunk[0], chunk[1], chunk[2], chunk[3]])
                 .collect(),
         ),
         width: w,
@@ -160,26 +136,19 @@ fn load_texture(
     }
 }
 
-fn icon_material(
-    name: &str,
-    bytes: &'static [u8],
-    context: &three_d::Context,
-) -> ColorMaterial {
+fn icon_material(name: &str, bytes: &'static [u8], context: &three_d::Context) -> ColorMaterial {
     let icon = load_texture(name, bytes, false);
     let cpu_material = CpuMaterial {
         albedo: Srgba::WHITE,
         albedo_texture: Some(icon),
         ..Default::default()
     };
-    let mut material =
-        ColorMaterial::new_transparent(&context, &cpu_material);
+    let mut material = ColorMaterial::new_transparent(context, &cpu_material);
     material.render_states.blend = Blend::Enabled {
         source_rgb_multiplier: BlendMultiplierType::SrcAlpha,
-        destination_rgb_multiplier:
-            BlendMultiplierType::OneMinusSrcAlpha,
+        destination_rgb_multiplier: BlendMultiplierType::OneMinusSrcAlpha,
         source_alpha_multiplier: BlendMultiplierType::One,
-        destination_alpha_multiplier:
-            BlendMultiplierType::OneMinusSrcAlpha,
+        destination_alpha_multiplier: BlendMultiplierType::OneMinusSrcAlpha,
         rgb_equation: BlendEquationType::Add,
         alpha_equation: BlendEquationType::Add,
     };
@@ -201,37 +170,31 @@ struct Globe {
 impl Globe {
     fn new(context: &three_d::Context) -> Self {
         let shadows = Texture2D::new(
-            &context,
+            context,
             &load_texture(
                 "shadows",
-                include_bytes!(
-                    "../../assets/globe/shadows.png"
-                ),
+                include_bytes!("../../assets/globe/shadows.png"),
                 true,
             ),
         );
         let satellite = Texture2D::new(
-            &context,
+            context,
             &load_texture(
                 "satellite",
-                include_bytes!(
-                    "../../assets/globe/satellite.bw.jpg"
-                ),
+                include_bytes!("../../assets/globe/satellite.bw.jpg"),
                 true,
             ),
         );
         let biomes = Texture2D::new(
-            &context,
+            context,
             &load_texture(
                 "biomes",
-                include_bytes!(
-                    "../../assets/globe/static_surface.png"
-                ),
+                include_bytes!("../../assets/globe/static_surface.png"),
                 true,
             ),
         );
         let mesh = uv_sphere(32, 1.);
-        let mesh = Mesh::new(&context, &mesh);
+        let mesh = Mesh::new(context, &mesh);
         let material = SurfaceMaterial {
             shadows,
             satellite,
@@ -241,25 +204,19 @@ impl Globe {
 
         let material = CloudsMaterial { time: 0.0 };
         let mesh = uv_sphere(32, 1.02);
-        let mesh = Mesh::new(&context, &mesh);
+        let mesh = Mesh::new(context, &mesh);
         let clouds = Gm::new(mesh, material);
 
-        let mut hexsphere: HashMap<usize, Vec<Tile>> =
-            HashMap::default();
-        let tiles =
-            serde_json::from_str::<Vec<Tile>>(HEXSPHERE)
-                .expect("valid hexsphere data");
+        let mut hexsphere: HashMap<usize, Vec<Tile>> = HashMap::default();
+        let tiles = serde_json::from_str::<Vec<Tile>>(HEXSPHERE).expect("valid hexsphere data");
         for tile in tiles {
-            let ts =
-                hexsphere.entry(tile.region_id).or_default();
+            let ts = hexsphere.entry(tile.region_id).or_default();
             ts.push(tile);
         }
 
         let ping_material = icon_material(
             "discontent",
-            include_bytes!(
-                "../../assets/images/icons/pips/discontent.png"
-            ),
+            include_bytes!("../../assets/images/icons/pips/discontent.png"),
             context,
         );
 
@@ -287,14 +244,8 @@ pub struct GlobeView {
     context: three_d::Context,
 }
 impl GlobeView {
-    pub fn new(
-        size: u32,
-        camera_distance: f32,
-        ctx: &Arc<context::Context>,
-    ) -> Self {
-        let context =
-            three_d::Context::from_gl_context(ctx.clone())
-                .unwrap();
+    pub fn new(size: u32, camera_distance: f32, ctx: &Arc<context::Context>) -> Self {
+        let context = three_d::Context::from_gl_context(ctx.clone()).unwrap();
 
         Self {
             globe: Globe::new(&context),
@@ -316,8 +267,7 @@ impl GlobeView {
     }
 
     fn look_at_pos(&mut self, pos: Vec3) {
-        let rotation =
-            Mat4::from_angle_y(Rad(ADJUSTMENT_ANGLE));
+        let rotation = Mat4::from_angle_y(Rad(ADJUSTMENT_ANGLE));
         let target = (rotation * pos.extend(1.0)).truncate();
         let dir = target.normalize();
         let pos = dir * self.camera_distance;
@@ -327,99 +277,63 @@ impl GlobeView {
     pub fn highlight_region(&mut self, region_idx: usize) {
         self.globe.highlighted_tiles.clear();
         let mut points = vec![];
-        if let Some(tiles) =
-            self.globe.hexsphere.get(&region_idx)
-        {
+        if let Some(tiles) = self.globe.hexsphere.get(&region_idx) {
             for tile in tiles {
                 let cpu_material = CpuMaterial {
                     albedo: Srgba::new(0xeb, 0x40, 0x34, 0xAA),
                     ..Default::default()
                 };
-                let material = ColorMaterial::new_transparent(
-                    &self.context,
-                    &cpu_material,
-                );
-                let mesh = generate_tile_mesh(
-                    &self.context,
-                    &tile.boundary,
-                    material,
-                );
+                let material = ColorMaterial::new_transparent(&self.context, &cpu_material);
+                let mesh = generate_tile_mesh(&self.context, &tile.boundary, material);
                 self.globe.highlighted_tiles.push(mesh);
                 points.push(tile.center);
             }
 
-            let pos = Vec3::new(
-                points[0][0],
-                points[0][1],
-                points[0][2],
-            );
+            let pos = Vec3::new(points[0][0], points[0][1], points[0][2]);
             self.look_at_pos(pos);
         }
     }
 
-    pub fn show_event(
-        &mut self,
-        region_idx: usize,
-        icon: Icon,
-        intensity: usize,
-    ) {
+    pub fn show_event(&mut self, region_idx: usize, icon: Icon, intensity: usize) {
         if let Some(bytes) = icon.bytes()
-            && let Some(tiles) =
-                self.globe.hexsphere.get(&region_idx)
+            && let Some(tiles) = self.globe.hexsphere.get(&region_idx)
+            && let Some(tile) = fastrand::choice(tiles)
         {
-            if let Some(tile) = fastrand::choice(tiles) {
-                let material = icon_material(
-                    &icon.to_string(),
-                    bytes,
-                    &self.context,
-                );
+            let material = icon_material(&icon.to_string(), bytes, &self.context);
 
-                let p = Vec3::new(
-                    tile.center[0] + tile.offset[0],
-                    tile.center[1] + tile.offset[1],
-                    tile.center[2] + tile.offset[2],
-                ) * 1.05;
-                let rotation =
-                    Mat4::from_angle_y(Rad(ADJUSTMENT_ANGLE));
-                let target =
-                    (rotation * p.extend(1.0)).truncate();
-                let mut icon = Sprites::new(
-                    &self.context,
-                    &[target],
-                    None,
-                );
-                icon.set_transformation(Mat4::from_scale(0.1));
-                let sprite = Gm::new(icon, material);
-                self.globe.disasters.push(sprite);
+            let p = Vec3::new(
+                tile.center[0] + tile.offset[0],
+                tile.center[1] + tile.offset[1],
+                tile.center[2] + tile.offset[2],
+            ) * 1.05;
+            let rotation = Mat4::from_angle_y(Rad(ADJUSTMENT_ANGLE));
+            let target = (rotation * p.extend(1.0)).truncate();
+            let mut icon = Sprites::new(&self.context, &[target], None);
+            icon.set_transformation(Mat4::from_scale(0.1));
+            let sprite = Gm::new(icon, material);
+            self.globe.disasters.push(sprite);
 
-                let targets: Vec<_> = (0..intensity)
-                    .map(|_| {
-                        let jitter = Vec3::new(
-                            (fastrand::f32() - 0.5) * 0.1,
-                            (fastrand::f32() - 0.5) * 0.1,
-                            (fastrand::f32() - 0.5) * 0.1,
-                        );
-                        target + jitter
-                    })
-                    .collect();
-                let mut pings =
-                    Sprites::new(&self.context, &targets, None);
-                pings
-                    .set_transformation(Mat4::from_scale(0.08));
-                let sprite = Gm::new(
-                    pings,
-                    self.globe.ping_material.clone(),
-                );
-                self.globe.pings.push(sprite);
-            }
+            let targets: Vec<_> = (0..intensity)
+                .map(|_| {
+                    let jitter = Vec3::new(
+                        (fastrand::f32() - 0.5) * 0.1,
+                        (fastrand::f32() - 0.5) * 0.1,
+                        (fastrand::f32() - 0.5) * 0.1,
+                    );
+                    target + jitter
+                })
+                .collect();
+            let mut pings = Sprites::new(&self.context, &targets, None);
+            pings.set_transformation(Mat4::from_scale(0.08));
+            let sprite = Gm::new(pings, self.globe.ping_material.clone());
+            self.globe.pings.push(sprite);
         }
     }
 }
 
 impl Widget for &mut GlobeView {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        let elapsed =
-            self.globe.start_time.elapsed().as_secs_f32();
+        let elapsed = self.globe.start_time.elapsed().as_secs_f32();
         self.globe.clouds.material.time = elapsed * 1e3;
 
         if self.rotate {
@@ -430,11 +344,9 @@ impl Widget for &mut GlobeView {
         const UP_PER_SEC: f32 = 0.008;
         let dy = UP_PER_SEC * elapsed;
         self.globe.pings.retain_mut(|ping| {
-            ping.material.color.a =
-                ping.material.color.a.saturating_sub(5);
+            ping.material.color.a = ping.material.color.a.saturating_sub(5);
             let mat = ping.transformation();
-            let mat = mat
-                * Mat4::from_translation(vec3(0.0, dy, 0.0));
+            let mat = mat * Mat4::from_translation(vec3(0.0, dy, 0.0));
             ping.set_transformation(mat);
 
             ping.material.color.a != 0
@@ -442,17 +354,9 @@ impl Widget for &mut GlobeView {
 
         let camera_pos = self.camera_pos.unwrap_or_else(|| {
             let rotation = Mat4::from_angle_y(Rad(self.angle));
-            rotation.transform_vector(vec3(
-                0.0,
-                0.0,
-                self.camera_distance,
-            ))
+            rotation.transform_vector(vec3(0.0, 0.0, self.camera_distance))
         });
-        let texture = self.renderer.render(
-            ui.ctx(),
-            camera_pos,
-            &self.globe,
-        );
+        let texture = self.renderer.render(ui.ctx(), camera_pos, &self.globe);
         let resp = ui.image(texture);
         ui.ctx().request_repaint();
         resp
@@ -467,21 +371,12 @@ impl Material for CloudsMaterial {
         EffectMaterialId(1)
     }
 
-    fn fragment_shader_source(
-        &self,
-        _lights: &[&dyn Light],
-    ) -> String {
-        include_str!("../../assets/globe/shaders/clouds.frag")
-            .to_string()
+    fn fragment_shader_source(&self, _lights: &[&dyn Light]) -> String {
+        include_str!("../../assets/globe/shaders/clouds.frag").to_string()
     }
 
-    fn use_uniforms(
-        &self,
-        program: &Program,
-        _viewer: &dyn Viewer,
-        _lights: &[&dyn Light],
-    ) {
-        program.use_uniform("time", &self.time);
+    fn use_uniforms(&self, program: &Program, _viewer: &dyn Viewer, _lights: &[&dyn Light]) {
+        program.use_uniform("time", self.time);
     }
 
     fn render_states(&self) -> RenderStates {
@@ -508,20 +403,11 @@ impl Material for SurfaceMaterial {
         EffectMaterialId(0)
     }
 
-    fn fragment_shader_source(
-        &self,
-        _lights: &[&dyn Light],
-    ) -> String {
-        include_str!("../../assets/globe/shaders/surface.frag")
-            .to_string()
+    fn fragment_shader_source(&self, _lights: &[&dyn Light]) -> String {
+        include_str!("../../assets/globe/shaders/surface.frag").to_string()
     }
 
-    fn use_uniforms(
-        &self,
-        program: &Program,
-        _viewer: &dyn Viewer,
-        _lights: &[&dyn Light],
-    ) {
+    fn use_uniforms(&self, program: &Program, _viewer: &dyn Viewer, _lights: &[&dyn Light]) {
         program.use_texture("uShadows", &self.shadows);
         program.use_texture("uSatTexture", &self.satellite);
         program.use_texture("uBiomesTexture", &self.biomes);
@@ -549,23 +435,16 @@ fn uv_sphere(subdiv: usize, scale: f32) -> CpuMesh {
     let mut indices = Vec::new();
 
     for stack in 0..=stacks {
-        let phi = std::f32::consts::PI * (stack as f32)
-            / (stacks as f32);
+        let phi = std::f32::consts::PI * (stack as f32) / (stacks as f32);
         let y = phi.cos();
         let r = phi.sin();
 
         for slice in 0..=slices {
-            let theta =
-                2.0 * std::f32::consts::PI * (slice as f32)
-                    / (slices as f32);
+            let theta = 2.0 * std::f32::consts::PI * (slice as f32) / (slices as f32);
             let x = r * theta.cos();
             let z = r * theta.sin();
 
-            positions.push(Vector3::new(
-                x * scale,
-                y * scale,
-                z * scale,
-            ));
+            positions.push(Vector3::new(x * scale, y * scale, z * scale));
             normals.push(Vector3::new(x, y, z).normalize());
 
             // U = [0, 1], V = [0, 1]
@@ -610,8 +489,7 @@ pub fn generate_tile_mesh(
             .iter()
             .map(|v| {
                 let v = Vec3::new(v[0], v[1], v[2]);
-                let rotation =
-                    Mat4::from_angle_y(Rad(ADJUSTMENT_ANGLE));
+                let rotation = Mat4::from_angle_y(Rad(ADJUSTMENT_ANGLE));
                 (rotation * v.extend(1.0)).truncate()
             })
             .collect(),
@@ -627,7 +505,7 @@ pub fn generate_tile_mesh(
 
     let cpu = CpuMesh {
         positions,
-        indices: indices,
+        indices,
         ..Default::default()
     };
 

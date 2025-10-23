@@ -9,6 +9,7 @@ members = [
 ]
 default-members = [
     "game",
+    "engine",
 ]
 
 [workspace.dependencies]

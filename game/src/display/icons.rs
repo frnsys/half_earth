@@ -18,11 +18,14 @@ impl PartialEq for IconData {
         self.slug == other.slug
     }
 }
+
+#[allow(clippy::non_canonical_partial_ord_impl)]
 impl PartialOrd for IconData {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.slug.partial_cmp(other.slug)
     }
 }
+
 impl Eq for IconData {}
 impl Ord for IconData {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
@@ -34,9 +37,9 @@ impl std::fmt::Display for Icon {
         write!(f, "{}", self.slug)
     }
 }
-impl Into<ImageSource<'static>> for &IconData {
-    fn into(self) -> ImageSource<'static> {
-        self.image.clone()
+impl From<&IconData> for ImageSource<'static> {
+    fn from(val: &IconData) -> Self {
+        val.image.clone()
     }
 }
 impl IconData {

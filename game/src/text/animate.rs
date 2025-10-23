@@ -40,30 +40,17 @@ impl NodesAnimator {
         }
 
         let mut found = false;
-        for (node, finished) in
-            nodes.into_iter().zip(self.states.iter_mut())
-        {
+        for (node, finished) in nodes.into_iter().zip(self.states.iter_mut()) {
             if *finished {
                 // For visual consistency
-                node.render_partial(
-                    ui,
-                    usize::MAX,
-                    1.0,
-                    text_height,
-                );
+                node.render_partial(ui, usize::MAX, 1.0, text_height);
             } else if !found {
-                let animator =
-                    self.animator.get_or_insert_default();
+                let animator = self.animator.get_or_insert_default();
                 animator.advance(ui.ctx());
                 *finished = animator.is_animation_finished();
                 if *finished {
                     self.animator = None;
-                    node.render_partial(
-                        ui,
-                        usize::MAX,
-                        1.0,
-                        text_height,
-                    );
+                    node.render_partial(ui, usize::MAX, 1.0, text_height);
                 } else {
                     animator.render(ui, node, text_height);
                     ui.ctx().request_repaint();
@@ -104,19 +91,14 @@ impl NodeAnimator {
         }
 
         let dt = ctx.input(|i| i.unstable_dt);
-        self.timer = self.timer + dt;
+        self.timer += dt;
     }
 
     fn is_animation_finished(&self) -> bool {
         self.animation_finished
     }
 
-    fn render(
-        &mut self,
-        ui: &mut egui::Ui,
-        node: Node<'_>,
-        text_height: f32,
-    ) {
+    fn render(&mut self, ui: &mut egui::Ui, node: Node<'_>, text_height: f32) {
         if matches!(
             node,
             Node::Tagged {
@@ -130,16 +112,9 @@ impl NodeAnimator {
             let total_time = num_chars as f32 * 1. / self.speed;
             let p = self.timer / total_time;
             let visible_chars_float = p * num_chars as f32;
-            let visible_chars =
-                visible_chars_float.floor() as usize;
-            let progress = visible_chars_float
-                - visible_chars_float.floor();
-            node.render_partial(
-                ui,
-                visible_chars,
-                progress,
-                text_height,
-            );
+            let visible_chars = visible_chars_float.floor() as usize;
+            let progress = visible_chars_float - visible_chars_float.floor();
+            node.render_partial(ui, visible_chars, progress, text_height);
             if p >= 1. {
                 self.animation_finished = true;
             }
@@ -188,74 +163,39 @@ impl Node<'_> {
         match self {
             Node::Text(text) => {
                 let style = current_text_style(ui);
-                partial_text(
-                    ui,
-                    text,
-                    style,
-                    visible_chars,
-                    progress,
-                );
+                partial_text(ui, text, style, visible_chars, progress);
             }
             Node::Tagged { tag, children } => {
                 match tag {
                     Tag::Bold => {
                         let style = current_text_style(ui);
                         let text = inner_text(&children);
-                        partial_text(
-                            ui,
-                            &text,
-                            style,
-                            visible_chars,
-                            progress,
-                        );
+                        partial_text(ui, &text, style, visible_chars, progress);
                     }
                     Tag::Image => {
                         ui.scope(|ui| {
                             ui.set_opacity(progress);
-                            ui.add(super::inline_image(
-                                &children,
-                                text_height,
-                            ));
+                            ui.add(super::inline_image(&children, text_height));
                         });
                     }
                     Tag::TipWarn => {
                         let mut style = current_text_style(ui);
-                        style.color =
-                            Color32::from_rgb(0xeb, 0x39, 0x41);
+                        style.color = Color32::from_rgb(0xeb, 0x39, 0x41);
                         let text = inner_text(&children);
-                        partial_text(
-                            ui,
-                            &text,
-                            style,
-                            visible_chars,
-                            progress,
-                        );
+                        partial_text(ui, &text, style, visible_chars, progress);
                     }
                     Tag::TipGoal => {
                         let mut style = current_text_style(ui);
-                        style.color =
-                            Color32::from_rgb(0x43, 0xcc, 0x70);
+                        style.color = Color32::from_rgb(0x43, 0xcc, 0x70);
                         let text = inner_text(&children);
-                        partial_text(
-                            ui,
-                            &text,
-                            style,
-                            visible_chars,
-                            progress,
-                        );
+                        partial_text(ui, &text, style, visible_chars, progress);
                     }
 
                     // Everything else is just treated as normal text when animated
                     _ => {
                         let style = current_text_style(ui);
                         let text = inner_text(&children);
-                        partial_text(
-                            ui,
-                            &text,
-                            style,
-                            visible_chars,
-                            progress,
-                        );
+                        partial_text(ui, &text, style, visible_chars, progress);
                     }
                 }
             }
@@ -269,11 +209,7 @@ fn current_text_style(ui: &mut egui::Ui) -> TextFormat {
         .override_font_id
         .clone()
         .unwrap_or_else(|| FontId::monospace(18.));
-    let color = style
-        .visuals
-        .override_text_color
-        .clone()
-        .unwrap_or_else(|| Color32::GRAY);
+    let color = style.visuals.override_text_color.unwrap_or(Color32::GRAY);
     TextFormat {
         font_id,
         color,
@@ -300,8 +236,7 @@ fn partial_text(
             0.0
         };
         let mut format = style.clone();
-        format.color =
-            format.color.gamma_multiply(char_alpha_f32);
+        format.color = format.color.gamma_multiply(char_alpha_f32);
         job.append(&ch.to_string(), 0.0, format);
     }
     ui.label(job);

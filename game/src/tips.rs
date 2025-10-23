@@ -10,18 +10,11 @@ use crate::{
     views::{Card, Changes, FactorsCard, render_event_card},
 };
 
-fn set_tip_width(ui: &mut egui::Ui) {
-    let width = (ui.ctx().screen_rect().width() - 36.).min(420.);
-    ui.set_max_width(width);
-}
-
 #[derive(Clone)]
 pub struct Tip {
-    text: String,
+    pub text: String,
     icon: Icon,
     card: Option<TipCard>,
-    subicon: Option<Icon>,
-    supicon: Option<Icon>,
 }
 impl Tip {
     pub fn card(mut self, card: impl Into<TipCard>) -> Self {
@@ -29,18 +22,9 @@ impl Tip {
         self
     }
 
-    pub fn subicon(mut self, icon: Icon) -> Self {
-        self.subicon = Some(icon);
-        self
-    }
-
-    pub fn supicon(mut self, icon: Icon) -> Self {
-        self.supicon = Some(icon);
-        self
-    }
-
-    // Doesn't support cards
-    pub fn render_as_hover(&self, ui: &mut egui::Ui) {
+    /// A tip displayed on hover (rather than on click).
+    /// Doesn't support cards.
+    fn render_as_hover(&self, ui: &mut egui::Ui) {
         raised_frame().shadow().show(ui, |ui| {
             set_tip_width(ui);
             ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
@@ -117,11 +101,10 @@ pub fn tip(icon: Icon, text: impl Into<String>) -> Tip {
         icon,
         text: text.into(),
         card: None,
-        subicon: None,
-        supicon: None,
     }
 }
 
+/// Add a tooltip displayed when the response is clicked.
 pub fn add_tip(tip: Tip, resp: egui::Response) -> egui::Response {
     let rect = resp.rect;
     if resp.contains_pointer() {
@@ -135,6 +118,7 @@ pub fn add_tip(tip: Tip, resp: egui::Response) -> egui::Response {
     resp
 }
 
+/// Convenience method to display a tip card on click.
 pub fn add_card<C: Into<TipCard>>(card: C, resp: egui::Response) -> egui::Response {
     if resp.interact(egui::Sense::click()).clicked() {
         let mut tip = tip(icons::OTHER, "");
@@ -142,6 +126,24 @@ pub fn add_card<C: Into<TipCard>>(card: C, resp: egui::Response) -> egui::Respon
         open_tip(&resp, tip);
     }
     resp
+}
+
+/// Add a hover tooltip to a response.
+pub fn add_hover_tip(tip: Tip, resp: egui::Response) -> egui::Response {
+    if resp.contains_pointer() {
+        egui::Popup::from_response(&resp)
+            .frame(egui::Frame::NONE)
+            .gap(8.)
+            .show(|ui| {
+                tip.render_as_hover(ui);
+            });
+    }
+    resp
+}
+
+fn set_tip_width(ui: &mut egui::Ui) {
+    let width = (ui.ctx().screen_rect().width() - 36.).min(420.);
+    ui.set_max_width(width);
 }
 
 fn open_tip(resp: &egui::Response, tip: Tip) {
@@ -170,18 +172,7 @@ fn open_tip(resp: &egui::Response, tip: Tip) {
     });
 }
 
-pub fn add_hover_tip(tip: Tip, resp: egui::Response) -> egui::Response {
-    if resp.contains_pointer() {
-        egui::Popup::from_response(&resp)
-            .frame(egui::Frame::NONE)
-            .gap(8.)
-            .show(|ui| {
-                tip.render_as_hover(ui);
-            });
-    }
-    resp
-}
-
+/// Render the currently-open tip, if any.
 pub fn render_tip(ctx: &egui::Context, state: &GameState) {
     let popup_id = egui::Id::new("tip");
     let opened_id = popup_id.with("just-opened");
@@ -204,6 +195,7 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
                 .inner_margin(egui::Margin::symmetric(0, 18)),
         )
         .show(|ui| {
+            // Overlay takes up full screen.
             ui.set_max_size(screen_size); // Needed for resizing
             ui.set_width(ui.available_width());
             ui.set_height(screen_size.y);
@@ -213,6 +205,8 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
             }
 
             // Close only if the tip wasn't just opened this frame.
+            // Otherwise this will register the click that opened the tip
+            // as a click that will close it immediately.
             let should_close = tip.render(ui, state);
             let just_opened = ctx
                 .memory(|mem| mem.data.get_temp::<bool>(opened_id))

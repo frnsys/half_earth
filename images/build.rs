@@ -4,22 +4,18 @@ use std::{env, path::PathBuf};
 fn get_fnames(pat: &str) -> Vec<String> {
     glob(pat)
         .unwrap()
-        .into_iter()
         .map(|entry| {
             let path = entry.unwrap();
             format!(
                 "{:?}",
-                path.display()
-                    .to_string()
-                    .replace("assets/", "images/")
+                path.display().to_string().replace("assets/", "images/")
             )
         })
         .collect()
 }
 
 fn main() {
-    let out = PathBuf::from(env::var("OUT_DIR").unwrap())
-        .join("sharing.rs");
+    let out = PathBuf::from(env::var("OUT_DIR").unwrap()).join("sharing.rs");
 
     let wins = get_fnames("assets/sharing/win/*.jpg");
     let lose = get_fnames("assets/sharing/lose/generic/*.jpg");

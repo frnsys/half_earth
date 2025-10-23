@@ -12,13 +12,8 @@ use crate::{
 
 use super::Scannable;
 
-fn is_subtractable(
-    process: &Process,
-    mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>,
-) -> bool {
-    let change = mix_changes[process.output]
-        .get(&process.id)
-        .unwrap_or(&0);
+fn is_subtractable(process: &Process, mix_changes: &EnumMap<Output, BTreeMap<Id, isize>>) -> bool {
+    let change = mix_changes[process.output].get(&process.id).unwrap_or(&0);
     process.mix_share as isize + *change != 0
 }
 
@@ -40,9 +35,7 @@ fn remove_point(
     process: &Process,
     mix_changes: &mut EnumMap<Output, BTreeMap<Id, isize>>,
 ) {
-    let change = mix_changes[process.output]
-        .entry(process.id)
-        .or_default();
+    let change = mix_changes[process.output].entry(process.id).or_default();
     if process.mix_share as isize + *change > 0 {
         *points += 1;
         *change -= 1;
@@ -57,10 +50,8 @@ fn add_point(
     mix_changes: &mut EnumMap<Output, BTreeMap<Id, isize>>,
 ) {
     if *points > 0 {
-        let change = mix_changes[process.output]
-            .entry(process.id)
-            .or_default();
-        if *change + 1 <= max_share as isize {
+        let change = mix_changes[process.output].entry(process.id).or_default();
+        if *change < max_share as isize {
             *points -= 1;
             *change += 1;
         }
@@ -76,10 +67,7 @@ impl Scannable for Process {
         consts::PROCESS_CARD_SCAN_TIME
     }
 
-    fn add_scan_done(
-        &self,
-        state: &mut GameState,
-    ) -> ScanResult {
+    fn add_scan_done(&self, state: &mut GameState) -> ScanResult {
         let addable = is_addable(
             self,
             &state.core,
@@ -91,8 +79,7 @@ impl Scannable for Process {
                 state.ui.tutorial.advance();
             }
 
-            let max_share =
-                state.core.process_max_share(&self.id);
+            let max_share = state.core.process_max_share(&self.id);
 
             add_point(
                 &mut state.ui.process_points,
@@ -132,10 +119,7 @@ impl Scannable for Process {
         consts::PROCESS_CARD_WITHDRAW_TIME
     }
 
-    fn rem_scan_done(
-        &self,
-        state: &mut GameState,
-    ) -> ScanResult {
+    fn rem_scan_done(&self, state: &mut GameState) -> ScanResult {
         remove_point(
             &mut state.ui.process_points,
             self,
@@ -143,8 +127,7 @@ impl Scannable for Process {
         );
 
         // If still subtractable, continue scanning
-        if is_subtractable(self, &state.ui.process_mix_changes)
-        {
+        if is_subtractable(self, &state.ui.process_mix_changes) {
             ScanResult::SuccessContinue
         } else {
             ScanResult::SuccessStop

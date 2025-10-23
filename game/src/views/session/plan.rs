@@ -130,7 +130,7 @@ impl Plan {
         ui: &mut egui::Ui,
         state: &State,
         tutorial: &Tutorial,
-        viewed: &Vec<Id>,
+        viewed: &[Id],
         plan_changes: &BTreeMap<Id, PlanChange>,
     ) -> Option<PlanAction> {
         let projects = &state.world.projects;
@@ -160,7 +160,7 @@ impl Plan {
         let items: Vec<_> = active_projects
             .into_iter()
             .take(n_projects)
-            .map(|p| Some(p))
+            .map(Some)
             .chain((0..placeholders).map(|_| None))
             .collect();
         let top = &items[0..split_at];
@@ -220,8 +220,8 @@ impl Plan {
             icons::ALERT,
             format!(
                 "{}. {}",
-                prod_shortages.clone().unwrap_or(String::new()),
-                inp_shortages.unwrap_or(String::new())
+                prod_shortages.clone().unwrap_or_default(),
+                inp_shortages.unwrap_or_default()
             ),
         );
 
@@ -433,9 +433,9 @@ impl Plan {
     }
 
     fn close_page(&mut self, tutorial: &mut Tutorial) {
-        if matches!(self.page, Page::Projects(_)) && *tutorial == Tutorial::ProjectsBack {
-            tutorial.advance();
-        } else if matches!(self.page, Page::Processes(_)) && *tutorial == Tutorial::ProcessesBack {
+        if (matches!(self.page, Page::Projects(_)) && *tutorial == Tutorial::ProjectsBack)
+            || (matches!(self.page, Page::Processes(_)) && *tutorial == Tutorial::ProcessesBack)
+        {
             tutorial.advance();
         }
         self.set_page(Page::Overview);
@@ -515,10 +515,8 @@ fn production_shortages(state: &State) -> Option<String> {
             let met = produced.of(output) / output_demand[output];
             if met >= 0.99 {
                 continue;
-            } else {
-                if met < problems[output] {
-                    problems[output] = met;
-                }
+            } else if met < problems[output] {
+                problems[output] = met;
             }
         }
         problems
@@ -545,25 +543,23 @@ fn production_shortages(state: &State) -> Option<String> {
 
     if problems.is_empty() {
         None
+    } else if problems.len() == 1 {
+        let (output, severity) = &problems[0];
+        let desc = severity.desc();
+        let details = t!(output.title());
+        Some(format!("{desc}: {details}"))
     } else {
-        if problems.len() == 1 {
-            let (output, severity) = &problems[0];
-            let desc = severity.desc();
-            let details = t!(output.title());
-            Some(format!("{desc}: {details}"))
-        } else {
-            let list = problems
-                .into_iter()
-                .map(|(output, severity)| {
-                    let title = t!(output.title());
-                    let label = severity.label();
-                    format!("{title} ({label})")
-                })
-                .collect::<Vec<_>>()
-                .join("\n");
-            let desc = t!("There are multiple production shortages:");
-            Some(format!("{desc} {list}"))
-        }
+        let list = problems
+            .into_iter()
+            .map(|(output, severity)| {
+                let title = t!(output.title());
+                let label = severity.label();
+                format!("{title} ({label})")
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        let desc = t!("There are multiple production shortages:");
+        Some(format!("{desc} {list}"))
     }
 }
 
@@ -1036,10 +1032,7 @@ fn get_projects(
                     && project_lockers.get(&p.id)
                     .map(|locker_id| {
                         // Is the locker satisfied?
-                        match projects[locker_id].status {
-                            Status::Building | Status::Active | Status::Finished => false,
-                            _=> true
-                        }
+                        !matches!(projects[locker_id].status, Status::Building | Status::Active | Status::Finished)
                     }).unwrap_or(true)
                 })
                 .cloned()
@@ -1316,13 +1309,13 @@ fn estimate_changes(
 
     // Changed overall/total/global demand for each of these
     // Subtract out previous process demand, then add in changed process demand
-    let mut after = Usage::default();
-    after.land_use = before.land_use - current.land_use + changed.land_use;
-    after.water_use = before.water_use - current.water_use + changed.water_use;
-    after.energy_use = before.energy_use - current.energy_use + changed.energy_use;
-    after.emissions = before.emissions - current.emissions + changed.emissions;
-    after.extinction_rate =
-        before.extinction_rate - current.extinction_rate + changed.extinction_rate;
+    let after = Usage {
+        land_use: before.land_use - current.land_use + changed.land_use,
+        water_use: before.water_use - current.water_use + changed.water_use,
+        energy_use: before.energy_use - current.energy_use + changed.energy_use,
+        emissions: before.emissions - current.emissions + changed.emissions,
+        extinction_rate: before.extinction_rate - current.extinction_rate + changed.extinction_rate,
+    };
 
     Changes { before, after }
 }
@@ -1372,7 +1365,7 @@ impl Changes {
             ),
         ]
         .into_iter()
-        .filter_map(|c| c)
+        .flatten()
         .collect::<Vec<_>>();
 
         if !descs.is_empty() {
@@ -1422,7 +1415,7 @@ impl egui::Widget for &Changes {
             ),
         ]
         .into_iter()
-        .filter_map(|c| c)
+        .flatten()
         .collect::<Vec<_>>();
 
         if descs.is_empty() {

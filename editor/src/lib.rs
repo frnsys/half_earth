@@ -36,8 +36,8 @@ pub struct WorldEditor {
     projects: Collection<Project>,
     file_picker: FilePicker,
 }
-impl WorldEditor {
-    pub fn new() -> Self {
+impl Default for WorldEditor {
+    fn default() -> Self {
         let world = World::default();
         Self {
             tab: Tab::Planet,
@@ -54,10 +54,7 @@ impl egui::Widget for &mut WorldEditor {
         // Increase font size of inputs
         ui.style_mut().text_styles.insert(
             egui::TextStyle::Button,
-            egui::FontId::new(
-                11.0,
-                egui::FontFamily::Proportional,
-            ),
+            egui::FontId::new(11.0, egui::FontFamily::Proportional),
         );
 
         egui::Frame::NONE
@@ -72,9 +69,7 @@ impl egui::Widget for &mut WorldEditor {
                         .anchor(egui::Align2::RIGHT_TOP, egui::vec2(-8., 8.))
                         .movable(false)
                         .show(ui.ctx(), |ui| {
-                            if let Err(err) =
-                                self.file_picker.render(ui, &mut self.world)
-                            {
+                            if let Err(err) = self.file_picker.render(ui, &mut self.world) {
                                 TOASTS.lock().error(format!("Error: {err}"));
                             }
                         });
@@ -88,7 +83,8 @@ impl egui::Widget for &mut WorldEditor {
                                 if tab == self.tab {
                                     ui.label(egui::RichText::new(tab.to_string()).underline());
                                 } else {
-                                    let resp = ui.label(tab.to_string()).interact(egui::Sense::click());
+                                    let resp =
+                                        ui.label(tab.to_string()).interact(egui::Sense::click());
                                     if resp.clicked() {
                                         self.tab = tab;
                                     }
@@ -103,7 +99,7 @@ impl egui::Widget for &mut WorldEditor {
                             h_center(ui, "main", |ui| {
                                 world(ui, &mut self.world);
                             });
-                        },
+                        }
                         Tab::Industries => {
                             h_center(ui, "main", |ui| {
                                 let resp = industries(ui, &mut self.world.industries);
@@ -112,11 +108,7 @@ impl egui::Widget for &mut WorldEditor {
                         }
                         Tab::Processes => {
                             h_center(ui, "main", |ui| {
-                                let resp = processes(
-                                    ui,
-                                    &mut self.world.processes,
-                                    &self.npcs,
-                                );
+                                let resp = processes(ui, &mut self.world.processes, &self.npcs);
                                 request = resp.inner;
                             });
                         }
@@ -132,8 +124,7 @@ impl egui::Widget for &mut WorldEditor {
                                     &self.npcs,
                                 );
                                 if resp.response.changed() {
-                                    self.projects =
-                                        self.world.projects.clone();
+                                    self.projects = self.world.projects.clone();
                                 }
                                 request = resp.inner;
                             });
@@ -168,24 +159,27 @@ impl egui::Widget for &mut WorldEditor {
                                         Tab::Processes => self.world.processes.remove(&id),
                                         Tab::Projects => {
                                             self.projects.remove(&id);
-                                            self.projects =
-                                                self.world.projects.clone();
-                                        },
+                                            self.projects = self.world.projects.clone();
+                                        }
                                         Tab::Events => {
                                             self.events.remove(&id);
                                             self.events = self.world.events.clone();
-                                        },
+                                        }
                                         _ => {}
                                     }
                                 } else {
-                                    TOASTS.lock().error(format!("Can't delete, still referenced by:\n{}", refs.join(", ")));
+                                    TOASTS.lock().error(format!(
+                                        "Can't delete, still referenced by:\n{}",
+                                        refs.join(", ")
+                                    ));
                                 }
-                            },
+                            }
                         }
                     }
 
                     TOASTS.lock().show(ui.ctx());
                 });
-            }).response
+            })
+            .response
     }
 }

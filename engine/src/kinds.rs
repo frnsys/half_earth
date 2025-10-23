@@ -3,17 +3,7 @@ use paste::paste;
 use serde::{Deserialize, Serialize};
 use std::{
     fmt::Display,
-    ops::{
-        Add,
-        AddAssign,
-        Div,
-        Index,
-        IndexMut,
-        Mul,
-        MulAssign,
-        Sub,
-        SubAssign,
-    },
+    ops::{Add, AddAssign, Div, Index, IndexMut, Mul, MulAssign, Sub, SubAssign},
 };
 use strum::{EnumIter, EnumString, IntoStaticStr};
 
@@ -37,9 +27,7 @@ pub trait KindMap<const SIZE: usize>:
 }
 
 /// A consumable, exhaustible supply of something.
-#[derive(
-    Serialize, Deserialize, Clone, PartialEq, Default, Debug,
-)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Default, Debug)]
 pub struct Reserve<M: KindMap<N>, const N: usize> {
     /// Current un-consumed stock.
     pub available: M,
@@ -51,9 +39,7 @@ pub struct Reserve<M: KindMap<N>, const N: usize> {
     /// which may be more than what's available.
     pub required: M,
 }
-impl<M: KindMap<N>, const N: usize> Index<M::Key>
-    for Reserve<M, N>
-{
+impl<M: KindMap<N>, const N: usize> Index<M::Key> for Reserve<M, N> {
     type Output = f32;
     fn index(&self, index: M::Key) -> &Self::Output {
         &self.available[index]
@@ -93,10 +79,7 @@ impl<M: KindMap<N>, const N: usize> Reserve<M, N> {
     pub fn scarcity(&self) -> M {
         let mut weights = M::default();
         for (k, v) in self.required.items() {
-            weights[k] = f32::min(
-                f32::max(v / self.available[k], 0.),
-                1.,
-            );
+            weights[k] = (v / self.available[k]).clamp(0., 1.);
         }
         weights
     }
@@ -118,9 +101,7 @@ pub struct Modifiable<M: KindMap<N>, const N: usize> {
     pub factor: M,
     pub modifier: M,
 }
-impl<M: KindMap<N>, const N: usize> Default
-    for Modifiable<M, N>
-{
+impl<M: KindMap<N>, const N: usize> Default for Modifiable<M, N> {
     fn default() -> Self {
         Self {
             base: M::default(),
@@ -385,13 +366,10 @@ macro_rules! define_enum_map {
 // Hacky to use consts like this, there are nicer ways in theory
 // but the compiler doesn't yet support them.
 pub type Resources = Reserve<ResourceMap, { ResourceMap::N }>;
-pub type Feedstocks =
-    Reserve<FeedstockMap, { FeedstockMap::N }>;
+pub type Feedstocks = Reserve<FeedstockMap, { FeedstockMap::N }>;
 pub type OutputDemand = Modifiable<OutputMap, { OutputMap::N }>;
-pub type ResourceDemand =
-    Modifiable<ResourceMap, { ResourceMap::N }>;
-pub type Byproducts =
-    Modifiable<ByproductMap, { ByproductMap::N }>;
+pub type ResourceDemand = Modifiable<ResourceMap, { ResourceMap::N }>;
+pub type Byproducts = Modifiable<ByproductMap, { ByproductMap::N }>;
 
 define_enum_map!(Resource {
     Land,
@@ -473,11 +451,11 @@ macro_rules! byproducts {
 #[macro_export]
 macro_rules! outputs {
     () => {
-        crate::kinds::OutputMap::default()
+        $crate::kinds::OutputMap::default()
     };
     ($($field:ident: $value:expr),*) => {
         {
-            let mut map = crate::kinds::OutputMap::default();
+            let mut map = $crate::kinds::OutputMap::default();
             $(
                 map.$field = $value;
             )*
@@ -578,10 +556,7 @@ impl FeedstockMap {
 }
 
 impl Display for Output {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{}",
@@ -594,6 +569,8 @@ impl Display for Output {
         )
     }
 }
+
+#[allow(clippy::derivable_impls)]
 impl Default for Output {
     fn default() -> Self {
         Self::Fuel
@@ -601,10 +578,7 @@ impl Default for Output {
 }
 
 impl Display for Feedstock {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{}",
@@ -622,6 +596,7 @@ impl Display for Feedstock {
     }
 }
 
+#[allow(clippy::derivable_impls)]
 impl Default for Feedstock {
     fn default() -> Self {
         Self::Other
@@ -629,10 +604,7 @@ impl Default for Feedstock {
 }
 
 impl Display for Resource {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{}",
@@ -647,10 +619,7 @@ impl Display for Resource {
 }
 
 impl Display for Byproduct {
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-    ) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{}",
@@ -658,8 +627,7 @@ impl Display for Byproduct {
                 Byproduct::Co2 => "CO2",
                 Byproduct::N2o => "N2O",
                 Byproduct::Ch4 => "CH4 (Methane)",
-                Byproduct::Biodiversity =>
-                    "Biodiversity Pressure",
+                Byproduct::Biodiversity => "Biodiversity Pressure",
             }
         )
     }
@@ -677,33 +645,28 @@ mod tests {
 
         // No consumption = lasts indefinitely
         reserves.consumed.coal = 0.;
-        let estimate =
-            reserves.until_exhaustion(Feedstock::Coal);
+        let estimate = reserves.until_exhaustion(Feedstock::Coal);
         assert!(estimate.is_infinite());
 
         // Consumption = lasts according to rate of consumption
         reserves.consumed.coal = 10.;
-        let estimate =
-            reserves.until_exhaustion(Feedstock::Coal);
+        let estimate = reserves.until_exhaustion(Feedstock::Coal);
         assert_eq!(estimate, 10.);
 
         reserves.available.coal = 10.;
-        let estimate =
-            reserves.until_exhaustion(Feedstock::Coal);
+        let estimate = reserves.until_exhaustion(Feedstock::Coal);
         assert_eq!(estimate, 1.);
 
         // Exhausted
         reserves.consumed.coal = 10.;
         reserves.available.coal = 0.;
-        let estimate =
-            reserves.until_exhaustion(Feedstock::Coal);
+        let estimate = reserves.until_exhaustion(Feedstock::Coal);
         assert_eq!(estimate, 0.);
 
         // Exhausted, even if no consumption
         reserves.consumed.coal = 0.;
         reserves.available.coal = 0.;
-        let estimate =
-            reserves.until_exhaustion(Feedstock::Coal);
+        let estimate = reserves.until_exhaustion(Feedstock::Coal);
         assert_eq!(estimate, 0.);
     }
 }

@@ -9,6 +9,7 @@ use egui_taffy::{
     tui,
 };
 
+/// Helper for responding to different screen sizes.
 #[derive(Clone)]
 pub struct Sizing {
     pub scale: f32,
@@ -28,6 +29,7 @@ pub fn get_sizing(ui: &egui::Ui) -> Sizing {
     ui.memory(|mem| mem.data.get_temp(egui::Id::NULL).unwrap_or_default())
 }
 
+/// A background image that fully covers the target rect, like `background-size: cover` in CSS.
 pub fn bg_cover_image(ui: &mut egui::Ui, image: egui::Image<'_>, target_rect: Rect) {
     if let Some(image_size) = image.load_and_calc_size(ui, ui.available_size()) {
         let target_size = target_rect.size();
@@ -50,7 +52,7 @@ pub fn bg_cover_image(ui: &mut egui::Ui, image: egui::Image<'_>, target_rect: Re
     }
 }
 
-/// Full cover background image.
+/// Full screen background image.
 fn full_bg_image(
     ui: &mut egui::Ui,
     image: egui::ImageSource<'_>,
@@ -118,6 +120,7 @@ pub fn draw_bg_image(ui: &mut egui::Ui) {
     }
 }
 
+/// A raised (or inset) frame.
 pub struct RaisedFrame {
     top_color: Color32,
     bot_color: Color32,
@@ -383,6 +386,7 @@ pub fn flex_spaced(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui)) {
         .show(inner);
 }
 
+/// A raised button.
 pub struct Button {
     frame: RaisedFrame,
     text: String,
@@ -458,7 +462,7 @@ pub fn overlay(ctx: &egui::Context, inner: impl FnOnce(&mut egui::Ui) -> egui::R
                 .show(ui, |ui| {
                     ui.set_width(ui.available_width());
                     ui.set_height(ui.available_height());
-                    center_center(ui, "overlay-content".into(), |tui| {
+                    center_center(ui, "overlay-content", |tui| {
                         tui.ui(|ui| {
                             let resp = inner(ui);
                             resp.clicked_elsewhere()
@@ -470,6 +474,7 @@ pub fn overlay(ctx: &egui::Context, inner: impl FnOnce(&mut egui::Ui) -> egui::R
         .inner
 }
 
+/// A "NEW" icon, for indicating new cards.
 pub fn new_icon(card_rect: Rect) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     let size = egui::vec2(48., 48.);
     let rect = egui::Rect::from_min_size(card_rect.left_top() - egui::vec2(16., 16.), size);
@@ -592,35 +597,3 @@ pub fn fill_bar((width, height): (f32, f32), filled: f32) -> FillBar {
         back_color: Color32::WHITE,
     }
 }
-
-// pub struct Fader {
-//     started: bool,
-// }
-// impl Fader {
-//     fn advance(
-//         &mut self,
-//         ui: &mut egui::Ui,
-//         duration: f32,
-//         contents: impl FnOnce(&mut egui::Ui),
-//     ) -> bool {
-//         let target = if self.started {
-//             1.0
-//         } else {
-//             self.started = true;
-//             0.0
-//         };
-//
-//         let easing: fn(f32) -> f32 =
-//             egui_animation::easing::cubic_in_out;
-//         let value = egui_animation::animate_eased(
-//             ui.ctx(),
-//             "fade-in",
-//             target,
-//             duration,
-//             easing,
-//         );
-//         ui.set_opacity(value);
-//
-//         value == 1.0
-//     }
-// }

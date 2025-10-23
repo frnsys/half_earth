@@ -16,7 +16,7 @@ pub fn rounded(value: f32) -> String {
         value.to_string()
     } else {
         let value = value.round();
-        if value >= 0. && value < 1. {
+        if (0. ..1.).contains(&value) {
             "<1".into()
         } else {
             value.to_string()
@@ -53,43 +53,28 @@ pub fn to_energy_units(amount: f32) -> f32 {
 
 pub fn output(amount: f32, output: Output) -> f32 {
     match output {
-        Output::Fuel | Output::Electricity => {
-            to_energy_units(amount)
-        }
-        Output::PlantCalories | Output::AnimalCalories => {
-            to_calorie_units(amount)
-        }
+        Output::Fuel | Output::Electricity => to_energy_units(amount),
+        Output::PlantCalories | Output::AnimalCalories => to_calorie_units(amount),
     }
     .round_to(1)
 }
 
-pub fn resource(
-    amount: f32,
-    resource: Resource,
-    available_resources: ResourceMap,
-) -> f32 {
+pub fn resource(amount: f32, resource: Resource, available_resources: ResourceMap) -> f32 {
     let scale = match resource {
         Resource::Water => 100. / available_resources.water, // percent of available water
-        Resource::Land => 100. / available_resources.land, // percent of habitable land
+        Resource::Land => 100. / available_resources.land,   // percent of habitable land
         other => {
             if let Some(o) = other.as_output() {
                 return output(amount, o);
             } else {
-                panic!(
-                    "No formatting defined for {:?}",
-                    resource
-                );
+                panic!("No formatting defined for {:?}", resource);
             }
         }
     };
     (amount * scale).round()
 }
 
-pub fn format_resource(
-    amount: f32,
-    res: Resource,
-    available_resources: ResourceMap,
-) -> String {
+pub fn format_resource(amount: f32, res: Resource, available_resources: ResourceMap) -> String {
     let amount = resource(amount, res, available_resources);
     match res {
         Resource::Water | Resource::Land => {
@@ -102,18 +87,9 @@ pub fn format_resource(
 pub fn outputs(outputs: &OutputMap) -> OutputMap {
     OutputMap {
         fuel: output(outputs.fuel, Output::Fuel),
-        electricity: output(
-            outputs.electricity,
-            Output::Electricity,
-        ),
-        plant_calories: output(
-            outputs.plant_calories,
-            Output::PlantCalories,
-        ),
-        animal_calories: output(
-            outputs.animal_calories,
-            Output::AnimalCalories,
-        ),
+        electricity: output(outputs.electricity, Output::Electricity),
+        plant_calories: output(outputs.plant_calories, Output::PlantCalories),
+        animal_calories: output(outputs.animal_calories, Output::AnimalCalories),
     }
 }
 
@@ -125,11 +101,7 @@ pub fn water_use_percent(l: f32, available: f32) -> f32 {
     l / available * 100.
 }
 
-pub fn demand_percent(
-    demand: f32,
-    total_demand: f32,
-    round: bool,
-) -> String {
+pub fn demand_percent(demand: f32, total_demand: f32, round: bool) -> String {
     let mut total = total_demand;
     if total == 0. {
         total = 1.;
@@ -159,22 +131,14 @@ pub fn percent(p: f32, round: bool) -> String {
 
 pub fn signed_percent(p: f32, round: bool) -> String {
     let s = percent(p, round);
-    if p > 0. {
-        format!("+{s}")
-    } else {
-        s
-    }
+    if p > 0. { format!("+{s}") } else { s }
 }
 
 fn is_small(val: f32) -> bool {
     val < 1. && val > 0.
 }
 
-pub fn format_impact(
-    impact: Impact,
-    val: f32,
-    available_resources: ResourceMap,
-) -> String {
+pub fn format_impact(impact: Impact, val: f32, available_resources: ResourceMap) -> String {
     match impact {
         Impact::Land => {
             if is_small(val) {
@@ -182,13 +146,7 @@ pub fn format_impact(
             } else {
                 format!(
                     "{}%",
-                    percent(
-                        land_use_percent(
-                            val,
-                            available_resources.land
-                        ) / 100.,
-                        true
-                    )
+                    percent(land_use_percent(val, available_resources.land) / 100., true)
                 )
             }
         }
@@ -207,10 +165,7 @@ pub fn format_impact(
                 format!(
                     "{}%",
                     percent(
-                        water_use_percent(
-                            val,
-                            available_resources.water
-                        ) / 100.,
+                        water_use_percent(val, available_resources.water) / 100.,
                         true
                     )
                 )
@@ -258,10 +213,6 @@ impl FloatExt for f32 {
         let factor = 10_f32.powi(precision);
         let abs_number = self.abs();
         let rounded = f32::round(abs_number * factor) / factor;
-        if *self < 0.0 {
-            -rounded
-        } else {
-            rounded
-        }
+        if *self < 0.0 { -rounded } else { rounded }
     }
 }

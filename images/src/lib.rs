@@ -167,8 +167,8 @@ pub fn flavor_image<'a>(image: &hes_engine::flavor::Image) -> egui::Image<'a> {
     let fname = match &image.data {
         hes_engine::flavor::ImageData::File(fname) => fname.to_string(),
         hes_engine::flavor::ImageData::Data { bytes, mime } => {
-            let fname = hash_to_hex(&bytes);
-            let ext = ext_from_mime(&mime);
+            let fname = hash_to_hex(bytes);
+            let ext = ext_from_mime(mime);
             if let Some(ext) = ext {
                 format!("{fname}.{ext}")
             } else {
