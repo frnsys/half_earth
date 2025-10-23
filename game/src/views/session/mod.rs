@@ -169,9 +169,12 @@ impl Session {
                                 state,
                             );
                         }
-                        PlanAction::PageChanged(phase) => {
-                            self.events
-                                .replace(StateExt::roll_events(&mut state.core, phase), state);
+                        PlanAction::PageChanged(phases) => {
+                            let mut events = vec![];
+                            for phase in phases {
+                                events.extend(StateExt::roll_events(&mut state.core, *phase));
+                            }
+                            self.events.replace(events, state);
                         }
                     }
                 }
@@ -190,7 +193,6 @@ impl Session {
         if state.flags.contains(&Flag::SkipTutorial) {
             *tutorial = Tutorial::Ready;
         } else if state.flags.contains(&Flag::RepeatTutorial) {
-            state.flags.retain(|flag| *flag != Flag::RepeatTutorial);
             *tutorial = Tutorial::Projects;
 
             let events = StateExt::roll_events(state, EventPhase::PlanningStart);

@@ -35,7 +35,7 @@ use crate::{
 
 pub enum PlanAction {
     EnterWorld,
-    PageChanged(EventPhase),
+    PageChanged(&'static [EventPhase]),
     PlanChanged,
 }
 
@@ -88,12 +88,12 @@ impl Plan {
                 if let Some(action) = action {
                     match action {
                         ProjectsAction::ChangeTo(next_kind) => {
-                            let phase = match next_kind {
-                                ProjectType::Policy => EventPhase::PlanningPolicies,
-                                ProjectType::Research => EventPhase::PlanningResearch,
-                                ProjectType::Initiative => EventPhase::PlanningInitiatives,
+                            let phases = match next_kind {
+                                ProjectType::Policy => &[EventPhase::PlanningPolicies],
+                                ProjectType::Research => &[EventPhase::PlanningResearch],
+                                ProjectType::Initiative => &[EventPhase::PlanningInitiatives],
                             };
-                            ret_action = Some(PlanAction::PageChanged(phase));
+                            ret_action = Some(PlanAction::PageChanged(phases));
                         }
                         ProjectsAction::Changed => {
                             ret_action = Some(PlanAction::PlanChanged);
@@ -113,13 +113,13 @@ impl Plan {
         }
 
         if self.page.as_uint() != cur_page {
-            let phase = match self.page {
-                Page::Overview => EventPhase::PlanningPlan,
-                Page::Projects(_) => EventPhase::PlanningAdd,
-                Page::Processes(_) => EventPhase::PlanningProcesses,
-                Page::All => EventPhase::PlanningPlan,
+            let phases: &[EventPhase] = match self.page {
+                Page::Overview => &[EventPhase::PlanningPlan],
+                Page::Projects(_) => &[EventPhase::PlanningAdd, EventPhase::PlanningResearch],
+                Page::Processes(_) => &[EventPhase::PlanningProcesses],
+                Page::All => &[EventPhase::PlanningPlan],
             };
-            ret_action = Some(PlanAction::PageChanged(phase));
+            ret_action = Some(PlanAction::PageChanged(phases));
         }
 
         ret_action

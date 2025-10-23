@@ -29741,6 +29741,12 @@
                                 "Greater",
                                 0
                             ]
+                        },
+                        {
+                            "RunsPlayed": [
+                                "Less",
+                                3
+                            ]
                         }
                     ]
                 }
