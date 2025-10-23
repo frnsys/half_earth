@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 
 use hes_engine::{Flag, Id, Project, ProjectType, Status};
-use rust_i18n::t;
 
 use crate::{
     consts,
@@ -24,10 +23,6 @@ fn is_subtractable(project: &Project, plan_changes: &BTreeMap<Id, PlanChange>) -
 }
 
 impl Scannable for Project {
-    fn add_label(&self, _state: &GameState) -> Option<String> {
-        None
-    }
-
     fn add_scan_time(&self) -> f32 {
         consts::PROJECT_CARD_SCAN_TIME
     }
@@ -100,10 +95,6 @@ impl Scannable for Project {
         result
     }
 
-    fn is_add_visible(&self, _state: &GameState) -> bool {
-        true
-    }
-
     fn is_add_allowed(&self, state: &GameState) -> bool {
         let player_seats = state.npcs.coalition_seats();
         let parliament_suspended = state.flags.contains(&Flag::ParliamentSuspended);
@@ -133,18 +124,6 @@ impl Scannable for Project {
         } else {
             true
         }
-    }
-
-    fn rem_label(&self, state: &GameState) -> Option<String> {
-        let label = if is_refundable(self, &state.ui.plan_changes) {
-            t!("Undo")
-        } else if self.can_downgrade() {
-            t!("Downgrade")
-        } else {
-            t!("Withdraw")
-        };
-
-        Some(label.to_string())
     }
 
     fn rem_scan_time(&self) -> f32 {
@@ -196,10 +175,6 @@ impl Scannable for Project {
         } else {
             ScanResult::SuccessStop
         }
-    }
-
-    fn is_rem_visible(&self, state: &GameState) -> bool {
-        self.is_rem_allowed(state)
     }
 
     fn is_rem_allowed(&self, state: &GameState) -> bool {

@@ -2,7 +2,6 @@ use std::collections::BTreeMap;
 
 use enum_map::EnumMap;
 use hes_engine::{Id, Output, Process, State};
-use rust_i18n::t;
 
 use crate::{
     consts,
@@ -59,10 +58,6 @@ fn add_point(
 }
 
 impl Scannable for Process {
-    fn add_label(&self, _state: &GameState) -> Option<String> {
-        None
-    }
-
     fn add_scan_time(&self) -> f32 {
         consts::PROCESS_CARD_SCAN_TIME
     }
@@ -98,10 +93,6 @@ impl Scannable for Process {
         }
     }
 
-    fn is_add_visible(&self, state: &GameState) -> bool {
-        self.is_add_allowed(state)
-    }
-
     fn is_add_allowed(&self, state: &GameState) -> bool {
         is_addable(
             self,
@@ -109,10 +100,6 @@ impl Scannable for Process {
             &state.ui.process_mix_changes,
             state.ui.process_points,
         )
-    }
-
-    fn rem_label(&self, _state: &GameState) -> Option<String> {
-        Some(t!("Remove points").to_string())
     }
 
     fn rem_scan_time(&self) -> f32 {
@@ -132,10 +119,6 @@ impl Scannable for Process {
         } else {
             ScanResult::SuccessStop
         }
-    }
-
-    fn is_rem_visible(&self, state: &GameState) -> bool {
-        self.is_rem_allowed(state)
     }
 
     fn is_rem_allowed(&self, state: &GameState) -> bool {
