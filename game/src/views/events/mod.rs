@@ -36,7 +36,8 @@ pub trait AsEventView {
     fn details<'a>(&'a self, state: &'a State) -> EventDetails<'a>;
     fn dialogue(&self, state: &State) -> Option<Dialogue>;
     fn show_card(&self) -> bool;
-    fn render_extras(&self, ui: &mut egui::Ui, state: &State);
+    fn render_above(&self, _ui: &mut egui::Ui, _state: &State) {}
+    fn render_below(&self, _ui: &mut egui::Ui, _state: &State) {}
 }
 
 impl AsEventView for DisplayEvent {
@@ -48,7 +49,7 @@ impl AsEventView for DisplayEvent {
         self.show_as_card()
     }
 
-    fn render_extras(&self, ui: &mut egui::Ui, _state: &State) {
+    fn render_above(&self, ui: &mut egui::Ui, _state: &State) {
         let factors_list = self
             .factors
             .iter()
@@ -225,6 +226,9 @@ pub fn render_event_card<E: AsEventView>(
     });
 
     ui.vertical(|ui| {
+        event.render_above(ui, state);
+        ui.add_space(8.);
+
         if let Some(image) = details.image {
             let target_rect = egui::Rect::from_min_size(
                 ui.cursor().left_top(),
@@ -260,11 +264,11 @@ pub fn render_event_card<E: AsEventView>(
             ui.add_space(8.);
             scale_text_styles(ui.style_mut(), 0.9);
             render_effects(ui, state, effects);
-            ui.add_space(8.);
         }
 
         ui.add_space(8.);
-        event.render_extras(ui, state);
+        event.render_below(ui, state);
+        ui.add_space(8.);
     })
     .response
 }

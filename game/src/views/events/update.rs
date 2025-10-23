@@ -53,7 +53,7 @@ impl AsEventView for EngineUpdate {
         true
     }
 
-    fn render_extras(&self, ui: &mut egui::Ui, state: &State) {
+    fn render_below(&self, ui: &mut egui::Ui, state: &State) {
         match self {
             EngineUpdate::Project { id } | EngineUpdate::Policy { id } => {
                 let proj = &state.world.projects[id];
