@@ -99,7 +99,7 @@ impl WorldPicker {
         let data: Option<(String, Vec<u8>)> = future.block_on();
         if let Some((name, data)) = data {
             self.world = match serde_json::from_slice::<World>(&data) {
-                Ok(world) => WorldStatus::Custom(name, world),
+                Ok(world) => WorldStatus::Custom(name, Box::new(world)),
                 Err(_) => WorldStatus::FailedToParse,
             };
         }
