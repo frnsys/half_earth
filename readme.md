@@ -1,4 +1,4 @@
-# Half-Earth Socialism
+# Half-Earth Socialism: The Game
 
 This repo includes:
 
@@ -6,7 +6,7 @@ This repo includes:
 - `hes-game` is the game itself, which is mostly a visual layer over the engine.
 - `hes-editor` is an editor to change parts of the game/engine, e.g. what projects are available, their parameters, etc, and is used to build custom `.world` files that can be loaded into new games.
 
-Note that there are effectively two versions of the game: web and native. We don't include the editor for the web version but that should be the only major difference between the world. Worlds created in the editor can be used in the web version.
+Note that there are effectively two versions of the game: web and native. We don't include the editor for the web version but that should be the only major difference between the two. However worlds created in the editor _can_ be used in the web version.
 
 We also include [a version](https://github.com/frnsys/hector-wasm) of the [Hector simple climate model](https://jgcri.github.io/hector/) that we've adapted to run in the browser. The process of building Hector for WASM is complicated so pre-compiled versions are included here.
 
@@ -15,6 +15,12 @@ For native (i.e. non-web) builds we instead use [a Rust wrapper for Hector](http
 ## Editor
 
 [This video walks through an example of how to use the editor.](https://youtu.be/U8rmVcehZlg)
+
+## Translations
+
+The game is already translated into 8 languages thanks to volunteers! If you'd like to translate the game into your language there are examples in `game/translations` to work from. Open an issue and include the CSV and we will try to get it into the game quickly.
+
+Note there are some aspects of our internationalization system that need improvement (how we handle pluralization, for example).
 
 ## Setup & Dependencies
 
@@ -51,7 +57,7 @@ Available recipes:
 # Releases
 
 You can play it at:
-* [half.earth](https://play.half.earth/) (web; and [the editor](https://editor.half.earth/))
+* [half.earth](https://play.half.earth/)
 * [Steam](https://store.steampowered.com/app/2071530/HalfEarth_Socialism/) (Windows/macOS/Linux) (Account needed)
   - _Note_: The build process for the Steam version is more complicated so it's less likely to be up-to-date.
 * [Itch.io](https://frnsys.itch.io/half-earth-socialism) (Windows/macOS/Linux)
