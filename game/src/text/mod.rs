@@ -165,6 +165,13 @@ fn inline_image<'a>(nodes: &'a [Node<'_>], text_height: f32) -> egui::Image<'a> 
     if text == "gosplant" {
         egui::Image::new(icon_from_slug(&text)).max_height(text_height)
     } else {
-        icon_from_slug(&text).size(text_height - 4.)
+        let img = icon_from_slug(&text).size(text_height - 4.);
+        match text.as_str() {
+            // Not ideal to match explicitly like this,
+            // but some icons are white SVGs and have to be tinted black
+            // for the dialogue box.
+            "nemesis" | "ally" | "hud_contentedness" => img.tint(Color32::BLACK),
+            _ => img,
+        }
     }
 }
