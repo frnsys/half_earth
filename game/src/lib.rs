@@ -111,7 +111,12 @@ impl App {
     }
 
     fn save_game(&mut self, storage: &mut dyn eframe::Storage) {
-        eframe::set_value(storage, eframe::APP_KEY, &self.state);
+        // NOTE: For some reason serializing the state directly by
+        // passing it to `set_value` doesn't load/deserialize;
+        // loading always returns `None`. There might be something wrong
+        // with the RON de/serializer. It works fine using JSON though.
+        let s = serde_json::to_string(&self.state).unwrap();
+        eframe::set_value(storage, "state", &s);
     }
 
     fn save_prefs(&mut self, storage: &mut dyn eframe::Storage) {
@@ -124,7 +129,10 @@ impl App {
 }
 
 fn load_game(storage: Option<&dyn eframe::Storage>) -> Option<GameState> {
-    storage.and_then(|storage| eframe::get_value(storage, eframe::APP_KEY))
+    storage
+        .and_then(|storage| eframe::get_value::<String>(storage, "state"))
+        // See note in `save_game`.
+        .map(|s| serde_json::from_str(&s).unwrap())
 }
 
 fn load_prefs(storage: Option<&dyn eframe::Storage>) -> Option<Settings> {
