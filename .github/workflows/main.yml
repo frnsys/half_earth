@@ -103,7 +103,7 @@ jobs:
       - name: Calculate tag name
         run: |
           name=dev
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
             name=${GITHUB_REF:10}
           fi
           echo ::set-output name=val::$name
