@@ -413,23 +413,47 @@ impl Plan {
         plan_changes: &BTreeMap<Id, PlanChange>,
     ) {
         let projects = &state.world.projects;
-        let active_projects = projects.iter().filter(|p| p.is_online() || p.is_building());
+        let active_projects: Vec<_> = projects
+            .iter()
+            .filter(|p| p.is_online() || p.is_building())
+            .collect();
 
-        if ui.button(t!("Back")).clicked() {
+        let tabs = vec![TabItem::<()> {
+            tab: (),
+            selected: false,
+            tutorial: None,
+            label: t!("Back").to_string(),
+            icon: None,
+            disabled: false,
+        }];
+        if render_tabs(ui, tutorial, &tabs).is_some() {
             self.close_page(tutorial);
         }
 
-        ui.horizontal(|ui| {
-            let resp = ui
-                .add(add_cards_slot(false, false))
-                .interact(Sense::click());
-            if resp.clicked() {
-                self.set_page(Page::Projects(Projects::new(state, plan_changes)));
-            }
-            for project in active_projects {
-                add_card(project.clone(), ui.add(project_card_slot(project)));
-            }
+        ui.add_space(32.);
+
+        let slots = calc_slots(ui);
+
+        h_center(ui, "full-plan", |tui| {
+            tui.ui(|ui| {
+                for chunk in active_projects.chunks(slots) {
+                    ui.horizontal(|ui| {
+                        for project in chunk {
+                            add_card((*project).clone(), ui.add(project_card_slot(project)));
+                        }
+                    });
+                }
+            });
         });
+
+        // ui.horizontal(|ui| {
+        //     let resp = ui
+        //         .add(add_cards_slot(false, false))
+        //         .interact(Sense::click());
+        //     if resp.clicked() {
+        //         self.set_page(Page::Projects(Projects::new(state, plan_changes)));
+        //     }
+        // });
     }
 
     fn close_page(&mut self, tutorial: &mut Tutorial) {
@@ -1041,19 +1065,21 @@ fn get_projects(
     projects
 }
 
+const SLOT_HEIGHT: f32 = 155.;
+const SLOT_WIDTH: f32 = 105.;
+
 fn add_cards_slot(show_new: bool, highlight: bool) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
         let resp = inset_frame()
             .margin(0)
             .maybe_highlight(highlight)
             .show(ui, |ui| {
-                ui.set_height(155.);
-                ui.set_width(105. - 1.); // account for inset shadow
+                ui.set_height(SLOT_HEIGHT);
+                ui.set_width(SLOT_WIDTH - 1.); // account for inset shadow
                 ui.vertical_centered(|ui| {
                     ui.add_space(54.);
-                    ui.style_mut().visuals.override_text_color = Some(Color32::BLACK);
                     ui.add(icons::ADD.size(32.));
-                    ui.label(t!("Add"));
+                    ui.colored_label(Color32::BLACK, t!("Add"));
                 });
             });
 
@@ -1068,11 +1094,11 @@ fn add_cards_slot(show_new: bool, highlight: bool) -> impl FnOnce(&mut egui::Ui)
 fn view_all_slot() -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     move |ui| {
         inset_frame().margin(0).show(ui, |ui| {
-            ui.set_height(155.);
-            ui.set_width(105. - 1.); // account for inset shadow
+            ui.set_height(SLOT_HEIGHT);
+            ui.set_width(SLOT_WIDTH - 1.); // account for inset shadow
             ui.vertical_centered(|ui| {
                 ui.add_space(68.);
-                ui.label(t!("View All"));
+                ui.colored_label(Color32::BLACK, t!("View All"));
             });
         })
     }
@@ -1084,8 +1110,8 @@ fn empty_card_slot() -> impl FnOnce(&mut egui::Ui) -> egui::Response {
             .stroke(Stroke::new(1., Color32::from_black_alpha(48)))
             .corner_radius(6)
             .show(ui, |ui| {
-                ui.set_height(155.);
-                ui.set_width(105.);
+                ui.set_height(SLOT_HEIGHT);
+                ui.set_width(SLOT_WIDTH);
             })
             .response
     }
@@ -1111,10 +1137,10 @@ fn project_card_slot(project: &Project) -> impl FnOnce(&mut egui::Ui) -> egui::R
             })
             .show(ui, |ui| {
                 // account for stroke
-                ui.set_height(155. - 6.);
-                ui.set_width(105. - 8.);
-                let height = 155. - 6.;
-                let width = 105. - 8.;
+                ui.set_height(SLOT_HEIGHT - 6.);
+                ui.set_width(SLOT_WIDTH - 8.);
+                let height = SLOT_HEIGHT - 6.;
+                let width = SLOT_WIDTH - 8.;
 
                 let target_size = egui::vec2(width, height);
                 let center = ui.cursor().left_top() + target_size / 2.;
@@ -1165,10 +1191,10 @@ fn process_card_slot(process: &Process) -> impl FnOnce(&mut egui::Ui) -> egui::R
         egui::Frame::NONE
             .corner_radius(6)
             .show(ui, |ui| {
-                ui.set_height(155. * sizing.scale);
-                ui.set_width(105. * sizing.scale);
-                let height = 155. * sizing.scale;
-                let width = 105. * sizing.scale;
+                ui.set_height(SLOT_HEIGHT * sizing.scale);
+                ui.set_width(SLOT_WIDTH * sizing.scale);
+                let height = SLOT_HEIGHT * sizing.scale;
+                let width = SLOT_WIDTH * sizing.scale;
 
                 let target_size = egui::vec2(width, height);
                 let center = ui.cursor().left_top() + target_size / 2.;

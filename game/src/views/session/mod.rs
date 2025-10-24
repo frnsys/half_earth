@@ -310,7 +310,13 @@ fn render_tabs<'a, T>(
                         disabled = *cur_tutorial < tutorial || tab.disabled;
                     }
 
-                    let radius = if i == 0 {
+                    let radius = if i == 0 && i == n - 1 {
+                        CornerRadius {
+                            sw: 4,
+                            se: 4,
+                            ..Default::default()
+                        }
+                    } else if i == 0 {
                         CornerRadius {
                             sw: 4,
                             ..Default::default()
