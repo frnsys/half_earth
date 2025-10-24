@@ -1,5 +1,8 @@
 name: Release
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
 
 env:
   BIN_NAME: hes-game
