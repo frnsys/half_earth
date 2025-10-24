@@ -149,6 +149,18 @@ impl<C: AsCard + Scannable> Cards<C> {
             });
 
             ui.input(|inp| {
+                let delta = inp.events.iter().find_map(|e| match e {
+                    egui::Event::MouseWheel { unit: _, delta, .. } => Some(*delta),
+                    _ => None,
+                });
+                if let Some(delta) = delta {
+                    if delta.y > 0. {
+                        action = Some(Action::Next);
+                    } else if delta.y < 0. {
+                        action = Some(Action::Prev);
+                    }
+                }
+
                 if [Key::ArrowLeft, Key::A].iter().any(|k| inp.key_pressed(*k)) {
                     action = Some(Action::Prev);
                 } else if [Key::ArrowRight, Key::D]
