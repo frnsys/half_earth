@@ -155,9 +155,9 @@ impl<C: AsCard + Scannable> Cards<C> {
                 });
                 if let Some(delta) = delta {
                     if delta.y > 0. {
-                        action = Some(Action::Next);
-                    } else if delta.y < 0. {
                         action = Some(Action::Prev);
+                    } else if delta.y < 0. {
+                        action = Some(Action::Next);
                     }
                 }
 

@@ -175,7 +175,10 @@ impl<E: AsEventView> Events<E> {
                 .vertical(|ui| {
                     ui.set_width(width);
                     render_event_card(ui, state, event);
-                    ui.add(button(t!("Continue"))).clicked()
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        ui.add(button(t!("Continue"))).clicked()
+                    })
+                    .inner
                 })
                 .inner;
             if go_to_next {

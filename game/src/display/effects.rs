@@ -888,7 +888,7 @@ impl DisplayEffect {
                     t!("an unknown amount")
                 } else if project.is_policy() {
                     format!(
-                        "{}% [i]political_capital[/i]",
+                        "{}% [political_capital]",
                         display::percent(amount.abs(), true)
                     )
                     .into()

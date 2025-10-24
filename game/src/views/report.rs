@@ -293,6 +293,7 @@ impl Report {
                         });
                     });
                     row.col(|ui| {
+                        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                         let pc_change = format!("{:+}", self.pc_change);
                         ui.label(pc_change);
                     });

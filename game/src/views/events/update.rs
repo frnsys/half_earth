@@ -9,6 +9,7 @@ use crate::{
         intensity::{self, intensity_bar},
         render_effects,
     },
+    text::bbcode,
     tips::{add_tip, tip},
 };
 
@@ -135,9 +136,14 @@ fn render_region_outcomes(ui: &mut egui::Ui, region: &Region, up: bool, world: &
     let prev_demand = prev_region.demand(per_capita_demand);
     let pop = region.population;
 
-    ui.label(body);
+    ui.add(bbcode(&body));
+
+    ui.add_space(12.);
+
+    let spacer = ui.available_width() / 2. - 92.;
 
     ui.horizontal(|ui| {
+        ui.add_space(spacer);
         add_tip(
             prev_tip,
             ui.horizontal(|ui| {
@@ -179,6 +185,7 @@ fn render_region_outcomes(ui: &mut egui::Ui, region: &Region, up: bool, world: &
         );
 
         ui.horizontal(|ui| {
+            ui.add_space(spacer);
             add_tip(
                 prev_tip,
                 ui.horizontal(|ui| {
