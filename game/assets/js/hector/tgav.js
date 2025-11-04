@@ -3,6 +3,7 @@ import initHector from './init';
 // Base emissions scenario for Hector
 const baseEmissionsScenario = '/hector/rcp26.to_2050.json';
 const defaultEmissionsScenario = '/hector/rcp26.default_emissions.json';
+const START_YEAR = 1765; // Should match `baseEmissionsScenario["startYear"]`
 
 const hectorOutputVars = {
   'temperature.Tgav': {
@@ -16,6 +17,11 @@ const hectorOutputVars = {
 class Temperature {
   constructor(startYear) {
     this.startYear = startYear;
+
+    this.emissions = {
+      startYear: START_YEAR,
+      data: {},
+    };
 
     fetch('/hector/config.json')
       .then((resp) => resp.json())
