@@ -64,6 +64,34 @@ impl Start {
                             }
                         }
 
+                        #[cfg(target_arch = "wasm32")]
+                        {
+                            let resp = ui.add(
+                                egui::Button::new(format!("  {}  ", t!("Report a Bug")))
+                                    .stroke(egui::Stroke::new(
+                                        1.,
+                                        egui::Color32::from_rgb(0xFF, 0xCA, 0x28),
+                                    )),
+                            );
+                            if resp.clicked() {
+                                ui.ctx().open_url(egui::OpenUrl::new_tab(
+                                    "https://github.com/frnsys/half_earth/issues",
+                                ));
+                            }
+                            let resp = ui.add(
+                                egui::Button::new(format!("  {}  ", t!("Download World Editor")))
+                                    .stroke(egui::Stroke::new(
+                                        1.,
+                                        egui::Color32::from_rgb(0xFF, 0xCA, 0x28),
+                                    )),
+                            ).on_hover_text(t!("The World Editor is only available in the desktop version of the game, which you can download here."));
+                            if resp.clicked() {
+                                ui.ctx().open_url(egui::OpenUrl::new_tab(
+                                    "https://github.com/frnsys/half_earth/releases/latest",
+                                ));
+                            }
+                        }
+
                         let mut lang = rust_i18n::locale().to_string();
                         egui::ComboBox::new("lang-picker", "")
                             .width(0.)
