@@ -276,7 +276,11 @@ impl AsCard for Project {
                     .inner_margin(Margin::symmetric(3, 1))
                     .show(ui, |ui| {
                         ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
-                        ui.label(egui::RichText::new(building_term.to_uppercase()).size(11.));
+                        ui.label(
+                            egui::RichText::new(building_term.to_uppercase())
+                                .size(11.)
+                                .color(Color32::BLACK),
+                        );
                     })
                     .response
             });
