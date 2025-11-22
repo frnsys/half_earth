@@ -446,27 +446,35 @@ fn touch_controls(ui: &mut egui::Ui, action: &mut Option<Action>) -> egui::Respo
     let screen_height = ui.ctx().screen_rect().height();
     let is_short = screen_height < 600.;
     egui::Frame::NONE
-        .inner_margin(Margin::symmetric(6, if is_short { 18 } else { 20 }))
+        .inner_margin(Margin::symmetric(6, if is_short { 14 } else { 16 }))
         .show(ui, |ui| {
             ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
             h_center(ui, "controls-buttons", |tui| {
                 tui.ui(|ui| {
-                    let label = egui::RichText::new("◄")
-                        .size(18.)
-                        .color(Color32::from_gray(230));
-                    if ui.label(label).interact(Sense::click()).clicked() {
+                    let resp = padded_label(ui, "◄");
+                    if resp.interact(Sense::click()).clicked() {
                         *action = Some(Action::Prev);
                     }
                 });
                 tui.ui(|ui| {
-                    let label = egui::RichText::new("►")
-                        .size(18.)
-                        .color(Color32::from_gray(230));
-                    if ui.label(label).interact(Sense::click()).clicked() {
+                    let resp = padded_label(ui, "►");
+                    if resp.interact(Sense::click()).clicked() {
                         *action = Some(Action::Next);
                     }
                 });
             });
+        })
+        .response
+}
+
+fn padded_label(ui: &mut egui::Ui, text: &str) -> egui::Response {
+    egui::Frame::NONE
+        .inner_margin(6)
+        .show(ui, |ui| {
+            let label = egui::RichText::new(text)
+                .size(18.)
+                .color(Color32::from_gray(230));
+            ui.label(label);
         })
         .response
 }
