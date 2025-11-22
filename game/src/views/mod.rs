@@ -72,6 +72,14 @@ impl GameView {
         }
     }
 
+    pub fn from_save(state: &mut State, ctx: &Arc<three_d::context::Context>) -> Self {
+        Self {
+            phase: Phase::Interstitial(Interstitial::new(state)),
+            show_menu: false,
+            ctx: ctx.clone(),
+        }
+    }
+
     fn intro(state: &mut State, ctx: Arc<three_d::context::Context>) -> Self {
         Self {
             phase: Phase::Intro(Intro::new(state)),

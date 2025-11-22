@@ -171,8 +171,10 @@ impl eframe::App for App {
                                     StartAction::Continue => {
                                         self.state = load_game(frame.storage()).unwrap_or_default();
                                         prepare_game(&mut self.state, &self.prefs);
-                                        self.view =
-                                            View::Game(GameView::new(&mut self.state, &self.ctx));
+                                        self.view = View::Game(GameView::from_save(
+                                            &mut self.state,
+                                            &self.ctx,
+                                        ));
                                     }
                                     StartAction::NewGame(world) => {
                                         self.state = GameState::from_world(*world);
