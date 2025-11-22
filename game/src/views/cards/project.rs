@@ -404,6 +404,7 @@ fn majority_warning(rect: Rect) -> impl FnOnce(&mut egui::Ui) -> Response {
 
                 ui.vertical_centered(|ui| {
                     ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+                    ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
                     ui.add_space(48.);
                     ui.add(icons::WARNING.size(24.));
                     ui.label(t!(
