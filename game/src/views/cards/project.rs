@@ -235,7 +235,7 @@ impl AsCard for Project {
                                 ui.horizontal_centered(|ui| {
                                     ui.label(t!("Next Level"));
                                     ui.label(cost.to_string());
-                                    ui.image(icons::POLITICAL_CAPITAL);
+                                    ui.add(icons::POLITICAL_CAPITAL.size(13.));
                                 });
                             }
                             render_effects(ui, state, effects);
