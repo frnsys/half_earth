@@ -124,19 +124,17 @@ impl WorldPicker {
 }
 
 pub struct Menu {
-    world: WorldStatus,
     picker: WorldPicker,
 }
 impl Menu {
     pub fn new() -> Self {
         Self {
-            world: WorldStatus::Default,
             picker: WorldPicker::new(),
         }
     }
 
     fn world(&self) -> Box<World> {
-        match &self.world {
+        match &self.picker.world {
             WorldStatus::Default | WorldStatus::FailedToRead | WorldStatus::FailedToParse => {
                 Box::new(World::default())
             }
