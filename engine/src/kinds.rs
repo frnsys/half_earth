@@ -159,6 +159,28 @@ macro_rules! define_enum_map {
                         + self.[<$field:snake>]
                     )*
                 }
+
+                pub fn max(&self, max: f32) -> Self {
+                    Self {
+                        $(
+                            [<$field:snake>]: self.[<$field:snake>].max(max),
+                        )*
+                    }
+                }
+
+                /// If the value in `other` is negative, use that value.
+                /// Otherwise use the value from `self`.
+                pub fn or_negative(&self, other: Self) -> Self {
+                    Self {
+                        $(
+                            [<$field:snake>]: if other.[<$field:snake>] < 0. {
+                                other.[<$field:snake>]
+                            } else {
+                                self.[<$field:snake>]
+                            },
+                        )*
+                    }
+                }
             }
 
             // Indexing by enum variants
@@ -668,5 +690,51 @@ mod tests {
         reserves.available.coal = 0.;
         let estimate = reserves.until_exhaustion(Feedstock::Coal);
         assert_eq!(estimate, 0.);
+    }
+
+    #[test]
+    fn test_map_max() {
+        let map = ByproductMap {
+            co2: 10.,
+            ch4: -20.,
+            n2o: -5.,
+            biodiversity: 2.,
+        };
+        let max = map.max(0.);
+        assert_eq!(
+            max,
+            ByproductMap {
+                co2: 10.,
+                ch4: 0.,
+                n2o: 0.,
+                biodiversity: 2.
+            }
+        );
+    }
+
+    #[test]
+    fn test_map_or_negative() {
+        let a = ByproductMap {
+            co2: 1.,
+            ch4: 2.,
+            n2o: 5.,
+            biodiversity: 2.,
+        };
+        let b = ByproductMap {
+            co2: 2.,
+            ch4: 3.,
+            n2o: -1.,
+            biodiversity: 0.,
+        };
+        let c = a.or_negative(b);
+        assert_eq!(
+            c,
+            ByproductMap {
+                co2: 1.,
+                ch4: 2.,
+                n2o: -1.,
+                biodiversity: 2.
+            }
+        );
     }
 }
