@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{cell::RefCell, path::PathBuf, rc::Rc};
 
 use super::super::parts::set_full_bg_image;
 use crate::{image, parts::glow, state::Settings, text::scale_text_ui};
@@ -19,18 +19,19 @@ pub enum MenuAction {
 #[derive(Clone)]
 enum WorldStatus {
     Default,
+    Loading,
     Custom(String, Box<World>),
     FailedToRead,
     FailedToParse,
 }
 
 struct WorldPicker {
-    world: WorldStatus,
+    world: Rc<RefCell<WorldStatus>>,
 }
 impl WorldPicker {
     fn new() -> Self {
         Self {
-            world: WorldStatus::Default,
+            world: Rc::new(RefCell::new(WorldStatus::Default)),
         }
     }
 
@@ -41,8 +42,9 @@ impl WorldPicker {
                 .inner_margin(Margin::symmetric(2, 4))
                 .begin(ui);
 
-            let label = match &self.world {
+            let label = match &*self.world.borrow() {
                 WorldStatus::Default => t!("Default World").to_string(),
+                WorldStatus::Loading => t!("Loading").to_string(),
                 WorldStatus::Custom(name, _) => {
                     format!("{}: {name}", t!("Custom World"))
                 }
@@ -63,9 +65,14 @@ impl WorldPicker {
             }
             frame.paint(ui);
 
-            if resp.clicked() {
-                self.pick_and_load_world();
-            }
+            ui.scope(|ui| {
+                if matches!(&*self.world.borrow(), WorldStatus::Loading) {
+                    ui.disable();
+                }
+                if resp.clicked() {
+                    self.pick_and_load_world();
+                }
+            });
         });
     }
 
@@ -81,32 +88,35 @@ impl WorldPicker {
 
     #[cfg(target_arch = "wasm32")]
     fn pick_and_load_world(&mut self) {
-        use pollster::FutureExt as _;
-        let future = async {
+        use wasm_bindgen_futures::spawn_local;
+        let prev = self.world.borrow().clone();
+        *self.world.borrow_mut() = WorldStatus::Loading;
+
+        let world = self.world.clone();
+        spawn_local(async move {
             let file = rfd::AsyncFileDialog::new()
                 .add_filter("World", &["world"])
                 .pick_file()
                 .await;
 
+            let mut world = world.borrow_mut();
             if let Some(file) = file {
                 let name: String = file.file_name();
                 let data: Vec<u8> = file.read().await;
-                Some((name, data))
+
+                *world = match serde_json::from_slice::<World>(&data) {
+                    Ok(world) => WorldStatus::Custom(name, Box::new(world)),
+                    Err(_) => WorldStatus::FailedToParse,
+                };
             } else {
-                None
+                *world = prev;
             }
-        };
-        let data: Option<(String, Vec<u8>)> = future.block_on();
-        if let Some((name, data)) = data {
-            self.world = match serde_json::from_slice::<World>(&data) {
-                Ok(world) => WorldStatus::Custom(name, Box::new(world)),
-                Err(_) => WorldStatus::FailedToParse,
-            };
-        }
+        });
     }
 
     fn load_world(&mut self, path: PathBuf) {
-        self.world = match std::fs::read_to_string(&path) {
+        let mut world = self.world.borrow_mut();
+        *world = match std::fs::read_to_string(&path) {
             Ok(data) => match serde_json::from_str::<World>(&data) {
                 Ok(world) => {
                     let name = path
@@ -134,10 +144,12 @@ impl Menu {
     }
 
     fn world(&self) -> Box<World> {
-        match &self.picker.world {
-            WorldStatus::Default | WorldStatus::FailedToRead | WorldStatus::FailedToParse => {
-                Box::new(World::default())
-            }
+        let world = self.picker.world.borrow();
+        match &*world {
+            WorldStatus::Default
+            | WorldStatus::Loading
+            | WorldStatus::FailedToRead
+            | WorldStatus::FailedToParse => Box::new(World::default()),
             WorldStatus::Custom(_, world) => world.clone(),
         }
     }

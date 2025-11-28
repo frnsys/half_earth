@@ -42,7 +42,6 @@ eframe = { version = "0.32.0", default-features = false, features = ["glow", "pe
 egui_extras = { version = "0.32.0", default-features = false, features = ["webp", "svg", "image", "http"] }
 sys-locale = { version = "0.3.2", features = ["js"] }
 poll-promise = { version = "0.3.0", features = ["web"] }
-pollster = "0.4.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 hes-editor = { path = "../editor" }

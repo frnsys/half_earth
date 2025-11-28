@@ -2208,7 +2208,6 @@ dependencies = [
  "phf 0.13.1",
  "phf_codegen",
  "poll-promise",
- "pollster",
  "regex-lite",
  "rfd",
  "rust-i18n",

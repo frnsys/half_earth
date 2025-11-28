@@ -4,6 +4,10 @@ set dotenv-load
 run:
     cargo run
 
+# Run the game (web)
+run-web:
+    cd game && trunk serve
+
 # Generate pre-computed earth surface textures.
 surfaces:
     cargo run --bin surface --release
