@@ -2163,7 +2163,7 @@ dependencies = [
 
 [[package]]
 name = "hes-engine"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
  "criterion",
  "enum-map",
