@@ -21,7 +21,7 @@ pub struct DebugOpts {
     /// Directly open the editor.
     pub open_editor: bool,
 
-    /// Skip all events.
+    /// Skip all events (region and project updates still trigger).
     pub skip_events: bool,
 
     /// Skip the tutorial.
