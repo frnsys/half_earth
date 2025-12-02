@@ -107,26 +107,32 @@ impl End {
 
                 ui.add_space(32.);
 
-                h_center(ui, "history", |tui| {
-                    tui.ui(|ui| {
-                        ui.set_max_width(width);
-                        if let Some(image) = &self.image {
-                            ui.add(egui::Image::new(image.clone()));
-                        }
+                ui.scope(|ui| {
+                    ui.style_mut().interaction.selectable_labels = true;
+                    h_center(ui, "history", |tui| {
+                        tui.ui(|ui| {
+                            ui.set_max_width(width);
+                            if let Some(image) = &self.image {
+                                ui.add(egui::Image::new(image.clone()));
+                            }
 
-                        ui.add_space(32.);
+                            ui.add_space(32.);
 
-                        ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
-                        ui.style_mut().interaction.selectable_labels = true;
-                        ui.monospace("Your History");
+                            ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
+                            ui.monospace(t!("Your History"));
+
+                            if ui.button("Copy to Clipboard").clicked() {
+                                ui.ctx().copy_text(self.log.join("\n"));
+                            }
+                        });
                     });
-                });
 
-                ui.vertical(|ui| {
-                    ui.set_width(320.);
-                    for line in &self.log {
-                        ui.monospace(line);
-                    }
+                    ui.vertical(|ui| {
+                        ui.set_width(320.);
+                        for line in &self.log {
+                            ui.monospace(line);
+                        }
+                    });
                 });
 
                 ui.add_space(64.);
