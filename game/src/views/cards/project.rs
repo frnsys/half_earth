@@ -232,7 +232,14 @@ impl AsCard for Project {
                             if is_upgrading {
                                 ui.label(t!("Upgrading in one planning cycle."));
                             } else {
-                                ui.horizontal_centered(|ui| {
+                                ui.style_mut()
+                                    .visuals
+                                    .widgets
+                                    .noninteractive
+                                    .bg_stroke
+                                    .color = Color32::from_black_alpha(64);
+                                ui.separator();
+                                ui.horizontal(|ui| {
                                     ui.label(t!("Next Level"));
                                     ui.label(cost.to_string());
                                     ui.add(icons::POLITICAL_CAPITAL.size(13.));
