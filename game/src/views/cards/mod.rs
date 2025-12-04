@@ -202,9 +202,9 @@ fn corner(ui: &mut egui::Ui, rect: egui::Rect, id: egui::Id, on_dark: bool, flip
     let resp = ui.interact(tri_rect, tri_id, Sense::click());
 
     let base = if on_dark {
-        Color32::from_white_alpha(32)
+        Color32::from_white_alpha(96)
     } else {
-        Color32::from_black_alpha(32)
+        Color32::from_black_alpha(96)
     };
     let hover = if on_dark {
         Color32::from_white_alpha(64)
