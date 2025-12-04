@@ -66,6 +66,9 @@ impl App {
         egui_extras::install_image_loaders(&cc.egui_ctx);
         style::configure_style(&cc.egui_ctx);
 
+        // Force dark mode for consistency
+        cc.egui_ctx.set_theme(egui::Theme::Dark);
+
         let mut prefs = load_prefs(cc.storage).unwrap_or_default();
         let state = load_game(cc.storage);
         let has_save = state.is_some();
