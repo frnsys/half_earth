@@ -60,7 +60,7 @@ fn full_bg_image(
     tint: Option<Color32>,
 ) {
     // Get the target rect (e.g., the whole screen)
-    let target_rect = ui.ctx().screen_rect();
+    let target_rect = ui.ctx().content_rect();
     let target_size = target_rect.size();
 
     // Compute aspect ratios
@@ -448,7 +448,7 @@ pub fn button_frame() -> RaisedFrame {
 }
 
 pub fn overlay(ctx: &egui::Context, inner: impl FnOnce(&mut egui::Ui) -> egui::Response) -> bool {
-    let screen_size = ctx.screen_rect().size();
+    let screen_size = ctx.content_rect().size();
     egui::Area::new("overlay".into())
         .order(Order::Foreground)
         .default_size(screen_size)
@@ -523,7 +523,7 @@ impl egui::Widget for CenteredText<'_> {
     fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         let font_id = egui::FontId::new(self.font_size, self.font_family);
 
-        let galley = ui.fonts(|f| f.layout_delayed_color(self.text, font_id, f32::INFINITY));
+        let galley = ui.fonts_mut(|f| f.layout_delayed_color(self.text, font_id, f32::INFINITY));
         let mut content_width = galley.size().x;
         let width = ui.available_width();
 
@@ -552,7 +552,7 @@ pub fn calc_text_width(
     family: egui::FontFamily,
 ) -> f32 {
     let font_id = egui::FontId::new(size, family);
-    let galley = ui.fonts(|f| f.layout_delayed_color(text, font_id, f32::INFINITY));
+    let galley = ui.fonts_mut(|f| f.layout_delayed_color(text, font_id, f32::INFINITY));
     galley.size().x
 }
 

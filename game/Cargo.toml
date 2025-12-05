@@ -6,8 +6,8 @@ edition = "2024"
 [dependencies]
 egui = { workspace = true }
 egui_taffy = { workspace = true }
-egui_extras = { version = "0.32.0", default-features = false, features = ["webp", "svg", "image"] }
-egui_animation = "0.9.0"
+egui_extras = { workspace = true }
+egui_animation = "0.10.0"
 image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"] }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
@@ -38,15 +38,15 @@ wasm-bindgen = "0.2.100"
 wasm-bindgen-futures = "0.4"
 serde-wasm-bindgen = "0.6"
 web-sys = { version = "0.3", default-features = false }
-eframe = { version = "0.32.0", default-features = false, features = ["glow", "persistence"] }
-egui_extras = { version = "0.32.0", default-features = false, features = ["webp", "svg", "image", "http"] }
+eframe = { version = "0.33.0", default-features = false, features = ["glow", "persistence"] }
+egui_extras = { version = "0.33.0", default-features = false, features = ["webp", "svg", "image", "http"] }
 sys-locale = { version = "0.3.2", features = ["js"] }
 poll-promise = { version = "0.3.0", features = ["web"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 hes-editor = { path = "../editor" }
 hector = { git = "https://github.com/frnsys/hector-rs.git", rev = "f3eea39505672dbfb76e8b7be2cc50cab54a4503" }
-eframe = { version = "0.32.0", default-features = false, features = ["glow", "persistence", "wayland", "x11"] }
+eframe = { version = "0.33.0", default-features = false, features = ["glow", "persistence", "wayland", "x11"] }
 kira = { version = "0.10.8", default-features = false, features = ["cpal", "ogg"] }
 
 [dev-dependencies]

@@ -22,7 +22,7 @@ const LED_DURATION: u8 = 12;
 
 fn scanner_height(ui: &egui::Ui) -> f32 {
     const SCANNER_HEIGHT: f32 = 48.;
-    let screen_height = ui.ctx().screen_rect().height();
+    let screen_height = ui.ctx().content_rect().height();
     if screen_height < 600. {
         SCANNER_HEIGHT / 2.
     } else {
@@ -443,7 +443,7 @@ fn progress_bar(painter: &egui::Painter, mut rect: Rect, color: Color32, percent
 }
 
 fn touch_controls(ui: &mut egui::Ui, action: &mut Option<Action>) -> egui::Response {
-    let screen_height = ui.ctx().screen_rect().height();
+    let screen_height = ui.ctx().content_rect().height();
     let is_short = screen_height < 600.;
     egui::Frame::NONE
         .inner_margin(Margin::symmetric(6, if is_short { 14 } else { 16 }))

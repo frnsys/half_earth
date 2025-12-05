@@ -160,7 +160,7 @@ impl<E: AsEventView> Events<E> {
 
     fn render_event(&mut self, ui: &mut egui::Ui, state: &mut State) -> Option<DialogueResult> {
         let event = &self.events[self.idx];
-        let width = (ui.ctx().screen_rect().width() - (18. * 3.)).clamp(0., 360.);
+        let width = (ui.ctx().content_rect().width() - (18. * 3.)).clamp(0., 360.);
         if let Some(dialogue) = &mut self.dialogue {
             ui.set_width(width);
             ui.vertical(|ui| {

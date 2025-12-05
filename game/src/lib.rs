@@ -152,7 +152,7 @@ impl eframe::App for App {
             tracing::error!("Audio error: {err}");
         }
 
-        let is_small_screen = ctx.screen_rect().width() <= 450.;
+        let is_small_screen = ctx.content_rect().width() <= 450.;
         let scale = if is_small_screen { 0.7 } else { 1. };
         let sizing = Sizing {
             scale,

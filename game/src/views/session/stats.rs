@@ -90,7 +90,7 @@ impl Stats {
             ui.set_max_width(720.);
 
             let sizing = get_sizing(ui);
-            let screen_width = ui.ctx().screen_rect().width();
+            let screen_width = ui.ctx().content_rect().width();
             if sizing.is_small {
                 h_center_top(ui, "stats-top", |tui| {
                     tui.ui(|ui| {

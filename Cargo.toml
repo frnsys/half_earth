@@ -20,8 +20,9 @@ numfmt = "1.1.1"
 strum = { version = "0.25.0", features = ["strum_macros", "derive"] }
 enum-map = { version = "2.7.3", features = ["serde"] }
 fastrand = { version = "2.1.0" }
-egui = { version = "0.32.3", features = ["persistence"], default-features = false }
-egui_taffy = "0.9"
+egui = { version = "0.33.2", features = ["persistence"], default-features = false }
+egui_extras = { version = "0.33.0", default-features = false, features = ["webp", "svg", "image"] }
+egui_taffy = "0.10"
 
 [profile.release]
 debug = 0

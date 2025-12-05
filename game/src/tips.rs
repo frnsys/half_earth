@@ -142,7 +142,7 @@ pub fn add_hover_tip(tip: Tip, resp: egui::Response) -> egui::Response {
 }
 
 fn set_tip_width(ui: &mut egui::Ui) {
-    let width = (ui.ctx().screen_rect().width() - 36.).min(420.);
+    let width = (ui.ctx().content_rect().width() - 36.).min(420.);
     ui.set_max_width(width);
 }
 
@@ -179,7 +179,7 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
     let card_id = popup_id.with("card");
 
     if let Some(mut tip) = ctx.memory(|mem| mem.data.get_temp::<Tip>(popup_id)) {
-        let screen_size = ctx.screen_rect().size();
+        let screen_size = ctx.content_rect().size();
         egui::Popup::new(
             popup_id,
             ctx.clone(),

@@ -1,12 +1,4 @@
-use egui::{
-    Color32,
-    Margin,
-    PopupAnchor,
-    RichText,
-    Stroke,
-    StrokeKind,
-    emath::OrderedFloat,
-};
+use egui::{Color32, Margin, PopupAnchor, RichText, Stroke, StrokeKind, emath::OrderedFloat};
 use rust_i18n::t;
 use treemap::{MapItem, Mappable, TreemapLayout};
 
@@ -27,25 +19,17 @@ pub fn treemap<'a>(
     items.sort_by_key(|item| OrderedFloat::from(-item.value));
 
     let layout = TreemapLayout::new();
-    let bounds = treemap::Rect::from_points(
-        0.0,
-        0.0,
-        width as f64,
-        height as f64,
-    );
+    let bounds = treemap::Rect::from_points(0.0, 0.0, width as f64, height as f64);
     let total_area = width * height;
     let mut map_items: Vec<MapItem> = items
         .iter()
         .filter(|bar| bar.value > 0.)
-        .map(|bar| {
-            MapItem::with_size((bar.value * total_area) as f64)
-        })
+        .map(|bar| MapItem::with_size((bar.value * total_area) as f64))
         .collect();
 
     layout.layout_items(&mut map_items, bounds);
 
-    let (_, rect) =
-        ui.allocate_space(egui::vec2(width, height));
+    let (_, rect) = ui.allocate_space(egui::vec2(width, height));
     let painter = ui.painter();
 
     let mut tip = None;
@@ -58,10 +42,7 @@ pub fn treemap<'a>(
         let y = rect.top() + item_bounds.y as f32;
         let node = egui::Rect::from_two_pos(
             egui::pos2(x, y),
-            egui::pos2(
-                x + item_bounds.w as f32,
-                y + item_bounds.h as f32,
-            ),
+            egui::pos2(x + item_bounds.w as f32, y + item_bounds.h as f32),
         );
         painter.rect(
             node,
@@ -71,16 +52,9 @@ pub fn treemap<'a>(
             egui::StrokeKind::Middle,
         );
 
-        let font_id = egui::FontId::new(
-            12.0,
-            egui::FontFamily::Proportional,
-        );
-        let galley = ui.fonts(|f| {
-            f.layout_delayed_color(
-                t!(item.label).to_string(),
-                font_id,
-                f32::INFINITY,
-            )
+        let font_id = egui::FontId::new(12.0, egui::FontFamily::Proportional);
+        let galley = ui.fonts_mut(|f| {
+            f.layout_delayed_color(t!(item.label).to_string(), font_id, f32::INFINITY)
         });
 
         let rect = egui::Rect::from_center_size(
@@ -101,11 +75,7 @@ pub fn treemap<'a>(
         }
 
         if ui.rect_contains_pointer(node) {
-            tip = Some(format!(
-                "{}: {}",
-                t!(item.label),
-                item.display
-            ));
+            tip = Some(format!("{}: {}", t!(item.label), item.display));
         }
     }
 

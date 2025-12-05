@@ -79,23 +79,20 @@ pub struct Credits;
 impl Credits {
     pub fn render(ui: &mut egui::Ui) -> bool {
         ui.painter().rect_filled(
-            ui.ctx().screen_rect(),
+            ui.ctx().content_rect(),
             0.,
             Color32::from_rgba_premultiplied(0, 0, 0, 180),
         );
 
         let mut close = false;
         ui.vertical_centered(|ui| {
-            ui.style_mut().visuals.override_text_color =
-                Some(Color32::WHITE);
+            ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
             ui.add_space(32.);
             for (label, names) in CREDITS {
                 ui.heading(*label);
                 ui.add_space(18.);
                 for name in names.iter() {
-                    ui.label(RichText::new(*name).family(
-                        FontFamily::Name("TimesTen".into()),
-                    ));
+                    ui.label(RichText::new(*name).family(FontFamily::Name("TimesTen".into())));
                 }
                 ui.add_space(32.);
             }
@@ -104,10 +101,9 @@ impl Credits {
         egui::Area::new("menu-close".into())
             .anchor(Align2::RIGHT_TOP, egui::vec2(-8., 8.))
             .show(ui.ctx(), |ui| {
-                let resp =
-                    button_frame().margin(6).show(ui, |ui| {
-                        ui.add(icons::CLOSE.size(24.));
-                    });
+                let resp = button_frame().margin(6).show(ui, |ui| {
+                    ui.add(icons::CLOSE.size(24.));
+                });
                 if resp.interact(Sense::click()).clicked() {
                     close = true;
                 }

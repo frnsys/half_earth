@@ -66,7 +66,7 @@ impl End {
         } else {
             ui.vertical_centered(|ui| {
                 ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
-                let width = (ui.ctx().screen_rect().width() - 12.).min(480.);
+                let width = (ui.ctx().content_rect().width() - 12.).min(480.);
                 ui.set_max_width(width);
 
                 ui.add_space(64.);

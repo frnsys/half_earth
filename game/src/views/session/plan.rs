@@ -488,7 +488,7 @@ impl Page {
 }
 
 fn calc_slots(ui: &mut egui::Ui) -> usize {
-    let width = ui.ctx().screen_rect().width();
+    let width = ui.ctx().content_rect().width();
     if width > 680. {
         9
     } else if width > 560. {

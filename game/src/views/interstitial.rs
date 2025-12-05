@@ -77,7 +77,7 @@ impl Interstitial {
         );
 
         ui.painter().rect_filled(
-            ui.ctx().screen_rect(),
+            ui.ctx().content_rect(),
             0.,
             Color32::from_rgba_premultiplied(0, 0, 0, 200),
         );

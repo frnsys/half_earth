@@ -73,7 +73,7 @@ pub fn render_hud(ui: &mut egui::Ui, state: &mut State) -> Option<HudAction> {
         tip(icons::CONTENTEDNESS, tip_text).card(factors_card(None, Var::Contentedness, state))
     };
 
-    let screen_width = ui.ctx().screen_rect().width();
+    let screen_width = ui.ctx().content_rect().width();
 
     // Space the bar would take up
     ui.add_space(24.);

@@ -15,7 +15,7 @@ pub fn bbcode(text: &str) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
         ui.horizontal_wrapped(|ui| {
             let style = ui.style();
             let font_id = TextStyle::Body.resolve(style);
-            let text_height = ui.fonts(|f| f.row_height(&font_id));
+            let text_height = ui.fonts_mut(|f| f.row_height(&font_id));
             ui.style_mut().spacing.item_spacing.x = 0.;
 
             let (_, nodes) = parse::parse_bbcode(text).unwrap();
@@ -44,7 +44,7 @@ impl BbCodeAnimator {
         ui.horizontal_wrapped(|ui| {
             let style = ui.style();
             let font_id = TextStyle::Body.resolve(style);
-            let text_height = ui.fonts(|f| f.row_height(&font_id));
+            let text_height = ui.fonts_mut(|f| f.row_height(&font_id));
 
             ui.style_mut().spacing.item_spacing.x = 0.;
 
