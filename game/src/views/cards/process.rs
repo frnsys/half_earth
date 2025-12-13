@@ -78,7 +78,7 @@ impl AsCard for Process {
             if amount > 0. {
                 amount = amount.max(1.);
             }
-            let gtco2eq = self.byproducts.gtco2eq();
+            let gtco2eq = self.adj_byproducts().gtco2eq();
             let mut emissions = gtco2eq * base_amount;
             if emissions > 0. {
                 emissions = emissions.max(1.);

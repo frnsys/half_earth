@@ -1313,10 +1313,10 @@ fn estimate_changes(
     for process in processes {
         let mix_share = process.mix_share as f32;
         let total = mix_share / 20. * state.output_demand.of(process.output);
-        current.land_use += process.resources.land * total;
-        current.water_use += process.resources.water * total;
-        current.energy_use += process.resources.energy() * total;
-        current.emissions += process.byproducts.gtco2eq() * total;
+        current.land_use += process.adj_resources().land * total;
+        current.water_use += process.adj_resources().water * total;
+        current.energy_use += process.adj_resources().energy() * total;
+        current.emissions += process.adj_byproducts().gtco2eq() * total;
         current.extinction_rate += process.extinction_rate(available_land) * total;
     }
 
@@ -1326,10 +1326,10 @@ fn estimate_changes(
         let mix_share = process.mix_share as f32
             + (*mix_changes[process.output].get(&process.id).unwrap_or(&0)) as f32;
         let total = mix_share / 20. * state.output_demand.of(process.output);
-        changed.land_use += process.resources.land * total;
-        changed.water_use += process.resources.water * total;
-        changed.energy_use += process.resources.energy() * total;
-        changed.emissions += process.byproducts.gtco2eq() * total;
+        changed.land_use += process.adj_resources().land * total;
+        changed.water_use += process.adj_resources().water * total;
+        changed.energy_use += process.adj_resources().energy() * total;
+        changed.emissions += process.adj_byproducts().gtco2eq() * total;
         changed.extinction_rate += process.extinction_rate(available_land) * total;
     }
 
