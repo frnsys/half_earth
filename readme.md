@@ -43,6 +43,14 @@ DEBUG=SKIP_TUTORIAL,ALL_PROJECTS,SKIP_EVENTS DEBUG_VIEW=Plan cargo run
 
 See `game/src/debug.rs`.
 
+Game states can also be exported via the game menu (the "Copy Session" button). For compactness this is a base64-encoded, DEFLATE-compressed representation.
+
+The exported game state can be saved to a file then loaded via:
+
+```bash
+DEBUG_STATE=/path/to/session/file cargo run
+```
+
 ## Running
 
 You can use [`just`](https://github.com/casey/just) to run most tasks:

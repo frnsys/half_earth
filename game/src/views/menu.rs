@@ -1,8 +1,11 @@
+use std::time::{Duration, Instant};
+
 use egui::{Align2, Color32, Margin, Sense};
 use hes_engine::State;
 use rust_i18n::t;
 
 use crate::{
+    debug::serialize_state,
     display::icons,
     image,
     parts::{RaisedFrame, button, button_frame, raised_frame, set_full_bg_image},
@@ -97,6 +100,8 @@ pub fn render_menu(
                 ui.add(egui::Image::new(motto).max_height(80.));
                 ui.add_space(32.);
 
+                copy_session_button(ui, state);
+
                 let sound = format!(
                     "{}: {}",
                     t!("Sound"),
@@ -115,6 +120,35 @@ pub fn render_menu(
         });
 
     action
+}
+
+fn copy_session_button(ui: &mut egui::Ui, state: &State) {
+    let id = egui::Id::new("session-button");
+    let now = Instant::now();
+    let dur = Duration::from_secs(2);
+    let active_until = ui.ctx().data(|d| d.get_temp::<Instant>(id)).and_then(|t0| {
+        if now.duration_since(t0) < dur {
+            Some(t0 + dur)
+        } else {
+            None
+        }
+    });
+    let label = if active_until.is_some() {
+        t!("Copied to Clipboard")
+    } else {
+        t!("Copy Session")
+    };
+    if ui.add(button(label)).clicked() {
+        ui.ctx().data_mut(|d| d.insert_temp(id, now));
+        if let Some(session) = serialize_state(state) {
+            ui.ctx().copy_text(session);
+        }
+        ui.ctx().request_repaint_after(dur);
+    } else if let Some(until) = active_until {
+        let remaining = until.saturating_duration_since(now);
+        ui.ctx()
+            .request_repaint_after(remaining.min(Duration::from_millis(16)));
+    }
 }
 
 fn inset_frame() -> RaisedFrame {

@@ -2182,6 +2182,7 @@ dependencies = [
 name = "hes-game"
 version = "1.0.5"
 dependencies = [
+ "base64",
  "bincode",
  "csv",
  "eframe",
@@ -2202,6 +2203,7 @@ dependencies = [
  "image",
  "kira",
  "log",
+ "miniz_oxide 0.8.9",
  "nom 8.0.0",
  "numfmt",
  "paste",

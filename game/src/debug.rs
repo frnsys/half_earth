@@ -1,3 +1,5 @@
+use base64::{Engine, prelude::BASE64_STANDARD};
+use miniz_oxide::{deflate::compress_to_vec, inflate::decompress_to_vec};
 use std::{env, sync::LazyLock};
 
 use hes_engine::{ByproductMap, Flag, ProjectType, State};
@@ -16,7 +18,6 @@ pub enum DebugView {
     GameWin,
 }
 
-#[derive(Debug)]
 pub struct DebugOpts {
     /// Directly open the editor.
     pub open_editor: bool,
@@ -65,9 +66,16 @@ pub struct DebugOpts {
 
     /// Start with a seceded region.
     pub region_seceded: bool,
+
+    /// State to load.
+    pub state: Option<State>,
 }
 impl DebugOpts {
     pub fn apply(&self, state: &mut State) {
+        if let Some(use_state) = &self.state {
+            *state = use_state.clone();
+        }
+
         if self.parliament_suspended {
             state.flags.push(Flag::ParliamentSuspended);
         }
@@ -135,7 +143,46 @@ impl Default for DebugOpts {
         let d = env::var("DEBUG").unwrap_or_default();
         let debug: Vec<_> = d.split(',').collect();
 
-        let view = env::var("DEBUG_VIEW").unwrap_or_default();
+        let mut view = env::var("DEBUG_VIEW")
+            .map(|view| match view.as_str() {
+                "Plan" => Some(DebugView::Plan),
+                "Regions" => Some(DebugView::Regions),
+                "Govt" => Some(DebugView::Parliament),
+                "Stats" => Some(DebugView::Stats),
+                "World" => Some(DebugView::World),
+                "Report" => Some(DebugView::Report),
+                "GameOver" => Some(DebugView::GameOver),
+                "GameWin" => Some(DebugView::GameWin),
+                _ => None,
+            })
+            .ok()
+            .flatten();
+        let state = {
+            if cfg!(not(target_arch = "wasm32")) {
+                env::var("DEBUG_STATE")
+                    .map(|path| match std::fs::read_to_string(&path) {
+                        Err(err) => {
+                            eprintln!("Failed to read state file: {path:?}");
+                            eprintln!("{err}");
+                            None
+                        }
+                        Ok(ser) => Some(deserialize_state(&ser)),
+                    })
+                    .ok()
+                    .flatten()
+
+            // Not supported on web
+            } else {
+                None
+            }
+        };
+
+        // If a debug state is provided and a debug view
+        // isn't specified, go straight to the plan view.
+        if state.is_some() && view.is_none() {
+            view = Some(DebugView::Plan);
+        }
+
         Self {
             open_editor: debug.contains(&"EDITOR"),
             skip_events: debug.contains(&"SKIP_EVENTS"),
@@ -152,17 +199,29 @@ impl Default for DebugOpts {
             production_shortage: debug.contains(&"PRODUCTION_SHORTAGE"),
             feedstock_shortage: debug.contains(&"FEEDSTOCK_SHORTAGE"),
             region_seceded: debug.contains(&"SECEDED"),
-            view: match view.as_str() {
-                "Plan" => Some(DebugView::Plan),
-                "Regions" => Some(DebugView::Regions),
-                "Govt" => Some(DebugView::Parliament),
-                "Stats" => Some(DebugView::Stats),
-                "World" => Some(DebugView::World),
-                "Report" => Some(DebugView::Report),
-                "GameOver" => Some(DebugView::GameOver),
-                "GameWin" => Some(DebugView::GameWin),
-                _ => None,
-            },
+            view,
+            state,
         }
     }
+}
+
+pub fn serialize_state(state: &State) -> Option<String> {
+    serde_json::to_string(state)
+        .map(|json| {
+            let compressed = compress_to_vec(json.as_bytes(), 6);
+            let b64 = BASE64_STANDARD.encode(compressed);
+            b64.as_bytes()
+                .chunks(76)
+                .map(|c| std::str::from_utf8(c).unwrap())
+                .collect::<Vec<_>>()
+                .join("\n")
+        })
+        .ok()
+}
+
+pub fn deserialize_state(b64: &str) -> State {
+    let compressed = BASE64_STANDARD.decode(b64.replace("\n", "")).unwrap();
+    let decompressed = decompress_to_vec(&compressed).unwrap();
+    let str = String::from_utf8(decompressed).unwrap();
+    serde_json::from_str(&str).unwrap()
 }
