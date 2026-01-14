@@ -1,4 +1,5 @@
-use std::time::{Duration, Instant};
+use std::time::Duration;
+use web_time::Instant;
 
 use egui::{Align2, Color32, Margin, Sense};
 use hes_engine::State;
