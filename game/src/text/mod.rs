@@ -12,6 +12,7 @@ pub use scale::{scale_text, scale_text_styles, scale_text_ui};
 
 pub fn bbcode(text: &str) -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     |ui| {
+        ui.style_mut().spacing.interact_size.y = 0.;
         ui.horizontal_wrapped(|ui| {
             let style = ui.style();
             let font_id = TextStyle::Body.resolve(style);

@@ -84,7 +84,7 @@ pub fn render_effects(ui: &mut egui::Ui, state: &State, effects: &[DisplayEffect
         .filter_map(|effect| effect.tip(state).ok())
         .collect::<Vec<_>>();
     effects.sort_by_key(|effect| effect.text.clone());
-    ui.vertical_centered(|ui| {
+    ui.vertical(|ui| {
         for effect in effects {
             let resp = ui.add(bbcode(&effect.text));
             add_tip(effect.tip, resp);
