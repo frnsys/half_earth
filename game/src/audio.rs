@@ -190,9 +190,11 @@ mod engine {
 
             match request {
                 AudioRequest::Mute => {
+                    self.muted = true;
                     get_audio_manager().mute();
                 }
                 AudioRequest::Unmute => {
+                    self.muted = false;
                     get_audio_manager().unmute();
                 }
                 AudioRequest::Ping => {
