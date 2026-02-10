@@ -63,11 +63,13 @@ fn load_fonts() -> egui::FontDefinitions {
     prop.push("NotoSansThai".into());
     prop.push("NotoSansJP".into());
 
-    fonts
+    let mono = fonts
         .families
-        .entry(egui::FontFamily::Monospace)
-        .or_default()
-        .insert(0, "W95FA".into());
+        .get_mut(&egui::FontFamily::Monospace)
+        .unwrap();
+    mono.insert(0, "W95FA".into());
+    mono.push("NotoSansThai".into());
+    mono.push("NotoSansJP".into());
 
     let serif = fonts
         .families
