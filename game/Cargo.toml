@@ -1,6 +1,6 @@
 [package]
 name = "hes-game"
-version = "1.0.8"
+version = "1.0.10"
 edition = "2024"
 
 [dependencies]
