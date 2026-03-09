@@ -290,7 +290,7 @@ fn render_npc(ui: &mut egui::Ui, npc: &NPC, total_seats: usize) -> egui::Respons
             left: 8,
             right: 8,
             top: -32,
-            bottom: 24,
+            bottom: if npc.is_ally() { 8 } else { 24 },
         })
         .show(ui, |ui| {
             ui.set_width(150.);
@@ -318,8 +318,7 @@ fn render_npc(ui: &mut egui::Ui, npc: &NPC, total_seats: usize) -> egui::Respons
                 }
 
                 if npc.is_ally() {
-                    ui.image(icons::ALLY);
-                    ui.label(t!("Ally"));
+                    ui.label(egui::RichText::new(format!("★ {}", t!("Ally"))).size(11.));
                 }
             });
         })
