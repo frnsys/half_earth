@@ -151,10 +151,14 @@ impl Scannable for Project {
                 // Don't allow stored research-only points to be converted into PC,
                 // instead convert them back into research points
                 if self.kind == ProjectType::Research {
-                    let excess_points = points.saturating_sub(state.ui.points.refundable_research);
-                    refund = state.core.next_point_cost(&self.kind) * (points - excess_points);
-                    state.ui.points.refundable_research =
-                        state.ui.points.refundable_research.saturating_sub(points);
+                    let n_refundable_points = state.ui.points.refundable_research.len();
+                    let excess_points = points.saturating_sub(n_refundable_points);
+                    let n_refunded_points = points - excess_points;
+                    refund = state
+                        .ui
+                        .points
+                        .refundable_research
+                        .refund(n_refunded_points);
                     state.ui.points.research += excess_points as isize;
                 }
                 state.core.unassign_points(&self.id, points);

@@ -43,7 +43,78 @@ pub struct PlanChange {
 pub struct Points {
     pub research: isize,
     pub initiative: isize,
-    pub refundable_research: usize,
+
+    /// Research points can either be directly given
+    /// or they can be purchased with PC.
+    /// This tracks the research points purchased with
+    /// PC so we know they can be refunded for PC,
+    /// and the cost they were paid at.
+    ///
+    /// We need to track their paid cost because there are
+    /// different flags that affect the cost of research points
+    /// (see [`StateExt::buy_point`]) so the amount to refund for
+    /// an individual point may differ.
+    ///
+    /// Also note that `self.research - self.refundable_research`
+    /// gives us the research points that can't be refunded.
+    pub refundable_research: RefundablePoints,
+}
+
+// Note: this is necessary for deserializing
+// the previous representation of points, which was just a `usize`.
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RefundablePoints {
+    Amount(usize),
+    Values(Vec<usize>),
+}
+impl Default for RefundablePoints {
+    fn default() -> Self {
+        Self::Values(Vec::default())
+    }
+}
+impl RefundablePoints {
+    pub fn len(&self) -> usize {
+        match self {
+            Self::Amount(n) => *n,
+            Self::Values(items) => items.len(),
+        }
+    }
+
+    pub fn clear(&mut self) {
+        match self {
+            Self::Amount(_) => *self = Self::Values(vec![]),
+            Self::Values(items) => items.clear(),
+        }
+    }
+
+    pub fn push(&mut self, cost: usize) {
+        match self {
+            Self::Amount(n) => *n += 1,
+            Self::Values(items) => items.push(cost),
+        }
+    }
+
+    pub fn refund(&mut self, n_points: usize) -> usize {
+        match self {
+            Self::Amount(n) => {
+                // NOTE: This is just a fallback implementation,
+                // which will sometimes be wrong since there may be discounts
+                // that mean the refunded point cost should be lower than what's
+                // given here. However this should only affect old save files;
+                // new games will use the correct `Self::Values` implementation.
+                let n_refunded = n_points.min(*n);
+                *n = n.saturating_sub(n_refunded);
+                *n * (consts::POINT_COST as usize)
+            }
+            Self::Values(items) => {
+                let n_refundable_points = items.len();
+                let split_at = n_refundable_points.saturating_sub(n_points);
+                let refunded = items.split_off(split_at);
+                refunded.iter().sum()
+            }
+        }
+    }
 }
 
 #[derive(

@@ -259,7 +259,10 @@ impl AsCard for Project {
             })
             .response;
 
-        if self.is_building() {
+        // Get the world state version of the project
+        // as it will have the latest state.
+        let proj = &state.world.projects[&self.id];
+        if proj.is_building() {
             let rect = egui::Rect::from_min_size(
                 resp.rect.center_bottom() + egui::vec2(-6., -10.),
                 egui::vec2(0., 0.),

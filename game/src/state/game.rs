@@ -68,6 +68,7 @@ pub impl State {
         consts::POINT_COST.saturating_sub(discount) as usize
     }
 
+    /// Buy Research or Initiative points with PC.
     fn buy_point(&mut self, project_id: &Id, points: &mut Points) -> bool {
         let (kind, proj_points) = {
             let project = &self.world.projects[project_id];
@@ -88,7 +89,7 @@ pub impl State {
                     _ => (),
                 }
                 if is_research {
-                    points.refundable_research += 1;
+                    points.refundable_research.push(cost as usize);
                 }
                 true
             } else {
@@ -97,6 +98,8 @@ pub impl State {
         }
     }
 
+    /// Pay PC points directly.
+    /// Used for Policies.
     fn pay_points(&mut self, project_id: &Id) -> bool {
         // Only policies have points paid all at once,
         // rather than assigned.

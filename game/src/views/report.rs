@@ -114,7 +114,7 @@ impl Report {
 
                             // Reset session plan changes
                             state.ui.plan_changes.clear();
-                            state.ui.points.refundable_research = 0;
+                            state.ui.points.refundable_research.clear();
 
                             done = true;
                         }
