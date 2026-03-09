@@ -4,6 +4,7 @@ use enum_map::EnumMap;
 use hes_engine::{Change, IconEvent, Id, Income, Output, State};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use strum::IntoEnumIterator;
 
 /// The state at the start of a 5-year cycle,
 /// for generating comparisons for the report.
@@ -204,5 +205,25 @@ impl UIState {
         self.process_mix_changes[output]
             .iter()
             .any(|(_, change)| *change != 0)
+    }
+
+    pub fn has_any_process_mix_changes(&self) -> bool {
+        Output::iter().any(|output| self.has_process_mix_changes(output))
+    }
+
+    pub fn process_mix_change_time(&self, output: Output) -> f32 {
+        let total = self.process_mix_changes[output]
+            .values()
+            .map(|change| change.abs())
+            .sum::<isize>() as f32;
+        let changing_points = (total / 2.).ceil();
+        changing_points / consts::PROCESS_POINTS_PER_CYCLE as f32
+    }
+
+    pub fn all_process_mix_change_time(&self) -> f32 {
+        Output::iter()
+            .map(|output| self.process_mix_change_time(output))
+            .reduce(f32::max)
+            .unwrap_or_default()
     }
 }

@@ -748,16 +748,8 @@ impl Processes {
         let mut ret_action = None;
         let allow_back = self.points == 0;
 
-        let has_changes = state.ui.has_process_mix_changes(self.output);
-
-        let changing_points = {
-            let total = state.ui.process_mix_changes[self.output]
-                .values()
-                .map(|change| change.abs())
-                .sum::<isize>() as f32;
-            (total / 2.).ceil()
-        };
-        let changes_time = changing_points / consts::PROCESS_POINTS_PER_CYCLE as f32;
+        let has_changes = state.ui.has_any_process_mix_changes();
+        let changes_time = state.ui.all_process_mix_change_time();
 
         let mut tabs: Vec<_> = Output::iter()
             .map(|output| TabItem {
