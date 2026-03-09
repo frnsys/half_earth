@@ -1,14 +1,7 @@
-use crate::{climate::EmissionsData, display::DisplayEvent};
+use crate::{climate::EmissionsData, consts, display::DisplayEvent};
 use enum_iterator::Sequence;
 use enum_map::EnumMap;
-use hes_engine::{
-    Change,
-    IconEvent,
-    Id,
-    Income,
-    Output,
-    State,
-};
+use hes_engine::{Change, IconEvent, Id, Income, Output, State};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -117,17 +110,7 @@ impl RefundablePoints {
     }
 }
 
-#[derive(
-    Debug,
-    Default,
-    Clone,
-    Copy,
-    PartialEq,
-    PartialOrd,
-    Serialize,
-    Deserialize,
-    Sequence,
-)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize, Sequence)]
 pub enum Tutorial {
     #[default]
     Projects,
@@ -168,15 +151,13 @@ pub struct UIState {
     pub change_history: Vec<(usize, Vec<Change>)>,
 
     #[serde(default)]
-    pub process_mix_history:
-        Vec<(usize, EnumMap<Output, BTreeMap<String, usize>>)>,
+    pub process_mix_history: Vec<(usize, EnumMap<Output, BTreeMap<String, usize>>)>,
 
     #[serde(default)]
     pub session_start_state: State,
 
     // Track planned process mix changes
-    pub process_mix_changes:
-        EnumMap<Output, BTreeMap<Id, isize>>,
+    pub process_mix_changes: EnumMap<Output, BTreeMap<Id, isize>>,
 
     // Track changes made to the plan
     // in a given session, so they can
@@ -209,28 +190,17 @@ impl UIState {
         self.world_events.clear();
 
         self.cycle_start_state.year = state.world.year;
-        self.cycle_start_state.extinction_rate =
-            state.world.extinction_rate;
+        self.cycle_start_state.extinction_rate = state.world.extinction_rate;
         self.cycle_start_state.contentedness = state.outlook();
-        self.cycle_start_state.temperature =
-            state.world.temperature;
-        self.cycle_start_state.emissions =
-            state.emissions.as_gtco2eq();
-        self.cycle_start_state.region_incomes = state
-            .world
-            .regions
-            .iter()
-            .map(|r| r.income)
-            .collect();
-        self.cycle_start_state.parliament =
-            state.npcs.iter().map(|npc| npc.seats).collect();
+        self.cycle_start_state.temperature = state.world.temperature;
+        self.cycle_start_state.emissions = state.emissions.as_gtco2eq();
+        self.cycle_start_state.region_incomes =
+            state.world.regions.iter().map(|r| r.income).collect();
+        self.cycle_start_state.parliament = state.npcs.iter().map(|npc| npc.seats).collect();
         self.cycle_start_state.completed_projects.clear();
     }
 
-    pub fn has_process_mix_changes(
-        &self,
-        output: Output,
-    ) -> bool {
+    pub fn has_process_mix_changes(&self, output: Output) -> bool {
         self.process_mix_changes[output]
             .iter()
             .any(|(_, change)| *change != 0)

@@ -64,8 +64,8 @@ impl Scannable for Project {
 
             result = ScanResult::SuccessContinue;
 
-            // Passing Policies
-            // Free if withdrawn in this same session (i.e. undo the withdraw)
+        // Passing Policies
+        // Free if withdrawn in this same session (i.e. undo the withdraw)
         } else if self.kind == ProjectType::Policy
             && (changes.withdrawn || state.core.pay_points(&self.id))
         {
