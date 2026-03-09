@@ -93,14 +93,13 @@ impl Renderer {
             render_target.height() as usize,
         ];
         let img = egui::ColorImage::from_rgba_unmultiplied(size, &data);
-        if self.texture_id.is_none() {
+        if let Some(tex) = &self.texture_id {
+            ctx.tex_manager()
+                .write()
+                .set(tex.id(), ImageDelta::full(img, TextureOptions::NEAREST));
+        } else {
             self.texture_id =
                 Some(ctx.load_texture("globe-render-texture", img, TextureOptions::NEAREST));
-        } else {
-            ctx.tex_manager().write().set(
-                self.texture_id.as_ref().unwrap().id(),
-                ImageDelta::full(img, TextureOptions::NEAREST),
-            );
         }
         self.texture_id.as_ref().expect("handle exists")
     }

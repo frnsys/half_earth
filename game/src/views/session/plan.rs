@@ -12,7 +12,6 @@ use rust_i18n::t;
 use strum::IntoEnumIterator;
 
 use crate::{
-    consts,
     debug::DEBUG,
     display::{
         self, AsText, FloatExt, HasIcon, Icon, factors::factors_card, group_color, icons, resource,
@@ -720,7 +719,7 @@ fn get_processes(state: &State, output: Output) -> Vec<Process> {
         .filter(|p| (!p.locked || show_all) && p.output == output)
         .cloned()
         .collect::<Vec<_>>();
-    processes.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    processes.sort_by_key(|a| a.name.to_lowercase());
     processes
 }
 
@@ -1053,7 +1052,7 @@ fn get_projects(
                 })
                 .cloned()
                 .collect::<Vec<_>>();
-    projects.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    projects.sort_by_key(|a| a.name.to_lowercase());
     projects
 }
 
