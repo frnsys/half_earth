@@ -23,7 +23,7 @@ use crate::{
     },
     state::{GameState, PlanChange, Points, StateExt, Tutorial},
     text::bbcode,
-    tips::{Tip, add_card, add_tip, tip},
+    tips::{Tip, add_editable_project_card, add_tip, tip},
     vars::Var,
     views::{
         cards::draw_mix_cell,
@@ -180,7 +180,10 @@ impl Plan {
                     for p in top {
                         match p {
                             Some(proj) => {
-                                add_card((*proj).clone(), ui.add(project_card_slot(proj)));
+                                add_editable_project_card(
+                                    (*proj).clone(),
+                                    ui.add(project_card_slot(proj)),
+                                );
                             }
                             None => {
                                 ui.add(empty_card_slot());
@@ -193,7 +196,10 @@ impl Plan {
                     for p in bot {
                         match p {
                             Some(proj) => {
-                                add_card((*proj).clone(), ui.add(project_card_slot(proj)));
+                                add_editable_project_card(
+                                    (*proj).clone(),
+                                    ui.add(project_card_slot(proj)),
+                                );
                             }
                             None => {
                                 ui.add(empty_card_slot());
@@ -438,7 +444,10 @@ impl Plan {
                 for chunk in active_projects.chunks(slots) {
                     ui.horizontal(|ui| {
                         for project in chunk {
-                            add_card((*project).clone(), ui.add(project_card_slot(project)));
+                            add_editable_project_card(
+                                (*project).clone(),
+                                ui.add(project_card_slot(project)),
+                            );
                         }
                     });
                 }

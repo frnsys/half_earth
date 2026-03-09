@@ -138,7 +138,7 @@ impl<C: AsCard + Clone> Card<C> {
                 corner(
                     ui,
                     resp.rect,
-                    "card-flip".into(),
+                    ui.id().with("card-flip"),
                     self.bg_color().intensity() < 0.5,
                     &mut self.flipped,
                 );

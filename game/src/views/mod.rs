@@ -30,6 +30,7 @@ use session::Session;
 pub(crate) use cards::Card;
 pub(crate) use events::render_event_card;
 pub(crate) use factors::FactorsCard;
+pub(crate) use scanner::Cards;
 pub(crate) use session::Changes;
 
 /// Phase of the game.

@@ -7,7 +7,7 @@ use crate::{
     parts::{glow_fill, h_center, raised_frame},
     state::GameState,
     text::bbcode,
-    views::{Card, Changes, FactorsCard, render_event_card},
+    views::{Card, Cards, Changes, FactorsCard, render_event_card},
 };
 
 #[derive(Clone)]
@@ -35,7 +35,7 @@ impl Tip {
         });
     }
 
-    pub fn render(&mut self, ui: &mut egui::Ui, state: &GameState) -> bool {
+    pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> bool {
         let mut clicked_outside = false;
         if !self.text.is_empty() {
             h_center(ui, "tip", |tui| {
@@ -83,6 +83,14 @@ impl Tip {
                         }
                         TipCard::NPC(card) => card.render(ui, state, false),
                         TipCard::Changes(changes) => ui.add(&(*changes)),
+                        TipCard::EditableProject(cards) => {
+                            ui.push_id("editable-project", |ui| {
+                                ui.set_height(ui.ctx().content_rect().height().min(640.));
+                                set_tip_width(ui);
+                                cards.render(ui, state)
+                            })
+                            .response
+                        }
                     };
                     if !clicked_outside {
                         clicked_outside = resp.clicked_elsewhere();
@@ -118,11 +126,10 @@ pub fn add_tip(tip: Tip, resp: egui::Response) -> egui::Response {
     resp
 }
 
-/// Convenience method to display a tip card on click.
-pub fn add_card<C: Into<TipCard>>(card: C, resp: egui::Response) -> egui::Response {
+pub fn add_editable_project_card(project: Project, resp: egui::Response) -> egui::Response {
     if resp.interact(egui::Sense::click()).clicked() {
         let mut tip = tip(icons::OTHER, "");
-        tip.card = Some(card.into());
+        tip.card = Some(TipCard::editable_project(project));
         open_tip(&resp, tip);
     }
     resp
@@ -173,7 +180,7 @@ fn open_tip(resp: &egui::Response, tip: Tip) {
 }
 
 /// Render the currently-open tip, if any.
-pub fn render_tip(ctx: &egui::Context, state: &GameState) {
+pub fn render_tip(ctx: &egui::Context, state: &mut GameState) {
     let popup_id = egui::Id::new("tip");
     let opened_id = popup_id.with("just-opened");
     let card_id = popup_id.with("card");
@@ -217,6 +224,10 @@ pub fn render_tip(ctx: &egui::Context, state: &GameState) {
                 ctx.memory_mut(|mem| {
                     mem.data.remove::<TipCard>(card_id);
                 });
+            } else if let Some(card) = &tip.card {
+                ctx.memory_mut(|mem| {
+                    mem.data.insert_temp(card_id, card.clone());
+                });
             }
 
             // No longer just-opened this frame.
@@ -237,6 +248,7 @@ pub enum TipCard {
     Event(DisplayEvent),
     NPC(Card<NPC>),
     Changes(Changes),
+    EditableProject(Cards<Project>),
 }
 impl From<Project> for TipCard {
     fn from(value: Project) -> Self {
@@ -276,5 +288,10 @@ impl From<DisplayEvent> for TipCard {
 impl From<Changes> for TipCard {
     fn from(value: Changes) -> Self {
         TipCard::Changes(value)
+    }
+}
+impl TipCard {
+    pub fn editable_project(value: Project) -> Self {
+        TipCard::EditableProject(Cards::new(std::iter::once(value)))
     }
 }
