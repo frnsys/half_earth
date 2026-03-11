@@ -192,7 +192,7 @@ impl Session {
     fn update_tutorial(&mut self, state: &mut State, tutorial: &mut Tutorial) {
         if state.flags.contains(&Flag::SkipTutorial) {
             *tutorial = Tutorial::Ready;
-        } else if state.flags.contains(&Flag::RepeatTutorial) {
+        } else if state.flags.contains(&Flag::RepeatTutorial) && *tutorial == Tutorial::Ready {
             *tutorial = Tutorial::Projects;
 
             let events = StateExt::roll_events(state, EventPhase::PlanningStart);
