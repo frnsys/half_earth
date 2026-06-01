@@ -41,6 +41,8 @@ Debug options can be specified through the env vars `DEBUG` and `DEBUG_VIEW`, e.
 DEBUG=SKIP_TUTORIAL,ALL_PROJECTS,SKIP_EVENTS DEBUG_VIEW=Plan cargo run
 ```
 
+On web, use e.g. `play.half.earth/?debug=SKIP_TUTORIAL,SKIP_EVENTS`.
+
 See `game/src/debug.rs`.
 
 Game states can also be exported via the game menu (the "Copy Session" button). For compactness this is a base64-encoded, DEFLATE-compressed representation.
