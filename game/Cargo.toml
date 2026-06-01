@@ -39,7 +39,7 @@ miniz_oxide = "0.8.9"
 wasm-bindgen = "0.2.100"
 wasm-bindgen-futures = "0.4"
 serde-wasm-bindgen = "0.6"
-web-sys = { version = "0.3", default-features = false }
+web-sys = { version = "0.3", default-features = false, features = ["Window", "Location", "UrlSearchParams"] }
 eframe = { version = "0.33.0", default-features = false, features = ["glow", "persistence"] }
 egui_extras = { version = "0.33.0", default-features = false, features = ["webp", "svg", "image", "http"] }
 sys-locale = { version = "0.3.2", features = ["js"] }

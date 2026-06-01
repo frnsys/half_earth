@@ -137,10 +137,25 @@ impl DebugOpts {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+fn get_debug_opts() -> String {
+    std::env::var("DEBUG").unwrap_or_default()
+}
+
+#[cfg(target_arch = "wasm32")]
+fn get_debug_opts() -> String {
+    web_sys::window()
+        .and_then(|win| win.location().search().ok())
+        .and_then(|search| web_sys::UrlSearchParams::new_with_str(&search).ok())
+        .and_then(|params| params.get("debug"))
+        .unwrap_or_default()
+}
+
 impl Default for DebugOpts {
     /// Initialize debug options from env variables.
     fn default() -> Self {
-        let d = env::var("DEBUG").unwrap_or_default();
+        let d = get_debug_opts();
+        log::error!("Debug options: {d}");
         let debug: Vec<_> = d.split(',').collect();
 
         let mut view = env::var("DEBUG_VIEW")
