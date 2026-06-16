@@ -2146,7 +2146,7 @@ checksum = "fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c"
 
 [[package]]
 name = "hes-editor"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "egui",
  "egui-file-dialog",
@@ -2180,7 +2180,7 @@ dependencies = [
 
 [[package]]
 name = "hes-game"
-version = "1.0.12"
+version = "1.0.13"
 dependencies = [
  "base64",
  "bincode",
