@@ -158,11 +158,11 @@ impl egui::Widget for &mut WorldEditor {
                                         Tab::Industries => self.world.industries.remove(&id),
                                         Tab::Processes => self.world.processes.remove(&id),
                                         Tab::Projects => {
-                                            self.projects.remove(&id);
+                                            self.world.projects.remove(&id);
                                             self.projects = self.world.projects.clone();
                                         }
                                         Tab::Events => {
-                                            self.events.remove(&id);
+                                            self.world.events.remove(&id);
                                             self.events = self.world.events.clone();
                                         }
                                         _ => {}
