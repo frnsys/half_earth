@@ -545,7 +545,7 @@ pub enum CostKind {
 impl Editable for (&mut Vec<Id>, &Collection<NPC>) {
     fn edit(self, ui: &mut egui::Ui) {
         let (ids, opts) = self;
-        ui.horizontal_wrapped(|ui| {
+        ui.vertical(|ui| {
             for v in opts.iter() {
                 let selected = ids.contains(&v.id);
                 let color = if selected {
