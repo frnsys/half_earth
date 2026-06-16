@@ -13,7 +13,7 @@ pub fn projects(
     events: &Collection<Event>,
     npcs: &Collection<NPC>,
 ) -> parts::ListResponse {
-    parts::editable_list(ui, items, |ui, item| {
+    parts::editable_list("projects", ui, items, |ui, item| {
         project_view(ui, item, processes, projects, industries, events, npcs)
     })
 }

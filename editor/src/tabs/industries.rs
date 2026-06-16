@@ -1,19 +1,11 @@
 use crate::{inputs, parts};
 use hes_engine::Industry;
 
-pub fn industries(
-    ui: &mut egui::Ui,
-    items: &mut Vec<Industry>,
-) -> parts::ListResponse {
-    parts::editable_list(ui, items, |ui, item| {
-        industry_view(ui, item)
-    })
+pub fn industries(ui: &mut egui::Ui, items: &mut Vec<Industry>) -> parts::ListResponse {
+    parts::editable_list("industries", ui, items, |ui, item| industry_view(ui, item))
 }
 
-fn industry_view(
-    ui: &mut egui::Ui,
-    industry: &mut Industry,
-) -> egui::Response {
+fn industry_view(ui: &mut egui::Ui, industry: &mut Industry) -> egui::Response {
     ui.vertical(|ui| {
         ui.add(inputs::heading(&mut industry.name));
 

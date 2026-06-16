@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use egui::{Color32, Sense};
+use egui::{Color32, RichText, Sense};
 use egui_extras::{Column, TableBuilder, TableRow};
 use hes_engine::{flavor::Image, *};
 use hes_images::flavor_image;
@@ -92,10 +92,7 @@ impl<'a> Editable for Heading<'a> {
 
 impl<'a> Editable for LongText<'a> {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.scope(|ui| {
-            ui.style_mut().spacing.text_edit_width = ui.available_width();
-            ui.text_edit_multiline(self.0);
-        });
+        ui.add(egui::TextEdit::multiline(self.0).desired_width(ui.available_width()));
     }
 }
 
@@ -201,19 +198,17 @@ impl Editable for &mut Option<f32> {
 
 impl Editable for &mut Option<Image> {
     fn edit(self, ui: &mut egui::Ui) {
-        // let mut enable = self.is_some();
-        // ui.add(edit(&mut enable));
-
         if let Some(image) = self {
             ui.add(edit(image));
+        } else {
+            // Create an empty placeholder
+            let desired_size = egui::vec2(360.0, 360.0);
+            let (rect, _) = ui.allocate_exact_size(desired_size, egui::Sense::hover());
+            let mut child_ui = ui.new_child(egui::UiBuilder::new().max_rect(rect).layout(
+                egui::Layout::centered_and_justified(egui::Direction::LeftToRight),
+            ));
+            child_ui.label(RichText::new("(no image)").color(Color32::from_gray(96)));
         }
-
-        // if enable != self.is_some() {
-        //     *self = match self {
-        //         Some(_) => None,
-        //         None => Some(Image::default()),
-        //     };
-        // }
     }
 }
 
@@ -258,7 +253,18 @@ impl<'a, const U: usize> Editable for Precise<'a, U> {
 impl Editable for &mut Image {
     fn edit(self, ui: &mut egui::Ui) {
         ui.vertical(|ui| {
-            ui.add(flavor_image(self));
+            let desired_size = egui::vec2(360.0, 240.0);
+            let (rect, _) = ui.allocate_exact_size(desired_size, egui::Sense::hover());
+            let mut child_ui = ui.new_child(
+                egui::UiBuilder::new()
+                    .max_rect(rect)
+                    .layout(egui::Layout::centered_and_justified(egui::Direction::LeftToRight))
+            );
+            child_ui.add(
+                flavor_image(self)
+                    .max_size(desired_size)
+            );
+
             ui.add(edit(&mut self.attribution).label("Attribution").inline());
             ui.add(parts::help("Images will be bundled with your exported world, so it's recommended that you make sure they aren't too big. Recommended size is 360x240."));
         });

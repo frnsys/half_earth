@@ -11,11 +11,8 @@ pub fn events(
     events: &Collection<Event>,
     npcs: &Collection<NPC>,
 ) -> parts::ListResponse {
-    parts::editable_list(ui, items, |ui, item| {
-        event_view(
-            ui, item, processes, projects, industries, events,
-            npcs,
-        )
+    parts::editable_list("events", ui, items, |ui, item| {
+        event_view(ui, item, processes, projects, industries, events, npcs)
     })
 }
 
@@ -37,35 +34,35 @@ fn event_view(
             parts::two_columns(
                 ui,
                 |ui| {
-                    ui.add(inputs::edit(
-                        &mut event.flavor.image,
-                    ));
+                    ui.add(inputs::edit(&mut event.flavor.image));
 
                     parts::space(ui);
 
                     ui.add(
-                    inputs::lock(&mut event.locked)
-                    .label("Locked")
-                    .help(
-                        "If this event is locked at the start.",
-                    )
-                    .inline(),
+                        inputs::lock(&mut event.locked)
+                            .label("Locked")
+                            .help("If this event is locked at the start.")
+                            .inline(),
                     );
                 },
                 |ui| {
                     ui.add(
                         inputs::edit(&mut event.flavor.arc)
-                        .label("Arc")
-                        .help("Optional story arc name").inline(),
+                            .label("Arc")
+                            .help("Optional story arc name")
+                            .inline(),
                     );
 
                     parts::space(ui);
 
-                    ui.add(inputs::edit(&mut event.phase).label("Phase").help(
-                            "What phase/screen the event can occur on.",
-                    ).inline());
+                    ui.add(
+                        inputs::edit(&mut event.phase)
+                            .label("Phase")
+                            .help("What phase/screen the event can occur on.")
+                            .inline(),
+                    );
                 },
-                );
+            );
 
             parts::space(ui);
 

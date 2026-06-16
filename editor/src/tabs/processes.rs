@@ -43,7 +43,9 @@ pub fn processes(
     items: &mut Vec<Process>,
     npcs: &Collection<NPC>,
 ) -> parts::ListResponse {
-    parts::editable_list(ui, items, |ui, item| process_view(ui, item, npcs))
+    parts::editable_list("processes", ui, items, |ui, item| {
+        process_view(ui, item, npcs)
+    })
 }
 
 fn process_view(

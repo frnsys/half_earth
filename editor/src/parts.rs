@@ -1,4 +1,4 @@
-use egui::{Color32, InnerResponse, Response, Ui};
+use egui::{Color32, InnerResponse, Response, Ui, ahash::HashMap};
 use egui_taffy::{TuiBuilderLogic, taffy, tui};
 use hes_engine::{HasId, Id};
 
@@ -32,6 +32,7 @@ pub fn frame() -> egui::Frame {
 }
 
 pub fn editable_list<T: Default + HasId>(
+    id: &str,
     ui: &mut egui::Ui,
     items: &mut Vec<T>,
     list_item: impl Fn(&mut egui::Ui, &mut T) -> egui::Response,
@@ -39,10 +40,15 @@ pub fn editable_list<T: Default + HasId>(
     let mut request = None;
     let mut changed = false;
 
+    let cache_id = ui.make_persistent_id(id).with("height_cache");
+    let mut height_cache = ui.memory_mut(|mem| {
+        mem.data
+            .get_temp::<HashMap<Id, f32>>(cache_id)
+            .unwrap_or_default()
+    });
+
     let mut resp = ui
         .vertical(|ui| {
-            ui.set_width(SECTION_WIDTH);
-
             h_center(ui, "add-item", |ui| {
                 ui.add_space(6.);
                 ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
@@ -64,7 +70,7 @@ pub fn editable_list<T: Default + HasId>(
                 }
             });
 
-            for item in items.iter_mut() {
+            let mut render_item = |ui: &mut Ui, item: &mut T| -> Response {
                 let resp = frame()
                     .show(ui, |ui| {
                         let id = *item.id();
@@ -91,9 +97,47 @@ pub fn editable_list<T: Default + HasId>(
 
                     resp
                 });
+
+                resp
+            };
+
+            for item in items.iter_mut() {
+                let item_id = *item.id();
+
+                let cached_height = height_cache.get(&item_id);
+
+                match cached_height {
+                    None => {
+                        let resp = render_item(ui, item);
+                        height_cache.insert(item_id, resp.rect.height());
+                    }
+                    Some(height) => {
+                        let row_width = ui.available_width();
+                        let next_item_pos = ui.cursor().min;
+                        let predicted_rect = egui::Rect::from_min_size(
+                            next_item_pos,
+                            egui::vec2(row_width, *height),
+                        );
+                        if ui.is_rect_visible(predicted_rect) {
+                            let resp = render_item(ui, item);
+                            if resp.changed() {
+                                // Re-compute height
+                                height_cache.remove(&item_id);
+                            }
+                        } else {
+                            // Empty placeholder to ensure correct positions
+                            ui.allocate_at_least(
+                                egui::vec2(row_width, *height),
+                                egui::Sense::hover(),
+                            );
+                        }
+                    }
+                }
             }
         })
         .response;
+
+    ui.memory_mut(|mem| mem.data.insert_temp(cache_id, height_cache));
 
     if changed {
         resp.mark_changed();
