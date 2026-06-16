@@ -68,6 +68,7 @@ pub fn editable_list<T: Default + HasId>(
                 let resp = frame()
                     .show(ui, |ui| {
                         let id = *item.id();
+                        ui.set_width(SECTION_WIDTH);
                         ui.push_id(id, |ui| {
                             let resp = list_item(ui, item);
                             if resp.changed() {
