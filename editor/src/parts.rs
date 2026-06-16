@@ -4,6 +4,43 @@ use hes_engine::{HasId, Id};
 
 pub const ROW_HEIGHT: f32 = 18.;
 
+pub trait CreateNew {
+    fn create_new() -> Self;
+}
+
+impl CreateNew for hes_engine::Project {
+    fn create_new() -> Self {
+        let mut new = Self::default();
+        new.id = Id::new_v4();
+        new.name = format!("Project {}", &new.id.to_string()[..5]);
+        new
+    }
+}
+impl CreateNew for hes_engine::Process {
+    fn create_new() -> Self {
+        let mut new = Self::default();
+        new.id = Id::new_v4();
+        new.name = format!("Process {}", &new.id.to_string()[..5]);
+        new
+    }
+}
+impl CreateNew for hes_engine::Industry {
+    fn create_new() -> Self {
+        let mut new = Self::default();
+        new.id = Id::new_v4();
+        new.name = format!("Industry {}", &new.id.to_string()[..5]);
+        new
+    }
+}
+impl CreateNew for hes_engine::Event {
+    fn create_new() -> Self {
+        let mut new = Self::default();
+        new.id = Id::new_v4();
+        new.name = format!("Event {}", &new.id.to_string()[..5]);
+        new
+    }
+}
+
 pub enum Request {
     Delete(Id),
 }
@@ -31,7 +68,7 @@ pub fn frame() -> egui::Frame {
         .corner_radius(6)
 }
 
-pub fn editable_list<T: Default + HasId>(
+pub fn editable_list<T: Default + HasId + CreateNew>(
     id: &str,
     ui: &mut egui::Ui,
     items: &mut Vec<T>,
@@ -65,7 +102,7 @@ pub fn editable_list<T: Default + HasId>(
                 frame.paint(ui);
 
                 if resp.clicked() {
-                    let new = T::default();
+                    let new = T::create_new();
                     items.insert(0, new);
                 }
             });
