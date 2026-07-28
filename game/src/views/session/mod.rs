@@ -207,6 +207,12 @@ impl Session {
         };
         if should_advance {
             tutorial.advance();
+
+            // Need to remove the RepeatTutorial flag when the tutorial
+            // finishes, otherwise it will re-trigger the tutorial mid-game
+            if *tutorial == Tutorial::Ready {
+                state.flags.retain(|flag| *flag != Flag::RepeatTutorial);
+            }
         }
     }
 }
