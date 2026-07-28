@@ -57,11 +57,7 @@ impl NodesAnimator {
                 }
                 found = true;
             } else {
-                // TODO this is buggy
-                // ui.scope(|ui| {
-                //     ui.set_opacity(0.);
-                //     node.render_static(ui, text_height);
-                // });
+                node.render_partial(ui, 0, 0.0, text_height);
             }
         }
     }

@@ -119,8 +119,8 @@ impl Dialogue {
 
         let revealed = self.animator.finished();
 
-        if revealed {
-            if is_last_line {
+        if is_last_line {
+            options(ui, revealed, |ui| {
                 if let Some(effects) = &self.effects {
                     render_effects(ui, state, effects);
                 }
@@ -133,7 +133,9 @@ impl Dialogue {
                         }
                     });
                 });
-            } else if let Some(DialogueNext::Responses(responses)) = line.next.clone() {
+            });
+        } else if let Some(DialogueNext::Responses(responses)) = line.next.clone() {
+            options(ui, revealed, |ui| {
                 ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 r_align(ui, "dialogue-opts", |tui| {
                     for branch in responses {
@@ -149,7 +151,9 @@ impl Dialogue {
                         });
                     }
                 });
-            } else {
+            });
+        } else {
+            options(ui, revealed, |ui| {
                 ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
                 r_align(ui, "dialogue-opts", |tui| {
                     tui.ui(|ui| {
@@ -159,7 +163,7 @@ impl Dialogue {
                         }
                     });
                 });
-            }
+            });
         }
         result
     }
@@ -197,4 +201,16 @@ impl Dialogue {
             true
         }
     }
+}
+
+/// Display dialogue options/responses, hiding them if the dialogue text
+/// isn't yet fully revealed, but they'll still take up the required space.
+fn options(ui: &mut egui::Ui, revealed: bool, inner: impl FnOnce(&mut egui::Ui)) {
+    ui.scope(|ui| {
+        if !revealed {
+            ui.disable();
+            ui.set_opacity(0.);
+        }
+        inner(ui);
+    });
 }
