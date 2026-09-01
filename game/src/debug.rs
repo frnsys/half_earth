@@ -67,6 +67,9 @@ pub struct DebugOpts {
     /// Start with a seceded region.
     pub region_seceded: bool,
 
+    /// Use a grid for the project cards instead of the scanner.
+    pub use_card_grid: bool,
+
     /// State to load.
     pub state: Option<State>,
 }
@@ -214,6 +217,7 @@ impl Default for DebugOpts {
             production_shortage: debug.contains(&"PRODUCTION_SHORTAGE"),
             feedstock_shortage: debug.contains(&"FEEDSTOCK_SHORTAGE"),
             region_seceded: debug.contains(&"SECEDED"),
+            use_card_grid: debug.contains(&"CARD_GRID"),
             view,
             state,
         }
