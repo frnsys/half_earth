@@ -656,6 +656,11 @@ impl State {
             for effect in &proj.effects {
                 effects.push(effect.clone());
             }
+
+            let mut changes = ProjectChanges::default();
+            changes.add_supporters(&proj.supporters);
+            changes.add_opposers(&proj.opposers);
+            self.apply_changes(changes);
         }
 
         for effect in effects {

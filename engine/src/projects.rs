@@ -242,7 +242,7 @@ impl Project {
     }
 
     /// Advance this project's implementation
-    pub fn build(&mut self) -> bool {
+    fn build(&mut self) -> bool {
         match &mut self.status {
             Status::Building => {
                 self.progress += 1. / years_for_points(self.points, self.cost);
@@ -408,21 +408,16 @@ impl Project {
             }
         }
 
+        // NOTE: policy completion is handled separately,
+        // because they always complete before the next planning cycle.
+        // See `roll_new_policy_outcomes`.
         let completed = self.build();
         if completed {
             self.completed_at = year;
             changes.add_effects.extend(self.effects.iter().cloned());
 
-            for npc_id in &self.supporters {
-                changes
-                    .relationships
-                    .push((*npc_id, RELATIONSHIP_CHANGE_AMOUNT));
-            }
-            for npc_id in &self.opposers {
-                changes
-                    .relationships
-                    .push((*npc_id, -RELATIONSHIP_CHANGE_AMOUNT));
-            }
+            changes.add_supporters(&self.supporters);
+            changes.add_opposers(&self.opposers);
 
             changes.completed = true;
         } else if self.gradual {
@@ -473,6 +468,21 @@ pub struct ProjectChanges {
     pub remove_effects: Vec<Effect>,
     pub add_effects: Vec<Effect>,
     pub relationships: Vec<(Id, f32)>,
+}
+impl ProjectChanges {
+    pub fn add_supporters(&mut self, npc_ids: &[Id]) {
+        for npc_id in npc_ids {
+            self.relationships
+                .push((*npc_id, RELATIONSHIP_CHANGE_AMOUNT));
+        }
+    }
+
+    pub fn add_opposers(&mut self, npc_ids: &[Id]) {
+        for npc_id in npc_ids {
+            self.relationships
+                .push((*npc_id, -RELATIONSHIP_CHANGE_AMOUNT));
+        }
+    }
 }
 
 impl Collection<Project> {
