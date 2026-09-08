@@ -543,7 +543,7 @@ fn npc_opposer(ui: &mut egui::Ui, npc: &NPC) {
         t!(
             "%{name} is opposed to this. If you implement it, your relationship will worsen by -[i]%{icon}[/i].",
             name = t!(&npc.name),
-            icon = icons::RELATIONSHIP,
+            icon = icons::RELATIONSHIP_HALF,
         ),
     );
     add_tip(tip, ui.add(npc_icon(npc, false)));
@@ -555,7 +555,7 @@ fn npc_supporter(ui: &mut egui::Ui, npc: &NPC) {
         t!(
             "%{name} supports this. If you implement it, your relationship will improve by +[i]%{icon}[/i].",
             name = t!(&npc.name),
-            icon = icons::RELATIONSHIP,
+            icon = icons::RELATIONSHIP_HALF,
         ),
     );
     add_tip(tip, ui.add(npc_icon(npc, true)));

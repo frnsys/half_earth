@@ -56,8 +56,9 @@ impl AsCard for NPC {
                             ui.horizontal(|ui| {
                                 ui.style_mut().spacing.item_spacing.x = 1.;
                                 for i in 0..consts::MAX_RELATIONSHIP {
-                                    let icon = if i as f32 <= self.relationship
-                                    {
+                                    let icon = if i as f32 + 0.5 == self.relationship {
+                                        icons::RELATIONSHIP_HALF
+                                    } else if i as f32 <= self.relationship {
                                         icons::RELATIONSHIP
                                     } else {
                                         icons::RELATIONSHIP_EMPTY

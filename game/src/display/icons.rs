@@ -157,6 +157,7 @@ icons! {
 
     // NPC relationships
     RELATIONSHIP: "/icons/relationship.png",
+    RELATIONSHIP_HALF: "/icons/relationship_half.png",
     RELATIONSHIP_EMPTY: "/icons/relationship_empty.png",
     ALLY: "/icons/npcs/ally.svg",
     NEUTRAL: "/icons/npcs/neutral.svg",
