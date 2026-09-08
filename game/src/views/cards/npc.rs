@@ -88,9 +88,7 @@ impl AsCard for NPC {
                 .show(ui, |ui| {
                     ui.set_width(ui.available_width() - 6.);
                     ui.vertical_centered(|ui| {
-                        ui.add(portrait.fit_to_exact_size(
-                            egui::Vec2::splat(164.),
-                        ))
+                        ui.add(portrait.fit_to_exact_size(egui::Vec2::splat(164.)))
                     });
                 })
         });
@@ -110,10 +108,7 @@ impl AsCard for NPC {
             })
             .inner_margin(egui::Margin::symmetric(8, 8))
             .corner_radius(4)
-            .stroke(Stroke::new(
-                1.,
-                Color32::from_black_alpha(64),
-            ))
+            .stroke(Stroke::new(1., Color32::from_black_alpha(64)))
             .show(ui, |ui| {
                 ui.set_width(ui.available_width());
                 ui.set_height(ui.available_height());
@@ -161,10 +156,7 @@ impl AsCard for NPC {
         ui.vertical_centered(|ui| {
             ui.add_space(12.);
             let speaker = as_speaker(&self.name);
-            ui.add(
-                speaker_icon(&speaker)
-                    .fit_to_exact_size(egui::Vec2::splat(64.)),
-            );
+            ui.add(speaker_icon(&speaker).fit_to_exact_size(egui::Vec2::splat(64.)));
         });
 
         super::card_desc(ui, &self.flavor.description);
@@ -180,23 +172,12 @@ impl AsCard for NPC {
                     ui.columns(2, |cols| {
                         cols[0].vertical(|ui| {
                             let likes = t!(&self.flavor.likes);
-                            ui.label(
-                                egui::RichText::new(t!(
-                                    "Likes"
-                                ))
-                                .underline(),
-                            );
+                            ui.label(egui::RichText::new(t!("Likes")).underline());
                             ui.label(likes);
                         });
                         cols[1].vertical(|ui| {
-                            let dislikes =
-                                t!(&self.flavor.dislikes);
-                            ui.label(
-                                egui::RichText::new(t!(
-                                    "Dislikes"
-                                ))
-                                .underline(),
-                            );
+                            let dislikes = t!(&self.flavor.dislikes);
+                            ui.label(egui::RichText::new(t!("Dislikes")).underline());
                             ui.label(dislikes);
                         });
                     });
