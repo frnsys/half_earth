@@ -4,14 +4,7 @@ use rust_i18n::t;
 
 use crate::{
     consts,
-    display::{
-        self,
-        HasIcon,
-        Icon,
-        factors::Factor,
-        icons,
-        intensity::intensity_bar,
-    },
+    display::{self, HasIcon, Icon, factors::Factor, icons, intensity::intensity_bar},
     parts::flex_justified,
     state::FACTORS,
     vars::Var,
@@ -112,16 +105,10 @@ impl FactorsCard {
             Var::Emissions => display::emissions(self.total),
             Var::Biodiversity => display::extinction(self.total),
             Var::Land => {
-                format!(
-                    "{}%",
-                    display::percent(self.total / 100., true)
-                )
+                format!("{}%", display::percent(self.total / 100., true))
             }
             Var::Water => {
-                format!(
-                    "{}%",
-                    display::percent(self.total / 100., true)
-                )
+                format!("{}%", display::percent(self.total / 100., true))
             }
             Var::Energy => format!("{}", self.total.round()),
             Var::Electricity => {
@@ -141,13 +128,7 @@ impl FactorsCard {
     }
 }
 
-fn render_factor_line(
-    ui: &mut egui::Ui,
-    name: &str,
-    factor: &Factor,
-    relation: &str,
-    icon: Icon,
-) {
+fn render_factor_line(ui: &mut egui::Ui, name: &str, factor: &Factor, relation: &str, icon: Icon) {
     match factor {
         Factor::Region {
             intensity, display, ..
@@ -159,47 +140,33 @@ fn render_factor_line(
                     ui.add(intensity_bar(*intensity).pips(4));
                 });
 
-                ui.with_layout(
-                    Layout::right_to_left(Align::Center),
-                    |ui| {
-                        ui.style_mut().spacing.item_spacing.x =
-                            4.;
-                        ui.set_width(ui.available_width() / 2.);
-                        ui.add(icon.size(18.));
-                        ui.label(display);
-                    },
-                );
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.style_mut().spacing.item_spacing.x = 4.;
+                    ui.set_width(ui.available_width() / 2.);
+                    ui.add(icon.size(18.));
+                    ui.label(display);
+                });
             });
         }
         Factor::Project { display, .. } => {
             ui.horizontal(|ui| {
-                ui.with_layout(
-                    Layout::right_to_left(Align::Center),
-                    |ui| {
-                        ui.style_mut().spacing.item_spacing.x =
-                            4.;
-                        ui.add(icon.size(18.));
-                        ui.label(display);
-                    },
-                );
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.style_mut().spacing.item_spacing.x = 4.;
+                    ui.add(icon.size(18.));
+                    ui.label(display);
+                });
             });
         }
         Factor::Event {
             display, amount, ..
         } => {
-            let display = display
-                .clone()
-                .unwrap_or_else(|| amount.to_string());
+            let display = display.clone().unwrap_or_else(|| amount.to_string());
             ui.horizontal(|ui| {
-                ui.with_layout(
-                    Layout::right_to_left(Align::Center),
-                    |ui| {
-                        ui.style_mut().spacing.item_spacing.x =
-                            4.;
-                        ui.add(icon.size(18.));
-                        ui.label(display);
-                    },
-                );
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.style_mut().spacing.item_spacing.x = 4.;
+                    ui.add(icon.size(18.));
+                    ui.label(display);
+                });
             });
         }
         Factor::Process {
@@ -213,9 +180,7 @@ fn render_factor_line(
                 tui.ui(|ui| {
                     ui.horizontal_centered(|ui| {
                         ui.add(icon.size(18.));
-                        ui.add(
-                            intensity_bar(*intensity).pips(4),
-                        );
+                        ui.add(intensity_bar(*intensity).pips(4));
                     });
                 });
                 tui.ui(|ui| {
@@ -240,16 +205,12 @@ fn render_factor_line(
                     ui.add(intensity_bar(*intensity).pips(4));
                 });
 
-                ui.with_layout(
-                    Layout::right_to_left(Align::Center),
-                    |ui| {
-                        ui.style_mut().spacing.item_spacing.x =
-                            4.;
-                        ui.set_width(ui.available_width() / 2.);
-                        ui.add(icon.size(18.));
-                        ui.label(display);
-                    },
-                );
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.style_mut().spacing.item_spacing.x = 4.;
+                    ui.set_width(ui.available_width() / 2.);
+                    ui.add(icon.size(18.));
+                    ui.label(display);
+                });
             });
         }
     }
