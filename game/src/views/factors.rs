@@ -40,7 +40,7 @@ impl FactorsCard {
                     egui::Frame::NONE
                         .inner_margin(4)
                         .fill(Color32::from_black_alpha(64))
-                        .stroke(Stroke::new(1., Color32::from_black_alpha(96)))
+                        .stroke(Stroke::new(1f32, Color32::from_black_alpha(96)))
                         .corner_radius(4)
                         .show(ui, |ui| {
                             flex_justified(ui, "factors-header", |tui| {

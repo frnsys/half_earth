@@ -61,7 +61,7 @@ pub const SECTION_WIDTH: f32 = 720.;
 
 pub fn frame() -> egui::Frame {
     egui::Frame::NONE
-        .stroke(egui::Stroke::new(1., egui::Color32::WHITE))
+        .stroke(egui::Stroke::new(1f32, egui::Color32::WHITE))
         .fill(Color32::from_black_alpha(128))
         .inner_margin(12)
         .outer_margin(16)
@@ -190,7 +190,7 @@ pub fn h_center<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut egui::Ui
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Row,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
@@ -212,7 +212,7 @@ pub fn flex_justified(
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Row,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),

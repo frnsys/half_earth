@@ -108,7 +108,7 @@ impl AsCard for NPC {
             })
             .inner_margin(egui::Margin::symmetric(8, 8))
             .corner_radius(4)
-            .stroke(Stroke::new(1., Color32::from_black_alpha(64)))
+            .stroke(Stroke::new(1f32, Color32::from_black_alpha(64)))
             .show(ui, |ui| {
                 ui.set_width(ui.available_width());
                 ui.set_height(ui.available_height());

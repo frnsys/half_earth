@@ -89,12 +89,7 @@ impl Plan {
                 }
             }
             Page::All => {
-                self.render_full_plan(
-                    ui,
-                    &state.core,
-                    &mut state.ui.tutorial,
-                    &state.ui.plan_changes,
-                );
+                self.render_full_plan(ui, &state.core, &mut state.ui.tutorial);
             }
         }
 
@@ -125,7 +120,7 @@ impl Plan {
 
         ui.add_space(48.);
 
-        if let Some(page) = slots::processes_preview(ui, state, tutorial, viewed, plan_changes) {
+        if let Some(page) = slots::processes_preview(ui, state, tutorial, viewed) {
             self.set_page(page);
         }
 
@@ -164,13 +159,7 @@ impl Plan {
         }
     }
 
-    fn render_full_plan(
-        &mut self,
-        ui: &mut egui::Ui,
-        state: &State,
-        tutorial: &mut Tutorial,
-        plan_changes: &BTreeMap<Id, PlanChange>,
-    ) {
+    fn render_full_plan(&mut self, ui: &mut egui::Ui, state: &State, tutorial: &mut Tutorial) {
         let projects = &state.world.projects;
         let active_projects: Vec<_> = projects
             .iter()

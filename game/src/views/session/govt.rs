@@ -102,7 +102,7 @@ impl Parliament {
                 .fill(Color32::from_rgb(0x96, 0x5F, 0xA9))
                 .inner_margin(Margin::symmetric(8, 12))
                 .outer_margin(Margin::symmetric(0, 16))
-                .stroke(Stroke::new(1., Color32::from_rgb(0x76, 0x44, 0x87)))
+                .stroke(Stroke::new(1f32, Color32::from_rgb(0x76, 0x44, 0x87)))
                 .shadow(Shadow {
                     offset: [2, 2],
                     blur: 8,
@@ -137,7 +137,7 @@ impl Parliament {
                                         };
                                         egui::Frame::NONE
                                             .fill(fill)
-                                            .stroke(Stroke::new(1., stroke))
+                                            .stroke(Stroke::new(1f32, stroke))
                                             .corner_radius(3)
                                             .show(ui, |ui| {
                                                 ui.add(

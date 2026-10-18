@@ -270,7 +270,7 @@ impl AsCard for Process {
             .inner_margin(egui::Margin::symmetric(4, 4))
             .corner_radius(4)
             .stroke(Stroke::new(
-                1.,
+                1f32,
                 Color32::from_white_alpha(24),
             ))
             .show(ui, |ui| {

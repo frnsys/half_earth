@@ -290,8 +290,8 @@ pub fn center_center<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Column,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
-                height: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
+                height: taffy::prelude::percent(1f32),
             },
             align_items: Some(taffy::AlignItems::Center),
             justify_content: Some(taffy::JustifyContent::SpaceAround),
@@ -307,7 +307,7 @@ pub fn r_align<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui) -> T
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Column,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::End),
@@ -324,7 +324,7 @@ pub fn h_center<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui) -> 
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Row,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
@@ -341,12 +341,12 @@ pub fn h_center_top<T>(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui)
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Row,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Start),
             justify_content: Some(taffy::JustifyContent::Center),
-            gap: Size::length(12.),
+            gap: Size::length(12f32),
             ..Default::default()
         })
         .show(inner)
@@ -359,7 +359,7 @@ pub fn flex_justified(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui))
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Row,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),
@@ -376,7 +376,7 @@ pub fn flex_spaced(ui: &mut egui::Ui, id: &str, inner: impl FnOnce(&mut Tui)) {
             flex_grow: 1.,
             flex_direction: taffy::FlexDirection::Row,
             min_size: taffy::Size {
-                width: taffy::prelude::percent(1.),
+                width: taffy::prelude::percent(1f32),
                 height: taffy::prelude::auto(),
             },
             align_items: Some(taffy::AlignItems::Center),

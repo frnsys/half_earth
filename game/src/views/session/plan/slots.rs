@@ -121,7 +121,6 @@ pub fn processes_preview(
     state: &State,
     tutorial: &Tutorial,
     viewed: &[Id],
-    plan_changes: &BTreeMap<Id, PlanChange>,
 ) -> Option<Page> {
     let mut page = None;
 
@@ -355,7 +354,7 @@ fn view_all_slot() -> impl FnOnce(&mut egui::Ui) -> egui::Response {
 fn empty_card_slot() -> impl FnOnce(&mut egui::Ui) -> egui::Response {
     |ui| {
         egui::Frame::NONE
-            .stroke(Stroke::new(1., Color32::from_black_alpha(48)))
+            .stroke(Stroke::new(1f32, Color32::from_black_alpha(48)))
             .corner_radius(6)
             .show(ui, |ui| {
                 ui.set_height(SLOT_HEIGHT);
@@ -375,7 +374,7 @@ fn project_card_slot(project: &Project) -> impl FnOnce(&mut egui::Ui) -> egui::R
 
     move |ui| {
         egui::Frame::NONE
-            .stroke(Stroke::new(5., color))
+            .stroke(Stroke::new(5f32, color))
             .corner_radius(6)
             .shadow(Shadow {
                 offset: [1, 1],
@@ -632,7 +631,7 @@ mod prod_status {
                         } else {
                             Color32::from_rgb(0xE4, 0xC9, 0xC2)
                         })
-                        .stroke(Stroke::new(1., Color32::from_rgb(0xB8, 0xA2, 0x9C)))
+                        .stroke(Stroke::new(1f32, Color32::from_rgb(0xB8, 0xA2, 0x9C)))
                         .inner_margin(Margin::symmetric(3, 2))
                         .corner_radius(3)
                         .show(ui, |ui| {

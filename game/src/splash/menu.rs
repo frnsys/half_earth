@@ -61,7 +61,7 @@ impl WorldPicker {
 
             let resp = frame.allocate_space(ui).interact(Sense::click());
             if resp.hovered() {
-                frame.frame.stroke = Stroke::new(1., Color32::WHITE);
+                frame.frame.stroke = Stroke::new(1f32, Color32::WHITE);
             }
             frame.paint(ui);
 
@@ -195,7 +195,7 @@ impl Menu {
                 );
                 ui.style_mut().visuals.override_text_color = Some(Color32::WHITE);
                 ui.style_mut().visuals.widgets.noninteractive.bg_stroke =
-                    Stroke::new(1., Color32::WHITE);
+                    Stroke::new(1f32, Color32::WHITE);
 
                 ui.add_space(18.);
 

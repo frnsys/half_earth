@@ -129,9 +129,9 @@ pub fn configure_style(ctx: &egui::Context) {
         ..Default::default()
     };
     visuals.selection.bg_fill = Color32::from_rgb(0xfc, 0xba, 0x03);
-    visuals.selection.stroke = egui::Stroke::new(1., egui::Color32::BLACK);
+    visuals.selection.stroke = egui::Stroke::new(1f32, egui::Color32::BLACK);
     visuals.widgets.hovered.weak_bg_fill = egui::Color32::from_gray(20);
-    visuals.widgets.hovered.bg_stroke = egui::Stroke::new(0.5, egui::Color32::from_gray(64));
+    visuals.widgets.hovered.bg_stroke = egui::Stroke::new(0.5f32, egui::Color32::from_gray(64));
     visuals.widgets.open.weak_bg_fill = egui::Color32::from_gray(24);
     visuals.widgets.open.bg_fill = egui::Color32::from_gray(24);
     visuals.widgets.inactive.weak_bg_fill = egui::Color32::from_gray(24);

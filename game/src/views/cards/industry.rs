@@ -29,12 +29,7 @@ impl AsCard for Industry {
         egui::Frame::NONE
             .inner_margin(egui::Margin::symmetric(6, 6))
             .show(ui, |ui| {
-                ui.label(
-                    egui::RichText::new(
-                        t!("Sector").to_uppercase(),
-                    )
-                    .monospace(),
-                );
+                ui.label(egui::RichText::new(t!("Sector").to_uppercase()).monospace());
             });
     }
 
@@ -51,8 +46,7 @@ impl AsCard for Industry {
         let demand = self.demand(lic_pop);
         let total_resources = self.adj_resources() * demand;
         let empty = total_resources.sum() == 0.;
-        let emissions =
-            (self.adj_byproducts() * demand).co2eq();
+        let emissions = (self.adj_byproducts() * demand).co2eq();
         let resources_demand = state.resource_demand.total();
         let available_resources = state.resources.available;
 
@@ -66,7 +60,7 @@ impl AsCard for Industry {
             .inner_margin(egui::Margin::symmetric(4, 4))
             .corner_radius(4)
             .stroke(Stroke::new(
-                1.,
+                1f32,
                 Color32::from_white_alpha(24),
             ))
             .show(ui, |ui| {
@@ -127,11 +121,7 @@ impl AsCard for Industry {
         super::card_desc(ui, &self.flavor.description);
     }
 
-    fn bottom_back(
-        &self,
-        ui: &mut egui::Ui,
-        _state: &GameState,
-    ) {
+    fn bottom_back(&self, ui: &mut egui::Ui, _state: &GameState) {
         let image_attrib = &self.flavor.image.attribution;
         ui.label(format!("{} {image_attrib}", t!("Image:")));
     }

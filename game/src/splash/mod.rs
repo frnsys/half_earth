@@ -54,7 +54,7 @@ impl Start {
                             let resp = ui.add(
                                 egui::Button::new(format!("  {}  ", t!("World Editor"))).stroke(
                                     egui::Stroke::new(
-                                        1.,
+                                        1f32,
                                         egui::Color32::from_rgb(0xFF, 0xCA, 0x28),
                                     ),
                                 ),

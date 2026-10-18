@@ -96,7 +96,7 @@ pub fn render_hud(ui: &mut egui::Ui, state: &mut State) -> Option<HudAction> {
                             flex_grow: 1.,
                             flex_direction: taffy::FlexDirection::Row,
                             min_size: taffy::Size {
-                                width: taffy::prelude::percent(1.),
+                                width: taffy::prelude::percent(1f32),
                                 height: taffy::prelude::auto(),
                             },
                             align_items: Some(taffy::AlignItems::Center),

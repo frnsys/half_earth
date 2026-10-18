@@ -12,7 +12,6 @@ use crate::{
     },
 };
 
-use super::grid::{CardGrid, CardGridAction};
 use egui::Color32;
 use hes_engine::{KindMap, Output, Process, State};
 use rust_i18n::t;

@@ -19,8 +19,7 @@ use egui_taffy::{TuiBuilderLogic, taffy};
 use hes_engine::{Collection, Flag, Id, NPC, Project, ProjectType};
 use rust_i18n::t;
 
-pub struct ProjectState<'a> {
-    pub name: &'a str,
+pub struct ProjectState {
     pub pc_cost_per: usize,
     pub points: usize,
     pub has_points: bool,
@@ -37,11 +36,10 @@ pub struct ProjectState<'a> {
     pub has_levels: bool,
     pub next_upgrade: Option<(usize, Vec<DisplayEffect>)>,
 }
-impl<'a> ProjectState<'a> {
-    pub fn from_project(proj: &'a Project, state: &GameState) -> Self {
+impl ProjectState {
+    pub fn from_project(proj: &Project, state: &GameState) -> Self {
         // Ensure we're using the canonical project,
         // which reflects the latest state.
-        let name = &proj.name;
         let proj = &state.world.projects[&proj.id];
 
         let can_downgrade = proj.kind == ProjectType::Policy && proj.level > 0;
@@ -69,7 +67,6 @@ impl<'a> ProjectState<'a> {
         };
 
         Self {
-            name,
             pc_cost_per: {
                 if proj.kind == ProjectType::Policy {
                     proj.cost
@@ -231,7 +228,7 @@ impl AsCard for Project {
             })
             .inner_margin(egui::Margin::symmetric(4, 4))
             .corner_radius(4)
-            .stroke(Stroke::new(1., Color32::from_black_alpha(64)))
+            .stroke(Stroke::new(1f32, Color32::from_black_alpha(64)))
             .show(ui, |ui| {
                 ui.set_width(ui.available_width());
                 ui.set_height(ui.available_height());
@@ -321,7 +318,7 @@ impl AsCard for Project {
             ui.place(rect, |ui: &mut egui::Ui| {
                 egui::Frame::NONE
                     .fill(Color32::WHITE)
-                    .stroke(egui::Stroke::new(1., Color32::BLACK))
+                    .stroke(egui::Stroke::new(1f32, Color32::BLACK))
                     .corner_radius(6)
                     .inner_margin(Margin::symmetric(3, 1))
                     .show(ui, |ui| {
@@ -514,7 +511,7 @@ pub fn npc_icon(npc: &NPC, yea: bool) -> impl FnOnce(&mut egui::Ui) -> Response 
             .fill(color)
             .corner_radius(4)
             .inner_margin(Margin::symmetric(3, 3))
-            .stroke(Stroke::new(1., color))
+            .stroke(Stroke::new(1f32, color))
             .show(ui, |ui| {
                 ui.set_width(24.);
                 ui.add(icon.size(24.));

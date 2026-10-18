@@ -48,7 +48,7 @@ pub fn treemap<'a>(
             node,
             0.,
             item.color,
-            Stroke::new(1., Color32::from_gray(16)),
+            Stroke::new(1f32, Color32::from_gray(16)),
             egui::StrokeKind::Middle,
         );
 

@@ -459,7 +459,7 @@ fn led(painter: &egui::Painter, center: egui::Pos2, color: Color32, glow: bool) 
             painter.circle_stroke(
                 center,
                 RADIUS + i,
-                egui::Stroke::new(1., color.gamma_multiply(alpha)),
+                egui::Stroke::new(1f32, color.gamma_multiply(alpha)),
             );
         }
     }
