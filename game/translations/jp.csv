@@ -83,7 +83,7 @@ Electricity,電力
 Emissions,CO2排出量
 Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,排気ガス：地球を覆う排気ガス。現在、年間で %{amount}Gtの排気ガスを排出している。
 Energy Use,エネルギー使用量
-Energy: The fundamental mover. You're using %{amount}TWh of energy.,エネルギー：基本的な動力。現在、%{amount}TWhのエネルギーを使用している。
+Energy: The fundamental mover. You're using %{amount} of energy.,エネルギー：基本的な動力。現在、%{amount}のエネルギーを使用している。
 Events,イベント
 Extinction Rate,絶滅率
 Fuel,燃料

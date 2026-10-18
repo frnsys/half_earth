@@ -344,7 +344,7 @@ impl AsCard for Process {
                     self.output.into(),
                 );
                 let amount = state.energy_twh();
-                let tip = tip(icons::ENERGY, t!("Energy: The fundamental mover. You're using %{amount}TWh of energy.", amount=amount))
+                let tip = tip(icons::ENERGY, t!("Energy: The fundamental mover. You're using %{amount} of energy.", amount=amount))
                     .card(factors_card(Some(self.name.clone()), Var::Energy, state));
                 (tip, icons::ENERGY, int)
             };
@@ -355,7 +355,7 @@ impl AsCard for Process {
                     Impact::Emissions,
                     self.output.into(),
                 );
-                let amount = state.emissions.as_gtco2eq();
+                let amount = display::emissions(state.emissions.as_gtco2eq());
                 let tip = tip(icons::EMISSIONS, t!("Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.", amount=amount))
                     .card(factors_card(Some(self.name.clone()), Var::Emissions, state));
                 (tip, icons::EMISSIONS, int)
@@ -369,7 +369,7 @@ impl AsCard for Process {
                     Impact::Biodiversity,
                     self.output.into(),
                 );
-                let amount = state.world.extinction_rate;
+                let amount = display::extinction(state.world.extinction_rate);
                 let tip = tip(icons::EXTINCTION_RATE, t!("Biodiversity: The co-inhabitants of the planet. The current biodiversity threat index is %{amount}.", amount=amount))
                     .card(factors_card(Some(self.name.clone()), Var::Biodiversity, state));
                 (tip, icons::EXTINCTION_RATE, int)

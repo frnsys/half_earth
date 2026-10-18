@@ -83,7 +83,7 @@ Electricity,Electricidad
 Emissions,Emisiones
 Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,Emisiones: Una mortaja alrededor de la tierra. Estás emitiendo %{amount} gigatoneladas por año.
 Energy Use,Uso de energía
-Energy: The fundamental mover. You're using %{amount}TWh of energy.,Energía: El motor fundamental. Estás usando %{amount}TWh de energía.
+Energy: The fundamental mover. You're using %{amount} of energy.,Energía: El motor fundamental. Estás usando %{amount} de energía.
 Events,Eventos
 Extinction Rate,Tasa de extinción
 Fuel,Combustible

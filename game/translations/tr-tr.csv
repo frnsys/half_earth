@@ -83,7 +83,7 @@ Electricity,Elektrik
 Emissions,Salınımlar
 Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,Salınımlar: Dünya'nın etrafında bir örtü. Her yıl %{amount} gigaton salınım yapıyorsun.
 Energy Use,Enerji Kullanımı
-Energy: The fundamental mover. You're using %{amount}TWh of energy.,Enerji: Esas haraket ettirici güç. %{amount}TWh enerji kullanıyorsun.
+Energy: The fundamental mover. You're using %{amount} of energy.,Enerji: Esas haraket ettirici güç. %{amount} enerji kullanıyorsun.
 Events,Olaylar
 Extinction Rate,Soyu Tükenme Oranı
 Fuel,Yakıt

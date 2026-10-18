@@ -32,6 +32,10 @@ pub fn emissions(emissions_gt: f32) -> String {
     format!("{:.1}Gt", emissions_gt)
 }
 
+pub fn extinction(extinction: f32) -> String {
+    format!("{extinction:.0}")
+}
+
 // From kWh to TWh
 pub fn twh(amount: f32) -> f32 {
     (amount * 1e-9).round()

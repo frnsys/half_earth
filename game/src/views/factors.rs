@@ -142,7 +142,7 @@ impl FactorsCard {
     pub fn total_formatted(&self) -> String {
         match self.kind {
             Var::Emissions => display::emissions(self.total),
-            Var::Biodiversity => format!("{:.0}", self.total),
+            Var::Biodiversity => display::extinction(self.total),
             Var::Land => {
                 format!(
                     "{}%",

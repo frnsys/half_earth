@@ -83,7 +83,7 @@ Electricity,ไฟฟ้า
 Emissions,การปล่อยก๊าซ
 Emissions: A shroud around the earth. You're emitting %{amount} gigatonnes per year.,การปล่อยมลพิษ: ตราสังห่อโลก คุณกำลังปล่อย %{amount} กิกะตันต่อปี
 Energy Use,การใช้พลังงาน
-Energy: The fundamental mover. You're using %{amount}TWh of energy.,พลังงาน: สิ่งพื้นฐานที่คอยขับเคลื่อนโลก คุณกำลังใช้พลังงาน %{amount} เทระวัตต์
+Energy: The fundamental mover. You're using %{amount} of energy.,พลังงาน: สิ่งพื้นฐานที่คอยขับเคลื่อนโลก คุณกำลังใช้พลังงาน %{amount}
 Events,เหตุการณ์
 Extinction Rate,อัตราการสูญพันธุ์
 Fuel,เชื้อเพลิง
