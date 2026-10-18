@@ -77,6 +77,13 @@ pub fn active_effects(project: &Project) -> Vec<DisplayEffect> {
     effects
 }
 
+pub fn visible_effect(d: &DisplayEffect) -> bool {
+    !matches!(
+        d.effect,
+        Effect::ProjectRequest(..) | Effect::ProcessRequest(..)
+    )
+}
+
 pub fn render_effects(ui: &mut egui::Ui, state: &State, effects: &[DisplayEffect]) {
     let mut effects = effects
         .iter()
@@ -279,7 +286,7 @@ pub struct DisplayEffect {
     pub effect: Effect,
     likelihood: Option<Likelihood>,
     is_unknown: bool,
-    is_hidden: bool,
+    pub is_hidden: bool,
 }
 
 impl From<&Effect> for DisplayEffect {

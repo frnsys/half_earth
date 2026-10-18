@@ -2,7 +2,10 @@ use std::collections::BTreeMap;
 
 use crate::{
     consts,
-    display::{AsText, DisplayEffect, HasIcon, active_effects, group_color, icons, render_effects},
+    display::{
+        AsText, DisplayEffect, HasIcon, active_effects, group_color, icons, render_effects,
+        visible_effect,
+    },
     image,
     parts::{flex_justified, new_icon},
     state::{GameState, PlanChange},
@@ -13,7 +16,7 @@ use crate::{
 use super::AsCard;
 use egui::{Color32, Margin, Rect, Response, Stroke, TextStyle};
 use egui_taffy::{TuiBuilderLogic, taffy};
-use hes_engine::{Collection, Effect as EngineEffect, Flag, Id, NPC, Project, ProjectType};
+use hes_engine::{Collection, Flag, Id, NPC, Project, ProjectType};
 use rust_i18n::t;
 
 impl AsCard for Project {
@@ -144,13 +147,6 @@ impl AsCard for Project {
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
-        let visible_effect = |d: &DisplayEffect| -> bool {
-            !matches!(
-                d.effect,
-                EngineEffect::ProjectRequest(..) | EngineEffect::ProcessRequest(..)
-            )
-        };
-
         let effects = active_effects(self)
             .into_iter()
             .filter(visible_effect)
