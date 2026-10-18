@@ -8,7 +8,7 @@ use crate::{
     },
     image,
     parts::{flex_justified, new_icon},
-    state::{GameState, PlanChange},
+    state::{GameState, PlanChange, StateExt},
     text::scale_text_ui,
     tips::{Tip, add_tip, tip},
 };
@@ -18,6 +18,97 @@ use egui::{Color32, Margin, Rect, Response, Stroke, TextStyle};
 use egui_taffy::{TuiBuilderLogic, taffy};
 use hes_engine::{Collection, Flag, Id, NPC, Project, ProjectType};
 use rust_i18n::t;
+
+pub struct ProjectState<'a> {
+    pub name: &'a str,
+    pub pc_cost_per: usize,
+    pub points: usize,
+    pub has_points: bool,
+    pub level: usize,
+    pub passed: bool,
+    pub majority_blocked: bool,
+    pub cost_remaining: String,
+    pub is_online: bool,
+    pub is_countdown: bool,
+    pub is_building: bool,
+    pub is_upgrading: bool,
+    pub can_downgrade: bool,
+    pub has_downgrade: bool,
+    pub has_levels: bool,
+    pub next_upgrade: Option<(usize, Vec<DisplayEffect>)>,
+}
+impl<'a> ProjectState<'a> {
+    pub fn from_project(proj: &'a Project, state: &GameState) -> Self {
+        // Ensure we're using the canonical project,
+        // which reflects the latest state.
+        let name = &proj.name;
+        let proj = &state.world.projects[&proj.id];
+
+        let can_downgrade = proj.kind == ProjectType::Policy && proj.level > 0;
+        let is_building = proj.is_building();
+        let is_upgrading = state.ui.queued_upgrades.get(&proj.id) == Some(&true);
+
+        let next_upgrade = if proj.upgrades.is_empty() {
+            None
+        } else {
+            let idx = proj.level;
+            if idx >= proj.upgrades.len() {
+                None
+            } else {
+                let upgrade = &proj.upgrades[idx];
+                let mut cost = upgrade.cost;
+                if let Some(changes) = state.ui.plan_changes.get(&proj.id)
+                    && changes.downgrades > 0
+                {
+                    cost = 0;
+                }
+                let effects: Vec<DisplayEffect> =
+                    upgrade.effects.iter().map(|e| e.into()).collect();
+                Some((cost, effects))
+            }
+        };
+
+        Self {
+            name,
+            pc_cost_per: {
+                if proj.kind == ProjectType::Policy {
+                    proj.cost
+                } else {
+                    state.next_point_cost(&proj.kind)
+                }
+            },
+            points: proj.points,
+            has_points: proj.kind != ProjectType::Policy && is_building,
+            level: proj.level,
+            passed: proj.kind == ProjectType::Policy && (is_building || proj.is_online()),
+            majority_blocked: {
+                let parliament_suspended = state.flags.contains(&Flag::ParliamentSuspended);
+                let player_seats = state.npcs.coalition_seats();
+                let majority_satisfied = if parliament_suspended {
+                    true
+                } else if proj.required_majority == 0. {
+                    true
+                } else {
+                    player_seats > proj.required_majority
+                };
+                !majority_satisfied
+            },
+            cost_remaining: if is_upgrading {
+                t!("1 planning cycle left").to_string()
+            } else {
+                remaining_cost(proj, &state.ui.plan_changes)
+            },
+            is_countdown: proj.kind != ProjectType::Policy || is_building,
+            is_online: proj.is_online(),
+            is_building,
+            is_upgrading,
+            can_downgrade,
+            has_downgrade: proj.is_online() && can_downgrade,
+            has_levels: !proj.upgrades.is_empty(),
+            next_upgrade,
+        }
+    }
+}
 
 impl AsCard for Project {
     fn id(&self) -> hes_engine::Id {
@@ -47,11 +138,11 @@ impl AsCard for Project {
                     .label(egui::RichText::new(group.to_uppercase()).monospace());
 
                     tui.ui(|ui| {
+                        let p = ProjectState::from_project(self, state);
                         if self.is_online() {
                             ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
-                            let has_levels = !self.upgrades.is_empty();
-                            if has_levels {
-                                let level = self.level + 1;
+                            if p.has_levels {
+                                let level = p.level + 1;
                                 ui.label(
                                     egui::RichText::new(format!("{} {level}", t!("Level")))
                                         .size(12.),
@@ -60,20 +151,16 @@ impl AsCard for Project {
                                 ui.add(icons::CHECK.size(12.).tint(self.fg_color()));
                             }
                         } else {
-                            // See other note why we need to get the canonical ref.
-                            let p = &state.world.projects[&self.id];
-                            let remaining_cost = remaining_cost(p, &state.ui.plan_changes);
-                            let is_countdown = self.kind != ProjectType::Policy || p.is_building();
                             add_tip(
-                                cost_tip(&self.kind, &remaining_cost),
+                                cost_tip(&self.kind, &p.cost_remaining),
                                 ui.horizontal_centered(|ui| {
                                     ui.style_mut().spacing.item_spacing.x = 2.;
-                                    if is_countdown {
+                                    if p.is_countdown {
                                         ui.add(icons::TIME.size(12.));
                                     } else if self.kind == ProjectType::Policy {
                                         ui.add(icons::POLITICAL_CAPITAL.size(14.));
                                     }
-                                    ui.label(egui::RichText::new(remaining_cost).size(12.));
+                                    ui.label(egui::RichText::new(&p.cost_remaining).size(12.));
                                 })
                                 .response,
                             );
@@ -94,40 +181,21 @@ impl AsCard for Project {
     }
 
     fn figure(&self, ui: &mut egui::Ui, state: &GameState) {
+        let p = ProjectState::from_project(self, state);
         let rect = super::render_flavor_image(ui, &self.flavor.image);
 
-        // NOTE: this is hacky, but the cards actually display
-        // a clone of the Project, so when we e.g. add points
-        // to the project it's not reflected in `self`.
-        // This is fine for most data displayed as they're static,
-        // but for dynamic data we have to get a ref to the canonical
-        // data in `state.core.world`. This could probably be redesigned
-        // to directly use the canonical project ref but it's of low priority.
-        let p = &state.world.projects[&self.id];
-
-        let has_points = self.kind != ProjectType::Policy && p.is_building();
-        if has_points {
+        if p.has_points {
             ui.place(rect, points(p.points, &self.kind));
         }
 
         let (opposers, supporters) = npc_stances(self, &state.npcs);
         npc_support(ui, rect, &opposers, &supporters);
 
-        let parliament_suspended = state.flags.contains(&Flag::ParliamentSuspended);
-        let player_seats = state.npcs.coalition_seats();
-        let majority_satisfied = if parliament_suspended {
-            true
-        } else {
-            player_seats > self.required_majority
-        };
-        let warn_majority = self.required_majority > 0. && !majority_satisfied;
-
-        if warn_majority {
+        if p.majority_blocked {
             ui.place(rect, majority_warning(rect));
         }
 
-        let passed = self.kind == ProjectType::Policy && (p.is_building() || p.is_online());
-        if passed {
+        if p.passed {
             let rect = egui::Rect::from_min_size(
                 rect.left_top() + egui::vec2(16., -48.),
                 egui::Vec2::splat(228.),
@@ -147,6 +215,8 @@ impl AsCard for Project {
     }
 
     fn body(&self, ui: &mut egui::Ui, state: &GameState) {
+        let p = ProjectState::from_project(self, state);
+
         let effects = active_effects(self)
             .into_iter()
             .filter(visible_effect)
@@ -167,32 +237,7 @@ impl AsCard for Project {
                 ui.set_height(ui.available_height());
                 ui.style_mut().override_text_style = Some(TextStyle::Small);
 
-                let is_active = self.is_active();
-
-                let next_upgrade = if self.upgrades.is_empty() {
-                    None
-                } else {
-                    let idx = self.level;
-                    if idx >= self.upgrades.len() {
-                        None
-                    } else {
-                        let upgrade = &self.upgrades[idx];
-                        let mut cost = upgrade.cost;
-                        if let Some(changes) = state.ui.plan_changes.get(&self.id)
-                            && changes.downgrades > 0
-                        {
-                            cost = 0;
-                        }
-                        let effects: Vec<DisplayEffect> =
-                            upgrade.effects.iter().map(|e| e.into()).collect();
-                        Some((cost, effects))
-                    }
-                };
-                let is_upgrading = state.ui.queued_upgrades.get(&self.id) == Some(&true);
-
-                let can_downgrade = self.kind == ProjectType::Policy && self.level > 0;
-                let has_downgrade = self.is_active() && can_downgrade;
-                let prev_upgrade = if can_downgrade {
+                let prev_upgrade = if p.can_downgrade {
                     let idx = self.level as isize - 2;
                     if idx < 0 {
                         let effects: Vec<DisplayEffect> = self
@@ -224,8 +269,10 @@ impl AsCard for Project {
                     scale_text_ui(ui, max_size, move |ui| {
                         render_effects(ui, state, &effects);
 
-                        if is_active && let Some((cost, effects)) = &next_upgrade {
-                            if is_upgrading {
+                        if p.is_online
+                            && let Some((cost, effects)) = &p.next_upgrade
+                        {
+                            if p.is_upgrading {
                                 ui.label(t!("Upgrading in one planning cycle."));
                             } else {
                                 ui.style_mut()
@@ -244,7 +291,7 @@ impl AsCard for Project {
                             render_effects(ui, state, effects);
                         }
 
-                        if has_downgrade {
+                        if p.has_downgrade {
                             ui.label(t!("Prev Level"));
                             if let Some((_, effects)) = &prev_upgrade {
                                 render_effects(ui, state, effects);
@@ -255,10 +302,7 @@ impl AsCard for Project {
             })
             .response;
 
-        // Get the world state version of the project
-        // as it will have the latest state.
-        let proj = &state.world.projects[&self.id];
-        if proj.is_building() {
+        if p.is_building {
             let rect = egui::Rect::from_min_size(
                 resp.rect.center_bottom() + egui::vec2(-6., -10.),
                 egui::vec2(0., 0.),

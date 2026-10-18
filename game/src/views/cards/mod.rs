@@ -12,6 +12,7 @@ mod process;
 mod project;
 
 pub use process::draw_mix_cell;
+pub use project::ProjectState;
 
 pub trait AsCard {
     fn id(&self) -> hes_engine::Id;

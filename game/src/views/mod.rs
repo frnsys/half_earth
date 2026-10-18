@@ -234,16 +234,85 @@ fn print_projects(state: &GameState) {
 
     println!("\nPROJECTS");
     for proj in state.world.projects.unlocked() {
-        println!("{}", proj.name);
-        for effect in crate::display::active_effects(proj)
-            .into_iter()
-            .filter(crate::display::visible_effect)
-            .filter(|effect| !effect.is_hidden)
-            .filter_map(|effect| effect.tip(state).ok())
-        {
-            // println!("  {}", effect.text);
-            println!("  {}", strip_bbcode_parser(&effect.text));
+        let p = cards::ProjectState::from_project(proj, state);
+        if p.majority_blocked {
+            continue;
         }
+
+        let is_upgrade = p.is_online && p.next_upgrade.is_some();
+
+        println!(
+            "\n{}{}     [{}]",
+            proj.name,
+            if is_upgrade { " (Upgrade)" } else { "" },
+            {
+                if is_upgrade && let Some((cost, _)) = &p.next_upgrade {
+                    format!("Cost:{}", cost)
+                } else if proj.kind == hes_engine::ProjectType::Policy {
+                    format!("Cost:{}", p.pc_cost_per)
+                } else {
+                    if p.is_building || p.is_upgrading {
+                        format!(
+                            "Points:{} | Building:{} | Cost/point:{}",
+                            proj.points, p.cost_remaining, p.pc_cost_per
+                        )
+                    } else {
+                        format!("Points:{} | Cost/point:{}", proj.points, p.pc_cost_per)
+                    }
+                }
+            }
+        );
+
+        let effects: Vec<_> = if is_upgrade && let Some((_, effects)) = &p.next_upgrade {
+            effects
+                .into_iter()
+                .filter_map(|effect| effect.tip(state).ok())
+                .collect()
+        } else {
+            crate::display::active_effects(proj)
+                .into_iter()
+                .filter(crate::display::visible_effect)
+                .filter(|effect| !effect.is_hidden)
+                .filter_map(|effect| effect.tip(state).ok())
+                .collect()
+        };
+
+        for effect in effects {
+            // println!("  {}", effect.text);
+            println!("  - {}", strip_bbcode_parser(&effect.text).trim());
+        }
+
+        let supporters = proj
+            .supporters
+            .iter()
+            .map(|id| &state.npcs[id])
+            .filter(|npc| !npc.locked)
+            .map(|npc| npc.name.clone())
+            .collect::<Vec<_>>();
+        println!(
+            "  SUPPORTERS: {}",
+            if supporters.is_empty() {
+                "None".to_string()
+            } else {
+                supporters.join(", ")
+            }
+        );
+
+        let opposers = proj
+            .opposers
+            .iter()
+            .map(|id| &state.npcs[id])
+            .filter(|npc| !npc.locked)
+            .map(|npc| npc.name.clone())
+            .collect::<Vec<_>>();
+        println!(
+            "  OPPOSERS: {}",
+            if opposers.is_empty() {
+                "None".to_string()
+            } else {
+                opposers.join(", ")
+            }
+        );
     }
 
     println!("\nPROCESSES");
