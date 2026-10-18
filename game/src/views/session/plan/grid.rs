@@ -25,7 +25,7 @@ impl<T: Scannable> CardGrid<T> {
     pub fn render(&mut self, ui: &mut egui::Ui, state: &mut GameState) -> Option<CardGridAction> {
         let mut action = None;
 
-        let width = ui.ctx().content_rect().width();
+        let width = ui.ctx().content_rect().width() - 64.;
         let slots = (width / CARD_WIDTH).floor() as usize;
 
         ui.add_space(16.);
