@@ -79,6 +79,10 @@ impl DebugOpts {
             *state = use_state.clone();
         }
 
+        if self.skip_tutorial {
+            state.flags.push(Flag::SkipTutorial);
+        }
+
         if self.parliament_suspended {
             state.flags.push(Flag::ParliamentSuspended);
         }
