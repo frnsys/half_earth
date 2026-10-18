@@ -179,6 +179,11 @@ fn open_tip(resp: &egui::Response, tip: Tip) {
     });
 }
 
+pub fn tip_is_open(ctx: &egui::Context) -> bool {
+    let popup_id = egui::Id::new("tip");
+    egui::Popup::is_id_open(ctx, popup_id)
+}
+
 /// Render the currently-open tip, if any.
 pub fn render_tip(ctx: &egui::Context, state: &mut GameState) {
     let popup_id = egui::Id::new("tip");

@@ -1,6 +1,7 @@
 use crate::{
     parts::{get_sizing, h_center, raised_frame},
     state::GameState,
+    tips::tip_is_open,
     views::{
         cards::{AsCard, CARD_HEIGHT, CARD_WIDTH, Card},
         scanner::{ScanResult, Scannable},
@@ -145,32 +146,34 @@ impl<C: AsCard + Scannable> Cards<C> {
         selected_idx: Option<usize>,
         card_resps: Vec<egui::Response>,
     ) {
-        ui.input(|inp| {
-            let delta = inp.events.iter().find_map(|e| match e {
-                egui::Event::MouseWheel { unit: _, delta, .. } => Some(*delta),
-                _ => None,
-            });
-            if let Some(delta) = delta {
-                if delta.y > 0. {
-                    *action = Some(Action::Prev);
-                } else if delta.y < 0. {
-                    *action = Some(Action::Next);
+        if !tip_is_open(ui.ctx()) {
+            ui.input(|inp| {
+                let delta = inp.events.iter().find_map(|e| match e {
+                    egui::Event::MouseWheel { unit: _, delta, .. } => Some(*delta),
+                    _ => None,
+                });
+                if let Some(delta) = delta {
+                    if delta.y > 0. {
+                        *action = Some(Action::Prev);
+                    } else if delta.y < 0. {
+                        *action = Some(Action::Next);
+                    }
                 }
-            }
 
-            if [Key::ArrowLeft, Key::A].iter().any(|k| inp.key_pressed(*k)) {
-                *action = Some(Action::Prev);
-            } else if [Key::ArrowRight, Key::D]
-                .iter()
-                .any(|k| inp.key_pressed(*k))
-            {
-                *action = Some(Action::Next);
-            } else if [Key::ArrowUp, Key::W].iter().any(|k| inp.key_pressed(*k)) {
-                *action = Some(Action::Up);
-            } else if [Key::ArrowDown, Key::S].iter().any(|k| inp.key_pressed(*k)) {
-                *action = Some(Action::Down);
-            }
-        });
+                if [Key::ArrowLeft, Key::A].iter().any(|k| inp.key_pressed(*k)) {
+                    *action = Some(Action::Prev);
+                } else if [Key::ArrowRight, Key::D]
+                    .iter()
+                    .any(|k| inp.key_pressed(*k))
+                {
+                    *action = Some(Action::Next);
+                } else if [Key::ArrowUp, Key::W].iter().any(|k| inp.key_pressed(*k)) {
+                    *action = Some(Action::Up);
+                } else if [Key::ArrowDown, Key::S].iter().any(|k| inp.key_pressed(*k)) {
+                    *action = Some(Action::Down);
+                }
+            });
+        }
 
         match action {
             Some(action) => match action {
