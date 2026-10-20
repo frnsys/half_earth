@@ -27,7 +27,7 @@ Note there are some aspects of our internationalization system that need improve
 ```bash
 git submodule init
 git submodule update
-cd game/assets/js && npm install -d
+cd game/assets/js && npm install -d && bash build.sh
 ```
 
 Building was last tested with Rust stable `1.89.0 (29483883e 2025-08-04)`.
