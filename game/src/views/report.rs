@@ -190,6 +190,7 @@ impl Report {
                             };
                         });
                         row.col(|ui| {
+                            ui.set_min_width(32.);
                             let pc_change = format!("{:+}", change.pc_change);
                             ui.label(pc_change);
                         });
