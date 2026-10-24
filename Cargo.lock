@@ -2180,7 +2180,7 @@ dependencies = [
 
 [[package]]
 name = "hes-game"
-version = "1.0.16"
+version = "1.0.17"
 dependencies = [
  "base64",
  "bincode",
