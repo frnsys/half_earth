@@ -154,6 +154,7 @@ impl AsRef<Effect> for Effect {
     }
 }
 
+// Check if the player loses
 fn check_game_over(state: &mut State) {
     if !state.npcs.is_ally("The Authoritarian")
         && state.outlook() < 0.

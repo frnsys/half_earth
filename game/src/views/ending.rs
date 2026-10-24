@@ -23,6 +23,7 @@ pub struct End {
     badges: Vec<Badge>,
     log: Vec<String>,
     image: Option<ImageSource<'static>>,
+    ending: Ending,
 }
 impl End {
     pub fn new(lose: bool, state: &mut GameState) -> Self {
@@ -36,7 +37,7 @@ impl End {
         let image = match summary.ending {
             Ending::Win => win_image(&summary.faction),
             Ending::Died => death_image(&summary.faction),
-            Ending::Coup => coup_image(&summary.faction),
+            Ending::Coup { .. } => coup_image(&summary.faction),
             Ending::LostOther => lose_image(&summary.faction),
         };
 
@@ -54,6 +55,7 @@ impl End {
             badges: eval_badges(state),
             log,
             image,
+            ending: summary.ending,
         }
     }
 
@@ -86,6 +88,47 @@ impl End {
 
                 h_center(ui, "message", |tui| {
                     tui.ui(|ui| {
+                        if self.lose {
+                            match self.ending {
+                                Ending::Win => {}
+                                Ending::Died => {
+                                    ui.label(
+                                        egui::RichText::new(t!("You died of old age."))
+                                            .color(Color32::WHITE),
+                                    );
+                                }
+                                Ending::Coup {
+                                    political_capital,
+                                    outlook,
+                                } => {
+                                    if political_capital {
+                                        ui.label(
+                                            egui::RichText::new(t!(
+                                                "You ran out of political capital."
+                                            ))
+                                            .color(Color32::WHITE),
+                                        );
+                                    } else if outlook {
+                                        ui.label(
+                                            egui::RichText::new(t!(
+                                                "You failed to keep the people happy."
+                                            ))
+                                            .color(Color32::WHITE),
+                                        );
+                                    }
+                                }
+                                Ending::LostOther => {
+                                    ui.label(
+                                        egui::RichText::new(t!(
+                                            "You did something to instantly lose."
+                                        ))
+                                        .color(Color32::WHITE),
+                                    );
+                                }
+                            }
+                            ui.add_space(64.);
+                        }
+
                         let message = if self.lose {
                             t!("This is not the end...")
                         } else {
@@ -146,7 +189,10 @@ impl End {
 enum Ending {
     Win,
     Died,
-    Coup,
+    Coup {
+        political_capital: bool,
+        outlook: bool,
+    },
     LostOther,
 }
 
@@ -290,6 +336,9 @@ fn summarize(state: &State, win: bool) -> Summary {
         .unwrap();
     let faction = closest.name.to_string();
 
+    let pc_fail = state.political_capital <= 0;
+    let outlook_fail = state.outlook() <= 0.;
+
     Summary {
         badges,
         faction,
@@ -297,8 +346,11 @@ fn summarize(state: &State, win: bool) -> Summary {
             Ending::Win
         } else if state.world.year >= state.death_year {
             Ending::Died
-        } else if state.political_capital <= 0 {
-            Ending::Coup
+        } else if pc_fail || outlook_fail {
+            Ending::Coup {
+                political_capital: pc_fail,
+                outlook: outlook_fail,
+            }
         } else {
             Ending::LostOther
         },
