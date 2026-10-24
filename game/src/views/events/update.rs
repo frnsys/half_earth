@@ -142,7 +142,7 @@ fn render_region_outcomes(ui: &mut egui::Ui, region: &Region, up: bool, world: &
 
     let spacer = ui.available_width() / 2. - 92.;
 
-    ui.horizontal(|ui| {
+    ui.horizontal_top(|ui| {
         ui.add_space(spacer);
         add_tip(
             prev_tip,
@@ -162,6 +162,8 @@ fn render_region_outcomes(ui: &mut egui::Ui, region: &Region, up: bool, world: &
             .response,
         );
     });
+
+    ui.add_space(6.);
 
     for (output, demand) in demand.items() {
         let region_per_capita_demand = demand / pop;
@@ -184,7 +186,7 @@ fn render_region_outcomes(ui: &mut egui::Ui, region: &Region, up: bool, world: &
             ),
         );
 
-        ui.horizontal(|ui| {
+        ui.horizontal_top(|ui| {
             ui.add_space(spacer);
             add_tip(
                 prev_tip,
@@ -204,5 +206,7 @@ fn render_region_outcomes(ui: &mut egui::Ui, region: &Region, up: bool, world: &
                 .response,
             );
         });
+
+        ui.add_space(6.);
     }
 }
