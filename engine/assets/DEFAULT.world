@@ -18062,6 +18062,14 @@
             "phase": "BreakStart",
             "probabilities": [
                 {
+                    "likelihood": "Impossible",
+                    "conditions": [
+                        {
+                            "HasFlag": "LifeGoesOn"
+                        }
+                    ]
+                },
+                {
                     "likelihood": "Guaranteed",
                     "conditions": [
                         {
@@ -25013,6 +25021,14 @@
             "phase": "InterstitialStart",
             "probabilities": [
                 {
+                    "likelihood": "Impossible",
+                    "conditions": [
+                        {
+                            "HasFlag": "LifeGoesOn"
+                        }
+                    ]
+                },
+                {
                     "likelihood": "Guaranteed",
                     "conditions": [
                         {
@@ -29990,6 +30006,14 @@
                     "likelihood": "Impossible",
                     "conditions": [
                         {
+                            "HasFlag": "LifeGoesOn"
+                        }
+                    ]
+                },
+                {
+                    "likelihood": "Impossible",
+                    "conditions": [
+                        {
                             "NPCRelationship": [
                                 "b6694f1d-5597-4bb8-a484-254930838982",
                                 "Ally"
@@ -31060,6 +31084,14 @@
             "id": "d31078d2-27c6-4ab2-8b80-cd93d37457c7",
             "phase": "BreakStart",
             "probabilities": [
+                {
+                    "likelihood": "Impossible",
+                    "conditions": [
+                        {
+                            "HasFlag": "LifeGoesOn"
+                        }
+                    ]
+                },
                 {
                     "likelihood": "Guaranteed",
                     "conditions": [
@@ -33687,6 +33719,14 @@
             "id": "dc6e5cc0-588f-4b33-ad5b-1a0e9bae3205",
             "phase": "BreakStart",
             "probabilities": [
+                {
+                    "likelihood": "Impossible",
+                    "conditions": [
+                        {
+                            "HasFlag": "LifeGoesOn"
+                        }
+                    ]
+                },
                 {
                     "likelihood": "Guaranteed",
                     "conditions": [

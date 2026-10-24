@@ -154,16 +154,6 @@ impl AsRef<Effect> for Effect {
     }
 }
 
-// Check if the player loses
-fn check_game_over(state: &mut State) {
-    if !state.npcs.is_ally("The Authoritarian")
-        && state.outlook() < 0.
-        && !state.flags.contains(&Flag::LifeGoesOn)
-    {
-        state.game_over = true;
-    }
-}
-
 impl Default for Effect {
     fn default() -> Self {
         Effect::PlayerVariable(PlayerVariable::PoliticalCapital, 10.)
@@ -336,7 +326,6 @@ impl Effect {
                     }
                     WorldVariable::Outlook => {
                         state.world.base_outlook += *change;
-                        check_game_over(state);
                     }
                     WorldVariable::Temperature => state.world.temperature_modifier += *change,
                     WorldVariable::SeaLevelRise => state.world.sea_level_rise += *change,
@@ -519,13 +508,11 @@ impl Effect {
                         * region.demand_level(output, &state.world.per_capita_demand) as f32)
                         .round();
                 }
-                check_game_over(state);
             }
             Effect::IncomeOutlookChange(mult) => {
                 for region in state.world.regions.iter_mut() {
                     region.outlook += (mult * region.income.level() as f32).round();
                 }
-                check_game_over(state);
             }
             Effect::ProjectCostModifier(id, change) => {
                 state.world.projects[id].cost_modifier += change;
