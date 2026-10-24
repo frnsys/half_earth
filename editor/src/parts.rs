@@ -4,11 +4,16 @@ use hes_engine::{HasId, Id};
 
 pub const ROW_HEIGHT: f32 = 18.;
 
-pub trait CreateNew {
+pub trait EditableItem {
+    fn name(&self) -> &str;
     fn create_new() -> Self;
 }
 
-impl CreateNew for hes_engine::Project {
+impl EditableItem for hes_engine::Project {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn create_new() -> Self {
         let mut new = Self::default();
         new.id = Id::new_v4();
@@ -16,7 +21,11 @@ impl CreateNew for hes_engine::Project {
         new
     }
 }
-impl CreateNew for hes_engine::Process {
+impl EditableItem for hes_engine::Process {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn create_new() -> Self {
         let mut new = Self::default();
         new.id = Id::new_v4();
@@ -24,7 +33,11 @@ impl CreateNew for hes_engine::Process {
         new
     }
 }
-impl CreateNew for hes_engine::Industry {
+impl EditableItem for hes_engine::Industry {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn create_new() -> Self {
         let mut new = Self::default();
         new.id = Id::new_v4();
@@ -32,7 +45,11 @@ impl CreateNew for hes_engine::Industry {
         new
     }
 }
-impl CreateNew for hes_engine::Event {
+impl EditableItem for hes_engine::Event {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn create_new() -> Self {
         let mut new = Self::default();
         new.id = Id::new_v4();
@@ -68,7 +85,7 @@ pub fn frame() -> egui::Frame {
         .corner_radius(6)
 }
 
-pub fn editable_list<T: Default + HasId + CreateNew>(
+pub fn editable_list<T: Default + HasId + EditableItem>(
     id: &str,
     ui: &mut egui::Ui,
     items: &mut Vec<T>,
@@ -84,9 +101,13 @@ pub fn editable_list<T: Default + HasId + CreateNew>(
             .unwrap_or_default()
     });
 
+    let filter_id = ui.make_persistent_id(id).with("filter_query");
+    let mut filter_query =
+        ui.memory_mut(|mem| mem.data.get_temp::<String>(filter_id).unwrap_or_default());
+
     let mut resp = ui
         .vertical(|ui| {
-            h_center(ui, "add-item", |ui| {
+            ui.horizontal(|ui| {
                 ui.add_space(6.);
                 ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
 
@@ -104,6 +125,14 @@ pub fn editable_list<T: Default + HasId + CreateNew>(
                 if resp.clicked() {
                     let new = T::create_new();
                     items.insert(0, new);
+                }
+
+                ui.label("Filter:");
+                if ui.text_edit_singleline(&mut filter_query).changed() {
+                    ui.memory_mut(|mem| {
+                        mem.data
+                            .insert_temp::<String>(filter_id, filter_query.to_string())
+                    });
                 }
             });
 
@@ -139,6 +168,10 @@ pub fn editable_list<T: Default + HasId + CreateNew>(
             };
 
             for item in items.iter_mut() {
+                if !filter_query.is_empty() && !item.name().to_lowercase().contains(&filter_query) {
+                    continue;
+                }
+
                 let item_id = *item.id();
 
                 let cached_height = height_cache.get(&item_id);
