@@ -160,7 +160,11 @@ impl<'a, E: Display + PartialEq + IntoEnumIterator> Editable for ToggleEnum<'a, 
 
 impl Editable for &mut f32 {
     fn edit(self, ui: &mut egui::Ui) {
-        ui.add(egui::DragValue::new(self));
+        ui.add(
+            egui::DragValue::new(self)
+                .custom_formatter(|v, _| (v as f32).to_string())
+                .speed(0.),
+        );
     }
 }
 
