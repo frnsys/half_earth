@@ -10,7 +10,7 @@ use crate::{
     display::intensity,
     parts::{button, center_center, set_full_bg_image},
     state::StateExt,
-    views::events::Events,
+    views::events::{EventResult, Events},
 };
 
 pub struct Interstitial {
@@ -128,7 +128,13 @@ impl Interstitial {
                     });
             });
 
-        self.events.render(ui, state);
+        // If the event was a game over event,
+        // immediately go to the next screen (which should
+        // be the game over screen) when the dialogue finishes.
+        let event_result = self.events.render(ui, state);
+        if event_result == Some(EventResult::JustFinished) && state.game_over {
+            return true;
+        }
 
         go_to_next
     }
