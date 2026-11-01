@@ -41,16 +41,23 @@ mod engine {
 
     pub struct Engine {
         muted: bool,
-        manager: Option<AudioManager<DefaultBackend>>,
+        manager: AudioManager<DefaultBackend>,
         handle: Option<StaticSoundHandle>,
     }
     impl Engine {
         pub fn new(muted: bool) -> Self {
-            Self {
+            let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default())
+                .expect("Failed to initialize audio manager");
+            let mut engine = Self {
                 muted,
-                manager: None,
+                manager,
                 handle: None,
+            };
+            // Apply initial mute state eagerly so it's never lost.
+            if muted {
+                engine.mute();
             }
+            engine
         }
 
         fn load_track(&self, track: Track) -> StaticSoundData {
@@ -82,36 +89,28 @@ mod engine {
                 if let Some(handle) = &mut self.handle {
                     handle.stop(Tween::default());
                 }
-                if let Some(manager) = &mut self.manager {
-                    let handle = manager.play(sound.loop_region(0.0..))?;
-                    self.handle = Some(handle);
-                }
+                let handle = self.manager.play(sound.loop_region(0.0..))?;
+                self.handle = Some(handle);
             }
             Ok(())
         }
 
         fn mute(&mut self) {
-            if let Some(manager) = &mut self.manager {
-                manager
-                    .main_track()
-                    .set_volume(Decibels::SILENCE, Tween::default());
-                self.muted = true;
-            }
+            self.manager
+                .main_track()
+                .set_volume(Decibels::SILENCE, Tween::default());
+            self.muted = true;
         }
 
         fn unmute(&mut self) {
-            if let Some(manager) = &mut self.manager {
-                manager.main_track().set_volume(0., Tween::default());
-                self.muted = false;
-            }
+            self.manager.main_track().set_volume(0., Tween::default());
+            self.muted = false;
         }
 
         fn ping(&mut self) -> Result<(), PlaySoundError<<StaticSoundData as SoundData>::Error>> {
-            if !self.muted
-                && let Some(manager) = &mut self.manager
-            {
+            if !self.muted {
                 let sound = audio!("notification.ogg");
-                let handle = manager.play(sound)?;
+                let handle = self.manager.play(sound)?;
                 self.handle = Some(handle);
             }
             Ok(())
@@ -121,14 +120,6 @@ mod engine {
             &mut self,
             request: AudioRequest,
         ) -> Result<(), PlaySoundError<<StaticSoundData as SoundData>::Error>> {
-            if self.manager.is_none() {
-                let manager =
-                    AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
-                self.manager = Some(manager);
-                if self.muted {
-                    self.mute();
-                }
-            }
             match request {
                 AudioRequest::Mute => {
                     self.mute();
