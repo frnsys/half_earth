@@ -90,7 +90,7 @@ Fuel,Combustible
 "Fuel demand will change from [i]%{iconFuel}[/i]%{prevDemandFuel} to [i]%{iconFuel}[/i]%{nextDemandFuel} and electricity demand will change from [i]%{iconElec}[/i]%{prevDemandElec} to [i]%{iconElec}[/i]%{nextDemandElec}.","La demande de carburant passera de [i]%{iconFuel}[/i]%{prevDemandFuel} à [i]%{iconFuel}[/i]%{nextDemandFuel} et la demande d'électricité passera de [i]%{iconElec}[/i]%{prevDemandElec} à [i]%{iconElec}[/i]%{nextDemandElec}."
 Global demand for %{output}.,Demande mondiale pour %{output}.
 "Global %{name} output will change from [i]%{icon}[/i]%{base} to [i]%{icon}[/i]%{changed} with no change in impacts.","La production globale de %{name} va passer de [i]%{icon}[/i]%{base} à [i]%{icon}[/i]%{changed} sans aucun changement dans les impacts."
-Govt,Gouv
+Govt,Gouvernement
 High,Haut
 How many seats your coalition has. Draw parties to your coalition by implementing projects they support.,Combien de sièges votre coalition a-t-elle. Attirez des partis à votre coalition en mettant en œuvre des projets qu'ils soutiennent.
 "How much political capital you have. Political capital is what you spend to implement your plans. [w]If you run out you'll be pushed out of government.[/w]","Combien de capital politique vous avez. Le capital politique est ce que vous dépensez pour mettre en œuvre vos plans. [w] Si vous en manquez, vous serez évincé du gouvernement. [/w]"
@@ -124,8 +124,8 @@ Moderate,Modéré
 Music,Musique
 N2O,N2O
 Nay,Non
-New Game,Nouveau Jeu
-Next,Prochain
+New Game,Nouvelle partie
+Next,Suivant
 Next Level,Niveau Suivant
 Off,Désactivé
 On,Activé
@@ -143,7 +143,7 @@ People are furious.,Les gens sont furieux.
 People are happy.,Les gens sont heureux.
 People are unhappy.,Les gens sont mécontents..
 People are upset.,Les gens sont contrariés.
-Plan,Planifiez
+Plan,Planification 
 Playtesting,Test de jeu
 Policies,Politiques
 Policy Outcome,Résultat de la Politique
@@ -386,7 +386,7 @@ year(s),an(s)
 %{changeDir} the global temperature by %{amount}[b]°c[/b].,Changez la température globale de [b]°c[/b]%{amount}%{changeDir}.
 %{changeDir} the rate of sea level rise by %{amount}mm/year.,Modifiez le taux de montée du niveau de la mer de %{amount}mm/année.
 %{changeDir} world contentedness by [b]%{amount}[/b].,[contentedness] Le contentement mondial change de [b]%{amount}[/b] %{changeDir}.
-%{changeDir} world contentedness by %{amount}.,Contenu mondial modifié par %{amount}.
+%{changeDir} world contentedness by %{amount}.,%{changeDir} le contentement mondial de %{amount}.
 %{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{changeDir} %{kind} de %{tag} par [b]%{tipAmount}[/b].
 %{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,Changer %{changeDir} %{label} pour %{tag} par [b]%{amount}[/b].
 "%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.","%{changeDir} l'approvisionnement de %{name} par [i]%{icon}[/i]%{amount}."
@@ -417,11 +417,11 @@ Maintain high levels of consumption in global North and stabilize the biosphere 
 
 Maintenir des niveaux élevés de consommation dans le Nord et stabiliser la biosphère aux dépens de la multitude appauvrie. Il faut être impitoyable pour désamorcer la bombe démographique.
 
-La liberté de se reproduire est intolérable. Garrett Hardin"""
+« La liberté de se reproduire est intolérable. » - Garrett Hardin"
 Population projects are substantially cheaper.,Les projets de population sont nettement moins coûteux.
 "Lifeboats, nature, borders, famines","Canots de sauvetage, nature, frontières, famines"
 The Utopian,L'Utopiste
-"'Nature, relieved by the relaxation of man's work, would be recovering her ancient beauty, and be teaching men the old story of art.' William Morris","La nature, soulagée par le relâchement du travail de l'homme, retrouverait son ancienne beauté et enseignerait aux hommes la vieille histoire de l'art. William Morris"
+"'Nature, relieved by the relaxation of man's work, would be recovering her ancient beauty, and be teaching men the old story of art.' William Morris","« La nature, soulagée par le relâchement du travail de l'homme, retrouverait son ancienne beauté et enseignerait aux hommes la vieille histoire de l'art. » - William Morris"
 "Limits, Protection, and Restoration projects are cheaper.","Les projets de limitation, de protection et de restauration sont moins coûteux."
 "Poetry, stained glass, sci-fi, lost causes, sentimentality","Poésie, vitrail, science-fiction, causes perdues, sentimentalité"
 The Consumerist,Le Consumériste
@@ -443,7 +443,7 @@ The Fanonist,La Fanoniste
 
 'For a colonized people the most essential value, because the most concrete, is first and foremost the land: the land which will bring them bread and, above all, dignity.' Frantz Fanon.","Révolutionnaires du Sud.
 
-Pour un peuple colonisé, la valeur la plus essentielle, parce que la plus concrète, c'est d'abord la terre : la terre qui lui apportera le pain et surtout la dignité. Frantz Fanon."
+« Pour un peuple colonisé, la valeur la plus essentielle, parce que la plus concrète, c'est d'abord la terre : la terre qui lui apportera le pain et surtout la dignité. » - Frantz Fanon."
 The contentedness of lower and lower-middle income regions recovers more quickly.,La satisfaction des régions à revenu faible et moyen inférieur se rétablit plus rapidement.
 "Psychoanalysis, internationalism, poetry, revolution","Psychanalyse, internationalisme, poésie, révolution"
 The Ecofeminist,L'Écoféministe
@@ -451,19 +451,19 @@ The Ecofeminist,L'Écoféministe
 
 'When women today attempt to change society's domination of nature, they are acting to overturn modern constructions of nature and women as culturally passive and subordinate.' Carolyn Merchant","Le patriarcat domine à la fois la nature et les femmes, et doit donc être renversé.
 
-Lorsque les femmes d'aujourd'hui tentent de changer la domination de la société sur la nature, elles agissent pour renverser les constructions modernes de la nature et des femmes, culturellement passives et subordonnées. Carolyn Merchant"
+« Lorsque les femmes d'aujourd'hui tentent de changer la domination de la société sur la nature, elles agissent pour renverser les constructions modernes de la nature et des femmes, culturellement passives et subordonnées. » - Carolyn Merchant"
 "Food, Agriculture, and Protection projects are cheaper.","Les projets relatifs à l'alimentation, à l'agriculture et à la protection sont moins coûteux."
 "Lichen, composting, Ursula Le Guin, tardigrades","Lichen, compostage, Ursula Le Guin, tardigrades"
 The Authoritarian,L'Autoritaire
-'Intolerance of ambiguity is the mark of an authoritarian personality.' Theodor Adorno,L'intolérance à l'ambiguïté est la marque d'une personnalité autoritaire. Theodor Adorno
+'Intolerance of ambiguity is the mark of an authoritarian personality.' Theodor Adorno,« L'intolérance à l'ambiguïté est la marque d'une personnalité autoritaire. » - Theodor Adorno
 You won't lose if contentedness dips below 0.,Vous ne serez pas perdant si le taux de satisfaction est inférieur à 0.
-"Shiny leather boots, cults of personality, daddy issues","Bottes en cuir brillant, cultes de la personnalité, problèmes de père"
-The Accelerationist,L'Accélérationist
-'We declare that only a Promethean politics of maximal mastery over society and its environment is capable of either dealing with global problems or achieving victory over capital.' Accelerationist Manifesto,Nous déclarons que seule une politique prométhéenne de maîtrise maximale de la société et de son environnement est capable de traiter les problèmes mondiaux ou de remporter la victoire sur le capital.Manifeste accélérationniste
-[research] Research points cost less [political_capital] political capital.,[research] Les points de recherche coûtent [political_capital] de moins en capital politique.
+"Shiny leather boots, cults of personality, daddy issues","Bottes en cuir brillant, cultes de la personnalité, problèmes paternels"
+The Accelerationist,L'Accélérationniste
+'We declare that only a Promethean politics of maximal mastery over society and its environment is capable of either dealing with global problems or achieving victory over capital.' Accelerationist Manifesto,« Nous déclarons que seule une politique prométhéenne de maîtrise maximale de la société et de son environnement est capable de traiter les problèmes mondiaux ou de remporter la victoire sur le capital. » - Manifeste accélérationniste
+[research] Research points cost less [political_capital] political capital.,[research] Les points de recherche coûtent moins de [political_capital] capital politique.
 "Drum 'n' bass, Wal-Mart [socialist], fragment on machines, asteroid mining","Drum 'n' bass, Amazon [socialiste], fragment sur les machines, l'extraction d'astéroïdes"
-The Environmentalist,La Militante Écologiste
-"'The more clearly we can focus our attention on the wonders and realities of the universe about us, the less taste we shall have for destruction.' Rachel Carson","Plus nous parviendrons à concentrer notre attention sur les merveilles et les réalités de l'univers qui nous entoure, moins nous aurons de goût pour la destruction. Rachel Carson"
+The Environmentalist,L’Écologiste
+"'The more clearly we can focus our attention on the wonders and realities of the universe about us, the less taste we shall have for destruction.' Rachel Carson","« Plus nous parviendrons à concentrer notre attention sur les merveilles et les réalités de l'univers qui nous entoure, moins nous aurons de goût pour la destruction. » - Rachel Carson"
 Restoration projects are substantially cheaper.,Les projets de restauration sont nettement moins coûteux.
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Vélos de luxe, randonnée, observation des oiseaux, granola, sandales, philanthropes"
 The Animal Liberationist,L'Antispéciste
@@ -471,7 +471,7 @@ The Animal Liberationist,L'Antispéciste
 
 'The question is not, can they reason? Nor can they talk? But, can they suffer?' Jeremy Bentham","Lutter pour les droits des animaux, lutter pour un monde sans douleur.
 
-La question n'est pas de savoir s'ils peuvent raisonner ou parler. Ni de savoir s'ils peuvent parler ? Mais de savoir s'ils peuvent souffrir. Jeremy Bentham"
+« La question n'est pas peuvent-ils raisonner, ni peuvent-ils parler, mais bien peuvent-ils souffrir ? » - Jeremy Bentham"
 Food projects are much cheaper.,Les projets alimentaires sont beaucoup moins chers.
 "Peter Singer, bad puns, veganizing things, punk music","Peter Singer, mauvais jeux de mots, végétalisation des choses, musique punk"
 Space,Espace
@@ -510,7 +510,7 @@ Blue Hydrogen,Hydrogène bleu
 "Follows the same process as grey, with the additional technologies necessary to capture the CO2 produced when hydrogen is split from methane (or from coal) and store it for long term.","Il s'agit du même processus que le processus gris, avec les technologies supplémentaires nécessaires pour capturer le CO2 produit lorsque l'hydrogène est séparé du méthane (ou du charbon) et le stocker à long terme."
 Hydropower,Hydroélectricité
 Uses the natural flow of moving water to generate electricity.,Utilise le flux naturel de l'eau en mouvement pour produire de l'électricité.
-Industrial Crop Ag,Agriculture industriel
+Industrial Crop Ag,Agriculture industrielle
 "Large-scale, intensive production of crops and animals, often involving chemical fertilizers on crops.","Production intensive et à grande échelle de cultures et d'animaux, impliquant souvent l'utilisation d'engrais chimiques sur les cultures."
 Terrestrial Wind Power,Énergie éolienne terrestre
 Land-based wind energy technologies harness kinetic energy from the wind to generate electricity.,Les technologies éoliennes terrestres exploitent l'énergie cinétique du vent pour produire de l'électricité.
@@ -518,23 +518,23 @@ Thorium Nuclear Power,Énergie nucléaire au thorium
 Nuclear fuel made from both uranium and thorium.,Combustible nucléaire fabriqué à partir d'uranium et de thorium.
 Grey Hydrogen,Hydrogène gris
 "Produced from methane (CH4), split with steam into CO2 – the main culprit for climate change – and H2, hydrogen. Grey hydrogen has increasingly been produced also from coal, with significantly higher CO2 emissions per unit of hydrogen produced.","Produit à partir du méthane (CH4), il se divise avec de la vapeur d'eau en CO2 - le principal responsable du changement climatique - et en H2, l'hydrogène. L'hydrogène gris est de plus en plus souvent produit à partir du charbon, avec des émissions de CO2 nettement plus élevées par unité d'hydrogène produite."
-Coal Power Generation,Électricité du charbon
+Coal Power Generation,Centrale à charbon
 "Produce electricity by burning coal in a boiler to produce steam. The steam produced, under pressure, flows into a turbine, which spins a generator to create electricity.","Produire de l'électricité en brûlant du charbon dans une chaudière pour produire de la vapeur. La vapeur produite, sous pression, s'écoule dans une turbine, qui fait tourner un générateur pour créer de l'électricité."
 Organic Livestock Ag,Elevage biologique
 "Livestock is allowed year-round access to the outdoors, raised on certified organic land and  per animal health and welfare standards.","Le bétail a accès à l'extérieur toute l'année et est élevé sur des terres certifiées biologiques, dans le respect des normes en matière de santé et de bien-être des animaux."
 Coal,Charbon
 "In coal-fired power plants, bituminous coal, subbituminous coal, or lignite is burned. The heat produced by the combustion of the coal is used to convert water into high-pressure steam, which drives a turbine, which produces electricity.","Dans les centrales électriques au charbon, on brûle du charbon bitumineux, du charbon subbitumineux ou du lignite. La chaleur produite par la combustion du charbon est utilisée pour transformer l'eau en vapeur à haute pression, qui entraîne une turbine, laquelle produit de l'électricité."
-Natural Gas Power Gen,Électricité du gas naturel
-Generate electricity by burning natural gas as fuel.,Produire de l'électricité en brûlant du gaz naturel comme combustible.
-Industrial Livestock Ag,Elevage industriel
-"Also known as ""factory farming""  designed to maximize production, while minimizing costs. Uses hormones and vaccines to produce consistent product. Animals are kept in confinement for most of their lives.","Également connu sous le nom d'""élevage industriel"", conçu pour maximiser la production tout en minimisant les coûts. Utilisation d'hormones et de vaccins pour obtenir un produit homogène. Les animaux sont enfermés pendant la majeure partie de leur vie."
+Natural Gas Power Gen,Centrale à gaz naturel
+Generate electricity by burning natural gas as fuel.,Produit de l'électricité en brûlant du gaz naturel comme combustible.
+Industrial Livestock Ag,Élevage industriel
+"Also known as ""factory farming""  designed to maximize production, while minimizing costs. Uses hormones and vaccines to produce consistent product. Animals are kept in confinement for most of their lives.","Également connu sous le nom d'""élevage intensif"", conçu pour maximiser la production tout en minimisant les coûts. Utilisation d'hormones et de vaccins pour obtenir un produit homogène. Les animaux sont enfermés pendant la majeure partie de leur vie."
 Nuclear Fusion,Fusion nucléaire
 "Harness the power of suns, and build utopia with it.",Exploitez la puissance des soleils et construisez l'utopie grâce à elle.
 Floating Wind Turbines,Éoliennes flottantes
 Offshore wind turbines mounted on a floating structure that allowing the turbine to generate electricity on water where terrestrial is not possible.,"Les éoliennes offshore sont montées sur une structure flottante qui permet à l'éolienne de produire de l'électricité sur l'eau, là où le terrestre n'est pas possible."
 Green Hydrogen,Hydrogène vert
 Hydrogen produced by splitting water into hydrogen and oxygen using renewable electricity.,Hydrogène produit en divisant l'eau en hydrogène et en oxygène à l'aide d'électricité renouvelable.
-Petroleum Power Gen,Électricité du pétrole
+Petroleum Power Gen,Centrale à pétrole
 Burn oil to create heat which is in turn used to generate steam to drive turbines which generate electricity.,Brûler du pétrole pour créer de la chaleur qui est à son tour utilisée pour générer de la vapeur afin d'actionner des turbines qui produisent de l'électricité.
 Biofuels,Biocarburants
 "Renewable resource, derived from biomass—wood, crop residues, sugar, corn, or miscanthus.
@@ -689,7 +689,7 @@ The Food Waste Campaign has been very successful!,La campagne de lutte contre le
 We have a reliable stream of extra organic material too.,Nous disposons également d'un flux fiable de matières organiques supplémentaires.
 "We could process this into biomaterials, such as crichton from crab shells, and streamline the process for large scale production.","Nous pourrions transformer cela en biomatériaux, comme le crichton provenant de carapaces de crabes, et simplifier le processus pour une production à grande échelle."
 Animal Liberationist Curriculum,Programme d'études sur la libération des animaux
-"Give students an anti-speciesist education where they question human supremacy. After all, what makes us so different from animals? Students will read classics such as 'Beasts of Burden', 'Animal Liberation', and 'Zoopolis'. This educational program will improve your relations with the Animal Liberationist.","Donnez aux élèves une éducation anti-spéciste où ils remettent en question la suprématie humaine. Après tout, qu'est-ce qui nous rend si différents des animaux? Les élèves liront des classiques tels que 'Beasts of Burden', 'Libération Animale' et 'Zoopolis'. Ce programme éducatif améliorera vos relations avec la Libération Animale."
+"Give students an anti-speciesist education where they question human supremacy. After all, what makes us so different from animals? Students will read classics such as 'Beasts of Burden', 'Animal Liberation', and 'Zoopolis'. This educational program will improve your relations with the Animal Liberationist.","Donnez aux élèves une éducation anti-spéciste où ils remettent en question la suprémacie humaine. Après tout, qu'est-ce qui nous rend si différents des animaux ? Les élèves liront des classiques tels que 'Beasts of Burden', 'Libération Animale' et 'Zoopolis'. Ce programme éducatif améliorera vos relations avec l'Antispéciste."
 The new curriculum instills children with a sense of compassion for all human and non-human animals.,Le nouveau programme inculque aux enfants un sentiment de compassion pour tous les animaux humains et non humains.
 Carbon-Negative Concrete,Béton à teneur en carbone négative
 Scale up carbon-negative concrete production processes.,Intensifiez les processus de production de béton à bilan carbone négatif.
@@ -1099,8 +1099,8 @@ Advances in Ecosystem Modelling,Modélisation des écosystèmes améliorés
 It's amazing that we can now diagnose specialized issues like species decline in a matter of minutes instead of years.,C'est incroyable que nous puissions maintenant diagnostiquer des problèmes spécialisés comme le déclin des espèces en quelques minutes au lieu de plusieurs années.
 Like what?,Comme quoi ?
 "Well for example, our fish population had a sudden decline and we found that it was due to cooler temperatures attracting more predators in the area.","Eh bien par exemple, notre population de poissons a connu une baisse soudaine et nous avons découvert que cela était dû à des températures plus fraîches attirant plus de prédateurs dans la zone."
-Accelerationist Curriculum,Programme d'enseignement accéléré
-"Teach children and adolescents that they can move mountains, channel rivers, and reshape the Earth until it becomes a mere human artifact. Socialism should remove the fetters on the forces of production, accelerate scientific developments, and reach for the stars! Students will read Edward Bellamy, Aaron Bastani, and Mikhail Budyko.","Enseignez aux enfants et aux adolescents qu'ils peuvent déplacer des montagnes, canaliser des rivières, et remodeler la Terre jusqu'à ce qu'elle devienne un simple artefact humain. Le socialisme devrait lever les entraves sur les forces de production, accélérer les développements scientifiques, et viser les étoiles ! Les étudiantes liront Edward Bellamy, Aaron Bastani, et Mikhail Budyko."
+Accelerationist Curriculum,Programme d'études accélérationniste
+"Teach children and adolescents that they can move mountains, channel rivers, and reshape the Earth until it becomes a mere human artifact. Socialism should remove the fetters on the forces of production, accelerate scientific developments, and reach for the stars! Students will read Edward Bellamy, Aaron Bastani, and Mikhail Budyko.","Enseignez aux enfants et aux adolescents qu'ils peuvent déplacer des montagnes, canaliser des rivières, et remodeler la Terre jusqu'à ce qu'elle devienne un simple artéfact humain. Le socialisme devrait lever les entraves sur les forces de production, accélérer les développements scientifiques, et viser les étoiles ! Les étudiantes liront Edward Bellamy, Aaron Bastani, et Mikhail Budyko."
 Our children will become the Prometheans of tomorrow!,Nos enfants deviendront les Prométhéens de demain !
 Search for Extraterrestrial Life,Recherche de vie extraterrestre
 Send radio waves into the dark void surrounding us. The hope is that we're not alone.,Envoyez des ondes radio dans le vide sombre qui nous entoure. L'espoir est que nous ne sommes pas seuls.
@@ -1280,7 +1280,7 @@ All national borders were dissolved soon after the revolution.,Toutes les fronti
 "Of course, regional inequities haven't vanished overnight, so regions are still distinct from one another.","Bien sûr, les inégalités régionales n'ont pas disparu du jour au lendemain, donc les régions restent toujours distinctes les unes des autres."
 Here you can gain some insight on those differences and learn more about each region.,"Ici, vous pouvez obtenir un aperçu de ces différences et en apprendre davantage sur chaque région."
 Now the world is organized into regions.,"Maintenant, le monde est organisé en régions."
-"Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","N'hésitez pas à naviguer un peu. Lorsque vous êtes prêt, revenez à l'onglet ""Plan""."
+"Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","N'hésitez pas à naviguer un peu. Lorsque vous êtes prêt, revenez à l'onglet ""Planification""."
 Extreme Flooding - Intro,Inondations extrêmes - Intro
 Natural Disasters,Catastrophes naturelles
 Flooding is getting even worse than before.,Les inondations deviennent encore pires qu'avant.
@@ -1423,7 +1423,7 @@ The Accelerationist is now an [ally] ally. [research] Research points cost less 
 Plan Intro 2,Plan Intro 2
 Tutorial,Tutoriel
 "Normally at this point you could hit that big ""Ready"" button to start running your plan.","Normalement, à ce stade, vous pourriez appuyer sur ce grand bouton ""Prêt"" pour commencer à exécuter votre plan."
-"Press the ""Govt"" tab to head on over.","Appuyez sur l'onglet ""Govt"" pour vous y rendre."
+"Press the ""Govt"" tab to head on over.","Appuyez sur l'onglet ""Gouvernement"" pour vous y rendre."
 But first let's visit parliament and get you acquainted with the people there.,"Mais d'abord, visitons le parlement et familiarisons-vous avec les gens là-bas."
 Navier-Stokes Smoothness Proven,Preuve de la Douceur de Navier-Stokes
 Miracles,Miracles
@@ -1689,16 +1689,16 @@ Let's get straight to it!,Allons droit au but !
 Got it?,L'avez-vous compris ?
 Good luck!,Bonne chance !
 And if the people are [nemesis] unhappy with your performance you will be removed from your position.,"Et si le peuple est mécontent de votre performance, vous serez destituée de votre poste."
-"If you get stuck, you can tap on most things for more details and reminders.","Si vous êtes bloqué, vous pouvez cliquer sur la plupart des choses pour obtenir plus de détails et de rappels."
+"If you get stuck, you can tap on most things for more details and reminders.","Si vous êtes bloquée, vous pouvez cliquer sur la plupart des choses pour obtenir plus de détails et de rappels."
 You'll need to spend [political_capital] political capital if you want something to happen.,Vous devrez dépenser [political_capital] de capital politique si vous voulez que quelque chose se passe.
 It's your job to guide us all safely through the next century.,C'est votre travail de nous guider tous en toute sécurité à travers le prochain siècle.
 But you don't have complete authority to make decisions unilaterally.,Mais vous n'avez pas l'autorité complète pour prendre des décisions unilatéralement.
 You'll need to spend [political_capital] political capital if you want something to happen.,Vous devrez dépenser [political_capital] de capital politique si vous voulez que quelque chose se passe.
-Got it?,L'avez-vous compris ?
-Got it.,"Great, let's begin."
+Got it?,Tout est clair pour vous ?
+Got it.,"Oui, c’est parti."
 Could you repeat that?,Pourriez-vous répéter cela ?
 "But if you run out of political capital, you will be recalled and your term will end.","Mais si vous épuisez votre capital politique, vous serez rappelée et votre mandat prendra fin."
-"If you get stuck, you can tap on most things for more details and reminders.","Si vous êtes bloqué, vous pouvez cliquer sur la plupart des choses pour obtenir plus de détails et de rappels."
+"If you get stuck, you can tap on most things for more details and reminders.","Si vous êtes bloquée, vous pouvez cliquer sur la plupart des choses pour obtenir plus de détails et de rappels."
 "...Anyways, just click the ""Add"" button there to start making your plan.","...En tout cas, cliquez simplement sur le bouton ""Ajouter"" là-bas pour commencer à élaborer votre plan."
 Got it?,L'avez-vous compris ?
 This planning application lets you make your plan.,Cette application de planification vous permet de faire votre plan.
@@ -1751,7 +1751,7 @@ Tutorial,Tutoriel
 This is your planning dashboard. It summarizes the state of the world today.,Voici votre tableau de bord de planification. Il résume l'état du monde aujourd'hui.
 Use this information to figure out the biggest contributors to problem areas.,Utilisez ces informations pour déterminer les plus grands contributeurs aux zones problématiques.
 "When you're ready, let's head over to the ""World"" tab.","Quand vous êtes prêt, allons à l'onglet ""Monde""."
-Tapping some values will show a detailed breakdown. Or you can use the chart below.,"En tapant certaines valeurs, vous verrez un détail détaillé. Ou vous pouvez utiliser le tableau ci-dessous."
+Tapping some values will show a detailed breakdown. Or you can use the chart below.,"En appuyant sur certaines valeurs, vous verrez un compte-rendu détaillé. Ou vous pouvez utiliser le tableau ci-dessous."
 Ozone Health,Santé de l'Ozone
 Under a White Sky,Sous un ciel blanc
 I'm seeing a disturbing increase in incidences of skin cancers and diseases.,Je constate une augmentation inquiétante des incidences de cancers et de maladies de la peau.
@@ -1919,7 +1919,7 @@ Plan items are represented as these cards here.,Les éléments de plan sont repr
 "Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.","Faites glisser une carte dans le scanner pour l'ajouter à votre plan, et maintenez-la pour engager plus de points de [research] recherche."
 "If you change your mind, drag the card down to reset its points.","Si vous changez d'avis, faites glisser la carte vers le bas pour réinitialiser ses points."
 Here you can turn [political_capital] political capital into [research] research points and use that to set research priorities.,"Ici, vous pouvez transformer le [political_capital] capital politique en points de [research] recherche et utiliser cela pour définir les priorités de recherche."
-"Not only new ones, but also the re-introduction and refinement of older ones too.","Non seulement de nouvelles, mais aussi la réintroduction et le raffinement des anciennes aussi."
+"Not only new ones, but also the re-introduction and refinement of older ones too.","Non seulement des nouvelles, mais aussi la réintroduction et le raffinement d’anciennes."
 Thwaites Glacier Collapses,Le Glacier Thwaites S'effondre
 A Rising Tide,Une marée montante
 This is extremely dangerous as now the entire West Antarctic Ice Sheet is at risk.,C'est extrêmement dangereux car maintenant toute la calotte glaciaire de l'Antarctique occidental est en danger.
@@ -2056,9 +2056,9 @@ Tutorial,Tutoriel
 We have a wide array of processes to produce two critical resources: [food] food and [energy] energy.,Nous avons un large éventail de processus pour produire deux ressources essentielles : [food] la nourriture et [energy] l'énergie.
 Why don't you try changing some process mixes now?,Pourquoi n'essayez-vous pas de changer quelques mélanges de processus maintenant ?
 Different processes have different benefits and drawbacks.,Différents processus ont des avantages et des inconvénients différents.
-"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Et certaines nécessitent certaines matières premières, comme [oil] l'huile ou [uranium] l'uranium, qui pourraient se dégrader. Alors gardez un œil sur ceux-ci."
+"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Et certaines nécessitent certaines matières premières, comme [oil] le pétrole ou [uranium] l'uranium, qui pourraient se dégrader. Alors gardez un œil sur ceux-ci."
 "If you need any more information about a process, just tap on it to flip it.","Si vous avez besoin de plus d'informations sur un processus, il suffit de le toucher pour le retourner."
-"Some may require much more [land] land or more [energy] energy, for example.","Certaines peuvent nécessiter beaucoup plus de [land] land ou plus [energy] d'énergie, par exemple."
+"Some may require much more [land] land or more [energy] energy, for example.","Certaines peuvent nécessiter beaucoup plus de [land] surface ou plus [energy] d'énergie, par exemple."
 "Of course, it will take time to make all of these changes.","Bien sûr, il faudra du temps pour apporter toutes ces modifications."
 Here you can change the [mix_token] production mix for each of these resources.,"Ici, vous pouvez modifier le [mix_token] mélange de production pour chacune de ces ressources."
 Wildfires - Intro,Feux de forêt - Intro
@@ -2107,8 +2107,8 @@ nothing so drastic is necessary...we finally can unleash technology from the yok
 Some projects will require a majority coalition in parliament to implement.,Certains projets nécessiteront une majorité de coalition au parlement pour être mis en œuvre.
 Hm.,Hm.
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
-Tap on a party to learn more.,Touchez une fête pour en savoir plus.
-...,"Sure, you can provide me with the English Text you want to translate into French."
+Tap on a party to learn more.,Appuyez sur un parti pour en savoir plus.
+...,...
 Symbiosis with nature is crucial.,La symbiose avec la nature est cruciale.
 A hard line is necessary!,Une ligne dure est nécessaire !
 Technology is the key to liberation.,La technologie est la clé de la libération.
@@ -2116,11 +2116,11 @@ That means taking the hard route that others might frown upon. Don't you agree?,
 We have a unique opportunity to reshape our relationship with nature and each other.,Nous avons une occasion unique de remodeler notre relation avec la nature et entre nous.
 Hm.,Hm.
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
-Hello planner! What an exciting time.,Bonjour planificateur ! Quelle période excitante.
-Some parties have special abilities that can help as well.,Certaines parties ont également des capacités spéciales qui peuvent aider.
-"Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","D'autres parties (indiquées ici) peuvent rejoindre votre coalition en tant qu'alliées [ally], selon ce que vous ajoutez à votre plan."
+Hello planner! What an exciting time.,Bonjour planificateur ! Quelle période enthousiasmante.
+Some parties have special abilities that can help as well.,Certains partis ont également des capacités spéciales qui peuvent vous aider.
+"Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","D'autres partis (indiqués ici) peuvent rejoindre votre coalition en tant qu'alliés [ally], selon ce que vous ajoutez à votre plan."
 Hm.,Hm.
-"Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Stats""."
+"Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Statistiques""."
 "Well, whatever you do, keep in mind that these people will come to love or hate you for it.","Eh bien, quoi que vous fassiez, gardez à l'esprit que ces personnes finiront par vous aimer ou vous détester pour cela."
 "Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Stats""."
 I'm glad we see eye-to-eye.,Je suis contente que nous voyons les choses de la même façon.
