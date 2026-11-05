@@ -28,7 +28,7 @@ English,Translation
 "%{changeDir} the chance of ""%{event}"" by %{amount}.","%{changeDir} la probabilité de ""%{event}"" de %{amount}."
 %{changeDir} the global temperature by %{amount}[b]°c[/b].,Changez la température globale de [b]°c[/b]%{amount}%{changeDir}.
 %{changeDir} the rate of sea level rise by %{amount}mm/year.,Modifiez le taux de montée du niveau de la mer de %{amount}mm/année.
-%{changeDir} world contentedness by %{amount}.,Contenu mondial modifié par %{amount}.
+%{changeDir} world contentedness by %{amount}.,%{changeDir} le contentement mondial de %{amount}.
 %{changeDir} world contentedness by [b]%{amount}[/b].,[contentedness] Le contentement mondial change de [b]%{amount}[/b] %{changeDir}.
 %{cost} yrs,%{cost} ans
 %{disaster} in %{region},%{disaster} dans %{region}
@@ -42,10 +42,10 @@ English,Translation
 %{region} is now %{income} income.,%{region} est maintenant de revenu %{income}.
 %{years} yrs left,Il vous reste %{years} ans
 'Green' Container Ships,"Navires porte-conteneurs ""verts"""
-'Intolerance of ambiguity is the mark of an authoritarian personality.' Theodor Adorno,L'intolérance à l'ambiguïté est la marque d'une personnalité autoritaire. Theodor Adorno
-"'Nature, relieved by the relaxation of man's work, would be recovering her ancient beauty, and be teaching men the old story of art.' William Morris","La nature, soulagée par le relâchement du travail de l'homme, retrouverait son ancienne beauté et enseignerait aux hommes la vieille histoire de l'art. William Morris"
-"'The more clearly we can focus our attention on the wonders and realities of the universe about us, the less taste we shall have for destruction.' Rachel Carson","Plus nous parviendrons à concentrer notre attention sur les merveilles et les réalités de l'univers qui nous entoure, moins nous aurons de goût pour la destruction. Rachel Carson"
-'We declare that only a Promethean politics of maximal mastery over society and its environment is capable of either dealing with global problems or achieving victory over capital.' Accelerationist Manifesto,Nous déclarons que seule une politique prométhéenne de maîtrise maximale de la société et de son environnement est capable de traiter les problèmes mondiaux ou de remporter la victoire sur le capital.Manifeste accélérationniste
+'Intolerance of ambiguity is the mark of an authoritarian personality.' Theodor Adorno,« L'intolérance à l'ambiguïté est la marque d'une personnalité autoritaire. » - Theodor Adorno
+"'Nature, relieved by the relaxation of man's work, would be recovering her ancient beauty, and be teaching men the old story of art.' William Morris","« La nature, soulagée par le relâchement du travail de l'homme, retrouverait son ancienne beauté et enseignerait aux hommes la vieille histoire de l'art. » - William Morris"
+"'The more clearly we can focus our attention on the wonders and realities of the universe about us, the less taste we shall have for destruction.' Rachel Carson","« Plus nous parviendrons à concentrer notre attention sur les merveilles et les réalités de l'univers qui nous entoure, moins nous aurons de goût pour la destruction. » - Rachel Carson"
+'We declare that only a Promethean politics of maximal mastery over society and its environment is capable of either dealing with global problems or achieving victory over capital.' Accelerationist Manifesto,« Nous déclarons que seule une politique prométhéenne de maîtrise maximale de la société et de son environnement est capable de traiter les problèmes mondiaux ou de remporter la victoire sur le capital. » - Manifeste accélérationniste
 "'You wanna live fancy? Live in a big mansion?
 Party in France? You better work, bitch.' Britney Spears","Tu veux vivre chic ? Vivre dans un grand manoir ?
 Faire la fête en France ? Tu ferais mieux de travailler, salope.' Britney Spears"
@@ -55,7 +55,7 @@ Faire la fête en France ? Tu ferais mieux de travailler, salope.' Britney Spear
 *COUGH* The constant smoke from wildfires is interfering with farming...plants need sunlight!,*TOUX* La fumée constante provenant des feux de forêt perturbe l'agriculture...les plantes ont besoin de la lumière du soleil !
 +%{amount} political capital.,
 +%{amount} research points.,
-...,"Sure, you can provide me with the English Text you want to translate into French."
+...,...
 ...And I've received numerous death threats too.,...Et j'ai reçu de nombreuses menaces de mort aussi.
 "...Anyways, just click the ""Add"" button there to start making your plan.","...En tout cas, cliquez simplement sur le bouton ""Ajouter"" là-bas pour commencer à élaborer votre plan."
 ...Hello?,...Allô ?
@@ -164,7 +164,7 @@ Abolish Prisons,Abolir les prisons
 Abolish Zoos,Abolir les zoos
 About nearly half of global farmland is degraded and we're still losing top soil every year.,Près de la moitié des terres agricoles mondiales sont dégradées et nous perdons encore de la couche arable chaque année.
 Accelerates regional development throughout the world.,Accélère le développement régional à travers le monde.
-Accelerationist Curriculum,Programme d'enseignement accéléré
+Accelerationist Curriculum,Programme d'études accélérationniste
 "Achieve a goal set out in the Communist Manifesto: the 'gradual abolition of all the distinction between town and country by a more equable distribution of the populace over the country.' Bring culture into the countryside to combat the 'idiocy' of rural life. Bring farms and gardens into the city, so people can discover their green thumbs.","Atteignez un objectif énoncé dans le Manifeste communiste : 'l'abolition progressive de toute distinction entre la ville et la campagne par une répartition plus équitable de la population sur le territoire.' Apportez la culture à la campagne pour combattre 'l'idiocie' de la vie rurale. Introduisez des fermes et des jardins en ville, afin que les gens puissent découvrir leur main verte."
 Acid Rain,Pluie acide
 "Actually, it's not that significant.","En fait, ce n'est pas si significatif."
@@ -192,7 +192,7 @@ Ally - The Fanonist,Ally - La Fanoniste
 Ally - The Malthusian,Ally - La Malthusienne
 Ally - The Posadist,Ally - La Posadiste
 Ally - The Utopian,Ally - L'Utopienne
-"Also known as ""factory farming""  designed to maximize production, while minimizing costs. Uses hormones and vaccines to produce consistent product. Animals are kept in confinement for most of their lives.","Également connu sous le nom d'""élevage industriel"", conçu pour maximiser la production tout en minimisant les coûts. Utilisation d'hormones et de vaccins pour obtenir un produit homogène. Les animaux sont enfermés pendant la majeure partie de leur vie."
+"Also known as ""factory farming""  designed to maximize production, while minimizing costs. Uses hormones and vaccines to produce consistent product. Animals are kept in confinement for most of their lives.","Également connu sous le nom d'""élevage intensif"", conçu pour maximiser la production tout en minimisant les coûts. Utilisation d'hormones et de vaccins pour obtenir un produit homogène. Les animaux sont enfermés pendant la majeure partie de leur vie."
 Alternative Refrigerants,Réfrigérants alternatifs
 Amateur plant breeding has become a bit of trend lately!,La sélection de plantes amateur est devenue une petite tendance récemment !
 Amazon Becomes a Savannah,Amazon Devient une Savane
@@ -206,7 +206,7 @@ And if the people are [nemesis] unhappy with your performance you will be remove
 And it's nice to have an additional green space to enjoy.,Et il est agréable d'avoir un espace vert supplémentaire à apprécier.
 And none of those silly substitutes can ever replicate the real thing.,Et aucune de ces substitutions ridicules ne peut jamais reproduire la chose réelle.
 And now I'm getting a lot of requests to use this technology for designer dogs.,"Aujourd'hui, je reçois de nombreuses demandes d'utilisation de cette technologie pour des chiens designer."
-"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Et certaines nécessitent certaines matières premières, comme [oil] l'huile ou [uranium] l'uranium, qui pourraient se dégrader. Alors gardez un œil sur ceux-ci."
+"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Et certaines nécessitent certaines matières premières, comme [oil] le pétrole ou [uranium] l'uranium, qui pourraient se dégrader. Alors gardez un œil sur ceux-ci."
 And that's all there is to it!,Et c'est tout ce qu'il y a à savoir !
 And the anxious fear of a changing planet still haunted the world.,Et la peur anxieuse d'une planète en mutation hantait toujours le monde.
 And they just contributed to climate change!,Et ils viennent tout juste de contribuer au changement climatique !
@@ -222,7 +222,7 @@ Antarctic Pumping,Pompage en Antarctique
 Any change where I have to work less is a welcome one.,Tout changement où je dois travailler moins est le bienvenu.
 Any last words?,Des derniers mots ?
 "Anyway, my party is joining your coalition, since I think we feel the same way.","Quoi qu'il en soit, mon parti se joint à votre coalition, car je pense que nous partageons le même sentiment."
-"Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Stats""."
+"Anyways, let's head over to the ""Stats"" tab now.","Quoi qu'il en soit, allons maintenant dans l'onglet ""Statistiques""."
 "Aquatic species, particularly fish, are vulnerable to the impacts of dams.","Les espèces aquatiques, en particulier les poissons, sont vulnérables aux impacts des barrages."
 Are We Preserving Too Much Land?,Préservons-nous Trop de Terres ?
 Are you ok?,Êtes-vous bien ?
@@ -402,7 +402,7 @@ Cloud Brightening Reversed,Inversion de l'Éclaircissement des Nuages
 Cloud Seeding,Ensemencement des nuages
 Co-Generation,Cogénération
 Coal,Charbon
-Coal Power Generation,Électricité du charbon
+Coal Power Generation,Centrale à charbon
 Coal Running Out,Le Charbon Se Vide
 Coastal Wetland Protection and Restoration,Protection et restauration des zones humides côtières
 Coastal species are not equipped to adjust to the immediate change in salinity caused by the release of brine into the area.,Les espèces côtières ne sont pas équipées pour s'adapter au changement immédiat de salinité causé par la libération de saumure dans la zone.
@@ -593,7 +593,7 @@ Fanonist Curriculum,Programme d'études fanoniste
 "Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",
 Fast-Breeder Nuclear Power,Énergie nucléaire à combustion rapide
 Fast-Breeder Reactor,Réacteur surgénérateur
-"Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","N'hésitez pas à naviguer un peu. Lorsque vous êtes prêt, revenez à l'onglet ""Plan""."
+"Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","N'hésitez pas à naviguer un peu. Lorsque vous êtes prêt, revenez à l'onglet ""Planification""."
 "Feel free to continue to explore, but whenever you're ready press the big ""Ready"" button to launch your plan.","N'hésitez pas à continuer à explorer, mais quand vous êtes prêt, appuyez sur le grand bouton ""Prêt"" pour lancer votre plan."
 Feminist Citizen-Scientists,Citoyennes-Scientifiques Féministes
 Feminist Science and Technology Studies,Études féministes sur les sciences et les technologies
@@ -601,7 +601,7 @@ Feminist Science and Technology Studies,Études féministes sur les sciences et 
 
 'The question is not, can they reason? Nor can they talk? But, can they suffer?' Jeremy Bentham","Lutter pour les droits des animaux, lutter pour un monde sans douleur.
 
-La question n'est pas de savoir s'ils peuvent raisonner ou parler. Ni de savoir s'ils peuvent parler ? Mais de savoir s'ils peuvent souffrir. Jeremy Bentham"
+« La question n'est pas peuvent-ils raisonner, ni peuvent-ils parler, mais bien peuvent-ils souffrir ? » - Jeremy Bentham"
 Finally! This moment couldn't come any sooner.,Enfin! Ce moment ne pouvait pas arriver plus tôt.
 "Finally, we can put that terrible past behind us.","Enfin, nous pouvons laisser ce terrible passé derrière nous."
 First 100m-Inhabitant City,Première ville de 100m d'habitants
@@ -641,13 +641,13 @@ Game Over: Assassinated,Fin de la partie : Assassinée
 Game Over: Coup,Fin de la Partie : Coup
 Game Over: Overthrown,Fin de la partie : Renversée
 General Strike,Grève générale
-Generate electricity by burning natural gas as fuel.,Produire de l'électricité en brûlant du gaz naturel comme combustible.
+Generate electricity by burning natural gas as fuel.,Produit de l'électricité en brûlant du gaz naturel comme combustible.
 Generated from a reactor that uses nuclear waste as fuel. Theoretically uses U-238 as fuel and produces plutonium-239 as waste.,"Généré par un réacteur qui utilise des déchets nucléaires comme combustible. En théorie, il utilise de l'U-238 comme combustible et produit du plutonium-239 comme déchet."
 Geoengineer Desert Commentary,Commentaire sur la Géoingénierie du Désert
 Geoengineering,Géoingénierie
 Geothermal,Géothermie
 "Geothermal energy uses the heat from the Earth's core, which is as hot as the surface of the sun. Currently, power plants can only gather such heat from permeable rock not far from the surface. The number of easy to identify and tap sites is limited. Produces a steady source of power useful to baseload power generation.","L'énergie géothermique utilise la chaleur du noyau terrestre, qui est aussi chaud que la surface du soleil. Actuellement, les centrales électriques ne peuvent capter cette chaleur qu'à partir de roches perméables situées à proximité de la surface. Le nombre de sites faciles à identifier et à exploiter est limité. Produit une source d'énergie régulière utile pour la production d'énergie de base."
-"Give students an anti-speciesist education where they question human supremacy. After all, what makes us so different from animals? Students will read classics such as 'Beasts of Burden', 'Animal Liberation', and 'Zoopolis'. This educational program will improve your relations with the Animal Liberationist.","Donnez aux élèves une éducation anti-spéciste où ils remettent en question la suprématie humaine. Après tout, qu'est-ce qui nous rend si différents des animaux? Les élèves liront des classiques tels que 'Beasts of Burden', 'Libération Animale' et 'Zoopolis'. Ce programme éducatif améliorera vos relations avec la Libération Animale."
+"Give students an anti-speciesist education where they question human supremacy. After all, what makes us so different from animals? Students will read classics such as 'Beasts of Burden', 'Animal Liberation', and 'Zoopolis'. This educational program will improve your relations with the Animal Liberationist.","Donnez aux élèves une éducation anti-spéciste où ils remettent en question la suprémacie humaine. Après tout, qu'est-ce qui nous rend si différents des animaux ? Les élèves liront des classiques tels que 'Beasts of Burden', 'Libération Animale' et 'Zoopolis'. Ce programme éducatif améliorera vos relations avec l'Antispéciste."
 Glad I can rest a bit easier now.,Je suis heureux de pouvoir me reposer un peu plus facilement maintenant.
 Glad we can finally get rid of that barbaric practice.,Je suis contente que nous puissions enfin nous débarrasser de cette pratique barbare.
 Global %{name} output will change from [i]%{icon}[/i]%{base} to [i]%{icon}[/i]%{changed} with no change in impacts.,La production globale de %{name} va passer de [i]%{icon}[/i]%{base} à [i]%{icon}[/i]%{changed} sans aucun changement dans les impacts.
@@ -661,9 +661,9 @@ Good luck!,Bonne chance !
 Good luck.,Bonne chance.
 Good to know that the soil can hold carbon for centuries!,Il est bon de savoir que le sol peut retenir le carbone pendant des siècles !
 Gossy,Gossy
-Got it.,"Great, let's begin."
-Got it?,L'avez-vous compris ?
-Govt,Gouv
+Got it.,"Oui, c’est parti."
+Got it?,Tout est clair pour vous ?
+Govt,Gouvernement
 "Gradual replacement of hydrofluorocarbons (HFCs) with alternative refrigerants like ammonia, carbon dioxide, propane, and isobutane that have a significantly lower global warming potential.","Remplacement progressif des hydrofluorocarbones (HFC) par des réfrigérants alternatifs tels que l'ammoniac, le dioxyde de carbone, le propane et l'isobutane qui ont un potentiel de réchauffement global nettement inférieur."
 Great Barrier Reef Dead,Grande Barrière de Corail Morte
 "Great!, let's go hang out by the water.","Super !, allons nous détendre près de l'eau."
@@ -689,7 +689,7 @@ Heatwaves - Intro,Canicules - Intro
 Heatwaves are becoming even more frequent and intense.,Les canicules deviennent encore plus fréquentes et intenses.
 Heatwaves are getting more frequent and intense.,Les vagues de chaleur deviennent de plus en plus fréquentes et intenses.
 Heatwaves are so frequent and intense these days...,Les vagues de chaleur sont si fréquentes et intenses ces jours-ci...
-Hello planner! What an exciting time.,Bonjour planificateur ! Quelle période excitante.
+Hello planner! What an exciting time.,Bonjour planificateur ! Quelle période enthousiasmante.
 Hello.,Bonjour.
 Hempcrete,Béton de chanvre
 "Hempcrete locked in a fair amount of carbon, but there are a few applications where it can't compete with conventional concrete.","Le Hempcrete a emprisonné une quantité respectable de carbone, mais il y a quelques applications où il ne peut pas rivaliser avec le béton conventionnel."
@@ -868,7 +868,7 @@ If we suspend parliament we could implement our plans without any obstruction.,"
 "If you change your mind, drag the card down to reset its points.","Si vous changez d'avis, faites glisser la carte vers le bas pour réinitialiser ses points."
 "If you change your mind, you can swipe it down to remove it from the plan.","Si vous changez d'avis, vous pouvez le balayer vers le bas pour le retirer du plan."
 "If you do this, don't expect help when you need some brute force to back you up...","Si vous faites cela, n'attendez pas d'aide lorsque vous aurez besoin de brute force pour vous soutenir..."
-"If you get stuck, you can tap on most things for more details and reminders.","Si vous êtes bloqué, vous pouvez cliquer sur la plupart des choses pour obtenir plus de détails et de rappels."
+"If you get stuck, you can tap on most things for more details and reminders.","Si vous êtes bloquée, vous pouvez cliquer sur la plupart des choses pour obtenir plus de détails et de rappels."
 "If you need any more information about a process, just tap on it to flip it.","Si vous avez besoin de plus d'informations sur un processus, il suffit de le toucher pour le retourner."
 "If you want to keep the lights on, you better find alternative energy sources. If you want to stick with nuclear, we better do a crash course in researching fusion, fast-breeders, or thorium reactors.","Si vous voulez garder les lumières allumées, vous feriez mieux de trouver des sources d'énergie alternatives. Si vous voulez rester avec le nucléaire, nous ferions mieux de faire un cours accéléré sur la recherche en fusion, les surgénérateurs ou les réacteurs au thorium."
 Illuminate cities using satellites that will reflect sunlight onto nighttime cities below. This project will marginally lower electrical demand and will adversely affect nocturnal animals.,Illuminer les villes en utilisant des satellites qui réfléchiront la lumière du soleil sur les villes nocturnes ci-dessous. Ce projet réduira légèrement la demande électrique et affectera négativement les animaux nocturnes.
@@ -900,8 +900,8 @@ Incredible. The greatest city our planet has ever known...,Incroyable. La plus g
 Indigenous Nations Block Oil Infrastructure,Les Nations Indigènes Bloquent l'Infrastructure Pétrolière
 Indigenous Sovereignty,Souveraineté indigène
 "Indigenous peoples have proven effective in blockading new pipelines and projects, lowering production.","Les peuples autochtones se sont révélés efficaces pour bloquer de nouveaux pipelines et projets, réduisant ainsi la production."
-Industrial Crop Ag,Agriculture industriel
-Industrial Livestock Ag,Elevage industriel
+Industrial Crop Ag,Agriculture industrielle
+Industrial Livestock Ag,Élevage industriel
 "Industrial agriculture gives us high yields, but it's like mining the soil.","L'agriculture industrielle nous donne de hauts rendements, mais c'est comme si nous exploitions le sol."
 Industrialized agriculture and vertical farming are the most resilient against these temperatures...,L'agriculture industrialisée et l'agriculture verticale sont les plus résistantes face à ces températures...
 Infrastructure,Infrastructure
@@ -1130,7 +1130,7 @@ NPC guidance - Geoengineer,Conseils du PNJ - Géoingénieure
 "National parks are beautiful, but are taking up land a lot of land these days.","Les parcs nationaux sont magnifiques, mais occupent beaucoup de terrains ces jours-ci."
 Natural Disasters,Catastrophes naturelles
 Natural Gas,Gaz naturel
-Natural Gas Power Gen,Électricité du gas naturel
+Natural Gas Power Gen,Centrale à gaz naturel
 Natural Gas is Running Out,Le Gaz Naturel se Tarit
 Nature Preserves,Réserves Naturelles
 Navier-Stokes Smoothness Proven,Preuve de la Douceur de Navier-Stokes
@@ -1149,12 +1149,12 @@ Nemesis - The Utopian,Némésis - L'Utopienne
 Neutral,Neutre
 Never really liked it much myself.,Je ne l'ai jamais vraiment aimé moi-même.
 New Cuisine,Nouvelle Cuisine
-New Game,Nouveau Jeu
+New Game,Nouvelle partie
 New Mosquito-Borne Disease,Nouvelle Maladie Transmise par les Moustiques
 New Tastes,Nouveaux goûts
 New Wines in Old Biomes,Nouveaux Vins dans de Anciens Biomes
 "New curriculum includes a vast literacy campaign to empower the working class and peasants of the global South. The works of Frantz Fanon, Paulo Freire, Audre Lorde will find a broad audience. This program will improve living conditions in the global South as well as your relationship with the Fanonist.","Le nouveau programme comprend une vaste campagne d'alphabétisation visant à responsabiliser la classe ouvrière et les paysans du Sud mondial. Les œuvres de Frantz Fanon, Paulo Freire, Audre Lorde trouveront un large public. Ce programme améliorera les conditions de vie dans le Sud mondial ainsi que votre relation avec le Fanoniste."
-Next,Prochain
+Next,Suivant
 Next Level,Niveau Suivant
 Next-Gen Solar PV,PV solaire de nouvelle génération
 Night Life Adaptation,Adaptation de la Vie Nocturne
@@ -1170,7 +1170,7 @@ Northern America,Amérique du Nord
 Northern Europe,Europe du Nord
 "Not if we let human nature run its course! This is a time of urgency, and we have to act swiftly.","Pas si nous laissons la nature humaine suivre son cours ! C'est un moment d'urgence, et nous devons agir rapidement."
 Not many feel the same way...,Pas beaucoup ressentent la même chose...
-"Not only new ones, but also the re-introduction and refinement of older ones too.","Non seulement de nouvelles, mais aussi la réintroduction et le raffinement des anciennes aussi."
+"Not only new ones, but also the re-introduction and refinement of older ones too.","Non seulement des nouvelles, mais aussi la réintroduction et le raffinement d’anciennes."
 "Not only that, they also found that pollution is placing communities at heightened risk of kidney damage, as well as diseases such as cancer, diabetes, Alzheimer’s and Parkinson’s.","Non seulement cela, ils ont également découvert que la pollution met les communautés en risque accru de dommages aux reins, ainsi que des maladies comme le cancer, le diabète, Alzheimer et Parkinson."
 "Nothing compared to my AI, but I don't have to manipulate delicate plants or tread through muddy soil!","C'est rien comparé à mon IA, mais je n'ai pas besoin de manipuler des plantes délicates ni de fouler un sol boueux !"
 Novel Disease,Maladie Inédite
@@ -1236,7 +1236,7 @@ Organic Livestock Ag,Elevage biologique
 Organic and fossil-free agriculture requires more labor than industrial farming.,L'agriculture biologique et l'agriculture sans énergie fossile nécessitent plus de main-d'œuvre que l'agriculture industrielle.
 Other,Autre
 Other Industry,Autres secteurs
-"Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","D'autres parties (indiquées ici) peuvent rejoindre votre coalition en tant qu'alliées [ally], selon ce que vous ajoutez à votre plan."
+"Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","D'autres partis (indiqués ici) peuvent rejoindre votre coalition en tant qu'alliés [ally], selon ce que vous ajoutez à votre plan."
 Otherwise I fear what they're going to take next.,"Autrement, je crains ce qu'ils vont prendre ensuite."
 Otherwise many places will become inhospitable.,"Sinon, de nombreux endroits deviendront invivables."
 Otherwise they will vote you out of office.,"Sinon, ils vous voteront hors du bureau."
@@ -1270,7 +1270,7 @@ Passive Building Mandate & Retrofit,Mandat des bâtiments passifs et modernisés
 
 'When women today attempt to change society's domination of nature, they are acting to overturn modern constructions of nature and women as culturally passive and subordinate.' Carolyn Merchant","Le patriarcat domine à la fois la nature et les femmes, et doit donc être renversé.
 
-Lorsque les femmes d'aujourd'hui tentent de changer la domination de la société sur la nature, elles agissent pour renverser les constructions modernes de la nature et des femmes, culturellement passives et subordonnées. Carolyn Merchant"
+« Lorsque les femmes d'aujourd'hui tentent de changer la domination de la société sur la nature, elles agissent pour renverser les constructions modernes de la nature et des femmes, culturellement passives et subordonnées. » - Carolyn Merchant"
 "Patriarchy, mechanistic worldviews, reply guys, Francis Bacon",
 "Paul Ehrlich calls it a 'fascinating but dumb idea', but it has potential to return some species, like the Iberian Ibex.","Paul Ehrlich l'appelle une 'idée fascinante mais stupide', mais elle a le potentiel de ramener certaines espèces, comme l'Ibex Ibérien."
 "Peasants tending small farms (<2 Ha) for subsistence production. These small farms produce a large share of the world's crops with relatively few environmental costs, but require more labour than industrial agriculture.","Paysans s'occupant de petites exploitations (<2 Ha) pour la production de subsistance. Ces petites exploitations produisent une grande partie des récoltes mondiales avec relativement peu de coûts environnementaux, mais nécessitent plus de main-d'œuvre que l'agriculture industrielle."
@@ -1308,12 +1308,12 @@ Pesticides from industrial agriculture have spread through the ecosystem with de
 "Pesticides, fertilizer, and irrigation each take their toll.","Les pesticides, les engrais et l'irrigation prennent chacun leur tribut."
 "Peter Singer, bad puns, veganizing things, punk music","Peter Singer, mauvais jeux de mots, végétalisation des choses, musique punk"
 Petroleum,Pétrole
-Petroleum Power Gen,Électricité du pétrole
+Petroleum Power Gen,Centrale à pétrole
 Phage Therapy,Thérapie par les phages
 Phase Out Commercial Fishing,Élimination progressive de la pêche commerciale
 Phase out cars with internal combustion engines and mandate a transition to electric-motored vehicles.,Éliminez progressivement les voitures à moteur à combustion interne et imposez une transition vers les véhicules à moteur électrique.
 Photovoltaic (PV) devices generate electricity directly from sunlight via an electronic process using semiconductors.,Les dispositifs photovoltaïques (PV) produisent de l'électricité directement à partir de la lumière du soleil grâce à un processus électronique utilisant des semi-conducteurs.
-Plan,Planifiez
+Plan,Planification 
 Plan Intro,Introduction du Plan
 Plan Intro 2,Plan Intro 2
 Plan Intro 3,Introduction du Plan 3
@@ -1355,7 +1355,7 @@ Potato Blight Destroys Harvest,Le Mildiou Ravage la Récolte de Pommes de Terre
 Power Hungry,La faim d'énergie
 Prepare to die!,Préparez-vous à mourir !
 "Press ""Change Production"" to go to the process manager.","Appuyez sur ""Changer la Production"" pour aller au gestionnaire de processus."
-"Press the ""Govt"" tab to head on over.","Appuyez sur l'onglet ""Govt"" pour vous y rendre."
+"Press the ""Govt"" tab to head on over.","Appuyez sur l'onglet ""Gouvernement"" pour vous y rendre."
 Prev Level,Niveau précédent
 "Prevent poorer regions of the world from developing further. While this will reduce the environmental costs of economic growth, it ignores the high and growing rates of consumption in the Global North.","Empêchez les régions les plus pauvres du monde de se développer davantage. Bien que cela réduira les coûts environnementaux de la croissance économique, cela ignore les taux élevés et croissants de consommation dans le Nord global."
 Prevents or stops metal shortages.,Prévient ou stoppe les pénuries de métal.
@@ -1450,7 +1450,7 @@ Revolts,Révoltes
 
 'For a colonized people the most essential value, because the most concrete, is first and foremost the land: the land which will bring them bread and, above all, dignity.' Frantz Fanon.","Révolutionnaires du Sud.
 
-Pour un peuple colonisé, la valeur la plus essentielle, parce que la plus concrète, c'est d'abord la terre : la terre qui lui apportera le pain et surtout la dignité. Frantz Fanon."
+« Pour un peuple colonisé, la valeur la plus essentielle, parce que la plus concrète, c'est d'abord la terre : la terre qui lui apportera le pain et surtout la dignité. » - Frantz Fanon."
 Rewild newly arid lands into vibrant ecosystems. Deserts can support a surprising variety of plants and animals if given a chance to recover. More plants might lower the albedo and heat up the atmosphere slightly.,Régénérez les terres nouvellement arides en écosystèmes vibrants. Les déserts peuvent soutenir une variété surprenante de plantes et d'animaux s'ils ont la chance de se rétablir. Plus de plantes pourraient réduire l'albédo et réchauffer légèrement l'atmosphère.
 "Rewilding and river restoration has not only decreased methane emissions and regulated streamflows, but also decreased wildfire severity. Thank a beaver.","La renaturalisation et la restauration des rivières n'ont pas seulement réduit les émissions de méthane et régulé les débits des rivières, mais ont également atténué la sévérité des feux de forêt. Remerciez une castor."
 Rien Faire Comme une Bête,Rien Faire Comme une Bête
@@ -1492,7 +1492,7 @@ Severe Wildfires,Feux de forêt graves
 Severe Wildfires - Intro,Feux de forêt sévères - Introduction
 Sewage Treatment Plants,Stations d'épuration des eaux usées
 Sewage treatment plants are unglamorous but so vital in improving the quality of  life for people and animals.,"Les stations d'épuration sont peu glorieuses, mais elles sont essentielles à l'amélioration de la qualité de vie des personnes et des animaux."
-"Shiny leather boots, cults of personality, daddy issues","Bottes en cuir brillant, cultes de la personnalité, problèmes de père"
+"Shiny leather boots, cults of personality, daddy issues","Bottes en cuir brillant, cultes de la personnalité, problèmes paternels"
 Shipping,Transport maritime
 "Significant amounts of carbon was locked into human structures, but the increase in logging put a serious strain on forest ecosystems.","Des quantités significatives de carbone étaient emprisonnées dans les structures humaines, mais l'augmentation de l'exploitation forestière a sérieusement mis à l'épreuve les écosystèmes forestiers."
 Significant amounts of carbon were locked into human structures and wide-scale reforestation helped to buffer the ecological strain of increased logging.,Des quantités significatives de carbone ont été emprisonnées dans les structures humaines et une reforestation à grande échelle a aidé à amortir la contrainte écologique due à l'augmentation de l'exploitation forestière.
@@ -1533,9 +1533,9 @@ Solar Radiation Management (SRM),Gestion du rayonnement solaire
 "Some areas have experienced cooling, but without significant emissions abatement, SRM needs to be ramped up to keep pace.","Certaines zones ont connu un refroidissement, mais sans une réduction significative des émissions, il est nécessaire d'intensifier la GSR pour suivre le rythme."
 Some crops are doing well with the heat and extra CO2 in the air...,Certaines cultures se portent bien avec la chaleur et le CO2 supplémentaire dans l'air...
 "Some had health and safety risks, some were less efficient, some had further environmental issues or were themselves potent greenhouse gases...","Certaines présentaient des risques pour la santé et la sécurité, certaines étaient moins efficaces, certaines avaient d'autres problèmes environnementaux ou étaient elles-mêmes de puissants gaz à effet de serre..."
-"Some may require much more [land] land or more [energy] energy, for example.","Certaines peuvent nécessiter beaucoup plus de [land] land ou plus [energy] d'énergie, par exemple."
+"Some may require much more [land] land or more [energy] energy, for example.","Certaines peuvent nécessiter beaucoup plus de [land] surface ou plus [energy] d'énergie, par exemple."
 "Some mourned the loss of someone with tremendous potential, while others cheered the death of a misguided tyrant.","Certains pleuraient la perte de quelqu'un au potentiel énorme, tandis que d'autres applaudissaient la mort d'une tyranne égarée."
-Some parties have special abilities that can help as well.,Certaines parties ont également des capacités spéciales qui peuvent aider.
+Some parties have special abilities that can help as well.,Certains partis ont également des capacités spéciales qui peuvent vous aider.
 "Some people just don't know any better, you know what I mean?","Certaines personnes ne savent tout simplement pas ce qu'il faut faire, vous voyez ce que je veux dire ?"
 Some projects will require a majority coalition in parliament to implement.,Certains projets nécessiteront une majorité de coalition au parlement pour être mis en œuvre.
 Some regions are really unhappy with your decisions. Protests cropping up everywhere.,Certaines régions sont vraiment mécontentes de vos décisions. Des manifestations éclatent partout.
@@ -1577,9 +1577,9 @@ Suspend Parliament,Suspendre le Parlement
 Symbiosis with nature is crucial.,La symbiose avec la nature est cruciale.
 THUD,BOUM
 Taking plants out of their native habitat and packing them in large quantities for container shipping is a recipe for the globalization of plant disease.,Prélever des plantes de leur habitat naturel et les emballer en grandes quantités pour l'expédition en conteneur est une recette pour la mondialisation des maladies des plantes.
-Tap on a party to learn more.,Touchez une fête pour en savoir plus.
-Tapping some values will show a detailed breakdown. Or you can use the chart below.,"En tapant certaines valeurs, vous verrez un détail détaillé. Ou vous pouvez utiliser le tableau ci-dessous."
-"Teach children and adolescents that they can move mountains, channel rivers, and reshape the Earth until it becomes a mere human artifact. Socialism should remove the fetters on the forces of production, accelerate scientific developments, and reach for the stars! Students will read Edward Bellamy, Aaron Bastani, and Mikhail Budyko.","Enseignez aux enfants et aux adolescents qu'ils peuvent déplacer des montagnes, canaliser des rivières, et remodeler la Terre jusqu'à ce qu'elle devienne un simple artefact humain. Le socialisme devrait lever les entraves sur les forces de production, accélérer les développements scientifiques, et viser les étoiles ! Les étudiantes liront Edward Bellamy, Aaron Bastani, et Mikhail Budyko."
+Tap on a party to learn more.,Appuyez sur un parti pour en savoir plus.
+Tapping some values will show a detailed breakdown. Or you can use the chart below.,"En appuyant sur certaines valeurs, vous verrez un compte-rendu détaillé. Ou vous pouvez utiliser le tableau ci-dessous."
+"Teach children and adolescents that they can move mountains, channel rivers, and reshape the Earth until it becomes a mere human artifact. Socialism should remove the fetters on the forces of production, accelerate scientific developments, and reach for the stars! Students will read Edward Bellamy, Aaron Bastani, and Mikhail Budyko.","Enseignez aux enfants et aux adolescents qu'ils peuvent déplacer des montagnes, canaliser des rivières, et remodeler la Terre jusqu'à ce qu'elle devienne un simple artéfact humain. Le socialisme devrait lever les entraves sur les forces de production, accélérer les développements scientifiques, et viser les étoiles ! Les étudiantes liront Edward Bellamy, Aaron Bastani, et Mikhail Budyko."
 Team up with a mental health startup to provide teletherapy.,Faites équipe avec une start-up en santé mentale pour offrir de la téléthérapie.
 Technology is the key to liberation.,La technologie est la clé de la libération.
 Temp. Anomaly,Anomalie de Temp.
@@ -1600,7 +1600,7 @@ That's right. You can look through some options at the next planning session.,C'
 That's the only thing in common across the global population that I can think of.,C'est la seule chose en commun que je peux imaginer à travers la population mondiale.
 "The ""nightshift"" has been said to increase health risks as well as potentially shorten lifespan!","On a dit que le ""travail de nuit"" pouvait augmenter les risques pour la santé et potentiellement raccourcir la durée de vie !"
 The %{n}%{ext} Planning Session,La %{n}%{ext} Session de Planification
-The Accelerationist,L'Accélérationist
+The Accelerationist,L'Accélérationniste
 The Accelerationist is now a [nemesis] nemesis.,L'Accelerationist est maintenant une [nemesis] ennemie jurée.
 The Accelerationist is now an [ally] ally. [research] Research points cost less [political_capital] political capital.,L'Accelerationist est maintenant une alliée [ally]. Les points de [research] recherche coûtent moins de [political_capital] capital politique.
 The Alien,L'Alien
@@ -1629,7 +1629,7 @@ The Ecologist,L'Écologue
 The Economist,L'Économiste
 The End,La fin
 The Engineer,L'Ingénieure
-The Environmentalist,La Militante Écologiste
+The Environmentalist,L’Écologiste
 The Environmentalist is now a [nemesis] nemesis.,L'Écologiste est maintenant une némésis [nemesis].
 The Environmentalist is now an [ally] ally. Restoration projects are substantially cheaper.,L'Environnementaliste est maintenant une alliée [ally]. Les projets de restauration sont nettement moins chers.
 The Fanonist,La Fanoniste
@@ -1724,7 +1724,7 @@ Maintain high levels of consumption in global North and stabilize the biosphere 
 
 Maintenir des niveaux élevés de consommation dans le Nord et stabiliser la biosphère aux dépens de la multitude appauvrie. Il faut être impitoyable pour désamorcer la bombe démographique.
 
-La liberté de se reproduire est intolérable. Garrett Hardin"""
+« La liberté de se reproduire est intolérable. » - Garrett Hardin"
 The other day a neighbor brought in a ton of jellyfish...I guess they're everywhere now.,"L'autre jour, une voisine a apporté une tonne de méduses... Je suppose qu'elles sont partout maintenant."
 The overuse of anti-biotics in animal husbandry has caused this problem.,L'abus d'antibiotiques dans l'élevage animal a causé ce problème.
 The pathogen was able to spread rapidly due to the industrialization of the nursery trade in Europe.,Le pathogène a pu se propager rapidement en raison de l'industrialisation du commerce des pépinières en Europe.
@@ -2325,7 +2325,7 @@ Zero square kilometres of arctic sea ice.,Zéro kilomètre carré de glace de me
 [b]Unlocks[/b] the %{tag} process.,[b]Débloque[/b] le processus %{tag}.
 [b]Unlocks[/b] the %{tag} project.,[b]Débloque[/b] le projet %{tag}.
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] a été chargée de réparer les innombrables dommages que des siècles de capitalisme ont infligés à la planète et à ses habitants.
-[research] Research points cost less [political_capital] political capital.,[research] Les points de recherche coûtent [political_capital] de moins en capital politique.
+[research] Research points cost less [political_capital] political capital.,[research] Les points de recherche coûtent moins de [political_capital] capital politique.
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...","un événement de ""bulbe humide"", où la température et l'humidité se combinent pour devenir intolérables..."
 active,
 alarming,alarmant
