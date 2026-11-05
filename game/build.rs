@@ -37,11 +37,17 @@ fn read_translation(path: &Path) -> HashMap<String, String> {
 }
 
 fn compile_translations() -> impl Iterator<Item = (String, HashMap<String, String>)> {
-    glob("translations/*.csv").unwrap().map(|entry| {
+    glob("translations/*.csv").unwrap().filter_map(|entry| {
         let path = entry.unwrap();
         let stem = path.file_stem().unwrap().to_str().unwrap();
+
+        // Skip `base.csv`, as it's the empty template for new translations.
+        if stem == "base" {
+            return None;
+        }
+
         let mapping = read_translation(&path);
-        (stem.to_string(), mapping)
+        Some((stem.to_string(), mapping))
     })
 }
 

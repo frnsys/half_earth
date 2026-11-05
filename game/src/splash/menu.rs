@@ -323,8 +323,10 @@ fn read_label(ui: &mut egui::Ui, is_hovered: bool) {
         |ui| {
             let mut job = LayoutJob::default();
 
+            // Keep the trailing space out of the translation key,
+            // since keys are trimmed when translations are compiled.
             job.append(
-                "Read the book: ",
+                &format!("{} ", t!("Read the book:")),
                 0.0,
                 TextFormat {
                     font_id: FontId::new(16., FontFamily::Name("TimesTen".into())),

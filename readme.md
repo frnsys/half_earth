@@ -18,7 +18,7 @@ For native (i.e. non-web) builds we instead use [a Rust wrapper for Hector](http
 
 ## Translations
 
-The game is already translated into 8 languages thanks to volunteers! If you'd like to translate the game into your language there are examples in `game/translations` to work from. Open an issue and include the CSV and we will try to get it into the game quickly.
+The game is already translated into 8 languages thanks to volunteers! If you'd like to translate the game into your language please copy and fill out `game/translations/base.csv`. Open an issue and include the CSV and we will try to get it into the game quickly.
 
 Note there are some aspects of our internationalization system that need improvement (how we handle pluralization, for example).
 

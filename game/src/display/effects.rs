@@ -702,7 +702,7 @@ impl DisplayEffect {
                         r#"%{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b]"#,
                         percent = display::percent(amount.abs(), true),
                         icon = feat.icon(),
-                        feature = feat.lower(),
+                        feature = t!(feat.lower()),
                         changeDir = self.change_dir(*amount),
                     )))
             }
@@ -730,7 +730,7 @@ impl DisplayEffect {
                             r#"%{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b]"#,
                             percent = display::percent(amount.abs(), true),
                             icon = feat.icon(),
-                            feature = feat.lower(),
+                            feature = t!(feat.lower()),
                             changeDir = self.change_dir(*amount),
                         )),
                 )
@@ -755,7 +755,7 @@ impl DisplayEffect {
                     r#"%{changeDir} biodiversity pressure for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{amount}.[/b]"#,
                     amount = amount.abs(),
                     icon = feat.icon(),
-                    feature = feat.lower(),
+                    feature = t!(feat.lower()),
                     changeDir = self.change_dir(*amount),
                 )))
             }
