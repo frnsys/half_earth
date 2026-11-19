@@ -52,8 +52,8 @@ Party in France? You better work, bitch.' Britney Spears","Quer viver no luxo? N
 (Mostly) Full Automation,Automação (Quase) Total
 (even though I don't use it myself),(mesmo que não use-o eu mesmo)
 *COUGH* The constant smoke from wildfires is interfering with farming...plants need sunlight!,*TOSSE* A fumaça constante dos incêndios florestais está interferindo na agricultura... as plantas precisam de luz solar!
-+%{amount} political capital.,
-+%{amount} research points.,
++%{amount} political capital.,+%{amount} de capital político.
++%{amount} research points.,+%{amount} pontos de pesquisa.
 ...,...
 ...And I've received numerous death threats too.,...E também recebi inúmeras ameaças de morte.
 "...Anyways, just click the ""Add"" button there to start making your plan.","...De qualquer forma, basta clicar no botão ""Adicionar"" para começar a fazer seu plano."
@@ -291,7 +291,7 @@ Because of resource availability this process can only make up to %{maxPercent}%
 Begin a campaign to address food waste across all parts of the food system.,Iniciar uma campanha contra o desperdício alimentar em todas as partes do sistema alimentar.
 Begin global program to destroy weapons and scale down military and police budgets around the world.,Iniciar um programa global para destruir armas e reduzir os orçamentos militares e policiais em todo o mundo.
 Behavior,Comportamento
-"Bicycle lanes, vegans, the greater good",
+"Bicycle lanes, vegans, the greater good","Ciclovias, veganos, o bem comum"
 Big news--a proof for P = NP has been discovered.,Grandes notícias - uma prova para P = NP foi descoberta.
 Biochar,BioCarvão Vegetal
 Biochar is doing wonders for my fields.,O biocarvão vegetal está fazendo maravilhas para meus campos.
@@ -330,7 +330,7 @@ problemas de intermitência e fornecimento. Especialmente útil para uma rede de
 "Build out infrastructure to mine, process, and transport minerals from asteroids.","Construir infraestrutura para minerar, processar e transportar minerais de asteroides."
 Building,Construindo
 Buildings,Edificações
-"Bureaucracy, being called 'Trotskyites'",
+"Bureaucracy, being called 'Trotskyites'","Burocracia, ser chamado de 'trotskista'"
 Burn oil to create heat which is in turn used to generate steam to drive turbines which generate electricity.,"Queimar óleo para criar calor, que por sua vez é usado para gerar vapor para acionar turbinas que geram eletricidade."
 But cutting it out every once in awhile feels reasonable to me.,Mas cortar de vez em quando parece razoável para mim.
 But does this method work?,Mas esse método funciona?
@@ -440,9 +440,9 @@ Continental Smart Grid,Rede Inteligente Continental
 Continue,Continuar
 Contract the economies of the wealthiest regions.,Freia as economias das regiões mais ricas.
 Control,Controle
-Copied to Clipboard,
+Copied to Clipboard,Copiado para a Área de Transferência
 Copper Shortage,Escassez de Cobre
-Copy Session,
+Copy Session,Copiar Sessão
 Could increase,Pode aumentar
 Could reduce,Pode reduzir
 Could unlock %{name}.,Pode desbloquear %{name}.
@@ -473,7 +473,7 @@ Current energy use.,Consumo de energia atual.
 Current land use.,Uso da terra atual.
 Current water demand.,Demanda de água atual.
 Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].,A aprovação atual no mundo é %{contentedness}[t]/%{maxContentedness}.[/t]
-Custom World,
+Custom World,Mundo Personalizado
 "Cycle livestock through different pastures to allow other parts to regrow and recover. Sceptics think it will not have much of an effect, but it is popular with consumers.","Adotar rotação de rebanhos por diferentes pastagens para permitir que outras partes cresçam e se recuperem. Os céticos acham que não terá muito efeito, mas é popular entre os consumidores."
 Dancing Plague,Epidemia de Dança
 Dashboard Intro,Painel de Controle
@@ -523,7 +523,7 @@ Do what you can to both increase supply of fresh water and to lower demands on i
 Don't be a fool. It's their fault they didn't adapt or prove resilient in these hard times. I say we keep them out.,Não seja um tolo. É culpa deles que não se adaptaram ou se mostraram resilientes nesses tempos difíceis. Digo para mantê-los afastados.
 Don't expect me to help you when you're in a fix.,Não espere que o ajude quando estiver em uma situação difícil.
 "Don't need to worry about replanting them every year, or messing up my soil...","Não precisa se preocupar em replantá-los todos os anos, ou bagunçar meu solo..."
-Download World Editor,
+Download World Editor,Baixar Editor de Mundos
 "Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.",Passe um cartão no leitor para adicioná-lo ao seu plano e mantenha-o lá para adicionar mais pontos de pesquisa [research].
 Drag a card up to assign leftover production,Arraste um cartão para cima para atribuir a produção restante
 Drought-Resistant Crops,Cultivos Resistentes a Secas
@@ -563,7 +563,7 @@ Energy Conservation Campaign,Campanha de Conservação de Energia
 Energy Quotas,Quotas de Energia
 Energy Use,Uso de Energia
 "Energy companies have been preemptively shutting down power to avoid the possibility of sparking fires in the dry, windy conditions.  Pre-emptive blackouts could become a common occurrence.",As empresas de energia têm desligado preventivamente a energia para evitar a possibilidade de provocar incêndios em secas e ventanias. Apagões preventivos podem se tornar recorrentes.
-"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx",
+"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx","Energéticos, sacolas plásticas, quadriciclos, gatos soltos na rua, Karl Marx"
 Energy: The fundamental mover. You're using %{amount} of energy.,Energia: O motor fundamental. Você está usando %{amount} de energia.
 Environmental Injustice - Copper,Injustiça Ambiental - Cobre
 Environmental Injustice - Rare Earth Metals,Injustiça Ambiental - Metais de Terras Raras
@@ -571,8 +571,8 @@ Environmental Injustice - Unconventional Oil,Injustiça Ambiental - Combustível
 Environmentalist Curriculum,Currículo Ambientalista
 Epidemic X,Epidemia X
 Epidemic Y: The Big One,Epidemia X: A Maior
-"Error parsing world, please re-select",
-"Error reading world, please re-select",
+"Error parsing world, please re-select","Erro ao analisar o mundo, por favor selecione novamente"
+"Error reading world, please re-select","Erro ao ler o mundo, por favor selecione novamente"
 Escape Velocity,Velocidade de Fuga
 Esperanto,Esperanto
 Establish off-world colonies.,Estabeleça colônias fora do planeta.
@@ -602,7 +602,7 @@ Famine,Fome
 Famine - Intro,Fome
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Bicicletas extravagantes, caminhadas, observação de pássaros, granola, sandálias, filantropos"
 Fanonist Curriculum,Currículo Fanonista
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Feiras livres, sentimentalismo, Wal-Mart [capitalist], natureza selvagem"
 Fast-Breeder Nuclear Power,Energia Nuclear de Geração Rápida
 Fast-Breeder Reactor,Reator de Criação Rápida
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Sinta-se à vontade para olhar ao redor um pouco. Quando estiver pronto, volte para a aba ""Planos""."
@@ -640,7 +640,7 @@ For now we'll track these events on the globe.,Por enquanto vamos acompanhar ess
 "For the longest time, climate modelling was far more advanced than ecosystem modelling. This program will allow ecologists to catch up! Capture and predict dynamic, non-linear and emergent behavior within ecosystems.","Por muito tempo, a modelagem climática foi mais avançada do que a modelagem de ecossistemas. Este programa permitirá que os ecologistas se atualizem!
 Capturar e prever o comportamento dinâmico, não linear e emergente dentro dos ecossistemas."
 Forest Infested,Florestas Infestadas
-"Freedom, dissent, improvisational jazz",
+"Freedom, dissent, improvisational jazz","Liberdade, dissidência, jazz improvisado"
 "Frequent fire also threatens the permafrost it can also lead to burning belowground, which melts the permafrost and can emit large amounts of carbon in a short time.","O fogo frequente também ameaça o pergelissolo - também pode levar à queimas abaixo do solo, que derretem o pergelissolo e podem emitir grandes quantidades de carbono em pouco tempo."
 Friendly,Favorável
 Fuel,Combustível
@@ -1008,7 +1008,7 @@ Just something to be aware of.,Apenas algo para estar ciente.
 Just swipe a card into the scanner and presto! It's added to your plan.,Basta passar um cartão no leitor e pronto! Ele foi adicionado ao seu plano.
 Just to keep the party going a little longer for some?,Apenas para manter a festa um pouco mais para alguns?
 Keep Global South Poor,Manter o Sul Global Pobre
-"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats",
+"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats","Jardins de infância, William Godwin, bobagens espaciais, pessoas tentando entrar nos botes salva-vidas"
 Land,Terreno
 Land Use,Uso de Terras
 Land-based wind energy technologies harness kinetic energy from the wind to generate electricity.,As tecnologias de energia eólica instaladas em terra aproveitam a energia cinética do vento para gerar eletricidade.
@@ -1291,7 +1291,7 @@ Passive Building Mandate & Retrofit,Mandato de Edificações Passivas e Readequa
 
 'When women today attempt to change society's domination of nature, they are acting to overturn modern constructions of nature and women as culturally passive and subordinate.' Carolyn Merchant","O patriarcado domina tanto a natureza quanto as mulheres e, portanto, deve ser derrubado.
 'Quando as mulheres de hoje tentam mudar a dominação da natureza pela sociedade, elas estão agindo para derrubar as construções modernas da natureza e das mulheres como culturalmente passivas e subordinadas.' Carolyn Merchant"
-"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon",
+"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon","Patriarcado, visões de mundo mecanicistas, comentaristas sabichões, Francis Bacon"
 "Paul Ehrlich calls it a 'fascinating but dumb idea', but it has potential to return some species, like the Iberian Ibex.","Paul Ehrlich a chama de uma 'ideia fascinante mas estúpida', mas tem potencial para devolver algumas espécies, como o ibex ibérico."
 "Peasants tending small farms (<2 Ha) for subsistence production. These small farms produce a large share of the world's crops with relatively few environmental costs, but require more labour than industrial agriculture.","Camponeses cuidando de pequenas propriedades (<2 Ha) para produção de subsistência. Essas pequenas fazendas produzem uma grande parte das colheitas do mundo com custos ambientais relativamente baixos, mas exigem mais mão de obra do que agricultura industrial."
 Pedestrian and Bike-Friendly Cities,Cidades para Pedestres e Ciclistas
@@ -1370,8 +1370,8 @@ Popular opinion is rapidly turning against you...,A opinião popular está rapid
 Population,População
 Population projects are substantially cheaper.,Projetos populacionais ficam substancialmente mais baratos.
 Populations of red colobus and pygmy hippos have bounced back. Local inhabitants are also much healthier and happier than before.,Populações de colobus vermelho e hipopótamos pigmeus se recuperaram. Os habitantes locais também estão mais saudáveis e felizes do que antes.
-Possible +%{amount} political capital.,
-Possible +%{amount} research points.,
+Possible +%{amount} political capital.,Possível +%{amount} de capital político.
+Possible +%{amount} research points.,Possível +%{amount} pontos de pesquisa.
 Post-Revolution Optimism,Otimismo Pós-Revolução
 Potato Blight Destroys Harvest,Praga da Batata Destrói Safra
 Power Hungry,Fome de Poder
@@ -1402,10 +1402,10 @@ Protests against your plans have escalated into riots in some places.,Os protest
 Psyop,Guerra Psicológica
 Pump water from the ocean onto Antarctica to reduce melting rates.,"Levar água do oceano para a Antártida, para reduzir as taxas de derretimento."
 Quite a lot of people have made the move to the countryside.,Muitas pessoas se mudaram para o campo.
-"Racism, authoritarianism, colonial Manichaenism",
+"Racism, authoritarianism, colonial Manichaenism","Racismo, autoritarismo, maniqueísmo colonial"
 Rapidly increase development throughout the world to catch up to Global North levels.,Aumentar rapidamente o desenvolvimento em todo o mundo para alcançar os níveis do Norte Global.
 Rare Metals Shortage,Escassez de Metais Raros
-Read the book:,
+Read the book:,Leia o livro:
 Ready,Pronto
 Recent Disasters,Desastres Recentes
 Reconcile Town and Country,Reconciliar a Cidade e o Campo
@@ -1441,7 +1441,7 @@ Renewables dominated energy production.,As energias renováveis ​​dominaram 
 Repeat the tutorial.,Repetir o tutorial.
 Report,Relatório
 Report Intro,Relatório
-Report a Bug,
+Report a Bug,Relatar um Bug
 Reports of strange lights in the skies are coming in from all over the world.,Relatos de luzes estranhas nos céus estão chegando de todo o mundo.
 Research,Pesquisa
 Research Intro,Pesquisa
@@ -1682,7 +1682,7 @@ The Utopian,Utopistas
 The Utopian is now a [nemesis] nemesis.,O Utopista é seu nêmesis [nemesis].
 "The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.","O Utopista é agora um [ally] aliado. Projetos de Limites, Proteção e Restauração são mais baratos."
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.","Os pinheiros Wollemi existiam há 200 milhões de anos, mas a última floresta natural foi recentemente destruída por um incêndio."
-"The World Editor is only available in the desktop version of the game, which you can download here.",
+"The World Editor is only available in the desktop version of the game, which you can download here.","O Editor de Mundos só está disponível na versão para desktop do jogo, que você pode baixar aqui."
 The Wretched,Os Miseráveis
 The Wretched - Attack,Os Miseráveis - Ataque
 The Wretched - Formation,Os Miseráveis
@@ -1720,7 +1720,7 @@ The estimated value after production changes have finished.,O valor estimado ap�
 "The extinction rate is high, the world is warming...","A taxa de extinção é alta, o mundo está aquecendo..."
 "The first DAC installations are up and running, and sucking carbon out of the air.",As primeiras instalações de captura direta de ar estão funcionando e sugando carbono do ar.
 The following processes can't produce as much as they need to: %{processesOverLimit},Os processos a seguir não podem produzir tanto quanto precisam: %{processesOverLimit}
-The game never ends.,
+The game never ends.,O jogo nunca acaba.
 The gender ratio has shifted as people prefer to have girls rather than boys.,"A proporção de gênero mudou, pois as pessoas preferem ter meninas em vez de meninos."
 The good life isn't about having more things. Degrowth reduces energy and material consumption in the Global North while funding social programs to provide material  support for everyone.,A boa vida não é ter mais coisas. O decrescimento reduz o consumo de energia e materiais no Norte Global enquanto financia programas sociais para fornecer apoio material para todos.
 The greatest pleasures are only narrowly separated from disgust.,Os maiores prazeres são apenas estreitamente separados de desgosto.
@@ -1998,7 +1998,7 @@ UFO Gift,Presente do OVNI
 UFO Visit,Visita de OVNIs
 UFO War,Guerra contra OVNIs
 "UFOs, dolphins, water-birthing, telekinesis","OVNIs, golfinhos, parto na água, telecinese"
-"Ugly architecture, industrial wastelands, practicality, shoddy goods",
+"Ugly architecture, industrial wastelands, practicality, shoddy goods","Arquitetura feia, terrenos industriais abandonados, praticidade, produtos de baixa qualidade"
 Uh oh--it looks like there are some production shortages.,Opa - parece que há alguma escassez de produção.
 Umm... planner?,Umm... administrador?
 Unconventional Petroleum Industry,Indústria Petrolífera Não Convencional
@@ -2264,7 +2264,7 @@ Won't unlock this project:,Não desbloqueará este projeto:
 Wooden Skyscrapers,Arranha-céus de Madeira
 Work on improving and proliferating automation systems to increase productivity.,Trabalhe na melhoria e proliferação de sistemas de automação para aumentar a produtividade.
 World,Mundo
-World Editor,
+World Editor,Editor de Mundos
 World Intro,Mundo
 "Worldwide, honeybees yield roughly $200 billion in pollination services!","Em todo o mundo, as abelhas rendem cerca de US$ 200 bilhões em serviços de polinização!"
 Would you be interested in foraging for mushrooms?,Você estaria interessado em forragear cogumelos?
@@ -2292,11 +2292,11 @@ You can tap the pulsing [alert] alert icon for more information.,Você pode toca
 You can't help but wonder how things could have gone differently.,Você não pode deixar de se perguntar como as coisas poderiam ter sido diferentes.
 "You can't ignore whats been happening in Ecotopia. While the rest of the world crumbles in consumerism and nonstop progress, Ecotopia is a small window into what could be.","Você não pode ignorar o que está acontecendo na Ecotopia. Enquanto o resto do mundo afunda no consumismo e no progresso ininterrupto, a Ecotopia é uma pequena janela para o que poderia ser."
 You can't just transition to renewables and do all of your restoration projects in whatever neighborhood you want! I'm not going to endure blackouts just because of your novel ideas.,Você não pode simplesmente fazer a transição para energias renováveis e fazer todos os seus projetos de restauração em qualquer bairro que você quiser! Não vou tolerar apagões só por causa de suas novas ideias.
-You did something to instantly lose.,
-You died of old age.,
+You did something to instantly lose.,Você fez algo que te fez perder instantaneamente.
+You died of old age.,Você morreu de velhice.
 You do realize that not everyone can enjoy a high standard of living?,Percebe que nem todos podem desfrutar de um alto padrão de vida?
 You don't look so well.,Você não parece tão bem.
-You failed to keep the people happy.,
+You failed to keep the people happy.,Você não conseguiu manter o povo satisfeito.
 You get it! I can see it!,Você entendeu! Percebi!
 You had an extraterrestrial encounter.,Você teve um encontro com extraterrestres.
 You have %{yearsLeft} years left in your tenure.,Você tem %{yearsLeft} anos restantes em seu mandato.
@@ -2319,7 +2319,7 @@ You ought to figure out some way to bring more stability--maybe changing where w
 onde obtemos nossa energia?"
 You ought to--,Você deveria--
 You pushed humanity towards the stars.,Você elevou a humanidade para as estrelas.
-You ran out of political capital.,
+You ran out of political capital.,Você ficou sem capital político.
 You really think we can all live on this Earth without torpedoing living standards?,Você realmente pensa que todos nós podemos viver nesta Terra sem torpedear os padrões de vida?
 You received a request to ban this process:,Você recebeu uma solicitação para banir este processo:
 You received a request to implement this project:,Você recebeu uma solicitação para realizar este projeto:
@@ -2344,7 +2344,7 @@ You've been bailed out once,Você foi poupado desta vez
 You've exhausted all your political capital...,Você esgotou todo o seu capital político...
 "You've kind of got tunnel vision with this whole earth stuff, don't you think?","Você meio que tem visão em túnel com toda essa coisa da terra, não acha?"
 You've run out of [political_capital] political capital...and lost the backing of members of parliament.,Você ficou sem capital político [political_capital]... e perdeu o apoio dos membros do parlamento.
-Your History,
+Your History,Sua História
 Your administration had failed to achieve its goals in time...,Seu governo não conseguiu atingir seus objetivos a tempo...
 Your coalition has %{coalitionSeats}/%{totalSeats} seats.,Sua coalizão tem %{coalitionSeats} em %{totalSeats} assentos.
 Your death was celebrated by people around the world.,Sua morte foi comemorada por pessoas ao redor do mundo.
@@ -2358,7 +2358,7 @@ Your plans will benefit from having others on board.,Seus planos se beneficiarã
 Your reckless disregard for life is going to ruin us all!,Seu desrespeito imprudente pela vida vai arruinar a todos nós!
 Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,"Seu relacionamento com %{name}. Aumente-o implementando projetos que eles gostam. Com 5 corações ou mais, eles se juntarão à sua coalizão."
 Zero square kilometres of arctic sea ice.,Zero quilômetros quadrados de gelo marinho do Ártico.
-"Zoos, bacon, fur, honey (?)",
+"Zoos, bacon, fur, honey (?)","Zoológicos, bacon, peles, mel (?)"
 [GAME],[JOGO]
 [b]Locks[/b] %{tag},[b]Bloqueia[/b] %{tag}
 [b]Unlocks[/b] %{name}.,[b]Desbloqueia[/b] %{name}.
@@ -2367,11 +2367,11 @@ Zero square kilometres of arctic sea ice.,Zero quilômetros quadrados de gelo ma
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] foi encarregado de desfazer a miríade de danos que séculos de capitalismo haviam desencadeado no planeta e em seu povo.
 [research] Research points cost less [political_capital] political capital.,[research] Pontos de Investigação custam menos [political_capital] capital político.
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...","um evento ""wet-bulb"", onde a temperatura e a umidade se combinam para serem intoleráveis..."
-active,
+active,ativo
 alarming,alarmante
 an unknown amount,uma quantidade desconhecida
 animal calories,calorias animais
-being built,
+being built,em construção
 biodiversity,biodiversidade
 biodiversity pressure,pressão sobre a biodiversidade
 "but nothing changes the fact that it all comes down to people, people, people!","mas nada muda o fato de que tudo se resume a pessoas, pessoas, pessoas!"
@@ -2380,10 +2380,10 @@ but there's been such an explosion of creative vegetarian recipes and techniques
 but they have been limited since less than 10% of global fish catch was on the high seas.,"mas eles têm sido limitados, pois menos de 10% da pesca global ocorria em alto mar."
 but we have enough to last for a while now.,mas agora temos o suficiente para durar por um tempo.
 but who doesn't like trains?,mas quem não gosta de trens?
-carbon capture processes,
+carbon capture processes,processos de captura de carbono
 causes,causa
 coal,carvão
-combustion processes,
+combustion processes,processos de combustão
 "construction workers, miners, firefighters, agricultural workers, and the like.","trabalhadores da construção civil, mineiros, bombeiros, agricultores e afins."
 cost,custo
 critical,crítica
@@ -2392,16 +2392,16 @@ development time,tempo de desenvolvimento
 electricity,eletricidade
 emissions,emissões
 energy use,uso de energia
-especially labor-intensive processes,
-fossil fuel processes,
+especially labor-intensive processes,processos que exigem muita mão de obra
+fossil fuel processes,processos de combustíveis fósseis
 frigid,fria
 fuel,combustíveis
-halted,
+halted,interrompido
 high,alto
-inactive,
+inactive,inativo
 increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,aumentar [i]%{icon}[/i] %{k} em %{warn}%{change}%
 infrastructure,infraestrutura
-intermittent processes,
+intermittent processes,processos intermitentes
 land,terreno
 land use,uso de terras
 lithium,lítio
@@ -2414,24 +2414,24 @@ natural gas,gás natural
 nd,ᵃ
 nothing so drastic is necessary...we finally can unleash technology from the yoke of capitalism...,nada tão drástico é necessário... finalmente podemos libertar a tecnologia do domínio do capitalismo...
 oil,petróleo
-oil processes,
+oil processes,processos que usam petróleo
 other,outros
 "people sleep during the day, and do everything else at night.",as pessoas dormem durante o dia e fazem todo o resto à noite.
 plant calories,calorias vegetais
 policy,política
-processes that may meltdown,
-processes that produce nuclear waste,
-processes that use livestock,
-processes that use pesticides,
-processes that use synthetic fertilizers,
+processes that may meltdown,processos que podem causar um desastre nuclear
+processes that produce nuclear waste,processos que produzem lixo nuclear
+processes that use livestock,processos que usam rebanhos
+processes that use pesticides,processos que usam pesticidas
+processes that use synthetic fertilizers,processos que utilizam fertilizantes sintéticos
 rd,ª
 research,pesquisa
 research time,tempo de pesquisa
 severe,grave
 soil,solo
-solar processes,
+solar processes,processos solares
 st,ᵃ
-stalled,
+stalled,paralisado
 subtropic,subtropical
 temperate,temperada
 th,ᵃ
