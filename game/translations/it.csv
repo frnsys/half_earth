@@ -460,7 +460,7 @@ Current biodiversity pressure is %{amount}[t]/%{maxAmount}[/t].,L'attuale pressi
 Current energy use.,Uso dell'energia attuale.
 Current land use.,Uso del suolo attuale.
 Current water demand.,Domanda attuale di acqua.
-Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].,L'attuale livello di contentezza nel mondo è %{contentedness}[t]/{max Contentedness}[/t].
+Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].,L'attuale livello di contentezza nel mondo è %{contentedness}[t]/%{maxContentedness}[/t].
 Custom World,Mondo personalizzato
 "Cycle livestock through different pastures to allow other parts to regrow and recover. Sceptics think it will not have much of an effect, but it is popular with consumers.","Fa' circolare il bestiame attraverso diversi pascoli per consentire ai terreni di ricrescere e riprendersi. Lə scettichə pensano che non avrà un grande effetto, ma è popolare tra lə consumatorə."
 Dancing Plague,Peste danzante
@@ -516,7 +516,7 @@ Download World Editor,Scarica l'editor dei mondi
 Drag a card up to assign leftover production,Trascina una scheda verso l'alto per assegnare la produzione residua
 Drought-Resistant Crops,Colture resistenti alla siccità
 Droughts aren't nearly as devastating as they once were thanks to these new varieties.,Le siccità non sono più devastanti come lo erano una volta grazie a queste nuove varietà.
-"Drum 'n' bass, Wal-Mart [socialist], fragment on machines, asteroid mining","Drum 'n' bass, Wal-Mart [socialist], frammento sulle macchine, estrazione di asteroidi"
+"Drum 'n' bass, Wal-Mart [socialist], fragment on machines, asteroid mining","Drum 'n' bass, Wal-Mart [socialista], frammento sulle macchine, estrazione di asteroidi"
 "Dump iron into the oceans to stimulate diatom growth, which might sequester four gigatonnes of CO2 a year. This technique might not work and could have detrimental ecological effects.","Scarica ferro negli oceani per stimolare la crescita delle diatomee, che potrebbero sequestrare quattro gigatonnellate di CO2 all'anno. Questa tecnica potrebbe non funzionare e potrebbe avere effetti ecologici dannosi."
 Earth Liberation Front,Fronte di liberazione della Terra
 Earth Liberation Front - (Re)Formation,Fronte di liberazione della terra - (Ri)formazione
@@ -589,7 +589,7 @@ Famine,Carestia
 Famine - Intro,Carestia - Introduzione
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Biciclette di lusso, escursioni, birdwatching, granola, sandali, filantropi"
 Fanonist Curriculum,Percorso di studi fanonista
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Mercati contadini, sentimentalismo, Wal-Mart [capitalist], natura selvaggia"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Mercati contadini, sentimentalismo, Wal-Mart [capitalista], natura selvaggia"
 Fast-Breeder Nuclear Power,Reattori autofertilizzanti
 Fast-Breeder Reactor,Reattore autofertilizzante
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Sentiti liberə di curiosare un po'. Quando sei prontə, torna alla scheda ""Piano""."
@@ -1920,7 +1920,7 @@ This will change %{resource} demand for %{name} by some unknown amount.,Questo c
 This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.,Questo cambierà la domanda di %{resource} per %{name} da [i]%{icon}[/i]%{demandBefore} a [i]%{icon}[/i]%{demandAfter}. Questo è un cambiamento del %{percent}% di tutta la domanda di %{resource}.
 This will change %{short} for %{name} from [i]%{icon}[/i]%{change},Questo cambierà %{short} per %{name} da [i]%{icon}[/i]%{change}
 This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.,Questo cambierà le emissioni per %{name} da [i]%{icon}[/i]%{emissionsBefore} a [i]%{icon}[/i]%{emissionsAfter}. Questo è un cambiamento del %{emissionsChange}% di tutte le emissioni.
-This will directly change annual emissions by %{amount}.%{percent},Ciò modificherà direttamente le emissioni annuali del {importo}.%{percent}
+This will directly change annual emissions by %{amount}.%{percent},Ciò modificherà direttamente le emissioni annuali di %{amount}.%{percent}
 This will directly change global precipitation by %{amount}[b]cm/yr[/b].,Ciò modificherà direttamente le precipitazioni globali di %{amount}[b]cm/anno[/b].
 This will directly change the global temperature anomaly by %{amount}[b]°c[/b].,Ciò modificherà direttamente l'anomalia della temperatura globale di %{amount}[b]°c[/b].
 This will just threaten broader ecosystems even more.,Questo non farà che minacciare ulteriormente gli ecosistemi più ampi.
@@ -2266,7 +2266,7 @@ You kept on using fossil fuels.,Hai continuato a usare i combustibili fossili.
 "You know, I think we should reconsider that policy...","Sai, credo dovremmo riconsiderare quella politica..."
 "You managed to last all this time, but how has everyone else fared?","Tu sei riuscitə a resistere tutto questo tempo, ma come se la sono cavata lə altrə?"
 You may need to change your production mixes to compensate for resource limitations.,Potrebbe essere necessario modificare i mix di produzione per compensare le limitazioni delle risorse.
-You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...,Devi farlo senza lasciare che la [w]soddisfazione delle persone scenda sotto 0[/w]...
+You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...,Devi farlo senza lasciare che la [contentedness][w]soddisfazione delle persone scenda sotto 0[/w]...
 You must reconsider this oppressive mandate!,Dovete riconsiderare questo mandato oppressivo!
 You need to cool things off--fast--or we'll be seeing a lot of hungry people.,"Bisogna calmare le acque, e in fretta, altrimenti vedremo un sacco di gente affamata."
 You need to do more to protect the natural world.,Devi fare di più per proteggere il mondo naturale.
@@ -2312,7 +2312,7 @@ Your plans have shown nothing but contempt for the people of the Global South.,I
 Your plans mean nothing if you let people's ignorance and impulsiveness run loose.,I tuoi piani non servono a nulla se lasci che l'ignoranza e l'impulsività delle persone prendano il sopravvento.
 Your plans will benefit from having others on board.,I tuoi piani trarranno vantaggio dalla partecipazione di altre persone.
 Your reckless disregard for life is going to ruin us all!,Il tuo sconsiderato disprezzo per la vita ci rovinerà tuttə!
-Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,"Il tuo rapporto con {nome}. Rafforzalo implementando progetti che piacciono loro. Con 5 cuori o più, si uniranno alla tua coalizione."
+Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,"Il tuo rapporto con %{name}. Rafforzalo implementando progetti che piacciono loro. Con 5 cuori o più, si uniranno alla tua coalizione."
 Zero square kilometres of arctic sea ice.,Zero chilometri quadrati di ghiaccio marino artico.
 "Zoos, bacon, fur, honey (?)","Zoo, pancetta, pellicce, miele (?)"
 [GAME],[GIOCO]

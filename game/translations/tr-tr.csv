@@ -5,7 +5,7 @@ English,Translation
 %{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{tag} %{kind} maliyetini [b]%{tipAmount}[/b] kadar %{changeDir}
 %{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{tag} için %{label} [b]%{amount}[/b] kadar %{changeDir}.
 %{changeDir} %{name} supply by [b]%{percent}%.[/b],%{name} arzını [b]%{percent}%.[/b] %{changeDir}
-%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{name} arzını mevcut arzın [i]%{icon}[/i]%{amount}.
+%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{name} arzını [i]%{icon}[/i]%{amount} kadar %{changeDir}.
 %{changeDir} %{resource} demand for %{tag} by %{amount}.,%{tag} için olan %{resource} talebini %{amount} %{changeDir}.
 %{changeDir} %{tag} output by [b]%{percent}%.[/b],%{tag} çıktısını [b]%%{percent}[/b] kadar %{changeDir}.
 %{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b],[e][i]%{icon}[/i]%{feature}[/e] CO2 salınımlarını [b]%%{percent}[/b] %{changeDir}.
@@ -591,7 +591,7 @@ Famine,Kıtlık
 Famine - Intro,Kıtlık - Giriş
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Süslü bisikletler, doğa yürüyüşleri, kuş izlemek, granola, sandaletler, hayırseverler"
 Fanonist Curriculum,Fanoncu Müfredat
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Semt pazarları, duygusallık, Wal-Mart [capitalist], vahşi doğa"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Semt pazarları, duygusallık, Wal-Mart [kapitalist], vahşi doğa"
 Fast-Breeder Nuclear Power,Hızlı Üretken Reaktör
 Fast-Breeder Reactor,Hızlı Üretken Reaktör
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Biraz göz atmaktan çekinmeyin. Hazır olduğunuzda, ""Plan"" sekmesine geri dönün."
@@ -695,7 +695,7 @@ Hempcrete,Kenevir Betonu
 Here you can change the [mix_token] production mix for each of these resources.,Burada süreçlerin her birine ayrılan [mix_token] oranları değiştirebilirsin.
 Here you can gain some insight on those differences and learn more about each region.,Burada bu farklılıklar hakkında biraz fikir edinebilir ve her bölge hakkında daha fazla şey öğrenebilirsiniz.
 Here you can turn [political_capital] political capital into [initiative] infrastructure points and use that to set build these projects.,Burada [political_capital] politik sermayeyi [initiative] altyapı puanlarına dönüştürebilir ve bunu bu projeleri inşa etmek için kullanabilirsiniz.
-Here you can turn [political_capital] political capital into [research] research points and use that to set research priorities.,Burada [political_capital) politik sermayenizi [research] araştırma puanına çevirmek ve bunu kullanarak araştırma önceliklerinizi belirlemek için kullanabilirsiniz
+Here you can turn [political_capital] political capital into [research] research points and use that to set research priorities.,Burada [political_capital] politik sermayenizi [research] araştırma puanına çevirmek ve bunu kullanarak araştırma önceliklerinizi belirlemek için kullanabilirsiniz
 Here you can use your [political_capital] political capital to wrangle support for policies to implement worldwide.,"Burada, dünya çapında uygulanacak politikalara destek sağlamak için [political_capital] siyasi sermayenizi kullanabilirsiniz."
 "Hey well, I guess I'm a socialist after all!","Hey, sanırım ben de bir sosyalistim!"
 Hey!,Hey!
@@ -1010,7 +1010,7 @@ Level,Seviye
 Like what?,Ne gibi?
 Likely to increase,Artırması muhtemel:
 Likely to reduce,Azaltması muhtemel:
-Likely to unlock %{name}.,Kilidini açması muhtemel
+Likely to unlock %{name}.,Muhtemelen kilidini açar: %{name}.
 Likely to unlock the %{tag} process.,%{tag} işleminin kilidini açması muhtemel.
 Likely to unlock the %{tag} project.,%{tag} projesini açması muhtemel.
 Likely to unlock this process:,Şu işlemin kilidini muhtemelen açar:
@@ -1679,7 +1679,7 @@ The contentedness of lower and lower-middle income regions recovers more quickly
 The contentedness of upper-middle and upper income regions recovers more quickly.,Üst ve  orta-üst gelir seviyeli bölgelerin memnuniyet seviyeleri daha hızlı toparlanır
 "The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse.",Mevcut biyolojik çeşitlilik baskısı. Yüksek arazi kullanımı ve diğer faktörler bunu ve bununla birlikte ekolojik çöküş riskini artırır.
 "The current biodiversity pressure. High land use and other factors increase this, and with it, the risk of ecological collapse. [g]Your goal is to get this to below 20.[/g]",Mevcut biyolojik çeşitlilik baskısı. Yüksek arazi kullanımı ve diğer faktörler bunu ve bununla birlikte ekolojik çöküş riskini artırır. [g]Amacın bunu 20'nin altına indirmek.[/g]
-"The current global temperature anomaly is +%{anomaly}°C. The higher this is, the more unpredictable the climate becomes. [g]Your goal is to get this below 1°C.[/g]","Mevcut küresel sıcaklık anomalisi +{anomali}°C'dir.  Bu ne kadar yüksek olursa, iklim o kadar öngörülemez hale gelir. [g]Amacın bunu 1°C'nin altına düşürmek.[/g]"
+"The current global temperature anomaly is +%{anomaly}°C. The higher this is, the more unpredictable the climate becomes. [g]Your goal is to get this below 1°C.[/g]","Mevcut küresel sıcaklık anomalisi +%{anomaly}°C'dir. Bu ne kadar yüksek olursa, iklim o kadar öngörülemez hale gelir. [g]Amacın bunu 1°C'nin altına düşürmek.[/g]"
 The current global temperature anomaly. [b]Increased warming[/b] will damage your political capital. [g]Your goal is to get this below 1°C.[/g],Mevcut küresel sıcaklık anomalisi. strong>Artan ısınma[/b] politik sermayene zarar verir. [g]Hedefin bunu 1°C'nin altına indirmek.[/g]
 "The dam constructed on the border between Paraguay and Brazil in the 1970s and 1980s, resulted in a 70 percent loss of biodiversity.","1970'lerde ve 1980'lerde Paraguay ve Brezilya arasındaki sınırda inşa edilen baraj, yüzde 70'lik bir biyolojik çeşitlilik kaybına neden oldu."
 The ecofeminist movement is strong and will mobilize quickly against environmental injustices.,Ekofeminist hareket güçlüdür ve çevresel adaletsizliklere karşı hızla harekete geçecektir.
@@ -1821,7 +1821,7 @@ Things aren't getting better. We won't waste any more effort on ineffective acti
 "This September, our satellites recorded...",Bu Eylül ayında uydularımızın kaydettiğine göre...
 This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}.,"Bu, %{name} talebini [i]%{icon}[/i]%{currentDemand} seviyesinden [i]%{icon}[/i]%{afterDemand} seviyesine getirir."
 This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.,"Bu, %{name} talebini [i]%{icon}[/i]%{currentDemand} seviyesinden [i]%{icon}[/i]%{afterDemand} seviyesine getirir. Bu, tüm %{name} talebinde %%{percent} değişim demektir."
-This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].,"Bu, bölgesel memnuniyeti %{name} talebine göre değiştirir. Mevcut küresel memnuniyet %{contentedness}[t]/%{maxContentedness}[/t]."
+This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].,"Bu, bölgesel memnuniyeti %{name} talebine göre değiştirir. Mevcut küresel memnuniyet %{amount}[t]/%{maxAmount}[/t]."
 This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].,"Bu, gelir seviyesine bağlı olarak bölgesel memnuniyeti değiştirir (daha zengin bölgeler bunu daha fazla hissedecek). Mevcut dünya memnuniyeti %{contentedness}[t]/%{maxContentedness}[/t]."
 This didn't really do much.,Bu pek bir şey yapmadı.
 This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,"Bu etki, bu projenin %{kind}'ini %{tipAmount} %{changeDir}."
@@ -1909,7 +1909,7 @@ This region's current precipitation range.,Bu bölgenin mevcut yağış aralığ
 This region's current temperature range.,Bu bölgenin mevcut sıcaklık aralığı.
 This region's habitability. Natural disasters and hotter temperatures lower habitability.,Bu bölgenin yaşanabilirliği. Doğal afetler ve daha yüksek sıcaklıklar yaşanabilirliği azaltır.
 "This region's income level has contracted to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Bu bölgenin gelir düzeyi [b]%{income}[/b] seviyesine daraldı. [i]%{iconElec}[/i]elektrik, [i]%{iconFuel}[/i]yakıt, [i]%{iconPCals}[/i]bitkisel ve [i]%{iconACals}[/i]hayvansal gıda talebi güncellendi."
-"This region's income level has increased to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Bu bölgenin gelir düzeyi [b]{gelir}[/b] seviyesine yükseldi. [i]%{iconElec}[/i]elektrik, [i]%{iconFuel}[/i]yakıt, [i]%{iconPCals}[/i]bitkisel ve [i]%{iconACals}[/i]hayvansal gıda talebi güncellendi."
+"This region's income level has increased to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Bu bölgenin gelir düzeyi [b]%{income}[/b] seviyesine yükseldi. [i]%{iconElec}[/i]elektrik, [i]%{iconFuel}[/i]yakıt, [i]%{iconPCals}[/i]bitkisel ve [i]%{iconACals}[/i]hayvansal gıda talebi güncellendi."
 This region's new demand for %{output}.,Bu bölgenin %{output} için yeni talebi.
 This region's new income level.,Bu bölgenin yeni gelir seviyesi
 This region's per-capita demand level for %{output}. The total regions's demand is %{demand}[i]%{icon}[/i]. This makes up %{percent}% of total demand for %{output}.,Bu bölgenin %{output} için kişi başına talep seviyesi. Bölgenin toplam talebi  %{demand}[i]%{icon}[/i]. Bu toplam %{output} talebinin %{percent}% kadarını oluşturuyor.
@@ -2201,7 +2201,7 @@ Wildfires are growing in intensity and frequency.,Orman yangınlarının yoğunl
 Will increase,Artıracak:
 Will it ever match the wealth that was stolen from us?,Bizden çalınan servete denk düşecek mi?
 Will reduce,Azaltacak
-Will unlock %{name}.,Kilidini açar: %{tag}.
+Will unlock %{name}.,Kilidini açar: %{name}.
 Will unlock the %{tag} process.,%{tag} işlemininin kilidini açar.
 Will unlock the %{tag} project.,%{tag} projesini açar.
 Will unlock this process:,Şu işlemi açar:
@@ -2217,7 +2217,7 @@ Without force we'll never save the planet.,Güç olmadan gezegeni asla kurtarama
 Without them we wouldn't be able to produce nearly as many crops.,"Onlar olmasaydı, bu kadar çok ürün üretemezdik."
 Won't increase,Artırmayacak:
 Won't reduce,Azaltmayacak
-Won't unlock %{name}.,Kilidini açmaz: %{tag}.
+Won't unlock %{name}.,Kilidini açmaz: %{name}.
 Won't unlock the %{tag} process.,%{tag} işleminin kilidini açmaz.
 Won't unlock the %{tag} project.,%{tag} projesini açmaz
 Won't unlock this process:,Şu işlemi açmaz:
@@ -2280,9 +2280,9 @@ You ought to--,Yapmalısın--
 You pushed humanity towards the stars.,İnsanlığı yıldızlara ittin.
 You ran out of political capital.,Siyasi sermayen tükendi.
 You really think we can all live on this Earth without torpedoing living standards?,Gerçekten hepimizin bu Dünya'da yaşam standartlarını mahvetmeden yaşayabileceğimizi mi düşünüyorsunuz?
-You received a request to ban this process:,Şu işlemi durdurmak için bir talep aldın: %{name}
+You received a request to ban this process:,Şu işlemi durdurmak için bir talep aldın:
 You received a request to implement this project:,Şu projeyi uygulamak için bir talep aldın:
-You received a request to promote this process:,Şu işlemi desteklemek için talep aldın: %{name}
+You received a request to promote this process:,Şu işlemi desteklemek için talep aldın:
 You received a request to stop this project:,Şu projeyi durdurmak için bir talep aldın:
 You rich Northerners will not sacrifice half the world on your altar of greed.,"Siz zengin Kuzeyliler, açgözlülük sunağınızda dünyanın yarısını feda etmeyeceksiniz."
 You seem like someone who loves nature.,Doğayı seven birine benziyorsun.

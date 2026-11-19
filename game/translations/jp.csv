@@ -1,11 +1,11 @@
 English,Translation
 """Finally, an end to more than half a century of incompetence and disaster,"" they cheered.",「半世紀以上にわたる無能による災難の歴史に、ついに終止符が打たれた」と彼らは歓喜しました。
 """Go back again, now you have seen us, and your outward eyes have learned that in spite of all the infallible maxims of your day there is yet a time of rest in store for the world, when mastery has changed into fellowship.""",「もう一度振り返ってください。従属の関係が友情に変わった時、あなたは私たちをを見て、あなたの日常の間違いのない格言にもかかわらず世界にはまだ安息の時が待っていることをあなたのその目が学ぶのです。」
-%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{kind} の排出量が、[b]%{amount}[/b]%{changeDir}
+%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{tag}の%{kind}の排出量が、[b]%{amount}[/b]%{changeDir}
 %{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{tag}の%{kind} が [b]%{tipAmount}[/b]%{changeDir}。
 %{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{tag}のための%{label}が、[b]%{amount}[/b] %{changeDir}
 %{changeDir} %{name} supply by [b]%{percent}%.[/b],%{name} の供給が、[b]%{percent}%[/b]%{changeDir}
-%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{name}の供給量は、[i]%{icon}[/i]%{amount}%{changeDir}。（現在の供給量の%{percent}% ）
+%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{name}の供給量は、[i]%{icon}[/i]%{amount}%{changeDir}。
 %{changeDir} %{resource} demand for %{tag} by %{amount}.,%{tag}の%{resource}の需要が %{amount}に%{changeDir}。
 %{changeDir} %{tag} output by [b]%{percent}%.[/b],%{tag}の生産量が、[b]%{percent}%.[/b] %{changeDir}。
 %{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b],[e][i]%{icon}[/i]%{feature}[/e] のCO2 排出量は、[b]%{percent}%[/b]%{changeDir}
@@ -416,7 +416,7 @@ Completed Request: Ban %{name},%{name}を禁止する要請の完了
 Completed Request: Implement %{name},%{name}を実装する要請の完了
 Completed Request: Stop %{name},%{name}を停止する要請の完了
 Completed Request: Unban %{name},%{name}を禁止を解除する要請の完了
-Completed Requests,%{name}を禁止する要請の完了
+Completed Requests,完了した要請
 Compost,コンポスト
 Concentrated Solar Power,集光型太陽熱発電
 Concept,コンセプト
@@ -588,7 +588,7 @@ Famine,飢饉
 Famine - Intro,飢饉－序章－
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists",お洒落な自転車、ハイキング、野鳥観察、グラノーラ、サンダル、慈善活動家
 Fanonist Curriculum,ファノニストの教育
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",ファーマーズマーケット、感傷、ウォルマート[capitalist]、手つかずの自然
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",ファーマーズマーケット、感傷、ウォルマート(資本主義的側面)、手つかずの自然
 Fast-Breeder Nuclear Power,高速増殖炉
 Fast-Breeder Reactor,高速増殖炉
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.",自由に見て回ってください。準備ができたら「施策」ボタンに戻りましょう。
@@ -1820,7 +1820,7 @@ Things aren't getting better. We won't waste any more effort on ineffective acti
 "This September, our satellites recorded...",今年9月、私たちの人工衛星が記録したのは...
 This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}.,これにより、%{name}の需要が[i]%{icon}[/i]%{currentDemand} から [i]%{icon}[/i]%{afterDemand} に変化する。
 This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.,これにより、%{name} の需要が [i]%{icon}[/i]%{currentDemand} から [i]%{icon}[/i]%{afterDemand} に変化する。 これはすべての %{name} の需要の %{percent}% にあたる変化である。
-This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].,これにより、%{name} の需要に基づいて地域の満足度が変化する。 現在の世界の満足度は %{amount}[t]/{max Amount}[/t] 。
+This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].,これにより、%{name} の需要に基づいて地域の満足度が変化する。 現在の世界の満足度は %{amount}[t]/%{maxAmount}[/t] 。
 This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].,これは収入レベルに基づいて地域の満足度を変化させます（裕福な地域ほど影響を受けます）。現在の世界の満足度は %{contentedness}[t]/%{maxContentedness}[/t] です。
 This didn't really do much.,これはあまり効果がありませんでした。
 This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,この効果は、このプロジェクトの%{kind}を%{tipAmount}だけ%{changeDir}。
@@ -1921,7 +1921,7 @@ This will also be our launch pad to go deeper into space.,また、さらに遠�
 This will change %{resource} demand for %{name} by some unknown amount.,これにより、%{name}のための %{resource}の需要がいくらか変化する。
 This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.,これにより、%{name}のための %{resource}の需要が[i]%{icon}[/i]%{demandBefore}から[i]%{icon}[/i]%{demandAfter}に変化する。これはすべての%{resource}の需要の%{percent}%にあたる変化である。
 This will change %{short} for %{name} from [i]%{icon}[/i]%{change},これにより、%{name} の %{short} が [i]%{icon}[/i]%{change} 変化する。
-This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.,これにより、%{name} の排出量が [i]%{icon}[/i]{emissions Before} から [i]%{icon}[/i]{emissions After} に変化する。 これは、すべての排出量の %{emissionsChange}% にあたる変化である。
+This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.,これにより、%{name} の排出量が [i]%{icon}[/i]%{emissionsBefore} から [i]%{icon}[/i]%{emissionsAfter} に変化する。 これは、すべての排出量の %{emissionsChange}% にあたる変化である。
 This will directly change annual emissions by %{amount}.%{percent},これは年間排出量を直接 %{amount}。%{percent} 変更します。
 This will directly change global precipitation by %{amount}[b]cm/yr[/b].,これにより、地球の降水量が%{amount}[b]cm/yr[/b]変化する。
 This will directly change the global temperature anomaly by %{amount}[b]°c[/b].,これにより、地球の気温は直接 [b]%{amount}℃[/b] 変化する。
@@ -2317,8 +2317,8 @@ Your reckless disregard for life is going to ruin us all!,あなたが命に対�
 Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,あなたと %{name}の友好度を表す。%{name}が支持する施策を実施すると、ハートが増える。ハートが5つ以上になると、%{name}はあなたの同盟に加わる。
 Zero square kilometres of arctic sea ice.,北極海の海氷は0平方キロメートル。
 "Zoos, bacon, fur, honey (?)",動物園、ベーコン、毛皮、はちみつ（？）
-[GAME],[GAME]
-[b]Locks[/b] %{tag},[locks]%{tag}は[b]選択不可[/b]になる。
+[GAME],[ゲーム]
+[b]Locks[/b] %{tag},%{tag}は[b]選択不可[/b]になる。
 [b]Unlocks[/b] %{name}.,%{name}が[b]選択可能[/b]になる。
 [b]Unlocks[/b] the %{tag} process.,%{tag}が[b]選択可能[/b]になる。
 [b]Unlocks[/b] the %{tag} project.,%{tag}が[b]選択可能[/b]になる。

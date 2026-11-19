@@ -23,7 +23,7 @@ mundo, cuando la supremacía sea cambiada en fraternidad"""
 %{changeDir} global population by %{amount}.,%{changeDir} población mundial por %{amount}.
 %{changeDir} global population growth by %{amount}[b]%.[/b],%{changeDir} crecimiento de la población mundial por %{amount}[b]%.[/b]
 %{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,%{changeDir} precipitación global por %{amount}[b]cm/yr[/b].
-%{changeDir} habitability in %{kind} regions by %{amount}.,%{changeDir} habitabilidad en regiones %{kind} por {cantidad}.
+%{changeDir} habitability in %{kind} regions by %{amount}.,%{changeDir} habitabilidad en regiones %{kind} por %{amount}.
 %{changeDir} maximum output for %{process} by [b]%{amount}[/b].,%{changeDir} salida máxima para %{process} por [b]%{amount}[/b].
 %{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b],%{changeDir} la producción de [e][i]%{icon}[/i][b]%{feature}[/b][/e] en un [b]%{percent}%.[/b]
 %{changeDir} the CO2 emissions for these processes by [b]%{percent}%.[/b],%{changeDir} las emisiones de CO2 de estos procesos en [b]%{percent}%.[/b]
@@ -205,20 +205,20 @@ Ancient Disease,Una enfermedad antigua
 "And as the drowned vegetation decomposes, decaying plants in man-made reservoirs release methane, a powerful greenhouse gas.","Y, al descomponerse la vegetación inundada, las plantas en las reservas creadas por humanos liberan metano a la atmósfera, un poderoso gas de efecto invernadero."
 "And by ""world"", I do mean the *whole* world, and not just the wealthy regions like some mean with that term.","Y por ""mundo"" me refiero a *todo* el mundo, no solo las regiones ricas a las que algunos asocian el término."
 And desalination takes up a lot of power!,¡La desalinización requiere mucha energía!
-And if the people are [nemesis] unhappy with your performance you will be removed from your position.,"Y si la población está [némesis] descontenta con tu desempeño, se te cesará."
+And if the people are [nemesis] unhappy with your performance you will be removed from your position.,"Y si la población está [nemesis] descontenta con tu desempeño, se te cesará."
 And it's nice to have an additional green space to enjoy.,Es agradable disfrutar de una nueva zona verde.
 And none of those silly substitutes can ever replicate the real thing.,Ninguno de esos estúpidos sustitutivos pueden siquiera imitar lo verdadero.
 And now I'm getting a lot of requests to use this technology for designer dogs.,Y ahora estoy recibiendo muchísimas solicitudes de tecnología para perros de diseño.
-"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Y algunos requieren de ciertas materias primas, como el [petróleo] petróleo o el [uranio] uranio, que pueden degradarse. Presta especial atención a estos."
+"And some require certain feedstocks, like [oil] oil or [uranium] uranium, that could become degraded. So keep an eye on those.","Y algunos requieren de ciertas materias primas, como el [oil] petróleo o el [uranium] uranio, que pueden degradarse. Presta especial atención a estos."
 And that's all there is to it!,¡Y eso es todo!
 And the anxious fear of a changing planet still haunted the world.,Y el miedo hacia un planeta cambiante siguió acechando al mundo entero.
 And they just contributed to climate change!,¡Y contribuido al cambio climático!
 And they kill *a lot* of bugs and other critters...,Y acaban con *muchísimos* insectos y otras criaturas...
 "And with how walkable cities have become, I don't even need to take my bike half the time.","Y ahora que las ciudades se han vuelto más peatonales, la mitad de las veces ni siquiera necesito coger la bicicleta."
-And you must do so without letting your [political_capital][w]political capital dip below 0[/w]...,Debes ejercer sin que tu [capital_político][w] capital político caiga por debajo de 0 [/w]...
+And you must do so without letting your [political_capital][w]political capital dip below 0[/w]...,Debes ejercer sin que tu [political_capital][w] capital político caiga por debajo de 0 [/w]...
 Animal Calories,Calorías Animales
 Animal Liberationist Curriculum,Plan de estudios de liberacionista animal
-Animal calorie demand will change from [i]%{iconACals}[/i]%{prevDemandACals} to [i]%{iconACals}[/i]%{nextDemandACals} and plant calorie demand will change from [i]%{iconPCals}[/i]%{prevDemandPCals} to [i]%{iconPCals}[/i]%{nextDemandPCals}.,La demanda calórica animal cambiará de [i]%{iconACals}[/i]%{prevDemandACals} a [i]%{iconACals}[/i]%{nextDemandACals} y la demanda calórica vegetal cambiará de [i]%{iconPCals}[/i]%{prevDemandPCals} a [i]%{iconPCals}[/i]%{prevDemandPCals}.
+Animal calorie demand will change from [i]%{iconACals}[/i]%{prevDemandACals} to [i]%{iconACals}[/i]%{nextDemandACals} and plant calorie demand will change from [i]%{iconPCals}[/i]%{prevDemandPCals} to [i]%{iconPCals}[/i]%{nextDemandPCals}.,La demanda calórica animal cambiará de [i]%{iconACals}[/i]%{prevDemandACals} a [i]%{iconACals}[/i]%{nextDemandACals} y la demanda calórica vegetal cambiará de [i]%{iconPCals}[/i]%{prevDemandPCals} a [i]%{iconPCals}[/i]%{nextDemandPCals}.
 Animal husbandry takes up far too much room! Hard trade-offs must be made.,¡La cría de animales requiere demasiado espacio! Debemos llevar a cabo compensaciones severas.
 "Animals in zoos suffer high mortality, depression, stress, and injuries from patrons. Veterinarians speak of 'zoochosis', where animals pace or sway repetitively. This policy will release animals back into the wild when possible, and place others in sanctuaries.","Los animales en los zoológicos sufren una alta mortalidad, depresión, estrés y lesiones por parte de los visitantes. Los veterinarios hablan de 'zoochosis', donde los animales caminan o se balancean repetitivamente. Esta política devolverá a los animales a la naturaleza cuando sea posible y colocará a otros en santuarios."
 Antarctic Pumping,Bombeo antártico
@@ -515,11 +515,11 @@ Don't be a fool. It's their fault they didn't adapt or prove resilient in these 
 Don't expect me to help you when you're in a fix.,No esperes mi ayuda cuando estés en problemas.
 "Don't need to worry about replanting them every year, or messing up my soil...",No tengo que preocuparme de replantar cada año o de echar a perder el suelo...
 Download World Editor,Descargar el editor de mundos
-"Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.",Arrastra una de las tarjetas hasta el escáner para añadirla a tu plan y mantenla ahí para destinar a ella más [investigación] puntos de investigación.
+"Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.",Arrastra una de las tarjetas hasta el escáner para añadirla a tu plan y mantenla ahí para destinar a ella más [research] puntos de investigación.
 Drag a card up to assign leftover production,Arrastre una tarjeta hacia arriba para asignar la producción sobrante
 Drought-Resistant Crops,Cultivos resistentes a la sequía
 Droughts aren't nearly as devastating as they once were thanks to these new varieties.,"Las sequías no son, ni de lejos, tan devastadoras como solían, gracias a esas nuevas variedades."
-"Drum 'n' bass, Wal-Mart [socialist], fragment on machines, asteroid mining","El Drum 'n' bass, el Wal-Mart (socialista), fragmento en máquinas, minería de asteroides"
+"Drum 'n' bass, Wal-Mart [socialist], fragment on machines, asteroid mining","El Drum 'n' bass, el Wal-Mart [socialista], fragmento en máquinas, minería de asteroides"
 "Dump iron into the oceans to stimulate diatom growth, which might sequester four gigatonnes of CO2 a year. This technique might not work and could have detrimental ecological effects.","Vertir hierro en los océanos para estimular el crecimiento de diatomeas, lo que podría secuestrar cuatro gigatoneladas de CO2 al año. Esta técnica podría no funcionar y podría tener efectos ecológicos perjudiciales."
 Earth Liberation Front,Frente de Liberación de la Tierra
 Earth Liberation Front - (Re)Formation,Frente de liberación de la Tierra - Constitución
@@ -592,7 +592,7 @@ Famine,Hambruna
 Famine - Intro,Hambruna - Introducción
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Las bicicletas elegantes, las caminatas, la observación de aves, el muesli, las sandalias, los filántropos"
 Fanonist Curriculum,Plan de estudios fanonista
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Los mercados de agricultores, el sentimentalismo, Wal-Mart [capitalist], la naturaleza salvaje"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Los mercados de agricultores, el sentimentalismo, Wal-Mart [capitalista], la naturaleza salvaje"
 Fast-Breeder Nuclear Power,Energía de reactor nuclear reproductor
 Fast-Breeder Reactor,Reactor reproductor rápido
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Curiosea cuanto te apetezca. Cuando lo consideres oportuno, regresa a la pestaña de ""Planificación""."
@@ -634,7 +634,7 @@ Forest Infested,Bosque infestado
 "Frequent fire also threatens the permafrost it can also lead to burning belowground, which melts the permafrost and can emit large amounts of carbon in a short time.","El permafrost también está amenazado por los incendios frecuentes; pueden conllevar que se queme el subsuelo, lo que deshace el permafrost y permite la liberación de grandes cantidades de carbono en poco tiempo."
 Friendly,Amistoso
 Fuel,Combustible
-Fuel demand will change from [i]%{iconFuel}[/i]%{prevDemandFuel} to [i]%{iconFuel}[/i]%{nextDemandFuel} and electricity demand will change from [i]%{iconElec}[/i]%{prevDemandElec} to [i]%{iconElec}[/i]%{nextDemandElec}.,La demanda de fuel cambiará de [i]%{iconFuel}[/i]%{prevDemandFuel} a [i]%{iconFuel}[/i]%{nextDemandFuel}  y la demanda de la electricidad cambiará de [i]%{iconElec}[/i]%{prevDemandElec} a [i]%{iconElec}[/i]%{prevDemandElec}.
+Fuel demand will change from [i]%{iconFuel}[/i]%{prevDemandFuel} to [i]%{iconFuel}[/i]%{nextDemandFuel} and electricity demand will change from [i]%{iconElec}[/i]%{prevDemandElec} to [i]%{iconElec}[/i]%{nextDemandElec}.,La demanda de combustible cambiará de [i]%{iconFuel}[/i]%{prevDemandFuel} a [i]%{iconFuel}[/i]%{nextDemandFuel} y la demanda de electricidad cambiará de [i]%{iconElec}[/i]%{prevDemandElec} a [i]%{iconElec}[/i]%{nextDemandElec}.
 "Fukushima, Mon Amour","Fukushima, Mon Amour"
 Fusion power might never become a reality...,La energía por fusión no se hizo realidad...
 "Gadgets, Fast Fashion, and Endless TV","Tecnología, moda rápida y televisión sin fin"
@@ -695,11 +695,11 @@ Hello planner! What an exciting time.,"¡Hola, Planificador! Qué época tan int
 Hello.,Hola.
 Hempcrete,Hormigón de cáñamo
 "Hempcrete locked in a fair amount of carbon, but there are a few applications where it can't compete with conventional concrete.","El hormigón de cáñamo retiene una buena cantidad de carbono, pero aún no puede competir con el hormigón convencional para algunas aplicaciones."
-Here you can change the [mix_token] production mix for each of these resources.,Aquí puedes modificar la [símbolo_mezcla] mezcla de producción para cada uno de esos recursos.
+Here you can change the [mix_token] production mix for each of these resources.,Aquí puedes modificar la [mix_token] mezcla de producción para cada uno de esos recursos.
 Here you can gain some insight on those differences and learn more about each region.,Aquí podrás aprender algo más sobre esas diferencias y saber más sobre cada una de las regiones.
-Here you can turn [political_capital] political capital into [initiative] infrastructure points and use that to set build these projects.,Aquí puedes transformar tu [capital_político] capital político en [iniciativa] puntos de infraestructura y usarlos para la construcción de proyectos.
-Here you can turn [political_capital] political capital into [research] research points and use that to set research priorities.,Aquí puedes convertir tu [capital_político] capital político en puntos de [investigación] investigación y usarlos para priorizar iniciativas.
-Here you can use your [political_capital] political capital to wrangle support for policies to implement worldwide.,Aquí puedes usar tu [capital_político] capital político para obtener apoyo a las políticas que implementarás a escala mundial.
+Here you can turn [political_capital] political capital into [initiative] infrastructure points and use that to set build these projects.,Aquí puedes transformar tu [political_capital] capital político en [initiative] puntos de infraestructura y usarlos para la construcción de proyectos.
+Here you can turn [political_capital] political capital into [research] research points and use that to set research priorities.,Aquí puedes convertir tu [political_capital] capital político en puntos de [research] investigación y usarlos para priorizar iniciativas.
+Here you can use your [political_capital] political capital to wrangle support for policies to implement worldwide.,Aquí puedes usar tu [political_capital] capital político para obtener apoyo a las políticas que implementarás a escala mundial.
 "Hey well, I guess I'm a socialist after all!","¡Bueno, pues supongo que, después de todo, soy un socialista!"
 Hey!,¡Ey!
 Hey! You were zoning out there for a second.,¡Ey! Te has distraído un momento.
@@ -821,7 +821,7 @@ I worry that you have a tendency to go too far with your plans...,Me preocupa es
 "I'd never seen myself living out in the country, but I was in a tough time and thought a fresh start might do me good.","No me veía viviendo en el campo, pero estaba pasando por una época difícil y pensé que sería bueno empezar de cero."
 I'll send you the data for further analysis.,Te mandaré los datos para la realización de más análisis.
 "I'll spare you the details, but suffice to say this will help greatly in all sorts of applications.","Te ahorraré los detalles, pero basta decir que esto será de gran ayuda a toda clase de recursos."
-I'll vouch for you. My word matters a lot to this generation. (+50[political_capital]),Te avalaré. Mi palabra significa mucho para la presente generación. (+50 [capital político])
+I'll vouch for you. My word matters a lot to this generation. (+50[political_capital]),Te avalaré. Mi palabra significa mucho para la presente generación. (+50 [political_capital])
 "I'm a socialist, but these people are extreme!","¡Soy socialista, pero esa gente me parecen unos extemistas!"
 I'm afraid that most of Earth's species will be lost forever.,Me temo que hemos perdido para siempre a la mayoría de especies animales de la Tierra.
 I'm getting older and I remember how the change came in the early 2020s...,Me estoy haciendo mayor y recuerdo cómo surgió el cambio a principios de la década de 2020...
@@ -883,7 +883,7 @@ Improve morale the easy way. The Romans had bread and circuses...,Mejora la mora
 Improve your relationship with %{name} to activate this ability.,Mejora tu relación con %{name} para activar esta habilidad.
 Improved cloning techniques that would allow for the revival of extinct species.,Técnicas de clonación mejoradas que permitirían revivir especies extintas.
 "Improved efficiency compared to a blast furnace. Allows steel to be made from 100% scrap material rather than virgin steelmaking from ores, which is less energy intensive.","Eficiencia mejorada en comparación con un alto horno. Permite fabricar acero 100 % hecho a partir de sobras en lugar de fabricar acero virgen a partir de minerales, pero consumiendo más energía."
-Improvements will foster confidence in your planning and gain you [political_capital] political capital.,Las mejoras harán que aumente la confianza en tu estrategia de planificación y te harán ganar [capital_político] capital político.
+Improvements will foster confidence in your planning and gain you [political_capital] political capital.,Las mejoras harán que aumente la confianza en tu estrategia de planificación y te harán ganar [political_capital] capital político.
 "In 1816, a volcanic eruption cooled the global climate and caused widespread famine. The ""year without a summer"" inspired Mary Shelley's Frankenstein.","En 1816, una erupción volcánica redujo el cambio climático y causó una extensa hambruna. El ""año sin verano"" sirvió de inspiración al Frankenstein de Mary Shelley."
 In 2022 a socialist revolution swept the globe.,"En 2022, una revolución socialista sacudió el mundo."
 "In addition, large areas of grass and shrub land have become inhospitable to the plants that once inhabited them.","Además, grandes extensiones de hierba y arbustos se han vuelto inhóspitas para las plantas que una vez las habitaron."
@@ -983,10 +983,10 @@ It's time we stamp them out for good.,Va siendo hora de erradicarlas para siempr
 "It's too early to say, but reports are estimating deaths in the tens of thousands.","Es demasiado pronto para evaluarlo, pero algunos informes estiman el número de fallecimientos en decenas de miles."
 It's vital for each generation to discover its mission and to fight for it!,¡Es importantísimo que cada generación descubra su misión y luche por ella!
 It's wrong to lock people up in cages. As a socialist society we can do better than this!,Enncerrar a personas en jaulas está mal. ¡Como sociedad socialista deberíamos ser mejores que eso!
-"It's your duty to bring [warming][g]warming to below 1°C[/g], the [extinction_rate][g]extinction rate to below 20[/g], and [emissions][g]emissions to below 0[/g] while there's still time.",Es tu deber hacer que el [aumento de las temperaturas][g] aumento de las temperaturas se mantenga por debajo de 1ºC[/g] y las [emisiones][g] emisiones por debajo de 0[/g] mientras aún estamos a tiempo.
+"It's your duty to bring [warming][g]warming to below 1°C[/g], the [extinction_rate][g]extinction rate to below 20[/g], and [emissions][g]emissions to below 0[/g] while there's still time.","Es tu deber hacer que el [warming][g]calentamiento se mantenga por debajo de 1 °C[/g], la [extinction_rate][g]tasa de extinción por debajo de 20[/g] y las [emissions][g]emisiones por debajo de 0[/g] mientras aún estamos a tiempo."
 It's your job to guide us all safely through the next century.,Tu trabajo consiste en llevarnos sanos y salvos hacia el siguiente siglo.
 "Just chill, comrade.","Relájate, camarada."
-"Just like with Research cards, swipe these up to scan them and add [initiative] infrastructure points.","Al igual que con las tarjetas de Investigación, arrastra estas hacia arriba para escanearlas y añadir [iniciativa] puntos de infraestructura."
+"Just like with Research cards, swipe these up to scan them and add [initiative] infrastructure points.","Al igual que con las tarjetas de Investigación, arrastra estas hacia arriba para escanearlas y añadir [initiative] puntos de infraestructura."
 Just something to be aware of.,Es algo que debemos tener presente.
 Just swipe a card into the scanner and presto! It's added to your plan.,Arrastra una de las tarjetas hasta el escáner y ¡tachán! Esta se añadirá a tu plan.
 Just to keep the party going a little longer for some?,¿Solo por alargar la fiesta para unos pocos?
@@ -1218,7 +1218,7 @@ Oil Pollution Causes High Infant Mortality,La contaminación por hidrocarburos c
 Oil Running Out,El petróleo se agota
 Old scraps are transformed through practices of care and attention into nutrient-rich new soil. What a great metaphor for how we can survive this era.,Los antiguos desguaces se han transformado --mediante prácticas de cuidados y atención-- parcelas de suelo rico en nutrientes. Qué buena metáfora de cómo podemos sobrevivir a esta época.
 On,On
-"On the flip side, setbacks and worsening conditions will lose you [political_capital] political capital.","Por otra parte, los retrasos y el empeoramiento de las condiciones te harán perder [capital_político] capital político."
+"On the flip side, setbacks and worsening conditions will lose you [political_capital] political capital.","Por otra parte, los retrasos y el empeoramiento de las condiciones te harán perder [political_capital] capital político."
 "Once again, we are just fuel to burn on the altar of progress.","Una vez más, no somos más que combustible que quemar en el altar del progreso"
 "Once-in-a-decade heavy rains have now become commonplace, leading to overflowing rivers capable of destroying hundreds of homes.","Las lluvias torrenciales, de las que solo tenían lugar una vez cada década, se han vuelto algo habitual, provocando el desbordamientos en los ríos capaces de arrasar con cientos de hogares."
 "One day I want to become a planetary planner, just like you!","¡Algún día me gustaría ser planificador planetario, como tú!"
@@ -1238,7 +1238,7 @@ Organic Livestock Ag,Ganaderia ecológica
 Organic and fossil-free agriculture requires more labor than industrial farming.,La agricultura orgánica y basada en combustibles fósiles requiere más trabajo que la ganadería industrial.
 Other,Otros
 Other Industry,Otras Industrias
-"Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","Otros partidos (mostrados aquí) pueden unirse a tu coalición como [aliado] aliados, dependiendo de lo que añadas a tu plan."
+"Other parties (shown here) may join your coalition as [ally] allies, depending on what you add to your plan.","Otros partidos (mostrados aquí) pueden unirse a tu coalición como [ally] aliados, dependiendo de lo que añadas a tu plan."
 Otherwise I fear what they're going to take next.,"Por lo demás, me da miedo pensar en qué va a ser lo siguiente que se lleven."
 Otherwise many places will become inhospitable.,"De otro modo, muchos lugares se volverán inhóspitos."
 Otherwise they will vote you out of office.,"De otro modo, votarán a favor de expulsarte del gobierno."
@@ -1284,7 +1284,7 @@ People are furious that our plans have privileged the wealthy countries.,A la po
 People are furious.,La gente está furiosa.
 People are happy.,La gente está feliz.
 People are learning about their local ecology and finding better ways of interacting and relating to the life around them.,La población está aprendiendo acerca de sus ecologías locales y hallando mejores formas de interactuar e implicarse con la vida a su alrededor.
-People are not happy with your performance...[hud_contentedness] outlook is really low.,La población no está satisfecha con tu rendimiento... el pronóstico [hud_satifacción] es muy bajo.
+People are not happy with your performance...[hud_contentedness] outlook is really low.,La población no está satisfecha con tu rendimiento... el pronóstico [hud_contentedness] es muy bajo.
 "People are suffering form PTSD from losing their homes, possessions, and pets. This is a mental health crisis!","Hay gente sufriendo Transtorno de estrés postraumático debido a la pérdida de sus hogares, sus posesiones y sus mascotas. ¡Esto es una crisis de salud mental!"
 People are tremendously upset about our solar radiation management program...,La gente está tremendamente descontenta con el programa de gestión de la radiación solar...
 People are unhappy.,La gente está infeliz.
@@ -1297,7 +1297,7 @@ People around the world mourned your death.,Personas de todo el mundo lamentaron
 People seem happier now. Keep up the good work!,La gente se muestra ahora más feliz. ¡Buen trabajo! ¡Sigue así!
 "People will work longer and harder, but socialism will be built faster.","La gente trabajará más y más duro, pero el socialismo se construirá más rápido."
 "People won't work as long and instead enjoy more leisure time. Energy-use will go down substantially, but projects will also take longer to finish.","La gente no trabajará tanto tiempo y en su lugar disfrutará de más tiempo libre. El uso de energía se reducirá sustancialmente, pero los proyectos también tardarán más en finalizar."
-People's are not happy with your performance...[hud_contentedness] outlook is really low.,La población no está satisfecha con tu rendimiento... el pronóstico [hud_satifacción] es muy bajo.
+People's are not happy with your performance...[hud_contentedness] outlook is really low.,La población no está satisfecha con tu rendimiento... el pronóstico [hud_contentedness] es muy bajo.
 Perennial Cereals,Cereales perennes
 "Perennial versions of the major cereal crops mean they don't need to be replanted each year, disturbing the soil less and sequestering more in deep roots.","Versiones perennes de los principales cultivos de cereales significan que no necesitan ser replantados cada año, alterando menos el suelo y secuestrando más en las raíces profundas."
 Perhaps the compulsive dancing allows some relief from stress and grinding poverty.,Quizá el bailar compulsivamente permite aliviar el estrés causado por la tremenda pobreza.
@@ -1535,7 +1535,7 @@ Solar Radiation Management (SRM),Geoingeniería solar
 "Some areas have experienced cooling, but without significant emissions abatement, SRM needs to be ramped up to keep pace.","Algunas zona se han enfriado, pero sin un descenso significativo de las emisiones, el SRM debe multiplicarse para seguir el ritmo."
 Some crops are doing well with the heat and extra CO2 in the air...,Algunos cultivos se ven beneficiados por el calor y el CO2 adicional en la atmósfera...
 "Some had health and safety risks, some were less efficient, some had further environmental issues or were themselves potent greenhouse gases...","Alguno conllevaban un riesgo para la salud o la seguridad, otros eran menos eficientes, otros resultaban problemáticos en relación a lo medioambiental o eran en sí mismos gases de efecto invernadero en potencia."
-"Some may require much more [land] land or more [energy] energy, for example.","Algunos requieren mucha más [tierra] tierra o [energía] energía, por ejemplo."
+"Some may require much more [land] land or more [energy] energy, for example.","Algunos requieren mucha más [land] tierra o [energy] energía, por ejemplo."
 "Some mourned the loss of someone with tremendous potential, while others cheered the death of a misguided tyrant.","Algunos lamentaron la pérdida de alguien con un potencial tremendo, mientras otros celebraron la muerte de un confundido tirano."
 Some parties have special abilities that can help as well.,Algunos partidos cuentan con habilidades especiales que te pueden ser de ayuda.
 "Some people just don't know any better, you know what I mean?","Algunos no lo entienden de otro modo, ¿entiendes lo que quiero decir?"
@@ -1603,40 +1603,40 @@ That's the only thing in common across the global population that I can think of
 "The ""nightshift"" has been said to increase health risks as well as potentially shorten lifespan!","¡Se dice que el ""turno de noche"" aumenta el riesgo de padecer problemas de salud y puede reducir la esperanza de vida!"
 The %{n}%{ext} Planning Session,La %{n}%{ext} Sesión de Planificación
 The Accelerationist,Aceleracionista
-The Accelerationist is now a [nemesis] nemesis.,El/la Aceleracionista es ahora tu [némesis] némesis.
-The Accelerationist is now an [ally] ally. [research] Research points cost less [political_capital] political capital.,El/la Aceleracionista es ahora tu [aliado] aliado/a. [Investigación] Los puntos de investigación cuestan menos [capital_político] capital político.
+The Accelerationist is now a [nemesis] nemesis.,El/la Aceleracionista es ahora tu [nemesis] némesis.
+The Accelerationist is now an [ally] ally. [research] Research points cost less [political_capital] political capital.,El/la Aceleracionista es ahora tu [ally] aliado/a. [research] Los puntos de investigación cuestan menos [political_capital] capital político.
 The Alien,Alién
 The Animal Liberationist,Antiespecista
 The Animal Liberationist is now a [nemesis] nemesis.,El/la Liberador/a Animal es ahora tu [nemesis] nemesis.
-The Animal Liberationist is now an [ally] ally. Food projects are much cheaper.,El/la Liberador/a animal es ahora tu [aliado] aliado. Los proyectos de Alimentación son mucho más baratos.
+The Animal Liberationist is now an [ally] ally. Food projects are much cheaper.,El/la Liberador/a animal es ahora tu [ally] aliado. Los proyectos de Alimentación son mucho más baratos.
 The Ark,El Arca
 The Ark Proposal,La propuesta de arca
 The Atlantic Meridional Overturning Circulation is a vital ocean current.,La circulación de vuelco meridional del Atlántico es una corriente oceánica esencial.
 The Authoritarian,Autoritario
-The Authoritarian is now a [nemesis] nemesis.,El/la Autoritario/ es ahora tu [némesis] némesis.
-The Authoritarian is now an [ally] ally. You won't lose if contentedness dips below 0.,"El/la Autoritario/a es ahora tu [aliado]. Si el nivel de satifacción baja de 0, no perderás la partida."
+The Authoritarian is now a [nemesis] nemesis.,El/la Autoritario/ es ahora tu [nemesis] némesis.
+The Authoritarian is now an [ally] ally. You won't lose if contentedness dips below 0.,"El/la Autoritario/a es ahora tu [ally]. Si el nivel de satifacción baja de 0, no perderás la partida."
 The Citizen,Ciudadanía
 The Climatologist,Climatologista
 The Consumerist,Consumista
-The Consumerist is now a [nemesis] nemesis.,El/la Consumista es ahora tu némesis.
-The Consumerist is now an [ally] ally. The contentedness of upper-middle and upper income regions will recover more quickly.,El/la Consumista se ha aliado contigo. El nivel de aceptación de las regiones con ingresos medio-altos se recuperará más rápido.
+The Consumerist is now a [nemesis] nemesis.,El/la Consumista es ahora tu [nemesis] némesis.
+The Consumerist is now an [ally] ally. The contentedness of upper-middle and upper income regions will recover more quickly.,El/la Consumista es ahora tu [ally] aliado. La satisfacción de las regiones de ingresos medios-altos y altos se recuperará más rápido.
 The Doctor,Doctora
 The Doom Cultist,Cultista del día final
 The Earth Liberation Front,Frente de Liberación de la Tierra
 "The Earth is calling for our aid and so we, the Earth Liberation Front, have returned.","La Tierra nos pide ayuda, por lo que nosotros, el Frente de Liberación, hemos vuelto."
 The Ecofeminist,Ecofeminista
-The Ecofeminist is now a [nemesis] nemesis.,El/la Ecofeminista es ahora tu [némesis] némesis.
-"The Ecofeminist is now an [ally] ally. Food, Agriculture, and Protection projects are cheaper.","El/la Ecofeminista es ahora tu [aliado] aliado. Se abaratan los proyectos de Alimentación, Agricultura y Protección."
+The Ecofeminist is now a [nemesis] nemesis.,El/la Ecofeminista es ahora tu [nemesis] némesis.
+"The Ecofeminist is now an [ally] ally. Food, Agriculture, and Protection projects are cheaper.","El/la Ecofeminista es ahora tu [ally] aliado. Se abaratan los proyectos de Alimentación, Agricultura y Protección."
 The Ecologist,Ecólogo
 The Economist,Economista
 The End,El fin
 The Engineer,Ingeniera
 The Environmentalist,Ecologista
-The Environmentalist is now a [nemesis] nemesis.,El/la Ecologista es ahora tu [némesis] némesis.
-The Environmentalist is now an [ally] ally. Restoration projects are substantially cheaper.,El/la Ecologista es ahora tu [aliado] aliado. Los proyectos de Restauración son ahora mucho más baratos.
+The Environmentalist is now a [nemesis] nemesis.,El/la Ecologista es ahora tu [nemesis] némesis.
+The Environmentalist is now an [ally] ally. Restoration projects are substantially cheaper.,El/la Ecologista es ahora tu [ally] aliado. Los proyectos de Restauración son ahora mucho más baratos.
 The Fanonist,Fanonista
-The Fanonist is now a [nemesis] nemesis.,El/la Fanonista es ahora tu [némesis] némesis
-The Fanonist is now an [ally] ally. The contentedness of lower and lower-middle income regions will recover more quickly.,El/la Fanonista es ahora tu [aliado] aliado. La satifacción de las regiones de ingresos bajos y medios-bajos se recuperará más rápido.
+The Fanonist is now a [nemesis] nemesis.,El/la Fanonista es ahora tu [nemesis] némesis
+The Fanonist is now an [ally] ally. The contentedness of lower and lower-middle income regions will recover more quickly.,El/la Fanonista es ahora tu [ally] aliado. La satifacción de las regiones de ingresos bajos y medios-bajos se recuperará más rápido.
 The Farmer,Granjero
 The Food Waste Campaign has been very successful!,¡La campaña contra el desperdicio de alimentos ha sido todo un éxito!
 The Geoengineer,Geoingeniero
@@ -1646,17 +1646,17 @@ The Leather Underground,The Leather Underground
 The Leather Underground - Formation,The Leader Underground - Constitución
 The Leather Underground Attack,Ataque de The Leather Underground
 The Malthusian,Maltusiano
-The Malthusian is now a [nemesis] nemesis.,El/la Maltusiano/a es ahora tu [némesis] némesis.
-The Malthusian is now an [ally] ally. Population projects are substantially cheaper.,El/la Maltuasiano/a es ahora tu [aliado] aliado. Los proyectos de Población son ahora mucho más baratos.
+The Malthusian is now a [nemesis] nemesis.,El/la Maltusiano/a es ahora tu [nemesis] némesis.
+The Malthusian is now an [ally] ally. Population projects are substantially cheaper.,El/la Maltuasiano/a es ahora tu [ally] aliado. Los proyectos de Población son ahora mucho más baratos.
 The Posadist,Posadista
-The Posadist is now a [nemesis] nemesis.,El/la Posadista es ahora tu [némesis] némesis.
-The Posadist is now an [ally] ally. Nuclear projects are substantially cheaper.,El/la Posadista es ahora un [aliado] aliado. Los proyectos nucleares se abaratan.
+The Posadist is now a [nemesis] nemesis.,El/la Posadista es ahora tu [nemesis] némesis.
+The Posadist is now an [ally] ally. Nuclear projects are substantially cheaper.,El/la Posadista es ahora un [ally] aliado. Los proyectos nucleares se abaratan.
 The Realm of Freedom,El reino de la libertad
 The Soldier,Soldado
 The Spacer,Explorador espacial
 The Utopian,Utópica
-The Utopian is now a [nemesis] nemesis.,El/la Utopistaa es ahora tu [némesis] némesis.
-"The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.","El/la Utopista es ahora tu [aliado] aliado. Se reduce el coste de los proyectos de Límites, Protección y Restauración."
+The Utopian is now a [nemesis] nemesis.,El/la Utopistaa es ahora tu [nemesis] némesis.
+"The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.","El/la Utopista es ahora tu [ally] aliado. Se reduce el coste de los proyectos de Límites, Protección y Restauración."
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.","Lo pinos Wollemia llevan 200 millones de años existiendo, pero el último bosque natural de estos ha sido recientemente destruido por un incendio."
 "The World Editor is only available in the desktop version of the game, which you can download here.","El editor de mundos solo está disponible en la versión de escritorio del juego, que puedes descargar aquí."
 The Wretched,Los miserables
@@ -1780,7 +1780,7 @@ There is a mild production shortage,Hay una leve escasez de producción
 There is a severe production shortage,Hay una grave escasez de producción
 There is currently no limit on this process' mix share.,Actualmente no hay límite en la cuota de mezcla de este proceso.
 "There is no official money in the post-revolutionary society, but libertarians still use crypto on the black market. Take thousands of these cryptographic-solving machines off the grid to save some electricity.","No hay dinero oficial en la sociedad posrevolucionaria, pero los libertarios aún usan criptomonedas en el mercado negro. Saca miles de estas máquinas de cálculo criptográfico de la red para ahorrar algo de electricidad."
-There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,No hay suficientes {recursos}. Debe cambiar sus mezclas de producción para usar menos de estos o reducir la demanda en otros lugares.
+There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,No hay suficiente %{resources}. Deberías cambiar tus mezclas de producción para usar menos o reducir la demanda en otros sectores.
 There just isn't enough earth for everyone to live well.,"Simplemente, no hay suficiente planeta como para que todos podamos vivir bien."
 There must be alternatives that don't require sacrificing us!,¡Deben existir opciones alternativas que no requieran nuestro sacrificio!
 There needs to be a major global program to remediate abandoned mines.,Necesitamos un programa global que repare las minas abandonadas.
@@ -1911,7 +1911,7 @@ This region's contentedness.,La satisfacción de esta región.
 This region's current precipitation range.,Rango de precipitación actual de esta región.
 This region's current temperature range.,Rango de temperatura actual de esta región.
 This region's habitability. Natural disasters and hotter temperatures lower habitability.,La habitabilidad de esta región. Los desastres naturales y las temperaturas más altas reducen la habitabilidad.
-"This region's income level has contracted to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","El nivel de ingresos de esta región se ha reducido a [b]{{display.enumDisplay(obj.income, true)}}[/b]. Se actualizó la demanda de [i]%{iconElec}[/i]electricidad, [i]%{iconFuel}[/i]combustible, [i]%{iconPCals}[/i]alimentos de origen vegetal y [i]%{iconACals}[/i]animal."
+"This region's income level has contracted to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","El nivel de ingresos de esta región se ha reducido a [b]%{income}[/b]. Se actualizó la demanda de [i]%{iconElec}[/i]electricidad, [i]%{iconFuel}[/i]combustible, [i]%{iconPCals}[/i]alimentos de origen vegetal y [i]%{iconACals}[/i]animal."
 "This region's income level has increased to [b]%{income}[/b]. Demand for [i]%{iconElec}[/i]electricity, [i]%{iconFuel}[/i]fuel, [i]%{iconPCals}[/i]plant and [i]%{iconACals}[/i]animal-based food has been updated.","Los ingresos de esta región han aumentado a [b]%{income}[/b]. La demanda por la [i]%{iconElec}[/i]electricidad, [i]%{iconFuel}[/i]combustible, [i]%{iconPCals}[/i] comida basada en plantas y [i]%{iconACals}[/i] animales ha sido actualizada."
 This region's new demand for %{output}.,La demanda nueva de esta región para %{output}.
 This region's new income level.,El nuevo nivel de ingresos de esta región.
@@ -1949,7 +1949,7 @@ Tiny chance to unlock this process:,Pequeña oportunidad de desbloquear este pro
 Tiny chance to unlock this project:,Pequeña oportunidad de desbloquear este proyecto:
 "Titan has an abundance of liquid hydrocarbons, more than even Earth. We could go get it...but why?","Titán tiene una abundancia de hidrocarburos líquidos, incluso más que la Tierra. Podríamos ir a buscarlo... pero ¿por qué?"
 "To keep up oil production firms have pushed deeper into remote regions, often in Indigenous territory.","A fin de cubrir la demanda, las empresas petroleras están internándose en regiones remotas, a menudo dentro de territorio indígena."
-To manage your [political_capital] political capital you'll need to balance short-term improvements with your long-term plans.,A fin de gestionar tu [capital_político] capital político deberás mantener el equilibrio entre las mejoras a corto plazo y los planes a largo plazo.
+To manage your [political_capital] political capital you'll need to balance short-term improvements with your long-term plans.,A fin de gestionar tu [political_capital] capital político deberás mantener el equilibrio entre las mejoras a corto plazo y los planes a largo plazo.
 Too Hot to Work,Demasiado calor como para trabajar
 Torches and Pitchforks Outside Your Window...,Picas y antorchas frente a tu puerta
 Total,Total
@@ -2052,7 +2052,7 @@ We gotta find a way to live ~harmoniously~ with nature.,Debemos dar con la forma
 We had collected most of our samples but then a massive blackout spoiled everything...,"Habíamos recogido ya la mayoría de muestras, pero entonces un enorme apagón lo echó todo a perder..."
 We have a reliable stream of extra organic material too.,Contamos también con una flujo estable de materia orgánica adicional.
 We have a unique opportunity to reshape our relationship with nature and each other.,Tenemos la oportunidad de dar nueva forma a nuestra relación con la naturaleza y al modo en que nos relacionamos los unos con los otros.
-We have a wide array of processes to produce two critical resources: [food] food and [energy] energy.,Contamos con una amplia variedad de procesos mediante los cuales producir dos recursos clave: [alimento] alimento y [energía] energía.
+We have a wide array of processes to produce two critical resources: [food] food and [energy] energy.,Contamos con una amplia variedad de procesos mediante los cuales producir dos recursos clave: [food] alimento y [energy] energía.
 We have all the technologies in place to send out ships to settle new planets.,Contamos con la tecnología necesaria para enviar nuestras naves a colonizar otros planetas.
 We have been observing your planet for some time now...,Llevamos ya un tiempo observando tu planeta...
 "We have space to grow food, have more greenery in the city, and have a new hobby!","¡Disponemos de espacio en el que cultivar alimentos, la ciudad cuenta con más zonas verdes y tenemos una nueva afición a la que dedicarnos!"
@@ -2250,8 +2250,8 @@ You are *killing* me with these plans!,"¡Me estás ""matando"" con esos planes!
 "You are so, so misguided.","Estás tan, pero tan equivocado"
 You better abandon that cozy relationship with the Accelerationist or else we'll have to take drastic action to protect the planet.,"Más te vale poner fin a esa cómoda relación con el/la Aceleracionista, o nos veremos obligados a tomar medidas drásticas para la protección del planeta."
 "You can expand the DAC capacity in the planning tool, if you want.","Puedes aumentar la capacidad del DAC con la herramienta de planificación, si así lo deseas."
-"You can set [research] research priorities, initiate large-scale [initiative] projects, implement [policy] policies, or ban certain production processes.","Puedes fijar las prioridades de [investigación] investigación, iniciar proyecto a gran escala [iniciativa], implementar [política] políticas o inhabilitar determinados procesos de producción."
-You can tap the pulsing [alert] alert icon for more information.,Pulsa el icono [alerta] de alerta para obtener más información.
+"You can set [research] research priorities, initiate large-scale [initiative] projects, implement [policy] policies, or ban certain production processes.","Puedes fijar las prioridades de [research] investigación, iniciar proyecto a gran escala [initiative], implementar [policy] políticas o inhabilitar determinados procesos de producción."
+You can tap the pulsing [alert] alert icon for more information.,Pulsa el icono [alert] de alerta para obtener más información.
 You can't help but wonder how things could have gone differently.,Uno no puede evitar preguntarse si no podría haber sucedido de otro modo.
 "You can't ignore whats been happening in Ecotopia. While the rest of the world crumbles in consumerism and nonstop progress, Ecotopia is a small window into what could be.","No podemos pasar por alto que ha sucedido en Ecotopia. Mientras que el resto del mundo se desmorona a causa del consumismo y el progreso continuo, Ecotopia es una pequeña demostración de lo que distinto que podría ser todo."
 You can't just transition to renewables and do all of your restoration projects in whatever neighborhood you want! I'm not going to endure blackouts just because of your novel ideas.,¡No se puede simplemente realizar la transición a energías renovables e implementar toda clase de proyectos en cualquier barrio que se desee! No tengo por qué soportar apagones solo por tus novísimas ideas.
@@ -2272,7 +2272,7 @@ You kept on using fossil fuels.,Continuaste usando combustibles fósiles.
 "You know, I think we should reconsider that policy...","Ya sabes, creo que deberíamos reconsiderar esa política..."
 "You managed to last all this time, but how has everyone else fared?","Te las has ingeniado para durar en el cargo todo este tiempo, pero, ¿cómo le ha ido a los demás?"
 You may need to change your production mixes to compensate for resource limitations.,Quizá deberías modificar las mezclas de producción para compensar la limitación de recursos.
-You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...,Debes ejercer sin que la [satisfacción][w] satisfacción de la población caiga por debajo de 0 [/w]
+You must do so without letting people's [contentedness][w]contentedness dip below 0[/w]...,Debes ejercer sin que la [contentedness][w] satisfacción de la población caiga por debajo de 0 [/w]
 You must reconsider this oppressive mandate!,¡Debes reconsiderar ese mandato opresivo!
 You need to cool things off--fast--or we'll be seeing a lot of hungry people.,Debemos hacer que las temperaturas desciendan --y rápido-- o nos encontramos con muchímas personas hambrientas.
 You need to do more to protect the natural world.,Debes esforzarte más en la protección del medio natural.
@@ -2296,7 +2296,7 @@ You throw away non-human life like it's nothing.,Te deshaces de vidas humanas co
 You were bailed out.,Fuiste rescatado.
 You will be able to pass any laws you want by decree.,Podrás aprobar por decreto cualquier ley que desees.
 You won't lose if contentedness dips below 0.,No perderás si la satisfacción cae por debajo de 0.
-You'll need to spend [political_capital] political capital if you want something to happen.,Deberás gastar [capital_político] si quieres que suceda algo.
+You'll need to spend [political_capital] political capital if you want something to happen.,Deberás gastar [political_capital] si quieres que suceda algo.
 You're an unrepentant murderer!,¡Eres un asesino impenitente!
 You're digging your own grave.,Estás cavando tu propia tumba.
 You're going to regret this...,Lo lamentarás...
@@ -2305,7 +2305,7 @@ You're mad with power--how was this a good idea?,El poder te ha enloquecido... �
 You've been bailed out once,Te han rescatado una vez
 You've exhausted all your political capital...,Has agotado tu capital político...
 "You've kind of got tunnel vision with this whole earth stuff, don't you think?","Estás siendo algo estecho de mira en este asunto de la Tierra, ¿no crees?"
-You've run out of [political_capital] political capital...and lost the backing of members of parliament.,Se te ha agotado el [capital_político] capital político... Y has perdido tus apoyos en el parlamento.
+You've run out of [political_capital] political capital...and lost the backing of members of parliament.,Se te ha agotado el [political_capital] capital político... Y has perdido tus apoyos en el parlamento.
 Your History,Tu historia
 Your administration had failed to achieve its goals in time...,Tu gobierno fue incapaz de lograr sus objetivos a tiempo...
 Your coalition has %{coalitionSeats}/%{totalSeats} seats.,Tu coalición tiene %{coalitionSeats}/%{totalSeats} sillas.
@@ -2318,10 +2318,10 @@ Your plans have shown nothing but contempt for the people of the Global South.,T
 Your plans mean nothing if you let people's ignorance and impulsiveness run loose.,"Tus planes no sirven para nada, si dejas que la ignorancia y la impulsividad de la gente campe a sus anchas."
 Your plans will benefit from having others on board.,A tus planes les ayudará contar con otras personas.
 Your reckless disregard for life is going to ruin us all!,¡Tu desprecio por la vida va a llevarnos a todos a la ruina!
-Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,Tu relación con {nombre}. Incrementarlo implementando proyectos que les gusten. Con 5 corazones o más se unirán a tu coalición.
+Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,Tu relación con %{name}. Mejórala implementando proyectos que le gusten. Con 5 corazones o más se unirá a tu coalición.
 Zero square kilometres of arctic sea ice.,Cero kilómetros cuadrados de hielo en el océano Ártico.
 "Zoos, bacon, fur, honey (?)","Los zoológicos, el beicon, las pieles, la miel (?)"
-[GAME],[GAME]
+[GAME],[JUEGO]
 [b]Locks[/b] %{tag},[b]Bloquea[/b] %{tag}
 [b]Unlocks[/b] %{name}.,[b]Desbloquea[/b] %{name}.
 [b]Unlocks[/b] the %{tag} process.,[b]Desbloquea[/b] el proceso de %{tag}.

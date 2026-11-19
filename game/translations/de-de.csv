@@ -16,7 +16,7 @@ English,Translation
 %{changeDir} demand for %{name} by [b]%{percent}%[/b].,%{changeDir} Nachfrage für %{name} zu [b]%{percent}%[/b].
 %{changeDir} demand for %{name} by [i]%{icon}[/i]%{amount}.,%{changeDir} Nachfrage für %{name} zu [i]%{icon}[/i]%{amount}.
 %{changeDir} demand for %{tag} by %{amount}.,%{changeDir} Anforderung für %{tag} nach %{amount}.
-%{changeDir} emissions by %{amount}.,%{changeDir} Emissionen um {Betrag}.
+%{changeDir} emissions by %{amount}.,%{changeDir} Emissionen um %{amount}.
 %{changeDir} global population by %{amount}.,%{changeDir} Weltbevölkerung nach %{amount}.
 %{changeDir} global population growth by %{amount}[b]%.[/b],%{changeDir} globales Bevölkerungswachstum um %{amount}[b]%.[/b]
 %{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,%{changeDir} Globaler Niederschlag durch %{amount}[b]cm/yr[/b].
@@ -31,7 +31,7 @@ English,Translation
 %{changeDir} world contentedness by %{amount}.,%{changeDir} Weltzufriedenheit um %{amount}.
 %{changeDir} world contentedness by [b]%{amount}[/b].,%{changeDir} Weltzufriedenheit um [b]%{amount}[/b].
 %{cost} yrs,%{cost} Jahre
-%{disaster} in %{region},{Katastrophe} in %{region}
+%{disaster} in %{region},%{disaster} in %{region}
 %{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.,%{emissionsBefore} in [i]%{icon}[/i]%{emissionsAfter}. Dies ist eine %{emissionsChange}% Änderung aller Emissionen.
 %{fromAmount} to %{toAmount}[i]%{icon}[/i].,%{fromAmount} bis %{toAmount}[i]%{icon}[/i].
 %{kind} emissions,%{kind} Emissionen
@@ -278,7 +278,7 @@ Battery Storage Network,Batteriespeichernetzwerk
 "Beautiful. These changes have brought a wealth of wildlife into our cities, like voles, shrews, and lupine!","Wunderschön. Diese Veränderungen haben eine Fülle von Wildtieren in unsere Städte gebracht, wie Wühlmäuse, Spitzmäuse und Lupinen!"
 "Because of opposition, this requires a majority in parliament.",Wegen der Opposition braucht es dafür eine Mehrheit im Parlament.
 Because of resource availability this process can only make up to %{maxPercent}% of production.,Aufgrund der Ressourcenverfügbarkeit kann dieser Prozess nur bis zu %{maxPercent}% der Produktion ausmachen.
-Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion},Aufgrund der Ressourcenverfügbarkeit kann dieser Prozess nur bis zu %{maxPercent}% der Produktion ausmachen. {sugestion}
+Because of resource availability this process can only make up to %{maxPercent}% of production. %{suggestion},Aufgrund der Ressourcenverfügbarkeit kann dieser Prozess nur bis zu %{maxPercent}% der Produktion ausmachen. %{suggestion}
 "Because the boreal forest is not managed as intensely as other forests, the trees have been able to grow undisturbed, amassing large amounts of carbon in their roots and trunks. Twenty percent of the carbon held in forests in the world is in the boreal forest.","Da der boreale Wald nicht so intensiv bewirtschaftet wird wie andere Wälder, konnten die Bäume ungestört wachsen und große Mengen an Kohlenstoff in ihren Wurzeln und Stämmen anhäufen. Zwanzig Prozent des weltweit in den Wäldern gespeicherten Kohlenstoffs befinden sich in den borealen Wäldern."
 "Bees may be small, but they are a crucial part of modern farming!","Bienen mögen klein sein, aber sie sind ein entscheidender Bestandteil der modernen Landwirtschaft!"
 "Before I go, let me leave you a favorite quote from William Morris:","Bevor ich gehe, lasst mich euch ein Lieblingszitat von William Morris hinterlassen:"
@@ -453,7 +453,7 @@ Crop yields have been a bit lower than expected...this might be why.,Die Ernteer
 Crops,Landwirtschaftliche Erzeugnisse
 Crucible Earth,Schmelztiegel-Erde
 Current annual emissions are %{emissions} gigatonnes. [g]Your goal is to get this to below 0.[/g],"Die aktuellen jährlichen Emissionen betragen %{emissions} Gigatonnen. [g]Ihr Ziel ist es, diese unter 0 zu bringen.[/g]"
-Current annual emissions are %{emissions}. [g]Your goal is to get this to below 0.[/g],"Die aktuellen jährlichen Emissionen betragen {Emissionen}. [g]Dein Ziel ist es, diesen Wert unter 0 zu bringen. [/g]"
+Current annual emissions are %{emissions}. [g]Your goal is to get this to below 0.[/g],"Die aktuellen jährlichen Emissionen betragen %{emissions}. [g]Dein Ziel ist es, diesen Wert unter 0 zu bringen.[/g]"
 "Current annual emissions, in gigatonnes of CO2 equivalent.",Aktuelle jährliche Emissionen in Gigatonnen CO2-Äquivalent.
 Current biodiversity pressure is %{amount}[t]/%{maxAmount}[/t].,Der derzeitige Druck auf die biologische Vielfalt %{amount}[t]/%{maxAmount}[/t].
 Current energy use.,Aktueller Energieverbrauch.
@@ -588,7 +588,7 @@ Famine,Hungersnot
 Famine - Intro,Hungersnot - Intro
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Ausgefallene Fahrräder, Wandern, Vogelbeobachtung, Müsli, Sandalen, Philanthropen"
 Fanonist Curriculum,Entkoloniales Curriculum
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Bauernmärkte, Sentimentalität, Wal-Mart [capitalist], Wildnis"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Bauernmärkte, Sentimentalität, Wal-Mart [kapitalistisch], Wildnis"
 Fast-Breeder Nuclear Power,Brutreaktor Energie
 Fast-Breeder Reactor,Brutreaktor Energie
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Fühlen Sie sich frei, ein wenig zu stöbern. Wenn Sie bereit sind, gehen Sie zurück zum ""Plan""-Tab."
@@ -1582,7 +1582,7 @@ That means we can use batteries in a lot of places that we couldn't before.,"Das
 That was a close one--that grenade nearly got you!,Das war knapp - die Granate hätte Sie fast erwischt!
 That was an important hero from the revolution.,Das war ein wichtiger Held aus der Revolution.
 That'll just make things hotter...you can see where this is going.,"Das wird die Dinge nur noch heißer machen... Sie können sehen, wohin das führt."
-That's a %{percent}% change.,Das ist eine {Prozent}%ige Änderung.
+That's a %{percent}% change.,Das ist eine Änderung um %{percent}%.
 That's great!,Das ist super!
 That's right. You can look through some options at the next planning session.,Das ist richtig. In der nächsten Planungssitzung können Sie sich einige Optionen ansehen.
 That's the only thing in common across the global population that I can think of.,"Das ist die einzige Gemeinsamkeit in der Weltbevölkerung, die mir einfällt."
@@ -1593,7 +1593,7 @@ The Accelerationist is now a [nemesis] nemesis.,Die Akzelerationist*innen sind j
 The Accelerationist is now an [ally] ally. [research] Research points cost less [political_capital] political capital.,Die Accelerationist*innen sind jetzt [ally] Verbündete. [research] Forschungspunkte kosten weniger [political_capital] politisches Kapital.
 The Alien,Die Aliens
 The Animal Liberationist,Die Tierschützer*innen
-The Animal Liberationist is now a [nemesis] nemesis.,Die Tierschützer*innen sind jetzt ein [Nemesis] Feid.
+The Animal Liberationist is now a [nemesis] nemesis.,Die Tierschützer*innen sind jetzt ein [nemesis] Feid.
 The Animal Liberationist is now an [ally] ally. Food projects are much cheaper.,Die Tierschützer*innen sind jetzt [ally] Verbündete. Lebensmittelprojekte sind viel billiger.
 The Ark,Die Arche
 The Ark Proposal,Der Arche-Vorschlag
@@ -1605,7 +1605,7 @@ The Citizen,Die Bürger*innen
 The Climatologist,Die Klimatolog*innen
 The Consumerist,Die Konsument*innen
 The Consumerist is now a [nemesis] nemesis.,Die Konsument*innen sind nun [nemesis] Erzfeinde.
-The Consumerist is now an [ally] ally. The contentedness of upper-middle and upper income regions will recover more quickly.,Die Konsumer sind nun ein [Verbündeter] Verbündeter. Die Zufriedenheit in den Regionen mit oberem Mittelstand und höherem Einkommen wird sich schneller erholen.
+The Consumerist is now an [ally] ally. The contentedness of upper-middle and upper income regions will recover more quickly.,Die Konsumer sind nun ein [ally] Verbündeter. Die Zufriedenheit in den Regionen mit oberem Mittelstand und höherem Einkommen wird sich schneller erholen.
 The Doctor,Die Ärzt*innen
 The Doom Cultist,Die Untergangs-Kultisten*innen
 The Earth Liberation Front,Die Weltbefreiungskämpfer*innen
@@ -1619,7 +1619,7 @@ The End,Das Ende
 The Engineer,Die Ingenieur*innen
 The Environmentalist,Die Umweltschützer*innen
 The Environmentalist is now a [nemesis] nemesis.,Die Umweltschützer*innen sind jetzt [nemesis] Feinde.
-The Environmentalist is now an [ally] ally. Restoration projects are substantially cheaper.,Die Umweltschützer*innen sind jetzt [Verbündeter] Verbündete. Sanierungsprojekte sind wesentlich billiger.
+The Environmentalist is now an [ally] ally. Restoration projects are substantially cheaper.,Die Umweltschützer*innen sind jetzt [ally] Verbündete. Sanierungsprojekte sind wesentlich billiger.
 The Fanonist,Die Entkolonialist*innen
 The Fanonist is now a [nemesis] nemesis.,Die Fanonist*innen sind jetzt [nemesis] Feinde.
 The Fanonist is now an [ally] ally. The contentedness of lower and lower-middle income regions will recover more quickly.,Die Fanonist*innen sind jetzt [ally] Verbündete. Die Zufriedenheit der unteren und unteren mittleren Einkommensregionen wird sich schneller erholen.
@@ -1762,7 +1762,7 @@ There is a mild production shortage,Es besteht ein leichter Produktionsmangel
 There is a severe production shortage,Es herrscht ein gravierender Produktionsengpass
 There is currently no limit on this process' mix share.,Derzeit gibt es keine Begrenzung für den Mix-Anteil dieses Prozesses.
 "There is no official money in the post-revolutionary society, but libertarians still use crypto on the black market. Take thousands of these cryptographic-solving machines off the grid to save some electricity.","In der postrevolutionären Gesellschaft gibt es kein offizielles Geld, aber die Libertären verwenden trotzdem Kryptowährungen auf dem Schwarzmarkt. Nehmen Sie Tausende dieser Krypto-Maschinen vom Netz, um Strom zu sparen."
-There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,"Es gibt nicht genügend {Ressourcen}. Sie sollten Ihre Produktionsmischungen ändern, um weniger davon zu verwenden oder die Nachfrage an anderer Stelle zu reduzieren."
+There is not enough %{resources}. You should change your production mixes to use less of these or reduce demand elsewhere.,"Es gibt nicht genügend %{resources}. Sie sollten Ihre Produktionsmischungen ändern, um weniger davon zu verwenden oder die Nachfrage an anderer Stelle zu reduzieren."
 There just isn't enough earth for everyone to live well.,"Es gibt einfach nicht genug Erde für alle, um gut zu leben."
 There must be alternatives that don't require sacrificing us!,"Es muss Alternativen geben, bei denen wir nicht geopfert werden müssen!"
 There needs to be a major global program to remediate abandoned mines.,Es muss ein umfassendes globales Programm zur Sanierung stillgelegter Minen durchgeführt werden.
@@ -1905,7 +1905,7 @@ This should help prevent drought-induced crop failures.,"Dies dürfte dazu beitr
 This was long overdue!,Das war längst überfällig!
 This will also be our launch pad to go deeper into space.,"Dies wird auch unsere Startrampe sein, um tiefer in den Weltraum vorzudringen."
 This will change %{resource} demand for %{name} by some unknown amount.,Dadurch wird die Nachfrage nach %{resource} für %{name} um einen unbekannten Betrag geändert.
-This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.,Dadurch wird die %{resource}-Nachfrage für %{name} von [i]%{icon}[/i]%{demandBefore} in [i]%{icon}[/i]%{demandAfter} geändert. Dies ist eine {prozentige}%ige Änderung des gesamten {Ressourcen}-Bedarfs.
+This will change %{resource} demand for %{name} from [i]%{icon}[/i]%{demandBefore} to [i]%{icon}[/i]%{demandAfter}. This is a %{percent}% change of all %{resource} demand.,Dadurch wird die %{resource}-Nachfrage für %{name} von [i]%{icon}[/i]%{demandBefore} in [i]%{icon}[/i]%{demandAfter} geändert. Dies ist eine Änderung um %{percent}% der gesamten %{resource}-Nachfrage.
 This will change %{short} for %{name} from [i]%{icon}[/i]%{change},Dadruch wird %{short} von [i]%{icon}[/i]%{change} durch %{name} ersetzt.
 This will change emissions for %{name} from [i]%{icon}[/i]%{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.,Dadurch werden die Emissionen für %{name} von [i]%{icon}[/i]%{emissionsBefore} in [i]%{icon}[/i]%{emissionsAfter} geändert. Dies ist eine %{emissionsChange}% Änderung aller Emissionen.
 This will directly change annual emissions by %{amount}.%{percent},Dies wird die jährlichen Emissionen direkt um %{amount}.%{percent}.
@@ -1916,7 +1916,7 @@ This will limit the amount of land that processes can use. The amount of land un
 This will make your plans harder to implement...,Dies wird die Umsetzung Ihrer Pläne erschweren...
 This will no doubt have a substantial impact all fields of research and engineering.,Dies wird zweifellos einen erheblichen Einfluss auf alle Forschungs- und Ingenieursbereiche haben.
 This will no doubt have reverberations throughout various food webs.,Dies wird zweifellos Auswirkungen auf die verschiedenen Nahrungsnetze haben.
-This will take about %{remainingCost} to finish. Allocate more %{kind} points to accelerate its progress.,"Dies dauert ungefähr %{remainingCost}, um abgeschlossen zu werden. Verteile mehr {art}-Punkte, um diesen Fortschritt zu beschleunigen."
+This will take about %{remainingCost} to finish. Allocate more %{kind} points to accelerate its progress.,"Dies dauert ungefähr %{remainingCost}, um abgeschlossen zu werden. Verteile mehr %{kind}-Punkte, um diesen Fortschritt zu beschleunigen."
 Thorium,Thorium
 Thorium Nuclear Power,Thorium-Kernkraft
 Thorium Reactor,Thorium-Reaktor
@@ -2309,7 +2309,7 @@ Zero square kilometres of arctic sea ice.,Null Quadratkilometer arktisches Meere
 [b]Unlocks[/b] the %{tag} process.,[b]Entsperrt[/b] der %{tag} Prozess.
 [b]Unlocks[/b] the %{tag} project.,[b]Entsperrt[/b] das %{tag} Projekt.
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,"Die Aufgabe von [gosplant] bestand darin, die unzähligen Schäden zu beseitigen, die der Kapitalismus über Jahrhunderte hinweg dem Planeten und seinen Menschen zugefügt hatte."
-[research] Research points cost less [political_capital] political capital.,[Forschung] Forschungspunkte kosten weniger [political_capital] politisches Kapital.
+[research] Research points cost less [political_capital] political capital.,[research] Forschungspunkte kosten weniger [political_capital] politisches Kapital.
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...","ein ""Wet-Bulb""-Ereignis, bei dem Temperatur und Luftfeuchtigkeit zusammen unerträglich sind..."
 active,aktiv
 alarming,alarmierend

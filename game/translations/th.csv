@@ -589,7 +589,7 @@ Famine,ความอดอยาก
 Famine - Intro,ความอดอยาก - บทนำ
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","จักรยานแฟนซี, เดินป่า, ดูนก, กราโนล่า, รองเท้าแตะ, ผู้ใจบุญ"
 Fanonist Curriculum,หลักสูตรมาร์กซิสต์สายฟานอน
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","ตลาดเกษตรกร, ความอ่อนไหว, วอลมาร์ท [capitalist], ป่าธรรมชาติ"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","ตลาดเกษตรกร, ความอ่อนไหว, วอลมาร์ท [ทุนนิยม], ป่าธรรมชาติ"
 Fast-Breeder Nuclear Power,เครื่องปฏิกรณ์ฟาสต์บรีเดอร์
 Fast-Breeder Reactor,เครื่องปฏิกรณ์ฟาสต์บรีเดอร์
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","ลองดูคร่าว ๆ ก่อนได้เลย ถ้าพร้อมเมื่อไรให้กลับไปที่แท็บ ""แผน"""
@@ -1826,7 +1826,7 @@ This changes regional contentedness based on income level (wealthier regions wil
 This didn't really do much.,ไม่ค่อยช่วยเท่าไร
 This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,เอฟเฟกต์นี้ %{changeDir} %{kind} ของโครงการนี้ %{tipAmount}
 "This event can occur if ""%{name}"" is %{label}.","เหตุการณ์นี้สามารถเกิดขึ้นได้หาก ""%{name}"" อยู่ในสถานะ %{label}"
-This event can occur if %{name} is your %{relType}.,เหตุการณ์นี้สามารถเกิดขึ้นได้หาก %{name} เป็น {reltype} ของคุณ
+This event can occur if %{name} is your %{relType}.,เหตุการณ์นี้สามารถเกิดขึ้นได้หาก %{name} เป็น %{relType} ของคุณ
 This event is influenced by biodiversity pressures.,เหตุการณ์นี้ได้รับอิทธิพลจากแรงกดดันของความหลากหลายทางชีวภาพ
 This event is influenced by how happy people are.,เหตุการณ์นี้ได้รับอิทธิพลจากความสุขของผู้คน
 This event is influenced by how much energy production can meltdown.,เหตุการณ์นี้ได้รับอิทธิพลจากปริมาณการผลิตพลังงานที่สามารถหลอมละลายได้
@@ -1844,7 +1844,7 @@ This event is influenced by the demand for fuel.,เหตุการณ์น�
 This event is influenced by the demand for plant calories.,เหตุการณ์นี้ได้รับอิทธิพลจากความต้องการแคลอรี่พืช
 This event is influenced by the global temperature anomaly.,เหตุการณ์นี้ได้รับอิทธิพลจากความผิดปกติของอุณหภูมิโลก
 This event is influenced by the habitability of regions.,เหตุการณ์นี้ได้รับอิทธิพลจากความเป็นอยู่ของภูมิภาค
-This event is influenced by the mix share of %{name}.,เหตุการณ์นี้ได้รับอิทธิพลจากการปันส่วนผสมของ {ชื่อ}
+This event is influenced by the mix share of %{name}.,เหตุการณ์นี้ได้รับอิทธิพลจากการปันส่วนผสมของ %{name}
 This event is influenced by the output of %{name}.,เหตุการณ์นี้ได้รับอิทธิพลจากผลลัพธ์ของ %{name}
 This event occurred during this planning cycle.,เหตุการณ์นี้เกิดขึ้นในระหว่างรอบการวางแผนนี้
 This feedstock has been depleted.,วัตถุดิบนี้หมดแล้ว
@@ -2318,13 +2318,13 @@ Your reckless disregard for life is going to ruin us all!,การที่ค�
 Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,ความสัมพันธ์ของคุณกับ %{name} เพิ่มให้มากขึ้นโดยการใช้โครงการที่พวกเขาชอบ ถ้ามี 5 หัวใจขึ้นไป เขาจะเข้าร่วมเป็นพันธมิตรกับคุณ
 Zero square kilometres of arctic sea ice.,น้ำแข็งในทะเลอาร์คติกเหลือศูนย์ตารางกิโลเมตร
 "Zoos, bacon, fur, honey (?)","สวนสัตว์, เบคอน, ขนสัตว์, น้ำผึ้ง (?)"
-[GAME],[GAME]
+[GAME],[เกม]
 [b]Locks[/b] %{tag},[b]ล็อค[/b] %{tag}
 [b]Unlocks[/b] %{name}.,[b]ปลดล็อก[/b] %{name}.
 [b]Unlocks[/b] the %{tag} process.,[b]ปลดล็อก[/b] กระบวนการ %{tag}
 [b]Unlocks[/b] the %{tag} project.,[b] ปลดล็อก [/b] โครงการ %{tag}
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] มีหน้าที่ฟื้นฟูความเสียหายมากมายที่ระบบทุนนิยมกระทำกับโลกและผู้คนบนโลกนับหลายศตวรรษ
-[research] Research points cost less [political_capital] political capital.,[การวิจัย] คะแนนการวิจัยทำให้ใช้ [polical_capital] ทุนทางการเมืองลดลง
+[research] Research points cost less [political_capital] political capital.,[research] คะแนนการวิจัยทำให้ใช้ [political_capital] ทุนทางการเมืองลดลง
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...","เหตุการณ์ ""กระเปาะเปียก"" ที่อุณหภูมิและความชื้นรวมกันจนไม่อาจทนได้..."
 active,ดำเนินการอยู่
 alarming,ควรระวัง

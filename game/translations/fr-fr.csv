@@ -1,35 +1,35 @@
 English,Translation
 """Finally, an end to more than half a century of incompetence and disaster,"" they cheered.","""Enfin, une fin à plus d'un demi-siècle d'incompétence et de désastre"", ont-ils acclamé."
 """Go back again, now you have seen us, and your outward eyes have learned that in spite of all the infallible maxims of your day there is yet a time of rest in store for the world, when mastery has changed into fellowship.""","""Revenez encore, maintenant que vous nous avez vu, et que vos yeux extérieurs ont appris que malgré toutes les maximes infaillibles de votre époque, il y a encore un temps de repos en réserve pour le monde, quand la maîtrise s'est transformée en camaraderie."""
-%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,Les émissions de %{kind} pour %{tag} ont %{changeDir} de [b]%{amount}[/b].
-%{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{changeDir} %{kind} de %{tag} par [b]%{tipAmount}[/b].
-%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,Changer %{changeDir} %{label} pour %{tag} par [b]%{amount}[/b].
-%{changeDir} %{name} supply by [b]%{percent}%.[/b],Augmentez la fourniture de %{name} par [b]%{percent}%.[/b] %{changeDir}
-%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{changeDir} l'approvisionnement de %{name} par [i]%{icon}[/i]%{amount}.
-%{changeDir} %{resource} demand for %{tag} by %{amount}.,Demandez %{changeDir} de %{resource} pour %{tag} par %{amount}.
-%{changeDir} %{tag} output by [b]%{percent}%.[/b],La sortie de %{tag} %{changeDir} de [b]%{percent}%.[/b]
-%{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b],Réduisez les émissions de CO2 pour [e][i]%{icon}[/i]%{feature}[/e] de [b]%{percent}%.[/b]
-%{changeDir} all %{name} production by [b]%{percent}%.[/b],Réduisez toute la production de %{name} par [b]%{percent}%.[/b]
-%{changeDir} biodiversity pressure by %{amount}.,Pression sur la biodiversité %{changeDir} par %{amount}.
-%{changeDir} biodiversity pressure for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{amount}.[/b],%{changeDir} la pression sur la biodiversité pour [e][i]%{icon}[/i]%{feature}[/e] par [b]%{amount}.[/b]
-%{changeDir} contentedness by [b]%{amount}[/b].,[contentedness] la satisfaction augmente de [b]%{amount}[/b].
-%{changeDir} demand for %{name} by [b]%{percent}%[/b].,La demande pour %{name} a %{changeDir} de [b]%{percent}%[/b].
-%{changeDir} demand for %{name} by [i]%{icon}[/i]%{amount}.,Demande de %{changeDir} pour %{name} de [i]%{icon}[/i]%{amount}.
-%{changeDir} demand for %{tag} by %{amount}.,Demande de %{changeDir} pour %{tag} de %{amount}.
-%{changeDir} emissions by %{amount}.,Réduisez les émissions de %{amount}.
-%{changeDir} global population by %{amount}.,Changez la population mondiale de %{amount}.
-%{changeDir} global population growth by %{amount}[b]%.[/b],La croissance de la population mondiale %{changeDir} de %{amount}[b]%.[/b]
-%{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,Changer la précipitation globale de %{amount}[b]cm/an[/b] %{changeDir}.
-%{changeDir} habitability in %{kind} regions by %{amount}.,Changer %{changeDir} l'habitabilité dans les régions de type %{kind} par %{amount}.
-%{changeDir} maximum output for %{process} by [b]%{amount}[/b].,Augmentez la sortie maximale pour %{process} de [b]%{amount}[/b] %{changeDir}.
-%{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b],%{changeDir} la sortie pour [e][i]%{icon}[/i][b]%{feature}[/b][/e] de [b]%{percent}%.[/b]
-%{changeDir} the CO2 emissions for these processes by [b]%{percent}%.[/b],Changez les émissions de CO2 pour ces processus de [b]%{percent}%.[/b]
+%{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{changeDir} les émissions de %{kind} pour %{tag} de [b]%{amount}[/b].
+%{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{changeDir} %{kind} de %{tag} de [b]%{tipAmount}[/b].
+%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{changeDir} %{label} pour %{tag} de [b]%{amount}[/b].
+%{changeDir} %{name} supply by [b]%{percent}%.[/b],%{changeDir} l'approvisionnement en %{name} de [b]%{percent}%.[/b]
+%{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{changeDir} l'approvisionnement en %{name} de [i]%{icon}[/i]%{amount}.
+%{changeDir} %{resource} demand for %{tag} by %{amount}.,%{changeDir} la demande de %{resource} pour %{tag} de %{amount}.
+%{changeDir} %{tag} output by [b]%{percent}%.[/b],%{changeDir} la production de %{tag} de [b]%{percent}%.[/b]
+%{changeDir} CO2 emissions for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{percent}%.[/b],%{changeDir} les émissions de CO2 pour [e][i]%{icon}[/i]%{feature}[/e] de [b]%{percent}%.[/b]
+%{changeDir} all %{name} production by [b]%{percent}%.[/b],%{changeDir} toute la production de %{name} de [b]%{percent}%.[/b]
+%{changeDir} biodiversity pressure by %{amount}.,%{changeDir} la pression sur la biodiversité de %{amount}.
+%{changeDir} biodiversity pressure for [e][i]%{icon}[/i]%{feature}[/e] by [b]%{amount}.[/b],%{changeDir} la pression sur la biodiversité pour [e][i]%{icon}[/i]%{feature}[/e] de [b]%{amount}.[/b]
+%{changeDir} contentedness by [b]%{amount}[/b].,%{changeDir} la satisfaction de [b]%{amount}[/b].
+%{changeDir} demand for %{name} by [b]%{percent}%[/b].,%{changeDir} la demande de %{name} de [b]%{percent}%[/b].
+%{changeDir} demand for %{name} by [i]%{icon}[/i]%{amount}.,%{changeDir} la demande de %{name} de [i]%{icon}[/i]%{amount}.
+%{changeDir} demand for %{tag} by %{amount}.,%{changeDir} la demande de %{tag} de %{amount}.
+%{changeDir} emissions by %{amount}.,%{changeDir} les émissions de %{amount}.
+%{changeDir} global population by %{amount}.,%{changeDir} la population mondiale de %{amount}.
+%{changeDir} global population growth by %{amount}[b]%.[/b],%{changeDir} la croissance de la population mondiale de %{amount}[b]%.[/b]
+%{changeDir} global precipitation by %{amount}[b]cm/yr[/b].,%{changeDir} les précipitations mondiales de %{amount}[b]cm/an[/b].
+%{changeDir} habitability in %{kind} regions by %{amount}.,%{changeDir} l'habitabilité dans les régions de type %{kind} de %{amount}.
+%{changeDir} maximum output for %{process} by [b]%{amount}[/b].,%{changeDir} la production maximale de %{process} de [b]%{amount}[/b].
+%{changeDir} output for [e][i]%{icon}[/i][b]%{feature}[/b][/e] by [b]%{percent}%.[/b],%{changeDir} la production pour [e][i]%{icon}[/i][b]%{feature}[/b][/e] de [b]%{percent}%.[/b]
+%{changeDir} the CO2 emissions for these processes by [b]%{percent}%.[/b],%{changeDir} les émissions de CO2 de ces processus de [b]%{percent}%.[/b]
 %{changeDir} the amount of sea level rise by %{amount}mm/year.,%{changeDir} la hausse du niveau de la mer de %{amount} mm/an.
 "%{changeDir} the chance of ""%{event}"" by %{amount}.","%{changeDir} la probabilité de ""%{event}"" de %{amount}."
-%{changeDir} the global temperature by %{amount}[b]°c[/b].,Changez la température globale de [b]°c[/b]%{amount}%{changeDir}.
-%{changeDir} the rate of sea level rise by %{amount}mm/year.,Modifiez le taux de montée du niveau de la mer de %{amount}mm/année.
+%{changeDir} the global temperature by %{amount}[b]°c[/b].,%{changeDir} la température mondiale de %{amount}[b]°C[/b].
+%{changeDir} the rate of sea level rise by %{amount}mm/year.,%{changeDir} le rythme de montée du niveau de la mer de %{amount} mm/an.
 %{changeDir} world contentedness by %{amount}.,%{changeDir} le contentement mondial de %{amount}.
-%{changeDir} world contentedness by [b]%{amount}[/b].,[contentedness] Le contentement mondial change de [b]%{amount}[/b] %{changeDir}.
+%{changeDir} world contentedness by [b]%{amount}[/b].,%{changeDir} le contentement mondial de [b]%{amount}[/b].
 %{cost} yrs,%{cost} ans
 %{disaster} in %{region},%{disaster} dans %{region}
 %{emissionsBefore} to [i]%{icon}[/i]%{emissionsAfter}. This is a %{emissionsChange}% change of all emissions.,De %{emissionsBefore} à [i]%{icon}[/i]%{emissionsAfter}. C'est un changement de %{emissionsChange}% de toutes les émissions.
@@ -202,7 +202,7 @@ Ancient Disease,Maladie ancienne
 "And as the drowned vegetation decomposes, decaying plants in man-made reservoirs release methane, a powerful greenhouse gas.","Et tandis que la végétation noyée se décompose, les plantes en décomposition dans les réservoirs artificiels libèrent du méthane, un puissant gaz à effet de serre."
 "And by ""world"", I do mean the *whole* world, and not just the wealthy regions like some mean with that term.","Et par ""monde"", je veux dire le *monde entier*, et non seulement les régions riches comme certains l'entendent avec ce terme."
 And desalination takes up a lot of power!,Et la désalinisation consomme beaucoup d'énergie !
-And if the people are [nemesis] unhappy with your performance you will be removed from your position.,"Et si le peuple est mécontent de votre performance, vous serez destituée de votre poste."
+And if the people are [nemesis] unhappy with your performance you will be removed from your position.,"Et si le peuple est [nemesis] mécontent de votre performance, vous serez destituée de votre poste."
 And it's nice to have an additional green space to enjoy.,Et il est agréable d'avoir un espace vert supplémentaire à apprécier.
 And none of those silly substitutes can ever replicate the real thing.,Et aucune de ces substitutions ridicules ne peut jamais reproduire la chose réelle.
 And now I'm getting a lot of requests to use this technology for designer dogs.,"Aujourd'hui, je reçois de nombreuses demandes d'utilisation de cette technologie pour des chiens designer."
@@ -590,7 +590,7 @@ Famine,Famine
 Famine - Intro,Famine - Intro
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Vélos de luxe, randonnée, observation des oiseaux, granola, sandales, philanthropes"
 Fanonist Curriculum,Programme d'études fanoniste
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Marchés de producteurs, sentimentalisme, Wal-Mart [capitalist], nature sauvage"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Marchés de producteurs, sentimentalisme, Wal-Mart [capitaliste], nature sauvage"
 Fast-Breeder Nuclear Power,Énergie nucléaire à combustion rapide
 Fast-Breeder Reactor,Réacteur surgénérateur
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","N'hésitez pas à naviguer un peu. Lorsque vous êtes prêt, revenez à l'onglet ""Planification""."

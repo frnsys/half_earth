@@ -3,7 +3,7 @@ English,Translation
 """Go back again, now you have seen us, and your outward eyes have learned that in spite of all the infallible maxims of your day there is yet a time of rest in store for the world, when mastery has changed into fellowship.""","""Volta, agora já nos viste e os teus olhos aprenderam que, apesar de todas as máximas infalíveis do teu tempo, ainda se pode esperar um tempo de paz para o mundo, quando a dominação se tiver transformado em companheirismo."""
 %{changeDir} %{kind} emissions for %{tag} by [b]%{amount}[/b].,%{changeDir} emissões de %{kind} por %{tag} em [b]%{amount}[/b].
 %{changeDir} %{kind} of %{tag} by [b]%{tipAmount}[/b].,%{changeDir} %{kind} de %{tag} em [b]%{tipAmount}[/b].
-%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{changeDir} %{label} para %{tag} por [b]%{percent}[/b].
+%{changeDir} %{label} for %{tag} by [b]%{amount}[/b].,%{changeDir} %{label} para %{tag} por [b]%{amount}[/b].
 %{changeDir} %{name} supply by [b]%{percent}%.[/b],%{changeDir} fornecimento de %{name} em [b]%{percent}%.[/b]
 %{changeDir} %{name} supply by [i]%{icon}[/i]%{amount}.,%{changeDir} o fornecimento de %{name} em [i]%{icon}[/i]%{amount}.
 %{changeDir} %{resource} demand for %{tag} by %{amount}.,%{changeDir} a demanda de %{resource} de %{tag} em %{amount}.
@@ -591,7 +591,7 @@ Famine,Fome
 Famine - Intro,Fome - Intro
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Bicicletas chiques, caminhadas, observação de pássaros, granola, sandálias, filantropistas"
 Fanonist Curriculum,Currículo Fanonista
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Mercados de produtores, sentimentalismo, Wal-Mart [capitalist], natureza selvagem"
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Mercados de produtores, sentimentalismo, Wal-Mart [capitalista], natureza selvagem"
 Fast-Breeder Nuclear Power,Energia Nuclear à base de Super-regeneradores
 Fast-Breeder Reactor,Reator Reprodutor Rápido
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Podes explorar à vontade. Quando estiveres pronto, volta para a aba ""Planos""."
@@ -1829,7 +1829,7 @@ Things aren't getting better. We won't waste any more effort on ineffective acti
 "Things were hard at first, but now I think we're close to really creating a utopian society.","As coisas foram difíceis no começo, mas agora acho que estamos perto de criar uma sociedade utópica."
 "This September, our satellites recorded...","Este setembro, os nossos satélites registaram..."
 This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}.,Isto altera a demanda de %{name} de [i]%{icon}[/i]%{currentDemand} para [i]%{icon}[/i]%{afterDemand}.
-This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.,Isto altera a demanda de %{name} de [i]%{icon}[/i]%{currentDemand} para [i]%{icon}[/i]%{afterDemand}. Esta é uma alteração de %{percent}% em todas as demandas de {nome}.
+This changes %{name} demand from [i]%{icon}[/i]%{currentDemand} to [i]%{icon}[/i]%{afterDemand}. This is a %{percent}% change of all %{name} demand.,Isto altera a demanda de %{name} de [i]%{icon}[/i]%{currentDemand} para [i]%{icon}[/i]%{afterDemand}. Esta é uma alteração de %{percent}% em todas as demandas de %{name}.
 This changes regional contentedness based on demand for %{name}. Current world contentedeness is %{amount}[t]/%{maxAmount}[/t].,Isto altera a aprovação regional com base na demanda por %{name}. A aprovação mundial atual é %{amount}[t]/%{maxAmount}.[/t]
 This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].,Isto altera a satisfação regional com base no nível de rendimento (as regiões mais ricas sentirão mais). A satisfação mundial atual é %{contentedness}[t]/%{maxContentedness}[/t].
 This didn't really do much.,Não fez muita diferença.
