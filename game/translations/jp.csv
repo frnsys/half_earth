@@ -52,8 +52,8 @@ Party in France? You better work, bitch.' Britney Spears",「いい暮らしが�
 (Mostly) Full Automation,オートメーション化
 (even though I don't use it myself),（自分では使ってないですが）
 *COUGH* The constant smoke from wildfires is interfering with farming...plants need sunlight!,ゴホッゴホッ！森林火災の煙が常に流れてくるせいで、農業に支障をきたしています…植物には日光が必要だというのに！
-+%{amount} political capital.,
-+%{amount} research points.,
++%{amount} political capital.,政治資本+%{amount}。
++%{amount} research points.,研究ポイント+%{amount}。
 ...,…
 ...And I've received numerous death threats too.,…そして、私自身もなんども殺害の脅迫を受けてきました。
 "...Anyways, just click the ""Add"" button there to start making your plan.",…とりあえず、その「追加」ボタンをクリックすると、計画作成がはじまります。
@@ -285,7 +285,7 @@ Because of resource availability this process can only make up to %{maxPercent}%
 Begin a campaign to address food waste across all parts of the food system.,フードチェーンのあらゆる場面において、食品ロスを削減するキャンペーンを開始する。
 Begin global program to destroy weapons and scale down military and police budgets around the world.,世界中で兵器を廃棄し、世界の軍事・警察の予算を削減する。
 Behavior,行動
-"Bicycle lanes, vegans, the greater good",
+"Bicycle lanes, vegans, the greater good",自転車レーン、ヴィーガン、公共の利益
 Big news--a proof for P = NP has been discovered.,ビッグニュースです。P = NP であることが証明されました。
 Biochar,バイオ炭
 Biochar is doing wonders for my fields.,バイオ炭は、私の畑に素晴らしい効果がありました。
@@ -322,7 +322,7 @@ Build battery storage capacity and transmission to resolve intermittency and sup
 "Build out infrastructure to mine, process, and transport minerals from asteroids.",小惑星から鉱物を採掘、加工、輸送するためのインフラを構築する。
 Building,建築
 Buildings,建築
-"Bureaucracy, being called 'Trotskyites'",
+"Bureaucracy, being called 'Trotskyites'",官僚主義、「トロツキスト」呼ばわりされること
 Burn oil to create heat which is in turn used to generate steam to drive turbines which generate electricity.,石油を燃やして熱を発生させ、その熱で生み出した蒸気でタービンを回し発電する。
 But cutting it out every once in awhile feels reasonable to me.,でも、たまには手抜きをするのも合理的かもしれません。
 But does this method work?,でも、この方法は効果がありますか？
@@ -428,9 +428,9 @@ Continental Smart Grid,ヨーロッパ大陸のスマートグリッド化
 Continue,次へ
 Contract the economies of the wealthiest regions.,高所得者地域の経済を衰退させる。
 Control,制御
-Copied to Clipboard,
+Copied to Clipboard,クリップボードにコピーしました
 Copper Shortage,銅不足
-Copy Session,
+Copy Session,セッションをコピー
 Could increase,増加可能である
 Could reduce,削減可能である
 Could unlock %{name}.,%{name}は選択可能だ
@@ -460,7 +460,7 @@ Current energy use.,現在のエネルギー使用量の内訳
 Current land use.,現在の土地利用の内訳
 Current water demand.,現在の水資源の使用量の内訳
 Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].,現在の世界の満足度は、%{contentedness}[t]/%{maxContentedness}[/t]である。
-Custom World,
+Custom World,カスタムワールド
 "Cycle livestock through different pastures to allow other parts to regrow and recover. Sceptics think it will not have much of an effect, but it is popular with consumers.",家畜を異なる牧草地に循環させることで、土地の再生と回復を促す。大した効果はないと疑いの目を持つ人も多いが、消費者には支持されている。
 Dancing Plague,踊らずにはいられない
 Dashboard Intro,ダッシュボードの概要
@@ -510,7 +510,7 @@ Do what you can to both increase supply of fresh water and to lower demands on i
 Don't be a fool. It's their fault they didn't adapt or prove resilient in these hard times. I say we keep them out.,バカにしないでください。 この困難な時代に適応できなかった、またはレジリエンスを証明できなかったのは彼ら自身のせいです。 私たちは彼らを締め出すと言っています。
 Don't expect me to help you when you're in a fix.,あなたが困ったときに、私が助けられると思わないでください。
 "Don't need to worry about replanting them every year, or messing up my soil...",毎年植え替えたり、土が荒れたりする心配もありませんし...
-Download World Editor,
+Download World Editor,ワールドエディターをダウンロード
 "Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.",カードを上にドラッグすることで、これから実行する計画に追加され、さらに静止し続けると[research]ポイントが使用されます。
 Drag a card up to assign leftover production,カードを上にドラッグして、残りの生産ポイントを割り当てる
 Drought-Resistant Crops,耐乾性作物
@@ -549,7 +549,7 @@ Energy Conservation Campaign,省エネ運動
 Energy Quotas,エネルギーの使用割当
 Energy Use,エネルギー使用量
 "Energy companies have been preemptively shutting down power to avoid the possibility of sparking fires in the dry, windy conditions.  Pre-emptive blackouts could become a common occurrence.",エネルギー会社は、風の強い乾燥した日に火災が発生する危険性を避けるために、先手を打って電力供給を停止しています。この事前の停電が一般的になる可能性もあります。
-"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx",
+"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx",エナジードリンク、レジ袋、四輪バギー、外飼いの猫、カール・マルクス
 Energy: The fundamental mover. You're using %{amount} of energy.,エネルギー：基本的な動力。現在、%{amount}のエネルギーを使用している。
 Environmental Injustice - Copper,環境不正義－銅－
 Environmental Injustice - Rare Earth Metals,環境不正義－レアメタル－
@@ -557,8 +557,8 @@ Environmental Injustice - Unconventional Oil,環境不正義－非在来型石�
 Environmentalist Curriculum,環境保護主義者の教育
 Epidemic X,病原体Xの地域感染爆発
 Epidemic Y: The Big One,病原体Yの地域感染爆発：ビッグワン
-"Error parsing world, please re-select",
-"Error reading world, please re-select",
+"Error parsing world, please re-select",ワールドの解析中にエラーが発生しました。もう一度選択してください
+"Error reading world, please re-select",ワールドの読み込み中にエラーが発生しました。もう一度選択してください
 Escape Velocity,脱出速度
 Esperanto,エスペラント語
 Establish off-world colonies.,地球外に植民地を開拓する。
@@ -588,7 +588,7 @@ Famine,飢饉
 Famine - Intro,飢饉－序章－
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists",お洒落な自転車、ハイキング、野鳥観察、グラノーラ、サンダル、慈善活動家
 Fanonist Curriculum,ファノニストの教育
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",ファーマーズマーケット、感傷、ウォルマート[capitalist]、手つかずの自然
 Fast-Breeder Nuclear Power,高速増殖炉
 Fast-Breeder Reactor,高速増殖炉
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.",自由に見て回ってください。準備ができたら「施策」ボタンに戻りましょう。
@@ -627,7 +627,7 @@ For now we'll track these events on the globe.,当面は、これらの出来事
 "For the last 20 years since I installed the hail cannon, I haven't seen any hail coming to destroy my crops.",ヘイルキャノンを設置して以来20 年間、雹が降り作物を破壊するのを一度も見たことがありません。
 "For the longest time, climate modelling was far more advanced than ecosystem modelling. This program will allow ecologists to catch up! Capture and predict dynamic, non-linear and emergent behavior within ecosystems.",長い間、気候モデルは生態系モデルよりもはるかに進歩していた。この政策により、ついに生態学者はそれに追いつく日が来たる！生態系システムの動的・非線形的・創発的な行動を把握し、予測する。
 Forest Infested,寄生される森林
-"Freedom, dissent, improvisational jazz",
+"Freedom, dissent, improvisational jazz",自由、異議申し立て、即興ジャズ
 "Frequent fire also threatens the permafrost it can also lead to burning belowground, which melts the permafrost and can emit large amounts of carbon in a short time.",頻繁に起こっている火災は永久凍土を脅かします。地下にまで火が及べば、永久凍土が溶け短時間に大量の炭素が放出される可能性があります。
 Friendly,友好関係
 Fuel,燃料
@@ -988,7 +988,7 @@ Just something to be aware of.,ただ注意すべき点があります。
 Just swipe a card into the scanner and presto! It's added to your plan.,このカードを上にドラッグしてください！これから実行する計画に追加されます。
 Just to keep the party going a little longer for some?,一握りの人が乱痴気騒ぎを続けるためだけにですか？
 Keep Global South Poor,南の発展途上国を見捨てる
-"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats",
+"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats",幼稚園、ウィリアム・ゴドウィン、宇宙開発のたわごと、救命ボートに乗り込もうとする人々
 Land,土地
 Land Use,土地利用率
 Land-based wind energy technologies harness kinetic energy from the wind to generate electricity.,陸上風力発電は、風の運動エネルギーを利用して発電する技術である。
@@ -1269,7 +1269,7 @@ Passive Building Mandate & Retrofit,パッシブハウスの建築・改修の�
 
 'When women today attempt to change society's domination of nature, they are acting to overturn modern constructions of nature and women as culturally passive and subordinate.' Carolyn Merchant","家父長制は自然と女性の両方を支配している、それゆえに打ち倒さなければならない。
  「今日の女性が社会の自然への支配を変革しようとするとき、彼女たちは自然と女性が文化的に受動的で従属的であるという現代的な構造を打ち壊すために行動しているのです。」キャロリン・マーチャント"
-"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon",
+"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon",家父長制、機械論的世界観、クソリプおじさん、フランシス・ベーコン
 "Paul Ehrlich calls it a 'fascinating but dumb idea', but it has potential to return some species, like the Iberian Ibex.",ポール・エールリッヒはこれを「魅力的だが愚かなアイデア」と言いましたが、スペインアイベックスなど一部の種を復活させる可能性があります。
 "Peasants tending small farms (<2 Ha) for subsistence production. These small farms produce a large share of the world's crops with relatively few environmental costs, but require more labour than industrial agriculture.",自給自足生産のために小規模農場(２㏊未満)を営む農民。これらの小規模農場は、環境への負荷が比較的少なく、世界の農作物生産の大半を占めているが、工業システム型農業よりも多くの労働力を必要とする。
 Pedestrian and Bike-Friendly Cities,歩行者と自転車にやさしいまちづくり
@@ -1346,8 +1346,8 @@ Popular opinion is rapidly turning against you...,世論は急速にあなたに
 Population,人口
 Population projects are substantially cheaper.,人口に関わる施策の費用が大幅に下がる。
 Populations of red colobus and pygmy hippos have bounced back. Local inhabitants are also much healthier and happier than before.,アカコロブスやコビトカバの個体数も回復しています。地域住民も、以前よりはるかに健康的で幸福度も高まっています。
-Possible +%{amount} political capital.,
-Possible +%{amount} research points.,
+Possible +%{amount} political capital.,政治資本+%{amount}の可能性。
+Possible +%{amount} research points.,研究ポイント+%{amount}の可能性。
 Post-Revolution Optimism,革命後の楽観主義
 Potato Blight Destroys Harvest,収穫目前に襲うジャガイモの胴枯れ病
 Power Hungry,エネルギーの枯渇
@@ -1377,10 +1377,10 @@ Protests against your plans have escalated into riots in some places.,あなた�
 Psyop,心理作戦
 Pump water from the ocean onto Antarctica to reduce melting rates.,海から南極大陸に水を汲み上げて、融解速度を低下させる。
 Quite a lot of people have made the move to the countryside.,かなりの人が田舎に移住しました。
-"Racism, authoritarianism, colonial Manichaenism",
+"Racism, authoritarianism, colonial Manichaenism",人種差別、権威主義、植民地的マニ教的二元論
 Rapidly increase development throughout the world to catch up to Global North levels.,北の先進諸国の水準に追いつくべく、世界各地の開発を急速に推進する。
 Rare Metals Shortage,レアメタル不足
-Read the book:,
+Read the book:,本を読む：
 Ready,準備完了
 Recent Disasters,直近で起きた自然災害
 Reconcile Town and Country,都会と田舎の垣根を取り払う
@@ -1416,7 +1416,7 @@ Renewables dominated energy production.,再生可能エネルギーが、世界�
 Repeat the tutorial.,チュートリアルを繰り返す。
 Report,報告書
 Report Intro,報告書の紹介
-Report a Bug,
+Report a Bug,バグを報告
 Reports of strange lights in the skies are coming in from all over the world.,空に奇妙な光が見えるという報告が、世界各地から寄せられています。
 Research,研究
 Research Intro,研究の紹介
@@ -1654,7 +1654,7 @@ The Utopian,理想郷主義者
 The Utopian is now a [nemesis] nemesis.,理想郷主義者が [nemesis] 敵対勢力になった。
 "The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.",理想郷主義者が [ally] 味方になった。活動の制限、自然保護、修復に関わる施策の費用が大幅に下がる。
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.",ウォレマイ・パインは2億年前から存在していましたが、最後の原生林が最近の森林火災で焼失してしまいました。
-"The World Editor is only available in the desktop version of the game, which you can download here.",
+"The World Editor is only available in the desktop version of the game, which you can download here.",ワールドエディターはデスクトップ版でのみ利用できます。デスクトップ版はこちらからダウンロードできます。
 The Wretched,悲惨
 The Wretched - Attack,悲惨－攻撃－
 The Wretched - Formation,悲惨－成立－
@@ -1692,7 +1692,7 @@ The estimated value after production changes have finished.,生産変更後の�
 "The extinction rate is high, the world is warming...",絶滅率は高いですし、世界は温暖化しています…
 "The first DAC installations are up and running, and sucking carbon out of the air.",DACの第一号機が稼働し、空気中から二酸化炭素を吸着しています。
 The following processes can't produce as much as they need to: %{processesOverLimit},この方法では必要な量を生産できない：%{processesOverLimit}
-The game never ends.,
+The game never ends.,ゲームは決して終わらない。
 The gender ratio has shifted as people prefer to have girls rather than boys.,人々は男の子よりも女の子を産むことを好むようになるにつれて、男女比は変化しました。
 The good life isn't about having more things. Degrowth reduces energy and material consumption in the Global North while funding social programs to provide material  support for everyone.,良い人生とは、より多くのものを持つことではない。脱成長は、北の先進諸国におけるエネルギーと物質の消費を減らす一方で、すべての人に物質的支援を提供するための社会プログラムに資金を用意する。
 The greatest pleasures are only narrowly separated from disgust.,最大の喜びは、嫌悪からほんの少しの距離しかありません。
@@ -1898,7 +1898,7 @@ This process relies on the sun.,この方法は太陽光に依存している。
 This process use pesticides.,この方法は、農薬を使用する。
 This process uses %{feedstockName}. %{feedstockEstimateDesc},この方法は %{feedstockName}を使用する。 %{feedstockEstimateDesc}
 This process uses fossil fuels.,この方法は、化石燃料を使用する。
-This process uses livestock.,この方法は、化学肥料を使用する。
+This process uses livestock.,この方法は、家畜を使用する。
 This process uses oil.,この方法は、石油を使用する。
 This process uses synthetic fertilizers.,この方法は、化学肥料を使用する。
 This project was completed.,この施策は完了した
@@ -1961,7 +1961,7 @@ UFO Gift,UFOからの贈り物
 UFO Visit,UFOの訪問
 UFO War,UFOとの戦い
 "UFOs, dolphins, water-birthing, telekinesis",UFO、イルカ、水中出産、念動力
-"Ugly architecture, industrial wastelands, practicality, shoddy goods",
+"Ugly architecture, industrial wastelands, practicality, shoddy goods",醜い建築、工業荒廃地、実用主義、粗悪品
 Uh oh--it looks like there are some production shortages.,あちゃー、生産が足りていないようですね。
 Umm... planner?,うーん…
 Unconventional Petroleum Industry,非在来型石油産業
@@ -2224,7 +2224,7 @@ Won't unlock this project:,この施策は選択可能にならない
 Wooden Skyscrapers,木造超高層ビル
 Work on improving and proliferating automation systems to increase productivity.,生産性向上のため、オートメーションシステムの改善と普及に取り組む。
 World,世界
-World Editor,
+World Editor,ワールドエディター
 World Intro,世界の序章
 "Worldwide, honeybees yield roughly $200 billion in pollination services!","ミツバチは受粉によって、世界中で約 2,000 億ドルを生み出しています。"
 Would you be interested in foraging for mushrooms?,あなたはキノコの狩りに興味はありますか？
@@ -2251,11 +2251,11 @@ You can tap the pulsing [alert] alert icon for more information.,点滅する [a
 You can't help but wonder how things could have gone differently.,どうすれば違った展開に進んだのだろうかと考えずにはいられません。
 "You can't ignore whats been happening in Ecotopia. While the rest of the world crumbles in consumerism and nonstop progress, Ecotopia is a small window into what could be.",『エコトピア』で起きたことを無視することはできません。 世界の他の国々が消費主義ととどまるところを知らない進歩の中で崩壊しつつある中、エコトピアは今後の可能性を知るための道しるべです。
 You can't just transition to renewables and do all of your restoration projects in whatever neighborhood you want! I'm not going to endure blackouts just because of your novel ideas.,あなたがのぞむあらゆる地域で、再生可能エネルギーに移行し、且つあらゆる修復プロジェクトを実行するなんて無理です。あなたの斬新なアイデアの為に停電を耐えろなんて御免蒙りたい。
-You did something to instantly lose.,
-You died of old age.,
+You did something to instantly lose.,あなたは即座に敗北するようなことをしてしまった。
+You died of old age.,あなたは老衰で亡くなった。
 You do realize that not everyone can enjoy a high standard of living?,誰もが高い生活水準を享受できるわけではないことをご理解いただいていますか？
 You don't look so well.,体調があまりよくなさそうです。
-You failed to keep the people happy.,
+You failed to keep the people happy.,あなたは人々を満足させることができなかった。
 You get it! I can see it!,おわかりになったようですね！私にはわかっています！
 You had an extraterrestrial encounter.,あなたは地球外生命体と遭遇した。
 You have %{yearsLeft} years left in your tenure.,あなたの任期は、あと%{yearsLeft}年。
@@ -2277,7 +2277,7 @@ You need to take action to assuage their concerns and recover support for your p
 You ought to figure out some way to bring more stability--maybe changing where we get our power from?,もっと安定させる方法を考えないと...電源の供給元を変えるとかはいかがでしょうか？
 You ought to--,あなたは…
 You pushed humanity towards the stars.,あなたは人類を宇宙に向かわせた。
-You ran out of political capital.,
+You ran out of political capital.,あなたは政治資本を使い果たした。
 You really think we can all live on this Earth without torpedoing living standards?,私たち全員が生活水準を落とさずに、この地球上で生きていけると本気で思っているのですか？
 You received a request to ban this process:,次の政策を禁止する要請を受理した;
 You received a request to implement this project:,次の政策を実行する要請を受理した;
@@ -2302,7 +2302,7 @@ You've been bailed out once,一度救済されたことがある
 You've exhausted all your political capital...,あなたは政治資本を使い果たしました…
 "You've kind of got tunnel vision with this whole earth stuff, don't you think?",地球について考えるのに、あなたはすっかり視野狭窄に陥っているんじゃありませんか？
 You've run out of [political_capital] political capital...and lost the backing of members of parliament.,あなたは [political_capital] 政治資本を使い果たしました...そして議会メンバーの後ろ盾を失いました。
-Your History,
+Your History,あなたの歩み
 Your administration had failed to achieve its goals in time...,あなたは期限内に目標を達成することができませんでした...
 Your coalition has %{coalitionSeats}/%{totalSeats} seats.,現在のあなたの同盟の議席数は、%{coalitionSeats}/%{totalSeats}
 Your death was celebrated by people around the world.,あなたの死は世界中の人々から祝福されました。
@@ -2316,7 +2316,7 @@ Your plans will benefit from having others on board.,あなたの計画は、他
 Your reckless disregard for life is going to ruin us all!,あなたが命に対して無関心で軽視していることによって、私たち全員が破滅に向かいます！
 Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,あなたと %{name}の友好度を表す。%{name}が支持する施策を実施すると、ハートが増える。ハートが5つ以上になると、%{name}はあなたの同盟に加わる。
 Zero square kilometres of arctic sea ice.,北極海の海氷は0平方キロメートル。
-"Zoos, bacon, fur, honey (?)",
+"Zoos, bacon, fur, honey (?)",動物園、ベーコン、毛皮、はちみつ（？）
 [GAME],[GAME]
 [b]Locks[/b] %{tag},[locks]%{tag}は[b]選択不可[/b]になる。
 [b]Unlocks[/b] %{name}.,%{name}が[b]選択可能[/b]になる。
@@ -2325,11 +2325,11 @@ Zero square kilometres of arctic sea ice.,北極海の海氷は0平方キロメ�
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant]の任務は、資本主義が何世紀にもわたり地球と人類にもたらした無数の傷跡を回復させることだ。
 [research] Research points cost less [political_capital] political capital.,[research] 研究することにかかる[political_capital] 政治資本が少なくなる。
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...",「湿球」現象とは、温度と湿度が組み合わさって耐えられない状況になること...
-active,
+active,実施中
 alarming,注意すべき状況
 an unknown amount,不明な量
 animal calories,動物由来の食品
-being built,
+being built,建設中
 biodiversity,生物多様性
 biodiversity pressure,生物多様性に対する負荷
 "but nothing changes the fact that it all comes down to people, people, people!",しかし、すべては人、人、人だけが重要である事実はなにも変わりません。
@@ -2338,10 +2338,10 @@ but there's been such an explosion of creative vegetarian recipes and techniques
 but they have been limited since less than 10% of global fish catch was on the high seas.,しかし、公海での漁獲量は世界の漁獲量の10%に満たなかったので、その効果は限られています。
 but we have enough to last for a while now.,しかし、これでしばらく生きていけるほどの量です。
 but who doesn't like trains?,でも、電車が嫌いな人はいないでしょう？
-carbon capture processes,
+carbon capture processes,炭素回収を行う方法
 causes,原因
 coal,石炭
-combustion processes,
+combustion processes,燃焼を伴う方法
 "construction workers, miners, firefighters, agricultural workers, and the like.",建設作業員、鉱山労働者、消防士、農業従事者など。
 cost,費用
 critical,致命的な状況
@@ -2350,16 +2350,16 @@ development time,開発にかかる時間
 electricity,電力
 emissions,排出量
 energy use,エネルギー使用量
-especially labor-intensive processes,
-fossil fuel processes,
+especially labor-intensive processes,特に人手を要する方法
+fossil fuel processes,化石燃料を使用する方法
 frigid,寒帯
 fuel,燃料
-halted,
+halted,中止
 high,高所得者層
-inactive,
+inactive,未実施
 increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,[i]%{icon}[/i] %{k}が%{warn}%{change}%増加する
 infrastructure,インフラ
-intermittent processes,
+intermittent processes,断続的な方法
 land,土地
 land use,土地利用率
 lithium,リチウム
@@ -2372,24 +2372,24 @@ natural gas,天然ガス
 nd,番目
 nothing so drastic is necessary...we finally can unleash technology from the yoke of capitalism...,それほど思い切ったものが必要なわけではありません...私たちはついに資本主義のくびきから技術を解放することができるのです...
 oil,石油
-oil processes,
+oil processes,石油を使用する方法
 other,その他
 "people sleep during the day, and do everything else at night.",日中は寝ていて、あらゆることをすべて夜中に行います。
 plant calories,植物由来の食品
 policy,政策
-processes that may meltdown,
-processes that produce nuclear waste,
-processes that use livestock,
-processes that use pesticides,
-processes that use synthetic fertilizers,
+processes that may meltdown,メルトダウンの可能性がある方法
+processes that produce nuclear waste,核廃棄物が発生する方法
+processes that use livestock,家畜を使用する方法
+processes that use pesticides,農薬を使用する方法
+processes that use synthetic fertilizers,化学肥料を使用する方法
 rd,番目
 research,研究
 research time,研究にかかる時間
 severe,危機的な状況
 soil,土壌
-solar processes,
+solar processes,太陽光を利用する方法
 st,番目
-stalled,
+stalled,停滞中
 subtropic,亜熱帯
 temperate,温帯
 th,番目
