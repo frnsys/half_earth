@@ -53,8 +53,8 @@ Party in France? You better work, bitch.' Britney Spears"
 (Mostly) Full Automation,(Çoğunlukla) Tam Otomasyon
 (even though I don't use it myself),(kendim kullanmasam da)
 *COUGH* The constant smoke from wildfires is interfering with farming...plants need sunlight!,*ÖKSÜRÜK* Orman yangınlarından çıkan sürekli duman çiftçiliği engelliyor... Bitkilerin güneş ışığına ihtiyacı var!
-+%{amount} political capital.,
-+%{amount} research points.,
++%{amount} political capital.,+%{amount} siyasi sermaye.
++%{amount} research points.,+%{amount} araştırma puanı.
 ...,…
 ...And I've received numerous death threats too.,... Ve çok sayıda ölüm tehdidi de aldım.
 "...Anyways, just click the ""Add"" button there to start making your plan.","... Her neyse, planını yapmaya başlamak için oradaki ""Ekle"" düğmesini tıklaman yeterli."
@@ -288,7 +288,7 @@ Because of resource availability this process can only make up to %{maxPercent}%
 Begin a campaign to address food waste across all parts of the food system.,Yemek sisteminin her parçasındaki israfı azaltmak için bir kampanya başlat.
 Begin global program to destroy weapons and scale down military and police budgets around the world.,Silahları yok ederken askeri ve kolluk kuvveti bütçelerini azaltacak küresel bir program başlat.
 Behavior,Davranış
-"Bicycle lanes, vegans, the greater good",
+"Bicycle lanes, vegans, the greater good","Bisiklet yolları, veganlar, ortak iyilik"
 Big news--a proof for P = NP has been discovered.,Büyük haber P=NP için bir kanıt keşfedildi.
 Biochar,Biyokömür
 Biochar is doing wonders for my fields.,Biyokömür tarlalarım için harikalar yaratıyor.
@@ -325,7 +325,7 @@ Build battery storage capacity and transmission to resolve intermittency and sup
 "Build out infrastructure to mine, process, and transport minerals from asteroids.","Astroidlerden elde edilecek materyalleri kazmak, işlemek ve taşımak için altyapı inşa et."
 Building,İnşa Ediliyor
 Buildings,Binalar
-"Bureaucracy, being called 'Trotskyites'",
+"Bureaucracy, being called 'Trotskyites'","Bürokrasi, 'Troçkist' olarak anılmak"
 Burn oil to create heat which is in turn used to generate steam to drive turbines which generate electricity.,"Isı üretmek için petrol yakın, bu ısı elektrik üreten türbinleri çalıştıran buharı üretmek için kullanılır."
 But cutting it out every once in awhile feels reasonable to me.,Ama arada bir kesmek bana da mantıklı geliyor.
 But does this method work?,Ama bu yöntem işe yarıyor mu?
@@ -431,9 +431,9 @@ Continental Smart Grid,Kıtasal Akıllı Şebeke
 Continue,Devam
 Contract the economies of the wealthiest regions.,En zengin bölgelerin ekonomilerini küçült.
 Control,Kontrol
-Copied to Clipboard,
+Copied to Clipboard,Panoya Kopyalandı
 Copper Shortage,Bakır Kıtlığı
-Copy Session,
+Copy Session,Oturumu Kopyala
 Could increase,Artırabilir:
 Could reduce,Azaltabilir:
 Could unlock %{name}.,Kilidini açabilir: %{name}
@@ -463,7 +463,7 @@ Current energy use.,Mevcut enerji kullanımı.
 Current land use.,Mevcut arazi kullanımı.
 Current water demand.,Mevcut su talebi.
 Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].,Şuanki küresel memnuniyet %{contentedness}[t]/%{maxContentedness}[/t].
-Custom World,
+Custom World,Özel Dünya
 "Cycle livestock through different pastures to allow other parts to regrow and recover. Sceptics think it will not have much of an effect, but it is popular with consumers.",Çiftlik hayvanlarını düzenli olarak farklı çayırlarda otlat ve çayırların tekrar büyüyüp toparlanmasına izin ver. Şüpheciler bunun pek bir etkisi olacağını düşünmüyor ama tüketiciler arasında popüler.
 Dancing Plague,Dans Hastalığı
 Dashboard Intro,Arayüz Giriş
@@ -513,7 +513,7 @@ Do what you can to both increase supply of fresh water and to lower demands on i
 Don't be a fool. It's their fault they didn't adapt or prove resilient in these hard times. I say we keep them out.,Aptal olma. Bu zor zamanlarda uyum sağlayamamaları veya yeterince dirençli olmamaları onların suçu. Onları dışarıda tutalım diyorum.
 Don't expect me to help you when you're in a fix.,Bir kriz içindeyken sana yardım etmemi bekleme
 "Don't need to worry about replanting them every year, or messing up my soil...",Onları her yıl yeniden dikmek ya da toprağımı mahvetmek konusunda endişelenmeme gerek yok...
-Download World Editor,
+Download World Editor,Dünya Editörünü İndir
 "Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.",Kartı planınna katmak için yukarı doğru sürükleyerek tara ve daha fazla [research] araştırma puanı atamak için orada tut.
 Drag a card up to assign leftover production,Kalan üretimi atamak için bir kartı yukarı sürükle
 Drought-Resistant Crops,Kuraklığa Dayanıklı Ekinler
@@ -552,7 +552,7 @@ Energy Conservation Campaign,Enerji tasarrufu Kampanyası
 Energy Quotas,Enerji Kotaları
 Energy Use,Enerji Kullanımı
 "Energy companies have been preemptively shutting down power to avoid the possibility of sparking fires in the dry, windy conditions.  Pre-emptive blackouts could become a common occurrence.","Enerji şirketleri, kuru ve rüzgarlı koşullarda yangın çıkma olasılığını önlemek için önleyici olarak şebekeyi kapatıyor.  Önleyici elektrik kesintileri yaygın bir olay haline gelebilir."
-"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx",
+"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx","Enerji içecekleri, plastik poşetler, ATV'ler, dışarıda dolaşan kediler, Karl Marx"
 Energy: The fundamental mover. You're using %{amount} of energy.,Enerji: Esas haraket ettirici güç. %{amount} enerji kullanıyorsun.
 Environmental Injustice - Copper,Çevresel Adeletsizlik - Bakır
 Environmental Injustice - Rare Earth Metals,Çevresel Adeletsizlik - Nadir Toprak Metalleri
@@ -560,8 +560,8 @@ Environmental Injustice - Unconventional Oil,Çevresel Adaletsizlik - Deneysel P
 Environmentalist Curriculum,Çevreci Müfredat
 Epidemic X,X Salgını
 Epidemic Y: The Big One,Salgın Y: Büyük Olan
-"Error parsing world, please re-select",
-"Error reading world, please re-select",
+"Error parsing world, please re-select","Dünya ayrıştırılırken hata oluştu, lütfen yeniden seçin"
+"Error reading world, please re-select","Dünya okunurken hata oluştu, lütfen yeniden seçin"
 Escape Velocity,Kaçış İvmesi
 Esperanto,Esperanto
 Establish off-world colonies.,Dünya dışı koloniler kur.
@@ -591,7 +591,7 @@ Famine,Kıtlık
 Famine - Intro,Kıtlık - Giriş
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","Süslü bisikletler, doğa yürüyüşleri, kuş izlemek, granola, sandaletler, hayırseverler"
 Fanonist Curriculum,Fanoncu Müfredat
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","Semt pazarları, duygusallık, Wal-Mart [capitalist], vahşi doğa"
 Fast-Breeder Nuclear Power,Hızlı Üretken Reaktör
 Fast-Breeder Reactor,Hızlı Üretken Reaktör
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","Biraz göz atmaktan çekinmeyin. Hazır olduğunuzda, ""Plan"" sekmesine geri dönün."
@@ -627,7 +627,7 @@ For now we'll track these events on the globe.,Şimdilik bu olayları küresel �
 "For the last 20 years since I installed the hail cannon, I haven't seen any hail coming to destroy my crops.",Dolu topunu kurduğum son 20 yıldan beri ekinlerimi yok edecek herhangi bir dolu görmedim.
 "For the longest time, climate modelling was far more advanced than ecosystem modelling. This program will allow ecologists to catch up! Capture and predict dynamic, non-linear and emergent behavior within ecosystems.","Ezelden beridir iklim modellemeleri, ekosistem modellemelerinden çok daha fazla gelişmişti. Bu program çevrebilimcilerin yetişmesine izin verecek! Ekosistemler içerisindeki dinamik, çizgisel olmayan davranışları yakala ve öngör."
 Forest Infested,Orman İstila Edildi
-"Freedom, dissent, improvisational jazz",
+"Freedom, dissent, improvisational jazz","Özgürlük, muhalefet, doğaçlama caz"
 "Frequent fire also threatens the permafrost it can also lead to burning belowground, which melts the permafrost and can emit large amounts of carbon in a short time.",Sık sık çıkan yangınlar aynı zamanda permafrostu da tehdit ediyor. Bu yangınlar aynı zamanda permafrostu eritebilen ve kısa sürede büyük miktarlarda karbon yayabilen yer altı yanmalarına da yol açabilir.
 Friendly,Dost
 Fuel,Yakıt
@@ -988,7 +988,7 @@ Just something to be aware of.,Sadece farkında olunması gereken bir şey.
 Just swipe a card into the scanner and presto! It's added to your plan.,Sadece bir kartı tarayıcıya kaydır ve presto! Planına eklenir.
 Just to keep the party going a little longer for some?,Sadece bazıları için partiyi biraz daha uzun süre devam ettirmek için mi?
 Keep Global South Poor,Küresel Güneyi Yoksul Tut
-"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats",
+"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats","Anaokulları, William Godwin, uzay saçmalıkları, cankurtaran sandallarına binmeye çalışan insanlar"
 Land,Arazi
 Land Use,Arazi Kullanımı
 Land-based wind energy technologies harness kinetic energy from the wind to generate electricity.,"Kara tabanlı rüzgar enerjisi teknolojileri, elektrik üretmek için rüzgardan gelen kinetik enerjiden yararlanır."
@@ -1270,7 +1270,7 @@ Passive Building Mandate & Retrofit,Pasif İnşa ve Yenileme Kanunu
 'When women today attempt to change society's domination of nature, they are acting to overturn modern constructions of nature and women as culturally passive and subordinate.' Carolyn Merchant","Ataerkillik hem doğaya hem de kadınlara hükmeder ve bu nedenle devrilmelidir.
 
 ""Bugün kadınlar toplumun doğa üzerindeki tahakkümünü değiştirmeye çalıştıklarında, doğanın ve kadının; kültürel olarak  pasif ve ikincil olduğu inşaasını yıkmak için eyleme geçiyorlar."" Carolyn Merchant"
-"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon",
+"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon","Ataerkillik, mekanistik dünya görüşleri, her şeye cevap yazan ukalalar, Francis Bacon"
 "Paul Ehrlich calls it a 'fascinating but dumb idea', but it has potential to return some species, like the Iberian Ibex.",Paul Ehrlich bunu 'büyüleyici ama aptalca bir fikir' olarak nitelendiriyor ancak İber Dağ Keçisi gibi bazı türleri geri getirme potansiyeline sahip.
 "Peasants tending small farms (<2 Ha) for subsistence production. These small farms produce a large share of the world's crops with relatively few environmental costs, but require more labour than industrial agriculture.","Geçimlik üretim için küçük çiftliklere (<2 ha) bakan köylüler. Bu küçük çiftlikler, nispeten daha az çevresel maliyetle dünya mahsullerinin büyük bir bölümünü üretir, ancak endüstriyel tarımdan daha fazla emek gerektirir."
 Pedestrian and Bike-Friendly Cities,Yaya ve Bisiklet Dostu Şehirler
@@ -1347,8 +1347,8 @@ Popular opinion is rapidly turning against you...,Popüler görüş hızla aleyh
 Population,Nüfus
 Population projects are substantially cheaper.,Nüfus projeleri önemli ölçüde daha ucuz
 Populations of red colobus and pygmy hippos have bounced back. Local inhabitants are also much healthier and happier than before.,Kırmızı kolobus ve cüce suaygırlarının popülasyonları geri döndü. Yerel halk da eskisinden çok daha sağlıklı ve mutlu.
-Possible +%{amount} political capital.,
-Possible +%{amount} research points.,
+Possible +%{amount} political capital.,Olası +%{amount} siyasi sermaye.
+Possible +%{amount} research points.,Olası +%{amount} araştırma puanı.
 Post-Revolution Optimism,Devrim Sonrası İyimserliği
 Potato Blight Destroys Harvest,Patates Yanığı Hasadı Yok Etti
 Power Hungry,Güce Aç
@@ -1378,10 +1378,10 @@ Protests against your plans have escalated into riots in some places.,Planların
 Psyop,Psikolojik Operasyon
 Pump water from the ocean onto Antarctica to reduce melting rates.,Erime oranlarını azaltmak için okyanustan Antartika'ya su pompala.
 Quite a lot of people have made the move to the countryside.,Oldukça fazla insan kırsal kesime taşındı.
-"Racism, authoritarianism, colonial Manichaenism",
+"Racism, authoritarianism, colonial Manichaenism","Irkçılık, otoriterlik, sömürgeci Maniheizm"
 Rapidly increase development throughout the world to catch up to Global North levels.,Küresel Kuzey seviyelerini yakalamak için dünya çapında kalkınmayı hızla artırın.
 Rare Metals Shortage,Nadir Metal Kıtlığı
-Read the book:,
+Read the book:,Kitabı okuyun:
 Ready,Hazır
 Recent Disasters,Güncel Felaketler
 Reconcile Town and Country,Kent İle Kır Arasındaki Ayrımı Kaldır
@@ -1417,7 +1417,7 @@ Renewables dominated energy production.,Yenilenebilir enerji hakim üretim şeki
 Repeat the tutorial.,Eğitimi tekrarla.
 Report,Rapor
 Report Intro,Rapor Giriş
-Report a Bug,
+Report a Bug,Hata Bildir
 Reports of strange lights in the skies are coming in from all over the world.,Dünyanın her yerinden gökyüzünde garip ışıklar olduğuna dair haberler geliyor.
 Research,Araştırma
 Research Intro,Araştırma Giriş
@@ -1655,7 +1655,7 @@ The Utopian,Ütopyacı
 The Utopian is now a [nemesis] nemesis.,Ütopyacı artık bir [nemesis] düşman.
 "The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.","Ütopyacı artık bir [ally] müttefik. Limitler, Koruma ve Restorasyon projeleri daha ucuz."
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.",Wollemi çamı 200 milyon yıldır varlığını sürdürüyordu ancak son doğal orman da yakın zamanda gerçekleşen bir yangınn yüzünden yok oldu.
-"The World Editor is only available in the desktop version of the game, which you can download here.",
+"The World Editor is only available in the desktop version of the game, which you can download here.",Dünya Editörü yalnızca oyunun masaüstü sürümünde mevcuttur. Masaüstü sürümünü buradan indirebilirsiniz.
 The Wretched,Lanetliler
 The Wretched - Attack,Lanetliler - Saldırı
 The Wretched - Formation,Lanetliler - Formasyon
@@ -1693,7 +1693,7 @@ The estimated value after production changes have finished.,Üretim değişiklik
 "The extinction rate is high, the world is warming...","Soy tükenme oranı yüksek, dünya ısınıyor..."
 "The first DAC installations are up and running, and sucking carbon out of the air.",İlk DHY kurulumları çalışıyor ve havadaki karbonu emiyor.
 The following processes can't produce as much as they need to: %{processesOverLimit},Aşağıdaki işlemler gerektiği kadar üretemiyor: %{processesOverLimit}
-The game never ends.,
+The game never ends.,Oyun asla bitmez.
 The gender ratio has shifted as people prefer to have girls rather than boys.,İnsanlar erkeklerden ziyade kızlara sahip olmayı tercih etmesiyle cinsiyet dengesi tersi yönde değişti.
 The good life isn't about having more things. Degrowth reduces energy and material consumption in the Global North while funding social programs to provide material  support for everyone.,"İyi bir hayat daha fazla şeye sahip olmak demek değildir. Küçülme, Küresel Kuzey'de materyal ve enerji tüketimini azaltırken aynı zamanda herkese destek sağlayacak sosyal programları da fonlayacaktır."
 The greatest pleasures are only narrowly separated from disgust.,"En büyük zevkler, tiksintiden sadece dar bir şekilde ayrılır."
@@ -1962,7 +1962,7 @@ UFO Gift,UFO Hediyesi
 UFO Visit,UFO Ziyareti
 UFO War,UFO Savaşı
 "UFOs, dolphins, water-birthing, telekinesis","UFOlar, yunuslar, suda doğum, telekinezi"
-"Ugly architecture, industrial wastelands, practicality, shoddy goods",
+"Ugly architecture, industrial wastelands, practicality, shoddy goods","Çirkin mimari, endüstriyel çorak alanlar, pratiklik, kalitesiz mallar"
 Uh oh--it looks like there are some production shortages.,Eyvah! Görünüşe göre bazı üretim kıtlıkları var.
 Umm... planner?,Umm… Planlayıcı?
 Unconventional Petroleum Industry,Deneysel Petrol Endüstrisi
@@ -2225,7 +2225,7 @@ Won't unlock this project:,Şu projeyi açmaz:
 Wooden Skyscrapers,Ahşap Gökdelenler
 Work on improving and proliferating automation systems to increase productivity.,Verimliliği artıracak otomasyon sistemleri geliştirmek ve yaygınlaştırmak için çalış.
 World,Dünya
-World Editor,
+World Editor,Dünya Editörü
 World Intro,Dünya Giriş
 "Worldwide, honeybees yield roughly $200 billion in pollination services!","Dünya çapında, bal arıları tozlaşma hizmetlerinde yaklaşık 200 milyar dolar veriyor!"
 Would you be interested in foraging for mushrooms?,Mantar aramakla ilgilenir misin?
@@ -2252,11 +2252,11 @@ You can tap the pulsing [alert] alert icon for more information.,Daha fazla bilg
 You can't help but wonder how things could have gone differently.,İşlerin nasıl farklı gidebileceğini merak etmeden edemiyorsun.
 "You can't ignore whats been happening in Ecotopia. While the rest of the world crumbles in consumerism and nonstop progress, Ecotopia is a small window into what could be.","Ekotopya'da olup bitenleri görmezden gelemezsiniz. Dünyanın geri kalanı tüketimcilik ve durmaksızın ilerleme içinde parçalanırken, Ekotopya neler olabileceğine dair küçük bir penceredir."
 You can't just transition to renewables and do all of your restoration projects in whatever neighborhood you want! I'm not going to endure blackouts just because of your novel ideas.,İstediğin her mahallede restorasyon projelerini gerçekleştiremez ve öylece yenilenebilir enerjiye geçemezsin! Senin yeni fikirlerin yüzünden elektrik kesintilerine katlanmayacağım.
-You did something to instantly lose.,
-You died of old age.,
+You did something to instantly lose.,Anında kaybetmene yol açan bir şey yaptın.
+You died of old age.,Yaşlılıktan öldün.
 You do realize that not everyone can enjoy a high standard of living?,Herkesin yüksek bir yaşam standardının tadını çıkaramayacağının farkında mısın?
 You don't look so well.,Pek iyi görünmüyorsun.
-You failed to keep the people happy.,
+You failed to keep the people happy.,Halkı mutlu tutmayı başaramadın.
 You get it! I can see it!,Anladın! Görebiliyorum!
 You had an extraterrestrial encounter.,Dünya dışı bir karşılaşma yaşadın
 You have %{yearsLeft} years left in your tenure.,Görev sürenizde %{yearsLeft}  yılınız kaldı
@@ -2278,7 +2278,7 @@ You need to take action to assuage their concerns and recover support for your p
 You ought to figure out some way to bring more stability--maybe changing where we get our power from?,Elektrik şebekemize daha fazla istikrar getirmenin bir yolunu bulmalısın. Belki elektriğimizi nasıl elde ettiğimizi değiştirmek işe yarar.
 You ought to--,Yapmalısın--
 You pushed humanity towards the stars.,İnsanlığı yıldızlara ittin.
-You ran out of political capital.,
+You ran out of political capital.,Siyasi sermayen tükendi.
 You really think we can all live on this Earth without torpedoing living standards?,Gerçekten hepimizin bu Dünya'da yaşam standartlarını mahvetmeden yaşayabileceğimizi mi düşünüyorsunuz?
 You received a request to ban this process:,Şu işlemi durdurmak için bir talep aldın: %{name}
 You received a request to implement this project:,Şu projeyi uygulamak için bir talep aldın:
@@ -2303,7 +2303,7 @@ You've been bailed out once,Daha önce bir kez kurtarıldın
 You've exhausted all your political capital...,Tüm siyasi sermayenizi tükettiniz...
 "You've kind of got tunnel vision with this whole earth stuff, don't you think?","Tüm bu dünya meselesine at gözlüğüyle bakıyorsun, sence de öyle değil mi?"
 You've run out of [political_capital] political capital...and lost the backing of members of parliament.,[political_capital] Politik sermayen tükendi… ve parlemento üyelerinin desteğini kaybettin.
-Your History,
+Your History,Geçmişin
 Your administration had failed to achieve its goals in time...,Yönetiminiz hedeflerine zamanında ulaşamadı...
 Your coalition has %{coalitionSeats}/%{totalSeats} seats.,Koalisyonunuzda %{coalitionSeats}/%{totalSeats} sandalye var.
 Your death was celebrated by people around the world.,Ölümün dünyanın dört bir yanındaki insanlar tarafından kutlandı.
@@ -2317,7 +2317,7 @@ Your plans will benefit from having others on board.,Planlarınız başkaların�
 Your reckless disregard for life is going to ruin us all!,Hayatı pervasızca hiçe sayman hepimizi mahvedecek!
 Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,%{name} ile olan ilişkiniz. Beğendikleri projeleri uygulayarak artırabilirsin. 5 veya daha fazla kalpte koalisyonuna katılacaklar.
 Zero square kilometres of arctic sea ice.,Sıfır kilometrekarelik kutup deniz buzu kaldı.
-"Zoos, bacon, fur, honey (?)",
+"Zoos, bacon, fur, honey (?)","Hayvanat bahçeleri, pastırma, kürk, bal (?)"
 [GAME],[OYUN]
 [b]Locks[/b] %{tag},[b]Şunu kiltler:[/b] %{tag}
 [b]Unlocks[/b] %{name}.,[/b]kilidini açar:[/b] %{name}.
@@ -2326,11 +2326,11 @@ Zero square kilometres of arctic sea ice.,Sıfır kilometrekarelik kutup deniz b
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,"[gosplant], kapitalizmin gezegene ve insanlara yüzyıllar içerisinde verdiği sayısız zararı geri almakla görevlendirildi."
 [research] Research points cost less [political_capital] political capital.,[research] Araştırma puanları daha az  [political_capital] politik sermaye kullanacak
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...","sıcaklık ve nemin birleşerek dayanılmaz hale geldiği bir ""ıslak ampul"" olayı..."
-active,
+active,aktif
 alarming,Endişe verici
 an unknown amount,Bilinmeyen  bir miktarda
 animal calories,kayvan kalorileri
-being built,
+being built,inşa halinde
 biodiversity,biyoçeşitlilik
 biodiversity pressure,biyoçeşitlilik baskısı
 "but nothing changes the fact that it all comes down to people, people, people!","Ama hiçbir şey şu gerçeği değiştirmiyor ki her şey halktan geçiyor, halktan, halktan!"
@@ -2339,10 +2339,10 @@ but there's been such an explosion of creative vegetarian recipes and techniques
 but they have been limited since less than 10% of global fish catch was on the high seas.,"Ancak, küresel balık avının %10'undan daha azı açık denizlerde olduğu için sınırlı bir etkisi oldu."
 but we have enough to last for a while now.,Ama bir süre yetecek kadar var.
 but who doesn't like trains?,Ama trenleri kim sevmez ki?
-carbon capture processes,
+carbon capture processes,karbon yakalama işlemleri
 causes,sebep olur
 coal,kömür
-combustion processes,
+combustion processes,yanma içeren işlemler
 "construction workers, miners, firefighters, agricultural workers, and the like.","inşaat işçileri, madenciler, itfaiyeciler, tarım işçileri ve benzerleri."
 cost,maliyet
 critical,Kritik
@@ -2351,16 +2351,16 @@ development time,geliştirme süresi
 electricity,elektrik
 emissions,salınımlar
 energy use,enerji kullanımı
-especially labor-intensive processes,
-fossil fuel processes,
+especially labor-intensive processes,özellikle emek yoğun işlemler
+fossil fuel processes,fosil yakıt işlemleri
 frigid,soğuk
 fuel,yakıt
-halted,
+halted,durdurulmuş
 high,yüksek
-inactive,
+inactive,aktif değil
 increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,[i]%{icon}[/i] %{k} %{warn}%{change}% artır
 infrastructure,altyapı
-intermittent processes,
+intermittent processes,kesintili işlemler
 land,arazi
 land use,Arazi kullanımı
 lithium,lityum
@@ -2373,24 +2373,24 @@ natural gas,doğal gaz
 nd,.
 nothing so drastic is necessary...we finally can unleash technology from the yoke of capitalism...,Bu kadar sert bir şeye gerek yok... Sonunda teknolojiyi kapitalizmin boyunduruğundan kurtarabiliriz...
 oil,petrol
-oil processes,
+oil processes,petrol işlemleri
 other,diğer
 "people sleep during the day, and do everything else at night.",İnsanlar gündüzleri uyuyor ve diğer her şeyi geceleri yapıyorlar.
 plant calories,bitki kalorileri
 policy,politika
-processes that may meltdown,
-processes that produce nuclear waste,
-processes that use livestock,
-processes that use pesticides,
-processes that use synthetic fertilizers,
+processes that may meltdown,erime yaşayabilecek işlemler
+processes that produce nuclear waste,nükleer atık üreten işlemler
+processes that use livestock,hayvancılık kullanan işlemler
+processes that use pesticides,pestisit kullanan işlemler
+processes that use synthetic fertilizers,sentetik gübre kullanan işlemler
 rd,.
 research,araştırma
 research time,araştırma süresi
 severe,Şiddetli
 soil,toprak
-solar processes,
+solar processes,güneş enerjisi işlemleri
 st,.
-stalled,
+stalled,duraklamış
 subtropic,yarı tropik
 temperate,ılıman
 th,.
