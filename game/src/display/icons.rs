@@ -72,6 +72,11 @@ macro_rules! icons {
                 image: egui::include_image!("../../assets/images/missing_content.png"),
             };
 
+            /// Whether an icon is defined for this slug.
+            pub fn has_icon(slug: &str) -> bool {
+                matches!(slug, $(stringify!([<$name:lower>]))|*)
+            }
+
             /// Get an icon path from its slug.
             pub fn icon_from_slug(slug: &str) -> Icon {
                 match slug {

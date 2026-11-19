@@ -5,7 +5,7 @@ use nom::{
     branch::alt,
     bytes::complete::{tag, take_while_m_n, take_while1},
     character::complete::char,
-    combinator::map,
+    combinator::{map, verify},
     multi::many0,
     sequence::delimited,
 };
@@ -41,11 +41,16 @@ fn is_ident_char(c: char) -> bool {
 }
 
 /// E.g. `[political_capital]`
+///
+/// If the slug is not defined as an icon, it will pass through
+/// as plain text.
 fn icon<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     map(
         delimited(
             char('['),
-            take_while_m_n(2, usize::MAX, is_ident_char),
+            verify(take_while_m_n(2, usize::MAX, is_ident_char), |s: &str| {
+                crate::display::has_icon(s)
+            }),
             char(']'),
         ),
         |s| Node::Tagged {
@@ -64,13 +69,21 @@ fn tagged<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
     if tag == close {
         Ok((input, Node::Tagged { tag, children }))
     } else {
-        Err(nom::Err::Failure(nom::error::Error::new(
+        // Recoverable error so that the parser can backtrack
+        // and treat the opening bracket as plain text.
+        Err(nom::Err::Error(nom::error::Error::new(
             input,
             nom::error::ErrorKind::Tag,
         )))
     }
 }
 
+/// A `[` that doesn't start a valid icon or tag, to keep as plain text.
+fn lone_bracket<'a>(input: &'a str) -> IResult<&'a str, Node<'a>> {
+    map(tag("["), Node::Text).parse(input)
+}
+
+/// Parse bbcode, passing invalid markup as plain text.
 pub fn parse_bbcode<'a>(input: &'a str) -> IResult<&'a str, Vec<Node<'a>>> {
-    many0(alt((icon, tagged, text))).parse(input)
+    many0(alt((icon, tagged, text, lone_bracket))).parse(input)
 }
