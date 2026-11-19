@@ -53,8 +53,8 @@ Party in France? You better work, bitch.' Britney Spears","อยากใช้
 (Mostly) Full Automation,ระบบอัตโนมัติเต็มรูปแบบ (ส่วนใหญ่)
 (even though I don't use it myself),(ถึงแม้ฉันจะไม่ได้ใช้เองก็ตาม)
 *COUGH* The constant smoke from wildfires is interfering with farming...plants need sunlight!,*ไอ* ควันจากไฟป่าอย่างที่พัดมาอย่างต่อเนื่องรบกวนการทำฟาร์ม...พืชต้องการแสงแดด!
-+%{amount} political capital.,
-+%{amount} research points.,
++%{amount} political capital.,+%{amount} ทุนทางการเมือง
++%{amount} research points.,+%{amount} คะแนนการวิจัย
 ...,...
 ...And I've received numerous death threats too.,...ส่วนฉันก็ถูกขู่ฆ่ามากมายเช่นกัน
 "...Anyways, just click the ""Add"" button there to start making your plan.","...อย่างไรก็ตาม สามารถคลิกปุ่ม ""เพิ่ม"" เพื่อเริ่มวางแผนได้เลย"
@@ -286,7 +286,7 @@ Because of resource availability this process can only make up to %{maxPercent}%
 Begin a campaign to address food waste across all parts of the food system.,เริ่มการรณรงค์เพื่อจัดการกับขยะที่มาจากอาหารในทุกส่วนของระบบอาหาร
 Begin global program to destroy weapons and scale down military and police budgets around the world.,เริ่มต้นโครงการระดับโลกเพื่อทำลายอาวุธและลดงบประมาณทางการทหารและตำรวจทั่วโลก
 Behavior,พฤติกรรม
-"Bicycle lanes, vegans, the greater good",
+"Bicycle lanes, vegans, the greater good","ทางจักรยาน, วีแกน, ประโยชน์ส่วนรวม"
 Big news--a proof for P = NP has been discovered.,ข่าวใหญ่ มีการค้นพบข้อพิสูจน์สำหรับสมการ P = NP แล้ว
 Biochar,ถ่านชีวภาพ
 Biochar is doing wonders for my fields.,ถ่านชีวภาพกำลังร่ายมนตร์ให้กับทุ่งนาของฉัน
@@ -323,7 +323,7 @@ Build battery storage capacity and transmission to resolve intermittency and sup
 "Build out infrastructure to mine, process, and transport minerals from asteroids.",สร้างโครงสร้างพื้นฐานเพื่อขุด แปรรูป และขนส่งแร่ธาตุจากดาวเคราะห์น้อย
 Building,กำลังสร้าง
 Buildings,โยธา
-"Bureaucracy, being called 'Trotskyites'",
+"Bureaucracy, being called 'Trotskyites'","ระบบราชการ, การถูกเรียกว่า 'พวกทรอตสกี'"
 Burn oil to create heat which is in turn used to generate steam to drive turbines which generate electricity.,เผาน้ำมันเพื่อสร้างความร้อน แล้วนำไปใช้สร้างไอน้ำเพื่อขับเคลื่อนกังหันเพื่อผลิตกระแสไฟฟ้า
 But cutting it out every once in awhile feels reasonable to me.,แต่การตัดมันออกเป็นระยะ ๆ ก็รู้สึกสมเหตุสมผลสำหรับฉันอยู่
 But does this method work?,แต่วิธีนี้ใช้ได้ผลไหม?
@@ -429,9 +429,9 @@ Continental Smart Grid,สมาร์ทกริดภาพื้นทวี
 Continue,ดำเนินการต่อ
 Contract the economies of the wealthiest regions.,ทำเศรษฐกิจของภูมิภาคที่ร่ำรวยที่สุดให้หดตัวลง
 Control,ควบคุม
-Copied to Clipboard,
+Copied to Clipboard,คัดลอกไปยังคลิปบอร์ดแล้ว
 Copper Shortage,ทองแดงขาดแคลน
-Copy Session,
+Copy Session,คัดลอกเซสชั่น
 Could increase,สามารถเพิ่ม
 Could reduce,สามารถลด
 Could unlock %{name}.,สามารถปลดล็อก %{name}
@@ -461,7 +461,7 @@ Current energy use.,การใช้พลังงานในปัจจุ
 Current land use.,การใช้ที่ดินในปัจจุบัน
 Current water demand.,ความต้องการน้ำในปัจจุบัน
 Current world contentedness is %{contentedness}[t]/%{maxContentedness}[/t].,ความพึงพอใจของโลกในปัจจุบันคือ %{contentedness}[t]/%{maxContentedness}[/t].
-Custom World,
+Custom World,โลกที่กำหนดเอง
 "Cycle livestock through different pastures to allow other parts to regrow and recover. Sceptics think it will not have much of an effect, but it is popular with consumers.",หมุนเวียนปศุสัตว์ไปตามทุ่งหญ้าต่าง ๆ เพื่อให้ส่วนอื่น ๆ เติบโตและฟื้นตัว ผู้ที่คลางแคลงต่อนโยบายนี้จะคิดว่ามันไม่ส่งผลกระทบมากนัก แต่มันเป็นที่นิยมของผู้บริโภค
 Dancing Plague,โรคระบาดเริงระบำ
 Dashboard Intro,บทนำกระดานสรุปข้อมูล
@@ -511,7 +511,7 @@ Do what you can to both increase supply of fresh water and to lower demands on i
 Don't be a fool. It's their fault they didn't adapt or prove resilient in these hard times. I say we keep them out.,อย่าโง่ไปหน่อยเลย พวกเขาผิดเองที่ไม่ยอมปรับตัว หรือไม่ก็ไม่มีความยืดหยุ่นเพื่อต่อกรกับเหตุการณ์ยากลำบากแบบนี้ ฉันว่าเราควรกันพวกเขาออกไปจะดีกว่า
 Don't expect me to help you when you're in a fix.,อย่าคาดหวังให้ฉันช่วยคุณเมื่อคุณอยู่ในช่วงลำบาก
 "Don't need to worry about replanting them every year, or messing up my soil...",ไม่ต้องกังวลว่าจะต้องปลูกใหม่ทุกปี หรือทำให้หน้าดินเละเทะเลย...
-Download World Editor,
+Download World Editor,ดาวน์โหลดตัวแก้ไขโลก
 "Drag a card up into the scanner to add it to your plan, and hold it there to commit more [research] research points.",ลากการ์ดขึ้นไปในเครื่องสแกนเพื่อเพิ่มลงในแผนของคุณ และกดค้างไว้ตรงนั้นเพื่อเพิ่มคะแนน [research] การวิจัย
 Drag a card up to assign leftover production,ลากการ์ดขึ้นเพื่อกำหนดการผลิตที่เหลือ
 Drought-Resistant Crops,พืชทนสภาพแล้ง
@@ -550,7 +550,7 @@ Energy Conservation Campaign,แคมเปญการอนุรักษ์
 Energy Quotas,โควต้าพลังงาน
 Energy Use,การใช้พลังงาน
 "Energy companies have been preemptively shutting down power to avoid the possibility of sparking fires in the dry, windy conditions.  Pre-emptive blackouts could become a common occurrence.",บริษัทพลังงานหลายแห่งได้ปิดไฟฟ้าชั่วคราวเพื่อหลีกเลี่ยงความเป็นไปได้ที่จะเกิดประกายไฟในสภาพอากาศที่แห้งและมีลมแรง อาการไฟดับเพื่อป้องปรามอาจกลายเป็นเรื่องปกติ
-"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx",
+"Energy drinks, plastic bags, ATVs, outdoor cats, Karl Marx","เครื่องดื่มชูกำลัง, ถุงพลาสติก, รถ ATV, แมวที่ปล่อยเลี้ยงนอกบ้าน, คาร์ล มาร์กซ์"
 Energy: The fundamental mover. You're using %{amount} of energy.,พลังงาน: สิ่งพื้นฐานที่คอยขับเคลื่อนโลก คุณกำลังใช้พลังงาน %{amount}
 Environmental Injustice - Copper,ความอยุติธรรมด้านสิ่งแวดล้อม - ทองแดง
 Environmental Injustice - Rare Earth Metals,ความอยุติธรรมด้านสิ่งแวดล้อม - โลหะหายากจากโลก
@@ -558,8 +558,8 @@ Environmental Injustice - Unconventional Oil,ความอยุติธร�
 Environmentalist Curriculum,หลักสูตรนักอนุรักษ์สิ่งแวดล้อม
 Epidemic X,โรคระบาด x
 Epidemic Y: The Big One,โรคระบาด Y: ขนานใหญ่
-"Error parsing world, please re-select",
-"Error reading world, please re-select",
+"Error parsing world, please re-select",เกิดข้อผิดพลาดในการแยกวิเคราะห์โลก โปรดเลือกใหม่
+"Error reading world, please re-select",เกิดข้อผิดพลาดในการอ่านโลก โปรดเลือกใหม่
 Escape Velocity,ก้าวข้ามขีดจำกัด
 Esperanto,ภาษาเอสเปรันโต
 Establish off-world colonies.,สร้างอาณานิคมนอกโลก
@@ -589,7 +589,7 @@ Famine,ความอดอยาก
 Famine - Intro,ความอดอยาก - บทนำ
 "Fancy bicycles, hiking, bird-watching, granola, sandals, philanthropists","จักรยานแฟนซี, เดินป่า, ดูนก, กราโนล่า, รองเท้าแตะ, ผู้ใจบุญ"
 Fanonist Curriculum,หลักสูตรมาร์กซิสต์สายฟานอน
-"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness",
+"Farmers' markets, sentimentality, Wal-Mart [capitalist], wilderness","ตลาดเกษตรกร, ความอ่อนไหว, วอลมาร์ท [capitalist], ป่าธรรมชาติ"
 Fast-Breeder Nuclear Power,เครื่องปฏิกรณ์ฟาสต์บรีเดอร์
 Fast-Breeder Reactor,เครื่องปฏิกรณ์ฟาสต์บรีเดอร์
 "Feel free to browse a bit. When you're ready, head on back to the ""Plan"" tab.","ลองดูคร่าว ๆ ก่อนได้เลย ถ้าพร้อมเมื่อไรให้กลับไปที่แท็บ ""แผน"""
@@ -627,7 +627,7 @@ For now we'll track these events on the globe.,ในตอนนี้เรา
 "For the last 20 years since I installed the hail cannon, I haven't seen any hail coming to destroy my crops.",ตลอด 20 ปีที่ผ่านมาตั้งแต่ฉันติดตั้งปืนใหญ่ลูกเห็บ ฉันไม่เห็นลูกเห็บมาทำลายพืชผลของฉันเลย
 "For the longest time, climate modelling was far more advanced than ecosystem modelling. This program will allow ecologists to catch up! Capture and predict dynamic, non-linear and emergent behavior within ecosystems.",เป็นเวลานานแล้วที่การสร้างแบบจำลองสภาพภูมิอากาศมีความก้าวหน้ามากกว่าการสร้างแบบจำลองระบบนิเวศ โครงการนี้จะช่วยให้นักนิเวศวิทยาก้าวตามมาได้ทัน! จะมีทั้งการบันทึกและคาดการณ์พฤติกรรมแบบไดนามิก ไม่เป็นเชิงเส้น และเกิดขึ้นภายในระบบนิเวศ
 Forest Infested,ป่าไม้ถูกรบกวน
-"Freedom, dissent, improvisational jazz",
+"Freedom, dissent, improvisational jazz","เสรีภาพ, การเห็นต่าง, ดนตรีแจ๊สด้นสด"
 "Frequent fire also threatens the permafrost it can also lead to burning belowground, which melts the permafrost and can emit large amounts of carbon in a short time.",ไฟที่เกิดขึ้นบ่อยครั้งยังคุกคามชั้นดินเยือกแข็งถาวร (Permafrost) อีกด้วย มันยังนำไปสู่การเผาใต้ดิน ซึ่งทำให้ชั้นดินเยือกแข็งถาวร (Permafrost) ละลายและอาจปล่อยก๊าซคาร์บอนจำนวนมากออกมาในเวลาอันสั้น
 Friendly,เป็นกันเอง
 Fuel,เชื้อเพลิง
@@ -988,7 +988,7 @@ Just something to be aware of.,มันเป็นสิ่งที่ต้�
 Just swipe a card into the scanner and presto! It's added to your plan.,เพียงรูดการ์ดเข้าไปในเครื่องสแกนก็เสร็จแล้ว! มันถูกเพิ่มเข้าไปในแผนของคุณแล้ว
 Just to keep the party going a little longer for some?,เพียงเพื่อให้งานเลี้ยงของบางคนจัดต่อได้สักพักงั้นหรือ?
 Keep Global South Poor,คงระดับความจนในโลกฝั่งใต้ไว้เหมือนเดิม
-"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats",
+"Kindergartens, William Godwin, space nonsense, people trying to get into their lifeboats","โรงเรียนอนุบาล, วิลเลียม ก็อดวิน, เรื่องไร้สาระเกี่ยวกับอวกาศ, ผู้คนที่พยายามขึ้นเรือชูชีพ"
 Land,ที่ดิน
 Land Use,การใช้ที่ดิน
 Land-based wind energy technologies harness kinetic energy from the wind to generate electricity.,เทคโนโลยีพลังงานลมบนผืนดินที่ใช้การควบคุมและใช้ประโยชน์จากพลังงานจลน์ของลมเพื่อผลิตกระแสไฟฟ้า
@@ -1270,7 +1270,7 @@ Passive Building Mandate & Retrofit,อาคารประหยัดพล�
 'When women today attempt to change society's domination of nature, they are acting to overturn modern constructions of nature and women as culturally passive and subordinate.' Carolyn Merchant","ปิตาธิปไตยครอบงำทั้งธรรมชาติและสตรี และด้วยเหตุนี้จึงต้องถูกล้มล้าง
 
 ""เมื่อผู้หญิงในปัจจุบันพยายามที่จะเปลี่ยนแปลงสังคมที่ครอบงำธรรมชาติอยู่ นั่นหมายถึงพวกเขากำลังกระทำการเพื่อล้มล้างโครงสร้างธรรมชาติสมัยใหม่ของและผู้หญิงในฐานะที่เป็นผู้ตามและเป็นรองทางวัฒนธรรม"" Carolyn Merchant"
-"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon",
+"Patriarchy, mechanistic worldviews, reply guys, Francis Bacon","ระบบชายเป็นใหญ่, โลกทัศน์แบบกลไก, ผู้ชายที่ชอบตอบคอมเมนต์อวดรู้, ฟรานซิส เบคอน"
 "Paul Ehrlich calls it a 'fascinating but dumb idea', but it has potential to return some species, like the Iberian Ibex.","Paul Ehrlich เรียกมันว่า ""ความคิดที่น่าสนใจแต่โง่เขลา"" แต่ก็มีศักยภาพที่จะคืนสัตว์บางชนิด เช่น แพะไอเบ็กซ์ไอบีเรีย"
 "Peasants tending small farms (<2 Ha) for subsistence production. These small farms produce a large share of the world's crops with relatively few environmental costs, but require more labour than industrial agriculture.",ชาวนาดูแลฟาร์มขนาดเล็ก (<2 เฮกเตอร์) เพื่อยังชีพ ฟาร์มขนาดเล็กเหล่านี้ผลิตพืชผลจำนวนมากในโลกโดยมีค่าใช้จ่ายด้านสิ่งแวดล้อมค่อนข้างน้อย แต่ต้องใช้แรงงานมากกว่าการเกษตรเชิงอุตสาหกรรม
 Pedestrian and Bike-Friendly Cities,เมืองที่เป็นมิตรต่อการเดินเท้าและจักรยาน
@@ -1347,8 +1347,8 @@ Popular opinion is rapidly turning against you...,ความคิดเห็
 Population,ประชากร
 Population projects are substantially cheaper.,โครงการเกี่ยวกับประชากรมีราคาถูกกว่ามาก
 Populations of red colobus and pygmy hippos have bounced back. Local inhabitants are also much healthier and happier than before.,ประชากรโคโลบัสแดงและฮิปโปแคระกลับมาเพิ่มขึ้นอีกครั้ง ผู้อยู่อาศัยในท้องถิ่นยังมีสุขภาพที่ดีและมีความสุขมากกว่าเมื่อก่อนมาก
-Possible +%{amount} political capital.,
-Possible +%{amount} research points.,
+Possible +%{amount} political capital.,อาจได้รับ +%{amount} ทุนทางการเมือง
+Possible +%{amount} research points.,อาจได้รับ +%{amount} คะแนนการวิจัย
 Post-Revolution Optimism,สุทรรศน์นิยมยุคหลังปฏิวัติ
 Potato Blight Destroys Harvest,โรคใบไหม้มันฝรั่งทำลายการเก็บเกี่ยว
 Power Hungry,กระหายพลังงาน
@@ -1378,10 +1378,10 @@ Protests against your plans have escalated into riots in some places.,การ�
 Psyop,ปฏิบัติการจิตวิทยา
 Pump water from the ocean onto Antarctica to reduce melting rates.,สูบน้ำจากมหาสมุทรสู่แอนตาร์กติกาเพื่อลดอัตราการหลอมละลาย
 Quite a lot of people have made the move to the countryside.,คนย้ายไปอยู่ต่างจังหวัดค่อนข้างเยอะ
-"Racism, authoritarianism, colonial Manichaenism",
+"Racism, authoritarianism, colonial Manichaenism","การเหยียดเชื้อชาติ, อำนาจนิยม, ทวินิยมแบบอาณานิคม"
 Rapidly increase development throughout the world to catch up to Global North levels.,เพิ่มการพัฒนาทั่วโลกอย่างรวดเร็วเพื่อไล่ตามระดับโลกซีกเหนือ
 Rare Metals Shortage,การขาดแคลนโลหะหายาก
-Read the book:,
+Read the book:,อ่านหนังสือ:
 Ready,พร้อม
 Recent Disasters,ภัยพิบัติล่าสุด
 Reconcile Town and Country,การกระทบยอดเมืองและประเทศ
@@ -1417,7 +1417,7 @@ Renewables dominated energy production.,พลังงานหมุนเว�
 Repeat the tutorial.,ทำบทช่วยสอนอีกครั้ง
 Report,รายงาน
 Report Intro,บทนำรายงาน
-Report a Bug,
+Report a Bug,รายงานข้อผิดพลาด
 Reports of strange lights in the skies are coming in from all over the world.,มีรายงานแสงประหลาดบนท้องฟ้ามาจากทั่วทุกมุมโลก
 Research,วิจัย
 Research Intro,บทนำการวิจัย
@@ -1655,7 +1655,7 @@ The Utopian,ชาวยูโทเปีย
 The Utopian is now a [nemesis] nemesis.,ตอนนี้ชาวยูโทเปียกลายเป็น [nemesis] ศัตรูแล้ว
 "The Utopian is now an [ally] ally. Limits, Protection, and Restoration projects are cheaper.",ตอนนี้ชาวยูโทเปียเป็นพันธมิตร [ally] แล้ว โครงการจำกัดการป้องกันและโครงการฟื้นฟูมีราคาถูกลง
 "The Wollemi pines have existed for 200 millions years, but the last natural forest was recently destroyed in a wildfire.",ต้นสน Wollemi ดำรงอยู่มาเป็นเวลา 200 ล้านปี แต่ป่าธรรมชาติแห่งสุดท้ายถูกทำลายลงด้วยไฟป่าเมื่อไม่นานมานี้
-"The World Editor is only available in the desktop version of the game, which you can download here.",
+"The World Editor is only available in the desktop version of the game, which you can download here.",ตัวแก้ไขโลกมีให้ใช้งานเฉพาะในเกมเวอร์ชันเดสก์ท็อปเท่านั้น ซึ่งคุณสามารถดาวน์โหลดได้ที่นี่
 The Wretched,ผู้เคราะห์ร้าย
 The Wretched - Attack,ผู้อนาถา - โจมตี
 The Wretched - Formation,ผู้อนาถา - เริ่มรวมตัว
@@ -1693,7 +1693,7 @@ The estimated value after production changes have finished.,มูลค่า�
 "The extinction rate is high, the world is warming...",อัตราการสูญพันธุ์สูง โลกร้อนขึ้น...
 "The first DAC installations are up and running, and sucking carbon out of the air.",ตัวแปลงสัญญานไฟฟ้าดิจิทัลตัวแรกแรกเปิดทำงานและกำลังดูดคาร์บอนออกจากอากาศอยู่
 The following processes can't produce as much as they need to: %{processesOverLimit},กระบวนการต่อไปนี้ไม่สามารถผลิตได้มากเท่าที่พวกเขาต้องการ: %{processesOverLimit}
-The game never ends.,
+The game never ends.,เกมนี้ไม่มีวันจบ
 The gender ratio has shifted as people prefer to have girls rather than boys.,อัตราส่วนทางเพศเปลี่ยนไปเนื่องจากผู้คนนิยมมีลูกผู้หญิงมากกว่าลูกผู้ชาย
 The good life isn't about having more things. Degrowth reduces energy and material consumption in the Global North while funding social programs to provide material  support for everyone.,ชีวิตที่ดีไม่ได้เกี่ยวกับการมีสิ่งต่าง ๆ มากขึ้น การลดการพัฒนาจะช่วยลดการใช้พลังงานและวัสดุในโลกฝ่ายเหนือ ในขณะเดียวกันก็ให้ทุนสนับสนุนโครงการทางสังคมเพื่อให้การสนับสนุนด้านวัตถุสำหรับทุกคน
 The greatest pleasures are only narrowly separated from disgust.,ความสุขที่ยิ่งใหญ่ที่สุดนั้นแยกออกจากความรังเกียจได้ด้วยเพียงเส้นบาง ๆ เท่านั้น
@@ -1825,7 +1825,7 @@ This changes regional contentedness based on demand for %{name}. Current world c
 This changes regional contentedness based on income level (wealthier regions will feel it more). Current world contentedeness is %{contentedness}[t]/%{maxContentedness}[/t].,สิ่งนี้จะเปลี่ยนแปลงความพึงพอใจในภูมิภาคตามระดับรายได้ (ภูมิภาคที่ร่ำรวยกว่าจะรู้สึกถึงผลกระทบมากกว่า) ความพึงพอใจของโลกในปัจจุบันคือ %{contentedness}[t]/%{maxContentedness}[/t].
 This didn't really do much.,ไม่ค่อยช่วยเท่าไร
 This effect %{changeDir} the %{kind} of this project by %{tipAmount}.,เอฟเฟกต์นี้ %{changeDir} %{kind} ของโครงการนี้ %{tipAmount}
-"This event can occur if ""%{name}"" is %{label}.","เหตุการณ์นี้สามารถเกิดขึ้นได้หาก ""%{name}"" คือ %{label}"
+"This event can occur if ""%{name}"" is %{label}.","เหตุการณ์นี้สามารถเกิดขึ้นได้หาก ""%{name}"" อยู่ในสถานะ %{label}"
 This event can occur if %{name} is your %{relType}.,เหตุการณ์นี้สามารถเกิดขึ้นได้หาก %{name} เป็น {reltype} ของคุณ
 This event is influenced by biodiversity pressures.,เหตุการณ์นี้ได้รับอิทธิพลจากแรงกดดันของความหลากหลายทางชีวภาพ
 This event is influenced by how happy people are.,เหตุการณ์นี้ได้รับอิทธิพลจากความสุขของผู้คน
@@ -1962,7 +1962,7 @@ UFO Gift,ของขวัญจากยูเอฟโอ
 UFO Visit,ยูเอฟโอมาเยือน
 UFO War,สงครามยูเอฟโอ
 "UFOs, dolphins, water-birthing, telekinesis","จานบิน, โลมา, การคลอดในน้ำ, โทรจิต"
-"Ugly architecture, industrial wastelands, practicality, shoddy goods",
+"Ugly architecture, industrial wastelands, practicality, shoddy goods","สถาปัตยกรรมที่น่าเกลียด, พื้นที่รกร้างทางอุตสาหกรรม, ความเน้นประโยชน์ใช้สอย, สินค้าคุณภาพต่ำ"
 Uh oh--it looks like there are some production shortages.,โอ๊ะโอ ดูเหมือนว่าจะมีการขาดแคลนการผลิตเกิดขึ้นนิดหน่อย
 Umm... planner?,เอิ่ม...นักวางแผนเหรอ?
 Unconventional Petroleum Industry,อุตสาหกรรมปิโตรเลียมนอกรูปแบบ
@@ -2225,7 +2225,7 @@ Won't unlock this project:,จะไม่ปลดล็อกโครงก�
 Wooden Skyscrapers,ตึกไม้ระฟ้า
 Work on improving and proliferating automation systems to increase productivity.,เดินหน้าพัฒนาเกี่ยวกับการปรับปรุงและเพิ่มระบบอัตโนมัติเพื่อเพิ่มผลผลิต
 World,โลก
-World Editor,
+World Editor,ตัวแก้ไขโลก
 World Intro,บทนำโลก
 "Worldwide, honeybees yield roughly $200 billion in pollination services!",ทั่วโลกนี้ ผึ้งให้ผลตอบแทนประมาณ 200 พันล้านเหรียญสหรัฐในการบริการผสมเกสร!
 Would you be interested in foraging for mushrooms?,คุณสนใจไปเก็บเห็ดไหม?
@@ -2252,11 +2252,11 @@ You can tap the pulsing [alert] alert icon for more information.,คุณสา
 You can't help but wonder how things could have gone differently.,คุณอดไม่ได้ที่จะสงสัยว่าจะมีอะไรเปลี่ยนไปได้ด้วยหรือ
 "You can't ignore whats been happening in Ecotopia. While the rest of the world crumbles in consumerism and nonstop progress, Ecotopia is a small window into what could be.",คุณไม่สามารถเพิกเฉยต่อสิ่งที่เกิดขึ้นใน Ecotopia ได้ ในขณะที่ส่วนอื่น ๆ ของโลกกำลังล่มสลายภายใต้ลัทธิบริโภคนิยมและความก้าวหน้าที่ไม่หยุดยั้ง Ecotopia เป็นเพียงหน้าต่างบานเล็กที่เผยให้เห็นสิ่งที่อาจเป็นได้
 You can't just transition to renewables and do all of your restoration projects in whatever neighborhood you want! I'm not going to endure blackouts just because of your novel ideas.,คุณไม่สามารถเปลี่ยนมาใช้พลังงานหมุนเวียนและทำโครงการฟื้นฟูทั้งหมดของคุณในย่านใดก็ได้ที่คุณต้องการ! ฉันจะไม่ทนกับความมืดมน เพียงเพราะไอเดียใหม่ ๆ ของคุณ
-You did something to instantly lose.,
-You died of old age.,
+You did something to instantly lose.,คุณทำบางอย่างที่ทำให้แพ้ทันที
+You died of old age.,คุณเสียชีวิตเพราะชราภาพ
 You do realize that not everyone can enjoy a high standard of living?,คุณรู้ใช่ไหมว่าไม่ใช่ทุกคนที่สามารถมีมาตรฐานการครองชีพที่สูงได้?
 You don't look so well.,คุณดูอาการไม่ค่อยดีนะ
-You failed to keep the people happy.,
+You failed to keep the people happy.,คุณล้มเหลวในการทำให้ประชาชนพึงพอใจ
 You get it! I can see it!,คุณเข้าใจ! ฉันเห็นแล้ว!
 You had an extraterrestrial encounter.,คุณได้พบกับสิ่งมีชีวิตนอกโลก
 You have %{yearsLeft} years left in your tenure.,คุณมีเวลาเหลืออีก %{yearsLeft} ปีในตำแหน่งนี้
@@ -2278,7 +2278,7 @@ You need to take action to assuage their concerns and recover support for your p
 You ought to figure out some way to bring more stability--maybe changing where we get our power from?,คุณควรจะหาวิธีที่จะสร้างความมั่นคงให้มากขึ้น บางทีอาจจะเปลี่ยนแหล่งที่มาของพลังงาน?
 You ought to--,คุณควรจะ--
 You pushed humanity towards the stars.,คุณผลักดันมนุษยชาติไปสู่ดวงดาว
-You ran out of political capital.,
+You ran out of political capital.,คุณใช้ทุนทางการเมืองหมดแล้ว
 You really think we can all live on this Earth without torpedoing living standards?,คุณคิดว่าเราทุกคนสามารถมีชีวิตอยู่บนโลกนี้ได้โดยไม่ต้องทำลายมาตรฐานการครองชีพใช่หรือไม่?
 You received a request to ban this process:,คุณได้รับคำขอให้สั่งห้ามกระบวนการนี้:
 You received a request to implement this project:,คุณได้รับคำขอให้ดำเนินโครงการนี้:
@@ -2303,7 +2303,7 @@ You've been bailed out once,คุณได้รับการประกั�
 You've exhausted all your political capital...,คุณใช้ทุนทางการเมืองหมดแล้ว...
 "You've kind of got tunnel vision with this whole earth stuff, don't you think?",คุณไม่คิดบ้างหรือว่าคุณกำลังมองทั้งโลกผ่านวิสัยทัศน์แคบ ๆ แบบอุโมงค์อยู่?
 You've run out of [political_capital] political capital...and lost the backing of members of parliament.,[political_capital] ทุนทางการเมืองของคุณหมดแล้ว...และได้สูญเสียการสนับสนุนจากสมาชิกรัฐสภา
-Your History,
+Your History,ประวัติของคุณ
 Your administration had failed to achieve its goals in time...,ฝ่ายบริหารของคุณไม่อาจบรรลุเป้าหมายได้ทันเวลา...
 Your coalition has %{coalitionSeats}/%{totalSeats} seats.,พันธมิตรของคุณมีที่นั่ง %{coalitionSeats}/%{totalSeats} ที่นั่ง
 Your death was celebrated by people around the world.,การเสียชีวิตของคุณได้รับการเฉลิมฉลองจากผู้คนทั่วโลก
@@ -2317,7 +2317,7 @@ Your plans will benefit from having others on board.,แผนของคุณ
 Your reckless disregard for life is going to ruin us all!,การที่คุณเพิกเฉยต่อชีวิตจะทำให้พวกเราทุกคนย่ำแย่!
 Your relationship with %{name}. Increase it by implementing projects they like. At 5 hearts or more they will join your coalition.,ความสัมพันธ์ของคุณกับ %{name} เพิ่มให้มากขึ้นโดยการใช้โครงการที่พวกเขาชอบ ถ้ามี 5 หัวใจขึ้นไป เขาจะเข้าร่วมเป็นพันธมิตรกับคุณ
 Zero square kilometres of arctic sea ice.,น้ำแข็งในทะเลอาร์คติกเหลือศูนย์ตารางกิโลเมตร
-"Zoos, bacon, fur, honey (?)",
+"Zoos, bacon, fur, honey (?)","สวนสัตว์, เบคอน, ขนสัตว์, น้ำผึ้ง (?)"
 [GAME],[GAME]
 [b]Locks[/b] %{tag},[b]ล็อค[/b] %{tag}
 [b]Unlocks[/b] %{name}.,[b]ปลดล็อก[/b] %{name}.
@@ -2326,11 +2326,11 @@ Zero square kilometres of arctic sea ice.,น้ำแข็งในทะเ�
 [gosplant] was tasked with undoing the myriad harms that centuries of capitalism had unleashed on the planet and its people.,[gosplant] มีหน้าที่ฟื้นฟูความเสียหายมากมายที่ระบบทุนนิยมกระทำกับโลกและผู้คนบนโลกนับหลายศตวรรษ
 [research] Research points cost less [political_capital] political capital.,[การวิจัย] คะแนนการวิจัยทำให้ใช้ [polical_capital] ทุนทางการเมืองลดลง
 "a ""wet-bulb"" event, where temperature and humidity combine to be intolerable...","เหตุการณ์ ""กระเปาะเปียก"" ที่อุณหภูมิและความชื้นรวมกันจนไม่อาจทนได้..."
-active,
+active,ดำเนินการอยู่
 alarming,ควรระวัง
 an unknown amount,ไม่ทราบจำนวน
 animal calories,แคลอรี่จากสัตว์
-being built,
+being built,กำลังสร้าง
 biodiversity,ความหลากหลายทางชีวภาพ
 biodiversity pressure,ความกดดันด้านความหลากหลายทางชีวภาพ
 "but nothing changes the fact that it all comes down to people, people, people!",แต่ไม่มีอะไรเปลี่ยนแปลงความจริงที่ว่าทุกอย่างขึ้นอยู่กับประชาชน ประชาชน ประชาชน!
@@ -2339,10 +2339,10 @@ but there's been such an explosion of creative vegetarian recipes and techniques
 but they have been limited since less than 10% of global fish catch was on the high seas.,แต่ที่ถูกจำกัดเพราะน้อยกว่า 10% ของการจับปลาทั่วโลกอยู่ในทะเลหลวง
 but we have enough to last for a while now.,แต่ตอนนี้เรายังพออยู่ได้ระยะหนึ่ง
 but who doesn't like trains?,แต่ใครล่ะจะไม่ชอบรถไฟ?
-carbon capture processes,
+carbon capture processes,กระบวนการดักจับคาร์บอน
 causes,เป็นสาเหตุให้
 coal,ถ่านหิน
-combustion processes,
+combustion processes,กระบวนการเผาไหม้
 "construction workers, miners, firefighters, agricultural workers, and the like.",คนงานก่อสร้าง คนขุดแร่ นักดับเพลิง คนงานเกษตรกรรม และอื่น ๆ
 cost,ค่าใช้จ่าย
 critical,วิกฤต
@@ -2351,16 +2351,16 @@ development time,เวลาในการพัฒนา
 electricity,ไฟฟ้า
 emissions,การปล่อยมลพิษ
 energy use,การใช้พลังงาน
-especially labor-intensive processes,
-fossil fuel processes,
+especially labor-intensive processes,กระบวนการที่ใช้แรงงานเข้มข้นเป็นพิเศษ
+fossil fuel processes,กระบวนการเชื้อเพลิงฟอสซิล
 frigid,เขตหนาว
 fuel,เชื้อเพลิง
-halted,
+halted,ถูกยุติ
 high,สูง
-inactive,
+inactive,ไม่ได้ดำเนินการ
 increase [i]%{icon}[/i] %{k} by %{warn}%{change}%,เพิ่ม [i]%{icon}[/i] %{k} โดย %{warn}%{change}%
 infrastructure,โครงสร้างพื้นฐาน
-intermittent processes,
+intermittent processes,กระบวนการที่ไม่ต่อเนื่อง
 land,ที่ดิน
 land use,การใช้ที่ดิน
 lithium,ลิเธียม
@@ -2373,24 +2373,24 @@ natural gas,ก๊าซธรรมชาติ
 nd,-
 nothing so drastic is necessary...we finally can unleash technology from the yoke of capitalism...,ไม่มีอะไรรุนแรงเกินไป...ในที่สุดเราก็สามารถปลดปล่อยเทคโนโลยีจากแอกของระบบทุนนิยมได้...
 oil,น้ำมัน
-oil processes,
+oil processes,กระบวนการที่ใช้น้ำมัน
 other,อื่น ๆ
 "people sleep during the day, and do everything else at night.",ผู้คนนอนตอนกลางวันและทำทุกอย่างในเวลากลางคืน
 plant calories,แคลอรี่จากพืช
 policy,นโยบาย
-processes that may meltdown,
-processes that produce nuclear waste,
-processes that use livestock,
-processes that use pesticides,
-processes that use synthetic fertilizers,
+processes that may meltdown,กระบวนการที่อาจหลอมละลาย
+processes that produce nuclear waste,กระบวนการที่ผลิตของเสียนิวเคลียร์
+processes that use livestock,กระบวนการที่ใช้ปศุสัตว์
+processes that use pesticides,กระบวนการที่ใช้ยาฆ่าแมลง
+processes that use synthetic fertilizers,กระบวนการที่ใช้ปุ๋ยสังเคราะห์
 rd,-
 research,วิจัย
 research time,เวลาวิจัย
 severe,รุนแรง
 soil,ดิน
-solar processes,
+solar processes,กระบวนการพลังงานแสงอาทิตย์
 st,-
-stalled,
+stalled,หยุดชะงัก
 subtropic,เขตกึ่งเขตร้อน
 temperate,เขตอบอุ่น
 th,-
