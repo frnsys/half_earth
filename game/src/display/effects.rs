@@ -345,7 +345,9 @@ impl DisplayEffect {
 
     fn change_dir(&self, change: f32) -> String {
         if self.is_unknown {
-            t!("Changes").to_string()
+            // Not "Changes", which is also used as a heading (noun)
+            // and so is translated as a noun in most languages.
+            t!("Modifies").to_string()
         } else if let Some(prob) = self.likelihood {
             if change < 0. {
                 prefix_probs!(prob, " reduce").to_string()
